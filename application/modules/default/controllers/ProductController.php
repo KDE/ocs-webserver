@@ -70,7 +70,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $salt = PPLOAD_DOWNLOAD_SECRET;
         $collectionID = $productInfo->ppload_collection_id;
         $timestamp = time() + 3600; // one hour valid
-        $hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
+        //20181009 ronald: change hash from MD5 to SHA512
+        //$hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
+        $hash = hash('sha512',$salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
 
         $this->view->download_hash = $hash;
         $this->view->download_timestamp = $timestamp;
@@ -198,7 +200,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $salt = PPLOAD_DOWNLOAD_SECRET;
         $collectionID = $this->view->product->ppload_collection_id;
         $timestamp = time() + 3600; // one hour valid
-        $hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
+        //20181009 ronald: change hash from MD5 to SHA512
+        //$hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
+        $hash = hash('sha512',$salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
 
         $this->view->download_hash = $hash;
         $this->view->download_timestamp = $timestamp;
@@ -536,7 +540,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $salt = PPLOAD_DOWNLOAD_SECRET;
         $collectionID = $projectData->ppload_collection_id;
         $timestamp = time() + 3600; // one hour valid
-        $hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
+        //20181009 ronald: change hash from MD5 to SHA512
+        //$hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
+        $hash = hash('sha512',$salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
 
         $this->view->download_hash = $hash;
         $this->view->download_timestamp = $timestamp;

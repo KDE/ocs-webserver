@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -46,37 +47,36 @@ class Default_Form_Product extends Zend_Form
     {
         $this->setAction('');
         $this->setAttrib('enctype', 'multipart/form-data');
-        $this->addPrefixPath('Default_Form_Element', APPLICATION_PATH . '/modules/default/forms/elements/',
-            Zend_Form::ELEMENT);
+        $this->addPrefixPath('Default_Form_Element', APPLICATION_PATH . '/modules/default/forms/elements/', Zend_Form::ELEMENT);
 
         $this->addElement($this->getTitleElement())
-            ->addElement($this->getCategoryIdElement())
-            ->addElement($this->getDescriptionElement())
-            ->addElement($this->getVersionElement())
-            ->addElement($this->getSmallImageElement())
-            ->addElement($this->getImageUploadElement())
-//            ->addElement($this->getBigImageElement())
-//            ->addElement($this->getBigImageUploadElement())
-            ->addSubForm($this->getGalleryElement(), 'gallery')
-//            ->addElement($this->getAmountElement())
-//            ->addElement($this->getAmountPeriodElement())
-            ->addElement($this->getEmbedCodeElement())
-            ->addElement($this->getProjectHomepageElement())
-            ->addElement($this->getSourceElement())
-            ->addElement($this->getFacebookElement())
-            ->addElement($this->getTwitterElement())
-            ->addElement($this->getGoogleElement())
-            ->addElement($this->getTagElement())
-            ->addElement($this->getTagUserElement())
-            ->addElement($this->getHiddenProjectId())
-            ->addElement($this->getSubmitElement())
-            ->addElement($this->getCancelElement())
-            ->addElement($this->getLicenseIdElement())
-            ->addElement($this->getIsOriginal())  
-            ->addElement($this->getIsGitlab())  
-            ->addElement($this->getGitlabProjectId())  
-            ->addElement($this->getShowGitlabProjectIssues())
-            ->addElement($this->getUseGitlabProjectReadme())
+             ->addElement($this->getCategoryIdElement())
+             ->addElement($this->getDescriptionElement())
+             ->addElement($this->getVersionElement())
+             ->addElement($this->getSmallImageElement())
+             ->addElement($this->getImageUploadElement())
+            //            ->addElement($this->getBigImageElement())
+            //            ->addElement($this->getBigImageUploadElement())
+             ->addSubForm($this->getGalleryElement(), 'gallery')
+            //            ->addElement($this->getAmountElement())
+            //            ->addElement($this->getAmountPeriodElement())
+             ->addElement($this->getEmbedCodeElement())
+             ->addElement($this->getProjectHomepageElement())
+             ->addElement($this->getSourceElement())
+             ->addElement($this->getFacebookElement())
+             ->addElement($this->getTwitterElement())
+             ->addElement($this->getGoogleElement())
+             ->addElement($this->getTagElement())
+             ->addElement($this->getTagUserElement())
+             ->addElement($this->getHiddenProjectId())
+             ->addElement($this->getSubmitElement())
+             ->addElement($this->getCancelElement())
+             ->addElement($this->getLicenseIdElement())
+             ->addElement($this->getIsOriginal())
+             ->addElement($this->getIsGitlab())
+             ->addElement($this->getGitlabProjectId())
+             ->addElement($this->getShowGitlabProjectIssues())
+             ->addElement($this->getUseGitlabProjectReadme())
 
             //->addElement($this->getCCAttribution())
             //->addElement($this->getCCComercial())
@@ -88,97 +88,26 @@ class Default_Form_Product extends Zend_Form
 
     private function getTitleElement()
     {
+        $validatorRegEx = new Zend_Validate_Regex(array('pattern' => "/^[ \.\-_A-Za-z0-9']{1,}$/i"));
+        $validatorRegEx->setMessages(array(Zend_Validate_Regex::NOT_MATCH => "'%value%' is not valid. Please try again without using any character like \\, !, \", $, *, ^"));
+
         return $this->createElement('text', 'title')
-            ->setRequired(true)
-            ->addValidators(array(
-                array('StringLength', false, array(4, 60)),
-            	array('Regex', false, array('pattern' => '/^[\w.-]*$/i')),
-            	array('Regex', false, array('pattern' => '/[ .\-_A-z0-9]{1,}/i')),
-//            	array('Regex', false, array('pattern' => '/^[^\\\"\';\^\$\*!]*$/', 'messages' => array(Zend_Validate_Regex::NOT_MATCH => "'%value%' is not valid. Please try again without using any character like \\, !, ', \", $, *, ^")))
-//                $checkTitleExist
+                    ->setRequired(true)
+                    ->addValidators(array(
+                        array('StringLength', true, array(4, 60)),
+                        $validatorRegEx
+                    ))
+                    ->setFilters(array('StringTrim'))
+                    ->setDecorators(array(
+                array(
+                    'ViewScript',
+                    array(
+                        'viewScript' => 'product/viewscripts/input_title.phtml',
+                        'placement'  => false
+                    )
+                )
             ))
-            ->setFilters(array('StringTrim'))
-            ->setDecorators(
-                array(
-                    array(
-                        'ViewScript',
-                        array(
-                            'viewScript' => 'product/viewscripts/input_title.phtml',
-                            'placement' => false
-                        )
-                    )
-                ));
-    }
-    
-    private function getVersionElement()
-    {
-    	return $this->createElement('text', 'version')
-    	->setRequired(false)
-    	->addValidators(array(
-    			array('StringLength', false, array(0, 50)),
-    	))
-    	->setFilters(array('StringTrim'))
-    	->setDecorators(
-    			array(
-    					array(
-    							'ViewScript',
-    							array(
-    									'viewScript' => 'product/viewscripts/input_version.phtml',
-    									'placement' => false
-    							)
-    					)
-    			));
-    }
-
-    private function getSmallImageElement()
-    {
-        return $this->createElement('hidden', 'image_small')
-            ->setFilters(array('StringTrim'))
-            ->addValidators(array(array('Regex', false, array('/^[A-Za-z0-9.\/_-]{1,}$/i'))))
-            ->setDecorators(
-                array(
-                    array(
-                        'ViewScript',
-                        array(
-                            'viewScript' => 'product/viewscripts/input_image_small.phtml',
-                            'placement' => false
-                        )
-                    )
-                ));
-    }
-
-    private function getImageUploadElement()
-    {
-        $modelImage = new Default_Model_DbTable_Image();
-        return $this->createElement('file', 'image_small_upload')
-            ->setDisableLoadDefaultDecorators(true)
-            ->setValueDisabled(true)
-            ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())
-            ->setRequired(false)
-            ->setMaxFileSize(2097152)
-            ->addValidator('Count', false, 1)
-            ->addValidator('Size', false, array('min' => '500B', 'max' => '2MB'))
-            ->addValidator('Extension', false, $modelImage->getAllowedFileExtension())
-            ->addValidator('ImageSize', false,
-                array(
-                    'minwidth' => 20,
-                    'maxwidth' => 2000,
-                    'minheight' => 20,
-                    'maxheight' => 2000
-                ))
-            ->addValidator('MimeType', false, $modelImage->getAllowedMimeTypes())
-            ->setDecorators(
-                array(
-                    array('File' => new Local_Form_Decorator_File()),
-                    array(
-                        'ViewScript',
-                        array(
-                            'viewScript' => 'product/viewscripts/input_image_small_upload.phtml',
-                            'placement' => false
-                        )
-                    )
-
-                ));
+            ;
     }
 
     private function getCategoryIdElement()
@@ -187,259 +116,412 @@ class Default_Form_Product extends Zend_Form
         $validatorCategory = new Default_Form_Validator_Category();
 
         return $this->createElement('number', 'project_category_id', array())
-            ->setRequired(true)
-            ->addValidator('Digits')
-            ->addValidator($validatorCategory)
-            ->addFilter('Digits')
-            ->setDecorators(
+                    ->setRequired(true)
+                    ->addValidator('Digits')
+                    ->addValidator($validatorCategory)
+                    ->addFilter('Digits')
+                    ->setDecorators(array(
                 array(
+                    'ViewScript',
                     array(
-                        'ViewScript',
-                        array(
-                            'viewScript' => 'product/viewscripts/input_cat_id.phtml',
-                            'placement' => false
-                        )
+                        'viewScript' => 'product/viewscripts/input_cat_id.phtml',
+                        'placement'  => false
                     )
-                ));
-    }
-    
-    private function getLicenseIdElement()
-    {
-
-        //$element = new Zend_Form_Element_Multiselect('project_license_id', array('registerInArrayValidator' => false));
-        $element = new Zend_Form_Element_Select('license_tag_id', array('multiple' => false ));
-        $element->setIsArray(true);
-        
-        $tagTable = new Default_Model_DbTable_Tags();
-        $options = $tagTable->fetchLicenseTagsForSelect();
-        
-        return $element
-                    ->setFilters(array('StringTrim'))
-                    ->setMultiOptions($options)
-                    ->setDecorators(
-                        array(
-                            array(
-                                'ViewScript',
-                                array(
-                                    'viewScript' => 'product/viewscripts/input_select_license.phtml',
-                                    'placement' => false
-                                )
-                            )
-                        ));
+                )
+            ))
+            ;
     }
 
     private function getDescriptionElement()
     {
         return $this->createElement('textarea', 'description', array('cols' => 30, 'rows' => 9))
-            ->setRequired(true)
-            ->setFilters(array('StringTrim'))
-            ->setDecorators(
+                    ->setRequired(true)
+                    ->setFilters(array('StringTrim'))
+                    ->setDecorators(array(
                 array(
+                    'ViewScript',
                     array(
-                        'ViewScript',
-                        array(
-                            'viewScript' => 'product/viewscripts/input_description.phtml',
-                            'placement' => false
-                        )
+                        'viewScript' => 'product/viewscripts/input_description.phtml',
+                        'placement'  => false
                     )
-                ));
+                )
+            ))
+            ;
+    }
+
+    private function getVersionElement()
+    {
+        return $this->createElement('text', 'version')
+                    ->setRequired(false)
+                    ->addValidators(array(
+                        array('StringLength', false, array(0, 50)),
+                    ))
+                    ->setFilters(array('StringTrim'))
+                    ->setDecorators(array(
+                array(
+                    'ViewScript',
+                    array(
+                        'viewScript' => 'product/viewscripts/input_version.phtml',
+                        'placement'  => false
+                    )
+                )
+            ))
+            ;
+    }
+
+    private function getSmallImageElement()
+    {
+        return $this->createElement('hidden', 'image_small')
+                    ->setFilters(array('StringTrim'))
+                    ->addValidators(array(
+                        array(
+                            'Regex',
+                            false,
+                            array('/^[A-Za-z0-9.\/_-]{1,}$/i')
+                        )
+                    ))
+                    ->setDecorators(array(
+                array(
+                    'ViewScript',
+                    array(
+                        'viewScript' => 'product/viewscripts/input_image_small.phtml',
+                        'placement'  => false
+                    )
+                )
+            ))
+            ;
+    }
+
+    private function getImageUploadElement()
+    {
+        $modelImage = new Default_Model_DbTable_Image();
+
+        return $this->createElement('file', 'image_small_upload')
+                    ->setDisableLoadDefaultDecorators(true)
+                    ->setValueDisabled(true)
+                    ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())
+                    ->setRequired(false)
+                    ->setMaxFileSize(2097152)
+                    ->addValidator('Count', false, 1)
+                    ->addValidator('Size', false, array('min' => '500B', 'max' => '2MB'))
+                    ->addValidator('Extension', false, $modelImage->getAllowedFileExtension())
+                    ->addValidator('ImageSize', false, array(
+                    'minwidth'  => 20,
+                    'maxwidth'  => 2000,
+                    'minheight' => 20,
+                    'maxheight' => 2000
+                    ))
+                    ->addValidator('MimeType', false, $modelImage->getAllowedMimeTypes())
+                    ->setDecorators(array(
+                array('File' => new Local_Form_Decorator_File()),
+                array(
+                    'ViewScript',
+                    array(
+                        'viewScript' => 'product/viewscripts/input_image_small_upload.phtml',
+                        'placement'  => false
+                    )
+                )
+
+            ))
+            ;
     }
 
     private function getGalleryElement()
     {
         $gallerySubform = new Default_Form_GallerySubForm(array('pictures' => $this->onlineGalleryImageSources));
         $gallerySubform->setMaxGalleryPics(5);
+
         return $gallerySubform;
-    }
-
-    private function getAmountElement()
-    {
-        return $this->createElement('number', 'amount', array())
-            ->setRequired(false)
-            ->addValidator('Digits')
-            ->addFilter('Digits')
-            ->setDecorators(
-                array(
-                    array(
-                        'ViewScript',
-                        array(
-                            'viewScript' => 'product/viewscripts/input_amount.phtml',
-                            'placement' => false
-                        )
-                    )
-                ));
-    }
-
-    private function getAmountPeriodElement()
-    {
-        return $this->createElement('radio', 'amount_period', array())
-            ->setRequired(false)
-            ->addMultiOptions(array('yearly' => 'yearly (will run continuously each year)', 'one-time' => 'one-time'))
-            ->setValue('yearly')
-            ->setSeparator('&nbsp;')
-            ->setDecorators(
-                array(
-                    array(
-                        'ViewScript',
-                        array(
-                            'viewScript' => 'product/viewscripts/input_amount_period.phtml',
-                            'placement' => false
-                        )
-                    )
-                ));
     }
 
     private function getEmbedCodeElement()
     {
         return $this->createElement('textarea', 'embed_code', array('cols' => 30, 'rows' => 3))
-            ->setRequired(false)
-            ->setFilters(array('StringTrim'))
-            ->setDecorators(
+                    ->setRequired(false)
+                    ->setFilters(array('StringTrim'))
+                    ->setDecorators(array(
                 array(
+                    'ViewScript',
                     array(
-                        'ViewScript',
-                        array(
-                            'viewScript' => 'product/viewscripts/input_embedcode.phtml',
-                            'placement' => false
-                        )
+                        'viewScript' => 'product/viewscripts/input_embedcode.phtml',
+                        'placement'  => false
                     )
-                ));
+                )
+            ))
+            ;
     }
 
     private function getProjectHomepageElement()
     {
         return $this->createElement('text', 'link_1', array())
-            ->setRequired(false)
-            ->setFilters(array('StringTrim'))
-            ->addPrefixPath('Local_Validate', 'Local/Validate', Zend_Form_Element::VALIDATE)
-            ->addValidator('PartialUrl')
-            ->setDecorators(
-                array(
-                    array(
-                        'ViewScript',
+                    ->setRequired(false)
+                    ->setFilters(array('StringTrim'))
+                    ->addPrefixPath('Local_Validate', 'Local/Validate', Zend_Form_Element::VALIDATE)
+                    ->addValidator('PartialUrl')
+                    ->setDecorators(array(
                         array(
-                            'viewScript' => 'product/viewscripts/input_link.phtml',
-                            'placement' => false
+                            'ViewScript',
+                            array(
+                                'viewScript' => 'product/viewscripts/input_link.phtml',
+                                'placement'  => false
+                            )
                         )
-                    )
-                ));
+                    ))
+            ;
+    }
+
+    private function getSourceElement()
+    {
+        return $this->createElement('text', 'source_url', array())
+                    ->setRequired(false)
+                    ->setFilters(array('StringTrim'))
+                    ->addPrefixPath('Local_Validate', 'Local/Validate', Zend_Form_Element::VALIDATE)
+                    ->addValidator('PartialUrl')
+                    ->setDecorators(array(
+                        array(
+                            'ViewScript',
+                            array(
+                                'viewScript' => 'product/viewscripts/input_source_url.phtml',
+                                'placement'  => false
+                            )
+                        )
+                    ))
+            ;
     }
 
     private function getFacebookElement()
     {
         return $this->createElement('text', 'facebook_code', array())
-            ->setRequired(false)
-            ->setFilters(array('StringTrim'))
-            ->addPrefixPath('Local_Validate', 'Local/Validate', Zend_Form_Element::VALIDATE)
-            ->addValidator('PartialUrl')
-            ->setDecorators(
-                array(
-                    array(
-                        'ViewScript',
+                    ->setRequired(false)
+                    ->setFilters(array('StringTrim'))
+                    ->addPrefixPath('Local_Validate', 'Local/Validate', Zend_Form_Element::VALIDATE)
+                    ->addValidator('PartialUrl')
+                    ->setDecorators(array(
                         array(
-                            'viewScript' => 'product/viewscripts/input_facebook.phtml',
-                            'placement' => false
+                            'ViewScript',
+                            array(
+                                'viewScript' => 'product/viewscripts/input_facebook.phtml',
+                                'placement'  => false
+                            )
                         )
-                    )
-                ));
+                    ))
+            ;
     }
 
     private function getTwitterElement()
     {
         return $this->createElement('text', 'twitter_code', array())
-            ->setRequired(false)
-            ->setFilters(array('StringTrim'))
-            ->addPrefixPath('Local_Validate', 'Local/Validate', Zend_Form_Element::VALIDATE)
-            ->addValidator('PartialUrl')
-            ->setDecorators(
-                array(
-                    array(
-                        'ViewScript',
+                    ->setRequired(false)
+                    ->setFilters(array('StringTrim'))
+                    ->addPrefixPath('Local_Validate', 'Local/Validate', Zend_Form_Element::VALIDATE)
+                    ->addValidator('PartialUrl')
+                    ->setDecorators(array(
                         array(
-                            'viewScript' => 'product/viewscripts/input_twitter.phtml',
-                            'placement' => false
+                            'ViewScript',
+                            array(
+                                'viewScript' => 'product/viewscripts/input_twitter.phtml',
+                                'placement'  => false
+                            )
                         )
-                    )
-                ));
+                    ))
+            ;
     }
 
     private function getGoogleElement()
     {
         return $this->createElement('text', 'google_code', array())
-            ->setRequired(false)
-            ->setFilters(array('StringTrim'))
-            ->addPrefixPath('Local_Validate', 'Local/Validate', Zend_Form_Element::VALIDATE)
-            ->addValidator('PartialUrl')
-            ->setDecorators(
-                array(
-                    array(
-                        'ViewScript',
+                    ->setRequired(false)
+                    ->setFilters(array('StringTrim'))
+                    ->addPrefixPath('Local_Validate', 'Local/Validate', Zend_Form_Element::VALIDATE)
+                    ->addValidator('PartialUrl')
+                    ->setDecorators(array(
                         array(
-                            'viewScript' => 'product/viewscripts/input_google.phtml',
-                            'placement' => false
+                            'ViewScript',
+                            array(
+                                'viewScript' => 'product/viewscripts/input_google.phtml',
+                                'placement'  => false
+                            )
                         )
-                    )
-                ));
+                    ))
+            ;
     }
-    
-    private function getSourceElement()
+
+    private function getTagElement()
     {
-    	return $this->createElement('text', 'source_url', array())
-    	->setRequired(false)
-    	->setFilters(array('StringTrim'))
-    	->addPrefixPath('Local_Validate', 'Local/Validate', Zend_Form_Element::VALIDATE)
-    	->addValidator('PartialUrl')
-    	->setDecorators(
-    			array(
-    					array(
-    							'ViewScript',
-    							array(
-    									'viewScript' => 'product/viewscripts/input_source_url.phtml',
-    									'placement' => false
-    							)
-    					)
-    			));
+        $element = new Zend_Form_Element_Multiselect('tags', array('registerInArrayValidator' => false));
+
+        return $element->setFilters(array('StringTrim'))->setDecorators(array(
+                array(
+                    'ViewScript',
+                    array(
+                        'viewScript' => 'product/viewscripts/input_tags_multiselect.phtml',
+                        'placement'  => false
+                    )
+                )
+            ))
+            ;
+    }
+
+    private function getTagUserElement()
+    {
+        $element = new Zend_Form_Element_Multiselect('tagsuser', array('registerInArrayValidator' => false));
+
+        return $element->setFilters(array('StringTrim'))->setDecorators(array(
+                array(
+                    'ViewScript',
+                    array(
+                        'viewScript' => 'product/viewscripts/input_tags_user.phtml',
+                        'placement'  => false
+                    )
+                )
+            ))
+            ;
     }
 
     private function getHiddenProjectId()
     {
-        return $this->createElement('hidden', 'project_id')
-            ->setFilters(array('StringTrim'))
-            ->addValidators(array('Digits'))
-            ->setDecorators(
-                array(
-                    array(
-                        'ViewScript',
+        return $this->createElement('hidden', 'project_id')->setFilters(array('StringTrim'))->addValidators(array('Digits'))
+                    ->setDecorators(array(
                         array(
-                            'viewScript' => 'product/viewscripts/input_hidden.phtml',
-                            'placement' => false
+                            'ViewScript',
+                            array(
+                                'viewScript' => 'product/viewscripts/input_hidden.phtml',
+                                'placement'  => false
+                            )
                         )
-                    )
-                ));
+                    ))
+            ;
     }
 
     private function getSubmitElement()
     {
-        $submit = $this->createElement('button', 'preview')
-            ->setDecorators(
-                array(
-                    'ViewHelper'
-                ));
+        $submit = $this->createElement('button', 'preview')->setDecorators(array(
+                'ViewHelper'
+            ))
+        ;
         $submit->setLabel('Preview');
         $submit->setAttrib('type', 'submit');
+
         return $submit;
     }
 
     private function getCancelElement()
     {
-        $cancel = $this->createElement('button', 'cancel')
-            ->setDecorators(
-                array(
-                    'ViewHelper'
-                ));
+        $cancel = $this->createElement('button', 'cancel')->setDecorators(array(
+                'ViewHelper'
+            ))
+        ;
         $cancel->setLabel('Cancel');
         $cancel->setAttrib('type', 'submit');
+
         return $cancel;
+    }
+
+    private function getLicenseIdElement()
+    {
+
+        //$element = new Zend_Form_Element_Multiselect('project_license_id', array('registerInArrayValidator' => false));
+        $element = new Zend_Form_Element_Select('license_tag_id', array('multiple' => false));
+        $element->setIsArray(true);
+
+        $tagTable = new Default_Model_DbTable_Tags();
+        $options = $tagTable->fetchLicenseTagsForSelect();
+
+        return $element->setFilters(array('StringTrim'))->setMultiOptions($options)->setDecorators(array(
+                array(
+                    'ViewScript',
+                    array(
+                        'viewScript' => 'product/viewscripts/input_select_license.phtml',
+                        'placement'  => false
+                    )
+                )
+            ))
+            ;
+    }
+
+    private function getIsOriginal()
+    {
+        $element = new Zend_Form_Element_Checkbox('is_original');
+
+        return $element->setOptions(array(
+                'label'              => ' Product original ',
+                'use_hidden_element' => false,
+                'checked_value'      => 1,
+                'unchecked_value'    => 0
+            ));
+    }
+
+    private function getIsGitlab()
+    {
+        $element = new Zend_Form_Element_Checkbox('is_gitlab_project');
+
+        return $element->setOptions(array(
+                'label'              => ' Git-Project ',
+                'use_hidden_element' => false,
+                'checked_value'      => 1,
+                'unchecked_value'    => 0
+            ));
+    }
+
+    private function getGitlabProjectId()
+    {
+        $element = new Zend_Form_Element_Select('gitlab_project_id', array('multiple' => false));
+        $element->setIsArray(true);
+
+        $gitlab = new Default_Model_Ocs_Gitlab();
+
+        $optionArray = array();
+
+        if (Zend_Auth::getInstance()->hasIdentity()) {
+
+            $auth = Zend_Auth::getInstance();
+            $user = $auth->getStorage()->read();
+            $gitUser = $gitlab->getUserWithName($user->username);
+
+            if ($gitUser && null != $gitUser) {
+                //now get his projects
+                $gitProjects = $gitlab->getUserProjects($gitUser['id']);
+
+                foreach ($gitProjects as $proj) {
+                    $optionArray[$proj['id']] = $proj['name'];
+                }
+            }
+        }
+
+        return $element->setFilters(array('StringTrim'))->setMultiOptions($optionArray)->setDecorators(array(
+                array(
+                    'ViewScript',
+                    array(
+                        'viewScript' => 'product/viewscripts/input_gitlab_project_id.phtml',
+                        'placement'  => false
+                    )
+                )
+            ))
+            ;
+    }
+
+    private function getShowGitlabProjectIssues()
+    {
+        $element = new Zend_Form_Element_Checkbox('show_gitlab_project_issues');
+
+        return $element->setOptions(array(
+                'label'              => ' Git-Issues ',
+                'use_hidden_element' => false,
+                'checked_value'      => 1,
+                'unchecked_value'    => 0
+            ));
+    }
+
+    private function getUseGitlabProjectReadme()
+    {
+        $element = new Zend_Form_Element_Checkbox('use_gitlab_project_readme');
+
+        return $element->setOptions(array(
+                'label'              => 'README.md',
+                'use_hidden_element' => false,
+                'checked_value'      => 1,
+                'unchecked_value'    => 0
+            ));
     }
 
     public function initSubCatElement($projectCatId)
@@ -479,6 +561,7 @@ class Default_Form_Product extends Zend_Form
             $db = Zend_Registry::get('db');
             $sqlExclude .= $db->quoteInto(' AND project_id <> ?', $project_id, 'INTEGER');
         }
+
         /*
         $checkTitleExist = new Zend_Validate_Db_NoRecordExists(array(
             'table' => 'project',
@@ -490,6 +573,7 @@ class Default_Form_Product extends Zend_Form
         $this->getElement('title')
             ->addValidator($checkTitleExist);
 		*/
+
         return parent::isValid($data);
     }
 
@@ -499,6 +583,7 @@ class Default_Form_Product extends Zend_Form
      * Does not check for required flags.
      *
      * @param  array $data
+     *
      * @return boolean
      */
     public function isValidPartial(array $data)
@@ -506,55 +591,90 @@ class Default_Form_Product extends Zend_Form
         return parent::isValidPartial($data); // TODO: Change the autogenerated stub
     }
 
+    private function getAmountElement()
+    {
+        return $this->createElement('number', 'amount', array())
+                    ->setRequired(false)
+                    ->addValidator('Digits')
+                    ->addFilter('Digits')
+                    ->setDecorators(array(
+                        array(
+                            'ViewScript',
+                            array(
+                                'viewScript' => 'product/viewscripts/input_amount.phtml',
+                                'placement'  => false
+                            )
+                        )
+                    ))
+            ;
+    }
+
+    private function getAmountPeriodElement()
+    {
+        return $this->createElement('radio', 'amount_period', array())
+                    ->setRequired(false)
+                    ->addMultiOptions(array('yearly' => 'yearly (will run continuously each year)', 'one-time' => 'one-time'))
+                    ->setValue('yearly')
+                    ->setSeparator('&nbsp;')
+                    ->setDecorators(array(
+                array(
+                    'ViewScript',
+                    array(
+                        'viewScript' => 'product/viewscripts/input_amount_period.phtml',
+                        'placement'  => false
+                    )
+                )
+            ))
+            ;
+    }
+
     private function getBigImageElement()
     {
         return $this->createElement('hidden', 'image_big')
-            ->setFilters(array('StringTrim'))
-            ->addValidators(array(array('Regex', false, array('/^[A-Za-z0-9.\/_-]{1,}$/i'))))
-            ->setDecorators(
-                array(
-                    array(
-                        'ViewScript',
+                    ->setFilters(array('StringTrim'))
+                    ->addValidators(array(
                         array(
-                            'viewScript' => 'product/viewscripts/input_image_big.phtml',
-                            'placement' => false
+                            'Regex',
+                            false,
+                            array('/^[A-Za-z0-9.\/_-]{1,}$/i')
                         )
+                    ))
+                    ->setDecorators(array(
+                array(
+                    'ViewScript',
+                    array(
+                        'viewScript' => 'product/viewscripts/input_image_big.phtml',
+                        'placement'  => false
                     )
-                ));
+                )
+            ))
+            ;
     }
 
     private function getBigImageUploadElement()
     {
         $modelImage = new Default_Model_DbTable_Image();
-        return $this->createElement('file', 'image_big_upload')
-            ->setDisableLoadDefaultDecorators(true)
-            ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())
-            ->setRequired(false)
-            ->setMaxFileSize(2097152)
-            ->addValidator('Count', false, 1)
-            ->addValidator('Size', false, 2097152)
-            ->addValidator('FilesSize', false, 2000000)
-            ->addValidator('Extension', false, $modelImage->getAllowedFileExtension())
-            ->addValidator('ImageSize', false,
-                array(
-                    'minwidth' => 100,
-                    'maxwidth' => 2000,
+
+        return $this->createElement('file', 'image_big_upload')->setDisableLoadDefaultDecorators(true)
+                    ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())->setRequired(false)->setMaxFileSize(2097152)
+                    ->addValidator('Count', false, 1)->addValidator('Size', false, 2097152)->addValidator('FilesSize', false, 2000000)
+                    ->addValidator('Extension', false, $modelImage->getAllowedFileExtension())->addValidator('ImageSize', false, array(
+                    'minwidth'  => 100,
+                    'maxwidth'  => 2000,
                     'minheight' => 100,
                     'maxheight' => 1200
-                ))
-            ->addValidator('MimeType', false, $modelImage->getAllowedMimeTypes())
-            ->setDecorators(
+                ))->addValidator('MimeType', false, $modelImage->getAllowedMimeTypes())->setDecorators(array(
+                array('File' => new Local_Form_Decorator_File()),
                 array(
-                    array('File' => new Local_Form_Decorator_File()),
+                    'ViewScript',
                     array(
-                        'ViewScript',
-                        array(
-                            'viewScript' => 'product/viewscripts/input_image_big_upload.phtml',
-                            'placement' => false
-                        )
+                        'viewScript' => 'product/viewscripts/input_image_big_upload.phtml',
+                        'placement'  => false
                     )
+                )
 
-                ));
+            ))
+            ;
     }
 
     private function getCCAttribution()
@@ -580,134 +700,6 @@ class Default_Form_Product extends Zend_Form
     private function getCCLicense()
     {
         return $this->createElement('checkbox', 'cc_license');
-    }
-
- 
-    private function getIsOriginal()
-    {
-        $element = new Zend_Form_Element_Checkbox('is_original');
-        return $element
-               ->setOptions(array(
-               'label' =>' Product original ',
-               'use_hidden_element' => false,
-               'checked_value' => 1,
-               'unchecked_value' => 0
-               ));       
-    }
-    
-    private function getIsGitlab()
-    {
-        $element = new Zend_Form_Element_Checkbox('is_gitlab_project');
-        return $element
-               ->setOptions(array(
-               'label' =>' Git-Project ',
-               'use_hidden_element' => false,
-               'checked_value' => 1,
-               'unchecked_value' => 0
-               ));       
-    }
-    
-    private function getShowGitlabProjectIssues()
-    {
-        $element = new Zend_Form_Element_Checkbox('show_gitlab_project_issues');
-        
-        return $element
-               ->setOptions(array(
-               'label' =>' Git-Issues ',
-               'use_hidden_element' => false,
-               'checked_value' => 1,
-               'unchecked_value' => 0
-               ));       
-    }
-    
-    private function getUseGitlabProjectReadme()
-    {
-        $element = new Zend_Form_Element_Checkbox('use_gitlab_project_readme');
-        
-        return $element
-               ->setOptions(array(
-               'label' =>'README.md',
-               'use_hidden_element' => false,
-               'checked_value' => 1,
-               'unchecked_value' => 0
-               ));       
-    }
-    
-    private function getGitlabProjectId()
-    {
-        $element = new Zend_Form_Element_Select('gitlab_project_id', array('multiple' => false ));
-        $element->setIsArray(true);
-        
-        $gitlab = new Default_Model_Ocs_Gitlab();
-        
-        $optionArray = array();
-        
-        if (Zend_Auth::getInstance()->hasIdentity()) {
-        
-            $auth = Zend_Auth::getInstance();
-            $user = $auth->getStorage()->read();
-            $gitUser = $gitlab->getUserWithName($user->username);
-            
-            if($gitUser && null != $gitUser) {
-                //now get his projects
-                $gitProjects = $gitlab->getUserProjects($gitUser['id']);
-                
-                foreach ($gitProjects as $proj) {
-                    $optionArray[$proj['id']] = $proj['name']; 
-                }
-            }
-            
-        }
-        
-        
-        
-        return $element
-                    ->setFilters(array('StringTrim'))
-                    ->setMultiOptions($optionArray)
-                    ->setDecorators(
-                        array(
-                            array(
-                                'ViewScript',
-                                array(
-                                    'viewScript' => 'product/viewscripts/input_gitlab_project_id.phtml',
-                                    'placement' => false
-                                )
-                            )
-                        ));
-    }
-
-    private function getTagElement()
-    {
-        $element = new Zend_Form_Element_Multiselect('tags', array('registerInArrayValidator' => false));
-        return $element
-                    ->setFilters(array('StringTrim'))
-                    ->setDecorators(
-                        array(
-                            array(
-                                'ViewScript',
-                                array(
-                                    'viewScript' => 'product/viewscripts/input_tags_multiselect.phtml',
-                                    'placement' => false
-                                )
-                            )
-                        ));
-    }
-
-     private function getTagUserElement()
-    {
-        $element = new Zend_Form_Element_Multiselect('tagsuser', array('registerInArrayValidator' => false));
-        return $element
-                    ->setFilters(array('StringTrim'))
-                    ->setDecorators(
-                        array(
-                            array(
-                                'ViewScript',
-                                array(
-                                    'viewScript' => 'product/viewscripts/input_tags_user.phtml',
-                                    'placement' => false
-                                )
-                            )
-                        ));
     }
 
 }

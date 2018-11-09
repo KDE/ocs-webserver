@@ -363,7 +363,9 @@ class UserController extends Local_Controller_Action_DomainSwitch
         //create ppload download hash: secret + collection_id + expire-timestamp
         $salt = PPLOAD_DOWNLOAD_SECRET;
         $timestamp = time() + 3600; // one hour valid
-        $hash = md5($salt . $timestamp); // order isn't important at all... just do the same when verifying
+        //20181009 ronald: change hash from MD5 to SHA512
+        //$hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
+        $hash = hash('sha512',$salt . $timestamp); // order isn't important at all... just do the same when verifying
 
         $this->view->download_hash = $hash;
         $this->view->download_timestamp = $timestamp;

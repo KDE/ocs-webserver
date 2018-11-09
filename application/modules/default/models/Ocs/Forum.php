@@ -191,7 +191,7 @@ class Default_Model_Ocs_Forum
      * @param string $uri
      * @param string $uid
      * @param string $method
-     * @param null   $post_param
+     * @param array|null $post_param
      *
      * @return bool|array
      * @throws Zend_Http_Client_Exception
