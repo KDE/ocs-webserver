@@ -444,7 +444,11 @@ class MobileSiteHeader extends React.Component {
           React.createElement("img", { src: this.props.template['header-logo']['image-src'] })
         )
       ),
-      React.createElement("div", { id: "mobile-site-header-menus-container" })
+      React.createElement(
+        "div",
+        { id: "mobile-site-header-menus-container" },
+        mobileMenuDisplay
+      )
     );
   }
 }
