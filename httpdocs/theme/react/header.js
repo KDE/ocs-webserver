@@ -365,6 +365,16 @@ class MobileSiteHeader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.showMobileUserMenu = this.showMobileUserMenu.bind(this);
+    this.showMobileSearchForm = this.showMobileSearchForm.bind(this);
+  }
+
+  showMobileUserMenu() {
+    console.log('show mobile user menu');
+  }
+
+  showMobileSearchForm() {
+    console.log('show mobile search form');
   }
 
   render() {
@@ -373,8 +383,6 @@ class MobileSiteHeader extends React.Component {
       "borderLeftColor": this.props.template['header-nav-tabs']['background-color-active'],
       "borderRightColor": this.props.template['header-nav-tabs']['background-color']
     };
-
-    console.log(switchMenuSeperatorCss);
 
     return React.createElement(
       "section",
@@ -396,13 +404,13 @@ class MobileSiteHeader extends React.Component {
           { id: "switch-menu", style: { "color": this.props.template['header-nav-tabs']['background-color-active'] } },
           React.createElement(
             "a",
-            { id: "user-menu-switch" },
+            { onClick: this.showMobileUserMenu, id: "user-menu-switch" },
             React.createElement("span", { className: "glyphicon glyphicon-search" })
           ),
           React.createElement("span", { id: "switch-menu-seperator", style: switchMenuSeperatorCss }),
           React.createElement(
             "a",
-            { id: "search-menu-switch" },
+            { onClick: this.showMobileSearchForm, id: "search-menu-switch" },
             React.createElement("span", { className: "glyphicon glyphicon-option-horizontal" })
           )
         )

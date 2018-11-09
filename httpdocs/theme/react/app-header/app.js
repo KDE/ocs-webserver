@@ -261,6 +261,16 @@ class MobileSiteHeader extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
+    this.showMobileUserMenu = this.showMobileUserMenu.bind(this);
+    this.showMobileSearchForm = this.showMobileSearchForm.bind(this);
+  }
+
+  showMobileUserMenu(){
+    console.log('show mobile user menu');
+  }
+
+  showMobileSearchForm(){
+    console.log('show mobile search form');
   }
 
   render(){
@@ -269,8 +279,6 @@ class MobileSiteHeader extends React.Component {
       "borderLeftColor":this.props.template['header-nav-tabs']['background-color-active'],
       "borderRightColor":this.props.template['header-nav-tabs']['background-color']
     }
-
-    console.log(switchMenuSeperatorCss);
 
     return(
       <section id="mobile-site-header">
@@ -281,9 +289,9 @@ class MobileSiteHeader extends React.Component {
         </div>
         <div id="mobile-site-header-menus-container">
           <div id="switch-menu" style={{"color":this.props.template['header-nav-tabs']['background-color-active']}}>
-            <a id="user-menu-switch"><span className="glyphicon glyphicon-search"></span></a>
+            <a onClick={this.showMobileUserMenu} id="user-menu-switch"><span className="glyphicon glyphicon-search"></span></a>
             <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
-            <a id="search-menu-switch"><span className="glyphicon glyphicon-option-horizontal"></span></a>
+            <a onClick={this.showMobileSearchForm} id="search-menu-switch"><span className="glyphicon glyphicon-option-horizontal"></span></a>
           </div>
         </div>
       </section>
