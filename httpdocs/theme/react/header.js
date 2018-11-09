@@ -410,24 +410,34 @@ class MobileSiteHeader extends React.Component {
       );
     } else if (this.state.status === "user") {
       mobileMenuDisplay = React.createElement(
-        "p",
-        null,
-        "user ",
+        "div",
+        { id: "mobile-user-menu" },
+        React.createElement(
+          "span",
+          null,
+          "user"
+        ),
+        React.createElement("span", { id: "switch-menu-seperator", style: switchMenuSeperatorCss }),
         React.createElement(
           "a",
           { onClick: this.showMobileSwitchMenu },
-          "X"
+          React.createElement("span", { className: "glyphicon glyphicon-remove" })
         )
       );
     } else if (this.state.status === "search") {
       mobileMenuDisplay = React.createElement(
-        "p",
-        null,
-        "search ",
+        "div",
+        { id: "mobile-search-menu" },
+        React.createElement(
+          "span",
+          null,
+          "search"
+        ),
+        React.createElement("span", { id: "switch-menu-seperator", style: switchMenuSeperatorCss }),
         React.createElement(
           "a",
           { onClick: this.showMobileSwitchMenu },
-          "X"
+          React.createElement("span", { className: "glyphicon glyphicon-remove" })
         )
       );
     }

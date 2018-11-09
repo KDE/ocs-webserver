@@ -298,11 +298,19 @@ class MobileSiteHeader extends React.Component {
       );
     } else if (this.state.status === "user"){
       mobileMenuDisplay = (
-        <p>user <a onClick={this.showMobileSwitchMenu}>X</a></p>
+        <div id="mobile-user-menu">
+          <span>user</span>
+          <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
+          <a onClick={this.showMobileSwitchMenu}><span className="glyphicon glyphicon-remove"></span></a>
+        </div>
       )
     } else if (this.state.status === "search"){
       mobileMenuDisplay = (
-        <p>search <a onClick={this.showMobileSwitchMenu}>X</a></p>
+        <div id="mobile-search-menu">
+          <span>search</span>
+          <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
+          <a onClick={this.showMobileSwitchMenu}><span className="glyphicon glyphicon-remove"></span></a>
+        </div>
       )
     }
 
