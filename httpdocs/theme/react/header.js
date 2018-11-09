@@ -367,14 +367,19 @@ class MobileSiteHeader extends React.Component {
     this.state = {};
     this.showMobileUserMenu = this.showMobileUserMenu.bind(this);
     this.showMobileSearchForm = this.showMobileSearchForm.bind(this);
+    this.showMobileSwitchMenu = this.showMobileSwitchMenu.bind(this);
   }
 
   showMobileUserMenu() {
-    console.log('show mobile user menu');
+    this.setState({ status: "user" });
   }
 
   showMobileSearchForm() {
-    console.log('show mobile search form');
+    this.setState({ status: "search" });
+  }
+
+  showMobileSwitchMenu() {
+    this.setState({ status: "search" });
   }
 
   render() {
@@ -383,6 +388,47 @@ class MobileSiteHeader extends React.Component {
       "borderLeftColor": this.props.template['header-nav-tabs']['background-color-active'],
       "borderRightColor": this.props.template['header-nav-tabs']['background-color']
     };
+
+    let mobileMenuDisplay;
+    if (this.state.status === "switch") {
+      mobileMenuDisplay = React.createElement(
+        "div",
+        { id: "switch-menu", style: { "color": this.props.template['header-nav-tabs']['background-color-active'] } },
+        React.createElement(
+          "a",
+          { onClick: this.showMobileUserMenu, id: "user-menu-switch" },
+          React.createElement("span", { className: "glyphicon glyphicon-search" })
+        ),
+        React.createElement("span", { id: "switch-menu-seperator", style: switchMenuSeperatorCss }),
+        React.createElement(
+          "a",
+          { onClick: this.showMobileSearchForm, id: "search-menu-switch" },
+          React.createElement("span", { className: "glyphicon glyphicon-option-horizontal" })
+        )
+      );
+    } else if (this.state.status === "user") {
+      mobileMenuDisplay = React.createElement(
+        "p",
+        null,
+        "user ",
+        React.createElement(
+          "a",
+          { onClick: this.showMobileSwitchMenu },
+          "X"
+        )
+      );
+    } else if (this.state.status === "search") {
+      mobileMenuDisplay = React.createElement(
+        "p",
+        null,
+        "search ",
+        React.createElement(
+          "a",
+          { onClick: this.showMobileSwitchMenu },
+          "X"
+        )
+      );
+    }
 
     return React.createElement(
       "section",
@@ -396,25 +442,7 @@ class MobileSiteHeader extends React.Component {
           React.createElement("img", { src: this.props.template['header-logo']['image-src'] })
         )
       ),
-      React.createElement(
-        "div",
-        { id: "mobile-site-header-menus-container" },
-        React.createElement(
-          "div",
-          { id: "switch-menu", style: { "color": this.props.template['header-nav-tabs']['background-color-active'] } },
-          React.createElement(
-            "a",
-            { onClick: this.showMobileUserMenu, id: "user-menu-switch" },
-            React.createElement("span", { className: "glyphicon glyphicon-search" })
-          ),
-          React.createElement("span", { id: "switch-menu-seperator", style: switchMenuSeperatorCss }),
-          React.createElement(
-            "a",
-            { onClick: this.showMobileSearchForm, id: "search-menu-switch" },
-            React.createElement("span", { className: "glyphicon glyphicon-option-horizontal" })
-          )
-        )
-      )
+      React.createElement("div", { id: "mobile-site-header-menus-container" })
     );
   }
 }

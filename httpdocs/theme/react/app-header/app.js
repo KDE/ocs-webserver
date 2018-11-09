@@ -263,14 +263,19 @@ class MobileSiteHeader extends React.Component {
   	this.state = {};
     this.showMobileUserMenu = this.showMobileUserMenu.bind(this);
     this.showMobileSearchForm = this.showMobileSearchForm.bind(this);
+    this.showMobileSwitchMenu = this.showMobileSwitchMenu.bind(this);
   }
 
   showMobileUserMenu(){
-    console.log('show mobile user menu');
+    this.setState({status:"user"});
   }
 
   showMobileSearchForm(){
-    console.log('show mobile search form');
+    this.setState({status:"search"});
+  }
+
+  showMobileSwitchMenu(){
+    this.setState({status:"search"});
   }
 
   render(){
@@ -278,6 +283,25 @@ class MobileSiteHeader extends React.Component {
     const switchMenuSeperatorCss = {
       "borderLeftColor":this.props.template['header-nav-tabs']['background-color-active'],
       "borderRightColor":this.props.template['header-nav-tabs']['background-color']
+    }
+
+    let mobileMenuDisplay;
+    if (this.state.status === "switch"){
+      mobileMenuDisplay = (
+        <div id="switch-menu" style={{"color":this.props.template['header-nav-tabs']['background-color-active']}}>
+          <a onClick={this.showMobileUserMenu} id="user-menu-switch"><span className="glyphicon glyphicon-search"></span></a>
+          <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
+          <a onClick={this.showMobileSearchForm} id="search-menu-switch"><span className="glyphicon glyphicon-option-horizontal"></span></a>
+        </div>
+      );
+    } else if (this.state.status === "user"){
+      mobileMenuDisplay = (
+        <p>user <a onClick={this.showMobileSwitchMenu}>X</a></p>
+      )
+    } else if (this.state.status === "search"){
+      mobileMenuDisplay = (
+        <p>search <a onClick={this.showMobileSwitchMenu}>X</a></p>
+      )
     }
 
     return(
@@ -288,11 +312,7 @@ class MobileSiteHeader extends React.Component {
           </a>
         </div>
         <div id="mobile-site-header-menus-container">
-          <div id="switch-menu" style={{"color":this.props.template['header-nav-tabs']['background-color-active']}}>
-            <a onClick={this.showMobileUserMenu} id="user-menu-switch"><span className="glyphicon glyphicon-search"></span></a>
-            <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
-            <a onClick={this.showMobileSearchForm} id="search-menu-switch"><span className="glyphicon glyphicon-option-horizontal"></span></a>
-          </div>
+
         </div>
       </section>
     );
