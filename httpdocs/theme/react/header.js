@@ -48,7 +48,8 @@ class SiteHeader extends React.Component {
       logo: window.json_logoWidth,
       cat_title_left: window.json_cat_title_left,
       tabs_left: window.tabs_left,
-      template: window.json_template
+      template: window.json_template,
+      status: ""
     };
     this.updateDimensions = this.updateDimensions.bind(this);
   }
@@ -81,8 +82,6 @@ class SiteHeader extends React.Component {
   }
 
   render() {
-
-    console.log(this.state.template);
 
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user) {
@@ -163,8 +162,6 @@ class SiteHeader extends React.Component {
         baseUrl: this.state.baseUrl
       });
     }
-
-    console.log(this.state.device);
 
     return React.createElement(
       "section",
@@ -445,12 +442,17 @@ class MobileSiteHeader extends React.Component {
       );
     }
 
+    let logoElementCssClass;
+    if (this.state.status !== "switch") {
+      logoElementCssClass = "mini-version";
+    }
+
     return React.createElement(
       "section",
       { id: "mobile-site-header" },
       React.createElement(
         "div",
-        { id: "mobile-site-header-logo" },
+        { id: "mobile-site-header-logo", className: logoElementCssClass },
         React.createElement(
           "a",
           { href: this.props.logoLink },

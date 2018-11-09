@@ -19,7 +19,8 @@ class SiteHeader extends React.Component {
       logo:window.json_logoWidth,
       cat_title_left:window.json_cat_title_left,
       tabs_left:window.tabs_left,
-      template:window.json_template
+      template:window.json_template,
+      status:""
     };
     this.updateDimensions = this.updateDimensions.bind(this);
   }
@@ -52,8 +53,6 @@ class SiteHeader extends React.Component {
   }
 
   render(){
-
-    console.log(this.state.template);
 
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user){
@@ -126,8 +125,6 @@ class SiteHeader extends React.Component {
         />
       )
     }
-
-    console.log(this.state.device);
 
     return (
       <section id="site-header" style={this.state.template.header}>
@@ -329,9 +326,14 @@ class MobileSiteHeader extends React.Component {
       )
     }
 
+    let logoElementCssClass;
+    if (this.state.status !== "switch"){
+      logoElementCssClass = "mini-version";
+    }
+
     return(
       <section id="mobile-site-header">
-        <div id="mobile-site-header-logo">
+        <div id="mobile-site-header-logo" className={logoElementCssClass}>
           <a href={this.props.logoLink}>
             <img src={this.props.template['header-logo']['image-src']}/>
           </a>
