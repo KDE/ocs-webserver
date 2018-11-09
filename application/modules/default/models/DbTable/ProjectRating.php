@@ -113,6 +113,8 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
      */
     public function rateForProject($projectId, $member_id, $userRating, $msg )
     {        
+        $msg = trim($msg);
+        if(strlen($msg)<1) return;
         $userLikeIt = $userRating == 1 ? 1 : 0;
         $userDislikeIt = $userRating == 2 ? 1 : 0;        
         $sql = 'select rating_id,comment_id from project_rating where project_id='.$projectId.'  and rating_active=1 and user_like='.$userLikeIt.' and user_dislike='.$userDislikeIt.' and member_id='.$member_id;      
