@@ -281,13 +281,13 @@ class MobileSiteHeader extends React.Component {
 
   render(){
 
-    const switchMenuSeperatorCss = {
-      "borderLeftColor":this.props.template['header-nav-tabs']['background-color-active'],
-      "borderRightColor":this.props.template['header-nav-tabs']['background-color']
+    const menuItemCssClass = {
+      "borderColor":this.props.template['header-nav-tabs']['border-color'],
+      "backgroundColor":this.props.template['header-nav-tabs']['background-color']
     }
 
     const closeMenuElementDisplay = (
-      <a onClick={this.showMobileSwitchMenu}>
+      <a style={menuItemCssClass} onClick={this.showMobileSwitchMenu}>
         <span style={{"color":this.props.template['header-nav-tabs']['background-color-active']}} className="glyphicon glyphicon-remove"></span>
       </a>
     );
@@ -295,33 +295,30 @@ class MobileSiteHeader extends React.Component {
     let mobileMenuDisplay;
     if (this.state.status === "switch"){
       mobileMenuDisplay = (
-        <div id="switch-menu" style={{"color":this.props.template['header-nav-tabs']['background-color-active']}}>
-          <a onClick={this.showMobileSearchForm} id="user-menu-switch"><span className="glyphicon glyphicon-search"></span></a>
-          <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
-          <a onClick={this.showMobileUserMenu} id="search-menu-switch"><span className="glyphicon glyphicon-option-horizontal"></span></a>
+        <div id="switch-menu">
+          <a style={menuItemCssClass} onClick={this.showMobileSearchForm} id="user-menu-switch"><span className="glyphicon glyphicon-search"></span></a>
+          <a style={menuItemCssClass} onClick={this.showMobileUserMenu} id="search-menu-switch"><span className="glyphicon glyphicon-option-horizontal"></span></a>
         </div>
       );
     } else if (this.state.status === "user"){
       mobileMenuDisplay = (
-        <div id="mobile-user-menu" style={{"color":this.props.template['header-nav-tabs']['background-color-active']}}>
+        <div id="mobile-user-menu">
           <div className="menu-content-wrapper">
             <MobileUserContainer
               user={this.props.user}
             />
           </div>
-          <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
           {closeMenuElementDisplay}
         </div>
       )
     } else if (this.state.status === "search"){
       mobileMenuDisplay = (
-        <div id="mobile-search-menu" style={{"color":this.props.template['header-nav-tabs']['background-color-active']}}>
+        <div id="mobile-search-menu">
           <div className="menu-content-wrapper">
             <SiteHeaderSearchForm
               baseUrl={this.props.baseUrl}
             />
           </div>
-          <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
           {closeMenuElementDisplay}
         </div>
       )
@@ -331,9 +328,7 @@ class MobileSiteHeader extends React.Component {
     if (this.state.status !== "switch"){
       logoElementCssClass = "mini-version " + this.props.store.name;
     }
-
-    console.log(this.props.store);
-
+    
     return(
       <section id="mobile-site-header">
         <div id="mobile-site-header-logo" className={logoElementCssClass}>
