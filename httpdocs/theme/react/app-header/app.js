@@ -260,7 +260,9 @@ class SiteHeaderUserMenu extends React.Component {
 class MobileSiteHeader extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      status:"switch"
+    };
     this.showMobileUserMenu = this.showMobileUserMenu.bind(this);
     this.showMobileSearchForm = this.showMobileSearchForm.bind(this);
     this.showMobileSwitchMenu = this.showMobileSwitchMenu.bind(this);
