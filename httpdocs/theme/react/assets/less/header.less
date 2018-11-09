@@ -350,12 +350,13 @@ out: ../css/header.css, sourcemap: true, compress: true
 
     #site-header {
       height: 50px !important;
+      padding: 0;
     }
   }
 
   #mobile-site-header {
     height: 50px;
-    padding: 5px 0;
+    padding: 5px;
 
     #mobile-site-header-logo {
       height: 40px;
@@ -368,6 +369,23 @@ out: ../css/header.css, sourcemap: true, compress: true
 
         > img {
           max-height: 100%;
+        }
+      }
+    }
+
+    #mobile-site-header-menus-container {
+      float: right;
+      height: 40px;
+
+      #switch-menu {
+        height: 40px;
+        float: right;
+
+        a {
+          display: block;
+          padding: 0 5px;
+          height: 40px;
+          float: left;
         }
       }
     }
