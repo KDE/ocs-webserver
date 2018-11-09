@@ -116,60 +116,76 @@ class SiteHeader extends React.Component {
       );
     }
 
-    //let HeaderDisplay;
-    // if (this.state.device !== "tablet"){
-    const HeaderDisplay = React.createElement(
-      "section",
-      { id: "site-header-wrapper", style: { "paddingLeft": this.state.template['header-logo']['width'] } },
-      React.createElement(
-        "div",
-        { id: "siter-header-left" },
+    let HeaderDisplay;
+    if (this.state.device !== "tablet") {
+      HeaderDisplay = React.createElement(
+        "section",
+        { id: "site-header-wrapper", style: { "paddingLeft": this.state.template['header-logo']['width'] } },
         React.createElement(
           "div",
-          { id: "site-header-logo-container", style: this.state.template['header-logo'] },
+          { id: "siter-header-left" },
+          React.createElement(
+            "div",
+            { id: "site-header-logo-container", style: this.state.template['header-logo'] },
+            React.createElement(
+              "a",
+              { href: logoLink },
+              React.createElement("img", { src: this.state.template['header-logo']['image-src'] })
+            )
+          ),
+          siteHeaderStoreNameDisplay
+        ),
+        React.createElement(
+          "div",
+          { id: "site-header-right" },
+          React.createElement(
+            "div",
+            { id: "site-header-right-top", className: siteHeaderTopRightCssClass },
+            React.createElement(SiteHeaderSearchForm, {
+              baseUrl: this.state.baseUrl
+            }),
+            userMenuDisplay
+          ),
+          React.createElement(
+            "div",
+            { id: "site-header-right-bottom" },
+            loginMenuDisplay
+          )
+        )
+      );
+    } else {
+      HeaderDisplay = React.createElement(
+        "section",
+        { id: "mobile-site-header" },
+        React.createElement(
+          "div",
+          { id: "mobile-site-header-logo" },
           React.createElement(
             "a",
             { href: logoLink },
             React.createElement("img", { src: this.state.template['header-logo']['image-src'] })
           )
         ),
-        siteHeaderStoreNameDisplay
-      ),
-      React.createElement(
-        "div",
-        { id: "site-header-right" },
         React.createElement(
           "div",
-          { id: "site-header-right-top", className: siteHeaderTopRightCssClass },
-          React.createElement(SiteHeaderSearchForm, {
-            baseUrl: this.state.baseUrl
-          }),
-          userMenuDisplay
-        ),
-        React.createElement(
-          "div",
-          { id: "site-header-right-bottom" },
-          loginMenuDisplay
+          { id: "mobile-site-header-menus-container" },
+          React.createElement(
+            "div",
+            { id: "switch-menu" },
+            React.createElement(
+              "a",
+              { id: "search-menu-switch" },
+              "more"
+            ),
+            React.createElement(
+              "a",
+              { id: "user-menu-switch" },
+              "search"
+            )
+          )
         )
-      )
-    );
-    /*} else {
-      HeaderDisplay = (
-        <section id="mobile-site-header">
-          <div id="mobile-site-header-logo">
-            <a href={logoLink}>
-              <img src={this.state.template['header-logo']['image-src']}/>
-            </a>
-          </div>
-          <div id="mobile-site-header-menus-container">
-            <div id="switch-menu">
-              <a id="search-menu-switch">more</a>
-              <a id="user-menu-switch">search</a>
-            </div>
-          </div>
-        </section>
       );
-    }*/
+    }
 
     return React.createElement(
       "section",
