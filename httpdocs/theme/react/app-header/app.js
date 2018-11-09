@@ -122,6 +122,7 @@ class SiteHeader extends React.Component {
           template={this.state.template}
           user={this.state.user}
           baseUrl={this.state.baseUrl}
+          store={this.state.store}
         />
       )
     }
@@ -328,8 +329,10 @@ class MobileSiteHeader extends React.Component {
 
     let logoElementCssClass;
     if (this.state.status !== "switch"){
-      logoElementCssClass = "mini-version";
+      logoElementCssClass = "mini-version " + this.props.store.name;
     }
+
+    console.log(this.props.store);
 
     return(
       <section id="mobile-site-header">
