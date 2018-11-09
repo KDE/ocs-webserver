@@ -57,14 +57,14 @@ class SiteHeader extends React.Component {
     this.updateDimensions();
   }
 
+  componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener("orientationchange", this.updateDimensions);
+  }
+
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions);
     window.removeEventListener("orientationchange", this.updateDimensions);
-  }
-
-  initMetaHeader() {
-    window.addEventListener("resize", this.updateDimensions);
-    window.addEventListener("orientationchange", this.updateDimensions);
   }
 
   updateDimensions() {
@@ -81,6 +81,8 @@ class SiteHeader extends React.Component {
   }
 
   render() {
+
+    console.log(this.state.template);
 
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user) {
@@ -116,60 +118,52 @@ class SiteHeader extends React.Component {
       );
     }
 
-    //let HeaderDisplay;
-    // if (this.state.device !== "tablet"){
-    const HeaderDisplay = React.createElement(
-      "section",
-      { id: "site-header-wrapper", style: { "paddingLeft": this.state.template['header-logo']['width'] } },
-      React.createElement(
-        "div",
-        { id: "siter-header-left" },
+    let HeaderDisplay;
+    if (this.state.device !== "tablet") {
+      HeaderDisplay = React.createElement(
+        "section",
+        { id: "site-header-wrapper", style: { "paddingLeft": this.state.template['header-logo']['width'] } },
         React.createElement(
           "div",
-          { id: "site-header-logo-container", style: this.state.template['header-logo'] },
+          { id: "siter-header-left" },
           React.createElement(
-            "a",
-            { href: logoLink },
-            React.createElement("img", { src: this.state.template['header-logo']['image-src'] })
+            "div",
+            { id: "site-header-logo-container", style: this.state.template['header-logo'] },
+            React.createElement(
+              "a",
+              { href: logoLink },
+              React.createElement("img", { src: this.state.template['header-logo']['image-src'] })
+            )
+          ),
+          siteHeaderStoreNameDisplay
+        ),
+        React.createElement(
+          "div",
+          { id: "site-header-right" },
+          React.createElement(
+            "div",
+            { id: "site-header-right-top", className: siteHeaderTopRightCssClass },
+            React.createElement(SiteHeaderSearchForm, {
+              baseUrl: this.state.baseUrl
+            }),
+            userMenuDisplay
+          ),
+          React.createElement(
+            "div",
+            { id: "site-header-right-bottom" },
+            loginMenuDisplay
           )
-        ),
-        siteHeaderStoreNameDisplay
-      ),
-      React.createElement(
-        "div",
-        { id: "site-header-right" },
-        React.createElement(
-          "div",
-          { id: "site-header-right-top", className: siteHeaderTopRightCssClass },
-          React.createElement(SiteHeaderSearchForm, {
-            baseUrl: this.state.baseUrl
-          }),
-          userMenuDisplay
-        ),
-        React.createElement(
-          "div",
-          { id: "site-header-right-bottom" },
-          loginMenuDisplay
         )
-      )
-    );
-    /*} else {
-      HeaderDisplay = (
-        <section id="mobile-site-header">
-          <div id="mobile-site-header-logo">
-            <a href={logoLink}>
-              <img src={this.state.template['header-logo']['image-src']}/>
-            </a>
-          </div>
-          <div id="mobile-site-header-menus-container">
-            <div id="switch-menu">
-              <a id="search-menu-switch">more</a>
-              <a id="user-menu-switch">search</a>
-            </div>
-          </div>
-        </section>
       );
-    }*/
+    } else {
+      HeaderDisplay = React.createElement(MobileSiteHeader, {
+        logoLink: logoLink,
+        template: this.state.template,
+        user: this.state.user
+      });
+    }
+
+    console.log(this.state.device);
 
     return React.createElement(
       "section",
@@ -362,6 +356,108 @@ class SiteHeaderUserMenu extends React.Component {
             )
           )
         )
+      )
+    );
+  }
+}
+
+class MobileSiteHeader extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      status: "switch"
+    };
+    this.showMobileUserMenu = this.showMobileUserMenu.bind(this);
+    this.showMobileSearchForm = this.showMobileSearchForm.bind(this);
+    this.showMobileSwitchMenu = this.showMobileSwitchMenu.bind(this);
+  }
+
+  showMobileUserMenu() {
+    this.setState({ status: "user" });
+  }
+
+  showMobileSearchForm() {
+    this.setState({ status: "search" });
+  }
+
+  showMobileSwitchMenu() {
+    this.setState({ status: "switch" });
+  }
+
+  render() {
+
+    const switchMenuSeperatorCss = {
+      "borderLeftColor": this.props.template['header-nav-tabs']['background-color-active'],
+      "borderRightColor": this.props.template['header-nav-tabs']['background-color']
+    };
+
+    let mobileMenuDisplay;
+    if (this.state.status === "switch") {
+      mobileMenuDisplay = React.createElement(
+        "div",
+        { id: "switch-menu", style: { "color": this.props.template['header-nav-tabs']['background-color-active'] } },
+        React.createElement(
+          "a",
+          { onClick: this.showMobileSearchForm, id: "user-menu-switch" },
+          React.createElement("span", { className: "glyphicon glyphicon-search" })
+        ),
+        React.createElement("span", { id: "switch-menu-seperator", style: switchMenuSeperatorCss }),
+        React.createElement(
+          "a",
+          { onClick: this.showMobileUserMenu, id: "search-menu-switch" },
+          React.createElement("span", { className: "glyphicon glyphicon-option-horizontal" })
+        )
+      );
+    } else if (this.state.status === "user") {
+      mobileMenuDisplay = React.createElement(
+        "div",
+        { id: "mobile-user-menu" },
+        React.createElement(
+          "span",
+          null,
+          "user"
+        ),
+        React.createElement("span", { id: "switch-menu-seperator", style: switchMenuSeperatorCss }),
+        React.createElement(
+          "a",
+          { onClick: this.showMobileSwitchMenu },
+          React.createElement("span", { className: "glyphicon glyphicon-remove" })
+        )
+      );
+    } else if (this.state.status === "search") {
+      mobileMenuDisplay = React.createElement(
+        "div",
+        { id: "mobile-search-menu" },
+        React.createElement(
+          "span",
+          null,
+          "search"
+        ),
+        React.createElement("span", { id: "switch-menu-seperator", style: switchMenuSeperatorCss }),
+        React.createElement(
+          "a",
+          { onClick: this.showMobileSwitchMenu },
+          React.createElement("span", { className: "glyphicon glyphicon-remove" })
+        )
+      );
+    }
+
+    return React.createElement(
+      "section",
+      { id: "mobile-site-header" },
+      React.createElement(
+        "div",
+        { id: "mobile-site-header-logo" },
+        React.createElement(
+          "a",
+          { href: this.props.logoLink },
+          React.createElement("img", { src: this.props.template['header-logo']['image-src'] })
+        )
+      ),
+      React.createElement(
+        "div",
+        { id: "mobile-site-header-menus-container" },
+        mobileMenuDisplay
       )
     );
   }

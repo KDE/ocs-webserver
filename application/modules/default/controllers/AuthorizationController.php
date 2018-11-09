@@ -28,11 +28,19 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
     public function githubAction()
     {
+        require_once APPLICATION_LIB . '/Local/CrawlerDetect.php';
+        if (crawlerDetect($_SERVER['HTTP_USER_AGENT'])) {
+            $this->redirect('/', array('code' => 410));
+        }
         $this->forward('login', 'oauth', 'default', array('provider' => 'github', 'redirect' => $this->getParam('redirect')));
     }
 
     public function ocsAction()
     {
+        require_once APPLICATION_LIB . '/Local/CrawlerDetect.php';
+        if (crawlerDetect($_SERVER['HTTP_USER_AGENT'])) {
+            $this->redirect('/', array('code' => 410));
+        }
         $this->forward('login', 'oauth', 'default', array('provider' => 'ocs', 'redirect' => $this->getParam('redirect')));
     }
 

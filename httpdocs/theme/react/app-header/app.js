@@ -28,15 +28,14 @@ class SiteHeader extends React.Component {
     this.updateDimensions();
   }
 
+  componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener("orientationchange",this.updateDimensions);
+  }
+
   componentWillUnmount(){
     window.removeEventListener("resize", this.updateDimensions);
     window.removeEventListener("orientationchange",this.updateDimensions);
-
-  }
-
-  initMetaHeader(){
-    window.addEventListener("resize", this.updateDimensions);
-    window.addEventListener("orientationchange",this.updateDimensions);
   }
 
   updateDimensions(){
@@ -54,6 +53,7 @@ class SiteHeader extends React.Component {
 
   render(){
 
+    console.log(this.state.template);
 
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user){
@@ -80,7 +80,6 @@ class SiteHeader extends React.Component {
       logoLink += "/s/" + this.state.store.name;
     }
 
-
     let siteHeaderStoreNameDisplay;
     if (this.state.is_show_title === "1"){
       siteHeaderStoreNameDisplay = (
@@ -92,9 +91,9 @@ class SiteHeader extends React.Component {
       );
     }
 
-    //let HeaderDisplay;
-    // if (this.state.device !== "tablet"){
-    const  HeaderDisplay = (
+    let HeaderDisplay;
+    if (this.state.device !== "tablet"){
+      HeaderDisplay = (
         <section id="site-header-wrapper" style={{"paddingLeft":this.state.template['header-logo']['width']}}>
           <div id="siter-header-left">
             <div id="site-header-logo-container" style={this.state.template['header-logo']}>
@@ -117,23 +116,17 @@ class SiteHeader extends React.Component {
           </div>
         </section>
       );
-    /*} else {
+    } else {
       HeaderDisplay = (
-        <section id="mobile-site-header">
-          <div id="mobile-site-header-logo">
-            <a href={logoLink}>
-              <img src={this.state.template['header-logo']['image-src']}/>
-            </a>
-          </div>
-          <div id="mobile-site-header-menus-container">
-            <div id="switch-menu">
-              <a id="search-menu-switch">more</a>
-              <a id="user-menu-switch">search</a>
-            </div>
-          </div>
-        </section>
-      );
-    }*/
+        <MobileSiteHeader
+          logoLink={logoLink}
+          template={this.state.template}
+          user={this.state.user}
+        />
+      )
+    }
+
+    console.log(this.state.device);
 
     return (
       <section id="site-header" style={this.state.template.header}>
@@ -261,6 +254,78 @@ class SiteHeaderUserMenu extends React.Component {
         </li>
       </ul>
     )
+  }
+}
+
+class MobileSiteHeader extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {
+      status:"switch"
+    };
+    this.showMobileUserMenu = this.showMobileUserMenu.bind(this);
+    this.showMobileSearchForm = this.showMobileSearchForm.bind(this);
+    this.showMobileSwitchMenu = this.showMobileSwitchMenu.bind(this);
+  }
+
+  showMobileUserMenu(){
+    this.setState({status:"user"});
+  }
+
+  showMobileSearchForm(){
+    this.setState({status:"search"});
+  }
+
+  showMobileSwitchMenu(){
+    this.setState({status:"switch"});
+  }
+
+  render(){
+
+    const switchMenuSeperatorCss = {
+      "borderLeftColor":this.props.template['header-nav-tabs']['background-color-active'],
+      "borderRightColor":this.props.template['header-nav-tabs']['background-color']
+    }
+
+    let mobileMenuDisplay;
+    if (this.state.status === "switch"){
+      mobileMenuDisplay = (
+        <div id="switch-menu" style={{"color":this.props.template['header-nav-tabs']['background-color-active']}}>
+          <a onClick={this.showMobileSearchForm} id="user-menu-switch"><span className="glyphicon glyphicon-search"></span></a>
+          <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
+          <a onClick={this.showMobileUserMenu} id="search-menu-switch"><span className="glyphicon glyphicon-option-horizontal"></span></a>
+        </div>
+      );
+    } else if (this.state.status === "user"){
+      mobileMenuDisplay = (
+        <div id="mobile-user-menu">
+          <span>user</span>
+          <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
+          <a onClick={this.showMobileSwitchMenu}><span className="glyphicon glyphicon-remove"></span></a>
+        </div>
+      )
+    } else if (this.state.status === "search"){
+      mobileMenuDisplay = (
+        <div id="mobile-search-menu">
+          <span>search</span>
+          <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
+          <a onClick={this.showMobileSwitchMenu}><span className="glyphicon glyphicon-remove"></span></a>
+        </div>
+      )
+    }
+
+    return(
+      <section id="mobile-site-header">
+        <div id="mobile-site-header-logo">
+          <a href={this.props.logoLink}>
+            <img src={this.props.template['header-logo']['image-src']}/>
+          </a>
+        </div>
+        <div id="mobile-site-header-menus-container">
+          {mobileMenuDisplay}
+        </div>
+      </section>
+    );
   }
 }
 

@@ -62,10 +62,10 @@ class Default_Plugin_SignOn extends Zend_Controller_Plugin_Abstract
 
         if (isset($token_data['member_id']) AND isset($token_data['auth_result'])) {
             $modelAuth = new Default_Model_Authorization();
-            $authResult = $modelAuth->authenticateUser($token_data['member_id'], null, $token_data['remember_me'],
-                Local_Auth_AdapterFactory::LOGIN_SSO);
+            $authResult = $modelAuth->authenticateUser($token_data['member_id'], null, $token_data['remember_me'],Local_Auth_AdapterFactory::LOGIN_SSO);
             if (false === $authResult->isValid()) {
-                Zend_Registry::get('logger')->warn(__METHOD__ . ' - Sign on with OAuth failed: Can not authenticate user ('
+                Zend_Registry::get('logger')->warn(__METHOD__
+                    . ' - Sign on with OAuth failed: Can not authenticate user ('
                     . $token_data['member_id'] . ',' . $token_id . ')' . implode('; ', $authResult->getMessages()))
                 ;
             }
