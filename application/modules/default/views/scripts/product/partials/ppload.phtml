@@ -221,7 +221,7 @@ $packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
                                     var userid = '<?= $this->member_id?>';
 
                                     var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/download/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
-                                    var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
+                                    var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '" class="opendownloadfile">' + this.name + '</a>';
 
                                     /*
                                     var fileNameBtnLink = this.name;
