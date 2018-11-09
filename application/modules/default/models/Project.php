@@ -1487,6 +1487,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
     }
 
+
     public function fetchAllFeaturedProjectsForMember($member_id, $limit = null, $offset = null)
     {
            // for member me page
@@ -1527,7 +1528,64 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     }
 
 
+    public function fetchDuplatedSourceProjects($orderby='source_url asc',$limit = null, $offset  = null)
+    {
+       $sql = "
+            select source_url,count(1) as cnt,
+            GROUP_CONCAT(p.project_id) pids
+             from project p 
+            where p.source_url is not null 
+              and p.source_url<>'' 
+              and p.status=100
+            group by source_url
+            having count(1)>1           
+       ";
+      if(isset($orderby)){
+              $sql = $sql.'  order by '.$orderby;
+           }
 
-    
+           if (isset($limit)) {
+               $sql .= ' limit ' . (int)$limit;
+           }
+
+           if (isset($offset)) {
+               $sql .= ' offset ' . (int)$offset;
+           }
+       $result = $this->_db->fetchAll($sql);
+       return $result;
+    }
+
+    public function getTotalCountDuplicates()
+    {
+
+      $sql = "
+          select count(1) as cnt from
+          (
+           select source_url,count(1) as cnt,
+           GROUP_CONCAT(p.project_id) pids
+            from project p 
+           where p.source_url is not null 
+             and p.source_url<>'' 
+             and p.status=100
+           group by source_url
+           having count(1)>1  
+          ) a        
+      ";
+       $result = $this->_db->fetchAll($sql);
+      return $result[0]['cnt'];;
+    }
+
+    /**
+     * @param $ids
+     * @return Zend_Db_Table_Row_Abstract
+     * @throws Zend_Db_Statement_Exception
+     */
+    public function fetchProjects($ids)
+    {
+        $sql = "SELECT * FROM stat_projects WHERE project_id in (".$ids.")";
+        $resultSet = $this->_db->fetchAll($sql);        
+        return $this->generateRowSet($resultSet);
+    }
+
 
 }
