@@ -85,6 +85,7 @@ out: ../css/header.css, sourcemap: true, compress: true
           float: left;
           border-radius: 6px;
           box-shadow: none;
+
         }
 
         > a {
@@ -273,6 +274,11 @@ out: ../css/header.css, sourcemap: true, compress: true
   }
 }
 
+/*#mobile-site-header {
+  height: 50px;
+  overflow: hidden;
+}*/
+
 @media (max-width:767px) {
   #site-header {
     height: 180px !important;
@@ -303,7 +309,7 @@ out: ../css/header.css, sourcemap: true, compress: true
         height: 40px;
 
         #site-header-right-top {
-          padding-right: 215px;
+          padding-right: 185px;
           width: 100%;
           padding-left: 10px;
 
@@ -313,6 +319,7 @@ out: ../css/header.css, sourcemap: true, compress: true
 
             input[type="text"]{
               min-width: 100%;
+              font-size: 16px;
             }
           }
 
@@ -334,3 +341,26 @@ out: ../css/header.css, sourcemap: true, compress: true
     }
   }
 }
+
+/*@media (max-width: 610px){
+  #mobile-site-header {
+    height: 50px;
+    overflow: hidden;
+    padding: 5px 0;
+
+    #mobile-site-header-logo {
+      height: 40px;
+      width: auto;
+      float: left;
+
+      > a {
+        width: auto;
+        height: 100%;
+
+        > img {
+          max-height: 100%;
+        }
+      }
+    }
+  }
+}*/

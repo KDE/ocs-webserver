@@ -50,6 +50,34 @@ class SiteHeader extends React.Component {
       tabs_left: window.tabs_left,
       template: window.json_template
     };
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
+
+  componentWillMount() {
+    this.updateDimensions();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
+    window.removeEventListener("orientationchange", this.updateDimensions);
+  }
+
+  initMetaHeader() {
+    window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener("orientationchange", this.updateDimensions);
+  }
+
+  updateDimensions() {
+    const width = window.innerWidth;
+    let device;
+    if (width >= 910) {
+      device = "large";
+    } else if (width < 910 && width >= 610) {
+      device = "mid";
+    } else if (width < 610) {
+      device = "tablet";
+    }
+    this.setState({ device: device });
   }
 
   render() {
@@ -88,44 +116,65 @@ class SiteHeader extends React.Component {
       );
     }
 
-    return React.createElement(
+    //let HeaderDisplay;
+    // if (this.state.device !== "tablet"){
+    const HeaderDisplay = React.createElement(
       "section",
-      { id: "site-header", style: this.state.template.header },
+      { id: "site-header-wrapper", style: { "paddingLeft": this.state.template['header-logo']['width'] } },
       React.createElement(
-        "section",
-        { id: "site-header-wrapper", style: { "paddingLeft": this.state.template['header-logo']['width'] } },
+        "div",
+        { id: "siter-header-left" },
         React.createElement(
           "div",
-          { id: "siter-header-left" },
+          { id: "site-header-logo-container", style: this.state.template['header-logo'] },
           React.createElement(
-            "div",
-            { id: "site-header-logo-container", style: this.state.template['header-logo'] },
-            React.createElement(
-              "a",
-              { href: logoLink },
-              React.createElement("img", { src: this.state.template['header-logo']['image-src'] })
-            )
-          ),
-          siteHeaderStoreNameDisplay
+            "a",
+            { href: logoLink },
+            React.createElement("img", { src: this.state.template['header-logo']['image-src'] })
+          )
+        ),
+        siteHeaderStoreNameDisplay
+      ),
+      React.createElement(
+        "div",
+        { id: "site-header-right" },
+        React.createElement(
+          "div",
+          { id: "site-header-right-top", className: siteHeaderTopRightCssClass },
+          React.createElement(SiteHeaderSearchForm, {
+            baseUrl: this.state.baseUrl
+          }),
+          userMenuDisplay
         ),
         React.createElement(
           "div",
-          { id: "site-header-right" },
-          React.createElement(
-            "div",
-            { id: "site-header-right-top", className: siteHeaderTopRightCssClass },
-            React.createElement(SiteHeaderSearchForm, {
-              baseUrl: this.state.baseUrl
-            }),
-            userMenuDisplay
-          ),
-          React.createElement(
-            "div",
-            { id: "site-header-right-bottom" },
-            loginMenuDisplay
-          )
+          { id: "site-header-right-bottom" },
+          loginMenuDisplay
         )
       )
+    );
+    /*} else {
+      HeaderDisplay = (
+        <section id="mobile-site-header">
+          <div id="mobile-site-header-logo">
+            <a href={logoLink}>
+              <img src={this.state.template['header-logo']['image-src']}/>
+            </a>
+          </div>
+          <div id="mobile-site-header-menus-container">
+            <div id="switch-menu">
+              <a id="search-menu-switch">more</a>
+              <a id="user-menu-switch">search</a>
+            </div>
+          </div>
+        </section>
+      );
+    }*/
+
+    return React.createElement(
+      "section",
+      { id: "site-header", style: this.state.template.header },
+      HeaderDisplay
     );
   }
 }
