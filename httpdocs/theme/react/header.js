@@ -392,7 +392,7 @@ class MobileSiteHeader extends React.Component {
 
     const closeMenuElementDisplay = React.createElement(
       "a",
-      { style: menuItemCssClass, onClick: this.showMobileSwitchMenu },
+      { className: "menu-item", style: menuItemCssClass, onClick: this.showMobileSwitchMenu },
       React.createElement("span", { style: { "color": this.props.template['header-nav-tabs']['background-color-active'] }, className: "glyphicon glyphicon-remove" })
     );
 

@@ -287,7 +287,7 @@ class MobileSiteHeader extends React.Component {
     }
 
     const closeMenuElementDisplay = (
-      <a style={menuItemCssClass} onClick={this.showMobileSwitchMenu}>
+      <a className="menu-item" style={menuItemCssClass} onClick={this.showMobileSwitchMenu}>
         <span style={{"color":this.props.template['header-nav-tabs']['background-color-active']}} className="glyphicon glyphicon-remove"></span>
       </a>
     );
