@@ -80,7 +80,6 @@ class SiteHeader extends React.Component {
       logoLink += "/s/" + this.state.store.name;
     }
 
-
     let siteHeaderStoreNameDisplay;
     if (this.state.is_show_title === "1"){
       siteHeaderStoreNameDisplay = (
@@ -119,20 +118,12 @@ class SiteHeader extends React.Component {
       );
     } else {
       HeaderDisplay = (
-        <section id="mobile-site-header">
-          <div id="mobile-site-header-logo">
-            <a href={logoLink}>
-              <img src={this.state.template['header-logo']['image-src']}/>
-            </a>
-          </div>
-          <div id="mobile-site-header-menus-container">
-            <div id="switch-menu">
-              <a id="user-menu-switch"><span className="glyphicon glyphicon-search"></span></a>
-              <a id="search-menu-switch"><span className="glyphicon glyphicon-option-horizontal"></span></a>
-            </div>
-          </div>
-        </section>
-      );
+        <MobileSiteHeader
+          logoLink={logoLink}
+          template={this.state.template}
+          user={this.state.user}
+        />
+      )
     }
 
     return (
@@ -261,6 +252,31 @@ class SiteHeaderUserMenu extends React.Component {
         </li>
       </ul>
     )
+  }
+}
+
+class MobileSiteHeader extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    return(
+      <section id="mobile-site-header">
+        <div id="mobile-site-header-logo">
+          <a href={this.props.logoLink}>
+            <img src={this.props.template['header-logo']['image-src']}/>
+          </a>
+        </div>
+        <div id="mobile-site-header-menus-container">
+          <div id="switch-menu" style={{"color":this.props.template['header-nav-tabs']['background-color']}}>
+            <a id="user-menu-switch"><span className="glyphicon glyphicon-search"></span></a>
+            <a id="search-menu-switch"><span className="glyphicon glyphicon-option-horizontal"></span></a>
+          </div>
+        </div>
+      </section>
+    );
   }
 }
 

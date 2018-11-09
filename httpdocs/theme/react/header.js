@@ -154,37 +154,11 @@ class SiteHeader extends React.Component {
         )
       );
     } else {
-      HeaderDisplay = React.createElement(
-        "section",
-        { id: "mobile-site-header" },
-        React.createElement(
-          "div",
-          { id: "mobile-site-header-logo" },
-          React.createElement(
-            "a",
-            { href: logoLink },
-            React.createElement("img", { src: this.state.template['header-logo']['image-src'] })
-          )
-        ),
-        React.createElement(
-          "div",
-          { id: "mobile-site-header-menus-container" },
-          React.createElement(
-            "div",
-            { id: "switch-menu" },
-            React.createElement(
-              "a",
-              { id: "user-menu-switch" },
-              React.createElement("span", { className: "glyphicon glyphicon-search" })
-            ),
-            React.createElement(
-              "a",
-              { id: "search-menu-switch" },
-              React.createElement("span", { className: "glyphicon glyphicon-option-horizontal" })
-            )
-          )
-        )
-      );
+      HeaderDisplay = React.createElement(MobileSiteHeader, {
+        logoLink: logoLink,
+        template: this.state.template,
+        user: this.state.user
+      });
     }
 
     return React.createElement(
@@ -376,6 +350,47 @@ class SiteHeaderUserMenu extends React.Component {
               { href: "/logout" },
               "Logout"
             )
+          )
+        )
+      )
+    );
+  }
+}
+
+class MobileSiteHeader extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return React.createElement(
+      "section",
+      { id: "mobile-site-header" },
+      React.createElement(
+        "div",
+        { id: "mobile-site-header-logo" },
+        React.createElement(
+          "a",
+          { href: this.props.logoLink },
+          React.createElement("img", { src: this.props.template['header-logo']['image-src'] })
+        )
+      ),
+      React.createElement(
+        "div",
+        { id: "mobile-site-header-menus-container" },
+        React.createElement(
+          "div",
+          { id: "switch-menu", style: { "color": this.props.template['header-nav-tabs']['background-color'] } },
+          React.createElement(
+            "a",
+            { id: "user-menu-switch" },
+            React.createElement("span", { className: "glyphicon glyphicon-search" })
+          ),
+          React.createElement(
+            "a",
+            { id: "search-menu-switch" },
+            React.createElement("span", { className: "glyphicon glyphicon-option-horizontal" })
           )
         )
       )
