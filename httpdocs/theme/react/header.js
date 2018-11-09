@@ -57,14 +57,14 @@ class SiteHeader extends React.Component {
     this.updateDimensions();
   }
 
+  componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener("orientationchange", this.updateDimensions);
+  }
+
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions);
     window.removeEventListener("orientationchange", this.updateDimensions);
-  }
-
-  initMetaHeader() {
-    window.addEventListener("resize", this.updateDimensions);
-    window.addEventListener("orientationchange", this.updateDimensions);
   }
 
   updateDimensions() {
