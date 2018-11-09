@@ -319,7 +319,6 @@ class MobileSiteHeader extends React.Component {
         <div id="mobile-search-menu">
           <div className="menu-content-wrapper"></div>
           <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
-          <a onClick={this.showMobileSwitchMenu}><span className="glyphicon glyphicon-remove"></span></a>
           {closeMenuElementDisplay}
         </div>
       )
