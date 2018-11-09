@@ -325,7 +325,7 @@ class Statistics_Model_Data
               from dwh.files_downloads_project_daily
               where project_id = :project_id
               order by yyyymmdd desc
-                limit 100
+              limit 1000
         ";
         $result = $this->_db->fetchAll($sql,array("project_id"=>$project_id));        
         return  array_reverse($result);   
