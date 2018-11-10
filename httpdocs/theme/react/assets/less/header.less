@@ -274,10 +274,6 @@ out: ../css/header.css, sourcemap: true, compress: true
   }
 }
 
-#mobile-site-header {
-  height: 50px;
-  overflow: hidden;
-}
 /*
 @media (max-width:767px) {
   #site-header {
@@ -344,9 +340,12 @@ out: ../css/header.css, sourcemap: true, compress: true
 */
 @media (max-width: 610px){
 
+  #mobile-site-header {
+    height: 50px;
+  }
+
   #site-header-container {
     height: 50px;
-    overflow: hidden;
 
     #site-header {
       height: 50px !important;
@@ -513,11 +512,12 @@ out: ../css/header.css, sourcemap: true, compress: true
               }
             }
           }
-          
+
           #site-header-user-menu-container {
             float: right;
             margin-right: 6px;
             margin-left: 6px;
+            margin-top: -5px;
 
             #user-menu-toggle {
               position: relative;
