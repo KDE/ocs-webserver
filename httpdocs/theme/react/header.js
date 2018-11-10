@@ -63,11 +63,6 @@ class SiteHeader extends React.Component {
     window.addEventListener("orientationchange", this.updateDimensions);
   }
 
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.updateDimensions);
-    window.removeEventListener("orientationchange", this.updateDimensions);
-  }
-
   updateDimensions() {
     const width = window.innerWidth;
     let device;
