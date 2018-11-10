@@ -474,11 +474,9 @@ class MobileUserContainer extends React.Component {
 
     let userDisplay;
     if (this.props.user) {
-      userDisplay = React.createElement(
-        "p",
-        null,
-        "user"
-      );
+      userDisplay = React.createElement(SiteHeaderUserMenu, {
+        user: this.props.user
+      });
     } else {
       userDisplay = React.createElement(SiteHeaderLoginMenu, {
         baseUrl: this.props.baseUrl,
