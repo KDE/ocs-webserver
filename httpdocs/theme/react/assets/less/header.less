@@ -470,6 +470,52 @@ out: ../css/header.css, sourcemap: true, compress: true
             }
           }
 
+          #site-header-login-menu {
+            width: 100%;
+            float: left;
+            height: 100%;
+
+            ul {
+              position: absolute;
+              bottom: 0px;
+              display: inline-table;
+              list-style-type: none;
+              margin: 0;
+              padding: 0;
+              z-index: 999;
+              right: 0;
+              width: 175px;
+
+              li {
+                background-color: #609dca;
+                border-color: #a3acfd;
+                border-image: none;
+                border-radius: 5px 5px 0 0;
+                border-style: solid solid none;
+                border-width: 2px 2px 0;
+                height: 24px;
+                line-height: 24px;
+                margin-right: 2px;
+                float: left;
+
+                a {
+                  float: left;
+                  display: block;
+                  height: inherit;
+                  line-height: inherit;
+                  padding: 0 20px;
+                  font-size: 13px;
+                  color: white;
+                }
+
+                &.active {
+                  background: #60bcff none repeat scroll 0 0;
+                }
+              }
+            }
+          }
+
+
         }
       }
     }
