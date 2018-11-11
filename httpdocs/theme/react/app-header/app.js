@@ -118,7 +118,7 @@ class SiteHeader extends React.Component {
           user={this.state.user}
           baseUrl={this.state.baseUrl}
           store={this.state.store}
-          template={this.state.template}
+          redirectString={this.state.redirectString}
         />
       )
     }
@@ -308,6 +308,7 @@ class MobileSiteHeader extends React.Component {
               user={this.props.user}
               baseUrl={this.props.baseUrl}
               template={this.props.template}
+              redirectString={this.props.redirectString}
             />
           </div>
           {closeMenuElementDisplay}
