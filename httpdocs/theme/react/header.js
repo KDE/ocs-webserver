@@ -481,7 +481,8 @@ class MobileUserContainer extends React.Component {
     } else {
       userDisplay = React.createElement(SiteHeaderLoginMenu, {
         baseUrl: this.props.baseUrl,
-        template: this.props.template
+        template: this.props.template,
+        redirectString: this.props.redirectString
       });
     }
 

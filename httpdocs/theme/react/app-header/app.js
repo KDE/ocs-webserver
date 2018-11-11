@@ -367,6 +367,7 @@ class MobileUserContainer extends React.Component {
         <SiteHeaderLoginMenu
           baseUrl={this.props.baseUrl}
           template={this.props.template}
+          redirectString={this.props.redirectString}
         />
       );
     }
