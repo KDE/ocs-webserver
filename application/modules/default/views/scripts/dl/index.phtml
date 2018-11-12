@@ -144,7 +144,14 @@
                     <div class="" style="margin-top:0px;margin-bottom:15px;">
                         
                         <div class="" style="width:90%">
+                            <?php 
+                                    $identity = Zend_Auth::getInstance()->getIdentity();
+                                    if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
+                            ?>
                             <h3>Please consider to become a <a href="/support" target="_TOP">supporter</a> to help the site grow.</h3>
+                            <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
+                                <h3>Thank you for your support!</h3>
+                            <?php   }?>
                             <br/><br/>
                             <?php
                             if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
