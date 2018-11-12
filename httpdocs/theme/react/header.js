@@ -63,11 +63,6 @@ class SiteHeader extends React.Component {
     window.addEventListener("orientationchange", this.updateDimensions);
   }
 
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.updateDimensions);
-    window.removeEventListener("orientationchange", this.updateDimensions);
-  }
-
   updateDimensions() {
     const width = window.innerWidth;
     let device;
@@ -160,7 +155,8 @@ class SiteHeader extends React.Component {
         template: this.state.template,
         user: this.state.user,
         baseUrl: this.state.baseUrl,
-        store: this.state.store
+        store: this.state.store,
+        redirectString: this.state.redirectString
       });
     }
 
@@ -385,52 +381,53 @@ class MobileSiteHeader extends React.Component {
 
   render() {
 
-    const switchMenuSeperatorCss = {
-      "borderLeftColor": this.props.template['header-nav-tabs']['background-color-active'],
-      "borderRightColor": this.props.template['header-nav-tabs']['background-color']
+    const menuItemCssClass = {
+      "borderColor": this.props.template['header-nav-tabs']['border-color'],
+      "backgroundColor": this.props.template['header-nav-tabs']['background-color']
     };
 
     const closeMenuElementDisplay = React.createElement(
       "a",
-      { onClick: this.showMobileSwitchMenu },
-      React.createElement("span", { style: { "color": this.props.template['header-nav-tabs']['background-color-active'] }, className: "glyphicon glyphicon-remove" })
+      { className: "menu-item", onClick: this.showMobileSwitchMenu },
+      React.createElement("span", { className: "glyphicon glyphicon-remove" })
     );
 
     let mobileMenuDisplay;
     if (this.state.status === "switch") {
       mobileMenuDisplay = React.createElement(
         "div",
-        { id: "switch-menu", style: { "color": this.props.template['header-nav-tabs']['background-color-active'] } },
+        { id: "switch-menu" },
         React.createElement(
           "a",
-          { onClick: this.showMobileSearchForm, id: "user-menu-switch" },
+          { className: "menu-item", onClick: this.showMobileSearchForm, id: "user-menu-switch" },
           React.createElement("span", { className: "glyphicon glyphicon-search" })
         ),
-        React.createElement("span", { id: "switch-menu-seperator", style: switchMenuSeperatorCss }),
         React.createElement(
           "a",
-          { onClick: this.showMobileUserMenu, id: "search-menu-switch" },
+          { className: "menu-item", onClick: this.showMobileUserMenu, id: "search-menu-switch" },
           React.createElement("span", { className: "glyphicon glyphicon-option-horizontal" })
         )
       );
     } else if (this.state.status === "user") {
       mobileMenuDisplay = React.createElement(
         "div",
-        { id: "mobile-user-menu", style: { "color": this.props.template['header-nav-tabs']['background-color-active'] } },
+        { id: "mobile-user-menu" },
         React.createElement(
           "div",
           { className: "menu-content-wrapper" },
           React.createElement(MobileUserContainer, {
-            user: this.props.user
+            user: this.props.user,
+            baseUrl: this.props.baseUrl,
+            template: this.props.template,
+            redirectString: this.props.redirectString
           })
         ),
-        React.createElement("span", { id: "switch-menu-seperator", style: switchMenuSeperatorCss }),
         closeMenuElementDisplay
       );
     } else if (this.state.status === "search") {
       mobileMenuDisplay = React.createElement(
         "div",
-        { id: "mobile-search-menu", style: { "color": this.props.template['header-nav-tabs']['background-color-active'] } },
+        { id: "mobile-search-menu" },
         React.createElement(
           "div",
           { className: "menu-content-wrapper" },
@@ -438,7 +435,6 @@ class MobileSiteHeader extends React.Component {
             baseUrl: this.props.baseUrl
           })
         ),
-        React.createElement("span", { id: "switch-menu-seperator", style: switchMenuSeperatorCss }),
         closeMenuElementDisplay
       );
     }
@@ -447,8 +443,6 @@ class MobileSiteHeader extends React.Component {
     if (this.state.status !== "switch") {
       logoElementCssClass = "mini-version " + this.props.store.name;
     }
-
-    console.log(this.props.store);
 
     return React.createElement(
       "section",
@@ -481,17 +475,15 @@ class MobileUserContainer extends React.Component {
 
     let userDisplay;
     if (this.props.user) {
-      userDisplay = React.createElement(
-        "p",
-        null,
-        "user"
-      );
+      userDisplay = React.createElement(SiteHeaderUserMenu, {
+        user: this.props.user
+      });
     } else {
-      userDisplay = React.createElement(
-        "p",
-        null,
-        "no user"
-      );
+      userDisplay = React.createElement(SiteHeaderLoginMenu, {
+        baseUrl: this.props.baseUrl,
+        template: this.props.template,
+        redirectString: this.props.redirectString
+      });
     }
 
     return React.createElement(
