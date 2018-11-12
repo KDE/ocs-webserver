@@ -30,7 +30,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
     {
         require_once APPLICATION_LIB . '/Local/CrawlerDetect.php';
         if (crawlerDetect($_SERVER['HTTP_USER_AGENT'])) {
-            $this->redirect('/', array('code' => 410));
+            $this->redirect('/', array('code' => 404));
         }
         $this->forward('login', 'oauth', 'default', array('provider' => 'github', 'redirect' => $this->getParam('redirect')));
     }
@@ -39,7 +39,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
     {
         require_once APPLICATION_LIB . '/Local/CrawlerDetect.php';
         if (crawlerDetect($_SERVER['HTTP_USER_AGENT'])) {
-            $this->redirect('/', array('code' => 410));
+            $this->redirect('/', array('code' => 404));
         }
         $this->forward('login', 'oauth', 'default', array('provider' => 'ocs', 'redirect' => $this->getParam('redirect')));
     }

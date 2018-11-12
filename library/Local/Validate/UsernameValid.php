@@ -58,7 +58,7 @@ class Local_Validate_UsernameValid extends Zend_Validate_Abstract
      */
     private function isUsernameValid($username, $context)
     {
-        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/');
+        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,20}$)(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/');
 
         if (false == $usernameValidChars->isValid($username)) {
             $this->setMessages($usernameValidChars->getMessages());
