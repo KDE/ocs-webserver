@@ -815,20 +815,12 @@ class UserLoginMenuContainer extends React.Component {
             React.createElement(
               "a",
               { href: this.props.baseUrl + "/settings/", className: "btn btn-default btn-metaheader" },
-              React.createElement(
-                "span",
-                null,
-                "Settings"
-              )
+              "Settings"
             ),
             React.createElement(
               "a",
               { href: this.props.logoutUrl, className: "btn btn-default pull-right btn-metaheader" },
-              React.createElement(
-                "span",
-                null,
-                "Logout"
-              )
+              "Logout"
             )
           )
         )

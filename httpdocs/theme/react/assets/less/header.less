@@ -274,6 +274,10 @@ out: ../css/header.css, sourcemap: true, compress: true
   }
 }
 
+#mobile-site-header {
+  height: 50px;
+  overflow: hidden;
+}
 /*
 @media (max-width:767px) {
   #site-header {
@@ -340,12 +344,9 @@ out: ../css/header.css, sourcemap: true, compress: true
 */
 @media (max-width: 610px){
 
-  #mobile-site-header {
-    height: 50px;
-  }
-
   #site-header-container {
     height: 50px;
+    overflow: hidden;
 
     #site-header {
       height: 50px !important;
@@ -357,7 +358,6 @@ out: ../css/header.css, sourcemap: true, compress: true
   #mobile-site-header {
     height: 50px;
     padding: 5px;
-    padding-right: 10px;
 
     #mobile-site-header-logo {
       height: 40px;
@@ -380,6 +380,7 @@ out: ../css/header.css, sourcemap: true, compress: true
         &.Android {
           width: 24px;
           height: 27px;
+          margin-top: 5px; 
         }
       }
     }
@@ -392,33 +393,20 @@ out: ../css/header.css, sourcemap: true, compress: true
       #mobile-user-menu,
       #mobile-search-menu {
         height: 40px;
-        padding: 5px;
         float: right;
-        padding-right: 3px;
 
-        .menu-item {
+        a {
           display: block;
-          height: 30px;
-          width: 30px;
-          position: relative;
-          line-height: 30px;
+          padding: 0 5px;
+          height: 40px;
+          line-height: 40px;
           float: left;
-          color: white;
+          color: inherit !important;
           cursor: pointer;
-          border: 2px solid;
-          border-radius: 5px;
 
           > span {
-            color: white;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            margin: -6px 0 0 -7px;
+            color: inherit !important;
           }
-        }
-
-        .menu-item + .menu-item {
-          margin-left: 5px;
         }
 
         #switch-menu-seperator {
@@ -428,30 +416,28 @@ out: ../css/header.css, sourcemap: true, compress: true
           border-right: 1px solid black;
           border-left: 1px solid black;
           margin: 10px;
-          display: none;
         }
 
         .menu-content-wrapper {
           float: left;
-          height: 30px;
-          line-height: 30px;
+          height: 40px;
+          line-height: 40px;
           padding: 0 5px;
 
           #site-header-search-form {
-            width: 240px;
+            width: 220px;
           }
 
           #search-form {
-            height: 27px;
+            height: 25px;
             padding: 0;
-            margin: 1.5px 0;
-            line-height: 27px;
+            margin: 6.5px 0;
+            line-height: 25px;
             position: relative;
-            margin-right: 60px;
 
             input[type="text"]{
               width: 100%;
-              height: 27px;
+              height: 25px;
               padding: 0;
               border: 1px solid #fff;
               margin-bottom: -1px;
@@ -459,7 +445,7 @@ out: ../css/header.css, sourcemap: true, compress: true
               text-indent: 5px;
               color: #6a7686;
               float: left;
-              border-radius: 5px;
+              border-radius: 6px;
               box-shadow: none;
               font-size: 16px;
             }
@@ -474,170 +460,6 @@ out: ../css/header.css, sourcemap: true, compress: true
               background-position: center center;
               position: absolute;
               cursor: pointer;
-            }
-          }
-
-          #site-header-login-menu {
-            width: 100%;
-            float: left;
-            height: 100%;
-
-            ul {
-              position: relative;
-              bottom: 0;
-              display: inline-table;
-              list-style-type: none;
-              margin: 0;
-              padding: 0;
-              z-index: 999;
-              right: 0;
-              width: 185px;
-
-              li {
-                border-image: none;
-                border-radius: 5px;
-                border-style: solid;
-                border-width: 2px;
-                height: 30px;
-                line-height: 26px;
-                margin-right: 5px;
-                float: left;
-
-                a {
-                  float: left;
-                  display: block;
-                  height: inherit;
-                  line-height: inherit;
-                  padding: 0 20px;
-                  font-size: 13px;
-                  color: white;
-                }
-
-                &.active {
-                  background: #60bcff none repeat scroll 0 0;
-                }
-              }
-            }
-          }
-
-          #site-header-user-menu-container {
-            float: right;
-            margin-right: 6px;
-            margin-left: 6px;
-            margin-top: -5px;
-
-            #user-menu-toggle {
-              position: relative;
-              height: 40px;
-              float: right;
-              cursor: pointer;
-              line-height: 40px;
-
-              a.profile-menu-toggle {
-                display: block;
-                width: 100%;
-                height: 100%;
-                padding-left: 50px;
-                padding-right: 15px;
-              }
-
-              img {
-                position: absolute;
-                top: 5px;
-                left: 10px;
-                height: 30px;
-                width: 30px;
-                border-radius: 100%;
-              }
-
-              span {
-                color:white;
-              }
-
-              &:hover {
-                span {
-                  color: black;
-                }
-              }
-
-              ul {
-                display: none;
-                width: 165px;
-                margin-left: 0;
-                position: absolute;
-                top: 40px;
-                border: none;
-                font-size: 14px;
-                color: #7f8c8d;
-                font-weight: 400;
-                padding: 0;
-                z-index: 10000;
-                -webkit-border-radius: 5px;
-                -moz-border-radius: 5px;
-                border-radius: 5px;
-                -webkit-background-clip: padding-box;
-                -moz-background-clip: padding;
-                background-clip: padding-box;
-
-                .dropdown-header {
-                    display: block;
-                    padding: 3px 20px;
-                    font-size: 12px;
-                    line-height: 1.42857143;
-                    color: #777;
-                    white-space: nowrap;
-                    width: 175px;
-                    height: 12px;
-                    background-image: url(../img/bg_sheet.png);
-                    background-position: -385px 0;
-                }
-
-                li {
-                  text-align: left;
-                  display: block;
-                  width: 100%;
-                  background: #ecf0f1;
-                  margin: 0;
-                  padding: 0;
-                  height: 40px;
-                  border-bottom: 1px solid #d6d7d9;
-
-                  &:first-of-type {
-                    -webkit-border-radius: 5px 5px 0 0;
-                    -moz-border-radius: 5px 5px 0 0;
-                    border-radius: 5px 5px 0 0;
-                    -webkit-background-clip: padding-box;
-                    -moz-background-clip: padding;
-                    background-clip: padding-box;
-                  }
-
-                  &:last-of-type {
-                    -webkit-border-radius: 0 0 5px 5px;
-                    -moz-border-radius: 0 0 5px 5px;
-                    border-radius: 0 0 5px 5px;
-                    -webkit-background-clip: padding-box;
-                    -moz-background-clip: padding;
-                    background-clip: padding-box;
-                  }
-
-                  a {
-                    float: left;
-                    display: block;
-                    padding: 0 20px;
-                    color: #6a7686;
-                    text-align: left;
-                    height: 40px;
-                    line-height: 40px;
-                    width: 100%;
-                  }
-                }
-              }
-
-              &.open {
-                ul {
-                  display: block;
-                }
-              }
             }
           }
 
