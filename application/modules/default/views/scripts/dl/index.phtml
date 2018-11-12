@@ -82,7 +82,7 @@
                             <?php   }?>
                             <br/><br/>
                             <?php
-                            if ($_SERVER['REQUEST_METHOD'] == 'POST' || (null != $identity && $this->isSupporter($identity->member_id))) { 
+                            if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
                                 echo '<a href="'.$this->url.'">Please click here</a>';
                                 echo '<script>document.location.href = "'.$this->url.'";</script>';
                             } else {
