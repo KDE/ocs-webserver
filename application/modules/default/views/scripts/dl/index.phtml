@@ -113,11 +113,10 @@
 
         button{
                 border: none;
-            border-radius: 1.5em;
+            border-radius: 0.3em;
             color: #FFF;
             background: #000000;
             padding: 2.5px 10px;
-            width: 75px;
             height: 30px;
             cursor: pointer;
             transition: background .5s ease-in-out;
@@ -138,7 +137,7 @@
 <body>
     <main id="ads-page">   
         <center>
-            <div style="height: 500px; width: 400px">            
+            <div style="height: 200px; width: 300px">            
                 <div class="">
                     <div class="" style="margin-top:0px;margin-bottom:15px;">
                         
@@ -146,9 +145,10 @@
                             
                             <form id="Form1" name="Form1" action="" method="POST">
                             <?php
-                            if (empty($_POST) === false) {
+                            if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
 
                                 echo '<script>document.location.href = "'.$this->url.'";</script>';
+                                echo '<a href="'.$this->url.'">Please click here</a>';
 
                             } else {
                             ?>
