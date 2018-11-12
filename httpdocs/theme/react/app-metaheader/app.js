@@ -584,11 +584,11 @@ class UserLoginMenuContainer extends React.Component {
               </div>
             </li>
             <li className="buttons">
-              <a href={this.props.baseUrl + "/settings/"} className="btn btn-default btn-metaheader">Settings</a>
-              <a href={this.props.logoutUrl} className="btn btn-default pull-right btn-metaheader">Logout</a>
+              <a href={this.props.baseUrl + "/settings/"} className="btn btn-default btn-metaheader"><span>Settings</span></a>
+              <a href={this.props.logoutUrl} className="btn btn-default pull-right btn-metaheader"><span>Logout</span></a>
             </li>
           </ul>
-        </div>
+        </div> 
       </li>
     )
   }
