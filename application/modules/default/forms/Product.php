@@ -476,11 +476,27 @@ class Default_Form_Product extends Zend_Form
 
             $auth = Zend_Auth::getInstance();
             $user = $auth->getStorage()->read();
-            $gitUser = $gitlab->getUserWithName($user->username);
-
-            if ($gitUser && null != $gitUser) {
+            $memberTable = new Default_Model_Member();
+            $member = $memberTable->fetchMemberData($user->member_id);
+            $gitlab_user_id = null;
+            if(!empty($member->gitlab_user_id)) {
+                //get gitlab user id from db
+                $gitlab_user_id = $member->gitlab_user_id;
+            } else {
+                //get gitlab user id from gitlab API and save in DB
+                $gitUser = $gitlab->getUserWithName($user->username);
+                
+                if ($gitUser && null != $gitUser) {
+                    $gitlab_user_id = $gitUser['id'];
+                    $memberUpdate = $memberTable->find($user->member_id)->current();
+                    $memberUpdate->gitlab_user_id = $gitlab_user_id;
+                    $memberUpdate->update();
+                }
+            }
+            
+            if ($gitlab_user_id && null != $gitlab_user_id) {
                 //now get his projects
-                $gitProjects = $gitlab->getUserProjects($gitUser['id']);
+                $gitProjects = $gitlab->getUserProjects($gitlab_user_id);
 
                 foreach ($gitProjects as $proj) {
                     $optionArray[$proj['id']] = $proj['name'];
