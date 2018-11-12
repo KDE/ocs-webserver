@@ -1883,12 +1883,14 @@ $this->inlineScript()->appendScript('
                         $('#gitlab_project_id').attr('class','required form-control gitlab_project_id');
                         $('#gitlab_project_id').prop('disabled', false);
                         $('#show_gitlab_project_issues').prop('disabled', false);
+                        $('#use_gitlab_project_readme').prop('disabled', false);
                     } else {
                         //$('#gitlab_project_id').disable();
                         $('#gitlab_project_id').val([]);
                         $('#gitlab_project_id').removeClass('required');
                         $('#gitlab_project_id').prop('disabled', true);
                         $('#show_gitlab_project_issues').prop('disabled', true);
+                        $('#use_gitlab_project_readme').prop('disabled', true);
                     }
                 });
                 
