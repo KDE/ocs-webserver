@@ -69,5 +69,26 @@ class Default_Model_DbTable_MemberExternalId extends Local_Model_Table
         $id = $result[0]['external_id'];
         return $id;
     }
+    
+    /**
+     * @param int   $project_id
+     * @param array $values
+     *
+     * @return Zend_Db_Table_Row_Abstract
+     * @throws Exception
+     * @throws Zend_Db_Table_Exception
+     */
+    public function update($member_external_id, $values)
+    {
+        $values = (array)$values;
+        $memberData = $this->find($member_external_id)->current();
+        if (empty($memberData)) {
+            throw new Zend_Db_Table_Exception('member not found');
+        }
+
+        $memberData->setFromArray($values)->save();
+
+        return $memberData;
+    }
 
 }
