@@ -19,12 +19,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-## reCAPTCHA V3 key define ##
-#client-side
-define('RECAPTCHA_SITE_KEY',  Zend_Registry::get('config')->recaptcha->sitekey); // define here reCAPTCHA_site_key
-#server-side
-define('RECAPTCHA_SECRET_KEY',Zend_Registry::get('config')->recaptcha->secretkey); // define here reCAPTCHA_secret_key
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -38,37 +32,18 @@ define('RECAPTCHA_SECRET_KEY',Zend_Registry::get('config')->recaptcha->secretkey
             <div style="height: 500px; width: 400px">            
                 <?php
                 
-                class Captcha{
-                    public function getCaptcha($SecretKey){
-                        $Resposta=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".RECAPTCHA_SECRET_KEY."&response={$SecretKey}");
-                        $Retorno=json_decode($Resposta);
-                        return $Retorno;
-                    }
-                }
+                $errors = array();
 
                 if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
 
-                 //echo "<pre>"; print_r($_REQUEST); echo "</pre>";
+                    if (empty($errors) === true) {
 
-                 $ObjCaptcha = new Captcha();
-                 $Retorno = $ObjCaptcha->getCaptcha($_POST['g-recaptcha-response']); 
-
-                 //echo "<pre>"; print_r($Retorno); echo "</pre>";
-
-                 if($Retorno->success){
-                  //echo '<p style="color: #0a860a;">CAPTCHA was completed successfully!</p>';
-                  
-                  if($this->link_type == 'download') {
-                    echo 'If your download did not start please click <a href="'.$this->url.'">here</a>.';
-                  } else {
-                      echo 'If your installation did not start please click <a href="'.$this->url.'">here</a>.';
-                  }
-                  
-                  echo '<script>document.location.href = "'.$this->url.'";</script>';
-                  
-                 //} else {
-                 //    echo $Retorno->error->codes[0];
-                 }
+                        if (empty($_POST['captcha_entered'])) {
+                            $errors[] = '<p class = "input-error">Please answer the Captcha Question</p>';
+                        } elseif ($_REQUEST['captcha_entered']!=$_SESSION['rand_code']) {
+                            $errors[] = '<p class = "input-error">Your answer to the Math Question is incorrect.</p>';
+                        }
+                    }   
                 }
                 ?>
 
@@ -78,7 +53,21 @@ define('RECAPTCHA_SECRET_KEY',Zend_Registry::get('config')->recaptcha->secretkey
                         <div class="" style="width:90%">
                             
                             <form id="Form1" name="Form1" action="" method="POST">
-                             <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>   
+                            <?php
+                            if (empty($_POST) === false && empty($errors) === true) {
+
+                                echo '<script>document.location.href = "'.$this->url.'";</script>';
+
+                            } else if (empty($errors) === false) {
+
+                                echo output_errors($errors);
+                            }
+                            ?>
+                             <p>
+                                <img src="captcha.php" />
+                                <input name="captcha_entered" style = "width: 100px !important;" type="text" id="captcha_entered" size="5" maxlength="2" placeholder = "Answer" />
+                                <input type="hidden" name="captcha_total" id="captcha_total" value="<?php echo $_SESSION['rand_code']; ?>" />
+                            </p>
                              <?php if($this->link_type == 'download') { ?>
                              <input type="submit" value="Start Download">
                              <?php } else { ?>
