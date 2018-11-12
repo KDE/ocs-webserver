@@ -490,9 +490,7 @@ class Default_Form_Product extends Zend_Form
                     $gitlab_user_id = $gitUser['id'];
                     $memberTableExternal = new Default_Model_DbTable_MemberExternalId();
                     $memberUpdate = $memberTableExternal->fetchAll('member_id = '.$user->member_id)->current();
-                    $updateArray = array();
-                    $updateArray['gitlab_user_id'] = $gitlab_user_id;
-                    $memberTableExternal->update($memberUpdate->external_id, $updateArray);
+                    $memberTableExternal->updateGitlabUserId($memberUpdate->external_id, $gitlab_user_id);
                 }
             }
             
