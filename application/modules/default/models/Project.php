@@ -1532,7 +1532,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     {
        $sql = "
             select source_url,count(1) as cnt,
-            GROUP_CONCAT(p.project_id) pids
+            GROUP_CONCAT(p.project_id ORDER BY p.created_at) pids
              from project p 
             where p.source_url is not null 
               and p.source_url<>'' 
@@ -1575,6 +1575,41 @@ class Default_Model_Project extends Default_Model_DbTable_Project
       return $result[0]['cnt'];;
     }
 
+    public function getCountSourceUrl($source_url)
+    {
+
+      $sql = "
+            select count(1) as cnt from 
+            stat_projects p  
+            where p.source_url= :source_url and p.status = 100        
+      ";
+       $result = $this->_db->fetchAll($sql,array('source_url' => $source_url));
+      return $result[0]['cnt'];
+    }
+
+    public function getCountProjectsDuplicateSourceurl($member_id)
+    {
+
+      $sql = "
+           select sum(cnt) as cnt
+           from
+           (
+              select distinct p.source_url
+              ,(select count(1) from stat_projects pp where pp.status=100 and pp.source_url=p.source_url) cnt 
+              from stat_projects p 
+              where p.member_id = :member_id 
+              and p.status=100 
+              and p.source_url<>'' 
+              and p.source_url is not null
+           )t where t.cnt>1
+      ";
+       $result = $this->_db->fetchAll($sql,array('member_id' => $member_id));
+       return $result[0]['cnt'];
+    }
+
+
+    
+
     /**
      * @param $ids
      * @return Zend_Db_Table_Row_Abstract
@@ -1582,9 +1617,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function fetchProjects($ids)
     {
-        $sql = "SELECT * FROM stat_projects WHERE project_id in (".$ids.")";
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - ===================================' );
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . $sql);
+        $sql = "SELECT * FROM stat_projects WHERE project_id in (".$ids.")";       
         $resultSet = $this->_db->fetchAll($sql);        
         return $this->generateRowSet($resultSet);
     }
