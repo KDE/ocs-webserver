@@ -492,7 +492,7 @@ class Default_Form_Product extends Zend_Form
                     $memberUpdate = $memberTableExternal->fetchAll('member_id = '.$user->member_id)->current();
                     $updateArray = array();
                     $updateArray['gitlab_user_id'] = $gitlab_user_id;
-                    $memberTableExternal->update($memberUpdate->member_external_id, $updateArray);
+                    $memberTableExternal->update($memberUpdate->external_id, $updateArray);
                 }
             }
             
