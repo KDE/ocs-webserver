@@ -94,7 +94,7 @@ class Default_Model_DbTable_MemberExternalId extends Local_Model_Table
     public function updateGitlabUserId($member_id, $gitlab_user_id)
     {
         $sql = "
-                      update member set gitlab_user_id = :gitlab_user_id where member_id = :member_id
+                      update member_external_id set gitlab_user_id = :gitlab_user_id where member_id = :member_id
                    ";
         $this->getAdapter()->query($sql, array('gitlab_user_id'=>$gitlab_user_id,'member_id'=>$member_id));              
     }
