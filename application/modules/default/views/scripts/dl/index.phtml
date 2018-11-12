@@ -19,71 +19,155 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-## reCAPTCHA V3 key define ##
-#client-side
-define('RECAPTCHA_SITE_KEY',  Zend_Registry::get('config')->recaptcha->sitekey); // define here reCAPTCHA_site_key
-#server-side
-define('RECAPTCHA_SECRET_KEY',Zend_Registry::get('config')->recaptcha->secretkey); // define here reCAPTCHA_secret_key
-
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Download/Install</title>
-    <script src='https://www.google.com/recaptcha/api.js'></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="captcha.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <script>
+        var total;
+
+        function getRandom(){return Math.ceil(Math.random()* 20);}
+        function createSum(){
+                        var randomNum1 = getRandom(),
+                                randomNum2 = getRandom();
+                total =randomNum1 + randomNum2;
+          $( "#question" ).text( randomNum1 + " + " + randomNum2 + "=" );  
+          $("#ans").val('');
+          checkInput();
+        }
+
+        function checkInput(){
+                        var input = $("#ans").val(), 
+                slideSpeed = 200,
+              hasInput = !!input, 
+              valid = hasInput && input == total;
+            $('#message').toggle(!hasInput);
+            $('button[type=submit]').prop('disabled', !valid);  
+            $('#success').toggle(valid);
+            $('#fail').toggle(hasInput && !valid);
+        }
+
+        $(document).ready(function(){
+                //create initial sum
+                createSum();
+                // On "reset button" click, generate new random sum
+                $('button[type=reset]').click(createSum);
+                // On user input, check value
+                $( "#ans" ).keyup(checkInput);
+        });
+    </script>
+    <style>
+        
+        *{
+                padding: 0;
+                margin: 0;
+        }
+
+        html, body{
+                font-family: 'Open Sans';
+                font-weight: lighter;
+                font-size: 12px;
+                width: 100%;
+                height: 100%;
+        }
+
+        #success, #fail{
+                display: none;
+
+        }
+
+        #message, #success, #fail{
+                margin-top: 10px;
+                margin-bottom: 10px;
+        }
+
+        .container{
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+        }
+
+        p{
+                display: inline;
+                margin-right: 5px;
+        }
+
+        input, button{
+                font-family: 'Open Sans';
+                font-weight: lighter;
+                font-size: 12px;
+        }
+
+        input{
+                border: 1px solid #000000;
+                width: 30px;
+                height: 20px;
+                text-align: center;
+        }
+
+        button{
+                border: none;
+            border-radius: 0.3em;
+            color: #FFF;
+            background: #000000;
+            padding: 2.5px 10px;
+            height: 30px;
+            cursor: pointer;
+            transition: background .5s ease-in-out;
+        }
+
+        button:hover:enabled{
+                background: #303030;
+        }
+
+        button:disabled{
+                opacity: .5;
+                cursor: default;
+        }
+        
+    </style>
+    
 </head>
 <body>
     <main id="ads-page">   
         <center>
-            <div style="height: 500px; width: 400px">            
-                <?php
-                
-                class Captcha{
-                    public function getCaptcha($SecretKey){
-                        $Resposta=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".RECAPTCHA_SECRET_KEY."&response={$SecretKey}");
-                        $Retorno=json_decode($Resposta);
-                        return $Retorno;
-                    }
-                }
-
-                if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
-
-                 //echo "<pre>"; print_r($_REQUEST); echo "</pre>";
-
-                 $ObjCaptcha = new Captcha();
-                 $Retorno = $ObjCaptcha->getCaptcha($_POST['g-recaptcha-response']); 
-
-                 //echo "<pre>"; print_r($Retorno); echo "</pre>";
-
-                 if($Retorno->success){
-                  //echo '<p style="color: #0a860a;">CAPTCHA was completed successfully!</p>';
-                  
-                  if($this->link_type == 'download') {
-                    echo 'If your download did not start please click <a href="'.$this->url.'">here</a>.';
-                  } else {
-                      echo 'If your installation did not start please click <a href="'.$this->url.'">here</a>.';
-                  }
-                  
-                  echo '<script>document.location.href = "'.$this->url.'";</script>';
-                  
-                 //} else {
-                 //    echo $Retorno->error->codes[0];
-                 }
-                }
-                ?>
-
+            <div style="height: 200px; width: 300px">            
                 <div class="">
                     <div class="" style="margin-top:0px;margin-bottom:15px;">
                         
                         <div class="" style="width:90%">
                             
-                            <form id="Form1" name="Form1" action="" method="POST">
-                             <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>   
+                            
+                            <?php
+                            if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
+                                echo '<a href="'.$this->url.'">Please click here</a>';
+                                echo '<script>document.location.href = "'.$this->url.'";</script>';
+                            } else {
+                            ?>
+                            <form id="Form1" name="Form1" action="" method="POST">    
+                            <p id="question"></p><input id="ans" type="text">
+                            <div id="message">Please verify.</div>
+                            <div id="success">Validation complete</div>
+                            <div id="fail">Validation failed</div>
+                            
+                                
                              <?php if($this->link_type == 'download') { ?>
-                             <input type="submit" value="Start Download">
+                             <button type="submit" value="Start Download">Start Download</button>
                              <?php } else { ?>
-                             <input type="submit" value="Start Installation">
+                             <button type="submit" value="Start Installation">Start Installation</button>
                              <?php } ?>
+                             <button type="reset" value="reset">Reset</button>
+                             
+                             <?php
+                            }
+                             ?>
+                             
                             </form>   
                         </div>  
                     </div>
