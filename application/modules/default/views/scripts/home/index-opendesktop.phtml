@@ -52,6 +52,20 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 ?>
 
 <style>
+
+  @media (min-width:612px) and (max-width:720px){
+    #explore-content .GridFlex .content {
+      padding-right: 15px;
+      min-width: 400px;
+    }
+
+    #explore-content .GridFlex .sidebar-right {
+      width: 400px;
+      flex: none;
+      margin: 0 auto;
+    }
+  }
+
   @media (max-width:611px){
 
     body > .panel.panel-default.pull-left {
