@@ -29,6 +29,7 @@
     <script type="text/javascript" src="captcha.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <script>
+        /*
         var total;
 
         function getRandom(){return Math.ceil(Math.random()* 20);}
@@ -60,6 +61,7 @@
                 // On user input, check value
                 $( "#ans" ).keyup(checkInput);
         });
+        */
     </script>
     <style>
         
@@ -142,7 +144,7 @@
                     <div class="" style="margin-top:0px;margin-bottom:15px;">
                         
                         <div class="" style="width:90%">
-                            
+                            <h2>Please consider to become a <a href="/support">supporter</a> to help the site grow.</h2>
                             
                             <?php
                             if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
@@ -151,19 +153,22 @@
                             } else {
                             ?>
                             <form id="Form1" name="Form1" action="" method="POST">    
+                                
+                            <?php /*    
                             <p id="question"></p><input id="ans" type="text">
                             <div id="message">Please verify.</div>
                             <div id="success">Validation complete</div>
                             <div id="fail">Validation failed</div>
-                            
+                            */ ?>
                                 
                              <?php if($this->link_type == 'download') { ?>
                              <button type="submit" value="Start Download">Start Download</button>
                              <?php } else { ?>
                              <button type="submit" value="Start Installation">Start Installation</button>
                              <?php } ?>
+                             <?php /*  
                              <button type="reset" value="reset">Reset</button>
-                             
+                             */ ?>
                              <?php
                             }
                              ?>
