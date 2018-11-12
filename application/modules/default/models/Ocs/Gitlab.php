@@ -43,6 +43,48 @@ class Default_Model_Ocs_Gitlab
     }
 
     /**
+     * @param $member_data
+     * @param $oldUsername
+     *
+     * @return array|bool|null
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function updateUserFromArray($member_data, $oldUsername)
+    {
+        if (empty($member_data)) {
+            return false;
+        }
+
+        $this->messages = array();
+
+        $data = $this->mapUserData($member_data);
+
+        $user = $this->getUser($data['extern_uid'], $oldUsername);
+        if (empty($user)) {
+            $this->messages[] = "Fail";
+
+            return false;
+        }
+        $data['skip_reconfirmation'] = 'true';
+        unset($data['password']);
+
+        try {
+            $this->httpUserUpdate($data, $user['id']);
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+        $this->messages[] = "overwritten : " . json_encode($user);
+
+        return $user;
+
+    }
+
+    /**
      * @param string $uri
      * @param string $uid
      * @param string $method

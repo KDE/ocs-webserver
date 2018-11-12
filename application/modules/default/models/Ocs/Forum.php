@@ -301,17 +301,17 @@ class Default_Model_Ocs_Forum
             return false;
         }
 
-        $member_data = $this->getMemberData($member_id, false);
+        $uri = $this->config->host . '/admin/users/' . $member_id . '.json';
+        $method = Zend_Http_Client::DELETE;
+        $uid = $member_id;
 
-        $user = $this->getUser($member_data['external_id'], $member_data['username']);
+        $user = $this->httpRequest($uri, $uid, $method);
 
-        if (empty($user)) {
-            $this->messages[] = 'Nothing to delete. User not found. ' . $member_data['external_id'] . ', ' . $member_data['username'];
-
+        if (false === $user) {
             return false;
         }
 
-        return $this->httpUserDelete($user['id']);
+        return $user;
     }
 
     /**
@@ -343,45 +343,6 @@ class Default_Model_Ocs_Forum
         }
 
         return $result;
-    }
-
-    /**
-     * @param $id
-     *
-     * @return bool
-     * @throws Default_Model_Ocs_Exception
-     * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     */
-    private function httpUserDelete($id)
-    {
-        $this->httpClient->resetParameters();
-        $uri = $this->config->host . '/admin/users/' . $id . '.json';
-        $this->httpClient->setUri($uri);
-        $this->httpClient->setParameterGet('api_key', $this->config->private_token);
-        $this->httpClient->setParameterGet('api_username', $this->config->user_sudo);
-        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
-        $this->httpClient->setMethod(Zend_Http_Client::DELETE);
-
-        $response = $this->httpClient->request();
-
-        if (200 == $response->getStatus()) {
-            $this->messages[] = ' - response : ' . $response->getBody() . " - user id: {$id}";
-
-            return true;
-        }
-
-        if ($response->getStatus() < 200 AND $response->getStatus() >= 500) {
-            throw new Default_Model_Ocs_Exception('delete user failed. response: ' . $response->getBody() . PHP_EOL
-                . " - user id: {$id}");
-        }
-
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - request: ' . $uri);
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - response: ' . $response->getBody());
-
-        $this->messages[] = ' - response : ' . $response->getBody() . " - user id: {$id}";
-
-        return false;
     }
 
     /**
@@ -471,6 +432,51 @@ class Default_Model_Ocs_Forum
     public function addGroupMember($groupname, $members)
     {
 
+    }
+
+    /**
+     * @param $member_data
+     * @param $oldUsername
+     *
+     * @return array|bool|null
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function updateUserFromArray($member_data, $oldUsername)
+    {
+        if (empty($member_data)) {
+            return false;
+        }
+
+        $this->messages = array();
+
+        $data = $this->mapUserData($member_data);
+
+        $user = $this->getUser($member_data['external_id'], $oldUsername);
+
+        if (empty($user)) {
+            $this->messages[] = "Fail ";
+
+            return false;
+        }
+
+        $uid = $user['user']['username'];
+        unset($data['password']);
+
+        try {
+            $uri = $this->config->host . "/users/{$uid}.json";
+            $method = Zend_Http_Client::PUT;
+            $this->httpRequest($uri, $uid, $method, $data);
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+        $this->messages[] = "overwritten : " . json_encode($user);
+
+        return $user;
     }
 
 }
