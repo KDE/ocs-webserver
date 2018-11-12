@@ -175,7 +175,14 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 $stat['cntFProducts'] = 0;
             }
 
-            $stat['cntComments'] = $paginationComments->getTotalItemCount();                        
+            $stat['cntComments'] = $paginationComments->getTotalItemCount();
+
+            // $cntpv = 0;
+            // foreach ($this->view->userProducts as $pro) {
+            //     $cntpv = $cntpv + $tableProject->fetchProjectViews($pro->project_id);
+            // }
+            // $stat['cntPageviews'] = $cntpv;
+
             $tblFollower = new Default_Model_DbTable_ProjectFollower();
             $stat['cntLikesHeGave'] = $tblFollower->countLikesHeGave($this->_memberId);
             $stat['cntLikesHeGot'] = $tblFollower->countLikesHeGot($this->_memberId);
@@ -194,10 +201,6 @@ class UserController extends Local_Controller_Action_DomainSwitch
             //  $cntmb = $tableMember->fetchCntSupporters($this->_memberId);
             // $stat['cntSupporters'] = $cntmb;
             $stat['userLastActiveTime'] = $tableMember->fetchLastActiveTime($this->_memberId);
-
-            // duplicates sourceUrl
-            $stat['cntDuplicateSourceurl'] = $tableProject->getCountProjectsDuplicateSourceurl($this->_memberId);
-
             $this->view->stat = $stat;
         }
     }
@@ -360,7 +363,9 @@ class UserController extends Local_Controller_Action_DomainSwitch
         //create ppload download hash: secret + collection_id + expire-timestamp
         $salt = PPLOAD_DOWNLOAD_SECRET;
         $timestamp = time() + 3600; // one hour valid
-        $hash = md5($salt . $timestamp); // order isn't important at all... just do the same when verifying
+        //20181009 ronald: change hash from MD5 to SHA512
+        //$hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
+        $hash = hash('sha512',$salt . $timestamp); // order isn't important at all... just do the same when verifying
 
         $this->view->download_hash = $hash;
         $this->view->download_timestamp = $timestamp;

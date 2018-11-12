@@ -385,16 +385,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                             . ' <span class="fa fa-external-link"></span></a>';
                                     } else if (false === empty($this->product->source_url)) {
                                         echo '<a target="_blank" href="' . $this->product->source_url . '" rel="nofollow">' . $this->product->source_url
-                                            . ' <span class="fa fa-external-link"></span>
-                                            </a>';
-                                        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName)
-                                        {
-                                            $cntSameSource = $tableProject->getCountSourceurl($this->product->source_url);
-                                            if($cntSameSource>1){
-                                                echo '<span style="color:red">['.$cntSameSource.']</span>';
-                                            }
-                                        }
-
+                                            . ' <span class="fa fa-external-link"></span></a>';
                                     } else {
                                             echo '<span class="source" > Add the source-code for this project on </span><a href="https://git.opendesktop.org/'.$this->product->username.'">git.opendesktop.org</a>';                                                                                                                    
                                     }
@@ -1039,5 +1030,6 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
             PartialsButtonPlingProject.setup();
             TooltipUser.setup("tooltipuserleft","left");
             AppimagequestionOnClick.setup();
+            OpendownloadfileWerbung.setup();
         });
     ');

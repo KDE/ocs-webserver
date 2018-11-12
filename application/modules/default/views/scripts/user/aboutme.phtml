@@ -337,8 +337,6 @@ $isSupporter = $this->stat['donationIssupporter'];
                                 <div role="tabpanel" class="tab-pane " id="user-featuredproducts">
                                     <?php 
                                            $this->userProducts = $this->userFeaturedProducts;
-                                           $this->projectpage = 1;
-                                           $this->total_records=0;
                                         if ($this->userProducts) { ?>                                
                                          <div class="my-products-list" id="my-products-list">                                                                       
                                             <?php echo $this->render('user/partials/aboutme-products.phtml'); ?>                                       
@@ -446,13 +444,6 @@ $isSupporter = $this->stat['donationIssupporter'];
                                 <div>
                                     <span>Score: <?php echo $scoreArray['score']; ?> <div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Member Score" data-trigger="hover" data-html="true" data-content="The score is calculated from the following values:<br> <ul><li>Products: <?php echo $scoreArray['count_product'];?> * <?php echo $scoreArray['factor_prod'];?></li><li>Plings: <?php echo $scoreArray['count_pling'];?> * <?php echo $scoreArray['factor_pling'];?></li><li>Likes: <?php echo $scoreArray['count_like'];?> * <?php echo $scoreArray['factor_like'];?></li><li>Comments: <?php echo $scoreArray['count_comment'];?> * <?php echo $scoreArray['factor_comment'];?></li><li>Years of membership: <?php echo $scoreArray['count_years_membership'];?> * <?php echo $scoreArray['factor_year'];?></li><li>Spam-Reports: <?php echo $scoreArray['count_report_product_spam'];?> * <?php echo $scoreArray['factor_report_prod_spam'];?></li><li>Misuse-Reports: <?php echo $scoreArray['count_report_product_fraud'];?> * <?php echo $scoreArray['factor_report_prod_fraud'];?></li></ul>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div> </span>
                                 </div>
-
-                                <?php
-                                    if($this->stat['cntDuplicateSourceurl']>0)
-                                    {
-                                        echo '<span>Duplicates: '.$this->stat['cntDuplicateSourceurl'].'</span>';
-                                    }
-                                ?>
                             </div>
                         </div>
                         <?php } ?>

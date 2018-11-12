@@ -42,7 +42,6 @@ class DuplicatesController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
-        $this->view->headTitle('Duplicates','SET');
         $this->view->page = (int)$this->getParam('page', 1);        
     }
 
@@ -60,11 +59,11 @@ class DuplicatesController extends Local_Controller_Action_DomainSwitch
     	$mod = new Default_Model_Project();    
     	$reports = $mod->fetchDuplatedSourceProjects($sorting,(int)$pageSize,$startIndex);
 
-        //  Zend_Registry::get('logger')->info(__METHOD__ . ' - ===================================' );
-        // Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . sizeof($reports));
+         Zend_Registry::get('logger')->info(__METHOD__ . ' - ===================================' );
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . sizeof($reports));
 
         $helperTruncate = new Default_View_Helper_Truncate();   
-        foreach ($reports as &$r) {                    
+        foreach ($reports as &$r) {
                     $r['pids'] = $helperTruncate->truncate($r['pids']);
                 }
     	// foreach ($reports as &$r) {
