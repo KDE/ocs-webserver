@@ -143,16 +143,14 @@
                         
                         <div class="" style="width:90%">
                             
-                            <form id="Form1" name="Form1" action="" method="POST">
+                            
                             <?php
                             if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
-
-                                echo '<script>document.location.href = "'.$this->url.'";</script>';
                                 echo '<a href="'.$this->url.'">Please click here</a>';
-
+                                echo '<script>document.location.href = "'.$this->url.'";</script>';
                             } else {
                             ?>
-                                
+                            <form id="Form1" name="Form1" action="" method="POST">    
                             <p id="question"></p><input id="ans" type="text">
                             <div id="message">Please verify.</div>
                             <div id="success">Validation complete</div>
