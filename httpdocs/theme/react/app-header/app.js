@@ -283,7 +283,7 @@ class MobileSiteHeader extends React.Component {
     }
 
     const closeMenuElementDisplay = (
-      <a className="menu-item" style={menuItemCssClass} onClick={this.showMobileSwitchMenu}>
+      <a className="menu-item"  onClick={this.showMobileSwitchMenu}>
         <span className="glyphicon glyphicon-remove"></span>
       </a>
     );
@@ -292,10 +292,10 @@ class MobileSiteHeader extends React.Component {
     if (this.state.status === "switch"){
       mobileMenuDisplay = (
         <div id="switch-menu">
-          <a className="menu-item" style={menuItemCssClass} onClick={this.showMobileSearchForm} id="user-menu-switch">
+          <a className="menu-item" onClick={this.showMobileSearchForm} id="user-menu-switch">
             <span className="glyphicon glyphicon-search"></span>
           </a>
-          <a className="menu-item" style={menuItemCssClass} onClick={this.showMobileUserMenu} id="search-menu-switch">
+          <a className="menu-item" onClick={this.showMobileUserMenu} id="search-menu-switch">
             <span className="glyphicon glyphicon-option-horizontal"></span>
           </a>
         </div>
