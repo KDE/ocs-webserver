@@ -19,7 +19,7 @@ $this->products = $this->result['hits'];
 
 $this->highlighting = $this->result['highlighting'];
 
-
+$this->headTitle('Search: '.$this->searchText, 'SET');
 
 $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
 $modelInfo = new Default_Model_Info();

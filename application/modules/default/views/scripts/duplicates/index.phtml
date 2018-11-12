@@ -172,8 +172,11 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
                          display:function(data){   
                             var pids = data.record.pids.split(",");  
                             var html='';
-                            pids.forEach(function(element) {
-                               html = html+'<a target="_blank" href="/p/'+element+'">'+element+'</a>,';
+                            pids.forEach(function(element,idx, array) {
+                               html = html+'<a target="_blank" href="/p/'+element+'">'+element+'</a>';
+                               if (idx !== array.length - 1){ 
+                                       html=html+','; 
+                                }
                             });                   
                             return html;
                         }
