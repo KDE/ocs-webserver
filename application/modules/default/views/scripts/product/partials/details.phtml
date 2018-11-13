@@ -32,6 +32,10 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
     $isGhnsExcluded = true;
 }
 
+
+// $heute = date("Y-m-d H:i:s");
+$today = (new DateTime())->modify('-1 day');
+$filterDownloadToday = $today->format("Y-m-d H:i:s");
 ?>
 <div class="prod-widget-box right details">
     <span class="title"> Details </span>
@@ -387,8 +391,8 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
         (function (collection_id) {
             if (!collection_id) {
                 return;
-            }
-            var current_date = new Date().toISOString().split('T')[0];
+            }            
+            var current_date = '<?php echo $filterDownloadToday; ?>';       
             $.ajax({
                 url: '<?= PPLOAD_API_URI ?>files/index',
                 type: 'GET',
