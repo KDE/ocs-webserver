@@ -329,7 +329,7 @@ class MobileSiteHeader extends React.Component {
 
     let logoElementCssClass = this.props.store.name;
     if (this.state.status !== "switch"){
-      logoElementCssClass = " mini-version";
+      logoElementCssClass += " mini-version";
     }
 
     return(
