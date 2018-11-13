@@ -63,6 +63,13 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
         $this->log->info("METHOD: {$method}\n--------------\n");
         $this->log->err("METHOD: {$method}\n--------------\n");
 
+        if ('delete' == $method) {
+            $this->deleteMember($this->getParam('member_id'));
+            echo "not implemented";
+
+            return;
+        }
+
         if ($this->hasParam('member_id')) {
             $memberId = $this->getParam('member_id');
             $operator = $this->getParam('op', null);
@@ -197,6 +204,20 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
         print_r($result);
 
         echo json_encode($result);
+    }
+
+    private function deleteMember($member)
+    {
+        $modelSubSystem = new Default_Model_Ocs_Forum($this->config);
+        try {
+            //Export User, if he not exists
+            $modelSubSystem->deleteUser($member);
+        } catch (Exception $e) {
+            $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        $messages = $modelSubSystem->getMessages();
+        $this->log->info("messages " . Zend_Json::encode($messages));
+        echo "response " . Zend_Json::encode($messages) . PHP_EOL;
     }
 
 }

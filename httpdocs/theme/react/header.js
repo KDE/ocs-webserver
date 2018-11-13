@@ -112,53 +112,55 @@ class SiteHeader extends React.Component {
       );
     }
 
-    let HeaderDisplay;
-    if (this.state.device !== "tablet") {
-      HeaderDisplay = React.createElement(
-        "section",
-        { id: "site-header-wrapper", style: { "paddingLeft": this.state.template['header-logo']['width'] } },
+    /*let HeaderDisplay;
+    if (this.state.device !== "tablet"){*/
+    const HeaderDisplay = React.createElement(
+      "section",
+      { id: "site-header-wrapper", style: { "paddingLeft": this.state.template['header-logo']['width'] } },
+      React.createElement(
+        "div",
+        { id: "siter-header-left" },
         React.createElement(
           "div",
-          { id: "siter-header-left" },
+          { id: "site-header-logo-container", style: this.state.template['header-logo'] },
           React.createElement(
-            "div",
-            { id: "site-header-logo-container", style: this.state.template['header-logo'] },
-            React.createElement(
-              "a",
-              { href: logoLink },
-              React.createElement("img", { src: this.state.template['header-logo']['image-src'] })
-            )
-          ),
-          siteHeaderStoreNameDisplay
+            "a",
+            { href: logoLink },
+            React.createElement("img", { src: this.state.template['header-logo']['image-src'] })
+          )
+        ),
+        siteHeaderStoreNameDisplay
+      ),
+      React.createElement(
+        "div",
+        { id: "site-header-right" },
+        React.createElement(
+          "div",
+          { id: "site-header-right-top", className: siteHeaderTopRightCssClass },
+          React.createElement(SiteHeaderSearchForm, {
+            baseUrl: this.state.baseUrl
+          }),
+          userMenuDisplay
         ),
         React.createElement(
           "div",
-          { id: "site-header-right" },
-          React.createElement(
-            "div",
-            { id: "site-header-right-top", className: siteHeaderTopRightCssClass },
-            React.createElement(SiteHeaderSearchForm, {
-              baseUrl: this.state.baseUrl
-            }),
-            userMenuDisplay
-          ),
-          React.createElement(
-            "div",
-            { id: "site-header-right-bottom" },
-            loginMenuDisplay
-          )
+          { id: "site-header-right-bottom" },
+          loginMenuDisplay
         )
-      );
-    } else {
-      HeaderDisplay = React.createElement(MobileSiteHeader, {
-        logoLink: logoLink,
-        template: this.state.template,
-        user: this.state.user,
-        baseUrl: this.state.baseUrl,
-        store: this.state.store,
-        redirectString: this.state.redirectString
-      });
-    }
+      )
+    );
+    /*} else {
+      HeaderDisplay = (
+        <MobileSiteHeader
+          logoLink={logoLink}
+          template={this.state.template}
+          user={this.state.user}
+          baseUrl={this.state.baseUrl}
+          store={this.state.store}
+          redirectString={this.state.redirectString}
+        />
+      )
+    }*/
 
     return React.createElement(
       "section",
