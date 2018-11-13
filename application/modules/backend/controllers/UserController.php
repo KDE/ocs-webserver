@@ -213,10 +213,13 @@ class Backend_UserController extends Local_Controller_Action_Backend
             $modelOpenCode->createUserFromArray($record->toArray(), true);
 
             $modelIdent = new Default_Model_Ocs_Ldap();
-            $modelIdent->createUser($record->member_id);
+            $modelIdent->createUserFromArray($record->toArray(), true);
 
             $modelId = new Default_Model_Ocs_OAuth();
-            $modelId->createUser($record->member_id);
+            $modelId->createUserFromArray($record->toArray(), true);
+
+            $modelForum = new Default_Model_Ocs_Forum();
+            $modelForum->createUserFromArray($record->toArray(), true);
 
             $jTableResult = array();
             $jTableResult['Result'] = self::RESULT_OK;

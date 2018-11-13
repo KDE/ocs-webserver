@@ -19,7 +19,8 @@ class SiteHeader extends React.Component {
       logo:window.json_logoWidth,
       cat_title_left:window.json_cat_title_left,
       tabs_left:window.tabs_left,
-      template:window.json_template
+      template:window.json_template,
+      status:""
     };
     this.updateDimensions = this.updateDimensions.bind(this);
   }
@@ -28,13 +29,7 @@ class SiteHeader extends React.Component {
     this.updateDimensions();
   }
 
-  componentWillUnmount(){
-    window.removeEventListener("resize", this.updateDimensions);
-    window.removeEventListener("orientationchange",this.updateDimensions);
-
-  }
-
-  initMetaHeader(){
+  componentDidMount() {
     window.addEventListener("resize", this.updateDimensions);
     window.addEventListener("orientationchange",this.updateDimensions);
   }
@@ -53,7 +48,6 @@ class SiteHeader extends React.Component {
   }
 
   render(){
-
 
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user){
@@ -80,7 +74,6 @@ class SiteHeader extends React.Component {
       logoLink += "/s/" + this.state.store.name;
     }
 
-
     let siteHeaderStoreNameDisplay;
     if (this.state.is_show_title === "1"){
       siteHeaderStoreNameDisplay = (
@@ -92,9 +85,9 @@ class SiteHeader extends React.Component {
       );
     }
 
-    //let HeaderDisplay;
-    // if (this.state.device !== "tablet"){
-    const  HeaderDisplay = (
+    /*let HeaderDisplay;
+    if (this.state.device !== "tablet"){*/
+     const HeaderDisplay = (
         <section id="site-header-wrapper" style={{"paddingLeft":this.state.template['header-logo']['width']}}>
           <div id="siter-header-left">
             <div id="site-header-logo-container" style={this.state.template['header-logo']}>
@@ -119,20 +112,15 @@ class SiteHeader extends React.Component {
       );
     /*} else {
       HeaderDisplay = (
-        <section id="mobile-site-header">
-          <div id="mobile-site-header-logo">
-            <a href={logoLink}>
-              <img src={this.state.template['header-logo']['image-src']}/>
-            </a>
-          </div>
-          <div id="mobile-site-header-menus-container">
-            <div id="switch-menu">
-              <a id="search-menu-switch">more</a>
-              <a id="user-menu-switch">search</a>
-            </div>
-          </div>
-        </section>
-      );
+        <MobileSiteHeader
+          logoLink={logoLink}
+          template={this.state.template}
+          user={this.state.user}
+          baseUrl={this.state.baseUrl}
+          store={this.state.store}
+          redirectString={this.state.redirectString}
+        />
+      )
     }*/
 
     return (
@@ -260,6 +248,134 @@ class SiteHeaderUserMenu extends React.Component {
           </ul>
         </li>
       </ul>
+    )
+  }
+}
+
+class MobileSiteHeader extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {
+      status:"switch"
+    };
+    this.showMobileUserMenu = this.showMobileUserMenu.bind(this);
+    this.showMobileSearchForm = this.showMobileSearchForm.bind(this);
+    this.showMobileSwitchMenu = this.showMobileSwitchMenu.bind(this);
+  }
+
+  showMobileUserMenu(){
+    this.setState({status:"user"});
+  }
+
+  showMobileSearchForm(){
+    this.setState({status:"search"});
+  }
+
+  showMobileSwitchMenu(){
+    this.setState({status:"switch"});
+  }
+
+  render(){
+
+    const menuItemCssClass = {
+      "borderColor":this.props.template['header-nav-tabs']['border-color'],
+      "backgroundColor":this.props.template['header-nav-tabs']['background-color']
+    }
+
+    const closeMenuElementDisplay = (
+      <a className="menu-item"  onClick={this.showMobileSwitchMenu}>
+        <span className="glyphicon glyphicon-remove"></span>
+      </a>
+    );
+
+    let mobileMenuDisplay;
+    if (this.state.status === "switch"){
+      mobileMenuDisplay = (
+        <div id="switch-menu">
+          <a className="menu-item" onClick={this.showMobileSearchForm} id="user-menu-switch">
+            <span className="glyphicon glyphicon-search"></span>
+          </a>
+          <a className="menu-item" onClick={this.showMobileUserMenu} id="search-menu-switch">
+            <span className="glyphicon glyphicon-option-horizontal"></span>
+          </a>
+        </div>
+      );
+    } else if (this.state.status === "user"){
+      mobileMenuDisplay = (
+        <div id="mobile-user-menu">
+          <div className="menu-content-wrapper">
+            <MobileUserContainer
+              user={this.props.user}
+              baseUrl={this.props.baseUrl}
+              template={this.props.template}
+              redirectString={this.props.redirectString}
+            />
+          </div>
+          {closeMenuElementDisplay}
+        </div>
+      )
+    } else if (this.state.status === "search"){
+      mobileMenuDisplay = (
+        <div id="mobile-search-menu">
+          <div className="menu-content-wrapper">
+            <SiteHeaderSearchForm
+              baseUrl={this.props.baseUrl}
+            />
+          </div>
+          {closeMenuElementDisplay}
+        </div>
+      )
+    }
+
+    let logoElementCssClass = this.props.store.name;
+    if (this.state.status !== "switch"){
+      logoElementCssClass = " mini-version";
+    }
+
+    return(
+      <section id="mobile-site-header">
+        <div id="mobile-site-header-logo" className={logoElementCssClass}>
+          <a href={this.props.logoLink}>
+            <img src={this.props.template['header-logo']['image-src']}/>
+          </a>
+        </div>
+        <div id="mobile-site-header-menus-container">
+          {mobileMenuDisplay}
+        </div>
+      </section>
+    );
+  }
+}
+
+class MobileUserContainer extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+
+    let userDisplay;
+    if (this.props.user){
+      userDisplay = (
+        <SiteHeaderUserMenu
+          user={this.props.user}
+        />
+      );
+    } else {
+      userDisplay = (
+        <SiteHeaderLoginMenu
+          baseUrl={this.props.baseUrl}
+          template={this.props.template}
+          redirectString={this.props.redirectString}
+        />
+      );
+    }
+
+    return (
+      <div id="mobile-user-container">
+        {userDisplay}
+      </div>
     )
   }
 }

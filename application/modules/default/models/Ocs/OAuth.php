@@ -207,10 +207,7 @@ class Default_Model_Ocs_OAuth
      * @param array $member_data
      * @param bool  $force
      *
-     * @return bool
-     * @throws Zend_Cache_Exception
-     * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
+     * @return bool|array
      */
     public function createUserFromArray($member_data, $force = false)
     {
@@ -245,6 +242,29 @@ class Default_Model_Ocs_OAuth
     public function getMessages()
     {
         return $this->messages;
+    }
+
+    public function updateUserFromArray($member_data)
+    {
+        if (empty($member_data)) {
+            return false;
+        }
+
+        $this->messages = array();
+
+        $data = $this->mapUserData($member_data);
+        $options = array('bypassEmailCheck' => 'true', 'bypassUsernameCheck' => 'true', 'update' => 'true');
+
+        try {
+            $this->httpServer->pushHttpUserData($data, $options);
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+        $this->messages[] = $this->httpServer->getMessages();
+
+        return $data;
     }
 
 }

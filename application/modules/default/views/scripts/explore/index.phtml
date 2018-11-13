@@ -37,11 +37,100 @@ if($this->inputFilterOriginal ==1)
 }
 
 ?>
+
+<style>
+
+  @media (max-width:720px){
+
+    body > .panel.panel-default.pull-left {
+      max-width: 100%;
+      overflow-y: hidden;
+    }
+
+    #explore-content .GridFlex .content {
+      padding-right: 15px;
+      min-width: 400px;
+    }
+
+    #explore-content .GridFlex .sidebar-right {
+      width: 400px;
+      flex: none !important;
+      margin: 0 auto;
+    }
+
+    #explore-content .GridFlex .content .explore-products {
+      padding: 0 !important;
+    }
+
+    .explore-products .product-list .explore-product {
+      position: relative;
+      padding-left: 20px;
+      padding-right: 50px;
+    }
+
+    .explore-products .product-list .explore-product > .col-xs-1 {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 0;
+    }
+
+    .explore-products .product-list .explore-product .explore-product-imgcolumn {
+      width: 20%;
+    }
+
+    .explore-products .product-list .explore-product .explore-product-details {
+      width: 80%;
+    }
+
+    .explore-products .product-list .explore-product .explore-product-plings {
+      position: absolute;
+      top: 10px;
+      right: 0;
+      width: 50px;
+    }
+
+    .explore-products .product-list .explore-product .explore-product-plings .rating {
+      width: 100%;
+    }
+
+    .pling-nav-tabs ul.nav-tabs>li:last-child {
+      float: right;
+      padding: 10px;
+      font-size: 12px;
+    }
+
+    #explore-content .sidebar-right-info .prod-widget-box {
+      width: 100%;
+    }
+
+  }
+
+  @media (max-width:611px){
+    #explore-content .GridFlex .content {
+      padding-right: 0;
+      min-width: 100%;
+    }
+
+    #explore-content .GridFlex .sidebar-left {
+      flex: none !important;
+      width: 100%;
+    }
+
+    #explore-content .GridFlex .sidebar-right {
+      flex: none !important;
+      width: 100%;
+      padding: 0;
+    }
+  }
+
+</style>
+
 <main id="explore-content">
     <section class="wrapper" id="products-wrapper">
     <span class="glyphicon  togglesidebar" id="btnTogglesidebar" ></span>
     <div class="GridFlex">
-      <div class="GridFlex-cell sidebar-left" >          
+      <div class="GridFlex-cell sidebar-left" >
           <?php  $time_start = microtime(true);echo $this->render('explore/partials/filter.phtml'); $time_elapsed = microtime(true) - $time_start; ?>
           <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
              echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
@@ -51,7 +140,7 @@ if($this->inputFilterOriginal ==1)
         <section class="explore-products" id="explore-products">
 
             <div class="pling-nav-tabs">
-              <ul class="nav nav-tabs pling-nav-tabs" id="sort">               
+              <ul class="nav nav-tabs pling-nav-tabs" id="sort">
                   <li  <?=$this->filters['order'] == 'latest' ? 'class="active"' :'' ?>>
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
                           'latest') ?>"><span><?= $this->translate('Latest') ?></span></a>
@@ -59,7 +148,7 @@ if($this->inputFilterOriginal ==1)
                   <li <?=$this->filters['order'] == 'top' ? 'class="active"' :'' ?>>
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
                           'top') ?>"><span><?= $this->translate('Top') ?></span></a>
-                  </li>      
+                  </li>
                   <li style="float: right">
                       <input type="checkbox" name="filter_browse_original" value="1" id="filter_browse_original" <?=$checkedOriginal?> >  Original
                   </li>
@@ -67,7 +156,7 @@ if($this->inputFilterOriginal ==1)
             </div>
 
               <div class="product-list">
-                  <?php                
+                  <?php
                   if (count($this->products) == 0) {
                       echo '<div class="empty">No products to show in this category.</div>';
                   } else {
@@ -104,12 +193,12 @@ $time_start = microtime(true);
      }
 ?>
       <div class="GridFlex-cell sidebar-right">
-          <aside  id="explore-sidebar <?=$asidehide?>" >                      
+          <aside  id="explore-sidebar <?=$asidehide?>" >
              <?php
                 echo $this->render('/home/partials/common_rightsidebar.phtml');
             ?>
 
-            <div  class="row sidebar-right-info" >                                           
+            <div  class="row sidebar-right-info" >
               <?php
               if (count($topprods) > 0) {
                   ?>
@@ -125,7 +214,7 @@ $time_start = microtime(true);
                       ?>
                   </div>
               <?php } ?>
-               
+
             </div>
         </aside>
           <?php
@@ -145,9 +234,9 @@ $time_start = microtime(true);
 </main>
 
 <?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){          
-            TooltipUser.setup("tooltipuserleft","left");  
-            TooltipUser.setup("tooltipuser","right");         
-            FilterBrowseOriginalFn.setup();     
+    '    $(document).ready(function(){
+            TooltipUser.setup("tooltipuserleft","left");
+            TooltipUser.setup("tooltipuser","right");
+            FilterBrowseOriginalFn.setup();
         });
     ');

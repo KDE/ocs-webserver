@@ -720,26 +720,38 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         Zend_Registry::get('logger')->info(__METHOD__ . ' - user activated. member_id: ' . print_r($authUser->member_id, true));
 
+        $modelMember = new  Default_Model_Member();
+        $record = $modelMember->fetchMemberData($authUser->member_id, false);
+
         try {
-            $id_server = new Default_Model_Ocs_OAuth();
-            $id_server->createUser($authUser->member_id);
+            $oauth = new Default_Model_Ocs_OAuth();
+            $oauth->createUserFromArray($record->toArray());
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - oauth : ' . implode(PHP_EOL." - ", $oauth->getMessages()));
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
-            $ldap_server = new Default_Model_Ocs_Ldap();
-            $ldap_server->createUser($authUser->member_id);
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
+            $ldap = new Default_Model_Ocs_Ldap();
+            $ldap->createUserFromArray($record->toArray());
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap->getMessages()));
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
             $openCode = new Default_Model_Ocs_Gitlab();
-            $openCode->createUser($authUser->member_id);
+            $openCode->createUserFromArray($record->toArray());
             Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $openCode->getMessages()));
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
+        try {
+            $forum = new Default_Model_Ocs_Forum();
+            $forum->createUserFromArray($record->toArray());
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - forum : ' . implode(PHP_EOL." - ", $forum->getMessages()));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+
 
         Default_Model_ActivityLog::logActivity($authUser->member_id, null, $authUser->member_id,
             Default_Model_ActivityLog::MEMBER_EMAIL_CONFIRMED, array());

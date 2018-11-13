@@ -659,28 +659,41 @@ class Default_Model_Ocs_Ldap
      */
     public function updateUserFromArray($member_data)
     {
-        $newEntry = $this->createEntryUser($member_data);
+
+        if (empty($member_data)) {
+            return false;
+        }
+
+        $this->errMessages = array();
+
         $connection = $this->getConnectionUser();
+        $entry = $this->createEntryUser($member_data);
+        $dn = $this->getDnUser($member_data['username']);
+        $user = null;
+
         try {
-            $oldEntry = $this->getEntryUser($member_data, $connection);
+            $user = $this->hasUser($member_data['member_id'], $member_data['username']);
         } catch (Exception $e) {
-            $this->errMessages[] = "Failed.";
-            Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . $e->getMessage());
-
-            return false;
-        }
-        if (empty($oldEntry)) {
-            $this->errMessages[] = "ldap entry for user missing. " . $member_data['member_id'];
-            Zend_Registry::get('logger')->warn(__METHOD__ . ' - ldap entry for member does not exists.');
+            $this->errCode = 998;
+            $this->errMessages[] = $e->getMessage();
+            $user = null;
 
             return false;
         }
 
-        $dn = $oldEntry['dn'];
-        $connection->update($dn, $newEntry);
-        $connection->getLastError($this->errCode, $this->errMessages);
+        if ($this->hasChangedUsername($member_data['username'], $user)) {
+            $dnDelete = $user['dn'];
+            $connection->delete($dnDelete);
+            $connection->getLastError($this->errCode, $this->errMessages);
+            $connection->add($dn, $entry);
+            $connection->getLastError($this->errCode, $this->errMessages);
+        } else {
+            $connection->update($dn, $entry);
+            $connection->getLastError($this->errCode, $this->errMessages);
+        }
+        $this->errMessages[] = "overwritten : " . json_encode($user);
 
-        return $newEntry;
+        return $entry;
     }
 
     /**
