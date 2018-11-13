@@ -301,7 +301,16 @@ class Default_Model_Ocs_Forum
             return false;
         }
 
-        $uri = $this->config->host . '/admin/users/' . $member_id . '.json';
+        $member_data = $this->getMemberData($member_id, false);
+        if (empty($member_data)) {
+            return false;
+        }
+
+        $forum_member = $this->getUserByExternUid($member_data['external_id']);
+        if (empty($forum_member)) {
+            return false;
+        }
+        $uri = $this->config->host . '/admin/users/' . $forum_member['user']['id'] . '.json';
         $method = Zend_Http_Client::DELETE;
         $uid = $member_id;
 
@@ -475,6 +484,29 @@ class Default_Model_Ocs_Forum
             return false;
         }
         $this->messages[] = "overwritten : " . json_encode($user);
+
+        return $user;
+    }
+
+    public function deleteUserWithArray($member_data)
+    {
+        if (empty($member_data)) {
+            return false;
+        }
+
+        $forum_member = $this->getUserByExternUid($member_data['external_id']);
+        if (empty($forum_member)) {
+            return false;
+        }
+        $uri = $this->config->host . '/admin/users/' . $forum_member['id'] . '.json';
+        $method = Zend_Http_Client::DELETE;
+        $uid = $member_data['member_id'];
+
+        $user = $this->httpRequest($uri, $uid, $method);
+
+        if (false === $user) {
+            return false;
+        }
 
         return $user;
     }
