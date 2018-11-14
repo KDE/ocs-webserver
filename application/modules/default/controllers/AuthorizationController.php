@@ -32,6 +32,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         if (crawlerDetect($_SERVER['HTTP_USER_AGENT'])) {
             $this->getResponse()->setHttpResponseCode(404);
             $this->forward('index', 'explore');
+
+            return;
         }
         $this->forward('login', 'oauth', 'default', array('provider' => 'github', 'redirect' => $this->getParam('redirect')));
     }
@@ -42,6 +44,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         if (crawlerDetect($_SERVER['HTTP_USER_AGENT'])) {
             $this->getResponse()->setHttpResponseCode(404);
             $this->forward('index', 'explore');
+
+            return;
         }
         $this->forward('login', 'oauth', 'default', array('provider' => 'ocs', 'redirect' => $this->getParam('redirect')));
     }
