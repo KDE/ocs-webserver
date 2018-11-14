@@ -41,11 +41,19 @@ class Default_View_Helper_ImageUri extends Zend_View_Helper_Abstract
     public function ImageUri($filename, $options = array())
     {
         if (empty($options) and $this->validUri($filename)) {
-            return $filename;
+            /** @var Zend_Controller_Request_Http $request */
+            $request = Zend_Controller_Front::getInstance()->getRequest();
+            $uri = $this->replaceScheme($filename, $request->getScheme());
+
+            return $uri;
         }
 
         if ($this->validUri($filename)) {
-            return $this->updateImageUri($filename, $options);
+            /** @var Zend_Controller_Request_Http $request */
+            $request = Zend_Controller_Front::getInstance()->getRequest();
+            $uri = $this->replaceScheme($filename, $request->getScheme());
+
+            return $this->updateImageUri($uri, $options);
         }
 
         return $this->createImageUri($filename, $options);
@@ -106,6 +114,13 @@ class Default_View_Helper_ImageUri extends Zend_View_Helper_Abstract
         $uri = preg_replace("/\d\d\dx\d\d\d/", $dimension, $filename);
 
         return $uri;
+    }
+
+    private function replaceScheme($filename, $getScheme)
+    {
+        $result = preg_replace("|^https?|", $getScheme, $filename);
+
+        return $result;
     }
 
 }

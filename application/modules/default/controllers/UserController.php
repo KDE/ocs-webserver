@@ -207,6 +207,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout->disableLayout();
 
         $size = (int)$this->getParam("size", 200);
+        $width = (int)$this->getParam("width", ($size / 2));
         $this->view->size = (int)$size / 2;
 
         $emailHash = $this->getParam("emailhash", null);
@@ -218,12 +219,15 @@ class UserController extends Local_Controller_Action_DomainSwitch
             if ($member) {
 
                 $helperImage = new Default_View_Helper_ImageUri();
-                $imgUrl = $helperImage->ImageUri($member['profile_image_url'], array('width' => $size, 'height' => $size));
+                $imgUrl = $helperImage->ImageUri($member['profile_image_url'], array('width' => $width, 'height' => $width));
                 $this->view->avatar = $imgUrl;
 
                 $this->redirect($imgUrl);
             } else {
                 $this->view->avatar = "";
+                $helperImage = new Default_View_Helper_ImageUri();
+                $imgUrl = $helperImage->ImageUri("default-profile.png", array('width' => $width, 'height' => $width));
+                $this->redirect($imgUrl);
             }
         }
     }
