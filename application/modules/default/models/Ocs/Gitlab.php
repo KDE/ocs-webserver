@@ -808,7 +808,7 @@ class Default_Model_Ocs_Gitlab
         $body = Zend_Json::decode($response->getRawBody());
 
         if($body['visibility'] <> 'public') {
-            return null;
+            throw new Default_Model_Ocs_Exception('Project not found in gitlab');
         }
         
         if (count($body) == 0) {
