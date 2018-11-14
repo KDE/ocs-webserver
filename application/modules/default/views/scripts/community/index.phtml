@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 $modelInfo = new Default_Model_Info();
 $users = $modelInfo->getNewActiveMembers(100);
 $topusers = $modelInfo->getTopScoreUsers(100);
@@ -111,7 +111,7 @@ $membersCount = new Default_View_Helper_FetchTotalMembersCount();
                             <div class="u-wrap">
                                 <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['username']); ?>">
                                     <figure >
-                                        <img class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>" src="<?php echo $helperImage->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
+                                        <img class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>" src="<?php echo $helperImage->ImageUri($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
                                     </figure>
                                     <h3 class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><?php echo $user['username']; ?></h3>
 
@@ -137,7 +137,7 @@ $membersCount = new Default_View_Helper_FetchTotalMembersCount();
                                 <div class="u-wrap" >
                                     <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['username']); ?>">
                                         <figure >
-                                            <img class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>" src="<?php echo $helperImage->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
+                                            <img class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>" src="<?php echo $helperImage->ImageUri($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
                                         </figure>
                                         <h3 class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><?php echo $user['username']; ?></h3>                                        
                                         <span class="rank">#<?=$nr++?></span>
@@ -160,7 +160,7 @@ $membersCount = new Default_View_Helper_FetchTotalMembersCount();
                                                <div class="u-wrap" >
                                                    <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['username']); ?>">
                                                        <figure >
-                                                           <img class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>"  src="<?php echo $helperImage->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
+                                                           <img class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>"  src="<?php echo $helperImage->ImageUri($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
                                                        </figure>
                                                        <h3 class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><?php echo $user['username']; ?></h3>                                                                                                      
                                                            <span class="small"><?= $this->printDate($user['created_at'])?><span class="small">                                                                                    

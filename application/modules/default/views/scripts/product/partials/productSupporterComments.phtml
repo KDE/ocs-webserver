@@ -24,7 +24,7 @@ $helperHumanTiming = new Default_View_Helper_HumanTiming();
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
 $countSupporter = count($this->supporter->toArray());
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 ?>
 
 <div id="comments">
@@ -43,7 +43,7 @@ $helperImage = new Default_View_Helper_Image();
                     <figure class="supporter-thumbnail relative">
                         <a href="<?= $helperBuildMemberUrl->buildMemberUrl($comment['username']) ?>"
                            title="<?= $comment['username'] ?>">
-                            <img src="<?= $helperImage->Image($comment['profile_image_url'],array('width' => 100, 'height' => 100, 'crop' => 2)); ?>" alt="<?= $comment['username'] ?>">
+                            <img src="<?= $helperImage->ImageUri($comment['profile_image_url'],array('width' => 100, 'height' => 100, 'crop' => 2)); ?>" alt="<?= $comment['username'] ?>">
                         </a>
                     </figure>
                     <div class="comment-content">

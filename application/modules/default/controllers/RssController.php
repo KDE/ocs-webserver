@@ -127,8 +127,8 @@ class RssController extends Local_Controller_Action_DomainSwitch
     {
         $helperBuildUrl = new Default_View_Helper_BuildProductUrl();
         $link = $helperBuildUrl->buildProductUrl($requestedElement->project_id, '', null, true, 'https');
-        $helperImage = new Default_View_Helper_Image();
-        $image = $helperImage->Image($requestedElement->image_small, array('height' => 40, 'width' => 40));
+        $helperImage = new Default_View_Helper_ImageUri();
+        $image = $helperImage->ImageUri($requestedElement->image_small, array('height' => 40, 'width' => 40));
         return '<a href="' . $link . '"><img src="' . $image . '" alt="Thumbnail" class="thumbnail" align="left" hspace="10" vspace="10" border="0" /></a><b><big><a href="' . $link . '" style="font-weight:bold;color:#333333;text-decoration:none;">' . $requestedElement->title . '</a></big></b><br /> (' . $requestedElement->cat_title . ')<br />' . $requestedElement->description . '<br /><br /><a href="' . $link . '" style="font-weight:bold;color:#333333;text-decoration:none;">[read more]</a><br /><br />';
     }
 

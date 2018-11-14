@@ -153,8 +153,8 @@ class Backend_RssController extends Local_Controller_Action_CliAbstract
     private function createContent($requestedElement, $hostname)
     {
         $link = 'https://' . $hostname . '/p/' . $requestedElement->project_id;
-        $helperImage = new Default_View_Helper_Image();
-        $image = $helperImage->Image($requestedElement->image_small, array('height' => 40, 'width' => 40));
+        $helperImage = new Default_View_Helper_ImageUri();
+        $image = $helperImage->ImageUri($requestedElement->image_small, array('height' => 40, 'width' => 40));
 
         return '<a href="' . $link . '"><img src="' . $image
             . '" alt="Thumbnail" class="thumbnail" align="left" hspace="10" vspace="10" border="0" /></a><b><big><a href="' . $link

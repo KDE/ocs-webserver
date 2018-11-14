@@ -26,7 +26,7 @@ $store_config = Zend_Registry::get('store_config');
 
 $getAuthUser = new Default_View_Helper_GetAuthUser();
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
 $serverUrl = $this->serverUrl();
@@ -174,7 +174,7 @@ $tabs_left += $cat_title_length*10;
                             <a rel="profile-menu" class="menu-trigger">
                                 <div class="absolute header-profile-image">
                                             <img
-                                            src="<?= $helperImage->Image($member->profile_image_url,
+                                            src="<?= $helperImage->ImageUri($member->profile_image_url,
                                                 array('width' => 30, 'height' => 30)) ?>"/>
 
                                 </div>

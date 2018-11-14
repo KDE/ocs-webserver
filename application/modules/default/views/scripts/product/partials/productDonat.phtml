@@ -23,7 +23,7 @@
 //$plingData = $this->userPlings($this->product->project_id);
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 
 $auth = Zend_Auth::getInstance();
 $btnName = $auth->hasIdentity() ? 'Confirm Donation' : 'Anonymous Pling';
@@ -47,7 +47,7 @@ $this->headScript()
                   <div class="product-maker-thumbnail relative" style="">
                     <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->username); ?>"
                        title="<?= $this->member->username ?>">                  
-                        <img src="<?= $helperImage->Image($this->member->profile_image_url, array('width' => 40, 'height' => 40)) ?>"
+                        <img src="<?= $helperImage->ImageUri($this->member->profile_image_url, array('width' => 40, 'height' => 40)) ?>"
                              alt="product-maker" width="40" height="40"
                              class="sidebar-profile-image">
                     </a>
@@ -64,7 +64,7 @@ $this->headScript()
             </div>
          
            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-               <img style="border-radius: 2px; max-width: 240px; max-height: 150px; padding-top: 10px" src="<?= $helperImage->Image($this->product->image_small); ?>"/>            
+               <img style="border-radius: 2px; max-width: 240px; max-height: 150px; padding-top: 10px" src="<?= $helperImage->ImageUri($this->product->image_small); ?>"/>
            </div>
 
            <?php /*

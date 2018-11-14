@@ -44,7 +44,7 @@ $pageCount = $this->users->count();
 
     <?php 
     $this->rownum = (1 + (($this->page - 1) * 10));
-    $helpImage = new Default_View_Helper_Image();
+    $helpImage = new Default_View_Helper_ImageUri();
     $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
     foreach ($this->users as $this->user): ?>
             <div class="row" style="padding-bottom: 5px;">
@@ -52,7 +52,7 @@ $pageCount = $this->users->count();
                     <?=$this->rownum?>.
             	</div>
 				<div class="col-lg-7" >
-                    <img src="<?php echo $helpImage->Image( $this->user['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" style="max-width: 22px; max-height:22px;margin-right: 10px; border-radius: 50%;float: left"/>
+                    <img src="<?php echo $helpImage->ImageUri($this->user['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" style="max-width: 22px; max-height:22px;margin-right: 10px; border-radius: 50%;float: left"/>
 				    <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->user['username']); ?>" style="vertical-align:middle;">
                         <?php echo  $this->user['username']; ?>
                     </a>

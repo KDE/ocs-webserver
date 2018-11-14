@@ -24,7 +24,7 @@ $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
 $helperGetAuthUser = new Default_View_Helper_GetAuthUser();
 $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 $helperUserFollowsProject = new Default_View_Helper_UserFollowsProject();
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
 
@@ -39,7 +39,7 @@ if (false == $helperUserFollowsProject->userFollowsProject($this->authMember->me
     $urlUserFollows = $helperBuildProductUrl->buildProductUrl($this->product->project_id, 'follow');
     $imgFile = '/theme/flatui/img/icon-like.png';
 }
-$titleImage = $helperImage->Image($this->product->image_big, array('width' => 1170, 'height' => 300));
+$titleImage = $helperImage->ImageUri($this->product->image_big, array('width' => 1170, 'height' => 300));
 $pathParts = explode('/', $titleImage);
 $titleImageName = $pathParts[sizeof($pathParts) - 1];
 $styleAttr = ' style="background-image: url(' . $titleImage . ');"';
@@ -71,7 +71,7 @@ if ($this->product->claimable == 1) {
                         <!-- LOGO -->
                         <div id="product-logo" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
                             <img style="border-radius: 2px;"  width="120" height="96"
-                                 src="<?= $helperImage->Image($this->product->image_small, array('width' => 120, 'height' => 96)); ?>"/>
+                                 src="<?= $helperImage->ImageUri($this->product->image_small, array('width' => 120, 'height' => 96)); ?>"/>
                         </div>
                         <!-- /LOGO -->
 
@@ -110,7 +110,7 @@ if ($this->product->claimable == 1) {
                                                     <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->username); ?>"
                                                        title="<?= $this->member->username ?>">
                                                         <div class="profile-image-overlay-4 absolute"></div>
-                                                        <img src="<?= $helperImage->Image($this->member->profile_image_url, array('width' => 40, 'height' => 40)); ?>"
+                                                        <img src="<?= $helperImage->ImageUri($this->member->profile_image_url, array('width' => 40, 'height' => 40)); ?>"
                                                              alt="product-maker"
                                                              width="15"
                                                              height="15"
@@ -234,7 +234,7 @@ if ($this->product->claimable == 1) {
                                             <div class="u-wrap">
                                                 <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($supporter->username); ?>">
                                                     <figure>
-                                                        <img src="<?= $helperImage->Image($supporter->profile_image_url,array('width' => 200, 'height' => 200, 'crop' => 2)); ?>"/>
+                                                        <img src="<?= $helperImage->ImageUri($supporter->profile_image_url,array('width' => 200, 'height' => 200, 'crop' => 2)); ?>"/>
                                                     </figure>
                                                     <div class="u-content">
                                                         <h3><?= $supporter->username ?></h3>

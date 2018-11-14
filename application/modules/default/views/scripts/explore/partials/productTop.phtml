@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 $helpProductUrl = new Default_View_Helper_BuildProductUrl();
-$helpImage = new Default_View_Helper_Image();
+$helpImage = new Default_View_Helper_ImageUri();
 ?>
 <div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12 nopaddingleftright" >
     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 nopaddingleftright" >
@@ -32,7 +32,7 @@ $helpImage = new Default_View_Helper_Image();
         <figure>
             <a href="<?= $helpProductUrl->buildProductUrl($this->product['project_id'], ''); ?>">
                
-                <img src="<?php echo $helpImage->Image($this->product['image_small'], array('width' => 40, 'height' => 40)); ?>" style="width: 30px; height: 30px; padding-top: 3px"/>
+                <img src="<?php echo $helpImage->ImageUri($this->product['image_small'], array('width' => 40, 'height' => 40)); ?>" style="width: 30px; height: 30px; padding-top: 3px"/>
                
             </a>
         </figure>

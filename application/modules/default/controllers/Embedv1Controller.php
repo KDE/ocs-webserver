@@ -149,13 +149,13 @@ class Embedv1Controller extends Zend_Controller_Action
 
     protected function _getHTMLProjectDetail($project)
     {
-        $helperImage = new Default_View_Helper_Image();
+        $helperImage = new Default_View_Helper_ImageUri();
         $helperPrintDate = new Default_View_Helper_PrintDate();
         $printRating= new Default_View_Helper_PrintRatingWidgetSimple();
         $html = '';
         $html = $html.'<div class="opendesktopwidget-main-detail-container-body-header">';
 
-        $html = $html.'<div class="opendesktopwidget-img-member"><img src="'.$helperImage->Image($project['profile_image_url'], array('width' => 85, 'height' => 85)).'" /></div>';
+        $html = $html.'<div class="opendesktopwidget-img-member"><img src="'.$helperImage->ImageUri($project['profile_image_url'], array('width' => 85, 'height' => 85)).'" /></div>';
         $html = $html.'<div class="opendesktopwidget-description">'.$project['title'];
         $html = $html.'<span class="opendesktopwidget-category">'.$project['cat_title'];
         $html = $html.'</span>';
@@ -176,7 +176,7 @@ class Embedv1Controller extends Zend_Controller_Action
             $html = $html.'<div id="opendesktopwidget-main-detail-carousel" data-simple-slider>';
             //$html = $html.'<img src="'.$helperImage->Image($project['pics'][0], array('height' => '600')).'" />';
             foreach ($project['pics'] as  $pic) {
-                $html = $html.'<div><img src="'.$helperImage->Image($pic, array('width' => '621','height' => '621')).'" /></div>';
+                $html = $html.'<div><img src="'.$helperImage->ImageUri($pic, array('width' => '621', 'height' => '621')).'" /></div>';
             }
 
             $html = $html.'</div>';
@@ -281,7 +281,7 @@ class Embedv1Controller extends Zend_Controller_Action
     protected function _getHTMLReviews($reviews)
     {
 
-        $helperImage = new Default_View_Helper_Image();
+        $helperImage = new Default_View_Helper_ImageUri();
         $helperPrintDate = new Default_View_Helper_PrintDate();
 
         $cntActive = 0;
@@ -324,7 +324,7 @@ class Embedv1Controller extends Zend_Controller_Action
 
              $html = $html.'<div class="opendesktopwidget-reviews-rows '.$clsActive.$clsLike.'">';
               $html = $html.'<div class="opendesktopwidget-reviews-title">';
-              $html = $html.'<img class="opendesktopwidget-reviews-userimg" src="'.$helperImage->Image($review['profile_image_url'], array('width' => 40, 'height' => 40)).'" />';
+              $html = $html.'<img class="opendesktopwidget-reviews-userimg" src="'.$helperImage->ImageUri($review['profile_image_url'], array('width' => 40, 'height' => 40)).'" />';
               $html = $html.'<span class="opendesktopwidget-reviews-title-1">'.$review['username'].'</span>';
               $html = $html.'<span class="opendesktopwidget-reviews-title-2">'.$helperPrintDate->printDate($review['created_at']).'</span>';
               if($review['user_like']==1){
@@ -487,14 +487,14 @@ class Embedv1Controller extends Zend_Controller_Action
     protected function _getHTMLComments($comments)
     {
         $commentslist = $comments['result'];
-        $helperImage = new Default_View_Helper_Image();
+        $helperImage = new Default_View_Helper_ImageUri();
         $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
         $helperPrintDate = new Default_View_Helper_PrintDate();
         $html = '';
         foreach ($commentslist as $p) {
                 $html = $html.'<div class="opendesktopwidgetcommentrow level'.$p['level'].'"  id="opendesktopwidgetcommentrow_'.$p['comment_id'].'">';
 
-                $html = $html.'<img class="image_small" src="'.$helperImage->Image($p['profile_image_url'], array('width' => 60, 'height' => 60)).'" />';
+                $html = $html.'<img class="image_small" src="'.$helperImage->ImageUri($p['profile_image_url'], array('width' => 60, 'height' => 60)).'" />';
 
                 $html = $html.'<div class="opendesktopwidgetcommentrow-header">';
                 $html = $html.'<span class="username">'.$p['username'].'</span>';
@@ -622,10 +622,10 @@ class Embedv1Controller extends Zend_Controller_Action
         $html = '';
         $modelMember = new Default_Model_Member();
         $m = $modelMember->fetchMemberData($user_id);
-        $helperImage = new Default_View_Helper_Image();
+        $helperImage = new Default_View_Helper_ImageUri();
         $html = $html.'<div class="opendesktopwidgetheader">';
         $html = $html.'<a href="https://www.opendesktop.org" target="_blank"><img class="opendesktoplogo" src="https://www.opendesktop.org/images_sys/store_opendesktop/logo.png" /></a>';
-        $html = $html.'<img class="profile_image" src="'.$helperImage->Image($m['profile_image_url'], array('width' => 110, 'height' => 110)).'" />';
+        $html = $html.'<img class="profile_image" src="'.$helperImage->ImageUri($m['profile_image_url'], array('width' => 110, 'height' => 110)).'" />';
         $html = $html.'</div> <!--end of header-->';
         return $html;
 
@@ -633,7 +633,7 @@ class Embedv1Controller extends Zend_Controller_Action
 
     protected function _getHTMLProducts($userProducts)
     {
-        $helperImage = new Default_View_Helper_Image();
+        $helperImage = new Default_View_Helper_ImageUri();
         $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
         $printRating= new Default_View_Helper_PrintRatingWidgetSimple();
         $helperPrintDate = new Default_View_Helper_PrintDate();
@@ -643,7 +643,7 @@ class Embedv1Controller extends Zend_Controller_Action
                                         .' " data-project-id="'.$p['id']
                                         .' " data-ppload-collection-id="'.$p['ppload_collection_id'].'">';
                 //$html = $html.'<a href="'.$this->_config['baseurl'].'p/'.$p['id'].'" target="_blank">';
-                $html = $html.'<img class="image_small" src="'.$helperImage->Image($p['image_small'], array('width' => 167, 'height' => 167)).'" />';
+                $html = $html.'<img class="image_small" src="'.$helperImage->ImageUri($p['image_small'], array('width' => 167, 'height' => 167)).'" />';
 
                 $html = $html.'<div class="description-container">';
                 $html = $html.'<div class="description">';

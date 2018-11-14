@@ -21,7 +21,7 @@
  **/
 
 $helperHumanTiming = new Default_View_Helper_HumanTiming();
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helpProductUrl = new Default_View_Helper_BuildProductUrl();
 ?>
@@ -31,7 +31,7 @@ $helpProductUrl = new Default_View_Helper_BuildProductUrl();
         $inc = 1;
         $bufferDate = '';
         $index = 0;
-        $helperImage = new Default_View_Helper_Image();
+        $helperImage = new Default_View_Helper_ImageUri();
         foreach ($this->earnings as $element) {
         $loopProductId = 'loop' . $this->project_id . $inc++;
         $date = $helperHumanTiming->humanTiming($element->create_time);
@@ -47,7 +47,7 @@ $helpProductUrl = new Default_View_Helper_BuildProductUrl();
         <div class="row" id="<?= $loopProductId ?>" style="padding-bottom:10px;">
             <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2 ">
                 <a href="<?= $helpMemberUrl->buildMemberUrl($element->username) ?>">
-                <img src="<?php echo $helperImage->Image($element->profile_image_url,array('width' => 50, 'height' => 50)); ?>"
+                <img src="<?php echo $helperImage->ImageUri($element->profile_image_url,array('width' => 50, 'height' => 50)); ?>"
                          alt="profile-image"                         
                          style="border-radius:50%;  width: 50px; height: 50px; margin-right: 10px"
                          >
@@ -62,7 +62,7 @@ $helpProductUrl = new Default_View_Helper_BuildProductUrl();
 
             <div class="col-lg-7 col-md-2 col-sm-2 col-xs-2" >
                 <div style="padding-left: 50px">
-                <a href="<?=$helpProductUrl->buildProductUrl($element->project_id, '', null, true)?>"><img src="<?php echo $helperImage->Image($element->image_small, array('width' => 80, 'height' => 80)); ?>" style="max-width: 80px; max-height: 80px"/></a>
+                <a href="<?=$helpProductUrl->buildProductUrl($element->project_id, '', null, true)?>"><img src="<?php echo $helperImage->ImageUri($element->image_small, array('width' => 80, 'height' => 80)); ?>" style="max-width: 80px; max-height: 80px"/></a>
                 <a href="<?=$helpProductUrl->buildProductUrl($element->project_id, '', null, true)?>"> <span class="" style="padding-left: 20px"><?php echo $element->title; ?></span></a>
                 </div>
             </div>

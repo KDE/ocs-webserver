@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,15 +20,15 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_View_Helper_Image extends Zend_View_Helper_Abstract
+class Default_View_Helper_ImageUri extends Zend_View_Helper_Abstract
 {
 
     protected $_operations = array(
-        'crop' => '%d',
-        'width' => '%d',
-        'height' => '%d',
-        'quality' => '%d',
-        'bgColor' => '%s',
+        'crop'        => '%d',
+        'width'       => '%d',
+        'height'      => '%d',
+        'quality'     => '%d',
+        'bgColor'     => '%s',
         'progressive' => '%d'
     );
 
@@ -37,14 +38,27 @@ class Default_View_Helper_Image extends Zend_View_Helper_Abstract
 
     protected $_separator = '-';
 
-    public function Image($filename, $options = array())
+    public function ImageUri($filename, $options = array())
     {
-        if (strpos($filename, 'http', 0) === 0) {
+        if (empty($options) and $this->validUri($filename)) {
             return $filename;
         }
 
-        $operations = "";
+        if ($this->validUri($filename)) {
+            return $this->updateImageUri($filename, $options);
+        }
 
+        return $this->createImageUri($filename, $options);
+    }
+
+    private function validUri($filename)
+    {
+        return Zend_Uri::check($filename);
+    }
+
+    private function createImageUri($filename, $options)
+    {
+        $operations = "";
 
         if (isset($options['width']) && isset($options['height'])) {
             $operations .= $options['width'] . 'x' . $options['height'];
@@ -76,5 +90,22 @@ class Default_View_Helper_Image extends Zend_View_Helper_Abstract
 
         return $url;
     }
-    
+
+    private function updateImageUri($filename, $options)
+    {
+        $dimension = '';
+        if (isset($options['width']) && isset($options['height'])) {
+            $dimension = $options['width'] . 'x' . $options['height'];
+        }
+        elseif (isset($options['width']) && (false === isset($options['height']))) {
+            $dimension = $options['width'] . 'x' . $options['width'];
+        }
+        elseif (isset($options['height']) && (false === isset($options['width']))) {
+            $dimension = $options['height'] . 'x' . $options['height'];
+        }
+        $uri = preg_replace("/\d\d\dx\d\d\d/", $dimension, $filename);
+
+        return $uri;
+    }
+
 }

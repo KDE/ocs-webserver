@@ -340,8 +340,8 @@ class Default_Model_Ocs_Ldap
     private function createJpegPhoto($member_id, $profile_image_url)
     {
         $imgTempPath = APPLICATION_DATA . '/uploads/tmp/' . $member_id . "_avatar.jpg";
-        $helperImagePath = new Default_View_Helper_Image();
-        $urlImage = $helperImagePath->Image($profile_image_url);
+        $helperImagePath = new Default_View_Helper_ImageUri();
+        $urlImage = $helperImagePath->ImageUri($profile_image_url);
 
         try {
             $im = new imagick($urlImage);

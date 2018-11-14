@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
         $helpTruncate = new Default_View_Helper_Truncate();
-        $helpImage = new Default_View_Helper_Image();
+        $helpImage = new Default_View_Helper_ImageUri();
         $helpProductUrl = new Default_View_Helper_BuildProductUrl();
         $helpCategories = new Default_View_Helper_FetchCategoriesForProductAsString();
         $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
@@ -43,7 +43,7 @@
                             </span>   
                                                         
                               <a class="feature_image"  title="<?=$helpTruncate->truncate($this->product['description'], 200, '...', false, true)?>" href="<?=$helpProductUrl->buildProductUrl($this->product['project_id'],'')?>">
-                                 <img  src="<?=$helpImage->Image($this->product['image_small'], array('width' => 300, 'height' => 230 ,'crop' => 1))?>"  />
+                                 <img  src="<?=$helpImage->ImageUri($this->product['image_small'], array('width' => 300, 'height' => 230, 'crop' => 1))?>"  />
                               </a>
 
                                <div class="feature_text">
@@ -69,7 +69,7 @@
                                <div class="feature_text_auth" >
                                <a  class="auto_link" href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['username']); ?>" >
                                    <figure >
-                                       <img src="<?php echo $helpImage->Image($this->product['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" />
+                                       <img src="<?php echo $helpImage->ImageUri($this->product['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" />
                                    </figure>                                        
                                </a>
                                   <span class="created_by" > created by <?php echo $this->product['username']; ?> </span>

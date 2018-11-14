@@ -21,7 +21,7 @@
  **/
 $users = $this->newUsers($limit = 216,'created_at','DESC');
 $buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 $this->headMeta()->setName('robots', 'noindex, nofollow');
 ?>
 
@@ -61,7 +61,7 @@ $this->headMeta()->setName('robots', 'noindex, nofollow');
                 <div class="thumb">
                     <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['username']); ?>">
                         <span></span>
-                        <img src="<?php echo $helperImage->Image($user['profile_image_url'],array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"/>
+                        <img src="<?php echo $helperImage->ImageUri($user['profile_image_url'],array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"/>
                     </a>
                 </div>
 

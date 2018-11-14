@@ -206,24 +206,22 @@ class UserController extends Local_Controller_Action_DomainSwitch
     {
         $this->_helper->layout->disableLayout();
 
-        $size = 200;
-        if (null != ($this->getParam("size"))) {
-            $size = $this->getParam("size");
-        }
+        $size = (int)$this->getParam("size", 200);
         $this->view->size = (int)$size / 2;
 
-        $emailHash = null;
-        if (null != ($this->getParam("emailhash"))) {
-            $emailHash = $this->getParam("emailhash");
-        }
-        $memberTable = new Default_Model_Member();
+        $emailHash = $this->getParam("emailhash", null);
+
         if ($emailHash) {
+            $memberTable = new Default_Model_Member();
             $member = $memberTable->findMemberForMailHash($emailHash);
 
             if ($member) {
-                $helperImage = new Default_View_Helper_Image();
-                $imgUrl = $helperImage->Image($member['profile_image_url'], array('width' => $size, 'height' => $size));
+
+                $helperImage = new Default_View_Helper_ImageUri();
+                $imgUrl = $helperImage->ImageUri($member['profile_image_url'], array('width' => $size, 'height' => $size));
                 $this->view->avatar = $imgUrl;
+
+                $this->redirect($imgUrl);
             } else {
                 $this->view->avatar = "";
             }

@@ -24,7 +24,7 @@ $helperPrintDate = new Default_View_Helper_PrintDate();
 $updateTime = $helperPrintDate->printDate($this->product->project_changed_at);
 $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 $helperFetchSubcategoriesForProduct = new Default_View_Helper_FetchCategoriesForProductAsString();
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 ?>
 <div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12">
     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
@@ -36,7 +36,7 @@ $helperImage = new Default_View_Helper_Image();
         <figure>
             <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product->project_id, ''); ?>">
                 <div class="text-center">
-                <img src="<?php echo $helperImage->Image($this->product->image_small, array('width' => 167, 'height' => 167)); ?>" class="explore-product-image"/>
+                <img src="<?php echo $helperImage->ImageUri($this->product->image_small, array('width' => 167, 'height' => 167)); ?>" class="explore-product-image"/>
                 </div>
             </a>
         </figure>

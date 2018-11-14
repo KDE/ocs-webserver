@@ -22,7 +22,7 @@
 
 //$this->os = Zend_Registry::get('application_os');
 $this->tab = 'add';
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helpProductUrl = new Default_View_Helper_BuildProductUrl();
 $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
@@ -169,7 +169,7 @@ $this->inlineScript()->appendScript('
             <section class="wrapper about-me-header">
 
                 <figure>
-                    <img src="<?php echo $helperImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)); ?>" alt="profile-image" width="110" height="110">
+                    <img src="<?php echo $helperImage->ImageUri($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)); ?>" alt="profile-image" width="110" height="110">
                 </figure>
 
                 <div class="user-menu well">

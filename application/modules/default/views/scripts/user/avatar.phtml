@@ -36,9 +36,9 @@ if(null != $request->getParam('debug')) {
 //var_dump($hash);
 //sdie;
 
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 
-$imgUrl = $helperImage->Image($file_out,array('width' => $size, 'height' => $size));
+$imgUrl = $helperImage->ImageUri($file_out,array('width' => $size, 'height' => $size));
 
 if($debugMe == 1) {
     print_r('ImgUrl2: ' . $imgUrl);

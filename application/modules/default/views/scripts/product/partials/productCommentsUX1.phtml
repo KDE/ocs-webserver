@@ -27,7 +27,7 @@ $productUrl = $helpProductUrl->buildProductUrl($this->product->project_id);
 $loginUrl = '/login?redirect=' . $helperEncryptUrl->encryptUrl($productUrl.'#comments_block', true);
 $helperHumanTiming = new Default_View_Helper_HumanTiming();
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 $identity = Zend_Auth::getInstance()->getStorage()->read();
 $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountPerPage();
 
@@ -112,7 +112,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                        <span class="supporter-badge-<?=($elementComment['level']>1?2:1)?>" >S</span> 
                        <?php }?>
 
-                        <img src="<?= $helperImage->Image($comment['profile_image_url'], array('width' => 60, 'height' => 60)) ?>" class="img<?=$elementComment['level']?>">
+                        <img src="<?= $helperImage->ImageUri($comment['profile_image_url'], array('width' => 60, 'height' => 60)) ?>" class="img<?= $elementComment['level']?>">
                                                
                         </div>
                          <?php if( $comment['roleid'] ==Default_Model_DbTable_Member::ROLE_ID_MODERATOR) { ?>

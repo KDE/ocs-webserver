@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$helpImage = new Default_View_Helper_Image();
+$helpImage = new Default_View_Helper_ImageUri();
 $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 ?>
 
@@ -34,7 +34,7 @@ $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
                     if($product->project_id==0 || is_null($product->project_id)) {
                         continue;
                     }
-                    $imgUrl = $helpImage->Image($product->image_small, array('width' => 200, 'height' => 160));
+                    $imgUrl = $helpImage->ImageUri($product->image_small, array('width' => 200, 'height' => 160));
                     $title = substr($product->title, 0, 20) . ' - ' . substr($product->catTitle, 0, 20);
                     $title = str_replace('"', '&#8221;', $title);
                     ?>
@@ -57,7 +57,7 @@ $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
                         <a
                             href="<?= $helpBuildProductUrl->buildProductUrl($product->project_id) ?>"
                             title="<?= $product->title ?>">
-                            <img src="<?= $helpImage->Image($product->image_small, array('width' => 80, 'height' => 80)); ?>"
+                            <img src="<?= $helpImage->ImageUri($product->image_small, array('width' => 80, 'height' => 80)); ?>"
                                  alt="product">
                         </a>
                         <!-- /product thumbnail -->

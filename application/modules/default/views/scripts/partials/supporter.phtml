@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $this->myCounter = $this->myCounter + 1;
 
@@ -38,7 +38,7 @@ if (($this->partialCounter<4 && $this->partialCounter  % 5 == 0) || ($this->part
                 <?php echo $this->myCounter; ?>
                 <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->username); ?>">
                     <div class="profile-image-overlay-3 absolute"></div>
-                    <img src="<?= $helperImage->Image($this->profile_image_url,array('width' => 89, 'height' => 80, 'crop' => 2)); ?>" alt="<?= $this->username ?>" width="80">
+                    <img src="<?= $helperImage->ImageUri($this->profile_image_url,array('width' => 89, 'height' => 80, 'crop' => 2)); ?>" alt="<?= $this->username ?>" width="80">
                 </a>
             </div>
             <!-- /.supporter-thumbnail -->

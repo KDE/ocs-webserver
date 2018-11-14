@@ -21,7 +21,7 @@
  **/
 
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 $helpTruncate = new Default_View_Helper_Truncate();
 $this->headTitle($this->member->username . ' - ' . $_SERVER['HTTP_HOST'], 'SET');
 $this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
@@ -39,7 +39,7 @@ $this->headMeta()->appendProperty('og:title', $this->member->username);
 $this->headMeta()->appendProperty('og:description',
     $helpTruncate->truncate($desc, 200, '...', false, true));
 $this->headMeta()->appendProperty('og:image',
-    $helperImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)));
+    $helperImage->ImageUri($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)));
 
 
 $helperFetchMainCategories = new Default_View_Helper_FetchMainCategories();
@@ -48,7 +48,7 @@ $categories = $helperFetchMainCategories->fetchMainCategories();
 $helperAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
 $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 $helperTruncate = new Default_View_Helper_Truncate();
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 $helperPrintDate = new Default_View_Helper_PrintDate();
 $textCountryCity = $this->member->city;
 $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
@@ -77,7 +77,7 @@ $isSupporter = $this->stat['donationIssupporter'];
                                 <figure class="relative inline profile-image-container">
                                     <?php if( $isSupporter) { ?><span class="supporter-badge">S</span>                                                  
                                     <?php }?>                                                                        
-                                    <img src="<?php echo $helperImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"
+                                    <img src="<?php echo $helperImage->ImageUri($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"
                                          alt="profile-image"
                                          width="110"
                                          height="110">

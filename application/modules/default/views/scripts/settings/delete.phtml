@@ -69,7 +69,7 @@ $users = $this->newUsers($limit = 216,'created_at','DESC');
         <section id="thumbs">
 
             <?php
-            $helperImage = new Default_View_Helper_Image();
+            $helperImage = new Default_View_Helper_ImageUri();
             $helperMemberUrl = new Default_View_Helper_BuildMemberUrl();
 
             foreach ($users as $key => $user) { ?>
@@ -77,7 +77,7 @@ $users = $this->newUsers($limit = 216,'created_at','DESC');
                 <div class="thumb">
                     <a href="<?php echo $helperMemberUrl->buildMemberUrl($user['username']); ?>">
                         <span></span>
-                        <img src="<?php echo $helperImage->Image($user['profile_image_url'],array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"/>
+                        <img src="<?php echo $helperImage->ImageUri($user['profile_image_url'],array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"/>
                     </a>
                 </div>
 

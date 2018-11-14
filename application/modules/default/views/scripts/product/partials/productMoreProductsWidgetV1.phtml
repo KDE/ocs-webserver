@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$helpImage = new Default_View_Helper_Image();
+$helpImage = new Default_View_Helper_ImageUri();
 $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 ?>
 <div class="prod-widget-box right moreproducts">
@@ -31,7 +31,7 @@ $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
             <div class="row product-row" style="margin-top: -20px">
                 <?php
                 foreach ($this->moreProducts as $product):
-                    $imgUrl = $helpImage->Image($product->image_small, array('width' => 200, 'height' => 160));
+                    $imgUrl = $helpImage->ImageUri($product->image_small, array('width' => 200, 'height' => 160));
                     $title = substr($product->title, 0, 20) . ' - ' . substr($product->catTitle, 0, 20);
                     $title = str_replace('"', '&#8221;', $title);
                     ?>
@@ -54,7 +54,7 @@ $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
                         <a
                             href="<?= $helpBuildProductUrl->buildProductUrl($product->project_id) ?>"
                             title="<?= $product->title ?>">
-                            <img src="<?= $helpImage->Image($product->image_small, array('width' => 200, 'height' => 200)); ?>"
+                            <img src="<?= $helpImage->ImageUri($product->image_small, array('width' => 200, 'height' => 200)); ?>"
                                  alt="product">
                         </a>
                         <!-- /product thumbnail -->

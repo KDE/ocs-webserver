@@ -24,7 +24,7 @@ $helperPrintDate = new Default_View_Helper_PrintDate();
 $updateTime = $helperPrintDate->printDate($this->donation['create_time']);
 $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 $helperFetchSubcategoriesForProduct = new Default_View_Helper_FetchCategoriesForProductAsString();
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 ?><div class="commentstore">
 	<div class="row" style="margin-left: 0;margin-right: 0; ">
@@ -39,7 +39,7 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 		<div class="userinfo">
 			<div>
 				<a href="<?php echo $helpMemberUrl->buildMemberUrl($this->donation['username']) ?>">
-                    <img src="<?= $helperImage->Image($this->donation['profile_image_url'],	array('width' => 40, 'height' => 40)) ?>" />
+                    <img src="<?= $helperImage->ImageUri($this->donation['profile_image_url'],	array('width' => 40, 'height' => 40)) ?>" />
 					<span style="display: block"><?= $this->donation['username'] ?></span>
 				</a>
 			</div>

@@ -29,7 +29,7 @@
 
 <?php
 $helperProductUrl = new Default_View_Helper_BuildProductUrl();
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 if (count($this->followedProducts) < 4) {
     $g = count($this->followedProducts);
 } else {
@@ -49,7 +49,7 @@ foreach ($this->followedProducts as $follower):
         <div class="u-wrap">
             <a href="<?= $helperProductUrl->buildProductUrl($follower->project_id) ?>" title="<?= $follower->title ?>">
                 <figure>
-                    <img src="<?= $helperImage->Image($follower->image_small, array('width' => 280, 'height' => 167)); ?>"
+                    <img src="<?= $helperImage->ImageUri($follower->image_small, array('width' => 280, 'height' => 167)); ?>"
                          alt="<?= $follower->title ?>"
                          width="80">
                 </figure>

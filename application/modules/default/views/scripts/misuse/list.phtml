@@ -34,7 +34,7 @@
                     <?php
                     $helperPrintDate = new Default_View_Helper_PrintDate();
                     $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
-                    $helperImage = new Default_View_Helper_Image();
+                    $helperImage = new Default_View_Helper_ImageUri();
                     $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 
                     $this->rownum = (1 + (($this->page - 1) * 10));
@@ -68,7 +68,7 @@
                                     <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product['project_id'],
                                         ''); ?>">
                                         <div class="text-center">
-                                            <img src="<?php echo $helperImage->Image($this->product['image_small'],
+                                            <img src="<?php echo $helperImage->ImageUri($this->product['image_small'],
                                                 array('width' => 167, 'height' => 167)); ?>"
                                                  class="explore-product-image" style="max-width:95%;"/>
                                         </div>

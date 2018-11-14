@@ -23,7 +23,7 @@
 $helperHumanTiming = new Default_View_Helper_HumanTiming();
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 $comment = $this->comment;
 $marginLeft = $this->marginLeft;
 $age = $helperHumanTiming->humanTiming($comment['comment_created_at']);
@@ -43,7 +43,7 @@ $age = $helperHumanTiming->humanTiming($comment['comment_created_at']);
                             <img width="40"
                                  height="40"
                                  alt="<?= $comment['username'] ?>"
-                                 src="<?= $helperImage->Image($comment['profile_image_url'], array('width' => 40, 'height' => 40)) ?>">
+                                 src="<?= $helperImage->ImageUri($comment['profile_image_url'], array('width' => 40, 'height' => 40)) ?>">
                         </a>
                     </div>
                     <div class="col-md-7 col-lg-7 col-sm-7 col-xs-7 product-maker-summary">
@@ -68,7 +68,7 @@ $age = $helperHumanTiming->humanTiming($comment['comment_created_at']);
                             <figure class="supporter-thumbnail relative">
                                 <a href="<?= $helperBuildMemberUrl->buildMemberUrl($identity->username) ?>"
                                    title="<?= $identity->username ?>">
-                                    <img height="40" width="40" src="<?= $helperImage->Image($identity->profile_image_url,array('width' => 40, 'height' => 40, 'crop' => 2)); ?>"
+                                    <img height="40" width="40" src="<?= $helperImage->ImageUri($identity->profile_image_url,array('width' => 40, 'height' => 40, 'crop' => 2)); ?>"
                                          alt="<?= $identity->username ?>">
                                 </a>
                             </figure>

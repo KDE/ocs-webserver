@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 foreach (array_keys($this->supportingTeaser) as $cat):
     ?>
     <div class="cat-title col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -41,14 +41,14 @@ foreach (array_keys($this->supportingTeaser) as $cat):
     foreach ($this->supportingTeaser[$cat] as $product):
         $i++;
         $h++;
-        $titleImage = $helperImage->Image($product['image'], array('width' => 270, 'height' => 140));
+        $titleImage = $helperImage->ImageUri($product['image'], array('width' => 270, 'height' => 140));
         $hasTitle = $product['image'] !== null && strpos($titleImage, 'default.png') === false;
         ?>
         <div class="mini-card col-lg-2 col-md-2 col-sm-3 col-xs-2">
             <div class="u-wrap">
                 <a href="<?= $product['url'] ?>" title="<?= $product['name'] ?>">
                     <figure>
-                        <img src="<?= $helperImage->Image($product['image'], array('width' => 280, 'height' => 167)); ?>"
+                        <img src="<?= $helperImage->ImageUri($product['image'], array('width' => 280, 'height' => 167)); ?>"
                              alt="<?= $product['name'] ?>">
                     </figure>
                     <div class="u-content">

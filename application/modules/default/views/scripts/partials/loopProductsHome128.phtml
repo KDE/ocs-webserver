@@ -21,12 +21,12 @@
  **/
 
 $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
-$helperImage = new Default_View_Helper_Image();
+$helperImage = new Default_View_Helper_ImageUri();
 ?>
 <div class="product">
     <div class="product-wrap">
         <a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id); ?>">
-            <img src="<?php echo $helperImage->Image($this->image_small, array('width' => 160, 'height' => 90)); ?>"
+            <img src="<?php echo $helperImage->ImageUri($this->image_small, array('width' => 160, 'height' => 90)); ?>"
                  title="<?php echo $this->title; ?>" class="thumbsAlignleft" alt="product image">
 
             <h3><?php echo $this->title; ?></h3>

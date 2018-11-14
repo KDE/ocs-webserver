@@ -1,6 +1,6 @@
 <?php
     $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
-    $helperImage = new Default_View_Helper_Image();
+    $helperImage = new Default_View_Helper_ImageUri();
     $helperPrintDate = new Default_View_Helper_PrintDate();
     if($this->userProducts == null || count($this->userProducts)==0) return;
     foreach ($this->userProducts as $product): ?>
@@ -8,7 +8,7 @@
             <div class="u-wrap">
                 <a href="<?= $helperBuildProductUrl->buildProductUrl($product['project_id'], '', null, true); ?>">
                     <figure>
-                        <img src="<?php echo $helperImage->Image($product['image_small'], array('width' => 280, 'height' => 171)); ?>"
+                        <img src="<?php echo $helperImage->ImageUri($product['image_small'], array('width' => 280, 'height' => 171)); ?>"
                              class="explore-product-image" width="101" height="81" />
                     </figure>
                     <div class="u-content">

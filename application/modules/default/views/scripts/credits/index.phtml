@@ -120,7 +120,7 @@ $credits = $model->fetchCredits();
                     <?php
                     $helperPrintDate = new Default_View_Helper_PrintDate();
                     $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
-                    $helperImage = new Default_View_Helper_Image();
+                    $helperImage = new Default_View_Helper_ImageUri();
                     $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 
                     $this->rownum = (1 + (($this->page - 1) * 10));

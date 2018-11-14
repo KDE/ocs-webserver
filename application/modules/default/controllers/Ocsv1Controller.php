@@ -1148,12 +1148,12 @@ class Ocsv1Controller extends Zend_Controller_Action
             return $previews;
         }
 
-        $viewHelperImage = new Default_View_Helper_Image();
+        $viewHelperImage = new Default_View_Helper_ImageUri();
         $previewPics = array(
-            'previewpic1' => $viewHelperImage->Image($project->image_small, $previewPicSize)
+            'previewpic1' => $viewHelperImage->ImageUri($project->image_small, $previewPicSize)
         );
         $smallPreviewPics = array(
-            'smallpreviewpic1' => $viewHelperImage->Image($project->image_small, $smallPreviewPicSize)
+            'smallpreviewpic1' => $viewHelperImage->ImageUri($project->image_small, $smallPreviewPicSize)
         );
 
         $tableProject = new Default_Model_Project();
@@ -1161,8 +1161,8 @@ class Ocsv1Controller extends Zend_Controller_Action
         if ($galleryPics) {
             $i = 2;
             foreach ($galleryPics as $galleryPic) {
-                $previewPics['previewpic' . $i] = $viewHelperImage->Image($galleryPic, $previewPicSize);
-                $smallPreviewPics['smallpreviewpic' . $i] = $viewHelperImage->Image($galleryPic, $smallPreviewPicSize);
+                $previewPics['previewpic' . $i] = $viewHelperImage->ImageUri($galleryPic, $previewPicSize);
+                $smallPreviewPics['smallpreviewpic' . $i] = $viewHelperImage->ImageUri($galleryPic, $smallPreviewPicSize);
                 $i++;
             }
         }

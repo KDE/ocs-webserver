@@ -84,10 +84,10 @@ $helpBuildUrl = new Default_View_Helper_BuildProductUrl();
         
          <section class="wrapper" id="indeximages" >            
                          <?php     
-                         $helperImage = new Default_View_Helper_Image();
+                         $helperImage = new Default_View_Helper_ImageUri();
                          foreach ($imgs as $obj) {   
                             if($obj['image_small']=='') continue;
-                            $imgpath = $helperImage->Image($obj['image_small'],array('width' => 120, 'height' => 120));
+                            $imgpath = $helperImage->ImageUri($obj['image_small'],array('width' => 120, 'height' => 120));
                             if('http://cn.pling.ws/cache/90x90/img/default.png'== $imgpath) continue;                                            
                             ?>                    
                            <a href="<?= $helpBuildUrl->buildProductUrl($obj['project_id'])?>" title="<?= $obj['title']?>"> <img class="logo"  src="<?= $imgpath?>"  alt="<?= $obj['title']?>" /></a>

@@ -26,12 +26,12 @@ $updateTime = $helperPrintDate->printDate($this->changed_at);
 
 $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 $helperFetchSubcategoriesForProduct = new Default_View_Helper_FetchCategoriesForProductAsString();
-$helpImage = new Default_View_Helper_Image();
+$helpImage = new Default_View_Helper_ImageUri();
 ?>
 <div class="product-item grid-item">
     <a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, ''); ?>">
         <figure>
-            <img src="<?php echo $helpImage->Image($this->image_small, array('width' => 167, 'height' => 167)); ?>" class="explore-product-image"/>
+            <img src="<?php echo $helpImage->ImageUri($this->image_small, array('width' => 167, 'height' => 167)); ?>" class="explore-product-image"/>
         </figure>
         <div class="details">
             <h3>
