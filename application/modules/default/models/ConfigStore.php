@@ -91,7 +91,7 @@ class Default_Model_ConfigStore
         return $this->is_show_home == 1 ? true : false;
     }
 
-       /**
+    /**
      * @return bool
      */
     public function isRenderReact()

@@ -81,6 +81,8 @@ Still no luck? Search for whatever is missing, or take a look around the rest of
         }
 
         $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'undefined';
+        $storeHost = Zend_Registry::isRegistered('store_host') ? Zend_Registry::get('store_host') : 'undefined';
+
         $errorLog = Zend_Registry::get('logger');
         $errorMsg = '' . PHP_EOL;
         $errorMsg .= 'MESSAGE::     ' . $errors->exception->getMessage() . PHP_EOL;
@@ -88,7 +90,7 @@ Still no luck? Search for whatever is missing, or take a look around the rest of
         $errorMsg .= 'USER_AGENT::  ' . $userAgent . PHP_EOL;
         $errorMsg .= 'REQUEST_URI:: ' . $_SERVER['REQUEST_URI'] . PHP_EOL;
         $errorMsg .= 'ENVIRONMENT:: ' . APPLICATION_ENV . PHP_EOL;
-        $errorMsg .= 'STORE_HOST::  ' . Zend_Registry::get('store_host') . PHP_EOL;
+        $errorMsg .= 'STORE_HOST::  ' . $storeHost . PHP_EOL;
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $errorMsg .= 'FORWARDED_IP::' . $_SERVER['HTTP_X_FORWARDED_FOR'] . PHP_EOL;
         } else {
