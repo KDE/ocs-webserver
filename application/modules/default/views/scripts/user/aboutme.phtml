@@ -20,11 +20,31 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperImage = new Default_View_Helper_Image();
+$helpTruncate = new Default_View_Helper_Truncate();
+$this->headTitle($this->member->username . ' - ' . $_SERVER['HTTP_HOST'], 'SET');
+$this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
+$desc=  isset($this->mainProject->description) ? nl2br(strip_tags($this->mainProject->description)): $this->member->username;
+$this->headMeta()->setName('description',
+    $helpTruncate->truncate($desc, 200, '...', false, true));
+$this->headMeta()->setName('title',
+    $this->member->username . ' - ' . $_SERVER['HTTP_HOST']);
+$this->headMeta()->setName('keywords',
+    $this->member->username . ' - ' . $_SERVER['HTTP_HOST']);
+
+$this->headMeta()->appendProperty('og:url', $helperBuildMemberUrl->buildMemberUrl($this->member->username));
+$this->headMeta()->appendProperty('og:type', 'website');
+$this->headMeta()->appendProperty('og:title', $this->member->username);
+$this->headMeta()->appendProperty('og:description',
+    $helpTruncate->truncate($desc, 200, '...', false, true));
+$this->headMeta()->appendProperty('og:image',
+    $helperImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)));
+
+
 $helperFetchMainCategories = new Default_View_Helper_FetchMainCategories();
 $helperRatingWidget = new Default_View_Helper_PrintRatingWidget();
-
 $categories = $helperFetchMainCategories->fetchMainCategories();
-
 $helperAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
 $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 $helperTruncate = new Default_View_Helper_Truncate();
@@ -33,7 +53,6 @@ $helperPrintDate = new Default_View_Helper_PrintDate();
 $textCountryCity = $this->member->city;
 $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
 $helperMemberScore = new Default_View_Helper_FetchMemberScore();
-
 $isSupporter = $this->stat['donationIssupporter'];
 
 
@@ -578,7 +597,7 @@ $isSupporter = $this->stat['donationIssupporter'];
     </main>
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
-            AboutMePage.setup("'.$this->member->username.'");
+            //AboutMePage.setup("'.$this->member->username.'");
             AboutMeMyProjectsPaging.setup();
             AboutMeMyProjectsPagingButton.setup();        
             TooltipUser.setup("tooltipuser","right");   
