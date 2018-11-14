@@ -2586,7 +2586,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     
     private function fetchGitlabProject($gitProjectId)
     {
-        $gitlab = new Default_Model_Ocs_Gitlab();
+        $gitlab = new Default_Model_Ocs_Gitlab(); 
         
         $gitProject = $gitlab->getProject($gitProjectId);
         
