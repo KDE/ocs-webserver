@@ -1,3 +1,5 @@
+out: ../css/stylesheet.css, sourcemap: true, compress: true
+
 @import "stylesheets/mixins.less";
 /** @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);**/
 /**
@@ -2556,10 +2558,10 @@ span.page-views {
         background: #f5f5f5;
         padding: 10px;
         border-radius: 5px;
-        @media(max-width:800px){
+        /*@media(max-width:800px){
           max-height: 400px;
           overflow-y: auto;
-        }
+        }*/
 
         @media(max-width:550px){
 
@@ -2664,7 +2666,7 @@ span.page-views {
     #thumbs {
         z-index: -1;
         width: 100%;
-        min-height: 700px;
+        min-height: 1000px;
         overflow: hidden;
         position: relative;
         background: rgba(0,0,0,1);
