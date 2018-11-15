@@ -123,7 +123,7 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
             $headKeywords=$this::METAHEADER_DEFAULT_KEYWORDS;
         }
 
-        if($this->view->headMeta()->getValue('keywords')!=null)
+        if($this->view->headMeta()->getValue('keywords')==null)
         {
             $this->view->headMeta()
             ->appendName('author', $this->templateConfigData['head']['meta_author'])
