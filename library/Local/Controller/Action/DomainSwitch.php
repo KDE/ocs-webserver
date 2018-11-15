@@ -33,7 +33,10 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
     protected $_authMember;
     protected $templateConfigData;
     protected $defaultConfigName;
-
+    const METAHEADER_DEFAULT = 'meta_keywords';
+    const METAHEADER_DEFAULT_TITLE='opendesktop.org';
+    const METAHEADER_DEFAULT_DESCRIPTION='A community where developers and artists share applications, themes and other content';
+    const METAHEADER_DEFAULT_KEYWORDS='linux,kde,gnome,themes,apps,desktops,applications,addons,artwork,wallpapers';
     public function init()
     {
         $this->initDefaultConfigName();
@@ -105,8 +108,20 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
     public function initView()
     {
         $headTitle = $this->templateConfigData['head']['browser_title'];
+        $headDesc = $this->templateConfigData['head']['meta_description'];
+        $headKeywords =$this->templateConfigData['head']['meta_keywords'];
         //set default site-title
         $this->view->headTitle($headTitle, Zend_View_Helper_Placeholder_Container_Abstract::SET);
+
+        if($headTitle==$this::METAHEADER_DEFAULT){
+            $headTitle=$this::METAHEADER_DEFAULT_TITLE;
+        }
+        if($headDesc==$this::METAHEADER_DEFAULT){
+            $headDesc=$this::METAHEADER_DEFAULT_DESCRIPTION;
+        }
+        if($headKeywords==$this::METAHEADER_DEFAULT){
+            $headKeywords=$this::METAHEADER_DEFAULT_KEYWORDS;
+        }
 
         $this->view->headMeta()
             ->appendName('author', $this->templateConfigData['head']['meta_author'])
@@ -114,9 +129,9 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
             ->appendName('robots', 'index')
             ->appendName('robots', 'follow')
             ->appendName('revisit-after', '3 days')
-            ->appendName('title', $this->templateConfigData['head']['browser_title'])
-            ->appendName('description', $this->templateConfigData['head']['meta_description'], array('lang' => 'en-US'))
-            ->appendName('keywords', $this->templateConfigData['head']['meta_keywords'], array('lang' => 'en-US'));
+            ->appendName('title', $headTitle)
+            ->appendName('description', $headDesc, array('lang' => 'en-US'))
+            ->appendName('keywords', $headKeywords, array('lang' => 'en-US'));
 
         $this->view->template = $this->templateConfigData;
     }
