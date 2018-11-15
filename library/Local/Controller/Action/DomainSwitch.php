@@ -36,7 +36,7 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
     const METAHEADER_DEFAULT = 'meta_keywords';
     const METAHEADER_DEFAULT_TITLE='opendesktop.org';
     const METAHEADER_DEFAULT_DESCRIPTION='A community where developers and artists share applications, themes and other content';
-    const METAHEADER_DEFAULT_KEYWORDS='linux,kde,gnome,themes,apps,desktops,applications,addons,artwork,wallpapers';
+    const METAHEADER_DEFAULT_KEYWORDS='opendesktop,linux,kde,gnome,themes,apps,desktops,applications,addons,artwork,wallpapers';
     public function init()
     {
         $this->initDefaultConfigName();
