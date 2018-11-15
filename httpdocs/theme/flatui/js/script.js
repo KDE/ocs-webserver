@@ -1814,6 +1814,18 @@ var AboutMePage = (function () {
     }
 })();
 
+var InitActiveHashTab = (function () {
+    return {
+        setup: function () {
+            var activeTab = document.location.hash;            
+            if($('a[href="'+ activeTab +'"]'))
+            {
+                $('a[href="'+ activeTab +'"]').tab('show');    
+            }
+            
+        }
+    }
+})();
 
 var TagingProduct = (function () {
     return {
