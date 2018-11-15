@@ -123,18 +123,17 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
             $headKeywords=$this::METAHEADER_DEFAULT_KEYWORDS;
         }
 
-        if($this->view->headMeta()->getValue('keywords')==null)
-        {
-            $this->view->headMeta()
-            ->appendName('author', $this->templateConfigData['head']['meta_author'])
-            ->appendName('robots', 'all')
-            ->appendName('robots', 'index')
-            ->appendName('robots', 'follow')
-            ->appendName('revisit-after', '3 days')
-            ->appendName('title', $headTitle)
-            ->appendName('description', $headDesc, array('lang' => 'en-US'))
-            ->appendName('keywords', $headKeywords, array('lang' => 'en-US'));
-        }
+       
+        $this->view->headMeta()
+        ->appendName('author', $this->templateConfigData['head']['meta_author'])
+        ->appendName('robots', 'all')
+        ->appendName('robots', 'index')
+        ->appendName('robots', 'follow')
+        ->appendName('revisit-after', '3 days')
+        ->appendName('title', $headTitle)
+        ->appendName('description', $headDesc, array('lang' => 'en-US'))
+        ->appendName('keywords', $headKeywords, array('lang' => 'en-US'));
+      
         $this->view->template = $this->templateConfigData;
     }
 
