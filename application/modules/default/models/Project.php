@@ -1595,7 +1595,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
            from
            (
               select distinct p.source_url
-              ,(select count(1) from stat_projects pp where pp.status=100 and pp.source_url=p.source_url) cnt 
+              ,(select count(1) from stat_projects pp where p.project_id=pp.project_id and pp.status=100 and pp.source_url=p.source_url ) cnt 
               from stat_projects p 
               where p.member_id = :member_id 
               and p.status=100 
