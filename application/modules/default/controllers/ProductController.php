@@ -229,44 +229,50 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //gitlab
         if($this->view->product->is_gitlab_project) {
             $gitProject = $this->fetchGitlabProject($this->view->product->gitlab_project_id);
-            $this->view->gitlab_project = $gitProject;
-            
-            //show issues?
-            if($this->view->product->show_gitlab_project_issues) {
-                $issues = $this->fetchGitlabProjectIssues($this->view->product->gitlab_project_id);
-                $this->view->gitlab_project_issues = $issues;
-                $this->view->gitlab_project_issues_url = $this->view->gitlab_project['web_url'] . '/issues/';
-            }
-            
-            //show readme.md?
-            if($this->view->product->use_gitlab_project_readme && null != $this->view->gitlab_project['readme_url']) {
-                $config = Zend_Registry::get('config')->settings->server->opencode;
-                $readme = $this->view->gitlab_project['web_url'].'/raw/master/README.md?inline=false';
-                
-                $httpClient = new Zend_Http_Client($readme, array('keepalive' => true, 'strictredirects' => true));
-                $httpClient->resetParameters();
-                $httpClient->setUri($readme);
-                $httpClient->setHeaders('Private-Token', $config->private_token);
-                $httpClient->setHeaders('Sudo', $config->user_sudo);
-                $httpClient->setHeaders('User-Agent', $config->user_agent);
-                $httpClient->setMethod(Zend_Http_Client::GET);
-
-                $response = $httpClient->request();
-
-                $body = $response->getRawBody();
-
-                if (count($body) == 0) {
-                    return array();
-                }
-                include_once('Parsedown.php');
-                $Parsedown = new Parsedown();
-
-                $this->view->readme = $Parsedown->text($body);
-                
+            if(null == $gitProject) {
+                $this->view->product->is_gitlab_project = 0;
+                $this->view->product->show_gitlab_project_issues = 0;
+                $this->view->product->use_gitlab_project_readme = 0;
+                $this->view->product->gitlab_project_id = null;
             } else {
-                $this->view->readme = null;
+                $this->view->gitlab_project = $gitProject;
+
+                //show issues?
+                if($this->view->product->show_gitlab_project_issues) {
+                    $issues = $this->fetchGitlabProjectIssues($this->view->product->gitlab_project_id);
+                    $this->view->gitlab_project_issues = $issues;
+                    $this->view->gitlab_project_issues_url = $this->view->gitlab_project['web_url'] . '/issues/';
+                }
+
+                //show readme.md?
+                if($this->view->product->use_gitlab_project_readme && null != $this->view->gitlab_project['readme_url']) {
+                    $config = Zend_Registry::get('config')->settings->server->opencode;
+                    $readme = $this->view->gitlab_project['web_url'].'/raw/master/README.md?inline=false';
+
+                    $httpClient = new Zend_Http_Client($readme, array('keepalive' => true, 'strictredirects' => true));
+                    $httpClient->resetParameters();
+                    $httpClient->setUri($readme);
+                    $httpClient->setHeaders('Private-Token', $config->private_token);
+                    $httpClient->setHeaders('Sudo', $config->user_sudo);
+                    $httpClient->setHeaders('User-Agent', $config->user_agent);
+                    $httpClient->setMethod(Zend_Http_Client::GET);
+
+                    $response = $httpClient->request();
+
+                    $body = $response->getRawBody();
+
+                    if (count($body) == 0) {
+                        return array();
+                    }
+                    include_once('Parsedown.php');
+                    $Parsedown = new Parsedown();
+
+                    $this->view->readme = $Parsedown->text($body);
+
+                } else {
+                    $this->view->readme = null;
+                }
             }
-            
         }
         
 
@@ -2588,8 +2594,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     {
         $gitlab = new Default_Model_Ocs_Gitlab(); 
         
-        $gitProject = $gitlab->getProject($gitProjectId);
-        
+        try {
+            $gitProject = $gitlab->getProject($gitProjectId);
+        } catch (Exception $exc) {
+            //Project is gone
+            $modelProject = new Default_Model_Project();
+            $modelProject->updateProject($this->_projectId, array('is_gitlab_project' => 0, 'gitlab_project_id' => null, 'show_gitlab_project_issues' => 0, 'use_gitlab_project_readme' => 0));
+            $gitProject = null;
+        }
         return $gitProject;
     }
     
@@ -2597,7 +2609,17 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     {
         $gitlab = new Default_Model_Ocs_Gitlab();
         
-        $gitProjectIssues = $gitlab->getProjectIssues($gitProjectId);
+        try {
+            $gitProjectIssues = $gitlab->getProjectIssues($gitProjectId);
+        } catch (Exception $exc) {
+            //Project is gone
+            $modelProject = new Default_Model_Project();
+            $modelProject->updateProject($this->_projectId, array('is_gitlab_project' => 0, 'gitlab_project_id' => null, 'show_gitlab_project_issues' => 0, 'use_gitlab_project_readme' => 0));
+
+            $gitProjectIssues = null;
+        }
+
+        
         
         return $gitProjectIssues;
     }

@@ -176,7 +176,7 @@ class Embedv1Controller extends Zend_Controller_Action
             $html = $html.'<div id="opendesktopwidget-main-detail-carousel" data-simple-slider>';
             //$html = $html.'<img src="'.$helperImage->Image($project['pics'][0], array('height' => '600')).'" />';
             foreach ($project['pics'] as  $pic) {
-                $html = $html.'<div><img src="'.$helperImage->Image($pic, array('width' => '621','height' => '621')).'" /></div>';
+                $html = $html.'<div><img src="'.$helperImage->Image($pic, array('width' => '621', 'height' => '621')).'" /></div>';
             }
 
             $html = $html.'</div>';

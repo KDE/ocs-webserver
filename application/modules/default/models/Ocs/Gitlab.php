@@ -856,7 +856,7 @@ class Default_Model_Ocs_Gitlab
     public function getUserProjects($user_id, $page = 1, $limit = 50)
     {
         $this->httpClient->resetParameters();
-        $uri = $this->config->host . '/api/v4/users/' . $user_id . '/projects?page=' . $page . '&per_page=' . $limit;
+        $uri = $this->config->host . '/api/v4/users/' . $user_id . '/projects?visibility=public&page=' . $page . '&per_page=' . $limit;
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);

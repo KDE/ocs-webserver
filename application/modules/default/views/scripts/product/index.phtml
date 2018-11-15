@@ -1031,6 +1031,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
+            InitActiveHashTab.setup();
             PartialJson.setup();
             PartialJsonFraud.setup();
             ProductDetailCarousel.setup();
