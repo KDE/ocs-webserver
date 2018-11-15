@@ -20,7 +20,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_View_Helper_ImageUri extends Zend_View_Helper_Abstract
+class Default_View_Helper_Image extends Zend_View_Helper_Abstract
 {
 
     protected $_operations = array(
@@ -38,7 +38,7 @@ class Default_View_Helper_ImageUri extends Zend_View_Helper_Abstract
 
     protected $_separator = '-';
 
-    public function ImageUri($filename, $options = array())
+    public function Image($filename, $options = array())
     {
         if (empty($options) and $this->validUri($filename)) {
             /** @var Zend_Controller_Request_Http $request */

@@ -20,12 +20,12 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$helperImage = new Default_View_Helper_ImageUri();
+$helperImage = new Default_View_Helper_Image();
 ?>
 
 <?php  foreach ($this->galleryPictures as $picture): ?>
-            <a rel="gallery1" class="fancybox" href="<?php echo $helperImage->ImageUri($picture, array('width' => '1024', 'height' => '682')); ?>">
-                <img src="<?php echo $helperImage->ImageUri($picture, array('width' => '140', 'height' => '85')); ?>" width="140" height="85"/>
+            <a rel="gallery1" class="fancybox" href="<?php echo $helperImage->Image($picture, array('width' => '1024', 'height' => '682')); ?>">
+                <img src="<?php echo $helperImage->Image($picture, array('width' => '140', 'height' => '85')); ?>" width="140" height="85"/>
             </a>
 <?php endforeach;?>
 

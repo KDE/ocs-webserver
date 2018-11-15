@@ -20,9 +20,9 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$helperImage = new Default_View_Helper_ImageUri();
+$helperImage = new Default_View_Helper_Image();
 echo $this->{$this->element->helper}(
     $this->element->getName(),
-    $helperImage->ImageUri($this->element->getValue()),
+    $helperImage->Image($this->element->getValue()),
     $this->element->getAttribs()
 );

@@ -23,7 +23,7 @@
 $helpAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helpEncryptUrl = new Default_View_Helper_EncryptUrl();
-$helpImage = new Default_View_Helper_ImageUri();
+$helpImage = new Default_View_Helper_Image();
 $helpTruncate = new Default_View_Helper_Truncate();
 $helpProductUrl = new Default_View_Helper_BuildProductUrl();
 $helpBBCode = new Default_View_Helper_Bbcode2html();
@@ -63,7 +63,7 @@ $this->headMeta()->appendProperty('og:title', $this->product->title);
 $this->headMeta()->appendProperty('og:description',
     $helpTruncate->truncate($this->product->description, 200, '...', false, true));
 $this->headMeta()->appendProperty('og:image',
-    $helpImage->ImageUri($this->product->image_small, array('width' => 400, 'height' => 400)));
+    $helpImage->Image($this->product->image_small, array('width' => 400, 'height' => 400)));
 $tableProject = new Default_Model_Project();
 
 $tableProjectUpdates = new Default_Model_ProjectUpdates();
@@ -291,7 +291,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                         <div id="product-title-div" class="product-title-div">
                             <div  class="product-title">
                             <div class="product-logo-container">
-                                  <img class="logo" src="<?= $helpImage->ImageUri($this->product->image_small,
+                                  <img class="logo" src="<?= $helpImage->Image($this->product->image_small,
                                       array('width' => 85, 'height' => 85, 'crop' => 'crop')); ?>"/>
                                 </div>
                                 <div id="product-header-info-container">
@@ -477,7 +477,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                         <div class="item <?php if (!$this->product->ppload_collection_id && $cnt == 1) {
                                             echo 'active';
                                         } ?>">
-                                            <img src="<?php echo $helpImage->ImageUri($picture, array('height' => '600')); ?>"/>
+                                            <img src="<?php echo $helpImage->Image($picture, array('height' => '600')); ?>"/>
                                         </div>
                                         <?php
                                         $cnt++;
@@ -757,7 +757,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                                 ?>
                                                     <span class="supporter-badge" >S</span>
                                                 <?php } ?>
-                                                <img src="<?= $helpImage->ImageUri($this->product->profile_image_url,
+                                                <img src="<?= $helpImage->Image($this->product->profile_image_url,
                                                     array('width' => 80, 'height' => 80)) ?>"
                                                      alt="product-maker" width="15" height="15"
                                                      class="sidebar-profile-image">

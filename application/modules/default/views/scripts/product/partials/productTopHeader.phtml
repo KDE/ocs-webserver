@@ -24,7 +24,7 @@ $helperBaseUrl = new Default_View_Helper_BaseUrl();
 $helperServerUrl = new Zend_View_Helper_ServerUrl();
 $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 $helperTruncate = new Default_View_Helper_Truncate();
-$helperImage = new Default_View_Helper_ImageUri();
+$helperImage = new Default_View_Helper_Image();
 $helperGetAuthUser = new Default_View_Helper_GetAuthUser();
 $helperAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
 
@@ -35,10 +35,10 @@ $this->headMeta()->appendProperty('og:site_name', 'ocs');
 $this->headMeta()->appendProperty('og:title', $this->product->title);
 $this->headMeta()->appendProperty('og:url', $helperServerUrl->serverUrl() . $helperBaseUrl->baseUrl() . $helperBuildProductUrl->buildProductUrl($this->product->project_id));
 $this->headMeta()->appendProperty('og:description', $helperTruncate->truncate($this->product->description, 200, '...', false, true));
-$this->headMeta()->appendProperty('og:image', $helperImage->ImageUri($this->product->image_small, array('width' => 200, 'height' => 200)));
+$this->headMeta()->appendProperty('og:image', $helperImage->Image($this->product->image_small, array('width' => 200, 'height' => 200)));
 
 
-$titleImage = $helperImage->ImageUri($this->product->image_big, array('width' => 1170, 'height' => 300));
+$titleImage = $helperImage->Image($this->product->image_big, array('width' => 1170, 'height' => 300));
 $styleAttr = ' style="background-image: url(' . $titleImage . ');"';
 if (strpos($titleImage, 'default.png') !== false) {
     $styleAttr = '';

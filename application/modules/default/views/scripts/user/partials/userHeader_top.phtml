@@ -21,7 +21,7 @@
  **/
 
 $this->headLink()->appendStylesheet('/theme/flatui/css/stylesheets/general.css');
-$helpImage = new Default_View_Helper_ImageUri();
+$helpImage = new Default_View_Helper_Image();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 ?>
     <section class="head-wrap">
@@ -29,7 +29,7 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
         <section class="wrapper about-me-header">
 
             <figure>
-                <img src="<?php echo $helpImage->ImageUri($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)); ?>" alt="profile-image" width="110" height="110">
+                <img src="<?php echo $helpImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)); ?>" alt="profile-image" width="110" height="110">
             </figure>
 
             <div class="user-menu well">

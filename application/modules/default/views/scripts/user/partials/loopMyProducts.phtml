@@ -40,12 +40,12 @@ $helperSupporterBox = new Default_View_Helper_ExternalSupporterBox();
 $helperSupporterBoxSource = new Default_View_Helper_ExternalSupporterBoxSource();
 $helperDonationList = new Default_View_Helper_ExternalDonationList();
 $helperDonationListSource = new Default_View_Helper_ExternalDonationListSource();
-$helperImage = new Default_View_Helper_ImageUri();
+$helperImage = new Default_View_Helper_Image();
 ?>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 my-product-item" id="<?= $loopProductId ?>">
     <!-- IMAGE -->
     <figure class="col-lg-1 col-md-3 col-sm-3 col-xs-3">
-        <img src="<?php echo $helperImage->ImageUri($this->image_small, array('width' => 280, 'height' => 167)); ?>"
+        <img src="<?php echo $helperImage->Image($this->image_small, array('width' => 280, 'height' => 167)); ?>"
              class="explore-product-image" width="101" height="81"/>
     </figure>
     <!-- /IMAGE -->

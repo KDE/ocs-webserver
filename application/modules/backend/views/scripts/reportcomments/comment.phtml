@@ -22,7 +22,7 @@
 ?>
 <?php
 $helperHumanTiming = new Default_View_Helper_HumanTiming();
-$helperImage = new Default_View_Helper_ImageUri();
+$helperImage = new Default_View_Helper_Image();
 ?><div class="comments-list"><a name="comments_block"></a>
         <?php
         $comment = $this->comment[0];
@@ -33,7 +33,7 @@ $helperImage = new Default_View_Helper_ImageUri();
                 <small><?= $age['age'] ?> <span class="light"><?= $age['unit'] ?> ago</span></small>
             </p>
             <a class="media-left">
-                <img src="<?= $helperImage->ImageUri($comment['profile_image_url'], array('width' => 40, 'height' => 40)) ?>" width="40" height="40">
+                <img src="<?= $helperImage->Image($comment['profile_image_url'], array('width' => 40, 'height' => 40)) ?>" width="40" height="40">
             </a>
             <div class="media-body">
                 <h4 class="media-heading user_name"><?= $comment['username'] ?></h4>

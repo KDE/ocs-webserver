@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$helperImage = new Default_View_Helper_ImageUri();
+$helperImage = new Default_View_Helper_Image();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $this->tab = 'supporterbox';
 $totalcnt = $this->supporters->getTotalItemCount();
@@ -54,7 +54,7 @@ $totalcnt = $this->supporters->getTotalItemCount();
                                                title="<?php echo $this->member->username; ?>">
                                                 <img
                                                     class="profileimage"                                                    
-                                                    src="<?php echo $helperImage->ImageUri($this->member->profile_image_url, array('width' => 80, 'height' => 80)); ?>"
+                                                    src="<?php echo $helperImage->Image($this->member->profile_image_url, array('width' => 80, 'height' => 80)); ?>"
                                                     alt="<?php echo $this->member->username; ?>"/>
                                             </a>
                                         </figure>

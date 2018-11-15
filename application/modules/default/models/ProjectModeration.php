@@ -128,9 +128,9 @@ class Default_Model_ProjectModeration extends Default_Model_DbTable_ProjectModer
 
             $resultSet = $this->getAdapter()->fetchAll($sql);
 
-            $image = new Default_View_Helper_ImageUri();
+            $image = new Default_View_Helper_Image();
             foreach ($resultSet as &$value) {
-               $value['image_small']= $image->ImageUri($value['image_small'],array('height' => 120, 'width' => 120));
+               $value['image_small']= $image->Image($value['image_small'],array('height' => 120, 'width' => 120));
             }
             //return$this->generateRowClass($resultSet);;        
             return $resultSet;

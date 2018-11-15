@@ -61,13 +61,13 @@ class Default_Model_Discovery
         );
 
         $image_m = new Default_Model_DbTable_Image();
-        $ImageHelper = new Default_View_Helper_ImageUri();
+        $ImageHelper = new Default_View_Helper_Image();
         $thumbs = $video->getVideoThumbnails();
         foreach ($thumbs as $thumbnail) {
             $img_src = $thumbnail['url'];
             $filename = $image_m->storeRemoteImage($img_src, $file_info);
             $thumb = array(
-                'full_url' => $ImageHelper->ImageUri($filename, array('temporal' => true)),
+                'full_url' => $ImageHelper->Image($filename, array('temporal' => true)),
                 'filename' => $filename
             );
             $data['thumbnails'][] = $thumb;
@@ -118,7 +118,7 @@ class Default_Model_Discovery
             $dom_img = $dom->getElementsByTagName('img');
             $result['thumbnails'] = array();
             $image_m = new Default_Model_DbTable_Image();
-            $ImageHelper = new Default_View_Helper_ImageUri();
+            $ImageHelper = new Default_View_Helper_Image();
 
             $n_images = 0;
             $src_images = array();
@@ -139,7 +139,7 @@ class Default_Model_Discovery
                     $filename = $image_m->storeRemoteImage($img_src, $file_info);
                     if ($file_info['size'] > 4096) { #4Kb
                         $thumb = array(
-                            'full_url' => $ImageHelper->ImageUri($filename, array('temporal' => true)),
+                            'full_url' => $ImageHelper->Image($filename, array('temporal' => true)),
                             'filename' => $filename
                         );
                         $result['thumbnails'][] = $thumb;

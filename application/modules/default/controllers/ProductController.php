@@ -489,8 +489,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if (false === file_exists(dirname($filename))) {
             mkdir(dirname($filename), 0777, true);
         }
-        $viewHelperImage = new Default_View_Helper_ImageUri();
-        $uri = $viewHelperImage->ImageUri($projectData->image_small, array(
+        $viewHelperImage = new Default_View_Helper_Image();
+        $uri = $viewHelperImage->Image($projectData->image_small, array(
                 'width'  => 600,
                 'height' => 600
             ));

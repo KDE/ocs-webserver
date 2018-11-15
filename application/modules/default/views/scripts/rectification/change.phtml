@@ -21,7 +21,7 @@
  **/
 $users = $this->newUsers($limit = 216,'created_at','DESC');
 $buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
-$helperImage = new Default_View_Helper_ImageUri();
+$helperImage = new Default_View_Helper_Image();
 $this->inlineScript()->appendFile('/theme/flatui/js/lib/bootstrap-validator.min.js');
 ?>
 

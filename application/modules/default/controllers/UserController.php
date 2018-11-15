@@ -218,15 +218,15 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
             if ($member) {
 
-                $helperImage = new Default_View_Helper_ImageUri();
-                $imgUrl = $helperImage->ImageUri($member['profile_image_url'], array('width' => $width, 'height' => $width));
+                $helperImage = new Default_View_Helper_Image();
+                $imgUrl = $helperImage->Image($member['profile_image_url'], array('width' => $width, 'height' => $width));
                 $this->view->avatar = $imgUrl;
 
                 $this->redirect($imgUrl);
             } else {
                 $this->view->avatar = "";
-                $helperImage = new Default_View_Helper_ImageUri();
-                $imgUrl = $helperImage->ImageUri("default-profile.png", array('width' => $width, 'height' => $width));
+                $helperImage = new Default_View_Helper_Image();
+                $imgUrl = $helperImage->Image("default-profile.png", array('width' => $width, 'height' => $width));
                 $this->redirect($imgUrl);
             }
         }
