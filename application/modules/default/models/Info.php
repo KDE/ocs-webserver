@@ -1111,4 +1111,40 @@ class Default_Model_Info
          return $result['amount'];
     }
 
+    public function getOCSInstallInstruction()
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__;
+
+        if (false !== ($instruction = $cache->load($cacheName))) {
+            return $instruction;
+        }
+        $config = Zend_Registry::get('config')->settings->server->opencode;
+        $readme = 'https://git.opendesktop.org/OCS/ocs-url/raw/master/docs/How-to-install.md?inline=false';
+                        
+        $httpClient = new Zend_Http_Client($readme, array('keepalive' => true, 'strictredirects' => true));
+        $httpClient->resetParameters();
+        $httpClient->setUri($readme);
+        $httpClient->setHeaders('Private-Token', $config->private_token);
+        $httpClient->setHeaders('Sudo', $config->user_sudo);
+        $httpClient->setHeaders('User-Agent', $config->user_agent);
+        $httpClient->setMethod(Zend_Http_Client::GET);
+
+        $response = $httpClient->request();
+
+        $body = $response->getRawBody();
+
+       
+        if (count($body) == 0) {
+            return array();
+        }
+        include_once('Parsedown.php');
+        $Parsedown = new Parsedown();
+
+        $readmetext = $Parsedown->text($body);     
+
+        $cache->save($readmetext, $cacheName,array() , 3600);
+        return $readmetext;
+    }
 }

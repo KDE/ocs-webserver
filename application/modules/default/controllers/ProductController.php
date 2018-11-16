@@ -225,7 +225,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $files = $fmodel->fetchFilesForProject($this->view->product->ppload_collection_id);
         $this->view->filesJson = Zend_Json::encode($files);
         
-        
+       
         //gitlab
         if($this->view->product->is_gitlab_project) {
             $gitProject = $this->fetchGitlabProject($this->view->product->gitlab_project_id);
@@ -247,8 +247,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 //show readme.md?
                 if($this->view->product->use_gitlab_project_readme && null != $this->view->gitlab_project['readme_url']) {
                     $config = Zend_Registry::get('config')->settings->server->opencode;
-                    $readme = $this->view->gitlab_project['web_url'].'/raw/master/README.md?inline=false';
-
+                    $readme = $this->view->gitlab_project['web_url'].'/raw/master/README.md?inline=false';       
                     $httpClient = new Zend_Http_Client($readme, array('keepalive' => true, 'strictredirects' => true));
                     $httpClient->resetParameters();
                     $httpClient->setUri($readme);
@@ -1416,6 +1415,19 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $tableProjectRatings = new Default_Model_DbTable_ProjectRating();            
         $ratings = $tableProjectRatings->fetchRating($this->_projectId);
         $this->_helper->json($ratings);
+    }
+    
+    public function loadinstallinstructionAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $infomodel = new Default_Model_Info();
+        $text =  $infomodel->getOCSInstallInstruction();
+        
+
+        $this->_helper->json(array(
+            'status'  => 'ok',            
+            'data'    => $text
+        ));
     }
 
     public function followAction()
