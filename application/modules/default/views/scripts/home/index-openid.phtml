@@ -20,8 +20,14 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-  $modelInfo = new Default_Model_Info();
-  $host = $_SERVER['SERVER_NAME'];
+$modelInfo = new Default_Model_Info();
+$host = $_SERVER['SERVER_NAME'];
+$getAuthUser = new Default_View_Helper_GetAuthUser();
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperImage = new Default_View_Helper_Image();
+
+$auth = Zend_Auth::getInstance();
+$member = $getAuthUser->getAuthUser();
 
 ?>
 <link href="/theme/flatui/css/style-index-common.css" rel="stylesheet">
