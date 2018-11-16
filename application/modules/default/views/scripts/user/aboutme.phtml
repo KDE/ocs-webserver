@@ -30,8 +30,6 @@ $this->headMeta()->setName('description',
     $helpTruncate->truncate($desc, 200, '...', false, true));
 $this->headMeta()->setName('title',
     $this->member->username . ' - ' . $_SERVER['HTTP_HOST']);
-$this->headMeta()->setName('keywords',
-    $this->member->username . ' - ' . $_SERVER['HTTP_HOST']);
 
 $this->headMeta()->appendProperty('og:url', $helperBuildMemberUrl->buildMemberUrl($this->member->username));
 $this->headMeta()->appendProperty('og:type', 'website');
@@ -597,7 +595,7 @@ $isSupporter = $this->stat['donationIssupporter'];
     </main>
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
-            //AboutMePage.setup("'.$this->member->username.'");
+            InitActiveHashTab.setup();
             AboutMeMyProjectsPaging.setup();
             AboutMeMyProjectsPagingButton.setup();        
             TooltipUser.setup("tooltipuser","right");   

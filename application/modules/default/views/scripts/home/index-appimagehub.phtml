@@ -20,6 +20,16 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+$this->headTitle($_SERVER['HTTP_HOST'], 'SET');
+$this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
+$this->headMeta()->appendProperty('og:url', 'www.appimagehub.com');
+$this->headMeta()->appendProperty('og:type', 'website');
+$this->headMeta()->appendProperty('og:title', 'appimagehub.com');
+$this->headMeta()->appendProperty('og:site_name','www.appimagehub.com');
+$this->headMeta()->appendProperty('og:description','A community where developers and artists share applications, themes and other content');
+$this->headMeta()->appendProperty('og:image','https://www.appimagehub.com/images_sys/superstore/appimagehub-logo-4.png');
+
+
   $modelInfo = new Default_Model_Info();
   $host = $_SERVER['SERVER_NAME'];
   $package_type = $this->package_type;

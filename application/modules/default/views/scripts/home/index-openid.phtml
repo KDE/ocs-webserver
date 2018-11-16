@@ -19,10 +19,37 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+$this->headTitle($_SERVER['HTTP_HOST'], 'SET');
+$this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
+$this->headMeta()->appendProperty('og:url', 'www.opendesktop.org');
+$this->headMeta()->appendProperty('og:type', 'website');
+$this->headMeta()->appendProperty('og:title', 'opendesktop.org');
+$this->headMeta()->appendProperty('og:site_name','www.opendesktop.org');
+$this->headMeta()->appendProperty('og:description','A community where developers and artists share applications, themes and other content');
+$this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images/system/opendesktop-logo.png');
 
-  $modelInfo = new Default_Model_Info();
-  $host = $_SERVER['SERVER_NAME'];
 
+$modelInfo = new Default_Model_Info();
+$host = $_SERVER['SERVER_NAME'];
+$getAuthUser = new Default_View_Helper_GetAuthUser();
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperImage = new Default_View_Helper_Image();
+
+$auth = Zend_Auth::getInstance();
+$member = $getAuthUser->getAuthUser();
+$this->member = $member;
 ?>
+<link href="/theme/flatui/css/style-index-common.css" rel="stylesheet">
+<main id="explore-content">
+    <section class="wrapper-kde-store" id="intro-kde-store" >
+        <section class="container" style="height:100%; width: 100%;">                               
+            <div class="row">   
 
-<main id="explore-content"></main>
+                <aside class="col-lg-2 col-md-4 col-sm-6 col-xs-12 aside" >
+                     <?php  echo $this->render('settings/index.phtml'); ?>
+                </aside>               
+                
+            </div> <!--row -->
+        </section>
+    </section>
+</main>

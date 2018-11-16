@@ -39,7 +39,7 @@ $helpImage = new Default_View_Helper_Image();
      <div style="display: block; "  class="">        
          <div class="userinfo" >
 			<a href="<?= $helpBuildUrl->buildProductUrl($this->comment['project_id']) ?>">
-			    <img src="<?= $helpImage->Image($this->comment['profile_image_url'], array('width' => 60, 'height' => 60)) ?>"  style="margin: 5px; width: 40px; height:40px; border-radius: 50%; float: left"/>
+			    <img src="<?= $helpImage->Image($this->comment['profile_image_url'], array('width' => 60, 'height' => 60)) ?>" style="margin: 5px; width: 40px; height:40px; border-radius: 50%; float: left"/>
 				<span style="display: block;padding-top:15px;"><?= $this->comment['username'] ?></span>
 			</a>
 		</div>

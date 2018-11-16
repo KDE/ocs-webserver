@@ -224,7 +224,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'search',
             'startdownload',
             'ppload',
-            'loadratings'
+            'loadratings',
+            'loadinstallinstruction'
         ));
 
         // resource default_product

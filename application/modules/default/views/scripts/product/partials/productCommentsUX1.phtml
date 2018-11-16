@@ -112,7 +112,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                        <span class="supporter-badge-<?=($elementComment['level']>1?2:1)?>" >S</span> 
                        <?php }?>
 
-                        <img src="<?= $helperImage->Image($comment['profile_image_url'], array('width' => 60, 'height' => 60)) ?>" class="img<?=$elementComment['level']?>">
+                        <img src="<?= $helperImage->Image($comment['profile_image_url'], array('width' => 60, 'height' => 60)) ?>" class="img<?= $elementComment['level']?>">
                                                
                         </div>
                          <?php if( $comment['roleid'] ==Default_Model_DbTable_Member::ROLE_ID_MODERATOR) { ?>

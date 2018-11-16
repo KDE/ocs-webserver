@@ -88,7 +88,8 @@ class Default_Form_Product extends Zend_Form
 
     private function getTitleElement()
     {
-        $validatorRegEx = new Zend_Validate_Regex(array('pattern' => "/^[ \/\[\]\.\-_A-Za-z0-9'\pL]{1,}$/iu"));
+//        $validatorRegEx = new Zend_Validate_Regex(array('pattern' => "/^[ \/\[\]\.\-_A-Za-z0-9'\pL]{1,}$/iu")); // with unicode character class
+        $validatorRegEx = new Zend_Validate_Regex(array('pattern' => "/^[ \/\[\]\.\-_A-Za-z0-9']{1,}$/iu"));
         $validatorRegEx->setMessages(array(Zend_Validate_Regex::NOT_MATCH => "'%value%' is not valid. Please use only alphanumeric characters or /, [, ], -, _, ' "));
 
         return $this->createElement('text', 'title')
