@@ -61,7 +61,6 @@ class Backend_CoauthController extends Local_Controller_Action_CliAbstract
         $method = $this->getParam('method', 'create');
 
         $this->log->info("METHOD: {$method}\n--------------\n");
-        $this->log->err("METHOD: {$method}\n--------------\n");
 
         if ($this->hasParam('member_id')) {
             $memberId = $this->getParam('member_id');

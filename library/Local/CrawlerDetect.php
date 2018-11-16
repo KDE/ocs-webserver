@@ -27,7 +27,7 @@
 function crawlerDetect($USER_AGENT)
 {
     $crawlers = array(
-        array('Google', 'Google'),
+        array('Googlebot', 'Googlebot'),
         array('MSN', 'MSN'),
         array('msnbot-media', 'MSN'),
         array('bingbot', 'MSN'),

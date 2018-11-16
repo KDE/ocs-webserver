@@ -230,21 +230,18 @@ class Default_Model_Ocs_Gitlab
     private function getUser($extern_uid, $username)
     {
         $user_by_uid = $this->getUserByExternUid($extern_uid);
-        $user_by_dn = $this->getUserByDN($username);
 
-        if (empty($user_by_uid) AND empty($user_by_dn)) {
-            return null;
-        }
-
-        if (!empty($user_by_uid) AND empty($user_by_dn)) {
+        if (false === empty($user_by_uid)) {
             return $user_by_uid;
         }
 
-        if (empty($user_by_uid) AND !empty($user_by_dn)) {
+        $user_by_dn = $this->getUserByDN($username);
+
+        if (false === empty($user_by_dn)) {
             return $user_by_dn;
         }
 
-        return $user_by_uid;
+        return null;
     }
 
     /**
@@ -765,10 +762,10 @@ class Default_Model_Ocs_Gitlab
         return $body[0];
     }
 
-    public function getProjects()
+    public function getProjects($page = 1, $limit = 10, $order_by = 'created_at', $sort = 'desc')
     {
         $this->httpClient->resetParameters();
-        $uri = $this->config->host . "/api/v4/projects/";
+        $uri = $this->config->host . '/api/v4/projects?order_by='.$order_by.'&sort='.$sort.'&visibility=public&page=' . $page . '&per_page=' . $limit;
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);

@@ -33,8 +33,8 @@ $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
             <p><?= $this->translate('Please login or register to pling a product.') ?></p>
             <span><a href="/login?redirect=<?= $helperEncryptUrl->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(), true) ?>"
                      class="partial"
-                     data-target="#modal-dialog" data-toggle="#modal-dialog"><?= $this->translate('Login') ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a
-                    href="/register"><?= $this->translate('Register') ?></a> </span>
+                     data-target="#modal-dialog" data-toggle="#modal-dialog" rel="nofollow"><?= $this->translate('Login') ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a
+                    href="/register" rel="nofollow"><?= $this->translate('Register') ?></a> </span>
         </div>
         <div class="modal-footer w-logo">
             <div class="logo"></div>

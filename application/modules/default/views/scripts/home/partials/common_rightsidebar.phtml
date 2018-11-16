@@ -21,7 +21,41 @@
  **/
 $modelInfo = new Default_Model_Info();
 $this->supporters = $modelInfo->getNewActiveSupporters(9);
+
+$helpPrintDate = new Default_View_Helper_PrintDate();
 ?>
+
+<style>
+.s40 {
+    min-width: 40px;
+    min-height: 40px;
+}
+.s40.avatar, .s40.avatar-container {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+.avatar, .avatar-container {
+    border-radius: 3px;
+}
+
+.avatar-container .avatar {
+    border-radius: 0;
+    border: 0;
+    height: auto;
+    width: 100%;
+    margin: 0;
+    align-self: center;
+}
+.identicon.bg2 {
+    background-color: #e8eaf6;
+}
+.identicon.s40 {
+    font-size: 16px;
+    line-height: 38px;
+}
+</style>    
+
 
         <div class="downloadDiv" >
             <a href="https://www.opendesktop.org/p/1175480/"><img src="/images/system/ocsstore-download-button.png" /></a>
@@ -99,6 +133,57 @@ $this->supporters = $modelInfo->getNewActiveSupporters(9);
             <span class="newsTitle"> Forum </span>
             <div class="prod-widget-box right bgwhite " id="blogJson"> </div>     
            
+            <?php if(null != $this->git_projects && count($this->git_projects) > 0) {
+                ?>
+            <span class="newsTitle"> Git-Projects </span>
+            <div class="prod-widget-box right bgwhite" id="lastcomments">
+                <div class="prod-widget-box new-products">
+                <?php
+                foreach ($this->git_projects as $git_project) {
+                    ?>
+                    <div class="productrow">
+                        <div class="row" style="padding: 5px;">            
+                            <div class="col-lg-2 col-md-3 col-sm-4 col-xs-4"> 
+                                <div class="text-center">
+                                    <?php
+                                        $url = $git_project['web_url'];
+                                        $url = str_replace("http://", "https://", $url);
+                                    ?>
+                                    <a href="<?= $url ?>" target="_NEW">
+                                        <div class="avatar-container">
+                                        <?php
+                                            if(null != $git_project['avatar_url']) {
+                                                $imgurl = $git_project['avatar_url'];
+                                                $imgurl = str_replace("http://", "https://", $imgurl);
+                                        ?>
+                                            <img class="avatar project-avatar s40 js-lazy-loaded" src="<?= $imgurl ?>" width="40" height="40">
+                                        <?php
+                                            } else {
+                                        ?>
+                                            <div class="avatar project-avatar s40 identicon bg2"><?= substr($git_project['name'], 0, 1) ?></div>
+                                        <?php
+                                            }
+                                        ?>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div> 
+                            <div class="col-lg-9 col-md-6 col-sm-4 col-xs-4" style="padding-left: 25px;">
+                                <?php
+                                
+                                $date = date('Y-m-d H:i:s', strtotime($git_project['created_at']));
+                                ?>
+                                <a href="<?= $git_project['web_url'] ?>" target="_NEW"><?= $git_project['name'] ?></a>
+                                <div class="newsrow" style="font-size: 8.25pt;"><span class="date"><?= $helpPrintDate->printDate($date)?></span></div>
+                            </div>
+                        </div>
+                    </div>
+                <?php    
+                }
+                ?>
+                </div>
+            </div>          
+            <?php } ?>
             
             <?php  if (count($this->comments) > 0) {
                 ?>
