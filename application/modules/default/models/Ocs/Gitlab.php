@@ -230,21 +230,18 @@ class Default_Model_Ocs_Gitlab
     private function getUser($extern_uid, $username)
     {
         $user_by_uid = $this->getUserByExternUid($extern_uid);
-        $user_by_dn = $this->getUserByDN($username);
 
-        if (empty($user_by_uid) AND empty($user_by_dn)) {
-            return null;
-        }
-
-        if (!empty($user_by_uid) AND empty($user_by_dn)) {
+        if (false === empty($user_by_uid)) {
             return $user_by_uid;
         }
 
-        if (empty($user_by_uid) AND !empty($user_by_dn)) {
+        $user_by_dn = $this->getUserByDN($username);
+
+        if (false === empty($user_by_dn)) {
             return $user_by_dn;
         }
 
-        return $user_by_uid;
+        return null;
     }
 
     /**

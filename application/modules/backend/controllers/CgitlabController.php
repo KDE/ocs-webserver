@@ -64,7 +64,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         $this->log->err("METHOD: {$method}\n--------------\n");
 
         if ($this->hasParam('member_id')) {
-            $memberId = $this->getParam('member_id');
+            $memberId = (int)$this->getParam('member_id');
             $operator = $this->getParam('op', null);
             $members = $this->getMemberList($memberId, $operator);
         } else {

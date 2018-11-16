@@ -33,13 +33,13 @@ $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
 
 if (false === $auth->hasIdentity() || empty($member->username)) { ?>
     <li class="link profile-menu-nologin">
-        <a href="/register">
+        <a href="/register" rel="nofollow">
             <span>Join</span>
         </a>
     </li>
     <li class="link-partial last-link">
         <a href="/login?redirect=<?= $helperEncryptUrl->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(), true) ?>"
-           id="login-dropdown" onclick="return false;">
+           id="login-dropdown" onclick="return false;" rel="nofollow">
             <span>Login</span>
         </a>
 
@@ -58,15 +58,15 @@ if (false === $auth->hasIdentity() || empty($member->username)) { ?>
                         <?= $formLogin->remember_me ?>
                         <?= $formLogin->login ?>
                     </form>
-                    <a href="/login/forgot" class="lightblue small">Forgot your password?</a>
+                    <a href="/login/forgot" class="lightblue small" rel="nofollow">Forgot your password?</a>
                 </div>
                 <div class="form-footer">
                     <p><?= $this->translate('Or you can login with one of the following') ?></p>
 
                     <div class="social">
-                        <a href="/login/facebook" class="facebook"><i
+                        <a href="/login/facebook" class="facebook" rel="nofollow"><i
                                 class="icon-facebook"></i></a>
-                        <a href="/login/twitter" class="twitter"><i
+                        <a href="/login/twitter" class="twitter" rel="nofollow"><i
                                 class="icon-twitter"></i></a>
                     </div>
                 </div>
