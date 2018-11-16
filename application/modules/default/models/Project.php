@@ -1531,14 +1531,16 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     public function fetchDuplatedSourceProjects($orderby='source_url asc',$limit = null, $offset  = null)
     {
        $sql = "
-            select source_url,count(1) as cnt,
+            select 
+            TRIM(TRAILING '/' FROM p.source_url) as source_url
+            ,count(1) as cnt,
             GROUP_CONCAT(p.project_id ORDER BY p.created_at) pids
-             from project p 
+            from project p 
             where p.source_url is not null 
-              and p.source_url<>'' 
-              and p.status=100
-            group by source_url
-            having count(1)>1           
+            and p.source_url<>'' 
+            and p.status=100
+            group by TRIM(TRAILING '/' FROM p.source_url)
+            having count(1)>1        
        ";
       if(isset($orderby)){
               $sql = $sql.'  order by '.$orderby;
@@ -1561,14 +1563,16 @@ class Default_Model_Project extends Default_Model_DbTable_Project
       $sql = "
           select count(1) as cnt from
           (
-           select source_url,count(1) as cnt,
-           GROUP_CONCAT(p.project_id) pids
-            from project p 
-           where p.source_url is not null 
-             and p.source_url<>'' 
-             and p.status=100
-           group by source_url
-           having count(1)>1  
+                      select 
+                       TRIM(TRAILING '/' FROM p.source_url) as source_url
+                       ,count(1) as cnt,
+                       GROUP_CONCAT(p.project_id ORDER BY p.created_at) pids
+                       from project p 
+                       where p.source_url is not null 
+                       and p.source_url<>'' 
+                       and p.status=100
+                       group by TRIM(TRAILING '/' FROM p.source_url)
+                       having count(1)>1 
           ) a        
       ";
        $result = $this->_db->fetchAll($sql);
