@@ -25,10 +25,8 @@
 class Local_Log_File
 {
     const extension = ".log";
-    const extension_errors = ".error.log";
 
     protected $logfile;
-    protected $errorlogfile;
 
     /**
      * @inheritDoc
@@ -44,24 +42,20 @@ class Local_Log_File
     private function initLog($domain, $filename)
     {
         $fileDomainId = str_replace('.', '_', $domain);
-        $this->logfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $fileDomainId . '_' . $filename . self::extension;
-        $this->errorlogfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $fileDomainId . '_' . $filename . self::extension_errors;
-        $this->initFiles($this->logfile, $this->errorlogfile);
+        $date = date("Y-m-d");
+        $this->logfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $date . '_' . $fileDomainId . '_' . $filename . self::extension;
+        $this->initFiles($this->logfile);
     }
 
     /**
      * @param $file
      * @param $errorFile
      */
-    private function initFiles($file, $errorFile)
+    private function initFiles($file)
     {
         if (file_exists($file)) {
             file_put_contents($file, "1");
             unlink($file);
-        }
-        if (file_exists($errorFile)) {
-            file_put_contents($errorFile, "1");
-            unlink($errorFile);
         }
     }
 
@@ -71,7 +65,7 @@ class Local_Log_File
     public function info($message)
     {
         $timestamp = date("c");
-        file_put_contents($this->logfile, $timestamp . " : " . $message . PHP_EOL, FILE_APPEND);
+        file_put_contents($this->logfile, $timestamp . " [INFO] : " . $message . PHP_EOL, FILE_APPEND);
     }
 
     /**
@@ -80,7 +74,7 @@ class Local_Log_File
     public function err($message)
     {
         $timestamp = date("c");
-        file_put_contents($this->errorlogfile, $timestamp . " : " . $message . PHP_EOL, FILE_APPEND);
+        file_put_contents($this->logfile, $timestamp . " [ERROR] : " . $message . PHP_EOL, FILE_APPEND);
     }
 
 }
