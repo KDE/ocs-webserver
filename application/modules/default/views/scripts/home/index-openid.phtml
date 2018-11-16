@@ -28,7 +28,7 @@ $helperImage = new Default_View_Helper_Image();
 
 $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
-
+$this->member = $member;
 ?>
 <link href="/theme/flatui/css/style-index-common.css" rel="stylesheet">
 <main id="explore-content">
