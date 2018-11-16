@@ -24,5 +24,17 @@
   $host = $_SERVER['SERVER_NAME'];
 
 ?>
+<link href="/theme/flatui/css/style-index-common.css" rel="stylesheet">
+<main id="explore-content">
+    <section class="wrapper-kde-store" id="intro-kde-store" >
+        <section class="container" style="height:100%; width: 100%;">                               
+            <div class="row">   
 
-<main id="explore-content"></main>
+                <aside class="col-lg-2 col-md-4 col-sm-6 col-xs-12 aside" >
+                     <?php  echo $this->render('settings/index.phtml'); ?>
+                </aside>               
+                
+            </div> <!--row -->
+        </section>
+    </section>
+</main>
