@@ -195,7 +195,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
             // $stat['cntSupporters'] = $cntmb;
             $stat['userLastActiveTime'] = $tableMember->fetchLastActiveTime($this->_memberId);
 
-            // duplicates sourceUrl
+            
             $helperUserRole = new Backend_View_Helper_UserRole();
             $userRoleName = $helperUserRole->userRole();
             if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
