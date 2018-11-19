@@ -1532,15 +1532,12 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     {
        $sql = "
             select 
-            TRIM(TRAILING '/' FROM p.source_url) as source_url
+            source_url
             ,count(1) as cnt,
             GROUP_CONCAT(p.project_id ORDER BY p.created_at) pids
-            from project p 
-            where p.source_url is not null 
-            and p.source_url<>'' 
-            and p.status=100
-            group by TRIM(TRAILING '/' FROM p.source_url)
-            having count(1)>1        
+            from stat_projects_source_url p 
+            group by source_url
+            having count(1)>1         
        ";
       if(isset($orderby)){
               $sql = $sql.'  order by '.$orderby;
@@ -1564,16 +1561,13 @@ class Default_Model_Project extends Default_Model_DbTable_Project
           select count(1) as cnt from
           (
                       select 
-                       TRIM(TRAILING '/' FROM p.source_url) as source_url
+                       source_url
                        ,count(1) as cnt,
                        GROUP_CONCAT(p.project_id ORDER BY p.created_at) pids
-                       from project p 
-                       where p.source_url is not null 
-                       and p.source_url<>'' 
-                       and p.status=100
-                       group by TRIM(TRAILING '/' FROM p.source_url)
+                       from stat_projects_source_url p 
+                       group by p.source_url
                        having count(1)>1 
-          ) a        
+          ) a  
       ";
        $result = $this->_db->fetchAll($sql);
       return $result[0]['cnt'];;
@@ -1584,8 +1578,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
       $sql = "
             select count(1) as cnt from 
-            stat_projects p  
-            where p.source_url= :source_url and p.status = 100        
+            stat_projects_source_url p  
+            where p.source_url= :source_url        
       ";
        $result = $this->_db->fetchAll($sql,array('source_url' => $source_url));
       return $result[0]['cnt'];
@@ -1599,14 +1593,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
            from
            (
               select distinct p.source_url
-              ,(select count(1) from stat_projects pp where pp.status=100 
-                and TRIM(TRAILING '/' FROM pp.source_url)=TRIM(TRAILING '/' FROM p.source_url) ) cnt 
-              from stat_projects p 
+              ,(select count(1) from stat_projects_source_url pp where pp.source_url=p.source_url) cnt 
+              from stat_projects_source_url p 
               where p.member_id = :member_id 
-              and p.status=100 
-              and p.source_url<>'' 
-              and p.source_url is not null
-           )t where t.cnt>1
+           ) t where t.cnt>1
       ";
        $result = $this->_db->fetchAll($sql,array('member_id' => $member_id));
        return $result[0]['cnt'];
