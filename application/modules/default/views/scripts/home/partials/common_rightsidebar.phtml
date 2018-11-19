@@ -54,6 +54,14 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
     font-size: 16px;
     line-height: 38px;
 }
+
+.git-project {
+    border-bottom: 1px solid #ccd4d8;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    overflow: hidden;
+}
+
 </style>    
 
 
@@ -137,11 +145,11 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                 ?>
             <span class="newsTitle"> Git-Projects </span>
             <div class="prod-widget-box right bgwhite" id="lastcomments">
-                <div class="prod-widget-box new-products">
+                <div class="new-products">
                 <?php
                 foreach ($this->git_projects as $git_project) {
                     ?>
-                    <div class="productrow">
+                    <div class="productrow git-project">
                         <div class="row" style="padding: 5px;">            
                             <div class="col-lg-2 col-md-3 col-sm-4 col-xs-4"> 
                                 <div class="text-center">
