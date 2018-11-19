@@ -33,13 +33,11 @@ class Default_View_Helper_ProjectPageviewsToday extends Zend_View_Helper_Abstrac
         $sql
             = "
                 SELECT
-                    `project_id`,
-                    `count_views`,
-                    `count_visitor`,
-                    `last_view`
+                    count(1) as `count_views`
                 FROM
-                    `stat_page_views_today_mv`
+                    `stat_page_views_48h`
                 WHERE `project_id` = ?
+                AND created_at >= subdate(NOW(), 1)
                 ";
         $database = Zend_Db_Table::getDefaultAdapter();
         $sql = $database->quoteInto($sql, $project_id, 'INTEGER', 1);
