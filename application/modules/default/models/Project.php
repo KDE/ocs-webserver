@@ -1575,7 +1575,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
     public function getCountSourceUrl($source_url)
     {
-
+      $last = substr($source_url, -1);
+      if($last=='/'){
+        $source_url = substr($source_url, 0, -1);
+      }
       $sql = "
             select count(1) as cnt from 
             stat_projects_source_url p  
