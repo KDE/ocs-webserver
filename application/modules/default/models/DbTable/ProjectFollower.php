@@ -30,7 +30,7 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
                 SELECT count(*) AS count 
                 FROM project_follower f  
                 inner join member m on f.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0   
-                inner join stat_projects p on p.project_id = f.project_id and p.status = 100 
+                inner join project p on p.project_id = f.project_id and p.status = 100 
                 WHERE  f.member_id =:memberId
         ";
         $resultRow = $this->_db->fetchRow($sql, array('memberId' => $memberId));
@@ -43,7 +43,7 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
                 SELECT count(*) AS count 
                 FROM project_follower f  
                 inner join member m on f.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0   
-                inner join stat_projects p on p.project_id = f.project_id and p.status = 100 
+                inner join project p on p.project_id = f.project_id and p.status = 100 
                 WHERE  p.member_id =:memberId
         ";
         $resultRow = $this->_db->fetchRow($sql, array('memberId' => $memberId));
@@ -58,29 +58,30 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
 
      public function fetchLikesForMember($memberId)
     {            
-             $sql = "
+             $sql = "   
                         SELECT 
                         f.project_id
                         ,f.member_id
                         ,f.created_at
                         ,p.member_id as project_member_id
-                        ,p.username as project_username
+                        ,m.username as project_username
                         ,p.project_category_id
                         ,p.status
                         ,p.title
                         ,p.description
                         ,p.image_small
-                        ,p.project_created_at
-                        ,p.project_changed_at
-                        ,p.laplace_score
-                        ,p.cat_title
+                        ,p.created_at as project_created_at
+                        ,p.changed_at as project_changed_at
+                        ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
+                        ,c.title as cat_title                        
                         ,p.count_likes
                         ,p.count_dislikes
                         FROM project_follower f
                         inner join member m on f.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
-                        INNER JOIN stat_projects p ON p.project_id = f.project_id 
+                        INNER JOIN project p ON p.project_id = f.project_id 
+                        inner join project_category c on p.project_category_id = c.project_category_id
                         WHERE (p.status = 100) AND (f.member_id = :member_id) 
-                        order by f.created_at desc
+                        order by f.created_at desc                      
              ";
 
             $resultSet = $this->_db->fetchAll($sql, array('member_id' => $memberId));
