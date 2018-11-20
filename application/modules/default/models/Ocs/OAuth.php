@@ -217,23 +217,51 @@ class Default_Model_Ocs_OAuth
 
         $this->messages = array();
 
-        $data = $this->mapUserData($member_data);
+        $data = $this->mapData($member_data, $bypassEmailCheck = false, $bypassUsernameCheck = false);
+        $uid = $member_data['member_id'];
+        $user = $this->getUser($member_data['external_id']);
 
-        $options = array();
-        if (true === $force) {
-            $options = array('bypassEmailCheck' => 'true', 'bypassUsernameCheck' => 'true', 'update' => 'true');
+        if (empty($user)) {
+            try {
+                $method = Zend_Http_Client::POST;
+                $uri = $this->config->host . "/api/v2/users/create";
+                $result = $this->httpServer->httpRequest($uri, $uid, $method, $data);
+                if (false === $result) {
+                    $this->messages[] = $this->httpServer->getMessages();
+                    $this->messages[] = "Fail ";
+
+                    return false;
+                }
+            } catch (Zend_Exception $e) {
+                $this->messages[] = $this->httpServer->getMessages();
+                $this->messages[] = "Fail " . $e->getMessage();
+
+                return false;
+            }
+            $this->messages[] = $this->httpServer->getMessages();
+            $this->messages[] = "Success";
+
+            return $result;
+        }
+        if ($force === true) {
+            try {
+                $uri = $this->config->host . "/api/v2/users/update";
+                $method = Zend_Http_Client::PUT;
+                $user = $this->httpServer->httpRequest($uri, $uid, $method, $data);
+            } catch (Zend_Exception $e) {
+                $this->messages[] = "Fail " . $e->getMessage();
+
+                return false;
+            }
+            $this->messages[] = $this->httpServer->getMessages();
+            $this->messages[] = "overwritten : " . json_encode($user);
+
+            return $user;
         }
 
-        try {
-            $this->httpServer->pushHttpUserData($data, $options);
-        } catch (Zend_Exception $e) {
-            $this->messages[] = "Fail " . $e->getMessage();
+        $this->messages[] = 'user already exists.';
 
-            return false;
-        }
-        $this->messages[] = $this->httpServer->getMessages();
-
-        return $data;
+        return false;
     }
 
     /**
@@ -265,6 +293,66 @@ class Default_Model_Ocs_OAuth
         $this->messages[] = $this->httpServer->getMessages();
 
         return $data;
+    }
+
+    /**
+     * @param array $member_data
+     * @param bool $bypassEmailCheck
+     * @param bool $bypassUsernameCheck
+     *
+     * @return array
+     */
+    private function mapData($member_data, $bypassEmailCheck = false, $bypassUsernameCheck = false)
+    {
+        $map_user_data = array(
+            'user' => array(
+                'id'             => $member_data['external_id'],
+                'ocs_user_id'    => $member_data['member_id'],
+                'username'       => $member_data['username'],
+                'password'       => $member_data['password'],
+                'email'          => $member_data['mail'],
+                'emailVerified'  => empty($member_data['mail_checked']) ? 'false' : 'true',
+                'is_hive'        => $member_data['password_type'] == 0 ? 'false' : 'true',
+                'creationTime'   => strtotime($member_data['created_at']),
+                'lastUpdateTime' => strtotime($member_data['changed_at']),
+                'avatarUrl'      => $member_data['profile_image_url'],
+                'biography'      => empty($member_data['biography']) ? '' : $member_data['biography'],
+                'admin'          =>  $member_data['roleId'] == 100 ? 'true' : 'false',
+            )
+        );
+
+        if ((false == $member_data['is_active']) OR (true == $member_data['is_deleted'])) {
+            $map_user_data['user']['disabledReason'] = 'user account disabled';
+        }
+
+        $map_user_data['options'] = array(
+            'bypassEmailCheck' => $bypassEmailCheck ? 'true' : 'false',
+            'bypassUsernameCheck' => $bypassUsernameCheck ? 'true' : 'false'
+        );
+
+        return $map_user_data;
+    }
+
+    /**
+     * @param string $extern_uid
+     *
+     * @return bool|array
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function getUser($extern_uid)
+    {
+        $uri = $this->config->host . "/api/v2/users/{$extern_uid}";
+        $method = Zend_Http_Client::GET;
+        $uid = 'external_id';
+
+        $user = $this->httpServer->httpRequest($uri, $uid, $method);
+
+        if (false === $user) {
+            return false;
+        }
+
+        return $user;
     }
 
 }

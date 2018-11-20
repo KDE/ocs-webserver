@@ -24,6 +24,7 @@ class Default_Model_Ocs_HttpTransport_OAuthServer
 {
 
     protected $messages;
+    protected $httpClient;
     private $_config;
     private $_cache;
 
@@ -43,6 +44,9 @@ class Default_Model_Ocs_HttpTransport_OAuthServer
         }
 
         $this->_cache = $this->initCache();
+        $uri = $this->_config->host;
+        $this->httpClient = new Zend_Http_Client($uri, array('keepalive' => true, 'strictredirects' => true, 'timeout' => 120));
+        $this->httpClient->setCookieJar();
     }
 
     /**
@@ -167,9 +171,13 @@ class Default_Model_Ocs_HttpTransport_OAuthServer
         $httpClient->setHeaders('Content-Type', 'application/x-www-form-urlencoded');
         $httpClient->setHeaders('Accept', 'application/json');
         $httpClient->setParameterPost(array(
+            //'username'      => "dummy",
+            //'password'      => "dummy",
             'client_id'     => $this->_config->client_id,
             'client_secret' => $this->_config->client_secret,
             'grant_type'    => 'client_credentials'
+            //'grant_type'    => 'password',
+            //'scope'         => 'profile user:create user:delete'
         ));
 
         $response = $httpClient->request();
@@ -240,6 +248,49 @@ class Default_Model_Ocs_HttpTransport_OAuthServer
     public function getMessages()
     {
         return $this->messages;
+    }
+
+    /**
+     * @param string $uri
+     * @param string $uid
+     * @param string $method
+     * @param array|null $post_param
+     *
+     * @return bool|array
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function httpRequest($uri, $uid, $method = Zend_Http_Client::GET, $post_param = null)
+    {
+        $access_token = $this->getAccessToken();
+        $this->httpClient->resetParameters();
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Authorization', 'Bearer ' . $access_token);
+        $this->httpClient->setHeaders('Content-Type', 'application/json');
+        $this->httpClient->setHeaders('Accept', 'application/json');
+        $this->httpClient->setHeaders('User-Agent', $this->_config->user_agent);
+        $this->httpClient->setMethod($method);
+        if (isset($post_param)) {
+            $jsonUserData = Zend_Json::encode($post_param);
+            $this->httpClient->setRawData($jsonUserData, 'application/json');
+        }
+
+        $response = $this->httpClient->request();
+        if ($response->getStatus() < 200 OR $response->getStatus() >= 500) {
+            $this->messages[] = 'Request failed.(' . $uri . ') OCS OAuth server send message: ' . $response->getBody();
+
+            return false;
+        }
+
+        $body = Zend_Json::decode($response->getBody());
+
+        if (array_key_exists("message", $body) OR array_key_exists("error", $body)) {
+            $this->messages[] = "id: {$uid} ($uri) - " . $response->getBody();
+
+            return false;
+        }
+
+        return $body;
     }
 
 }
