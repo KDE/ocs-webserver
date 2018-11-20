@@ -22,6 +22,7 @@
 
 $helpImage = new Default_View_Helper_Image();
 $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helpCatTitle = new Default_View_Helper_CatTitle();
 ?>
 
     <div class="sidebar-content">
@@ -30,6 +31,7 @@ $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
             <div class="row product-row" >
                 <?php
                 foreach ($this->moreProducts as $product):                    
+                    $product->catTitle = $helpCatTitle->catTitle($product->project_category_id);
                     $product->title = Default_Model_HtmlPurify::purify($product->title);
                     if($product->project_id==0 || is_null($product->project_id)) {
                         continue;
