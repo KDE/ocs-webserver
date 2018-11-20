@@ -44,6 +44,7 @@ class Default_Plugin_SendMail extends Zend_Controller_Plugin_Abstract
         $this->setTemplateVar('username', '');
         $this->setTemplateVar('verificationlink', '');
         $this->setTemplateVar('sender', '');
+        $this->setTemplateVar('product_title', '');
     }
 
     public function setTemplate($tplName)
