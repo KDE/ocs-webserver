@@ -364,9 +364,10 @@ class Default_Model_Info
                 ,p.title
                 ,p.image_small       
                 ,s.amount 
-                ,s.category_title       
+                ,s.category_title 
+                ,p.package_types      
                 FROM stat_downloads_quarter_year s
-                INNER JOIN project p ON s.project_id = p.project_id';
+                INNER JOIN stat_projects p ON s.project_id = p.project_id';
 
         $sql .= ' WHERE
                     p.status=100
