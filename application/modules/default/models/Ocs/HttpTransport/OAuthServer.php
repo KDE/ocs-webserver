@@ -171,13 +171,13 @@ class Default_Model_Ocs_HttpTransport_OAuthServer
         $httpClient->setHeaders('Content-Type', 'application/x-www-form-urlencoded');
         $httpClient->setHeaders('Accept', 'application/json');
         $httpClient->setParameterPost(array(
-            //'username'      => "dummy",
-            //'password'      => "dummy",
+            //'username'      => $this->_config->username,
+            //'password'      => $this->_config->userpass,
             'client_id'     => $this->_config->client_id,
             'client_secret' => $this->_config->client_secret,
             'grant_type'    => 'client_credentials'
             //'grant_type'    => 'password',
-            //'scope'         => 'profile user:create user:delete'
+            //'scope'         => 'profile openid user:create user:delete'
         ));
 
         $response = $httpClient->request();
@@ -251,12 +251,14 @@ class Default_Model_Ocs_HttpTransport_OAuthServer
     }
 
     /**
-     * @param string $uri
-     * @param string $uid
-     * @param string $method
+     * @param string     $uri
+     * @param string     $uid
+     * @param string     $method
      * @param array|null $post_param
      *
      * @return bool|array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Json_Exception
      */
@@ -291,6 +293,11 @@ class Default_Model_Ocs_HttpTransport_OAuthServer
         }
 
         return $body;
+    }
+
+    public function resetMessages()
+    {
+        $this->messages = array();
     }
 
 }
