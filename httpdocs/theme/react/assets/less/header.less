@@ -8,6 +8,7 @@ out: ../css/header.css, sourcemap: true, compress: true
 #site-header {
   padding: 0 80px;
   font-size: 14px;
+  background-color: #ccc;
 
   ul {
     list-style-type: none;
@@ -357,7 +358,6 @@ out: ../css/header.css, sourcemap: true, compress: true
     #site-header {
       height: 50px !important;
       padding: 0;
-      background-size: contain;
     }
   }
 
@@ -392,6 +392,23 @@ out: ../css/header.css, sourcemap: true, compress: true
         &.Books {
           width: 38px;
         }
+
+        &.Mate {
+          width: 41px;
+        }
+
+        &.XFCE {
+          width: 56px;
+        }
+
+        &.Images {
+          width: 44px;
+        }
+
+        &.Window-Managers, &.Arch-Packages,&.Games, &.OpenSuse-RPMs, &.OSX-Packages, &.VLC-Addons, &.Krita-Addons   {
+          overflow: visible;
+        }
+
       }
 
       &.KFCE-Pling-CC {
@@ -460,10 +477,10 @@ out: ../css/header.css, sourcemap: true, compress: true
           #search-form {
             height: 27px;
             padding: 0;
-            margin: 1.5px 0;
+            margin: 1.5px 20px 0;
             line-height: 27px;
             position: relative;
-            margin-right: 60px;
+            margin-right: 40px;
 
             input[type="text"]{
               width: 100%;

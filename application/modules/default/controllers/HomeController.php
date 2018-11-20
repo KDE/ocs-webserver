@@ -24,6 +24,10 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 {
     public function indexAction()
     {
+        //get gitlab projetcs
+        $git = new Default_Model_Ocs_Gitlab();
+        $this->view->git_projects = $git->getProjects();
+        
         /** @var Default_Model_ConfigStore $storeConfig */
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         if ($storeConfig) {

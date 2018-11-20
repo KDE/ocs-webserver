@@ -651,14 +651,14 @@ var OpendownloadfileWerbung= (function () {
                     'type': 'iframe',
                     'width':'300',
                     'height':'200',
-                    'iframe': {'scrolling': 'no'},
+                    'iframe': {'scrolling': 'yes'},
                     'autoSize':false,
+                    'id': 'opendownloadfilepopup',
                     helpers: {
                         overlay: {
                             locked: false
                         }
                     },
-                    autoSize: false,
                     href:'/dl?file_id='+file_id+'&file_type='+file_type+'&file_name='+file_name+'&file_size='+file_size+'&project_id='+project_id+'&link_type='+link_type
 
                 });
