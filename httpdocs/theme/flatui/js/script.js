@@ -526,7 +526,7 @@ var Popuppanel =  (function () {
     return {
         setup: function () {
             $('.popuppanel').on('click', function (event) {
-              if ($(this).attr('id') === "plingList" || "aboutContent" || "ocsapiContent"){
+              if ($(this).attr('target') === "_blank"){
                 console.log('dont prevent default');
               } else {
                 event.preventDefault();
