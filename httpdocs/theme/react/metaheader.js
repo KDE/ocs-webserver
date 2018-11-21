@@ -425,7 +425,7 @@ class MoreDropDownMenu extends React.Component {
           React.createElement(
             "a",
             { id: "plingList", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + plingListUrl },
-            "FAQ"
+            "What are Plings?"
           )
         ),
         React.createElement(
@@ -574,7 +574,7 @@ class UserMenu extends React.Component {
           React.createElement(
             "a",
             { id: "plingList", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + plingListUrl },
-            "FAQ"
+            "What are Plings?"
           )
         ),
         React.createElement(
@@ -591,7 +591,8 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { target: linkTarget, href: this.props.baseUrl + aboutContentUrl },
+            { id: "aboutContent",
+              target: linkTarget, href: this.props.baseUrl + aboutContentUrl },
             "About"
           )
         ),
@@ -1044,7 +1045,7 @@ class MobileLeftSidePanel extends React.Component {
                 React.createElement(
                   "a",
                   { id: "plingList", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + plingListUrl },
-                  "FAQ"
+                  "What are Plings?"
                 )
               ),
               React.createElement(
