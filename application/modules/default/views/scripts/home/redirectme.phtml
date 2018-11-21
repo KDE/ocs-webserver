@@ -31,6 +31,7 @@ $http_scheme = $request->getScheme();
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 $url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
+$url_myopendesktop = Zend_Registry::get('config')->settings->client->default->url_myopendesktop;
 $config = Zend_Registry::get('config')->settings->domain;
 
 $getAuthUser = new Default_View_Helper_GetAuthUser();
@@ -59,6 +60,7 @@ foreach ($domains as $domain) {
 <img src="<?= $http_scheme?>://<?= $config->openid->host ?>/login/setsession?ltat=<?= $ltat ?>" height="0" width="0" onload="loadSubSys();"/>
 <img data-src="<?=$http_scheme?>://<?= $config->forum->host ?>/session/sso?return_path=%2F" height="0" width="0" id="f-login" />
 <img data-src="<?= $url_gitlab ?>/users/auth/oauth_opendesktop" height="0" width="0" id="g-login"/>
+<img src="<?= $url_myopendesktop ?>/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
 
 </body>
 </html>

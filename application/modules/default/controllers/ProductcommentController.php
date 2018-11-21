@@ -150,6 +150,11 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
+        // email sent by sendNotificationToOwner already
+        if ($product->member_id == $parentComment['member_id']) {
+            return;
+        }
+
         $productData = new stdClass();
         $productData->mail = $parentComment['mail'];
         $productData->username = $parentComment['username'];

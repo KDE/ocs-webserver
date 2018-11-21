@@ -31,10 +31,11 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                         ,c.external_link
                         ,c.member_id
                         ,c.text
-                        ,(select cat_title from stat_projects p where p.project_id = c.project_id_parent) catTitle
-                        ,(select title from stat_projects p where p.project_id = c.project_id_parent) title
-                        ,(select image_small from stat_projects p where p.project_id = c.project_id_parent) image_small
-                        ,(select changed_at from stat_projects p where p.project_id = c.project_id_parent) changed_at
+                        ,' ' as catTitle
+                        ,(select project_category_id from project p where p.project_id = c.project_id_parent) project_category_id
+                        ,(select title from project p where p.project_id = c.project_id_parent) title
+                        ,(select image_small from project p where p.project_id = c.project_id_parent) image_small
+                        ,(select changed_at from project p where p.project_id = c.project_id_parent) changed_at
                         FROM project_clone c
                         WHERE c.is_deleted = 0 and c.is_valid = 1 and c.project_id = :project_id
                         order by c.created_at desc
@@ -53,10 +54,11 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                             ,c.external_link
                             ,c.member_id
                             ,c.text
-                            ,(select cat_title from stat_projects p where p.project_id = c.project_id) catTitle
-                            ,(select title from stat_projects p where p.project_id = c.project_id) title
-                            ,(select image_small from stat_projects p where p.project_id = c.project_id) image_small
-                            ,(select changed_at from stat_projects p where p.project_id = c.project_id) changed_at
+                            ,' ' as catTitle
+                            ,(select project_category_id from project p where p.project_id = c.project_id_parent) project_category_id
+                            ,(select title from project p where p.project_id = c.project_id) title
+                            ,(select image_small from project p where p.project_id = c.project_id) image_small
+                            ,(select changed_at from project p where p.project_id = c.project_id) changed_at
                             FROM project_clone c
                             WHERE c.is_deleted = 0 and c.is_valid = 1 and  c.project_id_parent = :project_id
                             order by c.created_at desc
@@ -89,10 +91,11 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                                        ,c.external_link
                                        ,c.member_id
                                        ,c.text
-                                       ,(select cat_title from stat_projects p where p.project_id = c.project_id) catTitle
-                                       ,(select title from stat_projects p where p.project_id = c.project_id) title
-                                       ,(select image_small from stat_projects p where p.project_id = c.project_id) image_small
-                                       ,(select changed_at from stat_projects p where p.project_id = c.project_id) changed_at
+                                       ,' ' as catTitle
+                                       ,(select project_category_id from project p where p.project_id = c.project_id_parent) project_category_id
+                                       ,(select title from project p where p.project_id = c.project_id) title
+                                       ,(select image_small from project p where p.project_id = c.project_id) image_small
+                                       ,(select changed_at from project p where p.project_id = c.project_id) changed_at
                                        FROM project_clone c
                                        WHERE c.is_deleted = 0 and c.is_valid = 1 and  c.project_id_parent =  :project_id 
 
@@ -104,10 +107,11 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                                        ,c.external_link
                                        ,c.member_id
                                        ,c.text
-                                       ,(select cat_title from stat_projects p where p.project_id = c.project_id) catTitle
-                                       ,(select title from stat_projects p where p.project_id = c.project_id) title
-                                       ,(select image_small from stat_projects p where p.project_id = c.project_id) image_small
-                                       ,(select changed_at from stat_projects p where p.project_id = c.project_id) changed_at
+                                       ,' ' as catTitle
+                                       ,(select project_category_id from project p where p.project_id = c.project_id_parent) project_category_id
+                                       ,(select title from project p where p.project_id = c.project_id) title
+                                       ,(select image_small from project p where p.project_id = c.project_id) image_small
+                                       ,(select changed_at from project p where p.project_id = c.project_id) changed_at
                                        FROM project_clone c
                                        WHERE  c.project_id<> :project_id and  c.is_deleted = 0 and c.is_valid = 1 and  c.project_id_parent in (
                                             select project_id_parent from project_clone c 

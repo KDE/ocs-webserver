@@ -42,7 +42,7 @@ class Local_Log_File
     private function initLog($domain, $filename)
     {
         $fileDomainId = str_replace('.', '_', $domain);
-        $date = date("Y-m-d");
+        $date = date("Y-m-d_H-i-s");
         $this->logfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $date . '_' . $fileDomainId . '_' . $filename . self::extension;
         $this->initFiles($this->logfile);
     }

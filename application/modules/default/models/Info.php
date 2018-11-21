@@ -360,9 +360,12 @@ class Default_Model_Info
 
         $sql = '
             SELECT 
-                p.*        
+                 p.project_id
+                ,p.title
+                ,p.image_small       
                 ,s.amount 
-                ,s.category_title       
+                ,s.category_title 
+                ,p.package_types      
                 FROM stat_downloads_quarter_year s
                 INNER JOIN stat_projects p ON s.project_id = p.project_id';
 
