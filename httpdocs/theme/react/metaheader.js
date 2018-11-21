@@ -573,7 +573,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "plingList", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + plingListUrl },
+            { id: "plingList", target: linkTarget, href: this.props.baseUrl + plingListUrl },
             "What are Plings?"
           )
         ),
@@ -582,7 +582,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "ocsapiContent", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + ocsapiContentUrl },
+            { id: "ocsapiContent", target: linkTarget, href: this.props.baseUrl + ocsapiContentUrl },
             "API"
           )
         ),
