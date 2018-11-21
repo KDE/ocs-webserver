@@ -526,7 +526,7 @@ var Popuppanel =  (function () {
     return {
         setup: function () {
             $('.popuppanel').on('click', function (event) {
-              console.log(this);
+              console.log($(this).attr('id'));
                 event.preventDefault();
                 var hf = $(this).attr('href');
                 $.fancybox({
