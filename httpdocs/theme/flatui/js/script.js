@@ -526,7 +526,9 @@ var Popuppanel =  (function () {
     return {
         setup: function () {
             $('.popuppanel').on('click', function (event) {
-              console.log($(this).attr('id'));
+              if ($(this).attr('id') === "plingList" || "aboutContent" || "ocsapiContent"){
+                console.log('dont prevent default');
+              } else {
                 event.preventDefault();
                 var hf = $(this).attr('href');
                 $.fancybox({
@@ -546,6 +548,7 @@ var Popuppanel =  (function () {
                     href: hf,
                     type: 'ajax'
                 });
+              }
             });
         }
     }
