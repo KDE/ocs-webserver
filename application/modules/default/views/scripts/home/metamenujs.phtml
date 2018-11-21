@@ -48,8 +48,8 @@ if($target == 'opendesktop') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_forum);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_forum);
 } else if($target == 'myopendesktop') {
-    $url_login = $baseurl."/login/redirect/".$filter->filter($url_forum);
-    $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_forum);
+    $url_login = $baseurl."/login/redirect/".$filter->filter($url_myopendesktop);
+    $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_myopendesktop);
 }
 
 
