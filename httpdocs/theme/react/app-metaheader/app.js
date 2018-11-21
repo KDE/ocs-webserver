@@ -407,15 +407,18 @@ class UserMenu extends React.Component {
     let userMenuContainerDisplay;
     if (this.props.device === "large"){
 
+      console.log(window.location.hos)
+
       let plingListUrl = "/#plingList",
           ocsapiContentUrl = "/#ocsapiContent",
           aboutContentUrl = "/#aboutContent",
           linkTarget = "_blank";
-      if (window.location.hostname === this.props.baseUrl.split('https://')[1]){
-        plingListUrl = "/plings";
-        ocsapiContentUrl = "/partials/ocsapicontent.phtml";
-        aboutContentUrl = "/partials/about.phtml";
-        linkTarget = "";
+
+      if (window.location.hostname.indexOf('opendesktop') === -1){
+          plingListUrl = "/plings";
+          ocsapiContentUrl = "/partials/ocsapicontent.phtml";
+          aboutContentUrl = "/partials/about.phtml";
+          linkTarget = "";
       }
 
       userMenuContainerDisplay = (
