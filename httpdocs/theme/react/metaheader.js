@@ -536,8 +536,6 @@ class UserMenu extends React.Component {
     let userMenuContainerDisplay;
     if (this.props.device === "large") {
 
-      console.log(window.location.hos);
-
       let plingListUrl = "/#plingList",
           ocsapiContentUrl = "/#ocsapiContent",
           aboutContentUrl = "/#aboutContent",
