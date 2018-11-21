@@ -424,8 +424,7 @@ class UserMenu extends React.Component {
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
           <li><a id="plingList" target={linkTarget} href={this.props.baseUrl + plingListUrl}>What are Plings?</a></li>
           <li><a id="ocsapiContent" target={linkTarget} href={this.props.baseUrl + ocsapiContentUrl}>API</a></li>
-          <li><a id="aboutContent"
-             target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
+          <li><a id="aboutContent" target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
           {userAppsContextDisplay}
           {userDropdownDisplay}
         </ul>

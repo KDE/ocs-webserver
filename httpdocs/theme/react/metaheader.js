@@ -591,8 +591,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "aboutContent",
-              target: linkTarget, href: this.props.baseUrl + aboutContentUrl },
+            { id: "aboutContent", target: linkTarget, href: this.props.baseUrl + aboutContentUrl },
             "About"
           )
         ),
