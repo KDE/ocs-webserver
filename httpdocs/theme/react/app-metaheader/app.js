@@ -88,10 +88,13 @@ class MetaHeader extends React.Component {
         url += "/#aboutContent";
       }
     }
+    console.log(url);
+    console.log(this.state.isExternal);
     if (this.state.isExternal === true){
       window.open(url, '_blank');
     } else {
       this.setState({showModal:true,modalUrl:url});
+      console.log('open modal');
     }
   }
 
@@ -150,6 +153,7 @@ class MetaHeader extends React.Component {
             onPopupLinkClick={this.handlePopupLinkClick}
           />
         </div>
+        {modalDisplay}
       </nav>
     )
   }
