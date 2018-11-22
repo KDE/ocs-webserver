@@ -668,8 +668,8 @@ class MetaheaderModal extends React.Component {
 
   componentDidMount() {
     const self = this;
-    $.ajax({url: this.props.modalUrl,cache: false})
-      .done(function(response){
+    console.log(this.props.modalUrl);
+    $.ajax({url: this.props.modalUrl,cache: false}).done(function(response){
         console.log(response);
         self.setState({content:response,loading:false});
     });
