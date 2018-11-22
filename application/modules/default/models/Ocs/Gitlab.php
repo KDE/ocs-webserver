@@ -776,7 +776,7 @@ class Default_Model_Ocs_Gitlab
             }
         }
 
-        return $body[0];
+        return $body;
     }
 
     public function getProjects($page = 1, $limit = 10, $order_by = 'created_at', $sort = 'desc')
