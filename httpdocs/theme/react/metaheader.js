@@ -135,8 +135,26 @@ class MetaHeader extends React.Component {
   }
 
   handlePopupLinkClick(key) {
-    const url = window.appHelpers.getPopupUrl(key, this.state.isExternal, this.state.baseUrl);
-    console.log(url);
+    let url = this.state.baseUrl;
+    if (key === "FAQ") {
+      if (this.state.isExternal === true) {
+        url += "/plings";
+      } else {
+        url += "/#plingList";
+      }
+    } else if (key === "API") {
+      if (this.state.isExternal === true) {
+        url += "/partials/ocsapicontent.phtml";
+      } else {
+        url += "/#ocsapiContent";
+      }
+    } else if (key === "ABOUT") {
+      if (this.state.isExternal === true) {
+        url += "/partials/about.phtml";
+      } else {
+        url += "/#aboutContent";
+      }
+    }
     if (this.state.isExternal === true) {
       window.open(url, '_blank');
     } else {
