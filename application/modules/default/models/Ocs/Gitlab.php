@@ -24,10 +24,12 @@
  */
 class Default_Model_Ocs_Gitlab
 {
+    /** @var  Zend_Cache_Core */
+    protected $cache;
     protected $config;
     protected $messages;
     protected $httpClient;
-
+    
     /**
      * @inheritDoc
      */
@@ -40,6 +42,8 @@ class Default_Model_Ocs_Gitlab
         }
         $uri = $this->config->host;
         $this->httpClient = new Zend_Http_Client($uri, array('keepalive' => true, 'strictredirects' => true));
+        
+        $this->cache = Zend_Registry::get('cache');
     }
 
     /**
@@ -781,34 +785,46 @@ class Default_Model_Ocs_Gitlab
 
     public function getProjects($page = 1, $limit = 5, $order_by = 'created_at', $sort = 'desc')
     {
-        $this->httpClient->resetParameters();
-        $uri = $this->config->host . '/api/v4/projects?order_by='.$order_by.'&sort='.$sort.'&visibility=public&page=' . $page . '&per_page=' . $limit;
-        $this->httpClient->setUri($uri);
-        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
-        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
-        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
-        $this->httpClient->setMethod(Zend_Http_Client::GET);
+        $cache = $this->cache;
+        $cacheName = __FUNCTION__;
+        if (!($body = $cache->load($cacheName))) {
+            $this->httpClient->resetParameters();
+            $uri = $this->config->host . '/api/v4/projects?order_by='.$order_by.'&sort='.$sort.'&visibility=public&page=' . $page . '&per_page=' . $limit;
+            $this->httpClient->setUri($uri);
+            $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+            $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+            $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+            $this->httpClient->setMethod(Zend_Http_Client::GET);
 
-        try {
-            $response = $this->httpClient->request();
+            try {
+                $response = $this->httpClient->request();
 
-            $body = Zend_Json::decode($response->getRawBody());
+                $body = Zend_Json::decode($response->getRawBody());
 
-            if (count($body) == 0) {
+                if (count($body) == 0) {
+                    return array();
+                }
+
+                if (array_key_exists("message", $body)) {
+                    $result_code = substr(trim($body["message"]), 0, 3);
+                    if ((int)$result_code >= 300) {
+                        throw new Default_Model_Ocs_Exception($body["message"]);
+                    }
+                }
+                
+                //fetch also user data
+                $returnArray = array();
+                foreach ($body as $git_project) {
+                    $gituser = $this->getUserWithId($git_project['namespace']['id']);
+                    $git_project['namespace']['avatar_url'] = $gituser['avatar_url'];
+                    $returnArray[] = $git_project;
+                }
+                $body = $returnArray;
+
+            } catch (Exception $exc) {
                 return array();
             }
-
-            if (array_key_exists("message", $body)) {
-                $result_code = substr(trim($body["message"]), 0, 3);
-                if ((int)$result_code >= 300) {
-                    throw new Default_Model_Ocs_Exception($body["message"]);
-                }
-            }
-            
-        } catch (Exception $exc) {
-            return array();
         }
-
         return $body;
     }
 
