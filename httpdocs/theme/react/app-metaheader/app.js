@@ -1,4 +1,4 @@
- class MetaHeader extends React.Component {
+class MetaHeader extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
@@ -312,15 +312,21 @@ class MoreDropDownMenu extends React.Component {
 
   render(){
 
+    console.log(window.location.hostname);
+
     let plingListUrl = "/#plingList",
         ocsapiContentUrl = "/#ocsapiContent",
         aboutContentUrl = "/#aboutContent",
         linkTarget = "_blank";
-    if (window.location.hostname === this.props.baseUrl.split('https://')[1]){
-      plingListUrl = "/plings";
-      ocsapiContentUrl = "/partials/ocsapicontent.phtml";
-      aboutContentUrl = "/partials/about.phtml";
-      linkTarget = "";
+
+    if (window.location.hostname.indexOf('opendesktop') === -1 ||
+        window.location.hostname === "git.opendesktop.org" ||
+        window.location.hostname === "forum.opendesktop.org" ||
+        window.location.hostname === "my.opendesktop.org" ||){
+        plingListUrl = "/plings";
+        ocsapiContentUrl = "/partials/ocsapicontent.phtml";
+        aboutContentUrl = "/partials/about.phtml";
+        linkTarget = "";
     }
 
     return(
@@ -406,13 +412,18 @@ class UserMenu extends React.Component {
 
     let userMenuContainerDisplay;
     if (this.props.device === "large"){
-      
+
+      console.log(window.location.hostname);
+
       let plingListUrl = "/#plingList",
           ocsapiContentUrl = "/#ocsapiContent",
           aboutContentUrl = "/#aboutContent",
           linkTarget = "_blank";
 
-      if (window.location.hostname.indexOf('opendesktop') === -1){
+      if (window.location.hostname.indexOf('opendesktop') === -1 ||
+          window.location.hostname === "git.opendesktop.org" ||
+          window.location.hostname === "forum.opendesktop.org" ||
+          window.location.hostname === "my.opendesktop.org" ||){
           plingListUrl = "/plings";
           ocsapiContentUrl = "/partials/ocsapicontent.phtml";
           aboutContentUrl = "/partials/about.phtml";
@@ -687,15 +698,21 @@ class MobileLeftSidePanel extends React.Component {
       ));
     }
 
+    console.log(window.location.hostname);
+
     let plingListUrl = "/#plingList",
         ocsapiContentUrl = "/#ocsapiContent",
         aboutContentUrl = "/#aboutContent",
         linkTarget = "_blank";
-    if (window.location.hostname === this.props.baseUrl.split('https://')[1]){
-      plingListUrl = "/plings";
-      ocsapiContentUrl = "/partials/ocsapicontent.phtml";
-      aboutContentUrl = "/partials/about.phtml";
-      linkTarget = "";
+
+    if (window.location.hostname.indexOf('opendesktop') === -1 ||
+        window.location.hostname === "git.opendesktop.org" ||
+        window.location.hostname === "forum.opendesktop.org" ||
+        window.location.hostname === "my.opendesktop.org" ||){
+        plingListUrl = "/plings";
+        ocsapiContentUrl = "/partials/ocsapicontent.phtml";
+        aboutContentUrl = "/partials/about.phtml";
+        linkTarget = "";
     }
 
     return (
