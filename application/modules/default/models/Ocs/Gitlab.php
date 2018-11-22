@@ -143,7 +143,7 @@ class Default_Model_Ocs_Gitlab
 
         $data = $this->mapUserData($member_data);
 
-        $user = $this->getUser($data['extern_uid'], $data['username']);
+        $user = $this->getUser($member_data['external_id'], $member_data['username']);
 
         if (empty($user)) {
             $data['skip_confirmation'] = 'true';
@@ -161,11 +161,16 @@ class Default_Model_Ocs_Gitlab
         }
 
         if ($force === true) {
-            $data['skip_reconfirmation'] = 'true';
-            unset($data['password']);
+            //$data['skip_reconfirmation'] = 'true';
+            //unset($data['password']);
 
             try {
-                $this->httpUserUpdate($data, $user['id']);
+                foreach ($data as $datum) {
+                    $datum['skip_reconfirmation'] = 'true';
+                    unset($datum['password']);
+                    $this->httpUserUpdate($datum, $user['id']);
+                }
+                //$this->httpUserUpdate($data, $user['id']);
             } catch (Zend_Exception $e) {
                 $this->messages[] = "Fail " . $e->getMessage();
 
@@ -202,7 +207,7 @@ class Default_Model_Ocs_Gitlab
             $bio = empty($user['biography']) ? '' : $user['biography'];
         }
 
-        $data = array(
+        $data = array(array(
             'email'            => $paramEmail,
             'username'         => strtolower($user['username']),
             'name'             => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname']) : $user['username'],
@@ -212,7 +217,19 @@ class Default_Model_Ocs_Gitlab
             'bio'              => $bio,
             'admin'            => $user['roleId'] == 100 ? 'true' : 'false',
             'can_create_group' => 'true'
-        );
+        ),
+        array(
+            'email'            => $paramEmail,
+            'username'         => strtolower($user['username']),
+            'name'             => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname']) : $user['username'],
+            'password'         => $user['password'],
+            'provider'         => "ldapmain",
+            'extern_uid'       => $this->buildUserDn(strtolower($user['username'])),
+            'bio'              => $bio,
+            'admin'            => $user['roleId'] == 100 ? 'true' : 'false',
+            'can_create_group' => 'true'
+        ))
+        ;
 
         return $data;
     }
