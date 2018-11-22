@@ -66,6 +66,8 @@ class MetaHeader extends React.Component {
   }
 
   handlePopupLinkClick(key){
+    console.log(key);
+    console.log('wtf');
     let url = this.state.baseUrl;
     if (key === "FAQ"){
       if (this.state.isExternal === true){
@@ -432,6 +434,7 @@ class UserMenu extends React.Component {
   }
 
   onPopupLinkClick(key){
+    console.log(key);
     this.props.onPopupLinkClick(key);
   }
 
