@@ -128,6 +128,7 @@ body {
           border-radius: 5px;
           height: 24px;
           line-height: 24px;
+          cursor: pointer;
 
           &:active,
           &:hover {
@@ -812,5 +813,27 @@ body {
         }
       }
     }
+  }
+
+
+}
+
+
+#metaheader-modal {
+  position: fixed;
+  background: rgba(0,0,0,0.25);
+  z-index: 10000000000;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  padding: 5%;
+
+  #metaheader-modal-content {
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+    background: white;
+    padding: 10px;
   }
 }

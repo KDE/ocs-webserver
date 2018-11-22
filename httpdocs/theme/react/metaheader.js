@@ -926,7 +926,7 @@ class MetaheaderModal extends React.Component {
     return React.createElement(
       "div",
       { id: "metaheader-modal" },
-      React.createElement("div", { dangerouslySetInnerHTML: { __html: this.state.content } })
+      React.createElement("div", { id: "metaheader-modal-content", dangerouslySetInnerHTML: { __html: this.state.content } })
     );
   }
 }
@@ -941,6 +941,7 @@ class MobileLeftMenu extends React.Component {
     };
     this.toggleLeftSideOverlay = this.toggleLeftSideOverlay.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -977,6 +978,10 @@ class MobileLeftMenu extends React.Component {
     this.setState({ overlayClass: overlayClass });
   }
 
+  onPopupLinkClick(key) {
+    this.props.onPopupLinkClick(key);
+  }
+
   render() {
     return React.createElement(
       "div",
@@ -990,7 +995,8 @@ class MobileLeftMenu extends React.Component {
           domains: this.props.domains,
           baseUrl: this.props.baseUrl,
           blogUrl: this.props.blogUrl,
-          forumUrl: this.props.forumUrl
+          forumUrl: this.props.forumUrl,
+          onPopupLinkClick: this.props.onPopupLinkClick
         })
       )
     );

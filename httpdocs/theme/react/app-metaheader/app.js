@@ -663,7 +663,7 @@ class MetaheaderModal extends React.Component {
   render(){
     return (
       <div id="metaheader-modal">
-        <div dangerouslySetInnerHTML={{__html:this.state.content}}></div>
+        <div id="metaheader-modal-content" dangerouslySetInnerHTML={{__html:this.state.content}}></div>
       </div>
     )
   }
@@ -679,6 +679,7 @@ class MobileLeftMenu extends React.Component {
     };
     this.toggleLeftSideOverlay = this.toggleLeftSideOverlay.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -715,6 +716,10 @@ class MobileLeftMenu extends React.Component {
     this.setState({overlayClass:overlayClass});
   }
 
+  onPopupLinkClick(key){
+    this.props.onPopupLinkClick(key);
+  }
+
   render(){
     return (
       <div ref={node => this.node = node}  id="metaheader-left-mobile" className={this.state.overlayClass}>
@@ -726,6 +731,7 @@ class MobileLeftMenu extends React.Component {
             baseUrl={this.props.baseUrl}
             blogUrl={this.props.blogUrl}
             forumUrl={this.props.forumUrl}
+            onPopupLinkClick={this.props.onPopupLinkClick}
           />
         </div>
       </div>
