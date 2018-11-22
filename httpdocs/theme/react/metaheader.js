@@ -1,3 +1,72 @@
+window.appHelpers = function () {
+
+  function generateMenuGroupsArray(domains) {
+    let menuGroups = [];
+    domains.forEach(function (domain, index) {
+      if (menuGroups.indexOf(domain.menugroup) === -1) {
+        menuGroups.push(domain.menugroup);
+      }
+    });
+    return menuGroups;
+  }
+
+  function getDeviceFromWidth(width) {
+    let device;
+    if (width >= 910) {
+      device = "large";
+    } else if (width < 910 && width >= 610) {
+      device = "mid";
+    } else if (width < 610) {
+      device = "tablet";
+    }
+    return device;
+  }
+
+  function generatePopupLinks() {
+
+    let pLink = {};
+    pLink.plingListUrl = "/#plingList", pLink.ocsapiContentUrl = "/#ocsapiContent", pLink.aboutContentUrl = "/#aboutContent", pLink.linkTarget = "_blank";
+
+    if (window.location.hostname.indexOf('opendesktop') === -1 || window.location.hostname === "git.opendesktop.org" || window.location.hostname === "git.opendesktop.cc" || window.location.hostname === "forum.opendesktop.org" || window.location.hostname === "forum.opendesktop.cc" || window.location.hostname === "my.opendesktop.org" || window.location.hostname === "my.opendesktop.cc") {
+      pLink.plingListUrl = "/plings";
+      pLink.ocsapiContentUrl = "/partials/ocsapicontent.phtml";
+      pLink.aboutContentUrl = "/partials/about.phtml";
+      pLink.linkTarget = "";
+    }
+    return pLink;
+  }
+
+  function getPopupUrl(key, isExternal, baseUrl) {
+    let url = baseUrl;
+    if (key === "FAQ") {
+      if (isExternal === true) {
+        url += "/plings";
+      } else {
+        url += "/#plingList";
+      }
+    } else if (key === "API") {
+      if (isExternal === true) {
+        url += "/partials/ocsapicontent.phtml";
+      } else {
+        url += "/#ocsapiContent";
+      }
+    } else if (key === "ABOUT") {
+      if (isExternal === true) {
+        url += "/partials/about.phtml";
+      } else {
+        url += "/#aboutContent";
+      }
+    }
+    return url;
+  }
+
+  return {
+    generateMenuGroupsArray,
+    getDeviceFromWidth,
+    generatePopupLinks,
+    getPopupUrl
+  };
+}();
 class MetaHeader extends React.Component {
   constructor(props) {
     super(props);
@@ -66,7 +135,7 @@ class MetaHeader extends React.Component {
   }
 
   handlePopupLinkClick(key) {
-    const url = window.appHelpers.getPopupUrl(key, this.state.isExternal, this.state.baseUrl);
+    const url = appHelpers.getPopupUrl(key, this.state.isExternal, this.state.baseUrl);
     console.log(url);
     if (this.state.isExternal === true) {
       window.open(url, '_blank');

@@ -23,9 +23,7 @@ window.appHelpers = (function(){
   }
 
   function generatePopupLinks(){
-
-    console.log(window.location.hostname);
-
+    
     let pLink = {};
       pLink.plingListUrl = "/#plingList",
       pLink.ocsapiContentUrl = "/#ocsapiContent",
@@ -44,7 +42,7 @@ window.appHelpers = (function(){
     return pLink;
   }
 
-  getPopupUrl(key,isExternal,baseUrl){
+  function getPopupUrl(key,isExternal,baseUrl){
     let url = baseUrl;
     if (key === "FAQ"){
       if (isExternal === true){
