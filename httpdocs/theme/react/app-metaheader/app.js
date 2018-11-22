@@ -476,13 +476,25 @@ class UserMenu extends React.Component {
     let userMenuContainerDisplay;
     if (this.props.device === "large"){
 
+      let faqLinkItem, apiLinkItem, aboutLinkItem;
+      if (window.isExternal === true){
+        faqLinkItem = (<li><a className="popuppanel" id="faq" target="_blank" href={window.baseUrl + "/plings"}>FAQ</a></li>);
+        apiLinkItem = (<li><a className="popuppanel" id="api" target="_blank" href={window.baseUrl + "/partials/ocsapicontent.phtml"}>API</a></li>);
+        aboutLinkItem = (<li><a className="popuppanel" id="about" target="_blank" href={window.baseUrl + "/partials/about.phtml"}>ABOUT</a></li>);
+      } else {
+        faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/#plingsList"}>FAQ</a></li>);
+        apiLinkItem = (<li><a className="popuppanel" id="api" href={"/#ocsapiContent"}>API</a></li>);
+        aboutLinkItem = (<li><a className="popuppanel" id="about" href={"/#aboutContent"}>ABOUT</a></li>);
+      }
+
+
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-          <li><a onClick={() => this.onPopupLinkClick('FAQ')}>FAQ</a></li>
-          <li><a onClick={() => this.onPopupLinkClick('API')}>API</a></li>
-          <li><a onClick={() => this.onPopupLinkClick('ABOUT')}>About</a></li>
+          {faqLinkItem}
+          {apiLinkItem}
+          {aboutLinkItem}
           {userAppsContextDisplay}
           {userDropdownDisplay}
         </ul>
@@ -808,6 +820,17 @@ class MobileLeftSidePanel extends React.Component {
       ));
     }
 
+    let faqLinkItem, apiLinkItem, aboutLinkItem;
+    if (window.isExternal === true){
+      faqLinkItem = (<li><a className="popuppanel" id="faq" target="_blank" href={window.baseUrl + "/plings"}>FAQ</a></li>);
+      apiLinkItem = (<li><a className="popuppanel" id="api" target="_blank" href={window.baseUrl + "/partials/ocsapicontent.phtml"}>API</a></li>);
+      aboutLinkItem = (<li><a className="popuppanel" id="about" target="_blank" href={window.baseUrl + "/partials/about.phtml"}>ABOUT</a></li>);
+    } else {
+      faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/#plingsList"}>FAQ</a></li>);
+      apiLinkItem = (<li><a className="popuppanel" id="api" href={"/#ocsapiContent"}>API</a></li>);
+      aboutLinkItem = (<li><a className="popuppanel" id="about" href={"/#aboutContent"}>ABOUT</a></li>);
+    }
+
     return (
       <div id="left-side-panel">
         <div id="panel-header">
@@ -831,9 +854,9 @@ class MobileLeftSidePanel extends React.Component {
               <ul>
                 <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
                 <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-                <li><a onClick={() => this.onPopupLinkClick('FAQ')}>FAQ</a></li>
-                <li><a onClick={() => this.onPopupLinkClick('API')}>API</a></li>
-                <li><a onClick={() => this.onPopupLinkClick('ABOUT')}>About</a></li>
+                {faqLinkItem}
+                {apiLinkItem}
+                {aboutLinkItem}
               </ul>
             </li>
           </ul>
