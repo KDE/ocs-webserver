@@ -10,7 +10,10 @@ class MetaHeader extends React.Component {
       logoutUrl:window.logoutUrl,
       gitlabUrl:window.gitlabUrl,
       sName:window.sName,
+      isExternal:window.isExternal,
       user:{},
+      showModal:false,
+      modalUrl:''
     };
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
@@ -88,6 +91,16 @@ class MetaHeader extends React.Component {
         />
       )
     }
+
+    let modalDisplay;
+    if (this.state.showModal){
+      modalDisplay = (
+        <MetaheaderModal
+          modalUrl={this.state.modalUrl}
+        />
+      )
+    }
+
     return (
       <nav id="metaheader-nav" className="metaheader">
         <div className="metamenu">
@@ -700,6 +713,16 @@ class MobileLeftSidePanel extends React.Component {
             </li>
           </ul>
         </div>
+      </div>
+    )
+  }
+}
+
+class MetaheaderModal extends React.Component {
+  render(){
+    return (
+      <div id="metaheader-modal">
+        modal
       </div>
     )
   }

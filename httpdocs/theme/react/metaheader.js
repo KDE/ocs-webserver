@@ -56,7 +56,10 @@ class MetaHeader extends React.Component {
       logoutUrl: window.logoutUrl,
       gitlabUrl: window.gitlabUrl,
       sName: window.sName,
-      user: {}
+      isExternal: window.isExternal,
+      user: {},
+      showModal: false,
+      modalUrl: ''
     };
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
@@ -130,6 +133,14 @@ class MetaHeader extends React.Component {
         sName: this.state.sName
       });
     }
+
+    let modalDisplay;
+    if (this.state.showModal) {
+      modalDisplay = React.createElement(MetaheaderModal, {
+        modalUrl: this.state.modalUrl
+      });
+    }
+
     return React.createElement(
       "nav",
       { id: "metaheader-nav", className: "metaheader" },
@@ -305,7 +316,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
     let dropdownClass = "";
     if (this.node.contains(e.target)) {
       if (this.state.dropdownClass === "open") {
-        console.log(e.target.classNaconsoleme);
+        console.log(e.target.className);
         if (e.target.className === "discussion-menu-link-item") {
           dropdownClass = "";
         } else {
@@ -1059,6 +1070,16 @@ class MobileLeftSidePanel extends React.Component {
           )
         )
       )
+    );
+  }
+}
+
+class MetaheaderModal extends React.Component {
+  render() {
+    return React.createElement(
+      "div",
+      { id: "metaheader-modal" },
+      "modal"
     );
   }
 }
