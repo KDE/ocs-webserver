@@ -135,7 +135,7 @@ class MetaHeader extends React.Component {
   }
 
   handlePopupLinkClick(key) {
-    const url = appHelpers.getPopupUrl(key, this.state.isExternal, this.state.baseUrl);
+    const url = window.appHelpers.getPopupUrl(key, this.state.isExternal, this.state.baseUrl);
     console.log(url);
     if (this.state.isExternal === true) {
       window.open(url, '_blank');
