@@ -38,11 +38,18 @@ if(isset($_GET['target'])) {
     $target = $_GET['target'];
 }
 
+$thisurl = "/";
+if(isset($_SERVER[HTTP_HOST])) {
+    $thisurl = "https://".$_SERVER[HTTP_HOST];
+}
+if(isset($_SERVER[REQUEST_URI])) {
+    $thisurl .= $_SERVER[REQUEST_URI];
+}
 
 
 if($target == 'opendesktop') {
-    $url_login = $baseurl."/login/redirect/".$filter->filter("https://".$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI]);
-    $url_logout = $baseurl."/logout?redirect=".$filter->filter("https://".$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI]);
+    $url_login = $baseurl."/login/redirect/".$filter->filter($thisurl);
+    $url_logout = $baseurl."/logout?redirect=".$filter->filter($thisurl);
 } else if($target == 'gitlab') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_gitlab);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_gitlab);
