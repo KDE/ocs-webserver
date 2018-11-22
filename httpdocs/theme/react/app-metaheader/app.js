@@ -10,11 +10,15 @@ class MetaHeader extends React.Component {
       logoutUrl:window.logoutUrl,
       gitlabUrl:window.gitlabUrl,
       sName:window.sName,
+      isExternal:window.isExternal,
       user:{},
+      showModal:false,
+      modalUrl:''
     };
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.getUser = this.getUser.bind(this);
+    this.handlePopupLinkClick = this.handlePopupLinkClick.bind(this);
   }
 
 
@@ -61,6 +65,34 @@ class MetaHeader extends React.Component {
     this.setState({device:device});
   }
 
+  handlePopupLinkClick(key){
+    let url = this.state.baseUrl;
+    if (key === "FAQ"){
+      if (this.state.isExternal === true){
+        url += "/plings";
+      } else {
+        url += "/#plingList";
+      }
+    } else if (key === "API"){
+      if (this.state.isExternal === true){
+        url += "/partials/ocsapicontent.phtml";
+      } else {
+        url += "/#ocsapiContent";
+      }
+    } else if (key === "ABOUT"){
+      if (this.state.isExternal === true){
+        url += "/partials/about.phtml";
+      } else {
+        url += "/#aboutContent";
+      }
+    }
+    if (this.state.isExternal === true){
+      window.open(url, '_blank');
+    } else {
+      this.setState({showModal:true,modalUrl:url});
+    }
+  }
+
   render(){
     let domainsMenuDisplay;
     if (this.state.device === "tablet"){
@@ -73,6 +105,7 @@ class MetaHeader extends React.Component {
           blogUrl={this.state.blogUrl}
           forumUrl={this.state.forumUrl}
           sName={this.state.sName}
+          onPopupLinkClick={this.handlePopupLinkClick}
         />
       )
     } else {
@@ -85,9 +118,20 @@ class MetaHeader extends React.Component {
           blogUrl={this.state.blogUrl}
           forumUrl={this.state.forumUrl}
           sName={this.state.sName}
+          onPopupLinkClick={this.handlePopupLinkClick}
         />
       )
     }
+
+    let modalDisplay;
+    if (this.state.showModal){
+      modalDisplay = (
+        <MetaheaderModal
+          modalUrl={this.state.modalUrl}
+        />
+      )
+    }
+
     return (
       <nav id="metaheader-nav" className="metaheader">
         <div className="metamenu">
@@ -101,6 +145,7 @@ class MetaHeader extends React.Component {
             loginUrl={this.state.loginUrl}
             logoutUrl={this.state.logoutUrl}
             gitlabUrl={this.state.gitlabUrl}
+            onPopupLinkClick={this.handlePopupLinkClick}
           />
         </div>
       </nav>
@@ -113,6 +158,12 @@ class DomainsMenu extends React.Component {
   	super(props);
   	this.state = {
     };
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
+  }
+
+  onPopupLinkClick(url){
+    console.log(url);
+    this.props.onPopupLinkClick(url);
   }
 
   render(){
@@ -124,6 +175,7 @@ class DomainsMenu extends React.Component {
           domains={this.props.domains}
           baseUrl={this.props.baseUrl}
           blogUrl={this.props.blogUrl}
+          onPopupLinkClick={this.onPopupLinkClick}
         />
       )
     }
@@ -284,6 +336,7 @@ class MoreDropDownMenu extends React.Component {
   	super(props);
   	this.state = {};
     this.handleClick = this.handleClick.bind(this);
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -310,9 +363,14 @@ class MoreDropDownMenu extends React.Component {
     this.setState({dropdownClass:dropdownClass});
   }
 
+  onPopupLinkClick(url){
+    console.log(url);
+    this.props.onPopupLinkClick(url);
+  }
+
   render(){
 
-    const pLinks = appHelpers.generatePopupLinks();
+    /*const pLinks = appHelpers.generatePopupLinks();*/
 
     return(
       <li ref={node => this.node = node} id="more-dropdown-menu" className={this.state.dropdownClass}>
@@ -320,9 +378,9 @@ class MoreDropDownMenu extends React.Component {
         <ul className="dropdown-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-          <li><a id="plingList" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.plingListUrl}>FAQ</a></li>
-          <li><a id="ocsapiContent" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.ocsapiContentUrl}>API</a></li>
-          <li><a id="aboutContent" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.aboutContentUrl} >About</a></li>
+          <li><a onClick={() => this.onPopupLinkClick('FAQ')}>FAQ</a></li>
+          <li><a onClick={() => this.onPopupLinkClick('API')}>API</a></li>
+          <li><a onClick={() => this.onPopupLinkClick('ABOUT')}>About</a></li>
         </ul>
       </li>
     )
@@ -370,6 +428,11 @@ class UserMenu extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
+  }
+
+  onPopupLinkClick(key){
+    this.props.onPopupLinkClick(key);
   }
 
   render(){
@@ -398,15 +461,13 @@ class UserMenu extends React.Component {
     let userMenuContainerDisplay;
     if (this.props.device === "large"){
 
-      const pLinks = appHelpers.generatePopupLinks();
-
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-          <li><a id="plingList" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.plingListUrl}>FAQ</a></li>
-          <li><a id="ocsapiContent" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.ocsapiContentUrl}>API</a></li>
-          <li><a id="aboutContent" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.aboutContentUrl} >About</a></li>
+          <li><a onClick={() => this.onPopupLinkClick('FAQ')}>FAQ</a></li>
+          <li><a onClick={() => this.onPopupLinkClick('API')}>API</a></li>
+          <li><a onClick={() => this.onPopupLinkClick('ABOUT')}>About</a></li>
           {userAppsContextDisplay}
           {userDropdownDisplay}
         </ul>
@@ -575,6 +636,32 @@ class UserLoginMenuContainer extends React.Component {
   }
 }
 
+class MetaheaderModal extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {
+      loading:true
+    };
+  }
+
+  componentDidMount() {
+    const self = this;
+    $.ajax({url: this.props.modalUrl,cache: false})
+      .done(function(response){
+        console.log(response);
+        self.setState({content:response,loading:false});
+    });
+  }
+
+  render(){
+    return (
+      <div id="metaheader-modal">
+        <div dangerouslySetInnerHTML={{__html:this.state.content}}></div>
+      </div>
+    )
+  }
+}
+
 /** MOBILE SPECIFIC **/
 
 class MobileLeftMenu extends React.Component {
@@ -643,6 +730,7 @@ class MobileLeftSidePanel extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentDidMount() {
@@ -653,6 +741,10 @@ class MobileLeftSidePanel extends React.Component {
       }
     });
     this.setState({menuGroups:menuGroups});
+  }
+
+  onPopupLinkClick(key){
+    this.props.onPopupLinkClick(key);
   }
 
   render(){
@@ -667,8 +759,6 @@ class MobileLeftSidePanel extends React.Component {
         />
       ));
     }
-
-    const pLinks = appHelpers.generatePopupLinks();
 
     return (
       <div id="left-side-panel">
@@ -693,9 +783,9 @@ class MobileLeftSidePanel extends React.Component {
               <ul>
                 <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
                 <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-                <li><a id="plingList" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.plingListUrl}>FAQ</a></li>
-                <li><a id="ocsapiContent" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.ocsapiContentUrl}>API</a></li>
-                <li><a id="aboutContent" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.aboutContentUrl} >About</a></li>
+                <li><a onClick={() => this.onPopupLinkClick('FAQ')}>FAQ</a></li>
+                <li><a onClick={() => this.onPopupLinkClick('API')}>API</a></li>
+                <li><a onClick={() => this.onPopupLinkClick('ABOUT')}>About</a></li>
               </ul>
             </li>
           </ul>

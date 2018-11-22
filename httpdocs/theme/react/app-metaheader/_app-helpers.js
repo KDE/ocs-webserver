@@ -24,8 +24,6 @@ window.appHelpers = (function(){
 
   function generatePopupLinks(){
 
-    console.log(window.location.hostname);
-
     let pLink = {};
       pLink.plingListUrl = "/#plingList",
       pLink.ocsapiContentUrl = "/#ocsapiContent",
@@ -44,10 +42,16 @@ window.appHelpers = (function(){
     return pLink;
   }
 
+  function getPopupUrl(key,isExternal,baseUrl){
+    let url = baseUrl;
+    return url;
+  }
+
   return {
     generateMenuGroupsArray,
     getDeviceFromWidth,
-    generatePopupLinks
+    generatePopupLinks,
+    getPopupUrl
   }
 
 }());

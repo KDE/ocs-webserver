@@ -24,8 +24,6 @@ window.appHelpers = function () {
 
   function generatePopupLinks() {
 
-    console.log(window.location.hostname);
-
     let pLink = {};
     pLink.plingListUrl = "/#plingList", pLink.ocsapiContentUrl = "/#ocsapiContent", pLink.aboutContentUrl = "/#aboutContent", pLink.linkTarget = "_blank";
 
@@ -38,10 +36,16 @@ window.appHelpers = function () {
     return pLink;
   }
 
+  function getPopupUrl(key, isExternal, baseUrl) {
+    let url = baseUrl;
+    return url;
+  }
+
   return {
     generateMenuGroupsArray,
     getDeviceFromWidth,
-    generatePopupLinks
+    generatePopupLinks,
+    getPopupUrl
   };
 }();
 class MetaHeader extends React.Component {
@@ -56,11 +60,15 @@ class MetaHeader extends React.Component {
       logoutUrl: window.logoutUrl,
       gitlabUrl: window.gitlabUrl,
       sName: window.sName,
-      user: {}
+      isExternal: window.isExternal,
+      user: {},
+      showModal: false,
+      modalUrl: ''
     };
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.getUser = this.getUser.bind(this);
+    this.handlePopupLinkClick = this.handlePopupLinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -107,6 +115,34 @@ class MetaHeader extends React.Component {
     this.setState({ device: device });
   }
 
+  handlePopupLinkClick(key) {
+    let url = this.state.baseUrl;
+    if (key === "FAQ") {
+      if (this.state.isExternal === true) {
+        url += "/plings";
+      } else {
+        url += "/#plingList";
+      }
+    } else if (key === "API") {
+      if (this.state.isExternal === true) {
+        url += "/partials/ocsapicontent.phtml";
+      } else {
+        url += "/#ocsapiContent";
+      }
+    } else if (key === "ABOUT") {
+      if (this.state.isExternal === true) {
+        url += "/partials/about.phtml";
+      } else {
+        url += "/#aboutContent";
+      }
+    }
+    if (this.state.isExternal === true) {
+      window.open(url, '_blank');
+    } else {
+      this.setState({ showModal: true, modalUrl: url });
+    }
+  }
+
   render() {
     let domainsMenuDisplay;
     if (this.state.device === "tablet") {
@@ -117,7 +153,8 @@ class MetaHeader extends React.Component {
         baseUrl: this.state.baseUrl,
         blogUrl: this.state.blogUrl,
         forumUrl: this.state.forumUrl,
-        sName: this.state.sName
+        sName: this.state.sName,
+        onPopupLinkClick: this.handlePopupLinkClick
       });
     } else {
       domainsMenuDisplay = React.createElement(DomainsMenu, {
@@ -127,9 +164,18 @@ class MetaHeader extends React.Component {
         baseUrl: this.state.baseUrl,
         blogUrl: this.state.blogUrl,
         forumUrl: this.state.forumUrl,
-        sName: this.state.sName
+        sName: this.state.sName,
+        onPopupLinkClick: this.handlePopupLinkClick
       });
     }
+
+    let modalDisplay;
+    if (this.state.showModal) {
+      modalDisplay = React.createElement(MetaheaderModal, {
+        modalUrl: this.state.modalUrl
+      });
+    }
+
     return React.createElement(
       "nav",
       { id: "metaheader-nav", className: "metaheader" },
@@ -145,7 +191,8 @@ class MetaHeader extends React.Component {
           forumUrl: this.state.forumUrl,
           loginUrl: this.state.loginUrl,
           logoutUrl: this.state.logoutUrl,
-          gitlabUrl: this.state.gitlabUrl
+          gitlabUrl: this.state.gitlabUrl,
+          onPopupLinkClick: this.handlePopupLinkClick
         })
       )
     );
@@ -156,6 +203,12 @@ class DomainsMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
+  }
+
+  onPopupLinkClick(url) {
+    console.log(url);
+    this.props.onPopupLinkClick(url);
   }
 
   render() {
@@ -165,7 +218,8 @@ class DomainsMenu extends React.Component {
       moreMenuItemDisplay = React.createElement(MoreDropDownMenu, {
         domains: this.props.domains,
         baseUrl: this.props.baseUrl,
-        blogUrl: this.props.blogUrl
+        blogUrl: this.props.blogUrl,
+        onPopupLinkClick: this.onPopupLinkClick
       });
     }
 
@@ -305,7 +359,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
     let dropdownClass = "";
     if (this.node.contains(e.target)) {
       if (this.state.dropdownClass === "open") {
-        console.log(e.target.classNaconsoleme);
+        console.log(e.target.className);
         if (e.target.className === "discussion-menu-link-item") {
           dropdownClass = "";
         } else {
@@ -368,6 +422,7 @@ class MoreDropDownMenu extends React.Component {
     super(props);
     this.state = {};
     this.handleClick = this.handleClick.bind(this);
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -394,9 +449,14 @@ class MoreDropDownMenu extends React.Component {
     this.setState({ dropdownClass: dropdownClass });
   }
 
+  onPopupLinkClick(url) {
+    console.log(url);
+    this.props.onPopupLinkClick(url);
+  }
+
   render() {
 
-    const pLinks = appHelpers.generatePopupLinks();
+    /*const pLinks = appHelpers.generatePopupLinks();*/
 
     return React.createElement(
       "li",
@@ -432,7 +492,7 @@ class MoreDropDownMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "plingList", className: "popuppanel", target: pLinks.linkTarget, href: this.props.baseUrl + pLinks.plingListUrl },
+            { onClick: () => this.onPopupLinkClick('FAQ') },
             "FAQ"
           )
         ),
@@ -441,7 +501,7 @@ class MoreDropDownMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "ocsapiContent", className: "popuppanel", target: pLinks.linkTarget, href: this.props.baseUrl + pLinks.ocsapiContentUrl },
+            { onClick: () => this.onPopupLinkClick('API') },
             "API"
           )
         ),
@@ -450,7 +510,7 @@ class MoreDropDownMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "aboutContent", className: "popuppanel", target: pLinks.linkTarget, href: this.props.baseUrl + pLinks.aboutContentUrl },
+            { onClick: () => this.onPopupLinkClick('ABOUT') },
             "About"
           )
         )
@@ -514,6 +574,11 @@ class UserMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
+  }
+
+  onPopupLinkClick(key) {
+    this.props.onPopupLinkClick(key);
   }
 
   render() {
@@ -544,8 +609,6 @@ class UserMenu extends React.Component {
     let userMenuContainerDisplay;
     if (this.props.device === "large") {
 
-      const pLinks = appHelpers.generatePopupLinks();
-
       userMenuContainerDisplay = React.createElement(
         "ul",
         { className: "metaheader-menu", id: "user-menu" },
@@ -572,7 +635,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "plingList", className: "popuppanel", target: pLinks.linkTarget, href: this.props.baseUrl + pLinks.plingListUrl },
+            { onClick: () => this.onPopupLinkClick('FAQ') },
             "FAQ"
           )
         ),
@@ -581,7 +644,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "ocsapiContent", className: "popuppanel", target: pLinks.linkTarget, href: this.props.baseUrl + pLinks.ocsapiContentUrl },
+            { onClick: () => this.onPopupLinkClick('API') },
             "API"
           )
         ),
@@ -590,7 +653,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "aboutContent", className: "popuppanel", target: pLinks.linkTarget, href: this.props.baseUrl + pLinks.aboutContentUrl },
+            { onClick: () => this.onPopupLinkClick('ABOUT') },
             "About"
           )
         ),
@@ -836,6 +899,31 @@ class UserLoginMenuContainer extends React.Component {
   }
 }
 
+class MetaheaderModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true
+    };
+  }
+
+  componentDidMount() {
+    const self = this;
+    $.ajax({ url: this.props.modalUrl, cache: false }).done(function (response) {
+      console.log(response);
+      self.setState({ content: response, loading: false });
+    });
+  }
+
+  render() {
+    return React.createElement(
+      "div",
+      { id: "metaheader-modal" },
+      React.createElement("div", { dangerouslySetInnerHTML: { __html: this.state.content } })
+    );
+  }
+}
+
 /** MOBILE SPECIFIC **/
 
 class MobileLeftMenu extends React.Component {
@@ -906,6 +994,7 @@ class MobileLeftSidePanel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentDidMount() {
@@ -918,6 +1007,10 @@ class MobileLeftSidePanel extends React.Component {
     this.setState({ menuGroups: menuGroups });
   }
 
+  onPopupLinkClick(key) {
+    this.props.onPopupLinkClick(key);
+  }
+
   render() {
     let panelMenuGroupsDisplay;
     if (this.state.menuGroups) {
@@ -928,8 +1021,6 @@ class MobileLeftSidePanel extends React.Component {
         sName: this.props.sName
       }));
     }
-
-    const pLinks = appHelpers.generatePopupLinks();
 
     return React.createElement(
       "div",
@@ -1033,7 +1124,7 @@ class MobileLeftSidePanel extends React.Component {
                 null,
                 React.createElement(
                   "a",
-                  { id: "plingList", className: "popuppanel", target: pLinks.linkTarget, href: this.props.baseUrl + pLinks.plingListUrl },
+                  { onClick: () => this.onPopupLinkClick('FAQ') },
                   "FAQ"
                 )
               ),
@@ -1042,7 +1133,7 @@ class MobileLeftSidePanel extends React.Component {
                 null,
                 React.createElement(
                   "a",
-                  { id: "ocsapiContent", className: "popuppanel", target: pLinks.linkTarget, href: this.props.baseUrl + pLinks.ocsapiContentUrl },
+                  { onClick: () => this.onPopupLinkClick('API') },
                   "API"
                 )
               ),
@@ -1051,7 +1142,7 @@ class MobileLeftSidePanel extends React.Component {
                 null,
                 React.createElement(
                   "a",
-                  { id: "aboutContent", className: "popuppanel", target: pLinks.linkTarget, href: this.props.baseUrl + pLinks.aboutContentUrl },
+                  { onClick: () => this.onPopupLinkClick('ABOUT') },
                   "About"
                 )
               )
