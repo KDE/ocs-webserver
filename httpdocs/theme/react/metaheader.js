@@ -468,7 +468,7 @@ class MoreDropDownMenu extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "faq", target: "_blank", href: window.baseUrl + "/plings" },
+          { className: "popuppanel", id: "faq", href: window.baseUrl + "/plings" },
           "FAQ"
         )
       );
@@ -477,7 +477,7 @@ class MoreDropDownMenu extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "api", target: "_blank", href: window.baseUrl + "/partials/ocsapicontent.phtml" },
+          { className: "popuppanel", id: "api", href: window.baseUrl + "/partials/ocsapicontent.phtml" },
           "API"
         )
       );
@@ -486,7 +486,7 @@ class MoreDropDownMenu extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "about", target: "_blank", href: window.baseUrl + "/partials/about.phtml" },
+          { className: "popuppanel", id: "about", href: window.baseUrl + "/partials/about.phtml" },
           "About"
         )
       );
@@ -496,7 +496,7 @@ class MoreDropDownMenu extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "faq", href: window.baseUrl + "/#plingsList" },
+          { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#plingsList" },
           "FAQ"
         )
       );
@@ -505,7 +505,7 @@ class MoreDropDownMenu extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "api", href: window.baseUrl + "/#ocsapiContent" },
+          { className: "popuppanel", target: "_blank", id: "api", href: window.baseUrl + "/#ocsapiContent" },
           "API"
         )
       );
@@ -514,7 +514,7 @@ class MoreDropDownMenu extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "about", href: window.baseUrl + "/#aboutContent" },
+          { className: "popuppanel", target: "_blank", id: "about", href: window.baseUrl + "/#aboutContent" },
           "About"
         )
       );
@@ -655,7 +655,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { className: "popuppanel", id: "faq", target: "_blank", href: window.baseUrl + "/plings" },
+            { className: "popuppanel", id: "faq", href: window.baseUrl + "/plings" },
             "FAQ"
           )
         );
@@ -664,7 +664,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { className: "popuppanel", id: "api", target: "_blank", href: window.baseUrl + "/partials/ocsapicontent.phtml" },
+            { className: "popuppanel", id: "api", href: window.baseUrl + "/partials/ocsapicontent.phtml" },
             "API"
           )
         );
@@ -673,7 +673,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { className: "popuppanel", id: "about", target: "_blank", href: window.baseUrl + "/partials/about.phtml" },
+            { className: "popuppanel", id: "about", href: window.baseUrl + "/partials/about.phtml" },
             "About"
           )
         );
@@ -683,7 +683,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { className: "popuppanel", id: "faq", href: window.baseUrl + "/#plingsList" },
+            { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#plingsList" },
             "FAQ"
           )
         );
@@ -692,7 +692,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { className: "popuppanel", id: "api", href: window.baseUrl + "/#ocsapiContent" },
+            { className: "popuppanel", target: "_blank", id: "api", href: window.baseUrl + "/#ocsapiContent" },
             "API"
           )
         );
@@ -701,7 +701,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { className: "popuppanel", id: "about", href: window.baseUrl + "/#aboutContent" },
+            { className: "popuppanel", target: "_blank", id: "about", href: window.baseUrl + "/#aboutContent" },
             "About"
           )
         );
@@ -1137,7 +1137,7 @@ class MobileLeftSidePanel extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "faq", target: "_blank", href: window.baseUrl + "/plings" },
+          { className: "popuppanel", id: "faq", href: window.baseUrl + "/plings" },
           "FAQ"
         )
       );
@@ -1146,7 +1146,7 @@ class MobileLeftSidePanel extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "api", target: "_blank", href: window.baseUrl + "/partials/ocsapicontent.phtml" },
+          { className: "popuppanel", id: "api", href: window.baseUrl + "/partials/ocsapicontent.phtml" },
           "API"
         )
       );
@@ -1155,7 +1155,7 @@ class MobileLeftSidePanel extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "about", target: "_blank", href: window.baseUrl + "/partials/about.phtml" },
+          { className: "popuppanel", id: "about", href: window.baseUrl + "/partials/about.phtml" },
           "About"
         )
       );
@@ -1165,7 +1165,7 @@ class MobileLeftSidePanel extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "faq", href: window.baseUrl + "/#plingsList" },
+          { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#plingsList" },
           "FAQ"
         )
       );
@@ -1174,7 +1174,7 @@ class MobileLeftSidePanel extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "api", href: window.baseUrl + "/#ocsapiContent" },
+          { className: "popuppanel", target: "_blank", id: "api", href: window.baseUrl + "/#ocsapiContent" },
           "API"
         )
       );
@@ -1183,7 +1183,7 @@ class MobileLeftSidePanel extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "about", href: window.baseUrl + "/#aboutContent" },
+          { className: "popuppanel", target: "_blank", id: "about", href: window.baseUrl + "/#aboutContent" },
           "About"
         )
       );
