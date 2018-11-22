@@ -27,10 +27,10 @@ window.appHelpers = (function(){
     console.log(window.location.hostname);
 
     let pLink = {};
-    pLink.plingListUrl = "/#plingList",
-    pLink.ocsapiContentUrl = "/#ocsapiContent",
-    pLink.aboutContentUrl = "/#aboutContent",
-    pLink.linkTarget = "_blank";
+      pLink.plingListUrl = "/#plingList",
+      pLink.ocsapiContentUrl = "/#ocsapiContent",
+      pLink.aboutContentUrl = "/#aboutContent",
+      pLink.linkTarget = "_blank";
 
     if (window.location.hostname.indexOf('opendesktop') === -1 ||
         window.location.hostname === "git.opendesktop.org" || window.location.hostname === "git.opendesktop.cc" ||
