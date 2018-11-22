@@ -776,10 +776,10 @@ class Default_Model_Ocs_Gitlab
             }
         }
 
-        return $body[0];
+        return $body;
     }
 
-    public function getProjects($page = 1, $limit = 10, $order_by = 'created_at', $sort = 'desc')
+    public function getProjects($page = 1, $limit = 5, $order_by = 'created_at', $sort = 'desc')
     {
         $this->httpClient->resetParameters();
         $uri = $this->config->host . '/api/v4/projects?order_by='.$order_by.'&sort='.$sort.'&visibility=public&page=' . $page . '&per_page=' . $limit;
