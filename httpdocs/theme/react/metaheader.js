@@ -462,7 +462,7 @@ class MoreDropDownMenu extends React.Component {
   render() {
 
     let faqLinkItem, apiLinkItem, aboutLinkItem;
-    if (window.isExternal === true) {
+    if (window.isExternal === false) {
       faqLinkItem = React.createElement(
         "li",
         null,
@@ -649,7 +649,7 @@ class UserMenu extends React.Component {
     if (this.props.device === "large") {
 
       let faqLinkItem, apiLinkItem, aboutLinkItem;
-      if (window.isExternal === true) {
+      if (window.isExternal === false) {
         faqLinkItem = React.createElement(
           "li",
           null,
@@ -1131,7 +1131,7 @@ class MobileLeftSidePanel extends React.Component {
     }
 
     let faqLinkItem, apiLinkItem, aboutLinkItem;
-    if (window.isExternal === true) {
+    if (window.isExternal === false) {
       faqLinkItem = React.createElement(
         "li",
         null,

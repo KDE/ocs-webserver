@@ -376,7 +376,7 @@ class MoreDropDownMenu extends React.Component {
   render(){
 
     let faqLinkItem, apiLinkItem, aboutLinkItem;
-    if (window.isExternal === true){
+    if (window.isExternal === false){
       faqLinkItem = (<li><a className="popuppanel" id="faq" target="_blank" href={window.baseUrl + "/plings"}>FAQ</a></li>);
       apiLinkItem = (<li><a className="popuppanel" id="api" target="_blank" href={window.baseUrl + "/partials/ocsapicontent.phtml"}>API</a></li>);
       aboutLinkItem = (<li><a className="popuppanel" id="about" target="_blank" href={window.baseUrl + "/partials/about.phtml"}>About</a></li>);
@@ -477,7 +477,7 @@ class UserMenu extends React.Component {
     if (this.props.device === "large"){
 
       let faqLinkItem, apiLinkItem, aboutLinkItem;
-      if (window.isExternal === true){
+      if (window.isExternal === false){
         faqLinkItem = (<li><a className="popuppanel" id="faq" target="_blank" href={window.baseUrl + "/plings"}>FAQ</a></li>);
         apiLinkItem = (<li><a className="popuppanel" id="api" target="_blank" href={window.baseUrl + "/partials/ocsapicontent.phtml"}>API</a></li>);
         aboutLinkItem = (<li><a className="popuppanel" id="about" target="_blank" href={window.baseUrl + "/partials/about.phtml"}>About</a></li>);
@@ -821,7 +821,7 @@ class MobileLeftSidePanel extends React.Component {
     }
 
     let faqLinkItem, apiLinkItem, aboutLinkItem;
-    if (window.isExternal === true){
+    if (window.isExternal === false){
       faqLinkItem = (<li><a className="popuppanel" id="faq" target="_blank" href={window.baseUrl + "/plings"}>FAQ</a></li>);
       apiLinkItem = (<li><a className="popuppanel" id="api" target="_blank" href={window.baseUrl + "/partials/ocsapicontent.phtml"}>API</a></li>);
       aboutLinkItem = (<li><a className="popuppanel" id="about" target="_blank" href={window.baseUrl + "/partials/about.phtml"}>About</a></li>);
