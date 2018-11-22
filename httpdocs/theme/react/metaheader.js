@@ -64,6 +64,7 @@ class MetaHeader extends React.Component {
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.getUser = this.getUser.bind(this);
+    this.handlePopupLinkClick = this.handlePopupLinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -110,6 +111,11 @@ class MetaHeader extends React.Component {
     this.setState({ device: device });
   }
 
+  handlePopupLinkClick(url) {
+    console.log(url);
+    console.log(this.state.isExternal);
+  }
+
   render() {
     let domainsMenuDisplay;
     if (this.state.device === "tablet") {
@@ -130,7 +136,8 @@ class MetaHeader extends React.Component {
         baseUrl: this.state.baseUrl,
         blogUrl: this.state.blogUrl,
         forumUrl: this.state.forumUrl,
-        sName: this.state.sName
+        sName: this.state.sName,
+        onPopupLinkClick: this.handlePopupLinkClick
       });
     }
 
@@ -167,6 +174,12 @@ class DomainsMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
+  }
+
+  onPopupLinkClick(url) {
+    console.log(url);
+    this.props.onPopupLinkClick(url);
   }
 
   render() {
@@ -176,7 +189,8 @@ class DomainsMenu extends React.Component {
       moreMenuItemDisplay = React.createElement(MoreDropDownMenu, {
         domains: this.props.domains,
         baseUrl: this.props.baseUrl,
-        blogUrl: this.props.blogUrl
+        blogUrl: this.props.blogUrl,
+        onPopupLinkClick: this.onPopupLinkClick
       });
     }
 
@@ -379,6 +393,7 @@ class MoreDropDownMenu extends React.Component {
     super(props);
     this.state = {};
     this.handleClick = this.handleClick.bind(this);
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -405,9 +420,14 @@ class MoreDropDownMenu extends React.Component {
     this.setState({ dropdownClass: dropdownClass });
   }
 
+  onPopupLinkClick(url) {
+    console.log(url);
+    this.props.onPopupLinkClick(url);
+  }
+
   render() {
 
-    const pLinks = appHelpers.generatePopupLinks();
+    /*const pLinks = appHelpers.generatePopupLinks();*/
 
     return React.createElement(
       "li",
@@ -443,7 +463,7 @@ class MoreDropDownMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "plingList", className: "popuppanel", target: pLinks.linkTarget, href: this.props.baseUrl + pLinks.plingListUrl },
+            { onClick: () => this.onPopupLinkClick(this.props.baseUrl + pLinks.plingListUrl) },
             "FAQ"
           )
         ),
@@ -847,6 +867,21 @@ class UserLoginMenuContainer extends React.Component {
   }
 }
 
+class MetaheaderModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return React.createElement(
+      "div",
+      { id: "metaheader-modal" },
+      "modal"
+    );
+  }
+}
+
 /** MOBILE SPECIFIC **/
 
 class MobileLeftMenu extends React.Component {
@@ -1070,16 +1105,6 @@ class MobileLeftSidePanel extends React.Component {
           )
         )
       )
-    );
-  }
-}
-
-class MetaheaderModal extends React.Component {
-  render() {
-    return React.createElement(
-      "div",
-      { id: "metaheader-modal" },
-      "modal"
     );
   }
 }

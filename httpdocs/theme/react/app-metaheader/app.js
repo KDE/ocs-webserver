@@ -18,6 +18,7 @@ class MetaHeader extends React.Component {
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.getUser = this.getUser.bind(this);
+    this.handlePopupLinkClick = this.handlePopupLinkClick.bind(this);
   }
 
 
@@ -64,6 +65,11 @@ class MetaHeader extends React.Component {
     this.setState({device:device});
   }
 
+  handlePopupLinkClick(url){
+    console.log(url);
+    console.log(this.state.isExternal);
+  }
+
   render(){
     let domainsMenuDisplay;
     if (this.state.device === "tablet"){
@@ -88,6 +94,7 @@ class MetaHeader extends React.Component {
           blogUrl={this.state.blogUrl}
           forumUrl={this.state.forumUrl}
           sName={this.state.sName}
+          onPopupLinkClick={this.handlePopupLinkClick}
         />
       )
     }
@@ -126,6 +133,12 @@ class DomainsMenu extends React.Component {
   	super(props);
   	this.state = {
     };
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
+  }
+
+  onPopupLinkClick(url){
+    console.log(url);
+    this.props.onPopupLinkClick(url);
   }
 
   render(){
@@ -137,6 +150,7 @@ class DomainsMenu extends React.Component {
           domains={this.props.domains}
           baseUrl={this.props.baseUrl}
           blogUrl={this.props.blogUrl}
+          onPopupLinkClick={this.onPopupLinkClick}
         />
       )
     }
@@ -297,6 +311,7 @@ class MoreDropDownMenu extends React.Component {
   	super(props);
   	this.state = {};
     this.handleClick = this.handleClick.bind(this);
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -323,9 +338,14 @@ class MoreDropDownMenu extends React.Component {
     this.setState({dropdownClass:dropdownClass});
   }
 
+  onPopupLinkClick(url){
+    console.log(url);
+    this.props.onPopupLinkClick(url);
+  }
+
   render(){
 
-    const pLinks = appHelpers.generatePopupLinks();
+    /*const pLinks = appHelpers.generatePopupLinks();*/
 
     return(
       <li ref={node => this.node = node} id="more-dropdown-menu" className={this.state.dropdownClass}>
@@ -333,7 +353,7 @@ class MoreDropDownMenu extends React.Component {
         <ul className="dropdown-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-          <li><a id="plingList" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.plingListUrl}>FAQ</a></li>
+          <li><a onClick={() => this.onPopupLinkClick(this.props.baseUrl + pLinks.plingListUrl)}>FAQ</a></li>
           <li><a id="ocsapiContent" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.ocsapiContentUrl}>API</a></li>
           <li><a id="aboutContent" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.aboutContentUrl} >About</a></li>
         </ul>
@@ -588,6 +608,21 @@ class UserLoginMenuContainer extends React.Component {
   }
 }
 
+class MetaheaderModal extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    return (
+      <div id="metaheader-modal">
+        modal
+      </div>
+    )
+  }
+}
+
 /** MOBILE SPECIFIC **/
 
 class MobileLeftMenu extends React.Component {
@@ -713,16 +748,6 @@ class MobileLeftSidePanel extends React.Component {
             </li>
           </ul>
         </div>
-      </div>
-    )
-  }
-}
-
-class MetaheaderModal extends React.Component {
-  render(){
-    return (
-      <div id="metaheader-modal">
-        modal
       </div>
     )
   }
