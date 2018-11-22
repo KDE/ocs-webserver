@@ -117,8 +117,6 @@ class MetaHeader extends React.Component {
   }
 
   handlePopupLinkClick(key) {
-    console.log(key);
-    console.log('wtf');
     let url = this.state.baseUrl;
     if (key === "FAQ") {
       if (this.state.isExternal === true) {
@@ -139,13 +137,11 @@ class MetaHeader extends React.Component {
         url += "/#aboutContent";
       }
     }
-    console.log(url);
-    console.log(this.state.isExternal);
+
     if (this.state.isExternal === true) {
       window.open(url, '_blank');
     } else {
       this.setState({ showModal: true, modalUrl: url });
-      console.log('open modal');
     }
   }
 
@@ -219,7 +215,6 @@ class DomainsMenu extends React.Component {
   }
 
   onPopupLinkClick(url) {
-    console.log(url);
     this.props.onPopupLinkClick(url);
   }
 
@@ -371,7 +366,6 @@ class DiscussionBoardsDropDownMenu extends React.Component {
     let dropdownClass = "";
     if (this.node.contains(e.target)) {
       if (this.state.dropdownClass === "open") {
-        console.log(e.target.className);
         if (e.target.className === "discussion-menu-link-item") {
           dropdownClass = "";
         } else {
@@ -462,13 +456,69 @@ class MoreDropDownMenu extends React.Component {
   }
 
   onPopupLinkClick(url) {
-    console.log(url);
     this.props.onPopupLinkClick(url);
   }
 
   render() {
 
-    /*const pLinks = appHelpers.generatePopupLinks();*/
+    let faqLinkItem, apiLinkItem, aboutLinkItem;
+    if (window.isExternal === true) {
+      faqLinkItem = React.createElement(
+        "li",
+        null,
+        React.createElement(
+          "a",
+          { className: "popuppanel", id: "faq", target: "_blank", href: window.baseUrl + "/plings" },
+          "FAQ"
+        )
+      );
+      apiLinkItem = React.createElement(
+        "li",
+        null,
+        React.createElement(
+          "a",
+          { className: "popuppanel", id: "api", target: "_blank", href: window.baseUrl + "/partials/ocsapicontent.phtml" },
+          "API"
+        )
+      );
+      aboutLinkItem = React.createElement(
+        "li",
+        null,
+        React.createElement(
+          "a",
+          { className: "popuppanel", id: "about", target: "_blank", href: window.baseUrl + "/partials/about.phtml" },
+          "ABOUT"
+        )
+      );
+    } else {
+      faqLinkItem = React.createElement(
+        "li",
+        null,
+        React.createElement(
+          "a",
+          { className: "popuppanel", id: "faq", href: "/#plingsList" },
+          "FAQ"
+        )
+      );
+      apiLinkItem = React.createElement(
+        "li",
+        null,
+        React.createElement(
+          "a",
+          { className: "popuppanel", id: "api", href: "/#ocsapiContent" },
+          "API"
+        )
+      );
+      aboutLinkItem = React.createElement(
+        "li",
+        null,
+        React.createElement(
+          "a",
+          { className: "popuppanel", id: "about", href: "/#aboutContent" },
+          "ABOUT"
+        )
+      );
+    }
 
     return React.createElement(
       "li",
@@ -499,33 +549,9 @@ class MoreDropDownMenu extends React.Component {
             "Blog"
           )
         ),
-        React.createElement(
-          "li",
-          null,
-          React.createElement(
-            "a",
-            { onClick: () => this.onPopupLinkClick('FAQ') },
-            "FAQ"
-          )
-        ),
-        React.createElement(
-          "li",
-          null,
-          React.createElement(
-            "a",
-            { onClick: () => this.onPopupLinkClick('API') },
-            "API"
-          )
-        ),
-        React.createElement(
-          "li",
-          null,
-          React.createElement(
-            "a",
-            { onClick: () => this.onPopupLinkClick('ABOUT') },
-            "About"
-          )
-        )
+        faqLinkItem,
+        apiLinkItem,
+        aboutLinkItem
       )
     );
   }
@@ -951,7 +977,6 @@ class MetaheaderModal extends React.Component {
         showModal = true;
       }
     }
-    console.log(showModal);
     if (showModal === true) {
       this.props.onCloseModal();
     }
@@ -1056,7 +1081,6 @@ class MobileLeftSidePanel extends React.Component {
   }
 
   onPopupLinkClick(key) {
-    console.log(key);
     this.props.onPopupLinkClick(key);
   }
 
