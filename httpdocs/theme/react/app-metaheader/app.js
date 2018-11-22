@@ -322,7 +322,7 @@ class MoreDropDownMenu extends React.Component {
     if (window.location.hostname.indexOf('opendesktop') === -1 ||
         window.location.hostname === "git.opendesktop.org" ||
         window.location.hostname === "forum.opendesktop.org" ||
-        window.location.hostname === "my.opendesktop.org" ||){
+        window.location.hostname === "my.opendesktop.org"){
         plingListUrl = "/plings";
         ocsapiContentUrl = "/partials/ocsapicontent.phtml";
         aboutContentUrl = "/partials/about.phtml";
@@ -423,7 +423,7 @@ class UserMenu extends React.Component {
       if (window.location.hostname.indexOf('opendesktop') === -1 ||
           window.location.hostname === "git.opendesktop.org" ||
           window.location.hostname === "forum.opendesktop.org" ||
-          window.location.hostname === "my.opendesktop.org" ||){
+          window.location.hostname === "my.opendesktop.org"){
           plingListUrl = "/plings";
           ocsapiContentUrl = "/partials/ocsapicontent.phtml";
           aboutContentUrl = "/partials/about.phtml";
@@ -708,7 +708,7 @@ class MobileLeftSidePanel extends React.Component {
     if (window.location.hostname.indexOf('opendesktop') === -1 ||
         window.location.hostname === "git.opendesktop.org" ||
         window.location.hostname === "forum.opendesktop.org" ||
-        window.location.hostname === "my.opendesktop.org" ||){
+        window.location.hostname === "my.opendesktop.org"){
         plingListUrl = "/plings";
         ocsapiContentUrl = "/partials/ocsapicontent.phtml";
         aboutContentUrl = "/partials/about.phtml";
