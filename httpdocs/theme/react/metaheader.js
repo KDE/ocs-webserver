@@ -425,7 +425,7 @@ class MoreDropDownMenu extends React.Component {
           React.createElement(
             "a",
             { id: "plingList", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + plingListUrl },
-            "FAQ"
+            "What are Plings?"
           )
         ),
         React.createElement(
@@ -540,7 +540,8 @@ class UserMenu extends React.Component {
           ocsapiContentUrl = "/#ocsapiContent",
           aboutContentUrl = "/#aboutContent",
           linkTarget = "_blank";
-      if (window.location.hostname === this.props.baseUrl.split('https://')[1]) {
+
+      if (window.location.hostname.indexOf('opendesktop') === -1) {
         plingListUrl = "/plings";
         ocsapiContentUrl = "/partials/ocsapicontent.phtml";
         aboutContentUrl = "/partials/about.phtml";
@@ -574,7 +575,7 @@ class UserMenu extends React.Component {
           React.createElement(
             "a",
             { id: "plingList", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + plingListUrl },
-            "FAQ"
+            "What are Plings?"
           )
         ),
         React.createElement(
@@ -815,12 +816,20 @@ class UserLoginMenuContainer extends React.Component {
             React.createElement(
               "a",
               { href: this.props.baseUrl + "/settings/", className: "btn btn-default btn-metaheader" },
-              "Settings"
+              React.createElement(
+                "span",
+                null,
+                "Settings"
+              )
             ),
             React.createElement(
               "a",
               { href: this.props.logoutUrl, className: "btn btn-default pull-right btn-metaheader" },
-              "Logout"
+              React.createElement(
+                "span",
+                null,
+                "Logout"
+              )
             )
           )
         )
@@ -1036,7 +1045,7 @@ class MobileLeftSidePanel extends React.Component {
                 React.createElement(
                   "a",
                   { id: "plingList", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + plingListUrl },
-                  "FAQ"
+                  "What are Plings?"
                 )
               ),
               React.createElement(

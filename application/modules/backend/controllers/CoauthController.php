@@ -76,13 +76,13 @@ class Backend_CoauthController extends Local_Controller_Action_CliAbstract
             return;
         }
         if ('update' == $method) {
-            //$this->updateMembers($members);
+            $this->updateMembers($members);
             echo "not implemented";
 
             return;
         }
         if ('validate' == $method) {
-            //$this->validateMembers($members);
+            $this->validateMembers($members);
             echo "not implemented";
 
             return;
@@ -152,7 +152,6 @@ class Backend_CoauthController extends Local_Controller_Action_CliAbstract
 
         while ($member = $members->fetch()) {
             $this->log->info("process " . Zend_Json::encode($member));
-            echo "process " . Zend_Json::encode($member) . PHP_EOL;
 
             //if (false === $usernameValidChars->isValid($member['username'])) {
             //    file_put_contents($this->errorlogfile, print_r($member, true) . "user name validation error" . "\n\n", FILE_APPEND);
@@ -160,7 +159,6 @@ class Backend_CoauthController extends Local_Controller_Action_CliAbstract
             //}
             if (false === $emailValidate->isValid($member["email_address"])) {
                 $this->log->info("messages [\"email address validation error\"] ");
-                echo "response [\"email address validation error\"]" . PHP_EOL;
                 continue;
             }
             try {
@@ -171,7 +169,56 @@ class Backend_CoauthController extends Local_Controller_Action_CliAbstract
             }
             $messages = $modelOAuth->getMessages();
             $this->log->info("messages " . Zend_Json::encode($messages));
-            echo "response " . Zend_Json::encode($messages) . PHP_EOL;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Zend_Db_Statement_Interface $members
+     *
+     * @return bool
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
+     */
+    private function updateMembers($members)
+    {
+        $modelOAuth = new Default_Model_Ocs_OAuth($this->config);
+
+        while ($member = $members->fetch()) {
+            $this->log->info("process " . Zend_Json::encode($member));
+            try {
+                $modelOAuth->updateUser($member);
+            } catch (Exception $e) {
+                $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            }
+            $messages = $modelOAuth->getMessages();
+            $this->log->info("messages " . Zend_Json::encode($messages));
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Zend_Db_Statement_Interface $members
+     *
+     * @return bool
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
+     */
+    private function validateMembers($members)
+    {
+        $modelOAuth = new Default_Model_Ocs_OAuth($this->config);
+
+        while ($member = $members->fetch()) {
+            $this->log->info("process " . Zend_Json::encode($member));
+            try {
+                $result = $modelOAuth->validateUser($member);
+            } catch (Exception $e) {
+                $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            }
+            $messages = $modelOAuth->getMessages();
+            $this->log->info("messages " . Zend_Json::encode($messages));
         }
 
         return true;

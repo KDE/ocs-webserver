@@ -91,7 +91,7 @@ var ImagePreview = {
                         $($(input).closest('form')[0]).trigger('reset');
                         ImagePreview.hasError = true;
                     }
-                   
+
                     if (s > 2000) {
                         //image_element.attr('src', '').hide().parent().append('<div class="bg-danger">File too large</div>');
                         image_element.parent().parent().append('<div class="bg-danger">File too large</div>');
@@ -327,7 +327,7 @@ var ProductPage = (function () {
     return {
 
         setup: function () {
-            
+
             $(".dropdown-toggle").dropdown();
 
             $('.scroll-pane').jScrollPane({
@@ -526,6 +526,9 @@ var Popuppanel =  (function () {
     return {
         setup: function () {
             $('.popuppanel').on('click', function (event) {
+              if ($(this).attr('target') === "_blank"){
+                console.log('dont prevent default');
+              } else {
                 event.preventDefault();
                 var hf = $(this).attr('href');
                 $.fancybox({
@@ -545,6 +548,7 @@ var Popuppanel =  (function () {
                     href: hf,
                     type: 'ajax'
                 });
+              }
             });
         }
     }
@@ -1202,7 +1206,7 @@ var PartialCommentReviewForm = (function () {
                                 $('#review-product-modal').find('#votelabel').append("</br><span class='warning' style='color:red'> Please give a comment, thanks!</span>");
                             }
                             return;
-                    }    
+                    }
                 }
                 if(c.length<1)
                 {
@@ -1817,12 +1821,12 @@ var AboutMePage = (function () {
 var InitActiveHashTab = (function () {
     return {
         setup: function () {
-            var activeTab = document.location.hash;            
+            var activeTab = document.location.hash;
             if($('a[href="'+ activeTab +'"]'))
             {
-                $('a[href="'+ activeTab +'"]').tab('show');    
+                $('a[href="'+ activeTab +'"]').tab('show');
             }
-            
+
         }
     }
 })();
@@ -2159,7 +2163,7 @@ var productRatingToggle = (function () {
 
 var FilterBrowseOriginalFn= (function () {
                         return {
-                            setup: function () {                                          
+                            setup: function () {
                                            $('body').on('click', 'input#filter_browse_original', function (event) {
                                                 var checked = $(this).is( ":checked" );
                                                 var url  = window.location.href;
@@ -2171,8 +2175,8 @@ var FilterBrowseOriginalFn= (function () {
                                                 {
                                                     url = url.substring(0,url.indexOf("filteroriginal"));
                                                 }
-                                                if(checked){                                                
-                                                   window.location.href = url+'filteroriginal/1';                                                                                                           
+                                                if(checked){
+                                                   window.location.href = url+'filteroriginal/1';
                                                 }else{
                                                     window.location.href = url+'filteroriginal/0';
                                                 }
