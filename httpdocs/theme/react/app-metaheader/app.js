@@ -69,7 +69,7 @@ class MetaHeader extends React.Component {
     const url = appHelpers.getPopupUrl(key,this.state.isExternal,this.state.baseUrl);
     console.log(url);
     if (this.state.isExternal === true){
-      console.log('open external this url - ' + url);
+      window.open(url, '_blank');
     } else {
       console.log('open a popup with this ajax url - ' + url);
     }
