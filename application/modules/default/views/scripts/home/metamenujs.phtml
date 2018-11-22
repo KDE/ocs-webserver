@@ -38,13 +38,7 @@ if(isset($_GET['target'])) {
     $target = $_GET['target'];
 }
 
-$thisurl = "/";
-if(isset($this->serverUrl())) {
-    $thisurl = $this->serverUrl();
-}
-if(isset($this->url())) {
-    $thisurl = $this->url();
-}
+$thisurl = $this->serverUrl().$this->url();
 
 
 if($target == 'opendesktop') {
