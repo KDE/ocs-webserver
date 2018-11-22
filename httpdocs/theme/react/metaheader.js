@@ -116,6 +116,8 @@ class MetaHeader extends React.Component {
   }
 
   handlePopupLinkClick(key) {
+    console.log(key);
+    console.log('wtf');
     let url = this.state.baseUrl;
     if (key === "FAQ") {
       if (this.state.isExternal === true) {
@@ -136,10 +138,13 @@ class MetaHeader extends React.Component {
         url += "/#aboutContent";
       }
     }
+    console.log(url);
+    console.log(this.state.isExternal);
     if (this.state.isExternal === true) {
       window.open(url, '_blank');
     } else {
       this.setState({ showModal: true, modalUrl: url });
+      console.log('open modal');
     }
   }
 
@@ -194,7 +199,8 @@ class MetaHeader extends React.Component {
           gitlabUrl: this.state.gitlabUrl,
           onPopupLinkClick: this.handlePopupLinkClick
         })
-      )
+      ),
+      modalDisplay
     );
   }
 }
@@ -578,6 +584,7 @@ class UserMenu extends React.Component {
   }
 
   onPopupLinkClick(key) {
+    console.log(key);
     this.props.onPopupLinkClick(key);
   }
 
@@ -1008,6 +1015,7 @@ class MobileLeftSidePanel extends React.Component {
   }
 
   onPopupLinkClick(key) {
+    console.log(key);
     this.props.onPopupLinkClick(key);
   }
 
