@@ -44,10 +44,35 @@ window.appHelpers = (function(){
     return pLink;
   }
 
+  handlePopupLinkClick(key,isExternal,baseUrl){
+    let url = baseUrl;
+    if (key === "FAQ"){
+      if (isExternal === true){
+        url += "/plings";
+      } else {
+        url += "/#plingList";
+      }
+    } else if (key === "API"){
+      if (isExternal === true){
+        url += "/partials/ocsapicontent.phtml";
+      } else {
+        url += "/#ocsapiContent";
+      }
+    } else if (key === "ABOUT"){
+      if (isExternal === true){
+        url += "/partials/about.phtml";
+      } else {
+        url += "/#aboutContent";
+      }
+    }
+    return url;
+  }
+
   return {
     generateMenuGroupsArray,
     getDeviceFromWidth,
-    generatePopupLinks
+    generatePopupLinks,
+    handlePopupLinkClick
   }
 
 }());
