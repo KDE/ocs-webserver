@@ -463,7 +463,7 @@ class MoreDropDownMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { onClick: () => this.onPopupLinkClick(this.props.baseUrl + pLinks.plingListUrl) },
+            { onClick: () => this.onPopupLinkClick('FAQ') },
             "FAQ"
           )
         ),
@@ -472,7 +472,7 @@ class MoreDropDownMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { onClick: () => this.onPopupLinkClick(this.props.baseUrl + pLinks.ocsapiContentUrl) },
+            { onClick: () => this.onPopupLinkClick('API') },
             "API"
           )
         ),
@@ -481,7 +481,7 @@ class MoreDropDownMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { onClick: () => this.onPopupLinkClick(this.props.baseUrl + pLinks.aboutContentUrl) },
+            { onClick: () => this.onPopupLinkClick('ABOUT') },
             "About"
           )
         )

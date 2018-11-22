@@ -353,9 +353,9 @@ class MoreDropDownMenu extends React.Component {
         <ul className="dropdown-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-          <li><a onClick={() => this.onPopupLinkClick(this.props.baseUrl + pLinks.plingListUrl)}>FAQ</a></li>
-          <li><a onClick={() => this.onPopupLinkClick(this.props.baseUrl + pLinks.ocsapiContentUrl)}>API</a></li>
-          <li><a onClick={() => this.onPopupLinkClick(this.props.baseUrl + pLinks.aboutContentUrl)}>About</a></li>
+          <li><a onClick={() => this.onPopupLinkClick('FAQ')}>FAQ</a></li>
+          <li><a onClick={() => this.onPopupLinkClick('API')}>API</a></li>
+          <li><a onClick={() => this.onPopupLinkClick('ABOUT')}>About</a></li>
         </ul>
       </li>
     )
