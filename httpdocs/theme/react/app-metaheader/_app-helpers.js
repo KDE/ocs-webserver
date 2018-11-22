@@ -44,7 +44,7 @@ window.appHelpers = (function(){
     return pLink;
   }
 
-  handlePopupLinkClick(key,isExternal,baseUrl){
+  getPopupUrl(key,isExternal,baseUrl){
     let url = baseUrl;
     if (key === "FAQ"){
       if (isExternal === true){
@@ -72,7 +72,7 @@ window.appHelpers = (function(){
     generateMenuGroupsArray,
     getDeviceFromWidth,
     generatePopupLinks,
-    handlePopupLinkClick
+    getPopupUrl
   }
 
 }());
