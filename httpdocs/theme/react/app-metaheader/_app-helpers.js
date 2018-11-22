@@ -22,9 +22,29 @@ window.appHelpers = (function(){
     return device;
   }
 
+  function generatePopupLinks(){
+    let pLink;
+    pLink.plingListUrl = "/#plingList",
+    pLink.ocsapiContentUrl = "/#ocsapiContent",
+    pLink.aboutContentUrl = "/#aboutContent",
+    pLink.linkTarget = "_blank";
+
+    if (window.location.hostname.indexOf('opendesktop') === -1 ||
+        window.location.hostname === "git.opendesktop.org" ||
+        window.location.hostname === "forum.opendesktop.org" ||
+        window.location.hostname === "my.opendesktop.org"){
+        pLink.plingListUrl = "/plings";
+        pLink.ocsapiContentUrl = "/partials/ocsapicontent.phtml";
+        pLink.aboutContentUrl = "/partials/about.phtml";
+        pLink.linkTarget = "";
+    }
+    return pLink;
+  }
+
   return {
     generateMenuGroupsArray,
-    getDeviceFromWidth
+    getDeviceFromWidth,
+    generatePopupLinks
   }
 
 }());

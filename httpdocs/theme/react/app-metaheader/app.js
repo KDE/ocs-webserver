@@ -312,22 +312,7 @@ class MoreDropDownMenu extends React.Component {
 
   render(){
 
-    console.log(window.location.hostname);
-
-    let plingListUrl = "/#plingList",
-        ocsapiContentUrl = "/#ocsapiContent",
-        aboutContentUrl = "/#aboutContent",
-        linkTarget = "_blank";
-
-    if (window.location.hostname.indexOf('opendesktop') === -1 ||
-        window.location.hostname === "git.opendesktop.org" ||
-        window.location.hostname === "forum.opendesktop.org" ||
-        window.location.hostname === "my.opendesktop.org"){
-        plingListUrl = "/plings";
-        ocsapiContentUrl = "/partials/ocsapicontent.phtml";
-        aboutContentUrl = "/partials/about.phtml";
-        linkTarget = "";
-    }
+    const pLinks = appHelpers.generatePopupLinks();
 
     return(
       <li ref={node => this.node = node} id="more-dropdown-menu" className={this.state.dropdownClass}>
@@ -335,9 +320,9 @@ class MoreDropDownMenu extends React.Component {
         <ul className="dropdown-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-          <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>FAQ</a></li>
-          <li><a id="ocsapiContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + ocsapiContentUrl}>API</a></li>
-          <li><a id="aboutContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
+          <li><a id="plingList" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.plingListUrl}>FAQ</a></li>
+          <li><a id="ocsapiContent" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.ocsapiContentUrl}>API</a></li>
+          <li><a id="aboutContent" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.aboutContentUrl} >About</a></li>
         </ul>
       </li>
     )
@@ -413,30 +398,15 @@ class UserMenu extends React.Component {
     let userMenuContainerDisplay;
     if (this.props.device === "large"){
 
-      console.log(window.location.hostname);
-
-      let plingListUrl = "/#plingList",
-          ocsapiContentUrl = "/#ocsapiContent",
-          aboutContentUrl = "/#aboutContent",
-          linkTarget = "_blank";
-
-      if (window.location.hostname.indexOf('opendesktop') === -1 ||
-          window.location.hostname === "git.opendesktop.org" ||
-          window.location.hostname === "forum.opendesktop.org" ||
-          window.location.hostname === "my.opendesktop.org"){
-          plingListUrl = "/plings";
-          ocsapiContentUrl = "/partials/ocsapicontent.phtml";
-          aboutContentUrl = "/partials/about.phtml";
-          linkTarget = "";
-      }
+      const pLinks = appHelpers.generatePopupLinks();
 
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-          <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>FAQ</a></li>
-          <li><a id="ocsapiContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + ocsapiContentUrl}>API</a></li>
-          <li><a id="aboutContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
+          <li><a id="plingList" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.plingListUrl}>FAQ</a></li>
+          <li><a id="ocsapiContent" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.ocsapiContentUrl}>API</a></li>
+          <li><a id="aboutContent" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.aboutContentUrl} >About</a></li>
           {userAppsContextDisplay}
           {userDropdownDisplay}
         </ul>
@@ -698,22 +668,7 @@ class MobileLeftSidePanel extends React.Component {
       ));
     }
 
-    console.log(window.location.hostname);
-
-    let plingListUrl = "/#plingList",
-        ocsapiContentUrl = "/#ocsapiContent",
-        aboutContentUrl = "/#aboutContent",
-        linkTarget = "_blank";
-
-    if (window.location.hostname.indexOf('opendesktop') === -1 ||
-        window.location.hostname === "git.opendesktop.org" ||
-        window.location.hostname === "forum.opendesktop.org" ||
-        window.location.hostname === "my.opendesktop.org"){
-        plingListUrl = "/plings";
-        ocsapiContentUrl = "/partials/ocsapicontent.phtml";
-        aboutContentUrl = "/partials/about.phtml";
-        linkTarget = "";
-    }
+    const pLinks = appHelpers.generatePopupLinks();
 
     return (
       <div id="left-side-panel">
@@ -738,9 +693,9 @@ class MobileLeftSidePanel extends React.Component {
               <ul>
                 <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
                 <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-                <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>FAQ</a></li>
-                <li><a id="ocsapiContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + ocsapiContentUrl}>API</a></li>
-                <li><a id="aboutContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
+                <li><a id="plingList" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.plingListUrl}>FAQ</a></li>
+                <li><a id="ocsapiContent" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.ocsapiContentUrl}>API</a></li>
+                <li><a id="aboutContent" className="popuppanel" target={pLinks.linkTarget} href={this.props.baseUrl + pLinks.aboutContentUrl} >About</a></li>
               </ul>
             </li>
           </ul>
