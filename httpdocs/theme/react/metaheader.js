@@ -69,6 +69,7 @@ class MetaHeader extends React.Component {
     this.updateDimensions = this.updateDimensions.bind(this);
     this.getUser = this.getUser.bind(this);
     this.handlePopupLinkClick = this.handlePopupLinkClick.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentWillMount() {
@@ -148,6 +149,10 @@ class MetaHeader extends React.Component {
     }
   }
 
+  closeModal() {
+    this.setState({ showModal: false, modalUrl: '' });
+  }
+
   render() {
     let domainsMenuDisplay;
     if (this.state.device === "tablet") {
@@ -177,7 +182,8 @@ class MetaHeader extends React.Component {
     let modalDisplay;
     if (this.state.showModal) {
       modalDisplay = React.createElement(MetaheaderModal, {
-        modalUrl: this.state.modalUrl
+        modalUrl: this.state.modalUrl,
+        onCloseModal: this.closeModal
       });
     }
 
@@ -912,6 +918,15 @@ class MetaheaderModal extends React.Component {
     this.state = {
       loading: true
     };
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown', this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClick, false);
   }
 
   componentDidMount() {
@@ -922,10 +937,29 @@ class MetaheaderModal extends React.Component {
     });
   }
 
+  handleClick(e) {
+    let showModal;
+    if (this.node.contains(e.target)) {
+      if (showModal === false) {
+        if (e.target.id === "metaheader-modal-content") {
+          showModal = true;
+        } else {
+          showModal = false;
+        }
+      } else {
+        showModal = true;
+      }
+    }
+    console.log(showModal);
+    if (showModal === true) {
+      this.props.onCloseModal();
+    }
+  }
+
   render() {
     return React.createElement(
       "div",
-      { id: "metaheader-modal" },
+      { id: "metaheader-modal", ref: node => this.node = node },
       React.createElement("div", { id: "metaheader-modal-content", dangerouslySetInnerHTML: { __html: this.state.content } })
     );
   }
