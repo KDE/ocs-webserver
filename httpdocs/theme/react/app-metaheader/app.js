@@ -71,7 +71,7 @@ class MetaHeader extends React.Component {
     if (this.state.isExternal === true){
       window.open(url, '_blank');
     } else {
-      console.log('open a popup with this ajax url - ' + url);
+      this.setState({showModal:true,modalUrl:url});
     }
   }
 
@@ -616,13 +616,24 @@ class UserLoginMenuContainer extends React.Component {
 class MetaheaderModal extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      loading:true
+    };
+  }
+
+  componentDidMount() {
+    const self = this;
+    $.ajax({url: this.props.modalUrl,cache: false})
+      .done(function(response){
+        console.log(response);
+        self.setState({content:response,loading:false});
+    });
   }
 
   render(){
     return (
       <div id="metaheader-modal">
-        modal
+        <div dangerouslySetInnerHTML={{__html:this.state.content}}></div>
       </div>
     )
   }
