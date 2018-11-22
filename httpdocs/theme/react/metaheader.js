@@ -487,7 +487,7 @@ class MoreDropDownMenu extends React.Component {
         React.createElement(
           "a",
           { className: "popuppanel", id: "about", target: "_blank", href: window.baseUrl + "/partials/about.phtml" },
-          "ABOUT"
+          "About"
         )
       );
     } else {
@@ -515,7 +515,7 @@ class MoreDropDownMenu extends React.Component {
         React.createElement(
           "a",
           { className: "popuppanel", id: "about", href: "/#aboutContent" },
-          "ABOUT"
+          "About"
         )
       );
     }
@@ -674,7 +674,7 @@ class UserMenu extends React.Component {
           React.createElement(
             "a",
             { className: "popuppanel", id: "about", target: "_blank", href: window.baseUrl + "/partials/about.phtml" },
-            "ABOUT"
+            "About"
           )
         );
       } else {
@@ -702,7 +702,7 @@ class UserMenu extends React.Component {
           React.createElement(
             "a",
             { className: "popuppanel", id: "about", href: "/#aboutContent" },
-            "ABOUT"
+            "About"
           )
         );
       }
@@ -1156,7 +1156,7 @@ class MobileLeftSidePanel extends React.Component {
         React.createElement(
           "a",
           { className: "popuppanel", id: "about", target: "_blank", href: window.baseUrl + "/partials/about.phtml" },
-          "ABOUT"
+          "About"
         )
       );
     } else {
@@ -1184,7 +1184,7 @@ class MobileLeftSidePanel extends React.Component {
         React.createElement(
           "a",
           { className: "popuppanel", id: "about", href: "/#aboutContent" },
-          "ABOUT"
+          "About"
         )
       );
     }
