@@ -26,7 +26,7 @@ window.appHelpers = (function(){
 
     console.log(window.location.hostname);
 
-    let pLink;
+    let pLink = {};
     pLink.plingListUrl = "/#plingList",
     pLink.ocsapiContentUrl = "/#ocsapiContent",
     pLink.aboutContentUrl = "/#aboutContent",
