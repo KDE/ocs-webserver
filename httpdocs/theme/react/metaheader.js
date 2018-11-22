@@ -496,7 +496,7 @@ class MoreDropDownMenu extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#plings" },
+          { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#faq" },
           "FAQ"
         )
       );
@@ -683,7 +683,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#plings" },
+            { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#faq" },
             "FAQ"
           )
         );
@@ -1165,7 +1165,7 @@ class MobileLeftSidePanel extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#plings" },
+          { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#faq" },
           "FAQ"
         )
       );

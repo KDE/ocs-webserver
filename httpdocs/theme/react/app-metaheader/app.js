@@ -381,7 +381,7 @@ class MoreDropDownMenu extends React.Component {
       apiLinkItem = (<li><a className="popuppanel" id="api" href={window.baseUrl + "/partials/ocsapicontent.phtml"}>API</a></li>);
       aboutLinkItem = (<li><a className="popuppanel" id="about" href={window.baseUrl + "/partials/about.phtml"}>About</a></li>);
     } else {
-      faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={window.baseUrl + "/#plings"}>FAQ</a></li>);
+      faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={window.baseUrl + "/#faq"}>FAQ</a></li>);
       apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={window.baseUrl + "/#api"}>API</a></li>);
       aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={window.baseUrl + "/#about"}>About</a></li>);
     }
@@ -482,7 +482,7 @@ class UserMenu extends React.Component {
         apiLinkItem = (<li><a className="popuppanel" id="api" href={window.baseUrl + "/partials/ocsapicontent.phtml"}>API</a></li>);
         aboutLinkItem = (<li><a className="popuppanel" id="about" href={window.baseUrl + "/partials/about.phtml"}>About</a></li>);
       } else {
-        faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={window.baseUrl + "/#plings"}>FAQ</a></li>);
+        faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={window.baseUrl + "/#faq"}>FAQ</a></li>);
         apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={window.baseUrl + "/#api"}>API</a></li>);
         aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={window.baseUrl + "/#about"}>About</a></li>);
       }
@@ -825,7 +825,7 @@ class MobileLeftSidePanel extends React.Component {
       apiLinkItem = (<li><a className="popuppanel" id="api" href={window.baseUrl + "/partials/ocsapicontent.phtml"}>API</a></li>);
       aboutLinkItem = (<li><a className="popuppanel" id="about" href={window.baseUrl + "/partials/about.phtml"}>About</a></li>);
     } else {
-      faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={window.baseUrl + "/#plings"}>FAQ</a></li>);
+      faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={window.baseUrl + "/#faq"}>FAQ</a></li>);
       apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={window.baseUrl + "/#api"}>API</a></li>);
       aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={window.baseUrl + "/#about"}>About</a></li>);
     }
