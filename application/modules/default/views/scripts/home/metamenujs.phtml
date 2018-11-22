@@ -43,11 +43,11 @@ if(isset($_GET['url'])) {
     $thisurl = $_GET['url'];
 }
 
-$isExternal = 1;
+$isExternal = '1';
 if($target == 'opendesktop') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($thisurl);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($thisurl);
-    $isExternal = 0;
+    $isExternal = '0';
 } else if($target == 'gitlab') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_gitlab);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_gitlab);
@@ -66,7 +66,7 @@ $json_menu = $this->fetchMetaheaderMenuJson();
 
 ?>
 
-var isExternal = <? ($isExternal==1?'true':'false'); ?>;
+var isExternal = <? ($isExternal=='1'?'true':'false'); ?>;
 var domains = <?=$json_menu?>;
 var user = null;
 var baseUrl = "<?=$baseurl?>";
