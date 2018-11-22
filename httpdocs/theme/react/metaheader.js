@@ -305,7 +305,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
     let dropdownClass = "";
     if (this.node.contains(e.target)) {
       if (this.state.dropdownClass === "open") {
-        console.log(e.target.className);
+        console.log(e.target.classNaconsoleme);
         if (e.target.className === "discussion-menu-link-item") {
           dropdownClass = "";
         } else {
