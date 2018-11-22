@@ -300,6 +300,12 @@ class Default_Model_Ocs_OAuth
      */
     private function mapData($member_data, $bypassEmailCheck = false, $bypassUsernameCheck = false)
     {
+        if (strpos($member_data['profile_image_url'], 'http') === false) {
+            $urlImage = IMAGES_MEDIA_SERVER . '/img/' . $member_data['profile_image_url'];
+        } else {
+            $urlImage = $member_data['profile_image_url'];
+        }
+
         $map_user_data = array(
             'user' => array(
                 'id'             => $member_data['external_id'],
@@ -311,7 +317,7 @@ class Default_Model_Ocs_OAuth
                 'is_hive'        => $member_data['password_type'] == 0 ? 'false' : 'true',
                 'creationTime'   => strtotime($member_data['created_at']),
                 'lastUpdateTime' => strtotime($member_data['changed_at']),
-                'avatarUrl'      => $member_data['profile_image_url'],
+                'avatarUrl'      => $urlImage,
                 'biography'      => empty($member_data['biography']) ? '' : $member_data['biography'],
                 'admin'          => $member_data['roleId'] == 100 ? 'true' : 'false',
             )
@@ -395,9 +401,12 @@ class Default_Model_Ocs_OAuth
 
         try {
             $authUser = $this->getUser($member_data['external_id']);
+            if (false === $authUser) {
+                $this->messages[] = "Not Found : " . $member_data['member_id'];
+            }
             $result = $this->sameUserData($member_data, $authUser);
             if (false === $result) {
-                $this->messages[] = "Unequal : " . json_encode($member_data);
+                $this->messages[] = "Unequal : " . print_r($authUser, true);
             }
         } catch (Zend_Exception $e) {
             $this->messages[] = "Fail : " . $e->getMessage();
@@ -416,6 +425,12 @@ class Default_Model_Ocs_OAuth
      */
     private function sameUserData($user, $authUser)
     {
+        if (strpos($user['profile_image_url'], 'http') === false) {
+            $urlImage = IMAGES_MEDIA_SERVER . '/img/' . $user['profile_image_url'];
+        } else {
+            $urlImage = $user['profile_image_url'];
+        }
+
         $result = false;
         $result = $result || ($user['member_id'] != $authUser['ocsId']);
         $result = $result || ($user['username'] != $authUser['username']);
@@ -423,7 +438,7 @@ class Default_Model_Ocs_OAuth
         $result = $result || (strtolower($user['mail']) != $authUser['email']);
         $result = $result || ($user['mail_checked'] != $authUser['emailVerified']);
         $result = $result || (($user['password_type'] == 1) != $authUser['hiveImport']);
-        $result = $result || ($user['profile_image_url'] != $authUser['avatarUrl']);
+        $result = $result || ($urlImage != $authUser['avatarUrl']);
         $result = $result || ($user['biography'] != $authUser['biography']);
         $result = $result || (($user['roleId'] == 100) != $authUser['admin']);
         $result = $result || (($user['is_active'] == 0) != $authUser['disabled']);

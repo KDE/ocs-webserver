@@ -335,7 +335,7 @@ class MoreDropDownMenu extends React.Component {
         <ul className="dropdown-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-          <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>What are Plings?</a></li>
+          <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>FAQ</a></li>
           <li><a id="ocsapiContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + ocsapiContentUrl}>API</a></li>
           <li><a id="aboutContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
         </ul>
@@ -434,7 +434,7 @@ class UserMenu extends React.Component {
         <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-          <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>What are Plings?</a></li>
+          <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>FAQ</a></li>
           <li><a id="ocsapiContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + ocsapiContentUrl}>API</a></li>
           <li><a id="aboutContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
           {userAppsContextDisplay}
@@ -738,7 +738,7 @@ class MobileLeftSidePanel extends React.Component {
               <ul>
                 <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
                 <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-                <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>What are Plings?</a></li>
+                <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>FAQ</a></li>
                 <li><a id="ocsapiContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + ocsapiContentUrl}>API</a></li>
                 <li><a id="aboutContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
               </ul>
