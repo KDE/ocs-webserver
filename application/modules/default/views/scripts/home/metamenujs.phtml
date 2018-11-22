@@ -39,11 +39,11 @@ if(isset($_GET['target'])) {
 }
 
 $thisurl = "/";
-if(isset($_SERVER[HTTP_HOST])) {
-    $thisurl = "https://".$_SERVER[HTTP_HOST];
+if(isset($this->serverUrl())) {
+    $thisurl = $this->serverUrl();
 }
-if(isset($_SERVER[REQUEST_URI])) {
-    $thisurl .= $_SERVER[REQUEST_URI];
+if(isset($this->url())) {
+    $thisurl = $this->url();
 }
 
 
