@@ -496,7 +496,7 @@ class MoreDropDownMenu extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#plingsList" },
+          { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#plings" },
           "FAQ"
         )
       );
@@ -505,7 +505,7 @@ class MoreDropDownMenu extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", target: "_blank", id: "api", href: window.baseUrl + "/#ocsapiContent" },
+          { className: "popuppanel", target: "_blank", id: "api", href: window.baseUrl + "/#api" },
           "API"
         )
       );
@@ -514,7 +514,7 @@ class MoreDropDownMenu extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", target: "_blank", id: "about", href: window.baseUrl + "/#aboutContent" },
+          { className: "popuppanel", target: "_blank", id: "about", href: window.baseUrl + "/#about" },
           "About"
         )
       );
@@ -683,7 +683,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#plingsList" },
+            { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#plings" },
             "FAQ"
           )
         );
@@ -692,7 +692,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { className: "popuppanel", target: "_blank", id: "api", href: window.baseUrl + "/#ocsapiContent" },
+            { className: "popuppanel", target: "_blank", id: "api", href: window.baseUrl + "/#api" },
             "API"
           )
         );
@@ -701,7 +701,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { className: "popuppanel", target: "_blank", id: "about", href: window.baseUrl + "/#aboutContent" },
+            { className: "popuppanel", target: "_blank", id: "about", href: window.baseUrl + "/#about" },
             "About"
           )
         );
@@ -1165,7 +1165,7 @@ class MobileLeftSidePanel extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#plingsList" },
+          { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#plings" },
           "FAQ"
         )
       );
@@ -1174,7 +1174,7 @@ class MobileLeftSidePanel extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", target: "_blank", id: "api", href: window.baseUrl + "/#ocsapiContent" },
+          { className: "popuppanel", target: "_blank", id: "api", href: window.baseUrl + "/#api" },
           "API"
         )
       );
@@ -1183,7 +1183,7 @@ class MobileLeftSidePanel extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", target: "_blank", id: "about", href: window.baseUrl + "/#aboutContent" },
+          { className: "popuppanel", target: "_blank", id: "about", href: window.baseUrl + "/#about" },
           "About"
         )
       );
