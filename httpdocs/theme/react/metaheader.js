@@ -1011,6 +1011,7 @@ class MobileLeftSidePanel extends React.Component {
   }
 
   onPopupLinkClick(key) {
+    console.log(key);
     this.props.onPopupLinkClick(key);
   }
 
