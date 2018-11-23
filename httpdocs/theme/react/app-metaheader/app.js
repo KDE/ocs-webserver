@@ -1,4 +1,4 @@
- class MetaHeader extends React.Component {
+class MetaHeader extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
@@ -10,11 +10,16 @@
       logoutUrl:window.logoutUrl,
       gitlabUrl:window.gitlabUrl,
       sName:window.sName,
+      isExternal:window.isExternal,
       user:{},
+      showModal:false,
+      modalUrl:''
     };
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.getUser = this.getUser.bind(this);
+    this.handlePopupLinkClick = this.handlePopupLinkClick.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
 
@@ -61,6 +66,39 @@
     this.setState({device:device});
   }
 
+  handlePopupLinkClick(key){
+    let url = this.state.baseUrl;
+    if (key === "FAQ"){
+      if (this.state.isExternal === true){
+        url += "/plings";
+      } else {
+        url += "/#plingList";
+      }
+    } else if (key === "API"){
+      if (this.state.isExternal === true){
+        url += "/partials/ocsapicontent.phtml";
+      } else {
+        url += "/#ocsapiContent";
+      }
+    } else if (key === "ABOUT"){
+      if (this.state.isExternal === true){
+        url += "/partials/about.phtml";
+      } else {
+        url += "/#aboutContent";
+      }
+    }
+
+    if (this.state.isExternal === true){
+      window.open(url, '_blank');
+    } else {
+      this.setState({showModal:true,modalUrl:url});
+    }
+  }
+
+  closeModal(){
+    this.setState({showModal:false,modalUrl:''});
+  }
+
   render(){
     let domainsMenuDisplay;
     if (this.state.device === "tablet"){
@@ -73,6 +111,7 @@
           blogUrl={this.state.blogUrl}
           forumUrl={this.state.forumUrl}
           sName={this.state.sName}
+          onPopupLinkClick={this.handlePopupLinkClick}
         />
       )
     } else {
@@ -85,9 +124,21 @@
           blogUrl={this.state.blogUrl}
           forumUrl={this.state.forumUrl}
           sName={this.state.sName}
+          onPopupLinkClick={this.handlePopupLinkClick}
         />
       )
     }
+
+    let modalDisplay;
+    if (this.state.showModal){
+      modalDisplay = (
+        <MetaheaderModal
+          modalUrl={this.state.modalUrl}
+          onCloseModal={this.closeModal}
+        />
+      )
+    }
+
     return (
       <nav id="metaheader-nav" className="metaheader">
         <div className="metamenu">
@@ -101,8 +152,10 @@
             loginUrl={this.state.loginUrl}
             logoutUrl={this.state.logoutUrl}
             gitlabUrl={this.state.gitlabUrl}
+            onPopupLinkClick={this.handlePopupLinkClick}
           />
         </div>
+        {modalDisplay}
       </nav>
     )
   }
@@ -113,6 +166,11 @@ class DomainsMenu extends React.Component {
   	super(props);
   	this.state = {
     };
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
+  }
+
+  onPopupLinkClick(url){
+    this.props.onPopupLinkClick(url);
   }
 
   render(){
@@ -124,6 +182,7 @@ class DomainsMenu extends React.Component {
           domains={this.props.domains}
           baseUrl={this.props.baseUrl}
           blogUrl={this.props.blogUrl}
+          onPopupLinkClick={this.onPopupLinkClick}
         />
       )
     }
@@ -250,7 +309,6 @@ class DiscussionBoardsDropDownMenu extends React.Component {
     let dropdownClass = "";
     if (this.node.contains(e.target)){
       if (this.state.dropdownClass === "open"){
-        console.log(e.target.className);
         if (e.target.className === "discussion-menu-link-item"){
           dropdownClass = "";
         } else {
@@ -284,6 +342,7 @@ class MoreDropDownMenu extends React.Component {
   	super(props);
   	this.state = {};
     this.handleClick = this.handleClick.bind(this);
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -310,17 +369,21 @@ class MoreDropDownMenu extends React.Component {
     this.setState({dropdownClass:dropdownClass});
   }
 
+  onPopupLinkClick(url){
+    this.props.onPopupLinkClick(url);
+  }
+
   render(){
 
-    let plingListUrl = "/#plingList",
-        ocsapiContentUrl = "/#ocsapiContent",
-        aboutContentUrl = "/#aboutContent",
-        linkTarget = "_blank";
-    if (window.location.hostname === this.props.baseUrl.split('https://')[1]){
-      plingListUrl = "/plings";
-      ocsapiContentUrl = "/partials/ocsapicontent.phtml";
-      aboutContentUrl = "/partials/about.phtml";
-      linkTarget = "";
+    let faqLinkItem, apiLinkItem, aboutLinkItem;
+    if (window.isExternal === false){
+      faqLinkItem = (<li><a className="popuppanel" id="faq" href={window.baseUrl + "/plings"}>FAQ</a></li>);
+      apiLinkItem = (<li><a className="popuppanel" id="api" href={window.baseUrl + "/partials/ocsapicontent.phtml"}>API</a></li>);
+      aboutLinkItem = (<li><a className="popuppanel" id="about" href={window.baseUrl + "/partials/about.phtml"}>About</a></li>);
+    } else {
+      faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={window.baseUrl + "/#faq"}>FAQ</a></li>);
+      apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={window.baseUrl + "/#api"}>API</a></li>);
+      aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={window.baseUrl + "/#about"}>About</a></li>);
     }
 
     return(
@@ -329,9 +392,9 @@ class MoreDropDownMenu extends React.Component {
         <ul className="dropdown-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-          <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>FAQ</a></li>
-          <li><a id="ocsapiContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + ocsapiContentUrl}>API</a></li>
-          <li><a id="aboutContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
+          {faqLinkItem}
+          {apiLinkItem}
+          {aboutLinkItem}
         </ul>
       </li>
     )
@@ -379,6 +442,12 @@ class UserMenu extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
+  }
+
+  onPopupLinkClick(key){
+    console.log(key);
+    this.props.onPopupLinkClick(key);
   }
 
   render(){
@@ -406,26 +475,25 @@ class UserMenu extends React.Component {
 
     let userMenuContainerDisplay;
     if (this.props.device === "large"){
-      
-      let plingListUrl = "/#plingList",
-          ocsapiContentUrl = "/#ocsapiContent",
-          aboutContentUrl = "/#aboutContent",
-          linkTarget = "_blank";
 
-      if (window.location.hostname.indexOf('opendesktop') === -1){
-          plingListUrl = "/plings";
-          ocsapiContentUrl = "/partials/ocsapicontent.phtml";
-          aboutContentUrl = "/partials/about.phtml";
-          linkTarget = "";
+      let faqLinkItem, apiLinkItem, aboutLinkItem;
+      if (window.isExternal === false){
+        faqLinkItem = (<li><a className="popuppanel" id="faq" href={window.baseUrl + "/plings"}>FAQ</a></li>);
+        apiLinkItem = (<li><a className="popuppanel" id="api" href={window.baseUrl + "/partials/ocsapicontent.phtml"}>API</a></li>);
+        aboutLinkItem = (<li><a className="popuppanel" id="about" href={window.baseUrl + "/partials/about.phtml"}>About</a></li>);
+      } else {
+        faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={window.baseUrl + "/#faq"}>FAQ</a></li>);
+        apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={window.baseUrl + "/#api"}>API</a></li>);
+        aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={window.baseUrl + "/#about"}>About</a></li>);
       }
 
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-          <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>FAQ</a></li>
-          <li><a id="ocsapiContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + ocsapiContentUrl}>API</a></li>
-          <li><a id="aboutContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
+          {faqLinkItem}
+          {apiLinkItem}
+          {aboutLinkItem}
           {userAppsContextDisplay}
           {userDropdownDisplay}
         </ul>
@@ -594,6 +662,59 @@ class UserLoginMenuContainer extends React.Component {
   }
 }
 
+class MetaheaderModal extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {
+      loading:true
+    };
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentDidMount() {
+    const self = this;
+    console.log(this.props.modalUrl);
+    $.ajax({url: this.props.modalUrl,cache: false}).done(function(response){
+        console.log(response);
+        self.setState({content:response,loading:false});
+    });
+  }
+
+  handleClick(e){
+    let showModal;
+    if (this.node.contains(e.target)){
+      if (showModal === false){
+        if (e.target.id === "metaheader-modal-content"){
+          showModal = true;
+        } else {
+          showModal = false;
+        }
+      } else {
+        showModal = true;
+      }
+    }
+    if (showModal === true){
+      this.props.onCloseModal();
+    }
+  }
+
+  render(){
+    return (
+      <div id="metaheader-modal" ref={node => this.node = node}>
+        <div id="metaheader-modal-content" dangerouslySetInnerHTML={{__html:this.state.content}}></div>
+      </div>
+    )
+  }
+}
+
 /** MOBILE SPECIFIC **/
 
 class MobileLeftMenu extends React.Component {
@@ -604,6 +725,7 @@ class MobileLeftMenu extends React.Component {
     };
     this.toggleLeftSideOverlay = this.toggleLeftSideOverlay.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -640,6 +762,10 @@ class MobileLeftMenu extends React.Component {
     this.setState({overlayClass:overlayClass});
   }
 
+  onPopupLinkClick(key){
+    this.props.onPopupLinkClick(key);
+  }
+
   render(){
     return (
       <div ref={node => this.node = node}  id="metaheader-left-mobile" className={this.state.overlayClass}>
@@ -651,6 +777,7 @@ class MobileLeftMenu extends React.Component {
             baseUrl={this.props.baseUrl}
             blogUrl={this.props.blogUrl}
             forumUrl={this.props.forumUrl}
+            onPopupLinkClick={this.props.onPopupLinkClick}
           />
         </div>
       </div>
@@ -662,6 +789,7 @@ class MobileLeftSidePanel extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
+    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentDidMount() {
@@ -672,6 +800,10 @@ class MobileLeftSidePanel extends React.Component {
       }
     });
     this.setState({menuGroups:menuGroups});
+  }
+
+  onPopupLinkClick(key){
+    this.props.onPopupLinkClick(key);
   }
 
   render(){
@@ -687,15 +819,15 @@ class MobileLeftSidePanel extends React.Component {
       ));
     }
 
-    let plingListUrl = "/#plingList",
-        ocsapiContentUrl = "/#ocsapiContent",
-        aboutContentUrl = "/#aboutContent",
-        linkTarget = "_blank";
-    if (window.location.hostname === this.props.baseUrl.split('https://')[1]){
-      plingListUrl = "/plings";
-      ocsapiContentUrl = "/partials/ocsapicontent.phtml";
-      aboutContentUrl = "/partials/about.phtml";
-      linkTarget = "";
+    let faqLinkItem, apiLinkItem, aboutLinkItem;
+    if (window.isExternal === false){
+      faqLinkItem = (<li><a className="popuppanel" id="faq" href={window.baseUrl + "/plings"}>FAQ</a></li>);
+      apiLinkItem = (<li><a className="popuppanel" id="api" href={window.baseUrl + "/partials/ocsapicontent.phtml"}>API</a></li>);
+      aboutLinkItem = (<li><a className="popuppanel" id="about" href={window.baseUrl + "/partials/about.phtml"}>About</a></li>);
+    } else {
+      faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={window.baseUrl + "/#faq"}>FAQ</a></li>);
+      apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={window.baseUrl + "/#api"}>API</a></li>);
+      aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={window.baseUrl + "/#about"}>About</a></li>);
     }
 
     return (
@@ -721,9 +853,9 @@ class MobileLeftSidePanel extends React.Component {
               <ul>
                 <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
                 <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-                <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>FAQ</a></li>
-                <li><a id="ocsapiContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + ocsapiContentUrl}>API</a></li>
-                <li><a id="aboutContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
+                {faqLinkItem}
+                {apiLinkItem}
+                {aboutLinkItem}
               </ul>
             </li>
           </ul>

@@ -27,6 +27,8 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         //get gitlab projetcs
         $git = new Default_Model_Ocs_Gitlab();
         $this->view->git_projects = $git->getProjects();
+        $gitconfig = Zend_Registry::get('config')->settings->server->opencode;
+        $this->view->git_homepage = $gitconfig->host;
         
         /** @var Default_Model_ConfigStore $storeConfig */
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
