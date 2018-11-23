@@ -815,7 +815,7 @@ class Default_Model_Ocs_Gitlab
                 //fetch also user data
                 $returnArray = array();
                 foreach ($body as $git_project) {
-                    $gituser = $this->getUserWithId($git_project['namespace']['id']);
+                    $gituser = $this->getUserWithName($git_project['namespace']['name']);
                     $git_project['namespace']['avatar_url'] = $gituser['avatar_url'];
                     $returnArray[] = $git_project;
                 }
