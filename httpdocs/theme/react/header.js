@@ -234,7 +234,7 @@ class SiteHeaderLoginMenu extends React.Component {
           { style: menuItemCssClass, className: registerButtonCssClass },
           React.createElement(
             "a",
-            { href: this.props.baseUrl + "/register" },
+            { href: "/register" },
             "Register"
           )
         ),
@@ -243,7 +243,7 @@ class SiteHeaderLoginMenu extends React.Component {
           { style: menuItemCssClass, className: loginButtonCssClass },
           React.createElement(
             "a",
-            { href: this.props.baseUrl + "/login" + this.props.redirectString },
+            { href: "/login" + this.props.redirectString },
             "Login"
           )
         )
