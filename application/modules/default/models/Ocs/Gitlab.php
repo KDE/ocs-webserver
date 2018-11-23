@@ -219,6 +219,45 @@ class Default_Model_Ocs_Gitlab
     }
 
     /**
+     * @param string $email
+     *
+     * @return array
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function getUserByEmail($email)
+    {
+        $this->httpClient->resetParameters();
+        $uri = $this->config->host . "/api/v4/users?search={$email}";
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod(Zend_Http_Client::GET);
+
+        $response = $this->httpClient->request();
+
+        $body = Zend_Json::decode($response->getRawBody());
+
+        if (count($body) == 0) {
+            return array();
+        }
+
+        if (array_key_exists("message", $body)) {
+            $result_code = substr(trim($body["message"]), 0, 3);
+            if ((int)$result_code >= 300) {
+                throw new Default_Model_Ocs_Exception($body["message"]);
+            }
+        }
+
+        Zend_Registry::get('logger')->debug(__METHOD__ . " - body: " . $response->getRawBody());
+
+        return $body;
+    }
+
+    /**
      * @param $username
      *
      * @return array
@@ -374,18 +413,19 @@ class Default_Model_Ocs_Gitlab
 //            $data['skip_confirmation'] = 'true';
 
             try {
-                foreach ($data as $datum) {
-                    $datum['skip_confirmation'] = 'true';
-                    $this->httpUserCreate($datum);
-                }
+                $data[0]['skip_confirmation'] = 'true';
+                $user = $this->httpUserCreate($data[0]);
+                $this->messages[] = "created : " . json_encode($user);
+                $data[1]['skip_reconfirmation'] = 'true';
+                $updatedUser = $this->httpUserUpdate($data[1], $user['id']);
+                $this->messages[] = "updated : " . json_encode($updatedUser);
             } catch (Zend_Exception $e) {
                 $this->messages[] = "Fail " . $e->getMessage();
 
                 return false;
             }
-            $this->messages[] = "Success";
 
-            return $data;
+            return $updatedUser;
         }
 
         if ($force === true) {
@@ -396,7 +436,7 @@ class Default_Model_Ocs_Gitlab
                 foreach ($data as $datum) {
                     $datum['skip_reconfirmation'] = 'true';
                     unset($datum['password']);
-                    $result = $this->httpUserUpdate($datum, $user['id']);
+                    $updatedUser = $this->httpUserUpdate($datum, $user['id']);
                 }
                 //$this->httpUserUpdate($data, $user['id']);
             } catch (Zend_Exception $e) {
@@ -404,9 +444,9 @@ class Default_Model_Ocs_Gitlab
 
                 return false;
             }
-            $this->messages[] = "overwritten : " . json_encode($result);
+            $this->messages[] = "overwritten : " . json_encode($updatedUser);
 
-            return $user;
+            return $updatedUser;
         }
 
         $this->messages[0] = 'user already exists.';
@@ -448,7 +488,7 @@ class Default_Model_Ocs_Gitlab
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - request: ' . $uri);
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - response: ' . $response->getRawBody());
 
-        return true;
+        return $body;
     }
 
     /**
@@ -627,11 +667,12 @@ class Default_Model_Ocs_Gitlab
         if (empty($userId)) {
 
             try {
-                foreach ($data as $datum) {
-                    $datum['skip_confirmation'] = 'true';
-
-                    $this->httpUserCreate($datum);
-                }
+                $data[0]['skip_confirmation'] = 'true';
+                $user = $this->httpUserCreate($data[0]);
+                $this->messages[] = "created : " . json_encode($user);
+                $data[1]['skip_reconfirmation'] = 'true';
+                $updatedUser = $this->httpUserUpdate($data[1], $user['id']);
+                $this->messages[] = "updated : " . json_encode($updatedUser);
             } catch (Zend_Exception $e) {
                 $this->messages[] = "Fail " . $e->getMessage();
 
