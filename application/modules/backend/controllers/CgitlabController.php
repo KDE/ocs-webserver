@@ -61,7 +61,6 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         $method = $this->getParam('method', 'create');
 
         $this->log->info("METHOD: {$method}\n--------------\n");
-        $this->log->err("METHOD: {$method}\n--------------\n");
 
         if ($this->hasParam('member_id')) {
             $memberId = (int)$this->getParam('member_id');
@@ -83,8 +82,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             return;
         }
         if ('validate' == $method) {
-            //$this->validateMembers($members);
-            echo "not implemented";
+            $this->validateMembers($members, $force);
 
             return;
         }
@@ -153,7 +151,6 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
 
         while ($member = $members->fetch()) {
             $this->log->info("process " . Zend_Json::encode($member));
-            echo "process " . Zend_Json::encode($member) . PHP_EOL;
 
             //if (false === $usernameValidChars->isValid($member['username'])) {
             //    file_put_contents($this->errorlogfile, print_r($member, true) . "user name validation error" . "\n\n", FILE_APPEND);
@@ -161,7 +158,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             //}
             if (false === $emailValidate->isValid($member["email_address"])) {
                 $this->log->info("messages [\"email address validation error\"] ");
-                echo "response [\"email address validation error\"]" . PHP_EOL;
+
                 continue;
             }
             try {
@@ -172,11 +169,49 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             }
             $messages = $modelOpenCode->getMessages();
             $this->log->info("messages " . Zend_Json::encode($messages));
-            echo "response " . Zend_Json::encode($messages) . PHP_EOL;
         }
 
         return true;
     }
 
+    /**
+     * @param Zend_Db_Statement_Interface $members
+     *
+     * @param bool                        $force
+     *
+     * @return bool
+     * @throws Zend_Db_Statement_Exception
+     */
+    private function validateMembers($members, $force)
+    {
+        $modelSubSystem = new Default_Model_Ocs_Gitlab($this->config);
+
+        while ($member = $members->fetch()) {
+            $modelSubSystem->resetMessages();
+            $this->log->info("process " . Zend_Json::encode($member));
+            try {
+                $userSubsystem = $modelSubSystem->getUser($member['external_id'], $member['username']);
+                if (empty($userSubsystem)) {
+                    $this->log->info('Fail : user not exist (' . $member['member_id'] . ', ' . $member['username'] . ')');
+
+                    continue;
+                }
+
+                $result = $modelSubSystem->validateUserData($member, $userSubsystem);
+                if (isset($result)) {
+                    $this->log->info('Fail : unequal ' . implode("<=>", $result) . ' ' . $member[$result[0]] . '<=>' . $userSubsystem[$result[1]]);
+                    if ($force) {
+                        $modelSubSystem->createUserFromArray($member, true);
+                    }
+                }
+            } catch (Exception $e) {
+                $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            }
+            $messages = $modelSubSystem->getMessages();
+            $this->log->info("messages " . Zend_Json::encode($messages));
+        }
+
+        return true;
+    }
 
 }
