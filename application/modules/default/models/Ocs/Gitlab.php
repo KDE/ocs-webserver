@@ -366,9 +366,10 @@ class Default_Model_Ocs_Gitlab
             $result[] = 'oauth_opendesktop missing';
         }
         $provider =  array_column($userSubsystem['identities'], 'extern_uid', 'provider');
-        if ($member['external_id'] != $provider['oauth_opendesktop']) {
+        $providerOauth = isset($provider['oauth_opendesktop']) ? $provider['oauth_opendesktop'] : '';
+        if ($member['external_id'] != $providerOauth) {
             $result[] = 'external_id<=>oauth_opendesktop->extern_uid';
-            $result[] = $member['external_id'] . '<=>' . $provider['oauth_opendesktop'];
+            $result[] = $member['external_id'] . '<=>' . $providerOauth;
         }
         if (false === array_search('ldapmain', array_column($userSubsystem['identities'], 'provider'))) {
             $result[] = 'ldapmain missing';
