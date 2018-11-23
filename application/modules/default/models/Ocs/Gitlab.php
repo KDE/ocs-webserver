@@ -72,11 +72,16 @@ class Default_Model_Ocs_Gitlab
 
             return false;
         }
-        $data['skip_reconfirmation'] = 'true';
-        unset($data['password']);
+//        $data['skip_reconfirmation'] = 'true';
+//        unset($data['password']);
 
         try {
-            $this->httpUserUpdate($data, $user['id']);
+            foreach ($data as $datum) {
+                $datum['skip_reconfirmation'] = 'true';
+                unset($datum['password']);
+
+                $this->httpUserUpdate($data, $user['id']);
+            }
         } catch (Zend_Exception $e) {
             $this->messages[] = "Fail " . $e->getMessage();
 
@@ -462,9 +467,8 @@ class Default_Model_Ocs_Gitlab
         }
 
         $member_data = $this->getMemberData($member_id, false);
-        $data = $this->mapUserData($member_data);
 
-        $user = $this->getUser($data['extern_uid'], $data['username']);
+        $user = $this->getUser($member_data['external_id'], mb_strtolower($member_data['username']));
 
         if (empty($user)) {
             $this->messages[0] = 'Not deleted. User not exists. ';
@@ -621,10 +625,13 @@ class Default_Model_Ocs_Gitlab
         $userId = $this->getUser($data['extern_uid'], $data['username']);
 
         if (empty($userId)) {
-            $data['skip_confirmation'] = 'true';
 
             try {
-                $this->httpUserCreate($data);
+                foreach ($data as $datum) {
+                    $datum['skip_confirmation'] = 'true';
+
+                    $this->httpUserCreate($datum);
+                }
             } catch (Zend_Exception $e) {
                 $this->messages[] = "Fail " . $e->getMessage();
 
