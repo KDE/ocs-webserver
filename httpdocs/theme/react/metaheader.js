@@ -655,7 +655,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { className: "popuppanel", id: "faq", href: window.baseUrl + "/plings" },
+            { className: "popuppanel", id: "faq", href: "/plings" },
             "FAQ"
           )
         );
@@ -664,7 +664,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { className: "popuppanel", id: "api", href: window.baseUrl + "/partials/ocsapicontent.phtml" },
+            { className: "popuppanel", id: "api", href: "/partials/ocsapicontent.phtml" },
             "API"
           )
         );
@@ -673,7 +673,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { className: "popuppanel", id: "about", href: window.baseUrl + "/partials/about.phtml" },
+            { className: "popuppanel", id: "about", href: "/partials/about.phtml" },
             "About"
           )
         );
@@ -1137,7 +1137,7 @@ class MobileLeftSidePanel extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "faq", href: window.baseUrl + "/plings" },
+          { className: "popuppanel", id: "faq", href: "/plings" },
           "FAQ"
         )
       );
@@ -1146,7 +1146,7 @@ class MobileLeftSidePanel extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "api", href: window.baseUrl + "/partials/ocsapicontent.phtml" },
+          { className: "popuppanel", id: "api", href: "/partials/ocsapicontent.phtml" },
           "API"
         )
       );
@@ -1155,7 +1155,7 @@ class MobileLeftSidePanel extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "about", href: window.baseUrl + "/partials/about.phtml" },
+          { className: "popuppanel", id: "about", href: "/partials/about.phtml" },
           "About"
         )
       );
