@@ -70,19 +70,19 @@ class MetaHeader extends React.Component {
     let url = this.state.baseUrl;
     if (key === "FAQ"){
       if (this.state.isExternal === true){
-        url += "/plings";
+        url = "/plings";
       } else {
         url += "/#plingList";
       }
     } else if (key === "API"){
       if (this.state.isExternal === true){
-        url += "/partials/ocsapicontent.phtml";
+        url = "/partials/ocsapicontent.phtml";
       } else {
         url += "/#ocsapiContent";
       }
     } else if (key === "ABOUT"){
       if (this.state.isExternal === true){
-        url += "/partials/about.phtml";
+        url = "/partials/about.phtml";
       } else {
         url += "/#aboutContent";
       }
@@ -377,9 +377,9 @@ class MoreDropDownMenu extends React.Component {
 
     let faqLinkItem, apiLinkItem, aboutLinkItem;
     if (window.isExternal === false){
-      faqLinkItem = (<li><a className="popuppanel" id="faq" href={window.baseUrl + "/plings"}>FAQ</a></li>);
-      apiLinkItem = (<li><a className="popuppanel" id="api" href={window.baseUrl + "/partials/ocsapicontent.phtml"}>API</a></li>);
-      aboutLinkItem = (<li><a className="popuppanel" id="about" href={window.baseUrl + "/partials/about.phtml"}>About</a></li>);
+      faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>FAQ</a></li>);
+      apiLinkItem = (<li><a className="popuppanel" id="api" href={"/partials/ocsapicontent.phtml"}>API</a></li>);
+      aboutLinkItem = (<li><a className="popuppanel" id="about" href={"/partials/about.phtml"}>About</a></li>);
     } else {
       faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={window.baseUrl + "/#faq"}>FAQ</a></li>);
       apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={window.baseUrl + "/#api"}>API</a></li>);
@@ -478,9 +478,9 @@ class UserMenu extends React.Component {
 
       let faqLinkItem, apiLinkItem, aboutLinkItem;
       if (window.isExternal === false){
-        faqLinkItem = (<li><a className="popuppanel" id="faq" href={window.baseUrl + "/plings"}>FAQ</a></li>);
-        apiLinkItem = (<li><a className="popuppanel" id="api" href={window.baseUrl + "/partials/ocsapicontent.phtml"}>API</a></li>);
-        aboutLinkItem = (<li><a className="popuppanel" id="about" href={window.baseUrl + "/partials/about.phtml"}>About</a></li>);
+        faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>FAQ</a></li>);
+        apiLinkItem = (<li><a className="popuppanel" id="api" href={"/partials/ocsapicontent.phtml"}>API</a></li>);
+        aboutLinkItem = (<li><a className="popuppanel" id="about" href={"/partials/about.phtml"}>About</a></li>);
       } else {
         faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={window.baseUrl + "/#faq"}>FAQ</a></li>);
         apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={window.baseUrl + "/#api"}>API</a></li>);
@@ -821,9 +821,9 @@ class MobileLeftSidePanel extends React.Component {
 
     let faqLinkItem, apiLinkItem, aboutLinkItem;
     if (window.isExternal === false){
-      faqLinkItem = (<li><a className="popuppanel" id="faq" href={window.baseUrl + "/plings"}>FAQ</a></li>);
-      apiLinkItem = (<li><a className="popuppanel" id="api" href={window.baseUrl + "/partials/ocsapicontent.phtml"}>API</a></li>);
-      aboutLinkItem = (<li><a className="popuppanel" id="about" href={window.baseUrl + "/partials/about.phtml"}>About</a></li>);
+      faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>FAQ</a></li>);
+      apiLinkItem = (<li><a className="popuppanel" id="api" href={"/partials/ocsapicontent.phtml"}>API</a></li>);
+      aboutLinkItem = (<li><a className="popuppanel" id="about" href={"/partials/about.phtml"}>About</a></li>);
     } else {
       faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={window.baseUrl + "/#faq"}>FAQ</a></li>);
       apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={window.baseUrl + "/#api"}>API</a></li>);

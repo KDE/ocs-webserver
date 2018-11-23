@@ -120,19 +120,19 @@ class MetaHeader extends React.Component {
     let url = this.state.baseUrl;
     if (key === "FAQ") {
       if (this.state.isExternal === true) {
-        url += "/plings";
+        url = "/plings";
       } else {
         url += "/#plingList";
       }
     } else if (key === "API") {
       if (this.state.isExternal === true) {
-        url += "/partials/ocsapicontent.phtml";
+        url = "/partials/ocsapicontent.phtml";
       } else {
         url += "/#ocsapiContent";
       }
     } else if (key === "ABOUT") {
       if (this.state.isExternal === true) {
-        url += "/partials/about.phtml";
+        url = "/partials/about.phtml";
       } else {
         url += "/#aboutContent";
       }
@@ -468,7 +468,7 @@ class MoreDropDownMenu extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "faq", href: window.baseUrl + "/plings" },
+          { className: "popuppanel", id: "faq", href: "/plings" },
           "FAQ"
         )
       );
@@ -477,7 +477,7 @@ class MoreDropDownMenu extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "api", href: window.baseUrl + "/partials/ocsapicontent.phtml" },
+          { className: "popuppanel", id: "api", href: "/partials/ocsapicontent.phtml" },
           "API"
         )
       );
@@ -486,7 +486,7 @@ class MoreDropDownMenu extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", id: "about", href: window.baseUrl + "/partials/about.phtml" },
+          { className: "popuppanel", id: "about", href: "/partials/about.phtml" },
           "About"
         )
       );
