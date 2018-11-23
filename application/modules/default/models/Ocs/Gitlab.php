@@ -296,36 +296,46 @@ class Default_Model_Ocs_Gitlab
     {
         $name = (false == empty($member['lastname'])) ? trim($member['firstname'] . ' ' . $member['lastname']) : $member['username'];
         $userDn = $this->buildUserDn(strtolower($member['username']));
+        $result = array();
 
         if (mb_strtolower($member['email_address']) != $userSubsystem['email']) {
-            return array('email_address', 'email');
+            $result[] = 'email_address<=>email';
+            $result[] = $member['email_address'] . '<=>' . $userSubsystem['email'];
         }
-        if ($member['username'] != $userSubsystem['username']) {
-            return array('username', 'username');
+        if (mb_strtolower($member['username']) != $userSubsystem['username']) {
+            $result[] = 'username<=>username';
+            $result[] = mb_strtolower($member['username']) . '<=>' . $userSubsystem['username'];
         }
         if ($member['username'] != $userSubsystem['name']) {
-            return array('username', 'name');
+            $result[] = 'username<=>name';
+            $result[] = $member['username'] . '<=>' . $userSubsystem['name'];
         }
         if (($member['roleId'] == 100 ? true : false) != $userSubsystem['is_admin']) {
-            return array('roleId', 'admin');
-        }
-        if (false === array_search('oauth_opendesktop', array_column($userSubsystem['identities'], 'provider'))) {
-            return array('username', 'oauth_opendesktop');
-        }
-        if (false === array_search($member['external_id'], array_column($userSubsystem['identities'], 'extern_uid'))) {
-            return array('external_id', 'oauth_opendesktop=>extern_uid');
-        }
-        if (false === array_search('ldapmain', array_column($userSubsystem['identities'], 'provider'))) {
-            return array('username', 'ldapmain');
-        }
-        if (false === array_search($userDn, array_column($userSubsystem['identities'], 'extern_uid'))) {
-            return array('username', 'ldapmain=>extern_uid');
+            $result[] = 'roleId<=>admin';
+            $result[] = $member['roleId'] . '<=>' . $userSubsystem['admin'];
         }
         if ("active" != $userSubsystem['state']) {
-            return array('is_active','state');
+            $result[] = 'is_active<=>state';
+            $result[] = ($member['is_active'] ? 'active' : 'inactive') . '<=>' . $userSubsystem['state'];
+        }
+        if (false === array_search('oauth_opendesktop', array_column($userSubsystem['identities'], 'provider'))) {
+            $result[] = 'oauth_opendesktop missing';
+        }
+        $provider =  array_column($userSubsystem['identities'], 'extern_uid', 'provider');
+        if ($member['external_id'] != $provider['oauth_opendesktop']) {
+            $result[] = 'external_id<=>oauth_opendesktop->extern_uid';
+            $result[] = $member['external_id'] . '<=>' . $provider['oauth_opendesktop'];
+        }
+        if (false === array_search('ldapmain', array_column($userSubsystem['identities'], 'provider'))) {
+            $result[] = 'ldapmain missing';
+        }
+        $providerLdap = isset($provider['ldapmain']) ? $provider['ldapmain'] : '';
+        if ($userDn != $providerLdap) {
+            $result[] = 'userDn<=>ldapmain->extern_uid';
+            $result[] = $userDn . '<=>' . $providerLdap;
         }
 
-        return null;
+        return $result;
     }
 
     public function resetMessages()

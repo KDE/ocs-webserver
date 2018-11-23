@@ -112,7 +112,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         }
 
         $sql = "
-            SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`, `m`.`biography`
+            SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`, `m`.`biography`, `m`.`is_active`, `m`.`is_deleted`
             FROM `member` AS `m`
             LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
             LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
@@ -193,22 +193,30 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
                 $userSubsystem = $modelSubSystem->getUser($member['external_id'], $member['username']);
                 if (empty($userSubsystem)) {
                     $this->log->info('Fail : user not exist (' . $member['member_id'] . ', ' . $member['username'] . ')');
+                    if ($force) {
+                        $modelSubSystem->createUserFromArray($member, true);
+                        $this->log->info("Message : " . Zend_Json::encode($modelSubSystem->getMessages()));
+                    }
 
                     continue;
                 }
 
                 $result = $modelSubSystem->validateUserData($member, $userSubsystem);
-                if (isset($result)) {
-                    $this->log->info('Fail : unequal ' . implode("<=>", $result) . ' ' . $member[$result[0]] . '<=>' . $userSubsystem[$result[1]]);
+                if (false === empty($result)) {
+                    $this->log->info('Fail : ' . implode(" ", $result));
                     if ($force) {
                         $modelSubSystem->createUserFromArray($member, true);
                     }
+                } else {
+                    $this->log->info('Success');
                 }
             } catch (Exception $e) {
                 $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
             $messages = $modelSubSystem->getMessages();
-            $this->log->info("messages " . Zend_Json::encode($messages));
+            if (false === empty($messages)) {
+                $this->log->info("Message : " . Zend_Json::encode($messages));
+            }
         }
 
         return true;
