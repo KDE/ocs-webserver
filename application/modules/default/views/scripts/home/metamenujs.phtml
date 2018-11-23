@@ -45,8 +45,8 @@ if(isset($_GET['url'])) {
 
 $isExternal = 'var isExternal = true;';
 if($target == 'opendesktop') {
-    $url_login = $baseurl."/login/redirect/".$filter->filter($thisurl);
-    $url_logout = $baseurl."/logout?redirect=".$filter->filter($thisurl);
+    $url_login = "/login/redirect/".$filter->filter($thisurl);
+    $url_logout = "/logout?redirect=".$filter->filter($thisurl);
     $isExternal = 'var isExternal = false;';
 } else if($target == 'gitlab') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_gitlab);
