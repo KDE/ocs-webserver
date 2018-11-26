@@ -198,6 +198,9 @@ class DomainsMenu extends React.Component {
         <DomainsDropDownMenu
           domains={this.props.domains}
         />
+        <AdminsDropDownMenu
+          baseUrl={this.props.baseUrl}
+        />
         <DiscussionBoardsDropDownMenu
           forumUrl={this.props.forumUrl}
         />
@@ -335,6 +338,51 @@ class DiscussionBoardsDropDownMenu extends React.Component {
     );
   }
 
+}
+
+class AdminsDropDownMenu extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown',this.handleClick, false);
+  }
+
+  handleClick(e){
+    let dropdownClass = "";
+    if (this.node.contains(e.target)){
+      if (this.state.dropdownClass === "open"){
+        if (e.target.className === "admins-menu-link-item"){
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({dropdownClass:dropdownClass});
+  }
+
+
+  render(){
+    console.log(this.props.baseUrl);
+    return (
+      <li ref={node => this.node = node} id="domains-dropdown-menu" className={this.state.dropdownClass}>
+        <a className="admins-menu-link-item">Admins</a>
+        <ul className="dropdown-menu dropdown-menu-right">
+          <li><a href="my.opendesktop.cc">Clouds & Services</a></li>
+        </ul>
+      </li>
+    )
+  }
 }
 
 class MoreDropDownMenu extends React.Component {

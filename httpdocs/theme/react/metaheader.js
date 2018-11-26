@@ -246,6 +246,9 @@ class DomainsMenu extends React.Component {
       React.createElement(DomainsDropDownMenu, {
         domains: this.props.domains
       }),
+      React.createElement(AdminsDropDownMenu, {
+        baseUrl: this.props.baseUrl
+      }),
       React.createElement(DiscussionBoardsDropDownMenu, {
         forumUrl: this.props.forumUrl
       }),
@@ -421,6 +424,64 @@ class DiscussionBoardsDropDownMenu extends React.Component {
     );
   }
 
+}
+
+class AdminsDropDownMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown', this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClick, false);
+  }
+
+  handleClick(e) {
+    let dropdownClass = "";
+    if (this.node.contains(e.target)) {
+      if (this.state.dropdownClass === "open") {
+        if (e.target.className === "admins-menu-link-item") {
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({ dropdownClass: dropdownClass });
+  }
+
+  render() {
+    console.log(this.props.baseUrl);
+    return React.createElement(
+      "li",
+      { ref: node => this.node = node, id: "domains-dropdown-menu", className: this.state.dropdownClass },
+      React.createElement(
+        "a",
+        { className: "admins-menu-link-item" },
+        "Admins"
+      ),
+      React.createElement(
+        "ul",
+        { className: "dropdown-menu dropdown-menu-right" },
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: "my.opendesktop.cc" },
+            "Clouds & Services"
+          )
+        )
+      )
+    );
+  }
 }
 
 class MoreDropDownMenu extends React.Component {
