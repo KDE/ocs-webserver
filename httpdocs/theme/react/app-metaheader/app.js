@@ -364,6 +364,7 @@ class AdminsDropDownMenu extends React.Component {
     const self = this;
     $.ajax({url: self.props.gitlabUrl+"/api/v4/users?username="+self.props.user.username,cache: false})
       .done(function(response){
+        console.log(response);
         const gitlabLink = self.state.gitlabLink + response[0].id;
         self.setState({gitlabLink:gitlabLink,loading:false});
     });
