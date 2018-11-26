@@ -247,7 +247,9 @@ class DomainsMenu extends React.Component {
         domains: this.props.domains
       }),
       React.createElement(AdminsDropDownMenu, {
-        baseUrl: this.props.baseUrl
+        user: this.props.user,
+        baseUrl: this.props.baseUrl,
+        gitlabUrl: this.props.gitlabUrl
       }),
       React.createElement(DiscussionBoardsDropDownMenu, {
         forumUrl: this.props.forumUrl
@@ -430,6 +432,9 @@ class AdminsDropDownMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.state = {
+      gitlabLink: window.gitlabUrl + "/dashboard/issues?assignee_id="
+    };
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -439,6 +444,14 @@ class AdminsDropDownMenu extends React.Component {
 
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClick, false);
+  }
+
+  componentDidMount() {
+    const self = this;
+    $.ajax({ url: self.props.gitlabUrl + "/api/v4/users?username=" + self.props.user.username, cache: false }).done(function (response) {
+      const gitlabLink = self.state.gitlabLink + response[0].id;
+      self.setState({ gitlabLink: gitlabLink, loading: false });
+    });
   }
 
   handleClick(e) {
@@ -477,6 +490,24 @@ class AdminsDropDownMenu extends React.Component {
             "a",
             { href: "my.opendesktop.cc" },
             "Clouds & Services"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: window.gitlabUrl + "/dashboard/projects" },
+            "Projects"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: this.state.gitlabLink },
+            "Issues"
           )
         )
       )
