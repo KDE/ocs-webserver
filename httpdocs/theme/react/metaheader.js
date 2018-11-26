@@ -234,23 +234,23 @@ class DomainsMenu extends React.Component {
     }
 
     let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
-    console.log(this.props.isAdmin);
-    if (this.props.isAdmin === true) {
-      adminsDropDownMenuDisplay = React.createElement(AdminsDropDownMenu, {
-        user: this.props.user,
-        baseUrl: this.props.baseUrl,
-        gitlabUrl: this.props.gitlabUrl
-      });
-      myOpendesktopMenuDisplay = React.createElement(
-        "li",
-        null,
-        React.createElement(
-          "a",
-          { href: "https://my.opendesktop." + window.baseUrl.split('opendesktop.')[1] },
-          "Clouds & Services"
-        )
-      );
-    }
+    console.log(window.json_isAdmin);
+    // if (this.props.isAdmin === true){
+    adminsDropDownMenuDisplay = React.createElement(AdminsDropDownMenu, {
+      user: this.props.user,
+      baseUrl: this.props.baseUrl,
+      gitlabUrl: this.props.gitlabUrl
+    });
+    myOpendesktopMenuDisplay = React.createElement(
+      "li",
+      null,
+      React.createElement(
+        "a",
+        { href: "https://my.opendesktop." + window.baseUrl.split('opendesktop.')[1] },
+        "Clouds & Services"
+      )
+    );
+    // }
 
     return React.createElement(
       "ul",

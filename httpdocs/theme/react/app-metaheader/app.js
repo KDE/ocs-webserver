@@ -191,8 +191,8 @@ class DomainsMenu extends React.Component {
     }
 
     let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
-    console.log(this.props.isAdmin)
-    if (this.props.isAdmin === true){
+    console.log(window.json_isAdmin);
+    // if (this.props.isAdmin === true){
       adminsDropDownMenuDisplay = (
         <AdminsDropDownMenu
           user={this.props.user}
@@ -203,7 +203,7 @@ class DomainsMenu extends React.Component {
       myOpendesktopMenuDisplay = (
         <li><a href={"https://my.opendesktop." + window.baseUrl.split('opendesktop.')[1]}>Clouds & Services</a></li>
       );
-    }
+    // }
 
     return (
       <ul className="metaheader-menu left" id="domains-menu">
