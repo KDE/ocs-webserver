@@ -471,7 +471,7 @@ class AdminsDropDownMenu extends React.Component {
   }
 
   render() {
-    console.log(this.props.baseUrl);
+
     return React.createElement(
       "li",
       { ref: node => this.node = node, id: "admins-dropdown-menu", className: this.state.dropdownClass },
@@ -488,7 +488,7 @@ class AdminsDropDownMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { href: "my.opendesktop.cc" },
+            { href: "my.opendesktop." + window.baseUrl.split('opendesktop.')[1] },
             "Clouds & Services"
           )
         ),
