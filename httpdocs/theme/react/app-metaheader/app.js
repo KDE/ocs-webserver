@@ -13,7 +13,8 @@ class MetaHeader extends React.Component {
       isExternal:window.isExternal,
       user:{},
       showModal:false,
-      modalUrl:''
+      modalUrl:'',
+      isAdmin:window.json_isAdmin
     };
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
@@ -111,6 +112,7 @@ class MetaHeader extends React.Component {
           blogUrl={this.state.blogUrl}
           forumUrl={this.state.forumUrl}
           sName={this.state.sName}
+          isAdmin={this.state.isAdmin}
           onPopupLinkClick={this.handlePopupLinkClick}
         />
       )
@@ -124,6 +126,7 @@ class MetaHeader extends React.Component {
           blogUrl={this.state.blogUrl}
           forumUrl={this.state.forumUrl}
           sName={this.state.sName}
+          isAdmin={this.state.isAdmin}
           onPopupLinkClick={this.handlePopupLinkClick}
         />
       )
@@ -187,6 +190,21 @@ class DomainsMenu extends React.Component {
       )
     }
 
+    let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
+    console.log(this.props.isAdmin)
+    if (this.props.isAdmin === true){
+      adminsDropDownMenuDisplay = (
+        <AdminsDropDownMenu
+          user={this.props.user}
+          baseUrl={this.props.baseUrl}
+          gitlabUrl={this.props.gitlabUrl}
+        />
+      );
+      myOpendesktopMenuDisplay = (
+        <li><a href={"https://my.opendesktop." + window.baseUrl.split('opendesktop.')[1]}>Clouds & Services</a></li>
+      );
+    }
+
     return (
       <ul className="metaheader-menu left" id="domains-menu">
         <li className="active">
@@ -198,11 +216,8 @@ class DomainsMenu extends React.Component {
         <DomainsDropDownMenu
           domains={this.props.domains}
         />
-        <AdminsDropDownMenu
-          user={this.props.user}
-          baseUrl={this.props.baseUrl}
-          gitlabUrl={this.props.gitlabUrl}
-        />
+        {adminsDropDownMenuDisplay}
+        {myOpendesktopMenuDisplay}
         <DiscussionBoardsDropDownMenu
           forumUrl={this.props.forumUrl}
         />
@@ -392,9 +407,8 @@ class AdminsDropDownMenu extends React.Component {
 
     return (
       <li ref={node => this.node = node} id="admins-dropdown-menu" className={this.state.dropdownClass}>
-        <a className="admins-menu-link-item">Admins</a>
+        <a className="admins-menu-link-item">Development</a>
         <ul className="dropdown-menu dropdown-menu-right">
-          <li><a href={"https://my.opendesktop." + window.baseUrl.split('opendesktop.')[1]}>Clouds & Services</a></li>
           <li><a href={window.gitlabUrl+"/dashboard/projects"}>Projects</a></li>
           <li><a href={this.state.gitlabLink}>Issues</a></li>
         </ul>

@@ -63,7 +63,8 @@ class MetaHeader extends React.Component {
       isExternal: window.isExternal,
       user: {},
       showModal: false,
-      modalUrl: ''
+      modalUrl: '',
+      isAdmin: window.json_isAdmin
     };
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
@@ -160,6 +161,7 @@ class MetaHeader extends React.Component {
         blogUrl: this.state.blogUrl,
         forumUrl: this.state.forumUrl,
         sName: this.state.sName,
+        isAdmin: this.state.isAdmin,
         onPopupLinkClick: this.handlePopupLinkClick
       });
     } else {
@@ -171,6 +173,7 @@ class MetaHeader extends React.Component {
         blogUrl: this.state.blogUrl,
         forumUrl: this.state.forumUrl,
         sName: this.state.sName,
+        isAdmin: this.state.isAdmin,
         onPopupLinkClick: this.handlePopupLinkClick
       });
     }
@@ -230,6 +233,25 @@ class DomainsMenu extends React.Component {
       });
     }
 
+    let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
+    console.log(this.props.isAdmin);
+    if (this.props.isAdmin === true) {
+      adminsDropDownMenuDisplay = React.createElement(AdminsDropDownMenu, {
+        user: this.props.user,
+        baseUrl: this.props.baseUrl,
+        gitlabUrl: this.props.gitlabUrl
+      });
+      myOpendesktopMenuDisplay = React.createElement(
+        "li",
+        null,
+        React.createElement(
+          "a",
+          { href: "https://my.opendesktop." + window.baseUrl.split('opendesktop.')[1] },
+          "Clouds & Services"
+        )
+      );
+    }
+
     return React.createElement(
       "ul",
       { className: "metaheader-menu left", id: "domains-menu" },
@@ -246,11 +268,8 @@ class DomainsMenu extends React.Component {
       React.createElement(DomainsDropDownMenu, {
         domains: this.props.domains
       }),
-      React.createElement(AdminsDropDownMenu, {
-        user: this.props.user,
-        baseUrl: this.props.baseUrl,
-        gitlabUrl: this.props.gitlabUrl
-      }),
+      adminsDropDownMenuDisplay,
+      myOpendesktopMenuDisplay,
       React.createElement(DiscussionBoardsDropDownMenu, {
         forumUrl: this.props.forumUrl
       }),
@@ -480,20 +499,11 @@ class AdminsDropDownMenu extends React.Component {
       React.createElement(
         "a",
         { className: "admins-menu-link-item" },
-        "Admins"
+        "Development"
       ),
       React.createElement(
         "ul",
         { className: "dropdown-menu dropdown-menu-right" },
-        React.createElement(
-          "li",
-          null,
-          React.createElement(
-            "a",
-            { href: "https://my.opendesktop." + window.baseUrl.split('opendesktop.')[1] },
-            "Clouds & Services"
-          )
-        ),
         React.createElement(
           "li",
           null,
