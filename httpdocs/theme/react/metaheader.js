@@ -150,6 +150,7 @@ class MetaHeader extends React.Component {
   }
 
   render() {
+    console.log(this.state.user);
     let domainsMenuDisplay;
     if (this.state.device === "tablet") {
       domainsMenuDisplay = React.createElement(MobileLeftMenu, {
@@ -230,6 +231,7 @@ class DomainsMenu extends React.Component {
       });
     }
 
+    console.log(this.props.user);
     return React.createElement(
       "ul",
       { className: "metaheader-menu left", id: "domains-menu" },

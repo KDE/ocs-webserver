@@ -100,6 +100,7 @@ class MetaHeader extends React.Component {
   }
 
   render(){
+    console.log(this.state.user);
     let domainsMenuDisplay;
     if (this.state.device === "tablet"){
       domainsMenuDisplay = (
@@ -187,6 +188,7 @@ class DomainsMenu extends React.Component {
       )
     }
 
+    console.log(this.props.user);
     return (
       <ul className="metaheader-menu left" id="domains-menu">
         <li className="active">
