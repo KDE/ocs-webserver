@@ -35,6 +35,10 @@ if ($auth->hasIdentity()) {
     $ltat = $sess->openid;
 }
 
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+
+
 $serverUrl = $this->serverUrl();
 
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
@@ -397,6 +401,7 @@ echo $this->render('partials/header/metaheader.phtml');
     var json_logoWidth = <?php echo  Zend_Json::encode($logoWidth);?>;
     var json_cat_title_left = <?php echo  Zend_Json::encode($cat_title_left);?>;
     var json_tabs_left = <?php echo  Zend_Json::encode($tabs_left);?>;
+    var json_userRoleName = <?php echo  Zend_Json::encode($userRoleName);?>;
 </script>
 <link href="/theme/react/assets/css/header.css" type="text/css" rel="stylesheet" />
 <section id="site-header-container"></section>
