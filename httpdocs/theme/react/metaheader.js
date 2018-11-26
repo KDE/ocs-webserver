@@ -488,7 +488,7 @@ class AdminsDropDownMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { href: "my.opendesktop." + window.baseUrl.split('opendesktop.')[1] },
+            { href: "https://my.opendesktop." + window.baseUrl.split('opendesktop.')[1] },
             "Clouds & Services"
           )
         ),
