@@ -11,7 +11,7 @@ if(isset($_GET['k'])) {
     $key = $_GET['k'];
     $session_id = Local_LoginCookie::readJwt($key);
     if ($session_id) {
-        setcookie("OcsWebserverId", $session_id, time()+36000000, '/');
+        setcookie("OcsWebserverId", $session_id, time()+36000000, '/', "", false, true);
     }
 }
 include dirname(__FILE__) . "/../theme/flatui/css/empty.css";
