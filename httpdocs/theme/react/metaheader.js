@@ -153,7 +153,6 @@ class MetaHeader extends React.Component {
   render() {
 
     console.log(this.state);
-    console.log(window);
     console.log(window.json_isAdmin);
 
     let domainsMenuDisplay;
@@ -239,7 +238,6 @@ class DomainsMenu extends React.Component {
     }
 
     let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
-    console.log(window.json_isAdmin);
     if (this.props.isAdmin === true) {
       adminsDropDownMenuDisplay = React.createElement(AdminsDropDownMenu, {
         user: this.props.user,
@@ -471,10 +469,8 @@ class AdminsDropDownMenu extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
     const self = this;
     $.ajax({ url: window.gitlabUrl + "/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
-      console.log(response);
       const gitlabLink = self.state.gitlabLink + response[0].id;
       self.setState({ gitlabLink: gitlabLink, loading: false });
     });
@@ -1100,9 +1096,7 @@ class MetaheaderModal extends React.Component {
 
   componentDidMount() {
     const self = this;
-    console.log(this.props.modalUrl);
     $.ajax({ url: this.props.modalUrl, cache: false }).done(function (response) {
-      console.log(response);
       self.setState({ content: response, loading: false });
     });
   }
