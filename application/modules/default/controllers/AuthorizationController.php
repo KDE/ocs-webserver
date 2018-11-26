@@ -314,7 +314,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         // if the user is still logged in, we do not show the login page. They should log out first.
         if (Zend_Auth::getInstance()->hasIdentity()) {
             $this->_helper->flashMessenger->addMessage('<p class="text-danger center">You are still logged in. Please click <a href="/logout" class="bold">here</a> to log out first.</p>');
-            //$this->forward('news', 'user', null, $this->getAllParams());
             $this->handleRedirect(Zend_Auth::getInstance()->getIdentity()->member_id);
         }
 
@@ -331,6 +330,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             . PHP_EOL . ' - authentication attempt on host: ' . Zend_Registry::get('store_host')
             . PHP_EOL . ' - param redirect: ' . $this->getParam('redirect')
             . PHP_EOL . ' - from ip: ' . $this->_request->getClientIp()
+            . PHP_EOL . ' - http method: ' . $this->_request->getMethod()
+            . PHP_EOL . ' - csrf string: ' . (isset($_POST['login_csrf']) ? $_POST['login_csrf'] : '')
         );
 
         if (false === Default_Model_CsrfProtection::validateCsrfToken($_POST['login_csrf'])) {
@@ -422,32 +423,22 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $jwt = Default_Model_Jwt::encode($userId);
         $sess->openid = $jwt;
 
-        //$time = new DateTime();
-        //$timeout = DateInterval::createFromDateString(Zend_Registry::get('config')->settings->jwt->expire->cookie);
-        //$cookie_name = Zend_Registry::get('config')->settings->domain->openid->cookie_name;
-        //$host = Zend_Registry::get('config')->settings->domain->openid->host;
-        //setcookie($cookie_name, $jwt, $time->add($timeout)->getTimestamp(), '/', $host, null, true);
-
         //If the user is a hive user, we have to update his password
         $this->changePasswordIfNeeded($userId, $values['password']);
-        
-        
 
-        $modelToken = new Default_Model_SingleSignOnToken();
-        $data = array(
-            'remember_me' => $values['remember_me'],
-            //'redirect'    => $this->getParam('redirect'),
-            'redirect'    => $this->view->redirect,
-            'action'      => Default_Model_SingleSignOnToken::ACTION_LOGIN,
-            'member_id'   => $userId
-        );
-        $token_id = $modelToken->createToken($data);
-        setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token_id, time() + 120, '/',
-            Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
-
+        //$modelToken = new Default_Model_SingleSignOnToken();
+        //$data = array(
+        //    'remember_me' => $values['remember_me'],
+        //    //'redirect'    => $this->getParam('redirect'),
+        //    'redirect'    => $this->view->redirect,
+        //    'action'      => Default_Model_SingleSignOnToken::ACTION_LOGIN,
+        //    'member_id'   => $userId
+        //);
+        //$token_id = $modelToken->createToken($data);
+        //setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token_id, time() + 120, '/',
+        //    Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
         
         //user has to correct his data?
-        
         $modelReviewProfile = new Default_Model_ReviewProfileData();
         if (false === $modelReviewProfile->hasValidProfile($auth->getStorage()->read())) {
             Zend_Registry::get('logger')->info(__METHOD__
@@ -486,23 +477,28 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
                 $redirect = '/member/' . $userId . '/activities/';
             }
             if ($this->_request->isXmlHttpRequest()) {
-                
-                $redirect = '/home/redirectme?redirect='. $this->view->redirect;
+
+                $redirect = '/home/redirectme?redirect=' . $this->view->redirect;
                 $this->_helper->json(array('status' => 'ok', 'redirect' => $redirect));
             } else {
-                
-                //show rediretme page
-                //$this->redirect($redirect);
-                $redirect = '/home/redirectme?redirect='. $this->view->redirect;
+
+                //show redirect_me page
+                $redirect = '/home/redirectme?redirect=' . $this->view->redirect;
                 $this->redirect($redirect);
             }
+
+            return;
+        }
+
+        if ($this->_request->isXmlHttpRequest()) {
+            $redirect_url = $this->encodeString('/member/' . $userId . '/activities/');
+            $redirect = '/home/redirectme?redirect=' . $redirect_url;
+            $this->_helper->json(array('status' => 'ok', 'redirect' => $redirect));
         } else {
-            if ($this->_request->isXmlHttpRequest()) {
-                $this->_helper->json(array('status' => 'ok', 'redirect' => '/member/' . $userId . '/activities/'));
-            } else {
-                $this->getRequest()->setParam('member_id', $userId);
-                $this->redirect('/member/' . $userId . '/activities/', $this->getAllParams());
-            }
+            $this->getRequest()->setParam('member_id', $userId);
+            $redirect_url = $this->encodeString('/member/' . $userId . '/activities/');
+            $redirect = '/home/redirectme?redirect=' . $redirect_url;
+            $this->redirect($redirect, $this->getAllParams());
         }
     }
     
