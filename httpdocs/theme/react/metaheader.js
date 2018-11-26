@@ -461,7 +461,7 @@ class AdminsDropDownMenu extends React.Component {
     console.log(this.props.baseUrl);
     return React.createElement(
       "li",
-      { ref: node => this.node = node, id: "domains-dropdown-menu", className: this.state.dropdownClass },
+      { ref: node => this.node = node, id: "admins-dropdown-menu", className: this.state.dropdownClass },
       React.createElement(
         "a",
         { className: "admins-menu-link-item" },
