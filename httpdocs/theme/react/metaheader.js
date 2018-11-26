@@ -150,7 +150,6 @@ class MetaHeader extends React.Component {
   }
 
   render() {
-    console.log(this.state.user);
     let domainsMenuDisplay;
     if (this.state.device === "tablet") {
       domainsMenuDisplay = React.createElement(MobileLeftMenu, {
@@ -231,7 +230,6 @@ class DomainsMenu extends React.Component {
       });
     }
 
-    console.log(this.props.user);
     return React.createElement(
       "ul",
       { className: "metaheader-menu left", id: "domains-menu" },
@@ -449,8 +447,9 @@ class AdminsDropDownMenu extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props);
     const self = this;
-    $.ajax({ url: window.gitlabUrl + "/api/v4/users?username=" + window.user.username, cache: false }).done(function (response) {
+    $.ajax({ url: window.gitlabUrl + "/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
       console.log(response);
       const gitlabLink = self.state.gitlabLink + response[0].id;
       self.setState({ gitlabLink: gitlabLink, loading: false });
@@ -711,7 +710,6 @@ class UserMenu extends React.Component {
   }
 
   onPopupLinkClick(key) {
-    console.log(key);
     this.props.onPopupLinkClick(key);
   }
 
