@@ -151,6 +151,11 @@ class MetaHeader extends React.Component {
   }
 
   render() {
+
+    console.log(this.state);
+    console.log(window);
+    console.log(window.json_isAdmin);
+
     let domainsMenuDisplay;
     if (this.state.device === "tablet") {
       domainsMenuDisplay = React.createElement(MobileLeftMenu, {
