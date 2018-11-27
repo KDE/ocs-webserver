@@ -204,7 +204,7 @@ class DomainsMenu extends React.Component {
         />
       );
       myOpendesktopMenuDisplay = (
-        <li><a href={"https://my.opendesktop." + window.baseUrl.split('opendesktop.')[1]}>Clouds & Services</a></li>
+        <CloudsServicesDropDownMenu />
       );
     }
 
@@ -412,6 +412,51 @@ class AdminsDropDownMenu extends React.Component {
         <ul className="dropdown-menu dropdown-menu-right">
           <li><a href={window.gitlabUrl+"/dashboard/projects"}>Projects</a></li>
           <li><a href={this.state.gitlabLink}>Issues</a></li>
+        </ul>
+      </li>
+    )
+  }
+}
+
+class CloudsServicesDropDownMenu extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown',this.handleClick, false);
+  }
+
+  handleClick(e){
+    let dropdownClass = "";
+    if (this.node.contains(e.target)){
+      if (this.state.dropdownClass === "open"){
+        if (e.target.className === "admins-menu-link-item"){
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({dropdownClass:dropdownClass});
+  }
+
+
+  render(){
+
+    return (
+      <li ref={node => this.node = node} id="admins-dropdown-menu" className={this.state.dropdownClass}>
+        <a className="admins-menu-link-item">Clouds & Services</a>
+        <ul className="dropdown-menu dropdown-menu-right">
+          <li><a href={"https://my.opendesktop." + window.baseUrl.split('opendesktop.')[1]}>Clouds & Services</a></li>
         </ul>
       </li>
     )

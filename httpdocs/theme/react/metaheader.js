@@ -244,15 +244,7 @@ class DomainsMenu extends React.Component {
         baseUrl: this.props.baseUrl,
         gitlabUrl: this.props.gitlabUrl
       });
-      myOpendesktopMenuDisplay = React.createElement(
-        "li",
-        null,
-        React.createElement(
-          "a",
-          { href: "https://my.opendesktop." + window.baseUrl.split('opendesktop.')[1] },
-          "Clouds & Services"
-        )
-      );
+      myOpendesktopMenuDisplay = React.createElement(CloudsServicesDropDownMenu, null);
     }
 
     return React.createElement(
@@ -521,6 +513,64 @@ class AdminsDropDownMenu extends React.Component {
             "a",
             { href: this.state.gitlabLink },
             "Issues"
+          )
+        )
+      )
+    );
+  }
+}
+
+class CloudsServicesDropDownMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown', this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClick, false);
+  }
+
+  handleClick(e) {
+    let dropdownClass = "";
+    if (this.node.contains(e.target)) {
+      if (this.state.dropdownClass === "open") {
+        if (e.target.className === "admins-menu-link-item") {
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({ dropdownClass: dropdownClass });
+  }
+
+  render() {
+
+    return React.createElement(
+      "li",
+      { ref: node => this.node = node, id: "admins-dropdown-menu", className: this.state.dropdownClass },
+      React.createElement(
+        "a",
+        { className: "admins-menu-link-item" },
+        "Clouds & Services"
+      ),
+      React.createElement(
+        "ul",
+        { className: "dropdown-menu dropdown-menu-right" },
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: "https://my.opendesktop." + window.baseUrl.split('opendesktop.')[1] },
+            "Clouds & Services"
           )
         )
       )
