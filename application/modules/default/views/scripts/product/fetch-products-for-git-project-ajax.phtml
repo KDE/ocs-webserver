@@ -22,11 +22,12 @@
 
 
 http_response_code(200);
-if (!empty($_SERVER['HTTP_ORIGIN'])) {
-    header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN'], true);
-    header('Access-Control-Allow-Credentials: true', true);
-    header('Access-Control-Max-Age: 1728000', true);
-}
+
+
+header('Access-Control-Allow-Origin: https://git.opendesktop.cc', true);
+header('Access-Control-Allow-Credentials: true', true);
+header('Access-Control-Max-Age: 1728000', true);
+
 if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
     header('Access-Control-Allow-Methods: ' . implode(', ', array_unique([
         'OPTIONS', 'HEAD', 'GET', 'POST',
