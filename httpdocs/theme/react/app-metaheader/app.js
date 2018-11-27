@@ -195,7 +195,7 @@ class DomainsMenu extends React.Component {
     }
 
     let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
-    if (this.props.isAdmin === true){
+    //if (this.props.isAdmin === true){
       adminsDropDownMenuDisplay = (
         <AdminsDropDownMenu
           user={this.props.user}
@@ -206,7 +206,7 @@ class DomainsMenu extends React.Component {
       myOpendesktopMenuDisplay = (
         <CloudsServicesDropDownMenu />
       );
-    }
+    //}
 
     return (
       <ul className="metaheader-menu left" id="domains-menu">
@@ -451,7 +451,6 @@ class CloudsServicesDropDownMenu extends React.Component {
 
 
   render(){
-
     return (
       <li ref={node => this.node = node} id="admins-dropdown-menu" className={this.state.dropdownClass}>
         <a className="admins-menu-link-item">Clouds & Services</a>

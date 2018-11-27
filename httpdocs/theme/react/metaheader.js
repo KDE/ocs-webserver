@@ -238,14 +238,14 @@ class DomainsMenu extends React.Component {
     }
 
     let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
-    if (this.props.isAdmin === true) {
-      adminsDropDownMenuDisplay = React.createElement(AdminsDropDownMenu, {
-        user: this.props.user,
-        baseUrl: this.props.baseUrl,
-        gitlabUrl: this.props.gitlabUrl
-      });
-      myOpendesktopMenuDisplay = React.createElement(CloudsServicesDropDownMenu, null);
-    }
+    //if (this.props.isAdmin === true){
+    adminsDropDownMenuDisplay = React.createElement(AdminsDropDownMenu, {
+      user: this.props.user,
+      baseUrl: this.props.baseUrl,
+      gitlabUrl: this.props.gitlabUrl
+    });
+    myOpendesktopMenuDisplay = React.createElement(CloudsServicesDropDownMenu, null);
+    //}
 
     return React.createElement(
       "ul",
@@ -552,7 +552,6 @@ class CloudsServicesDropDownMenu extends React.Component {
   }
 
   render() {
-
     return React.createElement(
       "li",
       { ref: node => this.node = node, id: "admins-dropdown-menu", className: this.state.dropdownClass },
