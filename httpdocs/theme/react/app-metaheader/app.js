@@ -453,7 +453,7 @@ class CloudsServicesDropDownMenu extends React.Component {
   render(){
     return (
       <li ref={node => this.node = node} id="admins-dropdown-menu" className={this.state.dropdownClass}>
-        <a className="admins-menu-link-item">Clouds & Services</a>
+        <a className="admins-menu-link-item">My Opendesktop</a>
         <ul className="dropdown-menu dropdown-menu-right">
           <li><a href={"https://my.opendesktop." + window.baseUrl.split('opendesktop.')[1]}>Clouds & Services</a></li>
         </ul>

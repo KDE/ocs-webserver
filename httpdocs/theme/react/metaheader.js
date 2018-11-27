@@ -558,7 +558,7 @@ class CloudsServicesDropDownMenu extends React.Component {
       React.createElement(
         "a",
         { className: "admins-menu-link-item" },
-        "Clouds & Services"
+        "My Opendesktop"
       ),
       React.createElement(
         "ul",
