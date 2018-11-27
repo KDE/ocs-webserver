@@ -47,11 +47,13 @@ header('Content-Type: application/json; charset=UTF-8', true);
 $products = $this->products;
 
 $viewArray = array();
+$viewArray['Result'] = 'ok';
+$viewArray['Data'] = array();
 foreach ($products as $product) {
-    $viewArray[]['project_id'] = $product['project_id'];
-    $viewArray[]['title'] = $product['title'];
-    $viewArray[]['version'] = $product['version'];
-    $viewArray[]['member_id'] = $product['member_id'];
+    $viewArray['Data'][]['project_id'] = $product['project_id'];
+    $viewArray['Data'][]['title'] = $product['title'];
+    $viewArray['Data'][]['version'] = $product['version'];
+    $viewArray['Data'][]['member_id'] = $product['member_id'];
 }
 
 echo json_encode($viewArray);
