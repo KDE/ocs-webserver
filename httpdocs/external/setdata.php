@@ -14,4 +14,5 @@
       $user['avatar'] = $_GET['avatar'];
    }
 
-   setcookie("ocs_data", json_encode($user), time()+36000000, '/');
+   $cookie_params = session_get_cookie_params();
+   setcookie("ocs_data", json_encode($user), time()+31536000,  $cookie_params['path'], $_SERVER['HTTP_HOST'], $cookie_params['secure'], true);
