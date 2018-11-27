@@ -2,19 +2,19 @@ class MetaHeader extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      domains:window.domains,
-      baseUrl:window.baseUrl,
-      blogUrl:window.blogUrl,
-      forumUrl:window.forumUrl,
-      loginUrl:window.loginUrl,
-      logoutUrl:window.logoutUrl,
-      gitlabUrl:window.gitlabUrl,
-      sName:window.sName,
-      isExternal:window.isExternal,
+      domains:config.domains,
+      baseUrl:config.baseUrl,
+      blogUrl:config.blogUrl,
+      forumUrl:config.forumUrl,
+      loginUrl:config.loginUrl,
+      logoutUrl:config.logoutUrl,
+      gitlabUrl:config.gitlabUrl,
+      sName:config.sName,
+      isExternal:config.isExternal,
       user:{},
       showModal:false,
       modalUrl:'',
-      isAdmin:window.json_isAdmin
+      isAdmin:config.json_isAdmin
     };
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
@@ -29,6 +29,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
+    console.log(config);
     this.initMetaHeader();
   }
 
@@ -101,9 +102,6 @@ class MetaHeader extends React.Component {
   }
 
   render(){
-
-    console.log(this.state);
-    console.log(window.json_isAdmin);
 
     let domainsMenuDisplay;
     if (this.state.device === "tablet"){
@@ -365,7 +363,7 @@ class AdminsDropDownMenu extends React.Component {
   	super(props);
   	this.state = {};
     this.state = {
-      gitlabLink:window.gitlabUrl+"/dashboard/issues?assignee_id="
+      gitlabLink:config.gitlabUrl+"/dashboard/issues?assignee_id="
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -380,7 +378,7 @@ class AdminsDropDownMenu extends React.Component {
 
   componentDidMount() {
     const self = this;
-    $.ajax({url: window.gitlabUrl+"/api/v4/users?username="+this.props.user.username,cache: false})
+    $.ajax({url: config.gitlabUrl+"/api/v4/users?username="+this.props.user.username,cache: false})
       .done(function(response){
         const gitlabLink = self.state.gitlabLink + response[0].id;
         self.setState({gitlabLink:gitlabLink,loading:false});
@@ -410,7 +408,7 @@ class AdminsDropDownMenu extends React.Component {
       <li ref={node => this.node = node} id="admins-dropdown-menu" className={this.state.dropdownClass}>
         <a className="admins-menu-link-item">Development</a>
         <ul className="dropdown-menu dropdown-menu-right">
-          <li><a href={window.gitlabUrl+"/dashboard/projects"}>Projects</a></li>
+          <li><a href={config.gitlabUrl+"/dashboard/projects"}>Projects</a></li>
           <li><a href={this.state.gitlabLink}>Issues</a></li>
         </ul>
       </li>
@@ -452,7 +450,7 @@ class CloudsServicesDropDownMenu extends React.Component {
 
   render(){
 
-    const urlEnding = window.baseUrl.split('opendesktop.')[1];
+    const urlEnding = config.baseUrl.split('opendesktop.')[1];
 
     return (
       <li ref={node => this.node = node} id="cd-dropdown-menu" className={this.state.dropdownClass}>
@@ -506,14 +504,14 @@ class MoreDropDownMenu extends React.Component {
   render(){
 
     let faqLinkItem, apiLinkItem, aboutLinkItem;
-    if (window.isExternal === false){
+    if (config.isExternal === false){
       faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>FAQ</a></li>);
       apiLinkItem = (<li><a className="popuppanel" id="api" href={"/partials/ocsapicontent.phtml"}>API</a></li>);
       aboutLinkItem = (<li><a className="popuppanel" id="about" href={"/partials/about.phtml"}>About</a></li>);
     } else {
-      faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={window.baseUrl + "/#faq"}>FAQ</a></li>);
-      apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={window.baseUrl + "/#api"}>API</a></li>);
-      aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={window.baseUrl + "/#about"}>About</a></li>);
+      faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={config.baseUrl + "/#faq"}>FAQ</a></li>);
+      apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={config.baseUrl + "/#api"}>API</a></li>);
+      aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={config.baseUrl + "/#about"}>About</a></li>);
     }
 
     return(
@@ -606,14 +604,14 @@ class UserMenu extends React.Component {
     if (this.props.device === "large"){
 
       let faqLinkItem, apiLinkItem, aboutLinkItem;
-      if (window.isExternal === false){
+      if (config.isExternal === false){
         faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>FAQ</a></li>);
         apiLinkItem = (<li><a className="popuppanel" id="api" href={"/partials/ocsapicontent.phtml"}>API</a></li>);
         aboutLinkItem = (<li><a className="popuppanel" id="about" href={"/partials/about.phtml"}>About</a></li>);
       } else {
-        faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={window.baseUrl + "/#faq"}>FAQ</a></li>);
-        apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={window.baseUrl + "/#api"}>API</a></li>);
-        aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={window.baseUrl + "/#about"}>About</a></li>);
+        faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={config.baseUrl + "/#faq"}>FAQ</a></li>);
+        apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={config.baseUrl + "/#api"}>API</a></li>);
+        aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={config.baseUrl + "/#about"}>About</a></li>);
       }
 
       userMenuContainerDisplay = (
@@ -649,7 +647,7 @@ class UserContextMenuContainer extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      gitlabLink:window.gitlabUrl+"/dashboard/issues?assignee_id="
+      gitlabLink:config.gitlabUrl+"/dashboard/issues?assignee_id="
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -664,7 +662,7 @@ class UserContextMenuContainer extends React.Component {
 
   componentDidMount() {
     const self = this;
-    $.ajax({url: window.gitlabUrl+"/api/v4/users?username="+this.props.user.username,cache: false})
+    $.ajax({url: config.gitlabUrl+"/api/v4/users?username="+this.props.user.username,cache: false})
       .done(function(response){
         const gitlabLink = self.state.gitlabLink + response[0].id;
         self.setState({gitlabLink:gitlabLink,loading:false});
@@ -947,14 +945,14 @@ class MobileLeftSidePanel extends React.Component {
     }
 
     let faqLinkItem, apiLinkItem, aboutLinkItem;
-    if (window.isExternal === false){
+    if (config.isExternal === false){
       faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>FAQ</a></li>);
       apiLinkItem = (<li><a className="popuppanel" id="api" href={"/partials/ocsapicontent.phtml"}>API</a></li>);
       aboutLinkItem = (<li><a className="popuppanel" id="about" href={"/partials/about.phtml"}>About</a></li>);
     } else {
-      faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={window.baseUrl + "/#faq"}>FAQ</a></li>);
-      apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={window.baseUrl + "/#api"}>API</a></li>);
-      aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={window.baseUrl + "/#about"}>About</a></li>);
+      faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={config.baseUrl + "/#faq"}>FAQ</a></li>);
+      apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={config.baseUrl + "/#api"}>API</a></li>);
+      aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={config.baseUrl + "/#about"}>About</a></li>);
     }
 
     return (
