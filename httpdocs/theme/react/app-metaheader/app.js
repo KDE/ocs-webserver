@@ -451,11 +451,16 @@ class CloudsServicesDropDownMenu extends React.Component {
 
 
   render(){
+
+    const urlEnding = window.baseUrl.split('opendesktop.')[1];
+
     return (
       <li ref={node => this.node = node} id="cd-dropdown-menu" className={this.state.dropdownClass}>
         <a className="cd-menu-link-item">Clouds & Services</a>
         <ul className="dropdown-menu dropdown-menu-right">
-          <li><a href={"https://my.opendesktop." + window.baseUrl.split('opendesktop.')[1]}>My Opendesktop</a></li>
+          <li><a href={"https://my.opendesktop." + urlEnding}>Storage</a></li>
+          <li><a href={"https://music.opendesktop." + urlEnding}>Music</a></li>
+          <li><a href={"https://docs.opendesktop." + urlEnding}>Docs</a></li>
         </ul>
       </li>
     )

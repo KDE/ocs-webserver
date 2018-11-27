@@ -552,6 +552,9 @@ class CloudsServicesDropDownMenu extends React.Component {
   }
 
   render() {
+
+    const urlEnding = window.baseUrl.split('opendesktop.')[1];
+
     return React.createElement(
       "li",
       { ref: node => this.node = node, id: "cd-dropdown-menu", className: this.state.dropdownClass },
@@ -568,8 +571,26 @@ class CloudsServicesDropDownMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { href: "https://my.opendesktop." + window.baseUrl.split('opendesktop.')[1] },
-            "My Opendesktop"
+            { href: "https://my.opendesktop." + urlEnding },
+            "Storage"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: "https://music.opendesktop." + urlEnding },
+            "Music"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: "https://docs.opendesktop." + urlEnding },
+            "Docs"
           )
         )
       )
