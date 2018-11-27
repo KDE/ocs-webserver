@@ -472,7 +472,7 @@ class AdminsDropDownMenu extends React.Component {
     let dropdownClass = "";
     if (this.node.contains(e.target)) {
       if (this.state.dropdownClass === "open") {
-        if (e.target.className === "cd-menu-link-item") {
+        if (e.target.className === "admins-menu-link-item") {
           dropdownClass = "";
         } else {
           dropdownClass = "open";
@@ -488,10 +488,10 @@ class AdminsDropDownMenu extends React.Component {
 
     return React.createElement(
       "li",
-      { ref: node => this.node = node, id: "cd-dropdown-menu", className: this.state.dropdownClass },
+      { ref: node => this.node = node, id: "admins-dropdown-menu", className: this.state.dropdownClass },
       React.createElement(
         "a",
-        { className: "cd-menu-link-item" },
+        { className: "admins-menu-link-item" },
         "Development"
       ),
       React.createElement(
@@ -539,7 +539,7 @@ class CloudsServicesDropDownMenu extends React.Component {
     let dropdownClass = "";
     if (this.node.contains(e.target)) {
       if (this.state.dropdownClass === "open") {
-        if (e.target.className === "admins-menu-link-item") {
+        if (e.target.className === "cd-menu-link-item") {
           dropdownClass = "";
         } else {
           dropdownClass = "open";
@@ -554,10 +554,10 @@ class CloudsServicesDropDownMenu extends React.Component {
   render() {
     return React.createElement(
       "li",
-      { ref: node => this.node = node, id: "admins-dropdown-menu", className: this.state.dropdownClass },
+      { ref: node => this.node = node, id: "cd-dropdown-menu", className: this.state.dropdownClass },
       React.createElement(
         "a",
-        { className: "admins-menu-link-item" },
+        { className: "cd-menu-link-item" },
         "Clouds & Services"
       ),
       React.createElement(
