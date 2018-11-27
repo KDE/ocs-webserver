@@ -391,7 +391,7 @@ class AdminsDropDownMenu extends React.Component {
     let dropdownClass = "";
     if (this.node.contains(e.target)){
       if (this.state.dropdownClass === "open"){
-        if (e.target.className === "admins-menu-link-item"){
+        if (e.target.className === "cd-menu-link-item"){
           dropdownClass = "";
         } else {
           dropdownClass = "open";
@@ -407,8 +407,8 @@ class AdminsDropDownMenu extends React.Component {
   render(){
 
     return (
-      <li ref={node => this.node = node} id="admins-dropdown-menu" className={this.state.dropdownClass}>
-        <a className="admins-menu-link-item">Development</a>
+      <li ref={node => this.node = node} id="cd-dropdown-menu" className={this.state.dropdownClass}>
+        <a className="cd-menu-link-item">Development</a>
         <ul className="dropdown-menu dropdown-menu-right">
           <li><a href={window.gitlabUrl+"/dashboard/projects"}>Projects</a></li>
           <li><a href={this.state.gitlabLink}>Issues</a></li>
