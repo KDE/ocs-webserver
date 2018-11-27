@@ -19,8 +19,6 @@ class MetaHeader extends React.Component {
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.getUser = this.getUser.bind(this);
-    this.handlePopupLinkClick = this.handlePopupLinkClick.bind(this);
-    this.closeModal = this.closeModal.bind(this);
   }
 
 
@@ -68,39 +66,6 @@ class MetaHeader extends React.Component {
     this.setState({device:device});
   }
 
-  handlePopupLinkClick(key){
-    let url = this.state.baseUrl;
-    if (key === "FAQ"){
-      if (this.state.isExternal === true){
-        url = "/plings";
-      } else {
-        url += "/#plingList";
-      }
-    } else if (key === "API"){
-      if (this.state.isExternal === true){
-        url = "/partials/ocsapicontent.phtml";
-      } else {
-        url += "/#ocsapiContent";
-      }
-    } else if (key === "ABOUT"){
-      if (this.state.isExternal === true){
-        url = "/partials/about.phtml";
-      } else {
-        url += "/#aboutContent";
-      }
-    }
-
-    if (this.state.isExternal === true){
-      window.open(url, '_blank');
-    } else {
-      this.setState({showModal:true,modalUrl:url});
-    }
-  }
-
-  closeModal(){
-    this.setState({showModal:false,modalUrl:''});
-  }
-
   render(){
 
     let domainsMenuDisplay;
@@ -115,7 +80,6 @@ class MetaHeader extends React.Component {
           forumUrl={this.state.forumUrl}
           sName={this.state.sName}
           isAdmin={this.state.isAdmin}
-          onPopupLinkClick={this.handlePopupLinkClick}
         />
       )
     } else {
@@ -129,17 +93,6 @@ class MetaHeader extends React.Component {
           forumUrl={this.state.forumUrl}
           sName={this.state.sName}
           isAdmin={this.state.isAdmin}
-          onPopupLinkClick={this.handlePopupLinkClick}
-        />
-      )
-    }
-
-    let modalDisplay;
-    if (this.state.showModal){
-      modalDisplay = (
-        <MetaheaderModal
-          modalUrl={this.state.modalUrl}
-          onCloseModal={this.closeModal}
         />
       )
     }
@@ -157,10 +110,8 @@ class MetaHeader extends React.Component {
             loginUrl={this.state.loginUrl}
             logoutUrl={this.state.logoutUrl}
             gitlabUrl={this.state.gitlabUrl}
-            onPopupLinkClick={this.handlePopupLinkClick}
           />
         </div>
-        {modalDisplay}
       </nav>
     )
   }
@@ -171,11 +122,6 @@ class DomainsMenu extends React.Component {
   	super(props);
   	this.state = {
     };
-    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
-  }
-
-  onPopupLinkClick(url){
-    this.props.onPopupLinkClick(url);
   }
 
   render(){
@@ -187,7 +133,6 @@ class DomainsMenu extends React.Component {
           domains={this.props.domains}
           baseUrl={this.props.baseUrl}
           blogUrl={this.props.blogUrl}
-          onPopupLinkClick={this.onPopupLinkClick}
         />
       )
     }
@@ -470,7 +415,6 @@ class MoreDropDownMenu extends React.Component {
   	super(props);
   	this.state = {};
     this.handleClick = this.handleClick.bind(this);
-    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -495,10 +439,6 @@ class MoreDropDownMenu extends React.Component {
       }
     }
     this.setState({dropdownClass:dropdownClass});
-  }
-
-  onPopupLinkClick(url){
-    this.props.onPopupLinkClick(url);
   }
 
   render(){
@@ -570,11 +510,6 @@ class UserMenu extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
-    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
-  }
-
-  onPopupLinkClick(key){
-    this.props.onPopupLinkClick(key);
   }
 
   render(){
@@ -789,57 +724,6 @@ class UserLoginMenuContainer extends React.Component {
   }
 }
 
-class MetaheaderModal extends React.Component {
-  constructor(props){
-  	super(props);
-  	this.state = {
-      loading:true
-    };
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  componentWillMount() {
-    document.addEventListener('mousedown',this.handleClick, false);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('mousedown',this.handleClick, false);
-  }
-
-  componentDidMount() {
-    const self = this;
-    $.ajax({url: this.props.modalUrl,cache: false}).done(function(response){
-        self.setState({content:response,loading:false});
-    });
-  }
-
-  handleClick(e){
-    let showModal;
-    if (this.node.contains(e.target)){
-      if (showModal === false){
-        if (e.target.id === "metaheader-modal-content"){
-          showModal = true;
-        } else {
-          showModal = false;
-        }
-      } else {
-        showModal = true;
-      }
-    }
-    if (showModal === true){
-      this.props.onCloseModal();
-    }
-  }
-
-  render(){
-    return (
-      <div id="metaheader-modal" ref={node => this.node = node}>
-        <div id="metaheader-modal-content" dangerouslySetInnerHTML={{__html:this.state.content}}></div>
-      </div>
-    )
-  }
-}
-
 /** MOBILE SPECIFIC **/
 
 class MobileLeftMenu extends React.Component {
@@ -850,7 +734,6 @@ class MobileLeftMenu extends React.Component {
     };
     this.toggleLeftSideOverlay = this.toggleLeftSideOverlay.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -887,10 +770,6 @@ class MobileLeftMenu extends React.Component {
     this.setState({overlayClass:overlayClass});
   }
 
-  onPopupLinkClick(key){
-    this.props.onPopupLinkClick(key);
-  }
-
   render(){
     return (
       <div ref={node => this.node = node}  id="metaheader-left-mobile" className={this.state.overlayClass}>
@@ -902,7 +781,6 @@ class MobileLeftMenu extends React.Component {
             baseUrl={this.props.baseUrl}
             blogUrl={this.props.blogUrl}
             forumUrl={this.props.forumUrl}
-            onPopupLinkClick={this.props.onPopupLinkClick}
           />
         </div>
       </div>
@@ -914,7 +792,6 @@ class MobileLeftSidePanel extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
-    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentDidMount() {
@@ -925,10 +802,6 @@ class MobileLeftSidePanel extends React.Component {
       }
     });
     this.setState({menuGroups:menuGroups});
-  }
-
-  onPopupLinkClick(key){
-    this.props.onPopupLinkClick(key);
   }
 
   render(){
