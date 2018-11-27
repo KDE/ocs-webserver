@@ -44,7 +44,7 @@ class Default_Form_Register extends Zend_Form
         $userExistCheck->setMessage('This username already exists.');
         $userEmptyCheck = new Zend_Validate_NotEmpty();
         $userEmptyCheck->setMessage('RegisterFormUsernameErr', Zend_Validate_NotEmpty::IS_EMPTY);
-        $userNameLength = new Zend_Validate_StringLength(array('min' => 4, 'max' => 40));
+        $userNameLength = new Zend_Validate_StringLength(array('min' => 4, 'max' => 20));
         $groupNameExists = new Local_Validate_GroupnameExistsInOpenCode();
 
         $fname = $this->createElement('text', 'username')

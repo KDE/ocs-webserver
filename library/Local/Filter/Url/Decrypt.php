@@ -27,6 +27,7 @@ class Local_Filter_Url_Decrypt implements Zend_Filter_Interface
      * Returns the result of filtering $value
      *
      * @param  mixed $value
+     *
      * @return mixed
      */
     public function filter($value)
@@ -36,6 +37,7 @@ class Local_Filter_Url_Decrypt implements Zend_Filter_Interface
 
     /**
      * @param string $url
+     *
      * @return string
      */
     protected function decryptUrl($url)
@@ -47,13 +49,13 @@ class Local_Filter_Url_Decrypt implements Zend_Filter_Interface
         /*  Set various encryption options. */
         $options = array(
             // Encryption type - Openssl or Mcrypt
-            'adapter' => 'mcrypt',
+            'adapter'   => 'mcrypt',
             // Initialization vector
-            'vector' => '236587hgtyujkirtfgty5678',
+            'vector'    => '236587hgtyujkirtfgty5678',
             // Encryption algorithm
             'algorithm' => 'rijndael-192',
             // Encryption key
-            'key' => 'KFJGKDK$$##^FFS345678FG2'
+            'key'       => 'KFJGKDK$$##^FFS345678FG2'
         );
 
         /* Initialize the library and pass the options */
@@ -64,6 +66,7 @@ class Local_Filter_Url_Decrypt implements Zend_Filter_Interface
 
     /**
      * @param string $data
+     *
      * @return bool|string
      */
     protected function base64url_decode($data)
