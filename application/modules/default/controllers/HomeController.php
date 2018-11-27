@@ -120,6 +120,21 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         ;
         
     }
+
+    public function metamenubundlejsAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        
+        // header('Access-Control-Allow-Origin: *'); 
+        
+        // $this->getResponse()
+        //      ->setHeader('Access-Control-Allow-Origin', '*')
+        //      ->setHeader('Access-Control-Allow-Credentials', 'true')
+        //      ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+        //      ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        // ;
+        
+    }
     
     
     public function baseurlajaxAction()

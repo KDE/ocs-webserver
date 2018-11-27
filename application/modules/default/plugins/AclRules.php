@@ -225,8 +225,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'startdownload',
             'ppload',
             'loadratings',
-            'loadinstallinstruction',
-            'fetch-products-for-git-project-ajax'
+            'loadinstallinstruction'
         ));
 
         // resource default_product
@@ -312,7 +311,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
         
         // resource default_user
-        $this->allow(self::ROLENAME_GUEST, 'default_home', array('baseurlajax','forumurlajax','blogurlajax','storenameajax','domainsajax', 'userdataajax', 'loginurlajax', 'metamenujs'));
+        $this->allow(self::ROLENAME_GUEST, 'default_home', array('baseurlajax','forumurlajax','blogurlajax','storenameajax','domainsajax', 'userdataajax', 'loginurlajax', 'metamenujs','metamenubundlejs'));
 
         // resource default_user
         $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report', 'about', 'tooltip', 'avatar', 'userdataajax'));
