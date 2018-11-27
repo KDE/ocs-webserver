@@ -52,7 +52,7 @@ $viewArray['Data'] = array();
 $viewProjectArray = array();
 foreach ($products as $product) {
     $viewProjectArray = array();
-    $$viewProjectArray['project_id'] = $product['project_id'];
+    $viewProjectArray['project_id'] = $product['project_id'];
     $viewProjectArray['title'] = $product['title'];
     $viewProjectArray['version'] = $product['version'];
     $viewProjectArray['member_id'] = $product['member_id'];
