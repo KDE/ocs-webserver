@@ -47,8 +47,6 @@ header('Content-Type: application/json; charset=UTF-8', true);
 $products = $this->products;
 
 $viewArray = array();
-$viewArray['Result'] = 'ok';
-$viewArray['Data'] = array();
 $viewProjectArray = array();
 foreach ($products as $product) {
     $viewProjectArray = array();
@@ -56,7 +54,7 @@ foreach ($products as $product) {
     $viewProjectArray['title'] = $product['title'];
     $viewProjectArray['version'] = $product['version'];
     $viewProjectArray['member_id'] = $product['member_id'];
-    $viewArray['Data'][] = $viewProjectArray;
+    $viewArray[] = $viewProjectArray;
 }
 
 echo Zend_Json::encode($viewArray);
