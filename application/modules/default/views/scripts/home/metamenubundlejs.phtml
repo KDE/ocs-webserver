@@ -98,6 +98,7 @@ if (Zend_Auth::getInstance()->hasIdentity()){
     $identity = Zend_Auth::getInstance()->getStorage()->read();
     $user = array(
         "username" => $identity->username,
+        "member_id" => $identity->member_id,
         "mail" => $identity->mail,
         "profile_image_url" => $identity->profile_image_url,
         "roleName" =>$identity->roleName
