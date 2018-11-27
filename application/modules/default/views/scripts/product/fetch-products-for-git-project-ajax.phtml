@@ -49,13 +49,16 @@ $products = $this->products;
 $viewArray = array();
 $viewArray['Result'] = 'ok';
 $viewArray['Data'] = array();
+$viewProjectArray = array();
 foreach ($products as $product) {
-    $viewArray['Data'][]['project_id'] = $product['project_id'];
-    $viewArray['Data'][]['title'] = $product['title'];
-    $viewArray['Data'][]['version'] = $product['version'];
-    $viewArray['Data'][]['member_id'] = $product['member_id'];
+    $viewProjectArray = array();
+    $viewProjectArray['project_id'] = $product['project_id'];
+    $viewProjectArray['title'] = $product['title'];
+    $viewProjectArray['version'] = $product['version'];
+    $viewProjectArray['member_id'] = $product['member_id'];
+    $viewArray[] = $viewProjectArray;
 }
 
-echo json_encode($viewArray);
+echo Zend_Json::encode($viewArray);
 
 ?>

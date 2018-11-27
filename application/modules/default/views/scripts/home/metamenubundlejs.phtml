@@ -93,6 +93,18 @@ if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
     $isAdmin = true;
 }
 
+$user = null;
+if (Zend_Auth::getInstance()->hasIdentity()){
+    $identity = Zend_Auth::getInstance()->getStorage()->read();
+    $user = array(
+        "username" => $identity->username,
+        "member_id" => $identity->member_id,
+        "mail" => $identity->mail,
+        "profile_image_url" => $identity->profile_image_url,
+        "roleName" =>$identity->roleName
+    );
+    $user = $identity;
+}
 
 $sname = Zend_Registry::get('store_host');
 $json_menu = $this->fetchMetaheaderMenuJson();
@@ -101,7 +113,7 @@ $response = array(
     "json_isAdmin" => $isAdmin,
     "isExternal" => $is_external,
     "domains" => Zend_Json::decode($json_menu),
-    "user" => null,
+    "user" => $user,
     "baseUrl" => $baseurl,
     "blogUrl" => $url_blog,
     "forumUrl" => $url_forum,
