@@ -51,6 +51,7 @@ $viewArray['Result'] = 'ok';
 $viewArray['Data'] = array();
 $viewProjectArray = array();
 foreach ($products as $product) {
+    $viewProjectArray = array();
     $$viewProjectArray['project_id'] = $product['project_id'];
     $viewProjectArray['title'] = $product['title'];
     $viewProjectArray['version'] = $product['version'];
