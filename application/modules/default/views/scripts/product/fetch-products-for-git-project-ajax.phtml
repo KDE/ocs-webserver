@@ -46,6 +46,8 @@ header('Content-Type: application/json; charset=UTF-8', true);
 
 $products = $this->products;
 
+$helperImage = new Default_View_Helper_Image();
+
 $viewArray = array();
 $viewProjectArray = array();
 foreach ($products as $product) {
@@ -54,6 +56,7 @@ foreach ($products as $product) {
     $viewProjectArray['title'] = $product['title'];
     $viewProjectArray['version'] = $product['version'];
     $viewProjectArray['member_id'] = $product['member_id'];
+    $viewProjectArray['avatar'] = $this->Image($product['image_small'], array('width' => 25, 'height' => 25));
     $viewArray[] = $viewProjectArray;
 }
 
