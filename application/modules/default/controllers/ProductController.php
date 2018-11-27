@@ -2635,6 +2635,27 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         
         return $gitProjectIssues;
     }
+    
+    
+    public function fetchProductsForGitProjectAjaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        
+        $tableProject = new Default_Model_Project();
+
+        $params = $this->getAllParams();
+        $gitProjectId = $params['project_id'];
+        $this->view->products = null;
+        
+        if(isset($gitProjectId)) {
+        
+            $products = $tableProject->fetchAll('status = 100 AND type_id = 1 AND is_gitlab_project = 1 AND gitlab_project_id = ' . $gitProjectId);
+            $this->view->products = $products;
+        
+        }
+        
+        
+    }
 
 
 }
