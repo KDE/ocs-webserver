@@ -88,7 +88,7 @@ class MetaHeader extends React.Component {
       domainsMenuDisplay = (
         <DomainsMenu
           device={this.state.device}
-          domains={domains}
+          domains={this.state.domains}
           user={this.state.user}
           baseUrl={this.state.baseUrl}
           blogUrl={this.state.blogUrl}
