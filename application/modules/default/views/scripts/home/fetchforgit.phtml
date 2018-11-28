@@ -44,22 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 header('Content-Type: application/json; charset=UTF-8', true);
 
 
-$products = $this->products;
-
-$helperImage = new Default_View_Helper_Image();
-
-$viewArray = array();
-$viewProjectArray = array();
-foreach ($products as $product) {
-    $viewProjectArray = array();
-    $viewProjectArray['project_id'] = $product['project_id'];
-    $viewProjectArray['title'] = $product['title'];
-    $viewProjectArray['version'] = $product['version'];
-    $viewProjectArray['member_id'] = $product['member_id'];
-    $viewProjectArray['avatar'] = $this->Image($product['image_small'], array('width' => 100, 'height' => 100));
-    $viewArray[] = $viewProjectArray;
-}
-
-echo Zend_Json::encode($viewArray);
+echo Zend_Json::encode($this->viewdata);
 
 ?>
