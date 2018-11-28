@@ -115,16 +115,14 @@ class MetaHeader extends React.Component {
       gitlabUrl: config.gitlabUrl,
       sName: config.sName,
       isExternal: config.isExternal,
-      user: {},
+      user: config.user,
       showModal: false,
       modalUrl: '',
       isAdmin: config.json_isAdmin
     };
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
-    this.getUser = this.getUser.bind(this);
-    this.handlePopupLinkClick = this.handlePopupLinkClick.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    //this.getUser = this.getUser.bind(this);
   }
 
   componentWillMount() {
@@ -132,6 +130,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
+    console.log(config);
     this.initMetaHeader();
   }
 
@@ -143,7 +142,7 @@ class MetaHeader extends React.Component {
   initMetaHeader() {
     window.addEventListener("resize", this.updateDimensions);
     window.addEventListener("orientationchange", this.updateDimensions);
-    this.getUser();
+    //this.getUser();
   }
 
   getUser() {
@@ -171,76 +170,30 @@ class MetaHeader extends React.Component {
     this.setState({ device: device });
   }
 
-  handlePopupLinkClick(key) {
-    let url = this.state.baseUrl;
-    if (key === "FAQ") {
-      if (this.state.isExternal === true) {
-        url = "/plings";
-      } else {
-        url += "/#plingList";
-      }
-    } else if (key === "API") {
-      if (this.state.isExternal === true) {
-        url = "/partials/ocsapicontent.phtml";
-      } else {
-        url += "/#ocsapiContent";
-      }
-    } else if (key === "ABOUT") {
-      if (this.state.isExternal === true) {
-        url = "/partials/about.phtml";
-      } else {
-        url += "/#aboutContent";
-      }
-    }
-
-    if (this.state.isExternal === true) {
-      window.open(url, '_blank');
-    } else {
-      this.setState({ showModal: true, modalUrl: url });
-    }
-  }
-
-  closeModal() {
-    this.setState({ showModal: false, modalUrl: '' });
-  }
-
   render() {
-
-    console.log(this.state);
-    console.log(window.json_isAdmin);
 
     let domainsMenuDisplay;
     if (this.state.device === "tablet") {
       domainsMenuDisplay = React.createElement(MobileLeftMenu, {
         device: this.state.device,
-        domains: config.domains,
+        domains: this.state.domains,
         user: this.state.user,
         baseUrl: this.state.baseUrl,
         blogUrl: this.state.blogUrl,
         forumUrl: this.state.forumUrl,
         sName: this.state.sName,
-        isAdmin: this.state.isAdmin,
-        onPopupLinkClick: this.handlePopupLinkClick
+        isAdmin: this.state.isAdmin
       });
     } else {
       domainsMenuDisplay = React.createElement(DomainsMenu, {
         device: this.state.device,
-        domains: config.domains,
+        domains: this.state.domains,
         user: this.state.user,
         baseUrl: this.state.baseUrl,
         blogUrl: this.state.blogUrl,
         forumUrl: this.state.forumUrl,
         sName: this.state.sName,
-        isAdmin: this.state.isAdmin,
-        onPopupLinkClick: this.handlePopupLinkClick
-      });
-    }
-
-    let modalDisplay;
-    if (this.state.showModal) {
-      modalDisplay = React.createElement(MetaheaderModal, {
-        modalUrl: this.state.modalUrl,
-        onCloseModal: this.closeModal
+        isAdmin: this.state.isAdmin
       });
     }
 
@@ -259,11 +212,9 @@ class MetaHeader extends React.Component {
           forumUrl: this.state.forumUrl,
           loginUrl: this.state.loginUrl,
           logoutUrl: this.state.logoutUrl,
-          gitlabUrl: this.state.gitlabUrl,
-          onPopupLinkClick: this.handlePopupLinkClick
+          gitlabUrl: this.state.gitlabUrl
         })
-      ),
-      modalDisplay
+      )
     );
   }
 }
@@ -272,11 +223,6 @@ class DomainsMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
-  }
-
-  onPopupLinkClick(url) {
-    this.props.onPopupLinkClick(url);
   }
 
   render() {
@@ -286,8 +232,7 @@ class DomainsMenu extends React.Component {
       moreMenuItemDisplay = React.createElement(MoreDropDownMenu, {
         domains: this.props.domains,
         baseUrl: this.props.baseUrl,
-        blogUrl: this.props.blogUrl,
-        onPopupLinkClick: this.onPopupLinkClick
+        blogUrl: this.props.blogUrl
       });
     }
 
@@ -501,7 +446,7 @@ class AdminsDropDownMenu extends React.Component {
     super(props);
     this.state = {};
     this.state = {
-      gitlabLink: window.gitlabUrl + "/dashboard/issues?assignee_id="
+      gitlabLink: config.gitlabUrl + "/dashboard/issues?assignee_id="
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -516,7 +461,7 @@ class AdminsDropDownMenu extends React.Component {
 
   componentDidMount() {
     const self = this;
-    $.ajax({ url: window.gitlabUrl + "/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
+    $.ajax({ url: config.gitlabUrl + "/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
       const gitlabLink = self.state.gitlabLink + response[0].id;
       self.setState({ gitlabLink: gitlabLink, loading: false });
     });
@@ -556,7 +501,7 @@ class AdminsDropDownMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { href: window.gitlabUrl + "/dashboard/projects" },
+            { href: config.gitlabUrl + "/dashboard/projects" },
             "Projects"
           )
         ),
@@ -657,7 +602,6 @@ class MoreDropDownMenu extends React.Component {
     super(props);
     this.state = {};
     this.handleClick = this.handleClick.bind(this);
-    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -682,10 +626,6 @@ class MoreDropDownMenu extends React.Component {
       }
     }
     this.setState({ dropdownClass: dropdownClass });
-  }
-
-  onPopupLinkClick(url) {
-    this.props.onPopupLinkClick(url);
   }
 
   render() {
@@ -841,11 +781,6 @@ class UserMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
-  }
-
-  onPopupLinkClick(key) {
-    this.props.onPopupLinkClick(key);
   }
 
   render() {
@@ -1201,57 +1136,6 @@ class UserLoginMenuContainer extends React.Component {
   }
 }
 
-class MetaheaderModal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true
-    };
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  componentWillMount() {
-    document.addEventListener('mousedown', this.handleClick, false);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClick, false);
-  }
-
-  componentDidMount() {
-    const self = this;
-    $.ajax({ url: this.props.modalUrl, cache: false }).done(function (response) {
-      self.setState({ content: response, loading: false });
-    });
-  }
-
-  handleClick(e) {
-    let showModal;
-    if (this.node.contains(e.target)) {
-      if (showModal === false) {
-        if (e.target.id === "metaheader-modal-content") {
-          showModal = true;
-        } else {
-          showModal = false;
-        }
-      } else {
-        showModal = true;
-      }
-    }
-    if (showModal === true) {
-      this.props.onCloseModal();
-    }
-  }
-
-  render() {
-    return React.createElement(
-      "div",
-      { id: "metaheader-modal", ref: node => this.node = node },
-      React.createElement("div", { id: "metaheader-modal-content", dangerouslySetInnerHTML: { __html: this.state.content } })
-    );
-  }
-}
-
 /** MOBILE SPECIFIC **/
 
 class MobileLeftMenu extends React.Component {
@@ -1262,7 +1146,6 @@ class MobileLeftMenu extends React.Component {
     };
     this.toggleLeftSideOverlay = this.toggleLeftSideOverlay.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -1299,10 +1182,6 @@ class MobileLeftMenu extends React.Component {
     this.setState({ overlayClass: overlayClass });
   }
 
-  onPopupLinkClick(key) {
-    this.props.onPopupLinkClick(key);
-  }
-
   render() {
     return React.createElement(
       "div",
@@ -1316,8 +1195,7 @@ class MobileLeftMenu extends React.Component {
           domains: this.props.domains,
           baseUrl: this.props.baseUrl,
           blogUrl: this.props.blogUrl,
-          forumUrl: this.props.forumUrl,
-          onPopupLinkClick: this.props.onPopupLinkClick
+          forumUrl: this.props.forumUrl
         })
       )
     );
@@ -1328,7 +1206,6 @@ class MobileLeftSidePanel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentDidMount() {
@@ -1339,10 +1216,6 @@ class MobileLeftSidePanel extends React.Component {
       }
     });
     this.setState({ menuGroups: menuGroups });
-  }
-
-  onPopupLinkClick(key) {
-    this.props.onPopupLinkClick(key);
   }
 
   render() {
@@ -1522,6 +1395,7 @@ class MobileLeftSidePanel extends React.Component {
     );
   }
 }
+
 
 customElements.define('opendesktop-metaheader', class extends HTMLElement {
   constructor() {

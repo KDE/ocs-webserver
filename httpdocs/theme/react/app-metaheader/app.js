@@ -11,14 +11,14 @@ class MetaHeader extends React.Component {
       gitlabUrl:config.gitlabUrl,
       sName:config.sName,
       isExternal:config.isExternal,
-      user:{},
+      user:config.user,
       showModal:false,
       modalUrl:'',
       isAdmin:config.json_isAdmin
     };
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
-    this.getUser = this.getUser.bind(this);
+    //this.getUser = this.getUser.bind(this);
   }
 
 
@@ -40,7 +40,7 @@ class MetaHeader extends React.Component {
   initMetaHeader(){
     window.addEventListener("resize", this.updateDimensions);
     window.addEventListener("orientationchange",this.updateDimensions);
-    this.getUser();
+    //this.getUser();
   }
 
   getUser(){
@@ -73,7 +73,7 @@ class MetaHeader extends React.Component {
       domainsMenuDisplay = (
         <MobileLeftMenu
           device={this.state.device}
-          domains={domains}
+          domains={this.state.domains}
           user={this.state.user}
           baseUrl={this.state.baseUrl}
           blogUrl={this.state.blogUrl}
