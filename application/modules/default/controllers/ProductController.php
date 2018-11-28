@@ -2635,43 +2635,5 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         
         return $gitProjectIssues;
     }
-    
-    
-    public function fetchforgitAction()
-    {
-        $this->_helper->layout()->disableLayout();
-        
-        $tableProject = new Default_Model_Project();
-
-        $params = $this->getAllParams();
-        $gitProjectId = $params['project_id'];
-        $this->view->products = null;
-        
-        if(isset($gitProjectId)) {
-        
-            $products = $tableProject->fetchAll('status = 100 AND type_id = 1 AND is_gitlab_project = 1 AND gitlab_project_id = ' . $gitProjectId);
-            
-            
-            $helperImage = new Default_View_Helper_Image();
-
-            $viewArray = array();
-            $viewProjectArray = array();
-            foreach ($products as $product) {
-                $viewProjectArray = array();
-                $viewProjectArray['project_id'] = $product['project_id'];
-                $viewProjectArray['title'] = $product['title'];
-                $viewProjectArray['version'] = $product['version'];
-                $viewProjectArray['member_id'] = $product['member_id'];
-                $viewProjectArray['avatar'] = $helperImage->Image($product['image_small'], array('width' => 100, 'height' => 100));
-                $viewArray[] = $viewProjectArray;
-            }
-            
-            $this->view->viewdata = $viewArray;
-        
-        }
-        
-        
-    }
-
 
 }
