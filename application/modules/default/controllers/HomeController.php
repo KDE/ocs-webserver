@@ -434,8 +434,8 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 
         $params = $this->getAllParams();
         $action = 'fetch-products-for-git-project-id';
-        if($this->hasParam('action')) {
-            $action = $params['action'];
+        if($this->hasParam('target')) {
+            $action = $params['target'];
         }
         
         if($action == 'fetch-products-for-git-project-id') {
