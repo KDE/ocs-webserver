@@ -1,3 +1,57 @@
+import '@babel/polyfill';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+// Still need jQuery?
+import $ from 'jquery';
+
+// Use this object for config data instead of window.domains,
+// window.baseUrl, window.etc... so don't set variables in global scope.
+// Please see initConfig()
+let config = {};
+
+async function initConfig(target) {
+  // API https://www.opendesktop.org/home/metamenujs should send
+  // JSON data with CORS.
+  // Please see config-dummy.php.
+
+  // Also this API call sends cookie of www.opendesktop.org/cc
+  // by fetch() with option "credentials: 'include'", so
+  // www.opendesktop.org/cc possible detect user session.
+  // Can we consider if include user information into JSON data of
+  // API response instead of cookie set each external site?
+
+  let url = '';
+
+  if (location.hostname.endsWith('opendesktop.org')) {
+    url = `https://www.opendesktop.org/home/metamenubundlejs?target=${target}`;
+  }
+  else if (location.hostname.endsWith('opendesktop.cc')) {
+    url = `https://www.opendesktop.cc/home/metamenubundlejs?target=${target}`;
+  }
+  else if (location.hostname.endsWith('localhost')) {
+    url = `http://localhost:${location.port}/config-dummy.php`;
+  }else if (location.hostname.endsWith('pling.local')) {
+    url = `http://pling.local/home/metamenubundlejs?target=${target}`;
+  }
+
+  try {
+    const response = await fetch(url, {
+      mode: 'cors',
+      credentials: 'include'
+    });
+    if (!response.ok) {
+      throw new Error('Network response error');
+    }
+    config = await response.json();
+    return true;
+  }
+  catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
 window.appHelpers = function () {
 
   function generateMenuGroupsArray(domains) {
@@ -1341,3 +1395,47 @@ class MobileLeftSidePanel extends React.Component {
     );
   }
 }
+
+
+customElements.define('opendesktop-metaheader', class extends HTMLElement {
+  constructor() {
+    super();
+    this.buildComponent();
+  }
+
+  async buildComponent() {
+    await initConfig(this.getAttribute('config-target'));
+
+    const metaheaderElement = document.createElement('div');
+    metaheaderElement.id = 'metaheader';
+    ReactDOM.render(React.createElement(MetaHeader, null), metaheaderElement);
+
+    const stylesheetElement = document.createElement('link');
+    stylesheetElement.rel = 'stylesheet';
+    if (location.hostname.endsWith('opendesktop.org')) {
+      stylesheetElement.href = 'https://www.opendesktop.org/theme/react/assets/css/metaheader.css';
+    }
+    else if (location.hostname.endsWith('opendesktop.cc')) {
+      stylesheetElement.href = 'https://www.opendesktop.cc/theme/react/assets/css/metaheader.css';
+    }
+    else if (location.hostname.endsWith('localhost')) {
+      stylesheetElement.href = 'https://www.opendesktop.cc/theme/react/assets/css/metaheader.css';
+    }else{
+       stylesheetElement.href = 'https://www.opendesktop.org/theme/react/assets/css/metaheader.css';
+    }
+
+    // Component must be capsule within Shadow DOM, and don't hack
+    // context/scope of external sites.
+    /*
+    this.attachShadow({mode: 'open'});
+    this.shadowRoot.appendChild(stylesheetElement);
+    this.shadowRoot.appendChild(metaheaderElement);
+    */
+
+    // However, make this as Light DOM for now, because current
+    // implementation is not real component design yet.
+    // Need solve event handling, scoped CSS.
+    this.appendChild(stylesheetElement);
+    this.appendChild(metaheaderElement);
+  }
+});
