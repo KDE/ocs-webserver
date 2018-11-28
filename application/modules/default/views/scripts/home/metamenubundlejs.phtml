@@ -96,14 +96,16 @@ if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
 $user = null;
 if (Zend_Auth::getInstance()->hasIdentity()){
     $identity = Zend_Auth::getInstance()->getStorage()->read();
+    $helperImage = new Default_View_Helper_Image();
+    $avatar = $helperImage->image($identity->profile_image_url,array('width' => 40, 'height' => 40, 'crop' => 2));
     $user = array(
         "username" => $identity->username,
         "member_id" => $identity->member_id,
         "mail" => $identity->mail,
-        "profile_image_url" => $identity->profile_image_url,
+        "avatar" => $avatar, 
         "roleName" =>$identity->roleName
     );
-    $user = $user;
+  
 }
 
 $sname = Zend_Registry::get('store_host');
