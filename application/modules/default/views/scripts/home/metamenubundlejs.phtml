@@ -103,7 +103,7 @@ if (Zend_Auth::getInstance()->hasIdentity()){
         "profile_image_url" => $identity->profile_image_url,
         "roleName" =>$identity->roleName
     );
-    $user = $identity;
+    $user = $user;
 }
 
 $sname = Zend_Registry::get('store_host');
