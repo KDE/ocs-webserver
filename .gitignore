@@ -80,3 +80,5 @@ node_modules/*
 .ftpconfig
 appimagehub-bu/*
 /nbproject/
+
+TEMP_opendesktop-metaheader-master/*

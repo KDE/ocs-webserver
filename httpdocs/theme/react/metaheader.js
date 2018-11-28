@@ -61,7 +61,7 @@ class MetaHeader extends React.Component {
       gitlabUrl: config.gitlabUrl,
       sName: config.sName,
       isExternal: config.isExternal,
-      user: {},
+      user: config.user,
       showModal: false,
       modalUrl: '',
       isAdmin: config.json_isAdmin
@@ -117,6 +117,8 @@ class MetaHeader extends React.Component {
   }
 
   render() {
+
+    console.log(config);
 
     let domainsMenuDisplay;
     if (this.state.device === "tablet") {
