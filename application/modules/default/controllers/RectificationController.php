@@ -85,22 +85,6 @@ class RectificationController extends Local_Controller_Action_DomainSwitch
 
         Zend_Auth::getInstance()->getStorage()->write($this->_authMember);
 
-        //try {
-        //    $id_server = new Default_Model_Ocs_OAuth();
-        //    $id_server->createUser($this->_authMember->member_id);
-        //} catch (Exception $e) {
-        //    Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
-        //}
-        //try {
-        //    $ldap_server = new Default_Model_Ocs_Ldap();
-        //    $ldap_server->createUser($this->_authMember->member_id);
-        //    if (isset($oldUsername)) {
-        //        $ldap_server->deleteByUsername($oldUsername);
-        //    }
-        //} catch (Exception $e) {
-        //    Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
-        //}
-
         $modelMember = new  Default_Model_Member();
         $record = $modelMember->fetchMemberData($this->_authMember->member_id, false);
 
