@@ -225,7 +225,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'startdownload',
             'ppload',
             'loadratings',
-            'loadinstallinstruction'
+            'loadinstallinstruction',
+            'fetch-products-for-git-project-ajax'
         ));
 
         // resource default_product
