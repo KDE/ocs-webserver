@@ -21,6 +21,8 @@ async function initConfig(target) {
   // Can we consider if include user information into JSON data of
   // API response instead of cookie set each external site?
 
+  console.log(config);
+
   let url = '';
 
   if (location.hostname.endsWith('opendesktop.org')) {
@@ -427,11 +429,16 @@ class AdminsDropDownMenu extends React.Component {
 
   componentDidMount() {
     const self = this;
-    $.ajax({url: config.gitlabUrl+"/api/v4/users?username="+this.props.user.username,cache: false})
-      .done(function(response){
-        const gitlabLink = self.state.gitlabLink + response[0].id;
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        const res = JSON.parse(this.response);
+        const gitlabLink = self.state.gitlabLink + res[0].id;
         self.setState({gitlabLink:gitlabLink,loading:false});
-    });
+      }
+    };
+    xhttp.open("GET", config.gitlabUrl+"/api/v4/users?username="+this.props.user.username, true);
+    xhttp.send();
   }
 
   handleClick(e){
@@ -704,7 +711,6 @@ class UserContextMenuContainer extends React.Component {
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        console.log(this.response[0]);
         const res = JSON.parse(this.response);
         const gitlabLink = self.state.gitlabLink + res[0].id;
         self.setState({gitlabLink:gitlabLink,loading:false});
@@ -712,7 +718,6 @@ class UserContextMenuContainer extends React.Component {
     };
     xhttp.open("GET", config.gitlabUrl+"/api/v4/users?username="+this.props.user.username, true);
     xhttp.send();
-
   }
 
   handleClick(e){
