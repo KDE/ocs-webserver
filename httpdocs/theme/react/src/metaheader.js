@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 // Still need jQuery?
-import $ from 'jquery';
+// import $ from 'jquery';
 
 // Use this object for config data instead of window.domains,
 // window.baseUrl, window.etc... so don't set variables in global scope.
