@@ -34,8 +34,6 @@ async function initConfig(target) {
     url = `http://pling.local/home/metamenubundlejs?target=${target}`;
   }
 
-  console.log(url);
-
   try {
     const response = await fetch(url, {
       mode: 'cors',
