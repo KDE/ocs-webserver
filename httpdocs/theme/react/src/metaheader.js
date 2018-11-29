@@ -708,6 +708,18 @@ class UserContextMenuContainer extends React.Component {
         const gitlabLink = self.state.gitlabLink + response[0].id;
         self.setState({gitlabLink:gitlabLink,loading:false});
     });
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      console.log(this);
+      /*if (this.readyState == 4 && this.status == 200) {
+           // Typical action to be performed when the document is ready:
+           document.getElementById("demo").innerHTML = xhttp.responseText;
+      }*/
+    };
+    xhttp.open("GET", config.gitlabUrl+"/api/v4/users?username="+this.props.user.username, true);
+    xhttp.send();
+
   }
 
   handleClick(e){
