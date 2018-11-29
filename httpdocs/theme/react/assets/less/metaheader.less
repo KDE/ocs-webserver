@@ -20,20 +20,21 @@ body {
 
   &.navigation-topics,
   &.category-themes-and-apps,
-  &.docked,
-  &.staff,
-  &[class^="category-"] {
+  &.category-general {
     #metaheader #metaheader-nav #user-context-menu-container .user-dropdown .th-icon {
       margin-top: -5px;
     }
     #metaheader #metaheader-nav #user-login-menu-container .user-dropdown .dropdown-toggle img {
       // margin-top: -7px;
     }
-    .d-header {
-      top: 34px;
-    }
-    #metaheader {
-      position: fixed;
+
+    &.docked {
+      .d-header {
+        top: 34px;
+      }
+      #metaheader {
+        position: fixed;
+      }
     }
   }
 }
