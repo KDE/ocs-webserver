@@ -988,10 +988,9 @@ customElements.define('opendesktop-metaheader', class extends HTMLElement {
 
     const stylesheetElement = document.createElement('link');
     stylesheetElement.rel = 'stylesheet';
-    if (location.hostname.endsWith('opendesktop.org')) {
-      stylesheetElement.href = 'https://www.opendesktop.org/theme/react/assets/css/metaheader.css';
-    }
-    else if (location.hostname.endsWith('opendesktop.cc')) {
+    stylesheetElement.href = 'https://www.opendesktop.org/theme/react/assets/css/metaheader.css';
+
+    else if (location.hostname.endsWith('cc')) {
       stylesheetElement.href = 'https://www.opendesktop.cc/theme/react/assets/css/metaheader.css';
     }
     else if (location.hostname.endsWith('localhost')) {
