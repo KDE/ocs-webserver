@@ -27,15 +27,16 @@ async function initConfig(target) {
 
   console.log(location.hostname.endsWith('cc'));
 
-  if (location.hostname.endsWith('opendesktop.org')) {
+  if (location.hostname.endsWith('org')) {
     url = `https://www.opendesktop.org/home/metamenubundlejs?target=${target}`;
   }
-  else if (location.hostname.endsWith('opendesktop.cc')) {
+  else if (location.hostname.endsWith('cc')) {
     url = `https://www.opendesktop.cc/home/metamenubundlejs?target=${target}`;
   }
   else if (location.hostname.endsWith('localhost')) {
     url = `http://localhost:${location.port}/config-dummy.php`;
-  }else if (location.hostname.endsWith('pling.local')) {
+  }
+  else if (location.hostname.endsWith('pling.local')) {
     url = `http://pling.local/home/metamenubundlejs?target=${target}`;
   }
 
