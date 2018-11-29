@@ -703,12 +703,12 @@ class UserContextMenuContainer extends React.Component {
 
   componentDidMount() {
     const self = this;
-    $.ajax({url: config.gitlabUrl+"/api/v4/users?username="+this.props.user.username,cache: false})
+    /*$.ajax({url: config.gitlabUrl+"/api/v4/users?username="+this.props.user.username,cache: false})
       .done(function(response){
         const gitlabLink = self.state.gitlabLink + response[0].id;
         self.setState({gitlabLink:gitlabLink,loading:false});
-    });
-
+    });*/
+    console.log('component did mount');
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       console.log(this);
@@ -717,6 +717,7 @@ class UserContextMenuContainer extends React.Component {
            document.getElementById("demo").innerHTML = xhttp.responseText;
       }*/
     };
+
     xhttp.open("GET", config.gitlabUrl+"/api/v4/users?username="+this.props.user.username, true);
     xhttp.send();
 
