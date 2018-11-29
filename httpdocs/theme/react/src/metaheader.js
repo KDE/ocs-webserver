@@ -132,8 +132,6 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log(config);
-    console.log(window.location);
     this.initMetaHeader();
   }
 
