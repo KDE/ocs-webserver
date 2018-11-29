@@ -21,9 +21,11 @@ async function initConfig(target) {
   // Can we consider if include user information into JSON data of
   // API response instead of cookie set each external site?
 
-  console.log(config);
+  console.log('need the isExternal var here');
 
   let url = '';
+
+  console.log(location.hostname.endsWith());
 
   if (location.hostname.endsWith('opendesktop.org')) {
     url = `https://www.opendesktop.org/home/metamenubundlejs?target=${target}`;
