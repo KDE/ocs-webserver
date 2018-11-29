@@ -1,7 +1,9 @@
 {
   "name": "opendesktop-metaheader",
   "version": "0.0.0",
-  "description": "",
+  "description": "opendesktop-metaheader Web Components",
+  "license": "AGPL-3.0",
+  "repository": "https://cgit.kde.org/ocs-webserver.git/",
   "main": "src/metaheader.js",
   "scripts": {
     "build": "webpack --mode production",
