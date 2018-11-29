@@ -20,5 +20,8 @@
     "react": "*",
     "react-dom": "*",
     "jquery": "*"
+  },
+  "dependencies": {
+    "@webcomponents/custom-elements": "^1.2.1"
   }
 }
