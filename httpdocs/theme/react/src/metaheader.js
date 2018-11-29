@@ -21,12 +21,9 @@ async function initConfig(target) {
   // Can we consider if include user information into JSON data of
   // API response instead of cookie set each external site?
 
-  let url = '';
+  let url = `https://www.opendesktop.org/home/metamenubundlejs?target=${target}`;
 
-  if (location.hostname.endsWith('org') || location.hostname.endsWith('com')) {
-    url = `https://www.opendesktop.org/home/metamenubundlejs?target=${target}`;
-  }
-  else if (location.hostname.endsWith('cc')) {
+  if (location.hostname.endsWith('cc')) {
     url = `https://www.opendesktop.cc/home/metamenubundlejs?target=${target}`;
   }
   else if (location.hostname.endsWith('localhost')) {
@@ -35,6 +32,8 @@ async function initConfig(target) {
   else if (location.hostname.endsWith('pling.local')) {
     url = `http://pling.local/home/metamenubundlejs?target=${target}`;
   }
+
+  console.log(url);
 
   try {
     const response = await fetch(url, {
