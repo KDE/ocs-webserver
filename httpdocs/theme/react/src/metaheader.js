@@ -705,7 +705,8 @@ class UserContextMenuContainer extends React.Component {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         console.log(this.response[0]);
-        const gitlabLink = self.state.gitlabLink + this.response[0].id;
+        const res = JSON.parse(this.response);
+        const gitlabLink = self.state.gitlabLink + res[0].id;
         self.setState({gitlabLink:gitlabLink,loading:false});
       }
     };
