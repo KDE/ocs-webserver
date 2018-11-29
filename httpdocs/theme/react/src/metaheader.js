@@ -25,7 +25,7 @@ async function initConfig(target) {
 
   let url = '';
 
-  console.log(location.hostname.endsWith());
+  console.log(location.hostname.endsWith('cc'));
 
   if (location.hostname.endsWith('opendesktop.org')) {
     url = `https://www.opendesktop.org/home/metamenubundlejs?target=${target}`;
