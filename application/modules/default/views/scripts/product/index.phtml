@@ -376,7 +376,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                      ?>
 
                                     <p class="light small">
-                                    <span class="source">Source (link to original if based on other people's unmodified work): </span>
+                                    <span class="source">Source (link to git-repo or to original if based on someone elses unmodified work): </span>
                                     <?php if (false === empty($this->product->gitlab_project_id)) {
                                         $url = $this->gitlab_project['web_url'];
                                         $url = str_replace("http://", "https://", $url);
