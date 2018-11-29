@@ -82,6 +82,6 @@ appimagehub-bu/*
 /nbproject/
 
 httpdocs/theme/react/node_modules/*
-httpdocs/theme/react/package-lock.json 
+httpdocs/theme/react/package-lock.json
 httpdocs/theme/react/package.json
 httpdocs/theme/react/webpack.config.js
