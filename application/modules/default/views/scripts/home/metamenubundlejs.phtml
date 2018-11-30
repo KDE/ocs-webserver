@@ -122,7 +122,8 @@ $response = array(
     "gitlabUrl" => $url_gitlab,
     "loginUrl" => $url_login,
     "logoutUrl" => $url_logout,
-    "sName" => $sname
+    "sName" => $sname,
+    "url" =>$this->serverUrl(). $this->url()
 );
 
 echo Zend_Json::encode($response);
