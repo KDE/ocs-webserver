@@ -62,11 +62,10 @@ if(isset($_GET['target'])) {
     $target = $_GET['target'];
 }
 
-// $thisurl = "/";
-// if(isset($_GET['url'])) {
-//     $thisurl = $_GET['url'];
-// }
-$thisurl = $this->serverUrl(). $this->url();
+$thisurl = "/";
+if(isset($_GET['url'])) {
+    $thisurl = $_GET['url'];
+}
 
 $isExternal = 'var isExternal = true;';
 $is_external = true;
