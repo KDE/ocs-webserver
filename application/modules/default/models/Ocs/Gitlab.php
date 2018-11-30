@@ -169,12 +169,21 @@ class Default_Model_Ocs_Gitlab
         if (false === empty($user_by_uid)) {
             return $user_by_uid;
         }
+        $this->messages[] = "external id not found. external_id: " . $extern_uid;
 
         $user_by_dn = $this->getUserByDN(urlencode($username));
 
         if (false === empty($user_by_dn)) {
             return $user_by_dn;
         }
+        $this->messages[] = "ldap dn not found. username: " . $username;
+
+        $user_by_name = $this->getUserWithName(urlencode($username));
+
+        if (false === empty($user_by_name)) {
+            return $user_by_name;
+        }
+        $this->messages[] = "username not found. username: " . $username;
 
         return null;
     }
