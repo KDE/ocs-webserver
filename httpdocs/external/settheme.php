@@ -9,10 +9,12 @@ if(extension_loaded('zlib')){ob_start('ob_gzhandler');}
 header("Content-type: text/css");
 if(isset($_GET['k'])) {
     $key = $_GET['k'];
-    $session_id = Local_LoginCookie::readJwt($key);
+    $data = Local_LoginCookie::readJwt($key);
+    $session_id = $data[1];
+    $session_name = $data[0];
     if ($session_id) {
         $cookie_params = session_get_cookie_params();
-        setcookie("OcsWebserverId", $session_id, time()+31536000,  $cookie_params['path'], $_SERVER['HTTP_HOST'], $cookie_params['secure'], true);
+        setcookie($session_name, $session_id, time()+31536000,  $cookie_params['path'], $_SERVER['HTTP_HOST'], $cookie_params['secure'], true);
     }
 }
 include dirname(__FILE__) . "/../theme/flatui/css/empty.css";
