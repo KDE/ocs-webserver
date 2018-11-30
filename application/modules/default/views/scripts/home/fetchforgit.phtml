@@ -23,8 +23,8 @@
 
 http_response_code(200);
 
-
-header('Access-Control-Allow-Origin: https://git.opendesktop.cc', true);
+$url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
+header('Access-Control-Allow-Origin: '.$url_gitlab, true);
 header('Access-Control-Allow-Credentials: true', true);
 header('Access-Control-Max-Age: 1728000', true);
 
