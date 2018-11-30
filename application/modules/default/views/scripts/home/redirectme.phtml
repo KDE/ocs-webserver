@@ -30,15 +30,17 @@ $domains = $info->getActiveStoresForCrossDomainLogin();
         if ($domain == $_SERVER['HTTP_HOST']) {
             continue;
         }
-        $data = array(Zend_Registry::get('config')->phpSettings->session->name, Zend_Session::getId());
-        $cookie = Local_LoginCookie::createJwt($data, 120);
-        $url = sprintf('https://%s/external/settheme.php?k=%s&XDEBUG_SESSION=PHPSTORM', $domain, $cookie);
+        $id = crc32($domain.Zend_Session::getId());
+        $data = array('domain' => Zend_Registry::get('config')->phpSettings->session->name, 'id' => Zend_Session::getId());
+        Zend_Registry::get('cache')->save($data, $id);
+        $cookie = Local_LoginCookie::createJwt($id, 120);
+        $url = sprintf('%s://%s/l/settheme?k=%s', $http_scheme, $domain, $cookie);
         echo('<link type="text/css" rel="stylesheet" href="'.$url.'" />'.PHP_EOL);
     }
     ?>
     <script>
         function loadComplete() {
-            document.location.href = "<?= $this->redirect ?>";
+            //document.location.href = "<?= $this->redirect ?>";
         }
 
         function loadSubSys() {
@@ -58,19 +60,6 @@ $domains = $info->getActiveStoresForCrossDomainLogin();
 <p>
     Please Wait...
 </p>
-<?php
-foreach ($domains as $domain) {
-
-//    echo '<img src="https://'.$domain.'/external/setdata.php?id='.$member->member_id.'&name='.$member->username.'&mail='.$member->mail.'&avatar='.$this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)).'" height="0" width="0">';
-    
-}
-?>
-<!--
-<img src="/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>" height="0" width="0">
-<img src="<?= $url_gitlab ?>/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
-<img src="<?= $url_forum ?>:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>" height="0" width="0">
-<img src="<?= $url_myopendesktop ?>/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
--->
 <img src="<?= $http_scheme?>://<?= $config->openid->host ?>/login/setsession?ltat=<?= $ltat ?>" height="0" width="0" onload="loadSubSys();"/>
 <img data-src="<?=$http_scheme?>://<?= $config->forum->host ?>/session/sso?return_path=%2F" height="0" width="0" id="f-login" />
 <img data-src="<?= $url_gitlab ?>/users/auth/oauth_opendesktop" height="0" width="0" id="g-login"/>

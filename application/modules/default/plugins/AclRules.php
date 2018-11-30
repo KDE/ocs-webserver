@@ -80,6 +80,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_dl'));
         $this->addResource(new Zend_Acl_Resource ('default_password'));
         $this->addResource(new Zend_Acl_Resource ('default_verify'));
+        $this->addResource(new Zend_Acl_Resource ('default_login'));
 
         $this->addResource(new Zend_Acl_Resource ('default_stati'));
         $this->addResource(new Zend_Acl_Resource ('default_tag'));
@@ -153,7 +154,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_dl',
             'default_stati',
             'default_password',
-            'default_verify'
+            'default_verify',
+            'default_login'
         ));
 
         $this->allow(self::ROLENAME_SYSUSER, array(
