@@ -1,0 +1,18 @@
+<?php
+require  APPLICATION_LIB . "/Local/LoginCookie.php";
+
+header("Content-type: text/css");
+if(isset($_GET['k'])) {
+    $key = $_GET['k'];
+    $id = Local_LoginCookie::readJwt($key);
+    if ($id) {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        if ($data = $cache->load($id)) {
+            $cookie_params = session_get_cookie_params();
+            setcookie($data['domain'], $data['id'], time()+31536000,  $cookie_params['path'], $_SERVER['HTTP_HOST'], $cookie_params['secure'], true);
+            $cache->remove($id);
+        }
+    }
+}
+include APPLICATION_PATH . "/../httpdocs/theme/flatui/css/empty.css";
