@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -23,9 +24,11 @@ class Default_View_Helper_EncryptUrl extends Zend_View_Helper_Abstract
 {
 
     /**
-     * @param $string
+     * @param string $string
      * @param bool $setHomeIfEmpty
+     *
      * @return string
+     * @throws Zend_Filter_Exception
      */
     public function EncryptUrl($string, $setHomeIfEmpty = false)
     {

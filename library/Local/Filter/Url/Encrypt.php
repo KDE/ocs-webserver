@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,7 +20,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Local_Filter_Url_Encrypt implements Zend_Filter_Interface
 {
 
@@ -27,20 +27,22 @@ class Local_Filter_Url_Encrypt implements Zend_Filter_Interface
      * Returns the result of filtering $value
      *
      * @param  mixed $value
+     *
      * @throws Zend_Filter_Exception If filtering $value is impossible
      * @return mixed
      */
     public function filter($value)
     {
-        return $this->encryptUrl($value);
+        return $this->encryptForUrl($value);
     }
 
     /**
      * @param string $url
-     * @param bool $setHomeIfEmpty
+     * @param bool   $setHomeIfEmpty
+     *
      * @return string
      */
-    protected function encryptUrl($url, $setHomeIfEmpty = false)
+    protected function encryptForUrl($url)
     {
         if (empty($url)) {
             return '';
@@ -49,13 +51,13 @@ class Local_Filter_Url_Encrypt implements Zend_Filter_Interface
         /*  Set various encryption options. */
         $options = array(
             // Encryption type - Openssl or Mcrypt
-            'adapter' => 'mcrypt',
+            'adapter'   => 'mcrypt',
             // Initialization vector
-            'vector' => '236587hgtyujkirtfgty5678',
+            'vector'    => '236587hgtyujkirtfgty5678',
             // Encryption algorithm
             'algorithm' => 'rijndael-192',
             // Encryption key
-            'key' => 'KFJGKDK$$##^FFS345678FG2'
+            'key'       => 'KFJGKDK$$##^FFS345678FG2'
         );
 
         /* Initialize the library and pass the options */
@@ -64,7 +66,8 @@ class Local_Filter_Url_Encrypt implements Zend_Filter_Interface
         return $this->base64url_encode($filter->filter(trim($url)));
     }
 
-    protected function base64url_encode($data) {
+    protected function base64url_encode($data)
+    {
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
 

@@ -1,0 +1,24 @@
+{
+  "name": "opendesktop-metaheader",
+  "version": "0.0.0",
+  "description": "opendesktop-metaheader Web Components",
+  "license": "AGPL-3.0",
+  "repository": "https://cgit.kde.org/ocs-webserver.git/",
+  "main": "src/metaheader.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "webpack --mode production --watch"
+  },
+  "devDependencies": {
+    "webpack": "*",
+    "webpack-cli": "*",
+    "@babel/core": "*",
+    "@babel/preset-env": "*",
+    "@babel/preset-react": "*",
+    "@babel/polyfill": "*",
+    "babel-loader": "*",
+    "@webcomponents/custom-elements": "*",
+    "react": "*",
+    "react-dom": "*"
+  }
+}

@@ -2636,5 +2636,4 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         return $gitProjectIssues;
     }
 
-
 }

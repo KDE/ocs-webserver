@@ -1,28 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <script>
-        function loadComplete() {
-            document.location.href = "<?= $this->redirect ?>";
-        }
-
-        function loadSubSys() {
-            var img = document.getElementById('f-login');
-            var img_src = img.getAttribute('data-src');
-            img.setAttribute('src', img_src);
-
-            var img_g = document.getElementById('g-login');
-            var img_src_g = img_g.getAttribute('data-src');
-            img_g.setAttribute('src', img_src_g);
-
-            return true;
-        }
-    </script>
-</head>
-<body onload="loadComplete()">
-<p>
-    Please Wait...
-</p>
 <?php
 /** @var Zend_Controller_Request_Http $request */
 $request = Zend_Controller_Front::getInstance()->getRequest();
@@ -47,20 +22,57 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 $info = new Default_Model_Info();
 $domains = $info->getActiveStoresForCrossDomainLogin();
 
+?><!DOCTYPE html>
+<html>
+<head>
+    <?php
+    foreach ($domains as $domain) {
+        if ($domain == $_SERVER['HTTP_HOST']) {
+            continue;
+        }
+        $cookie = Local_LoginCookie::createJwt(Zend_Session::getId(), 120);
+        $url = sprintf('https://%s/external/settheme.php?k=%s', $domain, $cookie);
+        echo('<link type="text/css" rel="stylesheet" href="'.$url.'" />'.PHP_EOL);
+    }
+    ?>
+    <script>
+        function loadComplete() {
+            document.location.href = "<?= $this->redirect ?>";
+        }
 
+        function loadSubSys() {
+            var img = document.getElementById('f-login');
+            var img_src = img.getAttribute('data-src');
+            img.setAttribute('src', img_src);
+
+            var img_g = document.getElementById('g-login');
+            var img_src_g = img_g.getAttribute('data-src');
+            img_g.setAttribute('src', img_src_g);
+
+            return true;
+        }
+    </script>
+</head>
+<body onload="loadComplete()">
+<p>
+    Please Wait...
+</p>
+<?php
 foreach ($domains as $domain) {
 
-    echo '<img src="https://'.$domain.'/external/setdata.php?id='.$member->member_id.'&name='.$member->username.'&mail='.$member->mail.'&avatar='.$this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)).'" height="0" width="0">';
+//    echo '<img src="https://'.$domain.'/external/setdata.php?id='.$member->member_id.'&name='.$member->username.'&mail='.$member->mail.'&avatar='.$this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)).'" height="0" width="0">';
     
 }
 ?>
+<!--
 <img src="/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>" height="0" width="0">
 <img src="<?= $url_gitlab ?>/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
 <img src="<?= $url_forum ?>:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>" height="0" width="0">
+<img src="<?= $url_myopendesktop ?>/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
+-->
 <img src="<?= $http_scheme?>://<?= $config->openid->host ?>/login/setsession?ltat=<?= $ltat ?>" height="0" width="0" onload="loadSubSys();"/>
 <img data-src="<?=$http_scheme?>://<?= $config->forum->host ?>/session/sso?return_path=%2F" height="0" width="0" id="f-login" />
 <img data-src="<?= $url_gitlab ?>/users/auth/oauth_opendesktop" height="0" width="0" id="g-login"/>
-<img src="<?= $url_myopendesktop ?>/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
 
 </body>
 </html>

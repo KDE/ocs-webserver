@@ -298,10 +298,11 @@ class Default_Model_Ocs_Ldap
      * @param array $member
      *
      * @return array
+     * @throws Zend_Exception
      */
     private function createEntryUser($member)
     {
-        $username = strtolower($member['username']);
+        $username = mb_strtolower($member['username']);
         $password = '{MD5}' . base64_encode(pack("H*", $member['password']));
         $jpegPhoto = $this->createJpegPhoto($member['member_id'], $member['profile_image_url']);
 
@@ -324,7 +325,6 @@ class Default_Model_Ocs_Ldap
             Zend_Ldap_Attribute::setAttribute($entry, 'sn', $member['lastname']);
         }
 
-        Zend_Ldap_Attribute::setAttribute($entry, 'memberUid', $member['external_id']);
         Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $jpegPhoto);
 
         return $entry;
@@ -552,6 +552,7 @@ class Default_Model_Ocs_Ldap
      * @param bool $force
      *
      * @return array|bool
+     * @throws Zend_Exception
      * @throws Zend_Ldap_Exception
      */
     public function createUserFromArray($member_data, $force = false)
@@ -587,6 +588,7 @@ class Default_Model_Ocs_Ldap
         if (true === $force) {
 
             if ($this->hasChangedUsername($member_data['username'], $user)) {
+                $this->errMessages[] = "has changed username";
                 $dnDelete = $user['dn'];
                 $connection->delete($dnDelete);
                 $connection->getLastError($this->errCode, $this->errMessages);
@@ -595,8 +597,8 @@ class Default_Model_Ocs_Ldap
             } else {
                 $connection->update($dn, $entry);
                 $connection->getLastError($this->errCode, $this->errMessages);
-                $this->errMessages[] = "overwritten : " . json_encode($user);
             }
+            $this->errMessages[] = "overwritten : " . json_encode($user);
 
             return $entry;
         }
@@ -629,25 +631,19 @@ class Default_Model_Ocs_Ldap
             throw new Default_Model_Ocs_Exception("{$member_id} is ambiguous");
         }
 
-        $username = strtolower($username);
-        $entry = $ldap->getEntry("cn={$username},{$this->baseDnUser}");
-
-        if (empty($entry) AND empty($entries)) {
-            return null;
-        }
-        if (empty($entry) AND !empty($entries)) {
+        if (false === empty($entries)) {
             return $entries[0];
         }
-        if (!empty($entry) AND empty($entries)) {
-            return $entry;
-        }
 
-        return $entries[0];
+        $username = mb_strtolower($username);
+        $entry = $ldap->getEntry("cn={$username},{$this->baseDnUser}");
+
+        return $entry;
     }
 
     private function hasChangedUsername($user_name, $user)
     {
-        return !Zend_Ldap_Attribute::attributeHasValue($user, 'cn', $user_name);
+        return !Zend_Ldap_Attribute::attributeHasValue($user, 'cn', mb_strtolower($user_name));
     }
 
     /**
@@ -676,6 +672,14 @@ class Default_Model_Ocs_Ldap
         } catch (Exception $e) {
             $this->errCode = 998;
             $this->errMessages[] = $e->getMessage();
+            $user = null;
+
+            return false;
+        }
+
+        if (empty($user)) {
+            $this->errCode = 998;
+            $this->errMessages[] = "user not exist";
             $user = null;
 
             return false;
@@ -894,6 +898,11 @@ class Default_Model_Ocs_Ldap
         Zend_Ldap_Attribute::removeDuplicatesFromAttribute($group, 'owner');
 
         return $group;
+    }
+
+    public function resetMessages()
+    {
+        $this->errMessages = array();
     }
 
 }

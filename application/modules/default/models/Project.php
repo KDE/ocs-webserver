@@ -513,6 +513,12 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function fetchMoreProjects($project, $count = 6)
     {
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5($project->project_id);
+        if (false !== ($result = $cache->load($cacheName))) {
+            return $result;
+        }
+
         $q = $this->select()->from('stat_projects', array(
             'project_id',
             'image_small',
@@ -537,7 +543,9 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $q = $this->generatePackageTypeFilter($q, array(self::FILTER_NAME_PACKAGETYPE => $storePackageTypeIds));
         }
 
-        return $this->fetchAll($q);
+        $result = $this->fetchAll($q);
+        $cache->save($result, $cacheName, array(), 300);
+        return $result;
     }
 
 
@@ -601,6 +609,13 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function fetchMoreProjectsOfOtherUsr($project, $count = 8)
     {
+
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5($project->project_id);
+        if (false !== ($result = $cache->load($cacheName))) {
+            return $result;
+        }
+
         $sql = "
                 SELECT count(1) AS `count`
                 FROM stat_projects
@@ -646,7 +661,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $q = $this->generatePackageTypeFilter($q, array(self::FILTER_NAME_PACKAGETYPE => $storePackageTypeIds));
         }
 
-        return $this->fetchAll($q);
+        $result = $this->fetchAll($q);
+        $cache->save($result, $cacheName, array(), 300);
+        return $result;
+        
     }
 
     /**
@@ -1333,62 +1351,62 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         return $projectData;
     }
 
-    /**
-     * @param int|array $storeCategories
-     * @param boolean   $withoutUpdates
-     *
-     * @return array
-     * @throws Zend_Db_Statement_Exception
-     * @throws Zend_Exception
-     * @todo: update the sql. It is deprecated since we store only one cat_id for the product.
-     */
-    public function fetchProductsForCategories($storeCategories, $withoutUpdates = true)
-    {
-        //        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
+    // /**
+    //  * @param int|array $storeCategories
+    //  * @param boolean   $withoutUpdates
+    //  *
+    //  * @return array
+    //  * @throws Zend_Db_Statement_Exception
+    //  * @throws Zend_Exception
+    //  * @todo: update the sql. It is deprecated since we store only one cat_id for the product.
+    //  */
+    // public function fetchProductsForCategories($storeCategories, $withoutUpdates = true)
+    // {
+    //     //        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
 
-        if (empty($storeCategories)) {
-            return array();
-        }
+    //     if (empty($storeCategories)) {
+    //         return array();
+    //     }
 
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        $storePackageTypeIds = null;
-        if ($storeConfig) {
-            $storePackageTypeIds = $storeConfig->package_type;
-        }
+    //     $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+    //     $storePackageTypeIds = null;
+    //     if ($storeConfig) {
+    //         $storePackageTypeIds = $storeConfig->package_type;
+    //     }
 
-        $sql = '
-                SELECT
-                  p.*,
-                  p.changed_at AS project_changed_at,
-                  pc.title AS cat_title,
-                  m.username,
-                  m.avatar,
-                  m.profile_image_url,
-                  m.roleId,
-                  m.mail,
-                  m.paypal_mail,
-                  m.dwolla_id,
-               	 laplace_score(p.count_likes,p.count_dislikes) AS laplace_score
-                FROM project AS p
-                  JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
-                  JOIN project_category AS pc ON p.project_category_id = pc.project_category_id';
+    //     $sql = '
+    //             SELECT
+    //               p.*,
+    //               p.changed_at AS project_changed_at,
+    //               pc.title AS cat_title,
+    //               m.username,
+    //               m.avatar,
+    //               m.profile_image_url,
+    //               m.roleId,
+    //               m.mail,
+    //               m.paypal_mail,
+    //               m.dwolla_id,
+    //            	 laplace_score(p.count_likes,p.count_dislikes) AS laplace_score
+    //             FROM project AS p
+    //               JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
+    //               JOIN project_category AS pc ON p.project_category_id = pc.project_category_id';
 
-        if ($storePackageTypeIds) {
-            $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('
-                    . $storePackageTypeIds . ')) package_type  ON p.project_id = package_type.project_id';
-        }
+    //     if ($storePackageTypeIds) {
+    //         $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('
+    //                 . $storePackageTypeIds . ')) package_type  ON p.project_id = package_type.project_id';
+    //     }
 
-        $sql .= ' WHERE p.project_category_id IN (' . implode(',', $storeCategories) . ') AND p.status >= 100';
+    //     $sql .= ' WHERE p.project_category_id IN (' . implode(',', $storeCategories) . ') AND p.status >= 100';
 
-        if ($withoutUpdates) {
-            $sql .= ' AND p.type_id = 1';
-        }
-        //        $this->_db->getProfiler()->setEnabled(true);
-        $result = $this->_db->query($sql)->fetchAll();
-        //        $dummy = $this->_db->getProfiler()->getLastQueryProfile()->getQuery();
-        //        $this->_db->getProfiler()->setEnabled(true);
-        return $result;
-    }
+    //     if ($withoutUpdates) {
+    //         $sql .= ' AND p.type_id = 1';
+    //     }
+    //     //        $this->_db->getProfiler()->setEnabled(true);
+    //     $result = $this->_db->query($sql)->fetchAll();
+    //     //        $dummy = $this->_db->getProfiler()->getLastQueryProfile()->getQuery();
+    //     //        $this->_db->getProfiler()->setEnabled(true);
+    //     return $result;
+    // }
 
     /**
      * @param int $member_id

@@ -52,24 +52,23 @@ class MetaHeader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      domains: window.domains,
-      baseUrl: window.baseUrl,
-      blogUrl: window.blogUrl,
-      forumUrl: window.forumUrl,
-      loginUrl: window.loginUrl,
-      logoutUrl: window.logoutUrl,
-      gitlabUrl: window.gitlabUrl,
-      sName: window.sName,
-      isExternal: window.isExternal,
-      user: {},
+      domains: config.domains,
+      baseUrl: config.baseUrl,
+      blogUrl: config.blogUrl,
+      forumUrl: config.forumUrl,
+      loginUrl: config.loginUrl,
+      logoutUrl: config.logoutUrl,
+      gitlabUrl: config.gitlabUrl,
+      sName: config.sName,
+      isExternal: config.isExternal,
+      user: config.user,
       showModal: false,
-      modalUrl: ''
+      modalUrl: '',
+      isAdmin: config.json_isAdmin
     };
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
-    this.getUser = this.getUser.bind(this);
-    this.handlePopupLinkClick = this.handlePopupLinkClick.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    //this.getUser = this.getUser.bind(this);
   }
 
   componentWillMount() {
@@ -77,6 +76,9 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
+    console.log(config);
+    console.log(window);
+    console.log(initConfig(target));
     this.initMetaHeader();
   }
 
@@ -88,7 +90,7 @@ class MetaHeader extends React.Component {
   initMetaHeader() {
     window.addEventListener("resize", this.updateDimensions);
     window.addEventListener("orientationchange", this.updateDimensions);
-    this.getUser();
+    //this.getUser();
   }
 
   getUser() {
@@ -116,70 +118,32 @@ class MetaHeader extends React.Component {
     this.setState({ device: device });
   }
 
-  handlePopupLinkClick(key) {
-    let url = this.state.baseUrl;
-    if (key === "FAQ") {
-      if (this.state.isExternal === true) {
-        url = "/plings";
-      } else {
-        url += "/#plingList";
-      }
-    } else if (key === "API") {
-      if (this.state.isExternal === true) {
-        url = "/partials/ocsapicontent.phtml";
-      } else {
-        url += "/#ocsapiContent";
-      }
-    } else if (key === "ABOUT") {
-      if (this.state.isExternal === true) {
-        url = "/partials/about.phtml";
-      } else {
-        url += "/#aboutContent";
-      }
-    }
-
-    if (this.state.isExternal === true) {
-      window.open(url, '_blank');
-    } else {
-      this.setState({ showModal: true, modalUrl: url });
-    }
-  }
-
-  closeModal() {
-    this.setState({ showModal: false, modalUrl: '' });
-  }
-
   render() {
+
+    console.log(config);
+
     let domainsMenuDisplay;
     if (this.state.device === "tablet") {
       domainsMenuDisplay = React.createElement(MobileLeftMenu, {
         device: this.state.device,
-        domains: domains,
+        domains: this.state.domains,
         user: this.state.user,
         baseUrl: this.state.baseUrl,
         blogUrl: this.state.blogUrl,
         forumUrl: this.state.forumUrl,
         sName: this.state.sName,
-        onPopupLinkClick: this.handlePopupLinkClick
+        isAdmin: this.state.isAdmin
       });
     } else {
       domainsMenuDisplay = React.createElement(DomainsMenu, {
         device: this.state.device,
-        domains: domains,
+        domains: this.state.domains,
         user: this.state.user,
         baseUrl: this.state.baseUrl,
         blogUrl: this.state.blogUrl,
         forumUrl: this.state.forumUrl,
         sName: this.state.sName,
-        onPopupLinkClick: this.handlePopupLinkClick
-      });
-    }
-
-    let modalDisplay;
-    if (this.state.showModal) {
-      modalDisplay = React.createElement(MetaheaderModal, {
-        modalUrl: this.state.modalUrl,
-        onCloseModal: this.closeModal
+        isAdmin: this.state.isAdmin
       });
     }
 
@@ -198,11 +162,9 @@ class MetaHeader extends React.Component {
           forumUrl: this.state.forumUrl,
           loginUrl: this.state.loginUrl,
           logoutUrl: this.state.logoutUrl,
-          gitlabUrl: this.state.gitlabUrl,
-          onPopupLinkClick: this.handlePopupLinkClick
+          gitlabUrl: this.state.gitlabUrl
         })
-      ),
-      modalDisplay
+      )
     );
   }
 }
@@ -211,11 +173,6 @@ class DomainsMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
-  }
-
-  onPopupLinkClick(url) {
-    this.props.onPopupLinkClick(url);
   }
 
   render() {
@@ -225,9 +182,18 @@ class DomainsMenu extends React.Component {
       moreMenuItemDisplay = React.createElement(MoreDropDownMenu, {
         domains: this.props.domains,
         baseUrl: this.props.baseUrl,
-        blogUrl: this.props.blogUrl,
-        onPopupLinkClick: this.onPopupLinkClick
+        blogUrl: this.props.blogUrl
       });
+    }
+
+    let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
+    if (this.props.isAdmin === true) {
+      adminsDropDownMenuDisplay = React.createElement(AdminsDropDownMenu, {
+        user: this.props.user,
+        baseUrl: this.props.baseUrl,
+        gitlabUrl: this.props.gitlabUrl
+      });
+      myOpendesktopMenuDisplay = React.createElement(CloudsServicesDropDownMenu, null);
     }
 
     return React.createElement(
@@ -246,6 +212,8 @@ class DomainsMenu extends React.Component {
       React.createElement(DomainsDropDownMenu, {
         domains: this.props.domains
       }),
+      adminsDropDownMenuDisplay,
+      myOpendesktopMenuDisplay,
       React.createElement(DiscussionBoardsDropDownMenu, {
         forumUrl: this.props.forumUrl
       }),
@@ -423,12 +391,167 @@ class DiscussionBoardsDropDownMenu extends React.Component {
 
 }
 
+class AdminsDropDownMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.state = {
+      gitlabLink: config.gitlabUrl + "/dashboard/issues?assignee_id="
+    };
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown', this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClick, false);
+  }
+
+  componentDidMount() {
+    const self = this;
+    $.ajax({ url: config.gitlabUrl + "/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
+      const gitlabLink = self.state.gitlabLink + response[0].id;
+      self.setState({ gitlabLink: gitlabLink, loading: false });
+    });
+  }
+
+  handleClick(e) {
+    let dropdownClass = "";
+    if (this.node.contains(e.target)) {
+      if (this.state.dropdownClass === "open") {
+        if (e.target.className === "admins-menu-link-item") {
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({ dropdownClass: dropdownClass });
+  }
+
+  render() {
+
+    return React.createElement(
+      "li",
+      { ref: node => this.node = node, id: "admins-dropdown-menu", className: this.state.dropdownClass },
+      React.createElement(
+        "a",
+        { className: "admins-menu-link-item" },
+        "Development"
+      ),
+      React.createElement(
+        "ul",
+        { className: "dropdown-menu dropdown-menu-right" },
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: config.gitlabUrl + "/dashboard/projects" },
+            "Projects"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: this.state.gitlabLink },
+            "Issues"
+          )
+        )
+      )
+    );
+  }
+}
+
+class CloudsServicesDropDownMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown', this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClick, false);
+  }
+
+  handleClick(e) {
+    let dropdownClass = "";
+    if (this.node.contains(e.target)) {
+      if (this.state.dropdownClass === "open") {
+        if (e.target.className === "cd-menu-link-item") {
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({ dropdownClass: dropdownClass });
+  }
+
+  render() {
+
+    const urlEnding = config.baseUrl.split('opendesktop.')[1];
+
+    return React.createElement(
+      "li",
+      { ref: node => this.node = node, id: "cd-dropdown-menu", className: this.state.dropdownClass },
+      React.createElement(
+        "a",
+        { className: "cd-menu-link-item" },
+        "Clouds & Services"
+      ),
+      React.createElement(
+        "ul",
+        { className: "dropdown-menu dropdown-menu-right" },
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: "https://my.opendesktop." + urlEnding },
+            "Storage"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: "https://music.opendesktop." + urlEnding },
+            "Music"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: "https://docs.opendesktop." + urlEnding },
+            "Docs"
+          )
+        )
+      )
+    );
+  }
+}
+
 class MoreDropDownMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
     this.handleClick = this.handleClick.bind(this);
-    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -455,14 +578,10 @@ class MoreDropDownMenu extends React.Component {
     this.setState({ dropdownClass: dropdownClass });
   }
 
-  onPopupLinkClick(url) {
-    this.props.onPopupLinkClick(url);
-  }
-
   render() {
 
     let faqLinkItem, apiLinkItem, aboutLinkItem;
-    if (window.isExternal === false) {
+    if (config.isExternal === false) {
       faqLinkItem = React.createElement(
         "li",
         null,
@@ -496,7 +615,7 @@ class MoreDropDownMenu extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#faq" },
+          { className: "popuppanel", target: "_blank", id: "faq", href: config.baseUrl + "/#faq" },
           "FAQ"
         )
       );
@@ -505,7 +624,7 @@ class MoreDropDownMenu extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", target: "_blank", id: "api", href: window.baseUrl + "/#api" },
+          { className: "popuppanel", target: "_blank", id: "api", href: config.baseUrl + "/#api" },
           "API"
         )
       );
@@ -514,7 +633,7 @@ class MoreDropDownMenu extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", target: "_blank", id: "about", href: window.baseUrl + "/#about" },
+          { className: "popuppanel", target: "_blank", id: "about", href: config.baseUrl + "/#about" },
           "About"
         )
       );
@@ -612,12 +731,6 @@ class UserMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
-  }
-
-  onPopupLinkClick(key) {
-    console.log(key);
-    this.props.onPopupLinkClick(key);
   }
 
   render() {
@@ -649,7 +762,7 @@ class UserMenu extends React.Component {
     if (this.props.device === "large") {
 
       let faqLinkItem, apiLinkItem, aboutLinkItem;
-      if (window.isExternal === false) {
+      if (config.isExternal === false) {
         faqLinkItem = React.createElement(
           "li",
           null,
@@ -683,7 +796,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#faq" },
+            { className: "popuppanel", target: "_blank", id: "faq", href: config.baseUrl + "/#faq" },
             "FAQ"
           )
         );
@@ -692,7 +805,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { className: "popuppanel", target: "_blank", id: "api", href: window.baseUrl + "/#api" },
+            { className: "popuppanel", target: "_blank", id: "api", href: config.baseUrl + "/#api" },
             "API"
           )
         );
@@ -701,7 +814,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { className: "popuppanel", target: "_blank", id: "about", href: window.baseUrl + "/#about" },
+            { className: "popuppanel", target: "_blank", id: "about", href: config.baseUrl + "/#about" },
             "About"
           )
         );
@@ -755,7 +868,7 @@ class UserContextMenuContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      gitlabLink: window.gitlabUrl + "/dashboard/issues?assignee_id="
+      gitlabLink: config.gitlabUrl + "/dashboard/issues?assignee_id="
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -770,7 +883,7 @@ class UserContextMenuContainer extends React.Component {
 
   componentDidMount() {
     const self = this;
-    $.ajax({ url: window.gitlabUrl + "/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
+    $.ajax({ url: config.gitlabUrl + "/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
       const gitlabLink = self.state.gitlabLink + response[0].id;
       self.setState({ gitlabLink: gitlabLink, loading: false });
     });
@@ -973,59 +1086,6 @@ class UserLoginMenuContainer extends React.Component {
   }
 }
 
-class MetaheaderModal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true
-    };
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  componentWillMount() {
-    document.addEventListener('mousedown', this.handleClick, false);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClick, false);
-  }
-
-  componentDidMount() {
-    const self = this;
-    console.log(this.props.modalUrl);
-    $.ajax({ url: this.props.modalUrl, cache: false }).done(function (response) {
-      console.log(response);
-      self.setState({ content: response, loading: false });
-    });
-  }
-
-  handleClick(e) {
-    let showModal;
-    if (this.node.contains(e.target)) {
-      if (showModal === false) {
-        if (e.target.id === "metaheader-modal-content") {
-          showModal = true;
-        } else {
-          showModal = false;
-        }
-      } else {
-        showModal = true;
-      }
-    }
-    if (showModal === true) {
-      this.props.onCloseModal();
-    }
-  }
-
-  render() {
-    return React.createElement(
-      "div",
-      { id: "metaheader-modal", ref: node => this.node = node },
-      React.createElement("div", { id: "metaheader-modal-content", dangerouslySetInnerHTML: { __html: this.state.content } })
-    );
-  }
-}
-
 /** MOBILE SPECIFIC **/
 
 class MobileLeftMenu extends React.Component {
@@ -1036,7 +1096,6 @@ class MobileLeftMenu extends React.Component {
     };
     this.toggleLeftSideOverlay = this.toggleLeftSideOverlay.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -1073,10 +1132,6 @@ class MobileLeftMenu extends React.Component {
     this.setState({ overlayClass: overlayClass });
   }
 
-  onPopupLinkClick(key) {
-    this.props.onPopupLinkClick(key);
-  }
-
   render() {
     return React.createElement(
       "div",
@@ -1090,8 +1145,7 @@ class MobileLeftMenu extends React.Component {
           domains: this.props.domains,
           baseUrl: this.props.baseUrl,
           blogUrl: this.props.blogUrl,
-          forumUrl: this.props.forumUrl,
-          onPopupLinkClick: this.props.onPopupLinkClick
+          forumUrl: this.props.forumUrl
         })
       )
     );
@@ -1102,7 +1156,6 @@ class MobileLeftSidePanel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   componentDidMount() {
@@ -1113,10 +1166,6 @@ class MobileLeftSidePanel extends React.Component {
       }
     });
     this.setState({ menuGroups: menuGroups });
-  }
-
-  onPopupLinkClick(key) {
-    this.props.onPopupLinkClick(key);
   }
 
   render() {
@@ -1131,7 +1180,7 @@ class MobileLeftSidePanel extends React.Component {
     }
 
     let faqLinkItem, apiLinkItem, aboutLinkItem;
-    if (window.isExternal === false) {
+    if (config.isExternal === false) {
       faqLinkItem = React.createElement(
         "li",
         null,
@@ -1165,7 +1214,7 @@ class MobileLeftSidePanel extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", target: "_blank", id: "faq", href: window.baseUrl + "/#faq" },
+          { className: "popuppanel", target: "_blank", id: "faq", href: config.baseUrl + "/#faq" },
           "FAQ"
         )
       );
@@ -1174,7 +1223,7 @@ class MobileLeftSidePanel extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", target: "_blank", id: "api", href: window.baseUrl + "/#api" },
+          { className: "popuppanel", target: "_blank", id: "api", href: config.baseUrl + "/#api" },
           "API"
         )
       );
@@ -1183,7 +1232,7 @@ class MobileLeftSidePanel extends React.Component {
         null,
         React.createElement(
           "a",
-          { className: "popuppanel", target: "_blank", id: "about", href: window.baseUrl + "/#about" },
+          { className: "popuppanel", target: "_blank", id: "about", href: config.baseUrl + "/#about" },
           "About"
         )
       );

@@ -1,3 +1,104 @@
+import '@babel/polyfill';
+import '@webcomponents/custom-elements'
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+// Use this object for config data instead of window.domains,
+// window.baseUrl, window.etc... so don't set variables in global scope.
+// Please see initConfig()
+let config = {};
+
+async function initConfig(target) {
+  // API https://www.opendesktop.org/home/metamenujs should send
+  // JSON data with CORS.
+  // Please see config-dummy.php.
+
+  // Also this API call sends cookie of www.opendesktop.org/cc
+  // by fetch() with option "credentials: 'include'", so
+  // www.opendesktop.org/cc possible detect user session.
+  // Can we consider if include user information into JSON data of
+  // API response instead of cookie set each external site?
+
+  let url = `https://www.opendesktop.org/home/metamenubundlejs?target=${target}`;
+
+  if (location.hostname.endsWith('cc')) {
+    url = `https://www.opendesktop.cc/home/metamenubundlejs?target=${target}`;
+  }
+  else if (location.hostname.endsWith('localhost')) {
+    url = `http://localhost:${location.port}/config-dummy.php`;
+  }
+  else if (location.hostname.endsWith('pling.local')) {
+    url = `http://pling.local/home/metamenubundlejs?target=${target}`;
+  }
+
+  try {
+    const response = await fetch(url, {
+      mode: 'cors',
+      credentials: 'include'
+    });
+    if (!response.ok) {
+      throw new Error('Network response error');
+    }
+    config = await response.json();
+    return true;
+  }
+  catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+window.appHelpers = function () {
+
+  function generateMenuGroupsArray(domains) {
+    let menuGroups = [];
+    domains.forEach(function (domain, index) {
+      if (menuGroups.indexOf(domain.menugroup) === -1) {
+        menuGroups.push(domain.menugroup);
+      }
+    });
+    return menuGroups;
+  }
+
+  function getDeviceFromWidth(width) {
+    let device;
+    if (width >= 910) {
+      device = "large";
+    } else if (width < 910 && width >= 610) {
+      device = "mid";
+    } else if (width < 610) {
+      device = "tablet";
+    }
+    return device;
+  }
+
+  function generatePopupLinks() {
+
+    let pLink = {};
+    pLink.plingListUrl = "/#plingList", pLink.ocsapiContentUrl = "/#ocsapiContent", pLink.aboutContentUrl = "/#aboutContent", pLink.linkTarget = "_blank";
+
+    if (window.location.hostname.indexOf('opendesktop') === -1 || window.location.hostname === "git.opendesktop.org" || window.location.hostname === "git.opendesktop.cc" || window.location.hostname === "forum.opendesktop.org" || window.location.hostname === "forum.opendesktop.cc" || window.location.hostname === "my.opendesktop.org" || window.location.hostname === "my.opendesktop.cc") {
+      pLink.plingListUrl = "/plings";
+      pLink.ocsapiContentUrl = "/partials/ocsapicontent.phtml";
+      pLink.aboutContentUrl = "/partials/about.phtml";
+      pLink.linkTarget = "";
+    }
+    return pLink;
+  }
+
+  function getPopupUrl(key, isExternal, baseUrl) {
+    let url = baseUrl;
+    return url;
+  }
+
+  return {
+    generateMenuGroupsArray,
+    getDeviceFromWidth,
+    generatePopupLinks,
+    getPopupUrl
+  };
+}();
+
 class MetaHeader extends React.Component {
   constructor(props){
   	super(props);
@@ -27,9 +128,6 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log(config);
-    console.log(window);
-    console.log(initConfig(target));
     this.initMetaHeader();
   }
 
@@ -69,8 +167,6 @@ class MetaHeader extends React.Component {
   }
 
   render(){
-
-    console.log(config);
 
     let domainsMenuDisplay;
     if (this.state.device === "tablet"){
@@ -327,11 +423,16 @@ class AdminsDropDownMenu extends React.Component {
 
   componentDidMount() {
     const self = this;
-    $.ajax({url: config.gitlabUrl+"/api/v4/users?username="+this.props.user.username,cache: false})
-      .done(function(response){
-        const gitlabLink = self.state.gitlabLink + response[0].id;
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        const res = JSON.parse(this.response);
+        const gitlabLink = self.state.gitlabLink + res[0].id;
         self.setState({gitlabLink:gitlabLink,loading:false});
-    });
+      }
+    };
+    xhttp.open("GET", config.gitlabUrl+"/api/v4/users?username="+this.props.user.username, true);
+    xhttp.send();
   }
 
   handleClick(e){
@@ -601,11 +702,16 @@ class UserContextMenuContainer extends React.Component {
 
   componentDidMount() {
     const self = this;
-    $.ajax({url: config.gitlabUrl+"/api/v4/users?username="+this.props.user.username,cache: false})
-      .done(function(response){
-        const gitlabLink = self.state.gitlabLink + response[0].id;
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        const res = JSON.parse(this.response);
+        const gitlabLink = self.state.gitlabLink + res[0].id;
         self.setState({gitlabLink:gitlabLink,loading:false});
-    });
+      }
+    };
+    xhttp.open("GET", config.gitlabUrl+"/api/v4/users?username="+this.props.user.username, true);
+    xhttp.send();
   }
 
   handleClick(e){
@@ -867,7 +973,44 @@ class MobileLeftSidePanel extends React.Component {
   }
 }
 
-ReactDOM.render(
-    <MetaHeader />,
-    document.getElementById('metaheader')
-);
+customElements.define('opendesktop-metaheader', class extends HTMLElement {
+  constructor() {
+    super();
+    this.buildComponent();
+  }
+
+  async buildComponent() {
+    await initConfig(this.getAttribute('config-target'));
+
+    const metaheaderElement = document.createElement('div');
+    metaheaderElement.id = 'metaheader';
+    ReactDOM.render(React.createElement(MetaHeader, null), metaheaderElement);
+
+    const stylesheetElement = document.createElement('link');
+    stylesheetElement.rel = 'stylesheet';
+    stylesheetElement.href = 'https://www.opendesktop.org/theme/react/assets/css/metaheader.css';
+
+    else if (location.hostname.endsWith('cc')) {
+      stylesheetElement.href = 'https://www.opendesktop.cc/theme/react/assets/css/metaheader.css';
+    }
+    else if (location.hostname.endsWith('localhost')) {
+      stylesheetElement.href = 'https://www.opendesktop.cc/theme/react/assets/css/metaheader.css';
+    }else{
+       stylesheetElement.href = 'https://www.opendesktop.org/theme/react/assets/css/metaheader.css';
+    }
+
+    // Component must be capsule within Shadow DOM, and don't hack
+    // context/scope of external sites.
+    /*
+    this.attachShadow({mode: 'open'});
+    this.shadowRoot.appendChild(stylesheetElement);
+    this.shadowRoot.appendChild(metaheaderElement);
+    */
+
+    // However, make this as Light DOM for now, because current
+    // implementation is not real component design yet.
+    // Need solve event handling, scoped CSS.
+    this.appendChild(stylesheetElement);
+    this.appendChild(metaheaderElement);
+  }
+});

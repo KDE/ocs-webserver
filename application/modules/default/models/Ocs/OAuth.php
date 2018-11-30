@@ -403,6 +403,8 @@ class Default_Model_Ocs_OAuth
             $authUser = $this->getUser($member_data['external_id']);
             if (false === $authUser) {
                 $this->messages[] = "Not Found : " . $member_data['member_id'];
+
+                return false;
             }
             $result = $this->sameUserData($member_data, $authUser);
             if (false === $result) {

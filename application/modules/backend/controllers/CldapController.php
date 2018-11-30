@@ -82,7 +82,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
             return;
         }
         if ('validate' == $method) {
-            $this->validateMembers($members);
+            $this->validateMembers($members, $force);
 
             return;
         }
@@ -216,22 +216,26 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
      * @throws Zend_Exception
      * @throws Zend_Validate_Exception
      */
-    private function validateMembers($members)
+    private function validateMembers($members, $force = false)
     {
-        $usernameValidChars = new Local_Validate_UsernameValid();
-        $mailAddressValid = new Zend_Validate_EmailAddress();
         $modelOcsIdent = new Default_Model_Ocs_Ldap();
 
-        $this->prepareLogTable();
-
         while ($member = $members->fetch()) {
+            $modelOcsIdent->resetMessages();
             $this->log->info("process " . json_encode($member));
             try {
                 $ldapEntry = $modelOcsIdent->hasUser($member['member_id'], $member['username']);
+                if (empty($ldapEntry)) {
+                    $this->log->info('Fail : user not exist (' . $member['member_id'] . ', ' . $member['username'] . ')');
+                    continue;
+                }
                 $result = $this->validateEntry($member, $ldapEntry);
                 if (isset($result)) {
-                    $this->dbLog($member['member_id'], 'fail', implode("<=>", $result),
-                        Zend_Ldap_Attribute::getAttribute($ldapEntry, $result[1], 0), $member[$result[0]]);
+                    $this->log->info('Fail : unequal ' . implode("<=>", $result). ' ' .
+                        mb_strtolower($member[$result[0]]) . '<=>' . Zend_Ldap_Attribute::getAttribute($ldapEntry, $result[1], 0));
+                    if ($force) {
+                        $modelOcsIdent->createUserFromArray($member, true);
+                    }
                 }
             } catch (Zend_Ldap_Exception $e) {
                 $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
@@ -260,7 +264,8 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
             return array('external_id', 'memberUid');
         }
         $attr = Zend_Ldap_Attribute::getAttribute($ldapEntry, 'cn', 0);
-        if ($member['username'] != $attr) {
+        $username = mb_strtolower($member['username']);
+        if ($username != $attr) {
             return array('username', 'cn');
         }
         $attr = Zend_Ldap_Attribute::getAttribute($ldapEntry, 'email', 0);

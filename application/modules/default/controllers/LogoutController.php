@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -21,7 +22,6 @@
  *
  * Created: 10.10.2018
  */
-
 class LogoutController extends Local_Controller_Action_DomainSwitch
 {
 
@@ -29,13 +29,12 @@ class LogoutController extends Local_Controller_Action_DomainSwitch
     {
         $this->_helper->layout()->disableLayout();
         //$this->_helper->viewRenderer->setNoRender(true);
-        
+
         $redir = "/";
-        if(isset($_GET['redirect'])) {
+        if (isset($_GET['redirect'])) {
             $redir = $_GET['redirect'];
             $filter = new Local_Filter_Url_Decrypt();
             $redir = $filter->filter($redir);
-            
         }
         $this->view->redirect = $redir;
 
@@ -44,7 +43,7 @@ class LogoutController extends Local_Controller_Action_DomainSwitch
 
             $modelAuth = new Default_Model_Authorization();
             $modelAuth->logout();
-            
+
             $modelToken = new Default_Model_SingleSignOnToken();
             $data = array(
                 'remember_me' => false,
@@ -64,7 +63,6 @@ class LogoutController extends Local_Controller_Action_DomainSwitch
 
             setcookie($config->opencode->cookie_name, $jwt, time() - 120, '/', $config->opencode->host, null, true);
         }
-
     }
 
 }

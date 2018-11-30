@@ -18,12 +18,23 @@ body {
     }
   }
 
-  &.navigation-topics {
+  &.navigation-topics,
+  &.category-themes-and-apps,
+  &.category-general {
     #metaheader #metaheader-nav #user-context-menu-container .user-dropdown .th-icon {
-      margin-top: -6px;
+      margin-top: -5px;
     }
     #metaheader #metaheader-nav #user-login-menu-container .user-dropdown .dropdown-toggle img {
-      margin-top: -7px;
+      // margin-top: -7px;
+    }
+
+    &.docked {
+      .d-header {
+        top: 34px;
+      }
+      #metaheader {
+        position: fixed;
+      }
     }
   }
 }
@@ -276,7 +287,9 @@ body {
           }
 
           &#discussion-boards,
-          &#more-dropdown-menu {
+          &#admins-dropdown-menu,
+          &#more-dropdown-menu,
+          &#cd-dropdown-menu {
 
             position: relative;
             cursor: pointer;
@@ -320,6 +333,21 @@ body {
 
             .dropdown-menu {
               left: -6px;
+            }
+          }
+
+          &#admins-dropdown-menu {
+            .dropdown-menu {
+              right: -75px;
+              min-height: 60px;
+              height: auto;
+            }
+          }
+
+          &#cd-dropdown-menu {
+            .dropdown-menu {
+              right: -45px;
+              height: auto;
             }
           }
         }
@@ -828,7 +856,6 @@ body {
 
 
 }
-
 
 #metaheader-modal {
   position: fixed;

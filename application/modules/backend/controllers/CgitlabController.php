@@ -61,7 +61,6 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         $method = $this->getParam('method', 'create');
 
         $this->log->info("METHOD: {$method}\n--------------\n");
-        $this->log->err("METHOD: {$method}\n--------------\n");
 
         if ($this->hasParam('member_id')) {
             $memberId = (int)$this->getParam('member_id');
@@ -83,8 +82,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             return;
         }
         if ('validate' == $method) {
-            //$this->validateMembers($members);
-            echo "not implemented";
+            $this->validateMembers($members, $force);
 
             return;
         }
@@ -114,7 +112,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         }
 
         $sql = "
-            SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`, `m`.`biography`
+            SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`, `m`.`biography`, `m`.`is_active`, `m`.`is_deleted`
             FROM `member` AS `m`
             LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
             LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
@@ -125,7 +123,8 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
               AND LOCATE('_deactivated', `m`.`username`) = 0 
               AND LOCATE('_deactivated', `me`.`email_address`) = 0
             " . $filter . "
-            ORDER BY `m`.`member_id` ASC
+            ORDER BY `m`.`member_id` DESC
+            #LIMIT 25,125
         ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql);
@@ -153,7 +152,6 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
 
         while ($member = $members->fetch()) {
             $this->log->info("process " . Zend_Json::encode($member));
-            echo "process " . Zend_Json::encode($member) . PHP_EOL;
 
             //if (false === $usernameValidChars->isValid($member['username'])) {
             //    file_put_contents($this->errorlogfile, print_r($member, true) . "user name validation error" . "\n\n", FILE_APPEND);
@@ -161,7 +159,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             //}
             if (false === $emailValidate->isValid($member["email_address"])) {
                 $this->log->info("messages [\"email address validation error\"] ");
-                echo "response [\"email address validation error\"]" . PHP_EOL;
+
                 continue;
             }
             try {
@@ -172,11 +170,57 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             }
             $messages = $modelOpenCode->getMessages();
             $this->log->info("messages " . Zend_Json::encode($messages));
-            echo "response " . Zend_Json::encode($messages) . PHP_EOL;
         }
 
         return true;
     }
 
+    /**
+     * @param Zend_Db_Statement_Interface $members
+     *
+     * @param bool                        $force
+     *
+     * @return bool
+     * @throws Zend_Db_Statement_Exception
+     */
+    private function validateMembers($members, $force)
+    {
+        $modelSubSystem = new Default_Model_Ocs_Gitlab($this->config);
+
+        while ($member = $members->fetch()) {
+            $modelSubSystem->resetMessages();
+            $this->log->info("process " . Zend_Json::encode($member));
+            try {
+                $userSubsystem = $modelSubSystem->getUser($member['external_id'], $member['username']);
+                if (empty($userSubsystem)) {
+                    $this->log->info('Fail : user not exist (' . $member['member_id'] . ', ' . $member['username'] . ')');
+                    if ($force) {
+                        $modelSubSystem->createUserFromArray($member, true);
+                        $this->log->info("Message : " . Zend_Json::encode($modelSubSystem->getMessages()));
+                    }
+
+                    continue;
+                }
+
+                $result = $modelSubSystem->validateUserData($member, $userSubsystem);
+                if (false === empty($result)) {
+                    $this->log->info('Fail : ' . implode(" ", $result));
+                    if ($force) {
+                        $modelSubSystem->createUserFromArray($member, true);
+                    }
+                } else {
+                    $this->log->info('Success');
+                }
+            } catch (Exception $e) {
+                $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            }
+            $messages = $modelSubSystem->getMessages();
+            if (false === empty($messages)) {
+                $this->log->info("Message : " . Zend_Json::encode($messages));
+            }
+        }
+
+        return true;
+    }
 
 }

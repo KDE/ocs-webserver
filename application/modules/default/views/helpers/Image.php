@@ -40,23 +40,25 @@ class Default_View_Helper_Image extends Zend_View_Helper_Abstract
 
     public function Image($filename, $options = array())
     {
-        if (empty($options) and $this->validUri($filename)) {
+        if (false === $this->validUri($filename)) {
+
+            return $this->createImageUri($filename, $options);
+        }
+
+        $httpScheme = 'https';
+        if (PHP_SAPI != 'cli') {
             /** @var Zend_Controller_Request_Http $request */
             $request = Zend_Controller_Front::getInstance()->getRequest();
-            $uri = $this->replaceScheme($filename, $request->getScheme());
+            $httpScheme = $request->getScheme();
+        }
+        $uri = $this->replaceScheme($filename, $httpScheme);
+
+        if (empty($options)) {
 
             return $uri;
         }
 
-        if ($this->validUri($filename)) {
-            /** @var Zend_Controller_Request_Http $request */
-            $request = Zend_Controller_Front::getInstance()->getRequest();
-            $uri = $this->replaceScheme($filename, $request->getScheme());
-
-            return $this->updateImageUri($uri, $options);
-        }
-
-        return $this->createImageUri($filename, $options);
+        return $this->updateImageUri($uri, $options);
     }
 
     private function validUri($filename)
@@ -99,28 +101,26 @@ class Default_View_Helper_Image extends Zend_View_Helper_Abstract
         return $url;
     }
 
-    private function updateImageUri($filename, $options)
-    {
-        $dimension = '';
-        if (isset($options['width']) && isset($options['height'])) {
-            $dimension = $options['width'] . 'x' . $options['height'];
-        }
-        elseif (isset($options['width']) && (false === isset($options['height']))) {
-            $dimension = $options['width'] . 'x' . $options['width'];
-        }
-        elseif (isset($options['height']) && (false === isset($options['width']))) {
-            $dimension = $options['height'] . 'x' . $options['height'];
-        }
-        $uri = preg_replace("/\d\d\dx\d\d\d/", $dimension, $filename);
-
-        return $uri;
-    }
-
     private function replaceScheme($filename, $getScheme)
     {
         $result = preg_replace("|^https?|", $getScheme, $filename);
 
         return $result;
+    }
+
+    private function updateImageUri($filename, $options)
+    {
+        $dimension = '';
+        if (isset($options['width']) && isset($options['height'])) {
+            $dimension = $options['width'] . 'x' . $options['height'];
+        } else if (isset($options['width']) && (false === isset($options['height']))) {
+            $dimension = $options['width'] . 'x' . $options['width'];
+        } else if (isset($options['height']) && (false === isset($options['width']))) {
+            $dimension = $options['height'] . 'x' . $options['height'];
+        }
+        $uri = preg_replace("/\d\d\dx\d\d\d/", $dimension, $filename);
+
+        return $uri;
     }
 
 }

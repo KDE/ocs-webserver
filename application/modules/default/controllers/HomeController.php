@@ -120,6 +120,21 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         ;
         
     }
+
+    public function metamenubundlejsAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        
+        // header('Access-Control-Allow-Origin: *'); 
+        
+        // $this->getResponse()
+        //      ->setHeader('Access-Control-Allow-Origin', '*')
+        //      ->setHeader('Access-Control-Allow-Credentials', 'true')
+        //      ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+        //      ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        // ;
+        
+    }
     
     
     public function baseurlajaxAction()
@@ -409,6 +424,54 @@ class HomeController extends Local_Controller_Action_DomainSwitch
             
         }
         $this->view->redirect = $redir;
+    }
+    
+    public function fetchforgitAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        
+        $tableProject = new Default_Model_Project();
+
+        $params = $this->getAllParams();
+        $action = 'fetch-products-for-git-project-id';
+        if($this->hasParam('target')) {
+            $action = $params['target'];
+        }
+        
+        if($action == 'fetch-products-for-git-project-id') {
+        
+        
+            $gitProjectId = $params['project_id'];
+            $this->view->products = null;
+
+            if(isset($gitProjectId)) {
+
+                $products = $tableProject->fetchAll('status = 100 AND type_id = 1 AND is_gitlab_project = 1 AND gitlab_project_id = ' . $gitProjectId);
+
+
+                $helperImage = new Default_View_Helper_Image();
+
+                $viewArray = array();
+                $viewProjectArray = array();
+                foreach ($products as $product) {
+                    $viewProjectArray = array();
+                    $viewProjectArray['project_id'] = $product['project_id'];
+                    $viewProjectArray['title'] = $product['title'];
+                    $viewProjectArray['version'] = $product['version'];
+                    $viewProjectArray['member_id'] = $product['member_id'];
+                    $viewProjectArray['avatar'] = $helperImage->Image($product['image_small'], array('width' => 100, 'height' => 100));
+                    $viewArray[] = $viewProjectArray;
+                }
+
+                $this->view->viewdata = $viewArray;
+
+            }
+        } else {
+            $this->view->viewdata = array();
+        }
+        
+        
+        
     }
 
 }
