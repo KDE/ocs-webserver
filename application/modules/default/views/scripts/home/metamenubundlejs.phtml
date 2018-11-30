@@ -62,10 +62,11 @@ if(isset($_GET['target'])) {
     $target = $_GET['target'];
 }
 
-$thisurl = "/";
-if(isset($_GET['url'])) {
-    $thisurl = $_GET['url'];
-}
+// $thisurl = "/";
+// if(isset($_GET['url'])) {
+//     $thisurl = $_GET['url'];
+// }
+$thisurl = $this->serverUrl(). $this->url();
 
 $isExternal = 'var isExternal = true;';
 $is_external = true;
@@ -122,8 +123,7 @@ $response = array(
     "gitlabUrl" => $url_gitlab,
     "loginUrl" => $url_login,
     "logoutUrl" => $url_logout,
-    "sName" => $sname,
-    "url" =>$this->serverUrl(). $this->url()
+    "sName" => $sname
 );
 
 echo Zend_Json::encode($response);
