@@ -8,7 +8,7 @@ import ReactDOM from 'react-dom';
 // Please see initConfig()
 let config = {};
 
-async function initConfig(target) {
+async function initConfig(target,url_afterlogin) {
   // API https://www.opendesktop.org/home/metamenujs should send
   // JSON data with CORS.
   // Please see config-dummy.php.
@@ -29,6 +29,11 @@ async function initConfig(target) {
   }
   else if (location.hostname.endsWith('pling.local')) {
     url = `http://pling.local/home/metamenubundlejs?target=${target}`;
+  }
+
+  if(url_afterlogin)
+  {
+    url = url+`&url=${url_afterlogin}`;
   }
 
   try {
@@ -980,7 +985,7 @@ customElements.define('opendesktop-metaheader', class extends HTMLElement {
   }
 
   async buildComponent() {
-    await initConfig(this.getAttribute('config-target'));
+    await initConfig(this.getAttribute('config-target'),this.getAttribute('config-url'));
 
     const metaheaderElement = document.createElement('div');
     metaheaderElement.id = 'metaheader';
@@ -990,7 +995,7 @@ customElements.define('opendesktop-metaheader', class extends HTMLElement {
     stylesheetElement.rel = 'stylesheet';
     stylesheetElement.href = 'https://www.opendesktop.org/theme/react/assets/css/metaheader.css';
 
-    else if (location.hostname.endsWith('cc')) {
+    if (location.hostname.endsWith('cc')) {
       stylesheetElement.href = 'https://www.opendesktop.cc/theme/react/assets/css/metaheader.css';
     }
     else if (location.hostname.endsWith('localhost')) {
