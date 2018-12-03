@@ -259,7 +259,7 @@ class DomainsMenu extends React.Component {
     return (
       <ul className="metaheader-menu left" id="domains-menu">
         <li className="active">
-          <a href={this.props.baseUrl}>
+          <a id="opendesktop-logo" href={this.props.baseUrl}>
             <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo"/>
             openDesktop.org :
           </a>

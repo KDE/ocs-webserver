@@ -191,6 +191,17 @@ body {
           > a {
             margin: 0 10px 0 5px;
             cursor: pointer;
+
+            &#opendesktop-logo {
+              position: relative;
+              padding-left: 25px;
+
+              img {
+                position: absolute;
+                top: 5px;
+                left: 5px;
+              }
+            }
           }
 
           &::after {
@@ -286,10 +297,7 @@ body {
             }
           }
 
-          &#discussion-boards,
-          &#admins-dropdown-menu,
-          &#more-dropdown-menu,
-          &#cd-dropdown-menu {
+          &#discussion-boards, &#admins-dropdown-menu, &#more-dropdown-menu, &#cd-dropdown-menu {
 
             position: relative;
             cursor: pointer;
