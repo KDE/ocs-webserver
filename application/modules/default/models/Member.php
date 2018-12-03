@@ -194,6 +194,29 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $this->setDeletedInSubSystems($member_id);
     }
 
+    //User ist mind. 1 jahr alt, user ist supporter, user hat minimum 20 kommentare
+    public function validDeleteMemberFromSpam($member_id)
+    {
+        $sql ='select 
+              m.created_at
+              , (m.created_at+ INTERVAL 12 MONTH < NOW()) is_old
+              ,(select count(1) from comments c where c.comment_member_id = m.member_id and comment_active = 1) comments
+              ,(select (DATE_ADD(max(active_time), INTERVAL 1 YEAR) > now()) from support s  where s.status_id = 2  AND s.member_id =m.member_id) is_supporter
+              from member m where member_id = :member_id';
+         $result = $this->_db->fetchRow($sql, array(
+                            'member_id'     => $member_id,          
+            ));
+         if($result['is_supporter'] && $result['is_supporter'] ==1)
+         {
+          return false;
+         }
+         if($result['is_old'] ==1 || $result['comments']>20)
+         {
+           return false;
+         }      
+         return true;
+    }
+
     private function setMemberProjectsDeleted($member_id)
     {
         $modelProject = new Default_Model_Project();
@@ -1124,20 +1147,20 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
-        try {
-            $openCode = new Default_Model_Ocs_Gitlab();
-            $openCode->deleteUser($member_id);
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $openCode->getMessages()));
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
-        }
-        try {
-            $forum = new Default_Model_Ocs_Forum();
-            $forum->deleteUser($member_id);
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - forum : ' . implode(PHP_EOL." - ", $forum->getMessages()));
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
-        }
+        //try {
+        //    $openCode = new Default_Model_Ocs_Gitlab();
+        //    $openCode->deleteUser($member_id);
+        //    Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $openCode->getMessages()));
+        //} catch (Exception $e) {
+        //    Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        //}
+        //try {
+        //    $forum = new Default_Model_Ocs_Forum();
+        //    $forum->deleteUser($member_id);
+        //    Zend_Registry::get('logger')->debug(__METHOD__ . ' - forum : ' . implode(PHP_EOL." - ", $forum->getMessages()));
+        //} catch (Exception $e) {
+        //    Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        //}
     }
 
 

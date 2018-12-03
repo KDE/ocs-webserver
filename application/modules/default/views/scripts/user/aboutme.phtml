@@ -53,6 +53,8 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
 $helperMemberScore = new Default_View_Helper_FetchMemberScore();
 $isSupporter = $this->stat['donationIssupporter'];
 
+$url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
+$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 
 ?>
     <main class="about-me-page">
@@ -497,7 +499,7 @@ $isSupporter = $this->stat['donationIssupporter'];
                                         </div>
                                         <div class="text">
                                     
-                                            <a href="https://git.opendesktop.org/<?php echo $this->member->username;?>">
+                                            <a href="<?= $url_gitlab ?>/<?php echo $this->member->username;?>">
                                                 <span style="font-size: 16px; font-weight: normal;">git-opendesktop </span>
                                             </a>
                                         </div>
@@ -577,7 +579,7 @@ $isSupporter = $this->stat['donationIssupporter'];
                                                 <em class="email-link"></em>
                                             </div>
                                             <div class="text">
-                                                <a href="https://forum.opendesktop.org/u/<?=$this->member->username?>">Send Message</a>
+                                                <a href="<?= $url_forum ?>/u/<?=$this->member->username?>">Send Message</a>
                                             </diV>
                                         </div>
 

@@ -883,6 +883,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         );
 
         $router->addRoute(
+            'LoginController',
+            new Zend_Controller_Router_Route(
+                '/l/:action/*',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'login',
+                    'action'     => 'login'
+                )
+            )
+        );
+
+        $router->addRoute(
             'content',
             new Zend_Controller_Router_Route(
                 '/content/:page',
