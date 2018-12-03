@@ -1000,7 +1000,7 @@ customElements.define('opendesktop-metaheader', class extends HTMLElement {
     }
     this.appendChild(stylesheetElement);
 
-    
+
     await initConfig(this.getAttribute('config-target'),window.location.href);
 
     const metaheaderElement = document.createElement('div');
@@ -1017,7 +1017,7 @@ customElements.define('opendesktop-metaheader', class extends HTMLElement {
 
     // However, make this as Light DOM for now, because current
     // implementation is not real component design yet.
-    // Need solve event handling, scoped CSS.    
+    // Need solve event handling, scoped CSS.
     this.appendChild(metaheaderElement);
   }
 });
