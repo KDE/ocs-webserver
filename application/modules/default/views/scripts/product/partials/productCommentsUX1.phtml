@@ -153,10 +153,16 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                             <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
                                 <a data-toggle="collapse" href="#reply-<?= $comment['comment_id'] ?>"><span class="glyphicon glyphicon-share-alt"></span> Reply</a>
                                 <span>&nbsp;</span>
-                            <?php } ?>
+
                                 <a data-toggle="modal" data-target="#report-<?= $comment['comment_id'] ?>" role="button" href="#report-<?= $comment['comment_id'] ?>">
                                     <span class="glyphicon glyphicon-alert"></span> Report
                                 </a>
+                            <?php }else{ ?>
+                                <a data-toggle="modal" data-target="#like-product-modal" role="button">
+                                   <span class="glyphicon glyphicon-alert"></span> Report 
+                                </a>
+                            <?php }?>
+                                
                             </small>
                         </p>
                         <div id="report-<?= $comment['comment_id'] ?>" class="modal" tabindex="-1" role="dialog">
@@ -212,9 +218,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
     </span>
 </div>
 <?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){            
-            //AjaxForm.setup("form#product-add-comment1", "div#product-discussion");
-            //AjaxForm.setup("form#product-add-comment2", "div#product-discussion");
+    '    $(document).ready(function(){                      
             AjaxForm.setup("form.product-add-comment", "div#product-discussion");
             ProductDetailCommentTooltip.setup();
         });
