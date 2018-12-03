@@ -147,7 +147,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
            
             <?php if(null != $this->git_projects && count($this->git_projects) > 0) {
                 ?>
-            <span class="newsTitle"> New Projects (Git) </span>
+            <span class="newsTitle"> Git-Projects </span>
             <div class="prod-widget-box right bgwhite" id="lastcomments">
                 <?php
                 foreach ($this->git_projects as $git_project) {
@@ -160,7 +160,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                                     $url = $git_project['web_url'];
                                     $url = str_replace("http://", "https://", $url);
                                 ?>
-                                <a href="<?= $url ?>" target="_NEW">
+                                <a href="<?= $url ?>">
                                     <div class="avatar-container">
                                     <?php
                                         if(null != $git_project['avatar_url']) {
@@ -180,7 +180,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                             </div>
                         </div> 
                         <div class="col-lg-9 col-md-6 col-sm-4 col-xs-4" style="padding-left: 25px;">
-                            <a href="<?= $git_project['web_url'] ?>" target="_NEW"><?= $git_project['name'] ?></a>
+                            <a href="<?= $git_project['web_url'] ?>"><?= $git_project['name'] ?></a>
                         </div>  
                     </div>
                     <div class="row" style="margin-left: 0;margin-right: 0;">
@@ -188,7 +188,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                             <?php
                                 $url = $this->git_homepage . '/' . $git_project['namespace']['path'];
                             ?>
-                            <a href="<?= $url ?>" class="tooltipuserleft tooltipstered" target="_NEW">
+                            <a href="<?= $url ?>" class="tooltipuserleft tooltipstered">
                                 <img src="<?= $git_project['namespace']['avatar_url'] ?>">
                                 <span style="display: block"><?= $git_project['namespace']['name'] ?></span>
                             </a>
