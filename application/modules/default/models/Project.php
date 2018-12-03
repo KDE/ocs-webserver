@@ -1638,5 +1638,29 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         return $this->generateRowSet($resultSet);
     }
 
+    /**
+     * @param $project_id
+     * @return true/false
+     * @throws Zend_Db_Statement_Exception
+     */
+    public function validateDeleteProjectFromSpam($project_id)
+    {
+      //produkt ist ueber 6 monate alt oder produkt hat ueber 5 kommentare oder produkt hat minimum 1 pling 
+      // darf nicht gelöscht werden      
+      $sql ='select count_comments
+            ,created_at
+            , (created_at+ INTERVAL 6 MONTH < NOW()) is_old
+            ,(select count(1) from project_plings f where f.project_id = p.project_id and f.is_deleted = 0) plings
+            FROM project p where project_id =:project_id';
+      $result = $this->_db->fetchRow($sql, array(
+                            'project_id'     => $project_id,          
+            ));
+
+      if($result['count_comments'] >5 || $result['is_old'] ==1 || $result['plings']>0)
+      {
+        return false;
+      }      
+      return true;
+    }
 
 }
