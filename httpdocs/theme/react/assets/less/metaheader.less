@@ -9,13 +9,25 @@ body {
     top: 34px;
   }
 
-  &.ui-indigo  {
-    #metaheader {
-      position: fixed;
-    }
+  #metaheader {
+    position: fixed;
+  }
+
+  &#git-body {
     .nav-sidebar {
       top:88px;
     }
+  }
+
+  &#od-body {
+    #metaheader {
+      position: absolute !important;
+    }
+  }
+
+  .d-header,
+  header.navbar.navbar-gitlab {
+    top: 34px;
   }
 
   &.navigation-topics,
@@ -31,9 +43,6 @@ body {
     &.docked {
       .d-header {
         top: 34px;
-      }
-      #metaheader {
-        position: fixed;
       }
     }
   }
@@ -191,6 +200,17 @@ body {
           > a {
             margin: 0 10px 0 5px;
             cursor: pointer;
+
+            &#opendesktop-logo {
+              position: relative;
+              padding-left: 25px;
+
+              img {
+                position: absolute;
+                top: 5px;
+                left: 5px;
+              }
+            }
           }
 
           &::after {
@@ -286,10 +306,7 @@ body {
             }
           }
 
-          &#discussion-boards,
-          &#admins-dropdown-menu,
-          &#more-dropdown-menu,
-          &#cd-dropdown-menu {
+          &#discussion-boards, &#admins-dropdown-menu, &#more-dropdown-menu, &#cd-dropdown-menu {
 
             position: relative;
             cursor: pointer;

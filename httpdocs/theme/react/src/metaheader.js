@@ -106,8 +106,8 @@ window.appHelpers = function () {
 
 class MetaHeader extends React.Component {
   constructor(props){
-  	super(props);
-  	this.state = {
+    super(props);
+    this.state = {
       domains:config.domains,
       baseUrl:config.baseUrl,
       blogUrl:config.blogUrl,
@@ -224,8 +224,8 @@ class MetaHeader extends React.Component {
 
 class DomainsMenu extends React.Component {
   constructor(props){
-  	super(props);
-  	this.state = {
+    super(props);
+    this.state = {
     };
   }
 
@@ -259,7 +259,7 @@ class DomainsMenu extends React.Component {
     return (
       <ul className="metaheader-menu left" id="domains-menu">
         <li className="active">
-          <a href={this.props.baseUrl}>
+          <a id="opendesktop-logo" href={this.props.baseUrl}>
             <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo"/>
             openDesktop.org :
           </a>
@@ -280,8 +280,8 @@ class DomainsMenu extends React.Component {
 
 class DomainsDropDownMenu extends React.Component {
   constructor(props){
-  	super(props);
-  	this.state = {};
+    super(props);
+    this.state = {};
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -363,8 +363,8 @@ class DomainsDropDownMenu extends React.Component {
 
 class DiscussionBoardsDropDownMenu extends React.Component {
   constructor(props){
-  	super(props);
-  	this.state = {};
+    super(props);
+    this.state = {};
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -410,8 +410,8 @@ class DiscussionBoardsDropDownMenu extends React.Component {
 
 class AdminsDropDownMenu extends React.Component {
   constructor(props){
-  	super(props);
-  	this.state = {};
+    super(props);
+    this.state = {};
     this.state = {
       gitlabLink:config.gitlabUrl+"/dashboard/issues?assignee_id="
     };
@@ -473,8 +473,8 @@ class AdminsDropDownMenu extends React.Component {
 
 class CloudsServicesDropDownMenu extends React.Component {
   constructor(props){
-  	super(props);
-  	this.state = {};
+    super(props);
+    this.state = {};
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -522,8 +522,8 @@ class CloudsServicesDropDownMenu extends React.Component {
 
 class MoreDropDownMenu extends React.Component {
   constructor(props){
-  	super(props);
-  	this.state = {};
+    super(props);
+    this.state = {};
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -581,8 +581,8 @@ class MoreDropDownMenu extends React.Component {
 
 class DomainsMenuGroup extends React.Component {
   constructor(props){
-  	super(props);
-  	this.state = {};
+    super(props);
+    this.state = {};
     this.filterDomainsByMenuGroup = this.filterDomainsByMenuGroup.bind(this);
   }
 
@@ -618,8 +618,8 @@ class DomainsMenuGroup extends React.Component {
 
 class UserMenu extends React.Component {
   constructor(props){
-  	super(props);
-  	this.state = {};
+    super(props);
+    this.state = {};
   }
 
   render(){
@@ -690,8 +690,8 @@ class UserMenu extends React.Component {
 
 class UserContextMenuContainer extends React.Component {
   constructor(props){
-  	super(props);
-  	this.state = {
+    super(props);
+    this.state = {
       gitlabLink:config.gitlabUrl+"/dashboard/issues?assignee_id="
     };
     this.handleClick = this.handleClick.bind(this);
@@ -772,8 +772,8 @@ class UserContextMenuContainer extends React.Component {
 
 class UserLoginMenuContainer extends React.Component {
   constructor(props){
-  	super(props);
-  	this.state = {};
+    super(props);
+    this.state = {};
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -843,8 +843,8 @@ class UserLoginMenuContainer extends React.Component {
 
 class MobileLeftMenu extends React.Component {
   constructor(props){
-  	super(props);
-  	this.state = {
+    super(props);
+    this.state = {
       overlayClass:""
     };
     this.toggleLeftSideOverlay = this.toggleLeftSideOverlay.bind(this);
@@ -905,8 +905,8 @@ class MobileLeftMenu extends React.Component {
 
 class MobileLeftSidePanel extends React.Component {
   constructor(props){
-  	super(props);
-  	this.state = {};
+    super(props);
+    this.state = {};
   }
 
   componentDidMount() {
@@ -985,11 +985,6 @@ customElements.define('opendesktop-metaheader', class extends HTMLElement {
   }
 
   async buildComponent() {
-    await initConfig(this.getAttribute('config-target'),this.getAttribute('config-url'));
-
-    const metaheaderElement = document.createElement('div');
-    metaheaderElement.id = 'metaheader';
-    ReactDOM.render(React.createElement(MetaHeader, null), metaheaderElement);
 
     const stylesheetElement = document.createElement('link');
     stylesheetElement.rel = 'stylesheet';
@@ -1003,6 +998,14 @@ customElements.define('opendesktop-metaheader', class extends HTMLElement {
     }else{
        stylesheetElement.href = 'https://www.opendesktop.org/theme/react/assets/css/metaheader.css';
     }
+    this.appendChild(stylesheetElement);
+
+    console.log(window.location);
+    await initConfig(this.getAttribute('config-target'),window.location.href);
+
+    const metaheaderElement = document.createElement('div');
+    metaheaderElement.id = 'metaheader';
+    ReactDOM.render(React.createElement(MetaHeader, null), metaheaderElement);
 
     // Component must be capsule within Shadow DOM, and don't hack
     // context/scope of external sites.
@@ -1015,7 +1018,6 @@ customElements.define('opendesktop-metaheader', class extends HTMLElement {
     // However, make this as Light DOM for now, because current
     // implementation is not real component design yet.
     // Need solve event handling, scoped CSS.
-    this.appendChild(stylesheetElement);
     this.appendChild(metaheaderElement);
   }
 });

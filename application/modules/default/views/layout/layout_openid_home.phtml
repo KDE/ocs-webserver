@@ -55,17 +55,17 @@
     <script type="text/javascript" src="/theme/flatui/js/lib/tooltipster/dist/js/tooltipster.bundle.min.js"></script>
     <script src="/theme/flatui/js/lib/moment.min.js"></script>
     <script type="text/javascript" src="/tools/fancybox2.1.4/jquery.fancybox.pack.js?v=2.1.4"></script>
-    
+
     <script src="/theme/flatui/js/script.js?<?= APPLICATION_VERSION ?>"></script>
 
 </head>
-<body>
+<body id="od-body">
 <?php echo $this->render('partials/header/template_react.phtml'); ?>
-    
+
 <?php echo $this->render('partials/flashMessage.phtml'); ?>
-    
+
 <?php echo $this->layout()->content; ?>
-    
+
 <?php echo $this->render('partials/footer/template.phtml'); ?>
 
 <div id="modal-dialog" class="modal hide fade" tabindex="-1" role="dialog">
@@ -83,14 +83,14 @@ echo $this->render('partials/propagateLogout.phtml');
 <?=$this->inlineScript() ?>
 
 
-    
+
     <div>
-        
+
         Inhalt
-        
+
     </div>
-    
-    
+
+
 
     <!-- Piwik -->
     <?php
