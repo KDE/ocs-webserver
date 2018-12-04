@@ -9,13 +9,25 @@ body {
     top: 34px;
   }
 
-  #git-body {
-    #metaheader {
-      position: fixed;
-    }
+  #metaheader {
+    position: fixed;
+  }
+
+  &#git-body {
     .nav-sidebar {
       top:88px;
     }
+  }
+
+  &#od-body {
+    #metaheader {
+      position: absolute !important;
+    }
+  }
+
+  .d-header,
+  header.navbar.navbar-gitlab {
+    top: 34px;
   }
 
   &.navigation-topics,
@@ -31,9 +43,6 @@ body {
     &.docked {
       .d-header {
         top: 34px;
-      }
-      #metaheader {
-        position: fixed;
       }
     }
   }

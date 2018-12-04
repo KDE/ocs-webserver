@@ -1000,7 +1000,7 @@ customElements.define('opendesktop-metaheader', class extends HTMLElement {
     }
     this.appendChild(stylesheetElement);
 
-
+    console.log(window.location);
     await initConfig(this.getAttribute('config-target'),window.location.href);
 
     const metaheaderElement = document.createElement('div');
