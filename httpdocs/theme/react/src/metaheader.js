@@ -204,7 +204,7 @@ class MetaHeader extends React.Component {
 
     return (
       <nav id="metaheader-nav" className="metaheader">
-        <div className="metamenu">
+        <div style={{"display":"none"}} className="metamenu">
           {domainsMenuDisplay}
           <UserMenu
             device={this.state.device}
