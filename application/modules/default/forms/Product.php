@@ -495,12 +495,17 @@ class Default_Form_Product extends Zend_Form
             }
             
             if ($gitlab_user_id && null != $gitlab_user_id) {
-                //now get his projects
-                $gitProjects = $gitlab->getUserProjects($gitlab_user_id);
+                try {
+                    //now get his projects
+                    $gitProjects = $gitlab->getUserProjects($gitlab_user_id);
 
-                foreach ($gitProjects as $proj) {
-                    $optionArray[$proj['id']] = $proj['name'];
+                    foreach ($gitProjects as $proj) {
+                        $optionArray[$proj['id']] = $proj['name'];
+                    }
+                } catch (Exception $exc) {
+                    //Error getting USerProjects, 
                 }
+
             }
         }
 
