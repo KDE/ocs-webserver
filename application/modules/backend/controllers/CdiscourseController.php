@@ -95,6 +95,11 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
 
             return;
         }
+        if ('block' == $method) {
+            $this->blockMembers($members);
+
+            return;
+        }
     }
 
     /**
@@ -218,6 +223,23 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
         $messages = $modelSubSystem->getMessages();
         $this->log->info("messages " . Zend_Json::encode($messages));
         echo "response " . Zend_Json::encode($messages) . PHP_EOL;
+    }
+
+    private function blockMembers($members)
+    {
+        $modelSubSystem = new Default_Model_Ocs_Forum($this->config);
+
+        while ($member = $members->fetch()) {
+            $result = $modelSubSystem->blockUser($member);
+            if (false == $result) {
+                $this->log->info('Fail');
+            }
+            $messages = $modelSubSystem->getMessages();
+            if (false === empty($messages)) {
+                $this->log->info("Message : " . Zend_Json::encode($messages));
+            }
+        }
+
     }
 
 }
