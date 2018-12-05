@@ -1528,8 +1528,8 @@ var GitlabNewProjectsJson = (function () {
                 }
                 crss += '</div></a></div></div><div class="col-lg-9 col-md-6 col-sm-4 col-xs-4" style="padding-left: 25px;"><a href="' + item.web_url + '">' + item.name + '</a></div></div>';
                 crss += '<div class="row" style="margin-left: 0;margin-right: 0;"><div class="userinfo"><a href="' + url_git + '/' + item.namespace.path + '" class="tooltipuserleft tooltipstered">';
-                showGitUserAvatar(url_git,item.namespace.name);
-                crss += '<img id="avatar_' + item.namespace.name + '" src="">';
+                showGitUserAvatar(url_git,item.namespace.name, item.name);
+                crss += '<img id="avatar_' + item.namespace.name + '_' + item.id + '" src="">';
                 crss += '<span style="display: block">' + item.namespace.name + '</span></a></div></div>';
 
                 crss += '<div class="row " style="margin-left: 0;margin-right: 0;">';
@@ -1543,12 +1543,12 @@ var GitlabNewProjectsJson = (function () {
     }
 })();
 
-function showGitUserAvatar(url_git,username) {
+function showGitUserAvatar(url_git,username, projectid) {
     var avatar = "";
     var json_url = url_git+'/api/v4/users?username=' + username;
     $.ajax(json_url).then(function (result) {
         $.each(result, function (i, item) {
-            $('#avatar_' + username).attr('src',item.avatar_url);
+            $('#avatar_' + username + '_' + projectid).attr('src',item.avatar_url);
         });
     });
 }
