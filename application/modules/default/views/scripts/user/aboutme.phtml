@@ -500,7 +500,8 @@ $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
                                         <div class="text">
                                     
                                             <a href="<?= $url_gitlab ?>/<?php echo $this->member->username;?>">
-                                                <span style="font-size: 16px; font-weight: normal;">git-opendesktop </span>
+                                                <span style="font-size: 16px; font-weight: normal;">
+                                                <?php echo $this->member->username;?> on git-opendesktop </span>
                                             </a>
                                         </div>
                                     </div>
