@@ -1510,9 +1510,8 @@ var BlogJson = (function () {
 
 var GitlabNewProjectsJson = (function () {
     return {
-        setup: function () {
-            var url_git = 'https://git.opendesktop.org/';
-            var json_url = 'https://git.opendesktop.org/api/v4/projects?order_by=created_at&sort=desc&visibility=public&page=1&per_page=5';
+        setup: function (url_git) {
+            var json_url = url_git+'/api/v4/projects?order_by=created_at&sort=desc&visibility=public&page=1&per_page=5';
             $.ajax(json_url).then(function (result) {
               var topics = result;
               var crss = '';
@@ -1529,7 +1528,7 @@ var GitlabNewProjectsJson = (function () {
                 }
                 crss += '</div></a></div></div><div class="col-lg-9 col-md-6 col-sm-4 col-xs-4" style="padding-left: 25px;"><a href="' + item.web_url + '">' + item.name + '</a></div></div>';
                 crss += '<div class="row" style="margin-left: 0;margin-right: 0;"><div class="userinfo"><a href="' + url_git + '/' + item.namespace.path + '" class="tooltipuserleft tooltipstered">';
-                showGitUserAvatar(item.namespace.name);
+                showGitUserAvatar(url_git,item.namespace.name);
                 crss += '<img id="avatar_' + item.namespace.name + '" src="">';
                 crss += '<span style="display: block">' + item.namespace.name + '</span></a></div></div>';
 
@@ -1544,9 +1543,9 @@ var GitlabNewProjectsJson = (function () {
     }
 })();
 
-function showGitUserAvatar(username) {
+function showGitUserAvatar(url_git,username) {
     var avatar = "";
-    var json_url = 'https://git.opendesktop.org/api/v4/users?username=' + username;
+    var json_url = url_git+'/api/v4/users?username=' + username;
     $.ajax(json_url).then(function (result) {
         $.each(result, function (i, item) {
             $('#avatar_' + username).attr('src',item.avatar_url);

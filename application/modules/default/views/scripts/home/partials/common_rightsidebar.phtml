@@ -23,6 +23,8 @@ $modelInfo = new Default_Model_Info();
 $this->supporters = $modelInfo->getNewActiveSupporters(9);
 
 $helpPrintDate = new Default_View_Helper_PrintDate();
+
+$git_url = Zend_Registry::get('config')->settings->server->opencode->host;
 ?>
 
 <style>
@@ -167,6 +169,6 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
     '    $(document).ready(function(){                               
                 RssNews.setup();   
                 BlogJson.setup();   
-                GitlabNewProjectsJson.setup();   
+                GitlabNewProjectsJson.setup("'.$git_url.'");   
             });
         ');
