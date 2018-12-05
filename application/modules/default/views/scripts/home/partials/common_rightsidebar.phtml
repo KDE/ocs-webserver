@@ -145,67 +145,8 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
             <span class="newsTitle"> Forum </span>
             <div class="prod-widget-box right bgwhite " id="blogJson"> </div>     
            
-            <?php if(null != $this->git_projects && count($this->git_projects) > 0) {
-                ?>
             <span class="newsTitle"> Git-Projects </span>
-            <div class="prod-widget-box right bgwhite" id="lastcomments">
-                <?php
-                foreach ($this->git_projects as $git_project) {
-                    ?>
-                <div class="commentstore">
-                    <div class="row">
-                        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-4"> 
-                            <div class="text-center">
-                                <?php
-                                    $url = $git_project['web_url'];
-                                    $url = str_replace("http://", "https://", $url);
-                                ?>
-                                <a href="<?= $url ?>">
-                                    <div class="avatar-container">
-                                    <?php
-                                        if(null != $git_project['avatar_url']) {
-                                            $imgurl = $git_project['avatar_url'];
-                                            $imgurl = str_replace("http://", "https://", $imgurl);
-                                    ?>
-                                        <img class="avatar project-avatar s40 js-lazy-loaded" src="<?= $imgurl ?>" width="40" height="40">
-                                    <?php
-                                        } else {
-                                    ?>
-                                        <div class="avatar project-avatar s40 identicon bg2"><?= substr($git_project['name'], 0, 1) ?></div>
-                                    <?php
-                                        }
-                                    ?>
-                                    </div>
-                                </a>
-                            </div>
-                        </div> 
-                        <div class="col-lg-9 col-md-6 col-sm-4 col-xs-4" style="padding-left: 25px;">
-                            <a href="<?= $git_project['web_url'] ?>"><?= $git_project['name'] ?></a>
-                        </div>  
-                    </div>
-                    <div class="row" style="margin-left: 0;margin-right: 0;">
-                        <div class="userinfo">
-                            <?php
-                                $url = $this->git_homepage . '/' . $git_project['namespace']['path'];
-                            ?>
-                            <a href="<?= $url ?>" class="tooltipuserleft tooltipstered">
-                                <img src="<?= $git_project['namespace']['avatar_url'] ?>">
-                                <span style="display: block"><?= $git_project['namespace']['name'] ?></span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="row " style="margin-left: 0;margin-right: 0;">
-                        <span style="font-size: smaller;">
-                            <?php 
-                                $date = date('Y-m-d H:i:s', strtotime($git_project['created_at']));
-                                echo $helpPrintDate->printDate($date);
-                            ?>
-                        </span>
-                    </div>
-                </div>
-                <?php } ?>
-            </div>          
-            <?php } ?>
+            <div class="prod-widget-box right bgwhite" id="lastgitprojects"></div>          
             
             <?php  if (count($this->comments) > 0) {
                 ?>
@@ -225,6 +166,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){                               
                 RssNews.setup();   
-                BlogJson.setup();                    
+                BlogJson.setup();   
+                GitlabNewProjectsJson.setup();   
             });
         ');
