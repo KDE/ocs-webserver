@@ -149,21 +149,16 @@ class Default_Model_Ocs_Forum
     private function getUser($extern_uid, $username)
     {
         $user_by_uid = $this->getUserByExternUid($extern_uid);
-        $user_by_dn = $this->getUserByUsername($username);
-
-        if (empty($user_by_uid) AND empty($user_by_dn)) {
-            return null;
-        }
-
-        if (!empty($user_by_uid) AND empty($user_by_dn)) {
+        if (false === empty($user_by_uid)) {
             return $user_by_uid;
         }
 
-        if (empty($user_by_uid) AND !empty($user_by_dn)) {
+        $user_by_dn = $this->getUserByUsername($username);
+        if (false === empty($user_by_dn)) {
             return $user_by_dn;
         }
 
-        return $user_by_uid;
+        return null;
     }
 
     /**
@@ -488,6 +483,13 @@ class Default_Model_Ocs_Forum
         return $user;
     }
 
+    /**
+     * @param array $member_data
+     *
+     * @return array|bool
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
     public function deleteUserWithArray($member_data)
     {
         if (empty($member_data)) {
@@ -507,6 +509,35 @@ class Default_Model_Ocs_Forum
         if (false === $user) {
             return false;
         }
+
+        return $user;
+    }
+
+    public function blockUser($member_data)
+    {
+        if (is_int($member_data)) {
+            $member_data = $this->getMemberData($member_data, false);
+        }
+
+        if (empty($member_data)) {
+            return false;
+        }
+
+        $forum_member = $this->getUser($member_data['external_id'], $member_data['username']);
+        if (empty($forum_member)) {
+            return false;
+        }
+
+        $uri = $this->config->host . '/admin/users/' . $forum_member['user']['id'] . '/suspend';
+        $method = Zend_Http_Client::PUT;
+        $uid = $member_data['member_id'];
+        $suspend_until = new DateTime();
+        $suspend_until->add(new DateInterval('P1Y'));
+        $data = array('suspend_until' => $suspend_until->format("Y-m-d"), "reason" => "");
+
+        $user = $this->httpRequest($uri, $uid, $method, $data);
+
+        $this->messages[] = 'Forum user suspended: ' . json_encode($user);
 
         return $user;
     }

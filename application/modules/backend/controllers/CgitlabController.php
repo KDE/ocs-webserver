@@ -86,6 +86,11 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
 
             return;
         }
+        if ('block' == $method) {
+            $this->blockMember($members);
+
+            return;
+        }
     }
 
     /**
@@ -221,6 +226,22 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         }
 
         return true;
+    }
+
+    private function blockMember($members)
+    {
+        $modelSubSystem = new Default_Model_Ocs_Gitlab($this->config);
+
+        while ($member = $members->fetch()) {
+            $result = $modelSubSystem->blockUser($member);
+            if (false == $result) {
+                $this->log->info('Fail');
+            }
+            $messages = $modelSubSystem->getMessages();
+            if (false === empty($messages)) {
+                $this->log->info("Message : " . Zend_Json::encode($messages));
+            }
+        }
     }
 
 }

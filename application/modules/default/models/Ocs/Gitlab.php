@@ -29,7 +29,7 @@ class Default_Model_Ocs_Gitlab
     protected $config;
     protected $messages;
     protected $httpClient;
-    
+
     /**
      * @inheritDoc
      */
@@ -42,114 +42,43 @@ class Default_Model_Ocs_Gitlab
         }
         $uri = $this->config->host;
         $this->httpClient = new Zend_Http_Client($uri, array('keepalive' => true, 'strictredirects' => true));
-        
+
         $this->cache = Zend_Registry::get('cache');
     }
 
-    /**
-     * @param $member_data
-     * @param $oldUsername
-     *
-     * @return array|bool|null
-     * @throws Default_Model_Ocs_Exception
-     * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
-     */
-    public function updateUserFromArray($member_data, $oldUsername)
+    public function blockUser($member_data)
     {
+        if (is_int($member_data)) {
+            $member_data = $this->getMemberData($member_data, false);
+        }
+
         if (empty($member_data)) {
             return false;
         }
 
-        $this->messages = array();
-
-        $data = $this->mapUserData($member_data);
-
-        $user = $this->getUser($data['extern_uid'], $oldUsername);
-        if (empty($user)) {
-            $this->messages[] = "Fail";
-
+        $user = $this->getUser($member_data['extern_uid'], $member_data['username']);
+        if (false === $user) {
             return false;
         }
-//        $data['skip_reconfirmation'] = 'true';
-//        unset($data['password']);
+
+        $uri = $this->config->host . "/api/v4/users/{$user['id']}/block";
+        $method = Zend_Http_Client::POST;
+        $uid = $member_data['member_id'];
 
         try {
-            foreach ($data as $datum) {
-                $datum['skip_reconfirmation'] = 'true';
-                unset($datum['password']);
+            $user = $this->httpRequest($uri, $uid, $method);
+            if (false === $user) {
+                $this->messages[] = "Fail ";
 
-                $this->httpUserUpdate($data, $user['id']);
+                return false;
             }
         } catch (Zend_Exception $e) {
             $this->messages[] = "Fail " . $e->getMessage();
 
             return false;
         }
-        $this->messages[] = "overwritten : " . json_encode($user);
 
-        return $user;
-    }
-
-    /**
-     * @param array $user
-     *
-     * @return array
-     */
-    protected function mapUserData($user)
-    {
-        $paramEmail = '';
-        if (isset($user['email_address'])) {
-            $paramEmail = $user['email_address'];
-        } else if (isset($user['mail'])) {
-            $paramEmail = $user['mail'];
-        }
-
-        if (strlen($user['biography']) > 254) {
-            $helperTruncate = new Default_View_Helper_Truncate();
-            $bio = $helperTruncate->truncate($user['biography'], 250);
-        } else {
-            $bio = empty($user['biography']) ? '' : $user['biography'];
-        }
-
-        $data = array(
-            array(
-                'email'            => $paramEmail,
-                'username'         => mb_strtolower($user['username']),
-//                'name'             => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname']) : $user['username'],
-                'name'             => $user['username'],
-                'password'         => $user['password'],
-                'provider'         => $this->config->provider_name,
-                'extern_uid'       => $user['external_id'],
-                'bio'              => $bio,
-                'admin'            => $user['roleId'] == 100 ? 'true' : 'false',
-                'can_create_group' => 'true'
-            ),
-            array(
-                'email'            => $paramEmail,
-                'username'         => mb_strtolower($user['username']),
-//                'name'             => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname']) : $user['username'],
-                'name'             => $user['username'],
-                'password'         => $user['password'],
-                'provider'         => "ldapmain",
-                'extern_uid'       => $this->buildUserDn($user['username']),
-                'bio'              => $bio,
-                'admin'            => $user['roleId'] == 100 ? 'true' : 'false',
-                'can_create_group' => 'true'
-            )
-        );
-
-        return $data;
-    }
-
-    private function buildUserDn($extern_uid)
-    {
-        $username = mb_strtolower($extern_uid);
-        $baseDn = Default_Model_Ocs_Ldap::getBaseDn();
-        $dn = "cn={$username},{$baseDn}";
-
-        return $dn;
+        return true;
     }
 
     /**
@@ -228,45 +157,6 @@ class Default_Model_Ocs_Gitlab
     }
 
     /**
-     * @param string $email
-     *
-     * @return array
-     * @throws Default_Model_Ocs_Exception
-     * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
-     */
-    public function getUserByEmail($email)
-    {
-        $this->httpClient->resetParameters();
-        $uri = $this->config->host . "/api/v4/users?search={$email}";
-        $this->httpClient->setUri($uri);
-        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
-        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
-        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
-        $this->httpClient->setMethod(Zend_Http_Client::GET);
-
-        $response = $this->httpClient->request();
-
-        $body = Zend_Json::decode($response->getRawBody());
-
-        if (count($body) == 0) {
-            return array();
-        }
-
-        if (array_key_exists("message", $body)) {
-            $result_code = substr(trim($body["message"]), 0, 3);
-            if ((int)$result_code >= 300) {
-                throw new Default_Model_Ocs_Exception($body["message"]);
-            }
-        }
-
-        Zend_Registry::get('logger')->debug(__METHOD__ . " - body: " . $response->getRawBody());
-
-        return $body;
-    }
-
-    /**
      * @param $username
      *
      * @return array
@@ -307,6 +197,178 @@ class Default_Model_Ocs_Gitlab
         return $body[0];
     }
 
+    private function buildUserDn($extern_uid)
+    {
+        $username = mb_strtolower($extern_uid);
+        $baseDn = Default_Model_Ocs_Ldap::getBaseDn();
+        $dn = "cn={$username},{$baseDn}";
+
+        return $dn;
+    }
+
+    public function getUserWithName($username)
+    {
+        $this->httpClient->resetParameters();
+        $uri = $this->config->host . "/api/v4/users?username=" . $username;
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod(Zend_Http_Client::GET);
+
+        $response = $this->httpClient->request();
+
+        $body = Zend_Json::decode($response->getRawBody());
+
+        if (count($body) == 0) {
+            return array();
+        }
+
+        if (array_key_exists("message", $body)) {
+            $result_code = substr(trim($body["message"]), 0, 3);
+            if ((int)$result_code >= 300) {
+                throw new Default_Model_Ocs_Exception($body["message"]);
+            }
+        }
+
+        return $body[0];
+    }
+
+    /**
+     * @param string     $uri
+     * @param string     $uid
+     * @param string     $method
+     * @param array|null $post_param
+     *
+     * @return bool|array
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    protected function httpRequest($uri, $uid, $method = Zend_Http_Client::GET, $post_param = null)
+    {
+        $this->httpClient->resetParameters();
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod($method);
+        if (isset($post_param)) {
+            $this->httpClient->setParameterPost($post_param);
+        }
+
+        $response = $this->httpClient->request();
+        if ($response->getStatus() < 200 OR $response->getStatus() >= 500) {
+            $this->messages[] = 'Request failed.(' . $uri . ') OCS Forum server send message: ' . $response->getBody();
+
+            return false;
+        }
+
+        $body = Zend_Json::decode($response->getBody());
+
+        if (array_key_exists("message", $body)) {
+            $this->messages[] = "id: {$uid} ($uri) - " . Zend_Json::encode($body["message"]);
+        }
+
+        return $body;
+    }
+
+    /**
+     * @param $member_data
+     * @param $oldUsername
+     *
+     * @return array|bool|null
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function updateUserFromArray($member_data, $oldUsername)
+    {
+        if (empty($member_data)) {
+            return false;
+        }
+
+        $this->messages = array();
+
+        $data = $this->mapUserData($member_data);
+
+        $user = $this->getUser($data['extern_uid'], $oldUsername);
+        if (empty($user)) {
+            $this->messages[] = "Fail";
+
+            return false;
+        }
+        //        $data['skip_reconfirmation'] = 'true';
+        //        unset($data['password']);
+
+        try {
+            foreach ($data as $datum) {
+                $datum['skip_reconfirmation'] = 'true';
+                unset($datum['password']);
+
+                $this->httpUserUpdate($data, $user['id']);
+            }
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+        $this->messages[] = "overwritten : " . json_encode($user);
+
+        return $user;
+    }
+
+    /**
+     * @param array $user
+     *
+     * @return array
+     */
+    protected function mapUserData($user)
+    {
+        $paramEmail = '';
+        if (isset($user['email_address'])) {
+            $paramEmail = $user['email_address'];
+        } else if (isset($user['mail'])) {
+            $paramEmail = $user['mail'];
+        }
+
+        if (strlen($user['biography']) > 254) {
+            $helperTruncate = new Default_View_Helper_Truncate();
+            $bio = $helperTruncate->truncate($user['biography'], 250);
+        } else {
+            $bio = empty($user['biography']) ? '' : $user['biography'];
+        }
+
+        $data = array(
+            array(
+                'email'            => $paramEmail,
+                'username'         => mb_strtolower($user['username']),
+                //                'name'             => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname']) : $user['username'],
+                'name'             => $user['username'],
+                'password'         => $user['password'],
+                'provider'         => $this->config->provider_name,
+                'extern_uid'       => $user['external_id'],
+                'bio'              => $bio,
+                'admin'            => $user['roleId'] == 100 ? 'true' : 'false',
+                'can_create_group' => 'true'
+            ),
+            array(
+                'email'            => $paramEmail,
+                'username'         => mb_strtolower($user['username']),
+                //                'name'             => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname']) : $user['username'],
+                'name'             => $user['username'],
+                'password'         => $user['password'],
+                'provider'         => "ldapmain",
+                'extern_uid'       => $this->buildUserDn($user['username']),
+                'bio'              => $bio,
+                'admin'            => $user['roleId'] == 100 ? 'true' : 'false',
+                'can_create_group' => 'true'
+            )
+        );
+
+        return $data;
+    }
+
     /**
      * @param $data
      *
@@ -345,6 +407,45 @@ class Default_Model_Ocs_Gitlab
         return $body;
     }
 
+    /**
+     * @param string $email
+     *
+     * @return array
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function getUserByEmail($email)
+    {
+        $this->httpClient->resetParameters();
+        $uri = $this->config->host . "/api/v4/users?search={$email}";
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod(Zend_Http_Client::GET);
+
+        $response = $this->httpClient->request();
+
+        $body = Zend_Json::decode($response->getRawBody());
+
+        if (count($body) == 0) {
+            return array();
+        }
+
+        if (array_key_exists("message", $body)) {
+            $result_code = substr(trim($body["message"]), 0, 3);
+            if ((int)$result_code >= 300) {
+                throw new Default_Model_Ocs_Exception($body["message"]);
+            }
+        }
+
+        Zend_Registry::get('logger')->debug(__METHOD__ . " - body: " . $response->getRawBody());
+
+        return $body;
+    }
+
     public function validateUserData($member, $userSubsystem)
     {
         $name = (false == empty($member['lastname'])) ? trim($member['firstname'] . ' ' . $member['lastname']) : $member['username'];
@@ -374,7 +475,7 @@ class Default_Model_Ocs_Gitlab
         if (false === array_search('oauth_opendesktop', array_column($userSubsystem['identities'], 'provider'))) {
             $result[] = 'oauth_opendesktop missing';
         }
-        $provider =  array_column($userSubsystem['identities'], 'extern_uid', 'provider');
+        $provider = array_column($userSubsystem['identities'], 'extern_uid', 'provider');
         $providerOauth = isset($provider['oauth_opendesktop']) ? $provider['oauth_opendesktop'] : '';
         if ($member['external_id'] != $providerOauth) {
             $result[] = 'external_id<=>oauth_opendesktop->extern_uid';
@@ -420,7 +521,7 @@ class Default_Model_Ocs_Gitlab
         $user = $this->getUser($member_data['external_id'], $member_data['username']);
 
         if (empty($user)) {
-//            $data['skip_confirmation'] = 'true';
+            //            $data['skip_confirmation'] = 'true';
 
             try {
                 $data[0]['skip_confirmation'] = 'true';
@@ -800,34 +901,6 @@ class Default_Model_Ocs_Gitlab
         return $body;
     }
 
-    public function getUserWithName($username)
-    {
-        $this->httpClient->resetParameters();
-        $uri = $this->config->host . "/api/v4/users?username=" . $username;
-        $this->httpClient->setUri($uri);
-        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
-        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
-        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
-        $this->httpClient->setMethod(Zend_Http_Client::GET);
-
-        $response = $this->httpClient->request();
-
-        $body = Zend_Json::decode($response->getRawBody());
-
-        if (count($body) == 0) {
-            return array();
-        }
-
-        if (array_key_exists("message", $body)) {
-            $result_code = substr(trim($body["message"]), 0, 3);
-            if ((int)$result_code >= 300) {
-                throw new Default_Model_Ocs_Exception($body["message"]);
-            }
-        }
-
-        return $body[0];
-    }
-
     public function getUserWithId($id)
     {
         $this->httpClient->resetParameters();
@@ -862,7 +935,9 @@ class Default_Model_Ocs_Gitlab
         $cacheName = __FUNCTION__;
         if (!($body = $cache->load($cacheName))) {
             $this->httpClient->resetParameters();
-            $uri = $this->config->host . '/api/v4/projects?order_by='.$order_by.'&sort='.$sort.'&visibility=public&page=' . $page . '&per_page=' . $limit;
+            $uri =
+                $this->config->host . '/api/v4/projects?order_by=' . $order_by . '&sort=' . $sort . '&visibility=public&page=' . $page
+                . '&per_page=' . $limit;
             $this->httpClient->setUri($uri);
             $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
             $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -884,7 +959,7 @@ class Default_Model_Ocs_Gitlab
                         throw new Default_Model_Ocs_Exception($body["message"]);
                     }
                 }
-                
+
                 //fetch also user data
                 $returnArray = array();
                 foreach ($body as $git_project) {
@@ -893,11 +968,11 @@ class Default_Model_Ocs_Gitlab
                     $returnArray[] = $git_project;
                 }
                 $body = $returnArray;
-
             } catch (Exception $exc) {
                 return array();
             }
         }
+
         return $body;
     }
 
@@ -988,44 +1063,5 @@ class Default_Model_Ocs_Gitlab
 
         return $body;
     }
-
-    /**
-     * @param string     $uri
-     * @param string     $uid
-     * @param string     $method
-     * @param array|null $post_param
-     *
-     * @return bool|array
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
-     */
-    protected function httpRequest($uri, $uid, $method = Zend_Http_Client::GET, $post_param = null)
-    {
-        $this->httpClient->resetParameters();
-        $this->httpClient->setUri($uri);
-        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
-        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
-        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
-        $this->httpClient->setMethod($method);
-        if (isset($post_param)) {
-            $this->httpClient->setParameterPost($post_param);
-        }
-
-        $response = $this->httpClient->request();
-        if ($response->getStatus() < 200 OR $response->getStatus() >= 500) {
-            $this->messages[] = 'Request failed.(' . $uri . ') OCS Forum server send message: ' . $response->getBody();
-
-            return false;
-        }
-
-        $body = Zend_Json::decode($response->getBody());
-
-        if (array_key_exists("message", $body)) {
-            $this->messages[] = "id: {$uid} ($uri) - " . Zend_Json::encode($body["message"]);
-        }
-
-        return $body;
-    }
-
 
 }

@@ -1508,6 +1508,55 @@ var BlogJson = (function () {
 })();
 
 
+var GitlabNewProjectsJson = (function () {
+    return {
+        setup: function (url_git) {
+            var json_url = url_git+'/api/v4/projects?order_by=created_at&sort=desc&visibility=public&page=1&per_page=5';
+            $.ajax(json_url).then(function (result) {
+              var topics = result;
+              var crss = '';
+
+             $.each(topics, function (i, item) {
+                var m = moment(item.created_at);
+
+                crss += '<div class="commentstore"><div class="row"><div class="col-lg-2 col-md-3 col-sm-4 col-xs-4"><div class="text-center">';
+                crss += '<a href="' + item.web_url + '"><div class="avatar-container">';
+                if(item.avatar_url) {
+                    crss += '<img class="avatar project-avatar s40 js-lazy-loaded" src="' + item.avatar_url + '" width="40" height="40">';
+                } else {
+                    crss += '<div class="avatar project-avatar s40 identicon bg2">' + item.name.substr(0,1) + '</div>';
+                }
+                crss += '</div></a></div></div><div class="col-lg-9 col-md-6 col-sm-4 col-xs-4" style="padding-left: 25px;"><a href="' + item.web_url + '">' + item.name + '</a></div></div>';
+                crss += '<div class="row" style="margin-left: 0;margin-right: 0;"><div class="userinfo"><a href="' + url_git + '/' + item.namespace.path + '" class="tooltipuserleft tooltipstered">';
+                showGitUserAvatar(url_git,item.namespace.name, item.id);
+                crss += '<img id="avatar_' + item.namespace.name + '_' + item.id + '" src="">';
+                crss += '<span style="display: block">' + item.namespace.name + '</span></a></div></div>';
+
+                crss += '<div class="row " style="margin-left: 0;margin-right: 0;">';
+                crss += '   <span style="font-size: smaller;">' + m.fromNow() + '</span></div></div></div>';      
+
+             });
+             $("#lastgitprojects").html(crss);
+            });
+        }
+
+    }
+})();
+
+function showGitUserAvatar(url_git,username, projectid) {
+    var json_url = url_git+'/api/v4/users?username=' + username;
+    $.ajax(json_url).then(function (result) {
+        var usr_list = result;
+        $.each(usr_list, function (i,usr) {
+            $img = $('#avatar_' + username + '_' + projectid);
+            //alert(usr);
+            //alert($img.attr('src'));
+            $img.attr('src',usr.avatar_url);
+            //alert($img.attr('src'));
+        });
+    });
+}
+
 var ProductDetailCarousel = (function () {
     return {
         setup: function () {
