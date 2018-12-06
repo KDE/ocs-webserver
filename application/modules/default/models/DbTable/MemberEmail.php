@@ -65,6 +65,9 @@ class Default_Model_DbTable_MemberEmail extends Local_Model_Table
     {
         $sql = "UPDATE `{$this->_name}` SET `email_deleted` = 1 WHERE `{$this->_key}` = :emailId";
         $stmnt = $this->_db->query($sql, array('emailId' => $email_id));
+        
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        $memberLog->logMemberEmailAsDeleted($email_id);
 
         return $stmnt->rowCount();
     }
@@ -105,10 +108,21 @@ class Default_Model_DbTable_MemberEmail extends Local_Model_Table
      */
     public function setDeletedByMember($member_id)
     {
+        
+        $sql = "SELECT email_id FROM member_email WHERE email_member_id = :member_id AND email_deleted = 0";
+        $emailsForDelete = $this->_db->fetchAll($sql, array(
+            'member_id'       => $member_id
+        ));
+        foreach ($emailsForDelete as $item) {
+            $this->setDeleted($item['email_id']);
+        }
+        
         $sql = "UPDATE `{$this->_name}` SET `email_deleted` = 1 WHERE `email_member_id` = :memberId";
         $stmnt = $this->_db->query($sql, array('memberId' => $member_id));
 
         return $stmnt->rowCount();
     }
+    
+    
 
 }

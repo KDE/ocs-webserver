@@ -1013,13 +1013,26 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         foreach ($projectForDelete as $item) {
             $this->setDeleted($item['project_id']);
         }
+        
         // set personal page deleted
+        $sql = "SELECT project_id FROM project WHERE member_id = :memberId AND type_id = :typeId";
+        $projectForDelete = $this->_db->fetchAll($sql, array(
+            'memberId'       => $member_id,
+            'typeId'         => self::PROJECT_TYPE_PERSONAL,
+            'project_status' => self::PROJECT_DELETED
+        ));
+        foreach ($projectForDelete as $item) {
+            $this->setDeleted($item['project_id']);
+        }
+        
+        /*
         $sql = "UPDATE project SET `status` = :statusCode, deleted_at = NOW() WHERE member_id = :memberId AND type_id = :typeId";
         $this->_db->query($sql, array(
             'statusCode' => self::PROJECT_DELETED,
             'memberId'   => $member_id,
             'typeId'     => self::PROJECT_TYPE_PERSONAL
         ))->execute();
+        */
     }
 
     /**
@@ -1034,6 +1047,9 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         );
 
         $this->update($updateValues, 'status > 30 AND project_id=' . $id);
+        
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        $memberLog->logProjectAsDeleted($id);
 
         $this->setDeletedForUpdates($id);
         $this->setDeletedForComments($id);
@@ -1045,6 +1061,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     protected function setDeletedForUpdates($id)
     {
+        
         $id = (int)$id;
         $updateValues = array(
             'status'     => self::PROJECT_DELETED,
