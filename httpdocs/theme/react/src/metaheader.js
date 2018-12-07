@@ -231,30 +231,35 @@ class DomainsMenu extends React.Component {
 
   render(){
 
-    let moreMenuItemDisplay;
+    let moreMenuItemDisplay, adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
     if (this.props.device !== "large"){
       moreMenuItemDisplay = (
         <MoreDropDownMenu
           domains={this.props.domains}
           baseUrl={this.props.baseUrl}
           blogUrl={this.props.blogUrl}
-        />
-      )
-    }
-
-    let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
-    if (this.props.isAdmin === true){
-      adminsDropDownMenuDisplay = (
-        <AdminsDropDownMenu
+          isAdmin={this.props.isAdmin}
           user={this.props.user}
           baseUrl={this.props.baseUrl}
           gitlabUrl={this.props.gitlabUrl}
         />
-      );
-      myOpendesktopMenuDisplay = (
-        <CloudsServicesDropDownMenu />
-      );
+      )
+    } else {
+      if (this.props.isAdmin === true){
+        adminsDropDownMenuDisplay = (
+          <AdminsDropDownMenu
+            user={this.props.user}
+            baseUrl={this.props.baseUrl}
+            gitlabUrl={this.props.gitlabUrl}
+          />
+        );
+        myOpendesktopMenuDisplay = (
+          <CloudsServicesDropDownMenu />
+        );
+      }
     }
+
+
 
     return (
       <ul className="metaheader-menu left" id="domains-menu">
@@ -564,6 +569,20 @@ class MoreDropDownMenu extends React.Component {
       aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={config.baseUrl + "/#about"}>About</a></li>);
     }
 
+    let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
+    if (this.props.isAdmin){
+      adminsDropDownMenuDisplay = (
+        <AdminsDropDownMenu
+          user={this.props.user}
+          baseUrl={this.props.baseUrl}
+          gitlabUrl={this.props.gitlabUrl}
+        />
+      );
+      myOpendesktopMenuDisplay = (
+        <CloudsServicesDropDownMenu />
+      );
+    }
+
     return(
       <li ref={node => this.node = node} id="more-dropdown-menu" className={this.state.dropdownClass}>
         <a className="more-menu-link-item">More</a>
@@ -573,6 +592,8 @@ class MoreDropDownMenu extends React.Component {
           {faqLinkItem}
           {apiLinkItem}
           {aboutLinkItem}
+          {adminsDropDownMenuDisplay}
+          {myOpendesktopMenuDisplay}
         </ul>
       </li>
     )
