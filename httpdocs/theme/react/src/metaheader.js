@@ -971,7 +971,7 @@ class MobileLeftSidePanel extends React.Component {
       aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={config.baseUrl + "/#about"}>About</a></li>);
     }
 
-    console.log(this.props.isAdmin);
+    console.log('is admin - ' + this.props.isAdmin);
     let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
     if (this.props.isAdmin){
       adminsDropDownMenuDisplay = (
