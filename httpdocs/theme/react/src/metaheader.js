@@ -184,7 +184,10 @@ class MetaHeader extends React.Component {
           blogUrl={this.state.blogUrl}
           forumUrl={this.state.forumUrl}
           sName={this.state.sName}
-          isAdmin={this.state.isAdmin}
+          isAdmin={this.props.isAdmin}
+          user={this.props.user}
+          baseUrl={this.props.baseUrl}
+          gitlabUrl={this.props.gitlabUrl} 
         />
       )
     } else {
@@ -964,6 +967,20 @@ class MobileLeftSidePanel extends React.Component {
       aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={config.baseUrl + "/#about"}>About</a></li>);
     }
 
+    let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
+    if (this.props.isAdmin){
+      adminsDropDownMenuDisplay = (
+        <AdminsDropDownMenu
+          user={this.props.user}
+          baseUrl={this.props.baseUrl}
+          gitlabUrl={this.props.gitlabUrl}
+        />
+      );
+      myOpendesktopMenuDisplay = (
+        <CloudsServicesDropDownMenu />
+      );
+    }
+
     return (
       <div id="left-side-panel">
         <div id="panel-header">
@@ -992,6 +1009,8 @@ class MobileLeftSidePanel extends React.Component {
                 {aboutLinkItem}
               </ul>
             </li>
+            {adminsDropDownMenuDisplay}
+            {myOpendesktopMenuDisplay}
           </ul>
         </div>
       </div>
