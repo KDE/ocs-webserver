@@ -187,7 +187,7 @@ class MetaHeader extends React.Component {
           isAdmin={this.props.isAdmin}
           user={this.props.user}
           baseUrl={this.props.baseUrl}
-          gitlabUrl={this.props.gitlabUrl} 
+          gitlabUrl={this.props.gitlabUrl}
         />
       )
     } else {
@@ -920,6 +920,10 @@ class MobileLeftMenu extends React.Component {
             baseUrl={this.props.baseUrl}
             blogUrl={this.props.blogUrl}
             forumUrl={this.props.forumUrl}
+            isAdmin={this.props.isAdmin}
+            user={this.props.user}
+            baseUrl={this.props.baseUrl}
+            gitlabUrl={this.props.gitlabUrl}
           />
         </div>
       </div>
@@ -967,6 +971,7 @@ class MobileLeftSidePanel extends React.Component {
       aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={config.baseUrl + "/#about"}>About</a></li>);
     }
 
+    console.log(this.props.isAdmin);
     let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
     if (this.props.isAdmin){
       adminsDropDownMenuDisplay = (
