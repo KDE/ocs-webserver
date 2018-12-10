@@ -863,8 +863,26 @@ body {
               }
 
               ul {
+
+                position: relative;
+                float: left;
+                top: 0;
+                left: 0;
+                padding: 5px;
+                padding-top: 0;
+                border: 0;
+                height: auto;
+                min-height: auto;
+                width: 100%;
+                box-shadow: none;
+                margin: 0;
                 padding: 0 10px;
                 margin-bottom: 15px;
+
+                &::before {
+                  display: none;
+                }
+
                 li {
                   margin-bottom: 0;
                   a {
@@ -874,6 +892,7 @@ body {
                   }
                 }
               }
+
             }
           }
         }
