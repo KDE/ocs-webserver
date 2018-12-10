@@ -184,10 +184,10 @@ class MetaHeader extends React.Component {
           blogUrl={this.state.blogUrl}
           forumUrl={this.state.forumUrl}
           sName={this.state.sName}
-          isAdmin={this.props.isAdmin}
-          user={this.props.user}
-          baseUrl={this.props.baseUrl}
-          gitlabUrl={this.props.gitlabUrl}
+          isAdmin={this.state.isAdmin}
+          user={this.state.user}
+          baseUrl={this.state.baseUrl}
+          gitlabUrl={this.state.gitlabUrl}
         />
       )
     } else {
