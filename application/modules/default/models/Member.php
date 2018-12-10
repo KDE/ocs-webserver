@@ -185,6 +185,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         
         $memberLog = new Default_Model_MemberDeactivationLog();
         $memberLog->logMemberAsDeleted($member_id);
+        
 
         $this->setMemberProjectsDeleted($member_id);
         $this->setMemberCommentsDeleted($member_id);

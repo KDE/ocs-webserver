@@ -301,12 +301,12 @@ class Default_Model_ProjectComments
     public function setAllCommentsForUserDeleted($member_id)
     {
         
-        $sql = "SELECT comment_id FROM comments WHERE comment_member_id = :member_id AND comment_avtive = 1";
-        $commentsForDelete = $this->_db->fetchAll($sql, array(
+        $sql = "SELECT comment_id FROM comments WHERE comment_member_id = :member_id AND comment_active = 1";
+        $commentsForDelete = $this->_dataTable->getAdapter()->fetchAll($sql, array(
             'member_id'       => $member_id
         ));
         foreach ($commentsForDelete as $item) {
-            $this->setDeleted($item['comment_id']);
+            $this->setDeleted($member_id, $item['comment_id']);
         }
         
         /*
@@ -327,14 +327,14 @@ class Default_Model_ProjectComments
         $this->_dataTable->getAdapter()->query($sql, array('member_id' => $member_id))->execute();
     }
 
-    public function setAllCommentsForProjectDeleted($project_id)
+    public function setAllCommentsForProjectDeleted($member_id, $project_id)
     {
-        $sql = "SELECT comment_id FROM comments WHERE comment_target_id = :project_id AND comment_type = 0 AND comment_avtive = 1";
-        $commentsForDelete = $this->_db->fetchAll($sql, array(
+        $sql = "SELECT comment_id FROM comments WHERE comment_target_id = :project_id AND comment_type = 0 AND comment_active = 1";
+        $commentsForDelete = $this->_dataTable->getAdapter()->fetchAll($sql, array(
             'project_id'       => $project_id
         ));
         foreach ($commentsForDelete as $item) {
-            $this->setDeleted($item['comment_id']);
+            $this->setDeleted($member_id, $item['comment_id']);
         }
         
         /*
@@ -346,7 +346,7 @@ class Default_Model_ProjectComments
         */
     }
     
-    public function setDeleted($comment_id)
+    public function setDeleted($member_id, $comment_id)
     {
         $sql = '
                 UPDATE comments
@@ -355,7 +355,7 @@ class Default_Model_ProjectComments
         $this->_dataTable->getAdapter()->query($sql, array('comment_id' => $comment_id))->execute();
         
         $memberLog = new Default_Model_MemberDeactivationLog();
-        $memberLog->logCommentAsDeleted($comment_id);
+        $memberLog->logCommentAsDeleted($member_id, $comment_id);
     }
 
     public function setAllCommentsForProjectActivated($project_id)

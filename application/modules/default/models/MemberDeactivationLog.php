@@ -24,19 +24,99 @@
  **/
 class Default_Model_MemberDeactivationLog extends Default_Model_DbTable_MemberDeactivationLog
 {
-    const CASE_INSENSITIVE = 1;
-    /** @var string */
-    protected $_dataTableName;
-    /** @var  Default_Model_DbTable_MemberEmail */
-    protected $_dataTable;
+    const OBJ_TYPE_OPENDESKTOP_MEMBER = 1;
+    const OBJ_TYPE_OPENDESKTOP_MEMBER_EMAIL = 2;
+    const OBJ_TYPE_OPENDESKTOP_PROJECT = 3;
+    const OBJ_TYPE_OPENDESKTOP_COMMENT = 4;
+
+    const OBJ_TYPE_GITLAB_USER = 20;
+    const OBJ_TYPE_GITLAB_PROJECT = 21;
+
+    const OBJ_TYPE_DISCOURSE_USER = 30;
+    const OBJ_TYPE_DISCOURSE_TOPIC = 31;
+    
+    
+    
+    /**
+     * @param int $identifer
+     *
+     * @return int
+     * @throws Zend_Db_Statement_Exception
+     */
+    public function logMemberAsDeleted($identifer)
+    {
+        return $this->addLog($identifer, Default_Model_MemberDeactivationLog::OBJ_TYPE_OPENDESKTOP_MEMBER, $identifer);
+    }
+    
+    /**
+     * @param int $identifer
+     *
+     * @return int
+     * @throws Zend_Db_Statement_Exception
+     */
+    public function logMemberEmailAsDeleted($member_id, $identifer)
+    {
+        return $this->addLog($member_id, Default_Model_MemberDeactivationLog::OBJ_TYPE_OPENDESKTOP_MEMBER_EMAIL, $identifer);
+    }
+    
+    /**
+     * @param int $identifer
+     *
+     * @return int
+     * @throws Zend_Db_Statement_Exception
+     */
+    public function logProjectAsDeleted($member_id, $identifer)
+    {
+        return $this->addLog($member_id, Default_Model_MemberDeactivationLog::OBJ_TYPE_OPENDESKTOP_PROJECT, $identifer);
+    }
+    
+    /**
+     * @param int $identifer
+     *
+     * @return int
+     * @throws Zend_Db_Statement_Exception
+     */
+    public function logCommentAsDeleted($member_id, $identifer)
+    {
+        return $this->addLog($member_id, Default_Model_MemberDeactivationLog::OBJ_TYPE_OPENDESKTOP_COMMENT, $identifer);
+    }
 
     /**
-     * @inheritDoc
+     * @param int $email_id
+     *
+     * @return int|void
+     * @throws Zend_Db_Statement_Exception
      */
-    public function __construct($_dataTableName = 'Default_Model_DbTable_MemberDeactivationLog')
+    public function addLog($member_id, $object_type, $identifer)
     {
-        $this->_dataTableName = $_dataTableName;
-        $this->_dataTable = new $this->_dataTableName;
+        $identity = Zend_Auth::getInstance()->getIdentity()->member_id;
+        
+        $sql = "INSERT INTO `member_deactivation_log` (deactivation_id,object_type_id,object_id,member_id) VALUES (:deactivation_id,:object_type_id,:object_id,:member_id)";
+
+        try {
+            Zend_Db_Table::getDefaultAdapter()->query($sql, array('deactivation_id' => $member_id, 'object_type_id' => $object_type,'object_id' => $identifer, 'member_id' => $identity));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR write member deactivation log - ' . print_r($e, true));
+        }
+    }
+
+    public function fetchNextLogId()
+    {
+        $sql = "
+                  SELECT
+                      max(deactivation_id)+1 AS next_id
+                  FROM
+                      `member_deactivation_log`
+                 ";
+        $result = null;
+        try {
+            $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR write member deactivation log - ' . print_r($e, true));
+        }
+        
+
+        return $result['next_id'];
     }
 
     
