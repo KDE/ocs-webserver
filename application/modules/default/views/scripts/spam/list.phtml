@@ -23,7 +23,18 @@
  */
     $project = new Default_Model_Project();
     $member = new Default_Model_Member();
+
+
 ?>
+<style type="text/css">
+    div.dangerous{
+        background: red;
+    }
+    a.dangerous{
+        color:red;
+    }
+
+</style>
 <main id="explore-content">
     <section class="wrapper" id="products-wrapper">
         <div class="container-fluid">
@@ -53,8 +64,17 @@
                     }
                     foreach ($this->products as $this->product) {
                         $updateTime = $helperPrintDate->printDate($this->product['project_changed_at']);
+                        $validProject = $project->validateDeleteProjectFromSpam($this->product['project_id']);
+                        $validUser =    $member->validDeleteMemberFromSpam($this->product['member_id']);
+                        
+                        $cssvalid='';
+                        if(!$validProject || !$validUser)         
+                        {
+                            $cssvalid='dangerous';
+                        }
+                           
                         ?>
-                        <div class="explore-product col-lg-10 col-md-10 col-sm-10 col-xs-10"
+                        <div class="explore-product col-lg-10 col-md-10 col-sm-10 col-xs-10 <?=$cssvalid?>"
                              style="border-top: 1px solid #ccc;font-size: 12px;padding: 10px 0;">
                             <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                                 <div class="rownum">
@@ -139,21 +159,20 @@
                             </div>
                         </div><!-- END .explore-product -->
                         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 small text-right"
-                             style="border-top: 1px solid #ccc;font-size: 12px;padding: 10px 0; color:red">
+                             style="border-top: 1px solid #ccc;font-size: 12px;padding: 10px 0; ">
                              <?php
-                                if($project->validateDeleteProjectFromSpam($this->product['project_id'])
-                                    &&
-                                    $member->validDeleteMemberFromSpam($this->product['member_id'])
-                                  )
+                                if($validProject && $validUser)
                                 {
                              ?>
+                                
                                 <a href="/backend/project/delete?project_id=<?= $this->product['project_id'] ?>"
-                                   class="delete-this" data-title="Delete this product?">delete product</a>
+                                   class="delete-this dangerous" data-title="Delete this product?">delete product</a>
                                 <hr/>
                                 <a href="/backend/user/delete?member_id=<?= $this->product['member_id'] ?>"
-                                   class="delete-this" data-title="Delete this member and all his products and comments?">delete
+                                   class="delete-this dangerous" data-title="Delete this member and all his products and comments?">delete
                                     user</a>
                                 <hr/>
+                           
                            <?php }?>
                                                     
 
