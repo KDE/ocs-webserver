@@ -61,7 +61,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $projectpage = (int)$this->getParam('projectpage', 1);
 
         $this->view->authMember = $this->_authMember;
-        $this->view->member = $tableMember->find($this->_memberId)->current();
+        //$this->view->member = $tableMember->find($this->_memberId)->current();
+        $this->view->member = $tableMember->fetchMemberData($this->_memberId);
         if (null == $this->view->member) {
             $this->redirect("/");
         }

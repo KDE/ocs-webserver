@@ -503,8 +503,18 @@ $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
                                         <div class="text">
                                     
                                             <a href="<?= $url_gitlab ?>/<?php echo $this->member->username;?>">
-                                                <span style="font-size: 16px; font-weight: normal;">
-                                                <?php echo $this->member->username;?> on git-opendesktop </span>
+                                            <span style="font-size: 16px; font-weight: normal;">
+                                                <?php 
+                                                $cntGitp = 0;
+                                                if(!empty($this->member->gitlab_user_id)) {
+                                                $gitlab = new Default_Model_Ocs_Gitlab();
+                                                $gitProjects = $gitlab->getUserProjects($this->member->gitlab_user_id);
+                                                $cntGitp = count($gitProjects);               
+                                                }
+                                                
+                                               
+                                                echo $this->member->username . ' on git-opendesktop('.$cntGitp.')';?> 
+                                            </span>
                                             </a>
                                         </div>
                                     </div>
