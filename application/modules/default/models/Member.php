@@ -182,6 +182,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             'deleted_at' => new Zend_Db_Expr('Now()'),
         );
         $this->update($updateValues, $this->_db->quoteInto('member_id=?', $member_id, 'INTEGER'));
+        
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        $memberLog->logMemberAsDeleted($member_id);
+        
 
         $this->setMemberProjectsDeleted($member_id);
         $this->setMemberCommentsDeleted($member_id);

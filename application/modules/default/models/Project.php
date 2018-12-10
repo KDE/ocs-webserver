@@ -130,10 +130,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     /**
      * @param $id
      */
-    private function setDeletedForComments($id)
+    private function setDeletedForComments($member_id, $id)
     {
         $modelComments = new Default_Model_ProjectComments();
-        $modelComments->setAllCommentsForProjectDeleted($id);
+        $modelComments->setAllCommentsForProjectDeleted($member_id, $id);
     }
 
     /**
@@ -1011,21 +1011,33 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             'project_status' => self::PROJECT_DELETED
         ));
         foreach ($projectForDelete as $item) {
-            $this->setDeleted($item['project_id']);
+            $this->setDeleted($member_id, $item['project_id']);
         }
+        
         // set personal page deleted
+        $sql = "SELECT project_id FROM project WHERE member_id = :memberId AND type_id = :typeId";
+        $projectForDelete = $this->_db->fetchAll($sql, array(
+            'memberId'       => $member_id,
+            'typeId'         => self::PROJECT_TYPE_PERSONAL
+        ));
+        foreach ($projectForDelete as $item) {
+            $this->setDeleted($member_id, $item['project_id']);
+        }
+        
+        /*
         $sql = "UPDATE project SET `status` = :statusCode, deleted_at = NOW() WHERE member_id = :memberId AND type_id = :typeId";
         $this->_db->query($sql, array(
             'statusCode' => self::PROJECT_DELETED,
             'memberId'   => $member_id,
             'typeId'     => self::PROJECT_TYPE_PERSONAL
         ))->execute();
+        */
     }
 
     /**
      * @param int $id
      */
-    public function setDeleted($id)
+    public function setDeleted($member_id, $id)
     {
         $id = (int)$id;
         $updateValues = array(
@@ -1034,17 +1046,21 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         );
 
         $this->update($updateValues, 'status > 30 AND project_id=' . $id);
+        
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        $memberLog->logProjectAsDeleted($member_id, $id);
 
-        $this->setDeletedForUpdates($id);
-        $this->setDeletedForComments($id);
+        $this->setDeletedForUpdates($member_id, $id);
+        $this->setDeletedForComments($member_id, $id);
         $this->setDeletedInMaterializedView($id);
     }
 
     /**
      * @param int $id
      */
-    protected function setDeletedForUpdates($id)
+    protected function setDeletedForUpdates($member_id, $id)
     {
+        
         $id = (int)$id;
         $updateValues = array(
             'status'     => self::PROJECT_DELETED,
