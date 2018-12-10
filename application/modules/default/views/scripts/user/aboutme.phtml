@@ -472,7 +472,10 @@ $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
                                     {
                                         echo '<span>Duplicates: '.$this->stat['cntDuplicateSourceurl'].'</span>';
                                     }
-                                
+                                    
+                                    echo '<br/><span>Email adress: '.$this->member->mail.' </span>';
+                                    echo '<br/><span>Paypal adress: '.$this->member->paypal_mail.' </span>';
+                                                                       
                                 ?>
                             </div>
                         </div>
