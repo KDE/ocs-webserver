@@ -115,9 +115,9 @@ class ProductCarousel extends React.Component {
   }
 
   updateDimensions(){
-    let containerWidth = $('#main-content').width();
+    let containerWidth = $('.GridFlex-cell.content').width();
     const rightSideWidth = $('.GridFlex-cell.sidebar-right').width();
-    containerWidth = containerWidth - rightSideWidth
+    containerWidth = containerWidth - rightSideWidth;
     console.log(containerWidth);
     const sliderWidth = containerWidth * Math.ceil(this.props.products / 5);
     const itemWidth = containerWidth / 5;
