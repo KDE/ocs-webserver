@@ -9,13 +9,12 @@ class App extends React.Component {
 
   componentDidMount() {
     console.log('opendesktop app homepage');
-    console.log(window.data);
-    this.convertDataObject(window.data);
+    this.convertDataObject();
   }
 
-  convertDataObject(data) {
-    for (var i = 0; i < data.length; i++) {
-      console.log(data[i]);
+  convertDataObject() {
+    for (i in window.data) {
+      console.log(window.data[i]);
       console.log([i]);
     }
     console.log('finished converting');
