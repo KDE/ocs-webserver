@@ -60,7 +60,7 @@ class App extends React.Component {
     for (var i in window.data) {
       console.log(i);
       console.log(window.data[i]);
-      if (i !== "comments") {
+      if (i !== "comments" && i !== "featureProducts") {
         const productGroup = {
           title: i,
           products: JSON.parse(window.data[i])
@@ -91,11 +91,14 @@ class App extends React.Component {
       ));
     }
 
+    let featureProduct = JSON.parse(window.data['featureProducts']);
+
     return React.createElement(
       "main",
       { id: "opendesktop-homepage" },
       React.createElement(SpotlightProduct, {
-        env: this.state.env
+        env: this.state.env,
+        featureProduct: featureProduct
       }),
       productCarouselsContainer
     );
@@ -109,7 +112,7 @@ class SpotlightProduct extends React.Component {
   }
 
   componentDidMount() {
-    console.log(window.featuredProduct);
+    console.log(this.props.featuredProduct);
   }
 
   render() {
@@ -119,6 +122,11 @@ class SpotlightProduct extends React.Component {
       imageBaseUrl = 'cn.opendesktop.org';
     } else {
       imageBaseUrl = 'cn.opendesktop.cc';
+    }
+
+    let description = this.props.featureProducts.description;
+    if (description.length > 295) {
+      description = this.props.featuredProduct.description.substring(0, 295) + "...";
     }
 
     return React.createElement(
@@ -135,7 +143,7 @@ class SpotlightProduct extends React.Component {
         React.createElement(
           "div",
           { className: "spotlight-image" },
-          React.createElement("img", { src: "https://" + imageBaseUrl + "/cache/300x230-1/img/" + window.featuredProduct.image_small })
+          React.createElement("img", { src: "https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.props.featuredProduct.image_small })
         ),
         React.createElement(
           "div",
@@ -148,7 +156,7 @@ class SpotlightProduct extends React.Component {
               null,
               React.createElement(
                 "a",
-                { href: "/p/" + window.featuredProduct.project_id },
+                { href: "/p/" + this.props.featuredProduct.project_id },
                 "title"
               )
             ),
@@ -160,14 +168,14 @@ class SpotlightProduct extends React.Component {
             React.createElement(
               "div",
               { className: "user-info" },
-              React.createElement("img", { src: window.featuredProduct.profile_image_url }),
-              window.featuredProduct.username
+              React.createElement("img", { src: this.props.featuredProduct.profile_image_url }),
+              this.props.featuredProduct.username
             )
           ),
           React.createElement(
             "div",
             { className: "info-description" },
-            window.featuredProduct.description.substring(0, 295) + "..."
+            description
           )
         )
       )
