@@ -13,7 +13,7 @@ class App extends React.Component {
   }
 
   convertDataObject() {
-    for (i in window.data) {
+    for (var i in window.data) {
       console.log(window.data[i])
       console.log([i]);
     }
