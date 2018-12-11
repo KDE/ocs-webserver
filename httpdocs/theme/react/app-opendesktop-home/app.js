@@ -26,7 +26,16 @@ class App extends React.Component {
   initHomePage(){
     window.addEventListener("resize", this.updateDimensions);
     window.addEventListener("orientationchange",this.updateDimensions);
-    this.convertDataObject();
+
+    let env = "live";
+    if (location.hostname.endsWith('cc')) {
+      env = "test";
+    } else if (location.hostname.endsWith('localhost')) {
+      env = "test";
+    }
+    this.setState({env:env},function(){
+      this.convertDataObject();
+    });
   }
 
   updateDimensions(){
@@ -63,10 +72,12 @@ class App extends React.Component {
         <div className="section">
           <div className="container">
             <ProductCarousel
+              key={index}
               products={pgc.products}
               device={this.state.device}
               title={pgc.title}
               link={'/'}
+              env={this.state.env}
             />
           </div>
         </div>
@@ -75,6 +86,9 @@ class App extends React.Component {
 
     return (
       <main id="opendesktop-homepage">
+        <div id="featured-product">
+          <div className="container"></div>
+        </div>
         {productCarouselsContainer}
       </main>
     )
@@ -102,7 +116,7 @@ class ProductCarousel extends React.Component {
   }
 
   updateDimensions(){
-    const containerWidth = $('#introduction').find('.container').width();
+    const containerWidth = $('#featured-product').find('.container').width();
     const sliderWidth = containerWidth * 3;
     const itemWidth = containerWidth / 5;
     this.setState({
@@ -152,6 +166,7 @@ class ProductCarousel extends React.Component {
           key={index}
           product={product}
           itemWidth={this.state.itemWidth}
+          env={this.props.env}
         />
       ));
     }
@@ -203,7 +218,7 @@ class ProductCarouselItem extends React.Component {
 
   render(){
     let imageBaseUrl;
-    if (store.getState().env === 'live') {
+    if (this.props.env === 'live') {
       imageBaseUrl = 'cn.opendesktop.org';
     } else {
       imageBaseUrl = 'cn.pling.it';

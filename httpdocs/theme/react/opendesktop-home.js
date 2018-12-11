@@ -25,7 +25,16 @@ class App extends React.Component {
   initHomePage() {
     window.addEventListener("resize", this.updateDimensions);
     window.addEventListener("orientationchange", this.updateDimensions);
-    this.convertDataObject();
+
+    let env = "live";
+    if (location.hostname.endsWith('cc')) {
+      env = "test";
+    } else if (location.hostname.endsWith('localhost')) {
+      env = "test";
+    }
+    this.setState({ env: env }, function () {
+      this.convertDataObject();
+    });
   }
 
   updateDimensions() {
@@ -65,10 +74,12 @@ class App extends React.Component {
           "div",
           { className: "container" },
           React.createElement(ProductCarousel, {
+            key: index,
             products: pgc.products,
             device: this.state.device,
             title: pgc.title,
-            link: '/'
+            link: '/',
+            env: this.state.env
           })
         )
       ));
@@ -77,6 +88,11 @@ class App extends React.Component {
     return React.createElement(
       "main",
       { id: "opendesktop-homepage" },
+      React.createElement(
+        "div",
+        { id: "featured-product" },
+        React.createElement("div", { className: "container" })
+      ),
       productCarouselsContainer
     );
   }
@@ -102,7 +118,7 @@ class ProductCarousel extends React.Component {
   }
 
   updateDimensions() {
-    const containerWidth = $('#introduction').find('.container').width();
+    const containerWidth = $('#featured-product').find('.container').width();
     const sliderWidth = containerWidth * 3;
     const itemWidth = containerWidth / 5;
     this.setState({
@@ -148,7 +164,8 @@ class ProductCarousel extends React.Component {
       carouselItemsDisplay = this.props.products.map((product, index) => React.createElement(ProductCarouselItem, {
         key: index,
         product: product,
-        itemWidth: this.state.itemWidth
+        itemWidth: this.state.itemWidth,
+        env: this.props.env
       }));
     }
 
@@ -232,7 +249,7 @@ class ProductCarouselItem extends React.Component {
 
   render() {
     let imageBaseUrl;
-    if (store.getState().env === 'live') {
+    if (this.props.env === 'live') {
       imageBaseUrl = 'cn.opendesktop.org';
     } else {
       imageBaseUrl = 'cn.pling.it';
