@@ -18,7 +18,7 @@ class App extends React.Component {
       if (i !== "comments"){
         const productGroup = {
           title:i,
-          products:JSON.parse(window.data[i]);
+          products:JSON.parse(window.data[i])
         }
         productGroupsArray.push(productGroup);
       }
