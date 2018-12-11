@@ -69,9 +69,7 @@ class App extends React.Component {
   render(){
     let productCarouselsContainer;
     if (this.state.loading === false){
-      productCarouselsContainer = this.state.productGroupsArray.map((pgc,index) => {
-        if (pgc.products.length > 0){
-          return (
+      productCarouselsContainer = this.state.productGroupsArray.map((pgc,index) => (
             <div key={index} className="section">
               <div className="container">
                 <ProductCarousel
@@ -83,19 +81,62 @@ class App extends React.Component {
                 />
               </div>
             </div>
-          )
-        }
-      });
+      ));
     }
 
     return (
       <main id="opendesktop-homepage">
-        <div id="featured-product">
-          <div className="container"></div>
-        </div>
+        <SpotlightProduct
+          env={this.state.env}
+        />
         {productCarouselsContainer}
       </main>
     )
+  }
+}
+
+class SpotlightProduct extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  componentDidMount() {
+    console.log(window.featuredProduct);
+  }
+
+  render(){
+
+    let imageBaseUrl;
+    if (this.props.env === 'live') {
+      imageBaseUrl = 'cn.opendesktop.org';
+    } else {
+      imageBaseUrl = 'cn.opendesktop.cc';
+    }
+
+    return(
+      <div id="spotlight-product">
+        <h2>In the Spotlight</h2>
+        <div className="container">
+          <div className="spotlight-image">
+            <img src={"https://" + imageBaseUrl + "/cache/300x230-1/img/" + window.featuredProduct.image_small}/>
+          </div>
+          <div className="spotlight-info">
+            <div className="info-top">
+              <h2><a href={"/p/"+window.featuredProduct.project_id}>title</a></h2>
+              <h3>category</h3>
+              <div className="user-info">
+                <img src={window.featuredProduct.profile_image_url}/>
+                {window.featuredProduct.username}
+              </div>
+            </div>
+            <div className="info-description">
+              {window.featuredProduct.description.substring(0,295) + "..."}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 }
 
@@ -234,7 +275,7 @@ class ProductCarouselItem extends React.Component {
     if (this.props.env === 'live') {
       imageBaseUrl = 'cn.opendesktop.org';
     } else {
-      imageBaseUrl = 'cn.pling.it';
+      imageBaseUrl = 'cn.opendesktop.cc';
     }
     return (
       <div className="product-carousel-item" style={{"width":this.props.itemWidth}}>
