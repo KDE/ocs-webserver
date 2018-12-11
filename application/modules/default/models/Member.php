@@ -534,6 +534,9 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (false == isset($userData['mail_checked'])) {
             $userData['mail_checked'] = 0;
         }
+        
+        //email is allways lower case
+        $userData['mail'] = strtolower( trim( $userData['mail'] ) );
 
         $newUser = $this->storeNewUser($userData)->toArray();
 
