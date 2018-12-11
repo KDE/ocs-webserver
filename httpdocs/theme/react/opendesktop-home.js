@@ -69,12 +69,11 @@ class App extends React.Component {
     if (this.state.loading === false) {
       productCarouselsContainer = this.state.productGroupsArray.map((pgc, index) => React.createElement(
         "div",
-        { className: "section" },
+        { key: index, className: "section" },
         React.createElement(
           "div",
           { className: "container" },
           React.createElement(ProductCarousel, {
-            key: index,
             products: pgc.products,
             device: this.state.device,
             title: pgc.title,
