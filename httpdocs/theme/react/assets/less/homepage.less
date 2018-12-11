@@ -51,20 +51,22 @@ out: ../css/homepage.css, sourcemap: true, compress: true
       padding: 10px;
       width: 100%;
       height: 230px;
+      position: relative;
 
+      .featured-label {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 15px;
+        padding: 5px;
+        border-radius: 4px 4px 4px 4px;
+        background-color: #5bc0de;
+        color: white;
+      }
 
       .info-top {
         padding-right: 40%;
         position: relative;
-
-        .featured-label {
-          position: absolute;
-          top: 0;
-          right: 0;
-          height: 15px;
-          padding: 5px;
-          border-radius: 4px 4px 4px 4px;
-        }
 
         h2,h3 {
           margin: 0;

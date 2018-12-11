@@ -135,8 +135,8 @@ class SpotlightProduct extends React.Component {
             <img src={"https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.props.featuredProduct.image_small}/>
           </div>
           <div className="spotlight-info">
+            <span className="featured-label">Featured</span>
             <div className="info-top">
-              <span className="featured-label">Featured</span>
               <h2><a href={"/p/"+this.props.featuredProduct.project_id}>title</a></h2>
               <h3>category</h3>
               <div className="user-info">
