@@ -124,7 +124,7 @@ class SpotlightProduct extends React.Component {
         React.createElement(
           "div",
           { className: "spotlight-image" },
-          React.createElement("img", { src: imageBaseUrl + "/cache/" + window.featuredProduct.image_small })
+          React.createElement("img", { src: "https://" + imageBaseUrl + "/cache/" + window.featuredProduct.image_small })
         ),
         React.createElement(
           "div",
