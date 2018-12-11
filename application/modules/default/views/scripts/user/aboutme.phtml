@@ -56,7 +56,25 @@ $isSupporter = $this->stat['donationIssupporter'];
 $url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
 $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 
+$memberProfile = $helperImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2));
+
 ?>
+<style type="text/css">
+/* ADD THIS TO CSS */
+div#preloaded-images {
+   position: absolute;
+   overflow: hidden;
+   left: -9999px; 
+   top: -9999px;
+   height: 1px;
+   width: 1px;
+}
+</style>
+<!-- ADD THIS TO XHTML -->
+<div id="preloaded-images">
+   <img src="<?php echo $memberProfile?>" width="1" height="1" alt="Image 01" />
+</div>
+
     <main class="about-me-page">
 
         <section class="head-wrap">
@@ -77,7 +95,7 @@ $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
                                 <figure class="relative inline profile-image-container">
                                     <?php if( $isSupporter) { ?><span class="supporter-badge">S</span>                                                  
                                     <?php }?>                                                                        
-                                    <img src="<?php echo $helperImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"
+                                    <img src="<?php echo $memberProfile ; ?>"
                                          alt="profile-image"
                                          width="110"
                                          height="110">
@@ -132,12 +150,7 @@ $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
                                        Got <span class="cnt"> <?=$this->stat['cntLikesHeGot']?> </span>Likes <i class="fa fa-heart" style="color:#8e44ad" aria-hidden="true"></i>
 
                                     </div>
-                                    <?php /*
-                                     <div class="row">
-                                       <span class="cnt"><?=$this->stat['cntPageviews']?> </span> Pageviews
-                                    </div>
-                                    */
-                                    ?>
+                                   
                                   <?php 
                                       if($this->stat['donationMax'] !=null && !$isSupporter){ // inactive supporter
                                   ?>
@@ -281,25 +294,7 @@ $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
                                 </a>
                             </li>
                             <?php }?>
-                              <?php /*
-                              <li>
-                                <a href="#user-donations" data-toggle="tab" role="tab"  aria-controls="user-donations">
-                                    Supported by<?=($this->stat['cntSupporters']>0?' ('.$this->stat['cntSupporters'].') ':'')?>
-                                </a>
-                            </li>
-                             <li>
-                                <a href="#user-supports" data-toggle="tab" role="tab"  aria-controls="user-supports">
-                                    Supporter of<?=(count($this->supportingTeaser)>0?' ('.count($this->supportingTeaser).') ':'')?>
-                                </a>
-                            </li>
-                          
-                            <li>
-                                <a href="#user-fans" data-toggle="tab" role="tab"  aria-controls="user-fans">
-                                    Fan of<?=(count($this->followedProducts)>0?' ('.count($this->followedProducts).') ':'')?>
-                                </a>
-                            </li>
-                            */
-                            ?>
+                             
                             <li>
                                 <a href="#user-comments" data-toggle="tab" role="tab"  aria-controls="user-comments">
                                     Comments (<?=$this->comments->getTotalItemCount()?>)
@@ -365,48 +360,7 @@ $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
                                     <?php } ?>
                                 </div>
                              <?php } ?>
-    <?php /*
-                            <div role="tabpanel" class="tab-pane " id="user-supports">
-
-                                <article>
-
-                                    <div class="my-products-list supports">
-
-                                        <?php if (count($this->supportingTeaser) > 0) { ?>
-                                            <?= $this->render('user/partials/supportProducts.phtml') ?>
-                                        <?php } else { ?>
-                                            <?= $this->translate('No supported products.') ?>
-                                        <?php } ?>
-
-                                    </div>
-
-                                </article>
-                            
-
-                            </div>
-
-                        
-                            <div role="tabpanel" class="tab-pane " id="user-fans">                              
-                                <article>
-
-                                    <div class="my-products-list supports">
-
-                                        <?php if (count($this->followedProducts) > 0) { ?>
-                                            <?= $this->render('user/partials/loopFollow.phtml') ?>
-                                        <?php } ?>
-
-                                    </div>
-
-                                </article>
-
-                            </div>
-                        
-                            
-                            <div  role="tabpanel" class="tab-pane " id="user-donations">                                    
-                                  <?php echo $this->render('user/partials/loopMyDonations.phtml'); ?>
-                            </div>
-                               */
-                            ?>
+   
                             <div  role="tabpanel" class="tab-pane " id="user-comments">                                    
                                   <?php echo $this->render('user/partials/loopMyComments.phtml'); ?>
                             </div>
@@ -511,9 +465,12 @@ $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
                                                 $gitProjects = $gitlab->getUserProjects($this->member->gitlab_user_id);
                                                 $cntGitp = count($gitProjects);               
                                                 }
-                                                
-                                               
-                                                echo $this->member->username . ' on git-opendesktop('.$cntGitp.')';?> 
+                                                $gittext = $this->member->username . ' on git-opendesktop';
+                                                if($cntGitp>0){
+                                                    $gittext = $gittext.' ('.$cntGitp.')';
+                                                }
+                                                echo $gittext;
+                                                ?> 
                                             </span>
                                             </a>
                                         </div>
