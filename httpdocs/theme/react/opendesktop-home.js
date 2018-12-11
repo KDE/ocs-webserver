@@ -149,6 +149,11 @@ class SpotlightProduct extends React.Component {
             "div",
             { className: "info-top" },
             React.createElement(
+              "span",
+              { className: "featured-label" },
+              "Featured"
+            ),
+            React.createElement(
               "h2",
               null,
               React.createElement(
