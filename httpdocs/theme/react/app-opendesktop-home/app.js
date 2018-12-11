@@ -20,5 +20,5 @@ class App extends React.Component {
 
 ReactDOM.render(
     <App />,
-    document.getElementById('explore-content')
+    document.getElementById('main-content')
 );

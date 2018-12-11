@@ -22,4 +22,4 @@ class App extends React.Component {
   }
 }
 
-ReactDOM.render(React.createElement(App, null), document.getElementById('explore-content'));
+ReactDOM.render(React.createElement(App, null), document.getElementById('main-content'));
