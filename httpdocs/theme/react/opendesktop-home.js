@@ -19,7 +19,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    console.log(window.featuredProduct);
     this.initHomePage();
   }
 
@@ -58,8 +57,6 @@ class App extends React.Component {
   convertDataObject() {
     let productGroupsArray = [];
     for (var i in window.data) {
-      console.log(i);
-      console.log(window.data[i]);
       if (i !== "comments" && i !== "featureProducts") {
         const productGroup = {
           title: i,
