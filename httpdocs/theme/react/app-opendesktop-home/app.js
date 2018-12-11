@@ -181,7 +181,7 @@ class ProductCarousel extends React.Component {
       leftArrowDisplay = (
         <div className="product-carousel-left">
           <a onClick={() => this.animateProductCarousel('left')} className="carousel-arrow arrow-left">
-            <i className="material-icons"><span className="glyphicon glyphicon-chevron-left"></span></i>
+            <span className="glyphicon glyphicon-chevron-left"></span>
           </a>
         </div>
       );
@@ -190,8 +190,7 @@ class ProductCarousel extends React.Component {
       rightArrowDisplay = (
         <div className="product-carousel-right">
           <a onClick={() => this.animateProductCarousel('right')} className="carousel-arrow arrow-right">
-            <i className="material-icons"><span className="glyphicon glyphicon-chevron-right"></span>
-</i>
+            <span className="glyphicon glyphicon-chevron-right"></span>
           </a>
         </div>
       );
@@ -200,8 +199,7 @@ class ProductCarousel extends React.Component {
     return (
       <div className="product-carousel">
         <div className="product-carousel-header">
-          <h2><a href={this.props.link}>{this.props.title}<i className="material-icons"><span className="glyphicon glyphicon-chevron-right"></span>
-</i></a></h2>
+          <h2><a href={this.props.link}>{this.props.title} <span className="glyphicon glyphicon-chevron-right"></span></a></h2>
         </div>
         <div className="product-carousel-wrapper">
           {leftArrowDisplay}

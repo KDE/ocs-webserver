@@ -182,11 +182,7 @@ class ProductCarousel extends React.Component {
         React.createElement(
           "a",
           { onClick: () => this.animateProductCarousel('left'), className: "carousel-arrow arrow-left" },
-          React.createElement(
-            "i",
-            { className: "material-icons" },
-            React.createElement("span", { className: "glyphicon glyphicon-chevron-left" })
-          )
+          React.createElement("span", { className: "glyphicon glyphicon-chevron-left" })
         )
       );
     }
@@ -197,11 +193,7 @@ class ProductCarousel extends React.Component {
         React.createElement(
           "a",
           { onClick: () => this.animateProductCarousel('right'), className: "carousel-arrow arrow-right" },
-          React.createElement(
-            "i",
-            { className: "material-icons" },
-            React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
-          )
+          React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
         )
       );
     }
@@ -219,11 +211,8 @@ class ProductCarousel extends React.Component {
             "a",
             { href: this.props.link },
             this.props.title,
-            React.createElement(
-              "i",
-              { className: "material-icons" },
-              React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
-            )
+            " ",
+            React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
           )
         )
       ),
