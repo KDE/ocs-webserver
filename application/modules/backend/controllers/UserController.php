@@ -95,14 +95,14 @@ class Backend_UserController extends Local_Controller_Action_Backend
 
     public function deleteAction()
     {
-        $dataId = (int)$this->getParam(self::DATA_ID_NAME, null);
+        $memberId = (int)$this->getParam('c');
 
-        $this->_model->setDeleted($dataId);
+        $this->_model->setDeleted($memberId);
 
         $identity = Zend_Auth::getInstance()->getIdentity();
 
         try {
-            Default_Model_ActivityLog::logActivity($dataId, null, $identity->member_id, Default_Model_ActivityLog::BACKEND_USER_DELETE,
+            Default_Model_ActivityLog::logActivity($memberId, null, $identity->member_id, Default_Model_ActivityLog::BACKEND_USER_DELETE,
                 null);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
@@ -237,14 +237,14 @@ class Backend_UserController extends Local_Controller_Action_Backend
     
     public function reactivateAction()
     {
-        $dataId = (int)$this->getParam(self::DATA_ID_NAME, null);
+        $memberId = (int)$this->getParam('c');
 
-        $this->_model->setActivated($dataId);
+        $this->_model->setActivated($memberId);
 
         $identity = Zend_Auth::getInstance()->getIdentity();
 
         try {
-            Default_Model_ActivityLog::logActivity($dataId, null, $identity->member_id, Default_Model_ActivityLog::BACKEND_USER_DELETE,
+            Default_Model_ActivityLog::logActivity($memberId, null, $identity->member_id, Default_Model_ActivityLog::BACKEND_USER_UNDELETE,
                 null);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());

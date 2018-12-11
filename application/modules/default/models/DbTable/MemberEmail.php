@@ -58,6 +58,21 @@ class Default_Model_DbTable_MemberEmail extends Local_Model_Table
         return $this->delete($identifer);
         
     }
+    
+    /**
+     * @param int $identifer
+     *
+     * @return int
+     * @throws Zend_Db_Statement_Exception
+     */
+    public function setActive($member_id, $identifer)
+    {
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        $memberLog->removeLogMemberEmailAsDeleted($member_id, $identifer);
+
+        return $this->activate($identifer);
+        
+    }
 
     /**
      * @param int $email_id
@@ -68,6 +83,20 @@ class Default_Model_DbTable_MemberEmail extends Local_Model_Table
     public function delete($email_id)
     {
         $sql = "UPDATE `{$this->_name}` SET `email_deleted` = 1 WHERE `{$this->_key}` = :emailId";
+        $stmnt = $this->_db->query($sql, array('emailId' => $email_id));
+
+        return $stmnt->rowCount();
+    }
+    
+    /**
+     * @param int $email_id
+     *
+     * @return int|void
+     * @throws Zend_Db_Statement_Exception
+     */
+    public function activate($email_id)
+    {
+        $sql = "UPDATE `{$this->_name}` SET `email_deleted` = 0 WHERE `{$this->_key}` = :emailId";
         $stmnt = $this->_db->query($sql, array('emailId' => $email_id));
 
         return $stmnt->rowCount();
@@ -124,6 +153,33 @@ class Default_Model_DbTable_MemberEmail extends Local_Model_Table
         return $stmnt->rowCount();
     }
     
+    /**
+     * @param $member_id
+     *
+     * @return int
+     * @throws Zend_Db_Statement_Exception
+     */
+    public function setActivatedByMember($member_id)
+    {
+        
+        $sql = "SELECT e.email_id FROM member_email e
+                JOIN member_deactivation_log l ON l.object_type_id = 2 AND l.object_id = e.email_id AND l.deactivation_id = e.email_member_id  AND l.is_deleted = 0
+                WHERE e.email_member_id = :member_id AND email_deleted = 1";
+        $emails = $this->_db->fetchAll($sql, array(
+            'member_id'       => $member_id
+        ));
+        foreach ($emails as $item) {
+            $this->setActive($member_id, $item['email_id']);
+        }
+        
+        /*
+        $sql = "UPDATE `{$this->_name}` SET `email_deleted` = 1 WHERE `email_member_id` = :memberId";
+        $stmnt = $this->_db->query($sql, array('memberId' => $member_id));
+
+        return $stmnt->rowCount();
+         * 
+         */
+    }
     
 
 }

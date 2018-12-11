@@ -402,7 +402,13 @@
                     return false;
                 },
                 success: function (results) {
-                    $('#dialog-form').empty().html(results.Message).dialog('open');
+                    $('#TableContainer').jtable('load', {
+                        filter_member_id: $('#filter_member_id').val(),
+                        filter_firstname: $('#filter_firstname').val(),
+                        filter_lastname: $('#filter_lastname').val(),
+                        filter_username: $('#filter_username').val(),
+                        filter_mail: $('#filter_mail').val()
+                    });
                     return false;
                 }
             });
@@ -434,7 +440,13 @@
                     return false;
                 },
                 success: function (results) {
-                    $('#dialog-form').empty().html(results.Message).dialog('open');
+                    $('#TableContainer').jtable('load', {
+                        filter_member_id: $('#filter_member_id').val(),
+                        filter_firstname: $('#filter_firstname').val(),
+                        filter_lastname: $('#filter_lastname').val(),
+                        filter_username: $('#filter_username').val(),
+                        filter_mail: $('#filter_mail').val()
+                    });
                     return false;
                 }
             });

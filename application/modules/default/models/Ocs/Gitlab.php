@@ -56,7 +56,7 @@ class Default_Model_Ocs_Gitlab
             return false;
         }
 
-        $user = $this->getUser($member_data['extern_uid'], $member_data['username']);
+        $user = $this->getUser($member_data['external_id'], $member_data['username']);
         if (false === $user) {
             return false;
         }
@@ -265,7 +265,7 @@ class Default_Model_Ocs_Gitlab
 
         $body = Zend_Json::decode($response->getBody());
 
-        if (array_key_exists("message", $body)) {
+        if ($body && array_key_exists("message", $body)) {
             $this->messages[] = "id: {$uid} ($uri) - " . Zend_Json::encode($body["message"]);
         }
 
