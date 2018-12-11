@@ -25,6 +25,7 @@ class App extends React.Component {
   }
 
   initHomePage(){
+
     window.addEventListener("resize", this.updateDimensions);
     window.addEventListener("orientationchange",this.updateDimensions);
 
@@ -34,12 +35,15 @@ class App extends React.Component {
     } else if (location.hostname.endsWith('localhost')) {
       env = "test";
     }
+
     this.setState({env:env},function(){
       this.convertDataObject();
     });
+
   }
 
   updateDimensions(){
+
     const width = window.innerWidth;
     let device;
     if (width >= 910){
@@ -49,12 +53,15 @@ class App extends React.Component {
     } else if (width < 610){
       device = "tablet";
     }
+
     this.setState({device:device});
+
   }
 
   convertDataObject() {
     let productGroupsArray = [];
     for (var i in window.data) {
+      console.log(i);
       if (i !== "comments"){
         const productGroup = {
           title:i,
