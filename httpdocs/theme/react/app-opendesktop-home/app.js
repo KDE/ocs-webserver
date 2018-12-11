@@ -165,7 +165,6 @@ class SpotlightProduct extends React.Component {
   }
 }
 
-
 class ProductCarousel extends React.Component {
   constructor(props){
   	super(props);
@@ -190,6 +189,16 @@ class ProductCarousel extends React.Component {
   }
 
   updateDimensions(){
+
+    let itemsPerRow;
+    if (this.props.device === 'large'){
+      itemsPerRow = 5;
+    } else if (this.props.device === 'mid'){
+      itemsPerRow = 4;
+    } else if (this.props.device === 'tablet'){
+      itemsPerRow = 3;
+    }
+
     const containerWidth = $('#main-content').width();
     const containerNumber = Math.ceil(this.props.products / 5);
     const sliderWidth = containerWidth * containerNumber;
