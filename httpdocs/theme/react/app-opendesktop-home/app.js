@@ -62,6 +62,7 @@ class App extends React.Component {
     let productGroupsArray = [];
     for (var i in window.data) {
       console.log(i);
+      console.log(window.data[i]);
       if (i !== "comments"){
         const productGroup = {
           title:i,
@@ -173,13 +174,9 @@ class ProductCarousel extends React.Component {
 
   updateDimensions(){
     const containerWidth = $('#main-content').width();
-    console.log(containerWidth);
     const containerNumber = Math.ceil(this.props.products / 5);
-    console.log(containerNumber);
     const sliderWidth = containerWidth * containerNumber;
-    console.log(sliderWidth);
     const itemWidth = containerWidth / 5;
-    console.log(itemWidth);
     this.setState({
       sliderPosition:0,
       containerWidth:containerWidth,
