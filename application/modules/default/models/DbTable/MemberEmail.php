@@ -50,9 +50,13 @@ class Default_Model_DbTable_MemberEmail extends Local_Model_Table
      * @return int
      * @throws Zend_Db_Statement_Exception
      */
-    public function setDeleted($identifer)
+    public function setDeleted($member_id, $identifer)
     {
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        $memberLog->logMemberEmailAsDeleted($member_id, $identifer);
+
         return $this->delete($identifer);
+        
     }
 
     /**
@@ -105,10 +109,21 @@ class Default_Model_DbTable_MemberEmail extends Local_Model_Table
      */
     public function setDeletedByMember($member_id)
     {
+        
+        $sql = "SELECT email_id FROM member_email WHERE email_member_id = :member_id AND email_deleted = 0";
+        $emailsForDelete = $this->_db->fetchAll($sql, array(
+            'member_id'       => $member_id
+        ));
+        foreach ($emailsForDelete as $item) {
+            $this->setDeleted($member_id, $item['email_id']);
+        }
+        
         $sql = "UPDATE `{$this->_name}` SET `email_deleted` = 1 WHERE `email_member_id` = :memberId";
         $stmnt = $this->_db->query($sql, array('memberId' => $member_id));
 
         return $stmnt->rowCount();
     }
+    
+    
 
 }

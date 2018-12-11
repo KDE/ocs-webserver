@@ -333,6 +333,30 @@ body {
                   line-height: 24px;
                   padding: 0 20px;
                   border-radius: 0;
+
+                  &.admins-menu-link-item,
+                  &.cd-menu-link-item {
+                    font-weight: bold;
+                  }
+                }
+
+                > ul {
+                  position: relative;
+                  float: left;
+                  top: 0;
+                  left: 0;
+                  padding: 5px;
+                  padding-top: 0;
+                  border: 0;
+                  height: auto;
+                  min-height: auto;
+                  width: 100%;
+                  box-shadow: none;
+                  margin: 0;
+
+                  &::before {
+                    display: none;
+                  }
                 }
               }
             }
@@ -817,6 +841,11 @@ body {
 
         #panel-menu {
           width: 100%;
+
+          > ul > li > a {
+            font-weight: bold;
+          }
+
           ul {
             list-style-type: none;
             padding: 0;
@@ -839,17 +868,37 @@ body {
               }
 
               ul {
+                display: block;
+                position: relative;
+                float: left;
+                top: 0;
+                left: 0;
+                padding: 5px;
+                padding-top: 0;
+                border: 0;
+                height: auto;
+                min-height: auto;
+                width: 100%;
+                box-shadow: none;
+                margin: 0;
                 padding: 0 10px;
                 margin-bottom: 15px;
+
+                &::before {
+                  display: none;
+                }
+
                 li {
                   margin-bottom: 0;
                   a {
+                    font-size: 14px;
                     &:hover {
                       background-color: #efefef;
                     }
                   }
                 }
               }
+
             }
           }
         }

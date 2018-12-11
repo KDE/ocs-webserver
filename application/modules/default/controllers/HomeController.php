@@ -30,7 +30,13 @@ class HomeController extends Local_Controller_Action_DomainSwitch
             $this->view->package_type = $storeConfig->package_type;
             if($storeConfig->isShowHomepage())
             {
-                 $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
+                 $test = (int)$this->getParam('test', 0);
+                 if($test==1)
+                 {
+                    $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name.'-test');   
+                 }else{
+                    $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);   
+                 }                 
                  return;
             }
         }

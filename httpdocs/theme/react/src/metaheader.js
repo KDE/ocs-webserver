@@ -185,6 +185,9 @@ class MetaHeader extends React.Component {
           forumUrl={this.state.forumUrl}
           sName={this.state.sName}
           isAdmin={this.state.isAdmin}
+          user={this.state.user}
+          baseUrl={this.state.baseUrl}
+          gitlabUrl={this.state.gitlabUrl}
         />
       )
     } else {
@@ -231,30 +234,35 @@ class DomainsMenu extends React.Component {
 
   render(){
 
-    let moreMenuItemDisplay;
+    let moreMenuItemDisplay, adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
     if (this.props.device !== "large"){
       moreMenuItemDisplay = (
         <MoreDropDownMenu
           domains={this.props.domains}
           baseUrl={this.props.baseUrl}
           blogUrl={this.props.blogUrl}
-        />
-      )
-    }
-
-    let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
-    if (this.props.isAdmin === true){
-      adminsDropDownMenuDisplay = (
-        <AdminsDropDownMenu
+          isAdmin={this.props.isAdmin}
           user={this.props.user}
           baseUrl={this.props.baseUrl}
           gitlabUrl={this.props.gitlabUrl}
         />
-      );
-      myOpendesktopMenuDisplay = (
-        <CloudsServicesDropDownMenu />
-      );
+      )
+    } else {
+      if (this.props.isAdmin === true){
+        adminsDropDownMenuDisplay = (
+          <AdminsDropDownMenu
+            user={this.props.user}
+            baseUrl={this.props.baseUrl}
+            gitlabUrl={this.props.gitlabUrl}
+          />
+        );
+        myOpendesktopMenuDisplay = (
+          <CloudsServicesDropDownMenu />
+        );
+      }
     }
+
+
 
     return (
       <ul className="metaheader-menu left" id="domains-menu">
@@ -564,6 +572,20 @@ class MoreDropDownMenu extends React.Component {
       aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={config.baseUrl + "/#about"}>About</a></li>);
     }
 
+    let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
+    if (this.props.isAdmin){
+      adminsDropDownMenuDisplay = (
+        <AdminsDropDownMenu
+          user={this.props.user}
+          baseUrl={this.props.baseUrl}
+          gitlabUrl={this.props.gitlabUrl}
+        />
+      );
+      myOpendesktopMenuDisplay = (
+        <CloudsServicesDropDownMenu />
+      );
+    }
+
     return(
       <li ref={node => this.node = node} id="more-dropdown-menu" className={this.state.dropdownClass}>
         <a className="more-menu-link-item">More</a>
@@ -573,6 +595,8 @@ class MoreDropDownMenu extends React.Component {
           {faqLinkItem}
           {apiLinkItem}
           {aboutLinkItem}
+          {adminsDropDownMenuDisplay}
+          {myOpendesktopMenuDisplay}
         </ul>
       </li>
     )
@@ -896,6 +920,10 @@ class MobileLeftMenu extends React.Component {
             baseUrl={this.props.baseUrl}
             blogUrl={this.props.blogUrl}
             forumUrl={this.props.forumUrl}
+            isAdmin={this.props.isAdmin}
+            user={this.props.user}
+            baseUrl={this.props.baseUrl}
+            gitlabUrl={this.props.gitlabUrl}
           />
         </div>
       </div>
@@ -943,6 +971,21 @@ class MobileLeftSidePanel extends React.Component {
       aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={config.baseUrl + "/#about"}>About</a></li>);
     }
 
+    console.log('is admin - ' + this.props.isAdmin);
+    let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
+    if (this.props.isAdmin){
+      adminsDropDownMenuDisplay = (
+        <AdminsDropDownMenu
+          user={this.props.user}
+          baseUrl={this.props.baseUrl}
+          gitlabUrl={this.props.gitlabUrl}
+        />
+      );
+      myOpendesktopMenuDisplay = (
+        <CloudsServicesDropDownMenu />
+      );
+    }
+
     return (
       <div id="left-side-panel">
         <div id="panel-header">
@@ -971,6 +1014,8 @@ class MobileLeftSidePanel extends React.Component {
                 {aboutLinkItem}
               </ul>
             </li>
+            {adminsDropDownMenuDisplay}
+            {myOpendesktopMenuDisplay}
           </ul>
         </div>
       </div>
@@ -1000,7 +1045,6 @@ customElements.define('opendesktop-metaheader', class extends HTMLElement {
     }
     this.appendChild(stylesheetElement);
 
-    console.log(window.location);
     await initConfig(this.getAttribute('config-target'),window.location.href);
 
     const metaheaderElement = document.createElement('div');
