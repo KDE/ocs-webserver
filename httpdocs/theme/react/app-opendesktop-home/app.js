@@ -118,7 +118,7 @@ class SpotlightProduct extends React.Component {
       <div id="spotlight-product">
         <div className="container">
           <div className="spotlight-image">
-            <img src={"https://" + imageBaseUrl + "/cache/300x230-1/" + window.featuredProduct.image_small}/>
+            <img src={"https://" + imageBaseUrl + "/cache/300x230-1/img/" + window.featuredProduct.image_small}/>
           </div>
           <div className="spotlight-info">
             <div className="info-top">
