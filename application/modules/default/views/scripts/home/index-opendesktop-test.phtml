@@ -57,271 +57,41 @@ if ($featuredProducts->getTotalItemCount()) {
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 $helpPrintDate = new Default_View_Helper_PrintDate();
+
+
+$response = array(
+    "comments" => Zend_Json::encode($this->comments),
+    "productsThemesGTK" => Zend_Json::encode($this->productsThemesGTK),
+    "productsThemesPlasma" => Zend_Json::encode($this->productsThemesPlasma),
+    "productsWindowmanager" => Zend_Json::encode($this->productsWindowmanager),
+    "productsIconsCursors" => Zend_Json::encode($this->productsIconsCursors),
+    "productsScreenshots" => Zend_Json::encode($this->productsScreenshots),
+    "productsApps" => Zend_Json::encode($this->productsApps),
+    "productsAddons" => Zend_Json::encode($this->productsAddons),
+    "productsWallpapersOriginal" => Zend_Json::encode($this->productsWallpapersOriginal),
+    "productsWallpapers" => Zend_Json::encode($this->productsWallpapers),
+    "featureProducts" => Zend_Json::encode($this->featureProducts)
+);
+
 ?>
+<link type="text/css" rel="stylesheet" href="/theme/react/assets/css/homepage.css"/>
 
-<style>
-
-  @media (max-width:611px){
-
-    body > .panel.panel-default.pull-left {
-      max-width: 100%;
-      overflow-y: hidden;
-    }
-
-
-    .sidebar-left {
-        background-color: #e4e4e4;
-    }
-
-    .GridFlex-cell.sidebar-left {
-      width: 100%;
-      flex: none !important;
-      border: 0;
-      border-bottom: 1px solid #ccd4d8;
-    }
-
-    #explore-content.startpage-store .GridFlex-cell.content {
-      padding: 0;
-      min-width: 100% !important;
-      padding: 0 5px;
-      padding-right: 5px !important;
-    }
-
-    #featureProductsContainer .feature_container {
-      width: 100% !important;
-    }
-
-    #featureProductsContainer {
-      height: auto !important;
-      margin-bottom: 15px;
-    }
-
-    #featureProductsContainer .feature_container {
-        width: 100%;
-        display: block;
-        margin: 0 auto;
-    }
-
-    #featureProductsContainer .feature_container .main_container {
-      float: left;
-      width: 100%;
-    }
-
-    #featureProductsContainer .feature_container .feature_title {
-      width: 100%;
-      display: block;
-      float: left;
-      text-align: center;
-      height: 25px;
-      line-height: 30px;
-    }
-
-    #featureProductsContainer .feature_container .main_container .label_featured {
-      float: right;
-      position: absolute;
-      top: 30px;
-      right: 0;
-      height: 25px;
-      line-height: 25px;
-      border-radius: 0 5px 0 5px;
-    }
-
-    #featureProductsContainer .feature_container .main_container .feature_image {
-      width: 100%;
-      margin: 0;
-      max-width: 100%;
-    }
-
-    #featureProductsContainer .feature_container .main_container .feature_image img {
-      margin: 0 auto;
-      display: table;
-      max-width: 100%;
-      width: 100%;
-      height: auto;
-    }
-
-    #featureProductsContainer .feature_container .main_container .feature_text {
-      width: 100%;
-      float: left;
-      padding: 15px;
-    }
-
-    #featureProductsContainer .feature_container .main_container .feature_text .feature_category {
-      width: 80%;
-    }
-
-    #featureProductsContainer .feature_container .main_container .feature_text .feature_rating {
-      padding-right: 0;
-      padding-top: 0;
-    }
-
-    .prod-widget-box {
-      padding: 0;
-      width: 100% !important;
-    }
-
-    #explore-content .GridFlex .sidebar-right {
-        width: 100% !important;
-        flex: none !important;
-    }
-
-    #explore-content .sidebar-right-info {
-      padding-left: 10px;
-    }
-
-    .commentstore {
-      padding: 5px;
-    }
-
-  }
-
-</style>
-testest
 <main id="explore-content" class="startpage-store">
+
   <div class="GridFlex">
+
     <div class="GridFlex-cell sidebar-left">
-            <?php  echo $this->render('explore/partials/filter.phtml'); ?>
+      <?php  echo $this->render('explore/partials/filter.phtml'); ?>
     </div>
+
     <div class="GridFlex-cell content">
-            <div class="contentcontainer">
-
-                            <div class="row"  id="featureProductsContainer">
-
-                                <?php
-                                if ($this->featureProducts) {
-                                              echo $this->render('home/partials/featured-products.phtml');
-                                }
-                                ?>
-                            </div>
-
-                            <div class="row">
-                            <?php
-                                        echo $this->partial('/home/partials/product_group.phtml', array(
-                                                "title"  => "GTK/Gnome",
-                                                "products" => $this->productsThemesGTK,
-                                                "catIDs" =>"366"
-                                            )
-                                        );
-
-                                        echo $this->partial('/home/partials/product_group.phtml', array(
-                                                "title"  => "KDE Plasma",
-                                                "products" => $this->productsThemesPlasma,
-                                                "catIDs" =>"365"
-                                            )
-                                        );
-                            ?>
-                            </div>
-
-                            <div class="row blockpadding">
-                            <?php
-                                        echo $this->partial('/home/partials/product_group.phtml', array(
-                                                "title"  => "Window Managers",
-                                                "products" => $this->productsWindowmanager,
-                                                "catIDs" =>"147"
-                                            )
-                                        );
-
-                                        echo $this->partial('/home/partials/product_group.phtml', array(
-                                                "title"  => "Icons, Cursors",
-                                                "products" => $this->productsIconsCursors,
-                                                "catIDs" =>"386,107"
-                                            )
-                                        );
-                            ?>
-                            </div>
-
-                            <div class="row blockpadding">
-                            <?php
-                                    echo $this->partial('/home/partials/product_group.phtml', array(
-                                            "title"  => "Artwork, Wallpapers ",
-                                            "products" => $this->productsWallpapers,
-                                            "catIDs" =>"158,295"
-                                        )
-                                    );
-
-
-                                        echo $this->partial('/home/partials/product_group.phtml', array(
-                                                "title"  => "Artwork, Wallpapers (Original)",
-                                                "products" => $this->productsWallpapersOriginal,
-                                                "catIDs" =>"158,295"
-
-                                            )
-                                        );
-                            ?>
-                            </div>
-                            <div class="row blockpadding" >
-                             <?php
-                                         echo $this->partial('/home/partials/product_group.phtml', array(
-                                                 "title"  => "App Add-Ons",
-                                                 "products" => $this->productsAddons,
-                                                 "catIDs" =>"152"
-                                             )
-                                         );
-
-                                         echo $this->partial('/home/partials/product_group.phtml', array(
-                                                 "title"  => "Applications",
-                                                 "products" => $this->productsApps,
-                                                 "catIDs" =>"233"
-                                             )
-                                         );
-
-                             ?>
-                            </div>
-
-                            <div class="row blockpadding">
-                            <?php
-                                               echo $this->partial('/home/partials/product_group.phtml', array(
-                                                "title"  => "Concepts, Screenshots",
-                                                "products" => $this->productsScreenshots,
-                                                "catIDs" =>"445,225"
-                                            )
-                                        );
-
-                            ?>
-                            </div>
-
-                            <?php /*
-
-                            <div class="row blockpadding supportersrow">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <?php
-                                            echo $this->partial('/home/partials/plingprojects.phtml', array(
-                                                    "title"  => "Recently plinged Products",
-                                                    "projects" => $this->plingproducts
-                                                )
-                                            );
-                                ?>
-                                </div>
-                            </div>
-
-                            <div class="row blockpadding supportersrow">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <?php
-                                            echo $this->partial('/home/partials/users.phtml', array(
-                                                    "title"  => "Latest Supporters",
-                                                    "users" => $this->supporters
-                                                )
-                                            );
-                                ?>
-                                </div>
-                            </div>
-
-                            <div class="row blockpadding">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <?php
-                                            echo $this->partial('/home/partials/users.phtml', array(
-                                                    "title"  => "Latest  Community Members ",
-                                                    "users" => $this->users
-                                                )
-                                            );
-                                ?>
-                                </div>
-                            </div>
-
-                            */
-                            ?>
-                 </div>
+      <div id="main-content"></div>
+      <script type="text/javascript">
+        var data =<?php echo Zend_Json::encode($response)?>;
+      </script>
+      <script src="/theme/react/opendesktop-home.js" type="text/javascript"></script>
     </div>
+
     <div class="GridFlex-cell sidebar-right">
             <aside  id="explore-sidebar" >
 
@@ -346,36 +116,13 @@ testest
 
             </aside>
     </div>
+
   </div>
+
   <div class="tooltip_templates" style="display:none">
       <span id="tooltip_content">
           <i class="fa fa-spinner"></i>
       </span>
   </div>
+
 </main>
-
-<script type="application/javascript">
-    $(document).ready(function () {
-        $('body').on('click', '.ajaxPartialFeatureProduct', function (event) {
-            event.preventDefault();
-            $(this).off();
-            var target = '#featureProductsContainer';
-            if($(this).hasClass( "disabled" )) return false;
-            var url = $(this).attr("href");
-            $(target).load(url, function (response, status, xhr) {
-                if (status == "error") {
-                    $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
-                }
-            });
-            return false;
-        });
-    });
-</script>
-
-<?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){
-                TooltipUser.setup("tooltipuser","right");
-                TooltipUser.setup("tooltipuserleft","left");
-                TooltipUserPlings.setup("tooltipuserplings","right");
-            });
-        ');
