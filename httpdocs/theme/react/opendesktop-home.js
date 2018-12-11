@@ -119,6 +119,11 @@ class SpotlightProduct extends React.Component {
       "div",
       { id: "spotlight-product" },
       React.createElement(
+        "h2",
+        null,
+        "In the Spotlight"
+      ),
+      React.createElement(
         "div",
         { className: "container" },
         React.createElement(
@@ -135,7 +140,7 @@ class SpotlightProduct extends React.Component {
             React.createElement(
               "h2",
               null,
-              "title"
+              React.createElement("a", { href: "/p/" + window.featuredProduct.project_id })
             ),
             React.createElement(
               "h3",

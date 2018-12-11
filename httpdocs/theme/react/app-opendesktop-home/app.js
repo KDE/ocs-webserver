@@ -116,13 +116,14 @@ class SpotlightProduct extends React.Component {
 
     return(
       <div id="spotlight-product">
+        <h2>In the Spotlight</h2>
         <div className="container">
           <div className="spotlight-image">
             <img src={"https://" + imageBaseUrl + "/cache/300x230-1/img/" + window.featuredProduct.image_small}/>
           </div>
           <div className="spotlight-info">
             <div className="info-top">
-              <h2>title</h2>
+              <h2><a href={"/p/"+window.featuredProduct.project_id}></a></h2>
               <h3>category</h3>
               <div className="user-info">
                 <img src={window.featuredProduct.profile_image_url}/>
