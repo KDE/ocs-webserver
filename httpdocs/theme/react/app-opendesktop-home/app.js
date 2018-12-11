@@ -13,11 +13,17 @@ class App extends React.Component {
   }
 
   convertDataObject() {
+    let productGroupsArray = [];
     for (var i in window.data) {
-      console.log(window.data[i])
-      console.log([i]);
+      if (i !== "comments"){
+        const productGroup = {
+          title:i,
+          products:JSON.parse(window.data[i]);
+        }
+        productGroupsArray.push(productGroup);
+      }
     }
-    console.log('finished converting');
+    console.log(productGroupsArray);
   }
 
   render(){
