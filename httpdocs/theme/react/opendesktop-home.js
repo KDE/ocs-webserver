@@ -100,8 +100,12 @@ class App extends React.Component {
 class ProductCarousel extends React.Component {
   constructor(props) {
     super(props);
+    let showRightArrow = false;
+    if (this.props.products.length > 5) {
+      showRightArrow = true;
+    }
     this.state = {
-      showRightArrow: true,
+      showRightArrow: showRightArrow,
       showLeftArrow: false
     };
     this.updateDimensions = this.updateDimensions.bind(this);
