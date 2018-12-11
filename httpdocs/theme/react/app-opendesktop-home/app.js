@@ -147,10 +147,10 @@ class SpotlightProduct extends React.Component {
                   score {this.props.featuredProduct.laplace_score + "%"}
                 </div>
                 <div className="score-bar-container">
-                  <div className="score-bar" width={this.props.featuredProduct.laplace_score + "%"}></div>
+                  <div className="score-bar" style={{"width":this.props.featuredProduct.laplace_score + "%"}}></div>
                 </div>
                 <div className="score-bar-date">
-                  
+
                 </div>
               </div>
             </div>
