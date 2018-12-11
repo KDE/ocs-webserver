@@ -124,7 +124,7 @@ class SpotlightProduct extends React.Component {
       imageBaseUrl = 'cn.opendesktop.cc';
     }
 
-    let description = this.props.featureProducts.description;
+    let description = this.props.featureProduct.description;
     if (description.length > 295) {
       description = this.props.featuredProduct.description.substring(0, 295) + "...";
     }
