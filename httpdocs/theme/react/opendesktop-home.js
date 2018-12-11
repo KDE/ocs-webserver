@@ -204,7 +204,7 @@ class ProductCarousel extends React.Component {
           React.createElement(
             "a",
             { href: this.props.link },
-            this.props.title,
+            this.props.title.match(/[A-Z][a-z]+/g),
             " ",
             React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
           )
