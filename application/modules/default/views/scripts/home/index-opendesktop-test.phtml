@@ -57,6 +57,22 @@ if ($featuredProducts->getTotalItemCount()) {
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 $helpPrintDate = new Default_View_Helper_PrintDate();
+
+
+$response = array(
+    "comments" => Zend_Json::encode($this->comments),
+    "productsThemesGTK" => Zend_Json::encode($this->productsThemesGTK),
+    "productsThemesPlasma" => Zend_Json::encode($this->productsThemesPlasma),
+    "productsWindowmanager" => Zend_Json::encode($this->productsWindowmanager),
+    "productsIconsCursors" => Zend_Json::encode($this->productsIconsCursors),
+    "productsScreenshots" => Zend_Json::encode($this->productsScreenshots),
+    "productsApps" => Zend_Json::encode($this->productsApps),
+    "productsAddons" => Zend_Json::encode($this->productsAddons),
+    "productsWallpapersOriginal" => Zend_Json::encode($this->productsWallpapersOriginal),
+    "productsWallpapers" => Zend_Json::encode($this->productsWallpapers),
+    "featureProducts" => Zend_Json::encode($this->featureProducts)
+);
+
 ?>
 
 <style>
@@ -353,6 +369,10 @@ testest
       </span>
   </div>
 </main>
+
+<script type="text/javascript">
+  var data =<?php echo Zend_Json::encode($response)?>;
+</script>
 
 <script type="application/javascript">
     $(document).ready(function () {
