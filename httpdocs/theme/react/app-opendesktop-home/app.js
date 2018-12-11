@@ -69,9 +69,7 @@ class App extends React.Component {
   render(){
     let productCarouselsContainer;
     if (this.state.loading === false){
-      productCarouselsContainer = this.state.productGroupsArray.map((pgc,index) => {
-        if (pgc.products.length > 0){
-          return (
+      productCarouselsContainer = this.state.productGroupsArray.map((pgc,index) => (
             <div key={index} className="section">
               <div className="container">
                 <ProductCarousel
@@ -83,9 +81,7 @@ class App extends React.Component {
                 />
               </div>
             </div>
-          )
-        }
-      });
+      ));
     }
 
     return (
