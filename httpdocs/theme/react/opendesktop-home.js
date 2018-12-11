@@ -91,7 +91,7 @@ class App extends React.Component {
       ));
     }
 
-    let featureProduct = JSON.parse(window.data['featureProducts']);
+    const featureProduct = JSON.parse(window.data['featureProducts']);
 
     return React.createElement(
       "main",

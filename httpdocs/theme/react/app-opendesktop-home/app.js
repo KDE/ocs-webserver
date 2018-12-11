@@ -92,7 +92,7 @@ class App extends React.Component {
       ));
     }
 
-    let featureProduct = JSON.parse(window.data['featureProducts']);
+    const featureProduct = JSON.parse(window.data['featureProducts']);
 
     return (
       <main id="opendesktop-homepage">
