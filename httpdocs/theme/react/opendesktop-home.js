@@ -185,7 +185,7 @@ class ProductCarousel extends React.Component {
           React.createElement(
             "i",
             { className: "material-icons" },
-            "chevron_left"
+            React.createElement("span", { className: "glyphicon glyphicon-chevron-left" })
           )
         )
       );
@@ -200,7 +200,7 @@ class ProductCarousel extends React.Component {
           React.createElement(
             "i",
             { className: "material-icons" },
-            "chevron_right"
+            React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
           )
         )
       );
@@ -222,7 +222,7 @@ class ProductCarousel extends React.Component {
             React.createElement(
               "i",
               { className: "material-icons" },
-              "chevron_right"
+              React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
             )
           )
         )
