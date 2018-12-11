@@ -4,12 +4,41 @@ class App extends React.Component {
     this.state = {
       loading: true
     };
+    this.initHomePage = this.initHomePage.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
     this.convertDataObject = this.convertDataObject.bind(this);
   }
 
+  componentWillMount() {
+    this.updateDimensions();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
+    window.removeEventListener("orientationchange", this.updateDimensions);
+  }
+
   componentDidMount() {
-    console.log('opendesktop app homepage');
+    this.initHomePage();
+  }
+
+  initHomePage() {
+    window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener("orientationchange", this.updateDimensions);
     this.convertDataObject();
+  }
+
+  updateDimensions() {
+    const width = window.innerWidth;
+    let device;
+    if (width >= 910) {
+      device = "large";
+    } else if (width < 910 && width >= 610) {
+      device = "mid";
+    } else if (width < 610) {
+      device = "tablet";
+    }
+    this.setState({ device: device });
   }
 
   convertDataObject() {
@@ -23,47 +52,33 @@ class App extends React.Component {
         productGroupsArray.push(productGroup);
       }
     }
-    console.log(productGroupsArray);
+    this.setState({ productGroupsArray: productGroupsArray, loading: false });
   }
 
   render() {
     let productCarouselsContainer;
     if (this.state.loading === false) {
-      productCarouselsContainer = React.createElement(
+      productCarouselsContainer = this.state.productGroupsArray.map((pgc, index) => React.createElement(
         "div",
-        { id: "product-carousels-container" },
+        { className: "section" },
         React.createElement(
           "div",
-          { className: "section" },
-          React.createElement(
-            "div",
-            { className: "container" },
-            React.createElement(ProductCarousel, {
-              products: this.state.products.LatestProducts,
-              device: this.state.device,
-              title: 'New',
-              link: '/browse/ord/latest/'
-            })
-          )
-        ),
-        React.createElement(
-          "div",
-          { className: "section" },
-          React.createElement(
-            "div",
-            { className: "container" },
-            React.createElement(ProductCarousel, {
-              products: this.state.products.LatestProducts,
-              device: this.state.device,
-              title: 'New',
-              link: '/browse/ord/latest/'
-            })
-          )
+          { className: "container" },
+          React.createElement(ProductCarousel, {
+            products: pgc.products,
+            device: this.state.device,
+            title: pgc.title,
+            link: '/'
+          })
         )
-      );
+      ));
     }
 
-    return React.createElement("main", { id: "opendesktop-homepage" });
+    return React.createElement(
+      "main",
+      { id: "opendesktop-homepage" },
+      productCarouselsContainer
+    );
   }
 }
 

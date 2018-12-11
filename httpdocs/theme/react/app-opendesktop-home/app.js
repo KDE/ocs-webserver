@@ -4,12 +4,42 @@ class App extends React.Component {
   	this.state = {
       loading:true
     };
+    this.initHomePage = this.initHomePage.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
     this.convertDataObject = this.convertDataObject.bind(this);
   }
 
+
+  componentWillMount() {
+    this.updateDimensions();
+  }
+
+  componentWillUnmount(){
+    window.removeEventListener("resize", this.updateDimensions);
+    window.removeEventListener("orientationchange",this.updateDimensions);
+  }
+
   componentDidMount() {
-    console.log('opendesktop app homepage');
+    this.initHomePage();
+  }
+
+  initHomePage(){
+    window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener("orientationchange",this.updateDimensions);
     this.convertDataObject();
+  }
+
+  updateDimensions(){
+    const width = window.innerWidth;
+    let device;
+    if (width >= 910){
+      device = "large";
+    } else if (width < 910 && width >= 610){
+      device = "mid";
+    } else if (width < 610){
+      device = "tablet";
+    }
+    this.setState({device:device});
   }
 
   convertDataObject() {
@@ -23,41 +53,29 @@ class App extends React.Component {
         productGroupsArray.push(productGroup);
       }
     }
-    console.log(productGroupsArray);
+    this.setState({productGroupsArray:productGroupsArray,loading:false});
   }
 
   render(){
     let productCarouselsContainer;
     if (this.state.loading === false){
-      productCarouselsContainer = (
-        <div id="product-carousels-container">
-          <div className="section">
-            <div className="container">
-              <ProductCarousel
-                products={this.state.products.LatestProducts}
-                device={this.state.device}
-                title={'New'}
-                link={'/browse/ord/latest/'}
-              />
-            </div>
-          </div>
-          <div className="section">
-            <div className="container">
-              <ProductCarousel
-                products={this.state.products.LatestProducts}
-                device={this.state.device}
-                title={'New'}
-                link={'/browse/ord/latest/'}
-              />
-            </div>
+      productCarouselsContainer = this.state.productGroupsArray.map((pgc,index) => (
+        <div className="section">
+          <div className="container">
+            <ProductCarousel
+              products={pgc.products}
+              device={this.state.device}
+              title={pgc.title}
+              link={'/'}
+            />
           </div>
         </div>
-      );
+      ));
     }
 
     return (
       <main id="opendesktop-homepage">
-
+        {productCarouselsContainer}
       </main>
     )
   }
