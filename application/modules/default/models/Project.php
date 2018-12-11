@@ -1087,28 +1087,22 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function setAllProjectsForMemberActivated($member_id)
     {
-        $sql = "SELECT project_id FROM project WHERE member_id = :memberId AND type_id = :typeId";
+        $sql = "SELECT p.project_id FROM project p
+                JOIN member_deactivation_log l ON l.object_type_id = 3 AND l.object_id = p.project_id AND l.deactivation_id = p.member_id
+                WHERE p.member_id = :memberId";
         $projectForDelete = $this->_db->fetchAll($sql,
             array(
-                'memberId' => $member_id,
-                'typeId'   => self::PROJECT_TYPE_STANDARD
+                'memberId' => $member_id
             ));
         foreach ($projectForDelete as $item) {
-            $this->setActive($item['project_id']);
+            $this->setActive($member_id, $item['project_id']);
         }
-        // set personal page active
-        $sql = "UPDATE project SET `status` = :statusCode, deleted_at = NULL WHERE member_id = :memberId AND type_id = :typeId";
-        $this->_db->query($sql, array(
-            'statusCode' => self::PROJECT_ACTIVE,
-            'memberId'   => $member_id,
-            'typeId'     => self::PROJECT_TYPE_PERSONAL
-        ))->execute();
     }
 
     /**
      * @param int $id
      */
-    public function setActive($id)
+    public function setActive($member_id, $id)
     {
         $updateValues = array(
             'status'     => self::PROJECT_ACTIVE,
@@ -1116,15 +1110,18 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         );
 
         $this->update($updateValues, $this->_db->quoteInto('project_id=?', $id, 'INTEGER'));
+        
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        $memberLog->removeLogProjectAsDeleted($member_id, $id);
 
-        $this->setActiveForUpdates($id);
-        $this->setActiveForComments($id);
+        $this->setActiveForUpdates($member_id, $id);
+        $this->setActiveForComments($member_id, $id);
     }
 
     /**
      * @param int $id
      */
-    protected function setActiveForUpdates($id)
+    protected function setActiveForUpdates($member_id, $id)
     {
         $updateValues = array(
             'status'     => self::PROJECT_ACTIVE,
@@ -1137,10 +1134,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     /**
      * @param $id
      */
-    private function setActiveForComments($id)
+    private function setActiveForComments($member_id, $id)
     {
         $modelComments = new Default_Model_ProjectComments();
-        $modelComments->setAllCommentsForProjectActivated($id);
+        $modelComments->setAllCommentsForProjectActivated($member_id, $id);
     }
 
     /**
