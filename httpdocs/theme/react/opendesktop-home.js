@@ -181,7 +181,8 @@ class SpotlightProduct extends React.Component {
                 "div",
                 { className: "score-bar-container" },
                 React.createElement("div", { className: "score-bar", width: this.props.featuredProduct.laplace_score + "%" })
-              )
+              ),
+              React.createElement("div", { className: "score-bar-date" })
             )
           ),
           React.createElement(

@@ -149,6 +149,9 @@ class SpotlightProduct extends React.Component {
                 <div className="score-bar-container">
                   <div className="score-bar" width={this.props.featuredProduct.laplace_score + "%"}></div>
                 </div>
+                <div className="score-bar-date">
+                  
+                </div>
               </div>
             </div>
             <div className="info-description">
