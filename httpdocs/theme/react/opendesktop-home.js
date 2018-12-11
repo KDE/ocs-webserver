@@ -91,14 +91,14 @@ class App extends React.Component {
       ));
     }
 
-    const featureProduct = JSON.parse(window.data['featureProducts']);
+    const featuredProduct = JSON.parse(window.data['featureProducts']);
 
     return React.createElement(
       "main",
       { id: "opendesktop-homepage" },
       React.createElement(SpotlightProduct, {
         env: this.state.env,
-        featureProduct: featureProduct
+        featuredProduct: featuredProduct
       }),
       productCarouselsContainer
     );
@@ -124,7 +124,7 @@ class SpotlightProduct extends React.Component {
       imageBaseUrl = 'cn.opendesktop.cc';
     }
 
-    let description = this.props.featureProduct.description;
+    let description = this.props.featuredProduct.description;
     if (description.length > 295) {
       description = this.props.featuredProduct.description.substring(0, 295) + "...";
     }
