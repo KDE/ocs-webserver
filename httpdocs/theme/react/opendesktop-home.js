@@ -92,12 +92,74 @@ class App extends React.Component {
     return React.createElement(
       "main",
       { id: "opendesktop-homepage" },
+      React.createElement(SpotlightProduct, {
+        env: this.state.env
+      }),
+      productCarouselsContainer
+    );
+  }
+}
+
+class SpotlightProduct extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    console.log(window.featuredProduct);
+  }
+
+  render() {
+
+    let imageBaseUrl;
+    if (this.props.env === 'live') {
+      imageBaseUrl = 'cn.opendesktop.org';
+    } else {
+      imageBaseUrl = 'cn.opendesktop.cc';
+    }
+
+    return React.createElement(
+      "div",
+      { id: "spotlight-product" },
       React.createElement(
         "div",
-        { id: "featured-product" },
-        React.createElement("div", { className: "container" })
-      ),
-      productCarouselsContainer
+        { className: "container" },
+        React.createElement(
+          "div",
+          { className: "spotlight-image" },
+          React.createElement("img", { src: imageBaseUrl + "/cache/" + window.featuredProduct.image_small })
+        ),
+        React.createElement(
+          "div",
+          { className: "spotlight-info" },
+          React.createElement(
+            "div",
+            { className: "info-top" },
+            React.createElement(
+              "h2",
+              null,
+              "title"
+            ),
+            React.createElement(
+              "h3",
+              null,
+              "category"
+            ),
+            React.createElement(
+              "div",
+              { className: "user-info" },
+              React.createElement("img", { src: window.featuredProduct.profile_image_url }),
+              window.featuredProduct.username
+            )
+          ),
+          React.createElement(
+            "div",
+            { className: "info-description" },
+            window.featuredProduct.description
+          )
+        )
+      )
     );
   }
 }
@@ -254,7 +316,7 @@ class ProductCarouselItem extends React.Component {
     if (this.props.env === 'live') {
       imageBaseUrl = 'cn.opendesktop.org';
     } else {
-      imageBaseUrl = 'cn.pling.it';
+      imageBaseUrl = 'cn.opendesktop.cc';
     }
     return React.createElement(
       "div",
