@@ -68,21 +68,25 @@ class App extends React.Component {
   render() {
     let productCarouselsContainer;
     if (this.state.loading === false) {
-      productCarouselsContainer = this.state.productGroupsArray.map((pgc, index) => React.createElement(
-        "div",
-        { key: index, className: "section" },
-        React.createElement(
-          "div",
-          { className: "container" },
-          React.createElement(ProductCarousel, {
-            products: pgc.products,
-            device: this.state.device,
-            title: pgc.title,
-            link: '/',
-            env: this.state.env
-          })
-        )
-      ));
+      productCarouselsContainer = this.state.productGroupsArray.map((pgc, index) => {
+        if (pgc.products.length > 0) {
+          return React.createElement(
+            "div",
+            { key: index, className: "section" },
+            React.createElement(
+              "div",
+              { className: "container" },
+              React.createElement(ProductCarousel, {
+                products: pgc.products,
+                device: this.state.device,
+                title: pgc.title,
+                link: '/',
+                env: this.state.env
+              })
+            )
+          );
+        }
+      });
     }
 
     return React.createElement(

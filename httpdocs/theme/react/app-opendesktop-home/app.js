@@ -69,19 +69,23 @@ class App extends React.Component {
   render(){
     let productCarouselsContainer;
     if (this.state.loading === false){
-      productCarouselsContainer = this.state.productGroupsArray.map((pgc,index) => (
-        <div key={index} className="section">
-          <div className="container">
-            <ProductCarousel
-              products={pgc.products}
-              device={this.state.device}
-              title={pgc.title}
-              link={'/'}
-              env={this.state.env}
-            />
-          </div>
-        </div>
-      ));
+      productCarouselsContainer = this.state.productGroupsArray.map((pgc,index) => {
+        if (pgc.products.length > 0){
+          return (
+            <div key={index} className="section">
+              <div className="container">
+                <ProductCarousel
+                  products={pgc.products}
+                  device={this.state.device}
+                  title={pgc.title}
+                  link={'/'}
+                  env={this.state.env}
+                />
+              </div>
+            </div>            
+          )
+        }
+      });
     }
 
     return (
