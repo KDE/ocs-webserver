@@ -58,10 +58,6 @@ $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 $helpPrintDate = new Default_View_Helper_PrintDate();
 
-
-
-
-
 $item;
 foreach ($this->featureProducts as $i) {
    $item = $i;
@@ -108,7 +104,8 @@ $response = array(
     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12  content">
       <div id="main-content"></div>
       <script type="text/javascript">
-        var data =<?php echo Zend_Json::encode($response)?>;
+        var data = <?php echo Zend_Json::encode($response)?>;
+        var featuredProduct = <?php echo Zend_Json::encode($feature)?>;
       </script>
       <script src="/theme/react/opendesktop-home.js" type="text/javascript"></script>
     </div>

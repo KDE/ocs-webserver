@@ -20,6 +20,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    console.log(window.featuredProduct);
     this.initHomePage();
   }
 
