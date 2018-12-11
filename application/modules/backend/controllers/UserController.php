@@ -233,5 +233,27 @@ class Backend_UserController extends Local_Controller_Action_Backend
 
         $this->_helper->json($jTableResult);
     }
+    
+    
+    public function reactivateAction()
+    {
+        $dataId = (int)$this->getParam(self::DATA_ID_NAME, null);
+
+        $this->_model->setActivated($dataId);
+
+        $identity = Zend_Auth::getInstance()->getIdentity();
+
+        try {
+            Default_Model_ActivityLog::logActivity($dataId, null, $identity->member_id, Default_Model_ActivityLog::BACKEND_USER_DELETE,
+                null);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+
+        $this->_helper->json($jTableResult);
+    }
 
 } 

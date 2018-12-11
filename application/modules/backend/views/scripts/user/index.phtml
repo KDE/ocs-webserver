@@ -67,8 +67,8 @@
             actions: {
                 listAction: '/backend/user/list',
                 createAction: '/backend/user/create',
-                updateAction: '/backend/user/update',
-                deleteAction: '/backend/user/delete'
+                updateAction: '/backend/user/update'/*,
+                deleteAction: '/backend/user/delete'*/
             },
             fields: {
                 member_id: {
@@ -303,6 +303,21 @@
                             return '<a role="button" title="export user data" class="btn btn-primary btn-xs export-user" style="color:white;" data-record="' + data.record.member_id + '"><span class="glyphicon glyphicon-export" aria-hidden="true"></span></a>';
                         }
                     }
+                },
+                reactivateUser: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record.is_deleted == 1) {
+                            return '<a role="button" title="Reactivate User" class="btn btn-primary btn-xs reactivate-user" style="color:white;" data-record="' + data.record.member_id + '"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span></a>';
+                        } else {
+                            return '<a role="button" title="Delete User" class="btn btn-primary btn-xs deactivate-user" style="color:white;" data-record="' + data.record.member_id + '"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>';
+                        }
+                    }
                 }
             }
         });
@@ -340,6 +355,70 @@
             jQuery.ajax({
                 data: {'c': elementRecord},
                 url: '/backend/user/export/',
+                type: 'post',
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR);
+                    console.log("-------");
+                    console.log(textStatus);
+                    console.log("-------");
+                    console.log(errorThrown);
+                    if (jqXHR.responseText) {
+                        $('#dialog-form').empty().html(jqXHR.responseText).dialog('open');
+                    } else {
+                        alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    }
+                    return false;
+                },
+                success: function (results) {
+                    $('#dialog-form').empty().html(results.Message).dialog('open');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+        
+        $('body').on("click", 'a.reactivate-user', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'c': elementRecord},
+                url: '/backend/user/reactivate/',
+                type: 'post',
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR);
+                    console.log("-------");
+                    console.log(textStatus);
+                    console.log("-------");
+                    console.log(errorThrown);
+                    if (jqXHR.responseText) {
+                        $('#dialog-form').empty().html(jqXHR.responseText).dialog('open');
+                    } else {
+                        alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    }
+                    return false;
+                },
+                success: function (results) {
+                    $('#dialog-form').empty().html(results.Message).dialog('open');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+        
+        $('body').on("click", 'a.deactivate-user', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'c': elementRecord},
+                url: '/backend/user/delete/',
                 type: 'post',
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.log(jqXHR);
