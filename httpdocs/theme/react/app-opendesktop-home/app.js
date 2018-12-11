@@ -142,6 +142,11 @@ class SpotlightProduct extends React.Component {
                 <img src={this.props.featuredProduct.profile_image_url}/>
                 {this.props.featuredProduct.username}
               </div>
+              <div className="score-info">
+                <div className="score-number">
+                  score {this.props.featuredProduct.laplace_score}
+                </div>
+              </div>
             </div>
             <div className="info-description">
               {description}

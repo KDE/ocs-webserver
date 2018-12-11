@@ -167,6 +167,16 @@ class SpotlightProduct extends React.Component {
               { className: "user-info" },
               React.createElement("img", { src: this.props.featuredProduct.profile_image_url }),
               this.props.featuredProduct.username
+            ),
+            React.createElement(
+              "div",
+              { className: "score-info" },
+              React.createElement(
+                "div",
+                { className: "score-number" },
+                "score ",
+                this.props.featuredProduct.laplace_score
+              )
             )
           ),
           React.createElement(
