@@ -1,6 +1,26 @@
 out: ../css/homepage.css, sourcemap: true, compress: true
 @import "elements.less";
 
+.startpage-store {
+  background-color: #f1f1f1;
+
+  .sidebar-left {
+    border: 0;
+  }
+
+  .content {
+    padding: 15px 30px 0 30px;
+    min-width: 400px !important;
+    border-left: 1px solid #ccc;
+    background-color: white;
+  }
+
+  .sidebar-right {
+    padding: 20px 0;
+    min-width: auto !important;
+  }
+}
+
 #opendesktop-homepage {
   .container {
       width: 100% !important;
@@ -38,11 +58,13 @@ out: ../css/homepage.css, sourcemap: true, compress: true
         color: #007aa6;
       }
 
-      i {
+      i,
+      span.glyphicon{
         display: inline-block;
         position: absolute;
-        top: 13px;
         right: 0;
+        top: 8px;
+        font-size: 16px;
       }
     }
   }
@@ -82,12 +104,13 @@ out: ../css/homepage.css, sourcemap: true, compress: true
       opacity: 0;
       .transition();
 
-      i {
+      i ,
+      span.glyphicon {
         position: absolute;
         top: 50%;
         left: 50%;
-        margin-left: -12px;
-        margin-top: -12px;
+        margin-left: -7px;
+        margin-top: -7px;
       }
 
       &:active {

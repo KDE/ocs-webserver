@@ -20,6 +20,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    console.log(window.featuredProduct);
     this.initHomePage();
   }
 
@@ -68,19 +69,23 @@ class App extends React.Component {
   render(){
     let productCarouselsContainer;
     if (this.state.loading === false){
-      productCarouselsContainer = this.state.productGroupsArray.map((pgc,index) => (
-        <div key={index} className="section">
-          <div className="container">
-            <ProductCarousel
-              products={pgc.products}
-              device={this.state.device}
-              title={pgc.title}
-              link={'/'}
-              env={this.state.env}
-            />
-          </div>
-        </div>
-      ));
+      productCarouselsContainer = this.state.productGroupsArray.map((pgc,index) => {
+        if (pgc.products.length > 0){
+          return (
+            <div key={index} className="section">
+              <div className="container">
+                <ProductCarousel
+                  products={pgc.products}
+                  device={this.state.device}
+                  title={pgc.title}
+                  link={'/'}
+                  env={this.state.env}
+                />
+              </div>
+            </div>
+          )
+        }
+      });
     }
 
     return (
@@ -98,8 +103,12 @@ class App extends React.Component {
 class ProductCarousel extends React.Component {
   constructor(props){
   	super(props);
+    let showRightArrow = false;
+    if (this.props.products.length > 5){
+      showRightArrow = true;
+    }
   	this.state = {
-      showRightArrow:true,
+      showRightArrow:showRightArrow,
       showLeftArrow:false
     };
     this.updateDimensions = this.updateDimensions.bind(this);
@@ -115,12 +124,14 @@ class ProductCarousel extends React.Component {
   }
 
   updateDimensions(){
-    let containerWidth = $('#main-content').width();
-    const rightSideWidth = $('.GridFlex-cell.sidebar-right').width();
-    containerWidth = containerWidth - rightSideWidth
+    const containerWidth = $('#main-content').width();
     console.log(containerWidth);
-    const sliderWidth = containerWidth * Math.ceil(this.props.products / 5);
+    const containerNumber = Math.ceil(this.props.products / 5);
+    console.log(containerNumber);
+    const sliderWidth = containerWidth * containerNumber;
+    console.log(sliderWidth);
     const itemWidth = containerWidth / 5;
+    console.log(itemWidth);
     this.setState({
       sliderPosition:0,
       containerWidth:containerWidth,
@@ -178,7 +189,7 @@ class ProductCarousel extends React.Component {
       leftArrowDisplay = (
         <div className="product-carousel-left">
           <a onClick={() => this.animateProductCarousel('left')} className="carousel-arrow arrow-left">
-            <i className="material-icons">chevron_left</i>
+            <span className="glyphicon glyphicon-chevron-left"></span>
           </a>
         </div>
       );
@@ -187,7 +198,7 @@ class ProductCarousel extends React.Component {
       rightArrowDisplay = (
         <div className="product-carousel-right">
           <a onClick={() => this.animateProductCarousel('right')} className="carousel-arrow arrow-right">
-            <i className="material-icons">chevron_right</i>
+            <span className="glyphicon glyphicon-chevron-right"></span>
           </a>
         </div>
       );
@@ -196,7 +207,7 @@ class ProductCarousel extends React.Component {
     return (
       <div className="product-carousel">
         <div className="product-carousel-header">
-          <h2><a href={this.props.link}>{this.props.title}<i className="material-icons">chevron_right</i></a></h2>
+          <h2><a href={this.props.link}>{this.props.title.match(/[A-Z][a-z]+/g).join(' ')} <span className="glyphicon glyphicon-chevron-right"></span></a></h2>
         </div>
         <div className="product-carousel-wrapper">
           {leftArrowDisplay}

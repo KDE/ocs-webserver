@@ -19,6 +19,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    console.log(window.featuredProduct);
     this.initHomePage();
   }
 
@@ -67,21 +68,25 @@ class App extends React.Component {
   render() {
     let productCarouselsContainer;
     if (this.state.loading === false) {
-      productCarouselsContainer = this.state.productGroupsArray.map((pgc, index) => React.createElement(
-        "div",
-        { key: index, className: "section" },
-        React.createElement(
-          "div",
-          { className: "container" },
-          React.createElement(ProductCarousel, {
-            products: pgc.products,
-            device: this.state.device,
-            title: pgc.title,
-            link: '/',
-            env: this.state.env
-          })
-        )
-      ));
+      productCarouselsContainer = this.state.productGroupsArray.map((pgc, index) => {
+        if (pgc.products.length > 0) {
+          return React.createElement(
+            "div",
+            { key: index, className: "section" },
+            React.createElement(
+              "div",
+              { className: "container" },
+              React.createElement(ProductCarousel, {
+                products: pgc.products,
+                device: this.state.device,
+                title: pgc.title,
+                link: '/',
+                env: this.state.env
+              })
+            )
+          );
+        }
+      });
     }
 
     return React.createElement(
@@ -100,8 +105,12 @@ class App extends React.Component {
 class ProductCarousel extends React.Component {
   constructor(props) {
     super(props);
+    let showRightArrow = false;
+    if (this.props.products.length > 5) {
+      showRightArrow = true;
+    }
     this.state = {
-      showRightArrow: true,
+      showRightArrow: showRightArrow,
       showLeftArrow: false
     };
     this.updateDimensions = this.updateDimensions.bind(this);
@@ -117,12 +126,14 @@ class ProductCarousel extends React.Component {
   }
 
   updateDimensions() {
-    let containerWidth = $('#main-content').width();
-    const rightSideWidth = $('.GridFlex-cell.sidebar-right').width();
-    containerWidth = containerWidth - rightSideWidth;
+    const containerWidth = $('#main-content').width();
     console.log(containerWidth);
-    const sliderWidth = containerWidth * Math.ceil(this.props.products / 5);
+    const containerNumber = Math.ceil(this.props.products / 5);
+    console.log(containerNumber);
+    const sliderWidth = containerWidth * containerNumber;
+    console.log(sliderWidth);
     const itemWidth = containerWidth / 5;
+    console.log(itemWidth);
     this.setState({
       sliderPosition: 0,
       containerWidth: containerWidth,
@@ -179,11 +190,7 @@ class ProductCarousel extends React.Component {
         React.createElement(
           "a",
           { onClick: () => this.animateProductCarousel('left'), className: "carousel-arrow arrow-left" },
-          React.createElement(
-            "i",
-            { className: "material-icons" },
-            "chevron_left"
-          )
+          React.createElement("span", { className: "glyphicon glyphicon-chevron-left" })
         )
       );
     }
@@ -194,11 +201,7 @@ class ProductCarousel extends React.Component {
         React.createElement(
           "a",
           { onClick: () => this.animateProductCarousel('right'), className: "carousel-arrow arrow-right" },
-          React.createElement(
-            "i",
-            { className: "material-icons" },
-            "chevron_right"
-          )
+          React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
         )
       );
     }
@@ -215,12 +218,9 @@ class ProductCarousel extends React.Component {
           React.createElement(
             "a",
             { href: this.props.link },
-            this.props.title,
-            React.createElement(
-              "i",
-              { className: "material-icons" },
-              "chevron_right"
-            )
+            this.props.title.match(/[A-Z][a-z]+/g).join(' '),
+            " ",
+            React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
           )
         )
       ),

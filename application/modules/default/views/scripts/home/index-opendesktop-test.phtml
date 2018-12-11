@@ -58,9 +58,27 @@ $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 $helpPrintDate = new Default_View_Helper_PrintDate();
 
-
+$item;
+foreach ($this->featureProducts as $i) {
+   $item = $i;
+   break;
+}
+$feature = array(
+    'project_id' => $item['project_id'],
+    'member_id' =>  $item['member_id'],
+    'username' =>  $item['username'],
+    'profile_image_url' =>  $item['profile_image_url'],
+    'featured' =>  $item['featured'],
+    'description' =>  $item['description'],
+    'image_small' =>  $item['image_small'],
+    'laplace_score' =>  $item['laplace_score'],
+    'count_likes' =>  $item['count_likes'],
+    'count_dislikes' =>  $item['count_dislikes'],
+    'changed_at' =>  $item['changed_at'],
+    'created_at' =>  $item['created_at'],
+    'count_comments' =>  $item['count_comments']
+);
 $response = array(
-    "comments" => Zend_Json::encode($this->comments),
     "productsThemesGTK" => Zend_Json::encode($this->productsThemesGTK),
     "productsThemesPlasma" => Zend_Json::encode($this->productsThemesPlasma),
     "productsWindowmanager" => Zend_Json::encode($this->productsWindowmanager),
@@ -70,54 +88,47 @@ $response = array(
     "productsAddons" => Zend_Json::encode($this->productsAddons),
     "productsWallpapersOriginal" => Zend_Json::encode($this->productsWallpapersOriginal),
     "productsWallpapers" => Zend_Json::encode($this->productsWallpapers),
-    "featureProducts" => Zend_Json::encode($this->featureProducts)
+    "featureProducts" => Zend_Json::encode($feature)
 );
+
 
 ?>
 <link type="text/css" rel="stylesheet" href="/theme/react/assets/css/homepage.css"/>
 
 <main id="explore-content" class="startpage-store">
 
-  <div class="GridFlex">
-
-    <div class="GridFlex-cell sidebar-left">
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 sidebar-left">
       <?php  echo $this->render('explore/partials/filter.phtml'); ?>
     </div>
 
-    <div class="GridFlex-cell content">
+    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12  content">
       <div id="main-content"></div>
       <script type="text/javascript">
-        var data =<?php echo Zend_Json::encode($response)?>;
+        var data = <?php echo Zend_Json::encode($response)?>;
+        var featuredProduct = <?php echo Zend_Json::encode($feature)?>;
       </script>
       <script src="/theme/react/opendesktop-home.js" type="text/javascript"></script>
     </div>
 
-    <div class="GridFlex-cell sidebar-right">
-            <aside  id="explore-sidebar" >
-
-            <?php
-                echo $this->render('/home/partials/common_rightsidebar.phtml');
-            ?>
-
-
-            <div>
-                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <!-- Responsive New Displayblock -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1150932386931372"
-                     data-ad-slot="1024407251"
-                     data-ad-format="auto"></ins>
-                <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-
-                </script>
-            </div>
-
-            </aside>
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 sidebar-right">
+      <aside  id="explore-sidebar" >
+        <?php
+            echo $this->render('/home/partials/common_rightsidebar.phtml');
+        ?>
+        <div>
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- Responsive New Displayblock -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1150932386931372"
+                 data-ad-slot="1024407251"
+                 data-ad-format="auto"></ins>
+            <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+      </aside>
     </div>
-
-  </div>
 
   <div class="tooltip_templates" style="display:none">
       <span id="tooltip_content">
