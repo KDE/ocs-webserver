@@ -1,11 +1,12 @@
 class App extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = { };
   }
 
   componentDidMount() {
     console.log('opendesktop app homepage');
+    console.log(window.data);
   }
 
   render(){
