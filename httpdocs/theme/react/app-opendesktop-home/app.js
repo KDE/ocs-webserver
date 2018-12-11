@@ -131,7 +131,7 @@ class SpotlightProduct extends React.Component {
               </div>
             </div>
             <div className="info-description">
-              {window.featuredProduct.description}
+              {window.featuredProduct.description.substring(0,295) + "..."}
             </div>
           </div>
         </div>

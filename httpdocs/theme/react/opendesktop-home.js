@@ -157,7 +157,7 @@ class SpotlightProduct extends React.Component {
           React.createElement(
             "div",
             { className: "info-description" },
-            window.featuredProduct.description
+            window.featuredProduct.description.substring(0, 295) + "..."
           )
         )
       )
