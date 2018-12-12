@@ -204,13 +204,24 @@ class SpotlightProduct extends React.Component {
 class ProductCarousel extends React.Component {
   constructor(props) {
     super(props);
+
+    let itemsPerRow;
+    if (this.props.device === 'large') {
+      itemsPerRow = 5;
+    } else if (this.props.device === 'mid') {
+      itemsPerRow = 4;
+    } else if (this.props.device === 'tablet') {
+      itemsPerRow = 3;
+    }
+
     let showRightArrow = false;
-    if (this.props.products.length > 5) {
+    if (this.props.products.length > itemsPerRow) {
       showRightArrow = true;
     }
     this.state = {
       showRightArrow: showRightArrow,
-      showLeftArrow: false
+      showLeftArrow: false,
+      itemsPerRow: itemsPerRow
     };
     this.updateDimensions = this.updateDimensions.bind(this);
     this.animateProductCarousel = this.animateProductCarousel.bind(this);
@@ -226,19 +237,10 @@ class ProductCarousel extends React.Component {
 
   updateDimensions() {
 
-    let itemsPerRow;
-    if (this.props.device === 'large') {
-      itemsPerRow = 5;
-    } else if (this.props.device === 'mid') {
-      itemsPerRow = 4;
-    } else if (this.props.device === 'tablet') {
-      itemsPerRow = 3;
-    }
-
     const containerWidth = $('#main-content').width();
-    const containerNumber = Math.ceil(this.props.products / itemsPerRow);
+    const containerNumber = Math.ceil(this.props.products / this.state.itemsPerRow);
     const sliderWidth = containerWidth * containerNumber;
-    const itemWidth = containerWidth / itemsPerRow;
+    const itemWidth = containerWidth / this.props.itemsPerRow;
     this.setState({
       sliderPosition: 0,
       containerWidth: containerWidth,
