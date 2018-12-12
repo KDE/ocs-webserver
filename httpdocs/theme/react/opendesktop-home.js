@@ -362,12 +362,18 @@ class ProductCarouselItem extends React.Component {
   }
 
   render() {
-    let imageBaseUrl;
-    if (this.props.env === 'live') {
-      imageBaseUrl = 'cn.opendesktop.org';
-    } else {
-      imageBaseUrl = 'cn.opendesktop.cc';
+
+    let imageUrl = this.props.product.image_small;
+    if (this.props.product.image_small.indexOf('https://') > -1 && this.props.product.image_small.indexOf('http://') > -1) {
+      let imageBaseUrl;
+      if (this.props.env === 'live') {
+        imageBaseUrl = 'cn.opendesktop.org';
+      } else {
+        imageBaseUrl = 'cn.opendesktop.cc';
+      }
+      imageUrl = 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small;
     }
+
     return React.createElement(
       "div",
       { className: "product-carousel-item", style: { "width": this.props.itemWidth } },
@@ -377,7 +383,7 @@ class ProductCarouselItem extends React.Component {
         React.createElement(
           "figure",
           null,
-          React.createElement("img", { className: "very-rounded-corners", src: 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small })
+          React.createElement("img", { className: "very-rounded-corners", src: imageUrl })
         ),
         React.createElement(
           "div",
