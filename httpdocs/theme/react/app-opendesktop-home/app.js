@@ -76,17 +76,19 @@ class App extends React.Component {
     if (this.state.loading === false){
       productCarouselsContainer = this.state.productGroupsArray.map((pgc,index) => {
         pgc.products = pgc.products.concat(pgc.products);
-            <div key={index} className="section">
-              <div className="container">
-                <ProductCarousel
-                  products={pgc.products}
-                  device={this.state.device}
-                  title={pgc.title}
-                  link={'/'}
-                  env={this.state.env}
-                />
-              </div>
+        return(
+          <div key={index} className="section">
+            <div className="container">
+              <ProductCarousel
+                products={pgc.products}
+                device={this.state.device}
+                title={pgc.title}
+                link={'/'}
+                env={this.state.env}
+              />
             </div>
+          </div>
+        )
       });
     }
 
