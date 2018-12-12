@@ -264,6 +264,8 @@ class ProductCarousel extends React.Component {
       let showLeftArrow = true,
           showRightArrow = true;
       const endPoint = this.state.sliderWidth - this.state.containerWidth;
+      console.log(this.state.sliderWidth);
+      console.log(this.state.containerWidth);
       console.log(endPoint);
       console.log(this.state.sliderPosition);
       if (this.state.sliderPosition <= 0) {
