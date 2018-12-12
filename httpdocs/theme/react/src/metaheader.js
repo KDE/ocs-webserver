@@ -218,6 +218,7 @@ class MetaHeader extends React.Component {
             loginUrl={this.state.loginUrl}
             logoutUrl={this.state.logoutUrl}
             gitlabUrl={this.state.gitlabUrl}
+            isAdmin={this.state.isAdmin}
           />
         </div>
       </nav>
@@ -474,53 +475,6 @@ class AdminsDropDownMenu extends React.Component {
   }
 }
 
-class CloudsServicesDropDownMenu extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {};
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  componentWillMount() {
-    document.addEventListener('mousedown',this.handleClick, false);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('mousedown',this.handleClick, false);
-  }
-
-  handleClick(e){
-    let dropdownClass = "";
-    if (this.node.contains(e.target)){
-      if (this.state.dropdownClass === "open"){
-        if (e.target.className === "cd-menu-link-item"){
-          dropdownClass = "";
-        } else {
-          dropdownClass = "open";
-        }
-      } else {
-        dropdownClass = "open";
-      }
-    }
-    this.setState({dropdownClass:dropdownClass});
-  }
-
-
-  render(){
-
-    return (
-      <li ref={node => this.node = node} id="cd-dropdown-menu" className={this.state.dropdownClass}>
-        <a className="cd-menu-link-item">Clouds & Services</a>
-        <ul className="dropdown-menu dropdown-menu-right">
-          <li><a href={"https://my.opendesktop." + urlEnding}>Storage</a></li>
-          <li><a href={"https://music.opendesktop." + urlEnding}>Music</a></li>
-          <li><a href={"https://docs.opendesktop." + urlEnding}>Docs</a></li>
-        </ul>
-      </li>
-    )
-  }
-}
-
 class MoreDropDownMenu extends React.Component {
   constructor(props){
     super(props);
@@ -638,6 +592,7 @@ class UserMenu extends React.Component {
           user={this.props.user}
           forumUrl={this.props.forumUrl}
           gitlabUrl={this.props.gitlabUrl}
+          isAdmin={this.props.isAdmin}
         />
       )
     } else {
@@ -737,7 +692,52 @@ class UserContextMenuContainer extends React.Component {
   }
 
   render(){
-    const urlEnding = config.baseUrl.split('opendesktop.')[1];
+
+    let storageLinkItem, musicLinkItem, docsLinkItem;
+    if (this.props.isAdmin){
+      const urlEnding = config.baseUrl.split('opendesktop.')[1];
+      storageLinkItem = (
+        <li id="storage-link-item">
+          <a href={"https://my.opendesktop." + urlEnding}>
+            <div className="icon"></div>
+            <span>Storage</span>
+          </a>
+        </li>
+      );
+      musicLinkItem = (
+        <li id="music-link-item">
+          <a href={"https://music.opendesktop." + urlEnding}>
+            <div className="icon"></div>
+            <span>Music</span>
+          </a>
+        </li>
+      );
+      docsLinkItem = (
+        <li id="docs-link-item">
+          <a href={"https://docs.opendesktop." + urlEnding}>
+            <div className="icon"></div>
+            <span>Docs</span>
+          </a>
+        </li>
+      );
+    }
+
+    /*
+    // BU CODE
+    <li id="opencode-link-item">
+      <a href={this.props.gitlabUrl+"/dashboard/projects"}>
+        <div className="icon"></div>
+        <span>Projects</span>
+      </a>
+    </li>
+    <li id="issues-link-item">
+      <a href={this.state.gitlabLink}>
+        <div className="icon"></div>
+        <span>Issues</span>
+      </a>
+    </li>
+    */
+
     return (
       <li ref={node => this.node = node} id="user-context-menu-container">
         <div className={"user-dropdown " + this.state.dropdownClass}>
@@ -746,42 +746,15 @@ class UserContextMenuContainer extends React.Component {
             <span className="th-icon"></span>
           </button>
           <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
-            <li id="opencode-link-item">
-              <a href={this.props.gitlabUrl+"/dashboard/projects"}>
-                <div className="icon"></div>
-                <span>Projects</span>
-              </a>
-            </li>
-            <li id="issues-link-item">
-              <a href={this.state.gitlabLink}>
-                <div className="icon"></div>
-                <span>Issues</span>
-              </a>
-            </li>
             <li id="messages-link-item">
               <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
                 <div className="icon"></div>
                 <span>Messages</span>
               </a>
             </li>
-            <li id="storage-link-item">
-              <a href={"https://my.opendesktop." + urlEnding}>
-                <div className="icon"></div>
-                <span>Storage</span>
-              </a>
-            </li>
-            <li id="music-link-item">
-              <a href={"https://music.opendesktop." + urlEnding}>
-                <div className="icon"></div>
-                <span>Music</span>
-              </a>
-            </li>
-            <li id="docs-link-item">
-              <a href={"https://docs.opendesktop." + urlEnding}>
-                <div className="icon"></div>
-                <span>Docs</span>
-              </a>
-            </li>
+            {storageLinkItem}
+            {musicLinkItem}
+            {docsLinkItem}
           </ul>
         </div>
       </li>
