@@ -71,24 +71,21 @@ class App extends React.Component {
   render() {
     let productCarouselsContainer;
     if (this.state.loading === false) {
-      productCarouselsContainer = this.state.productGroupsArray.map((pgc, index) => {
-        pgc.products = pgc.products.concat(pgc.products);
-        return React.createElement(
+      productCarouselsContainer = this.state.productGroupsArray.map((pgc, index) => React.createElement(
+        "div",
+        { key: index, className: "section" },
+        React.createElement(
           "div",
-          { key: index, className: "section" },
-          React.createElement(
-            "div",
-            { className: "container" },
-            React.createElement(ProductCarousel, {
-              products: pgc.products,
-              device: this.state.device,
-              title: pgc.title,
-              link: '/',
-              env: this.state.env
-            })
-          )
-        );
-      });
+          { className: "container" },
+          React.createElement(ProductCarousel, {
+            products: pgc.products,
+            device: this.state.device,
+            title: pgc.title,
+            link: '/',
+            env: this.state.env
+          })
+        )
+      ));
     }
 
     const featuredProduct = JSON.parse(window.data['featureProducts']);

@@ -74,9 +74,7 @@ class App extends React.Component {
   render(){
     let productCarouselsContainer;
     if (this.state.loading === false){
-      productCarouselsContainer = this.state.productGroupsArray.map((pgc,index) => {
-        pgc.products = pgc.products.concat(pgc.products);
-        return(
+      productCarouselsContainer = this.state.productGroupsArray.map((pgc,index) => (
           <div key={index} className="section">
             <div className="container">
               <ProductCarousel
@@ -88,8 +86,7 @@ class App extends React.Component {
               />
             </div>
           </div>
-        )
-      });
+      ));
     }
 
     const featuredProduct = JSON.parse(window.data['featureProducts']);
