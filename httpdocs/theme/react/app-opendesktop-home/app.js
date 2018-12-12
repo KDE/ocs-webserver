@@ -218,8 +218,10 @@ class ProductCarousel extends React.Component {
 
     let newSliderPosition = this.state.sliderPosition;
     if (dir === 'left'){
+      console.log(this.state.sliderPosition);
       newSliderPosition = this.state.sliderPosition - this.state.containerWidth;
     } else {
+      console.log(this.state.sliderPosition);
       newSliderPosition = this.state.sliderPosition + this.state.containerWidth;
     }
 
