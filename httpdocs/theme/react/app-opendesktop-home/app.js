@@ -137,8 +137,8 @@ class SpotlightProduct extends React.Component {
           <div className="spotlight-info">
             <span className="featured-label">Featured</span>
             <div className="info-top">
-              <h2><a href={"/p/"+this.props.featuredProduct.project_id}>title</a></h2>
-              <h3>category</h3>
+              <h2><a href={"/p/" + this.props.featuredProduct.project_id}>{this.props.featuredProduct.title}</a></h2>
+              <h3>{this.props.featuredProduct.category}</h3>
               <div className="user-info">
                 <img src={this.props.featuredProduct.profile_image_url}/>
                 {this.props.featuredProduct.username}
@@ -322,8 +322,6 @@ class ProductCarouselItem extends React.Component {
     )
   }
 }
-
-
 
 ReactDOM.render(
     <App />,

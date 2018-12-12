@@ -159,13 +159,13 @@ class SpotlightProduct extends React.Component {
               React.createElement(
                 "a",
                 { href: "/p/" + this.props.featuredProduct.project_id },
-                "title"
+                this.props.featuredProduct.title
               )
             ),
             React.createElement(
               "h3",
               null,
-              "category"
+              this.props.featuredProduct.category
             ),
             React.createElement(
               "div",
