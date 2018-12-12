@@ -35,6 +35,16 @@ out: ../css/homepage.css, sourcemap: true, compress: true
       max-width: 100% !important;
       padding: 0;
   }
+
+  .section {
+    &:last-of-type {
+      .container {
+        .product-carousel {
+          border-bottom: 0;
+        }
+      }
+    }
+  }
 }
 
 #spotlight-product {
