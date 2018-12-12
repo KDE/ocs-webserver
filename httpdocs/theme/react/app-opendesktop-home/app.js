@@ -218,10 +218,8 @@ class ProductCarousel extends React.Component {
 
     let newSliderPosition = this.state.sliderPosition;
     if (dir === 'left'){
-      console.log(this.state.sliderPosition);
       newSliderPosition = this.state.sliderPosition - this.state.containerWidth;
     } else {
-      console.log(this.state.sliderPosition);
       newSliderPosition = this.state.sliderPosition + this.state.containerWidth;
     }
 
@@ -230,6 +228,8 @@ class ProductCarousel extends React.Component {
       let showLeftArrow = true,
           showRightArrow = true;
       const endPoint = this.state.sliderWidth - this.state.containerWidth;
+      console.log(endPoint);
+      console.log(this.state.sliderPosition);
       if (this.state.sliderPosition <= 0){
         showLeftArrow = false;
       }
