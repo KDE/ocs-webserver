@@ -744,6 +744,25 @@ class UserContextMenuContainer extends React.Component {
                 <span>Docs</span>
               </a>
             </li>
+            <li id="contacts-link-item">
+              <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
+                <div className="icon"></div>
+                <span>Contacts</span>
+              </a>
+            </li>
+            <li id="calendar-link-item">
+              <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
+                <div className="icon"></div>
+                <span>Calendar</span>
+              </a>
+            </li>
+            <li id="talk-link-item">
+              <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/spreed/"}>
+                <div className="icon"></div>
+                <span>Talk</span>
+              </a>
+            </li>
+
           </ul>
         </div>
       </li>
