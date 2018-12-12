@@ -587,14 +587,15 @@ class UserMenu extends React.Component {
           baseUrl={this.props.baseUrl}
         />
       );
-      userAppsContextDisplay = (
-        <UserContextMenuContainer
-          user={this.props.user}
-          forumUrl={this.props.forumUrl}
-          gitlabUrl={this.props.gitlabUrl}
-          isAdmin={this.props.isAdmin}
-        />
-      )
+      if (this.props.isAdmin){
+        userAppsContextDisplay = (
+          <UserContextMenuContainer
+            user={this.props.user}
+            forumUrl={this.props.forumUrl}
+            gitlabUrl={this.props.gitlabUrl}
+          />
+        )
+      }
     } else {
       userDropdownDisplay = (
         <li id="user-login-container"><a href={this.props.loginUrl} className="btn btn-metaheader">Login</a></li>
@@ -693,35 +694,6 @@ class UserContextMenuContainer extends React.Component {
 
   render(){
 
-    let storageLinkItem, musicLinkItem, docsLinkItem;
-    if (this.props.isAdmin){
-      const urlEnding = config.baseUrl.split('opendesktop.')[1];
-      storageLinkItem = (
-        <li id="storage-link-item">
-          <a href={"https://my.opendesktop." + urlEnding}>
-            <div className="icon"></div>
-            <span>Storage</span>
-          </a>
-        </li>
-      );
-      musicLinkItem = (
-        <li id="music-link-item">
-          <a href={"https://music.opendesktop." + urlEnding}>
-            <div className="icon"></div>
-            <span>Music</span>
-          </a>
-        </li>
-      );
-      docsLinkItem = (
-        <li id="docs-link-item">
-          <a href={"https://docs.opendesktop." + urlEnding}>
-            <div className="icon"></div>
-            <span>Docs</span>
-          </a>
-        </li>
-      );
-    }
-
     /*
     // BU CODE
     <li id="opencode-link-item">
@@ -738,6 +710,8 @@ class UserContextMenuContainer extends React.Component {
     </li>
     */
 
+    const urlEnding = config.baseUrl.split('opendesktop.')[1];
+
     return (
       <li ref={node => this.node = node} id="user-context-menu-container">
         <div className={"user-dropdown " + this.state.dropdownClass}>
@@ -752,9 +726,24 @@ class UserContextMenuContainer extends React.Component {
                 <span>Messages</span>
               </a>
             </li>
-            {storageLinkItem}
-            {musicLinkItem}
-            {docsLinkItem}
+            <li id="storage-link-item">
+              <a href={"https://my.opendesktop." + urlEnding}>
+                <div className="icon"></div>
+                <span>Storage</span>
+              </a>
+            </li>
+            <li id="music-link-item">
+              <a href={"https://music.opendesktop." + urlEnding}>
+                <div className="icon"></div>
+                <span>Music</span>
+              </a>
+            </li>
+            <li id="docs-link-item">
+              <a href={"https://docs.opendesktop." + urlEnding}>
+                <div className="icon"></div>
+                <span>Docs</span>
+              </a>
+            </li>
           </ul>
         </div>
       </li>
@@ -961,6 +950,7 @@ class MobileLeftSidePanel extends React.Component {
         <div id="panel-menu">
           <ul>
             {panelMenuGroupsDisplay}
+            {adminsDropDownMenuDisplay}
             <li>
               <a className="groupname"><b>Discussion Boards</b></a>
               <ul>
@@ -969,7 +959,6 @@ class MobileLeftSidePanel extends React.Component {
                 <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
               </ul>
             </li>
-            {adminsDropDownMenuDisplay}
             <li>
               <a className="groupname"><b>More</b></a>
               <ul>
