@@ -63,6 +63,8 @@ foreach ($this->featureProducts as $i) {
    $item = $i;
    break;
 }
+$helpCategories = new Default_View_Helper_FetchCategoriesForProductAsString();
+
 $feature = array(
     'project_id' => $item['project_id'],
     'member_id' =>  $item['member_id'],
@@ -70,6 +72,8 @@ $feature = array(
     'profile_image_url' =>  $item['profile_image_url'],
     'featured' =>  $item['featured'],
     'description' =>  $item['description'],
+    'title' =>  $item['title'],
+    'category' =>  $helpCategories->fetchCategoriesForProductAsString($item['project_id']),
     'image_small' =>  $item['image_small'],
     'laplace_score' =>  $item['laplace_score'],
     'count_likes' =>  $item['count_likes'],

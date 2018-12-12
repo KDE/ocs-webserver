@@ -130,6 +130,7 @@ class HomeController extends Local_Controller_Action_DomainSwitch
            $item = $i;
            break;
         }                
+        $helpCategories = new Default_View_Helper_FetchCategoriesForProductAsString();
         $response = array(
             'project_id' => $item['project_id'],
             'member_id' =>  $item['member_id'],
@@ -137,6 +138,8 @@ class HomeController extends Local_Controller_Action_DomainSwitch
             'profile_image_url' =>  $item['profile_image_url'],
             'featured' =>  $item['featured'],
             'description' =>  $item['description'],
+            'title' =>  $item['title'],
+            'category' =>  $helpCategories->fetchCategoriesForProductAsString($item['project_id']),
             'image_small' =>  $item['image_small'],
             'laplace_score' =>  $item['laplace_score'],
             'count_likes' =>  $item['count_likes'],
