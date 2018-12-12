@@ -101,11 +101,11 @@ $response = array(
 
 <main id="explore-content" class="startpage-store">
 
-    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 sidebar-left">
+    <div class="sidebar-left">
       <?php  echo $this->render('explore/partials/filter.phtml'); ?>
     </div>
 
-    <div class="col-lg-7 col-md-7 col-sm-8 col-xs-12  content">
+    <div class="content">
       <div id="main-content"></div>
       <script type="text/javascript">
         var data = <?php echo Zend_Json::encode($response)?>;
@@ -114,7 +114,7 @@ $response = array(
       <script src="/theme/react/opendesktop-home.js" type="text/javascript"></script>
     </div>
 
-    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 sidebar-right">
+    <div class="sidebar-right">
       <aside  id="explore-sidebar" >
         <?php
             echo $this->render('/home/partials/common_rightsidebar.phtml');
