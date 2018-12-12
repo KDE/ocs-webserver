@@ -242,6 +242,30 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     /* New Nested Set Functions */
     /* ------------------------ */
 
+    public function setCategoryDeleted($id, $updateChildren = true)
+    {
+        $node = $this->findCategory($id);
+        if (count($node->toArray()) == 0) {
+            return false;
+        }
+
+        $this->_db->beginTransaction();
+        try {
+            $this->_db->query("UPDATE {$this->_name} SET is_active = 0, is_deleted = 1, deleted_at = :del_date WHERE project_category_id = :cat_id;",
+                array('cat_id' => $id, 'del_date'=>new Zend_Db_Expr('Now()')));
+            if ($updateChildren) {
+                $this->_db->query("UPDATE {$this->_name} SET is_active = 0, is_deleted = 1, deleted_at = :del_date WHERE lft > :parent_lft AND rgt < :parent_rgt;",
+                    array('del_date'=>new Zend_Db_Expr('Now()'), 'parent_lft' => $node->lft, 'parent_rgt' => $node->rgt));
+            }
+            $this->_db->commit();
+        } catch (Exception $e) {
+            $this->_db->rollBack();
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
+        }
+
+        return $node;
+    }
+
     /**
      * @param $title
      *
