@@ -477,6 +477,103 @@ class Default_Model_Info
         }        
     }
     
+
+
+    public function getJsonLastProductsForHostStores($limit = 10, $project_category_id = null, $package_type = null,$tag_isoriginal = null, $offset = 0)
+    {
+        /** @var Zend_Cache_Core $cache */
+      
+        if($project_category_id) {
+            $catids = str_replace(',', '_', (string)$project_category_id);
+        }else
+        {
+            $catids="";
+        }
+        $cache = Zend_Registry::get('cache');
+        $cacheName =
+            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit .$catids.$package_type.$tag_isoriginal.$offset);
+
+        if (($resultSet = $cache->load($cacheName))) {
+            return $resultSet;
+        }
+
+
+        $activeCategories =array();
+        if (empty($project_category_id)) {
+            $activeCategories = $this->getActiveCategoriesForCurrentHost();
+        } else {
+            $cats = explode(",", $project_category_id);
+            if(count($cats)==1){
+                $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);    
+            }else{
+                foreach ($cats as $cat) {
+                    $tmp = $this->getActiveCategoriesForCatId($cat);    
+                    $activeCategories = array_merge($tmp, $activeCategories);
+                }                
+            }            
+        }
+
+        if (count($activeCategories) == 0) {
+            return array();
+        }
+
+        $sql = '
+            SELECT 
+                project_id,
+                member_id,
+                image_small,
+                title,
+                version,
+                cat_title,
+                count_comments,
+                package_names,
+                laplace_score,
+                count_likes,
+                count_dislikes,
+                changed_at,
+                created_at            
+            FROM
+                stat_projects  AS p
+            WHERE
+                p.status = 100                
+                AND p.project_category_id IN (' . implode(',', $activeCategories) . ')
+                AND p.amount_reports is null';
+        
+        if(isset($package_type)) {
+            $sql .= ' AND find_in_set('.$package_type.', package_types)';
+        }
+        
+        if(isset($tag_isoriginal)) {
+            if($tag_isoriginal)
+            {
+                $sql .= ' AND find_in_set("'.self::TAG_ISORIGINAL.'", tags)';    
+            }else{
+                $sql .= ' AND NOT find_in_set("'.self::TAG_ISORIGINAL.'", tags)';    
+            }            
+        }
+
+        $sql .= ' ORDER BY IFNULL(p.changed_at,p.created_at)  DESC
+            ';
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+        if (isset($offset)) {
+                 $sql .= ' offset ' . (int)$offset;
+             }
+
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+        $imagehelper = new Default_View_Helper_Image();
+        foreach ($resultSet as &$value) {
+            $value['project_image_small_uri'] = $imagehelper->Image($value['image_small'], array('width' => 80, 'height' => 80));
+        }
+        if (count($resultSet) > 0) {
+            $result = Zend_Json::encode($resultSet);
+            $cache->save($result, $cacheName, array(), 300);
+            return $result;
+        } else {                
+            return '';
+        }        
+    }
   
     public function getTopProductsForHostStores($limit = 10, $project_category_id = null, $package_type = null)
     {
