@@ -9,10 +9,6 @@ body {
     top: 34px;
   }
 
-  #metaheader {
-    position: fixed;
-  }
-
   &#git-body {
     #metaheader {
       position: fixed !important;
@@ -22,29 +18,29 @@ body {
     }
   }
 
-  &#od-body {
-    #metaheader {
-      position: relative;
-    }
-  }
-
   &.navigation-topics,
   &.category-themes-and-apps,
-  &.category-general {
+  &.category-general,
+  &[class*='category-'] {
     #metaheader #metaheader-nav #user-context-menu-container .user-dropdown .th-icon {
       margin-top: -5px;
     }
     #metaheader #metaheader-nav #user-login-menu-container .user-dropdown .dropdown-toggle img {
       // margin-top: -7px;
     }
+
+    &.docked {
+      .d-header {
+        top: 34px;
+      }
+      #metaheader {
+        position: fixed;
+      }
+    }
   }
 }
 
-section#main {
-  .d-header {
-    top: 34px;
-  }
-}
+
 
 
 #metaheader {
