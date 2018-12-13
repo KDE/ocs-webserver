@@ -107,10 +107,17 @@ class SpotlightProduct extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
+    this.onSpotlightMenuClick = this.onSpotlightMenuClick.bind(this);
   }
 
-  componentDidMount() {
-    console.log(this.props.featuredProduct);
+  onSpotlightMenuClick(val){
+    let href = "/showfeatureajax/page/";
+    if (val === "random"){
+      href += "0";
+    } else {
+      href += "1";
+    }
+    console.log(val);
   }
 
   render(){
@@ -161,8 +168,8 @@ class SpotlightProduct extends React.Component {
               </div>
             </div>
             <div className="spotlight-menu">
-              <a onClick={this.getRandomSpotlightProduct}>random</a>
-              <a onClick={this.getFeaturedSpotlightProduct}>featured</a>
+              <a onClick={() => this.onSpotlightMenuClick('random')}>random</a>
+              <a onClick={() => this.onSpotlightMenuClick('featured')}>featured</a>
             </div>
           </div>
         </div>
