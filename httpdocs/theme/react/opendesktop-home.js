@@ -198,6 +198,20 @@ class SpotlightProduct extends React.Component {
               { className: "info-description" },
               description
             )
+          ),
+          React.createElement(
+            "div",
+            { className: "spotlight-menu" },
+            React.createElement(
+              "a",
+              { onClick: this.getRandomSpotlightProduct },
+              "random"
+            ),
+            React.createElement(
+              "a",
+              { onClick: this.getFeaturedSpotlightProduct },
+              "featured"
+            )
           )
         )
       )

@@ -160,6 +160,10 @@ class SpotlightProduct extends React.Component {
                 {description}
               </div>
             </div>
+            <div className="spotlight-menu">
+              <a onClick={this.getRandomSpotlightProduct}>random</a>
+              <a onClick={this.getFeaturedSpotlightProduct}>featured</a>
+            </div>
           </div>
         </div>
       </div>
