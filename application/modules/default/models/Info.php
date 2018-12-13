@@ -571,7 +571,7 @@ class Default_Model_Info
             $cache->save($result, $cacheName, array(), 300);
             return $result;
         } else {                
-            return '';
+            return  Zend_Json::encode('');
         }        
     }
   
