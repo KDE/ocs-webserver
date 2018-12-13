@@ -215,12 +215,9 @@ class ProductCarousel extends React.Component {
     }
 
     const containerWidth = $('#main-content').width();
-    console.log(containerWidth);
     const containerNumber = Math.ceil(this.props.products.length / 5);
-    console.log(containerNumber);
     const sliderWidth = containerWidth * containerNumber;
     const itemWidth = containerWidth / 5;
-    console.log(sliderWidth);
     this.setState({
       sliderPosition:0,
       containerWidth:containerWidth,
@@ -243,10 +240,6 @@ class ProductCarousel extends React.Component {
       let showLeftArrow = true,
           showRightArrow = true;
       const endPoint = this.state.sliderWidth - this.state.containerWidth;
-      console.log(this.state.sliderWidth);
-      console.log(this.state.containerWidth);
-      console.log(endPoint);
-      console.log(this.state.sliderPosition);
       if (this.state.sliderPosition <= 0){
         showLeftArrow = false;
       }
