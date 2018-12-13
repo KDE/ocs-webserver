@@ -350,9 +350,10 @@ out: ../css/homepage.css, sourcemap: true, compress: true
       flex:none;
       border-bottom: 1px solid #ccc;
     }
-    
+
     .content {
       width: 100%;
+      border-bottom: 1px solid #ccc;
       #spotlight-product {
         .container {
           padding-left: 0;
@@ -370,10 +371,12 @@ out: ../css/homepage.css, sourcemap: true, compress: true
     }
 
     .sidebar-right {
-      border-top: 1px solid #ccc;
+      border:0;
       width: 320px;
       position: relative;
       margin: 0 auto;
+      display: table;
+      float: none;
     }
   }
 }
