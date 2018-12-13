@@ -173,6 +173,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     /**
      * @param int $member_id
+     *
+     * @throws Zend_Exception
      */
     public function setDeleted($member_id)
     {

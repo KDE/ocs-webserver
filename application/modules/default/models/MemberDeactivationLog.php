@@ -34,47 +34,49 @@ class Default_Model_MemberDeactivationLog extends Default_Model_DbTable_MemberDe
 
     const OBJ_TYPE_DISCOURSE_USER = 30;
     const OBJ_TYPE_DISCOURSE_TOPIC = 31;
-    
-    
-    
+
+
     /**
      * @param int $identifer
      *
-     * @return int
-     * @throws Zend_Db_Statement_Exception
+     * @return void
+     * @throws Zend_Exception
      */
     public function logMemberAsDeleted($identifer)
     {
         return $this->addLog($identifer, Default_Model_MemberDeactivationLog::OBJ_TYPE_OPENDESKTOP_MEMBER, $identifer);
     }
-    
+
     /**
+     * @param int $member_id
      * @param int $identifer
      *
-     * @return int
-     * @throws Zend_Db_Statement_Exception
+     * @return void
+     * @throws Zend_Exception
      */
     public function logMemberEmailAsDeleted($member_id, $identifer)
     {
         return $this->addLog($member_id, Default_Model_MemberDeactivationLog::OBJ_TYPE_OPENDESKTOP_MEMBER_EMAIL, $identifer);
     }
-    
+
     /**
+     * @param int $member_id
      * @param int $identifer
      *
-     * @return int
-     * @throws Zend_Db_Statement_Exception
+     * @return void
+     * @throws Zend_Exception
      */
     public function logProjectAsDeleted($member_id, $identifer)
     {
         return $this->addLog($member_id, Default_Model_MemberDeactivationLog::OBJ_TYPE_OPENDESKTOP_PROJECT, $identifer);
     }
-    
+
     /**
+     * @param     $member_id
      * @param int $identifer
      *
-     * @return int
-     * @throws Zend_Db_Statement_Exception
+     * @return void
+     * @throws Zend_Exception
      */
     public function logCommentAsDeleted($member_id, $identifer)
     {
@@ -87,7 +89,7 @@ class Default_Model_MemberDeactivationLog extends Default_Model_DbTable_MemberDe
      * @param int $identifer object id
      *
      * @return void
-     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
      */
     public function addLog($member_id, $object_type, $identifer)
     {
@@ -105,41 +107,44 @@ class Default_Model_MemberDeactivationLog extends Default_Model_DbTable_MemberDe
     /**
      * @param int $identifer
      *
-     * @return int
-     * @throws Zend_Db_Statement_Exception
+     * @return void
+     * @throws Zend_Exception
      */
     public function removeLogMemberAsDeleted($identifer)
     {
         return $this->deleteLog($identifer, Default_Model_MemberDeactivationLog::OBJ_TYPE_OPENDESKTOP_MEMBER, $identifer);
     }
-    
+
     /**
+     * @param int $member_id
      * @param int $identifer
      *
-     * @return int
-     * @throws Zend_Db_Statement_Exception
+     * @return void
+     * @throws Zend_Exception
      */
     public function removeLogMemberEmailAsDeleted($member_id, $identifer)
     {
         return $this->deleteLog($member_id, Default_Model_MemberDeactivationLog::OBJ_TYPE_OPENDESKTOP_MEMBER_EMAIL, $identifer);
     }
-    
+
     /**
+     * @param int $member_id
      * @param int $identifer
      *
-     * @return int
-     * @throws Zend_Db_Statement_Exception
+     * @return void
+     * @throws Zend_Exception
      */
     public function removeLogProjectAsDeleted($member_id, $identifer)
     {
         return $this->deleteLog($member_id, Default_Model_MemberDeactivationLog::OBJ_TYPE_OPENDESKTOP_PROJECT, $identifer);
     }
-    
+
     /**
+     * @param int $member_id
      * @param int $identifer
      *
-     * @return int
-     * @throws Zend_Db_Statement_Exception
+     * @return void
+     * @throws Zend_Exception
      */
     public function removeLogCommentAsDeleted($member_id, $identifer)
     {
@@ -152,7 +157,7 @@ class Default_Model_MemberDeactivationLog extends Default_Model_DbTable_MemberDe
      * @param int $identifer object id
      *
      * @return void
-     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
      */
     public function deleteLog($member_id, $object_type, $identifer)
     {
