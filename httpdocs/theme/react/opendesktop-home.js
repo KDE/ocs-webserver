@@ -146,54 +146,58 @@ class SpotlightProduct extends React.Component {
           "div",
           { className: "spotlight-info" },
           React.createElement(
-            "span",
-            { className: "featured-label" },
-            "Featured"
-          ),
-          React.createElement(
             "div",
-            { className: "info-top" },
+            { className: "spotlight-info-wrapper" },
             React.createElement(
-              "h2",
-              null,
+              "span",
+              { className: "featured-label" },
+              "Featured"
+            ),
+            React.createElement(
+              "div",
+              { className: "info-top" },
               React.createElement(
-                "a",
-                { href: "/p/" + this.props.featuredProduct.project_id },
-                this.props.featuredProduct.title
+                "h2",
+                null,
+                React.createElement(
+                  "a",
+                  { href: "/p/" + this.props.featuredProduct.project_id },
+                  this.props.featuredProduct.title
+                )
+              ),
+              React.createElement(
+                "h3",
+                null,
+                this.props.featuredProduct.category
+              ),
+              React.createElement(
+                "div",
+                { className: "user-info" },
+                React.createElement("img", { src: this.props.featuredProduct.profile_image_url }),
+                this.props.featuredProduct.username
+              ),
+              React.createElement(
+                "div",
+                { className: "score-info" },
+                React.createElement(
+                  "div",
+                  { className: "score-number" },
+                  "score ",
+                  this.props.featuredProduct.laplace_score + "%"
+                ),
+                React.createElement(
+                  "div",
+                  { className: "score-bar-container" },
+                  React.createElement("div", { className: "score-bar", style: { "width": this.props.featuredProduct.laplace_score + "%" } })
+                ),
+                React.createElement("div", { className: "score-bar-date" })
               )
             ),
             React.createElement(
-              "h3",
-              null,
-              this.props.featuredProduct.category
-            ),
-            React.createElement(
               "div",
-              { className: "user-info" },
-              React.createElement("img", { src: this.props.featuredProduct.profile_image_url }),
-              this.props.featuredProduct.username
-            ),
-            React.createElement(
-              "div",
-              { className: "score-info" },
-              React.createElement(
-                "div",
-                { className: "score-number" },
-                "score ",
-                this.props.featuredProduct.laplace_score + "%"
-              ),
-              React.createElement(
-                "div",
-                { className: "score-bar-container" },
-                React.createElement("div", { className: "score-bar", style: { "width": this.props.featuredProduct.laplace_score + "%" } })
-              ),
-              React.createElement("div", { className: "score-bar-date" })
+              { className: "info-description" },
+              description
             )
-          ),
-          React.createElement(
-            "div",
-            { className: "info-description" },
-            description
           )
         )
       )

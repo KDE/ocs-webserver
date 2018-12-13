@@ -135,7 +135,7 @@ class SpotlightProduct extends React.Component {
             <img src={"https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.props.featuredProduct.image_small}/>
           </div>
           <div className="spotlight-info">
-            <div className="spotlight-wrapper">
+            <div className="spotlight-info-wrapper">
               <span className="featured-label">Featured</span>
               <div className="info-top">
                 <h2><a href={"/p/" + this.props.featuredProduct.project_id}>{this.props.featuredProduct.title}</a></h2>
@@ -158,7 +158,7 @@ class SpotlightProduct extends React.Component {
               </div>
               <div className="info-description">
                 {description}
-              </div>              
+              </div>
             </div>
           </div>
         </div>
