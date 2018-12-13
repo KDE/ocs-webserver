@@ -119,9 +119,9 @@ class SpotlightProduct extends React.Component {
     let href = "/home/showfeaturejson/page/";
     if (val === "random"){ href += "0"; }
     else { href += "1"; }
+    const self = this;
     $.ajax({url: href,cache: false}).done(function(response){
-        console.log(response);
-        this.setState({featuredProduct:response});
+        self.setState({featuredProduct:response});
     });
   }
 
