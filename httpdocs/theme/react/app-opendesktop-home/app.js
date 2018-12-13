@@ -139,6 +139,11 @@ class SpotlightProduct extends React.Component {
       description = this.state.featuredProduct.description.substring(0,295) + "...";
     }
 
+    let featuredLabelDisplay;
+    if (this.state.featuredProduct.feature === "1"){
+      featuredLabelDisplay = "featured"
+    }
+
     return(
       <div id="spotlight-product">
         <h2>In the Spotlight</h2>
@@ -148,7 +153,7 @@ class SpotlightProduct extends React.Component {
           </div>
           <div className="spotlight-info">
             <div className="spotlight-info-wrapper">
-              <span className="featured-label">Featured</span>
+              <span className="featured-label">{featuredLabelDisplay}</span>
               <div className="info-top">
                 <h2><a href={"/p/" + this.state.featuredProduct.project_id}>{this.state.featuredProduct.title}</a></h2>
                 <h3>{this.state.featuredProduct.category}</h3>

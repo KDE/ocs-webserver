@@ -141,6 +141,11 @@ class SpotlightProduct extends React.Component {
       description = this.state.featuredProduct.description.substring(0, 295) + "...";
     }
 
+    let featuredLabelDisplay;
+    if (this.state.featuredProduct.feature === "1") {
+      featuredLabelDisplay = "featured";
+    }
+
     return React.createElement(
       "div",
       { id: "spotlight-product" },
@@ -166,7 +171,7 @@ class SpotlightProduct extends React.Component {
             React.createElement(
               "span",
               { className: "featured-label" },
-              "Featured"
+              featuredLabelDisplay
             ),
             React.createElement(
               "div",
