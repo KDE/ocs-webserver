@@ -364,7 +364,7 @@ class ProductCarouselItem extends React.Component {
   render() {
 
     let imageUrl = this.props.product.image_small;
-    if (this.props.product.image_small.indexOf('https://') > -1 && this.props.product.image_small.indexOf('http://') > -1) {
+    if (this.props.product.image_small.indexOf('https://') === -1 && this.props.product.image_small.indexOf('http://') === -1) {
       let imageBaseUrl;
       if (this.props.env === 'live') {
         imageBaseUrl = 'cn.opendesktop.org';
