@@ -115,11 +115,8 @@ class SpotlightProduct extends React.Component {
 
   onSpotlightMenuClick(val){
     let href = "/home/showfeaturejson/page/";
-    if (val === "random"){
-      href += "0";
-    } else {
-      href += "1";
-    }
+    if (val === "random"){ href += "0"; }
+    else { href += "1"; }
     $.ajax({url: href,cache: false}).done(function(response){
         console.log(response);
     });
