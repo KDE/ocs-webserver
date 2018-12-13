@@ -191,6 +191,7 @@ class Default_Model_Ocs_Forum
      *
      * @return bool|array
      * @throws Zend_Http_Client_Exception
+     * @throws Zend_Http_Exception
      * @throws Zend_Json_Exception
      */
     protected function httpRequest($uri, $uid, $method = Zend_Http_Client::GET, $post_param = null)
@@ -522,6 +523,15 @@ class Default_Model_Ocs_Forum
         return $user;
     }
 
+    /**
+     * @param int|array $member_data
+     *
+     * @return array|bool
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
     public function blockUser($member_data)
     {
         if (is_int($member_data)) {
@@ -544,9 +554,23 @@ class Default_Model_Ocs_Forum
         $suspend_until->add(new DateInterval('P1Y'));
         $data = array('suspend_until' => $suspend_until->format("Y-m-d"), "reason" => "");
 
-        $user = $this->httpRequest($uri, $uid, $method, $data);
+        try {
+            $user = $this->httpRequest($uri, $uid, $method, $data);
+            if (false === $user) {
+                $this->messages[] = "Fail " . json_encode($this->messages);
+
+                return false;
+            }
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
 
         $this->messages[] = 'Forum user suspended: ' . json_encode($user);
+
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        $memberLog->addLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_USER, $forum_member['user']['id']);
 
         return $user;
     }

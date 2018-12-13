@@ -46,6 +46,15 @@ class Default_Model_Ocs_Gitlab
         $this->cache = Zend_Registry::get('cache');
     }
 
+    /**
+     * @param int|array $member_data
+     *
+     * @return bool
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
     public function blockUser($member_data)
     {
         if (is_int($member_data)) {
@@ -66,8 +75,8 @@ class Default_Model_Ocs_Gitlab
         $uid = $member_data['member_id'];
 
         try {
-            $user = $this->httpRequest($uri, $uid, $method);
-            if (false === $user) {
+            $response = $this->httpRequest($uri, $uid, $method);
+            if (false === $response) {
                 $this->messages[] = "Fail ";
 
                 return false;
@@ -77,6 +86,9 @@ class Default_Model_Ocs_Gitlab
 
             return false;
         }
+
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        $memberLog->addLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_USER, $user['id']);
 
         return true;
     }

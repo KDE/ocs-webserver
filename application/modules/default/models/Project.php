@@ -105,8 +105,12 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
     /**
      * @param int $project_id
+     * @param     $member_id
+     *
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
      */
-    public function setInActive($project_id)
+    public function setInActive($project_id, $member_id)
     {
         $project_id = (int)$project_id;
         $updateValues = array(
@@ -117,7 +121,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $this->update($updateValues, 'status > 40 AND project_id=' . $project_id);
 
         $this->setInActiveForUpdates($project_id);
-        $this->setDeletedForComments($project_id);
+        $this->setDeletedForComments($member_id,$project_id);
     }
 
     /**
@@ -137,6 +141,9 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     /**
      * @param int $member_id
      * @param int $id
+     *
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
      */
     private function setDeletedForComments($member_id, $id)
     {

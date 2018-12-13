@@ -86,19 +86,19 @@ class Default_Model_MemberDeactivationLog extends Default_Model_DbTable_MemberDe
     /**
      * @param int $member_id
      * @param int $object_type
-     * @param int $identifer object id
+     * @param int $identifier object id
      *
      * @return void
      * @throws Zend_Exception
      */
-    public function addLog($member_id, $object_type, $identifer)
+    public function addLog($member_id, $object_type, $identifier)
     {
         $identity = Zend_Auth::getInstance()->getIdentity()->member_id;
         
         $sql = "INSERT INTO `member_deactivation_log` (deactivation_id,object_type_id,object_id,member_id) VALUES (:deactivation_id,:object_type_id,:object_id,:member_id)";
 
         try {
-            Zend_Db_Table::getDefaultAdapter()->query($sql, array('deactivation_id' => $member_id, 'object_type_id' => $object_type,'object_id' => $identifer, 'member_id' => $identity));
+            Zend_Db_Table::getDefaultAdapter()->query($sql, array('deactivation_id' => $member_id, 'object_type_id' => $object_type, 'object_id' => $identifier, 'member_id' => $identity));
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR write member deactivation log - ' . print_r($e, true));
         }

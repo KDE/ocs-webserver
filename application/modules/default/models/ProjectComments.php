@@ -339,6 +339,13 @@ class Default_Model_ProjectComments
          */
     }
 
+    /**
+     * @param int $member_id
+     * @param int $project_id
+     *
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
+     */
     public function setAllCommentsForProjectDeleted($member_id, $project_id)
     {
         $sql = "SELECT comment_id FROM comments WHERE comment_target_id = :project_id AND comment_type = 0 AND comment_active = 1";
@@ -348,16 +355,15 @@ class Default_Model_ProjectComments
         foreach ($commentsForDelete as $item) {
             $this->setDeleted($member_id, $item['comment_id']);
         }
-        
-        /*
-        $sql = '
-                UPDATE comments
-                SET comment_active = 0
-                WHERE comment_target_id = :projectId';
-        $this->_dataTable->getAdapter()->query($sql, array('projectId' => $project_id))->execute();
-        */
     }
-    
+
+    /**
+     * @param int $member_id
+     * @param int $comment_id
+     *
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
+     */
     public function setDeleted($member_id, $comment_id)
     {
         $sql = '
