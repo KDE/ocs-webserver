@@ -63,8 +63,9 @@ class App extends React.Component {
     for (var i in window.data) {
       if (i !== "comments" && i !== "featureProducts"){
         const productGroup = {
-          title:i,
-          products:JSON.parse(window.data[i])
+          title:window.data[i].title,
+          catIds:window.data[i].catIds,
+          products:JSON.parse(window.data[i].products)
         }
         productGroupsArray.push(productGroup);
       }
@@ -82,6 +83,7 @@ class App extends React.Component {
                 products={pgc.products}
                 device={this.state.device}
                 title={pgc.title}
+                catIds={pgc.catIds}
                 link={'/'}
                 env={this.state.env}
               />
