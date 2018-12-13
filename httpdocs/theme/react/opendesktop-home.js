@@ -116,7 +116,9 @@ class SpotlightProduct extends React.Component {
     } else {
       href += "1";
     }
-    console.log(val);
+    $.ajax({ url: href, cache: false }).done(function (response) {
+      console.log(response);
+    });
   }
 
   render() {
