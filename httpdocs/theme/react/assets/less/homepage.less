@@ -3,12 +3,13 @@ out: ../css/homepage.css, sourcemap: true, compress: true
 
 .startpage-store {
   background-color: #f1f1f1;
-  display: flex;
+  position: relative;
+  padding-right: 320px;
 
   .sidebar-left {
     border: 0;
     float: left;
-    width: 16.5%;
+    width: 20%;
     padding: 20px 15px 20px 15px;
     flex: 1;
   }
@@ -19,15 +20,17 @@ out: ../css/homepage.css, sourcemap: true, compress: true
     border-left: 1px solid #ccc;
     background-color: white;
     float: left;
-    width: 58%;
+    width: 75%;
   }
 
   .sidebar-right {
-    padding: 20px 0;
     min-width: auto !important;
-    width: 25.5%;
+    width: 320px;
     float: right;
     padding: 20px 15px;
+    position: absolute;
+    top: 0;
+    right:0;
   }
 }
 
@@ -296,34 +299,43 @@ out: ../css/homepage.css, sourcemap: true, compress: true
 
 }
 
-/*@media (min-width:755px) and (max-width:910px){
+@media (min-width:900px) and (max-width:1100px){
   .startpage-store {
-    .content {
-      width: 53%;
+    .sidebar-left {
+      width: 100%;
+      flex: none;
+      border-bottom: 1px solid #ccc;
     }
-
-    .sidebar-right {
-      width: 30.5%;
+    .content {
+      width: 100%;
     }
   }
-}*/
+}
 
 @media (min-width:610px) and (max-width:900px){
   .startpage-store {
     display: block;
-
     .sidebar-left {
-      width: 25%;
-      flex: none;
-    }
-
-    .content {
-      width: 75%;
-    }
-
-    .sidebar-right {
-      border-top: 1px solid #ccc;
       width: 100%;
+      flex: none;
+      border-bottom: 1px solid #ccc;
+    }
+    .content {
+      width: 100%;
+      #spotlight-product {
+        .container {
+          padding-left: 0;
+          height: auto;
+
+          .spotlight-image {
+            position: relative;
+
+            img {
+              width: 100%;
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -331,18 +343,37 @@ out: ../css/homepage.css, sourcemap: true, compress: true
 @media (max-width:610px){
   .startpage-store {
     display: block;
+    padding-right: 0;
 
     .sidebar-left {
       width: 100%;
       flex:none;
       border-bottom: 1px solid #ccc;
     }
+    
     .content {
       width: 100%;
+      #spotlight-product {
+        .container {
+          padding-left: 0;
+          height: auto;
+
+          .spotlight-image {
+            position: relative;
+
+            img {
+              width: 100%;
+            }
+          }
+        }
+      }
     }
+
     .sidebar-right {
-      border-top: 1px solid #ccc;      
-      width: 100%;
+      border-top: 1px solid #ccc;
+      width: 320px;
+      position: relative;
+      margin: 0 auto;
     }
   }
 }
