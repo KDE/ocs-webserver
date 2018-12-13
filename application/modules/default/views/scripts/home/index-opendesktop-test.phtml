@@ -78,17 +78,22 @@ $feature = array(
     'created_at' =>  $item['created_at'],
     'count_comments' =>  $item['count_comments']
 );
+
 $response = array(
-    "productsThemesGTK" => $productsThemesGTK,
-    "productsThemesPlasma" => $productsThemesPlasma,   
-    "productsWindowmanager" => $productsWindowmanager,   
-    "productsIconsCursors" => $productsIconsCursors,
-     "productsScreenshots" => $productsScreenshots,
-     "productsApps" => $productsApps,
-     "productsAddons" => $productsAddons,
-     "productsWallpapersOriginal" => $productsWallpapersOriginal,
-     "productsWallpapers" => $productsWallpapers,
-    "featureProducts" => Zend_Json::encode($feature)
+  'productsThemesGTK' => array('title' =>'GTK/Gnome','catIds' =>'366','products' => $productsThemesGTK),
+  'productsThemesPlasma' => array('title' =>'KDE Plasma','catIds' =>'365','products' => $productsThemesPlasma),
+
+  'productsWindowmanager' =>array('title' =>'Window Managers','catIds' =>'147','products' => $productsWindowmanager),  
+  'productsIconsCursors' =>array('title' =>'Icons, Cursors','catIds' =>'386,107','products' => $productsIconsCursors),
+
+  'productsWallpapers' =>array('title' =>'Artwork, Wallpapers','catIds' =>'158,295','products' => $productsWallpapers),  
+  'productsWallpapersOriginal' =>array('title' =>'Artwork, Wallpapers (Original)','catIds' =>'158,295','products' => $productsWallpapersOriginal),
+
+  'productsAddons' =>array('title' =>'App Add-Ons','catIds' =>'152','products' => $productsAddons),
+  'productsApps' =>array('title' =>'Applications','catIds' =>'233','products' => $productsApps), 
+  
+  'productsScreenshots' =>array('title' =>'Concepts, Screenshots','catIds' =>'445,225','products' => $productsScreenshots),
+  "featureProducts" => Zend_Json::encode($feature)
 );
 
 ?>
