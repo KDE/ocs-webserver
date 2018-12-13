@@ -20,6 +20,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.initHomePage();
+    console.log(window.data);
   }
 
   initHomePage() {
