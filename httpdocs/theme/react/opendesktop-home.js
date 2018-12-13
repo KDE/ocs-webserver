@@ -159,13 +159,13 @@ class SpotlightProduct extends React.Component {
               React.createElement(
                 "a",
                 { href: "/p/" + this.props.featuredProduct.project_id },
-                "title"
+                this.props.featuredProduct.title
               )
             ),
             React.createElement(
               "h3",
               null,
-              "category"
+              this.props.featuredProduct.category
             ),
             React.createElement(
               "div",
@@ -236,9 +236,12 @@ class ProductCarousel extends React.Component {
     }
 
     const containerWidth = $('#main-content').width();
-    const containerNumber = Math.ceil(this.props.products / 5);
+    console.log(containerWidth);
+    const containerNumber = Math.ceil(this.props.products.length / 5);
+    console.log(containerNumber);
     const sliderWidth = containerWidth * containerNumber;
     const itemWidth = containerWidth / 5;
+    console.log(sliderWidth);
     this.setState({
       sliderPosition: 0,
       containerWidth: containerWidth,
@@ -261,6 +264,10 @@ class ProductCarousel extends React.Component {
       let showLeftArrow = true,
           showRightArrow = true;
       const endPoint = this.state.sliderWidth - this.state.containerWidth;
+      console.log(this.state.sliderWidth);
+      console.log(this.state.containerWidth);
+      console.log(endPoint);
+      console.log(this.state.sliderPosition);
       if (this.state.sliderPosition <= 0) {
         showLeftArrow = false;
       }
@@ -355,12 +362,18 @@ class ProductCarouselItem extends React.Component {
   }
 
   render() {
-    let imageBaseUrl;
-    if (this.props.env === 'live') {
-      imageBaseUrl = 'cn.opendesktop.org';
-    } else {
-      imageBaseUrl = 'cn.opendesktop.cc';
+
+    let imageUrl = this.props.product.image_small;
+    if (this.props.product.image_small.indexOf('https://') === -1 && this.props.product.image_small.indexOf('http://') === -1) {
+      let imageBaseUrl;
+      if (this.props.env === 'live') {
+        imageBaseUrl = 'cn.opendesktop.org';
+      } else {
+        imageBaseUrl = 'cn.opendesktop.cc';
+      }
+      imageUrl = 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small;
     }
+
     return React.createElement(
       "div",
       { className: "product-carousel-item", style: { "width": this.props.itemWidth } },
@@ -370,7 +383,7 @@ class ProductCarouselItem extends React.Component {
         React.createElement(
           "figure",
           null,
-          React.createElement("img", { className: "very-rounded-corners", src: 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small })
+          React.createElement("img", { className: "very-rounded-corners", src: imageUrl })
         ),
         React.createElement(
           "div",

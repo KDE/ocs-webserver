@@ -133,6 +133,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
+    console.log(window.location);
     this.initMetaHeader();
   }
 
@@ -218,6 +219,7 @@ class MetaHeader extends React.Component {
             loginUrl={this.state.loginUrl}
             logoutUrl={this.state.logoutUrl}
             gitlabUrl={this.state.gitlabUrl}
+            isAdmin={this.state.isAdmin}
           />
         </div>
       </nav>
@@ -247,21 +249,17 @@ class DomainsMenu extends React.Component {
           gitlabUrl={this.props.gitlabUrl}
         />
       )
-    } else {
-      if (this.props.isAdmin === true){
-        adminsDropDownMenuDisplay = (
-          <AdminsDropDownMenu
-            user={this.props.user}
-            baseUrl={this.props.baseUrl}
-            gitlabUrl={this.props.gitlabUrl}
-          />
-        );
-        myOpendesktopMenuDisplay = (
-          <CloudsServicesDropDownMenu />
-        );
-      }
     }
 
+    if (this.props.isAdmin === true){
+      adminsDropDownMenuDisplay = (
+        <AdminsDropDownMenu
+          user={this.props.user}
+          baseUrl={this.props.baseUrl}
+          gitlabUrl={this.props.gitlabUrl}
+        />
+      );
+    }
 
 
     return (
@@ -276,7 +274,6 @@ class DomainsMenu extends React.Component {
           domains={this.props.domains}
         />
         {adminsDropDownMenuDisplay}
-        {myOpendesktopMenuDisplay}
         <DiscussionBoardsDropDownMenu
           forumUrl={this.props.forumUrl}
         />
@@ -479,55 +476,6 @@ class AdminsDropDownMenu extends React.Component {
   }
 }
 
-class CloudsServicesDropDownMenu extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {};
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  componentWillMount() {
-    document.addEventListener('mousedown',this.handleClick, false);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('mousedown',this.handleClick, false);
-  }
-
-  handleClick(e){
-    let dropdownClass = "";
-    if (this.node.contains(e.target)){
-      if (this.state.dropdownClass === "open"){
-        if (e.target.className === "cd-menu-link-item"){
-          dropdownClass = "";
-        } else {
-          dropdownClass = "open";
-        }
-      } else {
-        dropdownClass = "open";
-      }
-    }
-    this.setState({dropdownClass:dropdownClass});
-  }
-
-
-  render(){
-
-    const urlEnding = config.baseUrl.split('opendesktop.')[1];
-
-    return (
-      <li ref={node => this.node = node} id="cd-dropdown-menu" className={this.state.dropdownClass}>
-        <a className="cd-menu-link-item">Clouds & Services</a>
-        <ul className="dropdown-menu dropdown-menu-right">
-          <li><a href={"https://my.opendesktop." + urlEnding}>Storage</a></li>
-          <li><a href={"https://music.opendesktop." + urlEnding}>Music</a></li>
-          <li><a href={"https://docs.opendesktop." + urlEnding}>Docs</a></li>
-        </ul>
-      </li>
-    )
-  }
-}
-
 class MoreDropDownMenu extends React.Component {
   constructor(props){
     super(props);
@@ -572,20 +520,6 @@ class MoreDropDownMenu extends React.Component {
       aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={config.baseUrl + "/#about"}>About</a></li>);
     }
 
-    let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
-    if (this.props.isAdmin){
-      adminsDropDownMenuDisplay = (
-        <AdminsDropDownMenu
-          user={this.props.user}
-          baseUrl={this.props.baseUrl}
-          gitlabUrl={this.props.gitlabUrl}
-        />
-      );
-      myOpendesktopMenuDisplay = (
-        <CloudsServicesDropDownMenu />
-      );
-    }
-
     return(
       <li ref={node => this.node = node} id="more-dropdown-menu" className={this.state.dropdownClass}>
         <a className="more-menu-link-item">More</a>
@@ -595,8 +529,6 @@ class MoreDropDownMenu extends React.Component {
           {faqLinkItem}
           {apiLinkItem}
           {aboutLinkItem}
-          {adminsDropDownMenuDisplay}
-          {myOpendesktopMenuDisplay}
         </ul>
       </li>
     )
@@ -656,13 +588,15 @@ class UserMenu extends React.Component {
           baseUrl={this.props.baseUrl}
         />
       );
-      userAppsContextDisplay = (
-        <UserContextMenuContainer
-          user={this.props.user}
-          forumUrl={this.props.forumUrl}
-          gitlabUrl={this.props.gitlabUrl}
-        />
-      )
+      if (this.props.isAdmin){
+        userAppsContextDisplay = (
+          <UserContextMenuContainer
+            user={this.props.user}
+            forumUrl={this.props.forumUrl}
+            gitlabUrl={this.props.gitlabUrl}
+          />
+        )
+      }
     } else {
       userDropdownDisplay = (
         <li id="user-login-container"><a href={this.props.loginUrl} className="btn btn-metaheader">Login</a></li>
@@ -761,6 +695,24 @@ class UserContextMenuContainer extends React.Component {
 
   render(){
 
+    /*
+    // BU CODE
+    <li id="opencode-link-item">
+      <a href={this.props.gitlabUrl+"/dashboard/projects"}>
+        <div className="icon"></div>
+        <span>Projects</span>
+      </a>
+    </li>
+    <li id="issues-link-item">
+      <a href={this.state.gitlabLink}>
+        <div className="icon"></div>
+        <span>Issues</span>
+      </a>
+    </li>
+    */
+
+    const urlEnding = config.baseUrl.split('opendesktop.')[1];
+
     return (
       <li ref={node => this.node = node} id="user-context-menu-container">
         <div className={"user-dropdown " + this.state.dropdownClass}>
@@ -769,24 +721,49 @@ class UserContextMenuContainer extends React.Component {
             <span className="th-icon"></span>
           </button>
           <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
-            <li id="opencode-link-item">
-              <a href={this.props.gitlabUrl+"/dashboard/projects"}>
-                <div className="icon"></div>
-                <span>Projects</span>
-              </a>
-            </li>
-            <li id="issues-link-item">
-              <a href={this.state.gitlabLink}>
-                <div className="icon"></div>
-                <span>Issues</span>
-              </a>
-            </li>
             <li id="messages-link-item">
               <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
                 <div className="icon"></div>
                 <span>Messages</span>
               </a>
             </li>
+            <li id="storage-link-item">
+              <a href={"https://my.opendesktop." + urlEnding}>
+                <div className="icon"></div>
+                <span>Storage</span>
+              </a>
+            </li>
+            <li id="music-link-item">
+              <a href={"https://music.opendesktop." + urlEnding}>
+                <div className="icon"></div>
+                <span>Music</span>
+              </a>
+            </li>
+            <li id="docs-link-item">
+              <a href={"https://docs.opendesktop." + urlEnding}>
+                <div className="icon"></div>
+                <span>Docs</span>
+              </a>
+            </li>
+            <li id="contacts-link-item">
+              <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
+                <div className="icon"></div>
+                <span>Contacts</span>
+              </a>
+            </li>
+            <li id="calendar-link-item">
+              <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
+                <div className="icon"></div>
+                <span>Calendar</span>
+              </a>
+            </li>
+            <li id="talk-link-item">
+              <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/spreed/"}>
+                <div className="icon"></div>
+                <span>Talk</span>
+              </a>
+            </li>
+
           </ul>
         </div>
       </li>
@@ -971,8 +948,7 @@ class MobileLeftSidePanel extends React.Component {
       aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={config.baseUrl + "/#about"}>About</a></li>);
     }
 
-    console.log('is admin - ' + this.props.isAdmin);
-    let adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
+    let adminsDropDownMenuDisplay;
     if (this.props.isAdmin){
       adminsDropDownMenuDisplay = (
         <AdminsDropDownMenu
@@ -980,9 +956,6 @@ class MobileLeftSidePanel extends React.Component {
           baseUrl={this.props.baseUrl}
           gitlabUrl={this.props.gitlabUrl}
         />
-      );
-      myOpendesktopMenuDisplay = (
-        <CloudsServicesDropDownMenu />
       );
     }
 
@@ -996,6 +969,7 @@ class MobileLeftSidePanel extends React.Component {
         <div id="panel-menu">
           <ul>
             {panelMenuGroupsDisplay}
+            {adminsDropDownMenuDisplay}
             <li>
               <a className="groupname"><b>Discussion Boards</b></a>
               <ul>
@@ -1014,8 +988,6 @@ class MobileLeftSidePanel extends React.Component {
                 {aboutLinkItem}
               </ul>
             </li>
-            {adminsDropDownMenuDisplay}
-            {myOpendesktopMenuDisplay}
           </ul>
         </div>
       </div>

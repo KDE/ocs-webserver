@@ -20,24 +20,28 @@ body {
 
   &.navigation-topics,
   &.category-themes-and-apps,
-  &.category-general {
+  &.category-general,
+  &[class*='category-'] {
     #metaheader #metaheader-nav #user-context-menu-container .user-dropdown .th-icon {
       margin-top: -5px;
     }
     #metaheader #metaheader-nav #user-login-menu-container .user-dropdown .dropdown-toggle img {
       // margin-top: -7px;
     }
+  }
 
-    &.docked {
-      .d-header {
-        top: 34px;
-      }
-      #metaheader {
-        position: fixed;
-      }
+  &.docked {
+    .d-header {
+      top: 34px;
+    }
+    #metaheader {
+      position: fixed;
     }
   }
 }
+
+
+
 
 #metaheader {
   float: left;
@@ -595,6 +599,60 @@ body {
               a {
                 .icon {
                   background-image: url(../img/issues.png);
+                  background-size: 45px;
+                }
+              }
+            }
+
+            &#music-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-music.png);
+                  background-size: 45px;
+                }
+              }
+            }
+
+            &#docs-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-docs.png);
+                  background-size: 45px;
+                }
+              }
+            }
+
+            &#storage-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-storage.png);
+                  background-size: 45px;
+                }
+              }
+            }
+
+            &#contacts-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-contacts.png);
+                  background-size: 45px;
+                }
+              }
+            }
+
+            &#calendar-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-calendar.png);
+                  background-size: 45px;
+                }
+              }
+            }
+
+            &#talk-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-talk.png);
                   background-size: 45px;
                 }
               }

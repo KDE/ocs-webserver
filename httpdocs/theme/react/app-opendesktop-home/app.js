@@ -75,17 +75,17 @@ class App extends React.Component {
     let productCarouselsContainer;
     if (this.state.loading === false){
       productCarouselsContainer = this.state.productGroupsArray.map((pgc,index) => (
-            <div key={index} className="section">
-              <div className="container">
-                <ProductCarousel
-                  products={pgc.products}
-                  device={this.state.device}
-                  title={pgc.title}
-                  link={'/'}
-                  env={this.state.env}
-                />
-              </div>
+          <div key={index} className="section">
+            <div className="container">
+              <ProductCarousel
+                products={pgc.products}
+                device={this.state.device}
+                title={pgc.title}
+                link={'/'}
+                env={this.state.env}
+              />
             </div>
+          </div>
       ));
     }
 
@@ -137,8 +137,8 @@ class SpotlightProduct extends React.Component {
           <div className="spotlight-info">
             <span className="featured-label">Featured</span>
             <div className="info-top">
-              <h2><a href={"/p/"+this.props.featuredProduct.project_id}>title</a></h2>
-              <h3>category</h3>
+              <h2><a href={"/p/" + this.props.featuredProduct.project_id}>{this.props.featuredProduct.title}</a></h2>
+              <h3>{this.props.featuredProduct.category}</h3>
               <div className="user-info">
                 <img src={this.props.featuredProduct.profile_image_url}/>
                 {this.props.featuredProduct.username}
@@ -200,9 +200,12 @@ class ProductCarousel extends React.Component {
     }
 
     const containerWidth = $('#main-content').width();
-    const containerNumber = Math.ceil(this.props.products / 5);
+    console.log(containerWidth);
+    const containerNumber = Math.ceil(this.props.products.length / 5);
+    console.log(containerNumber);
     const sliderWidth = containerWidth * containerNumber;
     const itemWidth = containerWidth / 5;
+    console.log(sliderWidth);
     this.setState({
       sliderPosition:0,
       containerWidth:containerWidth,
@@ -225,6 +228,10 @@ class ProductCarousel extends React.Component {
       let showLeftArrow = true,
           showRightArrow = true;
       const endPoint = this.state.sliderWidth - this.state.containerWidth;
+      console.log(this.state.sliderWidth);
+      console.log(this.state.containerWidth);
+      console.log(endPoint);
+      console.log(this.state.sliderPosition);
       if (this.state.sliderPosition <= 0){
         showLeftArrow = false;
       }
@@ -301,17 +308,24 @@ class ProductCarouselItem extends React.Component {
   }
 
   render(){
-    let imageBaseUrl;
-    if (this.props.env === 'live') {
-      imageBaseUrl = 'cn.opendesktop.org';
-    } else {
-      imageBaseUrl = 'cn.opendesktop.cc';
+
+    let imageUrl = this.props.product.image_small;
+    if (this.props.product.image_small.indexOf('https://') === -1 && this.props.product.image_small.indexOf('http://') === -1){
+      let imageBaseUrl;
+      if (this.props.env === 'live') {
+        imageBaseUrl = 'cn.opendesktop.org';
+      } else {
+        imageBaseUrl = 'cn.opendesktop.cc';
+      }
+      imageUrl = 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small;
     }
+
+
     return (
       <div className="product-carousel-item" style={{"width":this.props.itemWidth}}>
         <a href={"/p/"+this.props.product.project_id }>
           <figure>
-            <img className="very-rounded-corners" src={'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small} />
+            <img className="very-rounded-corners" src={imageUrl} />
           </figure>
           <div className="product-info">
             <span className="product-info-title">{this.props.product.title}</span>
@@ -322,8 +336,6 @@ class ProductCarouselItem extends React.Component {
     )
   }
 }
-
-
 
 ReactDOM.render(
     <App />,

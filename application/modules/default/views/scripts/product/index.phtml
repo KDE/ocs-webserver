@@ -524,6 +524,15 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                         <?php if(count($this->updates)>0){ ?>
                             <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php echo '('.count($this->updates).')';  ?></a></li>
                         <?php } ?>
+
+
+
+                        <?php if($this->product->show_gitlab_project_issues){ 
+                                $cntGitIssues = count($this->gitlab_project_issues);
+                            ?>
+                            <li><a href="#gitlabissues-panel" data-toggle="tab">Git Issues <?php echo '('.$cntGitIssues.')';  ?></a></li>
+                        <?php } ?>
+
                         <?php if(count($this->ratings)>0){ ?>
                             <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
                         <?php } ?>
@@ -751,6 +760,28 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                             </div>
                         </div>
                         <?php } ?>
+                        
+                        <?php  if ($this->product->show_gitlab_project_issues) { ?>
+                            <div class="tab-pane" id="gitlabissues-panel">
+                                <div id="gitlabissues-panel-wrapper" class="col-lg-9 col-md-9 col-sm-9 col-xs-12 ">
+                                
+                                <?php
+                                    $issues = $this->gitlab_project_issues;
+                                    $i = 0;
+                                    foreach ($issues as $issue){
+                                        $date = date('Y-m-d H:i:s', strtotime($issue['created_at']));
+                                        echo '<div class="commentstore"><a href="'.$issue['web_url'].'"><span class="title">' . $issue['title'] . '</span></a><div class="newsrow"><span class="date">'.$this->printDate($date).'</span></div></div>';
+                                        $i ++;
+                                        if($i>5) {
+                                            break;
+                                        }
+                                    }
+                                ?>
+                                <span class="center showmore"><a href="<?= $this->gitlab_project_issues_url ?>" target="_NEW">Show all <?= count($issues) ?> Issues</a></span>
+
+                                </div>
+                            </div>
+                         <?php } ?>
 
                         <!-- ratings panel -->
                         <?php  if (count($this->ratings) > 0) { ?>
@@ -1046,34 +1077,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 
                         <?php echo $this->render('partials/sidebarCcLicense.phtml'); ?>
 
-                        <?php echo $this->render('product/partials/details.phtml'); ?>
-                        
-                        <!-- gitlab issues -->
-                        <?php 
-                            if($this->product->show_gitlab_project_issues) {
-                                $helpPrintDate = new Default_View_Helper_PrintDate();
-                        ?>
-                        <div class="prod-widget-box right details">
-                            <span class="title"> Git Issues </span>
-                                
-                            <?php
-                              $issues = $this->gitlab_project_issues;
-                              $i = 0;
-                              foreach ($issues as $issue){
-                                  $date = date('Y-m-d H:i:s', strtotime($issue['created_at']));
-                                  echo '<div class="commentstore"><a href="'.$issue['web_url'].'"><span class="title">' . $issue['title'] . '</span></a><div class="newsrow"><span class="date">'.$helpPrintDate->printDate($date).'</span></div></div>';
-                                  $i ++;
-                                  if($i>5) {
-                                      break;
-                                  }
-                              }
-                              
-                              ?>
-                                
-                                
-                            <span class="center"><a href="<?= $this->gitlab_project_issues_url ?>" target="_NEW">Show all <?= count($issues) ?> Issues</a></span>
-                        </div>
-                        <?php } ?>
+                        <?php echo $this->render('product/partials/details.phtml'); ?>                                                
 
                       <?php echo $this->render('product/partials/tags.phtml'); ?>
 

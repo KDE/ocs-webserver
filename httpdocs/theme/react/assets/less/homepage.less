@@ -3,9 +3,14 @@ out: ../css/homepage.css, sourcemap: true, compress: true
 
 .startpage-store {
   background-color: #f1f1f1;
+  display: flex;
 
   .sidebar-left {
     border: 0;
+    float: left;
+    width: 16.5%;
+    padding: 20px 15px 20px 15px;
+    flex: 1;
   }
 
   .content {
@@ -13,11 +18,16 @@ out: ../css/homepage.css, sourcemap: true, compress: true
     min-width: 400px !important;
     border-left: 1px solid #ccc;
     background-color: white;
+    float: left;
+    width: 58%;
   }
 
   .sidebar-right {
     padding: 20px 0;
     min-width: auto !important;
+    width: 25.5%;
+    float: right;
+    padding: 20px 15px;
   }
 }
 
@@ -26,6 +36,16 @@ out: ../css/homepage.css, sourcemap: true, compress: true
       width: 100% !important;
       max-width: 100% !important;
       padding: 0;
+  }
+
+  .section {
+    &:last-of-type {
+      .container {
+        .product-carousel {
+          border-bottom: 0;
+        }
+      }
+    }
   }
 }
 
@@ -71,7 +91,17 @@ out: ../css/homepage.css, sourcemap: true, compress: true
 
         h2,h3 {
           margin: 0;
-          font-size: 17px;
+          font-weight: normal;
+        }
+
+        h2 {
+          font-size: 15px;
+          margin-bottom: 3px;
+        }
+
+        h3 {
+          font-size: 13px;
+
         }
 
         .user-info {
@@ -264,4 +294,55 @@ out: ../css/homepage.css, sourcemap: true, compress: true
     }
   }
 
+}
+
+/*@media (min-width:755px) and (max-width:910px){
+  .startpage-store {
+    .content {
+      width: 53%;
+    }
+
+    .sidebar-right {
+      width: 30.5%;
+    }
+  }
+}*/
+
+@media (min-width:610px) and (max-width:900px){
+  .startpage-store {
+    display: block;
+
+    .sidebar-left {
+      width: 25%;
+      flex: none;
+    }
+
+    .content {
+      width: 75%;
+    }
+
+    .sidebar-right {
+      border-top: 1px solid #ccc;
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width:610px){
+  .startpage-store {
+    display: block;
+
+    .sidebar-left {
+      width: 100%;
+      flex:none;
+      border-bottom: 1px solid #ccc;
+    }
+    .content {
+      width: 100%;
+    }
+    .sidebar-right {
+      border-top: 1px solid #ccc;      
+      width: 100%;
+    }
+  }
 }
