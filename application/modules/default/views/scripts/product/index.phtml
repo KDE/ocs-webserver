@@ -562,7 +562,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                     ?>
                                     <article>
                                         <b>Description:</b> <br/><br/>
-                                        <?=$this->readme ?>
+                                        <?=$this->readme ?><br/><br/>
                                     </article>
                                     <?php
                                         } else {
@@ -570,6 +570,122 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                     <article>
                                         <b>Description:</b> <br/><br/>
                                         <?=$this->product->description ?>
+                                        <br/><br/>
+                                        <?php if($this->isProjectEbook($this->product->project_id)){?>
+                                            <?php
+                                            $tagsuser = $tagmodel->getTagsEbookSubject($this->product->project_id);
+                                            
+                                            if(false === empty($tagsuser))
+                                            {
+                                                echo '<b>Subjects:</b> <br/><span class="topics"><span class="topicslink"><ul style="margin-top: 5px;">';
+                                                foreach ($tagsuser as $tag) {
+                                            ?>
+                                            <li><a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
+                                            <?php
+                                                }
+                                                echo '</ul></span></span><!--end of topicslink-->';
+                                            } ?>
+
+                                        
+                                            <?php
+                                            $tagsuser = $tagmodel->getTagsEbookAuthor($this->product->project_id);
+                                            if(false === empty($tagsuser))
+                                            {
+                                                echo '<b>Author/s:</b> <br/><span class="topics"><span class="topicslink"><ul style="margin-top: 5px;">';
+                                                foreach ($tagsuser as $tag) {
+                                            ?>
+                                            <li><a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
+                                            <?php
+                                                }
+                                                echo '</ul></span></span><!--end of topicslink-->';
+                                            } ?>
+                                        
+                                        
+                                            <?php
+                                            $tagsuser = $tagmodel->getTagsEbookEditor($this->product->project_id);
+                                            if(false === empty($tagsuser))
+                                            {
+                                                echo '<b>Editor/s:</b> <br/><span class="topics"><span class="topicslink"><ul style="margin-top: 5px;">';
+                                                foreach ($tagsuser as $tag) {
+                                            ?>
+                                            <li><a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
+                                            <?php
+                                                }
+                                                echo '</ul></span></span><!--end of topicslink-->';
+                                            } ?>
+
+                                        
+                                            <?php
+                                            $tagsuser = $tagmodel->getTagsEbookIllustrator($this->product->project_id);
+                                            if(false === empty($tagsuser))
+                                            {
+                                                echo '<b>Illustrator/s:</b> <br/><span class="topics"><span class="topicslink"><ul style="margin-top: 5px;">';
+                                                foreach ($tagsuser as $tag) {
+                                            ?>
+                                            <li><a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
+                                            <?php
+                                                }
+                                                echo '</ul></span></span><!--end of topicslink-->';
+                                            } ?>
+
+                                        
+                                            <?php
+                                            $tagsuser = $tagmodel->getTagsEbookTranslator($this->product->project_id);
+                                            if(false === empty($tagsuser))
+                                            {
+                                                echo '<b>Tranlator/s:</b> <br/><span class="topics"><span class="topicslink"><ul style="margin-top: 5px;">';
+                                                foreach ($tagsuser as $tag) {
+                                            ?>
+                                            <li><a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
+                                            <?php
+                                                }
+                                                echo '</ul></span></span><!--end of topicslink-->';
+                                            } ?>
+
+                                        
+                                            <?php
+                                            $tagsuser = $tagmodel->getTagsEbookShelf($this->product->project_id);
+                                            if(false === empty($tagsuser))
+                                            {
+                                                echo '<b>Bookshelf:</b> <br/><span class="topics"><span class="topicslink"><ul style="margin-top: 5px;">';
+                                                foreach ($tagsuser as $tag) {
+                                            ?>
+                                            <li><a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
+                                            <?php
+                                                }
+                                                echo '</ul></span></span><!--end of topicslink-->';
+                                            } ?>
+
+                                        
+                                            <?php
+                                            $tagsuser = $tagmodel->getTagsEbookLanguage($this->product->project_id);
+                                            if(false === empty($tagsuser))
+                                            {
+                                                echo '<b>Language:</b> <br/><span class="topics"><span class="topicslink"><ul style="margin-top: 5px;">';
+                                                foreach ($tagsuser as $tag) {
+                                            ?>
+                                            <li><a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
+                                            <?php
+                                                }
+                                                echo '</ul></span></span><!--end of topicslink-->';
+                                            } ?>
+                                        
+                                        
+                                            <?php
+                                            $tagsuser = $tagmodel->getTagsEbookType($this->product->project_id);
+                                            if(false === empty($tagsuser))
+                                            {
+                                                echo '<b>Type:</b> <br/><span class="topics"><span class="topicslink"><ul style="margin-top: 5px;">';
+                                                foreach ($tagsuser as $tag) {
+                                            ?>
+                                            <li><a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
+                                            <?php
+                                                }
+                                                echo '</ul></span></span><!--end of topicslink-->';
+                                            } ?>
+
+                                        <?php }?>
+                                        
                                     </article>
                                     
                                     <?php
