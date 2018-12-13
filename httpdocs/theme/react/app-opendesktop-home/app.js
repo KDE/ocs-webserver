@@ -296,7 +296,7 @@ class ProductCarousel extends React.Component {
     return (
       <div className="product-carousel">
         <div className="product-carousel-header">
-          <h2><a href={this.props.link}>{this.props.title.match(/[A-Z][a-z]+/g).join(' ')} <span className="glyphicon glyphicon-chevron-right"></span></a></h2>
+          <h2><a href={this.props.link}>{this.props.title} <span className="glyphicon glyphicon-chevron-right"></span></a></h2>
         </div>
         <div className="product-carousel-wrapper">
           {leftArrowDisplay}
