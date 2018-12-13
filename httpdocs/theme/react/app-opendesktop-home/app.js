@@ -135,28 +135,30 @@ class SpotlightProduct extends React.Component {
             <img src={"https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.props.featuredProduct.image_small}/>
           </div>
           <div className="spotlight-info">
-            <span className="featured-label">Featured</span>
-            <div className="info-top">
-              <h2><a href={"/p/" + this.props.featuredProduct.project_id}>{this.props.featuredProduct.title}</a></h2>
-              <h3>{this.props.featuredProduct.category}</h3>
-              <div className="user-info">
-                <img src={this.props.featuredProduct.profile_image_url}/>
-                {this.props.featuredProduct.username}
-              </div>
-              <div className="score-info">
-                <div className="score-number">
-                  score {this.props.featuredProduct.laplace_score + "%"}
+            <div className="spotlight-wrapper">
+              <span className="featured-label">Featured</span>
+              <div className="info-top">
+                <h2><a href={"/p/" + this.props.featuredProduct.project_id}>{this.props.featuredProduct.title}</a></h2>
+                <h3>{this.props.featuredProduct.category}</h3>
+                <div className="user-info">
+                  <img src={this.props.featuredProduct.profile_image_url}/>
+                  {this.props.featuredProduct.username}
                 </div>
-                <div className="score-bar-container">
-                  <div className="score-bar" style={{"width":this.props.featuredProduct.laplace_score + "%"}}></div>
-                </div>
-                <div className="score-bar-date">
+                <div className="score-info">
+                  <div className="score-number">
+                    score {this.props.featuredProduct.laplace_score + "%"}
+                  </div>
+                  <div className="score-bar-container">
+                    <div className="score-bar" style={{"width":this.props.featuredProduct.laplace_score + "%"}}></div>
+                  </div>
+                  <div className="score-bar-date">
 
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="info-description">
-              {description}
+              <div className="info-description">
+                {description}
+              </div>              
             </div>
           </div>
         </div>
