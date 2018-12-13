@@ -109,7 +109,9 @@ class App extends React.Component {
 class SpotlightProduct extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      featuredProduct:this.props.featuredProduct
+    };
     this.onSpotlightMenuClick = this.onSpotlightMenuClick.bind(this);
   }
 
@@ -119,6 +121,7 @@ class SpotlightProduct extends React.Component {
     else { href += "1"; }
     $.ajax({url: href,cache: false}).done(function(response){
         console.log(response);
+        this.setState({featuredProduct:response});
     });
   }
 
@@ -131,9 +134,9 @@ class SpotlightProduct extends React.Component {
       imageBaseUrl = 'cn.opendesktop.cc';
     }
 
-    let description = this.props.featuredProduct.description;
+    let description = this.state.featuredProduct.description;
     if (description.length > 295){
-      description = this.props.featuredProduct.description.substring(0,295) + "...";
+      description = this.state.featuredProduct.description.substring(0,295) + "...";
     }
 
     return(
@@ -141,24 +144,24 @@ class SpotlightProduct extends React.Component {
         <h2>In the Spotlight</h2>
         <div className="container">
           <div className="spotlight-image">
-            <img src={"https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.props.featuredProduct.image_small}/>
+            <img src={"https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.state.featuredProduct.image_small}/>
           </div>
           <div className="spotlight-info">
             <div className="spotlight-info-wrapper">
               <span className="featured-label">Featured</span>
               <div className="info-top">
-                <h2><a href={"/p/" + this.props.featuredProduct.project_id}>{this.props.featuredProduct.title}</a></h2>
-                <h3>{this.props.featuredProduct.category}</h3>
+                <h2><a href={"/p/" + this.state.featuredProduct.project_id}>{this.state.featuredProduct.title}</a></h2>
+                <h3>{this.state.featuredProduct.category}</h3>
                 <div className="user-info">
-                  <img src={this.props.featuredProduct.profile_image_url}/>
-                  {this.props.featuredProduct.username}
+                  <img src={this.state.featuredProduct.profile_image_url}/>
+                  {this.state.featuredProduct.username}
                 </div>
                 <div className="score-info">
                   <div className="score-number">
-                    score {this.props.featuredProduct.laplace_score + "%"}
+                    score {this.state.featuredProduct.laplace_score + "%"}
                   </div>
                   <div className="score-bar-container">
-                    <div className="score-bar" style={{"width":this.props.featuredProduct.laplace_score + "%"}}></div>
+                    <div className="score-bar" style={{"width":this.state.featuredProduct.laplace_score + "%"}}></div>
                   </div>
                   <div className="score-bar-date">
 

@@ -108,7 +108,9 @@ class App extends React.Component {
 class SpotlightProduct extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      featuredProduct: this.props.featuredProduct
+    };
     this.onSpotlightMenuClick = this.onSpotlightMenuClick.bind(this);
   }
 
@@ -121,6 +123,7 @@ class SpotlightProduct extends React.Component {
     }
     $.ajax({ url: href, cache: false }).done(function (response) {
       console.log(response);
+      this.setState({ featuredProduct: response });
     });
   }
 
@@ -133,9 +136,9 @@ class SpotlightProduct extends React.Component {
       imageBaseUrl = 'cn.opendesktop.cc';
     }
 
-    let description = this.props.featuredProduct.description;
+    let description = this.state.featuredProduct.description;
     if (description.length > 295) {
-      description = this.props.featuredProduct.description.substring(0, 295) + "...";
+      description = this.state.featuredProduct.description.substring(0, 295) + "...";
     }
 
     return React.createElement(
@@ -152,7 +155,7 @@ class SpotlightProduct extends React.Component {
         React.createElement(
           "div",
           { className: "spotlight-image" },
-          React.createElement("img", { src: "https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.props.featuredProduct.image_small })
+          React.createElement("img", { src: "https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.state.featuredProduct.image_small })
         ),
         React.createElement(
           "div",
@@ -173,20 +176,20 @@ class SpotlightProduct extends React.Component {
                 null,
                 React.createElement(
                   "a",
-                  { href: "/p/" + this.props.featuredProduct.project_id },
-                  this.props.featuredProduct.title
+                  { href: "/p/" + this.state.featuredProduct.project_id },
+                  this.state.featuredProduct.title
                 )
               ),
               React.createElement(
                 "h3",
                 null,
-                this.props.featuredProduct.category
+                this.state.featuredProduct.category
               ),
               React.createElement(
                 "div",
                 { className: "user-info" },
-                React.createElement("img", { src: this.props.featuredProduct.profile_image_url }),
-                this.props.featuredProduct.username
+                React.createElement("img", { src: this.state.featuredProduct.profile_image_url }),
+                this.state.featuredProduct.username
               ),
               React.createElement(
                 "div",
@@ -195,12 +198,12 @@ class SpotlightProduct extends React.Component {
                   "div",
                   { className: "score-number" },
                   "score ",
-                  this.props.featuredProduct.laplace_score + "%"
+                  this.state.featuredProduct.laplace_score + "%"
                 ),
                 React.createElement(
                   "div",
                   { className: "score-bar-container" },
-                  React.createElement("div", { className: "score-bar", style: { "width": this.props.featuredProduct.laplace_score + "%" } })
+                  React.createElement("div", { className: "score-bar", style: { "width": this.state.featuredProduct.laplace_score + "%" } })
                 ),
                 React.createElement("div", { className: "score-bar-date" })
               )
