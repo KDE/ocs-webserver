@@ -18,6 +18,15 @@ body {
     }
   }
 
+  &.docked {
+    .d-header {
+      top: 34px;
+    }
+    #metaheader {
+      position: fixed;
+    }
+  }
+
   &.navigation-topics,
   &.category-themes-and-apps,
   &.category-general {
@@ -27,17 +36,15 @@ body {
     #metaheader #metaheader-nav #user-login-menu-container .user-dropdown .dropdown-toggle img {
       // margin-top: -7px;
     }
-
-    &.docked {
-      .d-header {
-        top: 34px;
-      }
-      #metaheader {
-        position: fixed;
-      }
-    }
   }
 }
+
+section#main {
+  .d-header {
+    top: 34px;
+  }
+}
+
 
 #metaheader {
   float: left;
