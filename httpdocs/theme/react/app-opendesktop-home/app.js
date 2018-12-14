@@ -262,10 +262,10 @@ class ProductCarousel extends React.Component {
     console.log(url);
     const self = this;
     $.ajax({url: url,cache: false}).done(function(response){
-        const products = this.state.products.concat(response);
-        this.setState({products:products},function(){
+        const products = self.state.products.concat(response);
+        self.setState({products:products},function(){
           const animateCarousel = true;
-          this.updateDimensions(animateCarousel);
+          self.updateDimensions(animateCarousel);
         });
     });
   }
