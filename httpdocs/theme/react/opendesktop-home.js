@@ -115,14 +115,14 @@ class SpotlightProduct extends React.Component {
   }
 
   onSpotlightMenuClick(val) {
-    let href = "/home/showfeaturejson/page/";
+    let url = "/home/showfeaturejson/page/";
     if (val === "random") {
-      href += "0";
+      url += "0";
     } else {
-      href += "1";
+      url += "1";
     }
     const self = this;
-    $.ajax({ url: href, cache: false }).done(function (response) {
+    $.ajax({ url: url, cache: false }).done(function (response) {
       self.setState({ featuredProduct: response });
     });
   }
@@ -247,6 +247,7 @@ class ProductCarousel extends React.Component {
     };
     this.updateDimensions = this.updateDimensions.bind(this);
     this.animateProductCarousel = this.animateProductCarousel.bind(this);
+    this.getNextProductsBatch = this.getNextProductsBatch.bind(this);
   }
 
   componentWillMount() {
@@ -259,21 +260,25 @@ class ProductCarousel extends React.Component {
 
   updateDimensions() {
 
-    let itemsPerRow;
-    if (this.props.device === 'large') {
+    /*let itemsPerRow;
+    if (this.props.device === 'large'){
       itemsPerRow = 5;
-    } else if (this.props.device === 'mid') {
+    } else if (this.props.device === 'mid'){
       itemsPerRow = 4;
-    } else if (this.props.device === 'tablet') {
+    } else if (this.props.device === 'tablet'){
       itemsPerRow = 3;
-    }
+    }*/
 
     const containerWidth = $('#main-content').width();
     const containerNumber = Math.ceil(this.props.products.length / 5);
     const sliderWidth = containerWidth * containerNumber;
     const itemWidth = containerWidth / 5;
+    let sliderPosition = 0;
+    if (this.state.sliderPosition) {
+      sliderPosition = this.state.sliderPosition;
+    }
     this.setState({
-      sliderPosition: 0,
+      sliderPosition: sliderPosition,
       containerWidth: containerWidth,
       sliderWidth: sliderWidth,
       itemWidth: itemWidth
@@ -281,26 +286,34 @@ class ProductCarousel extends React.Component {
   }
 
   animateProductCarousel(dir) {
-
     let newSliderPosition = this.state.sliderPosition;
     if (dir === 'left') {
       if (this.state.sliderPosition > 0) {
         newSliderPosition = this.state.sliderPosition - this.state.containerWidth;
-      } else {
-        console.log('no mo left');
       }
     } else {
       const endPoint = this.state.sliderWidth - this.state.containerWidth;
-      console.log(endPoint);
-      console.log(this.state.sliderPosition);
       if (this.state.sliderPosition < endPoint) {
         newSliderPosition = this.state.sliderPosition + this.state.containerWidth;
       } else {
-        console.log('now ajax new products');
+        this.getNextProductsBatch();
       }
     }
-
     this.setState({ sliderPosition: newSliderPosition });
+  }
+
+  getNextProductsBatch() {
+    let offset = "5";
+    if (this.state.offset) {
+      offset = this.state.offset;
+    }
+    let url = "/home/showlastproductsjson/?page=1&limit=5&offset=" + offset + "&catIDs=" + this.state.catIds + "&isoriginal=0";
+    console.log(url);
+    const self = this;
+    $.ajax({ url: url, cache: false }).done(function (response) {
+      console.log(response);
+      //self.setState({featuredProduct:response});
+    });
   }
 
   render() {
