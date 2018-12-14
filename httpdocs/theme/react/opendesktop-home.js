@@ -284,12 +284,12 @@ class ProductCarousel extends React.Component {
       itemWidth: itemWidth
     }, function () {
       if (animateCarousel) {
-        this.animateProductCarousel('right');
+        this.animateProductCarousel('right', animateCarousel);
       }
     });
   }
 
-  animateProductCarousel(dir) {
+  animateProductCarousel(dir, animateCarousel) {
     let newSliderPosition = this.state.sliderPosition;
     if (dir === 'left') {
       if (this.state.sliderPosition > 0) {
@@ -300,7 +300,9 @@ class ProductCarousel extends React.Component {
       if (this.state.sliderPosition < endPoint) {
         newSliderPosition = this.state.sliderPosition + this.state.containerWidth;
       } else {
-        this.getNextProductsBatch();
+        if (!animateCarousel) {
+          this.getNextProductsBatch();
+        }
       }
     }
     this.setState({ sliderPosition: newSliderPosition });
