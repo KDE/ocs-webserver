@@ -256,10 +256,21 @@ class ProductCarousel extends React.Component {
         }
       }
     }
+    
     this.setState({sliderPosition:newSliderPosition},function(){
+
+      let disableleftArrow = false;
       if (this.state.sliderPosition <= 0){
-        this.setState({disableleftArrow:true});
+        disableleftArrow = true;
       }
+
+      let disableRightArrow = false;
+      if (this.state.sliderPosition >= endPoint){
+        disableRightArrow = true;
+      }
+
+      this.setState({disableRightArrow:disableRightArrow,disableleftArrow:disableleftArrow});
+
     });
   }
 
@@ -269,11 +280,11 @@ class ProductCarousel extends React.Component {
     $.ajax({url: url,cache: false}).done(function(response){
         const products = self.state.products.concat(response);
         const offset = self.state.offset + 5;
-        let disableRightArrow;
+        let finishedProducts = false;
         if (response.length < 5){
-          disableRightArrow = true;
+          finishedProducts = true;
         }
-        self.setState({products:products,offset:offset,disableRightArrow:disableRightArrow},function(){
+        self.setState({products:products,offset:offset,finishedProducts:finishedProducts},function(){
           const animateCarousel = true;
           self.updateDimensions(animateCarousel);
         });
