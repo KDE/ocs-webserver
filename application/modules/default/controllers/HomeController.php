@@ -111,6 +111,19 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         }
     }
     
+    public function showlastproductsjsonAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $modelInfo = new Default_Model_Info();
+        $offset = (int)$this->getParam('offset',0);
+        $limit = (int)$this->getParam('limit',5);
+        $catIds = $this->getParam('catIDs');
+        $packageType = $this->getParam('ptype');
+        $isOriginal = $this->getParam('isoriginal');
+        $response = $modelInfo->getJsonLastProductsForHostStores($limit,$catIds, $packageType,$isOriginal,$offset);        
+        $this->_helper->json(Zend_Json::decode($response));        
+    }
+
 
     public function showfeaturejsonAction()
     {
