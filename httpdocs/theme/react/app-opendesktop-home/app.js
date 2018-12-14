@@ -241,13 +241,15 @@ class ProductCarousel extends React.Component {
   }
 
   animateProductCarousel(dir,animateCarousel){
+
     let newSliderPosition = this.state.sliderPosition;
+    const endPoint = this.state.sliderWidth - this.state.containerWidth;
+
     if (dir === 'left'){
       if (this.state.sliderPosition > 0){
         newSliderPosition = this.state.sliderPosition - this.state.containerWidth;
       }
     } else {
-      const endPoint = this.state.sliderWidth - this.state.containerWidth;
       if (this.state.sliderPosition < endPoint){
         newSliderPosition = this.state.sliderPosition + this.state.containerWidth;
       } else {
@@ -256,7 +258,7 @@ class ProductCarousel extends React.Component {
         }
       }
     }
-    
+
     this.setState({sliderPosition:newSliderPosition},function(){
 
       let disableleftArrow = false;
