@@ -237,6 +237,10 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             if (false == $result) {
                 $this->log->info('Fail');
             }
+            $result = $modelSubSystem->blockUserProjects($member);
+            if (false == $result) {
+                $this->log->info('Fail');
+            }
             $messages = $modelSubSystem->getMessages();
             if (false === empty($messages)) {
                 $this->log->info("Message : " . Zend_Json::encode($messages));

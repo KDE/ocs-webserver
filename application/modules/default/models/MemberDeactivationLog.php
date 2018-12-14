@@ -49,6 +49,34 @@ class Default_Model_MemberDeactivationLog extends Default_Model_DbTable_MemberDe
 
     /**
      * @param int $member_id
+     * @param int $object_type
+     * @param int $identifier object id
+     *
+     * @return void
+     * @throws Zend_Exception
+     */
+    public function addLog($member_id, $object_type, $identifier)
+    {
+        $identity = Zend_Auth::getInstance()->getIdentity()->member_id;
+
+        $sql =
+            "INSERT INTO `member_deactivation_log` (`deactivation_id`,`object_type_id`,`object_id`,`member_id`) VALUES (:deactivation_id,:object_type_id,:object_id,:member_id)";
+
+        try {
+            Zend_Db_Table::getDefaultAdapter()->query($sql, array(
+                'deactivation_id' => $member_id,
+                'object_type_id'  => $object_type,
+                'object_id'       => $identifier,
+                'member_id'       => $identity
+            ))
+            ;
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR write member deactivation log - ' . print_r($e, true));
+        }
+    }
+
+    /**
+     * @param int $member_id
      * @param int $identifer
      *
      * @return void
@@ -86,19 +114,27 @@ class Default_Model_MemberDeactivationLog extends Default_Model_DbTable_MemberDe
     /**
      * @param int $member_id
      * @param int $object_type
-     * @param int $identifier object id
+     * @param int $identifier
+     * @param string $data
      *
-     * @return void
      * @throws Zend_Exception
      */
-    public function addLog($member_id, $object_type, $identifier)
+    public function addLogData($member_id, $object_type, $identifier, $data)
     {
         $identity = Zend_Auth::getInstance()->getIdentity()->member_id;
-        
-        $sql = "INSERT INTO `member_deactivation_log` (deactivation_id,object_type_id,object_id,member_id) VALUES (:deactivation_id,:object_type_id,:object_id,:member_id)";
+
+        $sql =
+            "INSERT INTO `member_deactivation_log` (`deactivation_id`,`object_type_id`,`object_id`,`member_id`, `object_data`) VALUES (:deactivation_id,:object_type_id,:object_id,:member_id,:object_data)";
 
         try {
-            Zend_Db_Table::getDefaultAdapter()->query($sql, array('deactivation_id' => $member_id, 'object_type_id' => $object_type, 'object_id' => $identifier, 'member_id' => $identity));
+            Zend_Db_Table::getDefaultAdapter()->query($sql, array(
+                'deactivation_id' => $member_id,
+                'object_type_id'  => $object_type,
+                'object_id'       => $identifier,
+                'member_id'       => $identity,
+                'object_data'     => $data
+            ))
+            ;
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR write member deactivation log - ' . print_r($e, true));
         }
@@ -113,6 +149,30 @@ class Default_Model_MemberDeactivationLog extends Default_Model_DbTable_MemberDe
     public function removeLogMemberAsDeleted($identifer)
     {
         return $this->deleteLog($identifer, Default_Model_MemberDeactivationLog::OBJ_TYPE_OPENDESKTOP_MEMBER, $identifer);
+    }
+
+    /**
+     * @param int $member_id
+     * @param int $object_type
+     * @param int $identifer object id
+     *
+     * @return void
+     * @throws Zend_Exception
+     */
+    public function deleteLog($member_id, $object_type, $identifer)
+    {
+        $identity = Zend_Auth::getInstance()->getIdentity()->member_id;
+
+        $sql =
+            "UPDATE `member_deactivation_log` SET is_deleted = 1, deleted_at = NOW() WHERE  deactivation_id = :deactivation_id AND object_type_id = :object_type_id AND object_id = :object_id";
+
+        try {
+            Zend_Db_Table::getDefaultAdapter()->query($sql,
+                array('deactivation_id' => $member_id, 'object_type_id' => $object_type, 'object_id' => $identifer))
+            ;
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR write member deactivation log - ' . print_r($e, true));
+        }
     }
 
     /**
@@ -149,27 +209,6 @@ class Default_Model_MemberDeactivationLog extends Default_Model_DbTable_MemberDe
     public function removeLogCommentAsDeleted($member_id, $identifer)
     {
         return $this->deleteLog($member_id, Default_Model_MemberDeactivationLog::OBJ_TYPE_OPENDESKTOP_COMMENT, $identifer);
-    }
-
-    /**
-     * @param int $member_id
-     * @param int $object_type
-     * @param int $identifer object id
-     *
-     * @return void
-     * @throws Zend_Exception
-     */
-    public function deleteLog($member_id, $object_type, $identifer)
-    {
-        $identity = Zend_Auth::getInstance()->getIdentity()->member_id;
-        
-        $sql = "UPDATE `member_deactivation_log` SET is_deleted = 1, deleted_at = NOW() WHERE  deactivation_id = :deactivation_id AND object_type_id = :object_type_id AND object_id = :object_id";
-
-        try {
-            Zend_Db_Table::getDefaultAdapter()->query($sql, array('deactivation_id' => $member_id, 'object_type_id' => $object_type,'object_id' => $identifer));
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR write member deactivation log - ' . print_r($e, true));
-        }
     }
 
 }
