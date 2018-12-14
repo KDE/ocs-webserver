@@ -211,4 +211,17 @@ class Default_Model_MemberDeactivationLog extends Default_Model_DbTable_MemberDe
         return $this->deleteLog($member_id, Default_Model_MemberDeactivationLog::OBJ_TYPE_OPENDESKTOP_COMMENT, $identifer);
     }
 
+    public function getLogEntries($member_id, $obj_type, $id)
+    {
+        $sql = "SELECT * FROM member_deactivation_log WHERE deactivation_id = :memberid AND object_type_id = :objecttype AND object_id = :objectid AND is_deleted = 0";
+
+        try {
+            $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql, array('memberid' => $member_id, 'objecttype' => $obj_type, 'objectid' => $id));
+        } catch (Zend_Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR READ member deactivation log - ' . print_r($e, true));
+        }
+
+        return $result;
+    }
+
 }

@@ -46,6 +46,79 @@ class Default_Model_Ocs_Gitlab
         $this->cache = Zend_Registry::get('cache');
     }
 
+    /**
+     * @param int|array $member_data
+     *
+     * @return bool
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function unblockUserProjects($member_data)
+    {
+        if (is_int($member_data)) {
+            $member_data = $this->getMemberData($member_data, false);
+        }
+
+        if (empty($member_data)) {
+            return false;
+        }
+
+        $user = $this->getUser($member_data['external_id'], $member_data['username']);
+        if (false === $user) {
+            return false;
+        }
+
+        $uri = $this->config->host . "/api/v4/users/{$user['id']}/projects";
+        $method = Zend_Http_Client::GET;
+        $uid = $member_data['member_id'];
+        try {
+            $response = $this->httpRequest($uri, $uid, $method);
+            if (false === $response) {
+                $this->messages[] = "Fail ";
+
+                return false;
+            }
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        foreach ($response as $project) {
+            $log_data = $memberLog->getLogEntries($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_PROJECT, $project['id']);
+            if (false === $log_data) {
+                continue;
+            }
+            $object_data = json_decode($log_data['object_data'], true);
+            $visibility = $object_data['visibility'];
+
+            $uri = $this->config->host . "/api/v4/projects/{$project['id']}";
+            $method = Zend_Http_Client::PUT;
+            $uid = $member_data['member_id'];
+            $data = array('visibility' => $visibility);
+            try {
+                $response = $this->httpRequest($uri, $uid, $method, $data);
+                if (false === $response) {
+                    $this->messages[] = "Fail " . $uri;
+
+                    continue;
+                }
+
+            } catch (Zend_Exception $e) {
+                $this->messages[] = "Fail " . $e->getMessage();
+
+                return false;
+            }
+
+            $memberLog->deleteLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_PROJECT, $project['id']);
+        }
+
+        return true;
+    }
+
     public function blockUserProjects($member_data)
     {
         if (is_int($member_data)) {
@@ -146,6 +219,53 @@ class Default_Model_Ocs_Gitlab
 
         $memberLog = new Default_Model_MemberDeactivationLog();
         $memberLog->addLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_USER, $user['id']);
+
+        return true;
+    }
+
+    /**
+     * @param int|array $member_data
+     *
+     * @return bool
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function unblockUser($member_data)
+    {
+        if (is_int($member_data)) {
+            $member_data = $this->getMemberData($member_data, false);
+        }
+
+        if (empty($member_data)) {
+            return false;
+        }
+
+        $user = $this->getUser($member_data['external_id'], $member_data['username']);
+        if (false === $user) {
+            return false;
+        }
+
+        $uri = $this->config->host . "/api/v4/users/{$user['id']}/unblock";
+        $method = Zend_Http_Client::POST;
+        $uid = $member_data['member_id'];
+
+        try {
+            $response = $this->httpRequest($uri, $uid, $method);
+            if (false === $response) {
+                $this->messages[] = "Fail ";
+
+                return false;
+            }
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        $memberLog->deleteLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_USER, $user['id']);
 
         return true;
     }
