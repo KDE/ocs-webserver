@@ -244,7 +244,8 @@ class ProductCarousel extends React.Component {
     super(props);
     this.state = {
       products: this.props.products,
-      offset: 5
+      offset: 5,
+      disableleftArrow: true
     };
     this.updateDimensions = this.updateDimensions.bind(this);
     this.animateProductCarousel = this.animateProductCarousel.bind(this);
@@ -306,7 +307,11 @@ class ProductCarousel extends React.Component {
         }
       }
     }
-    this.setState({ sliderPosition: newSliderPosition });
+    this.setState({ sliderPosition: newSliderPosition }, function () {
+      if (this.state.sliderPosition <= 0) {
+        this.setState({ disableleftArrow: true });
+      }
+    });
   }
 
   getNextProductsBatch() {
@@ -315,7 +320,11 @@ class ProductCarousel extends React.Component {
     $.ajax({ url: url, cache: false }).done(function (response) {
       const products = self.state.products.concat(response);
       const offset = self.state.offset + 5;
-      self.setState({ products: products, offset: offset }, function () {
+      let disableRightArrow;
+      if (response.length < 5) {
+        disableRightArrow = true;
+      }
+      self.setState({ products: products, offset: offset, disableRightArrow: disableRightArrow }, function () {
         const animateCarousel = true;
         self.updateDimensions(animateCarousel);
       });
@@ -332,6 +341,36 @@ class ProductCarousel extends React.Component {
         itemWidth: this.state.itemWidth,
         env: this.props.env
       }));
+    }
+
+    let carouselArrowLeftDisplay;
+    if (this.state.disableleftArrow) {
+      carouselArrowLeftDisplay = React.createElement(
+        "a",
+        { className: "carousel-arrow arrow-left disabled" },
+        React.createElement("span", { className: "glyphicon glyphicon-chevron-left" })
+      );
+    } else {
+      carouselArrowLeftDisplay = React.createElement(
+        "a",
+        { onClick: () => this.animateProductCarousel('left'), className: "carousel-arrow arrow-left" },
+        React.createElement("span", { className: "glyphicon glyphicon-chevron-left" })
+      );
+    }
+
+    let carouselArrowRightDisplay;
+    if (this.state.disableRightArrow) {
+      carouselArrowLeftDisplay = React.createElement(
+        "a",
+        { className: "carousel-arrow arrow-right disabled" },
+        React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
+      );
+    } else {
+      carouselArrowRightDisplay = React.createElement(
+        "a",
+        { onClick: () => this.animateProductCarousel('right'), className: "carousel-arrow arrow-right" },
+        React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
+      );
     }
 
     return React.createElement(
@@ -358,11 +397,7 @@ class ProductCarousel extends React.Component {
         React.createElement(
           "div",
           { className: "product-carousel-left" },
-          React.createElement(
-            "a",
-            { onClick: () => this.animateProductCarousel('left'), className: "carousel-arrow arrow-left" },
-            React.createElement("span", { className: "glyphicon glyphicon-chevron-left" })
-          )
+          carouselArrowLeftDisplay
         ),
         React.createElement(
           "div",
@@ -376,11 +411,7 @@ class ProductCarousel extends React.Component {
         React.createElement(
           "div",
           { className: "product-carousel-right" },
-          React.createElement(
-            "a",
-            { onClick: () => this.animateProductCarousel('right'), className: "carousel-arrow arrow-right" },
-            React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
-          )
+          carouselArrowRightDisplay
         )
       )
     );

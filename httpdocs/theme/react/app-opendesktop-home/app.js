@@ -194,6 +194,7 @@ class ProductCarousel extends React.Component {
   	this.state = {
       products:this.props.products,
       offset:5,
+      disableleftArrow:true
     };
     this.updateDimensions = this.updateDimensions.bind(this);
     this.animateProductCarousel = this.animateProductCarousel.bind(this);
@@ -255,7 +256,11 @@ class ProductCarousel extends React.Component {
         }
       }
     }
-    this.setState({sliderPosition:newSliderPosition});
+    this.setState({sliderPosition:newSliderPosition},function(){
+      if (this.state.sliderPosition <= 0){
+        this.setState({disableleftArrow:true});
+      }
+    });
   }
 
   getNextProductsBatch(){
@@ -264,7 +269,11 @@ class ProductCarousel extends React.Component {
     $.ajax({url: url,cache: false}).done(function(response){
         const products = self.state.products.concat(response);
         const offset = self.state.offset + 5;
-        self.setState({products:products,offset:offset},function(){
+        let disableRightArrow;
+        if (response.length < 5){
+          disableRightArrow = true;
+        }
+        self.setState({products:products,offset:offset,disableRightArrow:disableRightArrow},function(){
           const animateCarousel = true;
           self.updateDimensions(animateCarousel);
         });
@@ -285,6 +294,37 @@ class ProductCarousel extends React.Component {
       ));
     }
 
+    let carouselArrowLeftDisplay;
+    if (this.state.disableleftArrow){
+      carouselArrowLeftDisplay = (
+        <a className="carousel-arrow arrow-left disabled">
+          <span className="glyphicon glyphicon-chevron-left"></span>
+        </a>
+      )
+    } else {
+      carouselArrowLeftDisplay = (
+        <a onClick={() => this.animateProductCarousel('left')} className="carousel-arrow arrow-left">
+          <span className="glyphicon glyphicon-chevron-left"></span>
+        </a>
+      );
+    }
+
+    let carouselArrowRightDisplay;
+    if (this.state.disableRightArrow){
+      carouselArrowLeftDisplay = (
+        <a className="carousel-arrow arrow-right disabled">
+          <span className="glyphicon glyphicon-chevron-right"></span>
+        </a>
+      )
+    } else {
+      carouselArrowRightDisplay = (
+        <a onClick={() => this.animateProductCarousel('right')} className="carousel-arrow arrow-right">
+          <span className="glyphicon glyphicon-chevron-right"></span>
+        </a>
+      );
+    }
+
+
     return (
       <div className="product-carousel">
         <div className="product-carousel-header">
@@ -292,9 +332,7 @@ class ProductCarousel extends React.Component {
         </div>
         <div className="product-carousel-wrapper">
           <div className="product-carousel-left">
-            <a onClick={() => this.animateProductCarousel('left')} className="carousel-arrow arrow-left">
-              <span className="glyphicon glyphicon-chevron-left"></span>
-            </a>
+            {carouselArrowLeftDisplay}
           </div>
           <div className="product-carousel-container">
             <div className="product-carousel-slider" style={{"width":this.state.sliderWidth,"left":"-"+this.state.sliderPosition + "px"}}>
@@ -302,9 +340,7 @@ class ProductCarousel extends React.Component {
             </div>
           </div>
           <div className="product-carousel-right">
-            <a onClick={() => this.animateProductCarousel('right')} className="carousel-arrow arrow-right">
-              <span className="glyphicon glyphicon-chevron-right"></span>
-            </a>
+            {carouselArrowRightDisplay}
           </div>
         </div>
       </div>
