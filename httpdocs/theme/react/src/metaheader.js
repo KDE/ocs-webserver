@@ -523,9 +523,9 @@ class MoreDropDownMenu extends React.Component {
     return(
       <li ref={node => this.node = node} id="more-dropdown-menu" className={this.state.dropdownClass}>
         <a className="more-menu-link-item">More</a>
-        <ul className="dropdown-menu">
-          <li><a href={this.props.baseUrl + "/support"}>Support</a></li>           
+        <ul className="dropdown-menu">                   
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
+          <li><a href={this.props.baseUrl + "/support"}>Support</a></li>  
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
           {faqLinkItem}
           {apiLinkItem}
@@ -619,9 +619,9 @@ class UserMenu extends React.Component {
       }
 
       userMenuContainerDisplay = (
-        <ul className="metaheader-menu" id="user-menu">
-          <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
+        <ul className="metaheader-menu" id="user-menu">          
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
+          <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
           {faqLinkItem}
           {apiLinkItem}
@@ -982,9 +982,9 @@ class MobileLeftSidePanel extends React.Component {
             </li>
             <li>
               <a className="groupname"><b>More</b></a>
-              <ul>
-                <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
+              <ul>                
                 <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
+                <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
                 <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
                 {faqLinkItem}
                 {apiLinkItem}
