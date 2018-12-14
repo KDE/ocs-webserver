@@ -191,14 +191,7 @@ class SpotlightProduct extends React.Component {
 class ProductCarousel extends React.Component {
   constructor(props){
   	super(props);
-    let showRightArrow = false;
-    if (this.props.products.length > 5){
-      showRightArrow = true;
-    }
-  	this.state = {
-      showRightArrow:showRightArrow,
-      showLeftArrow:false
-    };
+  	this.state = {};
     this.updateDimensions = this.updateDimensions.bind(this);
     this.animateProductCarousel = this.animateProductCarousel.bind(this);
   }
@@ -238,30 +231,21 @@ class ProductCarousel extends React.Component {
 
     let newSliderPosition = this.state.sliderPosition;
     if (dir === 'left'){
-      newSliderPosition = this.state.sliderPosition - this.state.containerWidth;
+      if (this.state.sliderPosition > 0){
+        newSliderPosition = this.state.sliderPosition - this.state.containerWidth;
+      } else {
+        console.log('no mo left');
+      }
     } else {
-      newSliderPosition = this.state.sliderPosition + this.state.containerWidth;
+      const endPoint = this.state.sliderWidth - this.state.containerWidth;
+      if (this.state.sliderPosition >= endPoint){
+        newSliderPosition = this.state.sliderPosition + this.state.containerWidth;
+      } else {
+        console.log('now ajax new products');
+      }
     }
 
-    this.setState({sliderPosition:newSliderPosition},function(){
-
-      let showLeftArrow = true,
-          showRightArrow = true;
-      const endPoint = this.state.sliderWidth - this.state.containerWidth;
-      if (this.state.sliderPosition <= 0){
-        showLeftArrow = false;
-      }
-      if (this.state.sliderPosition >= endPoint){
-        showRightArrow = false;
-      }
-
-      this.setState({
-        showLeftArrow:showLeftArrow,
-        showRightArrow:showRightArrow
-      });
-
-    });
-
+    this.setState({sliderPosition:newSliderPosition});
   }
 
   render(){
