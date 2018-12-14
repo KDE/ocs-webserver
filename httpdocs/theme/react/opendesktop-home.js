@@ -311,30 +311,6 @@ class ProductCarousel extends React.Component {
       }));
     }
 
-    let rightArrowDisplay, leftArrowDisplay;
-    if (this.state.showLeftArrow) {
-      leftArrowDisplay = React.createElement(
-        "div",
-        { className: "product-carousel-left" },
-        React.createElement(
-          "a",
-          { onClick: () => this.animateProductCarousel('left'), className: "carousel-arrow arrow-left" },
-          React.createElement("span", { className: "glyphicon glyphicon-chevron-left" })
-        )
-      );
-    }
-    if (this.state.showRightArrow) {
-      rightArrowDisplay = React.createElement(
-        "div",
-        { className: "product-carousel-right" },
-        React.createElement(
-          "a",
-          { onClick: () => this.animateProductCarousel('right'), className: "carousel-arrow arrow-right" },
-          React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
-        )
-      );
-    }
-
     return React.createElement(
       "div",
       { className: "product-carousel" },
@@ -356,7 +332,15 @@ class ProductCarousel extends React.Component {
       React.createElement(
         "div",
         { className: "product-carousel-wrapper" },
-        leftArrowDisplay,
+        React.createElement(
+          "div",
+          { className: "product-carousel-left" },
+          React.createElement(
+            "a",
+            { onClick: () => this.animateProductCarousel('left'), className: "carousel-arrow arrow-left" },
+            React.createElement("span", { className: "glyphicon glyphicon-chevron-left" })
+          )
+        ),
         React.createElement(
           "div",
           { className: "product-carousel-container" },
@@ -366,7 +350,15 @@ class ProductCarousel extends React.Component {
             carouselItemsDisplay
           )
         ),
-        rightArrowDisplay
+        React.createElement(
+          "div",
+          { className: "product-carousel-right" },
+          React.createElement(
+            "a",
+            { onClick: () => this.animateProductCarousel('right'), className: "carousel-arrow arrow-right" },
+            React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
+          )
+        )
       )
     );
   }

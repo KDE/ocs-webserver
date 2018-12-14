@@ -262,39 +262,27 @@ class ProductCarousel extends React.Component {
       ));
     }
 
-    let rightArrowDisplay, leftArrowDisplay;
-    if (this.state.showLeftArrow){
-      leftArrowDisplay = (
-        <div className="product-carousel-left">
-          <a onClick={() => this.animateProductCarousel('left')} className="carousel-arrow arrow-left">
-            <span className="glyphicon glyphicon-chevron-left"></span>
-          </a>
-        </div>
-      );
-    }
-    if (this.state.showRightArrow){
-      rightArrowDisplay = (
-        <div className="product-carousel-right">
-          <a onClick={() => this.animateProductCarousel('right')} className="carousel-arrow arrow-right">
-            <span className="glyphicon glyphicon-chevron-right"></span>
-          </a>
-        </div>
-      );
-    }
-
     return (
       <div className="product-carousel">
         <div className="product-carousel-header">
           <h2><a href={this.props.link}>{this.props.title} <span className="glyphicon glyphicon-chevron-right"></span></a></h2>
         </div>
         <div className="product-carousel-wrapper">
-          {leftArrowDisplay}
+          <div className="product-carousel-left">
+            <a onClick={() => this.animateProductCarousel('left')} className="carousel-arrow arrow-left">
+              <span className="glyphicon glyphicon-chevron-left"></span>
+            </a>
+          </div>
           <div className="product-carousel-container">
             <div className="product-carousel-slider" style={{"width":this.state.sliderWidth,"left":"-"+this.state.sliderPosition + "px"}}>
               {carouselItemsDisplay}
             </div>
           </div>
-          {rightArrowDisplay}
+          <div className="product-carousel-right">
+            <a onClick={() => this.animateProductCarousel('right')} className="carousel-arrow arrow-right">
+              <span className="glyphicon glyphicon-chevron-right"></span>
+            </a>
+          </div>
         </div>
       </div>
     )
