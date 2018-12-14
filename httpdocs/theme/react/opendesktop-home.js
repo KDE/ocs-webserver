@@ -243,7 +243,8 @@ class ProductCarousel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: this.props.products
+      products: this.props.products,
+      offset: 5
     };
     this.updateDimensions = this.updateDimensions.bind(this);
     this.animateProductCarousel = this.animateProductCarousel.bind(this);
@@ -309,16 +310,12 @@ class ProductCarousel extends React.Component {
   }
 
   getNextProductsBatch() {
-    let offset = "5";
-    if (this.state.offset) {
-      offset = this.state.offset;
-    }
-    let url = "/home/showlastproductsjson/?page=1&limit=5&offset=" + offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
-    console.log(url);
+    let url = "/home/showlastproductsjson/?page=1&limit=5&offset=" + this.state.offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
     const self = this;
     $.ajax({ url: url, cache: false }).done(function (response) {
       const products = self.state.products.concat(response);
-      self.setState({ products: products }, function () {
+      offset = this.state.offset + 5;
+      self.setState({ products: products, offset: offset }, function () {
         const animateCarousel = true;
         self.updateDimensions(animateCarousel);
       });
