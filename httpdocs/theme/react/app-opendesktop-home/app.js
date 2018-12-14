@@ -121,6 +121,8 @@ class SpotlightProduct extends React.Component {
     else { url += "1"; }
     const self = this;
     $.ajax({url: url,cache: false}).done(function(response){
+      console.log(url);
+      console.log(response);
         self.setState({featuredProduct:response});
     });
   }
