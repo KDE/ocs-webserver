@@ -254,7 +254,7 @@ class ProductCarousel extends React.Component {
   getNextProductsBatch(){
     let offset = "5";
     if (this.state.offset){offset = this.state.offset;}
-    let url = "/home/showlastproductsjson/?page=1&limit=5&offset="+offset+"&catIDs="+this.state.catIds+"&isoriginal=0";
+    let url = "/home/showlastproductsjson/?page=1&limit=5&offset="+offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
     console.log(url);
     const self = this;
     $.ajax({url: url,cache: false}).done(function(response){
