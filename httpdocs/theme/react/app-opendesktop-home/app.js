@@ -263,7 +263,7 @@ class ProductCarousel extends React.Component {
     const self = this;
     $.ajax({url: url,cache: false}).done(function(response){
         const products = self.state.products.concat(response);
-        offset = this.state.offset + 5;
+        offset = self.state.offset + 5;
         self.setState({products:products,offset:offset},function(){
           const animateCarousel = true;
           self.updateDimensions(animateCarousel);
