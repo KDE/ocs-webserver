@@ -242,7 +242,9 @@ class SpotlightProduct extends React.Component {
 class ProductCarousel extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      products: this.props.products
+    };
     this.updateDimensions = this.updateDimensions.bind(this);
     this.animateProductCarousel = this.animateProductCarousel.bind(this);
   }
@@ -289,7 +291,9 @@ class ProductCarousel extends React.Component {
       }
     } else {
       const endPoint = this.state.sliderWidth - this.state.containerWidth;
-      if (this.state.sliderPosition >= endPoint) {
+      console.log(endPoint);
+      console.log(this.state.sliderPosition);
+      if (this.state.sliderPosition < endPoint) {
         newSliderPosition = this.state.sliderPosition + this.state.containerWidth;
       } else {
         console.log('now ajax new products');
@@ -302,8 +306,8 @@ class ProductCarousel extends React.Component {
   render() {
 
     let carouselItemsDisplay;
-    if (this.props.products && this.props.products.length > 0) {
-      carouselItemsDisplay = this.props.products.map((product, index) => React.createElement(ProductCarouselItem, {
+    if (this.state.products && this.state.products.length > 0) {
+      carouselItemsDisplay = this.state.products.map((product, index) => React.createElement(ProductCarouselItem, {
         key: index,
         product: product,
         itemWidth: this.state.itemWidth,
