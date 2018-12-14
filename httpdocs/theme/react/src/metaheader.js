@@ -524,6 +524,7 @@ class MoreDropDownMenu extends React.Component {
       <li ref={node => this.node = node} id="more-dropdown-menu" className={this.state.dropdownClass}>
         <a className="more-menu-link-item">More</a>
         <ul className="dropdown-menu">
+          <li><a href={this.props.baseUrl + "/support"}>Support</a></li>           
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
           {faqLinkItem}
@@ -619,6 +620,7 @@ class UserMenu extends React.Component {
 
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
+          <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
           {faqLinkItem}
@@ -981,6 +983,7 @@ class MobileLeftSidePanel extends React.Component {
             <li>
               <a className="groupname"><b>More</b></a>
               <ul>
+                <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
                 <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
                 <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
                 {faqLinkItem}
