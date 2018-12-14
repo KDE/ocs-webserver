@@ -113,6 +113,12 @@ class HomeController extends Local_Controller_Action_DomainSwitch
     
     public function showlastproductsjsonAction()
     {
+
+        if( 
+            isset($_SERVER['REMOTE_ADDR']) AND ( $_SERVER['REMOTE_ADDR'] !== $_SERVER['SERVER_ADDR'] )
+        ){
+            die(' Access Denied, Your IP: ' . $_SERVER['REMOTE_ADDR'] );
+        }
         $this->_helper->layout->disableLayout();
         $modelInfo = new Default_Model_Info();
         $offset = (int)$this->getParam('offset',0);
@@ -127,6 +133,11 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 
     public function showfeaturejsonAction()
     {
+        if( 
+            isset($_SERVER['REMOTE_ADDR']) AND ( $_SERVER['REMOTE_ADDR'] !== $_SERVER['SERVER_ADDR'] )
+        ){
+            die(' Access Denied, Your IP: ' . $_SERVER['REMOTE_ADDR'] );
+        }
         $this->_helper->layout->disableLayout();
         $modelInfo = new Default_Model_Info();
         $page = (int)$this->getParam('page');
