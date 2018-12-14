@@ -123,8 +123,6 @@ class SpotlightProduct extends React.Component {
     }
     const self = this;
     $.ajax({ url: url, cache: false }).done(function (response) {
-      console.log(url);
-      console.log(response);
       self.setState({ featuredProduct: response });
     });
   }
@@ -260,7 +258,7 @@ class ProductCarousel extends React.Component {
     this.updateDimensions();
   }
 
-  updateDimensions() {
+  updateDimensions(animateCarousel) {
 
     /*let itemsPerRow;
     if (this.props.device === 'large'){
@@ -284,6 +282,10 @@ class ProductCarousel extends React.Component {
       containerWidth: containerWidth,
       sliderWidth: sliderWidth,
       itemWidth: itemWidth
+    }, function () {
+      if (animateCarousel) {
+        this.animateProductCarousel('right');
+      }
     });
   }
 
@@ -313,8 +315,11 @@ class ProductCarousel extends React.Component {
     console.log(url);
     const self = this;
     $.ajax({ url: url, cache: false }).done(function (response) {
-      console.log(response);
-      //self.setState({featuredProduct:response});
+      const products = this.state.products.concat(response);
+      this.setState({ products: products }, function () {
+        const animateCarousel = true;
+        this.updateDimensions(animateCarousel);
+      });
     });
   }
 
