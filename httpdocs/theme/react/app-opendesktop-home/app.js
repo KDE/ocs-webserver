@@ -311,7 +311,7 @@ class ProductCarousel extends React.Component {
 
     let carouselArrowRightDisplay;
     if (this.state.disableRightArrow){
-      carouselArrowLeftDisplay = (
+      carouselArrowRightDisplay = (
         <a className="carousel-arrow arrow-right disabled">
           <span className="glyphicon glyphicon-chevron-right"></span>
         </a>
