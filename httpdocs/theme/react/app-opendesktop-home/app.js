@@ -135,7 +135,7 @@ class SpotlightProduct extends React.Component {
     }
 
     let description = this.state.featuredProduct.description;
-    if (description.length > 295){
+    if (description && description.length > 295){
       description = this.state.featuredProduct.description.substring(0,295) + "...";
     }
 
