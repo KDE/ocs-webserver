@@ -503,6 +503,7 @@ class ProductCarouselItemSecondVersion extends React.Component {
 
   componentDidMount() {
     console.log('second version');
+    console.log(this.props.product.image_small);
   }
 
   render() {
