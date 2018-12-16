@@ -400,7 +400,7 @@ class ProductCarouselItem extends React.Component {
     let paddingTop;
     let displayDate;
     if (window.hpVersion === 2){
-      paddingTop = (this.props.itemWidth * 1.35) / 2
+      paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
     }
 
     return (
