@@ -345,7 +345,7 @@ class ProductCarousel extends React.Component {
   }
 
   render() {
-
+    console.log(window.hpVersion);
     let carouselItemsDisplay;
     if (this.state.products && this.state.products.length > 0) {
       if (window.hpVersion === 1) {

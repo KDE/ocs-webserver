@@ -295,7 +295,7 @@ class ProductCarousel extends React.Component {
   }
 
   render(){
-
+    console.log(window.hpVersion);
     let carouselItemsDisplay;
     if (this.state.products && this.state.products.length > 0){
       if (window.hpVersion === 1){
@@ -448,7 +448,7 @@ class ProductCarouselItemSecondVersion extends React.Component {
               <span className="product-info-title">{this.props.product.title}</span>
               <span className="product-info-user">{this.props.product.username}</span>
             </div>
-          </a>          
+          </a>
         </div>
       </div>
     )
