@@ -398,7 +398,7 @@ class ProductCarousel extends React.Component {
       carouselWrapperPadding = {
         "paddingLeft": this.state.itemWidth / 2,
         "paddingRight": this.state.itemWidth / 2,
-        "height": this.state.itemWidth * 2
+        "height": this.state.itemWidth * 1.5
       };
     }
 
@@ -467,9 +467,10 @@ class ProductCarouselItem extends React.Component {
     }
 
     let paddingTop;
+    let displayDate;
     if (window.hpVersion === 2) {
       paddingTop = {
-        "paddingTop": this.props.itemWidth - 10
+        "paddingTop": this.props.itemWidth * 1.5 / 2
       };
     }
 
