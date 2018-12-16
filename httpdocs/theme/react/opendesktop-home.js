@@ -356,6 +356,7 @@ class ProductCarousel extends React.Component {
           env: this.props.env
         }));
       } else if (window.hpVersion === 2) {
+        console.log(this.state.products);
         carouselItemsDisplay = this.state.products.map((product, index) => React.createElement(ProductCarouselItemSecondVersion, {
           key: index,
           product: product,
