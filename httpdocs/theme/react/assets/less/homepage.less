@@ -308,6 +308,10 @@ out: ../css/homepage.css, sourcemap: true, compress: true
           &.product-info-title {
             color: #007aa6;
             display: block;
+            text-overflow: ellipsis;
+            word-break: break-word;
+            overflow: hidden;
+            white-space: nowrap;            
           }
 
           &.product-info-user {
@@ -326,10 +330,7 @@ out: ../css/homepage.css, sourcemap: true, compress: true
     }
 
     .product-carousel-container .product-carousel-item .product-info span.product-info-title {
-      text-overflow: ellipsis;
-      word-break: break-word;
-      overflow: hidden;
-      white-space: nowrap;
+
       padding-right: 20px;
       font-size: 16px;
     }
