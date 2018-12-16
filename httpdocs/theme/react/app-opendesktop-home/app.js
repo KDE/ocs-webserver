@@ -399,7 +399,7 @@ class ProductCarouselItem extends React.Component {
 
     let paddingTop;
     if (window.hpVersion === 2){
-      paddingTop = this.props.itemWidth;
+      paddingTop = {"paddingTop":this.props.itemWidth}
     }
 
     return (
