@@ -298,34 +298,52 @@ out: ../css/homepage.css, sourcemap: true, compress: true
           display: block;
           float: left;
           width: 100%;
-          height: 22px;
-          line-height: 22px;
 
           &.product-info-title {
             color: #007aa6;
-            text-overflow: ellipsis;
-            word-break: break-word;
             display: block;
-            overflow: hidden;
-            white-space: nowrap;
-            padding-right: 20px;
-            font-size: 16px;
           }
 
           &.product-info-user {
             color: #666;
-            font-size: 15px;
           }
         }
       }
     }
   }
 
+  &.one {
+
+    .product-carousel-container .product-carousel-item .product-info span {
+      height: 22px;
+      line-height: 22px;
+    }
+
+    .product-carousel-container .product-carousel-item .product-info span.product-info-title {
+      text-overflow: ellipsis;
+      word-break: break-word;
+      overflow: hidden;
+      white-space: nowrap;
+      padding-right: 20px;
+      font-size: 16px;
+    }
+
+    .product-carousel-container .product-carousel-item .product-info span.product-info-user {
+      font-size: 15px;
+    }
+  }
+
   &.two {
+    .product-carousel-wrapper {
+      height: 220px;
+    }
     .product-carousel-container {
+      height: 220px;
       .product-carousel-slider {
+        height: 220px;
         .product-carousel-item {
           padding: 10px;
+          height: 220px;
 
           .product-carousel-item-wrapper {
             width: 100%;
@@ -335,6 +353,9 @@ out: ../css/homepage.css, sourcemap: true, compress: true
           }
 
           figure {
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 0;
+
             img {
               height: auto;
               width: auto;
