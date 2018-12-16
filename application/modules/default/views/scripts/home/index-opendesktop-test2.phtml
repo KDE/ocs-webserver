@@ -83,15 +83,15 @@ $response = array(
   'productsThemesGTK' => array('title' =>'GTK/Gnome','catIds' =>'366','products' => $productsThemesGTK),
   'productsThemesPlasma' => array('title' =>'KDE Plasma','catIds' =>'365','products' => $productsThemesPlasma),
 
-  'productsWindowmanager' =>array('title' =>'Window Managers','catIds' =>'147','products' => $productsWindowmanager),  
+  'productsWindowmanager' =>array('title' =>'Window Managers','catIds' =>'147','products' => $productsWindowmanager),
   'productsIconsCursors' =>array('title' =>'Icons, Cursors','catIds' =>'386,107','products' => $productsIconsCursors),
 
-  'productsWallpapers' =>array('title' =>'Artwork, Wallpapers','catIds' =>'158,295','products' => $productsWallpapers),  
+  'productsWallpapers' =>array('title' =>'Artwork, Wallpapers','catIds' =>'158,295','products' => $productsWallpapers),
   'productsWallpapersOriginal' =>array('title' =>'Artwork, Wallpapers (Original)','catIds' =>'158,295','products' => $productsWallpapersOriginal),
 
   'productsAddons' =>array('title' =>'App Add-Ons','catIds' =>'152','products' => $productsAddons),
-  'productsApps' =>array('title' =>'Applications','catIds' =>'233','products' => $productsApps), 
-  
+  'productsApps' =>array('title' =>'Applications','catIds' =>'233','products' => $productsApps),
+
   'productsScreenshots' =>array('title' =>'Concepts, Screenshots','catIds' =>'445,225','products' => $productsScreenshots),
   "featureProducts" => Zend_Json::encode($feature)
 );
@@ -109,7 +109,7 @@ test2
       <div id="main-content"></div>
       <script type="text/javascript">
         var data = <?php echo Zend_Json::encode($response)?>;
-       
+        var hpVersion = 2;
       </script>
       <script src="/theme/react/opendesktop-home.js" type="text/javascript"></script>
     </div>

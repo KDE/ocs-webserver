@@ -83,15 +83,15 @@ $response = array(
   'productsThemesGTK' => array('title' =>'GTK/Gnome','catTitleIds' =>'366','catIds' =>'366,363,273,267,138,125,131,153,154,414,133','products' => $productsThemesGTK),
   'productsThemesPlasma' => array('title' =>'KDE Plasma','catTitleIds' =>'365','catIds' =>'365,119,123,266,114,118,349,417,101,100,111,422,423,446,417','products' => $productsThemesPlasma),
 
-  'productsWindowmanager' =>array('title' =>'Window Managers','catTitleIds' =>'147','catIds' =>'117,267,139,143,142,140,141,144','products' => $productsWindowmanager),  
+  'productsWindowmanager' =>array('title' =>'Window Managers','catTitleIds' =>'147','catIds' =>'117,267,139,143,142,140,141,144','products' => $productsWindowmanager),
   'productsIconsCursors' =>array('title' =>'Icons, Cursors','catTitleIds' =>'386,107','catIds' =>'386,107','products' => $productsIconsCursors),
 
-  'productsWallpapers' =>array('title' =>'Artwork, Wallpapers','catTitleIds' =>'158,295','catIds' =>'158,295','products' => $productsWallpapers),  
+  'productsWallpapers' =>array('title' =>'Artwork, Wallpapers','catTitleIds' =>'158,295','catIds' =>'158,295','products' => $productsWallpapers),
   'productsWallpapersOriginal' =>array('title' =>'Artwork, Wallpapers (Original)','catTitleIds' =>'158,295','catIds' =>'158,295','products' => $productsWallpapersOriginal),
 
   'productsAddons' =>array('title' =>'App Add-Ons','catTitleIds' =>'152','catIds' =>'152','products' => $productsAddons),
-  'productsApps' =>array('title' =>'Applications','catTitleIds' =>'233','catIds' =>'233','products' => $productsApps), 
-  
+  'productsApps' =>array('title' =>'Applications','catTitleIds' =>'233','catIds' =>'233','products' => $productsApps),
+
   'productsScreenshots' =>array('title' =>'Concepts, Screenshots','catTitleIds' =>'445,225','catIds' =>'445,225','products' => $productsScreenshots),
   "featureProducts" => Zend_Json::encode($feature)
 );
@@ -109,7 +109,8 @@ $response = array(
       <div id="main-content"></div>
       <script type="text/javascript">
         var data = <?php echo Zend_Json::encode($response)?>;
-       
+        var hpVersion = 1;
+
       </script>
       <script src="/theme/react/opendesktop-home.js" type="text/javascript"></script>
     </div>

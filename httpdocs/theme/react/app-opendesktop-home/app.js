@@ -2,7 +2,8 @@ class App extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      loading:true
+      loading:true,
+      hpVersion:window.hpVersion
     };
     this.initHomePage = this.initHomePage.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
