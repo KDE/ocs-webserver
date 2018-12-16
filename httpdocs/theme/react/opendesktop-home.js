@@ -397,7 +397,8 @@ class ProductCarousel extends React.Component {
       hpVersionClass = "two";
       carouselWrapperPadding = {
         "paddingLeft": this.state.itemWidth,
-        "paddingRight": this.state.itemWidth
+        "paddingRight": this.state.itemWidth,
+        "height": this.state.itemWidth * 2
       };
     }
 
