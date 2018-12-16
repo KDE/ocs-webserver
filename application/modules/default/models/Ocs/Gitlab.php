@@ -46,6 +46,145 @@ class Default_Model_Ocs_Gitlab
         $this->cache = Zend_Registry::get('cache');
     }
 
+    /**
+     * @param int|array $member_data
+     *
+     * @return bool
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function unblockUserProjects($member_data)
+    {
+        if (is_int($member_data)) {
+            $member_data = $this->getMemberData($member_data, false);
+        }
+
+        if (empty($member_data)) {
+            return false;
+        }
+
+        $user = $this->getUser($member_data['external_id'], $member_data['username']);
+        if (false === $user) {
+            return false;
+        }
+
+        $uri = $this->config->host . "/api/v4/users/{$user['id']}/projects";
+        $method = Zend_Http_Client::GET;
+        $uid = $member_data['member_id'];
+        try {
+            $response = $this->httpRequest($uri, $uid, $method);
+            if (false === $response) {
+                $this->messages[] = "Fail ";
+
+                return false;
+            }
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        foreach ($response as $project) {
+            $log_data = $memberLog->getLogEntries($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_PROJECT, $project['id']);
+            if (false === $log_data) {
+                continue;
+            }
+            $object_data = json_decode($log_data['object_data'], true);
+            $visibility = $object_data['visibility'];
+
+            $uri = $this->config->host . "/api/v4/projects/{$project['id']}";
+            $method = Zend_Http_Client::PUT;
+            $uid = $member_data['member_id'];
+            $data = array('visibility' => $visibility);
+            try {
+                $response = $this->httpRequest($uri, $uid, $method, $data);
+                if (false === $response) {
+                    $this->messages[] = "Fail " . $uri;
+
+                    continue;
+                }
+
+            } catch (Zend_Exception $e) {
+                $this->messages[] = "Fail " . $e->getMessage();
+
+                return false;
+            }
+
+            $memberLog->deleteLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_PROJECT, $project['id']);
+        }
+
+        return true;
+    }
+
+    public function blockUserProjects($member_data)
+    {
+        if (is_int($member_data)) {
+            $member_data = $this->getMemberData($member_data, false);
+        }
+
+        if (empty($member_data)) {
+            return false;
+        }
+
+        $user = $this->getUser($member_data['external_id'], $member_data['username']);
+        if (false === $user) {
+            return false;
+        }
+
+        $uri = $this->config->host . "/api/v4/users/{$user['id']}/projects";
+        $method = Zend_Http_Client::GET;
+        $uid = $member_data['member_id'];
+        try {
+            $response = $this->httpRequest($uri, $uid, $method);
+            if (false === $response) {
+                $this->messages[] = "Fail ";
+
+                return false;
+            }
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+
+        foreach ($response as $project) {
+            $memberLog = new Default_Model_MemberDeactivationLog();
+            $memberLog->addLogData($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_PROJECT, $project['id'], json_encode($project));
+
+            $uri = $this->config->host . "/api/v4/projects/{$project['id']}";
+            $method = Zend_Http_Client::PUT;
+            $uid = $member_data['member_id'];
+            $data = array('visibility' => 'private');
+            try {
+                $response = $this->httpRequest($uri, $uid, $method, $data);
+                if (false === $response) {
+                    $this->messages[] = "Fail " . $uri;
+
+                    continue;
+                }
+
+            } catch (Zend_Exception $e) {
+                $this->messages[] = "Fail " . $e->getMessage();
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param int|array $member_data
+     *
+     * @return bool
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
     public function blockUser($member_data)
     {
         if (is_int($member_data)) {
@@ -66,8 +205,8 @@ class Default_Model_Ocs_Gitlab
         $uid = $member_data['member_id'];
 
         try {
-            $user = $this->httpRequest($uri, $uid, $method);
-            if (false === $user) {
+            $response = $this->httpRequest($uri, $uid, $method);
+            if (false === $response) {
                 $this->messages[] = "Fail ";
 
                 return false;
@@ -78,7 +217,90 @@ class Default_Model_Ocs_Gitlab
             return false;
         }
 
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        $memberLog->addLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_USER, $user['id']);
+
         return true;
+    }
+
+    /**
+     * @param int|array $member_data
+     *
+     * @return bool
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function unblockUser($member_data)
+    {
+        if (is_int($member_data)) {
+            $member_data = $this->getMemberData($member_data, false);
+        }
+
+        if (empty($member_data)) {
+            return false;
+        }
+
+        $user = $this->getUser($member_data['external_id'], $member_data['username']);
+        if (false === $user) {
+            return false;
+        }
+
+        $uri = $this->config->host . "/api/v4/users/{$user['id']}/unblock";
+        $method = Zend_Http_Client::POST;
+        $uid = $member_data['member_id'];
+
+        try {
+            $response = $this->httpRequest($uri, $uid, $method);
+            if (false === $response) {
+                $this->messages[] = "Fail ";
+
+                return false;
+            }
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        $memberLog->deleteLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_USER, $user['id']);
+
+        return true;
+    }
+
+    /**
+     * @param int  $member_id
+     *
+     * @param bool $onlyActive
+     *
+     * @return array
+     * @throws Default_Model_Ocs_Exception
+     */
+    private function getMemberData($member_id, $onlyActive = true)
+    {
+
+        $onlyActiveFilter = '';
+        if ($onlyActive) {
+            $onlyActiveFilter =
+                " AND `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0";
+        }
+        $sql = "
+            SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`biography`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`
+            FROM `member` AS `m`
+            LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
+            LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
+            WHERE `m`.`member_id` = :memberId {$onlyActiveFilter}
+            ORDER BY `m`.`member_id` DESC
+        ";
+
+        $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql, array('memberId' => $member_id));
+        if (count($result) == 0) {
+            throw new Default_Model_Ocs_Exception('member with id ' . $member_id . ' could not found.');
+        }
+
+        return $result;
     }
 
     /**
@@ -197,6 +419,12 @@ class Default_Model_Ocs_Gitlab
         return $body[0];
     }
 
+    /**
+     * @param string $extern_uid
+     *
+     * @return string
+     * @throws Zend_Exception
+     */
     private function buildUserDn($extern_uid)
     {
         $username = mb_strtolower($extern_uid);
@@ -206,6 +434,14 @@ class Default_Model_Ocs_Gitlab
         return $dn;
     }
 
+    /**
+     * @param string $username
+     *
+     * @return array
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
     public function getUserWithName($username)
     {
         $this->httpClient->resetParameters();
@@ -322,6 +558,7 @@ class Default_Model_Ocs_Gitlab
      * @param array $user
      *
      * @return array
+     * @throws Zend_Exception
      */
     protected function mapUserData($user)
     {
@@ -446,9 +683,15 @@ class Default_Model_Ocs_Gitlab
         return $body;
     }
 
+    /**
+     * @param array $member
+     * @param array $userSubsystem
+     *
+     * @return array
+     * @throws Zend_Exception
+     */
     public function validateUserData($member, $userSubsystem)
     {
-        $name = (false == empty($member['lastname'])) ? trim($member['firstname'] . ' ' . $member['lastname']) : $member['username'];
         $userDn = $this->buildUserDn(strtolower($member['username']));
         $result = array();
 
@@ -519,6 +762,8 @@ class Default_Model_Ocs_Gitlab
         $data = $this->mapUserData($member_data);
 
         $user = $this->getUser($member_data['external_id'], $member_data['username']);
+
+        $updatedUser = null;
 
         if (empty($user)) {
             //            $data['skip_confirmation'] = 'true';
@@ -628,37 +873,6 @@ class Default_Model_Ocs_Gitlab
         }
 
         return $this->httpUserDelete($user['id']);
-    }
-
-    /**
-     * @param int $member_id
-     *
-     * @return array
-     * @throws Zend_Exception
-     */
-    private function getMemberData($member_id, $onlyActive = true)
-    {
-
-        $onlyActiveFilter = '';
-        if ($onlyActive) {
-            $onlyActiveFilter =
-                " AND `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0";
-        }
-        $sql = "
-            SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`biography`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`
-            FROM `member` AS `m`
-            LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
-            LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
-            WHERE `m`.`member_id` = :memberId {$onlyActiveFilter}
-            ORDER BY `m`.`member_id` DESC
-        ";
-
-        $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql, array('memberId' => $member_id));
-        if (count($result) == 0) {
-            throw new Default_Model_Ocs_Exception('member with id ' . $member_id . ' could not found.');
-        }
-
-        return $result;
     }
 
     /**
@@ -873,6 +1087,12 @@ class Default_Model_Ocs_Gitlab
         return true;
     }
 
+    /**
+     * @return array|mixed
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
     public function getUsers()
     {
         $this->httpClient->resetParameters();
@@ -901,6 +1121,14 @@ class Default_Model_Ocs_Gitlab
         return $body;
     }
 
+    /**
+     * @param int $id
+     *
+     * @return array|mixed
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
     public function getUserWithId($id)
     {
         $this->httpClient->resetParameters();
@@ -929,6 +1157,15 @@ class Default_Model_Ocs_Gitlab
         return $body;
     }
 
+    /**
+     * @param int    $page
+     * @param int    $limit
+     * @param string $order_by
+     * @param string $sort
+     *
+     * @return array|false|mixed
+     * @throws Zend_Http_Client_Exception
+     */
     public function getProjects($page = 1, $limit = 5, $order_by = 'created_at', $sort = 'desc')
     {
         $cache = $this->cache;
@@ -976,6 +1213,14 @@ class Default_Model_Ocs_Gitlab
         return $body;
     }
 
+    /**
+     * @param int $id
+     *
+     * @return mixed|null
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
     public function getProject($id)
     {
         $this->httpClient->resetParameters();
@@ -1008,6 +1253,17 @@ class Default_Model_Ocs_Gitlab
         return $body;
     }
 
+    /**
+     * @param int    $id
+     * @param string $state
+     * @param int    $page
+     * @param int    $limit
+     *
+     * @return array|mixed
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
     public function getProjectIssues($id, $state = 'opened', $page = 1, $limit = 5)
     {
         $this->httpClient->resetParameters();
@@ -1036,6 +1292,16 @@ class Default_Model_Ocs_Gitlab
         return $body;
     }
 
+    /**
+     * @param int $user_id
+     * @param int $page
+     * @param int $limit
+     *
+     * @return array|mixed
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
     public function getUserProjects($user_id, $page = 1, $limit = 50)
     {
         $this->httpClient->resetParameters();

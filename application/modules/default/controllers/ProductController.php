@@ -1317,14 +1317,17 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $memberId = (int)$this->getParam('m');
 
-        if ((empty($this->_authMember->member_id)) OR (empty($memberId)) OR ($this->_authMember->member_id
-                != $memberId)
+        if (
+            (empty($this->_authMember->member_id))
+            OR
+            (empty($memberId))
+            OR ($this->_authMember->member_id != $memberId)
         ) {
             return;
         }
 
         $tableProduct = new Default_Model_Project();
-        $tableProduct->setInActive($this->_projectId);
+        $tableProduct->setInActive($this->_projectId, $memberId);
 
         $product = $tableProduct->find($this->_projectId)->current();
 
@@ -1356,9 +1359,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $collectionResponse = $pploadApi->putCollection($product->ppload_collection_id, $collectionRequest);
         }
 
-        //        $this->setViewDataForMyProducts($memberId);
-        //
-        //        $this->renderScript('user/products.phtml');
         $this->forward('products', 'user', 'default');
     }
 

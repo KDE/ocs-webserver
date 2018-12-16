@@ -58,7 +58,7 @@ class DuplicatesController extends Local_Controller_Action_DomainSwitch
     	
 
     	$mod = new Default_Model_Project();    
-    	$reports = $mod->fetchDuplatedSourceProjects($sorting,(int)$pageSize,$startIndex);
+    	$reports = $mod->fetchDuplicatedSourceProjects($sorting,(int)$pageSize,$startIndex);
 
         //  Zend_Registry::get('logger')->info(__METHOD__ . ' - ===================================' );
         // Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . sizeof($reports));
