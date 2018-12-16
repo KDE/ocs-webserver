@@ -221,10 +221,15 @@ class ProductCarousel extends React.Component {
       itemsPerRow = 3;
     }*/
 
+    let itemsPerRow = 5;
+    if (window.hpVersion === 2){
+      itemsPerRow = 7;
+    }
+
     const containerWidth = $('#main-content').width();
-    const containerNumber = Math.ceil(this.state.products.length / 5);
+    const containerNumber = Math.ceil(this.state.products.length / itemsPerRow);
     const sliderWidth = containerWidth * containerNumber;
-    const itemWidth = containerWidth / 5;
+    const itemWidth = containerWidth / itemsPerRow;
     let sliderPosition = 0;
     if (this.state.sliderPosition){
       sliderPosition = this.state.sliderPosition;
@@ -340,8 +345,13 @@ class ProductCarousel extends React.Component {
 
 
     let hpVersionClass = "one";
+    let carouselWrapperPadding = {}
     if (window.hpVersion === 2){
       hpVersion = "two";
+      carouselWrapperPadding = {
+        "paddingLeft":this.state.itemWidth,
+        "paddingRight":this.state.itemWidth
+      }
     }
 
     return (
@@ -349,7 +359,7 @@ class ProductCarousel extends React.Component {
         <div className="product-carousel-header">
           <h2><a href={this.props.link}>{this.props.title} <span className="glyphicon glyphicon-chevron-right"></span></a></h2>
         </div>
-        <div className="product-carousel-wrapper">
+        <div className="product-carousel-wrapper" style={carouselWrapperPadding}>
           <div className="product-carousel-left">
             {carouselArrowLeftDisplay}
           </div>
