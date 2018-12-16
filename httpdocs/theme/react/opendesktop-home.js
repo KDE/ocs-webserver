@@ -274,7 +274,7 @@ class ProductCarousel extends React.Component {
 
     let itemsPerRow = 5;
     if (window.hpVersion === 2) {
-      itemsPerRow = 7;
+      itemsPerRow = 6;
     }
 
     const containerWidth = $('#main-content').width();
@@ -396,8 +396,8 @@ class ProductCarousel extends React.Component {
     if (window.hpVersion === 2) {
       hpVersionClass = "two";
       carouselWrapperPadding = {
-        "paddingLeft": this.state.itemWidth,
-        "paddingRight": this.state.itemWidth,
+        "paddingLeft": this.state.itemWidth / 2,
+        "paddingRight": this.state.itemWidth / 2,
         "height": this.state.itemWidth * 2
       };
     }
@@ -466,6 +466,11 @@ class ProductCarouselItem extends React.Component {
       imageUrl = 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small;
     }
 
+    let paddingTop;
+    if (window.hpVersion === 2) {
+      paddingTop = this.props.itemWidth;
+    }
+
     return React.createElement(
       "div",
       { className: "product-carousel-item", style: { "width": this.props.itemWidth } },
@@ -474,7 +479,7 @@ class ProductCarouselItem extends React.Component {
         { className: "product-carousel-item-wrapper" },
         React.createElement(
           "a",
-          { href: "/p/" + this.props.product.project_id },
+          { href: "/p/" + this.props.product.project_id, style: paddingTop },
           React.createElement(
             "figure",
             null,
