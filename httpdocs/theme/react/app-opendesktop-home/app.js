@@ -298,14 +298,26 @@ class ProductCarousel extends React.Component {
 
     let carouselItemsDisplay;
     if (this.state.products && this.state.products.length > 0){
-      carouselItemsDisplay = this.state.products.map((product,index) => (
-        <ProductCarouselItem
-          key={index}
-          product={product}
-          itemWidth={this.state.itemWidth}
-          env={this.props.env}
-        />
-      ));
+
+      if (window.hpVersion === 1){
+        carouselItemsDisplay = this.state.products.map((product,index) => (
+          <ProductCarouselItem
+            key={index}
+            product={product}
+            itemWidth={this.state.itemWidth}
+            env={this.props.env}
+          />
+        ));
+      } else if (window.hpVersion === 2){
+        carouselItemsDisplay = this.state.products.map((product,index) => (
+          <ProductCarouselItemSecondVersion
+            key={index}
+            product={product}
+            itemWidth={this.state.itemWidth}
+            env={this.props.env}
+          />
+        ));
+      }
     }
 
     let carouselArrowLeftDisplay;
@@ -397,6 +409,46 @@ class ProductCarouselItem extends React.Component {
     )
   }
 }
+
+class ProductCarouselItemSecondVersion extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  componentDidMount() {
+    console.log('second version');
+  }
+
+  render(){
+    let imageUrl = this.props.product.image_small;
+    if (imageUrl && this.props.product.image_small.indexOf('https://') === -1 && this.props.product.image_small.indexOf('http://') === -1){
+      let imageBaseUrl;
+      if (this.props.env === 'live') {
+        imageBaseUrl = 'cn.opendesktop.org';
+      } else {
+        imageBaseUrl = 'cn.opendesktop.cc';
+      }
+      imageUrl = 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small;
+    }
+
+
+    return (
+      <div className="product-carousel-item" style={{"width":this.props.itemWidth}}>
+        <a href={"/p/"+this.props.product.project_id }>
+          <figure>
+            <img className="very-rounded-corners" src={imageUrl} />
+          </figure>
+          <div className="product-info">
+            <span className="product-info-title">{this.props.product.title}</span>
+            <span className="product-info-user">{this.props.product.username}</span>
+          </div>
+        </a>
+      </div>
+    )
+  }
+}
+
 
 ReactDOM.render(
     <App />,
