@@ -469,9 +469,7 @@ class ProductCarouselItem extends React.Component {
     let paddingTop;
     let displayDate;
     if (window.hpVersion === 2) {
-      paddingTop = {
-        "paddingTop": this.props.itemWidth * 1.5 / 2
-      };
+      paddingTop = this.props.itemWidth * 1.5 / 2;
     }
 
     return React.createElement(
@@ -482,10 +480,10 @@ class ProductCarouselItem extends React.Component {
         { className: "product-carousel-item-wrapper" },
         React.createElement(
           "a",
-          { href: "/p/" + this.props.product.project_id, style: paddingTop },
+          { href: "/p/" + this.props.product.project_id, style: { "paddingTop": paddingTop } },
           React.createElement(
             "figure",
-            null,
+            { style: { "height": paddingTop } },
             React.createElement("img", { className: "very-rounded-corners", src: imageUrl })
           ),
           React.createElement(

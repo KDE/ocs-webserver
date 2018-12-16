@@ -400,16 +400,14 @@ class ProductCarouselItem extends React.Component {
     let paddingTop;
     let displayDate;
     if (window.hpVersion === 2){
-      paddingTop = {
-        "paddingTop":(this.props.itemWidth * 1.5) / 2
-      }
+      paddingTop = (this.props.itemWidth * 1.5) / 2
     }
 
     return (
       <div className="product-carousel-item" style={{"width":this.props.itemWidth}}>
         <div className="product-carousel-item-wrapper">
-          <a href={"/p/"+this.props.product.project_id } style={paddingTop}>
-            <figure>
+          <a href={"/p/"+this.props.product.project_id } style={{"paddingTop":paddingTop}}>
+            <figure style={{"height":paddingTop}}>
               <img className="very-rounded-corners" src={imageUrl} />
             </figure>
             <div className="product-info">
