@@ -386,7 +386,7 @@ class ProductCarouselItem extends React.Component {
 
   render(){
     console.log(this.props.product);
-    
+
     let imageUrl = this.props.product.image_small;
     if (imageUrl && this.props.product.image_small.indexOf('https://') === -1 && this.props.product.image_small.indexOf('http://') === -1){
       let imageBaseUrl;
@@ -399,10 +399,35 @@ class ProductCarouselItem extends React.Component {
     }
 
     let paddingTop;
-    let displayDate;
+    let productInfoDisplay = (
+      <div className="product-info">
+        <span className="product-info-title">{this.props.product.title}</span>
+        <span className="product-info-user">{this.props.product.username}</span>
+      </div>
+    );
+
     if (window.hpVersion === 2){
       paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
+      productInfoDisplay = (
+        <div className="product-info">
+          <span className="product-info-title">{this.props.product.title}</span>
+          <span className="product-info-category">{this.props.product.cat_title}</span>
+          <span className="product-info-date">{this.props.product.created_at}</span>
+          <div className="score-info">
+            <div className="score-number">
+              score {this.state.product.laplace_score + "%"}
+            </div>
+            <div className="score-bar-container">
+              <div className="score-bar" style={{"width":this.state.product.laplace_score + "%"}}></div>
+            </div>
+            <div className="score-bar-date">
+
+            </div>
+          </div>
+        </div>
+      );
     }
+
 
     return (
       <div className="product-carousel-item" style={{"width":this.props.itemWidth}}>
@@ -411,10 +436,7 @@ class ProductCarouselItem extends React.Component {
             <figure style={{"height":paddingTop}}>
               <img className="very-rounded-corners" src={imageUrl} />
             </figure>
-            <div className="product-info">
-              <span className="product-info-title">{this.props.product.title}</span>
-              <span className="product-info-user">{this.props.product.username}</span>
-            </div>
+            {productInfoDisplay}
           </a>
         </div>
       </div>

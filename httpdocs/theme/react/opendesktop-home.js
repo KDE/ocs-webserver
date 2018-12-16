@@ -468,9 +468,58 @@ class ProductCarouselItem extends React.Component {
     }
 
     let paddingTop;
-    let displayDate;
+    let productInfoDisplay = React.createElement(
+      "div",
+      { className: "product-info" },
+      React.createElement(
+        "span",
+        { className: "product-info-title" },
+        this.props.product.title
+      ),
+      React.createElement(
+        "span",
+        { className: "product-info-user" },
+        this.props.product.username
+      )
+    );
+
     if (window.hpVersion === 2) {
       paddingTop = this.props.itemWidth * 1.35 / 2 - 10;
+      productInfoDisplay = React.createElement(
+        "div",
+        { className: "product-info" },
+        React.createElement(
+          "span",
+          { className: "product-info-title" },
+          this.props.product.title
+        ),
+        React.createElement(
+          "span",
+          { className: "product-info-category" },
+          this.props.product.cat_title
+        ),
+        React.createElement(
+          "span",
+          { className: "product-info-date" },
+          this.props.product.created_at
+        ),
+        React.createElement(
+          "div",
+          { className: "score-info" },
+          React.createElement(
+            "div",
+            { className: "score-number" },
+            "score ",
+            this.state.product.laplace_score + "%"
+          ),
+          React.createElement(
+            "div",
+            { className: "score-bar-container" },
+            React.createElement("div", { className: "score-bar", style: { "width": this.state.product.laplace_score + "%" } })
+          ),
+          React.createElement("div", { className: "score-bar-date" })
+        )
+      );
     }
 
     return React.createElement(
@@ -487,20 +536,7 @@ class ProductCarouselItem extends React.Component {
             { style: { "height": paddingTop } },
             React.createElement("img", { className: "very-rounded-corners", src: imageUrl })
           ),
-          React.createElement(
-            "div",
-            { className: "product-info" },
-            React.createElement(
-              "span",
-              { className: "product-info-title" },
-              this.props.product.title
-            ),
-            React.createElement(
-              "span",
-              { className: "product-info-user" },
-              this.props.product.username
-            )
-          )
+          productInfoDisplay
         )
       )
     );
