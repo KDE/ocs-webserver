@@ -298,7 +298,6 @@ class ProductCarousel extends React.Component {
 
     let carouselItemsDisplay;
     if (this.state.products && this.state.products.length > 0){
-
       if (window.hpVersion === 1){
         carouselItemsDisplay = this.state.products.map((product,index) => (
           <ProductCarouselItem
@@ -351,8 +350,13 @@ class ProductCarousel extends React.Component {
     }
 
 
+    let hpVersionClass = "one";
+    if (window.hpVersion === 2){
+      hpVersion = "two";
+    }
+
     return (
-      <div className="product-carousel">
+      <div className={"product-carousel " + hpVersion}>
         <div className="product-carousel-header">
           <h2><a href={this.props.link}>{this.props.title} <span className="glyphicon glyphicon-chevron-right"></span></a></h2>
         </div>
@@ -435,15 +439,17 @@ class ProductCarouselItemSecondVersion extends React.Component {
 
     return (
       <div className="product-carousel-item" style={{"width":this.props.itemWidth}}>
-        <a href={"/p/"+this.props.product.project_id }>
-          <figure>
-            <img className="very-rounded-corners" src={imageUrl} />
-          </figure>
-          <div className="product-info">
-            <span className="product-info-title">{this.props.product.title}</span>
-            <span className="product-info-user">{this.props.product.username}</span>
-          </div>
-        </a>
+        <div className="product-carousel-item-wrapper">
+          <a href={"/p/"+this.props.product.project_id }>
+            <figure>
+              <img className="very-rounded-corners" src={imageUrl} />
+            </figure>
+            <div className="product-info">
+              <span className="product-info-title">{this.props.product.title}</span>
+              <span className="product-info-user">{this.props.product.username}</span>
+            </div>
+          </a>          
+        </div>
       </div>
     )
   }

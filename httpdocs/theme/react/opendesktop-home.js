@@ -348,7 +348,6 @@ class ProductCarousel extends React.Component {
 
     let carouselItemsDisplay;
     if (this.state.products && this.state.products.length > 0) {
-
       if (window.hpVersion === 1) {
         carouselItemsDisplay = this.state.products.map((product, index) => React.createElement(ProductCarouselItem, {
           key: index,
@@ -396,9 +395,14 @@ class ProductCarousel extends React.Component {
       );
     }
 
+    let hpVersionClass = "one";
+    if (window.hpVersion === 2) {
+      hpVersion = "two";
+    }
+
     return React.createElement(
       "div",
-      { className: "product-carousel" },
+      { className: "product-carousel " + hpVersion },
       React.createElement(
         "div",
         { className: "product-carousel-header" },
@@ -516,25 +520,29 @@ class ProductCarouselItemSecondVersion extends React.Component {
       "div",
       { className: "product-carousel-item", style: { "width": this.props.itemWidth } },
       React.createElement(
-        "a",
-        { href: "/p/" + this.props.product.project_id },
+        "div",
+        { className: "product-carousel-item-wrapper" },
         React.createElement(
-          "figure",
-          null,
-          React.createElement("img", { className: "very-rounded-corners", src: imageUrl })
-        ),
-        React.createElement(
-          "div",
-          { className: "product-info" },
+          "a",
+          { href: "/p/" + this.props.product.project_id },
           React.createElement(
-            "span",
-            { className: "product-info-title" },
-            this.props.product.title
+            "figure",
+            null,
+            React.createElement("img", { className: "very-rounded-corners", src: imageUrl })
           ),
           React.createElement(
-            "span",
-            { className: "product-info-user" },
-            this.props.product.username
+            "div",
+            { className: "product-info" },
+            React.createElement(
+              "span",
+              { className: "product-info-title" },
+              this.props.product.title
+            ),
+            React.createElement(
+              "span",
+              { className: "product-info-user" },
+              this.props.product.username
+            )
           )
         )
       )
