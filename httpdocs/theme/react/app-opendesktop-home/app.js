@@ -415,10 +415,10 @@ class ProductCarouselItem extends React.Component {
           <span className="product-info-date">{this.props.product.created_at}</span>
           <div className="score-info">
             <div className="score-number">
-              score {this.state.product.laplace_score + "%"}
+              score {this.props.product.laplace_score + "%"}
             </div>
             <div className="score-bar-container">
-              <div className="score-bar" style={{"width":this.state.product.laplace_score + "%"}}></div>
+              <div className="score-bar" style={{"width":this.props.product.laplace_score + "%"}}></div>
             </div>
             <div className="score-bar-date">
 

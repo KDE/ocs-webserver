@@ -510,12 +510,12 @@ class ProductCarouselItem extends React.Component {
             "div",
             { className: "score-number" },
             "score ",
-            this.state.product.laplace_score + "%"
+            this.props.product.laplace_score + "%"
           ),
           React.createElement(
             "div",
             { className: "score-bar-container" },
-            React.createElement("div", { className: "score-bar", style: { "width": this.state.product.laplace_score + "%" } })
+            React.createElement("div", { className: "score-bar", style: { "width": this.props.product.laplace_score + "%" } })
           ),
           React.createElement("div", { className: "score-bar-date" })
         )
