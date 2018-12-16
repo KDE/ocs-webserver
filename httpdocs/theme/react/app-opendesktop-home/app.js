@@ -385,7 +385,8 @@ class ProductCarouselItem extends React.Component {
   }
 
   render(){
-    console.log(this.props.product.image_small);
+    console.log(this.props.product);
+    
     let imageUrl = this.props.product.image_small;
     if (imageUrl && this.props.product.image_small.indexOf('https://') === -1 && this.props.product.image_small.indexOf('http://') === -1){
       let imageBaseUrl;
