@@ -347,7 +347,7 @@ class ProductCarousel extends React.Component {
     let hpVersionClass = "one";
     let carouselWrapperPadding = {}
     if (window.hpVersion === 2){
-      hpVersion = "two";
+      hpVersionClass = "two";
       carouselWrapperPadding = {
         "paddingLeft":this.state.itemWidth,
         "paddingRight":this.state.itemWidth
@@ -355,7 +355,7 @@ class ProductCarousel extends React.Component {
     }
 
     return (
-      <div className={"product-carousel " + hpVersion}>
+      <div className={"product-carousel " + hpVersionClass}>
         <div className="product-carousel-header">
           <h2><a href={this.props.link}>{this.props.title} <span className="glyphicon glyphicon-chevron-right"></span></a></h2>
         </div>

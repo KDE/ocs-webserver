@@ -394,7 +394,7 @@ class ProductCarousel extends React.Component {
     let hpVersionClass = "one";
     let carouselWrapperPadding = {};
     if (window.hpVersion === 2) {
-      hpVersion = "two";
+      hpVersionClass = "two";
       carouselWrapperPadding = {
         "paddingLeft": this.state.itemWidth,
         "paddingRight": this.state.itemWidth
@@ -403,7 +403,7 @@ class ProductCarousel extends React.Component {
 
     return React.createElement(
       "div",
-      { className: "product-carousel " + hpVersion },
+      { className: "product-carousel " + hpVersionClass },
       React.createElement(
         "div",
         { className: "product-carousel-header" },
