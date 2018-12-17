@@ -863,7 +863,7 @@ class UserTabs extends React.Component {
   render(){
 
     let tabContentDisplay;
-    if (this.currentTab === 'comments'){
+    if (this.state.currentTab === 'comments'){
       tabContentDisplay = (
         <div>Comments</div>
       );
