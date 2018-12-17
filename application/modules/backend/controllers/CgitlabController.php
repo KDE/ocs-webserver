@@ -134,7 +134,6 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
               AND LOCATE('_deactivated', `me`.`email_address`) = 0
             " . $filter . "
             ORDER BY `m`.`member_id` DESC
-            #LIMIT 25,125
         ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql);

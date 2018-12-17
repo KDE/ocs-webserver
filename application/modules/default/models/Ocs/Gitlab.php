@@ -44,6 +44,7 @@ class Default_Model_Ocs_Gitlab
         $this->httpClient = new Zend_Http_Client($uri, array('keepalive' => true, 'strictredirects' => true));
 
         $this->cache = Zend_Registry::get('cache');
+        $this->messages = array();
     }
 
     /**
@@ -500,6 +501,10 @@ class Default_Model_Ocs_Gitlab
         }
 
         $body = Zend_Json::decode($response->getBody());
+
+        if (false == $body) {
+            return false;
+        }
 
         if ($body && array_key_exists("message", $body)) {
             $this->messages[] = "id: {$uid} ($uri) - " . Zend_Json::encode($body["message"]);
