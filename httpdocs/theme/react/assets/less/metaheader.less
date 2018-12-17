@@ -111,6 +111,47 @@ body {
         text-decoration: none;
         background-color: #eee !important;
     }
+
+    &#right-panel {
+      height: 100%;
+      position: fixed;
+      top: 0;
+      right: 0;
+      padding: 0;
+      border: 0;
+      box-shadow: none;
+      width: 432px;
+      border-left: 1px solid #ccc;
+      margin: 0;
+      padding-top: 137px;
+
+      #user-info-menu-item {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 137px;
+
+        #user-details-username {
+          h2 {
+            margin: 10px 0;
+            font-size: 26px;
+            color: #353a3d;
+            font-weight: bold;
+          }
+        }
+
+        #user-details-email {
+          color: #687a86;
+          font-size: 18px;
+        }
+      }
+
+      #user-tabs-menu-item {
+        height: 100%;
+        overflow: scroll;
+        background-color: white;
+      }
+    }
   }
 
   .metamenu {
@@ -999,46 +1040,5 @@ body {
     background: white;
     padding: 10px;
     box-shadow: 0px 1px 2px rgba(0,0,0,0.25);
-  }
-}
-
-#right-panel {
-  height: 100%;
-  position: fixed;
-  top: 0;
-  right: 0;
-  padding: 0;
-  border: 0;
-  box-shadow: none;
-  width: 432px;
-  border-left: 1px solid #ccc;
-  margin: 0;
-  padding-top: 137px;
-
-  #user-info-menu-item {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 137px;
-
-    #user-details-username {
-      h2 {
-        margin: 10px 0;
-        font-size: 26px;
-        color: #353a3d;
-        font-weight: bold;
-      }
-    }
-
-    #user-details-email {
-      color: #687a86;
-      font-size: 18px;
-    }
-  }
-
-  #user-tabs-menu-item {
-    height: 100%;
-    overflow: scroll;
-    background-color: white;
   }
 }
