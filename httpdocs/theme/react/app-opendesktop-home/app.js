@@ -345,7 +345,7 @@ class ProductCarousel extends React.Component {
 
 
     let hpVersionClass = "one";
-    let carouselWrapperPadding = {};
+    let carouselWrapperStyling = {};
     let carouselArrowsMargin;
     if (window.hpVersion === 2){
       hpVersionClass = "two";
@@ -414,7 +414,7 @@ class ProductCarouselItem extends React.Component {
       let commentsCountDisplay;
       if (this.props.product.comment_count > 0){
         commentsCountDisplay = (
-          <span className="product-info-commentcount">{this.props.product.count_comments} comments</span>          
+          <span className="product-info-commentcount">{this.props.product.count_comments} comments</span>
         )
       }
       productInfoDisplay = (
