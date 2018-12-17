@@ -409,19 +409,12 @@ class ProductCarouselItem extends React.Component {
       paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
       const createDate = new Date(this.props.product.created_at);
       const createdDate = createDate.split(' ')[1] + " " + createDate.split(' ')[2] + " " createDate.split(' ')[3];
-      console.log(createdDate);
-      let commentsCountDisplay;
-      if (this.props.product.comment_count > 0){
-        commentsCountDisplay = (
-          <span className="product-info-commentcount">{this.props.product.count_comments} comments</span>
-        )
-      }
       productInfoDisplay = (
         <div className="product-info">
           <span className="product-info-title">{this.props.product.title}</span>
           <span className="product-info-category">{this.props.product.cat_title}</span>
-          <span className="product-info-date">{this.props.product.created_at}</span>
-          {commentsCountDisplay}
+          <span className="product-info-date">{createdDate}</span>
+          <span className="product-info-commentcount">{this.props.product.count_comments} comments</span>
           <div className="score-info">
             <div className="score-number">
               score {this.props.product.laplace_score + "%"}
