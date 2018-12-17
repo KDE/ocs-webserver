@@ -855,7 +855,17 @@ class UserTabs extends React.Component {
   render(){
     return(
       <div id="user-tabs-container">
-
+        <div id="user-tabs-menu">
+          <ul>
+            <li><a>Comments</a></li>
+            <li><a>Recommends</a></li>
+            <li><a>Followers</a></li>
+            <li><a>Following</a></li>
+          </ul>
+        </div>
+        <div id="user-tabs-content">
+          Content display
+        </div>
       </div>
     );
   }
