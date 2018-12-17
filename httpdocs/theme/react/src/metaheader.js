@@ -850,25 +850,46 @@ class UserLoginMenuContainer extends React.Component {
 class UserTabs extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      currentTab:'comments'
+    };
+    this.onTabMenuItemClick = this.onTabMenuItemClick.bind(this);
+  }
+
+  onTabMenuItemClick(val){
+    this.setState({currentTab:val});
   }
 
   render(){
+
+    let tabContentDisplay;
+    if (this.currentTab === 'comments'){
+      tabContentDisplay = (
+        <div>Comments</div>
+      );
+    } else if (this.state.currentTab === 'search'){
+      tabContentDisplay = (
+        <div>Search User</div>
+      );
+    }
+
     return(
       <div id="user-tabs-container">
         <div id="user-tabs-menu">
           <ul>
-            <li><a>Comments</a></li>
             <li>
-              <a>
+              <a className={} onClick={() => this.onTabMenuItemClick('comments')}>Comments</a>
+            </li>
+            <li>
+              <a onClick={() => this.onTabMenuItemClick('search')}>
                 <input type="text"/>
-                <span className="search-button"></span>              
+                <span className="search-button"></span>
               </a>
             </li>
           </ul>
         </div>
         <div id="user-tabs-content">
-          Content display
+          {tabContentDisplay}
         </div>
       </div>
     );
