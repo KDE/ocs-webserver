@@ -878,10 +878,10 @@ class UserTabs extends React.Component {
         <div id="user-tabs-menu">
           <ul>
             <li>
-              <a className={} onClick={() => this.onTabMenuItemClick('comments')}>Comments</a>
+              <a className={this.state.currentTab === "comments" ? "active" : ""} onClick={() => this.onTabMenuItemClick('comments')}>Comments</a>
             </li>
             <li>
-              <a onClick={() => this.onTabMenuItemClick('search')}>
+              <a className={this.state.currentTab === "search" ? "active" : ""} onClick={() => this.onTabMenuItemClick('search')}>
                 <input type="text"/>
                 <span className="search-button"></span>
               </a>
