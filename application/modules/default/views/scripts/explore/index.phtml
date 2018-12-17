@@ -19,15 +19,22 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+$modelCategory = new Default_Model_DbTable_ProjectCategory();
+$this->dataCategory = $modelCategory->findSingleRow($this->cat_id);
 $store_config = Zend_Registry::get('store_config');
 $host = $store_config->host;
 $og_server = $this->serverUrl(true);
+$catTitle = '';
+if($this->dataCategory['project_category_id'])
+{
+  $catTitle = $this->dataCategory['title'];
+}
 if($this->filters['order'] == 'latest'){
-  $og_title = 'Browse Latest | '.$host;
+  $og_title = 'Browse '.$catTitle.' Latest | '.$host;
 }else if($this->filters['order'] == 'top'){
-  $og_title = 'Browse Top | '.$host;
+  $og_title = 'Browse '.$catTitle.' Top | '.$host;
 }else{
-  $og_title='Browse | '.$host;
+  $og_title='Browse '.$catTitle.' | '.$host;
 }
 $og_description = $og_title .'| A community for free and open source software and libre content';
 $this->templateConfigData = Zend_Registry::get('store_template');
@@ -43,11 +50,11 @@ $this->headMeta()->appendProperty('og:image',$og_image);
 
 $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
 $modelInfo = new Default_Model_Info();
-$modelCategory = new Default_Model_DbTable_ProjectCategory();
-$this->dataCategory = $modelCategory->findSingleRow($this->cat_id);
+
 $this->countSupporters = $modelInfo->getCountActiveSupporters();
 $this->supporters = $modelInfo->getNewActiveSupporters(7);
 $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
+
 
 if($this->inputFilterOriginal ==1)
 {
