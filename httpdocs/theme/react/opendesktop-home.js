@@ -482,8 +482,8 @@ class ProductCarouselItem extends React.Component {
     );
 
     if (window.hpVersion === 2) {
-
       paddingTop = this.props.itemWidth * 1.35 / 2 - 10;
+      const createDate = new Date(this.props.product.created_at);
       let commentsCountDisplay;
       if (this.props.product.comment_count > 0) {
         commentsCountDisplay = React.createElement(
@@ -509,7 +509,7 @@ class ProductCarouselItem extends React.Component {
         React.createElement(
           "span",
           { className: "product-info-date" },
-          this.props.product.created_at
+          createDate
         ),
         commentsCountDisplay,
         React.createElement(
