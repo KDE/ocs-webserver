@@ -508,7 +508,7 @@ body {
         &#right-panel {
           height: 100%;
           position: fixed;
-          top: 0;
+          top: 35px;
           right: 0;
           padding: 0;
           border: 0;
@@ -589,13 +589,19 @@ body {
                     a {
                       display: block;
                       padding: 0 10px;
-                      height: 38px;
+                      height: 40px;
                       border-bottom: 2px solid transparent;
 
                       &.active,
                       &:hover {
                         color: #2e9fff;
                         border-bottom-color: #2e9fff;
+                      }
+
+                      input[type="text"] {
+                        height: 24px;
+                        border-radius: 5px;
+                        border: 1px solid #ccc;
                       }
                     }
                   }

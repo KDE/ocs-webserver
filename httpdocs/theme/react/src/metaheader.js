@@ -860,8 +860,10 @@ class UserTabs extends React.Component {
           <ul>
             <li><a>Comments</a></li>
             <li>
-              <input type="text"/>
-              <a className="search-button"></a>
+              <a>
+                <input type="text"/>
+                <span className="search-button"></span>              
+              </a>
             </li>
           </ul>
         </div>
