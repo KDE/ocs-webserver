@@ -407,6 +407,11 @@ class ProductCarouselItem extends React.Component {
 
     if (window.hpVersion === 2){
       paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
+
+      let cDate = new Date(this.props.product.created_at);
+      cDate = cDate.toString();
+      console.log(cDate);
+
       productInfoDisplay = (
         <div className="product-info">
           <span className="product-info-title">{this.props.product.title}</span>
@@ -424,7 +429,6 @@ class ProductCarouselItem extends React.Component {
         </div>
       );
     }
-
 
     return (
       <div className="product-carousel-item" style={{"width":this.props.itemWidth}}>
