@@ -489,8 +489,6 @@ class ProductCarouselItem extends React.Component {
 
     if (window.hpVersion === 2) {
       paddingTop = this.props.itemWidth * 1.35 / 2 - 10;
-      const createDate = new Date(this.props.product.created_at);
-      const createdDate = createDate.split(' ')[1] + " " + createDate.split(' ')[2] + " " + createDate.split(' ')[3];
       productInfoDisplay = React.createElement(
         "div",
         { className: "product-info" },
@@ -507,7 +505,7 @@ class ProductCarouselItem extends React.Component {
         React.createElement(
           "span",
           { className: "product-info-date" },
-          createdDate
+          this.props.product.created_at
         ),
         React.createElement(
           "span",
