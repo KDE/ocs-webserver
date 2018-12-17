@@ -523,9 +523,9 @@ class MoreDropDownMenu extends React.Component {
     return(
       <li ref={node => this.node = node} id="more-dropdown-menu" className={this.state.dropdownClass}>
         <a className="more-menu-link-item">More</a>
-        <ul className="dropdown-menu">                   
+        <ul className="dropdown-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
-          <li><a href={this.props.baseUrl + "/support"}>Support</a></li>  
+          <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
           {faqLinkItem}
           {apiLinkItem}
@@ -619,7 +619,7 @@ class UserMenu extends React.Component {
       }
 
       userMenuContainerDisplay = (
-        <ul className="metaheader-menu" id="user-menu">          
+        <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
@@ -815,7 +815,7 @@ class UserLoginMenuContainer extends React.Component {
             id="userLoginDropdown">
             <img className="th-icon" src={this.props.user.avatar}/>
           </button>
-          <ul className="dropdown-menu dropdown-menu-right">
+          <ul id="right-panel" className="dropdown-menu dropdown-menu-right">
             <li id="user-info-menu-item">
               <div id="user-info-section">
                 <div className="user-avatar">
@@ -825,7 +825,7 @@ class UserLoginMenuContainer extends React.Component {
                 </div>
                 <div className="user-details">
                   <ul>
-                    <li><b>{this.props.user.username}</b></li>
+                    <li id="user-details-username"><h2>{this.props.user.username}</h2></li>
                     <li>{this.props.user.mail}</li>
                   </ul>
                 </div>
@@ -982,7 +982,7 @@ class MobileLeftSidePanel extends React.Component {
             </li>
             <li>
               <a className="groupname"><b>More</b></a>
-              <ul>                
+              <ul>
                 <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
                 <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
                 <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
