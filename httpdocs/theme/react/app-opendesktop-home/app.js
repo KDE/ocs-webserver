@@ -161,6 +161,7 @@ class SpotlightProduct extends React.Component {
                   <img src={this.state.featuredProduct.profile_image_url}/>
                   {this.state.featuredProduct.username}
                 </div>
+                <span>{this.state.featuredProduct.comment_count} comments</span>
                 <div className="score-info">
                   <div className="score-number">
                     score {this.state.featuredProduct.laplace_score + "%"}
