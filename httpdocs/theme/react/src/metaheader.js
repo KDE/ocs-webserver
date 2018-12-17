@@ -826,7 +826,7 @@ class UserLoginMenuContainer extends React.Component {
                 <div className="user-details">
                   <ul>
                     <li id="user-details-username"><h2>{this.props.user.username}</h2></li>
-                    <li>{this.props.user.mail}</li>
+                    <li id="user-details-email">{this.props.user.mail}</li>
                     <li className="buttons">
                       <a href={this.props.baseUrl + "/settings/"} className="btn btn-default btn-metaheader"><span>Settings</span></a>
                       <a href={this.props.logoutUrl} className="btn btn-default pull-right btn-metaheader"><span>Logout</span></a>
@@ -855,7 +855,7 @@ class UserTabs extends React.Component {
   render(){
     return(
       <div id="user-tabs-container">
-        
+
       </div>
     );
   }
