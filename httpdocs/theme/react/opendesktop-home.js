@@ -515,6 +515,7 @@ class ProductCarouselItem extends React.Component {
           { className: "product-info-date" },
           this.props.product.created_at
         ),
+        commentsCountDisplay,
         React.createElement(
           "div",
           { className: "score-info" },
