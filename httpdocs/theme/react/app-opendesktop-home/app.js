@@ -411,7 +411,8 @@ class ProductCarouselItem extends React.Component {
       let cDate = new Date(this.props.product.created_at);
       cDate = cDate.toString();
       console.log(cDate);
-
+      const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
+      console.log(createdDate);
       productInfoDisplay = (
         <div className="product-info">
           <span className="product-info-title">{this.props.product.title}</span>
