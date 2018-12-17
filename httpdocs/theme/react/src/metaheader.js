@@ -815,6 +815,7 @@ class UserLoginMenuContainer extends React.Component {
             id="userLoginDropdown">
             <img className="th-icon" src={this.props.user.avatar}/>
           </button>
+          <div id="background-overlay"></div>
           <ul id="right-panel" className="dropdown-menu dropdown-menu-right">
             <li id="user-info-menu-item">
               <div id="user-info-section">
@@ -858,9 +859,10 @@ class UserTabs extends React.Component {
         <div id="user-tabs-menu">
           <ul>
             <li><a>Comments</a></li>
-            <li><a>Recommends</a></li>
-            <li><a>Followers</a></li>
-            <li><a>Following</a></li>
+            <li>
+              <input type="text"/>
+              <a className="search-button"></a>
+            </li>
           </ul>
         </div>
         <div id="user-tabs-content">
