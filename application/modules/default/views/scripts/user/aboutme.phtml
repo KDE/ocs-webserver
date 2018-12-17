@@ -476,7 +476,18 @@ div#preloaded-images {
                                         </div>
                                     </div>
 
-                                    <?php if (false === empty($this->member->link_website)): ?>
+                                    <?php if (isset($this->member->link_github) && $this->member->link_github != ''): ?>
+                                        <div class="github">
+                                            <div class="label">
+                                                <em class="gt-link"></em>
+                                            </div>
+                                            <div class="text">
+                                                <a href="<?php echo 'https://github.com/'.$this->member->link_github; ?>" target="_blank"><?php echo $this->member->link_github; ?></a>
+                                            </diV>
+                                        </div>
+                                    <?php endif; ?>
+
+                                     <?php if (false === empty($this->member->link_website)): ?>
                                         <div class="info-div">
                                             <div class="label">
                                                     <span class="glyphicon glyphicon-globe" style="color:#000"></span>
@@ -488,17 +499,6 @@ div#preloaded-images {
                                                     title="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->member->link_website); ?>"
                                                 ><?php echo $this->member->link_website; ?></a>
                                                 </div>
-                                        </div>
-                                    <?php endif; ?>
-
-                                    <?php if (isset($this->member->link_github) && $this->member->link_github != ''): ?>
-                                        <div class="github">
-                                            <div class="label">
-                                                <em class="gt-link"></em>
-                                            </div>
-                                            <div class="text">
-                                                <a href="<?php echo 'https://github.com/'.$this->member->link_github; ?>" target="_blank"><?php echo $this->member->link_github; ?></a>
-                                            </diV>
                                         </div>
                                     <?php endif; ?>
 
