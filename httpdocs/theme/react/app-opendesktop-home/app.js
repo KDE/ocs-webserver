@@ -345,14 +345,16 @@ class ProductCarousel extends React.Component {
 
 
     let hpVersionClass = "one";
-    let carouselWrapperPadding = {}
+    let carouselWrapperPadding = {};
+    let carouselArrowsMargin;
     if (window.hpVersion === 2){
       hpVersionClass = "two";
-      carouselWrapperPadding = {
+      carouselWrapperStyling = {
         "paddingLeft":this.state.itemWidth / 2,
         "paddingRight":this.state.itemWidth / 2,
         "height":this.state.itemWidth * 1.35
       }
+      carouselArrowsMargin = this.state.itemWidth / 4;
     }
 
     return (
@@ -360,8 +362,8 @@ class ProductCarousel extends React.Component {
         <div className="product-carousel-header">
           <h2><a href={this.props.link}>{this.props.title} <span className="glyphicon glyphicon-chevron-right"></span></a></h2>
         </div>
-        <div className="product-carousel-wrapper" style={carouselWrapperPadding}>
-          <div className="product-carousel-left">
+        <div className="product-carousel-wrapper" style={carouselWrapperStyling}>
+          <div className="product-carousel-left" style={{"left":carouselArrowsMargin}}>
             {carouselArrowLeftDisplay}
           </div>
           <div className="product-carousel-container">
@@ -369,7 +371,7 @@ class ProductCarousel extends React.Component {
               {carouselItemsDisplay}
             </div>
           </div>
-          <div className="product-carousel-right">
+          <div className="product-carousel-right" style={{"right":carouselArrowsMargin}}>
             {carouselArrowRightDisplay}
           </div>
         </div>
@@ -407,7 +409,14 @@ class ProductCarouselItem extends React.Component {
     );
 
     if (window.hpVersion === 2){
+
       paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
+      let commentsCountDisplay;
+      if (this.props.product.comment_count > 0){
+        commentsCountDisplay = (
+          <span className="product-info-commentcount">{this.props.product.count_comments} comments</span>          
+        )
+      }
       productInfoDisplay = (
         <div className="product-info">
           <span className="product-info-title">{this.props.product.title}</span>
@@ -419,9 +428,6 @@ class ProductCarouselItem extends React.Component {
             </div>
             <div className="score-bar-container">
               <div className="score-bar" style={{"width":this.props.product.laplace_score + "%"}}></div>
-            </div>
-            <div className="score-bar-date">
-
             </div>
           </div>
         </div>

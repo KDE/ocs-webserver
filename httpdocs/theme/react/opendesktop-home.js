@@ -393,13 +393,15 @@ class ProductCarousel extends React.Component {
 
     let hpVersionClass = "one";
     let carouselWrapperPadding = {};
+    let carouselArrowsMargin;
     if (window.hpVersion === 2) {
       hpVersionClass = "two";
-      carouselWrapperPadding = {
+      carouselWrapperStyling = {
         "paddingLeft": this.state.itemWidth / 2,
         "paddingRight": this.state.itemWidth / 2,
         "height": this.state.itemWidth * 1.35
       };
+      carouselArrowsMargin = this.state.itemWidth / 4;
     }
 
     return React.createElement(
@@ -422,10 +424,10 @@ class ProductCarousel extends React.Component {
       ),
       React.createElement(
         "div",
-        { className: "product-carousel-wrapper", style: carouselWrapperPadding },
+        { className: "product-carousel-wrapper", style: carouselWrapperStyling },
         React.createElement(
           "div",
-          { className: "product-carousel-left" },
+          { className: "product-carousel-left", style: { "left": carouselArrowsMargin } },
           carouselArrowLeftDisplay
         ),
         React.createElement(
@@ -439,7 +441,7 @@ class ProductCarousel extends React.Component {
         ),
         React.createElement(
           "div",
-          { className: "product-carousel-right" },
+          { className: "product-carousel-right", style: { "right": carouselArrowsMargin } },
           carouselArrowRightDisplay
         )
       )
@@ -484,7 +486,17 @@ class ProductCarouselItem extends React.Component {
     );
 
     if (window.hpVersion === 2) {
+
       paddingTop = this.props.itemWidth * 1.35 / 2 - 10;
+      let commentsCountDisplay;
+      if (this.props.product.comment_count > 0) {
+        commentsCountDisplay = React.createElement(
+          "span",
+          { className: "product-info-commentcount" },
+          this.props.product.count_comments,
+          " comments"
+        );
+      }
       productInfoDisplay = React.createElement(
         "div",
         { className: "product-info" },
@@ -516,8 +528,7 @@ class ProductCarouselItem extends React.Component {
             "div",
             { className: "score-bar-container" },
             React.createElement("div", { className: "score-bar", style: { "width": this.props.product.laplace_score + "%" } })
-          ),
-          React.createElement("div", { className: "score-bar-date" })
+          )
         )
       );
     }
