@@ -144,6 +144,10 @@ class SpotlightProduct extends React.Component {
       featuredLabelDisplay = "featured"
     }
 
+    let cDate = new Date(this.props.featuredProduct.created_at);
+    cDate = cDate.toString();
+    const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
+
     return(
       <div id="spotlight-product">
         <h2>In the Spotlight</h2>
@@ -170,7 +174,7 @@ class SpotlightProduct extends React.Component {
                     <div className="score-bar" style={{"width":this.state.featuredProduct.laplace_score + "%"}}></div>
                   </div>
                   <div className="score-bar-date">
-
+                    {createdDate}
                   </div>
                 </div>
               </div>
@@ -407,17 +411,14 @@ class ProductCarouselItem extends React.Component {
 
     if (window.hpVersion === 2){
       paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
-
       let cDate = new Date(this.props.product.created_at);
       cDate = cDate.toString();
-      console.log(cDate);
       const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
-      console.log(createdDate);
       productInfoDisplay = (
         <div className="product-info">
           <span className="product-info-title">{this.props.product.title}</span>
           <span className="product-info-category">{this.props.product.cat_title}</span>
-          <span className="product-info-date">{this.props.product.created_at}</span>
+          <span className="product-info-date">{createdDate}</span>
           <span className="product-info-commentcount">{this.props.product.count_comments} comments</span>
           <div className="score-info">
             <div className="score-number">

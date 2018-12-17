@@ -146,6 +146,10 @@ class SpotlightProduct extends React.Component {
       featuredLabelDisplay = "featured";
     }
 
+    let cDate = new Date(this.props.featuredProduct.created_at);
+    cDate = cDate.toString();
+    const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
+
     return React.createElement(
       "div",
       { id: "spotlight-product" },
@@ -216,7 +220,11 @@ class SpotlightProduct extends React.Component {
                   { className: "score-bar-container" },
                   React.createElement("div", { className: "score-bar", style: { "width": this.state.featuredProduct.laplace_score + "%" } })
                 ),
-                React.createElement("div", { className: "score-bar-date" })
+                React.createElement(
+                  "div",
+                  { className: "score-bar-date" },
+                  createdDate
+                )
               )
             ),
             React.createElement(
@@ -489,12 +497,9 @@ class ProductCarouselItem extends React.Component {
 
     if (window.hpVersion === 2) {
       paddingTop = this.props.itemWidth * 1.35 / 2 - 10;
-
       let cDate = new Date(this.props.product.created_at);
       cDate = cDate.toString();
-      console.log(cDate);
       const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
-      console.log(createdDate);
       productInfoDisplay = React.createElement(
         "div",
         { className: "product-info" },
@@ -511,7 +516,7 @@ class ProductCarouselItem extends React.Component {
         React.createElement(
           "span",
           { className: "product-info-date" },
-          this.props.product.created_at
+          createdDate
         ),
         React.createElement(
           "span",
