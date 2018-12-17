@@ -22,7 +22,6 @@ class App extends React.Component {
 
   componentDidMount() {
     this.initHomePage();
-    console.log(window.data);
   }
 
   initHomePage(){
@@ -300,7 +299,6 @@ class ProductCarousel extends React.Component {
   }
 
   render(){
-    console.log(window.hpVersion);
     let carouselItemsDisplay;
     if (this.state.products && this.state.products.length > 0){
       carouselItemsDisplay = this.state.products.map((product,index) => (
@@ -387,8 +385,6 @@ class ProductCarouselItem extends React.Component {
   }
 
   render(){
-    console.log(this.props.product);
-
     let imageUrl = this.props.product.image_small;
     if (imageUrl && this.props.product.image_small.indexOf('https://') === -1 && this.props.product.image_small.indexOf('http://') === -1){
       let imageBaseUrl;
