@@ -572,10 +572,15 @@ body {
                     height: 40px;
 
                     a {
+                      color: #2e9fff;
                       display: block;
                       padding: 0 10px;
-                      height: 40px;
-                      border-bottom: 2px solid blue;
+                      height: 38px;
+                      border-bottom: 2px solid transparent;
+
+                      &.active {
+                        border-bottom-color: #2e9fff;
+                      }
                     }
                   }
                 }
