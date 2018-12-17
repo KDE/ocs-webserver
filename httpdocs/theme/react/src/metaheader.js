@@ -801,7 +801,13 @@ class UserLoginMenuContainer extends React.Component {
         dropdownClass = "open";
       }
     }
-    this.setState({dropdownClass:dropdownClass})
+    this.setState({dropdownClass:dropdownClass},function(){
+      if (dropdownClass === "open"){
+        $('body').addClass('drawer-open');
+      } else {
+        $('body').removeClass('drawer-open');
+      }
+    });
   }
 
 
@@ -878,7 +884,7 @@ class UserTabs extends React.Component {
         <div id="user-tabs-menu">
           <ul>
             <li>
-              <a className={this.state.currentTab === "comments" ? "active" : ""} 
+              <a className={this.state.currentTab === "comments" ? "active" : ""}
                 onClick={() => this.onTabMenuItemClick('comments')}>
                 Comments
               </a>
