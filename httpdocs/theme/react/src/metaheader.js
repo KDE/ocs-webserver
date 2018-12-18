@@ -133,7 +133,6 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log(window.location);
     this.initMetaHeader();
   }
 
@@ -251,17 +250,6 @@ class DomainsMenu extends React.Component {
       )
     }
 
-    if (this.props.isAdmin === true){
-      adminsDropDownMenuDisplay = (
-        <AdminsDropDownMenu
-          user={this.props.user}
-          baseUrl={this.props.baseUrl}
-          gitlabUrl={this.props.gitlabUrl}
-        />
-      );
-    }
-
-
     return (
       <ul className="metaheader-menu left" id="domains-menu">
         <li className="active">
@@ -273,7 +261,12 @@ class DomainsMenu extends React.Component {
         <DomainsDropDownMenu
           domains={this.props.domains}
         />
-        {adminsDropDownMenuDisplay}
+        <DevelopmentDropDownMenu
+          user={this.props.user}
+          baseUrl={this.props.baseUrl}
+          gitlabUrl={this.props.gitlabUrl}
+          isAdmin={this.props.isAdmin}
+        />
         <DiscussionBoardsDropDownMenu
           forumUrl={this.props.forumUrl}
         />
@@ -413,7 +406,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
 
 }
 
-class AdminsDropDownMenu extends React.Component {
+class DevelopmentDropDownMenu extends React.Component {
   constructor(props){
     super(props);
     this.state = {};
@@ -432,7 +425,7 @@ class AdminsDropDownMenu extends React.Component {
   }
 
   componentDidMount() {
-    const self = this;
+    /*const self = this;
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -442,7 +435,7 @@ class AdminsDropDownMenu extends React.Component {
       }
     };
     xhttp.open("GET", config.gitlabUrl+"/api/v4/users?username="+this.props.user.username, true);
-    xhttp.send();
+    xhttp.send();*/
   }
 
   handleClick(e){
@@ -461,15 +454,21 @@ class AdminsDropDownMenu extends React.Component {
     this.setState({dropdownClass:dropdownClass});
   }
 
-
   render(){
+    let issuesMenuItem;
+    if (this.props.isAdmin){
+      console.log('this is admin - ' + this.props.isAdmin)
+      issuesMenuItem = (
+        <li><a href={config.gitlabUrl + "/dashboard/issues?milestone_title=No+Milestone&state=all"}>Issues</a></li>
+      )
+    }
 
     return (
       <li ref={node => this.node = node} id="admins-dropdown-menu" className={this.state.dropdownClass}>
         <a className="admins-menu-link-item">Development</a>
         <ul className="dropdown-menu dropdown-menu-right">
-          <li><a href={config.gitlabUrl+"/dashboard/projects"}>Projects</a></li>
-          <li><a href={this.state.gitlabLink}>Issues</a></li>
+          <li><a href={config.gitlabUrl + "/explore/projects"}>Projects</a></li>
+          {issuesMenuItem}
         </ul>
       </li>
     )
@@ -988,6 +987,82 @@ class UserTabs extends React.Component {
         </div>
       </div>
     );
+  }
+}
+
+class UserCommentsTab extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  componentDidMount() {
+    /*const threads = [
+      {
+        address:'lubuntu.me',
+        comment_count:68,
+        title:'Lubuntu 18.10 (Cosmic Cuttlefish) Released!',
+        comments:[
+          {
+            parent_comment_user:'Simon Quigly',
+            date:'2 months ago',
+            context:'<div>Yes. All visual inconsistencies are fixed now</div>',
+            votes_up:0,
+            votes_down:1
+          },{
+            date:'2 months ago',
+            context:'
+            <div>
+              <p>Hi, nice to see this release. Im curious to test Lubuntu with LXQt. I have already experimented the beta release, and found some theming inconsistencies. Is it all fixed in final release?</p>
+              <p>Meanwhile, I have created a release announcement feed in my blog. Please have a look.<br><a href="http://disq.us/url?url=http%3A%2F%2Ftheopensourcefeed.com%2F00-lubuntu-cosmic-first-release-lxqt%2F%3AiUXptXQ1sOYPoKxW4w8KQrVytwE&amp;cuid=5561052" rel="nofollow noopener" title="http://theopensourcefeed.com/00-lubuntu-cosmic-first-release-lxqt/">http://theopensourcefeed.co...</a></p>
+            </div>
+            ',
+            votes_up:1,
+            votes_down:0
+          }
+        ]
+      },{
+        address:'feren',
+        comment_count:1,
+        title:'A New Snapshot is here, bridging the way to a seamless transition to the future Feren OS',
+        comments:[
+          {
+            date:'2 months ago',
+            context:'<div>
+              <p>Just created a release news for Feren OS October snapshot. Please have a look.<br><a href="http://disq.us/url?url=http%3A%2F%2Ftheopensourcefeed.com%2F00-ferenos-october-snapshot-brings-significant-improvements%3AYftrbOQthqE4qTqKU-LN6sQN_FQ&amp;cuid=3291269" rel="nofollow noopener" title="http://theopensourcefeed.com/00-ferenos-october-snapshot-brings-significant-improvements">http://theopensourcefeed.co...</a></p>
+            </div>',
+            votes_up:4,
+            votes_down:0
+          },{
+            date:'2 months ago',
+            context:'
+            <div>
+              <p>Hi, nice to see this release. Im curious to test Lubuntu with LXQt. I have already experimented the beta release, and found some theming inconsistencies. Is it all fixed in final release?</p>
+              <p>Meanwhile, I have created a release announcement feed in my blog. Please have a look.<br><a href="http://disq.us/url?url=http%3A%2F%2Ftheopensourcefeed.com%2F00-lubuntu-cosmic-first-release-lxqt%2F%3AiUXptXQ1sOYPoKxW4w8KQrVytwE&amp;cuid=5561052" rel="nofollow noopener" title="http://theopensourcefeed.com/00-lubuntu-cosmic-first-release-lxqt/">http://theopensourcefeed.co...</a></p>
+            </div>
+            ',
+            votes_up:0,
+            votes_down:3
+          }
+        ]
+      }
+    ];
+    this.setState({threads:threads});*/
+  }
+
+  render(){
+
+    /*const threadsDisplay;
+    threadsDisplay = this.state.threads.map((t, index) => (
+      <UserCommentsThread
+        thread=
+      />
+    ));*/
+    return(
+      <div id="user-comments-tab-container">
+
+      </div>
+    )
   }
 }
 
