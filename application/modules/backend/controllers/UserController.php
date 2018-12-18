@@ -95,7 +95,11 @@ class Backend_UserController extends Local_Controller_Action_Backend
 
     public function deleteAction()
     {
-        $memberId = (int)$this->getParam('c');
+        if($this->hasParam(self::DATA_ID_NAME)) {
+            $memberId = (int)$this->getParam(self::DATA_ID_NAME, null); 
+        } else {
+            $memberId = (int)$this->getParam('c', null); 
+        }
 
         $this->_model->setDeleted($memberId);
 
