@@ -265,6 +265,7 @@ class DomainsMenu extends React.Component {
           user={this.props.user}
           baseUrl={this.props.baseUrl}
           gitlabUrl={this.props.gitlabUrl}
+          isAdmin={this.props.isAdmin}
         />
         <DiscussionBoardsDropDownMenu
           forumUrl={this.props.forumUrl}
@@ -454,13 +455,20 @@ class DevelopmentDropDownMenu extends React.Component {
   }
 
 
+  let issuesMenuItem;
+  if (this.props.isAdmin){
+    issuesMenuItem = (
+      <li><a href={config.gitlabUrl + "/dashboard/issues?milestone_title=No+Milestone&state=all"}>Issues</a></li>
+    )
+  }
+
   render(){
     return (
       <li ref={node => this.node = node} id="admins-dropdown-menu" className={this.state.dropdownClass}>
         <a className="admins-menu-link-item">Development</a>
         <ul className="dropdown-menu dropdown-menu-right">
           <li><a href={config.gitlabUrl + "/explore/projects"}>Projects</a></li>
-          <li><a href={config.gitlabUrl + "/dashboard/issues?milestone_title=No+Milestone&state=all"}>Issues</a></li>
+          {issuesMenuItem}
         </ul>
       </li>
     )
