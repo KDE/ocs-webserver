@@ -198,4 +198,25 @@ class Backend_StorecategoriesController extends Local_Controller_Action_Backend
         $modelConfigStore->fetchAllStoresConfigArray(true);
     }
 
+    public function treeAction()
+    {
+        $result = true;
+        $model = new Default_Model_DbTable_ProjectCategory();
+        $cat_id = (int)$this->getParam('c');
+
+        try {
+            $records = $model->fetchTreeForCategoryStores($cat_id);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
+            $result = false;
+            $records = array();
+        }
+
+        $jTableResult = array();
+        $jTableResult['Result'] = ($result == true) ? self::RESULT_OK : self::RESULT_ERROR;
+        $jTableResult['Options'] = $records;
+
+        $this->_helper->json($jTableResult);
+    }
+
 }

@@ -103,9 +103,9 @@ foreach ($hostnames as $element) {
                     options: function (data) {
                         if (data.source == 'edit') {
                             data.clearCache();
-                            return '/backend/categories/tree?c=-1';
+                            return '/backend/storecategories/tree?c=-1';
                         }
-                        return '/backend/categories/tree?c=-1';
+                        return '/backend/storecategories/tree?c=-1';
                     }
                 },
                 order: {

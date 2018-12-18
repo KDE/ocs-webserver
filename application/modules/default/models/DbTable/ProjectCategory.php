@@ -628,6 +628,44 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     }
 
     /**
+     * @param $cat_id
+     *
+     * @return array
+     */
+    public function fetchTreeForCategoryStores($cat_id)
+    {
+        $sql = "
+                SELECT
+                pc.project_category_id,
+                pc.lft,
+                pc.rgt,
+                pc.title,
+                pc.is_active,
+                MIN(pc2.is_active)                                       AS parent_active,
+                count(pc.lft) - 1                                        AS depth,
+                SUBSTRING_INDEX( GROUP_CONCAT(pc2.project_category_id ORDER BY pc2.lft), ',', -1) AS parent
+              FROM
+                  project_category AS pc
+              JOIN
+                  project_category AS pc2 ON (pc.lft BETWEEN pc2.lft AND pc2.rgt) AND (IF(pc.project_category_id <> 34,pc2.project_category_id <> pc.project_category_id,true))
+              GROUP BY pc.lft
+              HAVING parent_active = 1 AND pc.is_active = 1
+              ORDER BY pc.lft
+        ";
+        $resultRows = $this->_db->fetchAll($sql);
+
+        $resultForSelect = array();
+        foreach ($resultRows as $row) {
+            if (($row['project_category_id'] == $cat_id) OR ($row['parent'] == $cat_id)) {
+                continue;
+            }
+            $resultForSelect[] = array('DisplayText' => $row['title'], 'Value' => $row['project_category_id']);
+        }
+
+        return $resultForSelect;
+    }
+
+    /**
      * @param array $node
      * @param int   $newLeftPosition
      *
