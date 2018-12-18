@@ -590,7 +590,7 @@ class UserMenu extends React.Component {
         />
       );
         userAppsContextDisplay = (
-          <UserContextMenuContainer
+          <UserContextMenuContainerVersionTwo
             user={this.props.user}
             forumUrl={this.props.forumUrl}
             gitlabUrl={this.props.gitlabUrl}
