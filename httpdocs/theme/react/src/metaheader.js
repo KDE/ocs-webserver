@@ -457,11 +457,12 @@ class DevelopmentDropDownMenu extends React.Component {
   render(){
     let issuesMenuItem;
     if (this.props.isAdmin){
+      console.log('this is admin - ' + this.props.isAdmin)
       issuesMenuItem = (
         <li><a href={config.gitlabUrl + "/dashboard/issues?milestone_title=No+Milestone&state=all"}>Issues</a></li>
       )
     }
-    
+
     return (
       <li ref={node => this.node = node} id="admins-dropdown-menu" className={this.state.dropdownClass}>
         <a className="admins-menu-link-item">Development</a>
