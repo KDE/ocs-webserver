@@ -424,7 +424,7 @@ class DevelopmentDropDownMenu extends React.Component {
   }
 
   componentDidMount() {
-    const self = this;
+    /*const self = this;
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -434,7 +434,7 @@ class DevelopmentDropDownMenu extends React.Component {
       }
     };
     xhttp.open("GET", config.gitlabUrl+"/api/v4/users?username="+this.props.user.username, true);
-    xhttp.send();
+    xhttp.send();*/
   }
 
   handleClick(e){
