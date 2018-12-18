@@ -589,15 +589,14 @@ class UserMenu extends React.Component {
           baseUrl={this.props.baseUrl}
         />
       );
-      if (this.props.isAdmin){
         userAppsContextDisplay = (
           <UserContextMenuContainer
             user={this.props.user}
             forumUrl={this.props.forumUrl}
             gitlabUrl={this.props.gitlabUrl}
+            isAdmin={this.props.isAdmin}
           />
         )
-      }
     } else {
       userDropdownDisplay = (
         <li id="user-login-container"><a href={this.props.loginUrl} className="btn btn-metaheader">Login</a></li>
@@ -699,21 +698,83 @@ class UserContextMenuContainer extends React.Component {
 
     /*
     // BU CODE
-    <li id="opencode-link-item">
-      <a href={this.props.gitlabUrl+"/dashboard/projects"}>
-        <div className="icon"></div>
-        <span>Projects</span>
-      </a>
-    </li>
-    <li id="issues-link-item">
-      <a href={this.state.gitlabLink}>
-        <div className="icon"></div>
-        <span>Issues</span>
-      </a>
-    </li>
+
     */
 
     const urlEnding = config.baseUrl.split('opendesktop.')[1];
+
+    let contextMenuDisplay;
+    if (this.props.isAdmin){
+      contextMenuDisplay = (
+        <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
+          <li id="messages-link-item">
+            <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
+              <div className="icon"></div>
+              <span>Messages</span>
+            </a>
+          </li>
+          <li id="storage-link-item">
+            <a href={"https://my.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Storage</span>
+            </a>
+          </li>
+          <li id="music-link-item">
+            <a href={"https://music.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Music</span>
+            </a>
+          </li>
+          <li id="docs-link-item">
+            <a href={"https://docs.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Docs</span>
+            </a>
+          </li>
+          <li id="contacts-link-item">
+            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
+              <div className="icon"></div>
+              <span>Contacts</span>
+            </a>
+          </li>
+          <li id="calendar-link-item">
+            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
+              <div className="icon"></div>
+              <span>Calendar</span>
+            </a>
+          </li>
+          <li id="talk-link-item">
+            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/spreed/"}>
+              <div className="icon"></div>
+              <span>Talk</span>
+            </a>
+          </li>
+        </ul>
+      );
+    } else {
+      contextMenuDisplay = (
+        <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
+          <li id="messages-link-item">
+            <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
+              <div className="icon"></div>
+              <span>Messages</span>
+            </a>
+          </li>
+          <li id="opencode-link-item">
+            <a href={this.props.gitlabUrl+"/dashboard/projects"}>
+              <div className="icon"></div>
+              <span>Projects</span>
+            </a>
+          </li>
+          <li id="issues-link-item">
+            <a href={this.state.gitlabLink}>
+              <div className="icon"></div>
+              <span>Issues</span>
+            </a>
+          </li>
+        </ul>
+      );
+    }
 
     return (
       <li ref={node => this.node = node} id="user-context-menu-container">
@@ -722,50 +783,7 @@ class UserContextMenuContainer extends React.Component {
             className="btn btn-default dropdown-toggle" type="button" onClick={this.toggleDropDown}>
             <span className="th-icon"></span>
           </button>
-          <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
-            <li id="messages-link-item">
-              <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
-                <div className="icon"></div>
-                <span>Messages</span>
-              </a>
-            </li>
-            <li id="storage-link-item">
-              <a href={"https://my.opendesktop." + urlEnding}>
-                <div className="icon"></div>
-                <span>Storage</span>
-              </a>
-            </li>
-            <li id="music-link-item">
-              <a href={"https://music.opendesktop." + urlEnding}>
-                <div className="icon"></div>
-                <span>Music</span>
-              </a>
-            </li>
-            <li id="docs-link-item">
-              <a href={"https://docs.opendesktop." + urlEnding}>
-                <div className="icon"></div>
-                <span>Docs</span>
-              </a>
-            </li>
-            <li id="contacts-link-item">
-              <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
-                <div className="icon"></div>
-                <span>Contacts</span>
-              </a>
-            </li>
-            <li id="calendar-link-item">
-              <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
-                <div className="icon"></div>
-                <span>Calendar</span>
-              </a>
-            </li>
-            <li id="talk-link-item">
-              <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/spreed/"}>
-                <div className="icon"></div>
-                <span>Talk</span>
-              </a>
-            </li>
-          </ul>
+          {contextMenuDisplay}
         </div>
       </li>
     )
