@@ -714,7 +714,7 @@ class UserContextMenuContainer extends React.Component {
             </a>
           </li>
           <li id="storage-link-item">
-            <a href={"https://my.opendesktop." + urlEnding}>
+            <a href={"https://cloud.opendesktop." + urlEnding}>
               <div className="icon"></div>
               <span>Storage</span>
             </a>
@@ -956,7 +956,7 @@ class UserTabs extends React.Component {
     let tabContentDisplay;
     if (this.state.currentTab === 'comments'){
       tabContentDisplay = (
-        <div>Comments</div>
+        <UserCommentsTab />
       );
     } else if (this.state.currentTab === 'search'){
       tabContentDisplay = (
@@ -994,10 +994,6 @@ class UserTabs extends React.Component {
 class UserCommentsTab extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
-  }
-
-  componentDidMount() {
     const threads = [
       {
         address:'lubuntu.me',
@@ -1038,7 +1034,7 @@ class UserCommentsTab extends React.Component {
         ]
       }
     ];
-    this.setState({threads:threads});
+  	this.state = {threads:threads};
   }
 
   render(){
