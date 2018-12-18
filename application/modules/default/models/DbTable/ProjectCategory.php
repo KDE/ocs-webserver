@@ -514,6 +514,68 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
         return $tree;
     }
+    
+    
+    /**
+     * @param bool $isActive
+     * @param bool $withRoot
+     * @param int  $depth
+     *
+     * @return array
+     * @internal param int $pageSize
+     * @internal param int $startIndex
+     * @internal param bool $clearCache
+     */
+    public function fetchTreeWithParentIdAndTagGroups(
+        $isActive = true,
+        $depth = null
+    ) {
+        $sqlActive = $isActive == true ? " parent_active = 1 AND pc.is_active = 1" : '';
+        $sqlDepth = is_null($depth) == true ? '' : " AND depth <= " . (int)$depth;
+        $sqlHaving = $sqlActive || $sqlDepth ? "HAVING {$sqlActive} {$sqlDepth}" : '';
+        $sql = "
+              SELECT
+                `pc`.`project_category_id`,
+                `pc`.`lft`,
+                `pc`.`rgt`,
+                `pc`.`title`,
+                `pc`.`name_legacy`,
+                `pc`.`is_active`,
+                `pc`.`orderPos`,
+                `pc`.`xdg_type`,
+                `pc`.`dl_pling_factor`,
+                `pc`.`show_description`,
+                `pc`.`source_required`,
+                MIN(`pc2`.`is_active`)                                       AS `parent_active`,
+                concat(repeat('&nbsp;&nbsp;',count(`pc`.`lft`) - 1), `pc`.`title`) AS `title_show`,
+                concat(repeat('&nbsp;&nbsp;',count(`pc`.`lft`) - 1), IF(LENGTH(TRIM(`pc`.`name_legacy`))>0,`pc`.`name_legacy`,`pc`.`title`)) AS `title_legacy`,
+                count(`pc`.`lft`) - 1                                        AS `depth`,
+                GROUP_CONCAT(`pc2`.`project_category_id` ORDER BY `pc2`.`lft`)   AS `ancestor_id_path`,
+                GROUP_CONCAT(`pc2`.`title` ORDER BY `pc2`.`lft` SEPARATOR ' | ') AS `ancestor_path`,
+                GROUP_CONCAT(IF(LENGTH(TRIM(`pc2`.`name_legacy`))>0,`pc2`.`name_legacy`,`pc2`.`title`) ORDER BY `pc2`.`lft` SEPARATOR ' | ') AS `ancestor_path_legacy`,
+                SUBSTRING_INDEX( GROUP_CONCAT(`pc2`.`project_category_id` ORDER BY `pc2`.`lft`), ',', -1) AS `parent`,
+                (SELECT GROUP_CONCAT(`tag_group`.`group_name`)
+                FROM `category_tag_group`,`tag_group`            
+                WHERE `tag_group`.`group_id` = `category_tag_group`.`tag_group_id` AND `category_tag_group`.`category_id` = `pc`.`project_category_id`        
+                GROUP BY `category_tag_group`.`category_id`) AS `tag_group_name`,
+                (SELECT GROUP_CONCAT(`tag_group`.`group_id`)
+                FROM `category_tag_group`,`tag_group`            
+                WHERE `tag_group`.`group_id` = `category_tag_group`.`tag_group_id` AND `category_tag_group`.`category_id` = `pc`.`project_category_id`        
+                GROUP BY `category_tag_group`.`category_id`) AS `tag_group_id`
+              FROM
+                  `project_category` AS `pc`
+              JOIN
+                    `project_category` AS `pc2` ON (`pc`.`lft` BETWEEN `pc2`.`lft` AND `pc2`.`rgt`) AND `pc2`.`project_category_id` <> `pc`.`project_category_id`
+              GROUP BY `pc`.`lft`
+              {$sqlHaving}
+              ORDER BY pc.lft
+
+        ";
+
+        $tree = $this->_db->fetchAll($sql);
+
+        return $tree;
+    }
 
 
     /**

@@ -49,6 +49,17 @@ class Default_Model_TagGroup
 
         return $optgroup;
     }
+    
+    public function fetchAllGroups()
+    {
+        $sql = "
+            SELECT tag_group.group_name, tag_group.group_id
+            FROM tag_group
+        ";
+        $resultSet = $this->getAdapter()->fetchAll($sql);
+
+        return $resultSet;
+    }
 
     /**
      * @return Zend_Db_Adapter_Abstract
@@ -172,6 +183,24 @@ class Default_Model_TagGroup
     public function deleteGroupTag($groupItemId)
     {
         $this->getAdapter()->delete('tag_group_item', array('tag_group_item_id = ?' => $groupItemId));
+    }
+    
+    
+    public function updateTagGroupsPerCategory($cat_id,$taggroups)
+    {
+        $sql = "delete from category_tag_group where category_id=:cat_id";
+        $this->getAdapter()->query($sql, array('cat_id' => $cat_id));
+
+        if($taggroups){
+            $taggroup_id =explode(',', $taggroups);
+            $prepared_insert =
+                array_map(function ($id) use ($cat_id) { return "({$cat_id},{$id})"; },
+                    $taggroup_id);
+            $sql = "INSERT IGNORE INTO category_tag_group (category_id, tag_group_id) VALUES " . implode(',',
+                    $prepared_insert);
+          
+            $this->getAdapter()->query($sql);
+        }
     }
 
 }

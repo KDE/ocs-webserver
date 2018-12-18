@@ -88,6 +88,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('backend_categories'));
         $this->addResource(new Zend_Acl_Resource ('backend_vcategories'));
         $this->addResource(new Zend_Acl_Resource ('backend_categorytag'));
+        $this->addResource(new Zend_Acl_Resource ('backend_categorytaggroup'));
         $this->addResource(new Zend_Acl_Resource ('backend_claim'));
         $this->addResource(new Zend_Acl_Resource ('backend_comments'));
         $this->addResource(new Zend_Acl_Resource ('backend_content'));
