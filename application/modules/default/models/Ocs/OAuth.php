@@ -139,6 +139,10 @@ class Default_Model_Ocs_OAuth
             return false;
         }
 
+        if (is_int($member)) {
+            $member = $this->getUserData($member);
+        }
+
         $data = $this->mapData($member, false, false);
         $uid = $member['member_id'];
 
@@ -310,9 +314,9 @@ class Default_Model_Ocs_OAuth
             'user' => array(
                 'id'             => $member_data['external_id'],
                 'ocs_user_id'    => $member_data['member_id'],
-                'username'       => $member_data['username'],
+                'username'       => trim($member_data['username']),
                 'password'       => $member_data['password'],
-                'email'          => $member_data['mail'],
+                'email'          => trim($member_data['mail']),
                 'emailVerified'  => empty($member_data['mail_checked']) ? 'false' : 'true',
                 'is_hive'        => $member_data['password_type'] == 0 ? 'false' : 'true',
                 'creationTime'   => strtotime($member_data['created_at']),
