@@ -91,6 +91,11 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
 
             return;
         }
+        if ('unblock' == $method) {
+            $this->unblockMember($members);
+
+            return;
+        }
     }
 
     /**
@@ -129,7 +134,6 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
               AND LOCATE('_deactivated', `me`.`email_address`) = 0
             " . $filter . "
             ORDER BY `m`.`member_id` DESC
-            #LIMIT 25,125
         ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql);
@@ -234,6 +238,30 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
 
         while ($member = $members->fetch()) {
             $result = $modelSubSystem->blockUser($member);
+            if (false == $result) {
+                $this->log->info('Fail');
+            }
+            $result = $modelSubSystem->blockUserProjects($member);
+            if (false == $result) {
+                $this->log->info('Fail');
+            }
+            $messages = $modelSubSystem->getMessages();
+            if (false === empty($messages)) {
+                $this->log->info("Message : " . Zend_Json::encode($messages));
+            }
+        }
+    }
+
+    private function unblockMember($members)
+    {
+        $modelSubSystem = new Default_Model_Ocs_Gitlab($this->config);
+
+        while ($member = $members->fetch()) {
+            $result = $modelSubSystem->unblockUser($member);
+            if (false == $result) {
+                $this->log->info('Fail');
+            }
+            $result = $modelSubSystem->unblockUserProjects($member);
             if (false == $result) {
                 $this->log->info('Fail');
             }

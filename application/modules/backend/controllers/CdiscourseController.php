@@ -100,6 +100,21 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
 
             return;
         }
+        if ('posts' == $method) {
+            $this->postsMembers($members);
+
+            return;
+        }
+        if ('hide_posts' == $method) {
+            $this->hidePostsMembers($members);
+
+            return;
+        }
+        if ('silence' == $method) {
+            $this->silenceMembers($members);
+
+            return;
+        }
     }
 
     /**
@@ -239,7 +254,59 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
                 $this->log->info("Message : " . Zend_Json::encode($messages));
             }
         }
+    }
 
+    private function postsMembers($members)
+    {
+        $modelSubSystem = new Default_Model_Ocs_Forum($this->config);
+
+        while ($member = $members->fetch()) {
+            $result = $modelSubSystem->getPostsFromUser($member);
+            if (false == $result) {
+                $this->log->info('Fail');
+            }
+            $this->log->info("Posts : " . Zend_Json::encode($result));
+            $messages = $modelSubSystem->getMessages();
+            if (false === empty($messages)) {
+                $this->log->info("Message : " . Zend_Json::encode($messages));
+            }
+        }
+    }
+
+    private function hidePostsMembers($members)
+    {
+        $modelSubSystem = new Default_Model_Ocs_Forum($this->config);
+
+        while ($member = $members->fetch()) {
+            $result = $modelSubSystem->getPostsFromUser($member);
+            if (false == $result) {
+                $this->log->info('Fail');
+            }
+            foreach ($result['topic'] as $item) {
+                $result = $modelSubSystem->hidePostsFromUser($item['id']);
+            }
+            $this->log->info("Posts : " . Zend_Json::encode($result));
+            $messages = $modelSubSystem->getMessages();
+            if (false === empty($messages)) {
+                $this->log->info("Message : " . Zend_Json::encode($messages));
+            }
+        }
+    }
+
+    private function silenceMembers($members)
+    {
+        $modelSubSystem = new Default_Model_Ocs_Forum($this->config);
+
+        while ($member = $members->fetch()) {
+            $result = $modelSubSystem->silenceUser($member);
+            if (false == $result) {
+                $this->log->info('Fail');
+            }
+            $messages = $modelSubSystem->getMessages();
+            if (false === empty($messages)) {
+                $this->log->info("Message : " . Zend_Json::encode($messages));
+            }
+        }
     }
 
 }

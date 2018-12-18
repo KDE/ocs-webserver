@@ -99,8 +99,7 @@ class Backend_CategoriesController extends Local_Controller_Action_Backend
     {
         $identifier = (int)$this->getParam('project_category_id', null);
 
-        $this->_model->setDelete($identifier);
-        $this->_model->setStatus(0, $identifier);
+        $this->_model->setCategoryDeleted($identifier);
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;

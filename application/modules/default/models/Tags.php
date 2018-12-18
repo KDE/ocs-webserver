@@ -38,6 +38,20 @@ class Default_Model_Tags
 
     const TAG_PRODUCT_ORIGINAL_GROUPID = 11;
     const TAG_PRODUCT_ORIGINAL_ID = 2451;
+    
+    const TAG_PRODUCT_EBOOK_GROUPID = 14;
+    const TAG_PRODUCT_EBOOK_AUTHOR_GROUPID = 15;
+    const TAG_PRODUCT_EBOOK_EDITOR_GROUPID = 16;
+    const TAG_PRODUCT_EBOOK_ILLUSTRATOR_GROUPID = 17;
+    const TAG_PRODUCT_EBOOK_TRANSLATOR_GROUPID = 18;
+    const TAG_PRODUCT_EBOOK_SUBJECT_GROUPID = 19;
+    const TAG_PRODUCT_EBOOK_SHELF_GROUPID = 20;
+    const TAG_PRODUCT_EBOOK_LANGUAGE_GROUPID = 21;
+    const TAG_PRODUCT_EBOOK_TYPE_GROUPID = 22;
+    
+    
+    
+    const TAG_PRODUCT_EBOOK_ID = 2532;
 
     const TAG_PROJECT_GROUP_IDS = '6,7,10';//type product : category-tags, license-tags,ghns_excluded
     const TAG_FILE_GROUP_IDS = '8,9';//file-packagetype-tags,file-architecture-tags
@@ -128,7 +142,7 @@ class Default_Model_Tags
     public function getTagsArray($object_id, $tag_type,$tag_group_ids)
     {           
             $sql = "
-                        SELECT tag.tag_id,tag.tag_name,tag_group_item.tag_group_id
+                        SELECT tag.tag_id,tag.tag_name,tag_group_item.tag_group_id,tag.tag_fullname
                         FROM tag_object
                         JOIN tag ON tag.tag_id = tag_object.tag_id
                         join tag_group_item on tag_object.tag_id = tag_group_item.tag_id and tag_object.tag_group_id = tag_group_item.tag_group_id
@@ -142,6 +156,7 @@ class Default_Model_Tags
 
             return $result;
     }
+    
 
 
      /**
@@ -373,6 +388,24 @@ class Default_Model_Tags
             $r = $this->getAdapter()->fetchRow($sql_object, array('tag_id' => self::TAG_PRODUCT_ORIGINAL_ID, 
                                                                                                     'tag_object_id' =>$project_id, 
                                                                                                     'tag_group_id' => self::TAG_PRODUCT_ORIGINAL_GROUPID, 
+                                                                                                    'tag_type_id' => self::TAG_TYPE_PROJECT 
+                                                                                                    ));
+            if($r){
+                return true;
+            }else
+            {
+                return false;
+            }
+    }
+    
+    
+    public function isProuductEbook($project_id)
+    {
+            $sql_object= "select tag_item_id  from tag_object WHERE tag_id = :tag_id and tag_object_id=:tag_object_id and tag_group_id=:tag_group_id  
+                                    and tag_type_id = :tag_type_id and is_deleted = 0";
+            $r = $this->getAdapter()->fetchRow($sql_object, array('tag_id' => self::TAG_PRODUCT_EBOOK_ID, 
+                                                                                                    'tag_object_id' =>$project_id, 
+                                                                                                    'tag_group_id' => self::TAG_PRODUCT_EBOOK_GROUPID, 
                                                                                                     'tag_type_id' => self::TAG_TYPE_PROJECT 
                                                                                                     ));
             if($r){
@@ -761,5 +794,147 @@ class Default_Model_Tags
             return '';
         }
     }
+    
+    
+     /**
+     * @param int $object_id
+     *
+     * @return string|null
+     */
+    public function getTagsEbookSubject($object_id)
+    {
+        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_SUBJECT_GROUPID;
+        $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
 
+        $tag_names = array();
+        foreach ($tags as $tag) {
+            $tag_names[]=$tag['tag_fullname'];
+        }
+        return $tag_names;
+    }
+
+     /**
+     * @param int $object_id
+     *
+     * @return string|null
+     */
+    public function getTagsEbookAuthor($object_id)
+    {
+        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_AUTHOR_GROUPID;
+        $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
+
+        $tag_names = array();
+        foreach ($tags as $tag) {
+            $tag_names[]=$tag['tag_fullname'];
+        }
+        return $tag_names;
+    }
+    
+    
+     /**
+     * @param int $object_id
+     *
+     * @return string|null
+     */
+    public function getTagsEbookEditor($object_id)
+    {
+        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_EDITOR_GROUPID;
+        $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
+
+        $tag_names = array();
+        foreach ($tags as $tag) {
+            $tag_names[]=$tag['tag_fullname'];
+        }
+        return $tag_names;
+    }
+    
+    
+     /**
+     * @param int $object_id
+     *
+     * @return string|null
+     */
+    public function getTagsEbookIllustrator($object_id)
+    {
+        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_ILLUSTRATOR_GROUPID;
+        $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
+
+        $tag_names = array();
+        foreach ($tags as $tag) {
+            $tag_names[]=$tag['tag_fullname'];
+        }
+        return $tag_names;
+    }
+    
+    
+     /**
+     * @param int $object_id
+     *
+     * @return string|null
+     */
+    public function getTagsEbookTranslator($object_id)
+    {
+        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_TRANSLATOR_GROUPID;
+        $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
+
+        $tag_names = array();
+        foreach ($tags as $tag) {
+            $tag_names[]=$tag['tag_fullname'];
+        }
+        return $tag_names;
+    }
+    
+    
+     /**
+     * @param int $object_id
+     *
+     * @return string|null
+     */
+    public function getTagsEbookShelf($object_id)
+    {
+        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_SHELF_GROUPID;
+        $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
+
+        $tag_names = array();
+        foreach ($tags as $tag) {
+            $tag_names[]=$tag['tag_fullname'];
+        }
+        return $tag_names;
+    }
+    
+    
+     /**
+     * @param int $object_id
+     *
+     * @return string|null
+     */
+    public function getTagsEbookLanguage($object_id)
+    {
+        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_LANGUAGE_GROUPID;
+        $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
+
+        $tag_names = array();
+        foreach ($tags as $tag) {
+            $tag_names[]=$tag['tag_fullname'];
+        }
+        return $tag_names;
+    }
+    
+    
+     /**
+     * @param int $object_id
+     *
+     * @return string|null
+     */
+    public function getTagsEbookType($object_id)
+    {
+        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_TYPE_GROUPID;
+        $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
+
+        $tag_names = array();
+        foreach ($tags as $tag) {
+            $tag_names[]=$tag['tag_fullname'];
+        }
+        return $tag_names;
+    }
 }

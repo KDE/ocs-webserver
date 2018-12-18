@@ -30,10 +30,16 @@ class HomeController extends Local_Controller_Action_DomainSwitch
             $this->view->package_type = $storeConfig->package_type;
             if($storeConfig->isShowHomepage())
             {
-                 $test = (int)$this->getParam('test', 0);
-                 if($test==1)
+                 $index = $this->getParam('index');
+
+                 if($index)
                  {
-                    $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name.'-test');   
+                    if((int)$index==1){
+                        $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name.'-test');   
+                    }else{
+                        $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name.'-test'.$index);   
+                    }
+                    
                  }else{
                     $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);   
                  }                 
@@ -105,6 +111,67 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         }
     }
     
+    public function showlastproductsjsonAction()
+    {
+
+        $this->_helper->layout->disableLayout();
+        $modelInfo = new Default_Model_Info();
+        $offset = (int)$this->getParam('offset',0);
+        $limit = (int)$this->getParam('limit',5);
+        $catIds = $this->getParam('catIDs');
+        $packageType = $this->getParam('ptype');
+        $isOriginal = $this->getParam('isoriginal');
+        $response = $modelInfo->getJsonLastProductsForHostStores($limit,$catIds, $packageType,$isOriginal,$offset);        
+        $this->_helper->json(Zend_Json::decode($response));        
+    }
+
+
+    public function showfeaturejsonAction()
+    {
+        
+        $this->_helper->layout->disableLayout();
+        $modelInfo = new Default_Model_Info();
+        $page = (int)$this->getParam('page');
+        if($page==0){
+                $featureProducts = $modelInfo->getRandProduct();
+                $featureProducts->setItemCountPerPage(1);
+                $featureProducts->setCurrentPageNumber(1);
+            }else{
+                $featureProducts = $modelInfo->getFeaturedProductsForHostStores(100);
+                if($featureProducts->getTotalItemCount() > 0){
+                    $offset = (int)$this->getParam('page');
+                    $irandom = rand(1,$featureProducts->getTotalItemCount());
+                    $featureProducts->setItemCountPerPage(1);
+                    $featureProducts->setCurrentPageNumber($irandom);
+                }
+            }
+
+        $item;
+        foreach ($featureProducts as $i) {
+           $item = $i;
+           break;
+        }                
+        $helpCategories = new Default_View_Helper_FetchCategoriesForProductAsString();
+        $response = array(
+            'project_id' => $item['project_id'],
+            'member_id' =>  $item['member_id'],
+            'username' =>  $item['username'],
+            'profile_image_url' =>  $item['profile_image_url'],
+            'featured' =>  $item['featured'],
+            'description' =>  $item['description'],
+            'title' =>  $item['title'],
+            'category' =>  $helpCategories->fetchCategoriesForProductAsString($item['project_id']),
+            'image_small' =>  $item['image_small'],
+            'laplace_score' =>  $item['laplace_score'],
+            'count_likes' =>  $item['count_likes'],
+            'count_dislikes' =>  $item['count_dislikes'],
+            'changed_at' =>  $item['changed_at'],
+            'created_at' =>  $item['created_at'],
+            'count_comments' =>  $item['count_comments']                      
+        );
+        $this->_helper->json($response);        
+    }
+
     
     public function metamenujsAction()
     {

@@ -184,13 +184,14 @@ class Default_Model_Ocs_Forum
     }
 
     /**
-     * @param string $uri
-     * @param string $uid
-     * @param string $method
+     * @param string     $uri
+     * @param string     $uid
+     * @param string     $method
      * @param array|null $post_param
      *
      * @return bool|array
      * @throws Zend_Http_Client_Exception
+     * @throws Zend_Http_Exception
      * @throws Zend_Json_Exception
      */
     protected function httpRequest($uri, $uid, $method = Zend_Http_Client::GET, $post_param = null)
@@ -212,7 +213,16 @@ class Default_Model_Ocs_Forum
             return false;
         }
 
-        $body = Zend_Json::decode($response->getBody());
+        $body = $response->getRawBody();
+        $content_encoding = $response->getHeader('Content-encoding');
+        $transfer_encoding = $response->getHeader('Transfer-encoding');
+        if ($transfer_encoding == 'chunked') {
+            $body = Zend_Http_Response::decodeChunkedBody($body);
+        }
+        if ($content_encoding == 'gzip') {
+            $body = Zend_Http_Response::decodeGzip($body);
+        }
+        $body = Zend_Json::decode($body);
 
         if (array_key_exists("error_type", $body) OR array_key_exists("errors", $body)) {
             $this->messages[] = "id: {$uid} ($uri) - " . $response->getBody();
@@ -301,7 +311,7 @@ class Default_Model_Ocs_Forum
             return false;
         }
 
-        $forum_member = $this->getUserByExternUid($member_data['external_id']);
+        $forum_member = $this->getUser($member_data['external_id'], $member_data['username']);
         if (empty($forum_member)) {
             return false;
         }
@@ -513,6 +523,15 @@ class Default_Model_Ocs_Forum
         return $user;
     }
 
+    /**
+     * @param int|array $member_data
+     *
+     * @return array|bool
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
     public function blockUser($member_data)
     {
         if (is_int($member_data)) {
@@ -535,11 +554,96 @@ class Default_Model_Ocs_Forum
         $suspend_until->add(new DateInterval('P1Y'));
         $data = array('suspend_until' => $suspend_until->format("Y-m-d"), "reason" => "");
 
-        $user = $this->httpRequest($uri, $uid, $method, $data);
+        try {
+            $user = $this->httpRequest($uri, $uid, $method, $data);
+            if (false === $user) {
+                $this->messages[] = "Fail " . json_encode($this->messages);
+
+                return false;
+            }
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
 
         $this->messages[] = 'Forum user suspended: ' . json_encode($user);
 
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        $memberLog->addLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_USER, $forum_member['user']['id']);
+
         return $user;
+    }
+
+    public function silenceUser($member_data)
+    {
+        if (is_int($member_data)) {
+            $member_data = $this->getMemberData($member_data, false);
+        }
+
+        if (empty($member_data)) {
+            return false;
+        }
+
+        $forum_member = $this->getUser($member_data['external_id'], $member_data['username']);
+        if (empty($forum_member)) {
+            return false;
+        }
+
+        $uri = $this->config->host . '/admin/users/' . $forum_member['user']['id'] . '/silence';
+        $method = Zend_Http_Client::PUT;
+        $uid = $member_data['member_id'];
+        $suspend_until = new DateTime();
+        $suspend_until->add(new DateInterval('PT5M'));
+        $data = array('silenced_till' => $suspend_until->format(DateTime::ATOM), "reason" => "probably a spam user", "post_action" => "delete");
+
+        $user = $this->httpRequest($uri, $uid, $method, $data);
+
+        $this->messages[] = 'Forum user silenced: ' . json_encode($user);
+
+        return $user;
+    }
+
+    public function getPostsFromUser($member_data)
+    {
+        if (is_int($member_data)) {
+            $member_data = $this->getMemberData($member_data, false);
+        }
+
+        if (empty($member_data)) {
+            return false;
+        }
+
+        //$forum_member = $this->getUser($member_data['external_id'], $member_data['username']);
+        //if (empty($forum_member)) {
+        //    return false;
+        //}
+
+        $uri = $this->config->host . '/search/query.json?term=@'.$member_data['username'];
+        $method = Zend_Http_Client::GET;
+        $uid = $member_data['member_id'];
+
+        $result = $this->httpRequest($uri, $uid, $method);
+
+
+        return $result;
+    }
+
+    public function hidePostsFromUser($topic_id)
+    {
+        if (empty($topic_id)) {
+            return false;
+        }
+
+        $uri = $this->config->host . '/t'.$topic_id.'/status';
+        $method = Zend_Http_Client::PUT;
+        $uid = $topic_id;
+        $data = array("status"=>"visible", "enabled" => false);
+
+        $result = $this->httpRequest($uri, $uid, $method, $data);
+
+
+        return $result;
     }
 
 }

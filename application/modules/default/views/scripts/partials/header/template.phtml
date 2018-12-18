@@ -35,6 +35,15 @@ if ($auth->hasIdentity()) {
     $ltat = $sess->openid;
 }
 
+$jsonmember = null;
+if($member && !empty($member->username)){
+    $jsonmember=array(
+        'member_id' => $member->member_id,
+        'username' => $member->username,
+        'avatar' => $member->avatar,
+        'profile_image_url' => $member->profile_image_url
+    );
+}
 
 
 $serverUrl = $this->serverUrl();
@@ -383,7 +392,7 @@ echo $this->render('partials/header/metaheader.phtml');
     $redirectString = '/redirect/' . $helperEncryptUrl->EncryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"]);
     echo Zend_Json::encode($redirectString);} ?>;
     var json_serverUri = <?php echo Zend_Json::encode($_SERVER["REQUEST_URI"]);?>;
-    var json_member = <?php if( $auth->hasIdentity() ) {echo Zend_Json::encode($member);} else { echo Zend_Json::encode(null);}?>;
+    var json_member = <?php echo Zend_Json::encode($jsonmember); ?>;     
     var json_member_avatar = <?php if( $auth->hasIdentity() ) {                
         echo Zend_Json::encode($this->Image($member->profile_image_url,array('width' => 30, 'height' => 30)));
     } else { echo Zend_Json::encode(null);}?>;

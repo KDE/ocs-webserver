@@ -75,6 +75,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
     const BACKEND_PROJECT_PLING_EXCLUDED = 318;
     const BACKEND_USER_PLING_EXCLUDED = 319;
     const BACKEND_USER_DELETE = 320;
+    const BACKEND_USER_UNDELETE = 321;
 
     //internal system logs
     const MEMBER_EMAIL_CONFIRMED = 401;
@@ -135,6 +136,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
         318 => 'backend',
         319 => 'backend',
         320 => 'backend',
+        321 => 'backend',
         401 => 'member',
         402 => 'member_email',
         410 => 'member'

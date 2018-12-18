@@ -173,6 +173,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     /**
      * @param int $member_id
+     *
+     * @throws Zend_Exception
      */
     public function setDeleted($member_id)
     {
@@ -256,6 +258,12 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $modelEmail = new Default_Model_DbTable_MemberEmail();
         $modelEmail->setDeletedByMember($member_id);
     }
+    
+    private function setMemberEmailsActivated($member_id)
+    {
+        $modelEmail = new Default_Model_DbTable_MemberEmail();
+        $modelEmail->setActivatedByMember($member_id);
+    }
 
     private function setDeletedInMaterializedView($member_id)
     {
@@ -273,8 +281,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      */
     public function setActivated($member_id)
     {
-        throw new Zend_Db_Exception('not implemented yet.');
-
         $updateValues = array(
             'is_active'  => 1,
             'is_deleted' => 0,
@@ -283,9 +289,16 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         );
 
         $this->update($updateValues, $this->_db->quoteInto('member_id=?', $member_id, 'INTEGER'));
-
+        
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        $memberLog->removeLogMemberAsDeleted($member_id);
+        
         $this->setMemberProjectsActivated($member_id);
         $this->setMemberCommentsActivated($member_id);
+        $this->setMemberEmailsActivated($member_id);
+
+        $this->setActivatedInSubsystems($member_id);
+        
         //$this->setMemberPlingsActivated($member_id);
     }
 
@@ -535,6 +548,9 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (false == isset($userData['mail_checked'])) {
             $userData['mail_checked'] = 0;
         }
+        
+        //email is allways lower case
+        $userData['mail'] = strtolower( trim( $userData['mail'] ) );
 
         $newUser = $this->storeNewUser($userData)->toArray();
 
@@ -1208,4 +1224,38 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                    ";
         $this->getAdapter()->query($sql, array('type_id'=>$type_id,'member_id'=>$member_id));              
     }
+
+    private function setActivatedInSubsystems($member_id)
+    {
+        try {
+            $id_server = new Default_Model_Ocs_OAuth();
+            $id_server->createUser($member_id);
+            //Zend_Registry::get('logger')->debug(__METHOD__ . ' - : ' . implode(PHP_EOL." - ", $id_server->getMessages()));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $ldap_server = new Default_Model_Ocs_Ldap();
+            $ldap_server->createUser($member_id);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $openCode = new Default_Model_Ocs_Gitlab();
+            $openCode->unblockUserProjects($member_id);
+            $openCode->unblockUser($member_id);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $openCode->getMessages()));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        //try {
+        //    $forum = new Default_Model_Ocs_Forum();
+        //    $forum->blockUser($member_id);
+        //    Zend_Registry::get('logger')->debug(__METHOD__ . ' - forum : ' . implode(PHP_EOL." - ", $forum->getMessages()));
+        //} catch (Exception $e) {
+        //    Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        //}
+    }
+
 }

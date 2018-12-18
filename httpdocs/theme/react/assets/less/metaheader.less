@@ -18,24 +18,39 @@ body {
     }
   }
 
+  &#body-user, &#body-public {
+    opendesktop-metaheader {
+      position: relative !important;
+      #metaheader {
+        position: relative !important;
+      }
+    }
+  }
+
   &.navigation-topics,
   &.category-themes-and-apps,
-  &.category-general {
+  &.category-general,
+  &[class*='category-'] {
     #metaheader #metaheader-nav #user-context-menu-container .user-dropdown .th-icon {
       margin-top: -5px;
     }
     #metaheader #metaheader-nav #user-login-menu-container .user-dropdown .dropdown-toggle img {
       // margin-top: -7px;
     }
+  }
 
-    &.docked {
-      .d-header {
-        top: 34px;
-      }
-      #metaheader {
-        position: fixed;
-      }
+  &.docked {
+    .d-header {
+      top: 34px;
     }
+    #metaheader {
+      position: fixed;
+    }
+  }
+
+  &.drawer-open {
+    height: 100%;
+    overflow: hidden;
   }
 }
 
@@ -101,6 +116,8 @@ body {
         text-decoration: none;
         background-color: #eee !important;
     }
+
+
   }
 
   .metamenu {
@@ -414,6 +431,15 @@ body {
           display: block;
           right: -6px;
         }
+
+        #background-overlay {
+          position: fixed;
+          top: 34px;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0,0,0,0.25);
+        }
       }
 
       .dropdown-toggle {
@@ -482,6 +508,132 @@ body {
         li {
           float: left;
           box-sizing: border-box !important;
+        }
+
+        &#right-panel {
+          height: 100%;
+          position: fixed;
+          top: 35px;
+          right: 0;
+          padding: 0;
+          border: 0;
+          box-shadow: none;
+          width: 432px;
+          border-left: 1px solid #ccc;
+          margin: 0;
+          padding-top: 150px;
+
+          &::before {
+            display: none;
+          }
+
+          #user-info-menu-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 150px;
+
+            #user-info-section {
+              .user-details {
+                width: 100%;
+
+                .buttons {
+                  padding-left: 0;
+                  padding-right: 0;
+                  background: white;
+                }
+              }
+            }
+
+            #user-details-username {
+              h2 {
+                margin: 10px 0;
+                font-size: 26px;
+                color: #353a3d;
+                font-weight: bold;
+              }
+            }
+
+            #user-details-email {
+              color: #687a86;
+              font-size: 18px;
+              margin-bottom: 5px;
+            }
+          }
+
+          #user-tabs-menu-item {
+            height: 100%;
+            overflow: scroll;
+            background-color: white;
+
+            #user-tabs-container {
+              position: relative;
+              padding-top: 40px;
+              height: 100%;
+
+              #user-tabs-menu {
+                height: 40px;
+                width: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                border-bottom: 2px solid #ccc;
+
+                ul {
+                  padding: 0;
+                  list-style-type: none;
+                  height: 40px;
+                  display: table;
+                  margin: 0 auto;
+
+                  li {
+                    float: left;
+                    height: 40px;
+                    width: auto;
+                    line-height: 40px;
+
+                    a {
+                      display: block;
+                      padding: 0 10px;
+                      height: 40px;
+                      border-bottom: 2px solid transparent;
+
+                      &.active,
+                      &:hover {
+                        color: #2e9fff;
+                        border-bottom-color: #2e9fff;
+                      }
+
+                      input[type="text"] {
+                        height: 24px;
+                        border-radius: 5px;
+                        border: 1px solid #ccc;
+                        padding: 0 5px;
+                        float: left;
+                        margin: 7px 0;
+                        color: #888;
+                      }
+
+                      span.search-button {
+                        height: 23px;
+                        width: 23px;
+                        display: block;
+                        float: right;
+                        background-image: url('../img/bg_sheet');
+                        background-position: -670px -149px;
+                        margin: 6px;
+                      }
+                    }
+                  }
+                }
+              }
+
+              #user-tabs-content {
+                height: 100%;
+                padding: 10px;
+              }
+            }
+          }
         }
       }
     }
@@ -595,6 +747,60 @@ body {
               a {
                 .icon {
                   background-image: url(../img/issues.png);
+                  background-size: 45px;
+                }
+              }
+            }
+
+            &#music-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-music.png);
+                  background-size: 45px;
+                }
+              }
+            }
+
+            &#docs-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-docs.png);
+                  background-size: 45px;
+                }
+              }
+            }
+
+            &#storage-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-storage.png);
+                  background-size: 45px;
+                }
+              }
+            }
+
+            &#contacts-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-contacts.png);
+                  background-size: 45px;
+                }
+              }
+            }
+
+            &#calendar-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-calendar.png);
+                  background-size: 45px;
+                }
+              }
+            }
+
+            &#talk-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-talk.png);
                   background-size: 45px;
                 }
               }

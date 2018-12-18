@@ -31,3 +31,8 @@ INSERT INTO member_deactivation_object_types (`object_type_id`,`object_system`,`
 
 INSERT INTO member_deactivation_object_types (`object_type_id`,`object_system`,`object_name`) VALUES (30,'discourse','user');
 INSERT INTO member_deactivation_object_types (`object_type_id`,`object_system`,`object_name`) VALUES (31,'discourse','topic');
+
+
+ALTER TABLE `member_deactivation_log`
+	ADD COLUMN `is_deleted` INT NULL DEFAULT '0' COMMENT 'Is the user undeleted -> is_deleted = 1' AFTER `created_at`,
+	ADD COLUMN `deleted_at` TIMESTAMP NULL AFTER `is_deleted`;
