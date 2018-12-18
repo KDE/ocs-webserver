@@ -1170,6 +1170,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         try {
             $openCode = new Default_Model_Ocs_Gitlab();
             $openCode->blockUser($member_id);
+            $openCode->blockUserProjects($member_id);
             Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $openCode->getMessages()));
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
