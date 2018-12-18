@@ -589,15 +589,14 @@ class UserMenu extends React.Component {
           baseUrl={this.props.baseUrl}
         />
       );
-      if (this.props.isAdmin){
         userAppsContextDisplay = (
           <UserContextMenuContainer
             user={this.props.user}
             forumUrl={this.props.forumUrl}
             gitlabUrl={this.props.gitlabUrl}
+            isAdmin={this.props.isAdmin}
           />
         )
-      }
     } else {
       userDropdownDisplay = (
         <li id="user-login-container"><a href={this.props.loginUrl} className="btn btn-metaheader">Login</a></li>
@@ -699,21 +698,83 @@ class UserContextMenuContainer extends React.Component {
 
     /*
     // BU CODE
-    <li id="opencode-link-item">
-      <a href={this.props.gitlabUrl+"/dashboard/projects"}>
-        <div className="icon"></div>
-        <span>Projects</span>
-      </a>
-    </li>
-    <li id="issues-link-item">
-      <a href={this.state.gitlabLink}>
-        <div className="icon"></div>
-        <span>Issues</span>
-      </a>
-    </li>
+
     */
 
     const urlEnding = config.baseUrl.split('opendesktop.')[1];
+
+    let contextMenuDisplay;
+    if (this.props.isAdmin){
+      contextMenuDisplay = (
+        <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
+          <li id="messages-link-item">
+            <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
+              <div className="icon"></div>
+              <span>Messages</span>
+            </a>
+          </li>
+          <li id="storage-link-item">
+            <a href={"https://my.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Storage</span>
+            </a>
+          </li>
+          <li id="music-link-item">
+            <a href={"https://music.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Music</span>
+            </a>
+          </li>
+          <li id="docs-link-item">
+            <a href={"https://docs.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Docs</span>
+            </a>
+          </li>
+          <li id="contacts-link-item">
+            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
+              <div className="icon"></div>
+              <span>Contacts</span>
+            </a>
+          </li>
+          <li id="calendar-link-item">
+            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
+              <div className="icon"></div>
+              <span>Calendar</span>
+            </a>
+          </li>
+          <li id="talk-link-item">
+            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/spreed/"}>
+              <div className="icon"></div>
+              <span>Talk</span>
+            </a>
+          </li>
+        </ul>
+      );
+    } else {
+      contextMenuDisplay = (
+        <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
+          <li id="messages-link-item">
+            <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
+              <div className="icon"></div>
+              <span>Messages</span>
+            </a>
+          </li>
+          <li id="opencode-link-item">
+            <a href={this.props.gitlabUrl+"/dashboard/projects"}>
+              <div className="icon"></div>
+              <span>Projects</span>
+            </a>
+          </li>
+          <li id="issues-link-item">
+            <a href={this.state.gitlabLink}>
+              <div className="icon"></div>
+              <span>Issues</span>
+            </a>
+          </li>
+        </ul>
+      );
+    }
 
     return (
       <li ref={node => this.node = node} id="user-context-menu-container">
@@ -722,50 +783,85 @@ class UserContextMenuContainer extends React.Component {
             className="btn btn-default dropdown-toggle" type="button" onClick={this.toggleDropDown}>
             <span className="th-icon"></span>
           </button>
-          <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
-            <li id="messages-link-item">
-              <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
-                <div className="icon"></div>
-                <span>Messages</span>
-              </a>
-            </li>
-            <li id="storage-link-item">
-              <a href={"https://my.opendesktop." + urlEnding}>
-                <div className="icon"></div>
-                <span>Storage</span>
-              </a>
-            </li>
-            <li id="music-link-item">
-              <a href={"https://music.opendesktop." + urlEnding}>
-                <div className="icon"></div>
-                <span>Music</span>
-              </a>
-            </li>
-            <li id="docs-link-item">
-              <a href={"https://docs.opendesktop." + urlEnding}>
-                <div className="icon"></div>
-                <span>Docs</span>
-              </a>
-            </li>
-            <li id="contacts-link-item">
-              <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
-                <div className="icon"></div>
-                <span>Contacts</span>
-              </a>
-            </li>
-            <li id="calendar-link-item">
-              <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
-                <div className="icon"></div>
-                <span>Calendar</span>
-              </a>
-            </li>
-            <li id="talk-link-item">
-              <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/spreed/"}>
-                <div className="icon"></div>
-                <span>Talk</span>
-              </a>
-            </li>
+          {contextMenuDisplay}
+        </div>
+      </li>
+    )
+  }
+}
 
+class UserLoginMenuContainerVersionTwo extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown',this.handleClick, false);
+  }
+
+  handleClick(e){
+    let dropdownClass = "";
+    if (this.node.contains(e.target)){
+      if (this.state.dropdownClass === "open"){
+        if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle"){
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({dropdownClass:dropdownClass},function(){
+      if (dropdownClass === "open"){
+        $('body').addClass('drawer-open');
+      } else {
+        $('body').removeClass('drawer-open');
+      }
+    });
+  }
+
+
+  render(){
+    return (
+      <li id="user-login-menu-container" ref={node => this.node = node}>
+        <div className={"user-dropdown " + this.state.dropdownClass}>
+          <button
+            className="btn btn-default dropdown-toggle"
+            type="button"
+            id="userLoginDropdown">
+            <img className="th-icon" src={this.props.user.avatar}/>
+          </button>
+          <div id="background-overlay"></div>
+          <ul id="right-panel" className="dropdown-menu dropdown-menu-right">
+            <li id="user-info-menu-item">
+              <div id="user-info-section">
+                <div className="user-avatar">
+                  <div className="no-avatar-user-letter">
+                    <img src={this.props.user.avatar}/>
+                  </div>
+                </div>
+                <div className="user-details">
+                  <ul>
+                    <li id="user-details-username"><h2>{this.props.user.username}</h2></li>
+                    <li id="user-details-email">{this.props.user.mail}</li>
+                    <li className="buttons">
+                      <a href={this.props.baseUrl + "/settings/"} className="btn btn-default btn-metaheader"><span>Settings</span></a>
+                      <a href={this.props.logoutUrl} className="btn btn-default pull-right btn-metaheader"><span>Logout</span></a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <li id="user-tabs-menu-item">
+              <UserTabs />
+            </li>
           </ul>
         </div>
       </li>
@@ -801,7 +897,7 @@ class UserLoginMenuContainer extends React.Component {
         dropdownClass = "open";
       }
     }
-    this.setState({dropdownClass:dropdownClass})
+    this.setState({dropdownClass:dropdownClass});
   }
 
 
@@ -815,7 +911,7 @@ class UserLoginMenuContainer extends React.Component {
             id="userLoginDropdown">
             <img className="th-icon" src={this.props.user.avatar}/>
           </button>
-          <ul id="right-panel" className="dropdown-menu dropdown-menu-right">
+          <ul className="dropdown-menu dropdown-menu-right">
             <li id="user-info-menu-item">
               <div id="user-info-section">
                 <div className="user-avatar">
@@ -825,18 +921,15 @@ class UserLoginMenuContainer extends React.Component {
                 </div>
                 <div className="user-details">
                   <ul>
-                    <li id="user-details-username"><h2>{this.props.user.username}</h2></li>
-                    <li>{this.props.user.mail}</li>
-                    <li className="buttons">
-                      <a href={this.props.baseUrl + "/settings/"} className="btn btn-default btn-metaheader"><span>Settings</span></a>
-                      <a href={this.props.logoutUrl} className="btn btn-default pull-right btn-metaheader"><span>Logout</span></a>
-                    </li>
+                    <li id="user-details-username"><b>{this.props.user.username}</b></li>
+                    <li id="user-details-email">{this.props.user.mail}</li>
                   </ul>
                 </div>
               </div>
             </li>
-            <li id="user-tabs-menu-item">
-              <UserTabs />
+            <li className="buttons">
+              <a href={this.props.baseUrl + "/settings/"} className="btn btn-default btn-metaheader"><span>Settings</span></a>
+              <a href={this.props.logoutUrl} className="btn btn-default pull-right btn-metaheader"><span>Logout</span></a>
             </li>
           </ul>
         </div>
@@ -845,17 +938,54 @@ class UserLoginMenuContainer extends React.Component {
   }
 }
 
-
 class UserTabs extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      currentTab:'comments'
+    };
+    this.onTabMenuItemClick = this.onTabMenuItemClick.bind(this);
+  }
+
+  onTabMenuItemClick(val){
+    this.setState({currentTab:val});
   }
 
   render(){
+
+    let tabContentDisplay;
+    if (this.state.currentTab === 'comments'){
+      tabContentDisplay = (
+        <div>Comments</div>
+      );
+    } else if (this.state.currentTab === 'search'){
+      tabContentDisplay = (
+        <div>Search User</div>
+      );
+    }
+
     return(
       <div id="user-tabs-container">
-        
+        <div id="user-tabs-menu">
+          <ul>
+            <li>
+              <a className={this.state.currentTab === "comments" ? "active" : ""}
+                onClick={() => this.onTabMenuItemClick('comments')}>
+                Comments
+              </a>
+            </li>
+            <li>
+              <a className={this.state.currentTab === "search" ? "active" : ""}
+                onClick={() => this.onTabMenuItemClick('search')}>
+                <input type="text"/>
+                <span className="search-button"></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div id="user-tabs-content">
+          {tabContentDisplay}
+        </div>
       </div>
     );
   }
