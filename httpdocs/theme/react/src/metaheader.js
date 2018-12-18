@@ -133,7 +133,6 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log(window.location);
     this.initMetaHeader();
   }
 
@@ -456,12 +455,12 @@ class DevelopmentDropDownMenu extends React.Component {
 
 
   render(){
-
+    console.log('development menu');
     return (
       <li ref={node => this.node = node} id="admins-dropdown-menu" className={this.state.dropdownClass}>
         <a className="admins-menu-link-item">Development</a>
         <ul className="dropdown-menu dropdown-menu-right">
-          <li><a href={config.gitlabUrl+"/explore/projects"}>Projects</a></li>
+          <li><a href={config.gitlabUrl + "/explore/projects"}>Projects</a></li>
           <li><a href={config.gitlabUrl + "/dashboard/issues?milestone_title=No+Milestone&state=all"}>Issues</a></li>
         </ul>
       </li>
