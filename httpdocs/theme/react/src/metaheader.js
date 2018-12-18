@@ -583,7 +583,7 @@ class UserMenu extends React.Component {
     let userDropdownDisplay, userAppsContextDisplay;
     if (this.props.user && this.props.user.member_id){
       userDropdownDisplay = (
-        <UserLoginMenuContainer
+        <UserLoginMenuContainerVersionTwo
           user={this.props.user}
           logoutUrl={this.props.logoutUrl}
           baseUrl={this.props.baseUrl}

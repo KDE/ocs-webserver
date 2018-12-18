@@ -113,6 +113,7 @@ class Default_Model_Ocs_Gitlab
 
                 return false;
             }
+            $this->messages[] = "Successful unblock user project: {$project['id']}";
 
             $memberLog->deleteLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_PROJECT, $project['id']);
         }
@@ -172,6 +173,9 @@ class Default_Model_Ocs_Gitlab
 
                 return false;
             }
+
+            $this->messages[] = "Successful block user project: {$project['id']}";
+
         }
 
         return true;
@@ -217,6 +221,8 @@ class Default_Model_Ocs_Gitlab
 
             return false;
         }
+
+        $this->messages[] = "Successful block user: {$member_data['username']}";
 
         $memberLog = new Default_Model_MemberDeactivationLog();
         $memberLog->addLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_USER, $user['id']);
@@ -264,6 +270,8 @@ class Default_Model_Ocs_Gitlab
 
             return false;
         }
+
+        $this->messages[] = "Successful unblock user: {$member_data['username']}";
 
         $memberLog = new Default_Model_MemberDeactivationLog();
         $memberLog->deleteLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_USER, $user['id']);
@@ -502,11 +510,7 @@ class Default_Model_Ocs_Gitlab
 
         $body = Zend_Json::decode($response->getBody());
 
-        if (false == $body) {
-            return false;
-        }
-
-        if ($body && array_key_exists("message", $body)) {
+        if ($body && is_array($body) && array_key_exists("message", $body)) {
             $this->messages[] = "id: {$uid} ($uri) - " . Zend_Json::encode($body["message"]);
         }
 
