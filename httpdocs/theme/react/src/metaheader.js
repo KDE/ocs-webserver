@@ -990,7 +990,7 @@ class UserCommentsTab extends React.Component {
   }
 
   componentDidMount() {
-    const threads = [
+    /*const threads = [
       {
         address:'lubuntu.me',
         comment_count:68,
@@ -1040,17 +1040,17 @@ class UserCommentsTab extends React.Component {
         ]
       }
     ];
-    this.setState({threads:threads});
+    this.setState({threads:threads});*/
   }
 
   render(){
 
-    const threadsDisplay;
+    /*const threadsDisplay;
     threadsDisplay = this.state.threads.map((t, index) => (
       <UserCommentsThread
         thread=
       />
-    ));
+    ));*/
     return(
       <div id="user-comments-tab-container">
 
