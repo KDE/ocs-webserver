@@ -502,11 +502,7 @@ class Default_Model_Ocs_Gitlab
 
         $body = Zend_Json::decode($response->getBody());
 
-        if (false == $body) {
-            return false;
-        }
-
-        if ($body && array_key_exists("message", $body)) {
+        if ($body && is_array($body) && array_key_exists("message", $body)) {
             $this->messages[] = "id: {$uid} ($uri) - " . Zend_Json::encode($body["message"]);
         }
 
