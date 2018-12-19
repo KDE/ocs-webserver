@@ -1094,9 +1094,34 @@ class UserCommentsTab extends React.Component {
       }
     ];
   	this.state = {threads:threads};
+    this.getUserOdComments = this.getUserOdComments.bind(this);
+    this.getUserForumComments = this.getUserForumComments.bind(this);
   }
 
   componentDidMount() {
+    this.getUserOdComments();
+  }
+
+  getUserOdComments(){
+    const user = this.props.user;
+    console.log(user);
+    const self = this;
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      console.log('xhttp request');
+      if (this.readyState == 4 && this.status == 200) {
+        console.log('response :');
+        const res = JSON.parse(this.response);
+        self.setState({odComments:res},function(){
+          self.getUserForumComments();
+        });
+      }
+    };
+    xhttp.open("GET", "home/memberjson?member_id="+user.member_id, true);
+    xhttp.send();
+  }
+
+  getUserForumComments(){
     const user = this.props.user;
     /*https://forum.opendesktop.org/user_actions.json?offset=0&username=dummy&filter=5*/
     console.log(user);
@@ -1107,15 +1132,15 @@ class UserCommentsTab extends React.Component {
       if (this.readyState == 4 && this.status == 200) {
         console.log('response :');
         const res = JSON.parse(this.response);
-        console.log(res);
+        self.setState({forumComments:res});
       }
     };
-    xhttp.open("GET", "home/memberjson?member_id="+user.member_id, true);
+    xhttp.open("GET", "https://forum.opendesktop.org/user_actions.json?offset=0&username=" + user.username + "&filter=5", true);
     xhttp.send();
   }
 
   render(){
-
+    console.log(this.state);
     const threadsDisplay = this.state.threads.map((t, index) => (
       <UserCommentsTabThread
         key={index}

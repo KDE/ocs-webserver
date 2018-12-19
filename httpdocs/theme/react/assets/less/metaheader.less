@@ -626,7 +626,7 @@ body {
                     }
 
                     &#search-form-container {
-
+                      position: relative;
                       ul {
                         position: absolute;
                         background: white;
@@ -641,6 +641,10 @@ body {
                         li {
                           float: left;
                           width: 100%;
+                          cursor: pointer;
+                          &:hover {
+                            background-color: #ccc;
+                          }
                         }
                       }
                     }
