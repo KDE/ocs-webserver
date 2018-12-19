@@ -20,7 +20,7 @@ if (APPLICATION_ENV == 'development') {
 }
 
 $config = Zend_Registry::get('config')->settings->domain;
-$url_nextcloud = Zend_Registry::get('config')->settings->client->default->url_nextcloud;
+$url_nextcloud = Zend_Registry::get('config')->settings->client->default->url_cloudopendesktop;
 
 $info = new Default_Model_Info();
 $domains = $info->getActiveStoresForCrossDomainLogin();
