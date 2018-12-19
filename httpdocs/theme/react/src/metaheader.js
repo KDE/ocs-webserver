@@ -987,7 +987,6 @@ class UserTabs extends React.Component {
               <a className={this.state.currentTab === "search" ? "active" : ""}
                 onClick={() => this.onTabMenuItemClick('search')}>
                 <input type="text" onChange={this.onUserSearchInputChange}/>
-                <span className="search-button"></span>
               </a>
             </li>
           </ul>
