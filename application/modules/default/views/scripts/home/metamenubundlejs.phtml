@@ -51,6 +51,8 @@ $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
 $url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
 $url_myopendesktop = Zend_Registry::get('config')->settings->client->default->url_myopendesktop;
+$url_cloudopendesktop = Zend_Registry::get('config')->settings->client->default->url_cloudopendesktop;
+$url_musicopendesktop = Zend_Registry::get('config')->settings->client->default->url_musicopendesktop;
 
 $filter = new Local_Filter_Url_Encrypt();
 
@@ -86,6 +88,12 @@ if($target == 'opendesktop') {
 } else if($target == 'myopendesktop') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_myopendesktop);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_myopendesktop);
+} else if($target == 'cloudopendesktop') {
+    $url_login = $baseurl."/login/redirect/".$filter->filter($url_cloudopendesktop);
+    $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_cloudopendesktop);
+} else if($target == 'musicopendesktop') {
+    $url_login = $baseurl."/login/redirect/".$filter->filter($url_musicopendesktop);
+    $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_musicopendesktop);
 }
 
 
