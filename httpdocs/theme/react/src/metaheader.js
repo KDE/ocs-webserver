@@ -1033,7 +1033,7 @@ class UserTabs extends React.Component {
                 Comments
               </a>
             </li>
-            <li>
+            <li id="search-form-container">
               <a className={this.state.currentTab === "search" ? "active" : ""}
                 onClick={() => this.onTabMenuItemClick('search')}>
                 <input type="text" onChange={this.onUserSearchInputChange}/>
@@ -1245,6 +1245,7 @@ class UserSearchTab extends React.Component {
       ));
       contentDisplay = (
         <div className="users-list">
+
         </div>
       );
     }
