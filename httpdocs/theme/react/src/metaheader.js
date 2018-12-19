@@ -133,7 +133,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updated 8');
+    console.log('updated 9');
     this.initMetaHeader();
   }
 
@@ -963,10 +963,14 @@ class UserTabs extends React.Component {
   }
 
   getUsersAutocompleteList(searchPhrase){
+    console.log('getUsersAutocompleteList');
+    console.log(searchPhrase);
       const self = this;
       const xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
+        console.log('xhttp request');
         if (this.readyState == 4 && this.status == 200) {
+          console.log(this.response);
           const res = JSON.parse(this.response);
           self.setState({usersList:res});
         }
