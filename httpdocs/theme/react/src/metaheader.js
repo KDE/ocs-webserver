@@ -952,7 +952,7 @@ class UserTabs extends React.Component {
     this.setState({currentTab:val});
   }
 
-  onUserSearchInputChange(){
+  onUserSearchInputChange(e){
     console.log(e.target.value);
     this.setState({searchPhrase:e.target.value})
   }
