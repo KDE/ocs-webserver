@@ -631,6 +631,47 @@ body {
               #user-tabs-content {
                 height: 100%;
                 padding: 10px;
+
+                #user-comments-tab-container {
+
+                  .user-comments-thread-container {
+                    display: block;
+                    .thread-header {
+                      display: block;
+                      .thread-subtitle {
+                        display: block;
+                        span {
+                          display: block;
+                        }
+                        span + span {
+                          &::before {
+                            content: "•";
+                            color: rgb(226, 226, 226);
+                          }
+                        }
+                      }
+                      .thread-title {
+                        display: block;
+                      }
+                    }
+                    .thread-comments {
+                      display: block;
+                      .comment-item {
+                        display: block;
+                        position: relative;
+                        figure {
+                          display: block;
+                          img {
+                            position: absolute;
+                          }
+                        }
+                        .comment-item-header {
+                          display: block;
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -1120,8 +1161,6 @@ body {
       }
     }
   }
-
-
 }
 
 #metaheader-modal {

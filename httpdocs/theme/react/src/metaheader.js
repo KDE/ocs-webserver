@@ -133,7 +133,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updated 2');
+    console.log('updated 3');
     this.initMetaHeader();
   }
 
@@ -583,7 +583,7 @@ class UserMenu extends React.Component {
     let userDropdownDisplay, userAppsContextDisplay;
     if (this.props.user && this.props.user.member_id){
       userDropdownDisplay = (
-        <UserLoginMenuContainer
+        <UserLoginMenuContainerVersionTwo
           user={this.props.user}
           logoutUrl={this.props.logoutUrl}
           baseUrl={this.props.baseUrl}
@@ -1102,6 +1102,7 @@ class UserCommentsTabThreadCommentItem extends React.Component {
     return (
       <div className="comment-item">
         <figure className="comment-item-user-avatar">
+          <img className="th-icon" src={config.user.avatar}/>
         </figure>
         <div className="comment-item-header">
           <span className="user">{config.user.username}</span>
