@@ -1147,7 +1147,8 @@ class UserCommentsTab extends React.Component {
     }
     return(
       <div id="user-comments-tab-container">
-        {threadsDisplay}
+        {odCommentsDisplay}
+        {forumCommentsDisplay}
       </div>
     )
   }
@@ -1187,12 +1188,15 @@ class UserCommentsTabThread extends React.Component {
 
   render(){
     const t = this.props.thread;
-    let threadCommentsDisplay = t.comments.map((c,index) => (
-      <UserCommentsTabThreadCommentItem
-        key={index}
-        comment={c}
-      />
-    ));
+    let threadCommentsDisplay;
+    if (this.state.comments){
+      threadCommentsDisplay = t.comments.map((c,index) => (
+        <UserCommentsTabThreadCommentItem
+          key={index}
+          comment={c}
+        />
+      ));
+    }
 
     return (
       <div className="user-comments-thread-container">
