@@ -133,7 +133,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updated 5');
+    console.log('updated 6');
     this.initMetaHeader();
   }
 
@@ -946,6 +946,7 @@ class UserTabs extends React.Component {
       searchPhrase:''
     };
     this.onTabMenuItemClick = this.onTabMenuItemClick.bind(this);
+    this.onUserSearchInputChange = this.onUserSearchInputChange.bind(this);
   }
 
   onTabMenuItemClick(val){
@@ -965,14 +966,11 @@ class UserTabs extends React.Component {
         <UserCommentsTab />
       );
     } else if (this.state.currentTab === 'search'){
-      /*tabContentDisplay = (
+      tabContentDisplay = (
         <UserSearchTab
           searchPhrase={this.state.searchPhrase}
         />
-      );*/
-      tabContentDisplay = (
-        <p>{this.state.searchPhrase}</p>
-      )
+      );
     }
 
     return(
