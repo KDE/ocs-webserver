@@ -1141,12 +1141,24 @@ class UserCommentsTab extends React.Component {
 
   render(){
     console.log(this.state);
-    const threadsDisplay = this.state.threads.map((t, index) => (
-      <UserCommentsTabThread
-        key={index}
-        thread={t}
-      />
-    ));
+    let odCommentsDisplay;
+    if (this.state.odComments){
+      odCommentsDisplay = (
+        <UserCommentsTabThread
+          type={'od'}
+          thread={this.state.odComments}
+        />
+      );
+    }
+    let forumCommentsDisplay;
+    if (this.state.forumComments){
+      forumCommentsDisplay = (
+        <UserCommentsTabThread
+          type={'forum'}
+          thread={this.state.forumComments}
+        />
+      );
+    }
     return(
       <div id="user-comments-tab-container">
         {threadsDisplay}
@@ -1159,6 +1171,32 @@ class UserCommentsTabThread extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
+    this.renderOdComments = this.renderOdComments.bind(this);
+    this.renderForumComments = this.renderForumComments.bind(this);
+  }
+
+  componentDidMount() {
+    console.log(this.props);
+    if (this.props.type === 'od'){
+      this.renderOdComments();
+    } else if (this.props.type === 'forum'){
+      this.renderForumComments();
+    }
+  }
+
+  renderOdComments(){
+    console.log(this.props.thread);
+    console.log('here needs to convert object to array?');
+    const threadInfo = {
+      address:'openDesktop.org',
+      url:'https://www.opendesktop.org'
+    }
+    console.log(threadInfo);
+  }
+
+  renderForumComments(){
+    console.log(this.props.thread);
+    console.log('here convert forum thread');
   }
 
   render(){
