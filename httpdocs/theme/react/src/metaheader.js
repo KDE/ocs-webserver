@@ -1143,7 +1143,7 @@ class UserSearchTab extends React.Component {
 
   componentDidMount() {
     console.log(this.props);
-    if (this.props.searchPhrase.length > 2){
+    if (this.props.searchPhrase && this.props.searchPhrase.length > 2){
       this.setState({status:"searching"},function(){
         const self = this;
         const xhttp = new XMLHttpRequest();
