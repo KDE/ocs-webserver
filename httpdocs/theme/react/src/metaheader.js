@@ -1071,10 +1071,10 @@ class UserCommentsTabThread extends React.Component {
     return (
       <div className="user-comments-thread-container">
         <div className="thread-header">
-          <p className="thread-subtitle">
-            <span>Discussion on {t.address}</span>
-            <span>{t.comment_count} comments</span>
-          </p>
+          <div className="thread-subtitle">
+            <p>Discussion on <b>{t.address}</b></p>
+            <p><span>{t.comment_count} comments</span></p>
+          </div>
           <div className="thread-title">
             <h2>{t.title}</h2>
           </div>
