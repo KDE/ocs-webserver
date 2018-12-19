@@ -1045,6 +1045,20 @@ class UserCommentsTab extends React.Component {
   	this.state = {threads:threads};
   }
 
+  componentDidMount() {
+    console.log(config.user);
+    const self = this;
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        const res = JSON.parse(this.response);
+        self.setState({users:res,status:"finished"});
+      }
+    };
+    xhttp.open("GET", "home/memberjson?member_id="+config.user.id, true);
+    xhttp.send();
+  }
+
   render(){
 
     const threadsDisplay = this.state.threads.map((t, index) => (
