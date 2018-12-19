@@ -1046,17 +1046,20 @@ class UserCommentsTab extends React.Component {
   }
 
   componentDidMount() {
+    const user = config.user;
     /*https://forum.opendesktop.org/user_actions.json?offset=0&username=dummy&filter=5*/
-    console.log(config.user);
+    console.log(user);
     const self = this;
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
+      console.log('xhttp request');
       if (this.readyState == 4 && this.status == 200) {
+        console.log('response :');
         const res = JSON.parse(this.response);
         console.log(res);
       }
     };
-    xhttp.open("GET", "home/memberjson?member_id="+config.user.id, true);
+    xhttp.open("GET", "home/memberjson?member_id="+user.member_id, true);
     xhttp.send();
   }
 
