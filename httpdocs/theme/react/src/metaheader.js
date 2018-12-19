@@ -1220,8 +1220,8 @@ class UserCommentsTabThreadCommentItem extends React.Component {
   render(){
     const c = this.props.comment;
     let repliedUsernameDisplay;
-    if (c.parent_comment_user){
-      repliedUsernameDisplay = ( <p className="replied-user"><span><a href="#">{c.parent_comment_user}</a></span></p> )
+    if (c.p_comment_member_id){
+      repliedUsernameDisplay = ( <p className="replied-user"><span><a href="#">{c.p_username}</a></span></p> )
     }
     return (
       <div className="comment-item">
@@ -1231,10 +1231,11 @@ class UserCommentsTabThreadCommentItem extends React.Component {
         <div className="comment-item-header">
           <p className="user"><a href="#">{config.user.username}</a></p>
           {repliedUsernameDisplay}
-          <p className="date-created"><span>{c.date}</span></p>
+          <p className="date-created"><span>{c.comment_created_at}</span></p>
         </div>
         <div className="comment-item-content">
-          <div dangerouslySetInnerHTML={{__html:c.text}}></div>
+          {c.title}
+          <div dangerouslySetInnerHTML={{__html:c.comment_text}}></div>
         </div>
         <div className="comment-item-votes-container">
           <div className="comment-item-votes up-votes">
