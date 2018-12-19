@@ -427,6 +427,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         return $this->generateRowSet($result);
     }
 
+
     /**
      * @param int  $member_id
      * @param null $limit
@@ -781,7 +782,22 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         return $this->createRow();
     }
     
-    
+    /**
+     * @param string $value
+     *
+     * @return mixed
+     */
+    public function findActiveMemberByName($username){
+      $sql = '
+          select m.member_id,m.username,profile_image_url from member m where m.is_active=1 and m.is_deleted = 0 
+          and m.username like "'.$username.'%"
+          limit 20
+      ';
+      $result = $this->getAdapter()->fetchAll($sql);
+      return $result;
+    }
+
+
     /**
      * @param string $value
      *
