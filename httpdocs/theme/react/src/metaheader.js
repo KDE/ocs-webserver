@@ -1162,6 +1162,7 @@ class UserCommentsTabThread extends React.Component {
 
   componentDidMount() {
     console.log(this.props);
+    let threadInfo;
     if (this.props.type === 'od'){
       threadInfo = {
         address:'openDesktop.org',
