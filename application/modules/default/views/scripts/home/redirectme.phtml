@@ -7,6 +7,7 @@ $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 $url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
 $url_myopendesktop = Zend_Registry::get('config')->settings->client->default->url_myopendesktop;
+$url_nextcloud = Zend_Registry::get('config')->settings->client->default->url_cloudopendesktop;
 $config = Zend_Registry::get('config')->settings->domain;
 
 $getAuthUser = new Default_View_Helper_GetAuthUser();
@@ -63,6 +64,7 @@ $domains = $info->getActiveStoresForCrossDomainLogin();
 <img src="<?= $http_scheme?>://<?= $config->openid->host ?>/login/setsession?ltat=<?= $ltat ?>" height="0" width="0" onload="loadSubSys();"/>
 <img data-src="<?=$http_scheme?>://<?= $config->forum->host ?>/session/sso?return_path=%2F" height="0" width="0" id="f-login" />
 <img data-src="<?= $url_gitlab ?>/users/auth/oauth_opendesktop" height="0" width="0" id="g-login"/>
+<img data-src="<?= $url_nextcloud ?>/index.php/apps/sociallogin/custom_oidc/OpendesktopID" height="0" width="0" id="g-login"/>
 
 </body>
 </html>
