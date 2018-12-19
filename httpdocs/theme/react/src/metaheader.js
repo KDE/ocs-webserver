@@ -133,7 +133,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updated 7');
+    console.log('updated 8');
     this.initMetaHeader();
   }
 
@@ -1152,8 +1152,8 @@ class UserSearchTab extends React.Component {
         const xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
-            const res = this.response;
-            console.log(res);
+            const res = JSON.parse(this.response);
+            self.setState({users:res,status:"finished"});
           }
         };
         xhttp.open("GET", "https://www.opendesktop.cc/home/searchmember?username="+this.props.searchPhrase, true);
@@ -1168,13 +1168,39 @@ class UserSearchTab extends React.Component {
       contentDisplay = <p>search users min 3 chars</p>
     } else if (this.state.status === "searching"){
       contentDisplay = <p>searching...</p>
-    } else {
-      contentDisplay = <p>finished searching</p>
+    } else if (this.state.status === "finished") {
+      const users = this.state.users.map((u,index) => (
+        <UserSearchTabListItem
+          key={index}
+          user={user}
+        />
+      ));
+      contentDisplay = (
+        <div className="users-list">
+        </div>
+      );
     }
 
     return (
       <div id="user-users-search-tab-container">
         {contentDisplay}
+      </div>
+    );
+  }
+}
+
+class UserSearchTabListItem extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    const user = this.props.user;
+    return (
+      <div className="user-list-item">
+        <img src={user.profile_image_url} />
+        <span>{user.username}</span>
       </div>
     );
   }
