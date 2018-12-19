@@ -1247,4 +1247,29 @@ class Default_Model_Info
         $cache->save($readmetext, $cacheName,array() , 3600);
         return $readmetext;
     }
+
+    public function getDiscussionOpendeskop($member_id){
+        $sql = "
+                select 
+                 c.comment_id
+                ,c.comment_text
+                ,c.comment_member_id
+                ,c.comment_created_at
+                ,m.username          
+                ,p.project_id
+                ,p.title
+                ,cp.comment_member_id p_comment_member_id
+                ,(select username from member m where m.member_id = cp.comment_member_id) p_username
+                from comments c 
+                inner join project p on c.comment_target_id = p.project_id and p.status = 100
+                inner join  member m ON c.comment_member_id = m.member_id
+                left join comments cp on c.comment_parent_id = cp.comment_id
+                where c.comment_type = 0 and c.comment_active = 1
+                and c.comment_member_id = :member_id
+                ORDER BY c.comment_created_at DESC
+                limit 10
+                ";
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id))->fetchAll();
+        return $result;
+    }
 }

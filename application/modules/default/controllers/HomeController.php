@@ -212,6 +212,20 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         }
         $this->_helper->json($results);
     }
+
+    public function memberjsonAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $member_id = $this->getParam('member_id');
+        $results = null;
+        if($member_id){
+            $info = new Default_Model_Info();
+            $commentsOpendeskop = $info->getDiscussionOpendeskop($member_id);
+            $results=array('commentsOpendeskop' => $commentsOpendeskop);
+        }
+        $this->_helper->json($results);
+    }
     
     
     public function baseurlajaxAction()

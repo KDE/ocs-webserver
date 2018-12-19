@@ -900,6 +900,23 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      */
     public function fetchComments($member_id, $limit = null)
     {
+        $result = $this->fetchCommentsList($member_id, $limit);
+        if (count($result) > 0) {
+            return new Zend_Paginator(new Zend_Paginator_Adapter_Array($result));
+        } else {
+            return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
+        }
+    }
+
+    /**
+     * @param      $member_id
+     * @param null $limit
+     *
+     * @return Zend_Paginator
+     * @throws Zend_Paginator_Exception
+     */
+    public function fetchCommentsList($member_id, $limit = null)
+    {
         $sql = '
             SELECT
                 comment_id
@@ -939,11 +956,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             'comment_status' => Default_Model_DbTable_Comments::COMMENT_ACTIVE
         ));
 
-        if (count($result) > 0) {
-            return new Zend_Paginator(new Zend_Paginator_Adapter_Array($result));
-        } else {
-            return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
-        }
+        return $result;
     }
 
     public function fetchCntSupporters($member_id)
