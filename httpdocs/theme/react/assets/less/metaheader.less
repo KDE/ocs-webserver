@@ -710,11 +710,12 @@ body {
                           p {
                             margin-right: 5px;
                             margin-bottom: 0;
+                            float: left;
 
                             &.user,
                             &.replied-user {
                               a {
-                                color: #2e9fff;                                
+                                color: #2e9fff;
                               }
                               &:hover {
                                 a {
@@ -745,6 +746,11 @@ body {
                         .comment-item-votes-container {
                           width: 100%;
                           float: left;
+                          > div {
+                            float: left;
+                            width: auto;
+                            margin-right: 5px;
+                          }
                           .comment-item-votes {
                             &.up-votes {
                               span {
