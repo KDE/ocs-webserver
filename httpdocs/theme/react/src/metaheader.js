@@ -951,6 +951,11 @@ class UserTabs extends React.Component {
     this.setState({currentTab:val});
   }
 
+  onUserSearchInputChange(){
+    console.log(e.target.value);
+    this.setState({searchPhrase:e.target.value})
+  }
+
   render(){
 
     let tabContentDisplay;
@@ -960,7 +965,9 @@ class UserTabs extends React.Component {
       );
     } else if (this.state.currentTab === 'search'){
       tabContentDisplay = (
-        <div>Search User</div>
+        <UserSearchTab
+          searchPhrase={this.state.searchPhrase}
+        />
       );
     }
 
@@ -977,7 +984,7 @@ class UserTabs extends React.Component {
             <li>
               <a className={this.state.currentTab === "search" ? "active" : ""}
                 onClick={() => this.onTabMenuItemClick('search')}>
-                <input type="text"/>
+                <input type="text" onChange={this.onUserSearchInputChange}/>
                 <span className="search-button"></span>
               </a>
             </li>
@@ -1123,6 +1130,50 @@ class UserCommentsTabThreadCommentItem extends React.Component {
         </div>
       </div>
     )
+  }
+}
+
+class UserSearchTab extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {
+      status:"ready"
+    };
+  }
+
+  componentDidMount() {
+    console.log(this.props);
+    if (this.props.searchPhrase.length > 2){
+      this.setState({status:"searching"},function(){
+        const self = this;
+        const xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            const res = this.response;
+            console.log(res);
+          }
+        };
+        xhttp.open("GET", "https://www.opendesktop.cc/home/searchmember?username="+this.props.searchPhrase, true);
+        xhttp.send();
+      });
+    }
+  }
+
+  render(){
+    let contentDisplay;
+    if (this.state.status === "ready"){
+      contentDisplay = <p>search users min 3 chars</p>
+    } else if (this.state.status === "searching"){
+      contentDisplay = <p>searching...</p>
+    } else {
+      contentDisplay = <p>finished searching</p>
+    }
+
+    return (
+      <div id="user-users-search-tab-container">
+        {contentDisplay}
+      </div>
+    );
   }
 }
 
