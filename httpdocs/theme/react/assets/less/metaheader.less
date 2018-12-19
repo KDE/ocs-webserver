@@ -705,8 +705,61 @@ body {
                         }
                         .comment-item-header {
                           margin-bottom: 5px;
-                          span {
+                          width: 100%;
+                          float: left;
+                          p {
                             margin-right: 5px;
+                            margin-bottom: 0;
+
+                            &.user,
+                            &.replied-user {
+                              a {
+                                color: #2e9fff;                                
+                              }
+                              &:hover {
+                                a {
+                                  color: #2e87e7;
+                                }
+                              }
+                            }
+
+                            &.date-created {
+                              margin-left: 5px;
+                              padding-left: 5px;
+                              &::before {
+                                content: "•";
+                                color: rgb(226, 226, 226);
+                              }
+                              span {
+                                margin-left: 5px;
+                              }
+                            }
+                          }
+                        }
+
+                        .comment-item-content {
+                          width: 100%;
+                          float: left;
+                        }
+
+                        .comment-item-votes-container {
+                          width: 100%;
+                          float: left;
+                          .comment-item-votes {
+                            &.up-votes {
+                              span {
+                                &::after {
+                                  content: "\f103";
+                                }
+                              }
+                            }
+                            &.down-votes {
+                              span {
+                                &::after {
+                                  content: "\f102";
+                                }
+                              }
+                            }
                           }
                         }
                       }
