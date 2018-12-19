@@ -947,6 +947,8 @@ class UserTabs extends React.Component {
     };
     this.onTabMenuItemClick = this.onTabMenuItemClick.bind(this);
     this.onUserSearchInputChange = this.onUserSearchInputChange.bind(this);
+    this.getUsersAutocompleteList = this.getUsersAutocompleteList.bind(this);
+    this.selectUserFromAutocompleteList = this.selectUserFromAutocompleteList.bind(this);
   }
 
   onTabMenuItemClick(val){
@@ -954,24 +956,68 @@ class UserTabs extends React.Component {
   }
 
   onUserSearchInputChange(e){
-    console.log(e.target.value);
-    this.setState({searchPhrase:e.target.value})
+    const searchPhrase = e.target.value
+    if (searchPhrase.length > 2){
+      this.getUsersAutocompleteList(searchPhrase);
+    }
+  }
+
+  getUsersAutocompleteList(searchPhrase){
+      const self = this;
+      const xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          const res = JSON.parse(this.response);
+          self.setState({usersList:res});
+        }
+      };
+      xhttp.open("GET", "https://www.opendesktop.cc/home/searchmember?username="+searchPhrase, true);
+      xhttp.send();
+  }
+
+  selectUserFromAutocompleteList(user){
+    this.setState({selectedUser:user});
   }
 
   render(){
 
+    let usersAutocompleteList;
+    if (this.state.usersList){
+      const users = this.state.usersList.map((u,index) => (
+        <li onClick={() => this.selectUserFromAutocompleteList(u)} key={index}>
+          {u.username}
+        </li>
+      ));
+      usersAutocompleteList = (
+        <ul className="autcomplete-list">
+          {users}
+        </ul>
+      );
+      console.log(this.state.usersList);
+    }
+
     let tabContentDisplay;
     if (this.state.currentTab === 'comments'){
       tabContentDisplay = (
-        <UserCommentsTab />
-      );
-    } else if (this.state.currentTab === 'search'){
-      tabContentDisplay = (
-        <UserSearchTab
-          searchPhrase={this.state.searchPhrase}
+        <UserCommentsTab
+          user={config.user}
         />
       );
+    } else if (this.state.currentTab === 'search'){
+      if (this.state.selectedUser){
+        tabContentDisplay = (
+          <UserCommentsTab
+            user={this.state.selectedUser}
+          />
+        );
+      } else {
+        tabContentDisplay = (
+          <p>search user</p>
+        );
+      }
     }
+
+
 
     return(
       <div id="user-tabs-container">
@@ -988,6 +1034,7 @@ class UserTabs extends React.Component {
                 onClick={() => this.onTabMenuItemClick('search')}>
                 <input type="text" onChange={this.onUserSearchInputChange}/>
               </a>
+              {usersAutocompleteList}
             </li>
           </ul>
         </div>
@@ -1046,7 +1093,7 @@ class UserCommentsTab extends React.Component {
   }
 
   componentDidMount() {
-    const user = config.user;
+    const user = this.props.user;
     /*https://forum.opendesktop.org/user_actions.json?offset=0&username=dummy&filter=5*/
     console.log(user);
     const self = this;
