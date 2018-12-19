@@ -1103,7 +1103,7 @@ class UserCommentsTab extends React.Component {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         const res = JSON.parse(this.response);
-        self.setState({odComments:res},function(){
+        self.setState({odComments:res.commentsOpendeskop},function(){
           self.getUserForumComments();
         });
       }
@@ -1119,7 +1119,7 @@ class UserCommentsTab extends React.Component {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         const res = JSON.parse(this.response);
-        self.setState({forumComments:res});
+        self.setState({forumComments:res.user_actions});
       }
     };
     xhttp.open("GET", "https://forum.opendesktop.cc/user_actions.json?offset=0&username=" + user.username + "&filter=5", true);
@@ -1132,7 +1132,7 @@ class UserCommentsTab extends React.Component {
       odCommentsDisplay = (
         <UserCommentsTabThread
           type={'od'}
-          thread={this.state.odComments}
+          comments={this.state.odComments}
         />
       );
     }
@@ -1141,7 +1141,7 @@ class UserCommentsTab extends React.Component {
       forumCommentsDisplay = (
         <UserCommentsTabThread
           type={'forum'}
-          thread={this.state.forumComments}
+          comments={this.state.forumComments}
         />
       );
     }
@@ -1158,57 +1158,50 @@ class UserCommentsTabThread extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
-    this.renderOdComments = this.renderOdComments.bind(this);
-    this.renderForumComments = this.renderForumComments.bind(this);
   }
 
   componentDidMount() {
     console.log(this.props);
     if (this.props.type === 'od'){
-      this.renderOdComments();
+      threadInfo = {
+        address:'openDesktop.org',
+        url:'https://www.opendesktop.org'
+      }
     } else if (this.props.type === 'forum'){
-      this.renderForumComments();
+      threadInfo = {
+        address:'forum',
+        url:'https://forum.opendesktop.org'
+      }
     }
-  }
-
-  renderOdComments(){
-    console.log(this.props.thread);
-    console.log('here needs to convert object to array?');
-    const threadInfo = {
-      address:'openDesktop.org',
-      url:'https://www.opendesktop.org'
-    }
-    console.log(threadInfo);
-  }
-
-  renderForumComments(){
-    console.log(this.props.thread);
-    console.log('here convert forum thread');
+    this.setState({threadInfo:threadInfo,comments:this.props.comments});
   }
 
   render(){
-    const t = this.props.thread;
-    let threadCommentsDisplay;
+    const t = this.state.threadInfo;
+    let headerDisplay, threadCommentsDisplay;
     if (this.state.comments){
-      threadCommentsDisplay = t.comments.map((c,index) => (
+      threadCommentsDisplay = this.state.comments.map((c,index) => (
         <UserCommentsTabThreadCommentItem
           key={index}
           comment={c}
         />
       ));
-    }
-
-    return (
-      <div className="user-comments-thread-container">
+      headerDisplay = (
         <div className="thread-header">
           <div className="thread-subtitle">
             <p>Discussion on <b>{t.address}</b></p>
-            <p><span>{t.comment_count} comments</span></p>
+            <p><span>{this.state.comments.length} comments</span></p>
           </div>
           <div className="thread-title">
             <h2>{t.title}</h2>
           </div>
         </div>
+      );
+    }
+
+    return (
+      <div className="user-comments-thread-container">
+        {headerDisplay}
         <div className="thread-comments">
           {threadCommentsDisplay}
         </div>
