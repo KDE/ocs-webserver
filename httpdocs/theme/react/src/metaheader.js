@@ -1110,7 +1110,7 @@ class UserCommentsTabThreadCommentItem extends React.Component {
           <span className="date-created">{c.date}</span>
         </div>
         <div className="comment-item-content">
-          {c.text}
+          <div dangerouslySetInnerHTML={{__html:c.text}}></div>
         </div>
       </div>
     )

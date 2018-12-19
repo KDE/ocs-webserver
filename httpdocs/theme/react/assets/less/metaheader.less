@@ -635,13 +635,20 @@ body {
                 #user-comments-tab-container {
 
                   .user-comments-thread-container {
-                    display: block;
+
                     .thread-header {
-                      display: block;
+                      float: left;
+                      width: 100%;
+
                       .thread-subtitle {
-                        display: block;
+                        float: left;
+                        width: 100%;
+                        font-size: 14px;
+                        margin: 10px 0;
                         p {
-                          display: block;
+                          float: left;
+                          color: #687a86;
+                          margin: 0;
                         }
                         p + p {
                           margin-left: 5px;
@@ -650,25 +657,51 @@ body {
                             content: "•";
                             color: rgb(226, 226, 226);
                           }
+                          span {
+                            margin-left: 5px;
+                          }
                         }
                       }
                       .thread-title {
-                        display: block;
+                        float: left;
+                        width: 100%;
+
+                        h2 {
+                          float: left;
+                          margin: 0 0 10px 0;
+                          font-size: 20px;
+                        }
                       }
                     }
                     .thread-comments {
-                      display: block;
+                      float: left;
+                      width: 100%;
+
                       .comment-item {
-                        display: block;
                         position: relative;
+                        height: auto;
+                        padding-left: 40px;
+                        float: left;
+                        width: 100%;
+
                         figure {
-                          display: block;
+                          position: absolute;
+                          top: 0;
+                          left: 0;
+                          width: 32px;
+                          height: 32px;
+                          margin: 0;
+
                           img {
-                            position: absolute;
+                            width: 32px;
+                            height: 32px;
+                            border-radius: 100%;
                           }
                         }
                         .comment-item-header {
-                          display: block;
+                          span {
+                            margin-right: 5px;
+                          }
                         }
                       }
                     }
