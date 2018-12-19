@@ -1224,17 +1224,6 @@ class MobileLeftSidePanel extends React.Component {
       aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={config.baseUrl + "/#about"}>About</a></li>);
     }
 
-    let adminsDropDownMenuDisplay;
-    if (this.props.isAdmin){
-      adminsDropDownMenuDisplay = (
-        <AdminsDropDownMenu
-          user={this.props.user}
-          baseUrl={this.props.baseUrl}
-          gitlabUrl={this.props.gitlabUrl}
-        />
-      );
-    }
-
     return (
       <div id="left-side-panel">
         <div id="panel-header">
@@ -1245,7 +1234,12 @@ class MobileLeftSidePanel extends React.Component {
         <div id="panel-menu">
           <ul>
             {panelMenuGroupsDisplay}
-            {adminsDropDownMenuDisplay}
+            <DevelopmentDropDownMenu
+              user={this.props.user}
+              baseUrl={this.props.baseUrl}
+              gitlabUrl={this.props.gitlabUrl}
+              isAdmin={this.props.isAdmin}
+            />
             <li>
               <a className="groupname"><b>Discussion Boards</b></a>
               <ul>
