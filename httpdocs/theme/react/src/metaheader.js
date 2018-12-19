@@ -133,6 +133,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
+    console.log('updated 2');
     this.initMetaHeader();
   }
 
@@ -588,14 +589,14 @@ class UserMenu extends React.Component {
           baseUrl={this.props.baseUrl}
         />
       );
-        userAppsContextDisplay = (
-          <UserContextMenuContainer
-            user={this.props.user}
-            forumUrl={this.props.forumUrl}
-            gitlabUrl={this.props.gitlabUrl}
-            isAdmin={this.props.isAdmin}
-          />
-        )
+      userAppsContextDisplay = (
+        <UserContextMenuContainer
+          user={this.props.user}
+          forumUrl={this.props.forumUrl}
+          gitlabUrl={this.props.gitlabUrl}
+          isAdmin={this.props.isAdmin}
+        />
+      );
     } else {
       userDropdownDisplay = (
         <li id="user-login-container"><a href={this.props.loginUrl} className="btn btn-metaheader">Login</a></li>
@@ -713,7 +714,7 @@ class UserContextMenuContainer extends React.Component {
             </a>
           </li>
           <li id="storage-link-item">
-            <a href={"https://my.opendesktop." + urlEnding}>
+            <a href={"https://cloud.opendesktop." + urlEnding}>
               <div className="icon"></div>
               <span>Storage</span>
             </a>
@@ -955,7 +956,7 @@ class UserTabs extends React.Component {
     let tabContentDisplay;
     if (this.state.currentTab === 'comments'){
       tabContentDisplay = (
-        <div>Comments</div>
+        <UserCommentsTab />
       );
     } else if (this.state.currentTab === 'search'){
       tabContentDisplay = (
@@ -993,11 +994,7 @@ class UserTabs extends React.Component {
 class UserCommentsTab extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
-  }
-
-  componentDidMount() {
-    /*const threads = [
+    const threads = [
       {
         address:'lubuntu.me',
         comment_count:68,
@@ -1006,17 +1003,13 @@ class UserCommentsTab extends React.Component {
           {
             parent_comment_user:'Simon Quigly',
             date:'2 months ago',
-            context:'<div>Yes. All visual inconsistencies are fixed now</div>',
+            text:'<div>Yes. All visual inconsistencies are fixed now</div>',
             votes_up:0,
             votes_down:1
           },{
             date:'2 months ago',
-            context:'
-            <div>
-              <p>Hi, nice to see this release. Im curious to test Lubuntu with LXQt. I have already experimented the beta release, and found some theming inconsistencies. Is it all fixed in final release?</p>
-              <p>Meanwhile, I have created a release announcement feed in my blog. Please have a look.<br><a href="http://disq.us/url?url=http%3A%2F%2Ftheopensourcefeed.com%2F00-lubuntu-cosmic-first-release-lxqt%2F%3AiUXptXQ1sOYPoKxW4w8KQrVytwE&amp;cuid=5561052" rel="nofollow noopener" title="http://theopensourcefeed.com/00-lubuntu-cosmic-first-release-lxqt/">http://theopensourcefeed.co...</a></p>
-            </div>
-            ',
+            text:'<div><p>Hi, nice to see this release. Im curious to test Lubuntu with LXQt. I have already experimented the beta release, and found some theming inconsistencies. Is it all fixed in final release?</p>' +
+            '<p>Meanwhile, I have created a release announcement feed in my blog. Please have a look.<br><a href="http://disq.us/url?url=http%3A%2F%2Ftheopensourcefeed.com%2F00-lubuntu-cosmic-first-release-lxqt%2F%3AiUXptXQ1sOYPoKxW4w8KQrVytwE&amp;cuid=5561052" rel="nofollow noopener" title="http://theopensourcefeed.com/00-lubuntu-cosmic-first-release-lxqt/">http://theopensourcefeed.co...</a></p></div>',
             votes_up:1,
             votes_down:0
           }
@@ -1028,39 +1021,96 @@ class UserCommentsTab extends React.Component {
         comments:[
           {
             date:'2 months ago',
-            context:'<div>
-              <p>Just created a release news for Feren OS October snapshot. Please have a look.<br><a href="http://disq.us/url?url=http%3A%2F%2Ftheopensourcefeed.com%2F00-ferenos-october-snapshot-brings-significant-improvements%3AYftrbOQthqE4qTqKU-LN6sQN_FQ&amp;cuid=3291269" rel="nofollow noopener" title="http://theopensourcefeed.com/00-ferenos-october-snapshot-brings-significant-improvements">http://theopensourcefeed.co...</a></p>
-            </div>',
+            text:'<div><p>Just created a release news for Feren OS October snapshot. Please have a look.<br><a href="http://disq.us/url?url=http%3A%2F%2Ftheopensourcefeed.com%2F00-ferenos-october-snapshot-brings-significant-improvements%3AYftrbOQthqE4qTqKU-LN6sQN_FQ&amp;cuid=3291269" rel="nofollow noopener" title="http://theopensourcefeed.com/00-ferenos-october-snapshot-brings-significant-improvements">http://theopensourcefeed.co...</a></p></div>',
             votes_up:4,
             votes_down:0
           },{
             date:'2 months ago',
-            context:'
-            <div>
-              <p>Hi, nice to see this release. Im curious to test Lubuntu with LXQt. I have already experimented the beta release, and found some theming inconsistencies. Is it all fixed in final release?</p>
-              <p>Meanwhile, I have created a release announcement feed in my blog. Please have a look.<br><a href="http://disq.us/url?url=http%3A%2F%2Ftheopensourcefeed.com%2F00-lubuntu-cosmic-first-release-lxqt%2F%3AiUXptXQ1sOYPoKxW4w8KQrVytwE&amp;cuid=5561052" rel="nofollow noopener" title="http://theopensourcefeed.com/00-lubuntu-cosmic-first-release-lxqt/">http://theopensourcefeed.co...</a></p>
-            </div>
-            ',
+            text:'<div><p>Hi, nice to see this release. Im curious to test Lubuntu with LXQt. I have already experimented the beta release, and found some theming inconsistencies. Is it all fixed in final release?</p>' +
+            '<p>Meanwhile, I have created a release announcement feed in my blog. Please have a look.<br><a href="http://disq.us/url?url=http%3A%2F%2Ftheopensourcefeed.com%2F00-lubuntu-cosmic-first-release-lxqt%2F%3AiUXptXQ1sOYPoKxW4w8KQrVytwE&amp;cuid=5561052" rel="nofollow noopener" title="http://theopensourcefeed.com/00-lubuntu-cosmic-first-release-lxqt/">http://theopensourcefeed.co...</a></p></div>',
             votes_up:0,
             votes_down:3
           }
         ]
       }
     ];
-    this.setState({threads:threads});*/
+  	this.state = {threads:threads};
   }
 
   render(){
 
-    /*const threadsDisplay;
-    threadsDisplay = this.state.threads.map((t, index) => (
-      <UserCommentsThread
-        thread=
+    const threadsDisplay = this.state.threads.map((t, index) => (
+      <UserCommentsTabThread
+        key={index}
+        thread={t}
       />
-    ));*/
+    ));
     return(
       <div id="user-comments-tab-container">
+        {threadsDisplay}
+      </div>
+    )
+  }
+}
 
+class UserCommentsTabThread extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    const t = this.props.thread;
+    let threadCommentsDisplay = t.comments.map((c,index) => (
+      <UserCommentsTabThreadCommentItem
+        key={index}
+        comment={c}
+      />
+    ));
+
+    return (
+      <div className="user-comments-thread-container">
+        <div className="thread-header">
+          <p className="thread-subtitle">
+            <span>Discussion on {t.address}</span>
+            <span>{t.comment_count} comments</span>
+          </p>
+          <div className="thread-title">
+            <h2>{t.title}</h2>
+          </div>
+        </div>
+        <div className="thread-comments">
+          {threadCommentsDisplay}
+        </div>
+      </div>
+    )
+  }
+}
+
+class UserCommentsTabThreadCommentItem extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    const c = this.props.comment;
+    let repliedUsernameDisplay;
+    if (c.parent_comment_user){
+      repliedUsernameDisplay = ( <span className="replied-user">{c.parent_comment_user}</span> )
+    }
+    return (
+      <div className="comment-item">
+        <figure className="comment-item-user-avatar">
+        </figure>
+        <div className="comment-item-header">
+          <span className="user">{config.user.username}</span>
+          {repliedUsernameDisplay}
+          <span className="date-created">{c.date}</span>
+        </div>
+        <div className="comment-item-content">
+          {c.text}
+        </div>
       </div>
     )
   }
@@ -1174,17 +1224,6 @@ class MobileLeftSidePanel extends React.Component {
       aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={config.baseUrl + "/#about"}>About</a></li>);
     }
 
-    let adminsDropDownMenuDisplay;
-    if (this.props.isAdmin){
-      adminsDropDownMenuDisplay = (
-        <AdminsDropDownMenu
-          user={this.props.user}
-          baseUrl={this.props.baseUrl}
-          gitlabUrl={this.props.gitlabUrl}
-        />
-      );
-    }
-
     return (
       <div id="left-side-panel">
         <div id="panel-header">
@@ -1195,7 +1234,12 @@ class MobileLeftSidePanel extends React.Component {
         <div id="panel-menu">
           <ul>
             {panelMenuGroupsDisplay}
-            {adminsDropDownMenuDisplay}
+            <DevelopmentDropDownMenu
+              user={this.props.user}
+              baseUrl={this.props.baseUrl}
+              gitlabUrl={this.props.gitlabUrl}
+              isAdmin={this.props.isAdmin}
+            />
             <li>
               <a className="groupname"><b>Discussion Boards</b></a>
               <ul>
