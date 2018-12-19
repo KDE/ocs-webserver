@@ -549,6 +549,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             'catTitle' => 'cat_title'
         ))->setIntegrityCheck(false)->where('status = ?', self::PROJECT_ACTIVE)->where('member_id = ?', $project->member_id, 'INTEGER')
                   ->where('project_id != ?', $project->project_id, 'INTEGER')->where('type_id = ?', self::PROJECT_TYPE_STANDARD)
+                  ->where('amount_reports is null')
                   ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')->limit($count)
                   ->order('project_created_at DESC')
         ;
@@ -644,6 +645,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             'catTitle' => 'cat_title'
         ))->setIntegrityCheck(false)->where('status = ?', self::PROJECT_ACTIVE)
                   ->where('member_id != ?', $project->member_id, 'INTEGER')->where('type_id = ?', 1)
+                  ->where('amount_reports is null')
                   ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')->limit($count, $offset)
                   ->order('project_created_at DESC')
         ;
