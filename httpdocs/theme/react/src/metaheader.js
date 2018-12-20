@@ -133,7 +133,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updated 5');
+    console.log('updated 6');
     this.initMetaHeader();
   }
 
@@ -1043,7 +1043,7 @@ class UserTabs extends React.Component {
   onUserSearchInputChange(e){
     const searchPhrase = e.target.value;
     if (searchPhrase.length > 2){
-      this.setState({showUserList:true},function(){
+      this.setState({showUserList:true,selectedUser:''},function(){
         this.getUsersAutocompleteList(searchPhrase);
       });
     }
@@ -1112,8 +1112,6 @@ class UserTabs extends React.Component {
       }
     }
 
-
-
     return(
       <div id="user-tabs-container">
         <div id="user-tabs-menu">
@@ -1127,7 +1125,7 @@ class UserTabs extends React.Component {
             <li id="search-form-container">
               <a className={this.state.currentTab === "search" ? "active" : ""}
                 onClick={() => this.onTabMenuItemClick('search')}>
-                <input type="text" onChange={this.onUserSearchInputChange}/>
+                <input defaultValue={this.state.searchPhrase} type="text" onChange={this.onUserSearchInputChange}/>
               </a>
               {usersAutocompleteList}
             </li>
@@ -1341,7 +1339,6 @@ class UserCommentsTabThreadCommentItem extends React.Component {
           <p className="date-created"><span>{c.comment_created_at}</span></p>
         </div>
         <div className="comment-item-content">
-          {c.title}
           <div dangerouslySetInnerHTML={{__html:c.comment_text}}></div>
         </div>
         <div className="comment-item-votes-container">
