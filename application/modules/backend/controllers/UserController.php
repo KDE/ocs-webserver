@@ -215,20 +215,24 @@ class Backend_UserController extends Local_Controller_Action_Backend
 
             $modelOpenCode = new Default_Model_Ocs_Gitlab();
             $modelOpenCode->createUserFromArray($record->toArray(), true);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $modelOpenCode->getMessages()));
 
             $modelIdent = new Default_Model_Ocs_Ldap();
             $modelIdent->createUserFromArray($record->toArray(), true);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $modelIdent->getMessages()));
 
             $modelId = new Default_Model_Ocs_OAuth();
             $modelId->createUserFromArray($record->toArray(), true);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - oauth : ' . implode(PHP_EOL." - ", $modelId->getMessages()));
 
             $modelForum = new Default_Model_Ocs_Forum();
             $modelForum->createUserFromArray($record->toArray(), true);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - forum : ' . implode(PHP_EOL." - ", $modelForum->getMessages()));
 
             $jTableResult = array();
             $jTableResult['Result'] = self::RESULT_OK;
             //$jTableResult['Record'] = $record->toArray();
-            $jTableResult['Message'] = implode("<br>".PHP_EOL, $modelIdent->getMessages());
+            $jTableResult['Message'] = "OK";
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - (Line ' . $e->getLine() . ') ' . $e->getMessage());
             $jTableResult['Result'] = self::RESULT_ERROR;
