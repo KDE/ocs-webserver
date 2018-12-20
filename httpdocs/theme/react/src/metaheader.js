@@ -133,7 +133,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updated 3');
+    console.log('updated 4');
     this.initMetaHeader();
   }
 
@@ -162,11 +162,11 @@ class MetaHeader extends React.Component {
   updateDimensions(){
     const width = window.innerWidth;
     let device;
-    if (width >= 910){
+    if (width >= 930){
       device = "large";
-    } else if (width < 910 && width >= 610){
+    } else if (width < 930 && width >= 630){
       device = "mid";
-    } else if (width < 610){
+    } else if (width < 630){
       device = "tablet";
     }
     this.setState({device:device});
