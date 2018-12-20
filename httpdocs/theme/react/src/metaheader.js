@@ -589,7 +589,7 @@ class UserMenu extends React.Component {
   }
 
   render(){
-    let userDropdownDisplay, userAppsContextDisplay;
+    let userDropdownDisplay, userAppsContextDisplay, developmentAppMenuDisplay;
     if (this.props.user && this.props.user.member_id){
       userDropdownDisplay = (
         <UserLoginMenuContainerVersionTwo
@@ -600,6 +600,14 @@ class UserMenu extends React.Component {
       );
       userAppsContextDisplay = (
         <UserContextMenuContainer
+          user={this.props.user}
+          forumUrl={this.props.forumUrl}
+          gitlabUrl={this.props.gitlabUrl}
+          isAdmin={this.props.isAdmin}
+        />
+      );
+      developmentAppMenuDisplay = (
+        <DevelopmentAppMenu
           user={this.props.user}
           forumUrl={this.props.forumUrl}
           gitlabUrl={this.props.gitlabUrl}
@@ -634,6 +642,7 @@ class UserMenu extends React.Component {
           {faqLinkItem}
           {apiLinkItem}
           {aboutLinkItem}
+          {developmentAppMenuDisplay}
           {userAppsContextDisplay}
           {userDropdownDisplay}
         </ul>
@@ -769,18 +778,6 @@ class UserContextMenuContainer extends React.Component {
               <span>Messages</span>
             </a>
           </li>
-          <li id="opencode-link-item">
-            <a href={this.props.gitlabUrl+"/dashboard/projects"}>
-              <div className="icon"></div>
-              <span>Projects</span>
-            </a>
-          </li>
-          <li id="issues-link-item">
-            <a href={this.state.gitlabLink}>
-              <div className="icon"></div>
-              <span>Issues</span>
-            </a>
-          </li>
         </ul>
       );
     }
@@ -793,6 +790,84 @@ class UserContextMenuContainer extends React.Component {
             <span className="th-icon"></span>
           </button>
           {contextMenuDisplay}
+        </div>
+      </li>
+    )
+  }
+}
+
+class DevelopmentAppMenu extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      gitlabLink:config.gitlabUrl+"/dashboard/issues?assignee_id="
+    };
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentDidMount() {
+    const self = this;
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        const res = JSON.parse(this.response);
+        const gitlabLink = self.state.gitlabLink + res[0].id;
+        self.setState({gitlabLink:gitlabLink,loading:false});
+      }
+    };
+    xhttp.open("GET", config.gitlabUrl+"/api/v4/users?username="+this.props.user.username, true);
+    xhttp.send();
+  }
+
+  handleClick(e){
+    let dropdownClass = "";
+    if (this.node.contains(e.target)){
+      if (this.state.dropdownClass === "open"){
+        if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle"){
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({dropdownClass:dropdownClass});
+  }
+
+  render(){
+
+    const urlEnding = config.baseUrl.split('opendesktop.')[1];
+
+    return (
+      <li ref={node => this.node = node} id="user-context-menu-container">
+        <div className={"user-dropdown " + this.state.dropdownClass}>
+          <button
+            className="btn btn-default dropdown-toggle" type="button" onClick={this.toggleDropDown}>
+            <span className="th-icon"></span>
+          </button>
+          <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
+            <li id="opencode-link-item">
+              <a href={this.props.gitlabUrl+"/dashboard/projects"}>
+                <div className="icon"></div>
+                <span>Projects</span>
+              </a>
+            </li>
+            <li id="issues-link-item">
+              <a href={this.state.gitlabLink}>
+                <div className="icon"></div>
+                <span>Issues</span>
+              </a>
+            </li>
+          </ul>
         </div>
       </li>
     )
@@ -977,7 +1052,7 @@ class UserTabs extends React.Component {
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
           const res = JSON.parse(this.response);
-          self.setState({usersList:res});
+          self.setState({usersList:res,showUserList:true});
         }
       };
       xhttp.open("GET", "https://www.opendesktop.cc/home/searchmember?username="+searchPhrase, true);
@@ -985,13 +1060,13 @@ class UserTabs extends React.Component {
   }
 
   selectUserFromAutocompleteList(user){
-    this.setState({selectedUser:user});
+    this.setState({selectedUser:user,showUserList:false});
   }
 
   render(){
 
     let usersAutocompleteList;
-    if (this.state.usersList){
+    if (this.state.usersList && this.state.showUserList){
       const users = this.state.usersList.map((u,index) => (
         <li onClick={() => this.selectUserFromAutocompleteList(u)} key={index}>
           {u.username}
