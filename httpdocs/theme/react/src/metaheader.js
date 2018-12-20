@@ -1140,7 +1140,7 @@ class UserCommentsTab extends React.Component {
     let odCommentsDisplay;
     if (this.state.odComments){
       odCommentsDisplay = (
-        <UserCommentsTabThread
+        <UserCommentsTabThreadsContainer
           type={'od'}
           comments={this.state.odComments}
         />
@@ -1149,7 +1149,7 @@ class UserCommentsTab extends React.Component {
     let forumCommentsDisplay;
     if (this.state.forumComments){
       forumCommentsDisplay = (
-        <UserCommentsTabThread
+        <UserCommentsTabThreadsContainer
           type={'forum'}
           comments={this.state.forumComments}
         />
@@ -1164,21 +1164,21 @@ class UserCommentsTab extends React.Component {
   }
 }
 
-class UserCommentsTabThread extends React.Component {
+class UserCommentsTabThreadsContainer extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
   }
 
   componentDidMount() {
-    let threadInfo;
+    let siteInfo;
     if (this.props.type === 'od'){
-      threadInfo = {
+      siteInfo = {
         address:'openDesktop.org',
         url:'https://www.opendesktop.org'
       }
     } else if (this.props.type === 'forum'){
-      threadInfo = {
+      siteInfo = {
         address:'forum',
         url:'https://forum.opendesktop.org'
       }
@@ -1191,33 +1191,30 @@ class UserCommentsTabThread extends React.Component {
       }
     });
 
-    this.setState({threadInfo:threadInfo,comments:this.props.comments,threads:threads});
+    this.setState({siteInfo:siteInfo,comments:this.props.comments,threads:threads});
   }
 
   render(){
-    const t = this.state.threadInfo;
+    const t = this.state.siteInfo;
+    const comments = this.state.comments;
     let headerDisplay, threadsDisplay, threadCommentsDisplay;
-    /*if (this.state.threads){
+    if (this.state.threads){
       threadsDisplay = this.state.threads.map((tr,index) => (
-        threadCommentsDisplay = this.state.comments.map((c,index) => (
-          <UserCommentsTabThreadCommentItem
-            key={index}
-            comment={c}
-          />
-        ));
+        <UserCommentsTabThread
+          key={index}
+          thread={tr}
+          comments={comments}
+        />
       ));
       headerDisplay = (
         <div className="thread-header">
           <div className="thread-subtitle">
-            <p>Discussion on <b>{t.address}</b></p>
+            <p>Discussion on <b><a href={this.state.siteInfo.url}>{this.state.siteInfo.address}</a></b></p>
             <p><span>{this.state.comments.length} comments</span></p>
-          </div>
-          <div className="thread-title">
-            <h2>{t.title}</h2>
           </div>
         </div>
       );
-    }*/
+    }
 
     return (
       <div className="user-comments-thread-container">
@@ -1227,6 +1224,42 @@ class UserCommentsTabThread extends React.Component {
         </div>
       </div>
     )
+  }
+}
+
+class UserCommentsTabThread extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.filterCommentsByThread = this.filterCommentsByThread.bind(this);
+  }
+
+  filterCommentsByThread(comment){
+    if (comment.title === this.props.thread){
+      return comment;
+    }
+  }
+
+  render(){
+    let commentsDisplay;
+    if (this.props.comments){
+      commentsDisplay = this.props.comments.filter(this.filterCommentsByThread).map((c,index) => (
+        <UserCommentsTabThreadCommentItem
+          key={index}
+          comment={c}
+        />
+      ));
+    }
+    return (
+      <div className="user-comments-thread">
+        <div className="thread-title">
+          <h2>{this.props.thread}</h2>
+        </div>
+        <div className="thread-comments">
+          {commentsDisplay}
+        </div>
+      </div>
+    );
   }
 }
 
@@ -1267,77 +1300,6 @@ class UserCommentsTabThreadCommentItem extends React.Component {
         </div>
       </div>
     )
-  }
-}
-
-class UserSearchTab extends React.Component {
-  constructor(props){
-  	super(props);
-  	this.state = {
-      status:"ready",
-      searchPhrase:this.props.searchPhrase
-    };
-  }
-
-  componentDidMount() {
-    if (this.state.searchPhrase && this.state.searchPhrase.length > 2){
-      this.setState({status:"searching"},function(){
-        const self = this;
-        const xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 200) {
-            const res = JSON.parse(this.response);
-            self.setState({users:res,status:"finished"});
-          }
-        };
-        xhttp.open("GET", "https://www.opendesktop.cc/home/searchmember?username="+this.props.searchPhrase, true);
-        xhttp.send();
-      });
-    }
-  }
-
-  render(){
-    let contentDisplay;
-    if (this.state.status === "ready"){
-      contentDisplay = <p>search users min 3 chars</p>
-    } else if (this.state.status === "searching"){
-      contentDisplay = <p>searching...</p>
-    } else if (this.state.status === "finished") {
-      const users = this.state.users.map((u,index) => (
-        <UserSearchTabListItem
-          key={index}
-          user={u}
-        />
-      ));
-      contentDisplay = (
-        <div className="users-list">
-
-        </div>
-      );
-    }
-
-    return (
-      <div id="user-users-search-tab-container">
-        {contentDisplay}
-      </div>
-    );
-  }
-}
-
-class UserSearchTabListItem extends React.Component {
-  constructor(props){
-  	super(props);
-  	this.state = {};
-  }
-
-  render(){
-    const user = this.props.user;
-    return (
-      <div className="user-list-item">
-        <img src={user.profile_image_url} />
-        <span>{user.username}</span>
-      </div>
-    );
   }
 }
 
