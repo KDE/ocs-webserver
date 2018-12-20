@@ -1195,6 +1195,7 @@ class UserCommentsTabThreadsContainer extends React.Component {
   }
 
   render(){
+    console.log(this.state.siteInfo);
     const t = this.state.siteInfo;
     const comments = this.state.comments;
     let headerDisplay, threadsDisplay, threadCommentsDisplay;
