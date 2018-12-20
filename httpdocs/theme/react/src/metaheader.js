@@ -133,7 +133,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updated 1');
+    console.log('updated 2');
     this.initMetaHeader();
   }
 
@@ -848,7 +848,7 @@ class DevelopmentAppMenu extends React.Component {
     const urlEnding = config.baseUrl.split('opendesktop.')[1];
 
     return (
-      <li ref={node => this.node = node} id="user-context-menu-container">
+      <li ref={node => this.node = node} id="development-app-menu-container">
         <div className={"user-dropdown " + this.state.dropdownClass}>
           <button
             className="btn btn-default dropdown-toggle" type="button" onClick={this.toggleDropDown}>
