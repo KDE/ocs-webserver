@@ -682,12 +682,14 @@
                           width: 100%;
                           float: left;
                           p {
-                            margin-right: 5px;
                             margin-bottom: 0;
                             float: left;
 
                             &.user,
                             &.replied-user {
+                              span {
+                                margin-right: 5px;
+                              }
                               a {
                                 color: #2e9fff;
                               }
@@ -709,6 +711,10 @@
                                 margin-left: 5px;
                               }
                             }
+                          }
+
+                          p + p {
+                            margin-left: 5px;
                           }
                         }
 
