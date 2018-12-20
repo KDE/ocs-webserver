@@ -133,7 +133,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updated 2');
+    console.log('updated 3');
     this.initMetaHeader();
   }
 
@@ -650,6 +650,7 @@ class UserMenu extends React.Component {
     } else {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
+          {developmentAppMenuDisplay}
           {userAppsContextDisplay}
           {userDropdownDisplay}
         </ul>
