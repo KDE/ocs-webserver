@@ -1207,20 +1207,12 @@ class UserCommentsTab extends React.Component {
         );
       }
 
-      if (this.state.forumComments.length === 0 && this.state.forumComments.length === 0){
-        contentDisplay = (
-          <div>
-            <p>no comments for {this.props.user.username}</p>
-          </div>
-        )
-      } else {
-        contentDisplay = (
-          <div>
-            {odCommentsDisplay}
-            {forumCommentsDisplay}
-          </div>
-        )
-      }
+      contentDisplay = (
+        <div>
+          {odCommentsDisplay}
+          {forumCommentsDisplay}
+        </div>
+      )
 
     } else {
       contentDisplay = (
@@ -1307,20 +1299,12 @@ class UserSearchTab extends React.Component {
         );
       }
 
-      if (this.state.odComments.length > 0 && this.state.forumComments.length > 0){
-        contentDisplay = (
-          <div>
-            {odCommentsDisplay}
-            {forumCommentsDisplay}
-          </div>
-        )
-      } else {
-        contentDisplay = (
-          <div>
-            <p>no comments for {this.props.user.username}</p>
-          </div>
-        )
-      }
+      contentDisplay = (
+        <div>
+          {odCommentsDisplay}
+          {forumCommentsDisplay}
+        </div>
+      )
 
     } else {
       contentDisplay = (
