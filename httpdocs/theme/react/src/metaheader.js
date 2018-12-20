@@ -466,10 +466,10 @@ class DevelopmentDropDownMenu extends React.Component {
     let gitfaqLinkItem;
     if (config.isExternal === false){
       gitfaqLinkItem = (<li><a className="popuppanel" id="gitfaq" href={"/gitfaq"}>Git FAQ</a></li>);
-     
+
     } else {
       gitfaqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={config.baseUrl + "/#gitfaq"}>Git FAQ</a></li>);
-     
+
     }
 
     return (
@@ -1197,7 +1197,7 @@ class UserCommentsTabThread extends React.Component {
   render(){
     const t = this.state.threadInfo;
     let headerDisplay, threadsDisplay, threadCommentsDisplay;
-    if (this.state.threads){
+    /*if (this.state.threads){
       threadsDisplay = this.state.threads.map((tr,index) => (
         threadCommentsDisplay = this.state.comments.map((c,index) => (
           <UserCommentsTabThreadCommentItem
@@ -1217,7 +1217,7 @@ class UserCommentsTabThread extends React.Component {
           </div>
         </div>
       );
-    }
+    }*/
 
     return (
       <div className="user-comments-thread-container">
