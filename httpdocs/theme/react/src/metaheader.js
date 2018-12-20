@@ -1093,7 +1093,7 @@ class UserTabs extends React.Component {
       );
     } else if (this.state.currentTab === 'search'){
       if (this.state.selectedUser){
-        console.log('this state selected user'),;
+        console.log('this state selected user');
         console.log(this.state.selectedUser);
         tabContentDisplay = (
           <UserCommentsTab
