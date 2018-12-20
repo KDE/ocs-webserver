@@ -1082,6 +1082,9 @@ class UserTabs extends React.Component {
       );
     }
 
+    console.log('this current tab:');
+    console.log(this.state.currentTab);
+
     let tabContentDisplay;
     if (this.state.currentTab === 'comments'){
       console.log('comments tab, should show default');
