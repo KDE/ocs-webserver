@@ -133,7 +133,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updated 7');
+    console.log('updated 8');
     this.initMetaHeader();
   }
 
@@ -1148,14 +1148,12 @@ class UserCommentsTab extends React.Component {
   }
 
   componentDidMount() {
-    this.getUserOdComments();
-    console.log('+++++++++++');
-    console.log(this.props.user);
-    console.log('++++++++++++')
-  }
-
-  componentWillUnmount() {
-    console.log('remove od / forum comments?');
+    this.setState({odComments:[],forumComments:[]},function(){
+      this.getUserOdComments();
+      console.log('+++++++++++');
+      console.log(this.props.user);
+      console.log('++++++++++++')
+    });
   }
 
   getUserOdComments(){
