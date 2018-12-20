@@ -1103,7 +1103,7 @@ class UserTabs extends React.Component {
         console.log('this state selected user');
         console.log(this.state.selectedUser);
         tabContentDisplay = (
-          <UserCommentsTab
+          <UserSearchTab
             user={this.state.selectedUser}
           />
         );
@@ -1235,6 +1235,101 @@ class UserCommentsTab extends React.Component {
   }
 }
 
+class UserSearchTab extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {
+      loading:true
+    };
+    this.getUserOdComments = this.getUserOdComments.bind(this);
+    this.getUserForumComments = this.getUserForumComments.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({odComments:[],forumComments:[],loading:true},function(){
+      this.getUserOdComments();
+      console.log('+++++++++++');
+      console.log(this.props.user);
+      console.log('++++++++++++')
+    });
+  }
+
+  getUserOdComments(){
+    const user = this.props.user;
+    const self = this;
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        const res = JSON.parse(this.response);
+        console.log('++++++++++');
+        console.log(res);
+        console.log('++++++++++');
+        self.setState({odComments:res.commentsOpendeskop,loading:false},function(){
+          self.getUserForumComments();
+        });
+      }
+    };
+    xhttp.open("GET", "home/memberjson?member_id="+user.member_id, true);
+    xhttp.send();
+  }
+
+  getUserForumComments(){
+    const user = this.props.user;
+    const self = this;
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        const res = JSON.parse(this.response);
+        self.setState({forumComments:res.user_actions,loading:false});
+      }
+    };
+    xhttp.open("GET", "https://forum.opendesktop.cc/user_actions.json?offset=0&username=" + user.username + "&filter=5", true);
+    xhttp.send();
+  }
+
+  render(){
+    let contentDisplay;
+    if (!this.state.loading){
+      let odCommentsDisplay, forumCommentsDisplay;
+      if (this.state.odComments){
+        odCommentsDisplay = (
+          <UserCommentsTabThreadsContainer
+            type={'od'}
+            user={this.props.user}
+            comments={this.state.odComments}
+          />
+        );
+      }
+      if (this.state.forumComments){
+        forumCommentsDisplay = (
+          <UserCommentsTabThreadsContainer
+            type={'forum'}
+            user={this.props.user}
+            comments={this.state.forumComments}
+          />
+        );
+      }
+      contentDisplay = (
+        <div>
+          {odCommentsDisplay}
+          {forumCommentsDisplay}
+        </div>
+      )
+    } else {
+      contentDisplay = (
+        <div>loading</div>
+      );
+    }
+
+    return(
+      <div id="user-comments-tab-container">
+        {contentDisplay}
+      </div>
+    )
+  }
+}
+
+
 class UserCommentsTabThreadsContainer extends React.Component {
   constructor(props){
   	super(props);
@@ -1355,7 +1450,7 @@ class UserCommentsTabThreadCommentItem extends React.Component {
     return (
       <div className="comment-item">
         <figure className="comment-item-user-avatar">
-          <img className="th-icon" src={user.avatar}/>
+          <img className="th-icon" src={user.profile_image_url}/>
         </figure>
         <div className="comment-item-header">
           <p className="user"><a href="#">{user.username}</a></p>
