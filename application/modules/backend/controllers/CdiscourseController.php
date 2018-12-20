@@ -64,7 +64,7 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
         $this->log->err("METHOD: {$method}\n--------------\n");
 
         if ('delete' == $method) {
-            $this->deleteMember($this->getParam('member_id'));
+            //$this->deleteMember($this->getParam('member_id'));
             echo "not implemented";
 
             return;
@@ -205,41 +205,6 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
         return true;
     }
 
-    public function groupAction()
-    {
-        $groupname = $this->getParam('name', null);
-
-        $modelSubSystem = new Default_Model_Ocs_Forum($this->config);
-
-        //$result = $modelSubSystem->createGroup($groupname);
-        //
-        //echo $result;
-        //
-        //$result = $modelSubSystem->deleteGroup($result);
-        //
-        //echo $result;
-
-        $result = $modelSubSystem->getUserByEmail("info@dschinnweb.de");
-
-        print_r($result);
-
-        echo json_encode($result);
-    }
-
-    private function deleteMember($member)
-    {
-        $modelSubSystem = new Default_Model_Ocs_Forum($this->config);
-        try {
-            //Export User, if he not exists
-            $modelSubSystem->deleteUser($member);
-        } catch (Exception $e) {
-            $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
-        }
-        $messages = $modelSubSystem->getMessages();
-        $this->log->info("messages " . Zend_Json::encode($messages));
-        echo "response " . Zend_Json::encode($messages) . PHP_EOL;
-    }
-
     private function blockMembers($members)
     {
         $modelSubSystem = new Default_Model_Ocs_Forum($this->config);
@@ -307,6 +272,41 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
                 $this->log->info("Message : " . Zend_Json::encode($messages));
             }
         }
+    }
+
+    public function groupAction()
+    {
+        $groupname = $this->getParam('name', null);
+
+        $modelSubSystem = new Default_Model_Ocs_Forum($this->config);
+
+        //$result = $modelSubSystem->createGroup($groupname);
+        //
+        //echo $result;
+        //
+        //$result = $modelSubSystem->deleteGroup($result);
+        //
+        //echo $result;
+
+        $result = $modelSubSystem->getUserByEmail("info@dschinnweb.de");
+
+        print_r($result);
+
+        echo json_encode($result);
+    }
+
+    private function deleteMember($member)
+    {
+        $modelSubSystem = new Default_Model_Ocs_Forum($this->config);
+        try {
+            //Export User, if he not exists
+            $modelSubSystem->deleteUser($member);
+        } catch (Exception $e) {
+            $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        $messages = $modelSubSystem->getMessages();
+        $this->log->info("messages " . Zend_Json::encode($messages));
+        echo "response " . Zend_Json::encode($messages) . PHP_EOL;
     }
 
 }

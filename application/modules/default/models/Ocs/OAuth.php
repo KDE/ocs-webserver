@@ -143,90 +143,16 @@ class Default_Model_Ocs_OAuth
             $member = $this->getUserData($member);
         }
 
-        $data = $this->mapData($member, false, false);
-        $uid = $member['member_id'];
+        //$data = $this->mapData($member, false, false);
+        //$uid = $member['member_id'];
+        //
+        //$uri = $this->config->host . "/api/v2/users/update";
+        //$method = Zend_Http_Client::PUT;
+        //$user = $this->httpServer->httpRequest($uri, $uid, $method, $data);
 
-        $uri = $this->config->host . "/api/v2/users/update";
-        $method = Zend_Http_Client::PUT;
-        $user = $this->httpServer->httpRequest($uri, $uid, $method, $data);
+        $result = $this->createUserFromArray($member, $force = true);
 
-        return $user;
-    }
-
-    /**
-     * @param $member_id
-     *
-     * @return bool
-     * @throws Zend_Cache_Exception
-     * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     */
-    public function updateAvatarForUser($member_id)
-    {
-        if (empty($member_id)) {
-            return false;
-        }
-
-        $user = $this->getUserData($member_id);
-
-        return $this->updateUser($user);
-    }
-
-    /**
-     * @param $member_id
-     *
-     * @return bool
-     * @throws Zend_Cache_Exception
-     * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     */
-    public function updatePasswordForUser($member_id)
-    {
-        if (empty($member_id)) {
-            return false;
-        }
-
-        $user = $this->getUserData($member_id);
-
-        return $this->updateUser($user);
-    }
-
-    /**
-     * @param $member_id
-     *
-     * @return bool
-     * @throws Zend_Cache_Exception
-     * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     */
-    public function deleteUser($member_id)
-    {
-        if (empty($member_id)) {
-            return false;
-        }
-
-        $user = $this->getUserData($member_id);
-        $uid = $user['member_id'];
-        $id = $user['external_id'];
-
-        try {
-            $method = Zend_Http_Client::DELETE;
-            $uri = $this->config->host . "/api/v2/users/{$id}";
-            $result = $this->httpServer->httpRequest($uri, $uid, $method);
-            if (false === $result) {
-                $this->messages[] = $this->httpServer->getMessages();
-                $this->messages[] = "Fail ";
-
-                return false;
-            }
-        } catch (Zend_Exception $e) {
-            $this->messages[] = $this->httpServer->getMessages();
-            $this->messages[] = "Fail : " . $e->getMessage();
-
-            return false;
-        }
-
-        return true;
+        return $result;
     }
 
     /**
@@ -361,6 +287,83 @@ class Default_Model_Ocs_OAuth
         }
 
         return $user;
+    }
+
+    /**
+     * @param $member_id
+     *
+     * @return bool
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     */
+    public function updateAvatarForUser($member_id)
+    {
+        if (empty($member_id)) {
+            return false;
+        }
+
+        $user = $this->getUserData($member_id);
+
+        return $this->updateUser($user);
+    }
+
+    /**
+     * @param $member_id
+     *
+     * @return bool
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     */
+    public function updatePasswordForUser($member_id)
+    {
+        if (empty($member_id)) {
+            return false;
+        }
+
+        $user = $this->getUserData($member_id);
+
+        return $this->updateUser($user);
+    }
+
+    /**
+     * @param $member_id
+     *
+     * @return bool
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     */
+    public function deleteUser($member_id)
+    {
+        if (empty($member_id)) {
+            return false;
+        }
+
+        $user = $this->getUserData($member_id);
+        $uid = $user['member_id'];
+        $id = $user['external_id'];
+
+        try {
+            $method = Zend_Http_Client::DELETE;
+            $uri = $this->config->host . "/api/v2/users/{$id}";
+            $result = $this->httpServer->httpRequest($uri, $uid, $method);
+            $this->messages[] = print_r($this->httpServer->getMessages(), true);
+            $this->messages[] = "server response:" . is_array($result) ? print_r($result, true) : $result;
+
+            if (false === $result) {
+
+                return false;
+            }
+        } catch (Zend_Exception $e) {
+            $this->messages[] = $this->httpServer->getMessages();
+            $this->messages[] = "Fail : " . $e->getMessage();
+
+            return false;
+        }
+
+        return true;
     }
 
     /**

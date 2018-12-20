@@ -43,9 +43,9 @@ class Default_Model_Ocs_Forum
     }
 
     /**
-     * @param      $member_data
+     * @param array $member_data
      *
-     * @param bool $force
+     * @param bool  $force
      *
      * @return array|bool
      * @throws Zend_Exception
@@ -141,9 +141,8 @@ class Default_Model_Ocs_Forum
      * @param $username
      *
      * @return array|null
-     * @throws Default_Model_Ocs_Exception
-     * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
+     * @throws Zend_Http_Exception
      * @throws Zend_Json_Exception
      */
     private function getUser($extern_uid, $username)
@@ -166,6 +165,7 @@ class Default_Model_Ocs_Forum
      *
      * @return bool|array
      * @throws Zend_Http_Client_Exception
+     * @throws Zend_Http_Exception
      * @throws Zend_Json_Exception
      */
     public function getUserByExternUid($extern_uid)
@@ -240,10 +240,11 @@ class Default_Model_Ocs_Forum
     }
 
     /**
-     * @param $username
+     * @param string $username
      *
      * @return bool|array
      * @throws Zend_Http_Client_Exception
+     * @throws Zend_Http_Exception
      * @throws Zend_Json_Exception
      */
     public function getUserByUsername($username)
@@ -267,6 +268,7 @@ class Default_Model_Ocs_Forum
      *
      * @return bool|array
      * @throws Zend_Http_Client_Exception
+     * @throws Zend_Http_Exception
      * @throws Zend_Json_Exception
      */
     public function getUserByEmail($email)
@@ -498,6 +500,7 @@ class Default_Model_Ocs_Forum
      *
      * @return array|bool
      * @throws Zend_Http_Client_Exception
+     * @throws Zend_Http_Exception
      * @throws Zend_Json_Exception
      */
     public function deleteUserWithArray($member_data)
@@ -570,7 +573,8 @@ class Default_Model_Ocs_Forum
         $this->messages[] = 'Forum user suspended: ' . json_encode($user);
 
         $memberLog = new Default_Model_MemberDeactivationLog();
-        $memberLog->addLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_USER, $forum_member['user']['id']);
+        $memberLog->addLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_USER,
+            $forum_member['user']['id']);
 
         return $user;
     }
@@ -595,7 +599,11 @@ class Default_Model_Ocs_Forum
         $uid = $member_data['member_id'];
         $suspend_until = new DateTime();
         $suspend_until->add(new DateInterval('PT5M'));
-        $data = array('silenced_till' => $suspend_until->format(DateTime::ATOM), "reason" => "probably a spam user", "post_action" => "delete");
+        $data = array(
+            'silenced_till' => $suspend_until->format(DateTime::ATOM),
+            "reason"        => "probably a spam user",
+            "post_action"   => "delete"
+        );
 
         $user = $this->httpRequest($uri, $uid, $method, $data);
 
@@ -606,12 +614,12 @@ class Default_Model_Ocs_Forum
 
     public function getPostsFromUser($member_data)
     {
-        if (is_int($member_data)) {
-            $member_data = $this->getMemberData($member_data, false);
-        }
-
         if (empty($member_data)) {
             return false;
+        }
+
+        if (is_int($member_data)) {
+            $member_data = $this->getMemberData($member_data, false);
         }
 
         //$forum_member = $this->getUser($member_data['external_id'], $member_data['username']);
@@ -619,12 +627,11 @@ class Default_Model_Ocs_Forum
         //    return false;
         //}
 
-        $uri = $this->config->host . '/search/query.json?term=@'.$member_data['username'];
+        $uri = $this->config->host . '/search/query.json?term=@' . $member_data['username'];
         $method = Zend_Http_Client::GET;
         $uid = $member_data['member_id'];
 
         $result = $this->httpRequest($uri, $uid, $method);
-
 
         return $result;
     }
@@ -635,15 +642,55 @@ class Default_Model_Ocs_Forum
             return false;
         }
 
-        $uri = $this->config->host . '/t'.$topic_id.'/status';
+        $uri = $this->config->host . '/t' . $topic_id . '/status';
         $method = Zend_Http_Client::PUT;
         $uid = $topic_id;
-        $data = array("status"=>"visible", "enabled" => false);
+        $data = array("status" => "visible", "enabled" => false);
 
         $result = $this->httpRequest($uri, $uid, $method, $data);
 
-
         return $result;
+    }
+
+    public function unblockUser($member_data)
+    {
+        if (empty($member_data)) {
+            return false;
+        }
+
+        if (is_int($member_data)) {
+            $member_data = $this->getMemberData($member_data, false);
+        }
+
+        $forum_member = $this->getUser($member_data['external_id'], $member_data['username']);
+        if (empty($forum_member)) {
+            return false;
+        }
+
+        $uri = $this->config->host . '/admin/users/' . $forum_member['user']['id'] . '/unsuspend';
+        $method = Zend_Http_Client::PUT;
+        $uid = $member_data['member_id'];
+
+        try {
+            $user = $this->httpRequest($uri, $uid, $method);
+            if (false === $user) {
+                $this->messages[] = "Fail " . json_encode($this->messages);
+
+                return false;
+            }
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+
+        $this->messages[] = 'Forum user unsuspend: ' . json_encode($user);
+
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        $memberLog->deleteLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_USER,
+            $forum_member['user']['id']);
+
+        return $user;
     }
 
 }
