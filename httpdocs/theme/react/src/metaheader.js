@@ -1149,6 +1149,13 @@ class UserCommentsTab extends React.Component {
 
   componentDidMount() {
     this.getUserOdComments();
+    console.log('+++++++++++');
+    console.log(this.props.user);
+    console.log('++++++++++++')
+  }
+
+  componentWillUnmount() {
+    console.log('remove od / forum comments?');
   }
 
   getUserOdComments(){
@@ -1158,6 +1165,9 @@ class UserCommentsTab extends React.Component {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         const res = JSON.parse(this.response);
+        console.log('++++++++++');
+        console.log(res);
+        console.log('++++++++++');
         self.setState({odComments:res.commentsOpendeskop},function(){
           self.getUserForumComments();
         });
