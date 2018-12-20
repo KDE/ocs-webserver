@@ -1443,7 +1443,6 @@ class UserCommentsTabThreadCommentItem extends React.Component {
 
   render(){
     const c = this.props.comment;
-    console.log(c);
     const user = this.props.user;
     let repliedUsernameDisplay;
     if (c.p_comment_member_id){
@@ -1461,7 +1460,7 @@ class UserCommentsTabThreadCommentItem extends React.Component {
           <img className="th-icon" src={userImage}/>
         </figure>
         <div className="comment-item-header">
-          <p className="user"><a href="#">{user.username}</a></p>
+          <p className="user"><a href={"https://forum.opendesktop.cc/u/"+user.username+"/messages"}>{user.username}</a></p>
           {repliedUsernameDisplay}
           <p className="date-created"><span>{c.comment_created_at}</span></p>
         </div>
