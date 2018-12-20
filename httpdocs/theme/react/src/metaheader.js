@@ -1229,7 +1229,7 @@ class UserCommentsTab extends React.Component {
 
     return(
       <div id="user-comments-tab-container">
-
+        {contentDisplay}
       </div>
     )
   }
