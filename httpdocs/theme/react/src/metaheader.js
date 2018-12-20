@@ -1297,6 +1297,7 @@ class UserSearchTab extends React.Component {
             type={'od'}
             user={this.props.user}
             comments={this.state.odComments}
+            uType={'search'}
           />
         );
       }
@@ -1306,6 +1307,7 @@ class UserSearchTab extends React.Component {
             type={'forum'}
             user={this.props.user}
             comments={this.state.forumComments}
+            uType={'search'}
           />
         );
       }
@@ -1328,7 +1330,6 @@ class UserSearchTab extends React.Component {
     )
   }
 }
-
 
 class UserCommentsTabThreadsContainer extends React.Component {
   constructor(props){
@@ -1372,6 +1373,7 @@ class UserCommentsTabThreadsContainer extends React.Component {
           thread={tr}
           comments={comments}
           user={user}
+          uType={this.props.uType}
         />
       ));
       headerDisplay = (
@@ -1418,6 +1420,7 @@ class UserCommentsTabThread extends React.Component {
           key={index}
           comment={c}
           user={user}
+          uType={this.props.uType}
         />
       ));
     }
@@ -1447,10 +1450,16 @@ class UserCommentsTabThreadCommentItem extends React.Component {
     if (c.p_comment_member_id){
       repliedUsernameDisplay = ( <p className="replied-user"><span><a href="#">{c.p_username}</a></span></p> )
     }
+
+    let userImage = user.avatar;
+    if (this.props.uType === 'search'){
+      userImage = user.profile_image_url;
+    }
+
     return (
       <div className="comment-item">
         <figure className="comment-item-user-avatar">
-          <img className="th-icon" src={user.profile_image_url}/>
+          <img className="th-icon" src={userImage}/>
         </figure>
         <div className="comment-item-header">
           <p className="user"><a href="#">{user.username}</a></p>
