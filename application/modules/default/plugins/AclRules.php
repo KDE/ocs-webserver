@@ -71,6 +71,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_widget'));
         $this->addResource(new Zend_Acl_Resource ('default_file'));
         $this->addResource(new Zend_Acl_Resource ('default_plings'));
+        $this->addResource(new Zend_Acl_Resource ('default_gitfaq'));
         $this->addResource(new Zend_Acl_Resource ('default_spam'));
         $this->addResource(new Zend_Acl_Resource ('default_moderation'));
         $this->addResource(new Zend_Acl_Resource ('default_duplicates'));
@@ -151,6 +152,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_plingbox',
             'default_oauth',
             'default_plings',
+            'default_gitfaq',
             'default_ads',
             'default_dl',
             'default_stati',
