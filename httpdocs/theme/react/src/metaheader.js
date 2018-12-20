@@ -1092,7 +1092,7 @@ class UserTabs extends React.Component {
       console.log('comments tab, should show default');
       console.log(config.user);
       tabContentDisplay = (
-        <UserCommentsTab
+        <UserCommentsTabDefault
           user={config.user}
         />
       );
@@ -1138,6 +1138,89 @@ class UserTabs extends React.Component {
     );
   }
 }
+
+class UserCommentsTabDefault extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.getUserOdComments = this.getUserOdComments.bind(this);
+    this.getUserForumComments = this.getUserForumComments.bind(this);
+  }
+
+  componentDidMount() {
+    this.getUserOdComments();
+    console.log('+++++++++++');
+    console.log(this.props.user);
+    console.log('++++++++++++')
+  }
+
+  componentWillUnmount() {
+    console.log('remove od / forum comments?');
+  }
+
+  getUserOdComments(){
+    const user = this.props.user;
+    const self = this;
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        const res = JSON.parse(this.response);
+        console.log('++++++++++');
+        console.log(res);
+        console.log('++++++++++');
+        self.setState({odComments:res.commentsOpendeskop},function(){
+          self.getUserForumComments();
+        });
+      }
+    };
+    xhttp.open("GET", "home/memberjson?member_id="+user.member_id, true);
+    xhttp.send();
+  }
+
+  getUserForumComments(){
+    const user = this.props.user;
+    const self = this;
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        const res = JSON.parse(this.response);
+        self.setState({forumComments:res.user_actions});
+      }
+    };
+    xhttp.open("GET", "https://forum.opendesktop.cc/user_actions.json?offset=0&username=" + user.username + "&filter=5", true);
+    xhttp.send();
+  }
+
+  render(){
+    let odCommentsDisplay;
+    if (this.state.odComments){
+      odCommentsDisplay = (
+        <UserCommentsTabThreadsContainer
+          type={'od'}
+          user={this.props.user}
+          comments={this.state.odComments}
+        />
+      );
+    }
+    let forumCommentsDisplay;
+    if (this.state.forumComments){
+      forumCommentsDisplay = (
+        <UserCommentsTabThreadsContainer
+          type={'forum'}
+          user={this.props.user}
+          comments={this.state.forumComments}
+        />
+      );
+    }
+    return(
+      <div id="user-comments-tab-container">
+        {odCommentsDisplay}
+        {forumCommentsDisplay}
+      </div>
+    )
+  }
+}
+
 
 class UserCommentsTab extends React.Component {
   constructor(props){
