@@ -1432,7 +1432,7 @@ class UserCommentsTabThread extends React.Component {
     return (
       <div className="user-comments-thread">
         <div className="thread-title">
-          <h2>{this.props.thread}</h2>
+          <h2><a href="">{this.props.thread}</a></h2>
         </div>
         <div className="thread-comments">
           {commentsDisplay}
@@ -1453,7 +1453,7 @@ class UserCommentsTabThreadCommentItem extends React.Component {
     const user = this.props.user;
     let repliedUsernameDisplay;
     if (c.p_comment_member_id){
-      repliedUsernameDisplay = ( <p className="replied-user"><span><a href="#">{c.p_username}</a></span></p> )
+      repliedUsernameDisplay = ( <p className="replied-user"><span className="glyphicon glyphicon-share-alt"></span><a href="#">{c.p_username}</a></p> )
     }
 
     let userImage = user.avatar;
@@ -1476,9 +1476,11 @@ class UserCommentsTabThreadCommentItem extends React.Component {
         </div>
         <div className="comment-item-votes-container">
           <div className="comment-item-votes up-votes">
+            <span className="glyphicon glyphicon-arrow-up"></span>
             <span>{c.votes_up}</span>
           </div>
           <div className="comment-item-votes down-votes">
+            <span className="glyphicon glyphicon-arrow-down"></span>
             <span>{c.votes_down}</span>
           </div>
           <p>View in discussion</p>
