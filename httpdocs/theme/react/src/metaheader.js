@@ -1188,7 +1188,7 @@ class UserCommentsTab extends React.Component {
     let contentDisplay;
     if (!this.state.loading){
       let odCommentsDisplay, forumCommentsDisplay;
-      if (this.state.odComments){
+      if (this.state.odComments.length > 0){
         odCommentsDisplay = (
           <UserCommentsTabThreadsContainer
             type={'od'}
@@ -1197,7 +1197,7 @@ class UserCommentsTab extends React.Component {
           />
         );
       }
-      if (this.state.forumComments){
+      if (this.state.forumComments.length > 0){
         forumCommentsDisplay = (
           <UserCommentsTabThreadsContainer
             type={'forum'}
@@ -1206,12 +1206,22 @@ class UserCommentsTab extends React.Component {
           />
         );
       }
-      contentDisplay = (
-        <div>
-          {odCommentsDisplay}
-          {forumCommentsDisplay}
-        </div>
-      )
+
+      if (this.state.forumComments.length === 0 && this.state.forumComments.length === 0){
+        contentDisplay = (
+          <div>
+            <p>no comments for {this.props.user.username}</p>
+          </div>
+        )
+      } else {
+        contentDisplay = (
+          <div>
+            {odCommentsDisplay}
+            {forumCommentsDisplay}
+          </div>
+        )
+      }
+
     } else {
       contentDisplay = (
         <div>loading</div>
