@@ -1042,11 +1042,13 @@ class UserTabs extends React.Component {
 
   onUserSearchInputChange(e){
     const searchPhrase = e.target.value;
-    if (searchPhrase.length > 2){
-      this.setState({showUserList:true,selectedUser:''},function(){
-        this.getUsersAutocompleteList(searchPhrase);
-      });
-    }
+    this.setState({searchPhrase:e.target.value},function(){
+      if (searchPhrase.length > 2){
+        this.setState({showUserList:true,selectedUser:''},function(){
+          this.getUsersAutocompleteList(searchPhrase);
+        });
+      }
+    });
   }
 
   getUsersAutocompleteList(searchPhrase){
