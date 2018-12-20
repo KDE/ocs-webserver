@@ -133,7 +133,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updated 1');
+    console.log('updated 3');
     this.initMetaHeader();
   }
 
@@ -1042,7 +1042,6 @@ class UserTabs extends React.Component {
 
   onUserSearchInputChange(e){
     const searchPhrase = e.target.value;
-    console.log(searchPhrase);
     this.setState({searchPhrase:e.target.value},function(){
       let showUserList;
       if (searchPhrase.length > 2){
@@ -1057,7 +1056,6 @@ class UserTabs extends React.Component {
   }
 
   getUsersAutocompleteList(searchPhrase){
-      console.log('get users autocomplete list');
       const self = this;
       const xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
@@ -1071,7 +1069,6 @@ class UserTabs extends React.Component {
   }
 
   selectUserFromAutocompleteList(user){
-    console.log('select user from auto complete list')
     this.setState({selectedUser:user,searchPhrase:user.username,showUserList:false});
   }
 
@@ -1091,13 +1088,9 @@ class UserTabs extends React.Component {
       );
     }
 
-    console.log('this current tab:');
-    console.log(this.state.currentTab);
 
     let tabContentDisplay;
     if (this.state.currentTab === 'comments'){
-      console.log('comments tab, should show default');
-      console.log(config.user);
       tabContentDisplay = (
         <UserCommentsTab
           user={config.user}
@@ -1105,8 +1098,7 @@ class UserTabs extends React.Component {
       );
     } else if (this.state.currentTab === 'search'){
       if (this.state.selectedUser){
-        console.log('this state selected user');
-        console.log(this.state.selectedUser);
+
         tabContentDisplay = (
           <UserSearchTab
             user={this.state.selectedUser}
@@ -1159,9 +1151,6 @@ class UserCommentsTab extends React.Component {
   componentDidMount() {
     this.setState({odComments:[],forumComments:[],loading:true},function(){
       this.getUserOdComments();
-      console.log('+++++++++++');
-      console.log(this.props.user);
-      console.log('++++++++++++')
     });
   }
 
@@ -1172,9 +1161,6 @@ class UserCommentsTab extends React.Component {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         const res = JSON.parse(this.response);
-        console.log('++++++++++');
-        console.log(res);
-        console.log('++++++++++');
         self.setState({odComments:res.commentsOpendeskop,loading:false},function(){
           self.getUserForumComments();
         });
@@ -1253,9 +1239,6 @@ class UserSearchTab extends React.Component {
   componentDidMount() {
     this.setState({odComments:[],forumComments:[],loading:true},function(){
       this.getUserOdComments();
-      console.log('+++++++++++');
-      console.log(this.props.user);
-      console.log('++++++++++++')
     });
   }
 
@@ -1266,9 +1249,6 @@ class UserSearchTab extends React.Component {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         const res = JSON.parse(this.response);
-        console.log('++++++++++');
-        console.log(res);
-        console.log('++++++++++');
         self.setState({odComments:res.commentsOpendeskop,loading:false},function(){
           self.getUserForumComments();
         });
