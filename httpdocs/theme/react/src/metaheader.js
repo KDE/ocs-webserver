@@ -133,7 +133,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updated 9');
+    console.log('updated 1');
     this.initMetaHeader();
   }
 
