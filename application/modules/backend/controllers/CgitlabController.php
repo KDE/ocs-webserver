@@ -201,7 +201,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             $this->log->info("process " . Zend_Json::encode($member));
             try {
                 $userSubsystem = $modelSubSystem->getUser($member['external_id'], $member['username']);
-                if (empty($userSubsystem)) {
+                if (false === $userSubsystem) {
                     $this->log->info('Fail : user not exist (' . $member['member_id'] . ', ' . $member['username'] . ') ' . Zend_Json::encode($modelSubSystem->getMessages()));
                     if ($force) {
                         $modelSubSystem->createUserFromArray($member, true);
