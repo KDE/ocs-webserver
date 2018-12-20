@@ -1041,9 +1041,11 @@ class UserTabs extends React.Component {
   }
 
   onUserSearchInputChange(e){
-    const searchPhrase = e.target.value
+    const searchPhrase = e.target.value;
     if (searchPhrase.length > 2){
-      this.getUsersAutocompleteList(searchPhrase);
+      this.setState({showUserList:true},function(){
+        this.getUsersAutocompleteList(searchPhrase);        
+      });
     }
   }
 
@@ -1152,7 +1154,6 @@ class UserCommentsTab extends React.Component {
   }
 
   getUserOdComments(){
-    console.log(this.props.user);
     const user = this.props.user;
     const self = this;
     const xhttp = new XMLHttpRequest();
@@ -1246,8 +1247,6 @@ class UserCommentsTabThreadsContainer extends React.Component {
     const t = this.state.siteInfo;
     const comments = this.state.comments;
     const user = this.props.user;
-    console.log('the user is:');
-    console.log(user);
     let headerDisplay, threadsDisplay, threadCommentsDisplay;
     if (this.state.threads){
       threadsDisplay = this.state.threads.map((tr,index) => (
@@ -1327,8 +1326,6 @@ class UserCommentsTabThreadCommentItem extends React.Component {
   render(){
     const c = this.props.comment;
     const user = this.props.user;
-    console.log('the user is (2) :')
-    console.log(user);
     let repliedUsernameDisplay;
     if (c.p_comment_member_id){
       repliedUsernameDisplay = ( <p className="replied-user"><span><a href="#">{c.p_username}</a></span></p> )
