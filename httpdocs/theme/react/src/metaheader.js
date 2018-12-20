@@ -1127,7 +1127,7 @@ class UserTabs extends React.Component {
             <li id="search-form-container">
               <a className={this.state.currentTab === "search" ? "active" : ""}
                 onClick={() => this.onTabMenuItemClick('search')}>
-                <input defaultValue={this.state.searchPhrase} type="text" onChange={this.onUserSearchInputChange}/>
+                <input value={this.state.searchPhrase} type="text" onChange={this.onUserSearchInputChange}/>
               </a>
               {usersAutocompleteList}
             </li>
