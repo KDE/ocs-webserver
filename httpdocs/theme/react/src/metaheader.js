@@ -397,7 +397,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
 
         <a className="discussion-menu-link-item">Discussion Boards</a>
         <ul className="discussion-menu dropdown-menu dropdown-menu-right">
-          <li><a href={this.props.forumUrl + "/c/general"}>General</a></li>
+          <li><a href={this.props.forumUrl }>General</a></li>
           <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Themes & Apps</a></li>
           <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
         </ul>
@@ -463,12 +463,22 @@ class DevelopmentDropDownMenu extends React.Component {
       )
     }
 
+    let gitfaqLinkItem;
+    if (config.isExternal === false){
+      gitfaqLinkItem = (<li><a className="popuppanel" id="gitfaq" href={"/gitfaq"}>Git FAQ</a></li>);
+     
+    } else {
+      gitfaqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={config.baseUrl + "/#gitfaq"}>Git FAQ</a></li>);
+     
+    }
+
     return (
       <li ref={node => this.node = node} id="admins-dropdown-menu" className={this.state.dropdownClass}>
         <a className="admins-menu-link-item">Projects</a>
         <ul className="dropdown-menu dropdown-menu-right">
           <li><a href={config.gitlabUrl + "/explore/projects"}>Projects</a></li>
           {issuesMenuItem}
+          {gitfaqLinkItem}
         </ul>
       </li>
     )
@@ -1458,7 +1468,7 @@ class MobileLeftSidePanel extends React.Component {
             <li>
               <a className="groupname"><b>Discussion Boards</b></a>
               <ul>
-                <li><a href={this.props.forumUrl + "/c/general"}>General</a></li>
+                <li><a href={this.props.forumUrl }>General</a></li>
                 <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Themes & Apps</a></li>
                 <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
               </ul>
