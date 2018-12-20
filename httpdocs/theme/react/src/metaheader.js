@@ -1159,6 +1159,7 @@ class UserCommentsTab extends React.Component {
     const self = this;
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
+      console.log(this);
       if (this.readyState == 4 && this.status == 200) {
         const res = JSON.parse(this.response);
         self.setState({odComments:res.commentsOpendeskop,loading:false},function(){
