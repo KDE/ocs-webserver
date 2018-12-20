@@ -133,7 +133,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updated 4');
+    console.log('updated 5');
     this.initMetaHeader();
   }
 
@@ -1044,7 +1044,7 @@ class UserTabs extends React.Component {
     const searchPhrase = e.target.value;
     if (searchPhrase.length > 2){
       this.setState({showUserList:true},function(){
-        this.getUsersAutocompleteList(searchPhrase);        
+        this.getUsersAutocompleteList(searchPhrase);
       });
     }
   }
