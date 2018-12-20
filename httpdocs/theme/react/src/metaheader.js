@@ -133,7 +133,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updated 11');
+    console.log('updated 12');
     this.initMetaHeader();
   }
 
@@ -1288,6 +1288,7 @@ class UserCommentsTabThreadsContainer extends React.Component {
             <p>Discussion on <b><a href={this.state.siteInfo.url}>{this.state.siteInfo.address}</a></b></p>
             <p><span>{this.state.comments.length} comments</span></p>
           </div>
+          {threadsDisplay}
         </div>
       );
     }
