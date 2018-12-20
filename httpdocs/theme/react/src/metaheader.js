@@ -1170,7 +1170,7 @@ class UserCommentsTab extends React.Component {
         console.log('++++++++++');
         console.log(res);
         console.log('++++++++++');
-        self.setState({odComments:res.commentsOpendeskop},function(){
+        self.setState({odComments:res.commentsOpendeskop,loading:false},function(){
           self.getUserForumComments();
         });
       }
