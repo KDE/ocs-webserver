@@ -1161,7 +1161,6 @@ class UserCommentsTabThread extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
     let threadInfo;
     if (this.props.type === 'od'){
       threadInfo = {
@@ -1174,18 +1173,28 @@ class UserCommentsTabThread extends React.Component {
         url:'https://forum.opendesktop.org'
       }
     }
-    this.setState({threadInfo:threadInfo,comments:this.props.comments});
+
+    let threads = [];
+    this.props.comments.forEach(function(c,index){
+      if (threads.indexOf(c.title) === -1){
+        threads.push(c.title)
+      }
+    });
+
+    this.setState({threadInfo:threadInfo,comments:this.props.comments,threads:threads});
   }
 
   render(){
     const t = this.state.threadInfo;
-    let headerDisplay, threadCommentsDisplay;
-    if (this.state.comments){
-      threadCommentsDisplay = this.state.comments.map((c,index) => (
-        <UserCommentsTabThreadCommentItem
-          key={index}
-          comment={c}
-        />
+    let headerDisplay, threadsDisplay, threadCommentsDisplay;
+    if (this.state.threads){
+      threadsDisplay = this.state.threads.map((tr,index) => (
+        threadCommentsDisplay = this.state.comments.map((c,index) => (
+          <UserCommentsTabThreadCommentItem
+            key={index}
+            comment={c}
+          />
+        ));
       ));
       headerDisplay = (
         <div className="thread-header">
