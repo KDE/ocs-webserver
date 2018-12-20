@@ -133,7 +133,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updated 8');
+    console.log('updated 9');
     this.initMetaHeader();
   }
 
@@ -1142,13 +1142,15 @@ class UserTabs extends React.Component {
 class UserCommentsTab extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      loading:true
+    };
     this.getUserOdComments = this.getUserOdComments.bind(this);
     this.getUserForumComments = this.getUserForumComments.bind(this);
   }
 
   componentDidMount() {
-    this.setState({odComments:[],forumComments:[]},function(){
+    this.setState({odComments:[],forumComments:[],loading:true},function(){
       this.getUserOdComments();
       console.log('+++++++++++');
       console.log(this.props.user);
@@ -1182,7 +1184,7 @@ class UserCommentsTab extends React.Component {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         const res = JSON.parse(this.response);
-        self.setState({forumComments:res.user_actions});
+        self.setState({forumComments:res.user_actions,loading:false});
       }
     };
     xhttp.open("GET", "https://forum.opendesktop.cc/user_actions.json?offset=0&username=" + user.username + "&filter=5", true);
@@ -1190,30 +1192,42 @@ class UserCommentsTab extends React.Component {
   }
 
   render(){
-    let odCommentsDisplay;
-    if (this.state.odComments){
-      odCommentsDisplay = (
-        <UserCommentsTabThreadsContainer
-          type={'od'}
-          user={this.props.user}
-          comments={this.state.odComments}
-        />
+    let contentDisplay;
+    if (!this.state.loading){
+      let odCommentsDisplay, forumCommentsDisplay;
+      if (this.state.odComments){
+        odCommentsDisplay = (
+          <UserCommentsTabThreadsContainer
+            type={'od'}
+            user={this.props.user}
+            comments={this.state.odComments}
+          />
+        );
+      }
+      if (this.state.forumComments){
+        forumCommentsDisplay = (
+          <UserCommentsTabThreadsContainer
+            type={'forum'}
+            user={this.props.user}
+            comments={this.state.forumComments}
+          />
+        );
+      }
+      contentDisplay = (
+        <div>
+          {odCommentsDisplay}
+          {forumCommentsDisplay}
+        </div>
+      )
+    } else {
+      contentDisplay = (
+        <div>loading</div>
       );
     }
-    let forumCommentsDisplay;
-    if (this.state.forumComments){
-      forumCommentsDisplay = (
-        <UserCommentsTabThreadsContainer
-          type={'forum'}
-          user={this.props.user}
-          comments={this.state.forumComments}
-        />
-      );
-    }
+
     return(
       <div id="user-comments-tab-container">
-        {odCommentsDisplay}
-        {forumCommentsDisplay}
+
       </div>
     )
   }
