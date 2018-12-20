@@ -133,7 +133,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updated 3');
+    console.log('updated 4');
     this.initMetaHeader();
   }
 
@@ -1339,7 +1339,11 @@ class UserCommentsTabThreadsContainer extends React.Component {
     let threads = [];
     this.props.comments.forEach(function(c,index){
       if (threads.indexOf(c.title) === -1){
-        threads.push(c.title)
+        const thread = {
+          title:c.title,
+          id:c.project_id
+        }
+        threads.push(thread)
       }
     });
 
@@ -1391,7 +1395,7 @@ class UserCommentsTabThread extends React.Component {
   }
 
   filterCommentsByThread(comment){
-    if (comment.title === this.props.thread){
+    if (comment.title === this.props.thread.title){
       return comment;
     }
   }
@@ -1412,7 +1416,7 @@ class UserCommentsTabThread extends React.Component {
     return (
       <div className="user-comments-thread">
         <div className="thread-title">
-          <h2><a href="">{this.props.thread}</a></h2>
+          <h2><a href={"https://www.opendesktop.cc/p/" + this.props.thread.id}>{this.props.thread.title}</a></h2>
         </div>
         <div className="thread-comments">
           {commentsDisplay}
