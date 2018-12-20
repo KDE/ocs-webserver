@@ -1454,6 +1454,7 @@ class UserCommentsTabThreadCommentItem extends React.Component {
 
   render(){
     const c = this.props.comment;
+    console.log(c);
     const user = this.props.user;
     let repliedUsernameDisplay;
     if (c.p_comment_member_id){
