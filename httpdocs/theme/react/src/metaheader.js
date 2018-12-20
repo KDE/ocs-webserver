@@ -1048,6 +1048,7 @@ class UserTabs extends React.Component {
   }
 
   getUsersAutocompleteList(searchPhrase){
+      console.log('get users autocomplete list');
       const self = this;
       const xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
@@ -1061,7 +1062,8 @@ class UserTabs extends React.Component {
   }
 
   selectUserFromAutocompleteList(user){
-    this.setState({selectedUser:user,showUserList:false});
+    console.log('select user from auto complete list')
+    this.setState({selectedUser:user,searchPhrase:user.username,showUserList:false});
   }
 
   render(){
@@ -1082,6 +1084,8 @@ class UserTabs extends React.Component {
 
     let tabContentDisplay;
     if (this.state.currentTab === 'comments'){
+      console.log('comments tab, should show default');
+      console.log(config.user);
       tabContentDisplay = (
         <UserCommentsTab
           user={config.user}
@@ -1089,6 +1093,8 @@ class UserTabs extends React.Component {
       );
     } else if (this.state.currentTab === 'search'){
       if (this.state.selectedUser){
+        console.log('this state selected user'),;
+        console.log(this.state.selectedUser);
         tabContentDisplay = (
           <UserCommentsTab
             user={this.state.selectedUser}
@@ -1133,47 +1139,7 @@ class UserTabs extends React.Component {
 class UserCommentsTab extends React.Component {
   constructor(props){
   	super(props);
-    const threads = [
-      {
-        address:'lubuntu.me',
-        comment_count:68,
-        title:'Lubuntu 18.10 (Cosmic Cuttlefish) Released!',
-        comments:[
-          {
-            parent_comment_user:'Simon Quigly',
-            date:'2 months ago',
-            text:'<div>Yes. All visual inconsistencies are fixed now</div>',
-            votes_up:0,
-            votes_down:1
-          },{
-            date:'2 months ago',
-            text:'<div><p>Hi, nice to see this release. Im curious to test Lubuntu with LXQt. I have already experimented the beta release, and found some theming inconsistencies. Is it all fixed in final release?</p>' +
-            '<p>Meanwhile, I have created a release announcement feed in my blog. Please have a look.<br><a href="http://disq.us/url?url=http%3A%2F%2Ftheopensourcefeed.com%2F00-lubuntu-cosmic-first-release-lxqt%2F%3AiUXptXQ1sOYPoKxW4w8KQrVytwE&amp;cuid=5561052" rel="nofollow noopener" title="http://theopensourcefeed.com/00-lubuntu-cosmic-first-release-lxqt/">http://theopensourcefeed.co...</a></p></div>',
-            votes_up:1,
-            votes_down:0
-          }
-        ]
-      },{
-        address:'feren',
-        comment_count:1,
-        title:'A New Snapshot is here, bridging the way to a seamless transition to the future Feren OS',
-        comments:[
-          {
-            date:'2 months ago',
-            text:'<div><p>Just created a release news for Feren OS October snapshot. Please have a look.<br><a href="http://disq.us/url?url=http%3A%2F%2Ftheopensourcefeed.com%2F00-ferenos-october-snapshot-brings-significant-improvements%3AYftrbOQthqE4qTqKU-LN6sQN_FQ&amp;cuid=3291269" rel="nofollow noopener" title="http://theopensourcefeed.com/00-ferenos-october-snapshot-brings-significant-improvements">http://theopensourcefeed.co...</a></p></div>',
-            votes_up:4,
-            votes_down:0
-          },{
-            date:'2 months ago',
-            text:'<div><p>Hi, nice to see this release. Im curious to test Lubuntu with LXQt. I have already experimented the beta release, and found some theming inconsistencies. Is it all fixed in final release?</p>' +
-            '<p>Meanwhile, I have created a release announcement feed in my blog. Please have a look.<br><a href="http://disq.us/url?url=http%3A%2F%2Ftheopensourcefeed.com%2F00-lubuntu-cosmic-first-release-lxqt%2F%3AiUXptXQ1sOYPoKxW4w8KQrVytwE&amp;cuid=5561052" rel="nofollow noopener" title="http://theopensourcefeed.com/00-lubuntu-cosmic-first-release-lxqt/">http://theopensourcefeed.co...</a></p></div>',
-            votes_up:0,
-            votes_down:3
-          }
-        ]
-      }
-    ];
-  	this.state = {threads:threads};
+  	this.state = {};
     this.getUserOdComments = this.getUserOdComments.bind(this);
     this.getUserForumComments = this.getUserForumComments.bind(this);
   }
@@ -1183,6 +1149,7 @@ class UserCommentsTab extends React.Component {
   }
 
   getUserOdComments(){
+    console.log(this.props.user);
     const user = this.props.user;
     const self = this;
     const xhttp = new XMLHttpRequest();
@@ -1218,6 +1185,7 @@ class UserCommentsTab extends React.Component {
       odCommentsDisplay = (
         <UserCommentsTabThreadsContainer
           type={'od'}
+          user={this.props.user}
           comments={this.state.odComments}
         />
       );
@@ -1227,6 +1195,7 @@ class UserCommentsTab extends React.Component {
       forumCommentsDisplay = (
         <UserCommentsTabThreadsContainer
           type={'forum'}
+          user={this.props.user}
           comments={this.state.forumComments}
         />
       );
@@ -1273,6 +1242,9 @@ class UserCommentsTabThreadsContainer extends React.Component {
   render(){
     const t = this.state.siteInfo;
     const comments = this.state.comments;
+    const user = this.props.user;
+    console.log('the user is:');
+    console.log(user);
     let headerDisplay, threadsDisplay, threadCommentsDisplay;
     if (this.state.threads){
       threadsDisplay = this.state.threads.map((tr,index) => (
@@ -1280,6 +1252,7 @@ class UserCommentsTabThreadsContainer extends React.Component {
           key={index}
           thread={tr}
           comments={comments}
+          user={user}
         />
       ));
       headerDisplay = (
@@ -1320,10 +1293,12 @@ class UserCommentsTabThread extends React.Component {
   render(){
     let commentsDisplay;
     if (this.props.comments){
+      const user = this.props.user;
       commentsDisplay = this.props.comments.filter(this.filterCommentsByThread).map((c,index) => (
         <UserCommentsTabThreadCommentItem
           key={index}
           comment={c}
+          user={user}
         />
       ));
     }
@@ -1348,6 +1323,9 @@ class UserCommentsTabThreadCommentItem extends React.Component {
 
   render(){
     const c = this.props.comment;
+    const user = this.props.user;
+    console.log('the user is (2) :')
+    console.log(user);
     let repliedUsernameDisplay;
     if (c.p_comment_member_id){
       repliedUsernameDisplay = ( <p className="replied-user"><span><a href="#">{c.p_username}</a></span></p> )
@@ -1355,10 +1333,10 @@ class UserCommentsTabThreadCommentItem extends React.Component {
     return (
       <div className="comment-item">
         <figure className="comment-item-user-avatar">
-          <img className="th-icon" src={config.user.avatar}/>
+          <img className="th-icon" src={user.avatar}/>
         </figure>
         <div className="comment-item-header">
-          <p className="user"><a href="#">{config.user.username}</a></p>
+          <p className="user"><a href="#">{user.username}</a></p>
           {repliedUsernameDisplay}
           <p className="date-created"><span>{c.comment_created_at}</span></p>
         </div>
