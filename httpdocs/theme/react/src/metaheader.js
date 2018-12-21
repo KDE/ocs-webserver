@@ -1177,8 +1177,10 @@ class UserCommentsTab extends React.Component {
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
+        self.setState({loading:true},function(){
         const res = JSON.parse(this.response);
         self.setState({forumComments:res.user_actions,loading:false});
+        });
       }
     };
     xhttp.open("GET", "https://forum.opendesktop.cc/user_actions.json?offset=0&username=" + user.username + "&filter=5", true);
