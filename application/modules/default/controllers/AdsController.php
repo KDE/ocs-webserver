@@ -62,7 +62,13 @@ class AdsController extends Local_Controller_Action_DomainSwitch
             $url = PPLOAD_API_URI . 'files/download/id/' . $file_id . '/s/' . $hash . '/t/' . $timestamp . '/u/' . $memberId . '/' . $file_name;
             
             if($linkType == 'install') {
-                $url = "ocs://install?url=". urlencode($url);
+                $helperCatXdgType = new Default_View_Helper_CatXdgType();
+                $xdgType = $helperCatXdgType->catXdgType($productInfo->project_category_id);
+
+                $url = 'ocs://install'
+                    . '?url=' . urlencode($url)
+                    . '&type=' . urlencode($xdgType)
+                    . '&filename=' . urldecode($file_name);
             }
             $this->view->url = $url;
         }
