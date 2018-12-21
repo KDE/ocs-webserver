@@ -1252,12 +1252,9 @@ class UserSearchTab extends React.Component {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         const res = JSON.parse(this.response);
-        self.setState({odComments:res.commentsOpendeskop},function(){
+        self.setState({odComments:res.commentsOpendeskop,loading:false},function(){
           self.getUserForumComments();
         });
-      } else {
-        console.log('what happends here');
-        console.log(this);
       }
     };
     xhttp.open("GET", "home/memberjson?member_id="+user.member_id, true);
@@ -1269,10 +1266,11 @@ class UserSearchTab extends React.Component {
     const self = this;
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
-      console.log('this ');
       if (this.readyState == 4 && this.status == 200) {
-        const res = JSON.parse(this.response);
-        self.setState({forumComments:res.user_actions,loading:false});
+        self.setState({loading:true},function(){
+          const res = JSON.parse(this.response);
+          self.setState({forumComments:res.user_actions,loading:false});
+        });
       }
     };
     xhttp.open("GET", "https://forum.opendesktop.cc/user_actions.json?offset=0&username=" + user.username + "&filter=5", true);
