@@ -1165,6 +1165,8 @@ class UserCommentsTab extends React.Component {
         self.setState({odComments:res.commentsOpendeskop,loading:false},function(){
           self.getUserForumComments();
         });
+      } else if (this.readyState == 4 && this.status !== 200) {
+        console.log('ok so what happens here?');
       }
     };
     xhttp.open("GET", "home/memberjson?member_id="+user.member_id, true);
@@ -1181,6 +1183,8 @@ class UserCommentsTab extends React.Component {
         const res = JSON.parse(this.response);
         self.setState({forumComments:res.user_actions,loading:false});
         });
+      } else if (this.readyState == 4 && this.status !== 200) {
+        console.log('ok so what happens here?');
       }
     };
     xhttp.open("GET", "https://forum.opendesktop.cc/user_actions.json?offset=0&username=" + user.username + "&filter=5", true);
