@@ -44,7 +44,7 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     const TAG_GROUP_PACKAGETYPE = 8;
     const TAG_GROUP_ARCHITECTURE = 9;
     const TAG_GROUP_GHNS_EXCLUDED = 10;
-
+    const TAG_GHNS_EXCLUDED_ID = 1529;
     /**
      * @inheritDoc
      */
@@ -144,12 +144,13 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
      */
     public function fetchGhnsExcludedTagId()
     {
-        $tag = $this->fetchForGroupForSelect(Default_Model_DbTable_Tags::TAG_GROUP_GHNS_EXCLUDED);
-        $keys = array_keys($tag);
-        if(isset($keys) && count($keys) == 1) {
-            return $keys[0];
-        }
-        return null;
+        return $this:: TAG_GHNS_EXCLUDED_ID;   
+        // $tag = $this->fetchForGroupForSelect(Default_Model_DbTable_Tags::TAG_GROUP_GHNS_EXCLUDED);
+        // $keys = array_keys($tag);
+        // if(isset($keys) && count($keys) == 1) {
+        //     return $keys[0];
+        // }
+        // return null;
     }
     
     
