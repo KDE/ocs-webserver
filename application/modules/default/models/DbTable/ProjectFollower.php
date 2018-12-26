@@ -76,9 +76,9 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
                         ,c.title as cat_title                        
                         ,p.count_likes
                         ,p.count_dislikes
-                        FROM project_follower f
-                        inner join member m on f.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
+                        FROM project_follower f                        
                         INNER JOIN project p ON p.project_id = f.project_id 
+                        inner join member m on p.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
                         inner join project_category c on p.project_category_id = c.project_category_id
                         WHERE (p.status = 100) AND (f.member_id = :member_id) 
                         order by f.created_at desc                      
