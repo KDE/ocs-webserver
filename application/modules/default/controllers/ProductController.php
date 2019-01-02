@@ -1373,7 +1373,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $tableProduct = new Default_Model_Project();
-        $tableProduct->setActive($this->_projectId);
+        $tableProduct->setActive($this->_authMember->member_id,$this->_projectId);
 
         $product = $tableProduct->find($this->_projectId)->current();
 
