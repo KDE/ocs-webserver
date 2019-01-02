@@ -1279,7 +1279,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $tableProduct = new Default_Model_Project();
-        $tableProduct->setDeleted($this->_projectId);
+        $tableProduct->setDeleted($this->_authMember->member_id,$this->_projectId);
 
         $product = $tableProduct->find($this->_projectId)->current();
 
