@@ -530,7 +530,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                         <?php if($this->product->show_gitlab_project_issues){ 
                                 $cntGitIssues = count($this->gitlab_project_issues);
                             ?>
-                            <li><a href="#gitlabissues-panel" data-toggle="tab">Git Issues <?php echo '('.$cntGitIssues.')';  ?></a></li>
+                            <li><a href="#gitlabissues-panel" data-toggle="tab">Issues <?php echo '('.$cntGitIssues.')';  ?></a></li>
                         <?php } ?>
 
                         <?php if(count($this->ratings)>0){ ?>
