@@ -384,7 +384,11 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                         echo '<img src="/images_sys/gitlab.png" width="15"> <a href="' . $url . '" rel="nofollow">' . $url
                                             . ' <span class="fa fa-external-link"></span></a>';
                                     } else if (false === empty($this->product->source_url)) {
-                                        echo '<a target="_blank" href="' . $this->product->source_url . '" rel="nofollow">' . $this->product->source_url
+                                        $target='_blank';
+                                        if (strpos($this->product->source_url, 'git.opendesktop.org') !== false) {
+                                            $target='_self';
+                                        }
+                                        echo '<a target="'.$target.'" href="' . $this->product->source_url . '" rel="nofollow">' . $this->product->source_url
                                             . ' <span class="fa fa-external-link"></span>
                                             </a>';
                                         
