@@ -1482,9 +1482,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     }
 
-
-
-
     public function unfollowAction()
     {
         $this->_helper->layout()->disableLayout();
@@ -1559,7 +1556,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 Default_Model_ActivityLog::PROJECT_FOLLOWED, $product->toArray());
         }
     }
-
 
     public function unfollowpAction()
     {
