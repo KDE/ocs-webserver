@@ -93,6 +93,9 @@
                 listAction: '/spam/commentslist',                         
                /*deleteAction: '/spam/deletecomment' */
             },
+            recordsLoaded: function (event, data) {
+                TooltipUser.setup("tooltipuser","right");        
+            },
             fields: {
                 comment_id: {
                     key: true,
@@ -176,7 +179,7 @@
 
         //$('#TableContainer').jtable('load');
         $('#TableContainer').jtable('load', {},function(){
-              TooltipUser.setup("tooltipuser","right");        
+              //TooltipUser.setup("tooltipuser","right");        
             });
 
         $("#dialog-form").dialog({

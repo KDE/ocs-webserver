@@ -150,6 +150,9 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
                 listAction: '/moderation/list' ,
                 updateAction: '/moderation/update'
             },
+            recordsLoaded: function (event, data) {
+                TooltipUser.setup("tooltipuser","right");        
+            },
             fields: {
                  project_id: {
                                      title: 'project_id',
@@ -329,7 +332,7 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
             $('#TableContainer').jtable('load', {
                 filter_member_id: $('#filter_member_id').val(),              
             },function(){
-              TooltipUser.setup("tooltipuser","right");        
+              //TooltipUser.setup("tooltipuser","right");        
             });
         });
 
@@ -349,7 +352,7 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
           $('#TableContainer').jtable('load', {           
             filter_member_id: $('#filter_member_id').val()            
         },function(){
-              TooltipUser.setup("tooltipuser","right");        
+              //TooltipUser.setup("tooltipuser","right");        
         });
 
         $('body').on("click", 'a.imghistory', function (event) {
