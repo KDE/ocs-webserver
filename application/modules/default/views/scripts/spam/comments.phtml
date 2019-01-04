@@ -146,6 +146,18 @@
                     width: '15%',                    
                     create: false,
                     edit: false,
+                    display:function(data){   
+                            var reportedby = data.record.reportedby;  
+                            var html='';
+                            if(reportedby)
+                            {
+                                var array = reportedby.split(',');      
+                                $(array).each(function( index, element ) {                          
+                                    html = html+'<a  class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+element+'" >'+element+'</a><br/>';  
+                                });                                  
+                            }                            
+                            return html;
+                        }
                 },
                 cntreport: {
                     title: '#',
