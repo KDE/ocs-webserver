@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS `suspicion_log` (
   `http_referer` VARCHAR(255) NULL,
   `http_origin` VARCHAR(255) NULL,
   `client_ip` VARCHAR(45) NULL,
+  `suspicious` INT(1) NULL DEFAULT 0,
   PRIMARY KEY (`suspicion_id`),
   INDEX `idxProject` (`project_id` ASC),
   INDEX `idxMember` (`member_id` ASC))
