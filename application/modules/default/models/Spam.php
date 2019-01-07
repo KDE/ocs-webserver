@@ -58,6 +58,15 @@ class Default_Model_Spam
         if (stripos($haystack, 'muscles')) {
             return true;
         }
+        if (stripos($haystack, 'viagra')) {
+            return true;
+        }
+        if (stripos($haystack, 's3xual')) {
+            return true;
+        }
+        if (stripos($haystack, 'erection')) {
+            return true;
+        }
 
         if (stripos($haystack, 'http')) {
             return true;
