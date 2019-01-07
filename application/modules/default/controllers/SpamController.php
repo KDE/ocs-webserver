@@ -24,7 +24,10 @@
  */
 class SpamController extends Local_Controller_Action_DomainSwitch
 {
-
+	const RESULT_OK = "OK";
+	const RESULT_ERROR = "ERROR";
+	const IDENTIFIER = 'comment_id';
+	
     public function indexAction()
     {
         $this->forward('list', 'spam', 'default', $this->getAllParams());
@@ -32,7 +35,93 @@ class SpamController extends Local_Controller_Action_DomainSwitch
 
     public function listAction()
     {
+    	$this->view->headTitle('Spam','SET');
         $this->view->page = (int)$this->getParam('page', 1);
+    }
+
+    public function commentsAction()
+    {	
+    	$this->view->headTitle('Spam - Comments','SET');
+    	
+    }
+
+    public function deletecommentAction()
+    {
+        $commentId = (int)$this->getParam(self::IDENTIFIER, null);
+
+        $model = new Default_Model_DbTable_Comments();
+        $record = $model->find($commentId)->current();
+        $record->comment_active = 0;
+        $record->save();
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+        $jTableResult['Record'] = $record->toArray();
+        $this->_helper->json($jTableResult);
+    }
+
+    public function deletereportsAction()
+    {
+        $commentId = (int)$this->getParam(self::IDENTIFIER, null);              
+	    $sql = '
+	            UPDATE reports_comment
+	            SET is_deleted = 1
+	            WHERE comment_id = :comment_id';
+	    Zend_Db_Table::getDefaultAdapter()->query($sql, array('comment_id' => $commentId))->execute();        
+        
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+        $jTableResult['Record'] = array();
+        $this->_helper->json($jTableResult);
+    }
+
+    
+    public function commentslistAction()
+    {
+    	
+        $startIndex = (int)$this->getParam('jtStartIndex');
+        $pageSize = (int)$this->getParam('jtPageSize');
+        $sorting = $this->getParam('jtSorting');     
+
+        if(!isset($sorting))
+        {
+        	$sorting = 'cntreport desc, comment_created_at desc';
+        }        
+        $sql = "
+    			select 
+				comment_id,
+				comment_target_id,
+				comment_member_id,
+				comment_parent_id,
+				comment_text,
+				comment_created_at,
+				(select count(1) from reports_comment r where c.comment_id = r.comment_id and is_deleted is null) cntreport,
+				(select GROUP_CONCAT(reported_by) from reports_comment r where c.comment_id = r.comment_id and is_deleted is null) as reportedby
+				from comments c
+				where c.comment_type=0
+				and c.comment_active = 1
+				
+        	";   
+        
+        $sql .= ' order by ' . $sorting;
+        $sql .= ' limit ' . $pageSize;
+        $sql .= ' offset ' . $startIndex;
+
+        $comments = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+		
+		$sqlall = "	select count(*) 
+					from comments c 
+					where c.comment_type=0
+					and c.comment_active = 1";         
+
+        $reportsAll = Zend_Db_Table::getDefaultAdapter()->fetchRow($sqlall);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+        $jTableResult['Records'] = $comments;
+        $jTableResult['TotalRecordCount'] = array_pop($reportsAll);
+
+        $this->_helper->json($jTableResult);
     }
 
 }

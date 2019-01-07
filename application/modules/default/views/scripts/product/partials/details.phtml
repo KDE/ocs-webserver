@@ -251,38 +251,6 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
 
 
 
-            // $('#ghns_excluded-this-checkbox').on('click', function (event) {
-            //     event.stopPropagation();
-            //     var status = 1;
-            //     if (this.checked) {
-            //         status = 1;
-            //     } else {
-            //         status = 0;
-            //     }
-
-            //     var target = "/backend/project/doghnsexclude?project_id=<?= $this->product->project_id ?>&ghns_excluded=" + status;
-            //     $.ajax({
-            //         url: target,
-            //         success: function (results) {
-            //             if (status == 0) {
-            //                 alert('Project is successfully included into GHNS');
-            //                 $('#ghns_excluded-this-checkbox').prop("checked", false);
-
-            //             } else {
-            //                 alert('Project is successfully excluded from GHNS');
-            //                 $('#ghns_excluded-this-checkbox').prop("checked", true);
-
-            //             }
-
-            //         },
-            //         error: function () {
-            //             alert('Service is temporarily unavailable.');
-            //         }
-            //     });
-
-            //     return false;
-            // });
-
 
             $('#pling-excluded-checkbox').on('click', function (event) {
                 event.stopPropagation();
@@ -345,45 +313,11 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
     <?php elseif (Default_Model_DbTable_MemberRole::ROLE_NAME_MODERATOR == $userRoleName) : ?>
 
         <span class="page-views " style="color: red;">
-            <input type="checkbox" id="ghns_excluded-this-checkbox" <?php echo $this->product->ghns_excluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  ghns-excluded
+            
+             <input type="checkbox" id="ghns_excluded-this-checkbox" <?php echo $isGhnsExcluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  ghns-excluded
         </span>
-        <script>
 
-            // $('#ghns_excluded-this-checkbox').on('click', function (event) {
-            //     event.stopPropagation();
-            //     var status = 1;
-            //     var title = '';
-            //     if (this.checked) {
-            //         status = 1;
-
-            //     } else {
-            //         status = 0;
-
-            //     }
-
-            //     var target = "/backend/project/doghnsexclude?project_id=<?= $this->product->project_id ?>&ghns_excluded=" + status;
-            //     $.ajax({
-            //         url: target,
-            //         success: function (results) {
-            //             if (status == 0) {
-            //                 alert('Project is successfully included into GHNS');
-            //                 $('#ghns_excluded-this-checkbox').prop("checked", false);
-
-            //             } else {
-            //                 alert('Project is successfully excluded from GHNS');
-            //                 $('#ghns_excluded-this-checkbox').prop("checked", true);
-
-            //             }
-
-            //         },
-            //         error: function () {
-            //             alert('Service is temporarily unavailable.');
-            //         }
-            //     });
-
-            //     return false;
-            // });
-        </script>
+       
     <?php endif; ?>
 
 

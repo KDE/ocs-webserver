@@ -536,11 +536,11 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function fetchMoreProjects($project, $count = 6)
     {
-        $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5($project->project_id);
-        if (false !== ($result = $cache->load($cacheName))) {
-            return $result;
-        }
+        // $cache = Zend_Registry::get('cache');
+        // $cacheName = __FUNCTION__ . '_' . md5($project->project_id);
+        // if (false !== ($result = $cache->load($cacheName))) {
+        //     return $result;
+        // }
 
         $q = $this->select()->from('stat_projects', array(
             'project_id',
@@ -565,7 +565,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
 
         $result = $this->fetchAll($q);
-        $cache->save($result, $cacheName, array(), 300);
+        // $cache->save($result, $cacheName, array(), 300);
 
         return $result;
     }
@@ -609,11 +609,11 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     public function fetchMoreProjectsOfOtherUsr($project, $count = 8)
     {
 
-        $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5($project->project_id);
-        if (false !== ($result = $cache->load($cacheName))) {
-            return $result;
-        }
+        // $cache = Zend_Registry::get('cache');
+        // $cacheName = __FUNCTION__ . '_' . md5($project->project_id);
+        // if (false !== ($result = $cache->load($cacheName))) {
+        //     return $result;
+        // }
 
         $sql = "
                 SELECT count(1) AS `count`
@@ -661,7 +661,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
 
         $result = $this->fetchAll($q);
-        $cache->save($result, $cacheName, array(), 300);
+        // $cache->save($result, $cacheName, array(), 300);
 
         return $result;
     }

@@ -27,13 +27,75 @@ class Default_Model_Spam
 
     const SPAM_THRESHOLD = 1;
 
+    /**
+     * naive approach for spam detection
+     * @todo: define a list of stop words
+     *
+     * @param array $project_data
+     *
+     * @return bool
+     */
+    public static function hasSpamMarkers($project_data)
+    {
+        $haystack = implode(" ", array($project_data['title'], $project_data['description']));
+
+        if (stripos($haystack, 'keto')) {
+            return true;
+        }
+        if (stripos($haystack, 'spartan')) {
+            return true;
+        }
+        if (stripos($haystack, 'ingredient')) {
+            return true;
+        }
+        if (stripos($haystack, 'rdx surge')) {
+            return true;
+        }
+        if (stripos($haystack, 'vashikaran')) {
+            return true;
+        }
+        if (stripos($haystack, 'muscles')) {
+            return true;
+        }
+        if (stripos($haystack, 'viagra')) {
+            return true;
+        }
+        if (stripos($haystack, 's3xual')) {
+            return true;
+        }
+        if (stripos($haystack, 'erection')) {
+            return true;
+        }
+        if (stripos($haystack, 'praltrix')) {
+            return true;
+        }
+        if (stripos($haystack, 's3x')) {
+            return true;
+        }
+        if (stripos($haystack, 'herpes')) {
+            return true;
+        }
+        if (stripos($haystack, 'male enhancement')) {
+            return true;
+        }
+
+        if (stripos($haystack, 'http')) {
+            return true;
+        }
+        if (stripos($haystack, 'https')) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function fetchSpamCandidate()
     {
         $sql = "
             SELECT *
-            FROM stat_projects
-            WHERE stat_projects.amount_reports >= :threshold AND stat_projects.status = 100
-            ORDER BY stat_projects.changed_at DESC, stat_projects.created_at DESC, stat_projects.amount_reports DESC
+            FROM `stat_projects`
+            WHERE `stat_projects`.`amount_reports` >= :threshold AND `stat_projects`.`status` = 100
+            ORDER BY `stat_projects`.`changed_at` DESC, `stat_projects`.`created_at` DESC, `stat_projects`.`amount_reports` DESC
         ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('threshold' => self::SPAM_THRESHOLD));

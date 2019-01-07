@@ -365,48 +365,48 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         //New Project in Session, for AuthValidation (owner)
         $this->_auth->getIdentity()->projects[$newProject->project_id] = array('project_id' => $newProject->project_id);
-        //        $this->auth->getStorage()->write($this->auth->getIdentity());
-
-        // if ($values['tags']) {
-        //     $modelTags = new Default_Model_Tags();
-        //     $modelTags->processTags($newProject->project_id, implode(',',$values['tags']), Default_Model_Tags::TAG_TYPE_PROJECT);
-        // }
-
 
         $modelTags = new Default_Model_Tags();
-        if ($values['tagsuser']){
-            $modelTags->processTagsUser($newProject->project_id, implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);
-        }else
-        {
+        if ($values['tagsuser']) {
+            $modelTags->processTagsUser($newProject->project_id, implode(',', $values['tagsuser']),Default_Model_Tags::TAG_TYPE_PROJECT);
+        } else {
             $modelTags->processTagsUser($newProject->project_id, null, Default_Model_Tags::TAG_TYPE_PROJECT);
         }
 
-        if($values['is_original']){
-                 $modelTags->processTagProductOriginal($newProject->project_id,$values['is_original']);
+        if ($values['is_original']) {
+            $modelTags->processTagProductOriginal($newProject->project_id, $values['is_original']);
         }
 
         //set license, if needed
         $licenseTag = $form->getElement('license_tag_id')->getValue();
         //only set/update license tags if something was changed
-        if($licenseTag && count($licenseTag)>0) {
+        if ($licenseTag && count($licenseTag) > 0) {
             $modelTags->saveLicenseTagForProject($newProject->project_id, $licenseTag);
             $activityLog = new Default_Model_ActivityLog();
-            $activityLog->logActivity($newProject->project_id, $newProject->project_id, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_LICENSE_CHANGED, array('title' => 'Set new License Tag', 'description' => 'New TagId: '.$licenseTag));
+            $activityLog->logActivity($newProject->project_id, $newProject->project_id, $this->_authMember->member_id,Default_Model_ActivityLog::PROJECT_LICENSE_CHANGED, array('title' => 'Set new License Tag', 'description' => 'New TagId: ' . $licenseTag));
         }
-        
+
         $isGitlabProject = $form->getElement('is_gitlab_project')->getValue();
         $gitlabProjectId = $form->getElement('gitlab_project_id')->getValue();
-        if($isGitlabProject && $gitlabProjectId == 0) {
+        if ($isGitlabProject && $gitlabProjectId == 0) {
             $values['gitlab_project_id'] = null;
         }
 
-
         $activityLog = new Default_Model_ActivityLog();
-        $activityLog->writeActivityLog($newProject->project_id, $newProject->member_id,
-            Default_Model_ActivityLog::PROJECT_CREATED, $newProject->toArray());
+        $activityLog->writeActivityLog($newProject->project_id, $newProject->member_id, Default_Model_ActivityLog::PROJECT_CREATED, $newProject->toArray());
 
         // ppload
         $this->processPploadId($newProject);
+
+        try {
+            if (Default_Model_Spam::hasSpamMarkers($newProject->toArray())) {
+                $tableReportComments = new Default_Model_DbTable_ReportProducts();
+                $tableReportComments->save(array('project_id' => $newProject->project_id, 'reported_by' => 24, 'text' => "System: automatic spam detection"));
+            }
+            Default_Model_DbTable_SuspicionLog::logProject($newProject, $this->_authMember, $this->getRequest());
+        } catch (Zend_Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage());
+        }
 
         $this->redirect('/member/' . $newProject->member_id . '/products/');
     }
@@ -1482,9 +1482,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     }
 
-
-
-
     public function unfollowAction()
     {
         $this->_helper->layout()->disableLayout();
@@ -1559,7 +1556,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 Default_Model_ActivityLog::PROJECT_FOLLOWED, $product->toArray());
         }
     }
-
 
     public function unfollowpAction()
     {
