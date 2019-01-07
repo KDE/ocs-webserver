@@ -37,15 +37,18 @@ class Default_Model_DbTable_SuspicionLog extends Zend_Db_Table_Abstract
      */
     public static function logProject($newProject, $authMember, $getRequest)
     {
-       $data = array(
-           'project_id' => $newProject->project_id,
-           'member_id' => $authMember->member_id,
-           'http_referer' => $getRequest->getServer('HTTP_REFERER'),
-           'http_origin' => $getRequest->getServer('HTTP_ORIGIN'),
-           'client_ip' => $getRequest->getClientIp($checkProxy = true)
-       );
+        $suspicious = Default_Model_Spam::hasSpamMarkers($newProject->toArray());
+        $data = array(
+            'project_id'   => $newProject->project_id,
+            'member_id'    => $authMember->member_id,
+            'http_referer' => $getRequest->getServer('HTTP_REFERER'),
+            'http_origin'  => $getRequest->getServer('HTTP_ORIGIN'),
+            'client_ip'    => $getRequest->getClientIp($checkProxy = true),
+            'user_agent'   => $getRequest->getServer('HTTP_USER_AGENT'),
+            'suspicious'   => $suspicious ? 1 : 0
+        );
 
-       return Zend_Db_Table::getDefaultAdapter()->insert('suspicion_log', $data);
+        return Zend_Db_Table::getDefaultAdapter()->insert('suspicion_log', $data);
     }
 
 }
