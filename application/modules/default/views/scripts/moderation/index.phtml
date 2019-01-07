@@ -27,9 +27,9 @@ $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 $helperImage = new Default_View_Helper_Image();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 
-$isadmin = false;
+$isadmin = 0;
 if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
-$isadmin = true;
+$isadmin = 1;
 }
 ?>
 
@@ -133,7 +133,7 @@ $isadmin = true;
 <script type="text/javascript">
     $(document).ready(function () {
 
-        var isadmin = <?php echo $isadmin;?>
+        var isadmin = <?php echo $isadmin;?>;
 
         $("#dialog-form").dialog({
             autoOpen: false,
@@ -148,7 +148,7 @@ $isadmin = true;
         });
 
         var actions;
-        if(isadmin)
+        if(isadmin==1)
         {
             actions = {
                 listAction: '/moderation/list' ,
