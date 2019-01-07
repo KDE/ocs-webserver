@@ -61,7 +61,6 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
         $method = $this->getParam('method', 'create');
 
         $this->log->info("METHOD: {$method}\n--------------\n");
-        $this->log->err("METHOD: {$method}\n--------------\n");
 
         if ('delete' == $method) {
             //$this->deleteMember($this->getParam('member_id'));
@@ -193,7 +192,14 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
             }
             try {
                 //Export User, if he not exists
-                $modelSubSystem->createUserFromArray($member, $force);
+                $result = $modelSubSystem->createUserFromArray($member, $force);
+                if (false === $result AND $modelSubSystem->hasRateLimitError()) {
+                    $this->log->info("RateLimitError: Wait " . $modelSubSystem->getRateLimitWaitSeconds() . " seconds for next execution.");
+
+                    sleep((int)$modelSubSystem->getRateLimitWaitSeconds()+5);
+                    $modelSubSystem = new Default_Model_Ocs_Forum($this->config);
+                    $modelSubSystem->createUserFromArray($member, $force);
+                }
             } catch (Exception $e) {
                 $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
