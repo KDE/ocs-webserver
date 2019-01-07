@@ -399,6 +399,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->processPploadId($newProject);
 
         try {
+            if (Default_Model_Spam::hasSpamMarkers($newProject->toArray())) {
+                $tableReportComments = new Default_Model_DbTable_ReportProducts();
+                $tableReportComments->save(array('project_id' => $newProject->project_id, 'reported_by' => 24, 'text' => "System: automatic spam detection"));
+            }
             Default_Model_DbTable_SuspicionLog::logProject($newProject, $this->_authMember, $this->getRequest());
         } catch (Zend_Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage());

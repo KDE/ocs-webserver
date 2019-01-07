@@ -27,13 +27,39 @@ class Default_Model_Spam
 
     const SPAM_THRESHOLD = 1;
 
+    /**
+     * naive approach for spam detection
+     *
+     * @param array $project_data
+     *
+     * @return bool
+     */
+    public static function hasSpamMarkers($project_data)
+    {
+        $haystack = implode(" ___ ", array($project_data['title'], $project_data['description']));
+
+        if (stripos($haystack, 'keto')) {
+            return true;
+        }
+
+        if (stripos($haystack, 'spartan')) {
+            return true;
+        }
+
+        if (stripos($haystack, 'http')) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function fetchSpamCandidate()
     {
         $sql = "
             SELECT *
-            FROM stat_projects
-            WHERE stat_projects.amount_reports >= :threshold AND stat_projects.status = 100
-            ORDER BY stat_projects.changed_at DESC, stat_projects.created_at DESC, stat_projects.amount_reports DESC
+            FROM `stat_projects`
+            WHERE `stat_projects`.`amount_reports` >= :threshold AND `stat_projects`.`status` = 100
+            ORDER BY `stat_projects`.`changed_at` DESC, `stat_projects`.`created_at` DESC, `stat_projects`.`amount_reports` DESC
         ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('threshold' => self::SPAM_THRESHOLD));
