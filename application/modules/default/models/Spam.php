@@ -29,6 +29,7 @@ class Default_Model_Spam
 
     /**
      * naive approach for spam detection
+     * @todo: define a list of stop words
      *
      * @param array $project_data
      *
@@ -36,17 +37,15 @@ class Default_Model_Spam
      */
     public static function hasSpamMarkers($project_data)
     {
-        $haystack = implode(" ___ ", array($project_data['title'], $project_data['description']));
+        $haystack = implode(" ", array($project_data['title'], $project_data['description']));
 
         if (stripos($haystack, 'keto')) {
             return true;
         }
-
         if (stripos($haystack, 'spartan')) {
             return true;
         }
-
-        if (stripos($haystack, 'ingredients')) {
+        if (stripos($haystack, 'ingredient')) {
             return true;
         }
         if (stripos($haystack, 'rdx surge')) {
@@ -67,8 +66,23 @@ class Default_Model_Spam
         if (stripos($haystack, 'erection')) {
             return true;
         }
+        if (stripos($haystack, 'praltrix')) {
+            return true;
+        }
+        if (stripos($haystack, 's3x')) {
+            return true;
+        }
+        if (stripos($haystack, 'herpes')) {
+            return true;
+        }
+        if (stripos($haystack, 'male enhancement')) {
+            return true;
+        }
 
         if (stripos($haystack, 'http')) {
+            return true;
+        }
+        if (stripos($haystack, 'https')) {
             return true;
         }
 
