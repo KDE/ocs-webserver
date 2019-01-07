@@ -251,38 +251,6 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
 
 
 
-            // $('#ghns_excluded-this-checkbox').on('click', function (event) {
-            //     event.stopPropagation();
-            //     var status = 1;
-            //     if (this.checked) {
-            //         status = 1;
-            //     } else {
-            //         status = 0;
-            //     }
-
-            //     var target = "/backend/project/doghnsexclude?project_id=<?= $this->product->project_id ?>&ghns_excluded=" + status;
-            //     $.ajax({
-            //         url: target,
-            //         success: function (results) {
-            //             if (status == 0) {
-            //                 alert('Project is successfully included into GHNS');
-            //                 $('#ghns_excluded-this-checkbox').prop("checked", false);
-
-            //             } else {
-            //                 alert('Project is successfully excluded from GHNS');
-            //                 $('#ghns_excluded-this-checkbox').prop("checked", true);
-
-            //             }
-
-            //         },
-            //         error: function () {
-            //             alert('Service is temporarily unavailable.');
-            //         }
-            //     });
-
-            //     return false;
-            // });
-
 
             $('#pling-excluded-checkbox').on('click', function (event) {
                 event.stopPropagation();
