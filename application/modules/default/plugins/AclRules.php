@@ -270,7 +270,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         ));
 
         $this->allow(self::ROLENAME_MODERATOR, 'default_moderation', array(
-            'index'
+            'index','list'
         ));
         $this->allow(self::ROLENAME_MODERATOR, 'default_duplicates', array(
             'index'
