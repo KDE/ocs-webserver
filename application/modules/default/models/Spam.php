@@ -46,6 +46,19 @@ class Default_Model_Spam
             return true;
         }
 
+        if (stripos($haystack, 'ingredients')) {
+            return true;
+        }
+        if (stripos($haystack, 'rdx surge')) {
+            return true;
+        }
+        if (stripos($haystack, 'vashikaran')) {
+            return true;
+        }
+        if (stripos($haystack, 'muscles')) {
+            return true;
+        }
+
         if (stripos($haystack, 'http')) {
             return true;
         }
