@@ -465,7 +465,6 @@ class DevelopmentDropDownMenu extends React.Component {
     let gitfaqLinkItem;
     if (config.isExternal === false){
       gitfaqLinkItem = (<li><a className="popuppanel" id="gitfaq" href={"/gitfaq"}>Git FAQ</a></li>);
-
     } else {
       gitfaqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={config.baseUrl + "/#gitfaq"}>Git FAQ</a></li>);
     }
@@ -474,7 +473,7 @@ class DevelopmentDropDownMenu extends React.Component {
       <li ref={node => this.node = node} id="admins-dropdown-menu" className={this.state.dropdownClass}>
         <a className="admins-menu-link-item">Development</a>
         <ul className="dropdown-menu dropdown-menu-right">
-          <li><a href={config.gitlabUrl + "/explore/projects"}>projects</a></li>
+          <li><a href={config.gitlabUrl + "/explore/projects"}>Projects</a></li>
           {issuesMenuItem}
           {gitfaqLinkItem}
         </ul>
