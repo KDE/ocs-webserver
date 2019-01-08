@@ -468,14 +468,13 @@ class DevelopmentDropDownMenu extends React.Component {
 
     } else {
       gitfaqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={config.baseUrl + "/#gitfaq"}>Git FAQ</a></li>);
-
     }
 
     return (
       <li ref={node => this.node = node} id="admins-dropdown-menu" className={this.state.dropdownClass}>
-        <a className="admins-menu-link-item">Projects</a>
+        <a className="admins-menu-link-item">Development</a>
         <ul className="dropdown-menu dropdown-menu-right">
-          <li><a href={config.gitlabUrl + "/explore/projects"}>Development</a></li>
+          <li><a href={config.gitlabUrl + "/explore/projects"}>projects</a></li>
           {issuesMenuItem}
           {gitfaqLinkItem}
         </ul>
@@ -1596,7 +1595,7 @@ class MobileLeftSidePanel extends React.Component {
                 <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Themes & Apps</a></li>
                 <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
               </ul>
-            </li>            
+            </li>
             <DevelopmentDropDownMenu
               user={this.props.user}
               baseUrl={this.props.baseUrl}
