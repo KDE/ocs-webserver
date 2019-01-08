@@ -78,11 +78,22 @@ class Default_Model_Spam
         if (stripos($haystack, 'male enhancement')) {
             return true;
         }
-
-        if (stripos($haystack, 'http')) {
+        if (stripos($haystack, 'astrology')) {
             return true;
         }
-        if (stripos($haystack, 'https')) {
+        if (stripos($haystack, 'megashare')) {
+            return true;
+        }
+        if (stripos($haystack, 'body weight')) {
+            return true;
+        }
+        if (stripos($haystack, 'diet')) {
+            return true;
+        }
+        if (stripos($haystack, 'foreskin')) {
+            return true;
+        }
+        if (stripos($haystack, 'fat loss')) {
             return true;
         }
 
