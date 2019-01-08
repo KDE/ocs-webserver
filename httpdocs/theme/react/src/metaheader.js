@@ -261,14 +261,14 @@ class DomainsMenu extends React.Component {
         <DomainsDropDownMenu
           domains={this.props.domains}
         />
+        <DiscussionBoardsDropDownMenu
+          forumUrl={this.props.forumUrl}
+        />
         <DevelopmentDropDownMenu
           user={this.props.user}
           baseUrl={this.props.baseUrl}
           gitlabUrl={this.props.gitlabUrl}
           isAdmin={this.props.isAdmin}
-        />
-        <DiscussionBoardsDropDownMenu
-          forumUrl={this.props.forumUrl}
         />
         {moreMenuItemDisplay}
       </ul>
@@ -475,7 +475,7 @@ class DevelopmentDropDownMenu extends React.Component {
       <li ref={node => this.node = node} id="admins-dropdown-menu" className={this.state.dropdownClass}>
         <a className="admins-menu-link-item">Projects</a>
         <ul className="dropdown-menu dropdown-menu-right">
-          <li><a href={config.gitlabUrl + "/explore/projects"}>Projects</a></li>
+          <li><a href={config.gitlabUrl + "/explore/projects"}>Development</a></li>
           {issuesMenuItem}
           {gitfaqLinkItem}
         </ul>
@@ -1589,12 +1589,6 @@ class MobileLeftSidePanel extends React.Component {
         <div id="panel-menu">
           <ul>
             {panelMenuGroupsDisplay}
-            <DevelopmentDropDownMenu
-              user={this.props.user}
-              baseUrl={this.props.baseUrl}
-              gitlabUrl={this.props.gitlabUrl}
-              isAdmin={this.props.isAdmin}
-            />
             <li>
               <a className="groupname"><b>Discussion Boards</b></a>
               <ul>
@@ -1602,7 +1596,13 @@ class MobileLeftSidePanel extends React.Component {
                 <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Themes & Apps</a></li>
                 <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
               </ul>
-            </li>
+            </li>            
+            <DevelopmentDropDownMenu
+              user={this.props.user}
+              baseUrl={this.props.baseUrl}
+              gitlabUrl={this.props.gitlabUrl}
+              isAdmin={this.props.isAdmin}
+            />
             <li>
               <a className="groupname"><b>More</b></a>
               <ul>
