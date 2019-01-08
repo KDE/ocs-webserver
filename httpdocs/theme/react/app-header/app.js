@@ -117,6 +117,7 @@ class SiteHeader extends React.Component {
           template={this.state.template}
           user={this.state.user}
           baseUrl={this.state.baseUrl}
+          serverUrl={this.state.serverUrl}
           store={this.state.store}
           redirectString={this.state.redirectString}
         />
@@ -230,7 +231,7 @@ class SiteHeaderUserMenu extends React.Component {
   }
 
   render(){
-
+    
     return (
       <ul id="site-header-user-menu-container">
         <li ref={node => this.node = node} id="user-menu-toggle" className={this.state.dropdownClass}>
@@ -241,8 +242,8 @@ class SiteHeaderUserMenu extends React.Component {
           <ul id="user-profile-menu" >
             <div className="dropdown-header"></div>
             <li><a href="/product/add">Add Product</a></li>
-            <li><a href={this.props.baseUrl + "/u/" + this.props.user.username + "/products"}>Products</a></li>
-            <li><a href={this.props.baseUrl + "/u/" + this.props.user.username + "/plings"}>Plings</a></li>
+            <li><a href={window.json_baseurl + "/u/" + this.props.user.username + "/products"}>Products</a></li>
+            <li><a href={window.json_baseurl + "/u/" + this.props.user.username + "/plings"}>Plings</a></li>
             <li><a href="/settings">Settings</a></li>
             <li><a href="/logout">Logout</a></li>
           </ul>
@@ -307,6 +308,7 @@ class MobileSiteHeader extends React.Component {
             <MobileUserContainer
               user={this.props.user}
               baseUrl={this.props.baseUrl}
+              serverUrl={this.state.serverUrl}
               template={this.props.template}
               redirectString={this.props.redirectString}
             />
@@ -359,12 +361,15 @@ class MobileUserContainer extends React.Component {
     if (this.props.user){
       userDisplay = (
         <SiteHeaderUserMenu
+          serverUrl={this.state.serverUrl}
+          baseUrl={this.state.baseUrl}
           user={this.props.user}
         />
       );
     } else {
       userDisplay = (
         <SiteHeaderLoginMenu
+          user={this.props.user}
           baseUrl={this.props.baseUrl}
           template={this.props.template}
           redirectString={this.props.redirectString}

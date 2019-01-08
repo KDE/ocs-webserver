@@ -27,6 +27,10 @@ $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 $helperImage = new Default_View_Helper_Image();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 
+$isadmin = 0;
+if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+$isadmin = 1;
+}
 ?>
 
 <link href="/theme/backend/lib/jquery-ui/themes/smoothness/jquery-ui.min.css" rel="stylesheet">
@@ -129,6 +133,8 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 <script type="text/javascript">
     $(document).ready(function () {
 
+        var isadmin = <?php echo $isadmin;?>;
+
         $("#dialog-form").dialog({
             autoOpen: false,
             //height: 350,
@@ -141,14 +147,28 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
             }
         });
 
+        var actions;
+        if(isadmin==1)
+        {
+            actions = {
+                listAction: '/moderation/list' ,
+                updateAction: '/moderation/update'
+            }
+        }else{
+            actions = {
+                listAction: '/moderation/list' 
+                
+            }
+        }
+
 
         $('#TableContainer').jtable({
             jqueryuiTheme: true,
             paging: true,
             sorting: true,                     
-            actions: {
-                listAction: '/moderation/list' ,
-                updateAction: '/moderation/update'
+            actions: actions,
+            recordsLoaded: function (event, data) {
+                TooltipUser.setup("tooltipuser","right");        
             },
             fields: {
                  project_id: {
@@ -329,7 +349,7 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
             $('#TableContainer').jtable('load', {
                 filter_member_id: $('#filter_member_id').val(),              
             },function(){
-              TooltipUser.setup("tooltipuser","right");        
+              //TooltipUser.setup("tooltipuser","right");        
             });
         });
 
@@ -349,7 +369,7 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
           $('#TableContainer').jtable('load', {           
             filter_member_id: $('#filter_member_id').val()            
         },function(){
-              TooltipUser.setup("tooltipuser","right");        
+              //TooltipUser.setup("tooltipuser","right");        
         });
 
         $('body').on("click", 'a.imghistory', function (event) {

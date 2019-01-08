@@ -536,21 +536,20 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function fetchMoreProjects($project, $count = 6)
     {
-        // $cache = Zend_Registry::get('cache');
-        // $cacheName = __FUNCTION__ . '_' . md5($project->project_id);
-        // if (false !== ($result = $cache->load($cacheName))) {
-        //     return $result;
-        // }
-
         $q = $this->select()->from('stat_projects', array(
             'project_id',
             'image_small',
             'title',
             'catTitle' => 'cat_title'
-        ))->setIntegrityCheck(false)->where('status = ?', self::PROJECT_ACTIVE)->where('member_id = ?', $project->member_id, 'INTEGER')
-                  ->where('project_id != ?', $project->project_id, 'INTEGER')->where('type_id = ?', self::PROJECT_TYPE_STANDARD)
-                  ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')->limit($count)
-                  ->order('project_created_at DESC')
+        ))->setIntegrityCheck(false)
+          ->where('status = ?', self::PROJECT_ACTIVE)
+          ->where('member_id = ?', $project->member_id, 'INTEGER')
+          ->where('project_id != ?', $project->project_id, 'INTEGER')
+          ->where('type_id = ?', self::PROJECT_TYPE_STANDARD)
+          ->where('amount_reports is null')
+          ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')
+          ->limit($count)
+          ->order('project_created_at DESC')
         ;
 
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
@@ -564,7 +563,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
 
         $result = $this->fetchAll($q);
-        // $cache->save($result, $cacheName, array(), 300);
 
         return $result;
     }
@@ -607,13 +605,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function fetchMoreProjectsOfOtherUsr($project, $count = 8)
     {
-
-        // $cache = Zend_Registry::get('cache');
-        // $cacheName = __FUNCTION__ . '_' . md5($project->project_id);
-        // if (false !== ($result = $cache->load($cacheName))) {
-        //     return $result;
-        // }
-
         $sql = "
                 SELECT count(1) AS `count`
                 FROM `stat_projects`
@@ -644,6 +635,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             'catTitle' => 'cat_title'
         ))->setIntegrityCheck(false)->where('status = ?', self::PROJECT_ACTIVE)
                   ->where('member_id != ?', $project->member_id, 'INTEGER')->where('type_id = ?', 1)
+                  ->where('amount_reports is null')
                   ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')->limit($count, $offset)
                   ->order('project_created_at DESC')
         ;
@@ -658,8 +650,9 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $q = $this->generatePackageTypeFilter($q, array(self::FILTER_NAME_PACKAGETYPE => $storePackageTypeIds));
         }
 
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $q->__toString());
+
         $result = $this->fetchAll($q);
-        // $cache->save($result, $cacheName, array(), 300);
 
         return $result;
     }

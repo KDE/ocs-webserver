@@ -20,8 +20,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
-
 class UserController extends Local_Controller_Action_DomainSwitch
 {
 
@@ -121,9 +119,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->view->userProducts =
                 $tableProject->getUserActiveProjects($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit);
 
-            $this->view->userFeaturedProducts =
-                    $tableProject->fetchAllFeaturedProjectsForMember($this->_memberId);
-
+            $this->view->userFeaturedProducts = $tableProject->fetchAllFeaturedProjectsForMember($this->_memberId);
 
             $paginationComments = $tableMember->fetchComments($this->_memberId);
             if ($paginationComments) {
@@ -164,19 +160,17 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
             $stat = array();
             $stat['cntProducts'] = $total_records;
-            if($this->view->userFeaturedProducts)
-            {                
+            if ($this->view->userFeaturedProducts) {
                 $cnt = 0;
                 foreach ($this->view->userFeaturedProducts as $tmp) {
                     $cnt++;
                 }
                 $stat['cntFProducts'] = $cnt;
-            }else
-            {
+            } else {
                 $stat['cntFProducts'] = 0;
             }
 
-            $stat['cntComments'] = $paginationComments->getTotalItemCount();                        
+            $stat['cntComments'] = $paginationComments->getTotalItemCount();
             $tblFollower = new Default_Model_DbTable_ProjectFollower();
             $stat['cntLikesHeGave'] = $tblFollower->countLikesHeGave($this->_memberId);
             $stat['cntLikesHeGot'] = $tblFollower->countLikesHeGot($this->_memberId);
@@ -196,13 +190,12 @@ class UserController extends Local_Controller_Action_DomainSwitch
             // $stat['cntSupporters'] = $cntmb;
             $stat['userLastActiveTime'] = $tableMember->fetchLastActiveTime($this->_memberId);
 
-            
             $helperUserRole = new Backend_View_Helper_UserRole();
             $userRoleName = $helperUserRole->userRole();
             if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
                 $stat['cntDuplicateSourceurl'] = $tableProject->getCountProjectsDuplicateSourceurl($this->_memberId);
             }
-            
+
             $this->view->stat = $stat;
         }
     }
@@ -260,30 +253,27 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($page - 1) * $pageLimit, true);
         $this->_helper->viewRenderer('/partials/aboutmeProducts');
     }
-    
+
     public function userdataajaxAction()
     {
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         $resultArray = array();
-        
-        header('Access-Control-Allow-Origin: *'); 
-        
-        $this->getResponse()
-             ->setHeader('Access-Control-Allow-Origin', '*')
-             ->setHeader('Access-Control-Allow-Credentials', 'true')
+
+        header('Access-Control-Allow-Origin: *');
+
+        $this->getResponse()->setHeader('Access-Control-Allow-Origin', '*')->setHeader('Access-Control-Allow-Credentials', 'true')
              ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
              ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
         ;
-        
-        
+
         $userid = $this->getParam('id');
-        
+
         $modelMember = new Default_Model_Member();
         $user = $modelMember->find($userid)->current();
-        
+
         if (Zend_Auth::getInstance()->hasIdentity()) {
-        
+
             $auth = Zend_Auth::getInstance();
             $user = $auth->getStorage()->read();
 
@@ -291,29 +281,26 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $resultArray['username'] = $user->username;
             $resultArray['mail'] = $user->mail;
             $resultArray['avatar'] = $user->profile_image_url;
-            
-            
         } else if (null != $userid && null != $user) {
-        
+
             $resultArray['member_id'] = $user['member_id'];
             $resultArray['username'] = $user['username'];
             $resultArray['mail'] = $user['mail'];
             $resultArray['avatar'] = $user['profile_image_url'];
-
         } else {
             $resultArray['member_id'] = null;
             $resultArray['username'] = null;
             $resultArray['mail'] = null;
             $resultArray['avatar'] = null;
         }
-        
+
         $resultAll = array();
         $resultAll['status'] = "success";
         $resultAll['data'] = $resultArray;
-        
+
         $this->_helper->json($resultAll);
     }
-    
+
     public function followsAction()
     {
         $this->redirect($this->_helper->url('follows', 'member', null, $this->getAllParams()));
@@ -493,7 +480,6 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     public function plingsAction()
     {
-
         $tableMember = new Default_Model_Member();
         $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
 
@@ -501,7 +487,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $paypalValidStatus = $paypalValidStatusTable->find($this->view->view_member->paypal_valid_status)->current();
         $this->view->paypal_valid_status = $paypalValidStatus;
 
-        //backdore for admins
+        //backdoor for admins
         $helperUserRole = new Backend_View_Helper_UserRole();
         $userRoleName = $helperUserRole->userRole();
         if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {

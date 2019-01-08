@@ -281,18 +281,18 @@ END$$
 
 DELIMITER ;
 
-drop PROCEDURE solr_query_deleted_pk_new;
-
+drop procedure solr_query_deleted_pk_new;
 DELIMITER $$
 CREATE  PROCEDURE `solr_query_deleted_pk_new`(IN lastIndexed VARCHAR(255))
 BEGIN
-	SELECT project_id
-	FROM project
-	  JOIN member ON member.member_id = project.member_id  
-	WHERE 
-	 project.deleted_at > lastIndexed 
-	 OR member.deleted_at > lastIndexed 
-	 OR (project.changed_at > lastIndexed AND project.status < 100);
+  SELECT project_id
+  FROM project   
+  WHERE 
+   project.`type_id` = 1
+   and(
+     project.deleted_at > timestamp(DATE_SUB(lastIndexed, INTERVAL 1 DAY))     
+     OR (project.changed_at > timestamp(DATE_SUB(lastIndexed, INTERVAL 1 DAY)) AND project.status < 100)
+   );
 
 END$$
 

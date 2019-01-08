@@ -129,7 +129,8 @@ class HomeController extends Local_Controller_Action_DomainSwitch
     public function showfeaturejsonAction()
     {
         
-        $this->_helper->layout->disableLayout();
+        $this->_helper->layout->disableLayout();        
+        $this->_helper->viewRenderer->setNoRender(true);
         $modelInfo = new Default_Model_Info();
         $page = (int)$this->getParam('page');
         if($page==0){
@@ -190,17 +191,40 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 
     public function metamenubundlejsAction()
     {
+        $this->_helper->layout()->disableLayout();               
+    }
+
+    public function searchmemberAction()
+    {
         $this->_helper->layout()->disableLayout();
-        
-        // header('Access-Control-Allow-Origin: *'); 
-        
-        // $this->getResponse()
-        //      ->setHeader('Access-Control-Allow-Origin', '*')
-        //      ->setHeader('Access-Control-Allow-Credentials', 'true')
-        //      ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-        //      ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
-        // ;
-        
+        $this->_helper->viewRenderer->setNoRender(true);
+        $username = $this->getParam('username');
+        $results = null;
+        if(strlen(trim($username))>2)
+        {
+            $model = new Default_Model_Member();
+            $results = $model->findActiveMemberByName($username);
+            $helperImage = new Default_View_Helper_Image();
+            foreach ($results as &$value) {
+                $avatar = $helperImage->image($value['profile_image_url'],array('width' => 100, 'height' => 100, 'crop' => 2));
+                $value['profile_image_url'] = $avatar;
+            }
+        }
+        $this->_helper->json($results);
+    }
+
+    public function memberjsonAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $member_id = $this->getParam('member_id');
+        $results = null;
+        if($member_id){
+            $info = new Default_Model_Info();
+            $commentsOpendeskop = $info->getDiscussionOpendeskop($member_id);
+            $results=array('commentsOpendeskop' => $commentsOpendeskop);
+        }
+        $this->_helper->json($results);
     }
     
     

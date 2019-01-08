@@ -2,56 +2,10 @@
 
 @import "elements.less";
 
-body {
-  padding-top: 34px;
-
-  .navbar-gitlab {
-    top: 34px;
-  }
-
-  &#git-body {
-    #metaheader {
-      position: fixed !important;
-    }
-    .nav-sidebar {
-      top:88px;
-    }
-  }
-
-  &#body-user, &#body-public {
-    opendesktop-metaheader {
-      position: relative !important;
-      #metaheader {
-        position: relative !important;
-      }
-    }
-  }
-
-  &.navigation-topics,
-  &.category-themes-and-apps,
-  &.category-general,
-  &[class*='category-'] {
-    #metaheader #metaheader-nav #user-context-menu-container .user-dropdown .th-icon {
-      margin-top: -5px;
-    }
-    #metaheader #metaheader-nav #user-login-menu-container .user-dropdown .dropdown-toggle img {
-      // margin-top: -7px;
-    }
-  }
-
-  &.docked {
-    .d-header {
-      top: 34px;
-    }
-    #metaheader {
-      position: fixed;
-    }
-  }
-
-  &.drawer-open {
-    height: 100%;
-    overflow: hidden;
-  }
+body.drawer-open {
+  height: 100%;
+  overflow: hidden;
+  max-width: 100%;
 }
 
 #metaheader {
@@ -333,7 +287,7 @@ body {
             .dropdown-menu {
               width: 200px;
               top: 45px;
-              right: -43px;
+              right: auto;
               min-height: 84px;
 
               &::before {
@@ -350,6 +304,7 @@ body {
                   line-height: 24px;
                   padding: 0 20px;
                   border-radius: 0;
+                  display: block;
 
                   &.admins-menu-link-item,
                   &.cd-menu-link-item {
@@ -391,15 +346,15 @@ body {
 
           &#admins-dropdown-menu {
             .dropdown-menu {
-              right: -75px;
-              min-height: auto;
+              right: auto;
+              min-height: 61px;
               height: auto;
             }
           }
 
           &#cd-dropdown-menu {
             .dropdown-menu {
-              right: -45px;
+              right: auto;
               height: auto;
             }
           }
@@ -624,6 +579,30 @@ body {
                         margin: 6px;
                       }
                     }
+
+                    &#search-form-container {
+                      position: relative;
+                      ul {
+                        position: absolute;
+                        background: white;
+                        padding: 5px;
+                        border: 1px solid #ccc;
+                        border-radius: 0 0 5px 5px;
+                        top: 30px;
+                        left: 10px;
+                        width: 159px;
+                        z-index: 10;
+
+                        li {
+                          float: left;
+                          width: 100%;
+                          cursor: pointer;
+                          &:hover {
+                            background-color: #ccc;
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -631,6 +610,144 @@ body {
               #user-tabs-content {
                 height: 100%;
                 padding: 10px;
+                overflow: scroll;
+
+                #user-comments-tab-container {
+
+                  .user-comments-thread-container {
+                    width: 100%;
+                    float: left;
+                    padding: 10px;
+
+                    .thread-header {
+                      float: left;
+                      width: 100%;
+
+                      .thread-subtitle {
+                        float: left;
+                        width: 100%;
+                        font-size: 14px;
+                        margin: 10px 0;
+                        p {
+                          float: left;
+                          color: #687a86;
+                          margin: 0;
+                        }
+                        p + p {
+                          margin-left: 5px;
+                          padding-left: 5px;
+                          &::before {
+                            content: "•";
+                            color: rgb(226, 226, 226);
+                          }
+                          span {
+                            margin-left: 5px;
+                          }
+                        }
+                      }
+                      .thread-title {
+                        float: left;
+                        width: 100%;
+
+                        h2 {
+                          float: left;
+                          margin: 0 0 10px 0;
+                          font-size: 20px;
+                        }
+                      }
+                    }
+                    .thread-comments {
+                      float: left;
+                      width: 100%;
+
+                      .comment-item {
+                        position: relative;
+                        height: auto;
+                        padding-left: 40px;
+                        float: left;
+                        width: 100%;
+                        margin-bottom: 20px;
+
+                        figure {
+                          position: absolute;
+                          top: 0;
+                          left: 0;
+                          width: 32px;
+                          height: 32px;
+                          margin: 0;
+
+                          img {
+                            width: 32px;
+                            height: 32px;
+                            border-radius: 100%;
+                          }
+                        }
+                        .comment-item-header {
+                          margin-bottom: 5px;
+                          width: 100%;
+                          float: left;
+                          p {
+                            margin-bottom: 0;
+                            float: left;
+
+                            &.user,
+                            &.replied-user {
+                              span {
+                                margin-right: 5px;
+                              }
+                              a {
+                                color: #2e9fff;
+                              }
+                              &:hover {
+                                a {
+                                  color: #2e87e7;
+                                }
+                              }
+                            }
+
+                            &.date-created {
+                              margin-left: 5px;
+                              padding-left: 5px;
+                              &::before {
+                                content: "•";
+                                color: rgb(226, 226, 226);
+                              }
+                              span {
+                                margin-left: 5px;
+                              }
+                            }
+                          }
+
+                          p + p {
+                            margin-left: 5px;
+                          }
+                        }
+
+                        .comment-item-content {
+                          width: 100%;
+                          float: left;
+                        }
+
+                        .comment-item-votes-container {
+                          width: 100%;
+                          float: left;
+                          > div {
+                            float: left;
+                            width: auto;
+                            margin-right: 5px;
+                          }
+                          .comment-item-votes {
+
+                          }
+                        }
+                      }
+                    }
+                  }
+
+                  .user-comments-thread-container + .user-comments-thread-container {
+                     border-bottom: 3px solid #ccc;
+                  }
+                }
               }
             }
           }
@@ -638,7 +755,8 @@ body {
       }
     }
 
-    #user-context-menu-container {
+    #user-context-menu-container,
+    #development-app-menu-container {
 
       .user-dropdown {
 
@@ -820,6 +938,21 @@ body {
             }
           }
         }
+      }
+    }
+
+    #development-app-menu-container {
+      .user-dropdown {
+
+        .th-icon {
+          height: 24px;
+          width: 24px;
+          display: block;
+          background-image: url(../img/development-app-menu-item.png);
+          background-size: 32px;
+          background-position: center -5px;
+        }
+
       }
     }
 
@@ -1120,8 +1253,6 @@ body {
       }
     }
   }
-
-
 }
 
 #metaheader-modal {

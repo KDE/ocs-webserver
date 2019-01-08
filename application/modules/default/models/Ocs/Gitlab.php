@@ -778,8 +778,6 @@ class Default_Model_Ocs_Gitlab
         $updatedUser = null;
 
         if (false === $user) {
-            //            $data['skip_confirmation'] = 'true';
-
             try {
                 $data[0]['skip_confirmation'] = 'true';
                 $user = $this->httpUserCreate($data[0]);
@@ -797,16 +795,12 @@ class Default_Model_Ocs_Gitlab
         }
 
         if ($force === true) {
-            //$data['skip_reconfirmation'] = 'true';
-            //unset($data['password']);
-
             try {
                 foreach ($data as $datum) {
                     $datum['skip_reconfirmation'] = 'true';
                     unset($datum['password']);
                     $updatedUser = $this->httpUserUpdate($datum, $user['id']);
                 }
-                //$this->httpUserUpdate($data, $user['id']);
             } catch (Zend_Exception $e) {
                 $this->messages[] = "Fail " . $e->getMessage();
 

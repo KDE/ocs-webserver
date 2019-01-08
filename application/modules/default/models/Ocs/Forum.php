@@ -27,6 +27,8 @@ class Default_Model_Ocs_Forum
     protected $config;
     protected $messages;
     protected $httpClient;
+    protected $isRateLimitError;
+    protected $rateLimitWaitSeconds;
 
     /**
      * @inheritDoc
@@ -62,7 +64,13 @@ class Default_Model_Ocs_Forum
 
         $data = $this->mapUserData($member_data);
 
-        $user = $this->getUser($member_data['external_id'], $member_data['username']);
+        try {
+            $user = $this->getUser($member_data['external_id'], $member_data['username']);
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
         $uid = $data['username'];
 
         if (empty($user)) {
@@ -92,13 +100,13 @@ class Default_Model_Ocs_Forum
             try {
                 $uri = $this->config->host . "/users/{$uid}.json";
                 $method = Zend_Http_Client::PUT;
-                $this->httpRequest($uri, $uid, $method, $data);
+                $result = $this->httpRequest($uri, $uid, $method, $data);
             } catch (Zend_Exception $e) {
                 $this->messages[] = "Fail " . $e->getMessage();
 
                 return false;
             }
-            $this->messages[] = "overwritten : " . json_encode($user);
+            $this->messages[] = "overwritten : " . json_encode($result);
 
             return $user;
         }
@@ -190,12 +198,16 @@ class Default_Model_Ocs_Forum
      * @param array|null $post_param
      *
      * @return bool|array
+     * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Http_Exception
      * @throws Zend_Json_Exception
      */
     protected function httpRequest($uri, $uid, $method = Zend_Http_Client::GET, $post_param = null)
     {
+        $this->isRateLimitError = false;
+        $this->rateLimitWaitSeconds = 0;
+
         $this->httpClient->resetParameters();
         $this->httpClient->setUri($uri);
         $this->httpClient->setParameterGet('api_key', $this->config->private_token);
@@ -222,10 +234,23 @@ class Default_Model_Ocs_Forum
         if ($content_encoding == 'gzip') {
             $body = Zend_Http_Response::decodeGzip($body);
         }
+        if (substr($body, 0, strlen('<html>')) === '<html>') {
+            $this->messages[] = $body;
+
+            return false;
+        }
         $body = Zend_Json::decode($body);
 
         if (array_key_exists("error_type", $body) OR array_key_exists("errors", $body)) {
             $this->messages[] = "id: {$uid} ($uri) - " . $response->getBody();
+
+            if (isset($body['error_type']) AND ($body['error_type'] == "rate_limit")) {
+
+                $this->isRateLimitError = true;
+                $this->rateLimitWaitSeconds = $body['extras']['wait_seconds'];
+
+                throw new Zend_Exception($body['errors'][0]);
+            }
 
             return false;
         }
@@ -691,6 +716,22 @@ class Default_Model_Ocs_Forum
             $forum_member['user']['id']);
 
         return $user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function hasRateLimitError()
+    {
+        return $this->isRateLimitError;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRateLimitWaitSeconds()
+    {
+        return $this->rateLimitWaitSeconds;
     }
 
 }

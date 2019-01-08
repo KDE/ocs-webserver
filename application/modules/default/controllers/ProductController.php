@@ -518,8 +518,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
-
-
         $this->_helper->viewRenderer('add'); // we use the same view as you can see at add a product
         $this->view->mode = 'edit';
 
@@ -536,6 +534,19 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
+        $member = null;
+        if (isset($this->_authMember) AND (false === empty($this->_authMember->member_id))) {
+            $member = $this->_authMember;
+        } else {
+            throw new Zend_Controller_Action_Exception('no authorization found');
+        }
+
+        if (("admin" == $this->_authMember->roleName)) {
+            $modelMember = new Default_Model_Member();
+            $member = $modelMember->fetchMember($projectData->member_id, false);
+        }
+
+
         //set ppload-collection-id in view
         $this->view->ppload_collection_id = $projectData->ppload_collection_id;
         $this->view->project_id = $projectData->project_id;
@@ -551,10 +562,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->view->download_hash = $hash;
         $this->view->download_timestamp = $timestamp;
-        $this->view->member_id = null;
-        if(null != $this->_authMember && null != $this->_authMember->member_id) {
-            $this->view->member_id = $this->_authMember->member_id;
-        }
+        $this->view->member_id = $member->member_id;
+        $this->view->member = $member;
+
 
         //read the already existing gallery pics and add them to the form
         $sources = $projectModel->getGalleryPictureSources($this->_projectId);
@@ -569,8 +579,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $form->getElement('preview')->setLabel('Save');
 
         $form->removeElement('project_id'); // we don't need this field in edit mode
-
-        $this->view->member = $this->_authMember;
 
         if ($this->_request->isGet()) {
             $form->populate($projectData->toArray());
@@ -598,7 +606,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         if (isset($_POST['cancel'])) { // user cancel function
-            $this->redirect('/member/' . $this->_authMember->member_id . '/news/');
+            $this->redirect('/member/' . $member->member_id . '/news/');
         }
 
         if (false === $form->isValid($_POST, $this->_projectId)) { // form not valid
@@ -658,11 +666,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //20180219 ronald: we set the changed_at only by new files or new updates
         //$projectData->changed_at = new Zend_Db_Expr('NOW()');
         $projectData->save();
-
-        // if ($values['tags']) {
-        //     $modelTags->processTags($this->_projectId, implode(',',$values['tags']), Default_Model_Tags::TAG_TYPE_PROJECT);
-        // }
-
         
         $modelTags->processTagProductOriginal($this->_projectId,$values['is_original']);
 
@@ -673,8 +676,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $modelTags->processTagsUser($this->_projectId,null, Default_Model_Tags::TAG_TYPE_PROJECT);
         }
 
-
-
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
 
@@ -682,7 +683,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->processPploadId($projectData);
 
         $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
-        $this->redirect($helperBuildMemberUrl->buildMemberUrl($this->_authMember->username, 'products'));
+        $this->redirect($helperBuildMemberUrl->buildMemberUrl($member->username, 'products'));
     }
 
     public function getupdatesajaxAction()
@@ -1482,9 +1483,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     }
 
-
-
-
     public function unfollowAction()
     {
         $this->_helper->layout()->disableLayout();
@@ -1559,7 +1557,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 Default_Model_ActivityLog::PROJECT_FOLLOWED, $product->toArray());
         }
     }
-
 
     public function unfollowpAction()
     {

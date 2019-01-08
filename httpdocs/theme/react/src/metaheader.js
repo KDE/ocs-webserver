@@ -133,7 +133,6 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updated 2');
     this.initMetaHeader();
   }
 
@@ -162,11 +161,11 @@ class MetaHeader extends React.Component {
   updateDimensions(){
     const width = window.innerWidth;
     let device;
-    if (width >= 910){
+    if (width >= 1015){
       device = "large";
-    } else if (width < 910 && width >= 610){
+    } else if (width < 1015 && width >= 730){
       device = "mid";
-    } else if (width < 610){
+    } else if (width < 730){
       device = "tablet";
     }
     this.setState({device:device});
@@ -262,14 +261,14 @@ class DomainsMenu extends React.Component {
         <DomainsDropDownMenu
           domains={this.props.domains}
         />
+        <DiscussionBoardsDropDownMenu
+          forumUrl={this.props.forumUrl}
+        />
         <DevelopmentDropDownMenu
           user={this.props.user}
           baseUrl={this.props.baseUrl}
           gitlabUrl={this.props.gitlabUrl}
           isAdmin={this.props.isAdmin}
-        />
-        <DiscussionBoardsDropDownMenu
-          forumUrl={this.props.forumUrl}
         />
         {moreMenuItemDisplay}
       </ul>
@@ -397,7 +396,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
 
         <a className="discussion-menu-link-item">Discussion Boards</a>
         <ul className="discussion-menu dropdown-menu dropdown-menu-right">
-          <li><a href={this.props.forumUrl + "/c/general"}>General</a></li>
+          <li><a href={this.props.forumUrl }>General</a></li>
           <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Themes & Apps</a></li>
           <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
         </ul>
@@ -458,18 +457,26 @@ class DevelopmentDropDownMenu extends React.Component {
   render(){
     let issuesMenuItem;
     if (this.props.isAdmin){
-      console.log('this is admin - ' + this.props.isAdmin)
       issuesMenuItem = (
         <li><a href={config.gitlabUrl + "/dashboard/issues?milestone_title=No+Milestone&state=all"}>Issues</a></li>
       )
+    }
+
+    let gitfaqLinkItem;
+    if (config.isExternal === false){
+      gitfaqLinkItem = (<li><a className="popuppanel" id="gitfaq" href={"/gitfaq"}>Git FAQ</a></li>);
+
+    } else {
+      gitfaqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={config.baseUrl + "/#gitfaq"}>Git FAQ</a></li>);
     }
 
     return (
       <li ref={node => this.node = node} id="admins-dropdown-menu" className={this.state.dropdownClass}>
         <a className="admins-menu-link-item">Development</a>
         <ul className="dropdown-menu dropdown-menu-right">
-          <li><a href={config.gitlabUrl + "/explore/projects"}>Projects</a></li>
+          <li><a href={config.gitlabUrl + "/explore/projects"}>projects</a></li>
           {issuesMenuItem}
+          {gitfaqLinkItem}
         </ul>
       </li>
     )
@@ -580,7 +587,7 @@ class UserMenu extends React.Component {
   }
 
   render(){
-    let userDropdownDisplay, userAppsContextDisplay;
+    let userDropdownDisplay, userAppsContextDisplay, developmentAppMenuDisplay;
     if (this.props.user && this.props.user.member_id){
       userDropdownDisplay = (
         <UserLoginMenuContainer
@@ -591,6 +598,14 @@ class UserMenu extends React.Component {
       );
       userAppsContextDisplay = (
         <UserContextMenuContainer
+          user={this.props.user}
+          forumUrl={this.props.forumUrl}
+          gitlabUrl={this.props.gitlabUrl}
+          isAdmin={this.props.isAdmin}
+        />
+      );
+      developmentAppMenuDisplay = (
+        <DevelopmentAppMenu
           user={this.props.user}
           forumUrl={this.props.forumUrl}
           gitlabUrl={this.props.gitlabUrl}
@@ -625,6 +640,7 @@ class UserMenu extends React.Component {
           {faqLinkItem}
           {apiLinkItem}
           {aboutLinkItem}
+          {developmentAppMenuDisplay}
           {userAppsContextDisplay}
           {userDropdownDisplay}
         </ul>
@@ -632,6 +648,7 @@ class UserMenu extends React.Component {
     } else {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
+          {developmentAppMenuDisplay}
           {userAppsContextDisplay}
           {userDropdownDisplay}
         </ul>
@@ -760,18 +777,6 @@ class UserContextMenuContainer extends React.Component {
               <span>Messages</span>
             </a>
           </li>
-          <li id="opencode-link-item">
-            <a href={this.props.gitlabUrl+"/dashboard/projects"}>
-              <div className="icon"></div>
-              <span>Projects</span>
-            </a>
-          </li>
-          <li id="issues-link-item">
-            <a href={this.state.gitlabLink}>
-              <div className="icon"></div>
-              <span>Issues</span>
-            </a>
-          </li>
         </ul>
       );
     }
@@ -784,6 +789,84 @@ class UserContextMenuContainer extends React.Component {
             <span className="th-icon"></span>
           </button>
           {contextMenuDisplay}
+        </div>
+      </li>
+    )
+  }
+}
+
+class DevelopmentAppMenu extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      gitlabLink:config.gitlabUrl+"/dashboard/issues?assignee_id="
+    };
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentDidMount() {
+    const self = this;
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        const res = JSON.parse(this.response);
+        const gitlabLink = self.state.gitlabLink + res[0].id;
+        self.setState({gitlabLink:gitlabLink,loading:false});
+      }
+    };
+    xhttp.open("GET", config.gitlabUrl+"/api/v4/users?username="+this.props.user.username, true);
+    xhttp.send();
+  }
+
+  handleClick(e){
+    let dropdownClass = "";
+    if (this.node.contains(e.target)){
+      if (this.state.dropdownClass === "open"){
+        if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle"){
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({dropdownClass:dropdownClass});
+  }
+
+  render(){
+
+    const urlEnding = config.baseUrl.split('opendesktop.')[1];
+
+    return (
+      <li ref={node => this.node = node} id="development-app-menu-container">
+        <div className={"user-dropdown " + this.state.dropdownClass}>
+          <button
+            className="btn btn-default dropdown-toggle" type="button" onClick={this.toggleDropDown}>
+            <span className="th-icon"></span>
+          </button>
+          <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
+            <li id="opencode-link-item">
+              <a href={this.props.gitlabUrl+"/dashboard/projects"}>
+                <div className="icon"></div>
+                <span>Projects</span>
+              </a>
+            </li>
+            <li id="issues-link-item">
+              <a href={this.state.gitlabLink}>
+                <div className="icon"></div>
+                <span>Issues</span>
+              </a>
+            </li>
+          </ul>
         </div>
       </li>
     )
@@ -838,31 +921,32 @@ class UserLoginMenuContainerVersionTwo extends React.Component {
             id="userLoginDropdown">
             <img className="th-icon" src={this.props.user.avatar}/>
           </button>
-          <div id="background-overlay"></div>
-          <ul id="right-panel" className="dropdown-menu dropdown-menu-right">
-            <li id="user-info-menu-item">
-              <div id="user-info-section">
-                <div className="user-avatar">
-                  <div className="no-avatar-user-letter">
-                    <img src={this.props.user.avatar}/>
+          <div id="background-overlay">
+            <ul id="right-panel" className="dropdown-menu dropdown-menu-right">
+              <li id="user-info-menu-item">
+                <div id="user-info-section">
+                  <div className="user-avatar">
+                    <div className="no-avatar-user-letter">
+                      <img src={this.props.user.avatar}/>
+                    </div>
+                  </div>
+                  <div className="user-details">
+                    <ul>
+                      <li id="user-details-username"><h2>{this.props.user.username}</h2></li>
+                      <li id="user-details-email">{this.props.user.mail}</li>
+                      <li className="buttons">
+                        <a href={this.props.baseUrl + "/settings/"} className="btn btn-default btn-metaheader"><span>Settings</span></a>
+                        <a href={this.props.logoutUrl} className="btn btn-default pull-right btn-metaheader"><span>Logout</span></a>
+                      </li>
+                    </ul>
                   </div>
                 </div>
-                <div className="user-details">
-                  <ul>
-                    <li id="user-details-username"><h2>{this.props.user.username}</h2></li>
-                    <li id="user-details-email">{this.props.user.mail}</li>
-                    <li className="buttons">
-                      <a href={this.props.baseUrl + "/settings/"} className="btn btn-default btn-metaheader"><span>Settings</span></a>
-                      <a href={this.props.logoutUrl} className="btn btn-default pull-right btn-metaheader"><span>Logout</span></a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </li>
-            <li id="user-tabs-menu-item">
-              <UserTabs />
-            </li>
-          </ul>
+              </li>
+              <li id="user-tabs-menu-item">
+                <UserTabs />
+              </li>
+            </ul>
+          </div>
         </div>
       </li>
     )
@@ -942,26 +1026,88 @@ class UserTabs extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      currentTab:'comments'
+      currentTab:'comments',
+      searchPhrase:''
     };
     this.onTabMenuItemClick = this.onTabMenuItemClick.bind(this);
+    this.onUserSearchInputChange = this.onUserSearchInputChange.bind(this);
+    this.getUsersAutocompleteList = this.getUsersAutocompleteList.bind(this);
+    this.selectUserFromAutocompleteList = this.selectUserFromAutocompleteList.bind(this);
   }
 
   onTabMenuItemClick(val){
     this.setState({currentTab:val});
   }
 
+  onUserSearchInputChange(e){
+    const searchPhrase = e.target.value;
+    this.setState({searchPhrase:e.target.value},function(){
+      let showUserList;
+      if (searchPhrase.length > 2){
+        showUserList = true;
+      } else {
+        showUserList = false;
+      }
+      this.setState({showUserList:showUserList,selectedUser:''},function(){
+        this.getUsersAutocompleteList(searchPhrase);
+      });
+    });
+  }
+
+  getUsersAutocompleteList(searchPhrase){
+      const self = this;
+      const xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          const res = JSON.parse(this.response);
+          self.setState({usersList:res,showUserList:true});
+        }
+      };
+      xhttp.open("GET", "https://www.opendesktop.cc/home/searchmember?username="+searchPhrase, true);
+      xhttp.send();
+  }
+
+  selectUserFromAutocompleteList(user){
+    this.setState({selectedUser:user,searchPhrase:user.username,showUserList:false});
+  }
+
   render(){
+
+    let usersAutocompleteList;
+    if (this.state.usersList && this.state.showUserList){
+      const users = this.state.usersList.map((u,index) => (
+        <li onClick={() => this.selectUserFromAutocompleteList(u)} key={index}>
+          {u.username}
+        </li>
+      ));
+      usersAutocompleteList = (
+        <ul className="autcomplete-list">
+          {users}
+        </ul>
+      );
+    }
+
 
     let tabContentDisplay;
     if (this.state.currentTab === 'comments'){
       tabContentDisplay = (
-        <UserCommentsTab />
+        <UserCommentsTab
+          user={config.user}
+        />
       );
     } else if (this.state.currentTab === 'search'){
-      tabContentDisplay = (
-        <div>Search User</div>
-      );
+      if (this.state.selectedUser){
+
+        tabContentDisplay = (
+          <UserSearchTab
+            user={this.state.selectedUser}
+          />
+        );
+      } else {
+        tabContentDisplay = (
+          <p>search user</p>
+        );
+      }
     }
 
     return(
@@ -974,12 +1120,12 @@ class UserTabs extends React.Component {
                 Comments
               </a>
             </li>
-            <li>
+            <li id="search-form-container">
               <a className={this.state.currentTab === "search" ? "active" : ""}
                 onClick={() => this.onTabMenuItemClick('search')}>
-                <input type="text"/>
-                <span className="search-button"></span>
+                <input value={this.state.searchPhrase} type="text" onChange={this.onUserSearchInputChange}/>
               </a>
+              {usersAutocompleteList}
             </li>
           </ul>
         </div>
@@ -994,60 +1140,255 @@ class UserTabs extends React.Component {
 class UserCommentsTab extends React.Component {
   constructor(props){
   	super(props);
-    const threads = [
-      {
-        address:'lubuntu.me',
-        comment_count:68,
-        title:'Lubuntu 18.10 (Cosmic Cuttlefish) Released!',
-        comments:[
-          {
-            parent_comment_user:'Simon Quigly',
-            date:'2 months ago',
-            text:'<div>Yes. All visual inconsistencies are fixed now</div>',
-            votes_up:0,
-            votes_down:1
-          },{
-            date:'2 months ago',
-            text:'<div><p>Hi, nice to see this release. Im curious to test Lubuntu with LXQt. I have already experimented the beta release, and found some theming inconsistencies. Is it all fixed in final release?</p>' +
-            '<p>Meanwhile, I have created a release announcement feed in my blog. Please have a look.<br><a href="http://disq.us/url?url=http%3A%2F%2Ftheopensourcefeed.com%2F00-lubuntu-cosmic-first-release-lxqt%2F%3AiUXptXQ1sOYPoKxW4w8KQrVytwE&amp;cuid=5561052" rel="nofollow noopener" title="http://theopensourcefeed.com/00-lubuntu-cosmic-first-release-lxqt/">http://theopensourcefeed.co...</a></p></div>',
-            votes_up:1,
-            votes_down:0
-          }
-        ]
-      },{
-        address:'feren',
-        comment_count:1,
-        title:'A New Snapshot is here, bridging the way to a seamless transition to the future Feren OS',
-        comments:[
-          {
-            date:'2 months ago',
-            text:'<div><p>Just created a release news for Feren OS October snapshot. Please have a look.<br><a href="http://disq.us/url?url=http%3A%2F%2Ftheopensourcefeed.com%2F00-ferenos-october-snapshot-brings-significant-improvements%3AYftrbOQthqE4qTqKU-LN6sQN_FQ&amp;cuid=3291269" rel="nofollow noopener" title="http://theopensourcefeed.com/00-ferenos-october-snapshot-brings-significant-improvements">http://theopensourcefeed.co...</a></p></div>',
-            votes_up:4,
-            votes_down:0
-          },{
-            date:'2 months ago',
-            text:'<div><p>Hi, nice to see this release. Im curious to test Lubuntu with LXQt. I have already experimented the beta release, and found some theming inconsistencies. Is it all fixed in final release?</p>' +
-            '<p>Meanwhile, I have created a release announcement feed in my blog. Please have a look.<br><a href="http://disq.us/url?url=http%3A%2F%2Ftheopensourcefeed.com%2F00-lubuntu-cosmic-first-release-lxqt%2F%3AiUXptXQ1sOYPoKxW4w8KQrVytwE&amp;cuid=5561052" rel="nofollow noopener" title="http://theopensourcefeed.com/00-lubuntu-cosmic-first-release-lxqt/">http://theopensourcefeed.co...</a></p></div>',
-            votes_up:0,
-            votes_down:3
-          }
-        ]
+  	this.state = {
+      loading:true
+    };
+    this.getUserOdComments = this.getUserOdComments.bind(this);
+    this.getUserForumComments = this.getUserForumComments.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({odComments:[],forumComments:[],loading:true},function(){
+      this.getUserOdComments();
+    });
+  }
+
+  getUserOdComments(){
+    const user = this.props.user;
+    const self = this;
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        const res = JSON.parse(this.response);
+        self.setState({odComments:res.commentsOpendeskop,loading:false},function(){
+          self.getUserForumComments();
+        });
       }
-    ];
-  	this.state = {threads:threads};
+    };
+    xhttp.open("GET", "home/memberjson?member_id="+user.member_id, true);
+    xhttp.send();
+  }
+
+  getUserForumComments(){
+    const user = this.props.user;
+    const self = this;
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        const res = JSON.parse(this.response);
+        self.setState({forumComments:res.user_actions,loading:false});
+      }
+    };
+    xhttp.open("GET", "https://forum.opendesktop.cc/user_actions.json?offset=0&username=" + user.username + "&filter=5", true);
+    xhttp.send();
   }
 
   render(){
+    let contentDisplay;
+    if (!this.state.loading){
+      let odCommentsDisplay, forumCommentsDisplay;
+      if (this.state.odComments.length > 0){
+        odCommentsDisplay = (
+          <UserCommentsTabThreadsContainer
+            type={'od'}
+            user={this.props.user}
+            comments={this.state.odComments}
+          />
+        );
+      }
+      if (this.state.forumComments.length > 0){
+        forumCommentsDisplay = (
+          <UserCommentsTabThreadsContainer
+            type={'forum'}
+            user={this.props.user}
+            comments={this.state.forumComments}
+          />
+        );
+      }
 
-    const threadsDisplay = this.state.threads.map((t, index) => (
-      <UserCommentsTabThread
-        key={index}
-        thread={t}
-      />
-    ));
+      contentDisplay = (
+        <div>
+          {odCommentsDisplay}
+          {forumCommentsDisplay}
+        </div>
+      )
+
+    } else {
+      contentDisplay = (
+        <div>loading</div>
+      );
+    }
+
     return(
       <div id="user-comments-tab-container">
-        {threadsDisplay}
+        {contentDisplay}
+      </div>
+    )
+  }
+}
+
+class UserSearchTab extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {
+      loading:true
+    };
+    this.getUserOdComments = this.getUserOdComments.bind(this);
+    this.getUserForumComments = this.getUserForumComments.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({odComments:[],forumComments:[],loading:true},function(){
+      this.getUserOdComments();
+    });
+  }
+
+  getUserOdComments(){
+    const user = this.props.user;
+    const self = this;
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        const res = JSON.parse(this.response);
+        self.setState({odComments:res.commentsOpendeskop,loading:false},function(){
+          self.getUserForumComments();
+        });
+      } else {
+        console.log('what happends here');
+        console.log(this);
+      }
+    };
+    xhttp.open("GET", "home/memberjson?member_id="+user.member_id, true);
+    xhttp.send();
+  }
+
+  getUserForumComments(){
+    const user = this.props.user;
+    const self = this;
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      console.log('this ');
+      if (this.readyState == 4 && this.status == 200) {
+        const res = JSON.parse(this.response);
+        self.setState({forumComments:res.user_actions,loading:false});
+      }
+    };
+    xhttp.open("GET", "https://forum.opendesktop.cc/user_actions.json?offset=0&username=" + user.username + "&filter=5", true);
+    xhttp.send();
+  }
+
+  render(){
+    let contentDisplay;
+    if (!this.state.loading){
+      let odCommentsDisplay, forumCommentsDisplay;
+      if (this.state.odComments.length > 0){
+        odCommentsDisplay = (
+          <UserCommentsTabThreadsContainer
+            type={'od'}
+            user={this.props.user}
+            comments={this.state.odComments}
+            uType={'search'}
+          />
+        );
+      }
+      if (this.state.forumComments.length > 0){
+        forumCommentsDisplay = (
+          <UserCommentsTabThreadsContainer
+            type={'forum'}
+            user={this.props.user}
+            comments={this.state.forumComments}
+            uType={'search'}
+          />
+        );
+      }
+
+      contentDisplay = (
+        <div>
+          {odCommentsDisplay}
+          {forumCommentsDisplay}
+        </div>
+      )
+
+    } else {
+      contentDisplay = (
+        <div>loading</div>
+      );
+    }
+
+    return(
+      <div id="user-comments-tab-container">
+        {contentDisplay}
+      </div>
+    )
+  }
+}
+
+class UserCommentsTabThreadsContainer extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  componentDidMount() {
+    let siteInfo;
+    if (this.props.type === 'od'){
+      siteInfo = {
+        address:'openDesktop.org',
+        url:'https://www.opendesktop.org'
+      }
+    } else if (this.props.type === 'forum'){
+      siteInfo = {
+        address:'forum',
+        url:'https://forum.opendesktop.org'
+      }
+    }
+
+    let threads = [];
+    this.props.comments.forEach(function(c,index){
+      if (threads.indexOf(c.title) === -1){
+        const thread = {
+          title:c.title,
+          id:c.project_id
+        }
+        threads.push(thread)
+      }
+    });
+
+    this.setState({siteInfo:siteInfo,comments:this.props.comments,threads:threads});
+  }
+
+  render(){
+    const t = this.state.siteInfo;
+    const comments = this.state.comments;
+    const user = this.props.user;
+    let headerDisplay, threadsDisplay, threadCommentsDisplay;
+    if (this.state.threads){
+      threadsDisplay = this.state.threads.map((tr,index) => (
+        <UserCommentsTabThread
+          key={index}
+          thread={tr}
+          comments={comments}
+          user={user}
+          uType={this.props.uType}
+        />
+      ));
+      headerDisplay = (
+        <div className="thread-header">
+          <div className="thread-subtitle">
+            <p>Discussion on <b><a href={this.state.siteInfo.url}>{this.state.siteInfo.address}</a></b></p>
+            <p><span>{this.state.comments.length} comments</span></p>
+          </div>
+          {threadsDisplay}
+        </div>
+      );
+    }
+
+    return (
+      <div className="user-comments-thread-container">
+        {headerDisplay}
+        <div className="thread-comments">
+          {threadCommentsDisplay}
+        </div>
       </div>
     )
   }
@@ -1057,33 +1398,38 @@ class UserCommentsTabThread extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
+    this.filterCommentsByThread = this.filterCommentsByThread.bind(this);
+  }
+
+  filterCommentsByThread(comment){
+    if (comment.title === this.props.thread.title){
+      return comment;
+    }
   }
 
   render(){
-    const t = this.props.thread;
-    let threadCommentsDisplay = t.comments.map((c,index) => (
-      <UserCommentsTabThreadCommentItem
-        key={index}
-        comment={c}
-      />
-    ));
-
+    let commentsDisplay;
+    if (this.props.comments){
+      const user = this.props.user;
+      commentsDisplay = this.props.comments.filter(this.filterCommentsByThread).map((c,index) => (
+        <UserCommentsTabThreadCommentItem
+          key={index}
+          comment={c}
+          user={user}
+          uType={this.props.uType}
+        />
+      ));
+    }
     return (
-      <div className="user-comments-thread-container">
-        <div className="thread-header">
-          <p className="thread-subtitle">
-            <span>Discussion on {t.address}</span>
-            <span>{t.comment_count} comments</span>
-          </p>
-          <div className="thread-title">
-            <h2>{t.title}</h2>
-          </div>
+      <div className="user-comments-thread">
+        <div className="thread-title">
+          <h2><a href={"https://www.opendesktop.cc/p/" + this.props.thread.id}>{this.props.thread.title}</a></h2>
         </div>
         <div className="thread-comments">
-          {threadCommentsDisplay}
+          {commentsDisplay}
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -1095,21 +1441,29 @@ class UserCommentsTabThreadCommentItem extends React.Component {
 
   render(){
     const c = this.props.comment;
+    const user = this.props.user;
     let repliedUsernameDisplay;
-    if (c.parent_comment_user){
-      repliedUsernameDisplay = ( <span className="replied-user">{c.parent_comment_user}</span> )
+    if (c.p_comment_member_id){
+      repliedUsernameDisplay = ( <p className="replied-user"><span className="glyphicon glyphicon-share-alt"></span><a href={"https://forum.opendesktop.cc/u/"+c.p_username+"/messages"}>{c.p_username}</a></p> )
     }
+
+    let userImage = user.avatar;
+    if (this.props.uType === 'search'){
+      userImage = user.profile_image_url;
+    }
+
     return (
       <div className="comment-item">
         <figure className="comment-item-user-avatar">
+          <img className="th-icon" src={userImage}/>
         </figure>
         <div className="comment-item-header">
-          <span className="user">{config.user.username}</span>
+          <p className="user"><a href={"https://forum.opendesktop.cc/u/"+user.username+"/messages"}>{user.username}</a></p>
           {repliedUsernameDisplay}
-          <span className="date-created">{c.date}</span>
+          <p className="date-created"><span>{c.comment_created_at}</span></p>
         </div>
         <div className="comment-item-content">
-          {c.text}
+          <div dangerouslySetInnerHTML={{__html:c.comment_text}}></div>
         </div>
       </div>
     )
@@ -1234,20 +1588,20 @@ class MobileLeftSidePanel extends React.Component {
         <div id="panel-menu">
           <ul>
             {panelMenuGroupsDisplay}
+            <li>
+              <a className="groupname"><b>Discussion Boards</b></a>
+              <ul>
+                <li><a href={this.props.forumUrl }>General</a></li>
+                <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Themes & Apps</a></li>
+                <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
+              </ul>
+            </li>
             <DevelopmentDropDownMenu
               user={this.props.user}
               baseUrl={this.props.baseUrl}
               gitlabUrl={this.props.gitlabUrl}
               isAdmin={this.props.isAdmin}
             />
-            <li>
-              <a className="groupname"><b>Discussion Boards</b></a>
-              <ul>
-                <li><a href={this.props.forumUrl + "/c/general"}>General</a></li>
-                <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Themes & Apps</a></li>
-                <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
-              </ul>
-            </li>
             <li>
               <a className="groupname"><b>More</b></a>
               <ul>

@@ -20,7 +20,7 @@ if (APPLICATION_ENV == 'development') {
 }
 
 $config = Zend_Registry::get('config')->settings->domain;
-
+$url_nextcloud = Zend_Registry::get('config')->settings->client->default->url_cloudopendesktop;
 
 $info = new Default_Model_Info();
 $domains = $info->getActiveStoresForCrossDomainLogin();
@@ -39,6 +39,7 @@ foreach ($domains as $domain) {
     <img src="<?=$http_scheme?>://<?=$config->base->host?>/external/removedata.php" style="display:none;" />
     <img src="<?=$http_scheme?>://<?=$config->myopendesktop->host?>/removedata.php" style="display:none;" />
     <img src="<?=$http_scheme?>://<?=$config->opencode->host?>/users/sign_out" style="display:none;" />
+    <img src="<?=$http_scheme?>://<?=$url_nextcloud?>/users/sign_out" style="display:none;" />
 
 </body>
 </html>

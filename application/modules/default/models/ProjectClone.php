@@ -37,7 +37,9 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                         ,(select image_small from project p where p.project_id = c.project_id_parent) image_small
                         ,(select changed_at from project p where p.project_id = c.project_id_parent) changed_at
                         FROM project_clone c
+                        JOIN project p ON p.project_id = c.project_id_parent
                         WHERE c.is_deleted = 0 and c.is_valid = 1 and c.project_id = :project_id
+                        AND p.`status` = 100
                         order by c.created_at desc
              ";
             $resultSet = $this->_db->fetchAll($sql, array('project_id' => $project_id));
@@ -60,7 +62,9 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                             ,(select image_small from project p where p.project_id = c.project_id) image_small
                             ,(select changed_at from project p where p.project_id = c.project_id) changed_at
                             FROM project_clone c
+                            JOIN project p ON p.project_id = c.project_id
                             WHERE c.is_deleted = 0 and c.is_valid = 1 and  c.project_id_parent = :project_id
+                            AND p.`status` = 100
                             order by c.created_at desc
              ";
             $resultSet = $this->_db->fetchAll($sql, array('project_id' => $project_id));
@@ -97,7 +101,9 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                                        ,(select image_small from project p where p.project_id = c.project_id) image_small
                                        ,(select changed_at from project p where p.project_id = c.project_id) changed_at
                                        FROM project_clone c
+                                       JOIN project p on p.project_id = c.project_id
                                        WHERE c.is_deleted = 0 and c.is_valid = 1 and  c.project_id_parent =  :project_id 
+                                       AND p.`status` = 100
 
                                    union
 
@@ -113,7 +119,8 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                                        ,(select image_small from project p where p.project_id = c.project_id) image_small
                                        ,(select changed_at from project p where p.project_id = c.project_id) changed_at
                                        FROM project_clone c
-                                       WHERE  c.project_id<> :project_id and  c.is_deleted = 0 and c.is_valid = 1 and  c.project_id_parent in (
+                                       JOIN project p on p.project_id = c.project_id
+                                       WHERE  c.project_id<> :project_id and  c.is_deleted = 0 and c.is_valid = 1 AND p.`status` = 100 and  c.project_id_parent in (
                                             select project_id_parent from project_clone c 
                                                 where c.project_id = :project_id and c.is_valid = 1 and c.is_deleted = 0
                                           )
