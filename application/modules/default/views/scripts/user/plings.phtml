@@ -23,10 +23,9 @@
 $this->tab = 'plings';
 $this->countDownloadsOverall = 0;
 
-$modelDownload = new Default_Model_StatDownload();
-$this->downloads = $modelDownload->getUserDownloads($this->member->member_id);
-
-$this->countDownloadsOverall = count($this->downloads);
+#$modelDownload = new Default_Model_StatDownload();
+#$this->downloads = $modelDownload->getUserDownloads($this->member->member_id);
+#$this->countDownloadsOverall = count($this->downloads);
 ?>
 <main class="user-admin-page">
     <?php echo $this->render('user/partials/userHeader_top.phtml'); ?>

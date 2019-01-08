@@ -51,7 +51,11 @@
 <?php
     
 $isCurrentMonth = false;
-if ($this->countDownloadsOverall > 0) {  
+$modelDownload = new Default_Model_StatDownload();
+$downloadMonths = $modelDownload->getUserDownloadMonths($this->member->member_id);
+$countDownloadsOverall = count($downloadMonths);
+
+if ($countDownloadsOverall > 0) {  
     
     $currentMonth = '';
     $monthlyDownload = null;
@@ -60,7 +64,7 @@ if ($this->countDownloadsOverall > 0) {
     $currentDate = date("Ym",time());
     $printCurrentMonth = new DateTime($currentDate.'01');
     
-    foreach ($this->downloads as $download) {
+    foreach ($downloadMonths as $download) {
         $printMonth = new DateTime($download['yearmonth'].'01');
         
         $printDate = $printMonth->format('M Y');
@@ -102,9 +106,20 @@ if ($this->countDownloadsOverall > 0) {
             $popover = '<div class="inline payout-popover-'.$infoClass.'" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="'.$infoTitle.'" data-trigger="hover" data-html="true" data-content="'.$infoText.'"><span style="'. $infoIconStyle .'" class="glyphicon '.$infoIcon.'" aria-hidden="true"></span></div>';
         }
     ?>
+    
+    <?php if($isCurrentMonth) {?>
+    
     <li class="<?=$css_active?> ">
         <a href="#<?= $download['yearmonth'] ?>" data-toggle="tab"><?= $printDate ?><?= $popover ?></a>
     </li>
+    
+    <?php } else { ?>
+    
+    <li class="<?=$css_active?> ">
+        <a href="/member/<?= $this->member->member_id ?>/plingsajax/<?= $download['yearmonth'] ?>" data-toggle="tab"><?= $printDate ?><?= $popover ?></a>
+    </li>
+    
+    <?php } ?>
     
     <?php
         }
@@ -126,6 +141,8 @@ if ($this->countDownloadsOverall > 0) {
 }
 ?>
 </ul>
+
+
 
 <div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0;">
     <div class="row">
@@ -158,6 +175,9 @@ if ($this->countDownloadsOverall > 0) {
         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong style="color: #BBB">Potential Payout**</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Potential Payout" data-trigger="hover" data-html="true" data-content="This new Payout will become active in May 2019."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
     </div>
 </div>
+
+
+
 <div class="tab-content">
 <?php
 $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
@@ -165,7 +185,14 @@ $helpImage = new Default_View_Helper_Image();
 $css_active = ' in active';
 $has_paypal = false;
 $currency = new Zend_Currency('en_US');
-if ($this->countDownloadsOverall > 0) {
+
+$currentDate = date("Ym",time());
+$printCurrentMonth = new DateTime($currentDate.'01');
+
+$allDownloads = $modelDownload->getUserDownloadsForMonth($this->member->member_id, $printCurrentMonth->format('Ym'));
+$countDownloadsOverall = count($allDownloads);
+
+if ($countDownloadsOverall > 0) {
     foreach ($allDownloads as $month => $products) {
         $printMonth = new DateTime($month.'01');
         $printCurrentMonth = new DateTime($currentDate.'01');
