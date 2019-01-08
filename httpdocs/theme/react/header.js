@@ -264,6 +264,11 @@ class SiteHeaderUserMenu extends React.Component {
     document.addEventListener('mousedown', this.handleClick, false);
   }
 
+  componentDidMount() {
+    console.log('user:' + this.props.user);
+    console.log(window.json_member);
+  }
+
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClick, false);
   }
@@ -329,7 +334,7 @@ class SiteHeaderUserMenu extends React.Component {
             null,
             React.createElement(
               "a",
-              { href: this.props.baseUrl + "/u/" + window.json_member.username + "/plings" },
+              { href: this.props.baseUrl + "/u/" + this.props.user.username + "/plings" },
               "Plings"
             )
           ),
@@ -366,6 +371,10 @@ class MobileSiteHeader extends React.Component {
     this.showMobileUserMenu = this.showMobileUserMenu.bind(this);
     this.showMobileSearchForm = this.showMobileSearchForm.bind(this);
     this.showMobileSwitchMenu = this.showMobileSwitchMenu.bind(this);
+  }
+
+  componentDidMount() {
+    console.log('user:' + this.props.user);
   }
 
   showMobileUserMenu() {
@@ -473,6 +482,10 @@ class MobileUserContainer extends React.Component {
     this.state = {};
   }
 
+  componentDidMount() {
+    console.log('user:' + this.props.user);
+  }
+
   render() {
 
     let userDisplay;
@@ -484,6 +497,7 @@ class MobileUserContainer extends React.Component {
       });
     } else {
       userDisplay = React.createElement(SiteHeaderLoginMenu, {
+        user: this.props.user,
         baseUrl: this.props.baseUrl,
         template: this.props.template,
         redirectString: this.props.redirectString
