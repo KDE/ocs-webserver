@@ -264,10 +264,7 @@ class SiteHeaderUserMenu extends React.Component {
     document.addEventListener('mousedown', this.handleClick, false);
   }
 
-  componentDidMount() {
-    console.log('user:' + this.props.user);
-    console.log(window.json_member);
-  }
+  componentDidMount() {}
 
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClick, false);
@@ -290,7 +287,9 @@ class SiteHeaderUserMenu extends React.Component {
   }
 
   render() {
-
+    console.log(window.json_member);
+    console.log(window.json_member.username);
+    const username = window.json_member.username;
     return React.createElement(
       "ul",
       { id: "site-header-user-menu-container" },
@@ -325,7 +324,7 @@ class SiteHeaderUserMenu extends React.Component {
             null,
             React.createElement(
               "a",
-              { href: this.props.baseUrl + "/u/" + window.json_member.username + "/products" },
+              { href: this.props.baseUrl + "/u/" + username + "/products" },
               "Products"
             )
           ),
@@ -334,7 +333,7 @@ class SiteHeaderUserMenu extends React.Component {
             null,
             React.createElement(
               "a",
-              { href: this.props.baseUrl + "/u/" + this.props.user.username + "/plings" },
+              { href: this.props.baseUrl + "/u/" + username + "/plings" },
               "Plings"
             )
           ),
