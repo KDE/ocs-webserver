@@ -155,6 +155,7 @@ class SiteHeader extends React.Component {
         template: this.state.template,
         user: this.state.user,
         baseUrl: this.state.baseUrl,
+        serverUrl: this.state.serverUrl,
         store: this.state.store,
         redirectString: this.state.redirectString
       });
@@ -418,6 +419,7 @@ class MobileSiteHeader extends React.Component {
           React.createElement(MobileUserContainer, {
             user: this.props.user,
             baseUrl: this.props.baseUrl,
+            serverUrl: this.state.serverUrl,
             template: this.props.template,
             redirectString: this.props.redirectString
           })
@@ -476,6 +478,8 @@ class MobileUserContainer extends React.Component {
     let userDisplay;
     if (this.props.user) {
       userDisplay = React.createElement(SiteHeaderUserMenu, {
+        serverUrl: this.state.serverUrl,
+        baseUrl: this.state.baseUrl,
         user: this.props.user
       });
     } else {
