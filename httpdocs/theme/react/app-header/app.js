@@ -208,9 +208,6 @@ class SiteHeaderUserMenu extends React.Component {
     document.addEventListener('mousedown',this.handleClick, false);
   }
 
-  componentDidMount() {
-  }
-
   componentWillUnmount() {
     document.removeEventListener('mousedown',this.handleClick, false);
   }
@@ -234,9 +231,7 @@ class SiteHeaderUserMenu extends React.Component {
   }
 
   render(){
-    console.log(window.json_member);
-    console.log(window.json_member.username);
-    const username = window.json_member.username;
+    
     return (
       <ul id="site-header-user-menu-container">
         <li ref={node => this.node = node} id="user-menu-toggle" className={this.state.dropdownClass}>
@@ -247,8 +242,8 @@ class SiteHeaderUserMenu extends React.Component {
           <ul id="user-profile-menu" >
             <div className="dropdown-header"></div>
             <li><a href="/product/add">Add Product</a></li>
-            <li><a href={this.props.baseUrl + "/u/" + username + "/products"}>Products</a></li>
-            <li><a href={this.props.baseUrl + "/u/" + username + "/plings"}>Plings</a></li>
+            <li><a href={window.json_baseurl + "/u/" + this.props.user.username + "/products"}>Products</a></li>
+            <li><a href={window.json_baseurl + "/u/" + this.props.user.username + "/plings"}>Plings</a></li>
             <li><a href="/settings">Settings</a></li>
             <li><a href="/logout">Logout</a></li>
           </ul>
@@ -267,10 +262,6 @@ class MobileSiteHeader extends React.Component {
     this.showMobileUserMenu = this.showMobileUserMenu.bind(this);
     this.showMobileSearchForm = this.showMobileSearchForm.bind(this);
     this.showMobileSwitchMenu = this.showMobileSwitchMenu.bind(this);
-  }
-
-  componentDidMount() {
-    console.log('user:' + this.props.user);
   }
 
   showMobileUserMenu(){
@@ -362,10 +353,6 @@ class MobileUserContainer extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
-  }
-
-  componentDidMount() {
-    console.log('user:' + this.props.user);
   }
 
   render(){
