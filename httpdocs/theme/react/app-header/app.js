@@ -26,6 +26,7 @@ class SiteHeader extends React.Component {
   }
 
   componentWillMount() {
+    console.log('header update');
     this.updateDimensions();
   }
 
@@ -117,6 +118,7 @@ class SiteHeader extends React.Component {
           template={this.state.template}
           user={this.state.user}
           baseUrl={this.state.baseUrl}
+          serverUrl={this.state.serverUrl}
           store={this.state.store}
           redirectString={this.state.redirectString}
         />
@@ -307,6 +309,7 @@ class MobileSiteHeader extends React.Component {
             <MobileUserContainer
               user={this.props.user}
               baseUrl={this.props.baseUrl}
+              serverUrl={this.state.serverUrl}
               template={this.props.template}
               redirectString={this.props.redirectString}
             />
@@ -359,6 +362,8 @@ class MobileUserContainer extends React.Component {
     if (this.props.user){
       userDisplay = (
         <SiteHeaderUserMenu
+          serverUrl={this.state.serverUrl}
+          baseUrl={this.state.baseUrl}
           user={this.props.user}
         />
       );
