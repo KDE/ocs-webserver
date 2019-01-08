@@ -26,7 +26,6 @@ class SiteHeader extends React.Component {
   }
 
   componentWillMount() {
-    console.log('header update');
     this.updateDimensions();
   }
 
@@ -209,6 +208,9 @@ class SiteHeaderUserMenu extends React.Component {
     document.addEventListener('mousedown',this.handleClick, false);
   }
 
+  componentDidMount() {
+  }
+
   componentWillUnmount() {
     document.removeEventListener('mousedown',this.handleClick, false);
   }
@@ -232,7 +234,9 @@ class SiteHeaderUserMenu extends React.Component {
   }
 
   render(){
-
+    console.log(window.json_member);
+    console.log(window.json_member.username);
+    const username = window.json_member.username;
     return (
       <ul id="site-header-user-menu-container">
         <li ref={node => this.node = node} id="user-menu-toggle" className={this.state.dropdownClass}>
@@ -243,8 +247,8 @@ class SiteHeaderUserMenu extends React.Component {
           <ul id="user-profile-menu" >
             <div className="dropdown-header"></div>
             <li><a href="/product/add">Add Product</a></li>
-            <li><a href={this.props.baseUrl + "/u/" + this.props.user.username + "/products"}>Products</a></li>
-            <li><a href={this.props.baseUrl + "/u/" + this.props.user.username + "/plings"}>Plings</a></li>
+            <li><a href={this.props.baseUrl + "/u/" + username + "/products"}>Products</a></li>
+            <li><a href={this.props.baseUrl + "/u/" + username + "/plings"}>Plings</a></li>
             <li><a href="/settings">Settings</a></li>
             <li><a href="/logout">Logout</a></li>
           </ul>
@@ -263,6 +267,10 @@ class MobileSiteHeader extends React.Component {
     this.showMobileUserMenu = this.showMobileUserMenu.bind(this);
     this.showMobileSearchForm = this.showMobileSearchForm.bind(this);
     this.showMobileSwitchMenu = this.showMobileSwitchMenu.bind(this);
+  }
+
+  componentDidMount() {
+    console.log('user:' + this.props.user);
   }
 
   showMobileUserMenu(){
@@ -356,6 +364,10 @@ class MobileUserContainer extends React.Component {
   	this.state = {};
   }
 
+  componentDidMount() {
+    console.log('user:' + this.props.user);
+  }
+
   render(){
 
     let userDisplay;
@@ -370,6 +382,7 @@ class MobileUserContainer extends React.Component {
     } else {
       userDisplay = (
         <SiteHeaderLoginMenu
+          user={this.props.user}
           baseUrl={this.props.baseUrl}
           template={this.props.template}
           redirectString={this.props.redirectString}

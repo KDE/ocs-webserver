@@ -55,7 +55,6 @@ class SiteHeader extends React.Component {
   }
 
   componentWillMount() {
-    console.log('header update');
     this.updateDimensions();
   }
 
@@ -265,6 +264,8 @@ class SiteHeaderUserMenu extends React.Component {
     document.addEventListener('mousedown', this.handleClick, false);
   }
 
+  componentDidMount() {}
+
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClick, false);
   }
@@ -286,7 +287,9 @@ class SiteHeaderUserMenu extends React.Component {
   }
 
   render() {
-
+    console.log(window.json_member);
+    console.log(window.json_member.username);
+    const username = window.json_member.username;
     return React.createElement(
       "ul",
       { id: "site-header-user-menu-container" },
@@ -321,7 +324,7 @@ class SiteHeaderUserMenu extends React.Component {
             null,
             React.createElement(
               "a",
-              { href: this.props.baseUrl + "/u/" + this.props.user.username + "/products" },
+              { href: this.props.baseUrl + "/u/" + username + "/products" },
               "Products"
             )
           ),
@@ -330,7 +333,7 @@ class SiteHeaderUserMenu extends React.Component {
             null,
             React.createElement(
               "a",
-              { href: this.props.baseUrl + "/u/" + this.props.user.username + "/plings" },
+              { href: this.props.baseUrl + "/u/" + username + "/plings" },
               "Plings"
             )
           ),
@@ -367,6 +370,10 @@ class MobileSiteHeader extends React.Component {
     this.showMobileUserMenu = this.showMobileUserMenu.bind(this);
     this.showMobileSearchForm = this.showMobileSearchForm.bind(this);
     this.showMobileSwitchMenu = this.showMobileSwitchMenu.bind(this);
+  }
+
+  componentDidMount() {
+    console.log('user:' + this.props.user);
   }
 
   showMobileUserMenu() {
@@ -474,6 +481,10 @@ class MobileUserContainer extends React.Component {
     this.state = {};
   }
 
+  componentDidMount() {
+    console.log('user:' + this.props.user);
+  }
+
   render() {
 
     let userDisplay;
@@ -485,6 +496,7 @@ class MobileUserContainer extends React.Component {
       });
     } else {
       userDisplay = React.createElement(SiteHeaderLoginMenu, {
+        user: this.props.user,
         baseUrl: this.props.baseUrl,
         template: this.props.template,
         redirectString: this.props.redirectString

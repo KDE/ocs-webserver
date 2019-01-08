@@ -133,7 +133,6 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updated 5^1');
     this.initMetaHeader();
   }
 
@@ -592,7 +591,7 @@ class UserMenu extends React.Component {
     let userDropdownDisplay, userAppsContextDisplay, developmentAppMenuDisplay;
     if (this.props.user && this.props.user.member_id){
       userDropdownDisplay = (
-        <UserLoginMenuContainerVersionTwo
+        <UserLoginMenuContainer
           user={this.props.user}
           logoutUrl={this.props.logoutUrl}
           baseUrl={this.props.baseUrl}
