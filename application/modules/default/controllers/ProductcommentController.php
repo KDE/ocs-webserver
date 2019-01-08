@@ -53,8 +53,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $data['comment_target_id'] = (int)$this->getParam('p');
         $data['comment_parent_id'] = (int)$this->getParam('i');
         $data['comment_member_id'] = (int)$this->_authMember->member_id;
-        $data['comment_text'] = Default_Model_HtmlPurify::purify(trim($this->getParam('msg')));
-
+        $data['comment_text'] = Default_Model_HtmlPurify::purify($this->getParam('msg'));
         $tableReplies = new Default_Model_ProjectComments();
         $result = $tableReplies->save($data);
         $status = count($result->toArray()) > 0 ? 'ok' : 'error';
