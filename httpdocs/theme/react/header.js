@@ -55,7 +55,7 @@ class SiteHeader extends React.Component {
   }
 
   componentWillMount() {
-    console.log('header update');
+    console.log('header update 2');
     this.updateDimensions();
   }
 
@@ -321,7 +321,7 @@ class SiteHeaderUserMenu extends React.Component {
             null,
             React.createElement(
               "a",
-              { href: this.props.baseUrl + "/u/" + this.props.user.username + "/products" },
+              { href: this.props.baseUrl + "/u/" + window.json_member.username + "/products" },
               "Products"
             )
           ),
@@ -330,7 +330,7 @@ class SiteHeaderUserMenu extends React.Component {
             null,
             React.createElement(
               "a",
-              { href: this.props.baseUrl + "/u/" + this.props.user.username + "/plings" },
+              { href: this.props.baseUrl + "/u/" + window.json_member.username + "/plings" },
               "Plings"
             )
           ),
