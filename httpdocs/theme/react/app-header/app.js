@@ -26,6 +26,7 @@ class SiteHeader extends React.Component {
   }
 
   componentWillMount() {
+    console.log('header update');
     this.updateDimensions();
   }
 
