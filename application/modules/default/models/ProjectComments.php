@@ -348,10 +348,12 @@ class Default_Model_ProjectComments
      */
     public function setAllCommentsForProjectDeleted($member_id, $project_id)
     {
-        $sql = "SELECT comment_id FROM comments WHERE comment_target_id = :project_id AND comment_type = 0 AND comment_active = 1";
+        $sql =
+            "SELECT `comment_id` FROM `comments` WHERE `comment_target_id` = :project_id AND `comment_type` = 0 AND `comment_active` = 1";
         $commentsForDelete = $this->_dataTable->getAdapter()->fetchAll($sql, array(
-            'project_id'       => $project_id
-        ));
+            'project_id' => $project_id
+        ))
+        ;
         foreach ($commentsForDelete as $item) {
             $this->setDeleted($member_id, $item['comment_id']);
         }
@@ -367,11 +369,11 @@ class Default_Model_ProjectComments
     public function setDeleted($member_id, $comment_id)
     {
         $sql = '
-                UPDATE comments
-                SET comment_active = 0
-                WHERE comment_id = :comment_id';
+                UPDATE `comments`
+                SET `comment_active` = 0
+                WHERE `comment_id` = :comment_id';
         $this->_dataTable->getAdapter()->query($sql, array('comment_id' => $comment_id))->execute();
-        
+
         $memberLog = new Default_Model_MemberDeactivationLog();
         $memberLog->logCommentAsDeleted($member_id, $comment_id);
     }
@@ -388,26 +390,23 @@ class Default_Model_ProjectComments
         $memberLog->removeLogCommentAsDeleted($member_id, $comment_id);
     }
 
+    /**
+     * @param int $member_id
+     * @param int $project_id
+     */
     public function setAllCommentsForProjectActivated($member_id, $project_id)
     {
-        $sql = "SELECT comment_id FROM comments c
-                JOIN member_deactivation_log l ON l.object_type_id = 4 AND l.object_id = c.comment_id AND l.deactivation_id = c.comment_member_id AND l.is_deleted = 0
-                WHERE c.comment_target_id = :project_id AND comment_active = 0";
+        $sql = "SELECT `comment_id` FROM `comments` `c`
+                JOIN `member_deactivation_log` `l` ON `l`.`object_type_id` = 4 AND `l`.`object_id` = `c`.`comment_id` AND `l`.`is_deleted` = 0
+                WHERE `c`.`comment_target_id` = :project_id  AND `l`.`deactivation_id` = :member_id AND `comment_active` = 0";
         $commentsForDelete = $this->_dataTable->getAdapter()->fetchAll($sql, array(
-            'project_id'       => $project_id
-        ));
+            'project_id' => $project_id,
+            'member_id' => $member_id
+        ))
+        ;
         foreach ($commentsForDelete as $item) {
             $this->setActive($member_id, $item['comment_id']);
         }
-        
-        /*
-        $sql = '
-                UPDATE comments
-                SET comment_active = 1
-                WHERE comment_target_id = :projectId';
-        $this->_dataTable->getAdapter()->query($sql, array('projectId' => $project_id))->execute();
-         * 
-         */
     }
 
     public function getCommentsHierarchic($project_id)
