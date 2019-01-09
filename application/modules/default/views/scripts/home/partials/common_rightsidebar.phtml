@@ -150,7 +150,7 @@ $git_url = Zend_Registry::get('config')->settings->server->opencode->host;
             <?php
                 $store_config = Zend_Registry::get('store_config');
                 $is_show_git_projects = $store_config->is_show_git_projects;
-                if($is_show_git_projects) {
+                if($is_show_git_projects==1) {
             ?>
             
             <span class="newsTitle"> Git-Projects </span>
