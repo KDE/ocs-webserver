@@ -548,6 +548,10 @@ div#preloaded-images {
                                         </div>
                                     <?php endif; ?>
 
+                                    <?php 
+                                        $helpFaceBookUrl = new Default_View_Helper_FacebookLink();
+                                        $facebookLink = $helpFaceBookUrl->facebookLink($this->member->link_facebook);
+                                    ?>
                                         <div class="email">
                                             <div class="label">
                                                
@@ -558,7 +562,7 @@ div#preloaded-images {
                                                         50); ?></a>
                                             </diV>
                                         </div> 
-                                        
+
                                         <div class="email">
                                             <div class="label">
                                                
