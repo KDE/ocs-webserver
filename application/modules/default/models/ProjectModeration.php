@@ -69,7 +69,7 @@ class Default_Model_ProjectModeration extends Default_Model_DbTable_ProjectModer
 
   
 
-    public function getTotalCount()
+    public function getTotalCount($filter)
     {
         $sql = "select count(1)  as cnt
                     FROM project_moderation m
@@ -77,6 +77,10 @@ class Default_Model_ProjectModeration extends Default_Model_DbTable_ProjectModer
                     join stat_projects p on m.project_id = p.project_id and p.status=100
                     where m.is_deleted= 0  and m.value = 1             
         ";
+        if($filter && $filter['member_id'])
+        {      
+           $sql = $sql.' and m.created_by = '.$filter['member_id'];
+        }
         $result = $this->getAdapter()->query($sql, array())->fetchAll();      
         return  $result[0]['cnt'];
     }
