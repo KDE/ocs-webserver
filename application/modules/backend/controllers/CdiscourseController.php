@@ -104,8 +104,13 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
 
             return;
         }
-        if ('hide_posts' == $method) {
-            $this->hidePostsMembers($members);
+        if ('delete' == $method) {
+            $this->deletePostsMembers($members);
+
+            return;
+        }
+        if ('undelete' == $method) {
+            $this->undeletePostsMembers($members);
 
             return;
         }
@@ -244,7 +249,7 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
         }
     }
 
-    private function hidePostsMembers($members)
+    private function deletePostsMembers($members)
     {
         $modelSubSystem = new Default_Model_Ocs_Forum($this->config);
 
@@ -253,8 +258,28 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
             if (false == $result) {
                 $this->log->info('Fail');
             }
-            foreach ($result['topic'] as $item) {
-                $result = $modelSubSystem->hidePostsFromUser($item['id']);
+            foreach ($result['posts'] as $item) {
+                $result = $modelSubSystem->deletePostFromUser($item['id']);
+            }
+            $this->log->info("Posts : " . Zend_Json::encode($result));
+            $messages = $modelSubSystem->getMessages();
+            if (false === empty($messages)) {
+                $this->log->info("Message : " . Zend_Json::encode($messages));
+            }
+        }
+    }
+
+    private function undeletePostsMembers($members)
+    {
+        $modelSubSystem = new Default_Model_Ocs_Forum($this->config);
+
+        while ($member = $members->fetch()) {
+            $result = $modelSubSystem->getPostsFromUser($member);
+            if (false == $result) {
+                $this->log->info('Fail');
+            }
+            foreach ($result['posts'] as $item) {
+                $result = $modelSubSystem->undeletePostFromUser($item['id']);
             }
             $this->log->info("Posts : " . Zend_Json::encode($result));
             $messages = $modelSubSystem->getMessages();
