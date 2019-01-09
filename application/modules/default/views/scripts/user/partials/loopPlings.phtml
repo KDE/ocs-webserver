@@ -54,6 +54,7 @@ $isCurrentMonth = false;
 $modelDownload = new Default_Model_StatDownload();
 $downloadMonths = $modelDownload->getUserDownloadMonths($this->member->member_id);
 $countDownloadsOverall = count($downloadMonths);
+$minDate = null;
 
 if ($countDownloadsOverall > 0) {  
     
@@ -64,8 +65,12 @@ if ($countDownloadsOverall > 0) {
     $currentDate = date("Ym",time());
     $printCurrentMonth = new DateTime($currentDate.'01');
     
+    
     foreach ($downloadMonths as $download) {
         $printMonth = new DateTime($download['yearmonth'].'01');
+        if($minDate == null) {
+            $minDate = $download['yearmonth'];
+        }
         
         $printDate = $printMonth->format('M Y');
         $printDateNow = $printCurrentMonth->format('M Y');
@@ -147,32 +152,11 @@ if ($countDownloadsOverall > 0) {
 <div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0;">
     <div class="row">
         <div class="col-md-1"></div>
-<?php
-        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
-?>                    
-        <div class="col-md-3 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Products</strong></div>
-<?php
-        } else {
-?>
         <div class="col-md-5 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Products</strong></div>
-<?php
-        }
-?>        
         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Downloads</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads" data-trigger="hover" data-html="true" data-content="Sum of all downloads of all files (active or archived of this product within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Pling-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Pling-Factor" data-trigger="hover" data-html="true" data-content="The Pling-Factor's base is $-cent and depends on the product category.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong style="color: green;">Payout</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout" data-trigger="hover" data-html="true" data-content="This shows the amount that will be paid out to you until May 2019."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
 
-<?php
-        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
-?>
-        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Score-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Score" data-trigger="hover" data-html="true" data-content="The product score."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Payout</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout" data-trigger="hover" data-html="true" data-content="The payout amount."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-<?php        
-        }
-?>        
-        
-        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong style="color: #BBB">Plings</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Plings" data-trigger="hover" data-html="true" data-content="Plings = 1 System Pling + Supporter Plings for that product."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong style="color: #BBB">Potential Payout**</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Potential Payout" data-trigger="hover" data-html="true" data-content="This new Payout will become active in May 2019."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
     </div>
 </div>
 
@@ -189,7 +173,7 @@ $currency = new Zend_Currency('en_US');
 $currentDate = date("Ym",time());
 $printCurrentMonth = new DateTime($currentDate.'01');
 
-$allDownloads = $modelDownload->getUserDownloadsForMonth($this->member->member_id, $printCurrentMonth->format('Ym'));
+$allDownloads = $modelDownload->getUserDownloadsForMonth($this->member->member_id, $minDate);
 $countDownloadsOverall = count($allDownloads);
 
 if ($countDownloadsOverall > 0) {
@@ -221,19 +205,7 @@ if ($countDownloadsOverall > 0) {
                             <img src="<?php echo $helpImage->Image($product['image_small'], array('width' => 80, 'height' => 65)); ?> " height="81" width="101"/>
                         </a>
                     </div>
-<?php
-        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
-?>                    
-                    <div class="col-md-3 text-left cell-default">
-<?php
-        } else {
-?>
                     <div class="col-md-5 text-left cell-default">
-<?php
-        }
-?>
-                        
-                    
                         <a href="<?= $helperBuildProductUrl->buildProductUrl($product['project_id'], ''); ?>">
                             <span style="line-height: 3em;"><?= $product['title']; ?></span>
                         </a>
@@ -245,11 +217,6 @@ if ($countDownloadsOverall > 0) {
                     <div class="col-md-1 text-right cell-default">
                         <span><?= $product['dl_pling_factor'] ?></span>
                     </div>
-                    
-                    <?php /*
-                    <div class="col-md-2 text-right cell-default">
-                        <span><?= $product['num_downloads'] * $product['dl_pling_factor'] ?></span>
-                    </div> */ ?>
                     <div class="col-md-1 text-right cell-default">
                         <span>
                         <?php 
@@ -297,20 +264,6 @@ if ($countDownloadsOverall > 0) {
                         </span>
                         
                     </div>
-                        
-<?php
-        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
-?>
-                    <div class="col-md-1 text-right cell-default">
-                        <span><?= round($product['laplace_score'],2) ?></span>
-                    </div>
-                    <div class="col-md-1 text-right cell-default">
-                        <span><?php print($currency->toCurrency( ($product['num_downloads'] * $product['dl_pling_factor'] / 100) * $product['laplace_score'])); ?></span>
-                    </div>
-<?php
-        }
-?>
-                    
                     <div class="col-md-1 text-right cell-default">
                         <?php
                             $show_plings_sum = $sum_plings;
@@ -342,7 +295,6 @@ if ($countDownloadsOverall > 0) {
                         <?php } else { ?>
                         <span>&nbsp;</span>
                         <?php } ?>
-
                     </div>
 
                 </div>
@@ -370,28 +322,8 @@ if ($countDownloadsOverall > 0) {
             $sum_total_month_view = number_format($sum_total_month);
             ?>
             <div class='row row-total'>
-<?php
-        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
-?>                
-                <div class='col-md-6 text-right'><?=$sum_total_text?></div>
-<?php
-        } else {
-?>
                 <div class='col-md-8 text-right'><?=$sum_total_text?></div>
-<?php
-        }
-?>            
-                
                 <div class='col-md-1 text-right'><strong style="color: green;"><?=$sum_total_payout?></strong></div>
-                
-<?php
-        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
-?>                
-                <div class='col-md-1 text-right'></div>
-                <div class='col-md-1 text-right'><strong><?=$sum_total_payout_score?></strong></div>
-<?php
-        }
-?>                
                 <div class='col-md-1 text-right'></div>
                 <div class='col-md-1 text-right'><strong style="color: #BBB"><?=$sum_total_payout_new?></strong></div>
                 
