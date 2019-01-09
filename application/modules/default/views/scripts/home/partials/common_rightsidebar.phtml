@@ -147,8 +147,18 @@ $git_url = Zend_Registry::get('config')->settings->server->opencode->host;
             <span class="newsTitle"> Forum </span>
             <div class="prod-widget-box right bgwhite " id="blogJson"> </div>     
            
+            <?php
+                $store_config = Zend_Registry::get('store_config');
+                $is_show_git_projects = $store_config->is_show_git_projects;
+                if($is_show_git_projects) {
+            ?>
+            
             <span class="newsTitle"> Git-Projects </span>
-            <div class="prod-widget-box right bgwhite" id="lastgitprojects"></div>          
+             <div class="prod-widget-box right bgwhite" id="lastgitprojects"></div>          
+            
+            <?php
+                }
+            ?>
             
             <?php  if (count($this->comments) > 0) {
                 ?>
