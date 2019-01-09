@@ -452,7 +452,7 @@ div#preloaded-images {
 
                                     <div class="info-div">
                                         <div class="label">
-                                            <img src="/images_sys/gitlab.png" style="width: 20px; height: 20px; ">
+                                            <img src="/images_sys/gitlab.png" class="accounts_icon">
                                         </div>
                                         <div class="text">
                                     
@@ -478,8 +478,8 @@ div#preloaded-images {
 
                                     <?php if (isset($this->member->link_github) && $this->member->link_github != ''): ?>
                                         <div class="github">
-                                            <div class="label">
-                                                <em class="gt-link"></em>
+                                            <div class="label">                                               
+                                                <img src="/theme/flatui/img/social_icons/github.png" class="accounts_icon">
                                             </div>
                                             <div class="text">
                                                 <a href="<?php echo 'https://github.com/'.$this->member->link_github; ?>" target="_blank"><?php echo $this->member->link_github; ?></a>
@@ -491,7 +491,7 @@ div#preloaded-images {
                                         <div class="info-div">
                                             <div class="label">
                                                     <span class="glyphicon glyphicon-globe" style="color:#000"></span>
-                                                </div>
+                                            </div>
                                             <div class="text">
                                            <a
                                                     href="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->member->link_website); ?>"
@@ -508,7 +508,8 @@ div#preloaded-images {
                                         ?>
                                         <div class="facebook">
                                             <div class="label">
-                                                <em class="fb-link"></em>
+                                                
+                                                 <img src="/theme/flatui/img/social_icons/fb.png" class="accounts_icon">
                                             </div>
                                             <div class="text">
                                                 <a href="<?php echo $facebookLink; ?>"><?php echo $helperTruncate->truncate($this->member->link_facebook,
@@ -522,7 +523,8 @@ div#preloaded-images {
                                         ?>
                                         <div class="twitter">
                                             <div class="label">
-                                                <em class="tw-link"></em>
+                                               
+                                                <img src="/theme/flatui/img/social_icons/tw.png" class="accounts_icon">
                                             </div>
                                             <div class="text">
                                                 <a href="<?php echo $twitterLink; ?>"
@@ -536,7 +538,8 @@ div#preloaded-images {
                                     ?>
                                         <div class="google">
                                             <div class="label">
-                                                <em class="gp-link"></em>
+                                               
+                                                <img src="/theme/flatui/img/social_icons/g_plus.png" class="accounts_icon">
                                             </div>
                                             <div class="text">
                                                 <a href="<?php echo $googleplusLink ?>"><?php echo $helperTruncate->truncate($this->member->link_google,
@@ -547,7 +550,8 @@ div#preloaded-images {
 
                                         <div class="email">
                                             <div class="label">
-                                                <em class="email-link"></em>
+                                               
+                                                <img src="/theme/flatui/img/email.png" class="accounts_icon">
                                             </div>
                                             <div class="text">
                                                 <a href="<?= $url_forum ?>/u/<?=$this->member->username?>">Send Message</a>
