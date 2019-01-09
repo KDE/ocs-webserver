@@ -214,10 +214,31 @@ class Default_Model_MemberDeactivationLog extends Default_Model_DbTable_MemberDe
     public function getLogEntries($member_id, $obj_type, $id)
     {
         $sql = "SELECT * FROM member_deactivation_log WHERE deactivation_id = :memberid AND object_type_id = :objecttype AND object_id = :objectid AND is_deleted = 0";
+        $result = array();
 
         try {
             $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql, array('memberid' => $member_id, 'objecttype' => $obj_type, 'objectid' => $id));
-        } catch (Zend_Exception $e) {
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR READ member deactivation log - ' . print_r($e, true));
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param int $member_id
+     *
+     * @return array
+     * @throws Zend_Exception
+     */
+    public function getLogForumPosts($member_id)
+    {
+        $sql = "SELECT * FROM member_deactivation_log WHERE deactivation_id = :memberid AND object_type_id = :objecttype AND is_deleted = 0";
+        $result = array();
+
+        try {
+            $result = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('memberid' => $member_id, 'objecttype' => self::OBJ_TYPE_DISCOURSE_TOPIC));
+        } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR READ member deactivation log - ' . print_r($e, true));
         }
 

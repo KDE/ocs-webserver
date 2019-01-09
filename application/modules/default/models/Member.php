@@ -1207,6 +1207,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         try {
             $forum = new Default_Model_Ocs_Forum();
             $forum->blockUser($member_id);
+            $forum->blockUserPosts($member_id);
             Zend_Registry::get('logger')->debug(__METHOD__ . ' - forum : ' . implode(PHP_EOL." - ", $forum->getMessages()));
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
@@ -1273,8 +1274,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         }
         try {
             $openCode = new Default_Model_Ocs_Gitlab();
-            $openCode->unblockUserProjects($member_id);
             $openCode->unblockUser($member_id);
+            $openCode->unblockUserProjects($member_id);
             Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $openCode->getMessages()));
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
@@ -1282,6 +1283,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         try {
             $forum = new Default_Model_Ocs_Forum();
             $forum->unblockUser($member_id);
+            $forum->unblockUserPosts($member_id);
             Zend_Registry::get('logger')->debug(__METHOD__ . ' - forum : ' . implode(PHP_EOL." - ", $forum->getMessages()));
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());

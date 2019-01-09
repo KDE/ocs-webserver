@@ -241,6 +241,10 @@ class Default_Model_Ocs_Forum
         }
         $body = Zend_Json::decode($body);
 
+        if (empty($body)) {
+            return array('message' => 'empty body received');
+        }
+
         if (array_key_exists("error_type", $body) OR array_key_exists("errors", $body)) {
             $this->messages[] = "id: {$uid} ($uri) - " . $response->getBody();
 
@@ -604,6 +608,34 @@ class Default_Model_Ocs_Forum
         return $user;
     }
 
+    public function blockUserPosts($member_data)
+    {
+        if (is_int($member_data)) {
+            $member_data = $this->getMemberData($member_data, false);
+        }
+
+        if (empty($member_data)) {
+            return false;
+        }
+
+        $result = $this->getPostsFromUser($member_data);
+        if (false == $result) {
+            $this->messages[] = "Fail. No posts for user {$member_data['username']} received";
+        }
+
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        foreach ($result['posts'] as $item) {
+            $result = $this->deletePostFromUser($item['id']);
+            if (false === $result) {
+                continue;
+            }
+            $this->messages[] = 'Forum user post deleted: ' . json_encode($item['id']);
+            $memberLog->addLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_TOPIC, $item['id']);
+        }
+
+        return true;
+    }
+
     public function silenceUser($member_data)
     {
         if (is_int($member_data)) {
@@ -661,18 +693,51 @@ class Default_Model_Ocs_Forum
         return $result;
     }
 
-    public function hidePostsFromUser($topic_id)
+    /**
+     * @param int $post_id
+     *
+     * @return array|bool
+     */
+    public function deletePostFromUser($post_id)
     {
-        if (empty($topic_id)) {
+        if (empty($post_id)) {
             return false;
         }
 
-        $uri = $this->config->host . '/t' . $topic_id . '/status';
-        $method = Zend_Http_Client::PUT;
-        $uid = $topic_id;
-        $data = array("status" => "visible", "enabled" => false);
+        $uri = $this->config->host . '/posts/' . $post_id;
+        $method = Zend_Http_Client::DELETE;
+        $uid = $post_id;
 
-        $result = $this->httpRequest($uri, $uid, $method, $data);
+        try {
+            $result = $this->httpRequest($uri, $uid, $method);
+        } catch (Zend_Exception $e) {
+            $this->httpClient->getAdapter()->close();
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+
+        return $result;
+    }
+
+    public function undeletePostFromUser($post_id)
+    {
+        if (empty($post_id)) {
+            return false;
+        }
+
+        $uri = $this->config->host . '/posts/' . $post_id . '/recover';
+        $method = Zend_Http_Client::PUT;
+        $uid = $post_id;
+
+        try {
+            $result = $this->httpRequest($uri, $uid, $method);
+        } catch (Zend_Exception $e) {
+            $this->httpClient->getAdapter()->close();
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
 
         return $result;
     }
@@ -716,6 +781,35 @@ class Default_Model_Ocs_Forum
             $forum_member['user']['id']);
 
         return $user;
+    }
+
+    public function unblockUserPosts($member_data)
+    {
+        if (empty($member_data)) {
+            return false;
+        }
+
+        if (is_int($member_data)) {
+            $member_data = $this->getMemberData($member_data, false);
+        }
+
+        $forum_member = $this->getUser($member_data['external_id'], $member_data['username']);
+        if (empty($forum_member)) {
+            return false;
+        }
+        $memberLog = new Default_Model_MemberDeactivationLog();
+        $deletedPosts = $memberLog->getLogForumPosts($member_data['member_id']);
+
+        foreach ($deletedPosts as $deleted_post) {
+            $result = $this->undeletePostFromUser($deleted_post['object_id']);
+            if (false === $result) {
+                continue;
+            }
+            $this->messages[] = 'Forum user post undeleted: ' . json_encode($deleted_post['object_id']);
+            $memberLog->deleteLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_TOPIC, $deleted_post['object_id']);
+        }
+
+        return true;
     }
 
     /**
