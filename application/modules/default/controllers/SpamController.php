@@ -85,22 +85,31 @@ class SpamController extends Local_Controller_Action_DomainSwitch
 
         if(!isset($sorting))
         {
-        	$sorting = 'cntreport desc, comment_created_at desc';
+        	$sorting = ' comment_created_at desc';
         }        
         $sql = "
     			select 
-				comment_id,
-				comment_target_id,
-				comment_member_id,
-				comment_parent_id,
-				comment_text,
-				comment_created_at,
-				(select count(1) from reports_comment r where c.comment_id = r.comment_id and is_deleted is null) cntreport,
-				(select GROUP_CONCAT(reported_by) from reports_comment r where c.comment_id = r.comment_id and is_deleted is null) as reportedby
-				from comments c
-				where c.comment_type=0
-				and c.comment_active = 1
-				
+                comment_id,
+                comment_target_id,
+                comment_member_id,
+                comment_parent_id,
+                comment_text,
+                comment_created_at,
+                (select count(1) from reports_comment r where c.comment_id = r.comment_id and is_deleted is null) cntreport,
+                (select GROUP_CONCAT(reported_by) from reports_comment r where c.comment_id = r.comment_id and is_deleted is null) as reportedby,
+                  (
+                  SELECT count(1) AS count FROM comments c2
+                  where c2.comment_target_id <> 0 and c2.comment_member_id = c.comment_member_id and c2.comment_active = 1 
+                  ) as cntComments,
+                  m.created_at member_since,
+                  m.username,
+                  (select count(1) from project p where p.status=100 and p.member_id=m.member_id and p.type_id = 1 and p.is_deleted=0) cntProjects,
+                  m.profile_image_url,
+                  (select description from project p where p.type_id=0 and p.member_id = c.comment_member_id) aboutme
+                from comments c
+                join member m on c.comment_member_id = m.member_id and m.is_active = 1 and m.is_deleted = 0
+                where c.comment_type=0
+                and c.comment_active = 1 
         	";   
         
         $sql .= ' order by ' . $sorting;
@@ -109,18 +118,18 @@ class SpamController extends Local_Controller_Action_DomainSwitch
 
         $comments = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
 		
-		$sqlall = "	select count(*) 
-					from comments c 
-					where c.comment_type=0
-					and c.comment_active = 1";         
+		// $sqlall = "	select count(*) 
+		// 			from comments c 
+		// 			where c.comment_type=0
+		// 			and c.comment_active = 1";         
 
-        $reportsAll = Zend_Db_Table::getDefaultAdapter()->fetchRow($sqlall);
+        //$reportsAll = Zend_Db_Table::getDefaultAdapter()->fetchRow($sqlall);
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
         $jTableResult['Records'] = $comments;
-        $jTableResult['TotalRecordCount'] = array_pop($reportsAll);
-
+        // $jTableResult['TotalRecordCount'] = array_pop($reportsAll);
+        $jTableResult['TotalRecordCount'] = 1000;
         $this->_helper->json($jTableResult);
     }
 

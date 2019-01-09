@@ -79,7 +79,7 @@
           <i class="fa fa-spinner"></i>
       </span>
   </div>
-<div id="titleheader"> <h1>Table of comments</h1></div>
+<div id="titleheader"> <h1>Table of lastest 1000 comments </h1></div>
 <div id="TableContainer"></div>
 <div id="dialog-form" title="Object Details"></div>
 <div id="dialog-confirm" title="Confirm"></div>
@@ -102,11 +102,11 @@
                     title: 'comment id',
                     create: false,
                     edit: false,
-                    list: true
+                    list: false
                 },                               
                 comment_target_id: {
                     title: 'project id',
-                    width: '5%',
+                    
                     edit: false,
                     display:function(data){                               
                             var html='<a target="_blank" href="/p/'+data.record.comment_target_id+'">'+data.record.comment_target_id+'</a>';                            
@@ -118,20 +118,13 @@
                     width: '10%',
                     edit: false,                    
                     display:function(data){                        
-                        var html = '<a  class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+data.record.comment_member_id+'" >'+data.record.comment_member_id+'</a>';
+                        var html = '<a  class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+data.record.comment_member_id+'" >'+data.record.username+'</a>';
                          return html;
                     }
                 },
                 comment_text: {
                     title: 'text',
-                    width: '50%',
-                    input: function (data) {
-                        if (data.record) {
-                            return '<textarea name="comment_text" rows="10" cols="50">' + data.record.comment_text + '</textarea>';
-                        } else {
-                            return '<input type="text" name="comment_text" style="width:200px" value="enter text here" />';
-                        }
-                    }
+                    width: '40%'
                 },
                 comment_created_at: {
                     title: 'created',
