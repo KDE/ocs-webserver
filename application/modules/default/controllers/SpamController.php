@@ -115,8 +115,14 @@ class SpamController extends Local_Controller_Action_DomainSwitch
         $sql .= ' order by ' . $sorting;
         $sql .= ' limit ' . $pageSize;
         $sql .= ' offset ' . $startIndex;
-
+        $printDateSince = new Default_View_Helper_PrintDateSince();
         $comments = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+        $helperImage = new Default_View_Helper_Image();
+        foreach ($comments as &$value) {
+            $value['member_since'] = $printDateSince->printDateSince($value['member_since']);
+            $value['comment_created_at'] = $printDateSince->printDateSince($value['comment_created_at']);
+            $value['avatar'] = $helperImage->Image($value['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); 
+        }
 		
 		// $sqlall = "	select count(*) 
 		// 			from comments c 
