@@ -124,6 +124,21 @@ class Default_Model_Solr
         return $output;
     }
 
+    public function isExist($project_id)
+    {
+        $solr = $this->get_solr_connection();
+        $query = '*:*';
+        $params = array('fq' => 'id:'.$project_id);
+        $results = $solr->search($query, 0, 1, $params);
+        if(sizeof($results->response->docs)==1)
+        {
+            return true;
+        }
+        else{
+            return false;
+        }
+
+    }
     /**
      * @return Zend_Service_Solr
      * @throws Zend_Exception
