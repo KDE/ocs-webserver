@@ -41,6 +41,7 @@ class Default_Model_ConfigStore
     public $cross_domain_login;
     public $is_show_title;
     public $is_show_home;
+    public $is_show_git_projects;
     public $layout_home;
     public $layout_explore;
     public $layout_pagedetail;
@@ -68,6 +69,7 @@ class Default_Model_ConfigStore
             $this->cross_domain_login = $storeConfig['cross_domain_login'];
             $this->is_show_title = $storeConfig['is_show_title'];
             $this->is_show_home = $storeConfig['is_show_home'];
+            $this->is_show_git_projects = $storeConfig['is_show_git_projects'];
             $this->layout_home = $storeConfig['layout_home'];
             $this->layout_explore = $storeConfig['layout_explore'];
             $this->layout_pagedetail = $storeConfig['layout_pagedetail'];

@@ -96,6 +96,12 @@ class Default_Model_Spam
         if (stripos($haystack, 'fat loss')) {
             return true;
         }
+        if (stripos($haystack, 'cream')) {
+            return true;
+        }
+        if (stripos($haystack, 'healthy')) {
+            return true;
+        }
 
         return false;
     }

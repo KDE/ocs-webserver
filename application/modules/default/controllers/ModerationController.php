@@ -62,7 +62,7 @@ class ModerationController extends Local_Controller_Action_DomainSwitch
     	$reports = $mod->getList($filter['member_id'],$sorting,(int)$pageSize,$startIndex);
     	//$reports = $mod->getList();
 
-    	$totalRecordCount = $mod->getTotalCount();
+    	$totalRecordCount = $mod->getTotalCount($filter);
     	
     	$jTableResult = array();
     	$jTableResult['Result'] = self::RESULT_OK;

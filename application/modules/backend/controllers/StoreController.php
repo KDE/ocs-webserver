@@ -101,6 +101,9 @@ class Backend_StoreController extends Local_Controller_Action_Backend
             if(!isset($values['is_show_title'])){
                 $values['is_show_title'] = 0;
             }
+            if(!isset($values['is_show_git_projects'])){
+                $values['is_show_git_projects'] = 0;
+            }
             if(!isset($values['cross_domain_login'])){
                 $values['cross_domain_login'] = 0;
             }

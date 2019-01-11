@@ -1077,8 +1077,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                 JOIN `member_deactivation_log` `l` ON `l`.`object_type_id` = 3 AND `l`.`object_id` = `p`.`project_id` AND `l`.`deactivation_id` = `p`.`member_id`
                 WHERE `p`.`member_id` = :memberId";
         $projectForDelete = $this->_db->fetchAll($sql, array(
-                'memberId' => $member_id
-            ));
+            'memberId' => $member_id
+        ));
         foreach ($projectForDelete as $item) {
             $this->setActive($member_id, $item['project_id']);
         }
@@ -1120,12 +1120,13 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     }
 
     /**
-     * @param $id
+     * @param int $member_id
+     * @param int $project_id
      */
-    private function setActiveForComments($member_id, $id)
+    private function setActiveForComments($member_id, $project_id)
     {
         $modelComments = new Default_Model_ProjectComments();
-        $modelComments->setAllCommentsForProjectActivated($member_id, $id);
+        $modelComments->setAllCommentsForProjectActivated($member_id, $project_id);
     }
 
     /**
