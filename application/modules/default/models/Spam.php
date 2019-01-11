@@ -37,69 +37,14 @@ class Default_Model_Spam
      */
     public static function hasSpamMarkers($project_data)
     {
+        $sql = "SELECT spam_key_word FROM spam_keywords WHERE spam_key_is_active = 1 AND spam_key_is_deleted = 0";
+        $keywords = Zend_Db_Table::getDefaultAdapter()->fetchCol($sql);
+
+        $needles = implode('|', $keywords);
+
         $haystack = implode(" ", array($project_data['title'], $project_data['description']));
 
-        if (stripos($haystack, 'keto')) {
-            return true;
-        }
-        if (stripos($haystack, 'spartan')) {
-            return true;
-        }
-        if (stripos($haystack, 'ingredient')) {
-            return true;
-        }
-        if (stripos($haystack, 'rdx surge')) {
-            return true;
-        }
-        if (stripos($haystack, 'vashikaran')) {
-            return true;
-        }
-        if (stripos($haystack, 'muscles')) {
-            return true;
-        }
-        if (stripos($haystack, 'viagra')) {
-            return true;
-        }
-        if (stripos($haystack, 's3xual')) {
-            return true;
-        }
-        if (stripos($haystack, 'erection')) {
-            return true;
-        }
-        if (stripos($haystack, 'praltrix')) {
-            return true;
-        }
-        if (stripos($haystack, 's3x')) {
-            return true;
-        }
-        if (stripos($haystack, 'herpes')) {
-            return true;
-        }
-        if (stripos($haystack, 'male enhancement')) {
-            return true;
-        }
-        if (stripos($haystack, 'astrology')) {
-            return true;
-        }
-        if (stripos($haystack, 'megashare')) {
-            return true;
-        }
-        if (stripos($haystack, 'body weight')) {
-            return true;
-        }
-        if (stripos($haystack, 'diet')) {
-            return true;
-        }
-        if (stripos($haystack, 'foreskin')) {
-            return true;
-        }
-        if (stripos($haystack, 'fat loss')) {
-            return true;
-        }
-        if (stripos($haystack, 'cream')) {
-            return true;
-        }
-        if (stripos($haystack, 'healthy')) {
+        if(preg_match("/\b({$needles})\b/", $haystack)){
             return true;
         }
 
