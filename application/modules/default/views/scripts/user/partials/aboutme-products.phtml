@@ -1,9 +1,31 @@
+
+<style type="text/css">
+    div.catgroupseperator
+    {
+        display: block;
+        width: 100%;
+        height: 20px;
+        background-color: red;
+    }
+
+</style>
 <?php
     $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
     $helperImage = new Default_View_Helper_Image();
     $helperPrintDate = new Default_View_Helper_PrintDate();
     if($this->userProducts == null || count($this->userProducts)==0) return;
-    foreach ($this->userProducts as $product): ?>
+    $ix_last=0;
+    $ix_next=0;
+    $cat_last='';
+    $cat_next='';
+    foreach ($this->userProducts as $product): 
+
+            $catid= $product['project_category_id'];
+            if($catid!=$cat_last)
+            {
+               echo '<div class="catgroupseperator">'.$product['cat1'].'>>>>>>>>>'.$product['cat2'].'</div>';
+            }
+        ?>
         <div class="product mini-card col-lg-2 col-md-2 col-sm-3 col-xs-2">
             <div class="u-wrap">
                 <a href="<?= $helperBuildProductUrl->buildProductUrl($product['project_id'], '', null, true); ?>">
@@ -39,7 +61,9 @@
                 echo $this->render('partials/widgetRating.phtml'); ?>
             </div>
         </div>
- <?php endforeach; ?>
+ <?php 
+ $cat_last = $product['project_category_id'];
+endforeach; ?>
 
   <?php
         $total_pages = ceil($this->total_records / $this->pageLimit);                                                                                

@@ -66,5 +66,21 @@ class Default_Model_StatDownload
         }
     }
 
+    public function getMonthEarn($member_id,$yyyymm)
+    {
+        $sql = " select sum(probably_payout_amount) amount
+               from member_dl_plings 
+               where member_id=:member_id
+               and yearmonth=:yyyymm 
+               and is_pling_excluded = 0 
+               and is_license_missing = 0";
+ 
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('member_id' => $member_id,'yyyymm' =>$yyyymm));
+        return array_pop($resultSet);    
+       
+        
+        
+    }
+
 
 }
