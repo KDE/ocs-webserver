@@ -77,6 +77,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
         $userRoleName = $helperUserRole->userRole();
         if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+
             $amount = $earnModel->getMonthEarn($this->_memberId,201812);
             if($amount && $amount['amount'])
             {
@@ -243,7 +244,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 { 
                     $userinfo = $userinfo.'['.$userProjectCategories[0]['cnt'].']';
                 }
-                $userinfo = $userinfo.' ,<b> '.$userProjectCategories[1]['category1'].'</b>';
+                $userinfo = $userinfo.',<b> '.$userProjectCategories[1]['category1'].'</b>';
                 if($isAdmin)
                 { 
                     $userinfo = $userinfo.'['.$userProjectCategories[1]['cnt'].']';
@@ -260,12 +261,12 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 { 
                 $userinfo = $userinfo.'['.$userProjectCategories[0]['cnt'].']';
                 }
-                $userinfo = $userinfo.' , <b>'.$userProjectCategories[1]['category1'].'</b>';
+                $userinfo = $userinfo.', <b>'.$userProjectCategories[1]['category1'].'</b>';
                 if($isAdmin)
                 { 
                 $userinfo = $userinfo.'['.$userProjectCategories[1]['cnt'].']';
                 }
-                $userinfo = $userinfo.' , <b>'.$userProjectCategories[2]['category1'].'</b>';
+                $userinfo = $userinfo.', <b>'.$userProjectCategories[2]['category1'].'</b>';
                 if($isAdmin)
                 { 
                 $userinfo = $userinfo.'['.$userProjectCategories[2]['cnt'].']';
