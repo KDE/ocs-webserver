@@ -15,8 +15,13 @@
     $helperImage = new Default_View_Helper_Image();
     $helperPrintDate = new Default_View_Helper_PrintDate();
     if($this->userProducts == null || count($this->userProducts)==0) return;
-    
-    $cat_last='';
+    if($this->lastcatid)
+    {
+        $cat_last = $this->lastcatid;
+    }else
+    {
+          $cat_last='';
+      }
     foreach ($this->userProducts as $product): 
             $catid= $product['project_category_id'];
             if($catid!=$cat_last)

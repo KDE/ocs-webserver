@@ -90,38 +90,19 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
         
 
-        // TODOs
-
-        // $this->view->supportedProjects = $tableMember->fetchSupportedProjects($this->_memberId);
-
-        //Categories
-        /*
-        $catArray = array();
-        foreach ($this->view->supportedProjects as $pro) {
-            $catArray[$pro->catTitle] = array();
-        }
-
-        $helperProductUrl = new Default_View_Helper_BuildProductUrl();
-        foreach ($this->view->supportedProjects as $pro) {
-            $projArr = array();
-            $projArr['name'] = $pro->title;
-            $projArr['image'] = $pro->image_small;
-            $projArr['url'] = $helperProductUrl->buildProductUrl($pro->project_id);
-            $projArr['sumAmount'] = $pro->sumAmount;
-            array_push($catArray[$pro->catTitle], $projArr);
-        }
-        $this->view->supportingTeaser = $catArray;
-
-        $this->view->followedProducts = $tableMember->fetchFollowedProjects($this->_memberId, null);
-        $this->view->hits = $tableMember->fetchProjectsSupported($this->_memberId);
-        */
         // ajax load more products
         if ($this->getParam('projectpage', null)) {
             $total_records = $tableProject->countAllProjectsForMemberCatFilter($this->_memberId, true, null);
             $this->view->pageLimit = $pageLimit;
             $this->view->projectpage = $projectpage;
             $this->view->total_records = $total_records;
-            //$this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit,true);
+            
+            // get last project category id
+            $lastproject = $tableProject->getUserActiveProjects($this->_memberId, 1, (($projectpage - 1) * $pageLimit-1));
+            foreach ($lastproject as $value) {                
+                $this->view->lastcatid = $value['project_category_id'];                
+            }
+            
             $this->view->userProducts =
                 $tableProject->getUserActiveProjects($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit);
 
@@ -139,7 +120,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
             //$this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit,true);
             $this->view->userProducts =
                 $tableProject->getUserActiveProjects($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit);
-
+       
             $this->view->userFeaturedProducts = $tableProject->fetchAllFeaturedProjectsForMember($this->_memberId);
 
             $paginationComments = $tableMember->fetchComments($this->_memberId);
