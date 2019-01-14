@@ -1460,14 +1460,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         // for member me page
         $sql = "
                         SELECT
-                            SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_path, '|', 2),'|',-1) as cat1,
-                            SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_path, '|', 3),'|',-1) as cat2,
-                            SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_path, '|', 4),'|',-1) as cat3,
-                             SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_path, '|', 5),'|',-1) as cat4,
-                            SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_id_path, ',', 2),',',-1) as catid1,
-                            SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_id_path, ',', 3),',',-1) as catid2,
-                            SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_id_path, ',', 4),',',-1) as catid3,
-                             SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_id_path, ',', 5),',',-1) as catid4,
                         `p`.`project_id`,
                         `p`.`title`,
                         `p`.`created_at`  AS `project_created_at`,
@@ -1483,7 +1475,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                         (select count(1) from project pp where pp.member_id = p.member_id and pp.status = 100  and  pp.project_category_id = p.project_category_id) cntCategory
                         FROM `project` `p`
                         join project_category cat on p.project_category_id = cat.project_category_id
-                        join stat_cat_tree c on p.project_category_id = c.project_category_id
+                        
                         WHERE `p`.`status` =100
                         AND `p`.`member_id` = :member_id       
                         ORDER BY cntCategory desc, `p`.`changed_at` DESC
@@ -1514,21 +1506,34 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     //     // for member me page
     //     $sql = "
     //                     SELECT
+    //                         SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_path, '|', 2),'|',-1) as cat1,
+    //                         SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_path, '|', 3),'|',-1) as cat2,
+    //                         SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_path, '|', 4),'|',-1) as cat3,
+    //                          SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_path, '|', 5),'|',-1) as cat4,
+    //                         SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_id_path, ',', 2),',',-1) as catid1,
+    //                         SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_id_path, ',', 3),',',-1) as catid2,
+    //                         SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_id_path, ',', 4),',',-1) as catid3,
+    //                          SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_id_path, ',', 5),',',-1) as catid4,
     //                     `p`.`project_id`,
     //                     `p`.`title`,
     //                     `p`.`created_at`  AS `project_created_at`,
     //                     `p`.`changed_at` AS `project_changed_at`,
     //                     `p`.`count_likes`,
     //                     `p`.`count_dislikes`,
-    //                     `p`.`laplace_score`,
+    //                     laplace_score(`p`.`count_likes`, `p`.`count_dislikes`) AS `laplace_score`,
     //                     `p`.`member_id`,
-    //                     `p`.`cat_title` AS `catTitle`,
+    //                     `cat`.`title` AS `catTitle`,
+    //                     `p`.`project_category_id`,    
     //                     `p`.`image_small`,
-    //                     (SELECT count(1) FROM `project_plings` `l` WHERE `p`.`project_id` = `l`.`project_id` AND `l`.`is_deleted` = 0 AND `l`.`is_active` = 1 ) `countplings`
-    //                     FROM `stat_projects` `p`
+    //                     (SELECT count(1) FROM `project_plings` `l` WHERE `p`.`project_id` = `l`.`project_id` AND `l`.`is_deleted` = 0 AND `l`.`is_active` = 1 ) `countplings`,
+    //                     (select count(1) from project pp where pp.member_id = p.member_id and pp.status = 100  and  pp.project_category_id = p.project_category_id) cntCategory
+    //                     FROM `project` `p`
+    //                     join project_category cat on p.project_category_id = cat.project_category_id
+    //                     join stat_cat_tree c on p.project_category_id = c.project_category_id
     //                     WHERE `p`.`status` =100
-    //                     AND `p`.`member_id` = :member_id        
-    //                     ORDER BY `p`.`changed_at` DESC
+    //                     AND `p`.`member_id` = :member_id       
+    //                     ORDER BY cntCategory desc, `p`.`changed_at` DESC
+                      
     //     ";
 
     //     if (isset($limit)) {
@@ -1546,6 +1551,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     //         return null;
     //     }
     // }
+
+    
 
     /**
      * @param int      $member_id
