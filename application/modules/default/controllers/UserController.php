@@ -86,7 +86,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 $this->view->earnInfo=' Last month I earned 0.';
             }
         }else{
-            $this->view->earnInfo='test';
+            $this->view->earnInfo='';
         }
         
 
