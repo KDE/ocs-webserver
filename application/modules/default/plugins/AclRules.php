@@ -118,6 +118,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('backend_ghnsexcluded'));
         $this->addResource(new Zend_Acl_Resource ('backend_letteravatar'));
         $this->addResource(new Zend_Acl_Resource ('backend_group'));
+        $this->addResource(new Zend_Acl_Resource ('backend_spamkeywords'));
 
         $this->addResource(new Zend_Acl_Resource ('backend_cdiscourse'));
         $this->addResource(new Zend_Acl_Resource ('backend_cgitlab'));

@@ -142,4 +142,38 @@ class Local_Model_Table extends Zend_Db_Table
         return new $classRow(array('table' => $this, 'stored' => true, 'data' => $data));
     }
 
+    /**
+     * Convert an array, string, or Zend_Db_Expr object
+     * into a string to put in a WHERE clause.
+     *
+     * @param mixed $where
+     * @return string
+     */
+    protected function _whereExpr($where)
+    {
+        if (empty($where)) {
+            return $where;
+        }
+        if (!is_array($where)) {
+            $where = array($where);
+        }
+        foreach ($where as $cond => &$term) {
+            // is $cond an int? (i.e. Not a condition)
+            if (is_int($cond)) {
+                // $term is the full condition
+                if ($term instanceof Zend_Db_Expr) {
+                    $term = $term->__toString();
+                }
+            } else {
+                // $cond is the condition with placeholder,
+                // and $term is quoted into the condition
+                $term = $this->getAdapter()->quoteInto($cond, $term);
+            }
+            $term = '(' . $term . ')';
+        }
+
+        $where = implode(' AND ', $where);
+        return $where;
+    }
+
 }
