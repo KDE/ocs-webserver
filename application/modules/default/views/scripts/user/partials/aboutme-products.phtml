@@ -29,6 +29,7 @@
                  $title = $product['cat1'];
                  if($product['cat2']!=$product['cat1']) $title = $title.' ->' . $product['cat2'];
                  if($product['cat3']!=$product['cat2']) $title = $title.' ->' . $product['cat3'];
+                 if($product['cat4']!=$product['cat3']) $title = $title.' ->' . $product['cat4'];
 
                echo '<div class="catgroupseperator">'.$title.'</div>';
             }
