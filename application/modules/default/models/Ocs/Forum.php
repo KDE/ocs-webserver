@@ -619,7 +619,7 @@ class Default_Model_Ocs_Forum
         }
 
         $posts = $this->getPostsFromUser($member_data);
-        Zend_Registry::get('logger')->debug(print_r($posts, true));
+
         if (false == $posts) {
             $this->messages[] = "Fail. No posts for user {$member_data['username']} received";
         }
