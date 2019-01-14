@@ -1,32 +1,13 @@
 
-<style type="text/css">
-    div.catgroupseperator
-    {
-        display: block;
-        height: 40px;
-        font-size: 20px;
-        clear: both;
-        color: #777;
-    }
 
-</style>
 <?php
     $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
     $helperImage = new Default_View_Helper_Image();
     $helperPrintDate = new Default_View_Helper_PrintDate();
     if($this->userProducts == null || count($this->userProducts)==0) return;
-    
-    $cat_last='';
+   
     foreach ($this->userProducts as $product): 
-            $catid= $product['project_category_id'];
-            if($catid!=$cat_last)
-            {
-                 $title = $product['cat1'];
-                 if($product['cat2']!=$product['cat1']) $title = $title.' ->' . $product['cat2'];
-                 if($product['cat3']!=$product['cat2']) $title = $title.' ->' . $product['cat3'];
-
-               echo '<div class="catgroupseperator">'.$title.'</div>';
-            }
+           
         ?>
         <div class="product mini-card col-lg-2 col-md-2 col-sm-3 col-xs-2">
             <div class="u-wrap">
@@ -64,7 +45,6 @@
             </div>
         </div>
  <?php 
- $cat_last = $product['project_category_id'];
 endforeach; ?>
 
   <?php
