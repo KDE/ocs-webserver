@@ -124,7 +124,15 @@ div#preloaded-images {
                                
 
                             <div class="col-container" >
+                                <div class="details info" >
+                                   
+                                    <?php 
+                                        echo $this->aboutmeUserInfo. ' '. $this->earnInfo;                                                                              
+                                    ?>
+                                   
+                                </div>
                             <div class="details stat" >
+
                                 <h3>Statistics</h3>
                                 <div  class="statContent" >
                                     <div class="row ">
@@ -355,7 +363,7 @@ div#preloaded-images {
                                            $this->total_records=0;
                                         if ($this->userProducts) { ?>                                
                                          <div class="my-products-list" id="my-products-list">                                                                       
-                                            <?php echo $this->render('user/partials/aboutme-products.phtml'); ?>                                       
+                                            <?php echo $this->render('user/partials/aboutme-featured.phtml'); ?>                                       
                                         </div>
                                     <?php } ?>
                                 </div>
