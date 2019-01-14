@@ -1460,7 +1460,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         // for member me page
         $sql = "
                         SELECT
-                        SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_path, '|', 2),'|',-1) as cat1,
+                            SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_path, '|', 2),'|',-1) as cat1,
                             SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_path, '|', 3),'|',-1) as cat2,
                             SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_path, '|', 4),'|',-1) as cat3,
                              SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_path, '|', 5),'|',-1) as cat4,
