@@ -1446,7 +1446,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                       and p.member_id =:member_id
                       and p.type_id = 1
                       group by c.title
-                      order by cnt desc
+                      order by cnt desc, c.title asc
                   ";
         $result = $this->_db->fetchAll($sql, array('member_id' => $member_id));
         return $result;       
@@ -1479,7 +1479,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                         WHERE `p`.`status` =100
                         and `p`.`type_id` = 1
                         AND `p`.`member_id` = :member_id       
-                        ORDER BY cntCategory desc, `p`.`changed_at` DESC
+                        ORDER BY cntCategory desc,catTitle asc, `p`.`changed_at` DESC
                       
         ";
 
