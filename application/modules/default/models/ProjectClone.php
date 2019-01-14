@@ -32,10 +32,10 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                         ,c.member_id
                         ,c.text
                         ,' ' as catTitle
-                        ,(select project_category_id from project p where p.project_id = c.project_id_parent) project_category_id
-                        ,(select title from project p where p.project_id = c.project_id_parent) title
-                        ,(select image_small from project p where p.project_id = c.project_id_parent) image_small
-                        ,(select changed_at from project p where p.project_id = c.project_id_parent) changed_at
+                        ,p.project_category_id
+                        ,p.title
+                        ,p.image_small
+                        ,p.changed_at
                         FROM project_clone c
                         JOIN project p ON p.project_id = c.project_id_parent
                         WHERE c.is_deleted = 0 and c.is_valid = 1 and c.project_id = :project_id
@@ -58,9 +58,9 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                             ,c.text
                             ,' ' as catTitle
                             ,(select project_category_id from project p where p.project_id = c.project_id_parent) project_category_id
-                            ,(select title from project p where p.project_id = c.project_id) title
-                            ,(select image_small from project p where p.project_id = c.project_id) image_small
-                            ,(select changed_at from project p where p.project_id = c.project_id) changed_at
+                            ,p.title
+                            ,p.image_small
+                            ,p.changed_at
                             FROM project_clone c
                             JOIN project p ON p.project_id = c.project_id
                             WHERE c.is_deleted = 0 and c.is_valid = 1 and  c.project_id_parent = :project_id
@@ -97,9 +97,9 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                                        ,c.text
                                        ,' ' as catTitle
                                        ,(select project_category_id from project p where p.project_id = c.project_id_parent) project_category_id
-                                       ,(select title from project p where p.project_id = c.project_id) title
-                                       ,(select image_small from project p where p.project_id = c.project_id) image_small
-                                       ,(select changed_at from project p where p.project_id = c.project_id) changed_at
+                                       ,p.title
+                                      ,p.image_small
+                                      ,p.changed_at
                                        FROM project_clone c
                                        JOIN project p on p.project_id = c.project_id
                                        WHERE c.is_deleted = 0 and c.is_valid = 1 and  c.project_id_parent =  :project_id 
@@ -115,9 +115,9 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                                        ,c.text
                                        ,' ' as catTitle
                                        ,(select project_category_id from project p where p.project_id = c.project_id_parent) project_category_id
-                                       ,(select title from project p where p.project_id = c.project_id) title
-                                       ,(select image_small from project p where p.project_id = c.project_id) image_small
-                                       ,(select changed_at from project p where p.project_id = c.project_id) changed_at
+                                       ,p.title
+                                       ,p.image_small
+                                       ,p.changed_at
                                        FROM project_clone c
                                        JOIN project p on p.project_id = c.project_id
                                        WHERE  c.project_id<> :project_id and  c.is_deleted = 0 and c.is_valid = 1 AND p.`status` = 100 and  c.project_id_parent in (
@@ -143,27 +143,27 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                       ,c.external_link
                       ,c.text
                       ,c.member_id as reported_by
-                      ,(select username from member m where m.member_id = c.member_id) as reporter_username
-                      ,(select profile_image_url from member m where m.member_id = c.member_id) as reporter_profile_image_url
-
-                      ,(select cat_title from stat_projects p where p.project_id = c.project_id) catTitle
-                      ,(select title from stat_projects p where p.project_id = c.project_id) title
-                      ,(select image_small from stat_projects p where p.project_id = c.project_id) image_small
-                      ,(select changed_at from stat_projects p where p.project_id = c.project_id) changed_at
-                      ,(select laplace_score from stat_projects p where p.project_id = c.project_id) laplace_score
-                      ,(select member_id from stat_projects p where p.project_id = c.project_id) member_id
-                      ,(select username from stat_projects p where p.project_id = c.project_id) username
-
-
-                      ,(select cat_title from stat_projects p where p.project_id = c.project_id_parent) parent_catTitle
-                      ,(select title from stat_projects p where p.project_id = c.project_id_parent) parent_title
-                      ,(select image_small from stat_projects p where p.project_id = c.project_id_parent) parent_image_small
-                      ,(select changed_at from stat_projects p where p.project_id = c.project_id_parent) parent_changed_at
-                      ,(select laplace_score from stat_projects p where p.project_id = c.project_id_parent) parent_laplace_score
-                      ,(select member_id from stat_projects p where p.project_id = c.project_id_parent) parent_member_id
-                      ,(select username from stat_projects p where p.project_id = c.project_id_parent) parent_username
+                      ,m.username as reporter_username
+                      ,m.profile_image_url  as reporter_profile_image_url
+                      ,p.cat_title catTitle
+                      ,p.title
+                      ,p.image_small
+                      ,p.changed_at
+                      ,p.laplace_score
+                      ,p.member_id
+                      ,p.username
+                      ,pp.cat_title parent_catTitle
+                      ,pp.title parent_title
+                      ,pp.image_small parent_image_small
+                      ,pp.changed_at parent_changed_at
+                      ,pp.laplace_score parent_laplace_score
+                      ,pp.member_id parent_member_id
+                      ,pp.username parent_username
                       FROM project_clone c
-                      WHERE c.is_deleted = 0 and c.is_valid = 0 
+                      JOIN stat_projects p on p.project_id = c.project_id
+                      join member m on m.member_id = c.member_id
+                      left join stat_projects pp on  pp.project_id =c.project_id_parent 
+                      WHERE c.is_deleted = 0 and c.is_valid = 0  AND p.status = 100
                       order by c.created_at desc
 
           ";
