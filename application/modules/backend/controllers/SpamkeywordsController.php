@@ -22,7 +22,7 @@
  * Created: 11.01.2019
  */
 
-class Backend_SpamKeywordsController extends Local_Controller_Action_Backend
+class Backend_SpamkeywordsController extends Local_Controller_Action_Backend
 {
     const RESULT_OK = "OK";
     const RESULT_ERROR = "ERROR";
