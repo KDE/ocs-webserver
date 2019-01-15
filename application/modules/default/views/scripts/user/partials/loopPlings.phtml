@@ -124,7 +124,7 @@ if ($countDownloadsOverall > 0) {
     <?php if($isCurrentMonth) {?>
     
     <li class="media_node span <?=$css_active?> ">
-        <a href="#<?= $download['yearmonth'] ?>" data-toggle="tab"><?= $printDate ?><?= $popover ?></a>
+        <a href="/member/<?= $member->member_id ?>/plingsmonthajax?yearmonth=<?= $download['yearmonth'] ?>" data-toggle="tabajax" data-target="#pling-tab-content" id="tab_<?= $download['yearmonth'] ?>"><?= $printDate ?><?= $popover ?></a>
     </li>
     
     <?php } else { ?>
