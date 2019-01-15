@@ -95,7 +95,7 @@ $downloadYears = $modelDownload->getUserDownloadYears($this->member->member_id);
                 <div class="my-products-list" id="my-payout-list">
                     
                     <div class="form-group">
-                        <select class="form-control" id="sellYear" style="width: 200px;" data-target="plingsyear" data-href="plingsajax?year=">
+                        <select class="form-control" id="sellYear" style="width: 200px;" data-target="plingsyear" data-href="/member/<?= $member->member_id?>/plingsajax?year=">
                             <?php
                                 if(count($downloadYears) == 0 ||  $downloadYears[0]['year'] != $currentYear) {
                                     //Current year
@@ -198,6 +198,7 @@ $(document).ready(function(){
             return false;
         });
         
+        
         var $this = $('#tab_' + yearList[year]['maxMonth']),
             loadurl = $this.attr('href'),
             targ = $this.attr('data-target');
@@ -210,6 +211,8 @@ $(document).ready(function(){
 
         return false;
     });
+    
+    
     
     $('[data-toggle="tabajax"]').click(function(e) {
                

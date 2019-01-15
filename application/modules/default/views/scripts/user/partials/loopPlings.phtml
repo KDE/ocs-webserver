@@ -54,6 +54,8 @@
 $isCurrentMonth = false;
 $currentYear = date("Y",time());
 
+$member = $this->view_member;
+
 if($this->year) {
     $currentYear = $this->year;
 }
@@ -128,7 +130,7 @@ if ($countDownloadsOverall > 0) {
     <?php } else { ?>
     
     <li class="media_node span <?=$css_active?> ">
-        <a href="plingsmonthajax?yearmonth=<?= $download['yearmonth'] ?>" data-toggle="tabajax" data-target="#pling-tab-content" id="tab_<?= $download['yearmonth'] ?>"><?= $printDate ?><?= $popover ?></a>
+        <a href="/member/<?= $member->member_id ?>/plingsmonthajax?yearmonth=<?= $download['yearmonth'] ?>" data-toggle="tabajax" data-target="#pling-tab-content" id="tab_<?= $download['yearmonth'] ?>"><?= $printDate ?><?= $popover ?></a>
     </li>
     
     <?php } ?>
@@ -152,7 +154,7 @@ if ($countDownloadsOverall > 0) {
     
     ?>
     <li class="in active">
-        <a href="plingsmonthajax?yearmonth=<?= $currentDate  ?>" data-toggle="tabajax" data-target="#pling-tab-content" id="tab_<?= $currentDate  ?>"><?= $printDate ?></a>
+        <a href="/member/<?= $member->member_id ?>/plingsmonthajax?yearmonth=<?= $currentDate  ?>" data-toggle="tabajax" data-target="#pling-tab-content" id="tab_<?= $currentDate  ?>"><?= $printDate ?></a>
     </li>
 <?php
 }
