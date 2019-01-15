@@ -334,11 +334,12 @@ class MobileSiteHeader extends React.Component {
       logoElementCssClass += " mini-version";
     }
 
+    // href={this.props.logoLink}
     return(
       <section id="mobile-site-header">
         <div id="mobile-thumb-block"></div>
         <div id="mobile-site-header-logo" className={logoElementCssClass}>
-          <a href={this.props.logoLink}>
+          <a>
             <img src={this.props.template['header-logo']['image-src']}/>
           </a>
         </div>
