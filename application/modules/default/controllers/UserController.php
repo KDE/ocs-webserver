@@ -82,8 +82,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $month = $datetime->format('Ym');
             $amount = $earnModel->getMonthEarn($this->_memberId,$month);
             if($amount && $amount['amount'])
-            {
-                $this->view->earnInfo = ' Last month I earned $'.$amount['amount'].'.';
+            {                 
+                $this->view->earnInfo = ' Last month I earned $'.number_format($amount['amount'], 2, '.', '').'.';
             }else
             {
                 $this->view->earnInfo=' Last month I earned 0.';
