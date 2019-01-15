@@ -446,7 +446,6 @@ class MobileSiteHeader extends React.Component {
       logoElementCssClass += " mini-version";
     }
 
-    // href={this.props.logoLink}
     return React.createElement(
       "section",
       { id: "mobile-site-header" },
@@ -456,7 +455,7 @@ class MobileSiteHeader extends React.Component {
         { id: "mobile-site-header-logo", className: logoElementCssClass },
         React.createElement(
           "a",
-          null,
+          { href: this.props.logoLink },
           React.createElement("img", { src: this.props.template['header-logo']['image-src'] })
         )
       ),
