@@ -156,6 +156,15 @@ var aItemData = [
         }
     },
     {
+        text: "Spam",
+        submenu: {
+            id: "spam",
+            itemdata: [
+                {text: "Keywords", url: "/backend/spamkeywords"}
+            ]
+        }
+    },
+    {
         text: "Account",
         submenu: {
             id: "account",

@@ -130,6 +130,30 @@ class Default_Model_Info
         }
     }
 
+    public function countTotalActiveMembers()
+    {
+
+        $cacheName = __FUNCTION__ . md5('countTotalActiveMembers');
+        $cache = Zend_Registry::get('cache');
+
+        $result = $cache->load($cacheName);
+
+        if ($result) {
+            return (int)$result['count_active_members'];
+        }
+
+        $sql = "SELECT count(1) AS `count_active_members` FROM (                    
+                    SELECT count(1) AS `count_active_projects` FROM `project` `p`
+                    WHERE `p`.`status` = 100
+                    AND `p`.`type_id` = 1
+                    GROUP BY p.member_id
+                ) AS `A`;";
+
+        $result = $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql);
+        $cache->save($result, $cacheName);
+        return (int)$result['count_active_members'];
+    }
+
     /**
      * if category id not set the latest comments for all categories on the current host wil be returned.
      *

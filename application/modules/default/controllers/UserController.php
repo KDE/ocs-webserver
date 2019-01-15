@@ -54,7 +54,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
     {
         $tableMember = new Default_Model_Member();
         $tableProject = new Default_Model_Project();
-
+        $earnModel = new Default_Model_StatDownload();
+        $helperUserRole = new Backend_View_Helper_UserRole();
         $pageLimit = 500;
         $projectpage = (int)$this->getParam('projectpage', 1);
 
@@ -69,38 +70,40 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
 
         $this->view->mainProject = $this->view->member->findDependentRowset($tableProject, 'MainProject')->current();
-        // TODOs
 
-        // $this->view->supportedProjects = $tableMember->fetchSupportedProjects($this->_memberId);
+        $this->view->userProjectCategories = $tableProject->getUserCreatingCategorys($this->_memberId);
+        $this->view->aboutmeUserInfo = $this->getAboutmeUserInfo($this->_memberId,$this->view->member->username);
+        
 
-        //Categories
-        /*
-        $catArray = array();
-        foreach ($this->view->supportedProjects as $pro) {
-            $catArray[$pro->catTitle] = array();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+
+            $amount = $earnModel->getMonthEarn($this->_memberId,201812);
+            if($amount && $amount['amount'])
+            {
+                $this->view->earnInfo = ' Last month I earned $'.$amount['amount'].'.';
+            }else
+            {
+                $this->view->earnInfo=' Last month I earned 0.';
+            }
+        }else{
+            $this->view->earnInfo='';
         }
+        
 
-        $helperProductUrl = new Default_View_Helper_BuildProductUrl();
-        foreach ($this->view->supportedProjects as $pro) {
-            $projArr = array();
-            $projArr['name'] = $pro->title;
-            $projArr['image'] = $pro->image_small;
-            $projArr['url'] = $helperProductUrl->buildProductUrl($pro->project_id);
-            $projArr['sumAmount'] = $pro->sumAmount;
-            array_push($catArray[$pro->catTitle], $projArr);
-        }
-        $this->view->supportingTeaser = $catArray;
-
-        $this->view->followedProducts = $tableMember->fetchFollowedProjects($this->_memberId, null);
-        $this->view->hits = $tableMember->fetchProjectsSupported($this->_memberId);
-        */
         // ajax load more products
         if ($this->getParam('projectpage', null)) {
             $total_records = $tableProject->countAllProjectsForMemberCatFilter($this->_memberId, true, null);
             $this->view->pageLimit = $pageLimit;
             $this->view->projectpage = $projectpage;
             $this->view->total_records = $total_records;
-            //$this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit,true);
+            
+            // get last project category id
+            $lastproject = $tableProject->getUserActiveProjects($this->_memberId, 1, (($projectpage - 1) * $pageLimit-1));
+            foreach ($lastproject as $value) {                
+                $this->view->lastcatid = $value['project_category_id'];                
+            }
+            
             $this->view->userProducts =
                 $tableProject->getUserActiveProjects($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit);
 
@@ -118,7 +121,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
             //$this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit,true);
             $this->view->userProducts =
                 $tableProject->getUserActiveProjects($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit);
-
+       
             $this->view->userFeaturedProducts = $tableProject->fetchAllFeaturedProjectsForMember($this->_memberId);
 
             $paginationComments = $tableMember->fetchComments($this->_memberId);
@@ -190,7 +193,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
             // $stat['cntSupporters'] = $cntmb;
             $stat['userLastActiveTime'] = $tableMember->fetchLastActiveTime($this->_memberId);
 
-            $helperUserRole = new Backend_View_Helper_UserRole();
+            
             $userRoleName = $helperUserRole->userRole();
             if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
                 $stat['cntDuplicateSourceurl'] = $tableProject->getCountProjectsDuplicateSourceurl($this->_memberId);
@@ -200,6 +203,79 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
     }
 
+    public function getAboutmeUserInfo($member_id,$username)
+    {
+        $tableProject = new Default_Model_Project();
+        $userProjectCategories = $tableProject->getUserCreatingCategorys($member_id);
+        $cnt = sizeof($userProjectCategories ); 
+        $userinfo='';
+        $isAdmin = false;
+        $helperUserRole = new Backend_View_Helper_UserRole();
+         $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName){
+            $isAdmin= true;
+        }
+        if($cnt>0)
+        {
+            $userinfo = "Hi, I am <b>".$username."</b> and I'm creating ";
+            if($cnt==1)
+            {
+                $userinfo = $userinfo.' <b>'.$userProjectCategories[0]['category1'].'</b>';
+                if($isAdmin)
+                {
+                    $userinfo = $userinfo.'['.$userProjectCategories[0]['cnt'].'].';
+                }
+            }else if($cnt==2)
+            {
+                $userinfo = $userinfo.' <b>'.$userProjectCategories[0]['category1'].'</b>';
+                if($isAdmin)
+                {
+                $userinfo = $userinfo.'['.$userProjectCategories[0]['cnt'].']';
+                }
+                $userinfo = $userinfo.' and <b>'.$userProjectCategories[1]['category1'].'</b>';
+                if($isAdmin)
+                { 
+                    $userinfo = $userinfo.'['.$userProjectCategories[1]['cnt'].'].';
+                }
+            }else if($cnt==3)
+            {
+                $userinfo = $userinfo.' <b>'.$userProjectCategories[0]['category1'].'</b>';
+                if($isAdmin)
+                { 
+                    $userinfo = $userinfo.'['.$userProjectCategories[0]['cnt'].']';
+                }
+                $userinfo = $userinfo.',<b> '.$userProjectCategories[1]['category1'].'</b>';
+                if($isAdmin)
+                { 
+                    $userinfo = $userinfo.'['.$userProjectCategories[1]['cnt'].']';
+                }
+                $userinfo = $userinfo.' and <b>'.$userProjectCategories[2]['category1'].'</b>';
+                if($isAdmin)
+                { 
+                    $userinfo = $userinfo.'['.$userProjectCategories[2]['cnt'].'].';
+                }
+            }else if($cnt>3)
+            {
+                $userinfo = $userinfo.' <b>'.$userProjectCategories[0]['category1'].'</b>';
+                if($isAdmin)
+                { 
+                $userinfo = $userinfo.'['.$userProjectCategories[0]['cnt'].']';
+                }
+                $userinfo = $userinfo.', <b>'.$userProjectCategories[1]['category1'].'</b>';
+                if($isAdmin)
+                { 
+                $userinfo = $userinfo.'['.$userProjectCategories[1]['cnt'].']';
+                }
+                $userinfo = $userinfo.', <b>'.$userProjectCategories[2]['category1'].'</b>';
+                if($isAdmin)
+                { 
+                $userinfo = $userinfo.'['.$userProjectCategories[2]['cnt'].']';
+                }
+                $userinfo = $userinfo.' and more.';
+            }                                                
+        }
+        return $userinfo;
+    }
     public function avatarAction()
     {
         $this->_helper->layout->disableLayout();

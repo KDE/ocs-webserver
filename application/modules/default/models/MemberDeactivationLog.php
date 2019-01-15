@@ -33,7 +33,8 @@ class Default_Model_MemberDeactivationLog extends Default_Model_DbTable_MemberDe
     const OBJ_TYPE_GITLAB_PROJECT = 21;
 
     const OBJ_TYPE_DISCOURSE_USER = 30;
-    const OBJ_TYPE_DISCOURSE_TOPIC = 31;
+    const OBJ_TYPE_DISCOURSE_POST = 31;
+    const OBJ_TYPE_DISCOURSE_TOPIC = 32;
 
 
     /**
@@ -233,16 +234,27 @@ class Default_Model_MemberDeactivationLog extends Default_Model_DbTable_MemberDe
      */
     public function getLogForumPosts($member_id)
     {
-        $sql = "SELECT * FROM member_deactivation_log WHERE deactivation_id = :memberid AND object_type_id = :objecttype AND is_deleted = 0";
+        $sql = "SELECT * FROM member_deactivation_log WHERE deactivation_id = :memberid AND (object_type_id = ".self::OBJ_TYPE_DISCOURSE_TOPIC." OR object_type_id = ".self::OBJ_TYPE_DISCOURSE_POST.") AND is_deleted = 0";
         $result = array();
 
         try {
-            $result = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('memberid' => $member_id, 'objecttype' => self::OBJ_TYPE_DISCOURSE_TOPIC));
+            $result = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('memberid' => $member_id));
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR READ member deactivation log - ' . print_r($e, true));
         }
 
-        return $result;
+        $posts = array();
+
+        foreach ($result as $item) {
+            if (self::OBJ_TYPE_DISCOURSE_TOPIC == $item['object_type_id']) {
+                $posts['topics'][$item['object_id']] = $item;
+            }
+            if (self::OBJ_TYPE_DISCOURSE_POST == $item['object_type_id']) {
+                $posts['posts'][$item['object_id']] = $item;
+            }
+        }
+
+        return $posts;
     }
 
 }

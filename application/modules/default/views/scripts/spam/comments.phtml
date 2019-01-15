@@ -64,7 +64,7 @@
         }
 
         div.jtable-main-container img.avatar{
-                width: 80px;
+                width: 50px;
                 border: 1px solid #dbdbdb;
                 -webkit-border-radius: 999px;
                 -moz-border-radius: 999px;
@@ -72,11 +72,18 @@
                 -webkit-background-clip: padding-box;
                 -moz-background-clip: padding;
                 background-clip: padding-box;
+                display: block;
         }
        
        a.removeuser{
         display: block;
        }
+
+       .aligncenter
+       {
+        text-align: center;
+       }
+
 
 </style>
 
@@ -110,6 +117,11 @@
             recordsLoaded: function (event, data) {
                 TooltipUser.setup("tooltipuser","right");        
             },
+            rowInserted: function (event, data) {
+               if (data.record.cntComments==1) {                   
+                    data.row.css("background", "#F7F7E1");                   
+               }
+            },
             fields: {
                 comment_id: {
                     key: true,
@@ -120,17 +132,18 @@
                 },                               
                 comment_target_id: {
                     title: 'project id',
-                    
+                    width: '5%', 
                     edit: false,
                     display:function(data){                               
                             var html='<a target="_blank" href="/p/'+data.record.comment_target_id+'">'+data.record.comment_target_id+'</a>';                            
                             return html;
                         }
                 },
-                comment_text: {
-                    title: 'text',
-                    width: '30%',
-                    sorting:false
+                aboutme: {
+                    title: 'aboutme',
+                    width: '20%',                  
+                    create: false,
+                    edit: false
                 },
                 comment_created_at: {
                     title: 'created',
@@ -139,14 +152,13 @@
                     edit: false
                 },
                 comment_member_id: {
-                    title: 'comment by',
-                    width: '10%',
+                    title: 'by',
+                    width: '5%',
                     edit: false,                    
                     display:function(data){                        
-                        var html = '<a  class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+data.record.comment_member_id+'" >';
+                        var html = '<a href="/u/'+data.record.username+'" target="_blank" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+data.record.comment_member_id+'" >';
                         html=html+'<img class="avatar" src="'+data.record.avatar+'"/>'+data.record.username+'</a>';
-
-                        html = html+'<a class="removeuser btn btn-danger btn-xs" data-memberid="'+data.record.comment_member_id+'">Remove User </a>';
+                       
                          return html;
                     }
                 },
@@ -160,24 +172,27 @@
                 cntComments: {                  
                     title: '#comments',
                     create: false,
+                     width: '3%', 
                     edit: false,
-                    list: true
+                    list: true,
+                    listClass: 'aligncenter'
                 },     
                 cntProjects: {
                     title: '#projects',
-                    width: '10%',                  
+                    width: '3%',                  
                     create: false,
-                    edit: false
+                    edit: false,
+                    listClass: 'aligncenter'
                 },
-                 aboutme: {
-                    title: 'aboutme',
-                    width: '10%',                  
-                    create: false,
-                    edit: false
+                comment_text: {
+                    title: 'text',
+                    width: '30%',
+                    sorting:false
                 },
+                 
                 reportedby:{
                     title: 'reported by',
-                    width: '15%',                    
+                                        
                     create: false,
                     edit: false,
                     display:function(data){   
@@ -195,9 +210,10 @@
                 },
                 cntreport: {
                     title: '#',
-                    width: '10%',                    
+                    width: '5%',                    
                     create: false,
                     edit: false,
+                    listClass: 'aligncenter',
                     display:function(data){   
                             var cnt = data.record.cntreport;  
                             var html='';

@@ -399,11 +399,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->processPploadId($newProject);
 
         try {
-            if (Default_Model_Spam::hasSpamMarkers($newProject->toArray())) {
-                $tableReportComments = new Default_Model_DbTable_ReportProducts();
-                $tableReportComments->save(array('project_id' => $newProject->project_id, 'reported_by' => 24, 'text' => "System: automatic spam detection"));
+            if (100 < $this->_authMember->roleId) {
+                if (Default_Model_Spam::hasSpamMarkers($newProject->toArray())) {
+                    $tableReportComments = new Default_Model_DbTable_ReportProducts();
+                    $tableReportComments->save(array('project_id' => $newProject->project_id, 'reported_by' => 24, 'text' => "System: automatic spam detection"));
+                }
+                Default_Model_DbTable_SuspicionLog::logProject($newProject, $this->_authMember, $this->getRequest());
             }
-            Default_Model_DbTable_SuspicionLog::logProject($newProject, $this->_authMember, $this->getRequest());
         } catch (Zend_Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage());
         }
@@ -681,6 +683,18 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         // ppload
         $this->processPploadId($projectData);
+
+        try {
+            if (100 < $this->_authMember->roleId) {
+                if (Default_Model_Spam::hasSpamMarkers($projectData->toArray())) {
+                    $tableReportComments = new Default_Model_DbTable_ReportProducts();
+                    $tableReportComments->save(array('project_id' => $projectData->project_id, 'reported_by' => 24, 'text' => "System: automatic spam detection on product edit"));
+                }
+                Default_Model_DbTable_SuspicionLog::logProject($projectData, $this->_authMember, $this->getRequest());
+            }
+        } catch (Zend_Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage());
+        }
 
         $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
         $this->redirect($helperBuildMemberUrl->buildMemberUrl($member->username, 'products'));

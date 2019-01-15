@@ -104,12 +104,12 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
 
             return;
         }
-        if ('delete' == $method) {
+        if ('posts_delete' == $method) {
             $this->deletePostsMembers($members);
 
             return;
         }
-        if ('undelete' == $method) {
+        if ('posts_undelete' == $method) {
             $this->undeletePostsMembers($members);
 
             return;
@@ -254,13 +254,7 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
         $modelSubSystem = new Default_Model_Ocs_Forum($this->config);
 
         while ($member = $members->fetch()) {
-            $result = $modelSubSystem->getPostsFromUser($member);
-            if (false == $result) {
-                $this->log->info('Fail');
-            }
-            foreach ($result['posts'] as $item) {
-                $result = $modelSubSystem->deletePostFromUser($item['id']);
-            }
+            $result = $modelSubSystem->blockUserPosts($member);
             $this->log->info("Posts : " . Zend_Json::encode($result));
             $messages = $modelSubSystem->getMessages();
             if (false === empty($messages)) {
@@ -274,13 +268,7 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
         $modelSubSystem = new Default_Model_Ocs_Forum($this->config);
 
         while ($member = $members->fetch()) {
-            $result = $modelSubSystem->getPostsFromUser($member);
-            if (false == $result) {
-                $this->log->info('Fail');
-            }
-            foreach ($result['posts'] as $item) {
-                $result = $modelSubSystem->undeletePostFromUser($item['id']);
-            }
+            $result = $modelSubSystem->unblockUserPosts($member);
             $this->log->info("Posts : " . Zend_Json::encode($result));
             $messages = $modelSubSystem->getMessages();
             if (false === empty($messages)) {
