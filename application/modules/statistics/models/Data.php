@@ -60,6 +60,17 @@ class Statistics_Model_Data
           $result = $this->_db->fetchAll($sql);
           return $result;  
     }
+
+    public function getNewprojectWeeklystats(){        
+          $sql = "SELECT YEARWEEK(`created_at`) as yyyykw , count(*) as amount  
+                  FROM project
+                  where status=100 and type_id = 1
+                  group by  yyyykw    
+                  order by yyyykw 
+                  desc limit 60";
+          $result = $this->_db->fetchAll($sql);
+          return $result;  
+    }
     
     public function getPayout($yyyymm){
         

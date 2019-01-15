@@ -85,6 +85,12 @@
 }
 
 */
+
+
+.bar { fill: steelblue; }
+
+
+
 .d3-tip {
   line-height: 1;
   font-weight: bold;

@@ -70,6 +70,10 @@ $(document).ready(function () {
         $('#downloadsdailyTabContainer').empty();
         $.getScript("/theme/flatui/js/stati/downloadsdaily.js");
     });
+    $(".newproductsweeklyTab").click(function () {
+        $('#newproductsweekly').empty();
+        $.getScript("/theme/flatui/js/stati/newproductsweekly.js");
+    });
     $('#numofmonthback').change(function () {
         $.getScript("/theme/flatui/js/stati/downloadsdaily.js");
     });

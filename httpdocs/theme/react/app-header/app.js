@@ -231,7 +231,7 @@ class SiteHeaderUserMenu extends React.Component {
   }
 
   render(){
-    
+
     return (
       <ul id="site-header-user-menu-container">
         <li ref={node => this.node = node} id="user-menu-toggle" className={this.state.dropdownClass}>
@@ -336,6 +336,7 @@ class MobileSiteHeader extends React.Component {
 
     return(
       <section id="mobile-site-header">
+        <div id="mobile-thumb-block"></div>
         <div id="mobile-site-header-logo" className={logoElementCssClass}>
           <a href={this.props.logoLink}>
             <img src={this.props.template['header-logo']['image-src']}/>

@@ -250,6 +250,16 @@ class Backend_IndexController extends Local_Controller_Action_Backend
         $this->sendJson($modelData->getMonthDiff($yyyymm));
     }
 
+
+    public function newproductsweeklyAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $yyyymm = $this->getParam('yyyymm', '1');
+        $modelData = new Statistics_Model_Data(Zend_Registry::get('config')->settings->dwh->toArray());
+        $list = array_reverse($modelData->getNewprojectWeeklystats());
+        $this->sendJson($list);
+    }
+
     public function getnewmembersprojectsAction()
     {
 
