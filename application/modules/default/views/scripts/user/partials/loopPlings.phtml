@@ -52,21 +52,27 @@
 <?php
     
 $isCurrentMonth = false;
+$currentYear = date("Y",time());
+
+if($this->year) {
+    $currentYear = $this->year;
+}
+
+
+$currentDate = date("Ym",time());
+$currentMonth = '';
+$monthlyDownload = null;
+$allDownloads = array();
+$css_active = 'active';
+
+$printCurrentMonth = new DateTime($currentDate.'01');
+
 $modelDownload = new Default_Model_StatDownload();
-$downloadMonths = $modelDownload->getUserDownloadMonths($this->member->member_id);
+$downloadMonths = $modelDownload->getUserDownloadMonths($this->member->member_id, $currentYear);
 $countDownloadsOverall = count($downloadMonths);
 $minDate = null;
 
 if ($countDownloadsOverall > 0) {  
-    
-    $currentMonth = '';
-    $monthlyDownload = null;
-    $allDownloads = array();
-    $css_active = 'active';
-    $currentDate = date("Ym",time());
-    $printCurrentMonth = new DateTime($currentDate.'01');
-    
-    
     foreach ($downloadMonths as $download) {
         $printMonth = new DateTime($download['yearmonth'].'01');
         if($minDate == null) {
@@ -169,68 +175,3 @@ if ($countDownloadsOverall > 0) {
 
 
 <div class="tab-content" id="pling-tab-content"><i class="fa fa-spinner"></i></div>
-
-<script>
-    $('#payout_info').click(function (event ) {
-        event.preventDefault();
-        $('#le-alert').addClass('in'); // shows alert with Bootstrap CSS3 implem
-    });
-
-    $('.close').click(function () {
-        $(this).parent().removeClass('in'); // hides alert with Bootstrap CSS3 implem
-    });
-    
-    $(function(){
-        // Enables popover
-        $(".payout-popover-info").popover({
-            html : true,
-            template : '<div class="popover alert alert-info alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-        });
-        $(".payout-popover-warning").popover({
-            html : true,
-            template : '<div class="popover alert alert-warning alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-        });
-        $(".payout-popover-success").popover({
-            html : true,
-            template : '<div class="popover alert alert-success alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-        });
-        $(".payout-popover-danger").popover({
-            html : true,
-            template : '<div class="popover alert alert-danger alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-        });
-        $(".msg-popover-danger").popover({
-            html : true,
-            template : '<div class="popover alert alert-danger alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-        });
-    });
-
-</script> 
-
-<?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){
-            $(\'[data-toggle="popover"]\').popover();
-            $(\'[data-toggle="tabajax"]\').click(function(e) {
-               
-                var $this = $(this),
-                    loadurl = $this.attr(\'href\'),
-                    targ = $this.attr(\'data-target\');
-                $(targ).html(\'<i class="fa fa-spinner"></i>\');
-
-                $.get(loadurl, function(data) {
-                    $(targ).html(data);
-                });
-
-                $this.tab(\'show\');
-                return false;
-            });
-            var $this = $(\'#tab_'.$minDate.'\'),
-                loadurl = $this.attr(\'href\'),
-                targ = $this.attr(\'data-target\');
-
-            $.get(loadurl, function(data) {
-                $(targ).html(data);
-            });
-
-            $this.tab(\'show\');
-        });
-    ');
