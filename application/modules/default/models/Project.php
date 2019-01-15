@@ -1472,10 +1472,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                         `p`.`project_category_id`,    
                         `p`.`image_small`,
                         (SELECT count(1) FROM `project_plings` `l` WHERE `p`.`project_id` = `l`.`project_id` AND `l`.`is_deleted` = 0 AND `l`.`is_active` = 1 ) `countplings`,
-                        (select count(1) from project pp where pp.member_id = p.member_id and pp.status = 100 and pp.type_id = 1 and  pp.project_category_id = p.project_category_id) cntCategory
+                        c.cnt cntCategory
                         FROM `project` `p`
                         join project_category cat on p.project_category_id = cat.project_category_id
-                        
+                        left join stat_cnt_projects_catid_memberid c on p.project_category_id = c.project_category_id and p.member_id = c.member_id
                         WHERE `p`.`status` =100
                         and `p`.`type_id` = 1
                         AND `p`.`member_id` = :member_id       
