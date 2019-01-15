@@ -52,12 +52,12 @@ $membersCount = new Default_View_Helper_FetchTotalMembersCount();
                 <div class="banner col-lg-5 col-md-5 col-sm-6 col-xs-8">
 
                     <div class="top">
-
-                         <div class="large"><?= $countSupporters?></div>
-                        <div class="small margin-bottom-10">supporters help</div>
-
                         <div class="large"><?= $countActiveMembers ?></div>
-                        <div class="small margin-bottom-10">contributors </div>
+                        <div class="small margin-bottom-10">contributors are helped by </div>
+                         <div class="large"><?= $countSupporters?></div>
+                        <div class="small margin-bottom-10">supporters</div>
+
+                        
 
                     </div>
 
@@ -85,14 +85,14 @@ $membersCount = new Default_View_Helper_FetchTotalMembersCount();
                  <div class="pling-nav-tabs" >
                         <ul class="nav nav-tabs" >
                            <li class="active"><a href="#supportersPanel" data-toggle="tab"><?= $this->translate('Supporters') ?></a></li>
-                            
+                            <li><a href="#plingedproductsPanel" data-toggle="tab"><?= $this->translate('Recently plinged Products ') ?></a></li>
                             <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
                                 ?>
                                 <li><a href="#topMemberPanel" data-toggle="tab"><?= $this->translate('Top Members') ?></a></li>
                           <?php 
                           }?>                            
                            
-                            <li><a href="#plingedproductsPanel" data-toggle="tab"><?= $this->translate('Recently plinged Products ') ?></a></li>
+                            
                             <li ><a href="#newMemberPanel" data-toggle="tab"><?= $this->translate('New Members') ?></a></li>
                             
                         </ul>
