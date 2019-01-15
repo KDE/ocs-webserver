@@ -572,6 +572,85 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->view->member = $this->_authMember;
         }
     }
+    
+    
+    public function plingsoldAction()
+    {
+        $tableMember = new Default_Model_Member();
+        $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+
+        $paypalValidStatusTable = new Default_Model_DbTable_PaypalValidStatus();
+        $paypalValidStatus = $paypalValidStatusTable->find($this->view->view_member->paypal_valid_status)->current();
+        $this->view->paypal_valid_status = $paypalValidStatus;
+
+        //backdoor for admins
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+        }
+    }
+    
+    
+    public function plingsajaxAction()
+    {
+        $this->_helper->layout->disableLayout();
+        
+        $tableMember = new Default_Model_Member();
+        $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+
+        $paypalValidStatusTable = new Default_Model_DbTable_PaypalValidStatus();
+        $paypalValidStatus = $paypalValidStatusTable->find($this->view->view_member->paypal_valid_status)->current();
+        $this->view->paypal_valid_status = $paypalValidStatus;
+
+        //backdoor for admins
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+        }
+        
+        $year = null;
+        if($this->hasParam('year')) {
+            $year = $this->getParam('year');
+        }
+        $this->view->year = $year;
+        
+        $this->_helper->viewRenderer('/plingsajax');
+    }
+    
+    public function plingsmonthajaxAction()
+    {
+        $this->_helper->layout->disableLayout();
+        
+        $tableMember = new Default_Model_Member();
+        $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+
+        $paypalValidStatusTable = new Default_Model_DbTable_PaypalValidStatus();
+        $paypalValidStatus = $paypalValidStatusTable->find($this->view->view_member->paypal_valid_status)->current();
+        $this->view->paypal_valid_status = $paypalValidStatus;
+
+        //backdoor for admins
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+        }
+        
+        $yearmonth = null;
+        if($this->hasParam('yearmonth')) {
+            $yearmonth = $this->getParam('yearmonth');
+        }
+        $this->view->yearmonth = $yearmonth;
+        
+        $this->_helper->viewRenderer('/plingsmonthajax');
+    }
 
     public function downloadhistoryAction()
     {

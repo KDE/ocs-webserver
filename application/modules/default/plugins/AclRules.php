@@ -333,6 +333,9 @@ class Default_Plugin_AclRules extends Zend_Acl
             'income',
             'payout',
             'plings',
+            'plingsold',
+            'plingsajax',
+            'plingsmonthajax',
             'downloadhistory',
             'likes'
         ));
