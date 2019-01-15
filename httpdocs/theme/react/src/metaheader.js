@@ -1582,7 +1582,7 @@ class MobileLeftSidePanel extends React.Component {
         <div id="left-side-panel-thumb-block">
         </div>
         <div id="panel-header">
-          <a href={this.props.baseUrl}>
+          <a>
             <img src={this.props.baseUrl + "/images/system/opendesktop-logo.png"} className="logo"/> openDesktop.org
           </a>
         </div>
