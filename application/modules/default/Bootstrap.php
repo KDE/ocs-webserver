@@ -737,7 +737,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             )
         );
         
-        
         $router->addRoute(
             'user_avatar',
             new Zend_Controller_Router_Route(
