@@ -1134,17 +1134,17 @@ body.drawer-open {
 
     a#menu-toggle-item {
       cursor: pointer;
-      height: 34px;
-      width: 34px;
+      height: 60px;
+      width: 60px;
       display: block;
       float: left;
       background-image: url(../img/hamburger-menu-icon.png);
       background-size: 20px 16px;
       background-repeat: no-repeat;
-      background-position: center center;
+      background-position: 8px 10px;
       position: absolute;
       left: 0;
-      background-color: white;
+      background-color: transparent;
       z-index: 1000;
     }
 
@@ -1168,6 +1168,14 @@ body.drawer-open {
         box-shadow: 0 6px 12px rgba(0,0,0,.175);
         background-color: white;
         overflow: scroll;
+
+        #left-side-panel-thumb-block {
+          width: 100%;
+          height: 50px;
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
 
         #panel-header {
           background: #efefef;
