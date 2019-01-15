@@ -219,7 +219,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
         if($cnt>0)
         {
-            $userinfo = "Hi, I am <b>".$username."</b> and I'm creating ";
+            $userinfo = "Hi, I am <b>".$username."</b> and I contribute to ";
             if($cnt==1)
             {
                 $userinfo = $userinfo.' <b>'.$userProjectCategories[0]['category1'].'</b>';
