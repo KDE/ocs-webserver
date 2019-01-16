@@ -1512,7 +1512,10 @@ class MobileLeftMenu extends React.Component {
         overlayClass = "open";
       }
     }
-    this.setState({overlayClass:overlayClass});
+    const self = this;
+    setTimeout(function () {
+      self.setState({overlayClass:overlayClass});
+    }, 200);
   }
 
   render(){
