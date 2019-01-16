@@ -101,7 +101,7 @@ if ($countDownloadsOverall > 0) {
             foreach ($allDownloads as $product) { ?>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
 
-                    <div class="col-md-1 cell-default">
+                    <div class="col-md-1 cell-default" style="min-width: 150px;">
                         <a href="<?= $helperBuildProductUrl->buildProductUrl($product['project_id'], ''); ?>">
                             <img src="<?php echo $helpImage->Image($product['image_small'], array('width' => 80, 'height' => 65)); ?> " height="81" width="101"/>
                         </a>
@@ -112,13 +112,13 @@ if ($countDownloadsOverall > 0) {
                         </a>
                         <b style="display: block; margin-bottom: 5px; font-size: 10pt; line-height: 0em;"><?=$product['cat_title']?></b>
                     </div>
-                    <div class="col-md-1 text-right cell-default">
+                    <div class="col-md-1 text-right cell-default" style="min-width: 150px;">
                         <span><?= $product['num_downloads'] ?></span>
                     </div>
-                    <div class="col-md-1 text-right cell-default">
+                    <div class="col-md-1 text-right cell-default" style="min-width: 150px;">
                         <span><?= $product['dl_pling_factor'] ?></span>
                     </div>
-                    <div class="col-md-1 text-right cell-default">
+                    <div class="col-md-1 text-right cell-default" style="min-width: 150px;">
                         <span>
                         <?php 
                             $errorMsg = "<ul>";
@@ -208,8 +208,9 @@ if ($countDownloadsOverall > 0) {
             $sum_total_month_view = number_format($sum_total_month);
             ?>
             <div class='row row-total'>
-                <div class='col-md-7 text-right'><?=$sum_total_text?></div>
-                <div class='col-md-1 text-right'><strong style="color: green;"><?=$sum_total_payout?></strong></div>
+                <div class='col-md-5 text-right'></div>
+                <div class='col-md-2 text-right' style="min-width: 300px;"><?=$sum_total_text?></div>
+                <div class='col-md-1 text-right' style="min-width: 150px;"><strong style="color: green;"><?=$sum_total_payout?></strong></div>
             </div>
             
             
@@ -248,7 +249,7 @@ if ($countDownloadsOverall > 0) {
     echo '<div class="tab-pane fade in active" id="'.$printDate.'">';
     echo '    <div style="text-align: center;" class="row margin-bottom-12"><div class="col-md-8 cell-default">No Data</div></div>';
     echo '    <div class="row row-total">';
-    echo '        <div class="col-md-7 text-right">Possible payout for this month (<span style="font-size: smaller;">*</span>):</div><div class="col-md-1 text-right"><strong>$0.00</strong></div>';
+    echo '        <div class="col-md-5 text-right"></div><div class="col-md-2 text-right" style="min-width: 300px;">Possible payout for this month (<span style="font-size: smaller;">*</span>):</div><div class="col-md-1 text-right" style="min-width: 150px;"><strong>$0.00</strong></div>';
     echo '    </div>';
     echo '</div>';
 }
