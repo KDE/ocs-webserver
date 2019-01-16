@@ -26,7 +26,8 @@ $users = $modelInfo->getNewActiveMembers(100);
 $topusers = $modelInfo->getTopScoreUsers(100);
 $supporters = $modelInfo->getNewActiveSupporters(100);
 $plingproducts = $modelInfo->getNewActivePlingProduct(100);
-$countSupporters = $modelInfo->getCountActiveSupporters();
+// $countSupporters = $modelInfo->getCountActiveSupporters();
+$countProjects = $this->fetchTotalProductsCount();
 $countActiveMembers = $modelInfo->countTotalActiveMembers();
 $buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $buildProductUrl = new Default_View_Helper_BuildProductUrl();
@@ -53,9 +54,9 @@ $membersCount = new Default_View_Helper_FetchTotalMembersCount();
 
                     <div class="top">
                         <div class="large"><?= $countActiveMembers ?></div>
-                        <div class="small margin-bottom-10">contributors are helped by </div>
-                         <div class="large"><?= $countSupporters?></div>
-                        <div class="small margin-bottom-10">supporters</div>
+                        <div class="small margin-bottom-10">contributors added </div>
+                         <div class="large"><?= $countProjects?></div>
+                        <div class="small margin-bottom-10">products</div>
 
                         
 
