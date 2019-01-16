@@ -81,7 +81,7 @@ class Embedv1Controller extends Zend_Controller_Action
         $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
 
         $this->getResponse()
-            ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)
+            ->setHeader('X-FRAME-OPTIONS', 'ALLOWALL', true)
 //            ->setHeader('Last-Modified', $modifiedTime, true)
             ->setHeader('Expires', $expires, true)
             ->setHeader('Pragma', 'cache', true)
