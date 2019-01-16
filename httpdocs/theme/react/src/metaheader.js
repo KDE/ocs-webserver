@@ -1512,8 +1512,10 @@ class MobileLeftMenu extends React.Component {
         overlayClass = "open";
       }
     }
+
     const self = this;
     setTimeout(function () {
+      console.log('time out');
       self.setState({overlayClass:overlayClass});
     }, 200);
   }
