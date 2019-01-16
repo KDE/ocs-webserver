@@ -341,7 +341,7 @@ class DomainsDropDownMenu extends React.Component {
 
     return (
       <li ref={node => this.node = node} id="domains-dropdown-menu" className={this.state.dropdownClass}>
-        <a className="domains-menu-link-item">Store Listing</a>
+        <a className="domains-menu-link-item">Store Listings</a>
         <ul className="dropdown-menu dropdown-menu-right">
           <li className="submenu-container">
             <ul>
@@ -397,7 +397,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
         <a className="discussion-menu-link-item">Discussion Boards</a>
         <ul className="discussion-menu dropdown-menu dropdown-menu-right">
           <li><a href={this.props.forumUrl }>General</a></li>
-          <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Store Listing</a></li>
+          <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Store Listings</a></li>
           <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
         </ul>
       </li>
@@ -1596,7 +1596,7 @@ class MobileLeftSidePanel extends React.Component {
               <a className="groupname"><b>Discussion Boards</b></a>
               <ul>
                 <li><a href={this.props.forumUrl }>General</a></li>
-                <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Store Listing</a></li>
+                <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Store Listings</a></li>
                 <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
               </ul>
             </li>
