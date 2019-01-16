@@ -103,6 +103,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 }
 ?>
 
+
     <link href="/theme/react/assets/css/get-it.css" type="text/css" rel="stylesheet"/>
 
     <!-- facebook -->
@@ -281,7 +282,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
     <link href="/theme/flatui/css/product-page.css" type="text/css" rel="stylesheet"/>
 
     <main id="product-page-content">
-        <div id="product-page-view">
+        <div id="product-page-view" class="disply-flex">
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 sidebar-left" style="">
                 <?php  echo $this->render('explore/partials/filter.phtml'); ?>
             </div>
@@ -344,7 +345,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                             $this->headLink()->appendStylesheet('/theme/flatui/css/select2.custmized.css');
                                             $this->inlineScript()->appendFile('/theme/flatui/js/lib/select2.min.js');
                                         ?>
-                                        <span class="tagsuserselectpanel" style="display: none">
+                                        <span class="tagsuserselectpanel" style="display: none; ">
                                             <select
                                                     id="tagsuserselect"
                                                     name="tagsuser"
