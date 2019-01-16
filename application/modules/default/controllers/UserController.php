@@ -82,8 +82,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $month = $datetime->format('Ym');
             $amount = $earnModel->getMonthEarn($this->_memberId,$month);
             if($amount && $amount['amount'])
-            {
-                $this->view->earnInfo = ' Last month I earned $'.$amount['amount'].'.';
+            {                 
+                $this->view->earnInfo = ' Last month I earned $'.number_format($amount['amount'], 2, '.', '').'.';
             }else
             {
                 $this->view->earnInfo=' Last month I earned 0.';
@@ -219,7 +219,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
         if($cnt>0)
         {
-            $userinfo = "Hi, I am <b>".$username."</b> and I'm creating ";
+            $userinfo = "Hi, I am <b>".$username."</b> and I contribute to ";
             if($cnt==1)
             {
                 $userinfo = $userinfo.' <b>'.$userProjectCategories[0]['category1'].'</b>';
