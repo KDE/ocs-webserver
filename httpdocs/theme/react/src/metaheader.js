@@ -1526,7 +1526,6 @@ class MobileLeftMenu extends React.Component {
         <a className="menu-toggle" id="menu-toggle-item"></a>
         <div id="left-side-overlay">
           <MobileLeftSidePanel
-            baseUrl={this.props.baseUrl}
             domains={this.props.domains}
             baseUrl={this.props.baseUrl}
             blogUrl={this.props.blogUrl}
@@ -1585,9 +1584,8 @@ class MobileLeftSidePanel extends React.Component {
     return (
       <div id="left-side-panel">
         <div id="panel-header">
-          <a>
-            <img src={this.props.baseUrl + "/images/system/opendesktop-logo.png"} className="logo"/> openDesktop.org
-          </a>
+          <img src={this.props.baseUrl + "/images/system/opendesktop-logo.png"} className="logo"/>
+          <a href={this.props.baseUrl}>openDesktop.org</a>
         </div>
         <div id="panel-menu">
           <ul>
