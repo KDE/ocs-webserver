@@ -208,7 +208,8 @@ if ($countDownloadsOverall > 0) {
             $sum_total_month_view = number_format($sum_total_month);
             ?>
             <div class='row row-total'>
-                <div class='col-md-5 text-right'></div>
+                <div class='col-md-1 text-right' style="min-width: 150px;"></div>
+                <div class='col-md-4 text-right'></div>
                 <div class='col-md-2 text-right' style="min-width: 300px;"><?=$sum_total_text?></div>
                 <div class='col-md-1 text-right' style="min-width: 150px;"><strong style="color: green;"><?=$sum_total_payout?></strong></div>
             </div>
@@ -249,7 +250,7 @@ if ($countDownloadsOverall > 0) {
     echo '<div class="tab-pane fade in active" id="'.$printDate.'">';
     echo '    <div style="text-align: center;" class="row margin-bottom-12"><div class="col-md-8 cell-default">No Data</div></div>';
     echo '    <div class="row row-total">';
-    echo '        <div class="col-md-5 text-right"></div><div class="col-md-2 text-right" style="min-width: 300px;">Possible payout for this month (<span style="font-size: smaller;">*</span>):</div><div class="col-md-1 text-right" style="min-width: 150px;"><strong>$0.00</strong></div>';
+    echo '        <div class="col-md-1 text-right" style="min-width: 150px;"></div><div class="col-md-4 text-right"></div><div class="col-md-2 text-right" style="min-width: 300px;">Possible payout for this month (<span style="font-size: smaller;">*</span>):</div><div class="col-md-1 text-right" style="min-width: 150px;"><strong>$0.00</strong></div>';
     echo '    </div>';
     echo '</div>';
 }
