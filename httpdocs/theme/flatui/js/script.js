@@ -525,31 +525,32 @@ var SlideShow = (function () {
 var Popuppanel =  (function () {
     return {
         setup: function () {
-            $('.popuppanel').on('click', function (event) {
-              if ($(this).attr('target') === "_blank"){
-                console.log('dont prevent default');
-              } else {
-                event.preventDefault();
-                var hf = $(this).attr('href');
-                $.fancybox({
-                    'hideOnContentClick': true,
-                    'autoScale': true,
-                    'cyclic': 'true',
-                    'transitionIn': 'elastic',
-                    'transitionOut': 'elastic',
-                    'type': 'iframe',
-                    'scrolling': 'auto',
-                    helpers: {
-                        overlay: {
-                            locked: false
-                        }
-                    },
-                    autoSize: true,
-                    href: hf,
-                    type: 'ajax'
-                });
-              }
-            });
+            $('body').on('click', 'a.popuppanel', function (event) {
+                if ($(this).attr('target') === "_blank"){                
+                  console.log('dont prevent default');
+                } else {
+                  event.preventDefault();
+                  var hf = $(this).attr('href');                  
+                  $.fancybox({
+                      'hideOnContentClick': true,
+                      'autoScale': true,
+                      'cyclic': 'true',
+                      'transitionIn': 'elastic',
+                      'transitionOut': 'elastic',
+                      'type': 'iframe',
+                      'scrolling': 'auto',
+                      helpers: {
+                          overlay: {
+                              locked: false
+                          }
+                      },
+                      autoSize: true,
+                      href: hf,
+                      type: 'ajax'
+                  });
+                }
+
+            });                                    
         }
     }
 

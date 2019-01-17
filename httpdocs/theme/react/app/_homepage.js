@@ -23,6 +23,7 @@ class HomePage extends React.Component {
         <div className="hp-wrapper">
           <Introduction
             device={this.state.device}
+            count={this.state.products.TotalProjects}
           />
           <div className="section">
             <div className="container">
@@ -86,8 +87,9 @@ class Introduction extends React.Component {
       <div id="introduction" className="section">
         <div className="container">
           <article>
-            <h2 className="mdl-color-text--primary">Welcome to AppImageHub</h2>
+            <h2 className="mdl-color-text--primary">Welcome to AppImageHub</h2>            
             <p>
+              This catalog has {this.props.count} AppImages and counting.<br/>
               AppImages are self-contained apps which can simply be downloaded & run on any Linux distribution. For easy integration, download AppImageLauncher:
             </p>
             <div className="actions">

@@ -41,7 +41,7 @@ $downloadYears = $modelDownload->getUserDownloadYears($this->member->member_id);
                 <!-- NAVIGATION -->
                 <?php echo $this->render('user/partials/userHeader.phtml'); ?>
                 <!-- /NAVIGATION -->
-                <div class="my-products-heading">
+                <div class="my-products-heading" style="border-bottom: none; padding-bottom: 0px;">
                     <h1 class="page-title left"><?= $this->translate('Payout') ?></h1>
                 <?php
                     $member = $this->view_member;
@@ -49,6 +49,26 @@ $downloadYears = $modelDownload->getUserDownloadYears($this->member->member_id);
                         echo "<br><br><br><h1 style='color: red; '>This account has been excluded from receiving plings, due to various misuses.</h1>";
                     }
                 ?>
+                </div>
+                
+                <!-- year tabs nav -->
+                <div class="pling-nav-tabs" style="padding-bottom: 20px;">
+                    <ul class="nav nav-tabs" id="yeartablist">
+                        <?php
+                            if(count($downloadYears) == 0 ||  $downloadYears[0]['year'] != $currentYear) {
+                                //Current year
+                                echo '<li role="presentation" class="yeartabs">';
+                                echo '    <a style="font-size: 18px;" data-year="'.$currentYear.'" data-toggle="yeartabajax" href="/member/'.$member->member_id.'/plingsajax?year='.$currentYear.'" data-target="#my-payout-list" id="tab_year_'.$currentYear.'">'.$currentYear.'</a>';
+                                echo '</li>';
+                            }
+
+                            foreach ($downloadYears as $yearobj) {
+                                echo '<li role="presentation" class="yeartabs">';
+                                echo '    <a style="font-size: 18px;" data-year="'.$yearobj['year'].'" data-toggle="yeartabajax" href="/member/'. $member->member_id.'/plingsajax?year='.$yearobj['year'].'" data-target="#my-payout-list" id="tab_year_'.$yearobj['year'].'">'.$yearobj['year'].'</a>';
+                                echo '</li>';
+                            }
+                        ?>
+                    </ul>
                 </div>
                 <section>
                 <?php
@@ -93,22 +113,6 @@ $downloadYears = $modelDownload->getUserDownloadYears($this->member->member_id);
                         echo "</script>";
                 ?>  
                 <div class="my-products-list" id="my-payout-list">
-                    
-                    <div class="form-group">
-                        <select class="form-control" id="sellYear" style="width: 200px;" data-target="plingsyear" data-href="/member/<?= $member->member_id?>/plingsajax?year=">
-                            <?php
-                                if(count($downloadYears) == 0 ||  $downloadYears[0]['year'] != $currentYear) {
-                                    //Current year
-                                    echo '<option value="'.$currentYear.'" selected="selected">'.$currentYear.'</option>';
-                                }
-                                
-                                foreach ($downloadYears as $yearobj) {
-                                    echo '<option value="'.$yearobj['year'].'">'.$yearobj['year'].'</option>';
-                                }
-                            ?>
-                        </select>
-                    </div> 
-                    
                     <div id="plingsyear">
                         <i class="fa fa-spinner"></i>
                     </div>
@@ -127,18 +131,23 @@ $(document).ready(function(){
     
     
     //Load pling for year
-    $('#sellYear').change(function(e) {
+    $('[data-toggle="yeartabajax"]').click(function(e) {
                
         var $this = $(this);
-        var year = $this.val();
-        var loadurl = $this.attr('data-href');
-        var targ = $this.attr('data-target');
+        var year = $this.attr('data-year');
+        var loadurl = $this.attr('href');
+        var targ = $('#plingsyear');
+        
+        $('.yeartabs').removeClass('active');
+        $this.parent().addClass('active');
         
         $(targ).html('<i class="fa fa-spinner"></i>');
 
-        $.get(loadurl+year, function(data) {
+        $.get(loadurl, function(data) {
+            
             $('#plingsyear').html(data);
             $('[data-toggle="popover"]').popover();
+            
             
             //Init tabs
             $('[data-toggle="tabajax"]').click(function(e) {
@@ -156,7 +165,6 @@ $(document).ready(function(){
             });
             
             //Load first Tab
-            var year = $('#sellYear').val();
             var month = yearList[year]['maxMonth'];
             var $this = $('#tab_'+month),
             loadurl = $this.attr('href'),
@@ -175,13 +183,17 @@ $(document).ready(function(){
     });
          
     //Init View on first load     
-    var year = $('#sellYear').val();
-    var $this = $('#sellYear');
-    var loadurl = $this.attr('data-href');
-
-    $.get(loadurl+year, function(data) {
+    var year = <?= $currentYear ?>;
+    var currentyeartab = $('#tab_year_'+year);
+    $('.yeartabs').removeClass('active');
+    
+    currentyeartab.parent().addClass('active');
+    
+    var loadurl = currentyeartab.attr('href');
+    $.get(loadurl, function(data) {
         $('#plingsyear').html(data);
         $('[data-toggle="popover"]').popover();
+        
         
         //Init tabs
         $('[data-toggle="tabajax"]').click(function(e) {
@@ -208,10 +220,10 @@ $(document).ready(function(){
         });
 
         $this.tab('show');
+        
 
         return false;
     });
-    
     
     
     $('[data-toggle="tabajax"]').click(function(e) {

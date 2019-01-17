@@ -449,7 +449,6 @@ class MobileSiteHeader extends React.Component {
     return React.createElement(
       "section",
       { id: "mobile-site-header" },
-      React.createElement("div", { id: "mobile-thumb-block" }),
       React.createElement(
         "div",
         { id: "mobile-site-header-logo", className: logoElementCssClass },
