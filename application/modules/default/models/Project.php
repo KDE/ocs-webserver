@@ -963,16 +963,26 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
     }
 
+  
+
     /**
      * @return mixed
      */
-    public function fetchTotalProjectsCount()
+    public function fetchTotalProjectsCount($is_current_store=false)
     {
-        $sql =
-            "SELECT count(1) AS `total_project_count` FROM `project` WHERE `project`.`status` = :status AND `project`.`type_id` = :ptype";
 
-        $result = $this->_db->fetchRow($sql, array('status' => self::PROJECT_ACTIVE, 'ptype' => self::PROJECT_TYPE_STANDARD));
-
+        $sql ="SELECT count(1) AS `total_project_count` FROM `stat_projects`";
+        if($is_current_store){            
+            $info = new Default_Model_Info();
+            $activeCategories = $info->getActiveCategoriesForCurrentHost();
+            $sql .= ' where project_category_id IN (' . implode(',', $activeCategories) . ')';
+            $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+            if($storeConfig && $storeConfig->package_type)
+            {
+                $sql .= ' AND find_in_set('.$storeConfig->package_type.', package_types)';
+            }            
+        }
+        $result = $this->_db->fetchRow($sql);
         return $result['total_project_count'];
     }
 

@@ -43,9 +43,9 @@ $this->headMeta()->appendProperty('og:image','https://www.appimagehub.com/images
     $this->topGames = $modelInfo->getTopProductsForHostStores(15,"6",$package_type);
     $this->topApps = $modelInfo->getTopProductsForHostStores(15,"234,239,243,244,245,388,391,392,450,481,492",$package_type);
   }
-
+  $modelProject = new Default_Model_Project();
+  $totalProjects = $modelProject->fetchTotalProjectsCount(true);
 ?>
-
 <main id="explore-content"></main>
 <script type="text/javascript">
 
@@ -58,7 +58,8 @@ $this->headMeta()->appendProperty('og:image','https://www.appimagehub.com/images
   var products = {
     LatestProducts:<?php echo $js_latestProducts ?>,
     TopGames:<?php echo $js_topGames ?>,
-    TopApps:<?php echo $js_topApps ?>
+    TopApps:<?php echo $js_topApps ?>,
+    TotalProjects:<?php echo $totalProjects ?>
   };
   var filters = {};
   var view = "home";
