@@ -24,11 +24,15 @@ class Default_Form_Product extends Zend_Form
 {
 
     protected $onlineGalleryImageSources = array();
+    private $member_id = null;
 
     public function __construct($options = null)
     {
         if (isset($options['pictures'])) {
             $this->onlineGalleryImageSources = $options['pictures'];
+        }
+        if (isset($options['member_id'])) {
+            $this->member_id = $options['member_id'];
         }
 
         parent::__construct($options);
@@ -473,24 +477,22 @@ class Default_Form_Product extends Zend_Form
 
         $optionArray = array();
 
-        if (Zend_Auth::getInstance()->hasIdentity()) {
+        if ($this->member_id) {
 
-            $auth = Zend_Auth::getInstance();
-            $user = $auth->getStorage()->read();
             $memberTable = new Default_Model_Member();
-            $member = $memberTable->fetchMemberData($user->member_id);
+            $member = $memberTable->fetchMemberData($this->member_id);
             $gitlab_user_id = null;
             if(!empty($member->gitlab_user_id)) {
                 //get gitlab user id from db
                 $gitlab_user_id = $member->gitlab_user_id;
             } else {
                 //get gitlab user id from gitlab API and save in DB
-                $gitUser = $gitlab->getUserWithName($user->username);
+                $gitUser = $gitlab->getUserWithName($member->username);
                 
                 if ($gitUser && null != $gitUser) {
                     $gitlab_user_id = $gitUser['id'];
                     $memberTableExternal = new Default_Model_DbTable_MemberExternalId();
-                    $memberTableExternal->updateGitlabUserId($user->member_id, $gitlab_user_id);
+                    $memberTableExternal->updateGitlabUserId($this->member_id, $gitlab_user_id);
                 }
             }
             
