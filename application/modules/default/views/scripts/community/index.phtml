@@ -85,7 +85,7 @@ $membersCount = new Default_View_Helper_FetchTotalMembersCount();
 
                  <div class="pling-nav-tabs" >
                         <ul class="nav nav-tabs" >
-                           <li class="active"><a href="#supportersPanel" data-toggle="tab"><?= $this->translate('Supporters') ?></a></li>
+                           <li class="active"><a href="#supportersPanel" data-toggle="tab"><?= $this->translate('Active Supporters') ?></a></li>
                             <li><a href="#plingedproductsPanel" data-toggle="tab"><?= $this->translate('Recently plinged Products ') ?></a></li>
                             <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
                                 ?>
