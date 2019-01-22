@@ -297,6 +297,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'deletepploadfiles',
             'updatepackagetype',
             'updatearchitecture',
+            'gettaggroupsforcatajax'
 
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
 

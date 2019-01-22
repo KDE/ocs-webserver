@@ -80,6 +80,50 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->product = $productInfo;
         $this->_helper->viewRenderer('/partials/pploadajax');
     }
+    
+    public function gettaggroupsforcatajaxAction() {
+        $this->_helper->layout()->disableLayout();
+        
+        $catId = null;
+        $fileId = null;
+        
+        if($this->hasParam('file_id')) {
+            $fileId = $this->getParam('file_id');
+        }
+        
+        if($this->hasParam('project_cat_id')) {
+            $catId = $this->getParam('project_cat_id');
+            $catTagModel  = new Default_Model_Tags();
+            $catTagGropuModel  = new Default_Model_TagGroup();
+            $tagGroups = $catTagGropuModel->fetchTagGroupsForCategory($catId);
+            
+            $tableTags = new Default_Model_DbTable_Tags();
+            
+            $result = array();
+            $resultGroup = array();
+            
+            foreach ($tagGroups as $group) {
+                $tags = $tableTags->fetchForGroupForSelect($group['tag_group_id']); 
+                $selectedTag = null;
+                if(!empty($fileId)) {
+                    $selectedTags = $catTagModel->getTagsArray($fileId, Default_Model_DbTable_Tags::TAG_TYPE_FILE,$group['tag_group_id']);
+                    if(!empty($selectedTags) && count($selectedTags) == 1) {
+                        $selectedTag = $selectedTags[0]['tag_id'];
+                    }
+                }
+                
+                $group['tag_list'] = $tags;
+                $group['selected_tag'] = $selectedTag;
+                $result[] = $group;
+            }
+            
+            $this->_helper->json(array('status' => 'ok', 'ResultSize' => count($tagGroups), 'tag_groups' => $result));
+
+            return;
+        }
+
+        $this->_helper->json(array('status' => 'error'));
+    }
 
     
 
@@ -2140,6 +2184,37 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             //set architecture
             $modelTags = new Default_Model_Tags();
             $modelTags->savePackagetypeTagForProject($this->_projectId, $_POST['file_id'], $typeId);
+
+            $this->_helper->json(array('status' => 'ok'));
+
+            return;
+        } else {
+            $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
+        }
+
+        $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
+    }
+    
+    public function updatefiletagAction()
+    {
+        $this->_helper->layout()->disableLayout();
+
+        $error_text = '';
+
+        // Update a file information in ppload collection
+        if (!empty($_POST['file_id'])) {
+            $tagId = null;
+            if (isset($_POST['tag_id'])) {
+                $tagId = $_POST['tag_id'];
+            }
+            $tagGroupId = null;
+            if (isset($_POST['tag_group_id'])) {
+                $tagGroupId = $_POST['tag_group_id'];
+            }
+
+            //set architecture
+            $modelTags = new Default_Model_Tags();
+            $modelTags->saveFileTagForProjectAndTagGroup($this->_projectId, $_POST['file_id'], $tagId, $tagGroupId);
 
             $this->_helper->json(array('status' => 'ok'));
 
