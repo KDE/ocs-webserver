@@ -24,6 +24,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 {
     const DEFAULT_ORDER = 'latest';
     const TAG_ISORIGINAL = 'original-product';
+
     /** @var  string */
     protected $_browserTitlePrepend;
 
@@ -98,7 +99,6 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         return $result;
     }
 
-
     /**
      * @throws Zend_Cache_Exception
      * @throws Zend_Db_Select_Exception
@@ -107,8 +107,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
      * @throws Zend_Paginator_Exception
      */
     public function indexAction()
-    {           
-        
+    {
         $filter = array();
         $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
         $this->view->categories = $storeCatIds;
@@ -121,21 +120,17 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         // Filter-Parameter
         $inputCatId = (int)$this->getParam('cat', null);
 
+        $inputFilterOriginal = $this->getParam('filteroriginal', null);
 
-        $inputFilterOriginal =$this->getParam('filteroriginal', null);
-
-        if(isset($inputFilterOriginal))
-        {            
+        if (isset($inputFilterOriginal)) {
             //set to cookie session
             $config = Zend_Registry::get('config');
             $cookieName = $config->settings->session->filter_browse_original;
             $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
             $domain = Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost());
-            $cookieExpire = time() + $remember_me_seconds;            
+            $cookieExpire = time() + $remember_me_seconds;
             setcookie($cookieName, $inputFilterOriginal, $cookieExpire, '/');
-        }
-        else
-        {           
+        } else {
             $config = Zend_Registry::get('config');
             $cookieName = $config->settings->session->filter_browse_original;
             if (isset($_COOKIE[$cookieName])) {
@@ -159,33 +154,32 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
         $filter['category'] = $inputCatId ? $inputCatId : $storeCatIds;
         $filter['order'] = preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('ord', self::DEFAULT_ORDER));
-        if($inputFilterOriginal==1)
-        {
-            $filter['original']  = self::TAG_ISORIGINAL;
+        if ($inputFilterOriginal == 1) {
+            $filter['original'] = self::TAG_ISORIGINAL;
         }
 
         $page = (int)$this->getParam('page', 1);
-                
+
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        if($storeConfig->layout_explore && $storeConfig->isRenderReact()){     
-            $pageLimit = 50;         
-            $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);                       
-            $this->view->productsJson =Zend_Json::encode($requestedElements['elements']);           
+        if ($storeConfig->layout_explore && $storeConfig->isRenderReact()) {
+            $pageLimit = 50;
+            $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);
+            $this->view->productsJson = Zend_Json::encode($requestedElements['elements']);
             $this->view->filtersJson = Zend_Json::encode($filter);
             $this->view->cat_idJson = Zend_Json::encode($inputCatId);
             $modelInfo = new Default_Model_Info();
-            $topprods = $modelInfo->getMostDownloaded(100, $inputCatId,$this->view->package_type);
+            $topprods = $modelInfo->getMostDownloaded(100, $inputCatId, $this->view->package_type);
             $this->view->topprodsJson = Zend_Json::encode($topprods);
-            $comments = $modelInfo->getLatestComments(5, $inputCatId,$this->view->package_type);
+            $comments = $modelInfo->getLatestComments(5, $inputCatId, $this->view->package_type);
             $this->view->commentsJson = Zend_Json::encode($comments);
-            $modelCategory = new Default_Model_ProjectCategory();            
-            $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());   
-            $this->_helper->viewRenderer('index-react');                        
-        }else{
-            $pageLimit = 10;    
-            $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);       
+            $modelCategory = new Default_Model_ProjectCategory();
+            $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());
+            $this->_helper->viewRenderer('index-react');
+        } else {
+            $pageLimit = 10;
+            $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);
         }
-        
+
         $paginator = Local_Paginator::factory($requestedElements['elements']);
         $paginator->setItemCountPerPage($pageLimit);
         $paginator->setCurrentPageNumber($page);
@@ -195,7 +189,6 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $this->view->totalcount = $requestedElements['total_count'];
         $this->view->filters = $filter;
         $this->view->page = $page;
-        
     }
 
     /**
