@@ -79,7 +79,7 @@ class Default_Model_ProjectCategory
                 Zend_Registry::get('logger')->err(__METHOD__ . ' - can not fetch categories : ' . $e->getMessage());
                 $modelCategories = new Default_Model_DbTable_ConfigStore();
                 $defaultStore = $modelCategories->fetchDefaultStoreId();
-                $rows = $this->fetchCategoryTreeWithPackageType($defaultStore->store_id, $defaultStore->package_type);
+                $rows = $this->fetchCategoryTreeWithPackageType($defaultStore->store_id, $package_type);
             }
 
             list($rows, $tree) = $this->buildTreeForView($rows);
