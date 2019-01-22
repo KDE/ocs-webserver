@@ -44,7 +44,7 @@ class Default_Model_Spam
 
         $haystack = implode(" ", array($project_data['title'], $project_data['description']));
 
-        if(preg_match("/\b({$needles})\b/i", $haystack)){
+        if(preg_match("/\b({$needles})s?\b/i", $haystack)){
             return true;
         }
 
