@@ -21,12 +21,8 @@
  **/
 
 $modelCategory = new Default_Model_ProjectCategory();
-//$this->categories = $modelCategory->fetchCategoryTreeCurrentStore();
 $this->categories = $modelCategory->fetchTreeForView();
 $jsonTree = json_encode($this->categories);
-$this->navBackgroundColorActive = $this->template['header-nav-tabs']['background-color-active'];
-$this->navBackgroundColor = $this->template['header-nav-tabs']['background-color'];
-$this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
 ?>
 <style type="text/css">
 
@@ -41,43 +37,42 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
         width: 100%;
         color: #2673b0;
     }
+
     .navilink {
         color: #2673b0;
         margin: 0;
         padding: 3px 0 0 10px;
     }
+
     .navilink span.title:hover {
         font-weight: bold;
         cursor: pointer;
     }
-    ul.naviblock a:hover
-    {
-        background-color:  <?=$this->navBackgroundColorActive?> !important;
-        color:  <?=$this->navColorActive?> !important;
-    }
-    ul.naviblock a
-    {
-          display: block;
-            width:100%;
+
+    ul.naviblock a:hover {
+        background-color: <?=$this->navBackgroundColorActive?> !important;
+        color: <?=$this->navColorActive?> !important;
     }
 
-    li.navilink.parentactive.parent a
-    {
-        color:  <?=$this->navBackgroundColorActive?>;
+    ul.naviblock a {
+        display: block;
+        width: 100%;
     }
 
-    ul.naviblock a.active.child
-    {
-        background-color:  <?=$this->navBackgroundColorActive?>;
-        color:  <?=$this->navColorActive?>;
+    li.navilink.parentactive.parent a {
+        color: <?=$this->navBackgroundColorActive?>;
+    }
+
+    ul.naviblock a.active.child {
+        background-color: <?=$this->navBackgroundColorActive?>;
+        color: <?=$this->navColorActive?>;
     }
 
     li.navilink.active.parent a.active.parent,
     #category-tree-container #category-tree ul li.active > a,
-    #category-tree-container #category-tree ul li a:hover
-    {
-        background-color:  <?=$this->navBackgroundColorActive?> !important;
-        color:  <?=$this->navColorActive?> !important;
+    #category-tree-container #category-tree ul li a:hover {
+        background-color: <?=$this->navBackgroundColorActive?> !important;
+        color: <?=$this->navColorActive?> !important;
     }
 
     li.navilink span.cat-title {
@@ -89,107 +84,21 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
         vertical-align: middle;
         padding-left: 3px;
     }
+
     li.navilink span.product-counter {
         display: inline-block;
         vertical-align: middle;
         text-align: end;
         width: 20%;
     }
-
-    /*
-    li.navilink.active.parent a.child{
-        color:  <?=$this->navBackgroundColorActive?>;
-    }
-   */
-
 </style>
-
-<?php /* <div class="panel-group old-cat-tree-container" id="accordion">
-    <div class="panel panel-default accordion-group">
-            <div style="margin-left: -10px">
-            <?php
-            function build_tree($rows, $selectedOrder, $addAllItem = false)
-            {
-                if(!is_array($rows))
-                {
-                    $rows = array($rows);
-                }
-                $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
-
-                $csschild = "child";
-                if ($addAllItem) {
-                    $csschild = "parent";
-                }
-
-                $result = "<ul id='cat-tree' class='naviblock {$csschild}'>";
-
-                $result .= ($addAllItem) ? addRoot($selectedOrder) : '';
-
-                foreach ($rows as $row) {
-
-                    $urlExplore = $helperBuildExploreUrl->buildExploreUrl($row['id'], null, $selectedOrder);
-                    $product_count = empty($row['product_count']) ? '' : $row['product_count'];
-
-                    $result .= "<li class='navilink {$csschild}'><span class='title'><a class='{$csschild}' href='{$urlExplore}' data-id='{$row['id']}' title='{$row['title']}'><span class='cat-title'>{$row['title']}</span> <span class='product-counter'>{$product_count}</span> </a></span>";
-
-                    if ($row['has_children']) {
-                        $children = $row['children'];
-
-                        $htmlChildren = build_tree($children, $selectedOrder);
-                        $result .= "<span id='{$row['id']}' class='collapse'>"
-                            . $htmlChildren .
-                            "</span>";
-                    }
-                    $result .= "</li>";
-                }
-                $result .= "</ul>";
-
-                return $result;
-            }
-
-            /**
-             * @param string $selectedOrder
-             * @return string
-             *
-            function addRoot($selectedOrder)
-            {
-                $helpExploreUrl = new Default_View_Helper_BuildExploreUrl();
-                $urlExplore = $helpExploreUrl->buildExploreUrl(null, null, $selectedOrder);
-                return "<li class='navilink parent'><span class='title'><a class='parent' href='{$urlExplore}' data-id='0'><span class='cat-title'>All</span></a></span></li>";
-            }
-
-
-            $selectedOrder = isset($this->filters['order']) ? $this->filters['order'] : null;
-            echo build_tree($this->categories, $selectedOrder, true);
-            ?>
-            </div>
-    </div>
-</div>
-*/ ?>
-<script type="application/javascript">
-    /*$(document).ready(function(){
-        var hierarchy = (function () {
-            return {
-                setup: function (cat_id) {
-                    $('#cat-tree').find('[data-id='+cat_id+']').addClass('active').parents('li').addClass('active').parents('span.collapse').addClass('in');
-                    $('#cat-tree').find('[data-id='+cat_id+']').parent().siblings('span.collapse').addClass('in');
-                }
-            }
-        })();
-
-        hierarchy.setup(<?=$this->cat_id?>);
-    });*/
-</script>
 <link rel="stylesheet" href="/theme/react/assets/css/cat-tree.css"/>
-<div id="category-tree-container">
-</div>
+<div id="category-tree-container"></div>
 <script type="application/javascript">
-  var catTree = <?= $jsonTree ?>;
-  <?php
-    $catIdExists = isset($this->cat_id);
-    if ($catIdExists){
-      echo "var categoryId = ". $this->cat_id .";";
-    }
-  ?>
+    var catTree = <?= $jsonTree ?>;
+    <?php
+    $catIdExists = isset($this->cat_id) ? $this->cat_id : "null";
+    echo "var categoryId = {$catIdExists};";
+    ?>
 </script>
 <script type="application/javascript" src="/theme/react/cat-tree.js?<?= APPLICATION_VERSION ?>"></script>
