@@ -254,10 +254,48 @@ class Backend_IndexController extends Local_Controller_Action_Backend
     public function newproductsweeklyAction()
     {
         $this->_helper->layout->disableLayout();
-        $yyyymm = $this->getParam('yyyymm', '1');
+        // $yyyymm = $this->getParam('yyyymm', '1');
         $modelData = new Statistics_Model_Data(Zend_Registry::get('config')->settings->dwh->toArray());
-        $list = array_reverse($modelData->getNewprojectWeeklystats());
-        $this->sendJson($list);
+        // $list = array_reverse($modelData->getNewprojectWeeklystats());
+        // $this->sendJson($list);
+
+        $listwallpapers = $modelData->getNewprojectWeeklystatsWallpapers();
+        $listNowallpapers = $modelData->getNewprojectWeeklystatsWithoutWallpapers();
+
+        $map1 = array();
+        foreach($listwallpapers as $value) {          
+            $map1[$value['yyyykw']] = $value['amount'];
+        }
+
+        $map2 = array();
+        foreach($listNowallpapers as $value) {          
+            $map2[$value['yyyykw']] = $value['amount'];
+        }
+
+        $datetime = new DateTime();
+        $result = array();
+        for ($i = 1; $i < 60; $i++) {
+            $w = '-1 week';
+            $datetime->modify($w);    
+            $month = $datetime->format('YW');
+
+            $value1=0;
+            if(isset($map1[$month])){
+                $value1 = $map1[$month];
+            }
+            $value2=0;
+            if(isset($map2[$month])){
+                $value2 = $map2[$month];
+            }
+            $result[] = array('yyyykw'=>$month,
+                            'amountwallpapers' =>$value1,
+                            'amountnowallpapers'=>$value2);
+        }
+        $list = array_reverse($result);
+        $this->sendJson($list);        
+
+        // $this->_helper->json($list);
+       
     }
 
     public function getnewmembersprojectsAction()

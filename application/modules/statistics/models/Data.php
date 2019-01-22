@@ -63,8 +63,34 @@ class Statistics_Model_Data
 
     public function getNewprojectWeeklystats(){        
           $sql = "SELECT YEARWEEK(`created_at`) as yyyykw , count(*) as amount  
-                  FROM project
-                  where status=100 and type_id = 1
+                  FROM project p
+                  join stat_cat_tree t on p.project_category_id = t.project_category_id                
+                  where status=100 and type_id = 1 
+                  group by  yyyykw    
+                  order by yyyykw 
+                  desc limit 60";
+          $result = $this->_db->fetchAll($sql);
+          return $result;  
+    }
+    public function getNewprojectWeeklystatsWithoutWallpapers(){        
+          $sql = "SELECT YEARWEEK(`created_at`) as yyyykw , count(*) as amount  
+                  FROM project p
+                  join stat_cat_tree t on p.project_category_id = t.project_category_id                
+                  where status=100 and type_id = 1                   
+                  and (t.lft<899 or t.rgt>988)
+                  group by  yyyykw    
+                  order by yyyykw 
+                  desc limit 60";
+          $result = $this->_db->fetchAll($sql);
+          return $result;  
+    }
+
+    public function getNewprojectWeeklystatsWallpapers(){        
+          $sql = "SELECT YEARWEEK(`created_at`) as yyyykw , count(*) as amount  
+                  FROM project p
+                  join stat_cat_tree t on p.project_category_id = t.project_category_id                
+                  where status=100 and type_id = 1                   
+                  and (t.lft>899 and t.rgt<988)
                   group by  yyyykw    
                   order by yyyykw 
                   desc limit 60";
