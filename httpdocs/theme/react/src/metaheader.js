@@ -397,7 +397,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
         <a className="discussion-menu-link-item">Discussion Boards</a>
         <ul className="discussion-menu dropdown-menu dropdown-menu-right">
           <li><a href={this.props.forumUrl }>General</a></li>
-          <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Store Listings</a></li>
+          <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Themes & Apps</a></li>
           <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
         </ul>
       </li>
@@ -1584,8 +1584,10 @@ class MobileLeftSidePanel extends React.Component {
     return (
       <div id="left-side-panel">
         <div id="panel-header">
-          <img src={this.props.baseUrl + "/images/system/opendesktop-logo.png"} className="logo"/>
-          <a href={this.props.baseUrl}>openDesktop.org</a>
+          <a href={this.props.baseUrl}>
+            <img src={this.props.baseUrl + "/images/system/opendesktop-logo.png"} className="logo"/>
+            openDesktop.org
+          </a>
         </div>
         <div id="panel-menu">
           <ul>
@@ -1594,7 +1596,7 @@ class MobileLeftSidePanel extends React.Component {
               <a className="groupname"><b>Discussion Boards</b></a>
               <ul>
                 <li><a href={this.props.forumUrl }>General</a></li>
-                <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Store Listings</a></li>
+                <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Themes & Apps</a></li>
                 <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
               </ul>
             </li>

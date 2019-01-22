@@ -31,6 +31,7 @@ body.drawer-open {
 
   a {
     cursor: pointer;
+    text-decoration: none !important;
   }
 
   .dropdown-menu {
@@ -305,6 +306,7 @@ body.drawer-open {
                   padding: 0 20px;
                   border-radius: 0;
                   display: block;
+                  color: #6a7686;
 
                   &.admins-menu-link-item,
                   &.cd-menu-link-item {
@@ -1124,6 +1126,17 @@ body.drawer-open {
         }
       }
     }
+
+    #development-app-menu-container {
+      .user-dropdown {
+        ul.dropdown-menu {
+          right: -76px;
+          &::before {
+            right: 78px;
+          }
+        }
+      }
+    }
   }
 
   #metaheader-left-mobile {
@@ -1158,6 +1171,7 @@ body.drawer-open {
 
       a {
         cursor: pointer;
+        color: #6a7686;
       }
 
       #left-side-panel {

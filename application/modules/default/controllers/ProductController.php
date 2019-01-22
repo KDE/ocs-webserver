@@ -294,12 +294,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     public function addAction()
     {
-        $form = new Default_Form_Product();
-
         $this->view->member = $this->_authMember;
-        $this->view->form = $form;
         $this->view->mode = 'add';
-
+        
+        $form = new Default_Form_Product(array('member_id' => $this->view->member->member_id));
+        $this->view->form = $form;
+        
         if ($this->_request->isGet()) {
             return;
         }
@@ -574,7 +574,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //get the gitlab projects for this user
 
         //setup form
-        $form = new Default_Form_Product(array('pictures' => $sources));
+        $form = new Default_Form_Product(array('pictures' => $sources, 'member_id' => $this->view->member_id));
         if (false === empty($projectData->image_small)) {
             $form->getElement('image_small_upload')->setRequired(false);
         }

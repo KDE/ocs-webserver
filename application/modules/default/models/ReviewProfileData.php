@@ -26,16 +26,17 @@ class Default_Model_ReviewProfileData
 {
 
     const INVALID_USERNAME = 1;
-    const INVALID_EMAIL = 2;
-    const INVALID_EMAIL_DEACTIVATED = 20;
-    
     const INVALID_USERNAME_DEACTIVATED = 10;
     const INVALID_USERNAME_NOT_ALLOWED = 11;
     const INVALID_USERNAME_NOT_UNIQUE = 12;
-    
+
+    const INVALID_EMAIL = 2;
+    const INVALID_EMAIL_DEACTIVATED = 20;
+    const INVALID_EMAIL_NOT_UNIQUE = 21;
+
     const USERNAME_DEACTIVATED_TEXT = "_deactivated";
     const EMAIL_DEACTIVATED_TEXT = "_deactivated";
-    
+
 
     protected $message;
     protected $errorCode;
@@ -49,21 +50,25 @@ class Default_Model_ReviewProfileData
     public function __construct()
     {
         $this->errorCode = 0;
+        $this->message = array();
     }
 
 
     public function hasValidProfile($member_data)
     {
+        $this->errorCode = 0;
+        $this->message = array();
+
         $result = $this->hasValidUsername($member_data);
         if (false == $result) {
             return false;
         }
-        
+
         $result = $this->hasValidEmail($member_data);
         if (false == $result) {
             return false;
         }
-        
+
         return true;
     }
 
@@ -127,6 +132,7 @@ class Default_Model_ReviewProfileData
 
         if (false == $validatorEmail->isValid($member_data->mail)) {
             $this->message['email'][] = $validatorEmail->getMessages();
+            $this->errorCode = $this::INVALID_EMAIL;
 
             return false;
         }
@@ -155,13 +161,14 @@ class Default_Model_ReviewProfileData
 
         if ((false === empty($result)) AND $result['amount'] > 1) {
             $this->message['email'][] = array('email is not unique');
+            $this->errorCode = $this::INVALID_EMAIL_NOT_UNIQUE;
 
             return false;
         }
 
         return true;
     }
-    
+
     /**
      * @param $member_data
      *
@@ -170,7 +177,7 @@ class Default_Model_ReviewProfileData
      */
     private function isEmailDeactivated($member_data)
     {
-        if (strpos($member_data->mail, $this::EMAIL_DEACTIVATED_TEXT) > 0) { 
+        if (strpos($member_data->mail, $this::EMAIL_DEACTIVATED_TEXT) > 0) {
             $this->message['email'][] = 'Email is deactivated';
             $this->errorCode = $this::INVALID_EMAIL_DEACTIVATED;
 
@@ -179,7 +186,7 @@ class Default_Model_ReviewProfileData
 
         return true;
     }
-    
+
     /**
      * @param $member_data
      *
@@ -188,7 +195,7 @@ class Default_Model_ReviewProfileData
      */
     private function isUsernameDeactivated($member_data)
     {
-        if (strpos($member_data->username, $this::USERNAME_DEACTIVATED_TEXT) > 0) { 
+        if (strpos($member_data->username, $this::USERNAME_DEACTIVATED_TEXT) > 0) {
             $this->message['username'][] = 'User is deactivated';
             $this->errorCode = $this::INVALID_USERNAME_DEACTIVATED;
 
@@ -239,6 +246,7 @@ class Default_Model_ReviewProfileData
         if (is_array($result) AND count($result) > 0) {
             $this->message['username'][] = array('username is not unique');
             $this->errorCode = $this::INVALID_USERNAME_NOT_UNIQUE;
+
             return false;
         }
 

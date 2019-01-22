@@ -323,7 +323,7 @@ $this->inlineScript()->appendScript('
                                 </div>
 
                                 <?php
-                                    if($this->product->is_gitlab_project == 0) {
+                                    if(empty($this->product) || (!empty($this->product) && $this->product->is_gitlab_project == 0)) {
                                         $this->form->gitlab_project_id->setAttrib('disabled', 'disabled');
                                     }
                                 ?>
@@ -332,7 +332,7 @@ $this->inlineScript()->appendScript('
                                 <div class="form-group">
                                     <div class="col-sm-12 margin-top-15">
                                     <?php
-                                        if($this->product->is_gitlab_project == 0) {
+                                        if(empty($this->product) || (!empty($this->product) && $this->product->is_gitlab_project == 0)) {
                                             $this->form->show_gitlab_project_issues->setAttrib('disabled', 'disabled');
                                         }
                                     ?>
@@ -343,7 +343,7 @@ $this->inlineScript()->appendScript('
                                 <div class="form-group">
                                     <div class="col-sm-12 margin-top-15">
                                     <?php
-                                        if($this->product->is_gitlab_project == 0) {
+                                        if(empty($this->product) || (!empty($this->product) && $this->product->is_gitlab_project == 0)) {
                                             $this->form->use_gitlab_project_readme->setAttrib('disabled', 'disabled');
                                         }
                                     ?>
