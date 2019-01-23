@@ -505,27 +505,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'action'     => 'search'
                 )));
 
-<<<<<<< 096f3851b272c963f06c331915832a3e99c69bf7
-        $router->addRoute('product_save', new Zend_Controller_Router_Route('/p/save/*', array(
-=======
-        $router->addRoute(
-            'search_domain',
-            new Zend_Controller_Router_Route(
-                '/s/:domain_store_id/search/*',
+        $router->addRoute('search_domain',new Zend_Controller_Router_Route('/s/:domain_store_id/search/*',
                 array(
                     'module'     => 'default',
                     'controller' => 'product',
                     'action'     => 'search'
-                )
-            )
-        );
+                )));
 
-        $router->addRoute(
-            'product_save',
-            new Zend_Controller_Router_Route(
-                '/p/save/*',
-                array(
->>>>>>> search domain
+        $router->addRoute('product_save', new Zend_Controller_Router_Route('/p/save/*', array(
                     'module'     => 'default',
                     'controller' => 'product',
                     'action'     => 'saveproduct'
