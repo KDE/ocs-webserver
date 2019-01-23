@@ -42,7 +42,9 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
 
         Zend_Registry::set('store_template', $this->getStoreTemplate($storeConfigName));
 
-        Zend_Registry::set('store_config', $this->getStoreConfig($storeHost));
+        $config_store = $this->getConfigStore($storeHost);
+        Zend_Registry::set('store_config', $config_store);
+        Zend_Registry::set('config_store_tags', $this->getConfigStoreTags($config_store->store_id));
         Zend_Registry::set('store_category_list', $this->getStoreCategories($storeHost));
     }
 
@@ -199,7 +201,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
      *
      * @return Default_Model_ConfigStore
      */
-    private function getStoreConfig($storeHostName)
+    private function getConfigStore($storeHostName)
     {
         $storeConfig = new Default_Model_ConfigStore($storeHostName);
 
@@ -256,6 +258,13 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
         }
 
         return array();
+    }
+
+    private function getConfigStoreTags($store_id)
+    {
+        $modelConfigStoreTags = new Default_Model_ConfigStoreTags();
+
+        return $modelConfigStoreTags->getTagsForStore($store_id);
     }
 
 }
