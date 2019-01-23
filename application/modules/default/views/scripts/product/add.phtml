@@ -405,23 +405,6 @@ $this->inlineScript()->appendScript('
                                                 <div data-file-upload="" dropzone class="datafiledroparea">
                                                     <table class="table" data-ppload-files="">
                                                         <thead>
-                                                        <tr>
-                                                            <th><?= $this->translate('Filename') ?></th>
-                                                            <th><?= $this->translate('Version') ?></th>
-                                                            <th><?= $this->translate('Description') ?></th>
-                                                            <?php
-                                                                //Show all Tag-Groups for this Category and show them as Header
-                                                                if(!empty($tagGroups)) {
-                                                                    foreach ($tagGroups as $tagGroup) {
-                                                                        echo "<th>" . $tagGroup['group_display_name'] . "</th>";
-                                                                    }
-                                                                }
-                                                            ?>
-                                                            <th><?= $this->translate('Date added') ?></th>
-                                                            <th style="text-align: right"><?= $this->translate('Filesize') ?></th>
-                                                            <th></th>
-                                                            <th></th>
-                                                        </tr>
                                                         </thead>
                                                         <tbody></tbody>
                                                     </table>
@@ -570,6 +553,7 @@ $this->inlineScript()->appendScript('
                                 formElement.find("#modal-ppload").attr('data-product-id', ProductForm.project_id);
                                 formElement.find("#modal-changlog").attr('data-product-id', ProductForm.project_id);
                             }
+                            getPploadFiles();
                             return true;
                         }
                         return false;
@@ -776,11 +760,64 @@ $this->inlineScript()->appendScript('
 
                 function getPploadFiles(page, tagGroups) {
                     var collectionId = $modalPpload.attr('data-ppload-collection-id');
+                    
+                    if(!collectionId) {
+                        alert("Error: No ColelctionId");
+                        return;
+                    }
 
                     if (!page) {
                         page = 1;
                         $modalPpload.find('table[data-ppload-files] tbody').empty();
                     }
+                    
+                    var prodId = $modalPpload.attr('data-product-id');
+                    var catId = $('#project_category_id').val();
+                    
+                    //get cat-tag-groups
+                    var tagGroups = null;
+                    var tagGroupsCount = 0;
+                    $.ajax({
+                        url: '/p/'+prodId+'/gettaggroupsforcatajax',
+                        type: 'GET',
+                        async: false,
+                        cache: false,
+                        timeout: 30000,
+                        data: {project_cat_id: catId},
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'success') {
+                                $modalPpload.find('table[data-ppload-files] thead').html('');
+                                
+                                tagGroups = data.tag_groups;
+                                tagGroupsCount = data.ResultSize;
+                                var tableHeader = '';
+                                tableHeader += '<tr>';
+                                tableHeader +=  '    <th><?= $this->translate('Filename') ?></th>';
+                                tableHeader +=  '    <th><?= $this->translate('Version') ?></th>';
+                                tableHeader +=  '    <th><?= $this->translate('Description') ?></th>';
+
+                                $.each(tagGroups, function() {
+                                    tableHeader += '<th>'+this.group_display_name+'</th>';
+                                });
+
+                                tableHeader += '    <th><?= $this->translate('Date added') ?></th>';
+                                tableHeader += '    <th style="text-align: right"><?= $this->translate('Filesize') ?></th>';
+                                tableHeader +=  '    <th style="text-align: right"><?= $this->translate('# of Downloads') ?></th>';
+                                tableHeader +=  '    <th></th>';
+                                tableHeader +=  '    <th></th>';
+                                tableHeader +=  '</tr>';
+                                $modalPpload.find('table[data-ppload-files] thead').append(tableHeader);
+
+
+                                return;
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            return;
+                        }
+                    });
+                    
                     $.ajax({
                         url: pploadApiUri + 'files/index',
                         type: 'GET',
@@ -798,11 +835,28 @@ $this->inlineScript()->appendScript('
                                 return;
                             }
                             
-                            
-                            if(null != tagGroups) {
-                                alert('Now with JS');
+                            if(null != tagGroups && tagGroupsCount > 0) {
+                                //get cat-tag-groups
+                                $.ajax({
+                                    url: '/p/'+prodId+'/gettaggroupsforcatajax',
+                                    type: 'GET',
+                                    async: false,
+                                    cache: false,
+                                    timeout: 30000,
+                                    data: {project_cat_id: catId, file_id: this.id, test: false},
+                                    dataType: 'json',
+                                    success: function (data, textStatus, jqXHR) {
+                                        if (data.status != 'success') {
+                                            tagGroups = data.tag_groups;
+                                            return;
+                                        }
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        return;
+                                    }
+                                });
                             }
-
+                            
                             var updatePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a>';
                             var updatePploadFileBtnPerFile = '';
                             var deletePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';
@@ -851,14 +905,7 @@ $this->inlineScript()->appendScript('
                                 var link = '';
                                 var fileTags = '';
                                 var osId = null;
-                                <?php
-                                //Show all Tag-Groups for this Category
-                                if(!empty($tagGroups)) {
-                                    foreach ($tagGroups as $tagGroup) {
-                                        echo "var ".$tagGroup['group_legacy_name']."Id = '';";
-                                    }
-                                }
-                                ?>
+                                
 
                                 if (this.tags) {
                                     fileTags = this.tags;
@@ -867,29 +914,11 @@ $this->inlineScript()->appendScript('
                                             var tagStr = this.split('-');
                                             if (tagStr.length == 2 && tagStr[0] == 'os') {
                                                 osId = tagStr[1];
-                                            <?php
-                                            //Show all Tag-Groups for this Category and show them as Dropdowns
-                                            if(!empty($tagGroups)) {
-                                                foreach ($tagGroups as $tagGroup) {
-                                                    echo "} else if (tagStr.length == 2 && tagStr[0] == '". $tagGroup['group_legacy_name']."id') {";
-                                                    echo $tagGroup['group_legacy_name'] ."Id = tagStr[1];";
-                                                }
-                                            }
-                                            ?>    
                                             }
                                         } else {
                                             var tagStr = this.split('##');
                                             if (tagStr.length == 2 && tagStr[0] == 'link') {
                                                 link = tagStr[1];
-                                            <?php
-                                            //Show all Tag-Groups for this Category and show them as Dropdowns
-                                            if(!empty($tagGroups)) {
-                                                foreach ($tagGroups as $tagGroup) {
-                                                    echo "} else if (tagStr.length == 2 && tagStr[0] == '". $tagGroup['group_legacy_name']."id') {";
-                                                    echo $tagGroup['group_legacy_name'] ."Id = tagStr[1];";
-                                                }
-                                            }
-                                            ?>     
                                             }
                                         }
                                     });
@@ -909,61 +938,36 @@ $this->inlineScript()->appendScript('
                                     deletePploadFileBtnPerFile = '';
                                 }
 
-                                $modalPpload.find('table[data-ppload-files] tbody').append(
-                                    '<tr data-ppload-file-id="' + this.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">'
-                                    + '<td>' + downloadLink + '</td>'
-                                    + '<td>' + version + '</td>'
-                                    + '<td>' + inputFileDescription + '</td>'
+                                tableString = '';
+                                tableString += '<tr data-ppload-file-id="' + this.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
+                                tableString += '<td>' + downloadLink + '</td>';
+                                tableString += '<td>' + version + '</td>';
+                                tableString += '<td>' + inputFileDescription + '</td>';
                                        
-                                    <?php
-                                        //Show all Tag-Groups for this Category and show them as Dropdowns
-                                        if(!empty($tagGroups)) {
-                                            foreach ($tagGroups as $tagGroup) {
-                                                ?>
-                                    + '<td>'
-                                    + '<select id="data-select-<?= $tagGroup['group_legacy_name'] ?>' + this.id + '" data-<?= $tagGroup['group_legacy_name'] ?>-id="" data-tag-group-id="<?= $tagGroup['tag_group_id'] ?>" data-tag-group="<?= $tagGroup['group_legacy_name'] ?>" name="<?= $tagGroup['group_legacy_name'] ?>" class="form-control input-sm" style="width: 150px;">'
-                                    + '<option value=\"\"></option>'
-                                                
-                                                <?php
-                                                $tagList = $tagsForGroupHelper->fetchList($tagGroup['tag_group_id']);
-                                                foreach ($tagList as $opt_value => $opt_label) {
-                                                ?>
-                                    + '<option value="<?= $opt_value ?>"><?= $opt_label ?></option>'
-                                                <?php
-                                                }
-                                                ?>
-                                    + '</select>'
-                                    + '</td>'
-                                                <?php
-                                            }
-                                        }
-                                    ?>
-   
-                                    + '<td>' + this.created_timestamp + '</td>'
-                                    + '<td style="text-align: right">' + humanFileSize(this.size) + '</td>'
-                                    + '<td>' + updatePploadFileBtnPerFile + '</td>'
-                                    + '<td>' + deletePploadFileBtnPerFile + '</td>'
-                                    + '</tr>'
-                                );
-                        
-                                
-                                
-                                <?php
-                                //Show all Tag-Groups for this Category
-                                if(!empty($tagGroups)) {
-                                    foreach ($tagGroups as $tagGroup) {
-                                ?>
-                                    $("#data-select-<?= $tagGroup['group_legacy_name'] ?>" + this.id + " option[value='"+<?= $tagGroup['group_legacy_name'] ?>Id+"']").attr('selected', 'selected');
-                                    
-                                    $<?= $tagGroup['group_legacy_name'] ?>Select = $modalPpload.find('#data-select-<?= $tagGroup['group_legacy_name'] ?>' + this.id);
-                                    if(this.active == '0') {
-                                        $<?= $tagGroup['group_legacy_name'] ?>Select.prop('disabled', 'disabled');
-                                    }
-                                <?php
-                                    }
-                                }
-                                ?>    
+                                $.each(tagGroups, function() {
+                                    tableString += '<td>';
+                                    tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
+                                    tableString += '<option value=\"\"></option>';
 
+                                    for(key in this.tag_list){
+                                        tableString += '<option value=\"'+key+'\"';
+                                        if(null != this.selected_tag && key == this.selected_tag) {
+                                            tableString += ' selected="selected"';
+                                        }
+                                        tableString += '>' + this.tag_list[key] + '</option>';
+                                    }
+
+                                    tableString += '</select>';
+                                    tableString += '</td>';
+                                });
+   
+                                tableString += '<td>' + this.created_timestamp + '</td>';
+                                tableString += '<td style="text-align: right">' + humanFileSize(this.size) + '</td>';
+                                tableString += '<td>' + updatePploadFileBtnPerFile + '</td>';
+                                tableString += '<td>' + deletePploadFileBtnPerFile + '</td>';
+                                tableString += '</tr>';
+                                $modalPpload.find('table[data-ppload-files] tbody').append();
+                                
                                 if ((typeof link != 'undefined') && (link != "")) {
                                     //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
                                     $("#data-link" + this.id).attr('target','_blank');
@@ -1127,47 +1131,68 @@ $this->inlineScript()->appendScript('
                             if (data.file.tags) {
                                 fileTags = data.file.tags;
                             }
+                            
+                            var tableString = '';
+                            tableString += '<tr data-ppload-file-id="' + data.file.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
+                            tableString += '<td><a href="' + pploadApiUri + 'files/download/';
+                            tableString += 'id/' + data.file.id + '/' + data.file.name + '">' + data.file.name + '</a></td>';
+                            tableString += '<td>' + version + '</td>';
+                            tableString += '<td><input data-ppload-file-description="" class="form-control input-sm"';
+                            tableString += ' type="text" maxlength="140" placeholder="File description"';
+                            tableString += ' value="' + fileDescription + '"></td>';
+
+                            var fileId = data.file.id;
 
 
-                            $modalPpload.find('table[data-ppload-files] tbody').append(
-                                '<tr data-ppload-file-id="' + data.file.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">'
-                                + '<td><a href="' + pploadApiUri + 'files/download/'
-                                + 'id/' + data.file.id + '/' + data.file.name + '">' + data.file.name + '</a></td>'
-                                + '<td>' + version + '</td>'
-                                + '<td><input data-ppload-file-description="" class="form-control input-sm"'
-                                + ' type="text" maxlength="140" placeholder="File description"'
-                                + ' value="' + fileDescription + '"></td>'
-
-                                <?php
-                                    //Show all Tag-Groups for this Category and show them as Dropdowns
-                                    if(!empty($tagGroups)) {
-                                        foreach ($tagGroups as $tagGroup) {
-                                            ?>
-                                + '<td>'
-                                + '<select id="data-select-<?= $tagGroup['group_legacy_name'] ?>' + data.file.id + '" data-<?= $tagGroup['group_legacy_name'] ?>-id="" data-tag-group-id="<?= $tagGroup['tag_group_id'] ?>" data-tag-group="<?= $tagGroup['group_legacy_name'] ?>" name="<?= $tagGroup['group_legacy_name'] ?>" class="form-control input-sm" style="width: 150px;">'
-                                + '<option value=\"\"></option>'
-
-                                            <?php
-                                            $tagList = $tagsForGroupHelper->fetchList($tagGroup['tag_group_id']);
-                                            foreach ($tagList as $opt_value => $opt_label) {
-                                            ?>
-                                + '<option value="<?= $opt_value ?>"><?= $opt_label ?></option>'
-                                            <?php
-                                            }
-                                            ?>
-                                + '</select>'
-                                + '</td>'
-                                            <?php
-                                        }
+                            //get cat-tag-groups
+                            var tagGroups = null;
+                            var tagGroupsCount = 0;
+                            var catId = $('#project_category_id').val();
+                            
+                            $.ajax({
+                                url: '/p/'+ProductForm.project_id+'/gettaggroupsforcatajax',
+                                type: 'GET',
+                                async: false,
+                                cache: false,
+                                timeout: 30000,
+                                data: {project_cat_id: catId},
+                                dataType: 'json',
+                                success: function (data, textStatus, jqXHR) {
+                                    if (data.status != 'success') {
+                                        tagGroups = data.tag_groups;
+                                        tagGroupsCount = data.ResultSize;
+                                        return;
                                     }
-                                ?>
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    return;
+                                }
+                            });
 
-                                + '<td>' + data.file.created_timestamp + '</td>'
-                                + '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>'
-                                + '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a></td>'
-                                + '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a></td>'
-                                + '</tr>'
-                            );
+                            $.each(tagGroups, function() {
+                                tableString += '<td>';
+                                tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
+                                tableString += '<option value=\"\"></option>';
+
+
+                                for(key in this.tag_list){
+                                    tableString += '<option value=\"'+key+'\"';
+                                    if(null != this.selected_tag && key == this.selected_tag) {
+                                        tableString += ' selected="selected"';
+                                    }
+                                    tableString += '>' + this.tag_list[key] + '</option>';
+                                }
+
+                                tableString += '</select>';
+                                tableString += '</td>';
+                            });
+
+                            tableString += '<td>' + data.file.created_timestamp + '</td>';
+                            tableString += '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>';
+                            tableString += '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a></td>';
+                            tableString += '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a></td>';
+                            tableString += '</tr>';
+                            $modalPpload.find('table[data-ppload-files] tbody').append(tableString);
 
                             UserTags.activateSelect(data.file.id, '');
 
@@ -1603,7 +1628,6 @@ $this->inlineScript()->appendScript('
                     $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newTags);
                 });*/
 
-
                 $modalPpload.on('change', 'select[data-tag-group]', function(event) {
                     event.preventDefault();
                     var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
@@ -1684,6 +1708,7 @@ $this->inlineScript()->appendScript('
                 }
             });
           }
+          
           
           ProductForm = {
 
@@ -1813,40 +1838,6 @@ $this->inlineScript()->appendScript('
                              } else {
                                 var name_elem = name_old_elem;
                                 setSourceNeededForCategoryInfo(name_elem, cat_id);
-                                
-                                
-                                //get cat-tag-groups
-                                var tagGroups = null;
-                                var tagGroupsCount = 0;
-                                <?php
-                                    $proId = 0;
-                                    if(!empty($this->project_id)) {
-                                        $proId = $this->project_id;
-                                    }
-                                ?>
-                                $.ajax({
-                                    url: '/p/<?= $proId ?>/gettaggroupsforcatajax',
-                                    type: 'GET',
-                                    async: false,
-                                    cache: false,
-                                    timeout: 30000,
-                                    data: {project_cat_id: cat_id},
-                                    dataType: 'json',
-                                    success: function (data, textStatus, jqXHR) {
-                                        if (data.status != 'success') {
-                                            tagGroups = data.tag_groups;
-                                            tagGroupsCount = data.ResultSize;
-
-                                            getPploadFiles(null, tagGroups);
-
-                                            return;
-                                        }
-                                    },
-                                    error: function (jqXHR, textStatus, errorThrown) {
-                                        return;
-                                    }
-                                });
-                                
                              }
                         }
                       });
