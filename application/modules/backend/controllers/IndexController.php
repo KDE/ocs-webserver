@@ -288,8 +288,9 @@ class Backend_IndexController extends Local_Controller_Action_Backend
                 $value2 = $map2[$month];
             }
             $result[] = array('yyyykw'=>$month,
-                            'amountwallpapers' =>$value1,
-                            'amountnowallpapers'=>$value2);
+                            'amountnowallpapers'=>$value2,
+                            'amountwallpapers' =>$value1
+                            );
         }
         $list = array_reverse($result);
         $this->sendJson($list);        

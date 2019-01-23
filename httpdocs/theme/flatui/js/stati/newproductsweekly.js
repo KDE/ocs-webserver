@@ -27,14 +27,14 @@
 
   // set the colors
   var z = d3.scaleOrdinal()
-      .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+      .range(["#8a89a6", "#98abc5", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
   // load the csv and create the chart
   d3.json("/backend/index/newproductsweekly", function(error, data) {
     if (error) throw error;
     data = data.results;
 
-    data.columns=['yyyykw','amountwallpapers','amountnowallpapers']; 
+    data.columns=['yyyykw','amountnowallpapers','amountwallpapers']; 
     // format the data
     data.forEach(function(d) {
         d.yyyykw = d.yyyykw;
