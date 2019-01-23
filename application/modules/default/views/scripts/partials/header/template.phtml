@@ -49,6 +49,7 @@ if($member && !empty($member->username)){
 $serverUrl = $this->serverUrl();
 
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+$searchbaseurl = $this->buildSearchBaseUrl();
 $sname = Zend_Registry::get('store_host');
 $store_config = Zend_Registry::get('store_config');
 $store_order = $store_config->order;
@@ -399,6 +400,7 @@ echo $this->render('partials/header/metaheader.phtml');
     var json_template = <?php echo Zend_Json::encode($this->template); ?>;
     var json_serverUrl = <?php echo Zend_Json::encode($serverUrl); ?>;
     var json_baseurl = <?php echo  Zend_Json::encode($baseurl);?>;
+    var json_searchbaseurl = <?php echo  Zend_Json::encode($searchbaseurl);?>;    
     var json_sname =  <?php echo  Zend_Json::encode($sname);?>;
     var json_store_order =  <?php echo  Zend_Json::encode($store_order);?>;
     var json_store_name =  <?php echo  Zend_Json::encode($store_name);?>;
