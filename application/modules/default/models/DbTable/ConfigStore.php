@@ -209,6 +209,17 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
         return $resultSet;
     }
 
+    /**
+     * @return array
+     */
+    public function fetchDomainObjectsByName($name)
+    {
+        $sql = "SELECT * FROM config_store where name='".$name."'";
+        $resultSet = $this->_db->fetchAll($sql);        
+        return array_pop($resultSet);
+    }
+
+
     public function deleteId($dataId)
     {
         $sql = "DELETE FROM config_store WHERE {$this->_key} = ?";

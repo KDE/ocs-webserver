@@ -59,6 +59,8 @@ class Default_Model_Solr
             return $output;
         }
 
+        
+
         $params = array(
             'defType'           => 'dismax',
             'wt'                => 'json',
@@ -84,14 +86,16 @@ class Default_Model_Solr
             'spellcheck'        => 'true',
         );
 
-
-
-        $params = $this->setStoreFilter($params);
+    
+        
+        $params = $this->setStoreFilter($params,$op);
         $params = $this->addAnyFilter($params, $op);
 
         $offset = ((int)$op['page'] - 1) * (int)$op['count'];
 
         $query = trim($op['q']);
+
+
 
         if($offset<0) $offset = 0;
         $results = $solr->search($query, $offset, $op['count'], $params);
@@ -157,16 +161,26 @@ class Default_Model_Solr
      * @return mixed
      * @throws Zend_Exception
      */
-    private function setStoreFilter($params)
-    {
-        $currentStoreConfig = Zend_Registry::get('store_config');
-      
-        if (substr($currentStoreConfig->order, -1) <> 1) {
-            return $params;
+    private function setStoreFilter($params,$op)
+    {        
+     
+        if(isset($op['store']))
+        {
+            $storename = $op['store'];
+            $storemodel = new Default_Model_DbTable_ConfigStore(); 
+            $store = $storemodel->fetchDomainObjectsByName($storename);
+            $currentStoreConfig = new Default_Model_ConfigStore($store['host']);
         }
-        //$params['fq'] = array('stores:(' . $currentStoreConfig['store_id'] . ')');
+        else
+        {
+            $currentStoreConfig = Zend_Registry::get('store_config');                                  
+        }               
+
+        $currentStoreConfig = Zend_Registry::get('store_config');  
+        if (substr($currentStoreConfig->order, -1) <> 1) {
+                return $params;
+        }
         $params['fq'] = array('stores:(' . $currentStoreConfig->store_id . ')');
-        
         if(isset($currentStoreConfig->package_type)){            
             $pid = $currentStoreConfig->package_type;
             $t = new Default_Model_DbTable_Tags();

@@ -42,8 +42,10 @@ if (false === empty($tags)) {
                  if($tag['tag_group_id']==Default_Model_Tags::TAG_PACKAGETYPE_GROUPID){
                         $filterfield = 'package_names';
                 }  
+
+                $searchurl = 'projectSearchText/'.$tag['tag_name'].'/f/'.$filterfield;
             ?>
-            <a href="/search?projectSearchText=<?=$tag['tag_name']?>&f=<?=$filterfield?>" class="tag-element"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> <?=$tag['tag_name']?></a>
+            <a href="<?=$this->buildSearchUrl($searchurl)?>" class="tag-element"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> <?=$tag['tag_name']?></a>
         <?php }}?>
 
     </span>

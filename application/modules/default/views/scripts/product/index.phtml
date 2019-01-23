@@ -335,7 +335,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                     {
                                         foreach (explode(',',$tagsuser) as $tag) {
                                     ?>
-                                    <a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a>
+                                    <a rel="nofollow" href="<?=$this->buildSearchTagUrl($tag)?>" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a>
                                      <?php
                                         }
                                      }
@@ -585,7 +585,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                                 echo '<b>Subjects:</b> <br/><span class="topics"><span class="topicslink"><ul style="margin-top: 5px;">';
                                                 foreach ($tagsuser as $tag) {
                                             ?>
-                                            <li><a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
+                                            <li><a rel="nofollow" href="<?=$this->buildSearchTagUrl($tag)?>" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
                                             <?php
                                                 }
                                                 echo '</ul></span></span><!--end of topicslink-->';
@@ -599,7 +599,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                                 echo '<b>Author/s:</b> <br/><span class="topics"><span class="topicslink"><ul style="margin-top: 5px;">';
                                                 foreach ($tagsuser as $tag) {
                                             ?>
-                                            <li><a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
+                                            <li><a rel="nofollow" href="<?=$this->buildSearchTagUrl($tag)?>" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
                                             <?php
                                                 }
                                                 echo '</ul></span></span><!--end of topicslink-->';
@@ -613,7 +613,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                                 echo '<b>Editor/s:</b> <br/><span class="topics"><span class="topicslink"><ul style="margin-top: 5px;">';
                                                 foreach ($tagsuser as $tag) {
                                             ?>
-                                            <li><a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
+                                            <li><a rel="nofollow" href="<?=$this->buildSearchTagUrl($tag)?>" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
                                             <?php
                                                 }
                                                 echo '</ul></span></span><!--end of topicslink-->';
@@ -627,7 +627,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                                 echo '<b>Illustrator/s:</b> <br/><span class="topics"><span class="topicslink"><ul style="margin-top: 5px;">';
                                                 foreach ($tagsuser as $tag) {
                                             ?>
-                                            <li><a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
+                                            <li><a rel="nofollow" href="<?=$this->buildSearchTagUrl($tag)?>" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
                                             <?php
                                                 }
                                                 echo '</ul></span></span><!--end of topicslink-->';
@@ -641,7 +641,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                                 echo '<b>Tranlator/s:</b> <br/><span class="topics"><span class="topicslink"><ul style="margin-top: 5px;">';
                                                 foreach ($tagsuser as $tag) {
                                             ?>
-                                            <li><a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
+                                            <li><a rel="nofollow" href="<?=$this->buildSearchTagUrl($tag)?>" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
                                             <?php
                                                 }
                                                 echo '</ul></span></span><!--end of topicslink-->';
@@ -655,7 +655,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                                 echo '<b>Bookshelf:</b> <br/><span class="topics"><span class="topicslink"><ul style="margin-top: 5px;">';
                                                 foreach ($tagsuser as $tag) {
                                             ?>
-                                            <li><a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
+                                            <li><a rel="nofollow" href="<?=$this->buildSearchTagUrl($tag)?>" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
                                             <?php
                                                 }
                                                 echo '</ul></span></span><!--end of topicslink-->';
@@ -669,7 +669,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                                 echo '<b>Language:</b> <br/><span class="topics"><span class="topicslink"><ul style="margin-top: 5px;">';
                                                 foreach ($tagsuser as $tag) {
                                             ?>
-                                            <li><a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
+                                            <li><a rel="nofollow" href="<?=$this->buildSearchTagUrl($tag)?>" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
                                             <?php
                                                 }
                                                 echo '</ul></span></span><!--end of topicslink-->';
@@ -683,7 +683,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                                 echo '<b>Type:</b> <br/><span class="topics"><span class="topicslink"><ul style="margin-top: 5px;">';
                                                 foreach ($tagsuser as $tag) {
                                             ?>
-                                            <li><a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
+                                            <li><a rel="nofollow" href="<?=$this->buildSearchTagUrl($tag)?>" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a></li>
                                             <?php
                                                 }
                                                 echo '</ul></span></span><!--end of topicslink-->';

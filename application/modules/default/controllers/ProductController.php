@@ -2524,6 +2524,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->pkg = $filterInput->getEscaped('pkg');
         $this->view->arch = $filterInput->getEscaped('arch');
         $this->view->lic = $filterInput->getEscaped('lic');
+        $this->view->store = $this->getParam('domain_store_id');
     }
 
     /**
