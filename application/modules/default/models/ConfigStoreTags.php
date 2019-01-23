@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -21,22 +22,24 @@
  *
  * Created: 23.01.2019
  */
-
 class Default_Model_ConfigStoreTags
 {
 
     /**
-     * @param int $store_id
+     * @param int  $store_id
+     * @param bool $onlyActive
      *
-     * @return null|Zend_Db_Table_Rowset_Abstract
+     * @return null|array
      */
-    public function getTagsForStore($store_id)
+    public function getTagsAsIdForStore($store_id, $onlyActive = true)
     {
         $modelConfigStoreTags = new Default_Model_DbTable_ConfigStoreTags();
 
-        $result = $modelConfigStoreTags->fetchAll(array('store_id = ?' => (int)$store_id));
+        $sql = "SELECT `tag_id` FROM `config_store_tag` WHERE `store_id` = :store_id AND `is_active` = :active;";
 
-        if (0 == $result->count()) {
+        $result = $modelConfigStoreTags->getAdapter()->fetchAll($sql, array('store_id' => $store_id, 'active' => ($onlyActive ? 1 : 0)), Zend_Db::FETCH_COLUMN);
+
+        if (0 == count($result)) {
             return null;
         }
 

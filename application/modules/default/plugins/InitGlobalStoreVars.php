@@ -264,7 +264,9 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
     {
         $modelConfigStoreTags = new Default_Model_ConfigStoreTags();
 
-        return $modelConfigStoreTags->getTagsForStore($store_id);
+        $result = $modelConfigStoreTags->getTagsAsIdForStore($store_id);
+
+        return $result;
     }
 
 }
