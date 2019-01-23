@@ -229,6 +229,8 @@ class Default_Model_Tags
         return null;
     }
     
+    
+    
 
      /**
      * @param int $object_id
@@ -575,8 +577,25 @@ class Default_Model_Tags
             $this->getAdapter()->query($sql);
         }
     }
+    
+    public function updateTagsPerStore($store_id,$tags)
+    {
+        $sql = "delete from config_store_tag  where store_id=:store_id";
+        $this->getAdapter()->query($sql, array('store_id' => $store_id));
 
-     public function getTagsPerGroup($groupid)
+        if($tags){
+            $tags_id =explode(',', $tags);
+            $prepared_insert =
+                array_map(function ($id) use ($store_id) { return "({$store_id},{$id})"; },
+                    $tags_id);
+            $sql = "INSERT IGNORE INTO config_store_tag (store_id, tag_id) VALUES " . implode(',',
+                    $prepared_insert);
+          
+            $this->getAdapter()->query($sql);
+        }
+    }
+
+    public function getTagsPerGroup($groupid)
     {
           $sql = "
                          select 
@@ -587,6 +606,20 @@ class Default_Model_Tags
                          order by tag_name
                     ";
         $result = $this->getAdapter()->fetchAll($sql, array('groupid' => $groupid));
+        return $result;
+    }
+    
+    public function getAllTagsForStoreFilter()
+    {
+          $sql = "
+                         select 
+                         tag.tag_id, 
+                         CASE WHEN tag.tag_fullname IS NULL THEN tag_name ELSE tag.tag_fullname END as tag_name
+                         from tag
+                         where tag.is_active = 1
+                         order by tag_name
+                    ";
+        $result = $this->getAdapter()->fetchAll($sql);
         return $result;
     }
 
