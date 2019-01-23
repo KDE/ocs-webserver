@@ -374,7 +374,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
                 $cookieName = $config->settings->session->filter_browse_original;
                 $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
                 $cookieExpire = time() + $remember_me_seconds;
-                setcookie($cookieName, $storedInCookie, $cookieExpire, '/');
+                setcookie($cookieName, $inputFilterOriginal, $cookieExpire, '/');
         }
     }
 
