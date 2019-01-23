@@ -10,3 +10,9 @@ CREATE TABLE `config_store_tag` (
 )
 ;
 
+CREATE TRIGGER `config_store_tag_before_insert` BEFORE INSERT ON `config_store_tag` FOR EACH ROW BEGIN
+	 IF NEW.created_at IS NULL THEN
+      SET NEW.created_at = NOW();
+    END IF;
+END;
+
