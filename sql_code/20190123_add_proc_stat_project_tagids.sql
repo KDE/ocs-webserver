@@ -1,4 +1,4 @@
-drop PROCEDURE  generate_stat_project_ids;
+DROP PROCEDURE IF EXISTS generate_stat_project_ids;
 
 DELIMITER $$
 CREATE PROCEDURE `generate_stat_project_ids`()
@@ -30,3 +30,13 @@ BEGIN
 END$
 
 DELIMITER ;
+
+CREATE EVENT `e_generate_stat_project_ids`
+	ON SCHEDULE
+		EVERY 15 MINUTE STARTS '2019-01-23 15:43:00'
+	ON COMPLETION NOT PRESERVE
+	ENABLE
+	COMMENT ''
+	DO BEGIN
+   CALL generate_stat_project_ids();
+END
