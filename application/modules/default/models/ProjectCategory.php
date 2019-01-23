@@ -63,7 +63,7 @@ class Default_Model_ProjectCategory
         if (empty($store_id)) {
             $store_config = Zend_Registry::get('store_config');
             $store_id = $store_config->store_id;
-            $package_type = $store_config->package_type;
+            $package_type = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : array();
         }
 
         /** @var Zend_Cache_Core $cache */
@@ -105,7 +105,7 @@ class Default_Model_ProjectCategory
         if (empty($package_type)) {
             $statement = $this->_dataTable->getAdapter()->query("CALL fetchCatTreeForStore(:store_id)", array("store_id" => $store_id));
         } else {
-            $statement = $this->_dataTable->getAdapter()->query("CALL fetchCatTreeWithPackage(:store_id,:package_type)", array("store_id"=>$store_id, "package_type" => $package_type));
+            $statement = $this->_dataTable->getAdapter()->query("CALL fetchCatTreeWithTags(:store_id,:package_type)", array("store_id"=>$store_id, "package_type" => implode(',',$package_type)));
         }
 
         $result = $statement->fetchAll();
