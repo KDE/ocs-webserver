@@ -41,16 +41,16 @@ class Default_Model_Info
 
             $sql = '
                 SELECT 
-                    image_small
-                    ,project_id
-                    ,title
+                    `image_small`
+                    ,`project_id`
+                    ,`title`
                 FROM
-                    project
+                    `project`
                 WHERE
-                    project.image_small IS NOT NULL 
-                    AND project.status = 100
-                        AND project.project_category_id IN (' . implode(',', $activeCategories) . ')
-                ORDER BY ifnull(project.changed_at, project.created_at) DESC
+                    `project`.`image_small` IS NOT NULL 
+                    AND `project`.`status` = 100
+                        AND `project`.`project_category_id` IN (' . implode(',', $activeCategories) . ')
+                ORDER BY ifnull(`project`.`changed_at`, `project`.`created_at`) DESC
                 ';
 
             if (isset($limit)) {
@@ -69,48 +69,20 @@ class Default_Model_Info
             }
         }
     }
-    
-    public function getActiveStoresForCrossDomainLogin($limit = null)
-    {
-        $sql = '
-        SELECT DISTINCT
-            config_store.host
-        FROM
-            config_store
-        WHERE config_store.cross_domain_login = 1
-        ORDER BY config_store.order;
-        ';
-
-        if (isset($limit)) {
-            $sql .= ' limit ' . (int)$limit;
-        }
-
-        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
-
-        if (count($resultSet) > 0) {
-            $values = array_map(function ($row) {
-                return $row['host'];
-            }, $resultSet);
-
-            return $values;
-        } else {
-            return array();
-        }
-    }
 
     public function getActiveCategoriesForAllStores($limit = null)
     {
         $sql = '
         SELECT DISTINCT
-            config_store_category.project_category_id
+            `config_store_category`.`project_category_id`
         FROM
-            config_store
+            `config_store`
         JOIN
-            config_store_category ON config_store.store_id = config_store_category.store_id
+            `config_store_category` ON `config_store`.`store_id` = `config_store_category`.`store_id`
         JOIN
-            project_category ON config_store_category.project_category_id = project_category.project_category_id
-        WHERE project_category.is_active = 1
-        ORDER BY config_store_category.`order`;
+            `project_category` ON `config_store_category`.`project_category_id` = `project_category`.`project_category_id`
+        WHERE `project_category`.`is_active` = 1
+        ORDER BY `config_store_category`.`order`;
         ';
 
         if (isset($limit)) {
@@ -122,6 +94,34 @@ class Default_Model_Info
         if (count($resultSet) > 0) {
             $values = array_map(function ($row) {
                 return $row['project_category_id'];
+            }, $resultSet);
+
+            return $values;
+        } else {
+            return array();
+        }
+    }
+
+    public function getActiveStoresForCrossDomainLogin($limit = null)
+    {
+        $sql = '
+        SELECT DISTINCT
+            `config_store`.`host`
+        FROM
+            `config_store`
+        WHERE `config_store`.`cross_domain_login` = 1
+        ORDER BY `config_store`.`order`;
+        ';
+
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+
+        if (count($resultSet) > 0) {
+            $values = array_map(function ($row) {
+                return $row['host'];
             }, $resultSet);
 
             return $values;
@@ -146,11 +146,12 @@ class Default_Model_Info
                     SELECT count(1) AS `count_active_projects` FROM `project` `p`
                     WHERE `p`.`status` = 100
                     AND `p`.`type_id` = 1
-                    GROUP BY p.member_id
+                    GROUP BY `p`.`member_id`
                 ) AS `A`;";
 
         $result = $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql);
         $cache->save($result, $cacheName);
+
         return (int)$result['count_active_members'];
     }
 
@@ -169,7 +170,9 @@ class Default_Model_Info
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_new_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id . implode('_',$tags));
+        $cacheNameTags = is_array($tags) ? implode('_', $tags) : '';
+        $cacheName =
+            __FUNCTION__ . '_new_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id . $cacheNameTags);
 
         if (($latestComments = $cache->load($cacheName))) {
             return $latestComments;
@@ -282,83 +285,83 @@ class Default_Model_Info
      *
      * @return array|false|mixed
      */
-   /*/* public function getLatestPlings($limit = 5, $project_category_id = null)
-    {
-        /** @var Zend_Cache_Core $cache 
-        $cache = Zend_Registry::get('cache');
-        $cacheName =
-            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
+    /*/* public function getLatestPlings($limit = 5, $project_category_id = null)
+     {
+         /** @var Zend_Cache_Core $cache
+         $cache = Zend_Registry::get('cache');
+         $cacheName =
+             __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
 
-        if (($latestPlings = $cache->load($cacheName))) {
-            return $latestPlings;
-        }
+         if (($latestPlings = $cache->load($cacheName))) {
+             return $latestPlings;
+         }
 
-        if (empty($project_category_id)) {
-            $activeCategories = $this->getActiveCategoriesForCurrentHost();
-        } else {
-            $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);
-        }
+         if (empty($project_category_id)) {
+             $activeCategories = $this->getActiveCategoriesForCurrentHost();
+         } else {
+             $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);
+         }
 
-        if (count($activeCategories) == 0) {
-            return array();
-        }
+         if (count($activeCategories) == 0) {
+             return array();
+         }
 
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        $storePackageTypeIds = null;
-        if ($storeConfig) {
-            $storePackageTypeIds = $storeConfig['package_type'];
-        }
+         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+         $storePackageTypeIds = null;
+         if ($storeConfig) {
+             $storePackageTypeIds = $storeConfig['package_type'];
+         }
 
-        $sql = '
-        SELECT 
-        plings.project_id,
-        plings.id 
-        ,member.member_id
-        ,profile_image_url
-        ,plings.create_time
-        ,username
-        ,plings.amount
-        ,comment
-        ,project.title
-        FROM plings
-        JOIN project ON project.project_id = plings.project_id   
-        STRAIGHT_JOIN member ON plings.member_id = member.member_id';
+         $sql = '
+         SELECT
+         plings.project_id,
+         plings.id
+         ,member.member_id
+         ,profile_image_url
+         ,plings.create_time
+         ,username
+         ,plings.amount
+         ,comment
+         ,project.title
+         FROM plings
+         JOIN project ON project.project_id = plings.project_id
+         STRAIGHT_JOIN member ON plings.member_id = member.member_id';
 
-        if ($storePackageTypeIds) {
-            $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('
-                . $storePackageTypeIds . ')) package_type  ON project.project_id = package_type.project_id';
-        }
+         if ($storePackageTypeIds) {
+             $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('
+                 . $storePackageTypeIds . ')) package_type  ON project.project_id = package_type.project_id';
+         }
 
-        $sql .= ' WHERE 
-        plings.status_id = 2        
-        AND project.status <> 30
-        AND project.project_category_id IN (' . implode(',', $activeCategories) . ')
+         $sql .= ' WHERE
+         plings.status_id = 2
+         AND project.status <> 30
+         AND project.project_category_id IN (' . implode(',', $activeCategories) . ')
 
-        ORDER BY plings.create_time DESC
-        ';
+         ORDER BY plings.create_time DESC
+         ';
 
-        if (isset($limit)) {
-            $sql .= ' limit ' . (int)$limit;
-        }
+         if (isset($limit)) {
+             $sql .= ' limit ' . (int)$limit;
+         }
 
-        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
 
-        if (count($resultSet) > 0) {
-            $cache->save($resultSet, $cacheName, array(), 300);
+         if (count($resultSet) > 0) {
+             $cache->save($resultSet, $cacheName, array(), 300);
 
-            return $resultSet;
-        } else {
-            $cache->save(array(), $cacheName, array(), 300);
+             return $resultSet;
+         } else {
+             $cache->save(array(), $cacheName, array(), 300);
 
-            return array();
-        }
-    }*/
+             return array();
+         }
+     }*/
 
     /**
      * if category id not set the most downloaded products for all categories on the current host wil be returned.
      *
-     * @param int  $limit
-     * @param null $project_category_id
+     * @param int   $limit
+     * @param null  $project_category_id
      * @param array $tags
      *
      * @return array|false|mixed
@@ -369,8 +372,9 @@ class Default_Model_Info
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
+        $cacheNameTags = is_array($tags) ? implode('_', $tags) : '';
         $cacheName =
-            __FUNCTION__ . '_new_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id . implode('_',$tags));
+            __FUNCTION__ . '_new_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id . $cacheNameTags);
 
         if (($mostDownloaded = $cache->load($cacheName))) {
             return $mostDownloaded;
@@ -428,9 +432,9 @@ class Default_Model_Info
     }
 
     /**
-     * @param int  $limit
-     * @param int|null $project_category_id
-     * @param array|null $tags
+     * @param int         $limit
+     * @param int|null    $project_category_id
+     * @param array|null  $tags
      * @param string|null $tag_isoriginal
      *
      * @return array|false
@@ -439,15 +443,16 @@ class Default_Model_Info
      */
     public function getLastProductsForHostStores($limit = 10, $project_category_id = null, $tags = null, $tag_isoriginal = null)
     {
-        /** @var Zend_Cache_Core $cache */
-
+        $catids = "";
         if ($project_category_id) {
             $catids = str_replace(',', '', (string)$project_category_id);
-        } else {
-            $catids = "";
         }
+
+        /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . $catids . implode('_',$tags) . $tag_isoriginal);
+        $cacheNameTags = is_array($tags) ? implode('_', $tags) : '';
+        $cacheName =
+            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . $catids . $cacheNameTags . $tag_isoriginal);
 
         if (($resultSet = $cache->load($cacheName))) {
             return $resultSet;
@@ -514,11 +519,11 @@ class Default_Model_Info
 
 
     /**
-     * @param int  $limit
+     * @param int         $limit
      * @param string|null $project_category_id
-     * @param array|null $tags
+     * @param array|null  $tags
      * @param string|null $tag_isoriginal
-     * @param int  $offset
+     * @param int         $offset
      *
      * @return string
      * @throws Zend_Cache_Exception
@@ -538,8 +543,10 @@ class Default_Model_Info
 
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
+        $cacheNameTags = is_array($tags) ? implode('_', $tags) : '';
         $cacheName =
-            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . $cat_ids . implode('_',$tags) . $tag_isoriginal . $offset);
+            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . $cat_ids . $cacheNameTags . $tag_isoriginal
+                . $offset);
 
         if (($resultSet = $cache->load($cacheName))) {
             return $resultSet;
@@ -626,9 +633,9 @@ class Default_Model_Info
     }
 
     /**
-     * @param int  $limit
+     * @param int         $limit
      * @param string|null $project_category_id
-     * @param array|null $tags
+     * @param array|null  $tags
      *
      * @return array|false
      * @throws Zend_Cache_Exception
@@ -643,7 +650,8 @@ class Default_Model_Info
 
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . $catids . implode('_',$tags));
+        $cacheNameTags = is_array($tags) ? implode('_', $tags) : '';
+        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . $catids . $cacheNameTags);
 
         if (($resultSet = $cache->load($cacheName))) {
             return $resultSet;
@@ -701,63 +709,62 @@ class Default_Model_Info
         return array();
     }
 
-    public function getRandomStoreProjectIds()
+    public function getRandProduct()
     {
-            /** @var Zend_Cache_Core $cache */
-            $cache = Zend_Registry::get('cache');
-            $cacheName =
-                __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host'));
-
-            $resultSet = $cache->load($cacheName);
-
-            if(false ==$resultSet)
-            {
-                        $activeCategories = $this->getActiveCategoriesForCurrentHost();    
-                        if (count($activeCategories) == 0) {
-                            return array();
-                        }        
-                        $sql = '
-                            SELECT 
-                                p.project_id                   
-                            FROM
-                                project AS p                
-                            WHERE
-                                p.status = 100
-                                AND p.type_id = 1                    
-                                AND p.project_category_id IN ('. implode(',', $activeCategories).')                    
-                            ';                        
-                        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
-                        $cache->save($resultSet, $cacheName, array(), 3600 * 24);
-            }
-
-            $irandom = rand(0,sizeof($resultSet));
-            return $resultSet[$irandom];
-    }
-
-
-    public function getRandProduct(){
-           $pid = $this->getRandomStoreProjectIds();
-           $project_id = $pid['project_id'];
+        $pid = $this->getRandomStoreProjectIds();
+        $project_id = $pid['project_id'];
 
         $sql = '
             SELECT 
-                p.*
-                ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
-                ,m.profile_image_url
-                ,m.username
+                `p`.*
+                ,laplace_score(`p`.`count_likes`, `p`.`count_dislikes`) AS `laplace_score`
+                ,`m`.`profile_image_url`
+                ,`m`.`username`
             FROM
-                project AS p
+                `project` AS `p`
             JOIN 
-                member AS m ON m.member_id = p.member_id
+                `member` AS `m` ON `m`.`member_id` = `p`.`member_id`
             WHERE
-               p.project_id = :project_id
+               `p`.`project_id` = :project_id
             ';
-            $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('project_id' => $project_id));
-          if (count($resultSet) > 0) {                          
-              return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
-          } else {
-              return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
-          }
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('project_id' => $project_id));
+        if (count($resultSet) > 0) {
+            return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
+        }
+
+        return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
+    }
+
+    public function getRandomStoreProjectIds()
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host'));
+
+        $resultSet = $cache->load($cacheName);
+
+        if (false == $resultSet) {
+            $activeCategories = $this->getActiveCategoriesForCurrentHost();
+            if (count($activeCategories) == 0) {
+                return array();
+            }
+            $sql = '
+                    SELECT 
+                        `p`.`project_id`                   
+                    FROM
+                        `project` AS `p`                
+                    WHERE
+                        `p`.`status` = 100
+                        AND `p`.`type_id` = 1                    
+                        AND `p`.`project_category_id` IN (' . implode(',', $activeCategories) . ')                    
+                    ';
+            $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+            $cache->save($resultSet, $cacheName, array(), 3600 * 24);
+        }
+
+        $irandom = rand(0, sizeof($resultSet));
+
+        return $resultSet[$irandom];
     }
 
 
@@ -801,16 +808,15 @@ class Default_Model_Info
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName =
-            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
+        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
 
         if (false !== ($resultSet = $cache->load($cacheName))) {
-            
+
             return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
         }
 
         if (empty($project_category_id)) {
-            $activeCategories = $this->getActiveCategoriesForCurrentHost();            
+            $activeCategories = $this->getActiveCategoriesForCurrentHost();
         } else {
             $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);
         }
@@ -821,18 +827,18 @@ class Default_Model_Info
 
         $sql = '
             SELECT 
-                p.*              
-                ,m.profile_image_url
-                ,m.username
+                `p`.*              
+                ,`m`.`profile_image_url`
+                ,`m`.`username`
             FROM
-                stat_projects AS p
+                `stat_projects` AS `p`
             JOIN 
-                member AS m ON m.member_id = p.member_id
+                `member` AS `m` ON `m`.`member_id` = `p`.`member_id`
             WHERE
-                p.status = 100
-                AND p.type_id = 1
-                AND p.featured = 1
-                AND p.project_category_id IN ('. implode(',', $activeCategories).')                
+                `p`.`status` = 100
+                AND `p`.`type_id` = 1
+                AND `p`.`featured` = 1
+                AND `p`.`project_category_id` IN (' . implode(',', $activeCategories) . ')                
             ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
@@ -841,7 +847,7 @@ class Default_Model_Info
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
         $cache->save($resultSet, $cacheName, array(), 60);
 
-        if (count($resultSet) > 0) {                          
+        if (count($resultSet) > 0) {
             return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
         } else {
             return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
@@ -905,20 +911,20 @@ class Default_Model_Info
 
         $sql = '
                 SELECT 
-                rating_id                
-                , member.member_id                
-                ,username            
-                ,user_like
-                ,user_dislike
-                ,project_rating.project_id
-                ,project_rating.created_at
-                ,project.title
-                FROM project_rating           
-                JOIN project ON project_rating.project_id = project.project_id 
-                STRAIGHT_JOIN member ON project_rating.member_id = member.member_id
-                WHERE project.status = 100
-                AND project.member_id = :member_id
-                ORDER BY rating_id DESC               
+                `rating_id`                
+                , `member`.`member_id`                
+                ,`username`            
+                ,`user_like`
+                ,`user_dislike`
+                ,`project_rating`.`project_id`
+                ,`project_rating`.`created_at`
+                ,`project`.`title`
+                FROM `project_rating`           
+                JOIN `project` ON `project_rating`.`project_id` = `project`.`project_id` 
+                STRAIGHT_JOIN `member` ON `project_rating`.`member_id` = `member`.`member_id`
+                WHERE `project`.`status` = 100
+                AND `project`.`member_id` = :member_id
+                ORDER BY `rating_id` DESC               
         ';
 
         if (isset($limit)) {
@@ -1029,7 +1035,7 @@ class Default_Model_Info
     }
 
 
- /**
+    /**
      * @param int $limit
      *
      * @return array|false|mixed
@@ -1074,16 +1080,17 @@ class Default_Model_Info
                         and (DATE_ADD((s.active_time), INTERVAL 1 YEAR) > now())
                         group by member_id
                         order by s.active_time desc                                       
-        ';        
+        ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
         $cache->save($result, $cacheName, array(), 300);
+
         return $result;
     }
 
-     public function getNewActivePlingProduct($limit = 20)
+    public function getNewActivePlingProduct($limit = 20)
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
@@ -1093,7 +1100,6 @@ class Default_Model_Info
             return $newSupporters;
         }
 
-        
         $sql = '  
                         select 
                         pl.member_id as pling_member_id
@@ -1115,13 +1121,14 @@ class Default_Model_Info
                         inner join stat_projects p on pl.project_id = p.project_id and p.status > 30                        
                         where pl.is_deleted = 0 and pl.is_active = 1 
                         order by created_at desc                                                  
-        ';        
+        ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
-        
+
         $cache->save($result, $cacheName, array(), 300);
+
         return $result;
     }
 
@@ -1140,11 +1147,12 @@ class Default_Model_Info
                         from support s                         
                         where s.status_id = 2  
                         and (DATE_ADD((s.active_time), INTERVAL 1 YEAR) > now())
-        ';        
-      
+        ';
+
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
         $totalcnt = $result[0]['total_count'];
-        $cache->save($totalcnt, $cacheName,array() , 300);
+        $cache->save($totalcnt, $cacheName, array(), 300);
+
         return $totalcnt;
     }
 
@@ -1178,18 +1186,17 @@ class Default_Model_Info
         $resultMembers = Zend_Db_Table::getDefaultAdapter()->query($sql, array(
             'activeVal' => Default_Model_Member::MEMBER_ACTIVE,
             'typeVal'   => Default_Model_Member::MEMBER_TYPE_PERSON,
-            'roleid'   => Default_Model_DbTable_Member::ROLE_ID_MODERATOR
+            'roleid'    => Default_Model_DbTable_Member::ROLE_ID_MODERATOR
         ))->fetchAll()
         ;
 
         $cache->save($resultMembers, $cacheName, array(), 300);
 
         return $resultMembers;
-
     }
 
 
-     public function getCountMembers()
+    public function getCountMembers()
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
@@ -1206,10 +1213,11 @@ class Default_Model_Info
                         WHERE
                             is_active=1 AND is_deleted=0
                        ";
-      
+
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
         $totalcnt = $result[0]['total_count'];
-        $cache->save($totalcnt, $cacheName,array() , 300);
+        $cache->save($totalcnt, $cacheName, array(), 300);
+
         return $totalcnt;
     }
 
@@ -1217,7 +1225,7 @@ class Default_Model_Info
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__. '_' . md5($member_id);
+        $cacheName = __FUNCTION__ . '_' . md5($member_id);
 
         if (false !== ($tooptip = $cache->load($cacheName))) {
             return $tooptip;
@@ -1229,42 +1237,45 @@ class Default_Model_Info
         $printDate = new Default_View_Helper_PrintDate();
         $printDateSince = new Default_View_Helper_PrintDateSince();
 
-        $cnt = $modelMember->fetchCommentsCount($member_id);        
-        $cntLikesGave = $tblFollower->countLikesHeGave($member_id);  
-        $cntLikesGot= $tblFollower->countLikesHeGot($member_id);          
-        $donationinfo = $modelMember->fetchSupporterDonationInfo($member_id);                       
-        $lastactive =  $modelMember->fetchLastActiveTime($member_id);
-        $cntprojects = $modelProject->countAllProjectsForMember($member_id,true);
+        $cnt = $modelMember->fetchCommentsCount($member_id);
+        $cntLikesGave = $tblFollower->countLikesHeGave($member_id);
+        $cntLikesGot = $tblFollower->countLikesHeGot($member_id);
+        $donationinfo = $modelMember->fetchSupporterDonationInfo($member_id);
+        $lastactive = $modelMember->fetchLastActiveTime($member_id);
+        $cntprojects = $modelProject->countAllProjectsForMember($member_id, true);
 
         $member = $modelMember->find($member_id)->current();
-        $textCountryCity = $member->city;        
+        $textCountryCity = $member->city;
         $textCountryCity .= $member->country ? ', ' . $member->country : '';
 
         $data = array(
-                        'totalComments'       =>$cnt,
-                        'created_at'              =>$printDateSince->printDateSince($member->created_at),
-                        'username'               =>$member->username,
-                        'countrycity'             => $textCountryCity,
-                        'lastactive_at'           =>$printDateSince->printDateSince($lastactive),
-                        'cntProjects'              =>$cntprojects,
-                        'issupporter'             =>$donationinfo['issupporter'],
-                        'supportMax'            =>$donationinfo['active_time_max'],
-                        'supportMin'             =>$donationinfo['active_time_min'],
-                        'supportCnt'             =>$donationinfo['cnt'],
-                        'cntLikesGave'          =>$cntLikesGave,
-                        'cntLikesGot'            =>$cntLikesGot
-                );        
-       
-        $cache->save($data, $cacheName,array() , 3600);
+            'totalComments' => $cnt,
+            'created_at'    => $printDateSince->printDateSince($member->created_at),
+            'username'      => $member->username,
+            'countrycity'   => $textCountryCity,
+            'lastactive_at' => $printDateSince->printDateSince($lastactive),
+            'cntProjects'   => $cntprojects,
+            'issupporter'   => $donationinfo['issupporter'],
+            'supportMax'    => $donationinfo['active_time_max'],
+            'supportMin'    => $donationinfo['active_time_min'],
+            'supportCnt'    => $donationinfo['cnt'],
+            'cntLikesGave'  => $cntLikesGave,
+            'cntLikesGot'   => $cntLikesGot
+        );
+
+        $cache->save($data, $cacheName, array(), 3600);
+
         return $data;
     }
 
 
-     public function getProbablyPayoutPlingsCurrentmonth($project_id)
-    {       
-        $sql = " select FORMAT(probably_payout_amount, 2) as amount from member_dl_plings where project_id = :project_id and yearmonth=(DATE_FORMAT(NOW(),'%Y%m'))";                   
-        $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql,array('project_id'=>$project_id));
-         return $result['amount'];
+    public function getProbablyPayoutPlingsCurrentmonth($project_id)
+    {
+        $sql =
+            " select FORMAT(probably_payout_amount, 2) as amount from member_dl_plings where project_id = :project_id and yearmonth=(DATE_FORMAT(NOW(),'%Y%m'))";
+        $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql, array('project_id' => $project_id));
+
+        return $result['amount'];
     }
 
     public function getOCSInstallInstruction()
@@ -1278,7 +1289,7 @@ class Default_Model_Info
         }
         $config = Zend_Registry::get('config')->settings->server->opencode;
         $readme = 'https://git.opendesktop.org/OCS/ocs-url/raw/master/docs/How-to-install.md?inline=false';
-                        
+
         $httpClient = new Zend_Http_Client($readme, array('keepalive' => true, 'strictredirects' => true));
         $httpClient->resetParameters();
         $httpClient->setUri($readme);
@@ -1291,20 +1302,21 @@ class Default_Model_Info
 
         $body = $response->getRawBody();
 
-       
         if (count($body) == 0) {
             return array();
         }
         include_once('Parsedown.php');
         $Parsedown = new Parsedown();
 
-        $readmetext = $Parsedown->text($body);     
+        $readmetext = $Parsedown->text($body);
 
-        $cache->save($readmetext, $cacheName,array() , 3600);
+        $cache->save($readmetext, $cacheName, array(), 3600);
+
         return $readmetext;
     }
 
-    public function getDiscussionOpendeskop($member_id){
+    public function getDiscussionOpendeskop($member_id)
+    {
         $sql = "
                 select 
                  c.comment_id
