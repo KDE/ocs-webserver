@@ -368,6 +368,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 )));
 
         /** new store dependent routing rules */
+        //$router->addRoute('store_general', new Zend_Controller_Router_Route('/s/:domain_store_id/:controller/:action/*', array(
+        //    'module'     => 'default',
+        //    'controller' => 'explore',
+        //    'action'     => 'index'
+        //)));
+
         $router->addRoute('store_home', new Zend_Controller_Router_Route('/s/:domain_store_id/', array(
                     'module'     => 'default',
                     'controller' => 'home',

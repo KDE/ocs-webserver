@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,14 +20,13 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Default_View_Helper_FetchTotalProductsCount
 {
 
-    public function fetchTotalProductsCount()
+    public function fetchTotalProductsCount($in_current_store = false)
     {
         $tableMembers = new Default_Model_Project();
-        $result = $tableMembers->fetchTotalProjectsCount();
+        $result = $tableMembers->fetchTotalProjectsCount($in_current_store);
 
         return $result;
     }

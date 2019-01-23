@@ -159,17 +159,17 @@ class Default_Model_Info
      *
      * @param int      $limit
      * @param int|null $project_category_id
+     * @param array    $tags
      *
      * @return array
      * @throws Zend_Cache_Exception
      * @throws Zend_Exception
      */
-    public function getLatestComments($limit = 5, $project_category_id = null,$package_type = null)
+    public function getLatestComments($limit = 5, $project_category_id = null, $tags = null)
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName =
-            __FUNCTION__ . '_new_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id.$package_type);
+        $cacheName = __FUNCTION__ . '_new_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id . implode('_',$tags));
 
         if (($latestComments = $cache->load($cacheName))) {
             return $latestComments;
@@ -187,37 +187,38 @@ class Default_Model_Info
 
         $sql = '                
                    SELECT
-                       comment_id
-                       ,comment_text
-                       ,member.member_id
-                       ,member.profile_image_url
-                       ,comment_created_at
-                       ,member.username
-                       ,comment_target_id
-                       ,title
-                       ,stat_projects.project_id  
-                       ,cat_title as catTitle                                  
-                   FROM comments
-                   STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id
-                   inner JOIN stat_projects ON comments.comment_target_id = stat_projects.project_id ';      
+                       `comment_id`
+                       ,`comment_text`
+                       ,`member`.`member_id`
+                       ,`member`.`profile_image_url`
+                       ,`comment_created_at`
+                       ,`member`.`username`
+                       ,`comment_target_id`
+                       ,`title`
+                       ,`stat_projects`.`project_id`  
+                       ,`cat_title` AS `catTitle`                                  
+                   FROM `comments`
+                   STRAIGHT_JOIN `member` ON `comments`.`comment_member_id` = `member`.`member_id`
+                   INNER JOIN `stat_projects` ON `comments`.`comment_target_id` = `stat_projects`.`project_id` ';
+
+        if (isset($tags)) {
+            $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
+                . ')) AS store_tags ON stat_projects.project_id = store_tags.project_id';
+        }
 
         $sql .= ' WHERE comments.comment_active = 1            
             AND stat_projects.status = 100
             AND stat_projects.type_id = 1
             AND comments.comment_type = 0
             AND stat_projects.project_category_id IN (' . implode(',', $activeCategories) . ')                          
-        ';        
+        ';
 
-        if(isset($package_type)) {
-            $sql .= ' AND find_in_set('.$package_type.', stat_projects.package_types)';
-        }
-
-        $sql .='  ORDER BY comments.comment_created_at DESC ';
+        $sql .= '  ORDER BY comments.comment_created_at DESC ';
 
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
-       
+
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
 
         if (count($resultSet) > 0) {
@@ -358,15 +359,18 @@ class Default_Model_Info
      *
      * @param int  $limit
      * @param null $project_category_id
+     * @param array $tags
      *
      * @return array|false|mixed
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
      */
-    public function getMostDownloaded($limit = 100, $project_category_id = null, $package_type=null)
+    public function getMostDownloaded($limit = 100, $project_category_id = null, $tags = null)
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
         $cacheName =
-            __FUNCTION__ . '_new_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id.$package_type);
+            __FUNCTION__ . '_new_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id . implode('_',$tags));
 
         if (($mostDownloaded = $cache->load($cacheName))) {
             return $mostDownloaded;
@@ -384,14 +388,19 @@ class Default_Model_Info
 
         $sql = '
             SELECT 
-                 p.project_id
-                ,p.title
-                ,p.image_small       
-                ,s.amount 
-                ,s.category_title 
-                ,p.package_types      
-                FROM stat_downloads_quarter_year s
-                INNER JOIN stat_projects p ON s.project_id = p.project_id';
+                 `p`.`project_id`
+                ,`p`.`title`
+                ,`p`.`image_small`       
+                ,`s`.`amount` 
+                ,`s`.`category_title` 
+                ,`p`.`package_types`      
+                FROM `stat_downloads_quarter_year` `s`
+                INNER JOIN `stat_projects` `p` ON `s`.`project_id` = `p`.`project_id`';
+
+        if (isset($tags)) {
+            $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
+                . ')) AS store_tags ON p.project_id = store_tags.project_id';
+        }
 
         $sql .= ' WHERE
                     p.status=100
@@ -399,17 +408,12 @@ class Default_Model_Info
                     p.project_category_id IN (' . implode(',', $activeCategories) . ')          
             ';
 
-        if(isset($package_type)) {
-            $sql .= ' AND find_in_set('.$package_type.', p.package_types)';
-        }
-
         $sql .= '  ORDER BY s.amount DESC ';
 
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
 
-
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
 
         if (count($resultSet) > 0) {
@@ -423,38 +427,45 @@ class Default_Model_Info
         }
     }
 
-    public function getLastProductsForHostStores($limit = 10, $project_category_id = null, $package_type = null,$tag_isoriginal = null)
+    /**
+     * @param int  $limit
+     * @param int|null $project_category_id
+     * @param array|null $tags
+     * @param string|null $tag_isoriginal
+     *
+     * @return array|false
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     */
+    public function getLastProductsForHostStores($limit = 10, $project_category_id = null, $tags = null, $tag_isoriginal = null)
     {
         /** @var Zend_Cache_Core $cache */
-      
-        if($project_category_id) {
+
+        if ($project_category_id) {
             $catids = str_replace(',', '', (string)$project_category_id);
-        }else
-        {
-            $catids="";
+        } else {
+            $catids = "";
         }
         $cache = Zend_Registry::get('cache');
-        $cacheName =
-            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit .$catids.$package_type.$tag_isoriginal);
+        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . $catids . implode('_',$tags) . $tag_isoriginal);
 
         if (($resultSet = $cache->load($cacheName))) {
             return $resultSet;
         }
 
-
-        $activeCategories =array();
+        $activeCategories = array();
         if (empty($project_category_id)) {
             $activeCategories = $this->getActiveCategoriesForCurrentHost();
         } else {
             $cats = explode(",", $project_category_id);
-            if(count($cats)==1){
-                $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);    
-            }else{
+            if (count($cats) == 1) {
+                $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);
+            } else {
                 foreach ($cats as $cat) {
-                    $tmp = $this->getActiveCategoriesForCatId($cat);    
+                    $tmp = $this->getActiveCategoriesForCatId($cat);
                     $activeCategories = array_merge($tmp, $activeCategories);
-                }                
-            }            
+                }
+            }
         }
 
         if (count($activeCategories) == 0) {
@@ -463,78 +474,90 @@ class Default_Model_Info
 
         $sql = '
             SELECT 
-                p.*              
+                `p`.*              
             FROM
-                stat_projects  AS p
+                `stat_projects`  AS `p`
             WHERE
-                p.status = 100                
-                AND p.project_category_id IN (' . implode(',', $activeCategories) . ')
-                AND p.amount_reports is null';
-        
-        if(isset($package_type)) {
-            $sql .= ' AND find_in_set('.$package_type.', package_types)';
-        }
-        
-        if(isset($tag_isoriginal)) {
-            if($tag_isoriginal)
-            {
-                $sql .= ' AND find_in_set("'.self::TAG_ISORIGINAL.'", tags)';    
-            }else{
-                $sql .= ' AND NOT find_in_set("'.self::TAG_ISORIGINAL.'", tags)';    
-            }            
+                `p`.`status` = 100                
+                AND `p`.`project_category_id` IN (' . implode(',', $activeCategories) . ')
+                AND `p`.`amount_reports` IS NULL';
+
+        if (isset($tags)) {
+            $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
+                . ')) AS store_tags ON p.project_id = store_tags.project_id';
         }
 
-        $sql .= ' ORDER BY IFNULL(p.changed_at,p.created_at)  DESC
-            ';
+        if (isset($tag_isoriginal)) {
+            if ($tag_isoriginal) {
+                $sql .= ' AND find_in_set("' . self::TAG_ISORIGINAL . '", tags)';
+            } else {
+                $sql .= ' AND NOT find_in_set("' . self::TAG_ISORIGINAL . '", tags)';
+            }
+        }
+
+        $sql .= ' ORDER BY IFNULL(p.changed_at,p.created_at)  DESC';
+
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
 
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+        $cache->save($resultSet, $cacheName, array(), 300);
 
         if (count($resultSet) > 0) {
-                    $cache->save($resultSet, $cacheName, array(), 300);
-                    return $resultSet;
-        } else {
-                    $cache->save($resultSet, $cacheName, array(), 300);
-                    return array();
-        }        
-    }
-    
 
-
-    public function getJsonLastProductsForHostStores($limit = 10, $project_category_id = null, $package_type = null,$tag_isoriginal = null, $offset = 0)
-    {
-        /** @var Zend_Cache_Core $cache */
-      
-        if($project_category_id) {
-            $catids = str_replace(',', '_', (string)$project_category_id);
-        }else
-        {
-            $catids="";
+            return $resultSet;
         }
+
+        return array();
+    }
+
+
+    /**
+     * @param int  $limit
+     * @param string|null $project_category_id
+     * @param array|null $tags
+     * @param string|null $tag_isoriginal
+     * @param int  $offset
+     *
+     * @return string
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     */
+    public function getJsonLastProductsForHostStores(
+        $limit = 10,
+        $project_category_id = null,
+        $tags = null,
+        $tag_isoriginal = null,
+        $offset = 0
+    ) {
+        $cat_ids = "";
+        if ($project_category_id) {
+            $cat_ids = str_replace(',', '_', (string)$project_category_id);
+        }
+
+        /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
         $cacheName =
-            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit .$catids.$package_type.$tag_isoriginal.$offset);
+            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . $cat_ids . implode('_',$tags) . $tag_isoriginal . $offset);
 
         if (($resultSet = $cache->load($cacheName))) {
             return $resultSet;
         }
 
-
-        $activeCategories =array();
+        $activeCategories = array();
         if (empty($project_category_id)) {
             $activeCategories = $this->getActiveCategoriesForCurrentHost();
         } else {
             $cats = explode(",", $project_category_id);
-            if(count($cats)==1){
-                $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);    
-            }else{
+            if (count($cats) == 1) {
+                $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);
+            } else {
                 foreach ($cats as $cat) {
-                    $tmp = $this->getActiveCategoriesForCatId($cat);    
+                    $tmp = $this->getActiveCategoriesForCatId($cat);
                     $activeCategories = array_merge($tmp, $activeCategories);
-                }                
-            }            
+                }
+            }
         }
 
         if (count($activeCategories) == 0) {
@@ -543,47 +566,49 @@ class Default_Model_Info
 
         $sql = '
             SELECT 
-                project_id,
-                member_id,
-                image_small,
-                title,
-                version,
-                cat_title,
-                count_comments,
-                package_names,
-                laplace_score,
-                count_likes,
-                count_dislikes,
-                changed_at,
-                created_at            
+                `project_id`,
+                `member_id`,
+                `image_small`,
+                `title`,
+                `version`,
+                `cat_title`,
+                `count_comments`,
+                `package_names`,
+                `laplace_score`,
+                `count_likes`,
+                `count_dislikes`,
+                `changed_at`,
+                `created_at`            
             FROM
-                stat_projects  AS p
-            WHERE
-                p.status = 100                
-                AND p.project_category_id IN (' . implode(',', $activeCategories) . ')
-                AND p.amount_reports is null';
-        
-        if(isset($package_type)) {
-            $sql .= ' AND find_in_set('.$package_type.', package_types)';
-        }
-        
-        if(isset($tag_isoriginal)) {
-            if($tag_isoriginal)
-            {
-                $sql .= ' AND find_in_set("'.self::TAG_ISORIGINAL.'", tags)';    
-            }else{
-                $sql .= ' AND NOT find_in_set("'.self::TAG_ISORIGINAL.'", tags)';    
-            }            
+                `stat_projects`  AS `p`';
+
+        if (isset($tags)) {
+            $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
+                . ')) AS store_tags ON p.project_id = store_tags.project_id';
         }
 
-        $sql .= ' ORDER BY IFNULL(p.changed_at,p.created_at)  DESC
-            ';
+        $sql .= '
+            WHERE
+                `p`.`status` = 100                
+                AND `p`.`project_category_id` IN (' . implode(',', $activeCategories) . ')
+                AND `p`.`amount_reports` IS NULL';
+
+        if (isset($tag_isoriginal)) {
+            if ($tag_isoriginal) {
+                $sql .= ' AND find_in_set("' . self::TAG_ISORIGINAL . '", tags)';
+            } else {
+                $sql .= ' AND NOT find_in_set("' . self::TAG_ISORIGINAL . '", tags)';
+            }
+        }
+
+        $sql .= ' ORDER BY IFNULL(p.changed_at,p.created_at)  DESC';
+
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
         if (isset($offset)) {
-                 $sql .= ' offset ' . (int)$offset;
-             }
+            $sql .= ' offset ' . (int)$offset;
+        }
 
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
         $imagehelper = new Default_View_Helper_Image();
@@ -593,44 +618,50 @@ class Default_Model_Info
         if (count($resultSet) > 0) {
             $result = Zend_Json::encode($resultSet);
             $cache->save($result, $cacheName, array(), 300);
+
             return $result;
-        } else {                
-            return  Zend_Json::encode('');
-        }        
-    }
-  
-    public function getTopProductsForHostStores($limit = 10, $project_category_id = null, $package_type = null)
-    {
-        /** @var Zend_Cache_Core $cache */
-      
-        if($project_category_id) {
-            $catids = str_replace(',', '', (string)$project_category_id);
-        }else
-        {
-            $catids="";
         }
+
+        return Zend_Json::encode('');
+    }
+
+    /**
+     * @param int  $limit
+     * @param string|null $project_category_id
+     * @param array|null $tags
+     *
+     * @return array|false
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     */
+    public function getTopProductsForHostStores($limit = 10, $project_category_id = null, $tags = null)
+    {
+        $catids = "";
+        if ($project_category_id) {
+            $catids = str_replace(',', '', (string)$project_category_id);
+        }
+
+        /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName =
-            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit .$catids.$package_type);
+        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . $catids . implode('_',$tags));
 
         if (($resultSet = $cache->load($cacheName))) {
             return $resultSet;
         }
 
-
-        $activeCategories =array();
+        $activeCategories = array();
         if (empty($project_category_id)) {
             $activeCategories = $this->getActiveCategoriesForCurrentHost();
         } else {
             $cats = explode(",", $project_category_id);
-            if(count($cats)==1){
-                $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);    
-            }else{
+            if (count($cats) == 1) {
+                $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);
+            } else {
                 foreach ($cats as $cat) {
-                    $tmp = $this->getActiveCategoriesForCatId($cat);    
+                    $tmp = $this->getActiveCategoriesForCatId($cat);
                     $activeCategories = array_merge($tmp, $activeCategories);
-                }                
-            }            
+                }
+            }
         }
 
         if (count($activeCategories) == 0) {
@@ -639,18 +670,21 @@ class Default_Model_Info
 
         $sql = '
             SELECT 
-                p.*              
+                `p`.*              
             FROM
-                stat_projects  AS p
-            WHERE
-                p.status = 100                
-                AND p.project_category_id IN (' . implode(',', $activeCategories) . ')
-                AND p.amount_reports is null';
-        
-        if(isset($package_type)) {
-            $sql .= ' AND find_in_set('.$package_type.', package_types)';
+                `stat_projects`  AS `p`';
+
+        if (isset($tags)) {
+            $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
+                . ')) AS store_tags ON p.project_id = store_tags.project_id';
         }
-        
+
+        $sql .= '
+            WHERE
+                `p`.`status` = 100                
+                AND `p`.`project_category_id` IN (' . implode(',', $activeCategories) . ')
+                AND `p`.`amount_reports` IS NULL';
+
         $sql .= ' ORDER BY (round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC, created_at DESC
             ';
         if (isset($limit)) {
@@ -658,16 +692,14 @@ class Default_Model_Info
         }
 
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+        $cache->save($resultSet, $cacheName, array(), 300);
 
         if (count($resultSet) > 0) {
-                    $cache->save($resultSet, $cacheName, array(), 300);
-                    return $resultSet;
-        } else {
-                    $cache->save($resultSet, $cacheName, array(), 300);
-                    return array();
-        }        
-    }
+            return $resultSet;
+        }
 
+        return array();
+    }
 
     public function getRandomStoreProjectIds()
     {

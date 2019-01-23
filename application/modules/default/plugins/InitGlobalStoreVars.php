@@ -208,6 +208,15 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
         return $storeConfig;
     }
 
+    private function getConfigStoreTags($store_id)
+    {
+        $modelConfigStoreTags = new Default_Model_ConfigStoreTags();
+
+        $result = $modelConfigStoreTags->getTagsAsIdForStore($store_id);
+
+        return $result;
+    }
+
     /**
      * @param string $storeHostName
      *
@@ -229,7 +238,8 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
             ;
             $modelCategories = new Default_Model_DbTable_ProjectCategory();
             $root = $modelCategories->fetchRoot();
-            $storeCategories = $modelCategories->fetchImmediateChildrenIds($root['project_category_id'], $modelCategories::ORDERED_TITLE);
+            $storeCategories =
+                $modelCategories->fetchImmediateChildrenIds($root['project_category_id'], $modelCategories::ORDERED_TITLE);
         }
 
         return $storeCategories;
@@ -258,15 +268,6 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
         }
 
         return array();
-    }
-
-    private function getConfigStoreTags($store_id)
-    {
-        $modelConfigStoreTags = new Default_Model_ConfigStoreTags();
-
-        $result = $modelConfigStoreTags->getTagsAsIdForStore($store_id);
-
-        return $result;
     }
 
 }

@@ -108,40 +108,24 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
      */
     public function indexAction()
     {
-        $filter = array();
-        $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
-        $this->view->categories = $storeCatIds;
+        //$this->view->categories = $storeCatIds;
 
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        $storePackageTypeIds = null;
-        if ($storeConfig) {
-            $this->view->package_type = $filter['package_type'] = $storeConfig->package_type;
-        }
+        //$storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        //$storePackageTypeIds = null;
+        //if ($storeConfig) {
+        //    $this->view->package_type = $filter['package_type'] = $storeConfig->package_type;
+        //}
+
         // Filter-Parameter
-        $inputCatId = (int)$this->getParam('cat', null);
+        $inputFilterOriginal = $this->getParam('filteroriginal', $this->getFilterOriginalFromCookie());
+        $this->storeFilterOriginalInCookie($inputFilterOriginal);
 
-        $inputFilterOriginal = $this->getParam('filteroriginal', null);
-
-        if (isset($inputFilterOriginal)) {
-            //set to cookie session
-            $config = Zend_Registry::get('config');
-            $cookieName = $config->settings->session->filter_browse_original;
-            $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
-            $domain = Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost());
-            $cookieExpire = time() + $remember_me_seconds;
-            setcookie($cookieName, $inputFilterOriginal, $cookieExpire, '/');
-        } else {
-            $config = Zend_Registry::get('config');
-            $cookieName = $config->settings->session->filter_browse_original;
-            if (isset($_COOKIE[$cookieName])) {
-                $inputFilterOriginal = $_COOKIE[$cookieName];
-            }
-        }
         $this->view->inputFilterOriginal = $inputFilterOriginal;
 
+        $inputCatId = (int)$this->getParam('cat', null);
         if ($inputCatId) {
-            $this->view->isFilterCat = true;
-            $this->view->filterCat = $inputCatId;
+//            $this->view->isFilterCat = true;
+//            $this->view->filterCat = $inputCatId;
             $this->view->catabout = $this->getCategoryAbout($inputCatId);
 
             $helperFetchCategory = new Default_View_Helper_CatTitle();
@@ -152,11 +136,16 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
         $this->view->cat_id = $inputCatId;
 
+        $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+
+        $filter = array();
         $filter['category'] = $inputCatId ? $inputCatId : $storeCatIds;
         $filter['order'] = preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('ord', self::DEFAULT_ORDER));
-        if ($inputFilterOriginal == 1) {
-            $filter['original'] = self::TAG_ISORIGINAL;
-        }
+        $filter['original'] = $inputFilterOriginal == 1 ? self::TAG_ISORIGINAL : null;
+        $filter['package_type'] = Zend_Registry::isRegistered('config_store_tags') ?  Zend_Registry::get('config_store_tags') : null;
+        //if ($inputFilterOriginal == 1) {
+        //    $filter['original'] = self::TAG_ISORIGINAL;
+        //}
 
         $page = (int)$this->getParam('page', 1);
 
@@ -189,6 +178,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $this->view->totalcount = $requestedElements['total_count'];
         $this->view->filters = $filter;
         $this->view->page = $page;
+        $this->view->package_type = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
     }
 
     /**
@@ -373,6 +363,29 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         }else{
             $this->_helper->layout()->setLayout($layoutName);
         }        
+    }
+
+    private function storeFilterOriginalInCookie($inputFilterOriginal)
+    {
+        $storedInCookie = $this->getFilterOriginalFromCookie();
+
+        if (isset($inputFilterOriginal) AND ($inputFilterOriginal != $storedInCookie)) {
+                $config = Zend_Registry::get('config');
+                $cookieName = $config->settings->session->filter_browse_original;
+                $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
+                $cookieExpire = time() + $remember_me_seconds;
+                setcookie($cookieName, $storedInCookie, $cookieExpire, '/');
+        }
+    }
+
+    private function getFilterOriginalFromCookie()
+    {
+        $config = Zend_Registry::get('config');
+        $cookieName = $config->settings->session->filter_browse_original;
+
+        $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
+
+        return $storedInCookie;
     }
 
 }

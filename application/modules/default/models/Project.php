@@ -584,11 +584,11 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         if (is_array($filter)) {
             $statement->join(array(
-                'package_type' => new Zend_Db_Expr('(SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('
-                    . $filter . '))')
+                'package_type' => new Zend_Db_Expr('(SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in ('
+                    . implode(',', $filter) . '))')
             ), 'project.project_id = package_type.project_id', array());
         } else {
-            $statement->where('find_in_set(?, package_types)', $filter);
+            $statement->where('find_in_set(?, tag_ids)', $filter);
         }
 
         return $statement;
@@ -963,27 +963,30 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
     }
 
-  
 
     /**
-     * @return mixed
+     * @param bool $in_current_store
+     *
+     * @return int
+     * @throws Zend_Exception
      */
-    public function fetchTotalProjectsCount($is_current_store=false)
+    public function fetchTotalProjectsCount($in_current_store = false)
     {
+        $sql = "SELECT count(1) AS `total_project_count` FROM `stat_projects`";
+        if ($in_current_store) {
+            $store_tags = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
+            if ($store_tags) {
+                $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $store_tags)
+                    . ')) AS package_type ON stat_projects.project_id = package_type.project_id';
+            }
 
-        $sql ="SELECT count(1) AS `total_project_count` FROM `stat_projects`";
-        if($is_current_store){            
             $info = new Default_Model_Info();
             $activeCategories = $info->getActiveCategoriesForCurrentHost();
-            $sql .= ' where project_category_id IN (' . implode(',', $activeCategories) . ')';
-            $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-            if($storeConfig && $storeConfig->package_type)
-            {
-                $sql .= ' AND find_in_set('.$storeConfig->package_type.', package_types)';
-            }            
+            $sql .= ' WHERE project_category_id IN (' . implode(',', $activeCategories) . ')';
         }
         $result = $this->_db->fetchRow($sql);
-        return $result['total_project_count'];
+
+        return (int)$result['total_project_count'];
     }
 
     /**
