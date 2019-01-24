@@ -633,8 +633,7 @@ $this->inlineScript()->appendScript(
 
                                 tableHeader += '    <th><?= $this->translate('Date added') ?></th>';
                                 tableHeader += '    <th style="text-align: right"><?= $this->translate('Filesize') ?></th>';
-                                tableHeader +=  '    <th style="text-align: right"><?= $this->translate('# of Downloads') ?></th>';
-                                tableHeader +=  '    <th></th>';
+                                tableHeader +=  '   <th style="text-align: right"><?= $this->translate('# DLs') ?></th>';
                                 tableHeader +=  '    <th></th>';
                                 tableHeader +=  '</tr>';
                                 $modalPpload.find('table[data-ppload-files] thead').append(tableHeader);
@@ -976,18 +975,49 @@ $this->inlineScript()->appendScript(
                     //var tagOptions = UserTags.getTagOptions();
 
                     var tableString = '';
-                    tableString += '<tr data-ppload-file-id="' + this.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
-                    tableString += '<td><a href="' + pploadApiUri + 'files/download/id/' + data.file.id + '/' + data.file.name + '">' + data.file.name + '</a></td>';
+                    tableString += '<tr data-ppload-file-id="' + data.file.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
+                    tableString += '<td><a href="' + pploadApiUri + 'files/download/';
+                    tableString += 'id/' + data.file.id + '/' + data.file.name + '">' + data.file.name + '</a></td>';
                     tableString += '<td>' + version + '</td>';
-                    tableString += '<td>' + inputFileDescription + '</td>';
+                    tableString += '<td><input data-ppload-file-description="" class="form-control input-sm"';
+                    tableString += ' type="text" maxlength="140" placeholder="File description"';
+                    tableString += ' value="' + fileDescription + '"></td>';
 
                     var fileId = data.file.id;
+
+
+                    //get cat-tag-groups
+                    var tagGroups = null;
+                    var tagGroupsCount = 0;
+                    var catId = $modalPpload.attr('data-product-cat-id');
+
+                    $.ajax({
+                        url: '/p/'+$modalPpload.attr('data-product-id')+'/gettaggroupsforcatajax',
+                        type: 'GET',
+                        async: false,
+                        cache: false,
+                        timeout: 30000,
+                        data: {project_cat_id: catId},
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'success') {
+                                tagGroups = data.tag_groups;
+                                tagGroupsCount = data.ResultSize;
+                                return;
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            return;
+                        }
+                    });
+
 
 
                     $.each(tagGroups, function() {
                         tableString += '<td>';
                         tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
                         tableString += '<option value=\"\"></option>';
+
 
                         for(key in this.tag_list){
                             tableString += '<option value=\"'+key+'\"';
@@ -1003,10 +1033,10 @@ $this->inlineScript()->appendScript(
 
                     tableString += '<td>' + data.file.created_timestamp + '</td>';
                     tableString += '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>';
-                    tableString +='<td style="text-align: right">' + numDownloads + '</td>';
-                    tableString +='<td>' + updatePploadFileBtnPerFile + '</td>';
-                    tableString +='<td>' + deletePploadFileBtnPerFile + '</td>';
-                    tableString +='</tr>';
+                    tableString +='<td style="text-align: right">0</td>';
+                    tableString += '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a></td>';
+                    tableString += '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a></td>';
+                    tableString += '</tr>';
                     $modalPpload.find('table[data-ppload-files] tbody').append(tableString);
 
                     //UserTags.activateSelect(data.file.id, '');

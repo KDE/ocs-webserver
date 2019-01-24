@@ -124,6 +124,26 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->json(array('status' => 'error'));
     }
+    
+    
+    public function getfiletagsajaxAction() {
+        $this->_helper->layout()->disableLayout();
+        
+        $fileId = null;
+        
+        if($this->hasParam('file_id')) {
+            $fileId = $this->getParam('file_id');
+            
+            $tagModel  = new Default_Model_Tags();
+            $fileTags = $tagModel->getFileTags($fileId);
+            
+            $this->_helper->json(array('status' => 'ok', 'ResultSize' => count($fileTags), 'file_tags' => $fileTags));
+
+            return;
+        }
+
+        $this->_helper->json(array('status' => 'error'));
+    }
 
     
 

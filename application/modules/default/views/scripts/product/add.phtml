@@ -645,7 +645,9 @@ $this->inlineScript()->appendScript('
                         $('#get-url').val('').removeClass('hasError');
                         $('#get-url-error').html('');
                         $('#generic-dialog').modal('hide');
-                        getPploadFiles(null, null);
+                        
+                        getPploadFiles(null,null);
+                        
                     },
                     error: function() {
                         $('#get-url').addClass('hasError').focus();
@@ -758,20 +760,17 @@ $this->inlineScript()->appendScript('
 
                 }
 
-                function getPploadFiles(page, tagGroups) {
-                    var collectionId = $modalPpload.attr('data-ppload-collection-id');
-                    
-                    if(!collectionId) {
-                        alert("Error: No ColelctionId");
-                        return;
-                    }
-
+                function getPploadFiles(page) {
                     if (!page) {
                         page = 1;
                         $modalPpload.find('table[data-ppload-files] tbody').empty();
                     }
                     
-                    var prodId = $modalPpload.attr('data-product-id');
+                    var prodId = ProductForm.project_id;
+                    if(!prodId) {
+                        prodId = 0;
+                    }
+                    
                     var catId = $('#project_category_id').val();
                     
                     //get cat-tag-groups
@@ -791,21 +790,25 @@ $this->inlineScript()->appendScript('
                                 
                                 tagGroups = data.tag_groups;
                                 tagGroupsCount = data.ResultSize;
+                                
                                 var tableHeader = '';
                                 tableHeader += '<tr>';
                                 tableHeader +=  '    <th><?= $this->translate('Filename') ?></th>';
                                 tableHeader +=  '    <th><?= $this->translate('Version') ?></th>';
                                 tableHeader +=  '    <th><?= $this->translate('Description') ?></th>';
 
-                                $.each(tagGroups, function() {
-                                    tableHeader += '<th>'+this.group_display_name+'</th>';
-                                });
+                                if(tagGroupsCount>0) {
+                                    $.each(tagGroups, function() {
+                                        tableHeader += '<th>'+this.group_display_name+'</th>';
+                                    });
+                                } else {
+                                    tableHeader += '<th><?= $this->translate('Tags') ?></th>';
+                                }
 
                                 tableHeader += '    <th><?= $this->translate('Date added') ?></th>';
                                 tableHeader += '    <th style="text-align: right"><?= $this->translate('Filesize') ?></th>';
-                                tableHeader +=  '    <th style="text-align: right"><?= $this->translate('# of Downloads') ?></th>';
-                                tableHeader +=  '    <th></th>';
-                                tableHeader +=  '    <th></th>';
+                                tableHeader +=  '   <th style="text-align: right"><?= $this->translate('# DLs') ?></th>';
+                                tableHeader +=  '   <th></th>';
                                 tableHeader +=  '</tr>';
                                 $modalPpload.find('table[data-ppload-files] thead').append(tableHeader);
 
@@ -818,182 +821,224 @@ $this->inlineScript()->appendScript('
                         }
                     });
                     
-                    $.ajax({
-                        url: pploadApiUri + 'files/index',
-                        type: 'GET',
-                        data: {
-                            collection_id: collectionId,
-                            perpage: 1000,
-                            page: page,
-                            format: 'json',
-                            ignore_status_code: 0,
-                            status: 'active'
-                        },
-                        dataType: 'json',
-                        success: function (data, textStatus, jqXHR) {
-                            if (data.status != 'success') {
-                                return;
-                            }
-                            
-                            if(null != tagGroups && tagGroupsCount > 0) {
-                                //get cat-tag-groups
-                                $.ajax({
-                                    url: '/p/'+prodId+'/gettaggroupsforcatajax',
-                                    type: 'GET',
-                                    async: false,
-                                    cache: false,
-                                    timeout: 30000,
-                                    data: {project_cat_id: catId, file_id: this.id, test: false},
-                                    dataType: 'json',
-                                    success: function (data, textStatus, jqXHR) {
-                                        if (data.status != 'success') {
-                                            tagGroups = data.tag_groups;
-                                            return;
-                                        }
-                                    },
-                                    error: function (jqXHR, textStatus, errorThrown) {
-                                        return;
-                                    }
-                                });
-                            }
-                            
-                            var updatePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a>';
-                            var updatePploadFileBtnPerFile = '';
-                            var deletePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';
-                            var deletePploadFileBtnPerFile = '';
-
-                            var myArray = $.map(data.files, function(entry) {
-                                return entry;
-                            });
-                            myArray.sort(keysrt('created_timestamp'), false);
-
-
-                            $.each(myArray, function () {
-
-                                var fileDescription = '';
-                                if (this.description) {
-                                    fileDescription = this.description;
-                                    fileDescription = fileDescription.replace(/<\/?[^>]+(>|$)/g, "");
+                    var collectionId = $modalPpload.attr('data-ppload-collection-id');
+                    
+                    if(!collectionId) {
+                        return;
+                    } else {
+                        $.ajax({
+                            url: pploadApiUri + 'files/index',
+                            type: 'GET',
+                            data: {
+                                collection_id: collectionId,
+                                perpage: 1000,
+                                page: page,
+                                format: 'json',
+                                ignore_status_code: 0,
+                                status: 'active'
+                            },
+                            dataType: 'json',
+                            success: function (data, textStatus, jqXHR) {
+                                if (data.status != 'success') {
+                                    return;
                                 }
+                                var updatePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a>';
+                                var updatePploadFileBtnPerFile = '';
+                                var deletePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';
+                                var deletePploadFileBtnPerFile = '';
 
-                                var inputFileDescription = '<input data-ppload-file-description="" class="form-control input-sm"'
-                                    + ' type="text" maxlength="140" placeholder="File description"'
-                                    + ' value="' + fileDescription + '">';
-                                if(this.active == '0') {
-                                    inputFileDescription = '<input disabled="disabled" data-ppload-file-description="" class="form-control input-sm"'
+                                var myArray = $.map(data.files, function(entry) {
+                                    return entry;
+                                });
+                                myArray.sort(keysrt('created_timestamp'), false);
+
+                                var fileTagsArray = null;
+                                var fileTagsArraySize = 0;
+                                $.each(myArray, function () {
+                                    
+                                    
+                                    
+                                    if(null != tagGroups && tagGroupsCount > 0) {
+                                        //get cat-tag-groups
+                                        $.ajax({
+                                            url: '/p/'+prodId+'/gettaggroupsforcatajax',
+                                            type: 'GET',
+                                            async: false,
+                                            cache: false,
+                                            timeout: 30000,
+                                            data: {project_cat_id: catId, file_id: this.id, test: false},
+                                            dataType: 'json',
+                                            success: function (data, textStatus, jqXHR) {
+                                                if (data.status != 'success') {
+                                                    tagGroups = data.tag_groups;
+                                                    return;
+                                                }
+                                            },
+                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                return;
+                                            }
+                                        });
+                                    } else {
+                                        //get cat-tag-groups
+                                        $.ajax({
+                                            url: '/p/'+prodId+'/getfiletagsajax',
+                                            type: 'GET',
+                                            async: false,
+                                            cache: false,
+                                            timeout: 30000,
+                                            data: {file_id: this.id},
+                                            dataType: 'json',
+                                            success: function (data, textStatus, jqXHR) {
+                                                if (data.status != 'success') {
+                                                    fileTagsArray = data.file_tags;
+                                                    fileTagsArraySize = data.ResultSize;
+                                                    return;
+                                                }
+                                            },
+                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                return;
+                                            }
+                                        });
+                                    }
+
+                                    var fileDescription = '';
+                                    if (this.description) {
+                                        fileDescription = this.description;
+                                        fileDescription = fileDescription.replace(/<\/?[^>]+(>|$)/g, "");
+                                    }
+
+                                    var inputFileDescription = '<input data-ppload-file-description="" class="form-control input-sm"'
                                         + ' type="text" maxlength="140" placeholder="File description"'
                                         + ' value="' + fileDescription + '">';
-                                }
-
-                                var versionText;
-                                if(this.version==null) {versionText = '';} else{versionText = this.version;}
-                                versionText = versionText.replace(/<\/?[^>]+(>|$)/g, "");
-
-                                var version = '<input data-ppload-file-version="" class="form-control input-sm"'
-                                    + ' type="text" maxlength="140" placeholder="File version"'
-                                    + ' value="' + versionText + '">';
-                                if(this.active == '0') {
-                                    version = '<input disabled="disabled" data-ppload-file-version="" class="form-control input-sm"'
-                                        + ' type="text" maxlength="140" placeholder="File version"'
-                                        + ' value="' + versionText + '">';
-                                }
-
-                                var fileCategory = '';
-                                if (this.category) {
-                                    fileCategory = this.category;
-                                }
-                                var link = '';
-                                var fileTags = '';
-                                var osId = null;
-                                
-
-                                if (this.tags) {
-                                    fileTags = this.tags;
-                                    $.each(fileTags.split(','), function () {
-                                        if(this.indexOf("##")==-1) {
-                                            var tagStr = this.split('-');
-                                            if (tagStr.length == 2 && tagStr[0] == 'os') {
-                                                osId = tagStr[1];
-                                            }
-                                        } else {
-                                            var tagStr = this.split('##');
-                                            if (tagStr.length == 2 && tagStr[0] == 'link') {
-                                                link = tagStr[1];
-                                            }
-                                        }
-                                    });
-                                }
-
-                                //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
-                                var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size;
-                                
-                                var downloadLinkFilename = link ? this.name + ' (External Link)' : this.name;
-                                var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '" class="opendownloadfile" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->project_id ?>"  data-link_type="download">' + downloadLinkFilename + '</a>';
-
-                                if(this.active == '1') {
-                                    updatePploadFileBtnPerFile = updatePploadFileBtn;
-                                    deletePploadFileBtnPerFile = deletePploadFileBtn;
-                                } else {
-                                    updatePploadFileBtnPerFile = '';
-                                    deletePploadFileBtnPerFile = '';
-                                }
-
-                                tableString = '';
-                                tableString += '<tr data-ppload-file-id="' + this.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
-                                tableString += '<td>' + downloadLink + '</td>';
-                                tableString += '<td>' + version + '</td>';
-                                tableString += '<td>' + inputFileDescription + '</td>';
-                                       
-                                $.each(tagGroups, function() {
-                                    tableString += '<td>';
-                                    tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
-                                    tableString += '<option value=\"\"></option>';
-
-                                    for(key in this.tag_list){
-                                        tableString += '<option value=\"'+key+'\"';
-                                        if(null != this.selected_tag && key == this.selected_tag) {
-                                            tableString += ' selected="selected"';
-                                        }
-                                        tableString += '>' + this.tag_list[key] + '</option>';
+                                    if(this.active == '0') {
+                                        inputFileDescription = '<input disabled="disabled" data-ppload-file-description="" class="form-control input-sm"'
+                                            + ' type="text" maxlength="140" placeholder="File description"'
+                                            + ' value="' + fileDescription + '">';
                                     }
 
-                                    tableString += '</select>';
-                                    tableString += '</td>';
+                                    var versionText;
+                                    if(this.version==null) {versionText = '';} else{versionText = this.version;}
+                                    versionText = versionText.replace(/<\/?[^>]+(>|$)/g, "");
+
+                                    var version = '<input data-ppload-file-version="" class="form-control input-sm"'
+                                        + ' type="text" maxlength="140" placeholder="File version"'
+                                        + ' value="' + versionText + '">';
+                                    if(this.active == '0') {
+                                        version = '<input disabled="disabled" data-ppload-file-version="" class="form-control input-sm"'
+                                            + ' type="text" maxlength="140" placeholder="File version"'
+                                            + ' value="' + versionText + '">';
+                                    }
+
+                                    var fileCategory = '';
+                                    if (this.category) {
+                                        fileCategory = this.category;
+                                    }
+                                    var link = '';
+                                    var fileTags = '';
+                                    var osId = null;
+
+                                    //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
+                                    var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size;
+
+                                    var downloadLinkFilename = link ? this.name + ' (External Link)' : this.name;
+                                    var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '" class="opendownloadfile" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->project_id ?>"  data-link_type="download">' + downloadLinkFilename + '</a>';
+
+                                    if(this.active == '1') {
+                                        updatePploadFileBtnPerFile = updatePploadFileBtn;
+                                        deletePploadFileBtnPerFile = deletePploadFileBtn;
+                                    } else {
+                                        updatePploadFileBtnPerFile = '';
+                                        deletePploadFileBtnPerFile = '';
+                                    }
+                                    
+                                    var numDownloads = this.downloaded_count;
+                                    numDownloads = numDownloads || 0;
+
+                                    tableString = '';
+                                    tableString += '<tr data-ppload-file-id="' + this.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
+                                    tableString += '<td>' + downloadLink + '</td>';
+                                    tableString += '<td>' + version + '</td>';
+                                    tableString += '<td>' + inputFileDescription + '</td>';
+                                    
+                                    var fileId = this.id;
+
+                                    if(tagGroupsCount>0) {
+                                        $.each(tagGroups, function() {
+                                            tableString += '<td>';
+                                            tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
+                                            tableString += '<option value=\"\"></option>';
+
+                                            for(key in this.tag_list){
+                                                tableString += '<option value=\"'+key+'\"';
+                                                if(null != this.selected_tag && key == this.selected_tag) {
+                                                    tableString += ' selected="selected"';
+                                                }
+                                                tableString += '>' + this.tag_list[key] + '</option>';
+                                            }
+
+                                            tableString += '</select>';
+                                            tableString += '</td>';
+                                        });
+                                    } else {
+                                    
+                                        if(fileTagsArraySize>0) {
+                                            tableString += '<td>';
+
+                                            tableString += '<span class="select2 select2-container select2-container--default select2-container--below select2-container--focus" dir="ltr" style="width: auto;">';
+                                            tableString += '    <span class="selection">';
+                                            tableString += '        <span class="select2-selection select2-selection--multiple" aria-expanded="false" tabindex="-1">';
+                                            tableString += '            <ul class="select2-selection__rendered">';
+
+                                            $.each(fileTagsArray, function() {
+                                                tableString += '                <li class="select2-selection__choice" title="'+this.name+'">';
+                                                tableString += '                    <span class="select2-selection__choice__remove" role="presentation">×</span>'+this.name+'</li>';
+                                            });
+                                            tableString += '            </ul>';
+                                            tableString += '        </span>';
+                                            tableString += '    </span>';
+                                            tableString += '</span>';
+
+                                            tableString += '</td>';
+                                        } else {
+                                            tableString += '<td></td>';
+                                        }
+                                    }
+
+                                    tableString += '<td>' + this.created_timestamp + '</td>';
+                                    tableString += '<td style="text-align: right">' + humanFileSize(this.size) + '</td>';
+                                    tableString +='<td style="text-align: right">' + numDownloads + '</td>';
+                                    tableString += '<td>' + updatePploadFileBtnPerFile + '</td>';
+                                    tableString += '<td>' + deletePploadFileBtnPerFile + '</td>';
+                                    tableString += '</tr>';
+                                    $modalPpload.find('table[data-ppload-files] tbody').append(tableString);
+
+                                    if ((typeof link != 'undefined') && (link != "")) {
+                                        //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
+                                        $("#data-link" + this.id).attr('target','_blank');
+                                        $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
+                                    }
                                 });
-   
-                                tableString += '<td>' + this.created_timestamp + '</td>';
-                                tableString += '<td style="text-align: right">' + humanFileSize(this.size) + '</td>';
-                                tableString += '<td>' + updatePploadFileBtnPerFile + '</td>';
-                                tableString += '<td>' + deletePploadFileBtnPerFile + '</td>';
-                                tableString += '</tr>';
-                                $modalPpload.find('table[data-ppload-files] tbody').append();
-                                
-                                if ((typeof link != 'undefined') && (link != "")) {
-                                    //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
-                                    $("#data-link" + this.id).attr('target','_blank');
-                                    $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
-                                }
-                            });
 
-                            $modalPpload.find('p[data-file-upload-msg]').show();
-                            $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
-                            $modalPpload.find('#github_picker').attr('disabled', 'disabled');
-
-                            if ($modalPpload.find('input[data-accept-checkbox]').is(':checked')) {
-                                $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
-                                $modalPpload.find('#github_picker').removeAttr('disabled');
-                            } else {
-                                $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                                $modalPpload.find('p[data-file-upload-msg]').show();
+                                $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
                                 $modalPpload.find('#github_picker').attr('disabled', 'disabled');
+
+                                if ($modalPpload.find('input[data-accept-checkbox]').is(':checked')) {
+                                    $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
+                                    $modalPpload.find('#github_picker').removeAttr('disabled');
+                                } else {
+                                    $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                                    $modalPpload.find('#github_picker').attr('disabled', 'disabled');
+                                }
+                                if (data.pagination.next) {
+                                    getPploadFiles(data.pagination.next);
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                return;
                             }
-                            if (data.pagination.next) {
-                                getPploadFiles(data.pagination.next, tagGroups);
-                            }
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            return;
-                        }
-                    });
+                        });
+                    }
                 }
 
                 function addFileToPploadUploadQueue(fileId, fileUpload) {
@@ -1168,6 +1213,8 @@ $this->inlineScript()->appendScript('
                                     return;
                                 }
                             });
+                            
+                            
 
                             $.each(tagGroups, function() {
                                 tableString += '<td>';
@@ -1189,12 +1236,13 @@ $this->inlineScript()->appendScript('
 
                             tableString += '<td>' + data.file.created_timestamp + '</td>';
                             tableString += '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>';
+                            tableString +='<td style="text-align: right">0</td>';
                             tableString += '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a></td>';
                             tableString += '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a></td>';
                             tableString += '</tr>';
                             $modalPpload.find('table[data-ppload-files] tbody').append(tableString);
 
-                            UserTags.activateSelect(data.file.id, '');
+                            //UserTags.activateSelect(fileId, '');
 
                             $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
                             startUploadPploadFiles();
@@ -1337,7 +1385,7 @@ $this->inlineScript()->appendScript('
                             }
                             $modalPpload.find('table[data-ppload-files] tbody').html('');
                             $modalPpload.find('table[data-file-upload] tbody').html('');
-                            getPploadFiles(null, null);
+                            getPploadFiles();
                             /**
                              $modalPpload.find('tr[data-ppload-file-id="' + fileId + '"]').remove();
                              if ($modalPpload.find('tr[data-ppload-file-id]').size() === 0) {
@@ -1434,7 +1482,7 @@ $this->inlineScript()->appendScript('
                 $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
 
                 if ($modalPpload.attr('data-ppload-collection-id')) {
-                    getPploadFiles(null,null);
+                    getPploadFiles();
                 }
 
                 if(<?= (isset($this->project_id))?$this->project_id:0  ?> != 0) {

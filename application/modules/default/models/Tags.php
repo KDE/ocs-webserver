@@ -817,6 +817,19 @@ class Default_Model_Tags
      * @param int $fileId
      * @return string
      */
+    public function getFileTags($fileId)
+    {
+        $sql = 'SELECT ta.tag_id, ta.tag_fullname as name FROM tag_object t INNER JOIN tag ta on ta.tag_id = t.tag_id WHERE t.tag_type_id = :tag_type_id AND t.tag_object_id = :file_id AND t.is_deleted = 0';
+        $resultSet = $this->getAdapter()->fetchAll($sql, array('tag_type_id' => $this::TAG_TYPE_FILE,'file_id' => $fileId));
+        return $resultSet;
+    }
+    
+    
+    /**
+     * @param int $projectId
+     * @param int $fileId
+     * @return string
+     */
     public function getTagsForFileAndTagGroup($projectId, $fileId, $tagGroup)
     {
         $sql = 'SELECT ta.tag_fullname as name FROM tag_object t INNER JOIN tag ta on ta.tag_id = t.tag_id WHERE t.tag_group_id = :tag_group_id AND t.tag_parent_object_id = :project_id AND t.tag_object_id = :file_id AND t.is_deleted = 0';
