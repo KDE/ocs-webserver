@@ -293,6 +293,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'makerconfig',
             'addpploadfile',
             'updatepploadfile',
+            'updatefiletag',
+            'deletefiletag',
             'deletepploadfile',
             'deletepploadfiles',
             'updatepackagetype',

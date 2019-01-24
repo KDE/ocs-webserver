@@ -722,6 +722,16 @@ class Default_Model_Tags
     }
     
     
+    public function deleteFileTagForProject($project_id, $file_id, $tag_id) {
+        
+        //first delte old
+        $sql = "UPDATE tag_object SET tag_changed = NOW() , is_deleted = 1  WHERE tag_id= :tag_id AND tag_type_id = :tag_type_id AND tag_object_id = :tag_object_id AND tag_parent_object_id = :tag_parent_object_id";
+
+        $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_FILE, 'tag_object_id' => $file_id, 'tag_parent_object_id' => $project_id));
+
+    }
+    
+    
     public function savePackagetypeTagForProject($project_id, $file_id, $tag_id) {
         
         //first delte old

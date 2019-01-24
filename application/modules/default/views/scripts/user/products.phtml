@@ -362,6 +362,7 @@ $this->inlineScript()->appendScript(
      data-addpploadfile-uri=""
      data-updatepploadfile-uri=""
      data-updatefiletag-uri=""
+     data-deletefiletag-uri=""
      data-deletepploadfile-uri=""
      data-deletepploadfiles-uri="">
     <div class="modal-dialog content-modal" style="width: 95%">
@@ -619,22 +620,29 @@ $this->inlineScript()->appendScript(
                         dataType: 'json',
                         success: function (data, textStatus, jqXHR) {
                             if (data.status != 'success') {
+                                $modalPpload.find('table[data-ppload-files] thead').html('');
+                                
                                 tagGroups = data.tag_groups;
                                 tagGroupsCount = data.ResultSize;
+                                
                                 var tableHeader = '';
                                 tableHeader += '<tr>';
                                 tableHeader +=  '    <th><?= $this->translate('Filename') ?></th>';
                                 tableHeader +=  '    <th><?= $this->translate('Version') ?></th>';
                                 tableHeader +=  '    <th><?= $this->translate('Description') ?></th>';
 
-                                $.each(tagGroups, function() {
-                                    tableHeader += '<th>'+this.group_display_name+'</th>';
-                                });
+                                if(tagGroupsCount>0) {
+                                    $.each(tagGroups, function() {
+                                        tableHeader += '<th>'+this.group_display_name+'</th>';
+                                    });
+                                } else {
+                                    tableHeader += '<th></th>';
+                                }
 
                                 tableHeader += '    <th><?= $this->translate('Date added') ?></th>';
                                 tableHeader += '    <th style="text-align: right"><?= $this->translate('Filesize') ?></th>';
                                 tableHeader +=  '   <th style="text-align: right"><?= $this->translate('# DLs') ?></th>';
-                                tableHeader +=  '    <th></th>';
+                                tableHeader +=  '   <th></th>';
                                 tableHeader +=  '</tr>';
                                 $modalPpload.find('table[data-ppload-files] thead').append(tableHeader);
 
@@ -658,6 +666,8 @@ $this->inlineScript()->appendScript(
                     myArray.sort(keysrt('created_timestamp'), false);
 
                     //var tagOptions = UserTags.getTagOptions();
+                    var fileTagsArray = null;
+                    var fileTagsArraySize = 0;
 
                     $.each(myArray, function () {
                         if(null != tagGroups && tagGroupsCount > 0) {
@@ -673,6 +683,27 @@ $this->inlineScript()->appendScript(
                                 success: function (data, textStatus, jqXHR) {
                                     if (data.status != 'success') {
                                         tagGroups = data.tag_groups;
+                                        return;
+                                    }
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    return;
+                                }
+                            });
+                        } else {
+                            //get cat-tag-groups
+                            $.ajax({
+                                url: '/p/'+prodId+'/getfiletagsajax',
+                                type: 'GET',
+                                async: false,
+                                cache: false,
+                                timeout: 30000,
+                                data: {file_id: this.id},
+                                dataType: 'json',
+                                success: function (data, textStatus, jqXHR) {
+                                    if (data.status != 'success') {
+                                        fileTagsArray = data.file_tags;
+                                        fileTagsArraySize = data.ResultSize;
                                         return;
                                     }
                                 },
@@ -721,33 +752,6 @@ $this->inlineScript()->appendScript(
                             eval('var '+ this.group_legacy_name + 'Id = \'\';');
                         });
                         
-                        //var packageId = null;
-                        //var archId = null;
-                        //var deviceId = null;
-                        if (this.tags) {
-                            fileTags = this.tags;
-                            $.each(fileTags.split(','), function() {
-                                if(this.indexOf("##")==-1) {
-                                    var tagStr = this.split('-');
-                                    $.each(tagGroups, function() {
-                                        if (tagStr.length == 2 && tagStr[0] == this.group_legacy_name+"Id") {
-                                            eval(''+ this.group_legacy_name + 'Id = \'' + tagStr[1] + '\';');
-                                        }
-                                    });
-                                } else {
-                                    var tagStr = this.split('##');
-                                    
-                                    if (tagStr.length == 2 && tagStr[0] == 'link') {
-                                        link = tagStr[1];
-                                    }
-                                    $.each(tagGroups, function() {
-                                        if (tagStr.length == 2 && tagStr[0] == this.group_legacy_name+"Id") {
-                                            eval(''+ this.group_legacy_name + 'Id = \'' + tagStr[1] + '\';');
-                                        }
-                                    });
-                                }
-                            });
-                        }
                         
                         //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
                         $projectId = $('#modal-ppload').attr('data-product-id')
@@ -777,23 +781,47 @@ $this->inlineScript()->appendScript(
 
                         var fileId = this.id;
 
+                        if(tagGroupsCount>0) {
+                            $.each(tagGroups, function() {
+                                tableString += '<td>';
+                                tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
+                                tableString += '<option value=\"\"></option>';
 
-                        $.each(tagGroups, function() {
-                            tableString += '<td>';
-                            tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
-                            tableString += '<option value=\"\"></option>';
-
-                            for(key in this.tag_list){
-                                tableString += '<option value=\"'+key+'\"';
-                                if(null != this.selected_tag && key == this.selected_tag) {
-                                    tableString += ' selected="selected"';
+                                for(key in this.tag_list){
+                                    tableString += '<option value=\"'+key+'\"';
+                                    if(null != this.selected_tag && key == this.selected_tag) {
+                                        tableString += ' selected="selected"';
+                                    }
+                                    tableString += '>' + this.tag_list[key] + '</option>';
                                 }
-                                tableString += '>' + this.tag_list[key] + '</option>';
-                            }
 
-                            tableString += '</select>';
-                            tableString += '</td>';
-                        });
+                                tableString += '</select>';
+                                tableString += '</td>';
+                            });
+                        } else {
+
+                            if(fileTagsArraySize>0) {
+                                tableString += '<td>';
+
+                                tableString += '<span class="select2 select2-container select2-container--default select2-container--below select2-container--focus" dir="ltr" style="width: auto;">';
+                                tableString += '    <span class="selection">';
+                                tableString += '        <span class="select2-selection select2-selection--multiple" aria-expanded="false" tabindex="-1">';
+                                tableString += '            <ul class="select2-selection__rendered">';
+
+                                $.each(fileTagsArray, function() {
+                                    tableString += '                <li id="file-tag-'+fileId+'-'+this.tag_id+'" class="select2-selection__choice"  style="line-height: 20px !important; font-size: 9px !important;" title="'+this.name+'">';
+                                    tableString += '                    <span class="select2-selection__choice__remove" data-file-id="'+fileId+'" data-file-tag-id="'+this.tag_id+'" role="presentation">×</span>'+this.name+'</li>';
+                                });
+                                tableString += '            </ul>';
+                                tableString += '        </span>';
+                                tableString += '    </span>';
+                                tableString += '</span>';
+
+                                tableString += '</td>';
+                            } else {
+                                tableString += '<td></td>';
+                            }
+                        }
 
                         tableString += '<td>' + this.created_timestamp + '</td>';
                         tableString += '<td style="text-align: right">' + humanFileSize(this.size) + '</td>';
@@ -1012,24 +1040,28 @@ $this->inlineScript()->appendScript(
                     });
 
 
+                    if(tagGroupsCount>0) {
+                        $.each(tagGroups, function() {
+                            tableString += '<td>';
+                            tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
+                            tableString += '<option value=\"\"></option>';
 
-                    $.each(tagGroups, function() {
-                        tableString += '<td>';
-                        tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
-                        tableString += '<option value=\"\"></option>';
 
-
-                        for(key in this.tag_list){
-                            tableString += '<option value=\"'+key+'\"';
-                            if(null != this.selected_tag && key == this.selected_tag) {
-                                tableString += ' selected="selected"';
+                            for(key in this.tag_list){
+                                tableString += '<option value=\"'+key+'\"';
+                                if(null != this.selected_tag && key == this.selected_tag) {
+                                    tableString += ' selected="selected"';
+                                }
+                                tableString += '>' + this.tag_list[key] + '</option>';
                             }
-                            tableString += '>' + this.tag_list[key] + '</option>';
-                        }
 
-                        tableString += '</select>';
-                        tableString += '</td>';
-                    });
+                            tableString += '</select>';
+                            tableString += '</td>';
+                        });
+                    } else {
+                        tableString += '<td></td>';
+                    }
+
 
                     tableString += '<td>' + data.file.created_timestamp + '</td>';
                     tableString += '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>';
@@ -1097,6 +1129,30 @@ $this->inlineScript()->appendScript(
                     return;
                 }
             });
+        }
+        
+        function deleteFileTag(fileId, tagId) {
+            $.ajax({
+                url: $modalPpload.attr('data-deletefiletag-uri'),
+                type: 'POST',
+                data: {
+                    file_id: fileId,
+                    tag_id: tagId
+                },
+                dataType: 'json',
+                success: function (data, textStatus, jqXHR) {
+                    if (data.status == 'ok') {
+                        $('#file-tag-'+fileId+'-'+tagId).remove();
+                        return true;
+                    }
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("Error: " + textStatus + ", " + errorThrown);
+                    return false;
+                }
+            });
+
         }
 
         function updatePploadFileVersion(fileId, version) {
@@ -1242,6 +1298,7 @@ $this->inlineScript()->appendScript(
             $modalPpload.attr('data-product-version', $(this).attr('data-product-version'));
             $modalPpload.attr('data-addpploadfile-uri', $(this).attr('data-addpploadfile-uri'));
             $modalPpload.attr('data-updatefiletag-uri', $(this).attr('data-updatefiletag-uri'));
+            $modalPpload.attr('data-deletefiletag-uri', $(this).attr('data-deletefiletag-uri'));
             $modalPpload.attr('data-updatepploadfile-uri', $(this).attr('data-updatepploadfile-uri'));
             $modalPpload.attr('data-deletepploadfile-uri', $(this).attr('data-deletepploadfile-uri'));
             $modalPpload.attr('data-deletepploadfiles-uri', $(this).attr('data-deletepploadfiles-uri'));
@@ -1511,6 +1568,36 @@ $this->inlineScript()->appendScript(
             updatePploadFileTags(fileId, newFileTags);
             $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
             updateFileTag(fileId, tagId, tagGroupId);
+        });
+        
+        
+        $modalPpload.on('click', 'span[data-file-tag-id]', function (event) {
+            event.preventDefault();
+
+            $tagId = $(this).attr('data-file-tag-id');
+            $fileId = $(this).attr('data-file-id');
+            var fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
+
+            /*
+            var newFileTags = '';
+            if (fileTags) {
+
+                $.each(fileTags.split(','), function () {
+                    // skip old entries
+                    if ((this.length == 0) || (this.indexOf(tagGroupName+'id-') == 0) || (this.indexOf(tagGroupName+'id##') == 0)) {
+                        return true;
+                    }
+                    newFileTags += ',' + this;
+                });
+
+            }
+            newFileTags += ','+tagGroupName+'id-'+tagId;
+            updatePploadFileTags(fileId, newFileTags);
+
+            $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
+
+            */
+            deleteFileTag($fileId, $tagId);
         });
     });
 

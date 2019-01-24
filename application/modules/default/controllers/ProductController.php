@@ -2245,6 +2245,33 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
+    
+    public function deletefiletagAction()
+    {
+        $this->_helper->layout()->disableLayout();
+
+        $error_text = '';
+
+        // Update a file information in ppload collection
+        if (!empty($_POST['file_id'])) {
+            $tagId = null;
+            if (isset($_POST['tag_id'])) {
+                $tagId = $_POST['tag_id'];
+            }
+
+            //set architecture
+            $modelTags = new Default_Model_Tags();
+            $modelTags->deleteFileTagForProject($this->_projectId, $_POST['file_id'], $tagId);
+
+            $this->_helper->json(array('status' => 'ok'));
+
+            return;
+        } else {
+            $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
+        }
+
+        $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
+    }
 
     /**
      * 20180606 Ronald: egen Umstellung auf new tag system jetzt anders
