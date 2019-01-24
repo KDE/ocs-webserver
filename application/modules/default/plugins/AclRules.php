@@ -293,10 +293,14 @@ class Default_Plugin_AclRules extends Zend_Acl
             'makerconfig',
             'addpploadfile',
             'updatepploadfile',
+            'updatefiletag',
+            'deletefiletag',
             'deletepploadfile',
             'deletepploadfiles',
             'updatepackagetype',
             'updatearchitecture',
+            'gettaggroupsforcatajax',
+            'getfiletagsajax'
 
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
 

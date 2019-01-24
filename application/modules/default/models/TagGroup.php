@@ -186,6 +186,23 @@ class Default_Model_TagGroup
     }
     
     
+    public function fetchTagGroupsForCategory($cat_id) {
+        $sql = " SELECT category_tag_group.tag_group_id
+                        , tag_group.group_name
+                        , tag_group.group_display_name
+                        , tag_group.group_legacy_name
+                        , category_tag_group.category_id
+                        , project_category.title
+                 FROM category_tag_group
+                 JOIN tag_group ON tag_group.group_id = category_tag_group.tag_group_id
+                 JOIN project_category ON project_category.project_category_id = category_tag_group.category_id
+                 WHERE category_tag_group.category_id = :cat_id";
+        $resultSet = $this->getAdapter()->fetchAll($sql, array('cat_id' => $cat_id));
+        
+        return $resultSet;
+    }
+    
+    
     public function updateTagGroupsPerCategory($cat_id,$taggroups)
     {
         $sql = "delete from category_tag_group where category_id=:cat_id";

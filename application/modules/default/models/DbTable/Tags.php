@@ -37,6 +37,7 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     );
     
     const TAG_TYPE_PROJECT = 1;
+    const TAG_TYPE_FILE = 3;
     
     const TAG_GROUP_USER = 5;
     const TAG_GROUP_CATEGORY = 6;
