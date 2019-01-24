@@ -397,7 +397,8 @@ class DiscussionBoardsDropDownMenu extends React.Component {
         <a className="discussion-menu-link-item">Discussion Boards</a>
         <ul className="discussion-menu dropdown-menu dropdown-menu-right">
           <li><a href={this.props.forumUrl }>General</a></li>
-          <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Themes & Apps</a></li>
+          <li><a href={this.props.forumUrl + "/c/themes"}>Themes</a></li>
+          <li><a href={this.props.forumUrl + "/c/apps"}>Apps</a></li>
           <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
         </ul>
       </li>
@@ -1596,7 +1597,8 @@ class MobileLeftSidePanel extends React.Component {
               <a className="groupname"><b>Discussion Boards</b></a>
               <ul>
                 <li><a href={this.props.forumUrl }>General</a></li>
-                <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Themes & Apps</a></li>
+                <li><a href={this.props.forumUrl + "/c/themes"}>Themes</a></li>
+                <li><a href={this.props.forumUrl + "/c/apps"}>Apps</a></li>
                 <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
               </ul>
             </li>
