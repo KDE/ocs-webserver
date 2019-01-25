@@ -39,6 +39,11 @@ class MembersettingController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
+    public function indexAction()
+    {
+        $this->_sendErrorResponse(999, 'unknown request');
+    }
+
     protected function _initResponseHeader()
     {
         // $duration = 36000; // in seconds
@@ -48,36 +53,66 @@ class MembersettingController extends Zend_Controller_Action
         //     ->setHeader('Expires', $expires, true)
         //     ->setHeader('Pragma', 'cache', true)
         //     ->setHeader('Cache-Control', 'max-age=1800, public', true);      
-        $this->getResponse()
-             ->setHeader('X-FRAME-OPTIONS', 'ALLOWALL', true)
-             ->setHeader('Access-Control-Allow-Origin', '*')
-             ->setHeader('Access-Control-Allow-Credentials', 'true')
-             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
-			 ->setHeader('Access-Control-Max-Age: 1728000', true)
+    //     $this->getResponse()
+    //          ->setHeader('X-FRAME-OPTIONS', 'ALLOWALL', true)             
+    //          ->setHeader('Access-Control-Allow-Origin', '*')
+    //          ->setHeader('Access-Control-Allow-Credentials', 'true')
+    //          ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+    //          ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+			 // ->setHeader('Access-Control-Max-Age: 1728000', true)
              
-        ;
+    //     ;
+
+        http_response_code(200);
+
+        if (!empty($_SERVER['HTTP_ORIGIN'])) {
+            header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN'], true);
+            header('Access-Control-Allow-Credentials: true', true);
+            header('Access-Control-Max-Age: 1728000', true);
+        }
+
+        if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
+            header('Access-Control-Allow-Methods: ' . implode(', ', array_unique([
+                'OPTIONS', 'HEAD', 'GET', 'POST',
+                strtoupper($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])
+            ])), true);
+        }
+
+        if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
+            header('Access-Control-Allow-Headers: ' . $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'], true);
+            header('Access-Control-Expose-Headers: Authorization, Content-Type, Accept', true);
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            exit;
+        }
+
+        header('Content-Type: application/json; charset=UTF-8', true);
+
     }
 
     protected function _sendResponse($response, $format = 'json', $xmlRootTag = 'ocs')
     {
-    	$this->_initResponseHeader();
-        header('Pragma: public');
-        header('Cache-Control: cache, must-revalidate');
-        $duration = 1800; // in seconds
-        $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
-        header('Expires: ' . $expires);
-        $callback = $this->getParam('callback');
-        if ($callback != "")
-        {
-            header('Content-Type: text/javascript; charset=UTF-8');
-            // strip all non alphanumeric elements from callback
-            $callback = preg_replace('/[^a-zA-Z0-9_]/', '', $callback);
-            echo $callback. '('. json_encode($response). ')';
-        }else{
-             header('Content-Type: application/json; charset=UTF-8');
-             echo json_encode($response);
-        }
+    	
+    	header('Content-Type: application/json; charset=UTF-8');
+    	echo json_encode($response);
+    	
+        // header('Pragma: public');
+        // header('Cache-Control: cache, must-revalidate');
+        // $duration = 1800; // in seconds
+        // $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
+        // header('Expires: ' . $expires);
+        // $callback = $this->getParam('callback');
+        // if ($callback != "")
+        // {
+        //     header('Content-Type: text/javascript; charset=UTF-8');
+        //     // strip all non alphanumeric elements from callback
+        //     $callback = preg_replace('/[^a-zA-Z0-9_]/', '', $callback);
+        //     echo $callback. '('. json_encode($response). ')';
+        // }else{
+        //      header('Content-Type: application/json; charset=UTF-8');
+        //      echo json_encode($response);
+        // }
         exit;
     }
 
