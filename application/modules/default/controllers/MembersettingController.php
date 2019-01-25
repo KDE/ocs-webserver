@@ -96,7 +96,7 @@ class MembersettingController extends Zend_Controller_Action
     	
     	header('Content-Type: application/json; charset=UTF-8');
     	echo json_encode($response);
-    	
+
         // header('Pragma: public');
         // header('Cache-Control: cache, must-revalidate');
         // $duration = 1800; // in seconds
@@ -113,11 +113,11 @@ class MembersettingController extends Zend_Controller_Action
         //      header('Content-Type: application/json; charset=UTF-8');
         //      echo json_encode($response);
         // }
-        exit;
+        // exit;
     }
 
     public function getsettingsAction()
-    {
+    {    	
     	$identity = Zend_Auth::getInstance()->getStorage()->read();
     	if($identity==null || $identity->member_id==null)
     	{
