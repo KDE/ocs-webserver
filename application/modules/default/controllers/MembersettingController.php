@@ -46,52 +46,37 @@ class MembersettingController extends Zend_Controller_Action
 
     protected function _initResponseHeader()
     {
-        // $duration = 36000; // in seconds
-        // $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
-        // $this->getResponse()
-        //     ->setHeader('X-FRAME-OPTIONS', 'ALLOWALL', true)
-        //     ->setHeader('Expires', $expires, true)
-        //     ->setHeader('Pragma', 'cache', true)
-        //     ->setHeader('Cache-Control', 'max-age=1800, public', true);      
-    //     $this->getResponse()
-    //          ->setHeader('X-FRAME-OPTIONS', 'ALLOWALL', true)             
-    //          ->setHeader('Access-Control-Allow-Origin', '*')
-    //          ->setHeader('Access-Control-Allow-Credentials', 'true')
-    //          ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-    //          ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
-			 // ->setHeader('Access-Control-Max-Age: 1728000', true)
-             
-    //     ;
+        header('Access-Control-Allow-Origin: *', true);
+        header('Access-Control-Allow-Credentials: true', true);
+        header('Access-Control-Max-Age: 1728000', true);            
+        header('Access-Control-Allow-Methods: ' . implode(', ', array_unique([
+            'OPTIONS', 'HEAD', 'GET', 'POST'])), true);        
+        header('Access-Control-Expose-Headers: Authorization, Content-Type, Accept', true);
+		header("Access-Control-Allow-Headers: X-Requested-With");    
+		
 
-        http_response_code(200);
+        // http_response_code(200);
+        // if (!empty($_SERVER['HTTP_ORIGIN'])) {        	
+        //     header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN'], true);
+        //     header('Access-Control-Allow-Credentials: true', true);
+        //     header('Access-Control-Max-Age: 1728000', true);            
+        // }
 
+        // if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
+        //     header('Access-Control-Allow-Methods: ' . implode(', ', array_unique([
+        //         'OPTIONS', 'HEAD', 'GET', 'POST',
+        //         strtoupper($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])
+        //     ])), true);
+        // }
 
-        if (!empty($_SERVER['HTTP_ORIGIN'])) {
-            header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN'], true);
-            header('Access-Control-Allow-Credentials: true', true);
-            header('Access-Control-Max-Age: 1728000', true);            
-        }else
-        {
-        	header('Access-Control-Allow-Origin: *', true);
-        	header('Access-Control-Allow-Credentials: true', true);
-            header('Access-Control-Max-Age: 1728000', true); 
-        }
+        // if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
+        //     header('Access-Control-Allow-Headers: ' . $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'], true);
+        //     header('Access-Control-Expose-Headers: Authorization, Content-Type, Accept', true);
+        // }
 
-        if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
-            header('Access-Control-Allow-Methods: ' . implode(', ', array_unique([
-                'OPTIONS', 'HEAD', 'GET', 'POST',
-                strtoupper($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])
-            ])), true);
-        }
-
-        if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
-            header('Access-Control-Allow-Headers: ' . $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'], true);
-            header('Access-Control-Expose-Headers: Authorization, Content-Type, Accept', true);
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            exit;
-        }
+        // if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        //     exit;
+        // }
 
         header('Content-Type: application/json; charset=UTF-8', true);
 
