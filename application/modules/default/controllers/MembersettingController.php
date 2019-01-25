@@ -82,9 +82,17 @@ class MembersettingController extends Zend_Controller_Action
 
     public function getsettingsAction()
     {
-    	$model = new Default_Model_MemberSettingValue();
-
     	$identity = Zend_Auth::getInstance()->getStorage()->read();
+    	if($identity==null || $identity->member_id==null)
+    	{
+    			$response = array(
+    		            'status'     => 'error',   
+    		            'msg'	 => 'no user found'    		            
+    		        );
+    			$this->_sendResponse($response, $this->_format);
+    			return;
+    	}
+    	$model = new Default_Model_MemberSettingValue();
     	$member_id = $identity->member_id;
 
     	$results = $model->findMemberSettings($member_id,$this::GROUP_METAHEADER);
@@ -93,6 +101,30 @@ class MembersettingController extends Zend_Controller_Action
                 'member_id'  => $member_id,            
                 'results'    => $results
             );
+    	$this->_sendResponse($response, $this->_format);
+    }
+
+    public function setsettingsAction()
+    {
+    	
+    	$identity = Zend_Auth::getInstance()->getStorage()->read();
+    	if($identity==null || $identity->member_id==null)
+    	{
+    			$response = array(
+    		            'status'     => 'error',   
+    		            'msg'	 => 'no user found'    		            
+    		        );
+    	}else
+    	{
+    		$model = new Default_Model_MemberSettingValue();
+    		$member_id = $identity->member_id;
+    		$member_setting_item_id = $this->getParam('itemid');
+    		$value = $this->getParam('itemvalue');
+    		$model->updateOrInsertSetting($member_id,$member_setting_item_id,null,$value);
+    		$response = array(
+                'status'     => 'ok'                
+            );	
+    	}    	    	
     	$this->_sendResponse($response, $this->_format);
     }
 

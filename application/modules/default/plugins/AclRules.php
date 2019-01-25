@@ -268,7 +268,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         ));
 
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_membersetting', array(
-            'getsettings'            
+            'getsettings','setsettings'
         ));
 
         $this->allow(self::ROLENAME_MODERATOR, 'backend_project', array(

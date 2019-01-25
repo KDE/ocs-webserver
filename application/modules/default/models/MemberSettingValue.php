@@ -32,14 +32,14 @@ class Default_Model_MemberSettingValue
                     ,'value' => $value
                     ,'member_id' => $memberid
                 );
-        $tbl->_db->insert($tbl->_name, $values);
+        $tbl->insert($values);
     }
 
     public function update($itemid,$value,$memberid)
     {
        
         $tbl = new Default_Model_DbTable_MemberSettingValue();
-        $tbl->_db->update($tbl->_name, array('value' => $value
+        $tbl->update(array('value' => $value
                     ,'changed_at'=> new Zend_Db_Expr('Now()')
                     ,'is_active' => 1                    
                 )
@@ -63,7 +63,8 @@ class Default_Model_MemberSettingValue
     {
         $sql = "
             select 
-            t.member_setting_group_id
+            
+            t.member_setting_item_id
             ,t.title
             ,v.value 
             ,v.member_setting_value_id
