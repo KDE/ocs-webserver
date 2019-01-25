@@ -1160,6 +1160,11 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         if (false === ($returnValue = $cache->load($cacheName))) {
             $statement = $this->generateStatement($inputFilterParams, $limit, $offset);
+
+            if (APPLICATION_ENV == 'development') {
+                Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $statement->__toString());
+            }
+
             /** @var Zend_Db_Table_Rowset $fetchedElements */
             $fetchedElements = $this->fetchAll($statement);
 
