@@ -61,6 +61,7 @@ class MembersettingController extends Zend_Controller_Action
 
     protected function _sendResponse($response, $format = 'json', $xmlRootTag = 'ocs')
     {
+    	$this->_initResponseHeader();
         header('Pragma: public');
         header('Cache-Control: cache, must-revalidate');
         $duration = 1800; // in seconds
