@@ -58,6 +58,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_home'));
         $this->addResource(new Zend_Acl_Resource ('default_ocsv1')); // OCS API
         $this->addResource(new Zend_Acl_Resource ('default_embedv1')); // embed API
+        $this->addResource(new Zend_Acl_Resource ('default_membersetting')); 
         $this->addResource(new Zend_Acl_Resource ('default_productcategory'));
         $this->addResource(new Zend_Acl_Resource ('default_productcomment'));
         $this->addResource(new Zend_Acl_Resource ('default_product'));
@@ -266,6 +267,10 @@ class Default_Plugin_AclRules extends Zend_Acl
             'claim'
         ));
 
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_membersetting', array(
+            'getsettings'            
+        ));
+
         $this->allow(self::ROLENAME_MODERATOR, 'backend_project', array(
             'doghnsexclude'
         ));
@@ -293,14 +298,10 @@ class Default_Plugin_AclRules extends Zend_Acl
             'makerconfig',
             'addpploadfile',
             'updatepploadfile',
-            'updatefiletag',
-            'deletefiletag',
             'deletepploadfile',
             'deletepploadfiles',
             'updatepackagetype',
             'updatearchitecture',
-            'gettaggroupsforcatajax',
-            'getfiletagsajax'
 
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
 

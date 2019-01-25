@@ -1,0 +1,100 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+class MembersettingController extends Zend_Controller_Action
+{
+
+	const GROUP_METAHEADER = 1;
+	protected $_format = 'json';	
+	public function init()
+    {
+        parent::init();
+        $this->initView();
+        $this->_initResponseHeader();
+    }
+
+    public function initView()
+    {
+        // Disable render view
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+    }
+
+    protected function _initResponseHeader()
+    {
+        // $duration = 36000; // in seconds
+        // $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
+        // $this->getResponse()
+        //     ->setHeader('X-FRAME-OPTIONS', 'ALLOWALL', true)
+        //     ->setHeader('Expires', $expires, true)
+        //     ->setHeader('Pragma', 'cache', true)
+        //     ->setHeader('Cache-Control', 'max-age=1800, public', true);      
+        $this->getResponse()
+             ->setHeader('X-FRAME-OPTIONS', 'ALLOWALL', true)
+             ->setHeader('Access-Control-Allow-Origin', '*')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+			 ->setHeader('Access-Control-Max-Age: 1728000', true)
+             
+        ;
+    }
+
+    protected function _sendResponse($response, $format = 'json', $xmlRootTag = 'ocs')
+    {
+        header('Pragma: public');
+        header('Cache-Control: cache, must-revalidate');
+        $duration = 1800; // in seconds
+        $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
+        header('Expires: ' . $expires);
+        $callback = $this->getParam('callback');
+        if ($callback != "")
+        {
+            header('Content-Type: text/javascript; charset=UTF-8');
+            // strip all non alphanumeric elements from callback
+            $callback = preg_replace('/[^a-zA-Z0-9_]/', '', $callback);
+            echo $callback. '('. json_encode($response). ')';
+        }else{
+             header('Content-Type: application/json; charset=UTF-8');
+             echo json_encode($response);
+        }
+        exit;
+    }
+
+    public function getsettingsAction()
+    {
+    	$model = new Default_Model_MemberSettingValue();
+
+    	$identity = Zend_Auth::getInstance()->getStorage()->read();
+    	$member_id = $identity->member_id;
+
+    	$results = $model->findMemberSettings($member_id,$this::GROUP_METAHEADER);
+    	$response = array(
+                'status'     => 'ok',   
+                'member_id'  => $member_id,            
+                'results'    => $results
+            );
+    	$this->_sendResponse($response, $this->_format);
+    }
+
+
+}
