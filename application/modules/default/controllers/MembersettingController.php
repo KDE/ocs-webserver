@@ -46,37 +46,37 @@ class MembersettingController extends Zend_Controller_Action
 
     protected function _initResponseHeader()
     {
-        header('Access-Control-Allow-Origin: *', true);
-        header('Access-Control-Allow-Credentials: true', true);
-        header('Access-Control-Max-Age: 1728000', true);            
-        header('Access-Control-Allow-Methods: ' . implode(', ', array_unique([
-            'OPTIONS', 'HEAD', 'GET', 'POST'])), true);        
-        header('Access-Control-Expose-Headers: Authorization, Content-Type, Accept', true);
-		header("Access-Control-Allow-Headers: X-Requested-With");    
+  //       header('Access-Control-Allow-Origin: *', true);
+  //       header('Access-Control-Allow-Credentials: true', true);
+  //       header('Access-Control-Max-Age: 1728000', true);            
+  //       header('Access-Control-Allow-Methods: ' . implode(', ', array_unique([
+  //           'OPTIONS', 'HEAD', 'GET', 'POST'])), true);        
+  //       header('Access-Control-Expose-Headers: Authorization, Content-Type, Accept', true);
+		// header("Access-Control-Allow-Headers: X-Requested-With");    
 		
 
-        // http_response_code(200);
-        // if (!empty($_SERVER['HTTP_ORIGIN'])) {        	
-        //     header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN'], true);
-        //     header('Access-Control-Allow-Credentials: true', true);
-        //     header('Access-Control-Max-Age: 1728000', true);            
-        // }
+        http_response_code(200);
+        if (!empty($_SERVER['HTTP_ORIGIN'])) {        	
+            header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN'], true);
+            header('Access-Control-Allow-Credentials: true', true);
+            header('Access-Control-Max-Age: 1728000', true);            
+        }
 
-        // if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
-        //     header('Access-Control-Allow-Methods: ' . implode(', ', array_unique([
-        //         'OPTIONS', 'HEAD', 'GET', 'POST',
-        //         strtoupper($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])
-        //     ])), true);
-        // }
+        if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
+            header('Access-Control-Allow-Methods: ' . implode(', ', array_unique([
+                'OPTIONS', 'HEAD', 'GET', 'POST',
+                strtoupper($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])
+            ])), true);
+        }
 
-        // if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
-        //     header('Access-Control-Allow-Headers: ' . $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'], true);
-        //     header('Access-Control-Expose-Headers: Authorization, Content-Type, Accept', true);
-        // }
+        if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
+            header('Access-Control-Allow-Headers: ' . $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'], true);
+            header('Access-Control-Expose-Headers: Authorization, Content-Type, Accept', true);
+        }
 
-        // if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-        //     exit;
-        // }
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            exit;
+        }
 
         header('Content-Type: application/json; charset=UTF-8', true);
 
