@@ -325,6 +325,9 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                                         for(key in this.tag_list){
                                                             if(null != this.selected_tag && key == this.selected_tag) {
                                                                 tableString += '<span>'+this.tag_list[key]+'</span>';
+                                                                if(this.tag_list[key].toUpperCase() == 'APPIMAGE'){
+                                                                    tableString += ' <i class="fa fa-question-circle appimagequestion" style="cursor: pointer;"></i>';
+                                                                }
                                                             }
                                                         }
                                                     });
