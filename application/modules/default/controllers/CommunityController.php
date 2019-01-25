@@ -34,7 +34,44 @@ class CommunityController extends Local_Controller_Action_DomainSwitch
         } else {
             $this->view->categories = $modelCategories->fetchMainCatIdsOrdered();
         }
-        //    	Zend_Registry::get('logger')->err(__METHOD__ . ' - categories - ' . print_r($this->view->categories, true));
+        
+    }
+
+    public function supportersAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $modelInfo = new Default_Model_Info();
+        $this->view->supporters = $modelInfo->getNewActiveSupporters(100);
+    }
+    public function newmembersAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $modelInfo = new Default_Model_Info();
+        $this->view->users = $modelInfo->getNewActiveMembers(100);
+    }
+    public function topmembersAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $modelInfo = new Default_Model_Info();
+        $this->view->users = $modelInfo->getTopScoreUsers(100);
+    }
+    public function plingedprojectsAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $modelInfo = new Default_Model_Info();
+        $this->view->projects = $modelInfo->getNewActivePlingProduct(100);
+    }
+    public function mostplingedcreatorsAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $modelInfo = new Default_Model_Info();
+        $this->view->users = $modelInfo->getMostPlingedCreators(100);
+    }
+    public function mostplingedproductsAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $modelInfo = new Default_Model_Info();
+        $this->view->projects = $modelInfo->getMostPlingedProducts(100);
     }
 
 }
