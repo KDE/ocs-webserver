@@ -27,7 +27,7 @@ BEGIN
 	RENAME TABLE stat_project_tagids TO old_stat_project_tagids, tmp_stat_project_tagids TO stat_project_tagids;
 	DROP TABLE IF EXISTS old_stat_project_tagids;
 
-END$
+END$$
 
 DELIMITER ;
 

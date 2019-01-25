@@ -105,7 +105,7 @@ class Default_Model_ProjectCategory
         if (empty($package_type)) {
             $statement = $this->_dataTable->getAdapter()->query("CALL fetchCatTreeForStore(:store_id)", array("store_id" => $store_id));
         } else {
-            $statement = $this->_dataTable->getAdapter()->query("CALL fetchCatTreeWithTags(:store_id,:package_type)", array("store_id"=>$store_id, "package_type" => implode(',',$package_type)));
+            $statement = $this->_dataTable->getAdapter()->query("CALL fetchCatTreeWithTags(:store_id,:tagids)", array("store_id"=>$store_id, "tagids" => implode(',',$package_type)));
         }
 
         $result = $statement->fetchAll();
@@ -256,10 +256,10 @@ class Default_Model_ProjectCategory
 
         if ($storePackageTypeIds) {
             $sql =
-                "SELECT count_product FROM stat_cat_prod_count WHERE project_category_id = :cat_id AND package_type_id = :package_id";
+                "SELECT count_product FROM stat_cat_prod_count WHERE project_category_id = :cat_id AND tag_id = :package_id";
             $bind = array('cat_id' => $cat_id, 'package_id' => $storePackageTypeIds);
         } else {
-            $sql = "SELECT count_product FROM stat_cat_prod_count WHERE project_category_id = :cat_id AND package_type_id IS NULL";
+            $sql = "SELECT count_product FROM stat_cat_prod_count WHERE project_category_id = :cat_id AND tag_id IS NULL";
             $bind = array('cat_id' => $cat_id);
         }
 
