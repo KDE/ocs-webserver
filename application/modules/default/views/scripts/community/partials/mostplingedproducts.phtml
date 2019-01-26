@@ -30,10 +30,11 @@ $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 $updateTime = $helperPrintDate->printDate($this->project_changed_at);
 
 ?>
-<div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+<div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12 disply-flex rowproduct">
     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-        <div class="rownum">
-            #<?=$this->partialLoop()->view->nr++?>
+        <div class="rank">
+            <?=$this->partialLoop()->view->nr++?>
         </div>        
     </div>
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 explore-product-imgcolumn">
@@ -64,30 +65,10 @@ $updateTime = $helperPrintDate->printDate($this->project_changed_at);
         </div>
 
         
-        <div class="description" style=""><?php echo $this->truncate(Default_Model_HtmlPurify::purify(Default_Model_BBCode::renderHtml($this->description)), 100);?></div>      
-
-        <div class="packagetypes" >
-         <?php
-         if (false === empty($this->product->package_names)) {
-             $list_packages = explode(',', $this->package_names);
-             $resultString = '';
-             foreach ($list_packages as $item) {
-                 $resultString = $resultString . ' <span class="packagetypeos" > ' . stripslashes($item) . '</span>';
-             }
-             echo $resultString;
-         }
-
-        ?>
-        </div>
+      
 
         <div class="productInfo">
-       <?php
-                
-                $count_comments = $this->count_comments;                
-                echo ($count_comments>0 ? '<span class="cntComments">'.$count_comments.' comment':'').($count_comments>1?'s':'').($count_comments>0?'</span>':'') ;
-                ?>
-
-                <p>
+      
               <span class="small created_at" >
                 <a class="tooltipuserplings" data-tooltip-content="#tooltip_content" data-user="<?=$this->project_id?>" >
                     <img src="/images/system/pling-btn-active.png" style="width: 15px; height: 15px" /> </a>

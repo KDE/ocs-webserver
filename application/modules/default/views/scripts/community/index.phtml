@@ -24,6 +24,37 @@ $modelInfo = new Default_Model_Info();
 $countProjects = $this->fetchTotalProductsCount();
 $countActiveMembers = $modelInfo->countTotalActiveMembers();
 ?>
+<style type="text/css">  
+   .rowproduct{
+    align-items: center;
+    justify-content: center;
+   }
+  .rank{
+    font-size: 33px;
+    line-height: 33px;
+    letter-spacing: normal;
+    text-align: center;  
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+  .product-list 
+  {
+    background-color: #F5F5F5;
+    border: 1px solid #e4e4e4;
+    border-radius: 10px;
+  }
+  figure.mostplingedcreators img
+  {
+     width: 100%;
+     border: 1px solid #dbdbdb;
+     -webkit-border-radius: 999px;
+     -moz-border-radius: 999px;
+     border-radius: 999px;
+     -webkit-background-clip: padding-box;
+     -moz-background-clip: padding;
+     background-clip: padding-box;
+  }
+</style>
 <main id="community-page">
 
     <section class="head-wrap">
@@ -126,10 +157,10 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                         <div class="list "> </div>
                 </div> <!-- end row -->
                 <div class="row tab-pane active" id="mostplingedproductsPanel">
-                        <div class="list container explore-products" > </div>
+                        <div class="list container explore-products" style="width: 800px" > </div>
                 </div> <!-- end row -->
                  <div class="row tab-pane active" id="mostplingedcreatorsPanel">
-                        <div class="list" style="width:350px"> </div>
+                        <div class="list  container explore-products" style="width:800px"> </div>
                 </div> <!-- end row -->
 
                  <div class="row tab-pane" id="plingedproductsPanel">
