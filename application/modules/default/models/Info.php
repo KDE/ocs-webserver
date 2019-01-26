@@ -1154,6 +1154,11 @@ class Default_Model_Info
                         ,p.profile_image_url
                         ,p.username
                         ,p.cat_title as catTitle
+                        ,p.project_changed_at
+                        ,p.version
+                        ,p.description
+                        ,p.package_names
+                        ,p.count_comments
                         from project_plings pl
                         inner join stat_projects p on pl.project_id = p.project_id and p.status = 100
                         where pl.is_deleted = 0 and pl.is_active = 1 

@@ -1995,6 +1995,14 @@ var CommunityTab= (function () {
                 $('a[href="'+ activeTab +'"]').trigger( "click" );                  
             }
 
+            $('body').on('mouseenter', '.product-thumbnail-startpage', function () {
+                $(this).popover('show');
+            });
+
+            $('body').on('mouseleave', '.product-thumbnail-startpage', function () {
+                $(this).popover('hide');
+            });
+
         }
     }
 })();
