@@ -352,7 +352,7 @@ class ProductCarousel extends React.Component {
     let hpVersionClass = "one";
     let carouselWrapperStyling = {};
     let carouselArrowsMargin;
-    if (window.hpVersion === 2){
+    if (window.hpVersion === 2 && this.state.itemWidth){
       hpVersionClass = "two";
       carouselWrapperStyling = {
         "paddingLeft":this.state.itemWidth / 2,
