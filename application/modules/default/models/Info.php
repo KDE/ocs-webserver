@@ -997,28 +997,7 @@ class Default_Model_Info
     }
 
 
- /**
-     * @param int $limit
-     *
-     * @return array|false|mixed
-     */
-    public function getTopScoreUsers($limit = 120)
-    {
-        /** @var Zend_Cache_Core $cache */
-        $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5((int)$limit);
-
-        if (false !== ($resultMembers = $cache->load($cacheName))) {
-            return $resultMembers;
-        }
-
-        $model = new Default_Model_DbTable_MemberScore();
-        $resultMembers = $model->fetchTopUsers($limit);
-
-        $cache->save($resultMembers, $cacheName, array(), 300);
-
-        return $resultMembers;
-    }
+   
 
 
     public function getNewActiveSupporters($limit = 20)
@@ -1090,6 +1069,163 @@ class Default_Model_Info
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
         
         $cache->save($result, $cacheName, array(), 300);
+        return $result;
+    }
+
+
+     /**
+     * @param int $limit
+     *
+     * @return array|false|mixed
+     */
+    public function getTopScoreUsers($limit = 120,$offset=null)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit).md5((int)$offset);;
+
+        if (false !== ($resultMembers = $cache->load($cacheName))) {
+            return $resultMembers;
+        }
+
+        $sql = '
+                    select  
+                    s.*
+                    ,m.profile_image_url
+                    ,m.username
+                    from member_score s
+                    inner join member m on s.member_id = m.member_id
+                    order by s.score desc             
+                ';
+
+        
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+        if (isset($offset)) {
+            $sql .= ' offset ' . (int)$offset;
+        }
+        
+        $resultMembers = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+
+        $cache->save($resultMembers, $cacheName, array(), 300);
+
+        return $resultMembers;
+    }
+
+    public function getMostPlingedProductsTotalCnt(){
+        $sql = '
+            select count(1) as total_count
+            from
+            (
+                select distinct pl.project_id 
+                from project_plings pl
+                inner join stat_projects p on pl.project_id = p.project_id and p.status = 100
+                where pl.is_deleted = 0 and pl.is_active = 1 
+            ) t
+        ';
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+        $totalcnt = $result[0]['total_count'];
+        return $totalcnt;
+    }
+
+    public function getMostPlingedProducts($limit = 20,$offset = null)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit).md5((int)$offset);
+
+        if (false !== ($newSupporters = $cache->load($cacheName))) {
+            return $newSupporters;
+        }
+
+        $sql = '  
+                        select pl.project_id
+                        ,count(1) as sum_plings 
+                        ,p.title
+                        ,p.image_small
+                        ,p.laplace_score
+                        ,p.count_likes
+                        ,p.count_dislikes   
+                        ,p.member_id 
+                        ,p.profile_image_url
+                        ,p.username
+                        ,p.cat_title as catTitle
+                        ,p.project_changed_at
+                        ,p.version
+                        ,p.description
+                        ,p.package_names
+                        ,p.count_comments
+                        from project_plings pl
+                        inner join stat_projects p on pl.project_id = p.project_id and p.status = 100
+                        where pl.is_deleted = 0 and pl.is_active = 1 
+                        group by pl.project_id
+                        order by sum_plings desc 
+                                                              
+        ';
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+        if (isset($offset)) {
+            $sql .= ' offset ' . (int)$offset;
+        }
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+
+        $cache->save($result, $cacheName, array(), 300);
+
+        return $result;
+    }
+
+
+    public function getMostPlingedCreatorsTotalCnt(){
+        $sql = '
+            select count(1) as total_count
+            from
+            (
+                select distinct p.member_id
+                from stat_projects p
+                join project_plings pl on p.project_id = pl.project_id                       
+                where p.status = 100
+            ) t
+        ';
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+        $totalcnt = $result[0]['total_count'];
+        return $totalcnt;
+    } 
+    public function getMostPlingedCreators($limit = 20,$offset = null)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit).md5((int)$offset);
+
+        if (false !== ($newSupporters = $cache->load($cacheName))) {
+            return $newSupporters;
+        }
+
+        $sql = '  
+                       select p.member_id,
+                        count(1) as cnt,
+                        m.username,
+                        m.profile_image_url,
+                        m.created_at
+                        from stat_projects p
+                        join project_plings pl on p.project_id = pl.project_id
+                        join member m on p.member_id = m.member_id
+                        where p.status = 100
+                        group by p.member_id
+                        order by cnt desc                        
+                                                              
+        ';
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+        if (isset($offset)) {
+            $sql .= ' offset ' . (int)$offset;
+        }
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+
+        $cache->save($result, $cacheName, array(), 300);
+
         return $result;
     }
 
