@@ -127,8 +127,6 @@ class SpotlightProduct extends React.Component {
 
   render(){
 
-    console.log(this.props.featuredProduct);
-
     let imageBaseUrl;
     if (this.props.env === 'live') {
       imageBaseUrl = 'cn.opendesktop.org';
