@@ -215,19 +215,16 @@ class ProductCarousel extends React.Component {
   }
 
   updateDimensions(animateCarousel){
-
-    /*let itemsPerRow;
-    if (this.props.device === 'large'){
-      itemsPerRow = 5;
-    } else if (this.props.device === 'mid'){
-      itemsPerRow = 4;
-    } else if (this.props.device === 'tablet'){
-      itemsPerRow = 3;
-    }*/
-
+    
     let itemsPerRow = 5;
     if (window.hpVersion === 2){
-      itemsPerRow = 6;
+      if (this.props.device === 'large'){
+        itemsPerRow = 5;
+      } else if (this.props.device === 'mid'){
+        itemsPerRow = 4;
+      } else if (this.props.device === 'tablet'){
+        itemsPerRow = 3;
+      }
     }
 
     const containerWidth = $('#main-content').width();
