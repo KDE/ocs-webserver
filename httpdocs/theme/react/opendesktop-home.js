@@ -142,7 +142,7 @@ class SpotlightProduct extends React.Component {
     }
 
     let featuredLabelDisplay;
-    if (this.state.featuredProduct.feature === "1") {
+    if (this.state.featuredProduct.feature === 1) {
       featuredLabelDisplay = "featured";
     }
 

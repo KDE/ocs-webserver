@@ -140,7 +140,7 @@ class SpotlightProduct extends React.Component {
     }
 
     let featuredLabelDisplay;
-    if (this.state.featuredProduct.feature === "1"){
+    if (this.state.featuredProduct.feature === 1){
       featuredLabelDisplay = "featured"
     }
 
@@ -215,7 +215,7 @@ class ProductCarousel extends React.Component {
   }
 
   updateDimensions(animateCarousel){
-    
+
     let itemsPerRow = 5;
     if (window.hpVersion === 2){
       if (this.props.device === 'large'){
