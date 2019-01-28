@@ -89,24 +89,6 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->fetchReportsMisuseCnt($this->product->project_id)?></span>
     </div>
      <?php endif; ?>
-
-    <?php /**
-     * <div class="row">
-     * <span class=" col-lg-6" >
-     * package type
-     * </span>
-     * <span class="col-lg-6 value ">
-     * <?php
-     * $type = $this->FetchProjectPackageTypes($this->product->project_id);
-     * if(!empty($type)){
-     * ?>
-     * <?= $this->FetchProjectPackageTypes($this->product->project_id) ?>
-     * <?php
-     * }?>
-     * </span>
-     * </div>
-     **/ ?>
-
         <div class="row" style="padding-top: 5px">
             <div class="col-lg-12">
                 <div class="small " id="product-actions">

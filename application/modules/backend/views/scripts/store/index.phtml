@@ -20,8 +20,6 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$tagHelper = new Backend_View_Helper_FetchPackagetypeTags();
-
 ?>
 <style>
     #dialog-form form dl dl dd {
@@ -185,14 +183,6 @@ $tagHelper = new Backend_View_Helper_FetchPackagetypeTags();
                     title: 'google id',
                     width: '10%'
                 }
-                /*,
-                package_type: {
-                    title: 'package type',
-                    width: '10%',
-                    options: <?php /*echo $tagHelper->fetchList();*/ ?>,
-                    defaultValue: '',
-		    optionsSorting: 'text'
-                }*/,
                 tags_name: {
                     title: 'Tag-Filter Names',
                     type: 'textarea',

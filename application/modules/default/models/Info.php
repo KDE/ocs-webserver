@@ -278,86 +278,6 @@ class Default_Model_Info
     }
 
     /**
-     * if category id not set the latest plings for all categories on the current host wil be returned.
-     *
-     * @param int  $limit
-     * @param null $project_category_id
-     *
-     * @return array|false|mixed
-     */
-    /*/* public function getLatestPlings($limit = 5, $project_category_id = null)
-     {
-         /** @var Zend_Cache_Core $cache
-         $cache = Zend_Registry::get('cache');
-         $cacheName =
-             __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
-
-         if (($latestPlings = $cache->load($cacheName))) {
-             return $latestPlings;
-         }
-
-         if (empty($project_category_id)) {
-             $activeCategories = $this->getActiveCategoriesForCurrentHost();
-         } else {
-             $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);
-         }
-
-         if (count($activeCategories) == 0) {
-             return array();
-         }
-
-         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-         $storePackageTypeIds = null;
-         if ($storeConfig) {
-             $storePackageTypeIds = $storeConfig['package_type'];
-         }
-
-         $sql = '
-         SELECT
-         plings.project_id,
-         plings.id
-         ,member.member_id
-         ,profile_image_url
-         ,plings.create_time
-         ,username
-         ,plings.amount
-         ,comment
-         ,project.title
-         FROM plings
-         JOIN project ON project.project_id = plings.project_id
-         STRAIGHT_JOIN member ON plings.member_id = member.member_id';
-
-         if ($storePackageTypeIds) {
-             $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('
-                 . $storePackageTypeIds . ')) package_type  ON project.project_id = package_type.project_id';
-         }
-
-         $sql .= ' WHERE
-         plings.status_id = 2
-         AND project.status <> 30
-         AND project.project_category_id IN (' . implode(',', $activeCategories) . ')
-
-         ORDER BY plings.create_time DESC
-         ';
-
-         if (isset($limit)) {
-             $sql .= ' limit ' . (int)$limit;
-         }
-
-         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
-
-         if (count($resultSet) > 0) {
-             $cache->save($resultSet, $cacheName, array(), 300);
-
-             return $resultSet;
-         } else {
-             $cache->save(array(), $cacheName, array(), 300);
-
-             return array();
-         }
-     }*/
-
-    /**
      * if category id not set the most downloaded products for all categories on the current host wil be returned.
      *
      * @param int   $limit
@@ -397,7 +317,8 @@ class Default_Model_Info
                 ,`p`.`image_small`       
                 ,`s`.`amount` 
                 ,`s`.`category_title` 
-                ,`p`.`package_types`      
+                ,`p`.`package_types`
+                ,`p`.`tag_ids`
                 FROM `stat_downloads_quarter_year` `s`
                 INNER JOIN `stat_projects` `p` ON `s`.`project_id` = `p`.`project_id`';
 
@@ -581,6 +502,7 @@ class Default_Model_Info
                 `cat_title`,
                 `count_comments`,
                 `package_names`,
+                `tag_ids`,
                 `laplace_score`,
                 `count_likes`,
                 `count_dislikes`,

@@ -52,6 +52,11 @@ class Backend_RssController extends Local_Controller_Action_CliAbstract
         $filter['order'] = 'latest';
         $pageLimit = 10;
         $offset = 0;
+        
+        $tagFilter  = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
+        if ($tagFilter) {
+            $filter['tag'] = $tagFilter;
+        }
 
         $modelProject = new Default_Model_Project();
         $requestedElements = $modelProject->fetchProjectsByFilter($filter, $pageLimit, $offset);

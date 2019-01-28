@@ -211,9 +211,9 @@ if($this->inputFilterOriginal ==1)
 
 <?php
 $time_start = microtime(true);
-     $this->comments = $modelInfo->getLatestComments(5, $this->cat_id, $this->package_type);
+     $this->comments = $modelInfo->getLatestComments(5, $this->cat_id, $this->tags);
      //$donations = $modelInfo->getLatestPlings(5, $this->cat_id);
-     $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id, $this->package_type);
+     $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id, $this->tags);
      $asidehide = '';
      if(!$this->catabout && count($this->comments)==0  && count($topprods)==0 )
      {

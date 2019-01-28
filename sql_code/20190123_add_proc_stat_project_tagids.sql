@@ -14,7 +14,8 @@ BEGIN
 		select distinct tag.tag_id, tgo.tag_object_id AS project_id        
 		FROM tag_object AS tgo
 		JOIN tag ON tag.tag_id = tgo.tag_id
-		WHERE tag_type_id = 1 #project        
+		WHERE tag_type_id = 1 #project 
+                AND tgo.is_deleted = 0   
 		UNION ALL        
 		select distinct tag.tag_id, tgo.tag_parent_object_id AS project_id        
 		FROM tag_object AS tgo
@@ -22,6 +23,7 @@ BEGIN
 		JOIN ppload.ppload_files files ON files.id = tgo.tag_object_id
 		WHERE tag_type_id = 3 #file
 		AND files.active = 1
+                AND tgo.is_deleted = 0   
 	) A
 	;
 	RENAME TABLE stat_project_tagids TO old_stat_project_tagids, tmp_stat_project_tagids TO stat_project_tagids;
