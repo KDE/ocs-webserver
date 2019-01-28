@@ -1690,7 +1690,6 @@ var AboutMeMyProjectsPaging = (function () {
   return {
       setup: function () {
         $(window).scroll(function() {
-
             var end = $("footer").offset().top;
             var viewEnd = $(window).scrollTop() + $(window).height();
             var distance = end - viewEnd;
@@ -1963,6 +1962,36 @@ var AboutMePage = (function () {
 //     }
 // })();
 
+
+
+
+
+
+var CommunityTabToplistMemberScrollPaging= (function () {
+    return {
+        setup: function (paramEl,paramUrl) {            
+                $(window).scroll(function() {
+                            var end = $("footer").offset().top;
+                            var viewEnd = $(window).scrollTop() + $(window).height();
+                            var distance = end - viewEnd;
+                            if (distance < 300){                           
+                                    if(!$('button#toplistmemberscrollshowmore').length) return;
+                                    var indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';
+                                    var nextpage = $('button#toplistmemberscrollshowmore').attr('data-page');
+                                    $('button#toplistmemberscrollshowmore').remove();
+
+                                    var pagingurl = paramUrl+"/nopage/1/page/"+nextpage; 
+                                    var $newdiv = $('<div class="toplistmemberx"></div>');
+                                    $(paramEl).find('.product-list').append($newdiv);
+                                    $($newdiv).load(pagingurl,function (){   
+                                        generateTooltipster($($newdiv).find('.tooltipuser'),"right");                  
+                                    })
+                                }
+                            });
+        }
+    }
+})();
+
 var CommunityTab= (function () {
     return {
         setup: function () {
@@ -1980,13 +2009,16 @@ var CommunityTab= (function () {
                             generateTooltipUserPlings($(el).find('.tooltipuserplings'),"right");
                         }
 
+                        if(el=='#toplistMemberPanel')
+                        {
+                            CommunityTabToplistMemberScrollPaging.setup(el,url);
+                        }
                         // paging
                         let spans = $(el).find('.opendesktopwidgetpager span');
                         spans.each(function(index) {
                             $(this).on("click", function(){                      
-                                $(this).parent().addClass('active').siblings().removeClass('active');                                                                                                                 
-                                var pagingurl = url+"/nopage/1/page/"+$(this).html();  
-                                console.log(pagingurl);
+                                $(this).parent().addClass('active').siblings().removeClass('active');                                                                                                                
+                                var pagingurl = url+"/nopage/1/page/"+$(this).html();                                  
                                 $(el).find('.product-list').html('');
                                 $(el).find('.product-list').load(pagingurl,function (){   
                                 generateTooltipster($(el).find('.tooltipuser'),"right");                  

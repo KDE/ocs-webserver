@@ -19,13 +19,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-?>
 
- 
-
-
-<?php
-		
 
 		if(($this->page == 1) && ($this->nopage==0)){	
 			echo '<div class="product-list">';
@@ -38,11 +32,18 @@
 			echo '</div>';
 		}
 		
-		if(($this->totalcount>$this->pageLimit) && ($this->page == 1) && ($this->nopage==0))
-		{
-			echo '<div class="paging">';
-			$pagehtml = $this->printPaging($this->totalcount,$this->pageLimit,$this->page,'');
-			echo $pagehtml;
-			echo '</div>';
-		}
+		// if(($this->totalcount>$this->pageLimit) && ($this->page == 1) && ($this->nopage==0))
+		// {
+		// 	echo '<div class="paging">';
+		// 	$pagehtml = $this->printPaging($this->totalcount,$this->pageLimit,$this->page,'');
+		// 	echo $pagehtml;
+		// 	echo '</div>';
+		// }
+
+		$total_pages = ceil($this->totalcount / $this->pageLimit);
+
+		if($this->page<$total_pages){
+            echo '<button id="toplistmemberscrollshowmore" class="btnshowmore"  data-page='.($this->page+1).'>Show More</button>';
+        }
+		
 ?>
