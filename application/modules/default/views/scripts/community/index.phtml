@@ -96,16 +96,23 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                   <li>
                     <a class="communitytab" data-href="/community/plingedprojects" href="#plingedproductsPanel" data-toggle="tab"><?= $this->translate('Recently plinged Products ') ?></a>
                   </li>
+
+                   <li >
+                    <a class="communitytab" data-href="/community/newmembers"  href="#newMemberPanel" data-toggle="tab"><?= $this->translate('New Members') ?></a>
+                  </li>
+
                   <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
                   ?>
                   <li>
                     <a class="communitytab" data-href="/community/topmembers" href="#topMemberPanel" data-toggle="tab"><?= $this->translate('Top Members') ?></a>
                   </li>
+
+                  <li>
+                    <a class="communitytab" data-href="/community/toplistmembers" href="#toplistMemberPanel" data-toggle="tab"><?= $this->translate('Top List Members') ?></a>
+                  </li>
                   <?php 
                   }?>                                                                                   
-                  <li >
-                    <a class="communitytab" data-href="/community/newmembers"  href="#newMemberPanel" data-toggle="tab"><?= $this->translate('New Members') ?></a>
-                  </li>
+                 
                   </ul>
                 </div>
 
@@ -123,16 +130,20 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
             <div class="row tab-pane" id="topMemberPanel">
                     <div class="list "> </div>
                 </div> <!-- end row -->
+
+                <div class="row tab-pane" id="toplistMemberPanel">
+                    <div class="list container explore-products"> </div>
+                </div> <!-- end row -->
                 <?php } ?>
 
                 <div class="row tab-pane active" id="supportersPanel">
                         <div class="list "> </div>
                 </div> <!-- end row -->
                 <div class="row tab-pane active" id="mostplingedproductsPanel">
-                        <div class="list container explore-products" style="width: 800px" > </div>
+                        <div class="list container explore-products"  > </div>
                 </div> <!-- end row -->
                  <div class="row tab-pane active" id="mostplingedcreatorsPanel">
-                        <div class="list  container explore-products" style="width:800px"> </div>
+                        <div class="list  container explore-products" > </div>
                 </div> <!-- end row -->
 
                  <div class="row tab-pane" id="plingedproductsPanel">
