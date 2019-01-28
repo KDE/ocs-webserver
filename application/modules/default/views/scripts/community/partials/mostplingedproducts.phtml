@@ -43,7 +43,7 @@ $updateTime = $helperPrintDate->printDate($this->project_changed_at);
             </a>
         </figure>
     </div>
-    <div class="explore-product-details col-lg-4 col-md-4 col-sm-4 col-xs-4">
+    <div class="explore-product-details col-lg-6 col-md-6 col-sm-6 col-xs-6">
         <h3>
           <?php 
                 $version = Default_Model_HtmlPurify::purify($this->version);
@@ -69,29 +69,7 @@ $updateTime = $helperPrintDate->printDate($this->project_changed_at);
                     class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->member_id?>">
           <?php echo $this->username?></a></b>
     </div>
-    <div class="explore-product-plings col-lg-2 col-md-2 col-sm-2 col-xs-2">
-        <!-- RATING -->
-        <?php
-        $this->widgetRating = new stdClass();
-        $this->widgetRating->project_id = $this->project_id;
-        $this->widgetRating->laplace_score = $this->laplace_score;
-        $this->widgetRating->count_likes = $this->count_likes;
-        $this->widgetRating->count_dislikes = $this->count_dislikes;
-        // it is a trial
-        include APPLICATION_PATH . '/modules/default/views/scripts/partials/widgetRating.phtml';
-        //echo $this->render('partials/widgetRating.phtml'); ?>
-        <!-- /RATING -->
-        <div class="progress">
-            <div class="bar no-goal">
-            </div>
-        </div>
-         
-        <div class="collected">
-          
-             <span><?php echo $updateTime ?></span>
-        </div>
-        
-    </div>
+    
     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                  
       
