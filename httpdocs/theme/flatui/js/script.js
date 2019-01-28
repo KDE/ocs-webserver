@@ -1969,7 +1969,7 @@ var CommunityTab= (function () {
             var indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';
             $('body').on('click', 'a.communitytab', function (event) {
                event.preventDefault();
-               var el = $(this).attr('href');
+               var el = $(this).attr('href');               
                var url = $(this).attr('data-href');
                if($(el).find('.list').find('.user').length==0)
                {    // only load once
@@ -1979,6 +1979,27 @@ var CommunityTab= (function () {
                         {
                             generateTooltipUserPlings($(el).find('.tooltipuserplings'),"right");
                         }
+
+                        // paging
+                        let spans = $(el).find('.opendesktopwidgetpager span');
+                        spans.each(function(index) {
+                            $(this).on("click", function(){                      
+                                $(this).parent().addClass('active').siblings().removeClass('active');                                                                                                                 
+                                var pagingurl = url+"/nopage/1/page/"+$(this).html();  
+                                console.log(pagingurl);
+                                $(el).find('.product-list').html('');
+                                $(el).find('.product-list').load(pagingurl,function (){   
+                                generateTooltipster($(el).find('.tooltipuser'),"right");                  
+                                if($(el).find('.tooltipuserplings').length>0)
+                                {
+                                    generateTooltipUserPlings($(el).find('.tooltipuserplings'),"right");
+                                }})
+                                                               
+                            });
+                        });
+
+                        //end paging
+
                                             
                    });              
                }

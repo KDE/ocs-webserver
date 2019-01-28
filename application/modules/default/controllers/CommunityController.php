@@ -64,14 +64,30 @@ class CommunityController extends Local_Controller_Action_DomainSwitch
     public function mostplingedcreatorsAction()
     {
         $this->_helper->layout->disableLayout();
-        $modelInfo = new Default_Model_Info();
-        $this->view->users = $modelInfo->getMostPlingedCreators(100);
+        $modelInfo = new Default_Model_Info();        
+        $pageLimit = 100;
+        $page = (int)$this->getParam('page', 1);                            
+        $nopage = (int)$this->getParam('nopage', 0);                            
+        $modelInfo = new Default_Model_Info(); 
+        $this->view->page =$page;       
+        $this->view->nopage =$nopage;       
+        $this->view->pageLimit =$pageLimit;
+        $this->view->totalcount = $modelInfo->getMostPlingedCreatorsTotalCnt();        
+        $this->view->users = $modelInfo->getMostPlingedCreators($pageLimit, ($page - 1) * $pageLimit);
+
     }
     public function mostplingedproductsAction()
     {
         $this->_helper->layout->disableLayout();
-        $modelInfo = new Default_Model_Info();
-        $this->view->projects = $modelInfo->getMostPlingedProducts(100);
+        $pageLimit = 100;
+        $page = (int)$this->getParam('page', 1);                            
+        $nopage = (int)$this->getParam('nopage', 0);                            
+        $modelInfo = new Default_Model_Info(); 
+        $this->view->page =$page;       
+        $this->view->nopage =$nopage;       
+        $this->view->pageLimit =$pageLimit;
+        $this->view->totalcount = $modelInfo->getMostPlingedProductsTotalCnt();        
+        $this->view->projects = $modelInfo->getMostPlingedProducts($pageLimit, ($page - 1) * $pageLimit);
     }
 
 }

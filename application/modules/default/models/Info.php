@@ -1132,11 +1132,27 @@ class Default_Model_Info
         return $result;
     }
 
-    public function getMostPlingedProducts($limit = 20)
+    public function getMostPlingedProductsTotalCnt(){
+        $sql = '
+            select count(1) as total_count
+            from
+            (
+                select distinct pl.project_id 
+                from project_plings pl
+                inner join stat_projects p on pl.project_id = p.project_id and p.status = 100
+                where pl.is_deleted = 0 and pl.is_active = 1 
+            ) t
+        ';
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+        $totalcnt = $result[0]['total_count'];
+        return $totalcnt;
+    }
+
+    public function getMostPlingedProducts($limit = 20,$offset = null)
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5((int)$limit);
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit).md5((int)$offset);
 
         if (false !== ($newSupporters = $cache->load($cacheName))) {
             return $newSupporters;
@@ -1169,6 +1185,9 @@ class Default_Model_Info
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
+        if (isset($offset)) {
+            $sql .= ' offset ' . (int)$offset;
+        }
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
 
         $cache->save($result, $cacheName, array(), 300);
@@ -1176,11 +1195,27 @@ class Default_Model_Info
         return $result;
     }
 
-    public function getMostPlingedCreators($limit = 20)
+
+    public function getMostPlingedCreatorsTotalCnt(){
+        $sql = '
+            select count(1) as total_count
+            from
+            (
+                select distinct p.member_id
+                from stat_projects p
+                join project_plings pl on p.project_id = pl.project_id                       
+                where p.status = 100
+            ) t
+        ';
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+        $totalcnt = $result[0]['total_count'];
+        return $totalcnt;
+    } 
+    public function getMostPlingedCreators($limit = 20,$offset = null)
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5((int)$limit);
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit).md5((int)$offset);
 
         if (false !== ($newSupporters = $cache->load($cacheName))) {
             return $newSupporters;
@@ -1202,6 +1237,9 @@ class Default_Model_Info
         ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
+        }
+        if (isset($offset)) {
+            $sql .= ' offset ' . (int)$offset;
         }
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
 

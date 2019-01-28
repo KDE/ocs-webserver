@@ -24,9 +24,6 @@ $helperImage = new Default_View_Helper_Image();
 
 $helperPrintDate = new Default_View_Helper_PrintDate();
 $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
-
-
-
 $updateTime = $helperPrintDate->printDate($this->project_changed_at);
 
 ?>
@@ -46,7 +43,7 @@ $updateTime = $helperPrintDate->printDate($this->project_changed_at);
             </a>
         </figure>
     </div>
-    <div class="explore-product-details col-lg-7 col-md-7 col-sm-7 col-xs-7">
+    <div class="explore-product-details col-lg-4 col-md-4 col-sm-4 col-xs-4">
         <h3>
           <?php 
                 $version = Default_Model_HtmlPurify::purify($this->version);
@@ -59,23 +56,18 @@ $updateTime = $helperPrintDate->printDate($this->project_changed_at);
        
        <div class="title">
         <b><?php echo $this->catTitle?></b>
-        <b class="username small">by <a  href="<?php echo $this->buildMemberUrl($this->username)?>" 
-                    class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->member_id?>">
-          <?php echo $this->username?></a></b>
+        
         </div>
 
         
       
 
-        <div class="productInfo">
-      
-              <span class="small created_at" >
-                <a class="tooltipuserplings" data-tooltip-content="#tooltip_content" data-user="<?=$this->project_id?>" >
-                    <img src="/images/system/pling-btn-active.png" style="width: 15px; height: 15px" /> </a>
-                <?=$this->sum_plings; ?>
-             </span>
-
-        </div>            
+                  
+    </div>
+    <div class="explore-product-details col-lg-2 col-md-2 col-sm-2 col-xs-2">
+        <b class="username small">by <a  href="<?php echo $this->buildMemberUrl($this->username)?>" 
+                    class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->member_id?>">
+          <?php echo $this->username?></a></b>
     </div>
     <div class="explore-product-plings col-lg-2 col-md-2 col-sm-2 col-xs-2">
         <!-- RATING -->
@@ -99,6 +91,15 @@ $updateTime = $helperPrintDate->printDate($this->project_changed_at);
              <span><?php echo $updateTime ?></span>
         </div>
         
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                 
+      
+              <span class="small created_at" >
+                <a class="tooltipuserplings" data-tooltip-content="#tooltip_content" data-user="<?=$this->project_id?>" >
+                    <img src="/images/system/pling-btn-active.png" style="width: 15px; height: 15px" /> </a>
+                <?=$this->sum_plings; ?>
+             </span>              
     </div>
 </div><!-- END .explore-product -->
 

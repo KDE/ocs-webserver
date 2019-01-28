@@ -20,9 +20,24 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 ?>
-<div class="product-list ">
-  <?php                        
-  		$this->nr=1;                       
-        echo $this->partialLoop('community/partials/mostplingedproducts.phtml', $this->projects);                       
-  ?> 
-  </div>          
+<?php
+		
+
+		if(($this->page == 1) && ($this->nopage==0)){	
+			echo '<div class="product-list">';
+		}
+
+		$this->nr=($this->page - 1) * $this->pageLimit +1;    
+		echo $this->partialLoop('community/partials/mostplingedproducts.phtml', $this->projects);
+		
+		if(($this->page == 1) && ($this->nopage==0)){		
+			echo '</div>';
+		}
+		
+		if(($this->totalcount>$this->pageLimit) && ($this->page == 1) && ($this->nopage==0))
+		{
+			$pagehtml = $this->printPaging($this->totalcount,$this->pageLimit,$this->page,'');
+			echo $pagehtml;
+		}
+?>
+
