@@ -34,7 +34,60 @@ class CommunityController extends Local_Controller_Action_DomainSwitch
         } else {
             $this->view->categories = $modelCategories->fetchMainCatIdsOrdered();
         }
-        //    	Zend_Registry::get('logger')->err(__METHOD__ . ' - categories - ' . print_r($this->view->categories, true));
+        
+    }
+
+    public function supportersAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $modelInfo = new Default_Model_Info();
+        $this->view->supporters = $modelInfo->getNewActiveSupporters(100);
+    }
+    public function newmembersAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $modelInfo = new Default_Model_Info();
+        $this->view->users = $modelInfo->getNewActiveMembers(100);
+    }
+    public function topmembersAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $modelInfo = new Default_Model_Info();
+        $this->view->users = $modelInfo->getTopScoreUsers(100);
+    }
+    public function plingedprojectsAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $modelInfo = new Default_Model_Info();
+        $this->view->projects = $modelInfo->getNewActivePlingProduct(100);
+    }
+    public function mostplingedcreatorsAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $modelInfo = new Default_Model_Info();        
+        $pageLimit = 100;
+        $page = (int)$this->getParam('page', 1);                            
+        $nopage = (int)$this->getParam('nopage', 0);                            
+        $modelInfo = new Default_Model_Info(); 
+        $this->view->page =$page;       
+        $this->view->nopage =$nopage;       
+        $this->view->pageLimit =$pageLimit;
+        $this->view->totalcount = $modelInfo->getMostPlingedCreatorsTotalCnt();        
+        $this->view->users = $modelInfo->getMostPlingedCreators($pageLimit, ($page - 1) * $pageLimit);
+
+    }
+    public function mostplingedproductsAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $pageLimit = 100;
+        $page = (int)$this->getParam('page', 1);                            
+        $nopage = (int)$this->getParam('nopage', 0);                            
+        $modelInfo = new Default_Model_Info(); 
+        $this->view->page =$page;       
+        $this->view->nopage =$nopage;       
+        $this->view->pageLimit =$pageLimit;
+        $this->view->totalcount = $modelInfo->getMostPlingedProductsTotalCnt();        
+        $this->view->projects = $modelInfo->getMostPlingedProducts($pageLimit, ($page - 1) * $pageLimit);
     }
 
 }

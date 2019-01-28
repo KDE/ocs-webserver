@@ -143,9 +143,9 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $filter['order'] = preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('ord', self::DEFAULT_ORDER));
         $filter['original'] = $inputFilterOriginal == 1 ? self::TAG_ISORIGINAL : null;
         $filter['package_type'] = Zend_Registry::isRegistered('config_store_tags') ?  Zend_Registry::get('config_store_tags') : null;
-        //if ($inputFilterOriginal == 1) {
-        //    $filter['original'] = self::TAG_ISORIGINAL;
-        //}
+        if (APPLICATION_ENV == "development") {
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . json_encode($filter));
+        }
 
         $page = (int)$this->getParam('page', 1);
 

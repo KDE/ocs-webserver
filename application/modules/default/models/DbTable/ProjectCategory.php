@@ -1046,6 +1046,9 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
             HAVING COUNT(p.project_category_id)-2 > 0
             ORDER BY o.lft;
         ";
+        if (APPLICATION_ENV == "development") {
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $sql . ' - ' . json_encode($nodeId));
+        }
         $children = $this->_db->query($sql, $nodeId)->fetchAll();
         if (count($children)) {
             $result = $this->flattenArray($children);

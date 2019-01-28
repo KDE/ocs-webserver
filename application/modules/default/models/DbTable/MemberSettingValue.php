@@ -29,6 +29,14 @@ class Default_Model_DbTable_MemberSettingValue extends Local_Model_Table
 
     protected $_key = 'member_setting_value_id';
 
+    public function init()
+    {
+        parent::init();     
+    }
+    
+   
+
+
     public function delete($where)
     {
         $where = parent::_whereExpr($where);

@@ -34,6 +34,7 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
 
     /**
      * @param null $id
+     *
      * @return array
      * @throws Zend_Db_Select_Exception
      */
@@ -80,23 +81,25 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
     {
         $sql = "
                 SELECT
-                    config_store.`host`,
-                    config_store_category.store_id,
-                    config_store_category.project_category_id
+                    `config_store`.`host`,
+                    `config_store_category`.`store_id`,
+                    `config_store_category`.`project_category_id`
                 FROM
-                    config_store
+                    `config_store`
                 JOIN
-                    config_store_category ON config_store.store_id = config_store_category.store_id
+                    `config_store_category` ON `config_store`.`store_id` = `config_store_category`.`store_id`
                 JOIN
-                    project_category ON project_category.project_category_id = config_store_category.project_category_id
-                ORDER BY config_store.`host`,config_store_category.`order`,project_category.title;
+                    `project_category` ON `project_category`.`project_category_id` = `config_store_category`.`project_category_id`
+                ORDER BY `config_store`.`host`,`config_store_category`.`order`,`project_category`.`title`;
         ";
         $resultSet = $this->_db->fetchAll($sql);
+
         return $resultSet;
     }
 
     /**
      * @param array $resultSetConfig
+     *
      * @return array
      */
     private function createArrayAllStoresAndCategories($resultSetConfig)
@@ -106,6 +109,7 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
             $result[$element['host']][] = $element['project_category_id'];
         }
         array_walk($result, create_function('&$v', '$v = (count($v) == 1)? array_pop($v): $v;'));
+
         return $result;
     }
 
@@ -136,13 +140,15 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
      */
     private function queryDomainConfigIdList()
     {
-        $sql = "SELECT host, config_id_name FROM config_store ORDER BY host;";
+        $sql = "SELECT `host`, `config_id_name` FROM `config_store` ORDER BY `host`;";
         $resultSet = $this->_db->fetchAll($sql);
+
         return $resultSet;
     }
 
     /**
      * @param array $resultSetConfig
+     *
      * @return array
      */
     private function createDomainStoreIdArray($resultSetConfig)
@@ -151,6 +157,7 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
         foreach ($resultSetConfig as $element) {
             $result[$element['host']] = $element['config_id_name'];
         }
+
         return $result;
     }
 
@@ -181,13 +188,15 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
      */
     private function queryDomains()
     {
-        $sql = "SELECT host, name FROM config_store ORDER BY `order`;";
+        $sql = "SELECT `host`, `name` FROM `config_store` ORDER BY `order`;";
         $resultSet = $this->_db->fetchAll($sql);
+
         return $resultSet;
     }
 
     /**
      * @param array $resultSetConfig
+     *
      * @return array
      */
     private function createDomainsArray($resultSetConfig)
@@ -196,6 +205,7 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
         foreach ($resultSetConfig as $element) {
             $result[$element['host']] = $element['name'];
         }
+
         return $result;
     }
 
@@ -204,8 +214,9 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
      */
     public function fetchDomainObjects()
     {
-        $sql = "SELECT *  FROM config_store ORDER BY `order`;";
+        $sql = "SELECT *  FROM `config_store` ORDER BY `order`;";
         $resultSet = $this->_db->fetchAll($sql);
+
         return $resultSet;
     }
 
@@ -214,15 +225,16 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
      */
     public function fetchDomainObjectsByName($name)
     {
-        $sql = "SELECT * FROM config_store where name='".$name."'";
-        $resultSet = $this->_db->fetchAll($sql);        
+        $sql = "SELECT * FROM `config_store` WHERE `name`='" . $name . "'";
+        $resultSet = $this->_db->fetchAll($sql);
+
         return array_pop($resultSet);
     }
 
 
     public function deleteId($dataId)
     {
-        $sql = "DELETE FROM config_store WHERE {$this->_key} = ?";
+        $sql = "DELETE FROM `config_store` WHERE {$this->_key} = ?";
         $this->_db->query($sql, $dataId)->execute();
     }
 
@@ -258,6 +270,33 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
     }
 
     /**
+     * @return array
+     */
+    private function queryStoreConfigArray()
+    {
+        $sql = "SELECT * FROM `config_store` ORDER BY `order`;";
+        $resultSet = $this->_db->fetchAll($sql);
+
+        return $resultSet;
+    }
+
+    /**
+     * @param array  $resultSetConfig
+     * @param string $key
+     *
+     * @return array
+     */
+    private function createStoreConfigArray($resultSetConfig, $key = 'host')
+    {
+        $result = array();
+        foreach ($resultSetConfig as $element) {
+            $result[$element[$key]] = $element;
+        }
+
+        return $result;
+    }
+
+    /**
      * @param bool $clearCache
      *
      * @return array
@@ -286,31 +325,6 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
         return $configArray;
     }
 
-    /**
-     * @return array
-     */
-    private function queryStoreConfigArray()
-    {
-        $sql = "SELECT * FROM config_store ORDER BY `order`;";
-        $resultSet = $this->_db->fetchAll($sql);
-        return $resultSet;
-    }
-
-    /**
-     * @param array  $resultSetConfig
-     * @param string $key
-     *
-     * @return array
-     */
-    private function createStoreConfigArray($resultSetConfig, $key = 'host')
-    {
-        $result = array();
-        foreach ($resultSetConfig as $element) {
-            $result[$element[$key]] = $element;
-        }
-        return $result;
-    }
-
     public function fetchConfigForStore($store_id, $clearCache = false)
     {
         if (Zend_Registry::isRegistered('cache')) {
@@ -335,10 +349,10 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
 
     private function queryStoreConfig($store_id)
     {
-        $sql = "SELECT * FROM config_store WHERE store_id = :store;";
+        $sql = "SELECT * FROM `config_store` WHERE `store_id` = :store;";
         $resultSet = $this->_db->fetchRow($sql, array('store' => (int)$store_id));
-        return $resultSet;
 
+        return $resultSet;
     }
 
     /**
@@ -346,7 +360,7 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
      */
     public function fetchDefaultStoreId()
     {
-        $sql = "SELECT store_id, package_type FROM config_store WHERE `default` = 1;";
+        $sql = "SELECT `store_id`, `package_type` FROM `config_store` WHERE `default` = 1;";
         $resultSet = $this->_db->fetchRow($sql);
         if (count($resultSet) > 0) {
             return (object)$resultSet;

@@ -227,20 +227,38 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
     {
         $storeCategoryArray = Zend_Registry::get('application_store_category_list');
 
+        //check store_category_list to see if some categories are defined here
         if (isset($storeCategoryArray[$storeHostName])) {
             $storeCategories = $storeCategoryArray[$storeHostName];
             if (is_string($storeCategories)) {
-                $storeCategories = array($storeCategories);
+                return array($storeCategories);
             }
-        } else {
-            Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - ' . $storeHostName
-                . ' :: no categories for domain context configured. Using main categories instead')
-            ;
-            $modelCategories = new Default_Model_DbTable_ProjectCategory();
-            $root = $modelCategories->fetchRoot();
-            $storeCategories =
-                $modelCategories->fetchImmediateChildrenIds($root['project_category_id'], $modelCategories::ORDERED_TITLE);
+            return $storeCategories;
         }
+
+        Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - ' . $storeHostName
+            . ' :: no categories for domain context configured. Try to use categories from default store instead')
+        ;
+
+        // next step: check store_category_list to see if some categories are defined for the default store
+        $storeConfigArray = Zend_Registry::get('application_store_config_list');
+        $defaultStore = $this->arraySearchConfig($storeConfigArray, 'default', '1');
+        if (isset($storeCategoryArray[$defaultStore['host']])) {
+            $storeCategories = $storeCategoryArray[$defaultStore['host']];
+            if (is_string($storeCategories)) {
+                return array($storeCategories);
+            }
+            return $storeCategories;
+        }
+
+        Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - ' . $storeHostName
+            . ' :: no categories for default store found. Try to use main categories instead')
+        ;
+
+        // last chance: take the main categories from the tree
+        $modelCategories = new Default_Model_DbTable_ProjectCategory();
+        $root = $modelCategories->fetchRoot();
+        $storeCategories = $modelCategories->fetchImmediateChildrenIds($root['project_category_id'], $modelCategories::ORDERED_TITLE);
 
         return $storeCategories;
     }
@@ -250,19 +268,19 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
      *
      * @param $haystack
      * @param $key
-     * @param $value
+     * @param $needle
      *
      * @return array
      */
-    private function arraySearchConfig($haystack, $key, $value)
+    private function arraySearchConfig($haystack, $column, $needle)
     {
         if (PHP_VERSION_ID <= 50500) {
-            return $this->searchForConfig($haystack, $key, $value);
+            return $this->searchForConfig($haystack, $column, $needle);
         }
         if (false === is_array($haystack)) {
             return array();
         }
-        $key = array_search($value, array_column($haystack, $key, 'host'));
+        $key = array_search($needle, array_column($haystack, $column, 'host'));
         if ($key) {
             return $haystack[$key];
         }

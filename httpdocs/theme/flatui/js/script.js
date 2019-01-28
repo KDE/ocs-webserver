@@ -1771,6 +1771,46 @@ var ProductDetailCommentTooltip = (function () {
     }
 })();
 
+function generateTooltipster(elements,tooltipSide)
+{
+    $(elements).each(function() {
+        $(this).tooltipster(
+                {
+                    side: tooltipSide,
+                    theme: ['tooltipster-light', 'tooltipster-light-customized'],
+                    contentCloning: true,
+                    contentAsHTML: true,
+                    interactive: true,
+                    functionBefore: function (instance, helper) {
+                        var origin = $(helper.origin);
+                        var userid = origin.attr('data-user');
+                        if (origin.data('loaded') !== true) {
+                            $.get('/member/' + userid + '/tooltip/', function (data) {
+                                var d = data.data;
+                                var tmp = '<div class="mytooltip"><div class="header">' + d.username
+                                    + ' <span class="glyphicon glyphicon-map-marker"></span>' + d.countrycity
+                                    + '</div>'
+                                    + '<div class="statistic">'
+                                    + '<div class="row"><span class="title">' + d.cntProjects + '</span> products </div>'
+                                    + '<div class="row"><span class="title">' + d.totalComments + '</span> comments </div>'
+                                    + '<div class="row">Likes <span class="title">' + d.cntLikesGave + '</span>  products </div>'
+                                    + '<div class="row">Got <span class="title">' + d.cntLikesGot + '</span> Likes <i class="fa fa-heart myfav" aria-hidden="true"></i> </div>'
+                                    + '<div class="row">Last time active : ' + d.lastactive_at + ' </div>'
+                                    + '<div class="row">Member since : ' + d.created_at + ' </div>'
+                                    + '</div>';
+
+                                tmp = tmp + '</div>';
+
+                                instance.content(tmp);
+                                origin.data('loaded', true);
+                            });
+                        }
+                    }
+
+                }
+            );
+    });
+}
 
 var TooltipUser = (function () {
     return {
@@ -1814,6 +1854,48 @@ var TooltipUser = (function () {
     }
 })();
 
+
+
+function generateTooltipUserPlings(elements,tooltipSide)
+{
+    $(elements).each(function() {
+        $(this).tooltipster(
+                {
+                    side: tooltipSide,
+                    theme: ['tooltipster-light', 'tooltipster-light-customized'],
+                    contentCloning: true,
+                    contentAsHTML: true,
+                    interactive: true,
+                    functionBefore: function (instance, helper) {
+                        var origin = $(helper.origin);
+                        var userid = origin.attr('data-user');
+                        if (origin.data('loaded') !== true) {
+                            $.get('/plings/tooltip/id/'+userid, function (data) {
+
+                                var tmp = '<div class="tooltipuserplingscontainer">';
+                                $.each(data.data, function( index, value ) {
+                                    if(index>10) return false;
+                                    if(value.profile_image_url.indexOf('http')<0)
+                                    {
+                                         value.profile_image_url = "https://cn.opendesktop.org/cache/40x40-2/img/"+value.profile_image_url ;
+                                    }
+                                    if(value.profile_image_url.indexOf('.gif')>0)
+                                    {
+                                         value.profile_image_url = "https://cn.opendesktop.org/img/"+value.profile_image_url ;
+                                    }
+                                    tmp = tmp+'<div class="user"><a href="/member/'+value.member_id+'"><img src="'+value.profile_image_url+'" /></a><span class="caption">'+value.username+'</span></div>';
+                                });
+                                tmp = tmp + '</div>';
+                                instance.content(tmp);
+                                origin.data('loaded', true);
+                            });
+                        }
+                    }
+
+                }
+            );
+    });
+}
 
 var TooltipUserPlings = (function () {
     return {
@@ -1868,14 +1950,79 @@ var AboutMePage = (function () {
     }
 })();
 
-var InitActiveHashTab = (function () {
+// var InitActiveHashTab = (function () {
+//     return {
+//         setup: function () {
+//             var activeTab = document.location.hash;
+//             if($('a[href="'+ activeTab +'"]'))
+//             {
+//                 $('a[href="'+ activeTab +'"]').tab('show');
+//             }
+
+//         }
+//     }
+// })();
+
+var CommunityTab= (function () {
     return {
         setup: function () {
-            var activeTab = document.location.hash;
-            if($('a[href="'+ activeTab +'"]'))
+            var indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';
+            $('body').on('click', 'a.communitytab', function (event) {
+               event.preventDefault();
+               var el = $(this).attr('href');               
+               var url = $(this).attr('data-href');
+               if($(el).find('.list').find('.user').length==0)
+               {    // only load once
+                    $(el).find('.list').append(indicator).load(url,function (){   
+                        generateTooltipster($(el).find('.tooltipuser'),"right");                  
+                        if($(el).find('.tooltipuserplings').length>0)
+                        {
+                            generateTooltipUserPlings($(el).find('.tooltipuserplings'),"right");
+                        }
+
+                        // paging
+                        let spans = $(el).find('.opendesktopwidgetpager span');
+                        spans.each(function(index) {
+                            $(this).on("click", function(){                      
+                                $(this).parent().addClass('active').siblings().removeClass('active');                                                                                                                 
+                                var pagingurl = url+"/nopage/1/page/"+$(this).html();  
+                                console.log(pagingurl);
+                                $(el).find('.product-list').html('');
+                                $(el).find('.product-list').load(pagingurl,function (){   
+                                generateTooltipster($(el).find('.tooltipuser'),"right");                  
+                                if($(el).find('.tooltipuserplings').length>0)
+                                {
+                                    generateTooltipUserPlings($(el).find('.tooltipuserplings'),"right");
+                                }})
+                                                               
+                            });
+                        });
+
+                        //end paging
+
+                                            
+                   });              
+               }
+            });
+
+            var activeTab = document.location.hash;             
+            if($('a[href="'+ activeTab +'"]').length>0)
             {
                 $('a[href="'+ activeTab +'"]').tab('show');
+                $('a[href="'+ activeTab +'"]').trigger( "click" );
+            }else
+            {
+                activeTab = "#supportersPanel";
+                $('a[href="'+ activeTab +'"]').trigger( "click" );                  
             }
+
+            $('body').on('mouseenter', '.product-thumbnail-startpage', function () {
+                $(this).popover('show');
+            });
+
+            $('body').on('mouseleave', '.product-thumbnail-startpage', function () {
+                $(this).popover('hide');
+            });
 
         }
     }
