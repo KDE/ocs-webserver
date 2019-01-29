@@ -1,17 +1,23 @@
 class CommunityPage extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      jsonData:window.json_data
+    };
+  }
+
+  componentDidMount() {
+    console.log(this.state);
   }
 
   render(){
     return(
       <div id="community-page">
+        react community
       </div>
     );
   }
 }
-
 
 ReactDOM.render(
     <CommunityPage />,
