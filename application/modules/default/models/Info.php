@@ -403,15 +403,18 @@ class Default_Model_Info
                 `p`.*              
             FROM
                 `stat_projects`  AS `p`
+                ';
+
+        if (isset($tags)) {
+            $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
+                . ')) AS store_tags ON p.project_id = store_tags.project_id ';
+        }
+
+        $sql .= '
             WHERE
                 `p`.`status` = 100                
                 AND `p`.`project_category_id` IN (' . implode(',', $activeCategories) . ')
                 AND `p`.`amount_reports` IS NULL';
-
-        if (isset($tags)) {
-            $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
-                . ')) AS store_tags ON p.project_id = store_tags.project_id';
-        }
 
         if (isset($tag_isoriginal)) {
             if ($tag_isoriginal) {
