@@ -232,7 +232,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'startdownload',
             'ppload',
             'loadratings',
-            'loadinstallinstruction'
+            'loadinstallinstruction',
+            'gettaggroupsforcatajax'
         ));
 
         // resource default_product
