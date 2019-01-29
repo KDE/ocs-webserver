@@ -292,11 +292,7 @@ class ProductCarousel extends React.Component {
     console.log('container number:' + this.state.containerNumber);
     console.log(this.state.products.length);
     let limit = (this.state.itemsPerRow * this.state.containerNumber) - this.state.products.length;
-    let animateCarousel = false;
-    if (limit === 0){
-      limit = this.state.itemsPerRow;
-      animateCarousel = true;
-    }
+    if (limit === 0){ limit = this.state.itemsPerRow; }
     let url = "/home/showlastproductsjson/?page=1&limit="+limit+"&offset="+this.state.offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
     const self = this;
     $.ajax({url: url,cache: false}).done(function(response){
@@ -307,6 +303,7 @@ class ProductCarousel extends React.Component {
           finishedProducts = true;
         }
         self.setState({products:products,offset:offset,finishedProducts:finishedProducts},function(){
+          const animateCarousel = true;
           self.updateDimensions(animateCarousel);
         });
     });
