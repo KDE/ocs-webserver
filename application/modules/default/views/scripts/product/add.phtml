@@ -25,8 +25,6 @@ $this->tab = 'add';
 $helperImage = new Default_View_Helper_Image();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helpProductUrl = new Default_View_Helper_BuildProductUrl();
-$architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
-$packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
 
 $modelCategory = new Default_Model_DbTable_ProjectCategory();
 $valueCatId = $this->form->project_category_id->getValue();
@@ -72,6 +70,7 @@ $this->inlineScript()->appendScript('
 
         div.datafiledroparea{
             overflow-y: scroll !important;
+            overflow-x: scroll !important;
         }
 
         /*
@@ -382,8 +381,8 @@ $this->inlineScript()->appendScript('
                                      data-ppload-collection-id="<?= $this->ppload_collection_id ?>" data-product-id=""
                                      data-addpploadfile-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'addpploadfile') ?>"
                                      data-updatepploadfile-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'updatepploadfile') ?>"
-                                     data-updatepackagetype-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'updatepackagetype') ?>"
-                                     data-updatearchitecture-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'updatearchitecture') ?>"
+                                     data-updatefiletag-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'updatefiletag') ?>"
+                                     data-deletefiletag-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'deletefiletag') ?>"
                                      data-deletepploadfile-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'deletepploadfile') ?>"
                                      data-deletepploadfiles-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'deletepploadfiles') ?>">
                                     <div class="pling-modal" style="width: 100%;">
@@ -400,19 +399,6 @@ $this->inlineScript()->appendScript('
                                                 <div data-file-upload="" dropzone class="datafiledroparea">
                                                     <table class="table" data-ppload-files="">
                                                         <thead>
-                                                        <tr>
-                                                            <th><?= $this->translate('Filename') ?></th>
-                                                            <th><?= $this->translate('Version') ?></th>
-                                                            <th><?= $this->translate('Description') ?></th>
-                                                            <!--<th><?= $this->translate('License') ?></th>-->
-                                                            <!--<th><?= $this->translate('Filetype') ?></th>-->
-                                                            <th><?= $this->translate('Packagetype') ?></th>
-                                                            <th><?= $this->translate('Architecture') ?></th>
-                                                            <th><?= $this->translate('Date added') ?></th>
-                                                            <th style="text-align: right"><?= $this->translate('Filesize') ?></th>
-                                                            <th></th>
-                                                            <th></th>
-                                                        </tr>
                                                         </thead>
                                                         <tbody></tbody>
                                                     </table>
@@ -504,41 +490,6 @@ $this->inlineScript()->appendScript('
     </main>
 
     <script>
-
-        /**
-        $(document).ready(function() {
-            $('.add-tag-btn').on('click', function(event) {
-                event.stopPropagation();
-                var data = jQuery(this).parents('.form-group').find('input.personal-tag-name').val();
-                $.post('/tag/add/', {'t' : data})
-                    .done(function(response) {
-                        alert(response.data.id);
-                        alert(response.data.label);
-                        var template = '<div class="message-form-template">\n' +
-                            '\t<div class="new-tag">\n' +
-                            '\t\t<span class="tag"><a class="message-form-delete-tag" data-id="'+response.data.id+'" href="javascript:;">\n' +
-                            '<span class="tag-icon"></span>\n' +
-                            '</a> &nbsp;<span class="tag-label">'+response.data.label+'</span> </span>\n' +
-                            '\t</div>\n' +
-                            '</div>';
-                        $('#form-added-tags').empty().append(template);
-                    });
-            });
-
-            $('.message-form-delete-tag').on('click', function (event) {
-                event.stopPropagation();
-                var id =  parseInt(jQuery(this).attr('data-id'));
-                var jqxhr = $.post('/tag/del/',{'ti': id})
-                    .done(function(data) {
-                        alert('Response :' + data);
-                        jQuery(this).parents('.tag').remove();
-                    });
-
-                return false;
-            });
-        });
-        **/
-
         $(document).ready(function () {
 
             var formElement = $('#add-product-form');
@@ -596,6 +547,7 @@ $this->inlineScript()->appendScript('
                                 formElement.find("#modal-ppload").attr('data-product-id', ProductForm.project_id);
                                 formElement.find("#modal-changlog").attr('data-product-id', ProductForm.project_id);
                             }
+                            getPploadFiles();
                             return true;
                         }
                         return false;
@@ -687,7 +639,9 @@ $this->inlineScript()->appendScript('
                         $('#get-url').val('').removeClass('hasError');
                         $('#get-url-error').html('');
                         $('#generic-dialog').modal('hide');
-                        getPploadFiles();
+                        
+                        getPploadFiles(null,null);
+                        
                     },
                     error: function() {
                         $('#get-url').addClass('hasError').focus();
@@ -801,234 +755,284 @@ $this->inlineScript()->appendScript('
                 }
 
                 function getPploadFiles(page) {
-                    var collectionId = $modalPpload.attr('data-ppload-collection-id');
-
                     if (!page) {
                         page = 1;
                         $modalPpload.find('table[data-ppload-files] tbody').empty();
                     }
+                    
+                    var prodId = ProductForm.project_id;
+                    if(!prodId) {
+                        prodId = 0;
+                    }
+                    
+                    var catId = $('#project_category_id').val();
+                    
+                    //get cat-tag-groups
+                    var tagGroups = null;
+                    var tagGroupsCount = 0;
                     $.ajax({
-                        url: pploadApiUri + 'files/index',
+                        url: '/p/'+prodId+'/gettaggroupsforcatajax',
                         type: 'GET',
-                        data: {
-                            collection_id: collectionId,
-                            perpage: 1000,
-                            page: page,
-                            format: 'json',
-                            ignore_status_code: 0,
-                            status: 'active'
-                        },
+                        async: false,
+                        cache: false,
+                        timeout: 30000,
+                        data: {project_cat_id: catId},
                         dataType: 'json',
                         success: function (data, textStatus, jqXHR) {
                             if (data.status != 'success') {
-                                return;
-                            }
-
-                            var updatePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a>';
-                            var updatePploadFileBtnPerFile = '';
-                            var deletePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';
-                            var deletePploadFileBtnPerFile = '';
-
-                            var myArray = $.map(data.files, function(entry) {
-                                return entry;
-                            });
-                            myArray.sort(keysrt('created_timestamp'), false);
-
-
-                            $.each(myArray, function () {
-
-                                var fileDescription = '';
-                                if (this.description) {
-                                    fileDescription = this.description;
-                                    fileDescription = fileDescription.replace(/<\/?[^>]+(>|$)/g, "");
-                                }
-
-                                var inputFileDescription = '<input data-ppload-file-description="" class="form-control input-sm"'
-                                    + ' type="text" maxlength="140" placeholder="File description"'
-                                    + ' value="' + fileDescription + '">';
-                                if(this.active == '0') {
-                                    inputFileDescription = '<input disabled="disabled" data-ppload-file-description="" class="form-control input-sm"'
-                                        + ' type="text" maxlength="140" placeholder="File description"'
-                                        + ' value="' + fileDescription + '">';
-                                }
-
-                                var versionText;
-                                if(this.version==null) {versionText = '';} else{versionText = this.version;}
-                                versionText = versionText.replace(/<\/?[^>]+(>|$)/g, "");
-
-                                var version = '<input data-ppload-file-version="" class="form-control input-sm"'
-                                    + ' type="text" maxlength="140" placeholder="File version"'
-                                    + ' value="' + versionText + '">';
-                                if(this.active == '0') {
-                                    version = '<input disabled="disabled" data-ppload-file-version="" class="form-control input-sm"'
-                                        + ' type="text" maxlength="140" placeholder="File version"'
-                                        + ' value="' + versionText + '">';
-                                }
-
-                                var fileCategory = '';
-                                if (this.category) {
-                                    fileCategory = this.category;
-                                }
-                                var link = '';
-                                var fileTags = '';
-                                var osId = null;
-                                var licensetype = null;
-                                var license = '';
-                                var licenseId = '';
-                                var packagetypeId = '';
-                                var architectureId = '';
-
-
-                                //var packageId = null;
-                                //var archId = null;
-                                //var deviceId = null;
-                                if (this.tags) {
-                                    fileTags = this.tags;
-                                    $.each(fileTags.split(','), function () {
-                                        if(this.indexOf("##")==-1) {
-                                            var tagStr = this.split('-');
-                                            if (tagStr.length == 2 && tagStr[0] == 'os') {
-                                                osId = tagStr[1];
-                                            } else if (tagStr.length == 2 && tagStr[0] == 'licensetype') {
-                                                licenseId = tagStr[1];
-                                            } else if (tagStr.length == 2 && tagStr[0] == 'packagetypeid') {
-                                                packagetypeId = tagStr[1];
-                                            } else if (tagStr.length == 2 && tagStr[0] == 'architectureid') {
-                                                architectureId = tagStr[1];
-                                            }
-                                        } else {
-                                            var tagStr = this.split('##');
-                                            if (tagStr.length == 2 && tagStr[0] == 'link') {
-                                                link = tagStr[1];
-                                            } else if (tagStr.length == 2 && tagStr[0] == 'license') {
-                                                license = tagStr[1];
-                                                license = Base64.decode(license);
-                                            } else if (tagStr.length == 2 && tagStr[0] == 'packagetypeid') {
-                                                packagetypeId = tagStr[1];
-                                            } else if (tagStr.length == 2 && tagStr[0] == 'architectureid') {
-                                                architectureId = tagStr[1];
-                                            }
-                                        }
-                                    });
-                                }
-
-                                //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
-                                var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size;
+                                $modalPpload.find('table[data-ppload-files] thead').html('');
                                 
-                                var downloadLinkFilename = link ? this.name + ' (External Link)' : this.name;
-                                var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '" class="opendownloadfile" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->project_id ?>"  data-link_type="download">' + downloadLinkFilename + '</a>';
+                                tagGroups = data.tag_groups;
+                                tagGroupsCount = data.ResultSize;
+                                
+                                var tableHeader = '';
+                                tableHeader += '<tr>';
+                                tableHeader +=  '    <th><?= $this->translate('Filename') ?></th>';
+                                tableHeader +=  '    <th><?= $this->translate('Version') ?></th>';
+                                tableHeader +=  '    <th><?= $this->translate('Description') ?></th>';
 
-                                if(this.active == '1') {
-                                    updatePploadFileBtnPerFile = updatePploadFileBtn;
-                                    deletePploadFileBtnPerFile = deletePploadFileBtn;
+                                if(tagGroupsCount>0) {
+                                    $.each(tagGroups, function() {
+                                        tableHeader += '<th>'+this.group_display_name+'</th>';
+                                    });
                                 } else {
-                                    updatePploadFileBtnPerFile = '';
-                                    deletePploadFileBtnPerFile = '';
+                                    tableHeader += '<th></th>';
                                 }
 
-                                $modalPpload.find('table[data-ppload-files] tbody').append(
-                                    '<tr data-ppload-file-id="' + this.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">'
-                                    + '<td>' + downloadLink + '</td>'
-                                    + '<td>' + version + '</td>'
-                                    + '<td>' + inputFileDescription + '</td>'
-                                    /*
-                                    + '<td>'
-                                    + '<select id="data-select-license' + this.id + '" data-license-id="" name="license" class="form-control input-sm" style="width: 200px;">'
-                                    + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPLv2 or later</option><option value=\"18\">GPLv2 only</option><option value=\"19\">GPLv3</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
-                                    + '</select>'
-                                    + '</td>'
-                                    */
-                                    /*
-                                    + '<td>' + this.type + '</td>'
-                                    */
-                                    + '<td>'
-                                    + '<select id="data-select-packagetype' + this.id + '" data-packagetype-id="" name="packagetype" class="form-control input-sm" style="width: 150px;">'
-                                    + '<option value=\"\"></option>'
-                                        <?php
-                                        // force $value to array so we can compare multiple values to multiple
-                                        // options; also ensure it's a string for comparison purposes.
-                                        $tagList = $packagetypeListHelper->fetchList();
-                                        foreach ($tagList as $opt_value => $opt_label) {
-                                        ?>
-                                          + '<option value="<?= $opt_value ?>"><?= $opt_label ?></option>'
-                                        <?php
-                                        }
-                                        ?>
-                                    + '</select>'
-                                    + '</td>'
-
-                                    + '<td>'
-                                    + '<select class="form-control input-sm" id="data-select-architecture' + this.id + '" data-architecture-id="" name="architecture">'
-                                    + '    <option value=""></option>'
-                                        <?php
-                                        // force $value to array so we can compare multiple values to multiple
-                                        // options; also ensure it's a string for comparison purposes.
-                                        $tagList = $architectureListHelper->fetchList();
-                                        foreach ($tagList as $opt_value => $opt_label) {
-                                        ?>
-                                          + '<option value="<?= $opt_value ?>"><?= $opt_label ?></option>'
-                                        <?php
-                                        }
-                                        ?>
-                                    + '</select>'
-                                    + '</td>'
-
-                                    + '<td>' + this.created_timestamp + '</td>'
-                                    + '<td style="text-align: right">' + humanFileSize(this.size) + '</td>'
-                                    + '<td>' + updatePploadFileBtnPerFile + '</td>'
-                                    + '<td>' + deletePploadFileBtnPerFile + '</td>'
-                                    + '</tr>'
-                                );
-
-                                //$("#data-select-license" + this.id + " option[value='"+licenseId+"']").attr('selected', 'selected');
-                                $("#data-select-packagetype" + this.id + " option[value='"+packagetypeId+"']").attr('selected', 'selected');
-
-                                $("#data-select-architecture" + this.id + " option[value='"+architectureId+"']").attr('selected', 'selected');
-
-                                /*
-                                $licenseSelect = $modalPpload.find('#data-select-license' + this.id);
-                                if(this.active == '0') {
-                                    $licenseSelect.prop('disabled', 'disabled');
-                                }
-                                */
-
-                                $packagetypeSelect = $modalPpload.find('#data-select-packagetype' + this.id);
-                                if(this.active == '0') {
-                                    $packagetypeSelect.prop('disabled', 'disabled');
-                                }
-
-                                $architectureSelect = $modalPpload.find('#data-select-architecture' + this.id);
-                                if(this.active == '0') {
-                                    $architectureSelect.prop('disabled', 'disabled');
-                                }
+                                tableHeader += '    <th><?= $this->translate('Date added') ?></th>';
+                                tableHeader += '    <th style="text-align: right"><?= $this->translate('Filesize') ?></th>';
+                                tableHeader +=  '   <th style="text-align: right"><?= $this->translate('# DLs') ?></th>';
+                                tableHeader +=  '   <th></th>';
+                                tableHeader +=  '</tr>';
+                                $modalPpload.find('table[data-ppload-files] thead').append(tableHeader);
 
 
-                                if ((typeof link != 'undefined') && (link != "")) {
-                                    //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
-                                    $("#data-link" + this.id).attr('target','_blank');
-                                    $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
-                                }
-                            });
-
-                            $modalPpload.find('p[data-file-upload-msg]').show();
-                            $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
-                            $modalPpload.find('#github_picker').attr('disabled', 'disabled');
-
-                            if ($modalPpload.find('input[data-accept-checkbox]').is(':checked')) {
-                                $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
-                                $modalPpload.find('#github_picker').removeAttr('disabled');
-                            } else {
-                                $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
-                                $modalPpload.find('#github_picker').attr('disabled', 'disabled');
-                            }
-                            if (data.pagination.next) {
-                                getPploadFiles(data.pagination.next);
+                                return;
                             }
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             return;
                         }
                     });
+                    
+                    var collectionId = $modalPpload.attr('data-ppload-collection-id');
+                    
+                    if(!collectionId) {
+                        return;
+                    } else {
+                        $.ajax({
+                            url: pploadApiUri + 'files/index',
+                            type: 'GET',
+                            data: {
+                                collection_id: collectionId,
+                                perpage: 1000,
+                                page: page,
+                                format: 'json',
+                                ignore_status_code: 0,
+                                status: 'active'
+                            },
+                            dataType: 'json',
+                            success: function (data, textStatus, jqXHR) {
+                                if (data.status != 'success') {
+                                    return;
+                                }
+                                var updatePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a>';
+                                var updatePploadFileBtnPerFile = '';
+                                var deletePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';
+                                var deletePploadFileBtnPerFile = '';
+
+                                var myArray = $.map(data.files, function(entry) {
+                                    return entry;
+                                });
+                                myArray.sort(keysrt('created_timestamp'), false);
+
+                                var fileTagsArray = null;
+                                var fileTagsArraySize = 0;
+                                $.each(myArray, function () {
+                                    
+                                    
+                                    
+                                    if(null != tagGroups && tagGroupsCount > 0) {
+                                        //get cat-tag-groups
+                                        $.ajax({
+                                            url: '/p/'+prodId+'/gettaggroupsforcatajax',
+                                            type: 'GET',
+                                            async: false,
+                                            cache: false,
+                                            timeout: 30000,
+                                            data: {project_cat_id: catId, file_id: this.id, test: false},
+                                            dataType: 'json',
+                                            success: function (data, textStatus, jqXHR) {
+                                                if (data.status != 'success') {
+                                                    tagGroups = data.tag_groups;
+                                                    return;
+                                                }
+                                            },
+                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                return;
+                                            }
+                                        });
+                                    } else {
+                                        //get cat-tag-groups
+                                        $.ajax({
+                                            url: '/p/'+prodId+'/getfiletagsajax',
+                                            type: 'GET',
+                                            async: false,
+                                            cache: false,
+                                            timeout: 30000,
+                                            data: {file_id: this.id},
+                                            dataType: 'json',
+                                            success: function (data, textStatus, jqXHR) {
+                                                if (data.status != 'success') {
+                                                    fileTagsArray = data.file_tags;
+                                                    fileTagsArraySize = data.ResultSize;
+                                                    return;
+                                                }
+                                            },
+                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                return;
+                                            }
+                                        });
+                                    }
+
+                                    var fileDescription = '';
+                                    if (this.description) {
+                                        fileDescription = this.description;
+                                        fileDescription = fileDescription.replace(/<\/?[^>]+(>|$)/g, "");
+                                    }
+
+                                    var inputFileDescription = '<input data-ppload-file-description="" class="form-control input-sm"'
+                                        + ' type="text" maxlength="140" placeholder="File description"'
+                                        + ' value="' + fileDescription + '">';
+                                    if(this.active == '0') {
+                                        inputFileDescription = '<input disabled="disabled" data-ppload-file-description="" class="form-control input-sm"'
+                                            + ' type="text" maxlength="140" placeholder="File description"'
+                                            + ' value="' + fileDescription + '">';
+                                    }
+
+                                    var versionText;
+                                    if(this.version==null) {versionText = '';} else{versionText = this.version;}
+                                    versionText = versionText.replace(/<\/?[^>]+(>|$)/g, "");
+
+                                    var version = '<input data-ppload-file-version="" class="form-control input-sm"'
+                                        + ' type="text" maxlength="140" placeholder="File version"'
+                                        + ' value="' + versionText + '">';
+                                    if(this.active == '0') {
+                                        version = '<input disabled="disabled" data-ppload-file-version="" class="form-control input-sm"'
+                                            + ' type="text" maxlength="140" placeholder="File version"'
+                                            + ' value="' + versionText + '">';
+                                    }
+
+                                    var fileCategory = '';
+                                    if (this.category) {
+                                        fileCategory = this.category;
+                                    }
+                                    var link = '';
+                                    var fileTags = '';
+                                    var osId = null;
+
+                                    //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
+                                    var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size;
+
+                                    var downloadLinkFilename = link ? this.name + ' (External Link)' : this.name;
+                                    var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '" class="opendownloadfile" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->project_id ?>"  data-link_type="download">' + downloadLinkFilename + '</a>';
+
+                                    if(this.active == '1') {
+                                        updatePploadFileBtnPerFile = updatePploadFileBtn;
+                                        deletePploadFileBtnPerFile = deletePploadFileBtn;
+                                    } else {
+                                        updatePploadFileBtnPerFile = '';
+                                        deletePploadFileBtnPerFile = '';
+                                    }
+                                    
+                                    var numDownloads = this.downloaded_count;
+                                    numDownloads = numDownloads || 0;
+
+                                    tableString = '';
+                                    tableString += '<tr data-ppload-file-id="' + this.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
+                                    tableString += '<td>' + downloadLink + '</td>';
+                                    tableString += '<td>' + version + '</td>';
+                                    tableString += '<td>' + inputFileDescription + '</td>';
+                                    
+                                    var fileId = this.id;
+
+                                    if(tagGroupsCount>0) {
+                                        $.each(tagGroups, function() {
+                                            tableString += '<td>';
+                                            tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
+                                            tableString += '<option value=\"\"></option>';
+
+                                            for(key in this.tag_list){
+                                                tableString += '<option value=\"'+key+'\"';
+                                                if(null != this.selected_tag && key == this.selected_tag) {
+                                                    tableString += ' selected="selected"';
+                                                }
+                                                tableString += '>' + this.tag_list[key] + '</option>';
+                                            }
+
+                                            tableString += '</select>';
+                                            tableString += '</td>';
+                                        });
+                                    } else {
+                                    
+                                        if(fileTagsArraySize>0) {
+                                            tableString += '<td>';
+
+                                            tableString += '<span class="select2 select2-container select2-container--default select2-container--below select2-container--focus" dir="ltr" style="width: auto;">';
+                                            tableString += '    <span class="selection">';
+                                            tableString += '        <span class="select2-selection select2-selection--multiple" aria-expanded="false" tabindex="-1">';
+                                            tableString += '            <ul class="select2-selection__rendered">';
+
+                                            $.each(fileTagsArray, function() {
+                                                tableString += '                <li id="file-tag-'+fileId+'-'+this.tag_id+'" class="select2-selection__choice"  style="line-height: 20px !important; font-size: 9px !important;" title="'+this.name+'">';
+                                                tableString += '                    <span class="select2-selection__choice__remove" data-file-id="'+fileId+'" data-file-tag-id="'+this.tag_id+'" role="presentation">×</span>'+this.name+'</li>';
+                                            });
+                                            tableString += '            </ul>';
+                                            tableString += '        </span>';
+                                            tableString += '    </span>';
+                                            tableString += '</span>';
+
+                                            tableString += '</td>';
+                                        } else {
+                                            tableString += '<td></td>';
+                                        }
+                                    }
+
+                                    tableString += '<td>' + this.created_timestamp + '</td>';
+                                    tableString += '<td style="text-align: right">' + humanFileSize(this.size) + '</td>';
+                                    tableString +='<td style="text-align: right">' + numDownloads + '</td>';
+                                    tableString += '<td>' + updatePploadFileBtnPerFile + '</td>';
+                                    tableString += '<td>' + deletePploadFileBtnPerFile + '</td>';
+                                    tableString += '</tr>';
+                                    $modalPpload.find('table[data-ppload-files] tbody').append(tableString);
+
+                                    if ((typeof link != 'undefined') && (link != "")) {
+                                        //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
+                                        $("#data-link" + this.id).attr('target','_blank');
+                                        $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
+                                    }
+                                });
+
+                                $modalPpload.find('p[data-file-upload-msg]').show();
+                                $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
+                                $modalPpload.find('#github_picker').attr('disabled', 'disabled');
+
+                                if ($modalPpload.find('input[data-accept-checkbox]').is(':checked')) {
+                                    $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
+                                    $modalPpload.find('#github_picker').removeAttr('disabled');
+                                } else {
+                                    $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                                    $modalPpload.find('#github_picker').attr('disabled', 'disabled');
+                                }
+                                if (data.pagination.next) {
+                                    getPploadFiles(data.pagination.next);
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                return;
+                            }
+                        });
+                    }
                 }
 
                 function addFileToPploadUploadQueue(fileId, fileUpload) {
@@ -1166,66 +1170,77 @@ $this->inlineScript()->appendScript('
                             if (data.file.tags) {
                                 fileTags = data.file.tags;
                             }
+                            
+                            var tableString = '';
+                            tableString += '<tr data-ppload-file-id="' + data.file.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
+                            tableString += '<td><a href="' + pploadApiUri + 'files/download/';
+                            tableString += 'id/' + data.file.id + '/' + data.file.name + '">' + data.file.name + '</a></td>';
+                            tableString += '<td>' + version + '</td>';
+                            tableString += '<td><input data-ppload-file-description="" class="form-control input-sm"';
+                            tableString += ' type="text" maxlength="140" placeholder="File description"';
+                            tableString += ' value="' + fileDescription + '"></td>';
+
+                            var fileId = data.file.id;
 
 
-                            $modalPpload.find('table[data-ppload-files] tbody').append(
-                                '<tr data-ppload-file-id="' + data.file.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">'
-                                + '<td><a href="' + pploadApiUri + 'files/download/'
-                                + 'id/' + data.file.id + '/' + data.file.name + '">' + data.file.name + '</a></td>'
-                                + '<td>' + version + '</td>'
-                                + '<td><input data-ppload-file-description="" class="form-control input-sm"'
-                                + ' type="text" maxlength="140" placeholder="File description"'
-                                + ' value="' + fileDescription + '"></td>'
-                                /*
-                                + '<td>'
-                                + '<select id="data-select-license' + data.file.id + '" data-license-id="" name="license" class="form-control input-sm">'
-                                + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPLv2 or later</option><option value=\"18\">GPLv2 only</option><option value=\"19\">GPLv3</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
-                                + '</select>'
-                                + '</td>'
-                                */
-
-                                /*
-                                + '<td>' + data.file.type + '</td>'
-                                */
-                                + '<td>'
-                                + '<select id="data-select-packagetype' + data.file.id + '" data-packagetype-id="" name="packagetype" class="form-control input-sm" style="width: 200px;">'
-                                + '<option value=\"\"></option>'
-                                    <?php
-                                    // force $value to array so we can compare multiple values to multiple
-                                    // options; also ensure it's a string for comparison purposes.
-                                    $tagList = $packagetypeListHelper->fetchList();
-                                    foreach ($tagList as $opt_value => $opt_label) {
-                                    ?>
-                                      + '<option value="<?= $opt_value ?>"><?= $opt_label ?></option>'
-                                    <?php
+                            //get cat-tag-groups
+                            var tagGroups = null;
+                            var tagGroupsCount = 0;
+                            var catId = $('#project_category_id').val();
+                            
+                            $.ajax({
+                                url: '/p/'+ProductForm.project_id+'/gettaggroupsforcatajax',
+                                type: 'GET',
+                                async: false,
+                                cache: false,
+                                timeout: 30000,
+                                data: {project_cat_id: catId},
+                                dataType: 'json',
+                                success: function (data, textStatus, jqXHR) {
+                                    if (data.status != 'success') {
+                                        tagGroups = data.tag_groups;
+                                        tagGroupsCount = data.ResultSize;
+                                        return;
                                     }
-                                    ?>
-                                + '</select>'
-                                + '</td>'
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    return;
+                                }
+                            });
+                            
+                            
 
-                                + '<td>'
-                                + '<select class="form-control input-sm" id="data-select-architecture' + data.file.id + '" data-architecture-id="" name="architecture">'
-                                + '    <option value=""></option>'
-                                    <?php
-                                    // force $value to array so we can compare multiple values to multiple
-                                    // options; also ensure it's a string for comparison purposes.
-                                    $tagList = $architectureListHelper->fetchList();
-                                    foreach ($tagList as $opt_value => $opt_label) {
-                                    ?>
-                                      + '<option value="<?= $opt_value ?>"><?= $opt_label ?></option>'
-                                    <?php
+                            if(tagGroupsCount>0) {
+                                $.each(tagGroups, function() {
+                                    tableString += '<td>';
+                                    tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
+                                    tableString += '<option value=\"\"></option>';
+
+
+                                    for(key in this.tag_list){
+                                        tableString += '<option value=\"'+key+'\"';
+                                        if(null != this.selected_tag && key == this.selected_tag) {
+                                            tableString += ' selected="selected"';
+                                        }
+                                        tableString += '>' + this.tag_list[key] + '</option>';
                                     }
-                                    ?>
-                                + '</select>'
-                                + '</td>'
-                                + '<td>' + data.file.created_timestamp + '</td>'
-                                + '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>'
-                                + '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a></td>'
-                                + '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a></td>'
-                                + '</tr>'
-                            );
 
-                            UserTags.activateSelect(data.file.id, '');
+                                    tableString += '</select>';
+                                    tableString += '</td>';
+                                });
+                            } else {
+                                tableString += '<td></td>';
+                            }
+
+                            tableString += '<td>' + data.file.created_timestamp + '</td>';
+                            tableString += '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>';
+                            tableString +='<td style="text-align: right">0</td>';
+                            tableString += '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a></td>';
+                            tableString += '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a></td>';
+                            tableString += '</tr>';
+                            $modalPpload.find('table[data-ppload-files] tbody').append(tableString);
+
+                            //UserTags.activateSelect(fileId, '');
 
                             $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
                             startUploadPploadFiles();
@@ -1266,11 +1281,11 @@ $this->inlineScript()->appendScript('
                         }
                     });
                 }
-
-                function updatePackageType(fileId, packagetypeId) {
-                    var url = ($modalPpload.attr('data-updatepackagetype-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                
+                function updateFileTag(fileId, tagId, tagGroupId) {
+                    var url = ($modalPpload.attr('data-updatefiletag-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
                     if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
-                        url = ($modalPpload.attr('data-updatepackagetype-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
+                        url = ($modalPpload.attr('data-updatefiletag-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
                     }
 
                     $.ajax({
@@ -1278,7 +1293,8 @@ $this->inlineScript()->appendScript('
                         type: 'POST',
                         data: {
                             file_id: fileId,
-                            package_type_id: packagetypeId
+                            tag_id: tagId,
+                            tag_group_id: tagGroupId
                         },
                         dataType: 'json',
                         success: function (data, textStatus, jqXHR) {
@@ -1293,12 +1309,11 @@ $this->inlineScript()->appendScript('
                         }
                     });
                 }
-
-
-                function updateArchitecture(fileId, architectureId) {
-                    var url = ($modalPpload.attr('data-updatearchitecture-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                
+                function deleteFileTag(fileId, tagId) {
+                    var url = ($modalPpload.attr('data-deletefiletag-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
                     if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
-                        url = ($modalPpload.attr('data-updatearchitecture-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
+                        url = ($modalPpload.attr('data-deletefiletag-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
                     }
 
                     $.ajax({
@@ -1306,20 +1321,22 @@ $this->inlineScript()->appendScript('
                         type: 'POST',
                         data: {
                             file_id: fileId,
-                            architecture_id: architectureId
+                            tag_id: tagId
                         },
                         dataType: 'json',
                         success: function (data, textStatus, jqXHR) {
-                            if (data.status != 'ok') {
-                                return;
+                            if (data.status == 'ok') {
+                                $('#file-tag-'+fileId+'-'+tagId).remove();
+                                return true;
                             }
 
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             alert("Error: " + textStatus + ", " + errorThrown);
-                            return;
+                            return false;
                         }
                     });
+                    
                 }
 
                 function updatePploadFileVersion(fileId, version) {
@@ -1491,9 +1508,9 @@ $this->inlineScript()->appendScript('
                 $modalPpload.find('#github_picker').attr('disabled', 'disabled');
                 $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
 
-                if ($modalPpload.attr('data-ppload-collection-id')) {
-                    getPploadFiles();
-                }
+                //if ($modalPpload.attr('data-ppload-collection-id')) {
+                //    getPploadFiles();
+                //}
 
                 if(<?= (isset($this->project_id))?$this->project_id:0  ?> != 0) {
                     getUpdates();
@@ -1672,7 +1689,7 @@ $this->inlineScript()->appendScript('
                 });
 
 
-
+                /*
                 $modalPpload.on('change', 'select.chosen', function (event) {
                     event.preventDefault();
                     var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
@@ -1684,83 +1701,64 @@ $this->inlineScript()->appendScript('
 
                     updatePploadFileTags(fileId, newTags);
                     $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newTags);
-                });
+                });*/
 
-                /*
-                $modalPpload.on('change', 'select[id*=data-select-license]', function(event) {
+                $modalPpload.on('change', 'select[data-tag-group]', function(event) {
                     event.preventDefault();
                     var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
                     var fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
-                    var licenseId = $modalPpload.find('#data-select-license' + fileId).val();
-
+                    var tagId = $(this).val();
+                    var tagGroupId = $(this).attr('data-tag-group-id');
+                    var tagGroupName = $(this).attr('data-tag-group');
+                    
                     var newFileTags = '';
-
                     if (fileTags) {
 
                         $.each(fileTags.split(','), function () {
                             // skip old entries
-                            if ((this.length == 0) || (this.indexOf('licensetype-') == 0) || (this.indexOf('license##') == 0)) {
+                            if ((this.length == 0) || (this.indexOf(tagGroupName+'id-') == 0) || (this.indexOf(tagGroupName+'id##') == 0)) {
                                 return true;
                             }
                             newFileTags += ',' + this;
                         });
 
                     }
-                    newFileTags += ',licensetype-'+licenseId;
+                    newFileTags += ','+tagGroupName+'id-'+tagId;
                     updatePploadFileTags(fileId, newFileTags);
                     $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
+                    updateFileTag(fileId, tagId, tagGroupId);
                 });
-
-                */
-
-                $modalPpload.on('change', 'select[id*=data-select-packagetype]', function(event) {
+                
+                $modalPpload.on('click', 'span[data-file-tag-id]', function (event) {
                     event.preventDefault();
-                    var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                    
+                    $tagId = $(this).attr('data-file-tag-id');
+                    $fileId = $(this).attr('data-file-id');
                     var fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
-                    var packagetypeId = $modalPpload.find('#data-select-packagetype' + fileId).val();
-
+                    
+                    /*
                     var newFileTags = '';
                     if (fileTags) {
 
                         $.each(fileTags.split(','), function () {
                             // skip old entries
-                            if ((this.length == 0) || (this.indexOf('packagetypeid-') == 0) || (this.indexOf('packagetypeid##') == 0)) {
+                            if ((this.length == 0) || (this.indexOf(tagGroupName+'id-') == 0) || (this.indexOf(tagGroupName+'id##') == 0)) {
                                 return true;
                             }
                             newFileTags += ',' + this;
                         });
 
                     }
-                    newFileTags += ',packagetypeid-'+packagetypeId;
+                    newFileTags += ','+tagGroupName+'id-'+tagId;
                     updatePploadFileTags(fileId, newFileTags);
+        
                     $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
-                    updatePackageType(fileId, packagetypeId);
+        
+                    */
+                    deleteFileTag($fileId, $tagId);
                 });
 
-                $modalPpload.on('change', 'select[id*=data-select-architecture]', function(event) {
-                    event.preventDefault();
-                    var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
-                    var fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
-                    var architectureId = $modalPpload.find('#data-select-architecture' + fileId).val();
-
-                    var newFileTags = '';
-                    if (fileTags) {
-
-                        $.each(fileTags.split(','), function () {
-                            // skip old entries
-                            if ((this.length == 0) || (this.indexOf('architectureid-') == 0) || (this.indexOf('architectureid##') == 0)) {
-                                return true;
-                            }
-                            newFileTags += ',' + this;
-                        });
-
-                    }
-                    newFileTags += ',architectureid-'+architectureId;
-                    updatePploadFileTags(fileId, newFileTags);
-                    $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
-                    updateArchitecture(fileId, architectureId);
-                });
-
+                
         });
 
 
@@ -1816,9 +1814,8 @@ $this->inlineScript()->appendScript('
                 }
             });
           }
-
-
-
+          
+          
           ProductForm = {
 
               mode: "<?=$this->mode?>",
@@ -1893,12 +1890,6 @@ $this->inlineScript()->appendScript('
                         $('#use_gitlab_project_readme').prop('disabled', true);
                     }
                 });
-                
-                
-                
-                  
-                  
-                  
               },    
 
               sortOptionByValue: function(element_id) {

@@ -20,8 +20,6 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$tagHelper = new Backend_View_Helper_FetchPackagetypeTags();
-
 ?>
 <style>
     #dialog-form form dl dl dd {
@@ -97,7 +95,23 @@ $tagHelper = new Backend_View_Helper_FetchPackagetypeTags();
             actions: {
                 listAction: '/backend/store/list',
                 createAction: '/backend/store/create',
-                updateAction: '/backend/store/update',
+                updateAction: function (postData) {
+                    return $.Deferred(function ($dfd) {
+                        $.ajax({
+                            url: '/backend/store/update',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: postData,
+                            success: function (data) {
+                                $dfd.resolve(data);
+                                $('#TableContainer').jtable('reload');
+                            },
+                            error: function () {
+                                $dfd.reject();
+                            }
+                        });
+                    });
+                },
                 deleteAction: '/backend/store/delete'
             },
             fields: {
@@ -169,12 +183,31 @@ $tagHelper = new Backend_View_Helper_FetchPackagetypeTags();
                     title: 'google id',
                     width: '10%'
                 },
-                package_type: {
-                    title: 'package type',
-                    width: '10%',
-                    options: <?php echo $tagHelper->fetchList(); ?>,
-                    defaultValue: '',
-		    optionsSorting: 'text'
+                tags_name: {
+                    title: 'Tag-Filter Names',
+                    type: 'textarea',
+                    create: true,
+                    edit: true,
+                    width: '15%'
+                },                
+                tags_id: {
+                    title: 'Tag-Filter IDs',
+                    type: 'textarea',
+                    create: true,
+                    edit: true,
+                    list:false,
+                    width: '30%'
+                }
+                ,
+                tags_all: {
+                    title: 'Tags Helper -> Click to Select',
+                    create: false,
+                    edit: true,
+                    list: false,
+                    options: function (data) {
+                        data.clearCache();                        
+                        return '/backend/store/tagsall';
+                    }
                 },
                 cross_domain_login: {
                     title: 'cross domain login',
@@ -235,6 +268,28 @@ $tagHelper = new Backend_View_Helper_FetchPackagetypeTags();
                         }
                     }
                 }
+            },
+
+            //Initialize validation logic when a form is created
+            formCreated: function (event, data) {
+                $('#jtable-edit-form').find('#Edit-tags_name').prop("disabled", true);
+                $('#jtable-edit-form').find('#Edit-tags_all').change(function () {
+                    var str = "";
+                    $( "select#Edit-tags_all option:selected" ).each(function() {
+                      str = $( this ).val() ;
+                    });
+
+                    var t = $('#jtable-edit-form').find('#Edit-tags_id').val();
+                    var tids ='';
+                    if($.trim(t)){
+                        tids = t+','+str;
+                    }else{
+                        tids = str;
+                    }
+                    
+                     $('#jtable-edit-form').find('#Edit-tags_id').val(tids);
+                  })
+                  ;
             }
         });
 

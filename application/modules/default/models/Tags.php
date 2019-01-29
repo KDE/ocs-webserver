@@ -229,6 +229,8 @@ class Default_Model_Tags
         return null;
     }
     
+    
+    
 
      /**
      * @param int $object_id
@@ -575,8 +577,25 @@ class Default_Model_Tags
             $this->getAdapter()->query($sql);
         }
     }
+    
+    public function updateTagsPerStore($store_id,$tags)
+    {
+        $sql = "delete from config_store_tag  where store_id=:store_id";
+        $this->getAdapter()->query($sql, array('store_id' => $store_id));
 
-     public function getTagsPerGroup($groupid)
+        if($tags){
+            $tags_id =explode(',', $tags);
+            $prepared_insert =
+                array_map(function ($id) use ($store_id) { return "({$store_id},{$id})"; },
+                    $tags_id);
+            $sql = "INSERT IGNORE INTO config_store_tag (store_id, tag_id) VALUES " . implode(',',
+                    $prepared_insert);
+          
+            $this->getAdapter()->query($sql);
+        }
+    }
+
+    public function getTagsPerGroup($groupid)
     {
           $sql = "
                          select 
@@ -587,6 +606,20 @@ class Default_Model_Tags
                          order by tag_name
                     ";
         $result = $this->getAdapter()->fetchAll($sql, array('groupid' => $groupid));
+        return $result;
+    }
+    
+    public function getAllTagsForStoreFilter()
+    {
+          $sql = "
+                         select 
+                         tag.tag_id, 
+                         CASE WHEN tag.tag_fullname IS NULL THEN tag_name ELSE tag.tag_fullname END as tag_name
+                         from tag
+                         where tag.is_active = 1
+                         order by tag_name
+                    ";
+        $result = $this->getAdapter()->fetchAll($sql);
         return $result;
     }
 
@@ -705,6 +738,32 @@ class Default_Model_Tags
         
     }
     
+    public function saveFileTagForProjectAndTagGroup($project_id, $file_id, $tag_id, $tag_group_id) {
+        
+        //first delte old
+        $sql = "UPDATE tag_object SET tag_changed = NOW() , is_deleted = 1  WHERE tag_group_id = :tag_group_id AND tag_type_id = :tag_type_id AND tag_object_id = :tag_object_id AND tag_parent_object_id = :tag_parent_object_id";
+
+        $this->getAdapter()->query($sql, array('tag_group_id' => $tag_group_id, 'tag_type_id' => $this::TAG_TYPE_FILE, 'tag_object_id' => $file_id, 'tag_parent_object_id' => $project_id));
+
+        if($tag_id) {
+            $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_parent_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_parent_object_id, :tag_group_id)";
+            $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_FILE, 'tag_object_id' => $file_id, 'tag_parent_object_id' => $project_id, 'tag_group_id' => $tag_group_id));
+        }
+            
+        
+        
+    }
+    
+    
+    public function deleteFileTagForProject($project_id, $file_id, $tag_id) {
+        
+        //first delte old
+        $sql = "UPDATE tag_object SET tag_changed = NOW() , is_deleted = 1  WHERE tag_id= :tag_id AND tag_type_id = :tag_type_id AND tag_object_id = :tag_object_id AND tag_parent_object_id = :tag_parent_object_id";
+
+        $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_FILE, 'tag_object_id' => $file_id, 'tag_parent_object_id' => $project_id));
+
+    }
+    
     
     public function savePackagetypeTagForProject($project_id, $file_id, $tag_id) {
         
@@ -793,6 +852,33 @@ class Default_Model_Tags
         } else {
             return '';
         }
+    }
+    
+    
+    /**
+     * @param int $projectId
+     * @param int $fileId
+     * @return string
+     */
+    public function getFileTags($fileId)
+    {
+        $sql = 'SELECT ta.tag_id, ta.tag_fullname as name FROM tag_object t INNER JOIN tag ta on ta.tag_id = t.tag_id WHERE t.tag_type_id = :tag_type_id AND t.tag_object_id = :file_id AND t.is_deleted = 0';
+        $resultSet = $this->getAdapter()->fetchAll($sql, array('tag_type_id' => $this::TAG_TYPE_FILE,'file_id' => $fileId));
+        return $resultSet;
+    }
+    
+    
+    /**
+     * @param int $projectId
+     * @param int $fileId
+     * @return string
+     */
+    public function getTagsForFileAndTagGroup($projectId, $fileId, $tagGroup)
+    {
+        $sql = 'SELECT ta.tag_fullname as name FROM tag_object t INNER JOIN tag ta on ta.tag_id = t.tag_id WHERE t.tag_group_id = :tag_group_id AND t.tag_parent_object_id = :project_id AND t.tag_object_id = :file_id AND t.is_deleted = 0';
+        $resultSet = $this->getAdapter()->fetchAll($sql, array('tag_group_id' => $tagGroup,'project_id' => $projectId, 'file_id' => $fileId));
+        
+        return $resultSet;
     }
     
     

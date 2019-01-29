@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -18,19 +19,31 @@
  *
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- **/
-?>
-<?php /*
-<link href="/theme/react/assets/css/metaheader.css" rel="stylesheet">
-<script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
-<script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.js"></script>
-<div id="metaheader"></div>
-<script src="/home/metamenujs?target=opendesktop&url=<?= $this->serverUrl(). $this->url() ?>&v=1.8" ></script>
-<script type="text/javascript" src="/theme/react/metaheader.js?v=1.8"></script>
-<link href="/theme/react/assets/css/metaheader.css" rel="stylesheet">
-*/
-?>
+ *
+ * Created: 23.01.2019
+ */
+class Default_Model_ConfigStoreTags
+{
 
-<opendesktop-metaheader config-target="opendesktop">
-</opendesktop-metaheader>
-<script src="/theme/react/bundle/metaheader-bundle.js?v=2.3"></script>
+    /**
+     * @param int  $store_id
+     * @param bool $onlyActive
+     *
+     * @return null|array
+     */
+    public function getTagsAsIdForStore($store_id, $onlyActive = true)
+    {
+        $modelConfigStoreTags = new Default_Model_DbTable_ConfigStoreTags();
+
+        $sql = "SELECT `tag_id` FROM `config_store_tag` WHERE `store_id` = :store_id AND `is_active` = :active;";
+
+        $result = $modelConfigStoreTags->getAdapter()->fetchAll($sql, array('store_id' => $store_id, 'active' => ($onlyActive ? 1 : 0)), Zend_Db::FETCH_COLUMN);
+
+        if (0 == count($result)) {
+            return null;
+        }
+
+        return $result;
+    }
+
+}

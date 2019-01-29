@@ -32,6 +32,7 @@ class SiteHeader extends React.Component {
     super(props);
     this.state = {
       baseUrl: window.json_baseurl,
+      searchbaseurl: window.json_searchbaseurl,
       cat_title: window.json_cat_title,
       hasIdentity: window.json_hasIdentity,
       is_show_title: window.json_is_show_title,
@@ -138,7 +139,8 @@ class SiteHeader extends React.Component {
             "div",
             { id: "site-header-right-top", className: siteHeaderTopRightCssClass },
             React.createElement(SiteHeaderSearchForm, {
-              baseUrl: this.state.baseUrl
+              baseUrl: this.state.baseUrl,
+              searchbaseurl: this.state.searchbaseurl
             }),
             userMenuDisplay
           ),
@@ -161,9 +163,18 @@ class SiteHeader extends React.Component {
       });
     }
 
+    let templateHeaderStyle;
+    if (this.state.template) {
+      templateHeaderStyle = {
+        "backgroundImage": this.state.template.header['background-image'],
+        "backgroundColor": this.state.template.header['background-color'],
+        "height": this.state.template.header['height']
+      };
+    }
+
     return React.createElement(
       "section",
-      { id: "site-header", style: this.state.template.header },
+      { id: "site-header", style: templateHeaderStyle },
       HeaderDisplay
     );
   }
@@ -185,7 +196,7 @@ class SiteHeaderSearchForm extends React.Component {
 
   onSearchFormSubmit(e) {
     e.preventDefault();
-    window.location.href = this.props.baseUrl + "/search?projectSearchText=" + this.state.searchText;
+    window.location.href = this.props.searchbaseurl + this.state.searchText;
   }
 
   render() {
@@ -434,7 +445,8 @@ class MobileSiteHeader extends React.Component {
           "div",
           { className: "menu-content-wrapper" },
           React.createElement(SiteHeaderSearchForm, {
-            baseUrl: this.props.baseUrl
+            baseUrl: this.props.baseUrl,
+            searchBaseUrl: this.props.searchBaseUrl
           })
         ),
         closeMenuElementDisplay

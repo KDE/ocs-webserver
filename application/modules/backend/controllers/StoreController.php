@@ -110,14 +110,18 @@ class Backend_StoreController extends Local_Controller_Action_Backend
             if(!isset($values['is_client'])){
                 $values['is_client'] = 0;
             }
+            
 
             $record = $this->_model->save($values);
 
             $this->initCache($record->store_id);
+            
+            $tagsid = $this->getParam('tags_id', null);
+            $tagmodel  = new Default_Model_Tags();
+            $tagmodel->updateTagsPerStore($values['store_id'], $tagsid);
 
             $jTableResult = array();
             $jTableResult['Result'] = self::RESULT_OK;
-            $jTableResult['Record'] = $record->toArray();
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
             $translate = Zend_Registry::get('Zend_Translate');
@@ -170,7 +174,18 @@ class Backend_StoreController extends Local_Controller_Action_Backend
         $filter['hostname'] = $this->getParam('filter_hostname');
         $filter['category_id'] = $this->getParam('filter_category_id');
 
-        $select = $this->_model->select()->order($sorting)->limit($pageSize, $startIndex);
+        $select = $this->_model->select()->from($this->_model, array(
+            '*',
+            'tags_id' => new Zend_Db_Expr('(SELECT GROUP_CONCAT(CASE WHEN `tag`.`tag_fullname` IS NULL THEN `tag`.`tag_name` ELSE `tag`.`tag_fullname` END)
+                FROM `config_store_tag`,`tag`            
+                WHERE `tag`.`tag_id` = `config_store_tag`.`tag_id` AND `config_store_tag`.`store_id` = `config_store`.`store_id`        
+                GROUP BY `config_store_tag`.`store_id`) AS `tags_name`,
+                (SELECT GROUP_CONCAT(`tag`.`tag_id`)
+                FROM `config_store_tag`,`tag`            
+                WHERE `tag`.`tag_id` = `config_store_tag`.`tag_id` AND `config_store_tag`.`store_id` = `config_store`.`store_id`        
+                GROUP BY `config_store_tag`.`store_id`)')
+        ))->order($sorting)->limit($pageSize, $startIndex)->setIntegrityCheck(false);
+        
         foreach ($filter as $key => $value) {
             if (false === empty($value)) {
                 $select->where("{$key} like ?", $value);
@@ -178,7 +193,13 @@ class Backend_StoreController extends Local_Controller_Action_Backend
         }
 
         $reports = $this->_model->fetchAll($select);
-
+        
+        $select = $this->_model->select()->from($this->_model)->setIntegrityCheck(false);
+        foreach ($filter as $key => $value) {
+            if (false === empty($value)) {
+                $select->where("{$key} like ?", $value);
+            }
+        }
         $reportsAll = $this->_model->fetchAll($select->limit(null, null)->reset('columns')
                                                      ->columns(array('countAll' => new Zend_Db_Expr('count(*)'))));
 
@@ -256,6 +277,31 @@ class Backend_StoreController extends Local_Controller_Action_Backend
             $jTableResult['Result'] = self::RESULT_ERROR;
             $jTableResult['Message'] = $translate->_('Error while processing data.');
         }
+
+        $this->_helper->json($jTableResult);
+    }
+    
+    public function tagsallAction()
+    {
+
+        $result = true;
+        $tagmodel  = new Default_Model_Tags();
+        try {
+                $resultRows = $tagmodel->getAllTagsForStoreFilter();
+                $resultForSelect = array();
+                foreach ($resultRows as $row) {         
+                    $resultForSelect[] = array('DisplayText' => $row['tag_name'].'['.$row['tag_id'].']', 'Value' => $row['tag_id']);
+                }
+
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
+            $result = false;
+            $records = array();
+        }
+
+        $jTableResult = array();
+        $jTableResult['Result'] = ($result == true) ? self::RESULT_OK : self::RESULT_ERROR;
+        $jTableResult['Options'] = $resultForSelect;
 
         $this->_helper->json($jTableResult);
     }

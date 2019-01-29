@@ -20,15 +20,39 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_View_Helper_FetchTotalProductsCount
+class Default_Model_DbTable_MemberSettingValue extends Local_Model_Table
 {
 
-    public function fetchTotalProductsCount($in_current_store = false)
+    protected $_name = "member_setting_value";
+
+    protected $_keyColumnsForRow = array('member_setting_value_id');
+
+    protected $_key = 'member_setting_value_id';
+
+    public function init()
     {
-        $tableMembers = new Default_Model_Project();
-        $result = $tableMembers->fetchTotalProjectsCount($in_current_store);
+        parent::init();     
+    }
+    
+   
+
+
+    public function delete($where)
+    {
+        $where = parent::_whereExpr($where);
+
+        /**
+         * Build the DELETE statement
+         */
+        $sql = "UPDATE " . parent::getAdapter()->quoteIdentifier($this->_name, true) . " SET `is_active` = 0, `deleted_at` = NOW() " . (($where) ? " WHERE $where" : '');
+
+        /**
+         * Execute the statement and return the number of affected rows
+         */
+        $stmt = parent::getAdapter()->query($sql);
+        $result = $stmt->rowCount();
 
         return $result;
     }
 
-} 
+}

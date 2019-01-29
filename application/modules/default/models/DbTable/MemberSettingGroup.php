@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,18 +20,13 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-?>
-<?php /*
-<link href="/theme/react/assets/css/metaheader.css" rel="stylesheet">
-<script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
-<script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.js"></script>
-<div id="metaheader"></div>
-<script src="/home/metamenujs?target=opendesktop&url=<?= $this->serverUrl(). $this->url() ?>&v=1.8" ></script>
-<script type="text/javascript" src="/theme/react/metaheader.js?v=1.8"></script>
-<link href="/theme/react/assets/css/metaheader.css" rel="stylesheet">
-*/
-?>
+class Default_Model_DbTable_MemberSettingGroup extends Local_Model_Table
+{
 
-<opendesktop-metaheader config-target="opendesktop">
-</opendesktop-metaheader>
-<script src="/theme/react/bundle/metaheader-bundle.js?v=2.3"></script>
+    protected $_name = "member_setting_group";
+
+    protected $_keyColumnsForRow = array('member_setting_group_id');
+
+    protected $_key = 'member_setting_group_id';
+
+}

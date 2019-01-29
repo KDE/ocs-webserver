@@ -80,6 +80,70 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->product = $productInfo;
         $this->_helper->viewRenderer('/partials/pploadajax');
     }
+    
+    public function gettaggroupsforcatajaxAction() {
+        $this->_helper->layout()->disableLayout();
+        
+        $catId = null;
+        $fileId = null;
+        
+        if($this->hasParam('file_id')) {
+            $fileId = $this->getParam('file_id');
+        }
+        
+        if($this->hasParam('project_cat_id')) {
+            $catId = $this->getParam('project_cat_id');
+            $catTagModel  = new Default_Model_Tags();
+            $catTagGropuModel  = new Default_Model_TagGroup();
+            $tagGroups = $catTagGropuModel->fetchTagGroupsForCategory($catId);
+            
+            $tableTags = new Default_Model_DbTable_Tags();
+            
+            $result = array();
+            $resultGroup = array();
+            
+            foreach ($tagGroups as $group) {
+                $tags = $tableTags->fetchForGroupForSelect($group['tag_group_id']); 
+                $selectedTag = null;
+                if(!empty($fileId)) {
+                    $selectedTags = $catTagModel->getTagsArray($fileId, Default_Model_DbTable_Tags::TAG_TYPE_FILE,$group['tag_group_id']);
+                    if(!empty($selectedTags) && count($selectedTags) == 1) {
+                        $selectedTag = $selectedTags[0]['tag_id'];
+                    }
+                }
+                
+                $group['tag_list'] = $tags;
+                $group['selected_tag'] = $selectedTag;
+                $result[] = $group;
+            }
+            
+            $this->_helper->json(array('status' => 'ok', 'ResultSize' => count($tagGroups), 'tag_groups' => $result));
+
+            return;
+        }
+
+        $this->_helper->json(array('status' => 'error'));
+    }
+    
+    
+    public function getfiletagsajaxAction() {
+        $this->_helper->layout()->disableLayout();
+        
+        $fileId = null;
+        
+        if($this->hasParam('file_id')) {
+            $fileId = $this->getParam('file_id');
+            
+            $tagModel  = new Default_Model_Tags();
+            $fileTags = $tagModel->getFileTags($fileId);
+            
+            $this->_helper->json(array('status' => 'ok', 'ResultSize' => count($fileTags), 'file_tags' => $fileTags));
+
+            return;
+        }
+
+        $this->_helper->json(array('status' => 'error'));
+    }
 
     
 
@@ -220,11 +284,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
                 $this->_authMember->member_id);
         }
-
-        $fmodel =new  Default_Model_DbTable_PploadFiles();
-        $files = $fmodel->fetchFilesForProject($this->view->product->ppload_collection_id);
-        $this->view->filesJson = Zend_Json::encode($files);
-        
        
         //gitlab
         if($this->view->product->is_gitlab_project) {
@@ -276,7 +335,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         
 
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;              
-        if($storeConfig->layout_pagedetail && $storeConfig->isRenderReact()){           
+        if($storeConfig->layout_pagedetail && $storeConfig->isRenderReact()){ 
             $this->initJsonForReact();           
             $this->_helper->viewRenderer('index-react');              
         }
@@ -2124,7 +2183,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
 
-    public function updatepackagetypeAction()
+    public function updatefiletagAction()
     {
         $this->_helper->layout()->disableLayout();
 
@@ -2132,14 +2191,18 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         // Update a file information in ppload collection
         if (!empty($_POST['file_id'])) {
-            $typeId = null;
-            if (isset($_POST['package_type_id'])) {
-                $typeId = $_POST['package_type_id'];
+            $tagId = null;
+            if (isset($_POST['tag_id'])) {
+                $tagId = $_POST['tag_id'];
+            }
+            $tagGroupId = null;
+            if (isset($_POST['tag_group_id'])) {
+                $tagGroupId = $_POST['tag_group_id'];
             }
 
             //set architecture
             $modelTags = new Default_Model_Tags();
-            $modelTags->savePackagetypeTagForProject($this->_projectId, $_POST['file_id'], $typeId);
+            $modelTags->saveFileTagForProjectAndTagGroup($this->_projectId, $_POST['file_id'], $tagId, $tagGroupId);
 
             $this->_helper->json(array('status' => 'ok'));
 
@@ -2150,10 +2213,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
-
-    /**
-     * 20180606 Ronald: egen Umstellung auf new tag system jetzt anders
-    public function updatepackagetypeAction()
+    
+    public function deletefiletagAction()
     {
         $this->_helper->layout()->disableLayout();
 
@@ -2161,40 +2222,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         // Update a file information in ppload collection
         if (!empty($_POST['file_id'])) {
-            $typeId = null;
-            if (isset($_POST['package_type_id'])) {
-                $typeId = $_POST['package_type_id'];
-            }
-
-            $packageTypeTable = new Default_Model_DbTable_ProjectPackageType();
-            $packageTypeTable->addPackageTypeToProject($this->_projectId, $_POST['file_id'], $typeId);
-            $this->_helper->json(array('status' => 'ok'));
-
-            return;
-        } else {
-            $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
-        }
-
-        $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
-    }
-    */
-
-    public function updatearchitectureAction()
-    {
-        $this->_helper->layout()->disableLayout();
-
-        $error_text = '';
-
-        // Update a file information in ppload collection
-        if (!empty($_POST['file_id'])) {
-            $architectureId = null;
-            if (isset($_POST['architecture_id'])) {
-                $architectureId = $_POST['architecture_id'];
+            $tagId = null;
+            if (isset($_POST['tag_id'])) {
+                $tagId = $_POST['tag_id'];
             }
 
             //set architecture
             $modelTags = new Default_Model_Tags();
-            $modelTags->saveArchitectureTagForProject($this->_projectId, $_POST['file_id'], $architectureId);
+            $modelTags->deleteFileTagForProject($this->_projectId, $_POST['file_id'], $tagId);
 
             $this->_helper->json(array('status' => 'ok'));
 
@@ -2524,6 +2559,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->pkg = $filterInput->getEscaped('pkg');
         $this->view->arch = $filterInput->getEscaped('arch');
         $this->view->lic = $filterInput->getEscaped('lic');
+        $this->view->store = $this->getParam('domain_store_id');
     }
 
     /**
