@@ -193,7 +193,8 @@ class Backend_StoreController extends Local_Controller_Action_Backend
         }
 
         $reports = $this->_model->fetchAll($select);
-
+        
+        $select = $this->_model->select()->from($this->_model)->setIntegrityCheck(false);
         $reportsAll = $this->_model->fetchAll($select->limit(null, null)->reset('columns')
                                                      ->columns(array('countAll' => new Zend_Db_Expr('count(*)'))));
 
