@@ -220,9 +220,9 @@ class ProductCarousel extends React.Component {
     let itemsPerRow = 5;
     if (window.hpVersion === 2){
       if (this.props.device === 'large'){
-        itemsPerRow = 4;
+        itemsPerRow = 6;
       } else if (this.props.device === 'mid'){
-        itemsPerRow = 3;
+        itemsPerRow = 5;
       } else if (this.props.device === 'tablet'){
         itemsPerRow = 2;
       }
@@ -239,8 +239,11 @@ class ProductCarousel extends React.Component {
     this.setState({
       sliderPosition:sliderPosition,
       containerWidth:containerWidth,
+      containerNumber:containerNumber,
       sliderWidth:sliderWidth,
-      itemWidth:itemWidth
+      itemWidth:itemWidth,
+      offset:itemsPerRow,
+      itemsPerRow:itemsPerRow - 1
     },function(){
       if (animateCarousel){
         this.animateProductCarousel('right',animateCarousel);
@@ -275,7 +278,7 @@ class ProductCarousel extends React.Component {
       }
 
       let disableRightArrow = false;
-      if (this.state.sliderPosition >= endPoint && this.state.finishedProducts === true){
+      if (this.state.finishedProducts === true){
         disableRightArrow = true;
       }
 
@@ -285,15 +288,22 @@ class ProductCarousel extends React.Component {
   }
 
   getNextProductsBatch(){
-    let url = "/home/showlastproductsjson/?page=1&limit=5&offset="+this.state.offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
+    let limit = (this.state.itemsPerRow * (this.state.containerNumber + 1)) - this.state.products.length;
+    if (limit <= 0){
+      limit = this.state.itemsPerRow;
+    }
+    console.log(limit);
+    let url = "/home/showlastproductsjson/?page=1&limit="+limit+"&offset="+this.state.offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
     const self = this;
     $.ajax({url: url,cache: false}).done(function(response){
         const products = self.state.products.concat(response);
-        const offset = self.state.offset + 5;
+        const offset = self.state.offset + self.state.itemsPerRow;
         let finishedProducts = false;
-        if (response.length < 5){
+        if (response.length < limit){
           finishedProducts = true;
         }
+        console.log(finishedProducts);
+        console.log(response.length);
         self.setState({products:products,offset:offset,finishedProducts:finishedProducts},function(){
           const animateCarousel = true;
           self.updateDimensions(animateCarousel);

@@ -56,19 +56,9 @@ class Default_View_Helper_BuildSearchUrl
         } else {
             $storeId = "s/{$params['store_id']}/";
             unset($params['store_id']);
-        }
+        }       
 
-        $url_param = '';
-        if (is_array($params)) {
-            array_walk($params, create_function('&$i,$k', '$i="$k/$i/";'));
-            $url_param = implode('/', $params);
-        }
-
-        if ($action != '') {
-            $action = $action . '/';
-        }
-
-        return "{$host}/{$storeId}search/{$searchstring}/{$action}{$url_param}";
+        return "{$host}/{$storeId}search?{$searchstring}";
     }
 
 }
