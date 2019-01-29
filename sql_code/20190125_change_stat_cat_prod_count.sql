@@ -22,6 +22,7 @@ BEGIN
         FROM stat_cat_tree as sct1
           JOIN stat_cat_tree as sct2 ON sct1.lft between sct2.lft AND sct2.rgt
           LEFT JOIN stat_projects as p ON p.project_category_id = sct1.project_category_id
+        WHERE p.amount_reports is null
         GROUP BY sct2.project_category_id
 
         UNION
@@ -49,7 +50,7 @@ BEGIN
           JOIN tag_object AS ppt ON 
 			   ((ppt.tag_parent_object_id = p.project_id AND ppt.tag_type_id = 3) OR (ppt.tag_object_id = p.project_id) ) AND ppt.is_deleted = 0
           JOIN ppload.ppload_files AS files ON files.id = ppt.tag_object_id AND files.active = 1
-        
+        WHERE p.amount_reports is null
         GROUP BY sct2.lft, tg.tag_ids
     ;
 
