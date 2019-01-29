@@ -289,8 +289,7 @@ class ProductCarousel extends React.Component {
 
   getNextProductsBatch(){
     let limit = (this.state.itemsPerRow * (this.state.containerNumber + 1)) - this.state.products.length;
-    let animateCarousel = false;
-    if (limit === 0){
+    if (limit =< 0){
       limit = this.state.itemsPerRow;
     }
     console.log(limit);
