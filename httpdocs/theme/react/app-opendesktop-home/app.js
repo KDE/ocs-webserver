@@ -299,7 +299,7 @@ class ProductCarousel extends React.Component {
         const products = self.state.products.concat(response);
         const offset = self.state.offset + self.state.itemsPerRow;
         let finishedProducts = false;
-        if (response.length <= self.state.itemsPerRow * (this.state.containerNumber + 1) - this.state.products.length){
+        if (response.length <= self.state.itemsPerRow * (self.state.containerNumber + 1) - self.state.products.length){
           finishedProducts = true;
         }
         console.log(finishedProducts);
