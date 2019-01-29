@@ -288,14 +288,12 @@ class ProductCarousel extends React.Component {
   }
 
   getNextProductsBatch(){
-    console.log('per row:' + this.state.itemsPerRow)
-    console.log('container number:' + this.state.containerNumber);
-    console.log(this.state.products.length);
     let limit = (this.state.itemsPerRow * (this.state.containerNumber + 1)) - this.state.products.length;
     let animateCarousel = false;
     if (limit === 0){
       limit = this.state.itemsPerRow;
     }
+    console.log(limit);
     let url = "/home/showlastproductsjson/?page=1&limit="+limit+"&offset="+this.state.offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
     const self = this;
     $.ajax({url: url,cache: false}).done(function(response){
