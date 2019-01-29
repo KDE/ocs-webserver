@@ -25,15 +25,122 @@ class CommunityController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
-        $allDomainCatIds =
-            Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+        // $allDomainCatIds =
+        //     Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
 
-        $modelCategories = new Default_Model_DbTable_ProjectCategory();
-        if (isset($allDomainCatIds)) {
-            $this->view->categories = $allDomainCatIds;
-        } else {
-            $this->view->categories = $modelCategories->fetchMainCatIdsOrdered();
+        // $modelCategories = new Default_Model_DbTable_ProjectCategory();
+        // if (isset($allDomainCatIds)) {
+        //     $this->view->categories = $allDomainCatIds;
+        // } else {
+        //     $this->view->categories = $modelCategories->fetchMainCatIdsOrdered();
+        // }        
+    }
+
+    public function indexreactAction()
+    {
+        $tableMembers = new Default_Model_Project();        
+        $modelInfo = new Default_Model_Info();
+        $countProjects = $tableMembers->fetchTotalProjectsCount(false);
+        $countActiveMembers = $modelInfo->countTotalActiveMembers();   
+        $isadmin = 0;
+        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+            $isadmin = 1;
         }
+
+        $json_data = array(
+            'status'     => 'ok',                            
+            'data'       => array(
+                'countProjects' => $countProjects,
+                'countActiveMembers' => $countActiveMembers,
+                'isadmin' => $isadmin
+            )
+        );       
+        $this->view->json_data = $json_data;
+    }
+
+
+    public function getjsonAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $event = $this->getParam('e'); 
+        $modelInfo = new Default_Model_Info();
+        switch($event) {
+              case 'supporters':            
+                $json_data = array(
+                    'status'     => 'ok',                            
+                    'data'       => $modelInfo->getNewActiveSupporters(100)
+                );  
+                $this->view->json_data = $json_data;
+                break;
+              case 'newmembers':
+                $json_data = array(
+                    'status'     => 'ok',                            
+                    'data'       => $modelInfo->getNewActiveMembers(100)
+                );  
+                $this->view->json_data = $json_data;
+                break;
+              case 'topmembers':
+                $json_data = array(
+                    'status'     => 'ok',                            
+                    'data'       => $modelInfo->getTopScoreUsers(100)
+                );  
+                $this->view->json_data = $json_data;
+                break;
+               case 'plingedprojects':
+                $json_data = array(
+                    'status'     => 'ok',                            
+                    'data'       => $modelInfo->getNewActivePlingProduct(100)
+                );  
+                $this->view->json_data = $json_data;
+                break;
+                case 'mostplingedcreators':
+                 $pageLimit = 100;
+                 $page = (int)$this->getParam('page', 1);                            
+                 $nopage = (int)$this->getParam('nopage', 0);                                             
+                 $json_data = array(
+                     'status'     => 'ok',     
+                     'pageLimit'  => $pageLimit, 
+                     'page'       => $page,
+                     'nopage'     => $nopage,
+                     'totalcount' => $modelInfo->getMostPlingedCreatorsTotalCnt(),
+                     'data'       => $modelInfo->getMostPlingedCreators($pageLimit, ($page - 1) * $pageLimit)
+                 );  
+                 $this->view->json_data = $json_data;
+                 break;
+                 case 'mostplingedproducts':
+                  $pageLimit = 100;
+                  $page = (int)$this->getParam('page', 1);                            
+                  $nopage = (int)$this->getParam('nopage', 0);                                             
+                  $json_data = array(
+                      'status'     => 'ok',     
+                      'pageLimit'  => $pageLimit, 
+                      'page'       => $page,
+                      'nopage'     => $nopage,
+                      'totalcount' => $modelInfo->getMostPlingedProductsTotalCnt(),
+                      'data'       => $modelInfo->getMostPlingedProducts($pageLimit, ($page - 1) * $pageLimit)
+                  );  
+                  $this->view->json_data = $json_data;
+                  break;
+                  case 'toplistmembers':
+                   $pageLimit = 100;
+                   $page = (int)$this->getParam('page', 1);                            
+                   $nopage = (int)$this->getParam('nopage', 0);                                             
+                   $json_data = array(
+                       'status'     => 'ok',     
+                       'pageLimit'  => $pageLimit, 
+                       'page'       => $page,
+                       'nopage'     => $nopage,
+                       'totalcount' => 1000,
+                       'data'       => $modelInfo->getTopScoreUsers($pageLimit, ($page - 1) * $pageLimit)
+                   );  
+                   $this->view->json_data = $json_data;
+                   break;
+          default:
+           
+        } 
+
+        $this->_helper->json($this->view->json_data);      
         
     }
 
