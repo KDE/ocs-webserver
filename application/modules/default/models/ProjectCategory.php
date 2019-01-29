@@ -58,12 +58,12 @@ class Default_Model_ProjectCategory
      */
     public function fetchTreeForView($store_id = null)
     {
-        $package_type = null;
+        $tags = null;
 
         if (empty($store_id)) {
             $store_config = Zend_Registry::get('store_config');
             $store_id = $store_config->store_id;
-            $package_type = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : array();
+            $tags = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : array();
         }
 
         /** @var Zend_Cache_Core $cache */
@@ -74,12 +74,12 @@ class Default_Model_ProjectCategory
 
         if (false === $tree OR empty($tree)) {
             try {
-                $rows = $this->fetchCategoryTreeWithPackageType($store_id, $package_type);
+                $rows = $this->fetchCategoryTreeWithTags($store_id, $tags);
             } catch (Zend_Exception $e) {
                 Zend_Registry::get('logger')->err(__METHOD__ . ' - can not fetch categories : ' . $e->getMessage());
                 $modelCategories = new Default_Model_DbTable_ConfigStore();
                 $defaultStore = $modelCategories->fetchDefaultStoreId();
-                $rows = $this->fetchCategoryTreeWithPackageType($defaultStore->store_id, $package_type);
+                $rows = $this->fetchCategoryTreeWithTags($defaultStore->store_id, $tags);
             }
 
             list($rows, $tree) = $this->buildTreeForView($rows);
@@ -91,25 +91,25 @@ class Default_Model_ProjectCategory
 
     /**
      * @param int|null    $store_id
-     * @param string|null $package_type
+     * @param string|null $tags
      *
      * @return array
      * @throws Zend_Exception
      */
-    protected function fetchCategoryTreeWithPackageType($store_id = null, $package_type = null)
+    protected function fetchCategoryTreeWithTags($store_id = null, $tags = null)
     {
         if (empty($store_id)) {
             return array();
         }
 
         if (APPLICATION_ENV == "development") {
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $store_id . ' - ' . json_encode($package_type));
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $store_id . ' - ' . json_encode($tags));
         }
 
-        if (empty($package_type)) {
+        if (empty($tags)) {
             $statement = $this->_dataTable->getAdapter()->query("CALL fetchCatTreeForStore(:store_id)", array("store_id" => $store_id));
         } else {
-            $statement = $this->_dataTable->getAdapter()->query("CALL fetchCatTreeWithTags(:store_id,:tagids)", array("store_id"=>$store_id, "tagids" => implode(',',$package_type)));
+            $statement = $this->_dataTable->getAdapter()->query("CALL fetchCatTreeWithTags(:store_id,:tagids)", array("store_id"=>$store_id, "tagids" => implode(',',$tags)));
         }
 
         $result = $statement->fetchAll();
@@ -249,19 +249,20 @@ class Default_Model_ProjectCategory
     {
        
         $store_config = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        $tagFilter = null;
         if($store_config)
         {
-             $storePackageTypeIds = (false === empty($store_config->package_type)) ? $store_config->package_type : null;     
+            $tagFilter  = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
         }else
         {
-            $storePackageTypeIds = null;
+            $tagFilter = null;
         }
        
 
-        if ($storePackageTypeIds) {
+        if ($tagFilter) {
             $sql =
-                "SELECT count_product FROM stat_cat_prod_count WHERE project_category_id = :cat_id AND tag_id = :package_id";
-            $bind = array('cat_id' => $cat_id, 'package_id' => $storePackageTypeIds);
+                "SELECT count_product FROM stat_cat_prod_count WHERE project_category_id = :cat_id AND tag_id = :tags";
+            $bind = array('cat_id' => $cat_id, 'tags' => $tagFilter);
         } else {
             $sql = "SELECT count_product FROM stat_cat_prod_count WHERE project_category_id = :cat_id AND tag_id IS NULL";
             $bind = array('cat_id' => $cat_id);

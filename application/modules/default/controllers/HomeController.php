@@ -26,8 +26,9 @@ class HomeController extends Local_Controller_Action_DomainSwitch
     {
         /** @var Default_Model_ConfigStore $storeConfig */
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        
         if ($storeConfig) {
-            $this->view->package_type = $storeConfig->package_type;
+            $this->view->tag_filter  = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
             if($storeConfig->isShowHomepage())
             {
                  $index = $this->getParam('index');
@@ -52,37 +53,6 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         }
         $this->forward('index', 'explore', 'default', $params);        
     }
-
-
-    public function indexAction_()
-    {
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        $storePackageTypeIds = null;
-        if ($storeConfig) {
-            $this->view->package_type = $filter['package_type'] = $storeConfig['package_type'];
-        }
-
-        Zend_Registry::get('logger')->debug('*** SHOW_HOME_PAGE: ' . getenv('SHOW_HOME_PAGE'));
-        /**
-         *  The SHOW_HOME_PAGE environment var will be set in apache .htaccess for some specific host names
-         *  e.g.
-         *  SetEnvIfNoCase Host opendesktop\.org$ SHOW_HOME_PAGE
-         */
-        if (false == $this->hasParam('domain_store_id') AND getenv('SHOW_HOME_PAGE')) {
-            $this->_helper->viewRenderer('index-' . $this->getNameForStoreClient());
-            return;
-        }
-
-        // forward is the faster way, but you have no influence to the url. On redirect the url changes.
-        $params = array('ord' => 'latest');
-        if ($this->hasParam('domain_store_id')) {
-            $params['domain_store_id'] = $this->getParam('domain_store_id');
-        }
-        $this->forward('index', 'explore', 'default', $params);
-
-
-    }
-
 
     public function showfeatureajaxAction()
     {
@@ -119,9 +89,9 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         $offset = (int)$this->getParam('offset',0);
         $limit = (int)$this->getParam('limit',5);
         $catIds = $this->getParam('catIDs');
-        $packageType = $this->getParam('ptype');
+        $tags = $this->getParam('ptype');
         $isOriginal = $this->getParam('isoriginal');
-        $response = $modelInfo->getJsonLastProductsForHostStores($limit,$catIds, $packageType,$isOriginal,$offset);        
+        $response = $modelInfo->getJsonLastProductsForHostStores($limit,$catIds, $tags,$isOriginal,$offset);        
         $this->_helper->json(Zend_Json::decode($response));        
     }
 

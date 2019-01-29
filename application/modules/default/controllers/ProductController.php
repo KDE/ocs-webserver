@@ -284,11 +284,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
                 $this->_authMember->member_id);
         }
-
-        $fmodel =new  Default_Model_DbTable_PploadFiles();
-        $files = $fmodel->fetchFilesForProject($this->view->product->ppload_collection_id);
-        $this->view->filesJson = Zend_Json::encode($files);
-        
        
         //gitlab
         if($this->view->product->is_gitlab_project) {
@@ -340,7 +335,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         
 
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;              
-        if($storeConfig->layout_pagedetail && $storeConfig->isRenderReact()){           
+        if($storeConfig->layout_pagedetail && $storeConfig->isRenderReact()){ 
             $this->initJsonForReact();           
             $this->_helper->viewRenderer('index-react');              
         }
@@ -2188,33 +2183,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
 
-    public function updatepackagetypeAction()
-    {
-        $this->_helper->layout()->disableLayout();
-
-        $error_text = '';
-
-        // Update a file information in ppload collection
-        if (!empty($_POST['file_id'])) {
-            $typeId = null;
-            if (isset($_POST['package_type_id'])) {
-                $typeId = $_POST['package_type_id'];
-            }
-
-            //set architecture
-            $modelTags = new Default_Model_Tags();
-            $modelTags->savePackagetypeTagForProject($this->_projectId, $_POST['file_id'], $typeId);
-
-            $this->_helper->json(array('status' => 'ok'));
-
-            return;
-        } else {
-            $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
-        }
-
-        $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
-    }
-    
     public function updatefiletagAction()
     {
         $this->_helper->layout()->disableLayout();
@@ -2262,61 +2230,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             //set architecture
             $modelTags = new Default_Model_Tags();
             $modelTags->deleteFileTagForProject($this->_projectId, $_POST['file_id'], $tagId);
-
-            $this->_helper->json(array('status' => 'ok'));
-
-            return;
-        } else {
-            $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
-        }
-
-        $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
-    }
-
-    /**
-     * 20180606 Ronald: egen Umstellung auf new tag system jetzt anders
-    public function updatepackagetypeAction()
-    {
-        $this->_helper->layout()->disableLayout();
-
-        $error_text = '';
-
-        // Update a file information in ppload collection
-        if (!empty($_POST['file_id'])) {
-            $typeId = null;
-            if (isset($_POST['package_type_id'])) {
-                $typeId = $_POST['package_type_id'];
-            }
-
-            $packageTypeTable = new Default_Model_DbTable_ProjectPackageType();
-            $packageTypeTable->addPackageTypeToProject($this->_projectId, $_POST['file_id'], $typeId);
-            $this->_helper->json(array('status' => 'ok'));
-
-            return;
-        } else {
-            $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
-        }
-
-        $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
-    }
-    */
-
-    public function updatearchitectureAction()
-    {
-        $this->_helper->layout()->disableLayout();
-
-        $error_text = '';
-
-        // Update a file information in ppload collection
-        if (!empty($_POST['file_id'])) {
-            $architectureId = null;
-            if (isset($_POST['architecture_id'])) {
-                $architectureId = $_POST['architecture_id'];
-            }
-
-            //set architecture
-            $modelTags = new Default_Model_Tags();
-            $modelTags->saveArchitectureTagForProject($this->_projectId, $_POST['file_id'], $architectureId);
 
             $this->_helper->json(array('status' => 'ok'));
 

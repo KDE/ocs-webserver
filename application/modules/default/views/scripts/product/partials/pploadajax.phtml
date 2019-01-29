@@ -19,6 +19,11 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+
+$catTagGropuModel  = new Default_Model_TagGroup();
+$tagGroups = $catTagGropuModel->fetchTagGroupsForCategory($this->product->project_category_id);
+$tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
+
 ?>
 
 <style type="text/css">
@@ -52,13 +57,20 @@
                          <!--table-bordered-->
                          <table class="table table-ocs-file" data-ppload-files-ajax="" style="width: 1200px; ">
                              <thead>
-                             <tr>
+                                <tr>
                                  <th><?= $this->translate('File (click to download)'); ?></th>
                                  <th><?= $this->translate('Version'); ?></th>
                                  <th><?= $this->translate('Description'); ?></th>
 
-                                 <th><?= $this->translate('Packagetype'); ?></th>
-
+                                 
+                                 <?php
+                                    //Show all Tag-Groups for this Category and show them as Dropdowns
+                                    if(!empty($tagGroups)) {
+                                        foreach ($tagGroups as $tagGroup) {
+                                            echo "<th>" . $tagGroup['group_display_name'] . "</th>";
+                                        }
+                                    }
+                                ?>
                                  <th style="text-align: right"><?= $this->translate('Downloads'); ?></th>
                                  <th><?= $this->translate('Date'); ?></th>
 
@@ -68,8 +80,10 @@
                                   <th style="text-align: right;white-space:nowrap"><?= $this->translate('OCS-Install'); ?>
                                      <a href="#modal-installation-instructions" role="button" data-toggle="modal"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
                                  </th>
-
-                             </tr>
+                                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                 <th>Compatible</th>
+                                 <?php endif; ?>
+                                </tr>
                              </thead>
                              <tbody></tbody>
                              <tfoot>

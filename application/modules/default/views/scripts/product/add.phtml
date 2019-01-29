@@ -25,10 +25,6 @@ $this->tab = 'add';
 $helperImage = new Default_View_Helper_Image();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helpProductUrl = new Default_View_Helper_BuildProductUrl();
-$architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
-$packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
-$tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
-
 
 $modelCategory = new Default_Model_DbTable_ProjectCategory();
 $valueCatId = $this->form->project_category_id->getValue();
@@ -39,10 +35,6 @@ if (count($categoryAncestors) > 0) {
     $categoryPath = explode(',',$categoryAncestors['ancestors']);
 }
 $categoryPath[] = $valueCatId;
-
-$catTagGropuModel  = new Default_Model_TagGroup();
-$tagGroups = $catTagGropuModel->fetchTagGroupsForCategory($valueCatId);
-
 
 $this->headLink()->appendStylesheet('/theme/flatui/css/chosen.css');
 $this->inlineScript()->appendFile('/theme/flatui/js/lib/chosen.jquery.min.js');

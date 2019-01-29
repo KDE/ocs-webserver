@@ -31,10 +31,11 @@ class Default_View_Helper_FetchTopProductsForStore
         $filter['category'] = $storeCatIds;
         $filter['order'] = "top";
         
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        if ($storeConfig) {
-            $filter['package_type'] = $storeConfig->package_type;
+        $tagFilter  = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
+        if ($tagFilter) {
+            $filter['tag'] = $tagFilter;
         }
+        
         $modelProject = new Default_Model_Project();
         $requestedElements = $modelProject->fetchProjectsByFilter($filter, $pageLimit, 0);
 

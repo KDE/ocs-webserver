@@ -22,33 +22,36 @@ BEGIN
         FROM stat_cat_tree as sct1
           JOIN stat_cat_tree as sct2 ON sct1.lft between sct2.lft AND sct2.rgt
           LEFT JOIN stat_projects as p ON p.project_category_id = sct1.project_category_id
+        WHERE p.amount_reports is null
         GROUP BY sct2.project_category_id
 
         UNION
 
         SELECT
           sct2.project_category_id,
-          ppt.tag_id as tag_id,
+          tg.tag_ids as tag_id,
           count(distinct p.project_id) as count_product
         FROM stat_cat_tree as sct1
           JOIN stat_cat_tree as sct2 ON sct1.lft between sct2.lft AND sct2.rgt
           JOIN stat_projects as p ON p.project_category_id = sct1.project_category_id
-          JOIN tag_object AS ppt ON ppt.tag_parent_object_id = p.project_id AND ppt.tag_type_id = 3 AND ppt.is_deleted = 0
+          JOIN (select cs.store_id, GROUP_CONCAT(ct.tag_id) as tag_ids from config_store cs
+				join config_store_tag ct on ct.store_id = cs.store_id and ct.is_active = 1
+				group by cs.store_id) tg 
+			 JOIN (
+			 
+				 SELECT DISTINCT project_id,tag_ids 
+				 FROM stat_project_tagids 
+				 JOIN (select cs.store_id, GROUP_CONCAT(ct.tag_id) as tag_ids from config_store cs
+					join config_store_tag ct on ct.store_id = cs.store_id and ct.is_active = 1
+					group by cs.store_id) tg WHERE tag_id in (tg.tag_ids)
+					
+				
+			  ) AS store_tags ON p.project_id = store_tags.project_id AND store_tags.tag_ids = tg.tag_ids
+          JOIN tag_object AS ppt ON 
+			   ((ppt.tag_parent_object_id = p.project_id AND ppt.tag_type_id = 3) OR (ppt.tag_object_id = p.project_id) ) AND ppt.is_deleted = 0
           JOIN ppload.ppload_files AS files ON files.id = ppt.tag_object_id AND files.active = 1
-        GROUP BY sct2.lft, ppt.tag_id
-        
-        UNION
-
-        SELECT
-          sct2.project_category_id,
-          ppt.tag_id as tag_id,
-          count(distinct p.project_id) as count_product
-        FROM stat_cat_tree as sct1
-          JOIN stat_cat_tree as sct2 ON sct1.lft between sct2.lft AND sct2.rgt
-          JOIN stat_projects as p ON p.project_category_id = sct1.project_category_id
-          JOIN tag_object AS ppt ON ppt.tag_object_id = p.project_id AND ppt.is_deleted = 0
-          JOIN ppload.ppload_files AS files ON files.id = ppt.tag_object_id AND files.active = 1
-        GROUP BY sct2.lft, ppt.tag_id
+        WHERE p.amount_reports is null
+        GROUP BY sct2.lft, tg.tag_ids
     ;
 
     IF EXISTS(SELECT table_name
@@ -75,6 +78,87 @@ DELIMITER ;
 
 
 CALL generate_stat_cat_prod_count;
+
+
+
+DROP PROCEDURE IF EXISTS `generate_stat_cat_prod_count_w_spam`;
+
+DELIMITER $$
+
+CREATE PROCEDURE `generate_stat_cat_prod_count_w_spam`()
+BEGIN
+
+    DROP TABLE IF EXISTS tmp_stat_cat_prod_count_w_spam;
+    CREATE TABLE tmp_stat_cat_prod_count_w_spam
+    (
+      `project_category_id` int(11) NOT NULL,
+      `tag_id` int(11) NULL,
+      `count_product` int(11) NULL,
+      INDEX `idx_tag` (`project_category_id`,`tag_id`)
+    )
+      ENGINE Memory
+      AS
+        SELECT
+          sct2.project_category_id,
+          NULL as tag_id,
+          count(distinct p.project_id) as count_product
+        FROM stat_cat_tree as sct1
+          JOIN stat_cat_tree as sct2 ON sct1.lft between sct2.lft AND sct2.rgt
+          LEFT JOIN stat_projects as p ON p.project_category_id = sct1.project_category_id
+        GROUP BY sct2.project_category_id
+
+        UNION
+
+        SELECT
+          sct2.project_category_id,
+          tg.tag_ids as tag_id,
+          count(distinct p.project_id) as count_product
+        FROM stat_cat_tree as sct1
+          JOIN stat_cat_tree as sct2 ON sct1.lft between sct2.lft AND sct2.rgt
+          JOIN stat_projects as p ON p.project_category_id = sct1.project_category_id
+          JOIN (select cs.store_id, GROUP_CONCAT(ct.tag_id) as tag_ids from config_store cs
+				join config_store_tag ct on ct.store_id = cs.store_id and ct.is_active = 1
+				group by cs.store_id) tg 
+			 JOIN (
+			 
+				 SELECT DISTINCT project_id,tag_ids 
+				 FROM stat_project_tagids 
+				 JOIN (select cs.store_id, GROUP_CONCAT(ct.tag_id) as tag_ids from config_store cs
+					join config_store_tag ct on ct.store_id = cs.store_id and ct.is_active = 1
+					group by cs.store_id) tg WHERE tag_id in (tg.tag_ids)
+					
+				
+			  ) AS store_tags ON p.project_id = store_tags.project_id AND store_tags.tag_ids = tg.tag_ids
+          JOIN tag_object AS ppt ON 
+			   ((ppt.tag_parent_object_id = p.project_id AND ppt.tag_type_id = 3) OR (ppt.tag_object_id = p.project_id) ) AND ppt.is_deleted = 0
+          JOIN ppload.ppload_files AS files ON files.id = ppt.tag_object_id AND files.active = 1
+        
+        GROUP BY sct2.lft, tg.tag_ids
+    ;
+
+    IF EXISTS(SELECT table_name
+              FROM INFORMATION_SCHEMA.TABLES
+              WHERE table_schema = DATABASE()
+                    AND table_name = 'stat_cat_prod_count_w_spam')
+
+    THEN
+
+      RENAME TABLE stat_cat_prod_count_w_spam TO old_stat_cat_prod_count_w_spam, tmp_stat_cat_prod_count_w_spam TO stat_cat_prod_count_w_spam;
+
+    ELSE
+
+      RENAME TABLE tmp_stat_cat_prod_count_w_spam TO stat_cat_prod_count_w_spam;
+
+    END IF;
+
+
+    DROP TABLE IF EXISTS old_stat_cat_prod_count_w_spam;
+
+END$$
+
+DELIMITER ;
+
+
 
 
 DROP PROCEDURE IF EXISTS `fetchCatTreeWithTags`;

@@ -32,16 +32,16 @@ $this->headMeta()->appendProperty('og:image','https://www.appimagehub.com/images
 
   $modelInfo = new Default_Model_Info();
   $host = $_SERVER['SERVER_NAME'];
-  $package_type = $this->package_type;
+  $tags = $this->tag_filter;
 
   if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
-    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(7,"33,112",$package_type);
-    $this->topGames = $modelInfo->getTopProductsForHostStores(7,"112",$package_type);
-    $this->topApps = $modelInfo->getTopProductsForHostStores(7,"33",$package_type);
+    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(7,"33,112",$tags);
+    $this->topGames = $modelInfo->getTopProductsForHostStores(7,"112",$tags);
+    $this->topApps = $modelInfo->getTopProductsForHostStores(7,"33",$tags);
   } else {
-    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(15,"6,234,239,243,244,245,388,391,392,450,481,492",$package_type);
-    $this->topGames = $modelInfo->getTopProductsForHostStores(15,"6",$package_type);
-    $this->topApps = $modelInfo->getTopProductsForHostStores(15,"234,239,243,244,245,388,391,392,450,481,492",$package_type);
+    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(15,"6,234,239,243,244,245,388,391,392,450,481,492",$tags);
+    $this->topGames = $modelInfo->getTopProductsForHostStores(15,"6",$tags);
+    $this->topApps = $modelInfo->getTopProductsForHostStores(15,"234,239,243,244,245,388,391,392,450,481,492",$tags);
   }
   $modelProject = new Default_Model_Project();
   $totalProjects = $modelProject->fetchTotalProjectsCount(true);
