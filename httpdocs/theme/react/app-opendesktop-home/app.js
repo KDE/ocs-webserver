@@ -239,10 +239,11 @@ class ProductCarousel extends React.Component {
     this.setState({
       sliderPosition:sliderPosition,
       containerWidth:containerWidth,
+      containerNumber:containerNumber,
       sliderWidth:sliderWidth,
       itemWidth:itemWidth,
       offset:itemsPerRow,
-      itemsPerRow:itemsPerRow
+      itemsPerRow:itemsPerRow - 1
     },function(){
       if (animateCarousel){
         this.animateProductCarousel('right',animateCarousel);
@@ -287,20 +288,22 @@ class ProductCarousel extends React.Component {
   }
 
   getNextProductsBatch(){
-    console.log(this.state.offset);
-    console.log(this.state.itemsPerRow);
-    console.log(this.state.products.length);
-    let url = "/home/showlastproductsjson/?page=1&limit="+this.state.itemsPerRow+"&offset="+this.state.offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
+    let limit = (this.state.itemsPerRow * this.state.containerNumber) - this.state.products.length;
+    let animateCarousel = false;
+    if (limit === 0){
+      limit = this.state.itemsPerRow;
+      animateCarousel = true;
+    }
+    let url = "/home/showlastproductsjson/?page=1&limit="+limit+"&offset="+this.state.offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
     const self = this;
     $.ajax({url: url,cache: false}).done(function(response){
         const products = self.state.products.concat(response);
         const offset = self.state.offset + self.state.itemsPerRow;
         let finishedProducts = false;
-        if (response.length < self.state.itemsPerRow){
+        if (response.length < limit){
           finishedProducts = true;
         }
         self.setState({products:products,offset:offset,finishedProducts:finishedProducts},function(){
-          const animateCarousel = true;
           self.updateDimensions(animateCarousel);
         });
     });
