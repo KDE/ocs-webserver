@@ -26,7 +26,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     const FILTER_NAME_PROJECT_ID_NOT_IN = 'project_id_not_in';
     const FILTER_NAME_RANKING = 'ranking';
     const FILTER_NAME_CATEGORY = 'category';
-    const FILTER_NAME_PACKAGETYPE = 'package_type';
+    const FILTER_NAME_TAG = 'tag';
     const FILTER_NAME_ORIGINAL = 'original';
     const FILTER_NAME_MEMBER = 'member';
     const FILTER_NAME_ORDER = 'order';
@@ -536,57 +536,52 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function fetchMoreProjects($project, $count = 6)
     {
-        $q = $this->select()->from('stat_projects', array(
+        $q = $this->select()->from(array('project' => 'stat_projects'), array(
             'project_id',
             'image_small',
             'title',
             'catTitle' => 'cat_title'
         ))->setIntegrityCheck(false)
-          ->where('status = ?', self::PROJECT_ACTIVE)
-          ->where('member_id = ?', $project->member_id, 'INTEGER')
-          ->where('project_id != ?', $project->project_id, 'INTEGER')
-          ->where('type_id = ?', self::PROJECT_TYPE_STANDARD)
-          ->where('amount_reports is null')
-          ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')
+          ->where('project.status = ?', self::PROJECT_ACTIVE)
+          ->where('project.member_id = ?', $project->member_id, 'INTEGER')
+          ->where('project.project_id != ?', $project->project_id, 'INTEGER')
+          ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)
+          ->where('project.amount_reports is null')
+          ->where('project.project_category_id = ?', $project->project_category_id, 'INTEGER')
           ->limit($count)
-          ->order('project_created_at DESC')
+          ->order('project.project_created_at DESC')
         ;
 
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        $storePackageTypeIds = null;
-        if ($storeConfig) {
-            $storePackageTypeIds = $storeConfig->package_type;
-        }
-
-        if ($storePackageTypeIds) {
-            $q = $this->generatePackageTypeFilter($q, array(self::FILTER_NAME_PACKAGETYPE => $storePackageTypeIds));
+        $tagFilter  = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
+        
+        if ($tagFilter) {
+            $q = $this->generateTagFilter($q, array(self::FILTER_NAME_TAG => $tagFilter));
         }
 
         $result = $this->fetchAll($q);
 
         return $result;
     }
-
-
+    
     /**
      * @param Zend_Db_Select $statement
      * @param array          $filterArrayValue
      *
      * @return Zend_Db_Select
      */
-    protected function generatePackageTypeFilter(Zend_Db_Select $statement, $filterArrayValue)
+    protected function generateTagFilter(Zend_Db_Select $statement, $filterArrayValue)
     {
-        if (false == isset($filterArrayValue[self::FILTER_NAME_PACKAGETYPE])) {
+        if (false == isset($filterArrayValue[self::FILTER_NAME_TAG])) {
             return $statement;
         }
 
-        $filter = $filterArrayValue[self::FILTER_NAME_PACKAGETYPE];
+        $filter = $filterArrayValue[self::FILTER_NAME_TAG];
 
         if (is_array($filter)) {
             $statement->join(array(
-                'package_type' => new Zend_Db_Expr('(SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in ('
+                'tags' => new Zend_Db_Expr('(SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in ('
                     . implode(',', $filter) . '))')
-            ), 'project.project_id = package_type.project_id', array());
+            ), 'project.project_id = tags.project_id', array());
         } else {
             $statement->where('find_in_set(?, tag_ids)', $filter);
         }
@@ -628,7 +623,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $offset = 0;
         }
 
-        $q = $this->select()->from('stat_projects', array(
+        $q = $this->select()->from(array('project' => 'stat_projects'), array(
             'project_id',
             'image_small',
             'title',
@@ -640,14 +635,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   ->order('project_created_at DESC')
         ;
 
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        $storePackageTypeIds = null;
-        if ($storeConfig) {
-            $storePackageTypeIds = $storeConfig->package_type;
-        }
-
-        if ($storePackageTypeIds) {
-            $q = $this->generatePackageTypeFilter($q, array(self::FILTER_NAME_PACKAGETYPE => $storePackageTypeIds));
+        $tagFilter  = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
+        
+        if ($tagFilter) {
+            $q = $this->generateTagFilter($q, array(self::FILTER_NAME_TAG => $tagFilter));
         }
 
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $q->__toString());
@@ -864,9 +855,9 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         } else {
             $store_config = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         }
-        $storePackageTypeIds = (false === empty($store_config->package_type)) ? $store_config->package_type : null;
+        $tagFilter  = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
 
-        $cacheName = __FUNCTION__ . '_' . md5(serialize($idCategory) . $withSubCat . serialize($storePackageTypeIds));
+        $cacheName = __FUNCTION__ . '_' . md5(serialize($idCategory) . $withSubCat . serialize($tagFilter));
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
 
@@ -878,7 +869,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                        ->where('status = ? ', self::PROJECT_ACTIVE)->where('type_id = ?', self::PROJECT_TYPE_STANDARD)
         ;
 
-        $select = $this->generatePackageTypeFilter($select, array(self::FILTER_NAME_PACKAGETYPE => $storePackageTypeIds));
+        $select = $this->generateTagFilter($select, array(self::FILTER_NAME_TAG => $tagFilter));
 
         if ($withSubCat) {
             $modelCategory = new Default_Model_DbTable_ProjectCategory();
@@ -977,7 +968,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $store_tags = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
             if ($store_tags) {
                 $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $store_tags)
-                    . ')) AS package_type ON stat_projects.project_id = package_type.project_id';
+                    . ')) AS tags ON stat_projects.project_id = tags.project_id';
             }
 
             $info = new Default_Model_Info();
@@ -1193,7 +1184,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $statement = $this->generateBaseStatement();
         $statement = $this->generateCategoryFilter($statement, $inputFilterParams);
         $statement = $this->generateOrderFilter($statement, $inputFilterParams);
-        $statement = $this->generatePackageTypeFilter($statement, $inputFilterParams);
+        $statement = $this->generateTagFilter($statement, $inputFilterParams);
         $statement = $this->generateOriginalFilter($statement, $inputFilterParams);
         $statement = $this->generateReportedSpamFilter($statement);
 

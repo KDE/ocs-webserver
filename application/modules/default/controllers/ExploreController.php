@@ -108,14 +108,6 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
      */
     public function indexAction()
     {
-        //$this->view->categories = $storeCatIds;
-
-        //$storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        //$storePackageTypeIds = null;
-        //if ($storeConfig) {
-        //    $this->view->package_type = $filter['package_type'] = $storeConfig->package_type;
-        //}
-
         // Filter-Parameter
         $inputFilterOriginal = $this->getParam('filteroriginal', $this->getFilterOriginalFromCookie());
         $this->storeFilterOriginalInCookie($inputFilterOriginal);
@@ -142,10 +134,12 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $filter['category'] = $inputCatId ? $inputCatId : $storeCatIds;
         $filter['order'] = preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('ord', self::DEFAULT_ORDER));
         $filter['original'] = $inputFilterOriginal == 1 ? self::TAG_ISORIGINAL : null;
-        $filter['package_type'] = Zend_Registry::isRegistered('config_store_tags') ?  Zend_Registry::get('config_store_tags') : null;
+        $filter['tag'] = Zend_Registry::isRegistered('config_store_tags') ?  Zend_Registry::get('config_store_tags') : null;
         if (APPLICATION_ENV == "development") {
             Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . json_encode($filter));
         }
+        
+        $tagFilter  = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
 
         $page = (int)$this->getParam('page', 1);
 
@@ -157,9 +151,9 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $this->view->filtersJson = Zend_Json::encode($filter);
             $this->view->cat_idJson = Zend_Json::encode($inputCatId);
             $modelInfo = new Default_Model_Info();
-            $topprods = $modelInfo->getMostDownloaded(100, $inputCatId, $this->view->package_type);
+            $topprods = $modelInfo->getMostDownloaded(100, $inputCatId, $tagFilter);
             $this->view->topprodsJson = Zend_Json::encode($topprods);
-            $comments = $modelInfo->getLatestComments(5, $inputCatId, $this->view->package_type);
+            $comments = $modelInfo->getLatestComments(5, $inputCatId, $tagFilter);
             $this->view->commentsJson = Zend_Json::encode($comments);
             $modelCategory = new Default_Model_ProjectCategory();
             $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());
@@ -179,6 +173,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $this->view->filters = $filter;
         $this->view->page = $page;
         $this->view->package_type = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
+        $this->view->tags = $tagFilter;
     }
 
     /**

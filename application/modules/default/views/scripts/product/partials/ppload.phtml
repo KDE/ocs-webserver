@@ -19,9 +19,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-$architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
-$packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
-
 $catTagGropuModel  = new Default_Model_TagGroup();
 $tagGroups = $catTagGropuModel->fetchTagGroupsForCategory($this->product->project_category_id);
 $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
