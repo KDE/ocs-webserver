@@ -33,9 +33,3 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
     var json_data = <?=json_encode($this->json_data)?>;
 </script>
 <script type="text/javascript" src="/theme/react/community.js"></script>
-
-<?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){
-                CommunityTab.setup();
-            });
-        ');
