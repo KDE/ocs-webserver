@@ -362,7 +362,7 @@ class ProductCarousel extends React.Component {
     return (
       <div className={"product-carousel " + hpVersionClass}>
         <div className="product-carousel-header">
-          <h2><a href={this.props.link}>{this.props.title} <span className="glyphicon glyphicon-chevron-right"></span></a></h2>
+          <h2><a href={"/browse/cat/" + this.props.catIds + "/"}>{this.props.title} <span className="glyphicon glyphicon-chevron-right"></span></a></h2>
         </div>
         <div className="product-carousel-wrapper" style={carouselWrapperStyling}>
           <div className="product-carousel-left" style={{"left":carouselArrowsMargin}}>
