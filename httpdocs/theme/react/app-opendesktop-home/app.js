@@ -259,11 +259,11 @@ class ProductCarousel extends React.Component {
 
     if (dir === 'left'){
       if (this.state.sliderPosition > 0){
-        newSliderPosition = this.state.sliderPosition - this.state.containerWidth;
+        newSliderPosition = this.state.sliderPosition - (this.state.containerWidth - this.state.itemWidth);
       }
     } else {
       if (this.state.sliderPosition < endPoint){
-        newSliderPosition = this.state.sliderPosition + this.state.containerWidth;
+        newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
       } else {
         if (!animateCarousel){
           this.getNextProductsBatch();
