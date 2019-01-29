@@ -220,9 +220,9 @@ class ProductCarousel extends React.Component {
     let itemsPerRow = 5;
     if (window.hpVersion === 2){
       if (this.props.device === 'large'){
-        itemsPerRow = 4;
+        itemsPerRow = 5;
       } else if (this.props.device === 'mid'){
-        itemsPerRow = 3;
+        itemsPerRow = 5;
       } else if (this.props.device === 'tablet'){
         itemsPerRow = 2;
       }
@@ -240,7 +240,8 @@ class ProductCarousel extends React.Component {
       sliderPosition:sliderPosition,
       containerWidth:containerWidth,
       sliderWidth:sliderWidth,
-      itemWidth:itemWidth
+      itemWidth:itemWidth,
+      itemsPerRow:itemsPerRow
     },function(){
       if (animateCarousel){
         this.animateProductCarousel('right',animateCarousel);
@@ -289,9 +290,9 @@ class ProductCarousel extends React.Component {
     const self = this;
     $.ajax({url: url,cache: false}).done(function(response){
         const products = self.state.products.concat(response);
-        const offset = self.state.offset + 5;
+        const offset = self.state.offset + self.state.itemsPerRow;
         let finishedProducts = false;
-        if (response.length < 5){
+        if (response.length < self.state.itemsPerRow){
           finishedProducts = true;
         }
         self.setState({products:products,offset:offset,finishedProducts:finishedProducts},function(){
