@@ -79,15 +79,6 @@ class SiteHeader extends React.Component {
 
   render() {
 
-    let templateHeaderStyle;
-    if (this.state.template) {
-      templateHeaderStyle = {
-        "backgroundImage": this.state.template.header['background-image'],
-        "backgroundColor": this.state.template.header['background-color'],
-        "height": this.state.template.header['height']
-      };
-    }
-
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user) {
       userMenuDisplay = React.createElement(SiteHeaderUserMenu, {
@@ -170,6 +161,15 @@ class SiteHeader extends React.Component {
         store: this.state.store,
         redirectString: this.state.redirectString
       });
+    }
+
+    let templateHeaderStyle;
+    if (this.state.template) {
+      templateHeaderStyle = {
+        "backgroundImage": this.state.template.header['background-image'],
+        "backgroundColor": this.state.template.header['background-color'],
+        "height": this.state.template.header['height']
+      };
     }
 
     return React.createElement(

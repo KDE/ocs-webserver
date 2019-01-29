@@ -50,15 +50,6 @@ class SiteHeader extends React.Component {
 
   render(){
 
-    let templateHeaderStyle;
-    if (this.state.template){
-      templateHeaderStyle = {
-        "backgroundImage":this.state.template.header['background-image'],
-        "backgroundColor":this.state.template.header['background-color'],
-        "height":this.state.template.header['height']
-      }
-    }
-
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user){
       userMenuDisplay = (
@@ -133,6 +124,15 @@ class SiteHeader extends React.Component {
           redirectString={this.state.redirectString}
         />
       )
+    }
+
+    let templateHeaderStyle;
+    if (this.state.template){
+      templateHeaderStyle = {
+        "backgroundImage":this.state.template.header['background-image'],
+        "backgroundColor":this.state.template.header['background-color'],
+        "height":this.state.template.header['height']
+      }
     }
 
     return (
