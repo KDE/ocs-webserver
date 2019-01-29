@@ -229,7 +229,7 @@ class ProductCarousel extends React.Component {
     }
 
     const containerWidth = $('#main-content').width();
-    const containerNumber = Math.ceil(this.state.products.length / (itemsPerRow - 1));
+    const containerNumber = Math.ceil(this.state.products.length / itemsPerRow);
     const itemWidth = containerWidth / itemsPerRow;
     const sliderWidth = containerWidth * containerNumber;
     let sliderPosition = 0;
@@ -242,6 +242,7 @@ class ProductCarousel extends React.Component {
       containerNumber:containerNumber,
       sliderWidth:sliderWidth,
       itemWidth:itemWidth,
+      offset:itemsPerRow,
       itemsPerRow:itemsPerRow - 1
     },function(){
       if (animateCarousel){
@@ -290,8 +291,11 @@ class ProductCarousel extends React.Component {
     console.log('per row:' + this.state.itemsPerRow)
     console.log('container number:' + this.state.containerNumber);
     console.log(this.state.products.length);
-    let limit = (this.state.itemsPerRow * this.state.containerNumber) - this.state.products.length;
-    if (limit === 0){ limit = this.state.itemsPerRow; }
+    let limit = (this.state.itemsPerRow * (this.state.containerNumber + 1)) - this.state.products.length;
+    let animateCarousel = false;
+    if (limit === 0){
+      limit = this.state.itemsPerRow;
+    }
     let url = "/home/showlastproductsjson/?page=1&limit="+limit+"&offset="+this.state.offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
     const self = this;
     $.ajax({url: url,cache: false}).done(function(response){
