@@ -76,7 +76,7 @@ class App extends React.Component {
   render(){
     let productCarouselsContainer;
     if (this.state.loading === false){
-      console.log(this.state.productGroupsArray);
+
       productCarouselsContainer = this.state.productGroupsArray.map((pgc,index) => (
           <div key={index} className="section">
             <div className="container">
@@ -141,7 +141,7 @@ class SpotlightProduct extends React.Component {
     }
 
     let featuredLabelDisplay;
-    console.log(this.state.featuredProduct);
+
     if (this.state.featuredProduct.feature === "1"){
       featuredLabelDisplay = "featured"
     }
