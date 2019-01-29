@@ -220,17 +220,17 @@ class ProductCarousel extends React.Component {
     let itemsPerRow = 5;
     if (window.hpVersion === 2){
       if (this.props.device === 'large'){
-        itemsPerRow = 4;
+        itemsPerRow = 5;
       } else if (this.props.device === 'mid'){
-        itemsPerRow = 4;
+        itemsPerRow = 5;
       } else if (this.props.device === 'tablet'){
-        itemsPerRow = 1;
+        itemsPerRow = 2;
       }
     }
 
     const containerWidth = $('#main-content').width();
-    const containerNumber = Math.ceil(this.state.products.length / itemsPerRow );
-    const itemWidth = containerWidth / (itemsPerRow + 1);
+    const containerNumber = Math.ceil(this.state.products.length / (itemsPerRow - 1));
+    const itemWidth = containerWidth / itemsPerRow;
     const sliderWidth = containerWidth * containerNumber;
     let sliderPosition = 0;
     if (this.state.sliderPosition){
@@ -242,7 +242,7 @@ class ProductCarousel extends React.Component {
       containerNumber:containerNumber,
       sliderWidth:sliderWidth,
       itemWidth:itemWidth,
-      itemsPerRow:itemsPerRow
+      itemsPerRow:itemsPerRow - 1
     },function(){
       if (animateCarousel){
         this.animateProductCarousel('right',animateCarousel);
