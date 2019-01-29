@@ -220,7 +220,7 @@ class ProductCarousel extends React.Component {
     let itemsPerRow = 5;
     if (window.hpVersion === 2){
       if (this.props.device === 'large'){
-        itemsPerRow = 5;
+        itemsPerRow = 6;
       } else if (this.props.device === 'mid'){
         itemsPerRow = 5;
       } else if (this.props.device === 'tablet'){
@@ -289,7 +289,7 @@ class ProductCarousel extends React.Component {
 
   getNextProductsBatch(){
     let limit = (this.state.itemsPerRow * (this.state.containerNumber + 1)) - this.state.products.length;
-    if (limit =< 0){
+    if (limit <= 0){
       limit = this.state.itemsPerRow;
     }
     console.log(limit);
