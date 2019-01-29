@@ -76,6 +76,7 @@ class App extends React.Component {
   render(){
     let productCarouselsContainer;
     if (this.state.loading === false){
+
       productCarouselsContainer = this.state.productGroupsArray.map((pgc,index) => (
           <div key={index} className="section">
             <div className="container">
@@ -140,7 +141,7 @@ class SpotlightProduct extends React.Component {
     }
 
     let featuredLabelDisplay;
-    if (this.state.featuredProduct.feature === 1){
+    if (this.state.featuredProduct.featured === "1"){
       featuredLabelDisplay = "featured"
     }
 
@@ -219,18 +220,18 @@ class ProductCarousel extends React.Component {
     let itemsPerRow = 5;
     if (window.hpVersion === 2){
       if (this.props.device === 'large'){
-        itemsPerRow = 5;
-      } else if (this.props.device === 'mid'){
         itemsPerRow = 4;
-      } else if (this.props.device === 'tablet'){
+      } else if (this.props.device === 'mid'){
         itemsPerRow = 3;
+      } else if (this.props.device === 'tablet'){
+        itemsPerRow = 2;
       }
     }
 
     const containerWidth = $('#main-content').width();
     const containerNumber = Math.ceil(this.state.products.length / itemsPerRow);
-    const sliderWidth = containerWidth * containerNumber;
     const itemWidth = containerWidth / itemsPerRow;
+    const sliderWidth = containerWidth * containerNumber;
     let sliderPosition = 0;
     if (this.state.sliderPosition){
       sliderPosition = this.state.sliderPosition;
@@ -254,11 +255,11 @@ class ProductCarousel extends React.Component {
 
     if (dir === 'left'){
       if (this.state.sliderPosition > 0){
-        newSliderPosition = this.state.sliderPosition - this.state.containerWidth;
+        newSliderPosition = this.state.sliderPosition - (this.state.containerWidth - this.state.itemWidth);
       }
     } else {
       if (this.state.sliderPosition < endPoint){
-        newSliderPosition = this.state.sliderPosition + this.state.containerWidth;
+        newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
       } else {
         if (!animateCarousel){
           this.getNextProductsBatch();
@@ -360,7 +361,7 @@ class ProductCarousel extends React.Component {
     return (
       <div className={"product-carousel " + hpVersionClass}>
         <div className="product-carousel-header">
-          <h2><a href={this.props.link}>{this.props.title} <span className="glyphicon glyphicon-chevron-right"></span></a></h2>
+          <h2><a href={"/browse/cat/" + this.props.catIds + "/"}>{this.props.title} <span className="glyphicon glyphicon-chevron-right"></span></a></h2>
         </div>
         <div className="product-carousel-wrapper" style={carouselWrapperStyling}>
           <div className="product-carousel-left" style={{"left":carouselArrowsMargin}}>

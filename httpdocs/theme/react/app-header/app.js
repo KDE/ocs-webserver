@@ -126,8 +126,17 @@ class SiteHeader extends React.Component {
       )
     }
 
+    let templateHeaderStyle;
+    if (this.state.template){
+      templateHeaderStyle = {
+        "backgroundImage":this.state.template.header['background-image'],
+        "backgroundColor":this.state.template.header['background-color'],
+        "height":this.state.template.header['height']
+      }
+    }
+
     return (
-      <section id="site-header" style={this.state.template.header}>
+      <section id="site-header" style={templateHeaderStyle}>
         {HeaderDisplay}
       </section>
     )
