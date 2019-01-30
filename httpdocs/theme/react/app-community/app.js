@@ -230,7 +230,7 @@ class CommunityPageTabMenuItem extends React.Component {
         <a className={this.props.index === this.props.selectedIndex ? "active" : ""} onClick={this.onTabMenuItemClick}>
           {this.props.tab.title}
         </a>
-      </li>
+      </div>
     );
   }
 }
