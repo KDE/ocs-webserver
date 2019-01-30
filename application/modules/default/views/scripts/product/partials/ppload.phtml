@@ -474,9 +474,9 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                             oldestFileId = this.id;
                                     }
 
-                                    count_downloads = this.downloaded_count || 0;
+                                    var count_downloads = this.downloaded_count || 0;
 
-                                    downloaded_count_total = downloaded_count_total+parseInt(cout_downloads);
+                                    downloaded_count_total = downloaded_count_total+parseInt(count_downloads);
 
                                     var hash = '<?= $this->download_hash ?>';
                                     var timetamp = '<?= $this->download_timestamp ?>';
