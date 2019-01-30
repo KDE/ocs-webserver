@@ -226,10 +226,8 @@ class Ocsv1Controller extends Zend_Controller_Action
      */
     protected function _getNameForStoreClient()
     {
-        $clientName = Zend_Registry::get('config')->settings->client->default->name; // default client
-        if (Zend_Registry::isRegistered('store_config_name')) {
-            $clientName = Zend_Registry::get('store_config_name');
-        }
+        $clientName = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config')->name : Zend_Registry::get('config')->settings->client->default->name;
+
 
         return $clientName;
     }
