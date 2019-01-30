@@ -227,6 +227,25 @@ class CommunityPageTabMenuItem extends React.Component {
   }
 }
 
+class SupportersTab extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  componentDidMount() {
+    console.log(this.props);
+  }
+
+  render(){
+    return(
+      <div className="community-tab" id="supporters-tab">
+
+      </div>
+    );
+  }
+}
+
 ReactDOM.render(
     <CommunityPage />,
     document.getElementById('community-page-container')
