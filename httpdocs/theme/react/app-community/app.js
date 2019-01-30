@@ -156,8 +156,9 @@ class CommunityPageTabsContainer extends React.Component {
   render(){
     console.log(this.state);
     let tabsMenu, tabContent;
-    if (this.state.loading === false){
-
+    if (this.state.loading){
+      tabContent = <div>loading</div>
+    } else if (this.state.loading === false){
       const selectedIndex = this.state.selectedIndex;
       const tabsMenuDisplay = this.state.tabs.map((t,index) => (
         <CommunityPageTabMenuItem
@@ -188,6 +189,7 @@ class CommunityPageTabsContainer extends React.Component {
           />
         );
       }
+
     }
 
     return(

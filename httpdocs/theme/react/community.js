@@ -194,8 +194,13 @@ class CommunityPageTabsContainer extends React.Component {
   render() {
     console.log(this.state);
     let tabsMenu, tabContent;
-    if (this.state.loading === false) {
-
+    if (this.state.loading) {
+      tabContent = React.createElement(
+        "div",
+        null,
+        "loading"
+      );
+    } else if (this.state.loading === false) {
       const selectedIndex = this.state.selectedIndex;
       const tabsMenuDisplay = this.state.tabs.map((t, index) => React.createElement(CommunityPageTabMenuItem, {
         key: index,
