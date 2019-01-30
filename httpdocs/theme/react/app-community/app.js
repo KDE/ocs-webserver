@@ -39,7 +39,8 @@ window.appHelpers = (function(){
   }
 
   return {
-    getHostNameSuffix
+    getHostNameSuffix,
+    generateTabsMenuArray
   }
 }());
 
