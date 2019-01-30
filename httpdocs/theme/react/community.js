@@ -1,3 +1,31 @@
+window.appHelpers = function () {
+
+  function getHostNameSuffix() {
+    let hostNameSuffix = "org";
+    if (location.hostname.endsWith('cc')) {
+      hostNameSuffix = "cc";
+    } else if (location.hostname.endsWith('localhost')) {
+      hostNameSuffix = "localhost";
+    }
+    return hostNameSuffix;
+  }
+
+  function generateTabsMenuArray() {
+    const baseUrl = "https://www.opendesktop." + this.getHostNameSuffix();
+    const tabsMenuArray = [{
+      title: "Supporters",
+      url: baseUrl + "/community/getjson?e=supporters"
+    }, {
+      title: "Top Members",
+      url: baseUrl + "/community/getjson?e=topmembers"
+    }];
+  }
+
+  return {
+    getHostNameSuffix
+  };
+}();
+
 class CommunityPage extends React.Component {
   constructor(props) {
     super(props);
@@ -10,7 +38,7 @@ class CommunityPage extends React.Component {
     console.log(this.state);
     /*
       var json_data = <?=json_encode($this->json_data)?>; hier bekommest du die oberteil info
-      tabs info top members https://www.opendesktop.cc/community/getjson?e=topmembers
+      tabs info top members https://www.opendesktop.cc
       hier ist supporters https://www.opendesktop.cc/community/getjson?e=supporters
       alle tab events sind hier. /var/www/ocs-webserver/application/modules/default/controllers/CommunityController.php
       getjsonAction
