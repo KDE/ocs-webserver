@@ -361,9 +361,9 @@ class MemberScoresTab extends React.Component {
   }
 
   render() {
-    let memberDisplay;
+    let membersDisplay;
     if (this.props.items && this.props.items.length > 0) {
-      memberDisplay = this.props.items.map((member, index) => React.createElement(CommunityListItem, {
+      membersDisplay = this.props.items.map((member, index) => React.createElement(CommunityListItem, {
         key: index,
         item: member,
         type: 'score'
@@ -372,7 +372,7 @@ class MemberScoresTab extends React.Component {
     return React.createElement(
       "div",
       { className: "community-tab", id: "supporters-tab" },
-      usersDisplay
+      membersDisplay
     );
   }
 }
