@@ -260,10 +260,11 @@ class ProductCarousel extends React.Component {
     } else {
       console.log('endPoint - ' + endPoint);
       console.log('slider position - ' + this.state.sliderPosition);
-      if (Math.trunc(this.state.sliderPosition) <= Math.trunc(endPoint)){
+      if (Math.trunc(this.state.sliderPosition) < Math.trunc(endPoint)){
         console.log('slider position is smaller then endPoint');
         newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
       } else {
+        console.log('slider position is bigger / equal then endPoint');
         if (!animateCarousel){
           this.getNextProductsBatch();
         }
@@ -288,30 +289,24 @@ class ProductCarousel extends React.Component {
   }
 
   getNextProductsBatch(){
-    this.setState({disableRightArrow:true},function(){
-      let limit = (this.state.itemsPerRow * (this.state.containerNumber + 1)) - this.state.products.length;
-      if (limit <= 0){
-        limit = this.state.itemsPerRow;
-      }
-      let url = "/home/showlastproductsjson/?page=1&limit="+limit+"&offset="+this.state.offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
-      const self = this;
-      $.ajax({url: url,cache: false}).done(function(response){
-          const products = self.state.products.concat(response);
-          const offset = self.state.offset + self.state.itemsPerRow;
-          let finishedProducts = false,
-              animateCarousel = true;
-          if (response.length === 0){
-            finishedProducts = true;
-            animateCarousel = false;
-          }
-          self.setState({
-            products:products,
-            offset:offset + response.length,
-            finishedProducts:finishedProducts,
-            disableRightArrow:false},function(){
-              self.updateDimensions(animateCarousel);
-          });
-      });
+    let limit = (this.state.itemsPerRow * (this.state.containerNumber + 1)) - this.state.products.length;
+    if (limit <= 0){
+      limit = this.state.itemsPerRow;
+    }
+    let url = "/home/showlastproductsjson/?page=1&limit="+limit+"&offset="+this.state.offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
+    const self = this;
+    $.ajax({url: url,cache: false}).done(function(response){
+        const products = self.state.products.concat(response);
+        const offset = self.state.offset + self.state.itemsPerRow;
+        let finishedProducts = false,
+            animateCarousel = true;
+        if (response.length === 0){
+          finishedProducts = true;
+          animateCarousel = false;
+        }
+        self.setState({products:products,offset:offset + response.length,finishedProducts:finishedProducts},function(){
+          self.updateDimensions(animateCarousel);
+        });
     });
   }
 
