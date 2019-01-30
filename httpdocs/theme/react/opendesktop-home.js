@@ -301,7 +301,6 @@ class ProductCarousel extends React.Component {
       containerNumber: containerNumber,
       sliderWidth: sliderWidth,
       itemWidth: itemWidth,
-      offset: itemsPerRow,
       itemsPerRow: itemsPerRow - 1
     }, function () {
       if (animateCarousel) {
@@ -368,7 +367,7 @@ class ProductCarousel extends React.Component {
       console.log('products in res - ' + response.length);
       console.log('finished products - ' + finishedProducts);
       console.log('animate carousel - ' + animateCarousel);
-      self.setState({ products: products, offset: offset, finishedProducts: finishedProducts }, function () {
+      self.setState({ products: products, offset: offset + response.length, finishedProducts: finishedProducts }, function () {
         self.updateDimensions(animateCarousel);
       });
     });
