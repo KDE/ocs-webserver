@@ -16,8 +16,23 @@ window.appHelpers = function () {
       title: "Supporters",
       url: baseUrl + "/community/getjson?e=supporters"
     }, {
+      title: "Most plinged Creators",
+      url: baseUrl + "/community/getjson?e=mostplingedcreators"
+    }, {
+      title: "Most plinged Products",
+      url: baseUrl + "/community/getjson?e=mostplingedproducts"
+    }, {
+      title: "Recently plinged Products",
+      url: baseUrl + "/community/getjson?e=plingedprojects"
+    }, {
+      title: "New Members",
+      url: baseUrl + "/community/getjson?e=newmembers"
+    }, {
       title: "Top Members",
       url: baseUrl + "/community/getjson?e=topmembers"
+    }, {
+      title: "Top List Members",
+      url: baseUrl + "/community/getjson?e=toplistmembers"
     }];
   }
 
@@ -134,21 +149,81 @@ class CommunityPageTabsContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.renderTabs = this.renderTabs.bind(this);
+    this.handleTabMenuItemClick = this.handleTabMenuItemClick.bind(this);
+  }
+
+  componentDidMount() {
+    this.renderTabs();
+  }
+
+  renderTabs(selectedIndex) {
+    if (!selectedIndex) {
+      selectedIndex = 0;
+    }
+    const tabs = window.appHelpers.generateTabsMenuArray();
+    this.setState({ tabs: tabs, selectedIndex: selectedIndex });
+  }
+
+  handleTabMenuItemClick(itemIndex) {
+    console.log(this.state.tabs[itemIndex]);
   }
 
   render() {
+
+    let tabsMenu;
+    if (this.state.tabs) {
+      const selectedIndex = this.state.selectedIndex;
+      const tabsMenuDisplay = this.state.tabs.map((t, index) => React.createElement(CommunityPageTabMenuItem, {
+        key: index,
+        index: index,
+        selectedIndex: selectedIndex,
+        tab: t,
+        onTabMenuItemClick: this.handleTabMenuItemClick
+      }));
+      tabsMenu = React.createElement(
+        "ul",
+        null,
+        tabsMenuDisplay
+      );
+    }
+
     return React.createElement(
       "div",
       { id: "community-page-tabs-container" },
       React.createElement(
         "div",
         { id: "tabs-menu" },
-        "tabs"
+        tabsMenu
       ),
       React.createElement(
         "div",
         { id: "tabs-content" },
         "content"
+      )
+    );
+  }
+}
+
+class CommunityPageTabMenuItem extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.onTabMenuItemClick = this.onTabMenuItemClick.bind(this);
+  }
+
+  onTabMenuItemClick() {
+    this.props.onTabMenuItemClick(this.props.index);
+  }
+
+  render() {
+    return React.createElement(
+      "li",
+      null,
+      React.createElement(
+        "a",
+        { onClick: this.onTabMenuItemClick },
+        this.props.title
       )
     );
   }
