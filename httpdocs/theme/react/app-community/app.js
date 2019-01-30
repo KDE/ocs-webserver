@@ -238,13 +238,43 @@ class SupportersTab extends React.Component {
   }
 
   render(){
+    let supportersDisplay;
+    if (this.props.data.length > 0){
+      supportersDisplay = this.props.data.map((supporter,index){
+        <SupporterListItem
+          key={index}
+          supporter={supporter}
+        />
+      })
+    }
     return(
       <div className="community-tab" id="supporters-tab">
-
+        {supportersDisplay}
       </div>
     );
   }
 }
+
+class SupporterListItem extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    let s = this.props.supporter;
+    return(
+      <div className="supporter-list-item">
+        <li>supporter id : {s.supporter_id}</li>
+        <li>member id : {s.member_id}</li>
+        <li>username : {s.username}</li>
+        <li>profile_image_url : {s.profile_image_url}</li>
+        <li>created at : {s.created_at}</li>
+      </div>
+    );
+  }
+}
+
 
 ReactDOM.render(
     <CommunityPage />,
