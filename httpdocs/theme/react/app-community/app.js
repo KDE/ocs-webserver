@@ -181,13 +181,13 @@ class CommunityPageTabsContainer extends React.Component {
             items={data}
           />
         );
-      } /*else if (this.state.selectedIndex === 1){
+      } else if (this.state.selectedIndex === 1){
         tabContent = (
           <MostPlingedCreatorsTab
             items={data}
           />
         );
-      } else if (this.state.selectedIndex === 2){
+      } /*else if (this.state.selectedIndex === 2){
 
       }*/
     }
@@ -251,6 +251,31 @@ class SupportersTab extends React.Component {
     return(
       <div className="community-tab" id="supporters-tab">
         {supportersDisplay}
+      </div>
+    );
+  }
+}
+
+class MostPlingedCreatorsTab extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    let creatorsDisplay;
+    if (this.props.data.length > 0){
+      creatorsDisplay = this.props.data.map((creator,index){
+        <CommunityListItem
+          key={index}
+          item={creator}
+          type={'creator'}
+        />
+      })
+    }
+    return(
+      <div className="community-tab" id="most-pling-creators-tab">
+        {creatorsDisplay}
       </div>
     );
   }
