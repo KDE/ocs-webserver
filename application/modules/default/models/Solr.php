@@ -164,28 +164,40 @@ class Default_Model_Solr
     private function setStoreFilter($params,$op)
     {        
      
-        if(isset($op['store']))
-        {
-            $storename = $op['store'];
-            $storemodel = new Default_Model_DbTable_ConfigStore(); 
-            $store = $storemodel->fetchDomainObjectsByName($storename);
-            $currentStoreConfig = new Default_Model_ConfigStore($store['host']);
-        }
-        else
-        {
-            $currentStoreConfig = Zend_Registry::get('store_config');                                  
-        }               
+        // if(isset($op['store']))
+        // {
+        //     $storename = $op['store'];
+        //     $storemodel = new Default_Model_DbTable_ConfigStore(); 
+        //     $store = $storemodel->fetchDomainObjectsByName($storename);
+        //     $currentStoreConfig = new Default_Model_ConfigStore($store['host']);
+        // }
+        // else
+        // {
+        //     $currentStoreConfig = Zend_Registry::get('store_config');                                  
+        // }               
 
-        $currentStoreConfig = Zend_Registry::get('store_config');  
         // if (substr($currentStoreConfig->order, -1) <> 1) {
         //         return $params;
         // }
-        $params['fq'] = array('stores:(' . $currentStoreConfig->store_id . ')');
-        if(isset($currentStoreConfig->package_type)){            
-            $pid = $currentStoreConfig->package_type;
-            $t = new Default_Model_DbTable_Tags();
-            $tag = $t->fetchRow($t->select()->where('tag_id='.$pid));           
-            $params['fq'] = array_merge($params['fq'], array('package_names:' . $tag['tag_name']));   
+        // if(isset($currentStoreConfig->package_type)){            
+        //     $pid = $currentStoreConfig->package_type;
+        //     $t = new Default_Model_DbTable_Tags();
+        //     $tag = $t->fetchRow($t->select()->where('tag_id='.$pid));           
+        //     $params['fq'] = array_merge($params['fq'], array('package_names:' . $tag['tag_name']));   
+        // }
+
+        $currentStoreConfig = Zend_Registry::get('store_config');  
+        $params['fq'] = array('stores:(' . $currentStoreConfig->store_id . ')');        
+        $csmodel  = new Default_Model_ConfigStoreTags();
+        $packageFilter = $csmodel->getPackageTagsForStore($currentStoreConfig->store_id);       
+        if($packageFilter)
+        {
+            $pkg = '';
+            foreach ($packageFilter as $t) {
+                $pkg=$pkg.' '.$t['tag_name'];
+            }
+            $pkg = trim($pkg);
+            $params['fq'] = array_merge($params['fq'], array('package_names:(' . $pkg.')')); 
         }
         return $params;
     }
