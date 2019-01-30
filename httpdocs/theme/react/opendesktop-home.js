@@ -320,10 +320,12 @@ class ProductCarousel extends React.Component {
     } else {
       console.log('endPoint - ' + endPoint);
       console.log('slider position - ' + this.state.sliderPosition);
-      if (Math.trunc(this.state.sliderPosition) <= Math.trunc(endPoint)) {
+      if (Math.trunc(this.state.sliderPosition) < Math.trunc(endPoint)) {
         console.log('slider position is smaller then endPoint');
         newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
       } else {
+        console.log('slider position is equal or bigger then end point');
+        console.log('animate carousel - ' + animateCarousel);
         if (!animateCarousel) {
           this.getNextProductsBatch();
         }
