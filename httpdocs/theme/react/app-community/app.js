@@ -113,7 +113,10 @@ class CommunityPageHeader extends React.Component {
 class CommunityPageTabsContainer extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      loading:true,
+      tabs:[]
+    };
     this.renderTabs = this.renderTabs.bind(this);
     this.handleTabMenuItemClick = this.handleTabMenuItemClick.bind(this);
   }
@@ -125,7 +128,11 @@ class CommunityPageTabsContainer extends React.Component {
   renderTabs(selectedIndex){
     if (!selectedIndex){ selectedIndex = 0; }
     const tabs = window.appHelpers.generateTabsMenuArray();
-    this.setState({tabs:tabs,selectedIndex:selectedIndex});
+    this.setState({
+      tabs:tabs,
+      selectedIndex:selectedIndex,
+      loading:false
+    });
   }
 
   handleTabMenuItemClick(itemIndex){
@@ -133,24 +140,30 @@ class CommunityPageTabsContainer extends React.Component {
   }
 
   render(){
-
-    const selectedIndex = this.state.selectedIndex;
-    const tabsMenuDisplay = this.state.tabs.map((t,index) => (
-      <CommunityPageTabMenuItem
-        key={index}
-        index={index}
-        selectedIndex={selectedIndex}
-        tab={t}
-        onTabMenuItemClick={this.handleTabMenuItemClick}
-      />
-    ));
+    console.log(this.state);
+    let tabsMenu;
+    if (this.state.loading === false){
+      const selectedIndex = this.state.selectedIndex;
+      const tabsMenuDisplay = this.state.tabs.map((t,index) => (
+        <CommunityPageTabMenuItem
+          key={index}
+          index={index}
+          selectedIndex={selectedIndex}
+          tab={t}
+          onTabMenuItemClick={this.handleTabMenuItemClick}
+        />
+      ))
+      tabsMenu = (
+        <ul>
+          {tabsMenuDisplay}
+        </ul>
+      )
+    }
 
     return(
       <div id="community-page-tabs-container">
         <div id="tabs-menu">
-          <ul>
-            {tabsMenuDisplay}
-          </ul>
+          {tabsMenu}
         </div>
         <div id="tabs-content">
           content
@@ -175,7 +188,7 @@ class CommunityPageTabMenuItem extends React.Component {
     return(
       <li>
         <a onClick={this.onTabMenuItemClick}>
-          {this.props.t.title}
+          {this.props.title}
         </a>
       </li>
     );

@@ -149,7 +149,10 @@ class CommunityPageHeader extends React.Component {
 class CommunityPageTabsContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      loading: true,
+      tabs: []
+    };
     this.renderTabs = this.renderTabs.bind(this);
     this.handleTabMenuItemClick = this.handleTabMenuItemClick.bind(this);
   }
@@ -163,7 +166,11 @@ class CommunityPageTabsContainer extends React.Component {
       selectedIndex = 0;
     }
     const tabs = window.appHelpers.generateTabsMenuArray();
-    this.setState({ tabs: tabs, selectedIndex: selectedIndex });
+    this.setState({
+      tabs: tabs,
+      selectedIndex: selectedIndex,
+      loading: false
+    });
   }
 
   handleTabMenuItemClick(itemIndex) {
@@ -171,15 +178,23 @@ class CommunityPageTabsContainer extends React.Component {
   }
 
   render() {
-
-    const selectedIndex = this.state.selectedIndex;
-    const tabsMenuDisplay = this.state.tabs.map((t, index) => React.createElement(CommunityPageTabMenuItem, {
-      key: index,
-      index: index,
-      selectedIndex: selectedIndex,
-      tab: t,
-      onTabMenuItemClick: this.handleTabMenuItemClick
-    }));
+    console.log(this.state);
+    let tabsMenu;
+    if (this.state.loading === false) {
+      const selectedIndex = this.state.selectedIndex;
+      const tabsMenuDisplay = this.state.tabs.map((t, index) => React.createElement(CommunityPageTabMenuItem, {
+        key: index,
+        index: index,
+        selectedIndex: selectedIndex,
+        tab: t,
+        onTabMenuItemClick: this.handleTabMenuItemClick
+      }));
+      tabsMenu = React.createElement(
+        "ul",
+        null,
+        tabsMenuDisplay
+      );
+    }
 
     return React.createElement(
       "div",
@@ -187,11 +202,7 @@ class CommunityPageTabsContainer extends React.Component {
       React.createElement(
         "div",
         { id: "tabs-menu" },
-        React.createElement(
-          "ul",
-          null,
-          tabsMenuDisplay
-        )
+        tabsMenu
       ),
       React.createElement(
         "div",
@@ -220,7 +231,7 @@ class CommunityPageTabMenuItem extends React.Component {
       React.createElement(
         "a",
         { onClick: this.onTabMenuItemClick },
-        this.props.t.title
+        this.props.title
       )
     );
   }
