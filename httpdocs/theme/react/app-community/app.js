@@ -35,7 +35,8 @@ window.appHelpers = (function(){
         title:"Top List Members",
         url:baseUrl + "/community/getjson?e=toplistmembers"
       }
-    ]
+    ];
+    return tabsMenuArray;
   }
 
   return {
