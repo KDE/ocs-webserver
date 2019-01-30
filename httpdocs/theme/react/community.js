@@ -52,7 +52,6 @@ class CommunityPage extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.state);
     /*
       var json_data = <?=json_encode($this->json_data)?>; hier bekommest du die oberteil info
       tabs info top members https://www.opendesktop.cc
@@ -182,7 +181,6 @@ class CommunityPageTabsContainer extends React.Component {
     const self = this;
     const selectedTab = self.state.tabs[self.state.selectedIndex];
     $.ajax({ url: selectedTab.url, cache: false }).done(function (response) {
-      console.log(response);
       self.setState({
         tabContent: {
           title: selectedTab.title,
@@ -283,10 +281,6 @@ class UsersTab extends React.Component {
     this.state = {};
   }
 
-  componentDidMount() {
-    console.log(this.props);
-  }
-
   render() {
     let usersDisplay;
     if (this.props.items && this.props.items.length > 0) {
@@ -356,10 +350,6 @@ class MemberScoresTab extends React.Component {
     this.state = {};
   }
 
-  componentDidMount() {
-    console.log(this.props);
-  }
-
   render() {
     let membersDisplay;
     if (this.props.items && this.props.items.length > 0) {
@@ -380,6 +370,7 @@ class MemberScoresTab extends React.Component {
 class CommunityListItem extends React.Component {
   constructor(props) {
     super(props);
+    console.log(this.props.item);
     this.state = {};
   }
 
