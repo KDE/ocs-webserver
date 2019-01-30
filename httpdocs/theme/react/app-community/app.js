@@ -196,7 +196,7 @@ class CommunityPageTabsContainer extends React.Component {
         );
       } else if (this.state.selectedIndex === 5 || this.state.selectedIndex === 6){
         tabContent = (
-          <MemberScoreTab items={data} />
+          <MemberScoresTab items={data} />
         );
       }
 
@@ -313,6 +313,35 @@ class PlingedProductsTab extends React.Component {
     return(
       <div className="community-tab" id="most-pling-creators-tab">
         {productsDisplay}
+      </div>
+    );
+  }
+}
+
+class MemberScoresTab extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  componentDidMount() {
+    console.log(this.props);
+  }
+
+  render(){
+    let memberDisplay;
+    if (this.props.items && this.props.items.length > 0){
+      memberDisplay = this.props.items.map((member,index) => (
+        <CommunityListItem
+          key={index}
+          item={member}
+          type={'score'}
+        />
+      ));
+    }
+    return(
+      <div className="community-tab" id="supporters-tab">
+        {usersDisplay}
       </div>
     );
   }

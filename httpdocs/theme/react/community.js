@@ -228,7 +228,7 @@ class CommunityPageTabsContainer extends React.Component {
       } else if (this.state.selectedIndex === 2 || this.state.selectedIndex === 3) {
         tabContent = React.createElement(PlingedProductsTab, { items: data });
       } else if (this.state.selectedIndex === 5 || this.state.selectedIndex === 6) {
-        tabContent = React.createElement(MemberScoreTab, { items: data });
+        tabContent = React.createElement(MemberScoresTab, { items: data });
       }
     }
 
@@ -346,6 +346,33 @@ class PlingedProductsTab extends React.Component {
       "div",
       { className: "community-tab", id: "most-pling-creators-tab" },
       productsDisplay
+    );
+  }
+}
+
+class MemberScoresTab extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    console.log(this.props);
+  }
+
+  render() {
+    let memberDisplay;
+    if (this.props.items && this.props.items.length > 0) {
+      memberDisplay = this.props.items.map((member, index) => React.createElement(CommunityListItem, {
+        key: index,
+        item: member,
+        type: 'score'
+      }));
+    }
+    return React.createElement(
+      "div",
+      { className: "community-tab", id: "supporters-tab" },
+      usersDisplay
     );
   }
 }
