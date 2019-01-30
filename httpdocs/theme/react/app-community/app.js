@@ -139,9 +139,9 @@ class CommunityPageTabsContainer extends React.Component {
       $.ajax({url: selectedTab.url,cache: false}).done(function(response){
         console.log(response);
         self.setState({
-          tabData:{
+          tabContent:{
             title:selectedTab.title,
-            content:response
+            data:response
           },
           loading:false
         })
