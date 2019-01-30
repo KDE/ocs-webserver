@@ -216,7 +216,8 @@ class ProductCarousel extends React.Component {
   }
 
   updateDimensions(animateCarousel){
-
+    console.log('update dimensions');
+    console.log('animate carousel - ' + animateCarousel);
     let itemsPerRow = 5;
     if (window.hpVersion === 2){
       if (this.props.device === 'large'){
@@ -252,7 +253,8 @@ class ProductCarousel extends React.Component {
   }
 
   animateProductCarousel(dir,animateCarousel){
-
+    console.log('animate carousel dir - ' + dir);
+    console.log('animate carousel - ' + animateCarousel);
     let newSliderPosition = this.state.sliderPosition;
     const endPoint = this.state.sliderWidth - (this.state.containerWidth - this.state.itemWidth);
 
@@ -288,24 +290,26 @@ class ProductCarousel extends React.Component {
   }
 
   getNextProductsBatch(){
+    console.log('get next product batch');
     let limit = (this.state.itemsPerRow * (this.state.containerNumber + 1)) - this.state.products.length;
     if (limit <= 0){
       limit = this.state.itemsPerRow;
     }
-    console.log(limit);
+    console.log('limit - ' + limit);
     let url = "/home/showlastproductsjson/?page=1&limit="+limit+"&offset="+this.state.offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
     const self = this;
     $.ajax({url: url,cache: false}).done(function(response){
         const products = self.state.products.concat(response);
         const offset = self.state.offset + self.state.itemsPerRow;
-        let finishedProducts = false;
+        let finishedProducts = false,
+            animateCarousel = true;
         if (response.length === 0){
           finishedProducts = true;
+          animateCarousel = false;
         }
-        console.log(finishedProducts);
-        console.log(response.length);
+        console.log('finished products ' + finishedProducts);
+        console.log(''response.length);
         self.setState({products:products,offset:offset,finishedProducts:finishedProducts},function(){
-          const animateCarousel = true;
           self.updateDimensions(animateCarousel);
         });
     });
