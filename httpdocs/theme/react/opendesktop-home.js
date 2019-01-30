@@ -301,7 +301,8 @@ class ProductCarousel extends React.Component {
       containerNumber: containerNumber,
       sliderWidth: sliderWidth,
       itemWidth: itemWidth,
-      itemsPerRow: itemsPerRow - 1
+      itemsPerRow: itemsPerRow - 1,
+      disableRightArrow: false
     }, function () {
       if (animateCarousel) {
         this.animateProductCarousel('right', animateCarousel);
@@ -363,8 +364,7 @@ class ProductCarousel extends React.Component {
         self.setState({
           products: products,
           offset: offset + response.length,
-          finishedProducts: finishedProducts,
-          disableRightArrow: false }, function () {
+          finishedProducts: finishedProducts }, function () {
           self.updateDimensions(animateCarousel);
         });
       });
