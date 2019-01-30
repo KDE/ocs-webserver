@@ -284,6 +284,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
                 $this->_authMember->member_id);
         }
+        
+        $fmodel =new  Default_Model_DbTable_PploadFiles();
+        $files = $fmodel->fetchFilesForProject($this->view->product->ppload_collection_id);
+        $this->view->filesJson = Zend_Json::encode($files);
+        
        
         //gitlab
         if($this->view->product->is_gitlab_project) {
