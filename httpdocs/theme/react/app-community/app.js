@@ -229,7 +229,7 @@ class CommunityPageTabMenuItem extends React.Component {
   render(){
     return(
       <li>
-        <a onClick={this.onTabMenuItemClick}>
+        <a className={this.props.index === this.props.selectedIndex ? "active" : ""} onClick={this.onTabMenuItemClick}>
           {this.props.tab.title}
         </a>
       </li>
@@ -276,6 +276,7 @@ class CreatorsTab extends React.Component {
           key={index}
           item={creator}
           type={'creator'}
+          selectedIndex={this.props.selectedIndex}
         />
       ))
     }

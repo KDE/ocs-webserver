@@ -268,7 +268,7 @@ class CommunityPageTabMenuItem extends React.Component {
       null,
       React.createElement(
         "a",
-        { onClick: this.onTabMenuItemClick },
+        { className: this.props.index === this.props.selectedIndex ? "active" : "", onClick: this.onTabMenuItemClick },
         this.props.tab.title
       )
     );
@@ -314,7 +314,8 @@ class CreatorsTab extends React.Component {
       creatorsDisplay = this.props.items.map((creator, index) => React.createElement(CommunityListItem, {
         key: index,
         item: creator,
-        type: 'creator'
+        type: 'creator',
+        selectedIndex: this.props.selectedIndex
       }));
     }
     return React.createElement(
