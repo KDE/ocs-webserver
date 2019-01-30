@@ -178,7 +178,7 @@ class CommunityPageTabsContainer extends React.Component {
         console.log(response);
         self.setState({
           tabData: {
-            title: tab.title,
+            title: selectedTab.title,
             content: response
           },
           loading: false
@@ -211,7 +211,7 @@ class CommunityPageTabsContainer extends React.Component {
       tabContent = React.createElement(
         "p",
         null,
-        this.state.tabs[this.state.selectedIndex].title
+        this.state.tabContent.title
       );
     }
 
