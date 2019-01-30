@@ -308,7 +308,7 @@ class ProductCarousel extends React.Component {
           animateCarousel = false;
         }
         console.log('finished products ' + finishedProducts);
-        console.log(''response.length);
+        console.log(response.length);
         self.setState({products:products,offset:offset,finishedProducts:finishedProducts},function(){
           self.updateDimensions(animateCarousel);
         });
