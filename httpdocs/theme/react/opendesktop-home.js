@@ -314,7 +314,7 @@ class ProductCarousel extends React.Component {
   animateProductCarousel(dir, animateCarousel) {
 
     let newSliderPosition = this.state.sliderPosition;
-    const endPoint = this.state.sliderWidth - this.state.containerWidth;
+    const endPoint = this.state.sliderWidth - (this.state.containerWidth - this.state.itemWidth);
 
     if (dir === 'left') {
       if (this.state.sliderPosition > 0) {
