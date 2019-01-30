@@ -150,7 +150,9 @@ class CommunityPageTabsContainer extends React.Component {
   }
 
   handleTabMenuItemClick(itemIndex){
-    this.renderTabs(itemIndex);
+    this.setState({loading:true},function(){
+      this.renderTabs(itemIndex);
+    });
   }
 
   render(){
