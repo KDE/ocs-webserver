@@ -173,7 +173,7 @@ class CommunityPageTabsContainer extends React.Component {
         </ul>
       );
       tabContent = (
-        <p>{this.state.tabs[this.state.selectedIndex].title}
+        <p>{this.state.tabs[this.state.selectedIndex].title}</p>
       )
     }
 
