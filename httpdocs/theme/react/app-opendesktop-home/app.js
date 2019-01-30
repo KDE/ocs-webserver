@@ -216,8 +216,6 @@ class ProductCarousel extends React.Component {
   }
 
   updateDimensions(animateCarousel){
-    console.log('update dimensions');
-    console.log('animate carousel - ' + animateCarousel);
     let itemsPerRow = 5;
     if (window.hpVersion === 2){
       if (this.props.device === 'large'){
@@ -253,8 +251,6 @@ class ProductCarousel extends React.Component {
   }
 
   animateProductCarousel(dir,animateCarousel){
-    console.log('animate carousel dir - ' + dir);
-    console.log('animate carousel - ' + animateCarousel);
     let newSliderPosition = this.state.sliderPosition;
     const endPoint = this.state.sliderWidth - (this.state.containerWidth - this.state.itemWidth);
 
@@ -264,6 +260,7 @@ class ProductCarousel extends React.Component {
       }
     } else {
       if (this.state.sliderPosition < endPoint){
+        console.log('slider position is smaller then endPoint');
         newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
       } else {
         if (!animateCarousel){
@@ -307,8 +304,9 @@ class ProductCarousel extends React.Component {
           finishedProducts = true;
           animateCarousel = false;
         }
-        console.log('finished products ' + finishedProducts);
-        console.log(response.length);
+        console.log('products in res - ' + response.length);
+        console.log('finished products - ' + finishedProducts);
+        console.log('animate carousel - ' + animateCarousel);
         self.setState({products:products,offset:offset,finishedProducts:finishedProducts},function(){
           self.updateDimensions(animateCarousel);
         });
