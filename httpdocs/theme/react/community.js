@@ -172,22 +172,14 @@ class CommunityPageTabsContainer extends React.Component {
 
   render() {
 
-    let tabsMenu;
-    if (this.state.tabs) {
-      const selectedIndex = this.state.selectedIndex;
-      const tabsMenuDisplay = this.state.tabs.map((t, index) => React.createElement(CommunityPageTabMenuItem, {
-        key: index,
-        index: index,
-        selectedIndex: selectedIndex,
-        tab: t,
-        onTabMenuItemClick: this.handleTabMenuItemClick
-      }));
-      tabsMenu = React.createElement(
-        "ul",
-        null,
-        tabsMenuDisplay
-      );
-    }
+    const selectedIndex = this.state.selectedIndex;
+    const tabsMenuDisplay = this.state.tabs.map((t, index) => React.createElement(CommunityPageTabMenuItem, {
+      key: index,
+      index: index,
+      selectedIndex: selectedIndex,
+      tab: t,
+      onTabMenuItemClick: this.handleTabMenuItemClick
+    }));
 
     return React.createElement(
       "div",
@@ -195,7 +187,11 @@ class CommunityPageTabsContainer extends React.Component {
       React.createElement(
         "div",
         { id: "tabs-menu" },
-        tabsMenu
+        React.createElement(
+          "ul",
+          null,
+          tabsMenuDisplay
+        )
       ),
       React.createElement(
         "div",

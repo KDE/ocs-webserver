@@ -134,29 +134,23 @@ class CommunityPageTabsContainer extends React.Component {
 
   render(){
 
-    let tabsMenu;
-    if (this.state.tabs){
-      const selectedIndex = this.state.selectedIndex;
-      const tabsMenuDisplay = this.state.tabs.map((t,index) => (
-        <CommunityPageTabMenuItem
-          key={index}
-          index={index}
-          selectedIndex={selectedIndex}
-          tab={t}
-          onTabMenuItemClick={this.handleTabMenuItemClick}
-        />
-      ))
-      tabsMenu = (
-        <ul>
-          {tabsMenuDisplay}
-        </ul>
-      )
-    }
+    const selectedIndex = this.state.selectedIndex;
+    const tabsMenuDisplay = this.state.tabs.map((t,index) => (
+      <CommunityPageTabMenuItem
+        key={index}
+        index={index}
+        selectedIndex={selectedIndex}
+        tab={t}
+        onTabMenuItemClick={this.handleTabMenuItemClick}
+      />
+    ));
 
     return(
       <div id="community-page-tabs-container">
         <div id="tabs-menu">
-          {tabsMenu}
+          <ul>
+            {tabsMenuDisplay}
+          </ul>
         </div>
         <div id="tabs-content">
           content
