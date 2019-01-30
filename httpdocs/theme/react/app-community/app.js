@@ -190,7 +190,7 @@ class CommunityPageTabsContainer extends React.Component {
         );
       } else if (this.state.selectedIndex === 2 || this.state.selectedIndex === 3){
         tabContent = (
-          <PlingedProductsTab items={data} />
+          <PlingedProductsTab selectedIndex={this.state.selectedIndex} items={data} />
         );
       } else if (this.state.selectedIndex === 5 || this.state.selectedIndex === 6){
         tabContent = (
@@ -255,8 +255,8 @@ class UsersTab extends React.Component {
       ));
     }
     return(
-      <div className="community-tab" id="supporters-tab">
-        {usersDisplay}
+      <div className="community-tab card-list-display" id="supporters-tab">
+        <ul>{usersDisplay}</ul>
       </div>
     );
   }
@@ -280,8 +280,8 @@ class CreatorsTab extends React.Component {
       ))
     }
     return(
-      <div className="community-tab" id="most-pling-creators-tab">
-        {creatorsDisplay}
+      <div className="community-tab top-list-display" id="most-pling-creators-tab">
+        <ol>{creatorsDisplay}</ol>
       </div>
     );
   }
@@ -294,9 +294,9 @@ class PlingedProductsTab extends React.Component {
   }
 
   render(){
-    let productsDisplay;
+    let products;
     if (this.props.items && this.props.items.length > 0){
-      productsDisplay = this.props.items.map((product,index) => (
+      products = this.props.items.map((product,index) => (
         <CommunityListItem
           key={index}
           item={product}
@@ -304,8 +304,22 @@ class PlingedProductsTab extends React.Component {
         />
       ))
     }
+
+    let productsDisplay,
+        tabContainerCssClass;
+    if (this.props.selectedIndex === 3){
+      productsDisplay = (
+        <ol>{products}</ol>
+      );
+      tabContainerCssClass = "top-list-display";
+    } else if (this.props.selectedIndex === 4) {
+      productsDisplay = (
+        <ul>{products}</ul>
+      );
+      tabContainerCssClass = "card-list-display"
+    }
     return(
-      <div className="community-tab" id="most-pling-creators-tab">
+      <div className={"community-tab " + tabContainerCssClass} id="most-pling-creators-tab">
         {productsDisplay}
       </div>
     );
@@ -319,9 +333,9 @@ class MemberScoresTab extends React.Component {
   }
 
   render(){
-    let membersDisplay;
+    let members;
     if (this.props.items && this.props.items.length > 0){
-      membersDisplay = this.props.items.map((member,index) => (
+      members = this.props.items.map((member,index) => (
         <CommunityListItem
           key={index}
           item={member}
@@ -329,8 +343,23 @@ class MemberScoresTab extends React.Component {
         />
       ));
     }
+
+    let membersDisplay,
+        tabContainerCssClass;
+    if (this.props.selectedIndex === 6){
+      membersDisplay = (
+        <ol>{members}</ol>
+      );
+      tabContainerCssClass = "top-list-display";
+    } else if (this.props.selectedIndex === 5) {
+      membersDisplay = (
+        <ul>{members}</ul>
+      );
+      tabContainerCssClass = "card-list-display"
+    }
+
     return(
-      <div className="community-tab" id="supporters-tab">
+      <div className={"community-tab " + tabContainerCssClass} id="supporters-tab">
         {membersDisplay}
       </div>
     );
@@ -345,24 +374,40 @@ class CommunityListItem extends React.Component {
   }
 
   render(){
-    let i = this.props.item;
-    let specificInfoDisplay;
+
+    const i = this.props.item;
+    let score;
     if (this.props.type === 'user'){
-      specificInfoDisplay = <li>supporter id : {i.supporter_id}</li>
+      // score = '';
     } else if (this.props.type === 'creator'){
-      specificInfoDisplay = <li>cnt : {i.cnt}</li>
+      score = i.cnt;
+    } else if (this.props.type === 'product'){
+      score = i.laplace_score;
+    } else if (this.props.type === 'score'){
+      score = i.score
     }
-    return(
-      <div className="supporter-list-item">
-        <span>{this.props.type}</span>
-        <ul>
-          <li>member id : {i.member_id}</li>
-          <li>username : {i.username}</li>
-          <li>profile_image_url : {i.profile_image_url}</li>
-          <li>created at : {i.created_at}</li>
-          {specificInfoDisplay}
-        </ul>
+
+    const usersDisplay = (
+      <div className="user-display-container">
+        <div className="user">
+          <figure><img src={i.profile_image_url}/></figure>
+          <span className="username"><a href={"/u/"+i.username+"/"}>{i.username}</a></span>
+          <span className="user-created">{i.created_at}</span>
+        </div>
       </div>
+    );
+
+    const project = {
+      id:i.project_id,
+      title:i.title,
+      cat_title:i.catTitle,
+      image_url:i.image_small
+    }
+
+    return(
+      <li className="list-item">
+        {usersDisplay}
+      </li>
     );
   }
 }

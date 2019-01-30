@@ -224,7 +224,7 @@ class CommunityPageTabsContainer extends React.Component {
       } else if (this.state.selectedIndex === 1) {
         tabContent = React.createElement(CreatorsTab, { items: data });
       } else if (this.state.selectedIndex === 2 || this.state.selectedIndex === 3) {
-        tabContent = React.createElement(PlingedProductsTab, { items: data });
+        tabContent = React.createElement(PlingedProductsTab, { selectedIndex: this.state.selectedIndex, items: data });
       } else if (this.state.selectedIndex === 5 || this.state.selectedIndex === 6) {
         tabContent = React.createElement(MemberScoresTab, { items: data });
       }
@@ -292,8 +292,12 @@ class UsersTab extends React.Component {
     }
     return React.createElement(
       "div",
-      { className: "community-tab", id: "supporters-tab" },
-      usersDisplay
+      { className: "community-tab card-list-display", id: "supporters-tab" },
+      React.createElement(
+        "ul",
+        null,
+        usersDisplay
+      )
     );
   }
 }
@@ -315,8 +319,12 @@ class CreatorsTab extends React.Component {
     }
     return React.createElement(
       "div",
-      { className: "community-tab", id: "most-pling-creators-tab" },
-      creatorsDisplay
+      { className: "community-tab top-list-display", id: "most-pling-creators-tab" },
+      React.createElement(
+        "ol",
+        null,
+        creatorsDisplay
+      )
     );
   }
 }
@@ -328,17 +336,34 @@ class PlingedProductsTab extends React.Component {
   }
 
   render() {
-    let productsDisplay;
+    let products;
     if (this.props.items && this.props.items.length > 0) {
-      productsDisplay = this.props.items.map((product, index) => React.createElement(CommunityListItem, {
+      products = this.props.items.map((product, index) => React.createElement(CommunityListItem, {
         key: index,
         item: product,
         type: 'product'
       }));
     }
+
+    let productsDisplay, tabContainerCssClass;
+    if (this.props.selectedIndex === 3) {
+      productsDisplay = React.createElement(
+        "ol",
+        null,
+        products
+      );
+      tabContainerCssClass = "top-list-display";
+    } else if (this.props.selectedIndex === 4) {
+      productsDisplay = React.createElement(
+        "ul",
+        null,
+        products
+      );
+      tabContainerCssClass = "card-list-display";
+    }
     return React.createElement(
       "div",
-      { className: "community-tab", id: "most-pling-creators-tab" },
+      { className: "community-tab " + tabContainerCssClass, id: "most-pling-creators-tab" },
       productsDisplay
     );
   }
@@ -351,17 +376,35 @@ class MemberScoresTab extends React.Component {
   }
 
   render() {
-    let membersDisplay;
+    let members;
     if (this.props.items && this.props.items.length > 0) {
-      membersDisplay = this.props.items.map((member, index) => React.createElement(CommunityListItem, {
+      members = this.props.items.map((member, index) => React.createElement(CommunityListItem, {
         key: index,
         item: member,
         type: 'score'
       }));
     }
+
+    let membersDisplay, tabContainerCssClass;
+    if (this.props.selectedIndex === 6) {
+      membersDisplay = React.createElement(
+        "ol",
+        null,
+        members
+      );
+      tabContainerCssClass = "top-list-display";
+    } else if (this.props.selectedIndex === 5) {
+      membersDisplay = React.createElement(
+        "ul",
+        null,
+        members
+      );
+      tabContainerCssClass = "card-list-display";
+    }
+
     return React.createElement(
       "div",
-      { className: "community-tab", id: "supporters-tab" },
+      { className: "community-tab " + tabContainerCssClass, id: "supporters-tab" },
       membersDisplay
     );
   }
@@ -375,60 +418,58 @@ class CommunityListItem extends React.Component {
   }
 
   render() {
-    let i = this.props.item;
-    let specificInfoDisplay;
+
+    const i = this.props.item;
+    let score;
     if (this.props.type === 'user') {
-      specificInfoDisplay = React.createElement(
-        "li",
-        null,
-        "supporter id : ",
-        i.supporter_id
-      );
+      // score = '';
     } else if (this.props.type === 'creator') {
-      specificInfoDisplay = React.createElement(
-        "li",
-        null,
-        "cnt : ",
-        i.cnt
-      );
+      score = i.cnt;
+    } else if (this.props.type === 'product') {
+      score = i.laplace_score;
+    } else if (this.props.type === 'score') {
+      score = i.score;
     }
-    return React.createElement(
+
+    const usersDisplay = React.createElement(
       "div",
-      { className: "supporter-list-item" },
+      { className: "user-display-container" },
       React.createElement(
-        "span",
-        null,
-        this.props.type
-      ),
-      React.createElement(
-        "ul",
-        null,
+        "div",
+        { className: "user" },
         React.createElement(
-          "li",
+          "figure",
           null,
-          "member id : ",
-          i.member_id
+          React.createElement("img", { src: i.profile_image_url })
         ),
         React.createElement(
-          "li",
-          null,
-          "username : ",
-          i.username
+          "span",
+          { className: "username" },
+          React.createElement(
+            "a",
+            { href: "/u/" + i.username + "/" },
+            i.username
+          )
         ),
         React.createElement(
-          "li",
-          null,
-          "profile_image_url : ",
-          i.profile_image_url
-        ),
-        React.createElement(
-          "li",
-          null,
-          "created at : ",
+          "span",
+          { className: "user-created" },
           i.created_at
-        ),
-        specificInfoDisplay
+        )
       )
+    );
+
+    const project = {
+      id: i.project_id,
+      title: i.title,
+      cat_title: i.catTitle,
+      image_url: i.image_small
+    };
+
+    return React.createElement(
+      "li",
+      { className: "list-item" },
+      usersDisplay
     );
   }
 }
