@@ -241,8 +241,7 @@ class ProductCarousel extends React.Component {
       containerNumber:containerNumber,
       sliderWidth:sliderWidth,
       itemWidth:itemWidth,
-      itemsPerRow:itemsPerRow - 1,
-      disableRightArrow:false
+      itemsPerRow:itemsPerRow - 1
     },function(){
       if (animateCarousel){
         this.animateProductCarousel('right',animateCarousel);
