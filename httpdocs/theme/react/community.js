@@ -169,13 +169,26 @@ class CommunityPageTabsContainer extends React.Component {
     const tabs = window.appHelpers.generateTabsMenuArray();
     this.setState({
       tabs: tabs,
-      selectedIndex: selectedIndex,
-      loading: false
+      selectedIndex: selectedIndex
+    }, function () {
+      // get selected tab thing
+      const self = this;
+      const selectedTab = self.state.tabs[self.state.selectedIndex];
+      $.ajax({ url: selectedTab.url, cache: false }).done(function (response) {
+        console.log(response);
+        self.setState({
+          tabData: {
+            title: tab.title,
+            content: response
+          },
+          loading: false
+        });
+      });
     });
   }
 
   handleTabMenuItemClick(itemIndex) {
-    console.log(this.state.tabs[itemIndex]);
+    this.renderTabs(itemIndex);
   }
 
   render() {
