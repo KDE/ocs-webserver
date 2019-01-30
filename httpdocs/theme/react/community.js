@@ -156,7 +156,12 @@ class CommunityPageTabsContainer extends React.Component {
       selectedIndex: 0
     };
     this.renderTabs = this.renderTabs.bind(this);
+    this.getSelectedTabData = this.getSelectedTabData.bind(this);
     this.handleTabMenuItemClick = this.handleTabMenuItemClick.bind(this);
+  }
+
+  componentDidMount() {
+    this.getSelectedTabData();
   }
 
   renderTabs(selectedIndex) {
@@ -168,18 +173,22 @@ class CommunityPageTabsContainer extends React.Component {
       tabs: tabs,
       selectedIndex: selectedIndex
     }, function () {
-      // get selected tab thing
-      const self = this;
-      const selectedTab = self.state.tabs[self.state.selectedIndex];
-      $.ajax({ url: selectedTab.url, cache: false }).done(function (response) {
-        console.log(response);
-        self.setState({
-          tabContent: {
-            title: selectedTab.title,
-            data: response.data
-          },
-          loading: false
-        });
+      this.getSelectedTabData();
+    });
+  }
+
+  getSelectedTabData() {
+    // get selected tab thing
+    const self = this;
+    const selectedTab = self.state.tabs[self.state.selectedIndex];
+    $.ajax({ url: selectedTab.url, cache: false }).done(function (response) {
+      console.log(response);
+      self.setState({
+        tabContent: {
+          title: selectedTab.title,
+          data: response.data
+        },
+        loading: false
       });
     });
   }
