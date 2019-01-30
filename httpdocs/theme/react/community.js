@@ -326,6 +326,29 @@ class MostPlingedCreatorsTab extends React.Component {
   }
 }
 
+class MostPlingedProductsTab extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    let productsDisplay;
+    if (this.props.items && this.props.items.length > 0) {
+      productsDisplay = this.props.items.map((product, index) => React.createElement(CommunityListItem, {
+        key: index,
+        item: product,
+        type: 'product'
+      }));
+    }
+    return React.createElement(
+      "div",
+      { className: "community-tab", id: "most-pling-creators-tab" },
+      productsDisplay
+    );
+  }
+}
+
 class CommunityListItem extends React.Component {
   constructor(props) {
     super(props);
