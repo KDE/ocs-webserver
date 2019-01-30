@@ -347,28 +347,29 @@ class ProductCarousel extends React.Component {
   }
 
   getNextProductsBatch() {
-    console.log('get next product batch');
-    let limit = this.state.itemsPerRow * (this.state.containerNumber + 1) - this.state.products.length;
-    if (limit <= 0) {
-      limit = this.state.itemsPerRow;
-    }
-    console.log('limit - ' + limit);
-    let url = "/home/showlastproductsjson/?page=1&limit=" + limit + "&offset=" + this.state.offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
-    const self = this;
-    $.ajax({ url: url, cache: false }).done(function (response) {
-      const products = self.state.products.concat(response);
-      const offset = self.state.offset + self.state.itemsPerRow;
-      let finishedProducts = false,
-          animateCarousel = true;
-      if (response.length === 0) {
-        finishedProducts = true;
-        animateCarousel = false;
+    this.setState({ disableRightArrow: true }, function () {
+      let limit = this.state.itemsPerRow * (this.state.containerNumber + 1) - this.state.products.length;
+      if (limit <= 0) {
+        limit = this.state.itemsPerRow;
       }
-      console.log('products in res - ' + response.length);
-      console.log('finished products - ' + finishedProducts);
-      console.log('animate carousel - ' + animateCarousel);
-      self.setState({ products: products, offset: offset + response.length, finishedProducts: finishedProducts }, function () {
-        self.updateDimensions(animateCarousel);
+      let url = "/home/showlastproductsjson/?page=1&limit=" + limit + "&offset=" + this.state.offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
+      const self = this;
+      $.ajax({ url: url, cache: false }).done(function (response) {
+        const products = self.state.products.concat(response);
+        const offset = self.state.offset + self.state.itemsPerRow;
+        let finishedProducts = false,
+            animateCarousel = true;
+        if (response.length === 0) {
+          finishedProducts = true;
+          animateCarousel = false;
+        }
+        self.setState({
+          products: products,
+          offset: offset + response.length,
+          finishedProducts: finishedProducts,
+          disableRightArrow: false }, function () {
+          self.updateDimensions(animateCarousel);
+        });
       });
     });
   }
