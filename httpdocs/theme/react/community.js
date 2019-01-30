@@ -232,7 +232,7 @@ class CommunityPageTabMenuItem extends React.Component {
       React.createElement(
         "a",
         { onClick: this.onTabMenuItemClick },
-        this.props.title
+        this.props.tab.title
       )
     );
   }

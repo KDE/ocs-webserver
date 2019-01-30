@@ -189,7 +189,7 @@ class CommunityPageTabMenuItem extends React.Component {
     return(
       <li>
         <a onClick={this.onTabMenuItemClick}>
-          {this.props.title}
+          {this.props.tab.title}
         </a>
       </li>
     );
