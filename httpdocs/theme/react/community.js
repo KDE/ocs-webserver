@@ -270,17 +270,18 @@ class SupportersTab extends React.Component {
   }
 
   componentDidMount() {
-    console.log('supporters tab');
+    console.log(this.props);
   }
 
   render() {
-
-    const supportersDisplay = this.props.items.map((supporter, index) => React.createElement(CommunityListItem, {
-      key: index,
-      item: supporter,
-      type: 'supporter'
-    }));
-
+    let supportersDisplay;
+    if (this.props.items && this.props.items.length > 0) {
+      supportersDisplay = this.props.items.map((supporter, index) => React.createElement(CommunityListItem, {
+        key: index,
+        item: supporter,
+        type: 'supporter'
+      }));
+    }
     return React.createElement(
       "div",
       { className: "community-tab", id: "supporters-tab" },
@@ -295,18 +296,15 @@ class MostPlingedCreatorsTab extends React.Component {
     this.state = {};
   }
 
-  componentDidMount() {
-    console.log('most plinged creators tab');
-  }
-
   render() {
-
-    const creatorsDisplay = this.props.items.map((creator, index) => React.createElement(CommunityListItem, {
-      key: index,
-      item: creator,
-      type: 'creator'
-    }));
-
+    let creatorsDisplay;
+    if (this.props.items && this.props.items.length > 0) {
+      creatorsDisplay = this.props.items.map((creator, index) => React.createElement(CommunityListItem, {
+        key: index,
+        item: creator,
+        type: 'creator'
+      }));
+    }
     return React.createElement(
       "div",
       { className: "community-tab", id: "most-pling-creators-tab" },
