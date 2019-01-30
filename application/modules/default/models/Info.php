@@ -514,24 +514,24 @@ class Default_Model_Info
             FROM
                 `stat_projects`  AS `p`';
 
-        if (isset($tags)) {
-            $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
-                . ')) AS store_tags ON p.project_id = store_tags.project_id';
-        }
+        // if (isset($tags)) {
+        //     $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
+        //         . ')) AS store_tags ON p.project_id = store_tags.project_id';
+        // }
 
-        $sql .= '
-            WHERE
-                `p`.`status` = 100                
-                AND `p`.`project_category_id` IN (' . implode(',', $activeCategories) . ')
-                AND `p`.`amount_reports` IS NULL';
+        // $sql .= '
+        //     WHERE
+        //         `p`.`status` = 100                
+        //         AND `p`.`project_category_id` IN (' . implode(',', $activeCategories) . ')
+        //         AND `p`.`amount_reports` IS NULL';
 
-        if (isset($tag_isoriginal)) {
-            if ($tag_isoriginal) {
-                $sql .= ' AND find_in_set("' . self::TAG_ISORIGINAL . '", tags)';
-            } else {
-                $sql .= ' AND NOT find_in_set("' . self::TAG_ISORIGINAL . '", tags)';
-            }
-        }
+        // if (isset($tag_isoriginal)) {
+        //     if ($tag_isoriginal) {
+        //         $sql .= ' AND find_in_set("' . self::TAG_ISORIGINAL . '", tags)';
+        //     } else {
+        //         $sql .= ' AND NOT find_in_set("' . self::TAG_ISORIGINAL . '", tags)';
+        //     }
+        // }
 
         $sql .= ' ORDER BY IFNULL(p.changed_at,p.created_at)  DESC';
 
