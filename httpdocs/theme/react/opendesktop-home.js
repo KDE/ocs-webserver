@@ -291,7 +291,6 @@ class ProductCarousel extends React.Component {
     const containerNumber = Math.ceil(this.state.products.length / (itemsPerRow - 1));
     const itemWidth = containerWidth / itemsPerRow;
     const sliderWidth = (containerWidth - itemWidth) * containerNumber;
-    console.log(sliderWidth);
     let sliderPosition = 0;
     if (this.state.sliderPosition) {
       sliderPosition = this.state.sliderPosition;
@@ -319,13 +318,9 @@ class ProductCarousel extends React.Component {
         newSliderPosition = this.state.sliderPosition - (this.state.containerWidth - this.state.itemWidth);
       }
     } else {
-      console.log('endPoint - ' + endPoint);
-      console.log('slider position - ' + this.state.sliderPosition);
       if (Math.trunc(this.state.sliderPosition) < Math.trunc(endPoint)) {
-        console.log('slider position is smaller / equal then endPoint');
         newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
       } else {
-        console.log('slider position is bigger then endPoint');
         if (!animateCarousel) {
           this.getNextProductsBatch();
         }
