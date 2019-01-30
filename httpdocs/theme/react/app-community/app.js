@@ -203,9 +203,7 @@ class CommunityPageTabsContainer extends React.Component {
     return(
       <div id="community-page-tabs-container">
         <div id="tabs-menu">
-          <ul>
-            {tabsMenuDisplay}
-          </ul>
+          {tabsMenuDisplay}
         </div>
         <div id="tabs-content">
           {tabContent}
@@ -228,7 +226,7 @@ class CommunityPageTabMenuItem extends React.Component {
 
   render(){
     return(
-      <li>
+      <div className="tab-menu-item">
         <a className={this.props.index === this.props.selectedIndex ? "active" : ""} onClick={this.onTabMenuItemClick}>
           {this.props.tab.title}
         </a>
