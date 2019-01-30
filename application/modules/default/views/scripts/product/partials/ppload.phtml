@@ -474,15 +474,16 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                             oldestFileId = this.id;
                                     }
 
-                                    cout_downloads = this.downloaded_count || 0;
+                                    var count_downloads = this.downloaded_count || 0;
 
-                                    downloaded_count_total = downloaded_count_total+parseInt(cout_downloads);
+                                    downloaded_count_total = downloaded_count_total+parseInt(count_downloads);
 
                                     var hash = '<?= $this->download_hash ?>';
                                     var timetamp = '<?= $this->download_timestamp ?>';
                                     var userid = '<?= $this->product->member_id?>';
                                     var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/download/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
-                                    var downloadLink = '<a class="inactiverows" style="color: #ccc; display:none;"" href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
+                                    //var downloadLink = '<a class="inactiverows" style="color: #ccc; display:none;" href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
+                                    var downloadLink = '<a class="inactiverows opendownloadfile" style="color: #ccc; display:none;" href="' + downloadUrl + '" id="data-link' + this.id + '" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>"  data-link_type="download">' + this.name + '</a>';
 
 
                                      var fileDescription = '';
