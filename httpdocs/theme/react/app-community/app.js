@@ -240,13 +240,13 @@ class SupportersTab extends React.Component {
   render(){
     let supportersDisplay;
     if (this.props.data.length > 0){
-      supportersDisplay = this.props.data.map((supporter,index){
+      supportersDisplay = this.props.data.map((supporter,index) => (
         <CommunityListItem
           key={index}
           item={supporter}
           type={'supporter'}
         />
-      })
+      ));
     }
     return(
       <div className="community-tab" id="supporters-tab">
@@ -265,13 +265,13 @@ class MostPlingedCreatorsTab extends React.Component {
   render(){
     let creatorsDisplay;
     if (this.props.data.length > 0){
-      creatorsDisplay = this.props.data.map((creator,index){
+      creatorsDisplay = this.props.data.map((creator,index) => (
         <CommunityListItem
           key={index}
           item={creator}
           type={'creator'}
         />
-      })
+      ))
     }
     return(
       <div className="community-tab" id="most-pling-creators-tab">
