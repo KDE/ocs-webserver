@@ -1438,7 +1438,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $collectionResponse = $pploadApi->putCollection($product->ppload_collection_id, $collectionRequest);
         }
 
-        $this->forward('products', 'user', 'default');
+        $this->forward('products', 'user', 'default', array('member_id' => $memberId));
+        //$this->redirect('/member/'.$memberId.'/products');
     }
 
     public function publishAction()
@@ -1485,7 +1486,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $collectionResponse = $pploadApi->putCollection($product->ppload_collection_id, $collectionRequest);
         }
 
-        $this->forward('products', 'user', 'default');
+        $this->forward('products', 'user', 'default', array('member_id' => $memberId));
+        //$this->redirect('/member/'.$memberId.'/products');
     }
 
    public function loadratingsAction()
