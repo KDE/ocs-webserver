@@ -182,11 +182,11 @@ class CommunityPageTabsContainer extends React.Component {
 
       if (this.state.selectedIndex === 0 || this.state.selectedIndex === 4){
         tabContent = (
-          <UsersTab items={data} />
+          <UsersTab selectedIndex={this.state.selectedIndex} items={data} />
         );
       } else if (this.state.selectedIndex === 1){
         tabContent = (
-          <CreatorsTab items={data} />
+          <CreatorsTab  selectedIndex={this.state.selectedIndex} items={data} />
         );
       } else if (this.state.selectedIndex === 2 || this.state.selectedIndex === 3){
         tabContent = (
@@ -194,7 +194,7 @@ class CommunityPageTabsContainer extends React.Component {
         );
       } else if (this.state.selectedIndex === 5 || this.state.selectedIndex === 6){
         tabContent = (
-          <MemberScoresTab items={data} />
+          <MemberScoresTab selectedIndex={this.state.selectedIndex} items={data} />
         );
       }
 

@@ -220,13 +220,13 @@ class CommunityPageTabsContainer extends React.Component {
       const data = this.state.tabContent.data;
 
       if (this.state.selectedIndex === 0 || this.state.selectedIndex === 4) {
-        tabContent = React.createElement(UsersTab, { items: data });
+        tabContent = React.createElement(UsersTab, { selectedIndex: this.state.selectedIndex, items: data });
       } else if (this.state.selectedIndex === 1) {
-        tabContent = React.createElement(CreatorsTab, { items: data });
+        tabContent = React.createElement(CreatorsTab, { selectedIndex: this.state.selectedIndex, items: data });
       } else if (this.state.selectedIndex === 2 || this.state.selectedIndex === 3) {
         tabContent = React.createElement(PlingedProductsTab, { selectedIndex: this.state.selectedIndex, items: data });
       } else if (this.state.selectedIndex === 5 || this.state.selectedIndex === 6) {
-        tabContent = React.createElement(MemberScoresTab, { items: data });
+        tabContent = React.createElement(MemberScoresTab, { selectedIndex: this.state.selectedIndex, items: data });
       }
     }
 
