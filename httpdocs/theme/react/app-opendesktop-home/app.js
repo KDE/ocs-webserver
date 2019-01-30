@@ -275,7 +275,7 @@ class ProductCarousel extends React.Component {
       }
 
       let disableRightArrow = false;
-      if ( Math.trunc(this.state.sliderPosition) >= Math.trunc(endPoint) || this.state.finishedProducts === true){
+      if ( Math.trunc(this.state.sliderPosition) < Math.trunc(endPoint) || this.state.finishedProducts === true){
         disableRightArrow = true;
       }
 
@@ -292,6 +292,8 @@ class ProductCarousel extends React.Component {
     let url = "/home/showlastproductsjson/?page=1&limit="+limit+"&offset="+this.state.offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
     const self = this;
     $.ajax({url: url,cache: false}).done(function(response){
+      console.log('response - ' + response);
+      console.log('response length - ' + response.length);
         const products = self.state.products.concat(response);
         const offset = self.state.offset + self.state.itemsPerRow;
         let finishedProducts = false,
