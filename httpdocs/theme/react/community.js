@@ -195,6 +195,7 @@ class CommunityPageTabsContainer extends React.Component {
     console.log(this.state);
     let tabsMenu, tabContent;
     if (this.state.loading === false) {
+
       const selectedIndex = this.state.selectedIndex;
       const tabsMenuDisplay = this.state.tabs.map((t, index) => React.createElement(CommunityPageTabMenuItem, {
         key: index,
@@ -208,11 +209,20 @@ class CommunityPageTabsContainer extends React.Component {
         null,
         tabsMenuDisplay
       );
-      tabContent = React.createElement(
-        "p",
-        null,
-        this.state.tabContent.title
-      );
+
+      const data = this.state.tabContent.data;
+      if (this.state.selectedIndex === 0) {
+        tabContent = React.createElement(SupportersTab, {
+          items: data
+        });
+      } /*else if (this.state.selectedIndex === 1){
+        tabContent = (
+          <MostPlingedCreatorsTab
+            items={data}
+          />
+        );
+        } else if (this.state.selectedIndex === 2){
+        }*/
     }
 
     return React.createElement(
