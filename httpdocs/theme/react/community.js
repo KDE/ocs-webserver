@@ -276,8 +276,8 @@ class SupportersTab extends React.Component {
 
   render() {
     let supportersDisplay;
-    if (this.props.data.length > 0) {
-      supportersDisplay = this.props.data.map((supporter, index) => React.createElement(CommunityListItem, {
+    if (this.props.items.length > 0) {
+      supportersDisplay = this.props.items.map((supporter, index) => React.createElement(CommunityListItem, {
         key: index,
         item: supporter,
         type: 'supporter'
@@ -299,8 +299,8 @@ class MostPlingedCreatorsTab extends React.Component {
 
   render() {
     let creatorsDisplay;
-    if (this.props.data.length > 0) {
-      creatorsDisplay = this.props.data.map((creator, index) => React.createElement(CommunityListItem, {
+    if (this.props.items.length > 0) {
+      creatorsDisplay = this.props.items.map((creator, index) => React.createElement(CommunityListItem, {
         key: index,
         item: creator,
         type: 'creator'
