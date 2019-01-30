@@ -181,17 +181,22 @@ class CommunityPageTabsContainer extends React.Component {
     } else if (this.state.loading === false){
 
       const data = this.state.tabContent.data;
-      if (this.state.selectedIndex === 0){
+
+      if (this.state.selectedIndex === 0 || this.state.selectedIndex === 4){
         tabContent = (
-          <SupportersTab
-            items={data}
-          />
+          <UsersTab items={data} />
         );
       } else if (this.state.selectedIndex === 1){
         tabContent = (
-          <MostPlingedCreatorsTab
-            items={data}
-          />
+          <CreatorsTab items={data} />
+        );
+      } else if (this.state.selectedIndex === 2 || this.state.selectedIndex === 3){
+        tabContent = (
+          <PlingedProductsTab items={data} />
+        );
+      } else if (this.state.selectedIndex === 5 || this.state.selectedIndex === 6){
+        tabContent = (
+          <MemberScoreTab items={data} />
         );
       }
 
@@ -234,7 +239,7 @@ class CommunityPageTabMenuItem extends React.Component {
   }
 }
 
-class SupportersTab extends React.Component {
+class UsersTab extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
@@ -245,25 +250,25 @@ class SupportersTab extends React.Component {
   }
 
   render(){
-    let supportersDisplay;
+    let usersDisplay;
     if (this.props.items && this.props.items.length > 0){
-      supportersDisplay = this.props.items.map((supporter,index) => (
+      usersDisplay = this.props.items.map((user,index) => (
         <CommunityListItem
           key={index}
-          item={supporter}
-          type={'supporter'}
+          item={user}
+          type={'user'}
         />
       ));
     }
     return(
       <div className="community-tab" id="supporters-tab">
-        {supportersDisplay}
+        {usersDisplay}
       </div>
     );
   }
 }
 
-class MostPlingedCreatorsTab extends React.Component {
+class CreatorsTab extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
@@ -288,7 +293,7 @@ class MostPlingedCreatorsTab extends React.Component {
   }
 }
 
-class MostPlingedProductsTab extends React.Component {
+class PlingedProductsTab extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
@@ -322,13 +327,14 @@ class CommunityListItem extends React.Component {
   render(){
     let i = this.props.item;
     let specificInfoDisplay;
-    if (this.props.type === 'supporter'){
+    if (this.props.type === 'user'){
       specificInfoDisplay = <li>supporter id : {i.supporter_id}</li>
-    } else if (this.props.type){
+    } else if (this.props.type === 'creator'){
       specificInfoDisplay = <li>cnt : {i.cnt}</li>
     }
     return(
       <div className="supporter-list-item">
+        <span>{this.props.type}</span>
         <ul>
           <li>member id : {i.member_id}</li>
           <li>username : {i.username}</li>
