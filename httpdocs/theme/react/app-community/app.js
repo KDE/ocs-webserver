@@ -155,7 +155,7 @@ class CommunityPageTabsContainer extends React.Component {
 
   render(){
     console.log(this.state);
-    let tabsMenu;
+    let tabsMenu, tabContent;
     if (this.state.loading === false){
       const selectedIndex = this.state.selectedIndex;
       const tabsMenuDisplay = this.state.tabs.map((t,index) => (
@@ -171,6 +171,9 @@ class CommunityPageTabsContainer extends React.Component {
         <ul>
           {tabsMenuDisplay}
         </ul>
+      );
+      tabContent = (
+        <p>{this.state.tabs[this.state.selectedIndex].title}
       )
     }
 
@@ -180,7 +183,7 @@ class CommunityPageTabsContainer extends React.Component {
           {tabsMenu}
         </div>
         <div id="tabs-content">
-          content
+          {tabContent}
         </div>
       </div>
     );
