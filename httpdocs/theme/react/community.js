@@ -152,14 +152,11 @@ class CommunityPageTabsContainer extends React.Component {
     super(props);
     this.state = {
       loading: true,
-      tabs: []
+      tabs: window.appHelpers.generateTabsMenuArray(),
+      selectedIndex: 0
     };
     this.renderTabs = this.renderTabs.bind(this);
     this.handleTabMenuItemClick = this.handleTabMenuItemClick.bind(this);
-  }
-
-  componentDidMount() {
-    this.renderTabs();
   }
 
   renderTabs(selectedIndex) {
@@ -194,28 +191,24 @@ class CommunityPageTabsContainer extends React.Component {
   }
 
   render() {
-    console.log(this.state);
-    let tabsMenu, tabContent;
+    const selectedIndex = this.state.selectedIndex;
+    const tabsMenuDisplay = this.state.tabs.map((t, index) => React.createElement(CommunityPageTabMenuItem, {
+      key: index,
+      index: index,
+      selectedIndex: selectedIndex,
+      tab: t,
+      onTabMenuItemClick: this.handleTabMenuItemClick
+    }));
+
+    let tabContent;
     if (this.state.loading) {
+
       tabContent = React.createElement(
         "div",
         null,
         "loading"
       );
     } else if (this.state.loading === false) {
-      const selectedIndex = this.state.selectedIndex;
-      const tabsMenuDisplay = this.state.tabs.map((t, index) => React.createElement(CommunityPageTabMenuItem, {
-        key: index,
-        index: index,
-        selectedIndex: selectedIndex,
-        tab: t,
-        onTabMenuItemClick: this.handleTabMenuItemClick
-      }));
-      tabsMenu = React.createElement(
-        "ul",
-        null,
-        tabsMenuDisplay
-      );
 
       const data = this.state.tabContent.data;
       if (this.state.selectedIndex === 0) {
@@ -235,7 +228,11 @@ class CommunityPageTabsContainer extends React.Component {
       React.createElement(
         "div",
         { id: "tabs-menu" },
-        tabsMenu
+        React.createElement(
+          "ul",
+          null,
+          tabsMenuDisplay
+        )
       ),
       React.createElement(
         "div",
