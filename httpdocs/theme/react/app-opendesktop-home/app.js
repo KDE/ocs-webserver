@@ -230,6 +230,10 @@ class ProductCarousel extends React.Component {
     const containerWidth = $('#main-content').width();
     const containerNumber = Math.ceil(this.state.products.length / itemsPerRow);
     const itemWidth = containerWidth / itemsPerRow;
+    console.log(containerWidth);
+    console.log(containerNumber);
+    console.log(itemWidth);
+    console.log(sliderWidth);
     const sliderWidth = containerWidth * containerNumber;
     let sliderPosition = 0;
     if (this.state.sliderPosition){
