@@ -280,9 +280,9 @@ class ProductCarousel extends React.Component {
     let itemsPerRow = 5;
     if (window.hpVersion === 2) {
       if (this.props.device === 'large') {
-        itemsPerRow = 4;
+        itemsPerRow = 6;
       } else if (this.props.device === 'mid') {
-        itemsPerRow = 3;
+        itemsPerRow = 5;
       } else if (this.props.device === 'tablet') {
         itemsPerRow = 2;
       }
@@ -291,7 +291,7 @@ class ProductCarousel extends React.Component {
     const containerWidth = $('#main-content').width();
     const containerNumber = Math.ceil(this.state.products.length / itemsPerRow);
     const itemWidth = containerWidth / itemsPerRow;
-    const sliderWidth = containerWidth * containerNumber;
+    const sliderWidth = (containerWidth - itemWidth) * containerNumber;
     let sliderPosition = 0;
     if (this.state.sliderPosition) {
       sliderPosition = this.state.sliderPosition;
@@ -299,8 +299,11 @@ class ProductCarousel extends React.Component {
     this.setState({
       sliderPosition: sliderPosition,
       containerWidth: containerWidth,
+      containerNumber: containerNumber,
       sliderWidth: sliderWidth,
-      itemWidth: itemWidth
+      itemWidth: itemWidth,
+      offset: itemsPerRow,
+      itemsPerRow: itemsPerRow - 1
     }, function () {
       if (animateCarousel) {
         this.animateProductCarousel('right', animateCarousel);
@@ -311,14 +314,14 @@ class ProductCarousel extends React.Component {
   animateProductCarousel(dir, animateCarousel) {
 
     let newSliderPosition = this.state.sliderPosition;
-    const endPoint = this.state.sliderWidth - this.state.containerWidth;
+    const endPoint = this.state.sliderWidth - (this.state.containerWidth - this.state.itemWidth);
 
     if (dir === 'left') {
       if (this.state.sliderPosition > 0) {
         newSliderPosition = this.state.sliderPosition - (this.state.containerWidth - this.state.itemWidth);
       }
     } else {
-      if (this.state.sliderPosition < endPoint) {
+      if (this.state.sliderPosition <= endPoint) {
         newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
       } else {
         if (!animateCarousel) {
@@ -335,7 +338,7 @@ class ProductCarousel extends React.Component {
       }
 
       let disableRightArrow = false;
-      if (this.state.sliderPosition >= endPoint && this.state.finishedProducts === true) {
+      if (this.state.finishedProducts === true) {
         disableRightArrow = true;
       }
 
@@ -344,15 +347,22 @@ class ProductCarousel extends React.Component {
   }
 
   getNextProductsBatch() {
-    let url = "/home/showlastproductsjson/?page=1&limit=5&offset=" + this.state.offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
+    let limit = this.state.itemsPerRow * (this.state.containerNumber + 1) - this.state.products.length;
+    if (limit <= 0) {
+      limit = this.state.itemsPerRow;
+    }
+    console.log(limit);
+    let url = "/home/showlastproductsjson/?page=1&limit=" + limit + "&offset=" + this.state.offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
     const self = this;
     $.ajax({ url: url, cache: false }).done(function (response) {
       const products = self.state.products.concat(response);
-      const offset = self.state.offset + 5;
+      const offset = self.state.offset + self.state.itemsPerRow;
       let finishedProducts = false;
-      if (response.length < 5) {
+      if (response.length <= self.state.itemsPerRow * (self.state.containerNumber + 1) - self.state.products.length) {
         finishedProducts = true;
       }
+      console.log(finishedProducts);
+      console.log(response.length);
       self.setState({ products: products, offset: offset, finishedProducts: finishedProducts }, function () {
         const animateCarousel = true;
         self.updateDimensions(animateCarousel);
