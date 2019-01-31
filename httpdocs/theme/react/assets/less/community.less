@@ -25,12 +25,26 @@ out: ../css/community.css, sourcemap: true, compress: true
       width:100%;
 
       .tab-menu-item {
+        .transition();
         float: left;
         border-bottom: 2px solid transparent;
         padding: 0 10px;
+
+        a {
+          .transition();
+          font-size: 13px;
+          color:#777;
+        }
+
+        &:hover {
+          a {
+            color: #2673b0;
+          }
+        }
         &.active {
           a {
             color: #2673b0;
+            font-weight: bold;
           }
           border-bottom-color: #2673b0;
         }
