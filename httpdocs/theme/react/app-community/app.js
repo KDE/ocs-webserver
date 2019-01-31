@@ -378,6 +378,7 @@ class CommunityListItem extends React.Component {
   render(){
 
     const i = this.props.item;
+    console.log(this.props);
     let score;
     if (this.props.type === 'user'){
       // score = '';
