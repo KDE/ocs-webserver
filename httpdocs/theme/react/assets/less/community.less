@@ -5,5 +5,36 @@ out: ../css/community.css, sourcemap: true, compress: true
 
   #community-page-header {
     text-align: center;
+    width: 100%;
+    float: left;
+    margin-bottom: 20px;
+
+    #community-page-header-banner {
+      display: table;
+      margin: 0 auto;
+      float: none;
+    }
+  }
+
+  #community-page-tabs-container {
+    width: 100%;
+    float: left;
+
+    #tabs-menu {
+      float: left;
+      width:100%;
+
+      .tab-menu-item {
+        float: left;
+        border-bottom: 2px solid transparent;
+        padding: 0 10px;
+        &.active {
+          a {
+            color: #2673b0;
+          }
+          border-bottom-color: #2673b0;
+        }
+      }
+    }
   }
 }

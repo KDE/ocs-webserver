@@ -225,9 +225,10 @@ class CommunityPageTabMenuItem extends React.Component {
   }
 
   render(){
+    const activeCssClass = this.props.index === this.props.selectedIndex ? "active" : "";
     return(
-      <div className="tab-menu-item">
-        <a className={this.props.index === this.props.selectedIndex ? "active" : ""} onClick={this.onTabMenuItemClick}>
+      <div className={"tab-menu-item " + activeCssClass}>
+        <a onClick={this.onTabMenuItemClick}>
           {this.props.tab.title}
         </a>
       </div>

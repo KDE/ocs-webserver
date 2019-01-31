@@ -259,12 +259,13 @@ class CommunityPageTabMenuItem extends React.Component {
   }
 
   render() {
+    const activeCssClass = this.props.index === this.props.selectedIndex ? "active" : "";
     return React.createElement(
       "div",
-      { className: "tab-menu-item" },
+      { className: "tab-menu-item " + activeCssClass },
       React.createElement(
         "a",
-        { className: this.props.index === this.props.selectedIndex ? "active" : "", onClick: this.onTabMenuItemClick },
+        { onClick: this.onTabMenuItemClick },
         this.props.tab.title
       )
     );
