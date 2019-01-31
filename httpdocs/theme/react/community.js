@@ -37,9 +37,23 @@ window.appHelpers = function () {
     return tabsMenuArray;
   }
 
+  function formatDate(dateString) {
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const date = dateString.split(' ')[0];
+    const year = date.split('-')[0];
+    const month = date.split('-')[1];
+    const day = date.split('-')[2];
+    const monthNameIndex = parseInt(month) - 1;
+    const monthName = monthNames[monthNameIndex];
+
+    return monthName + ' ' + day + ' ' + year;
+  }
+
   return {
     getHostNameSuffix,
-    generateTabsMenuArray
+    generateTabsMenuArray,
+    formatDate
   };
 }();
 
@@ -423,6 +437,7 @@ class CommunityListItem extends React.Component {
 
     const i = this.props.item;
     console.log(this.props);
+    console.log(this.props.i);
     let score;
     if (this.props.type === 'user') {
       // score = '';
@@ -457,7 +472,7 @@ class CommunityListItem extends React.Component {
         React.createElement(
           "span",
           { className: "user-created" },
-          i.created_at
+          window.appHelpers.formatDate(i.created_at)
         )
       )
     );
