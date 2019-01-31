@@ -109,15 +109,24 @@ out: ../css/community.css, sourcemap: true, compress: true
       .community-tab {
         float: left;
         width: 100%;
-        
-        ul, ol {
-          margin: auto;
-          padding-right: 15px;
-          padding-left: 15px;
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          justify-content: center;
+
+        &.card-list-display {
+
+          ul, ol {
+            margin: auto;
+            padding-right: 15px;
+            padding-left: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+
+            li {
+              width: 115px;
+              height: 200px;
+              margin-right: 5px;
+            }
+          }
         }
       }
     }
