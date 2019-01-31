@@ -10,6 +10,10 @@ out: ../css/community.css, sourcemap: true, compress: true
     float: left;
     margin-bottom: 20px;
 
+    h1 {
+      margin-bottom: 40px;
+    }
+
     #community-page-header-banner {
       display: table;
       margin: 0 auto;
@@ -94,6 +98,26 @@ out: ../css/community.css, sourcemap: true, compress: true
             font-weight: bold;
           }
           border-bottom-color: #2673b0;
+        }
+      }
+    }
+
+    #tabs-content {
+      float: left;
+      width: 100%;
+
+      .community-tab {
+        float: left;
+        width: 100%;
+        
+        ul, ol {
+          margin: auto;
+          padding-right: 15px;
+          padding-left: 15px;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: center;
         }
       }
     }
