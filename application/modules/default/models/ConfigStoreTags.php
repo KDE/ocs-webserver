@@ -35,7 +35,7 @@ class Default_Model_ConfigStoreTags
     {
         $modelConfigStoreTags = new Default_Model_DbTable_ConfigStoreTags();
 
-        $sql = "SELECT `tag_id` FROM `config_store_tag` WHERE `store_id` = :store_id AND `is_active` = :active;";
+        $sql = "SELECT `tag_id` FROM `config_store_tag` WHERE `store_id` = :store_id AND `is_active` = :active ORDER BY `tag_id`;";
 
         $result = $modelConfigStoreTags->getAdapter()->fetchAll($sql, array('store_id' => $store_id, 'active' => ($onlyActive ? 1 : 0)), Zend_Db::FETCH_COLUMN);
 
