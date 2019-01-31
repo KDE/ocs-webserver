@@ -100,7 +100,7 @@ class CommunityPageHeader extends React.Component {
           </div>
           <div id="header-banner-bottom">
             <div className="center">
-              <a href="/register">
+              <a className="btn btn-native" href="/register">
                 Register
               </a>
               <span>to join the community</span>

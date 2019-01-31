@@ -135,7 +135,7 @@ class CommunityPageHeader extends React.Component {
             { className: "center" },
             React.createElement(
               "a",
-              { href: "/register" },
+              { className: "btn btn-native", href: "/register" },
               "Register"
             ),
             React.createElement(
