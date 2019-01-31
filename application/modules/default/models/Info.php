@@ -204,17 +204,36 @@ class Default_Model_Info
                    STRAIGHT_JOIN `member` ON `comments`.`comment_member_id` = `member`.`member_id`
                    INNER JOIN `stat_projects` ON `comments`.`comment_target_id` = `stat_projects`.`project_id` ';
 
+        /*
         if (isset($tags)) {
             $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
                 . ')) AS store_tags ON stat_projects.project_id = store_tags.project_id';
         }
-
+        */
+        
         $sql .= ' WHERE comments.comment_active = 1            
             AND stat_projects.status = 100
             AND stat_projects.type_id = 1
             AND comments.comment_type = 0
             AND stat_projects.project_category_id IN (' . implode(',', $activeCategories) . ')                          
         ';
+        
+        //Store Tag Filter
+        if (isset($tags)) {
+            $tagList = $tags;
+            //build where statement für projects
+            $sql .= " AND (";
+
+            if(!is_array($tagList)) {
+                $tagList = array($tagList);
+            }
+            
+            foreach($tagList as $item) {
+                #and
+                $sql .= ' find_in_set('.$item.', tag_ids) AND ';
+            }
+            $sql .= ' 1=1)';;
+        }
 
         $sql .= '  ORDER BY comments.comment_created_at DESC ';
 
@@ -322,16 +341,36 @@ class Default_Model_Info
                 FROM `stat_downloads_quarter_year` `s`
                 INNER JOIN `stat_projects` `p` ON `s`.`project_id` = `p`.`project_id`';
 
+        /*
         if (isset($tags)) {
             $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
                 . ')) AS store_tags ON p.project_id = store_tags.project_id';
         }
+         * 
+         */
 
         $sql .= ' WHERE
                     p.status=100
                     and 
                     p.project_category_id IN (' . implode(',', $activeCategories) . ')          
             ';
+        
+        //Store Tag Filter
+        if (isset($tags)) {
+            $tagList = $tags;
+            //build where statement für projects
+            $sql .= " AND (";
+
+            if(!is_array($tagList)) {
+                $tagList = array($tagList);
+            }
+            
+            foreach($tagList as $item) {
+                #and
+                $sql .= ' find_in_set('.$item.', tag_ids) AND ';
+            }
+            $sql .= ' 1=1)';;
+        }
 
         $sql .= '  ORDER BY s.amount DESC ';
 
@@ -405,16 +444,36 @@ class Default_Model_Info
                 `stat_projects`  AS `p`
                 ';
 
+        /*
         if (isset($tags)) {
             $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
                 . ')) AS store_tags ON p.project_id = store_tags.project_id ';
         }
+         * 
+         */
 
         $sql .= '
             WHERE
                 `p`.`status` = 100                
                 AND `p`.`project_category_id` IN (' . implode(',', $activeCategories) . ')
                 AND `p`.`amount_reports` IS NULL';
+        
+        //Store Tag Filter
+        if (isset($tags)) {
+            $tagList = $tags;
+            //build where statement für projects
+            $sql .= " AND (";
+
+            if(!is_array($tagList)) {
+                $tagList = array($tagList);
+            }
+            
+            foreach($tagList as $item) {
+                #and
+                $sql .= ' find_in_set('.$item.', tag_ids) AND ';
+            }
+            $sql .= ' 1=1)';;
+        }
 
         if (isset($tag_isoriginal)) {
             if ($tag_isoriginal) {
@@ -514,16 +573,36 @@ class Default_Model_Info
             FROM
                 `stat_projects`  AS `p`';
 
+        /*
         if (isset($tags)) {
             $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
                 . ')) AS store_tags ON p.project_id = store_tags.project_id';
         }
+         * 
+         */
 
         $sql .= '
             WHERE
                 `p`.`status` = 100                
                 AND `p`.`project_category_id` IN (' . implode(',', $activeCategories) . ')
                 AND `p`.`amount_reports` IS NULL';
+        
+        //Store Tag Filter
+        if (isset($tags)) {
+            $tagList = $tags;
+            //build where statement für projects
+            $sql .= " AND (";
+
+            if(!is_array($tagList)) {
+                $tagList = array($tagList);
+            }
+            
+            foreach($tagList as $item) {
+                #and
+                $sql .= ' find_in_set('.$item.', tag_ids) AND ';
+            }
+            $sql .= ' 1=1)';;
+        }
 
         if (isset($tag_isoriginal)) {
             if ($tag_isoriginal) {
@@ -607,10 +686,13 @@ class Default_Model_Info
             FROM
                 `stat_projects`  AS `p`';
 
+        /*
         if (isset($tags)) {
             $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
                 . ')) AS store_tags ON p.project_id = store_tags.project_id';
         }
+         * 
+         */
 
         $sql .= '
             WHERE
@@ -618,6 +700,23 @@ class Default_Model_Info
                 AND `p`.`project_category_id` IN (' . implode(',', $activeCategories) . ')
                 AND `p`.`amount_reports` IS NULL';
 
+        //Store Tag Filter
+        if (isset($tags)) {
+            $tagList = $tags;
+            //build where statement für projects
+            $sql .= " AND (";
+
+            if(!is_array($tagList)) {
+                $tagList = array($tagList);
+            }
+            
+            foreach($tagList as $item) {
+                #and
+                $sql .= ' find_in_set('.$item.', tag_ids) AND ';
+            }
+            $sql .= ' 1=1)';;
+        }
+        
         $sql .= ' ORDER BY (round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC, created_at DESC
             ';
         if (isset($limit)) {
