@@ -86,7 +86,7 @@ class CommunityPageHeader extends React.Component {
   render() {
     return React.createElement(
       "div",
-      { id: "community-page-header" },
+      { id: "community-page-header", className: "head-wrap" },
       React.createElement(
         "h1",
         null,
@@ -94,7 +94,7 @@ class CommunityPageHeader extends React.Component {
       ),
       React.createElement(
         "div",
-        { id: "community-page-header-banner" },
+        { id: "community-page-header-banner", className: "col-lg-5 col-md-5 col-sm-6 col-xs-8" },
         React.createElement(
           "div",
           { className: "header-banner-row" },
@@ -232,7 +232,7 @@ class CommunityPageTabsContainer extends React.Component {
 
     return React.createElement(
       "div",
-      { id: "community-page-tabs-container" },
+      { id: "community-page-tabs-container", className: "body-wrap" },
       React.createElement(
         "div",
         { id: "tabs-menu" },

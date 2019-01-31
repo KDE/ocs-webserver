@@ -85,9 +85,9 @@ class CommunityPageHeader extends React.Component {
 
   render(){
     return(
-      <div id="community-page-header">
+      <div id="community-page-header" className="head-wrap">
         <h1>Community</h1>
-        <div id="community-page-header-banner">
+        <div id="community-page-header-banner" className="col-lg-5 col-md-5 col-sm-6 col-xs-8">
           <div className="header-banner-row">
             <p>{this.props.headerData.countActiveMembers}</p>
             <span>contributors added</span>
@@ -201,7 +201,7 @@ class CommunityPageTabsContainer extends React.Component {
     }
 
     return(
-      <div id="community-page-tabs-container">
+      <div id="community-page-tabs-container" className="body-wrap">
         <div id="tabs-menu">
           {tabsMenuDisplay}
         </div>
@@ -410,7 +410,6 @@ class CommunityListItem extends React.Component {
     );
   }
 }
-
 
 ReactDOM.render(
     <CommunityPage />,
