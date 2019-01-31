@@ -97,30 +97,34 @@ class CommunityPageHeader extends React.Component {
         { id: "community-page-header-banner", className: "col-lg-5 col-md-5 col-sm-6 col-xs-8" },
         React.createElement(
           "div",
-          { className: "header-banner-row" },
+          { id: "header-banner-top" },
           React.createElement(
-            "p",
-            null,
-            this.props.headerData.countActiveMembers
+            "div",
+            { className: "header-banner-row" },
+            React.createElement(
+              "p",
+              null,
+              this.props.headerData.countActiveMembers
+            ),
+            React.createElement(
+              "span",
+              null,
+              "contributors added"
+            )
           ),
           React.createElement(
-            "span",
-            null,
-            "contributors added"
-          )
-        ),
-        React.createElement(
-          "div",
-          { className: "header-banner-row" },
-          React.createElement(
-            "p",
-            null,
-            this.props.headerData.countProjects
-          ),
-          React.createElement(
-            "span",
-            null,
-            "products"
+            "div",
+            { className: "header-banner-row" },
+            React.createElement(
+              "p",
+              null,
+              this.props.headerData.countProjects
+            ),
+            React.createElement(
+              "span",
+              null,
+              "products"
+            )
           )
         ),
         React.createElement(

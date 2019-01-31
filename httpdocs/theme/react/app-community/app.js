@@ -88,13 +88,15 @@ class CommunityPageHeader extends React.Component {
       <div id="community-page-header" className="head-wrap">
         <h1>Community</h1>
         <div id="community-page-header-banner" className="col-lg-5 col-md-5 col-sm-6 col-xs-8">
-          <div className="header-banner-row">
-            <p>{this.props.headerData.countActiveMembers}</p>
-            <span>contributors added</span>
-          </div>
-          <div className="header-banner-row">
-            <p>{this.props.headerData.countProjects}</p>
-            <span>products</span>
+          <div id="header-banner-top">
+            <div className="header-banner-row">
+              <p>{this.props.headerData.countActiveMembers}</p>
+              <span>contributors added</span>
+            </div>
+            <div className="header-banner-row">
+              <p>{this.props.headerData.countProjects}</p>
+              <span>products</span>
+            </div>
           </div>
           <div id="header-banner-bottom">
             <div className="center">
