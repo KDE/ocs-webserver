@@ -434,7 +434,7 @@ class CommunityListItem extends React.Component {
     }
 
     const usersDisplay = React.createElement(
-      "div",
+      "a",
       { className: "user-display-container" },
       React.createElement(
         "div",

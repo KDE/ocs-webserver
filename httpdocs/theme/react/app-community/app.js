@@ -390,13 +390,13 @@ class CommunityListItem extends React.Component {
     }
 
     const usersDisplay = (
-      <div className="user-display-container">
+      <a className="user-display-container">
         <div className="user">
           <figure><img src={i.profile_image_url}/></figure>
           <span className="username"><a href={"/u/"+i.username+"/"}>{i.username}</a></span>
           <span className="user-created">{i.created_at}</span>
         </div>
-      </div>
+      </a>
     );
 
     const project = {
