@@ -148,8 +148,11 @@ out: ../css/community.css, sourcemap: true, compress: true
                 width: 100%;
                 height: 100%;
                 position: relative;
+                .user-display-container {
 
+                }
                 .user {
+
                   figure {
                     float: left;
                     padding: .25em;
@@ -173,30 +176,31 @@ out: ../css/community.css, sourcemap: true, compress: true
                       -moz-background-clip: padding;
                       background-clip: padding-box;
                     }
-
-                    span.username {
-                      font-size: 13px;
-                      font-weight: 700;
-                      word-wrap: break-word;
-                      line-height: 20px;
-                      height: 20px;
-                      padding: 0;
-                      margin: 0;
-                      display: block;
-                      width: 100%;
-                      float: left;
-                    }
-
-                    span.user-created {
-                      display: block;
-                      position: absolute;
-                      left: 0;
-                      bottom: 0;
-                      width: 100%;
-                      font-size: 13px;
-                    }
                   }
-                }                            
+
+                  span.username {
+                    color: #333;
+                    font-size: 13px;
+                    font-weight: 700;
+                    word-wrap: break-word;
+                    line-height: 20px;
+                    height: 20px;
+                    padding: 0;
+                    margin: 0;
+                    display: block;
+                    width: 100%;
+                    float: left;
+                  }
+
+                  span.user-created {
+                    display: block;
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                    width: 100%;
+                    font-size: 13px;
+                  }
+                }
               }
             }
           }
