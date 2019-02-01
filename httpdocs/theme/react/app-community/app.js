@@ -422,13 +422,13 @@ class CommunityListItem extends React.Component {
     }
 
     let displayTemplate;
-    if (this.state.selectedIndex === 0 || this.state.selectedIndex === 4){
+    if (this.props.selectedIndex === 0 || this.props.selectedIndex === 4){
       displayTemplate = (
         <div className="list-item-template">
           {userDisplay}
         </div>
       );
-    } else if (this.state.selectedIndex === 1){
+    } else if (this.props.selectedIndex === 1){
       displayTemplate = (
         <div className="list-item-template">
           <div className="creator-wrapper">
@@ -440,9 +440,9 @@ class CommunityListItem extends React.Component {
           </div>
         </div>
       );
-    } else if (this.state.selectedIndex === 2 || this.state.selectedIndex === 3){
+    } else if (this.props.selectedIndex === 2 || this.props.selectedIndex === 3){
       // displayTemplate
-    } else if (this.state.selectedIndex === 5 || this.state.selectedIndex === 6){
+    } else if (this.props.selectedIndex === 5 || this.props.selectedIndex === 6){
       // displayTemplate
     }
 
