@@ -269,7 +269,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             );
         }
 
-        $this->_sendResponse($response, $this->_format, $local);
+        $this->_sendResponse($response, $this->_format, $xmlRootTag = 'ocs', $local);
     }
 
     protected function _sendResponse($response, $format = 'xml', $xmlRootTag = 'ocs', $local = false)
