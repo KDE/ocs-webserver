@@ -2006,4 +2006,9 @@ class Ocsv1Controller extends Zend_Controller_Action
         return false;
     }
 
+    public function voteAction()
+    {
+        $this->_sendErrorResponse(405, 'method not allowed');
+    }
+
 }

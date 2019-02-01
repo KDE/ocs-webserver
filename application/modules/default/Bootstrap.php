@@ -749,6 +749,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'content_id'   => null,
                     'second_id'    => null
                 )));
+        $router->addRoute('ocs_v1_voting',
+            new Zend_Controller_Router_Route('/ocs/v1/content/vote/:contentid', array(
+                'module'       => 'default',
+                'controller'   => 'ocsv1',
+                'action'       => 'vote'
+            )));
 
         // embed 
         $router->addRoute('embed_v1_member_projects', new Zend_Controller_Router_Route('/embed/v1/member/:memberid', array(
