@@ -416,6 +416,7 @@ class CommunityListItem extends React.Component {
 
     const userDisplay = (
       <CommunityListItemUserDisplay
+        selectedIndex={this.props.selectedIndex}
         item={i}
       />
     );

@@ -450,6 +450,7 @@ class CommunityListItem extends React.Component {
     /* USER DISPLAY */
 
     const userDisplay = React.createElement(CommunityListItemUserDisplay, {
+      selectedIndex: this.props.selectedIndex,
       item: i
     });
 
