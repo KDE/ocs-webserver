@@ -404,6 +404,7 @@ class CommunityListItem extends React.Component {
     const i = this.props.item;
     console.log(i);
 
+    /* USER DISPLAY */
     let userCreatedAt;
     if (i.created_at){
       userCreatedAt = window.appHelpers.formatDate(i.created_at);
@@ -421,7 +422,10 @@ class CommunityListItem extends React.Component {
         </div>
       </a>
     );
+    /* /USER DISPLAY */
 
+
+    /* PROJECT DISPLAY */
     const projectDisplay = (
       <a href={"/p/"+i.project_id}>
         <div className="project">
@@ -433,6 +437,7 @@ class CommunityListItem extends React.Component {
         </div>
       </a>
     );
+    /* /PROJECT DISPLAY */
 
     let displayTemplate;
     if (this.props.selectedIndex === 0 || this.props.selectedIndex === 4){
@@ -457,6 +462,7 @@ class CommunityListItem extends React.Component {
         </div>
       );
     } else if (this.props.selectedIndex === 2 || this.props.selectedIndex === 3){
+      console.log('what the fuck');
       displayTemplate = (
         <div className="list-item-template">
           <div className="creator-wrapper">
