@@ -441,7 +441,7 @@ class CommunityListItem extends React.Component {
   render() {
 
     const i = this.props.item;
-    console.log(this.props);
+    console.log(i);
 
     let userCreatedAt;
     if (i.created_at) {
@@ -471,6 +471,15 @@ class CommunityListItem extends React.Component {
       )
     );
 
+    const projectDisplay = React.createElement(
+      "a",
+      { href: "/p/" + i.project_id },
+      React.createElement(
+        "div",
+        { className: "project" },
+        React.createElement("figure", null)
+      )
+    );
     const project = {
       id: i.project_id,
       title: i.title,
@@ -511,7 +520,30 @@ class CommunityListItem extends React.Component {
         )
       );
     } else if (this.props.selectedIndex === 2 || this.props.selectedIndex === 3) {
-      // displayTemplate
+      displayTemplate = React.createElement(
+        "div",
+        { className: "list-item-template" },
+        React.createElement(
+          "div",
+          { className: "creator-wrapper" },
+          React.createElement(
+            "div",
+            { className: "list-ranking" },
+            this.props.index
+          ),
+          userDisplay,
+          React.createElement(
+            "div",
+            { className: "score-container" },
+            React.createElement(
+              "span",
+              { className: "score" },
+              React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
+              i.laplace_score
+            )
+          )
+        )
+      );
     } else if (this.props.selectedIndex === 5 || this.props.selectedIndex === 6) {
       // displayTemplate
     }

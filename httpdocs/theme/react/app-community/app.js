@@ -402,8 +402,7 @@ class CommunityListItem extends React.Component {
   render(){
 
     const i = this.props.item;
-    console.log(this.props);
-
+    console.log(i);
 
     let userCreatedAt;
     if (i.created_at){
@@ -419,6 +418,13 @@ class CommunityListItem extends React.Component {
       </a>
     );
 
+    const projectDisplay = (
+      <a href={"/p/"+i.project_id}>
+        <div className="project">
+          <figure></figure>
+        </div>
+      </a>
+    );
     const project = {
       id:i.project_id,
       title:i.title,
@@ -449,7 +455,20 @@ class CommunityListItem extends React.Component {
         </div>
       );
     } else if (this.props.selectedIndex === 2 || this.props.selectedIndex === 3){
-      // displayTemplate
+      displayTemplate = (
+        <div className="list-item-template">
+          <div className="creator-wrapper">
+            <div className="list-ranking">{this.props.index}</div>
+            {userDisplay}
+            <div className="score-container">
+              <span className="score">
+                <img src="/images/system/pling-btn-active.png"/>
+                {i.laplace_score}
+              </span>
+            </div>
+          </div>
+        </div>
+      );
     } else if (this.props.selectedIndex === 5 || this.props.selectedIndex === 6){
       // displayTemplate
     }
