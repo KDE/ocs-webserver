@@ -217,6 +217,14 @@ out: ../css/community.css, sourcemap: true, compress: true
               }
             }
           }
+
+          &#most-pling-products-tab {
+            .list-item {
+              .list-ranking {
+                display: none;
+              }
+            }
+          }
         }
 
         &.top-list-display {
@@ -314,7 +322,7 @@ out: ../css/community.css, sourcemap: true, compress: true
             display: table;
             margin: 0 auto;
             float: none;
-            
+
             .list-item {
 
               .list-item-template {
@@ -327,6 +335,21 @@ out: ../css/community.css, sourcemap: true, compress: true
                   .left-side-section {
                     float: left;
                     display: flex;
+
+                    .project {
+                      display: flex;
+
+                      figure {
+                        height: 108px;
+                        width: 108px;
+                        margin-right: 10px;
+
+                        img {
+                          width: 100%;
+                          height: 100%;
+                        }
+                      }
+                    }
                   }
                   .right-side-section {
                     float: right;
