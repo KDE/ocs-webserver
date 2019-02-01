@@ -440,7 +440,10 @@ class CommunityListItem extends React.Component {
             <div className="list-ranking">{this.props.index}</div>
             {userDisplay}
             <div className="score-container">
-              <span className="score">{i.cnt}</span>
+              <span className="score">
+                <img src="/images/system/pling-btn-active.png" style="width: 15px; height: 15px"/>
+                {i.cnt}
+              </span>
             </div>
           </div>
         </div>

@@ -225,14 +225,14 @@ out: ../css/community.css, sourcemap: true, compress: true
             border-radius: 10px;
             width: 100%;
             float: left;
-            padding: 0 10px;
 
             .list-item {
               align-items: center;
               justify-content: center;
               display: flex;
               flex-wrap: wrap;
-              padding: 10px 0;
+              padding: 10px;
+              border-top: 1px solid #ccc;
 
               .list-item-template {
                 width: auto;
@@ -247,6 +247,7 @@ out: ../css/community.css, sourcemap: true, compress: true
                 .score-container {
                   display: flex;
                   flex-direction: column;
+                  padding: 0 15px;
                 }
 
                 .list-ranking {
@@ -256,7 +257,25 @@ out: ../css/community.css, sourcemap: true, compress: true
                   text-align: center;
                   font-weight: 700;
                   letter-spacing: -1px;
+                  padding: 30px 0;
+                  width: 50px;
                 }
+
+                .user {
+                  .username {
+                    padding: 30px 10px 0;
+                    display: block;
+                    float: left;
+                    width: 110px;
+                  }
+                  .user-created {
+                    display: none;
+                  }
+                }
+              }
+
+              &:first-of-type {
+                border-top: 0;
               }
             }
           }
