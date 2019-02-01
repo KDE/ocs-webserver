@@ -510,7 +510,13 @@ class CommunityListItem extends React.Component {
           React.createElement(
             "h3",
             { className: "project-title" },
-            i.title
+            i.title,
+            " ",
+            React.createElement(
+              "span",
+              { className: "version" },
+              i.version
+            )
           ),
           React.createElement(
             "span",

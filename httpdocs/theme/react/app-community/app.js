@@ -441,7 +441,7 @@ class CommunityListItem extends React.Component {
         <div className="project">
           <figure><img src={imageBaseUrl}/></figure>
           <div className="project-info">
-            <h3 className="project-title">{i.title}</h3>
+            <h3 className="project-title">{i.title} <span className="version">{i.version}</span></h3>
             <span className="cat-title">{i.catTitle}</span>
           </div>
         </div>
