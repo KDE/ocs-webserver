@@ -617,9 +617,8 @@ class CommunityListItemUserDisplay extends React.Component {
       loading: true
     }, function () {
       const self = this;
-      $.get('/member/' + this.props.item.member_id + '/tooltip/', function (data) {
-        console.log(data);
-        self.setState({ loading: false });
+      $.get('/member/' + this.props.item.member_id + '/tooltip/', function (res) {
+        self.setState({ userData: res.data, loading: false });
       });
     });
   }
@@ -656,6 +655,7 @@ class CommunityListItemUserDisplay extends React.Component {
           "loading"
         );
       } else {
+        const userData = this.state.userData;
         infoDisplay = React.createElement(
           "div",
           { className: "user-hover-info" },
@@ -663,37 +663,46 @@ class CommunityListItemUserDisplay extends React.Component {
             "span",
             { className: "username" },
             i.username,
-            " ICON LOCATION"
+            " ICON ",
+            countrycity
           ),
           React.createElement(
             "span",
             null,
-            "x products"
+            userData.cntProjects,
+            " products"
           ),
           React.createElement(
             "span",
             null,
-            "x comments"
+            userData.totalComments,
+            " comments"
           ),
           React.createElement(
             "span",
             null,
-            "Liked x products"
+            "Liked ",
+            userData.cntLikesGave,
+            " products"
           ),
           React.createElement(
             "span",
             null,
-            "Got x Likes HEART"
+            "Got ",
+            userData.cntLikesGot,
+            " Likes HEART"
           ),
           React.createElement(
             "span",
             null,
-            "Last time active: TIME AGO"
+            "Last time active: ",
+            userData.lastactive_at
           ),
           React.createElement(
             "span",
             null,
-            "Member since: TIME AGO"
+            "Member since: ",
+            userData.created_at
           )
         );
       }

@@ -527,9 +527,8 @@ class CommunityListItemUserDisplay extends React.Component {
       loading:true
     },function(){
       const self = this;
-      $.get('/member/' + this.props.item.member_id + '/tooltip/', function (data) {
-        console.log(data);
-        self.setState({loading:false});
+      $.get('/member/' + this.props.item.member_id + '/tooltip/', function (res) {
+        self.setState({userData:res.data,loading:false});
       });
     });
   }
@@ -562,17 +561,18 @@ class CommunityListItemUserDisplay extends React.Component {
           </div>
         )
       } else {
+        const userData = this.state.userData;
         infoDisplay = (
           <div className="user-hover-info">
             <span className="username">
-              {i.username} ICON LOCATION
+              {i.username} ICON {countrycity}
             </span>
-            <span>x products</span>
-            <span>x comments</span>
-            <span>Liked x products</span>
-            <span>Got x Likes HEART</span>
-            <span>Last time active: TIME AGO</span>
-            <span>Member since: TIME AGO</span>
+            <span>{userData.cntProjects} products</span>
+            <span>{userData.totalComments} comments</span>
+            <span>Liked {userData.cntLikesGave} products</span>
+            <span>Got {userData.cntLikesGot} Likes HEART</span>
+            <span>Last time active: {userData.lastactive_at}</span>
+            <span>Member since: {userData.created_at}</span>
           </div>
         )
       }
