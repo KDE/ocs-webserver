@@ -522,6 +522,8 @@ class CommunityListItem extends React.Component {
     );
     /* /PROJECT DISPLAY */
 
+    /* DISPLAY TEMPLATE */
+    console.log(i);
     let displayTemplate;
     if (this.props.selectedIndex === 0 || this.props.selectedIndex === 4) {
       displayTemplate = React.createElement(
@@ -589,7 +591,6 @@ class CommunityListItem extends React.Component {
         )
       );
     } else if (this.props.selectedIndex === 5 || this.props.selectedIndex === 6) {
-      console.log(i);
       displayTemplate = React.createElement(
         "div",
         { className: "list-item-template" },
@@ -614,6 +615,7 @@ class CommunityListItem extends React.Component {
         )
       );
     }
+    /* /DISPLAY TEMPLATE */
 
     return React.createElement(
       "li",

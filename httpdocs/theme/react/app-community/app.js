@@ -449,6 +449,8 @@ class CommunityListItem extends React.Component {
     );
     /* /PROJECT DISPLAY */
 
+    /* DISPLAY TEMPLATE */
+    console.log(i);
     let displayTemplate;
     if (this.props.selectedIndex === 0 || this.props.selectedIndex === 4){
       displayTemplate = (
@@ -492,7 +494,6 @@ class CommunityListItem extends React.Component {
         </div>
       );
     } else if (this.props.selectedIndex === 5 || this.props.selectedIndex === 6){
-      console.log(i);
       displayTemplate = (
         <div className="list-item-template">
           <div className="scored-wrapper">
@@ -505,6 +506,7 @@ class CommunityListItem extends React.Component {
         </div>
       );
     }
+    /* /DISPLAY TEMPLATE */
 
     return(
       <li className="list-item">
