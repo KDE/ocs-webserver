@@ -235,7 +235,23 @@ out: ../css/community.css, sourcemap: true, compress: true
               padding: 10px 0;
 
               .creator-wrapper {
+                display: flex;
 
+                .list-ranking,
+                .user-display-container,
+                .score-container {
+                  display: flex;
+                  flex-direction: column;
+                }
+
+                .list-ranking {
+                  font-size: 33px;
+                  line-height: 33px;
+                  letter-spacing: normal;
+                  text-align: center;
+                  font-weight: 700;
+                  letter-spacing: -1px;
+                }
               }
             }
           }
