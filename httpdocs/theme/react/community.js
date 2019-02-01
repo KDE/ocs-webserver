@@ -447,6 +447,14 @@ class CommunityListItem extends React.Component {
     if (i.created_at) {
       userCreatedAt = window.appHelpers.formatDate(i.created_at);
     }
+    let byDisplay;
+    if (this.props.selectedIndex === 2) {
+      byDisplay = React.createElement(
+        "span",
+        { className: "by" },
+        "by"
+      );
+    }
     const userDisplay = React.createElement(
       "a",
       { href: "/u/" + i.username + "/", className: "user-display-container" },
@@ -461,6 +469,7 @@ class CommunityListItem extends React.Component {
         React.createElement(
           "span",
           { className: "username" },
+          byDisplay,
           i.username
         ),
         React.createElement(
@@ -477,15 +486,27 @@ class CommunityListItem extends React.Component {
       React.createElement(
         "div",
         { className: "project" },
-        React.createElement("figure", null)
+        React.createElement(
+          "figure",
+          null,
+          React.createElement("img", { src: i.image_small })
+        ),
+        React.createElement(
+          "div",
+          { className: "project-info" },
+          React.createElement(
+            "h3",
+            { className: "project-title" },
+            i.title
+          ),
+          React.createElement(
+            "span",
+            { className: "cat-title" },
+            i.catTitle
+          )
+        )
       )
     );
-    const project = {
-      id: i.project_id,
-      title: i.title,
-      cat_title: i.catTitle,
-      image_url: i.image_small
-    };
 
     let displayTemplate;
     if (this.props.selectedIndex === 0 || this.props.selectedIndex === 4) {
@@ -504,7 +525,7 @@ class CommunityListItem extends React.Component {
           React.createElement(
             "div",
             { className: "list-ranking" },
-            this.props.index
+            this.props.index + 1
           ),
           userDisplay,
           React.createElement(
@@ -531,6 +552,7 @@ class CommunityListItem extends React.Component {
             { className: "list-ranking" },
             this.props.index + 1
           ),
+          projectDisplay,
           userDisplay,
           React.createElement(
             "div",

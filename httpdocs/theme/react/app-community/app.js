@@ -408,11 +408,15 @@ class CommunityListItem extends React.Component {
     if (i.created_at){
       userCreatedAt = window.appHelpers.formatDate(i.created_at);
     }
+    let byDisplay;
+    if (this.props.selectedIndex === 2){
+      byDisplay = <span className="by">by</span>;
+    }
     const userDisplay = (
       <a href={"/u/"+i.username+"/"} className="user-display-container">
         <div className="user">
           <figure><img src={i.profile_image_url}/></figure>
-          <span className="username">{i.username}</span>
+          <span className="username">{byDisplay}{i.username}</span>
           <span className="user-created">{userCreatedAt}</span>
         </div>
       </a>
@@ -421,16 +425,14 @@ class CommunityListItem extends React.Component {
     const projectDisplay = (
       <a href={"/p/"+i.project_id}>
         <div className="project">
-          <figure></figure>
+          <figure><img src={i.image_small}/></figure>
+          <div className="project-info">
+            <h3 className="project-title">{i.title}</h3>
+            <span className="cat-title">{i.catTitle}</span>
+          </div>
         </div>
       </a>
     );
-    const project = {
-      id:i.project_id,
-      title:i.title,
-      cat_title:i.catTitle,
-      image_url:i.image_small
-    }
 
     let displayTemplate;
     if (this.props.selectedIndex === 0 || this.props.selectedIndex === 4){
@@ -443,7 +445,7 @@ class CommunityListItem extends React.Component {
       displayTemplate = (
         <div className="list-item-template">
           <div className="creator-wrapper">
-            <div className="list-ranking">{this.props.index}</div>
+            <div className="list-ranking">{this.props.index + 1}</div>
             {userDisplay}
             <div className="score-container">
               <span className="score">
@@ -459,6 +461,7 @@ class CommunityListItem extends React.Component {
         <div className="list-item-template">
           <div className="creator-wrapper">
             <div className="list-ranking">{this.props.index + 1}</div>
+            {projectDisplay}
             {userDisplay}
             <div className="score-container">
               <span className="score">
