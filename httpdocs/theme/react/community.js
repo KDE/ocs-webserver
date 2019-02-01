@@ -487,6 +487,12 @@ class CommunityListItem extends React.Component {
     /* /USER DISPLAY */
 
     /* PROJECT DISPLAY */
+
+    let imageBaseUrl;
+    if (i.image_small) {
+      imageBaseUrl = "https://cn.opendesktop." + window.appHelpers.getHostNameSuffix + "/cache/167x167-0/img/" + i.image_small;
+    }
+
     const projectDisplay = React.createElement(
       "a",
       { href: "/p/" + i.project_id },
@@ -496,7 +502,7 @@ class CommunityListItem extends React.Component {
         React.createElement(
           "figure",
           null,
-          React.createElement("img", { src: i.image_small })
+          React.createElement("img", { src: imageBaseUrl })
         ),
         React.createElement(
           "div",

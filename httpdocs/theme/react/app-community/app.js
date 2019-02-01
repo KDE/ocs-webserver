@@ -430,10 +430,16 @@ class CommunityListItem extends React.Component {
 
 
     /* PROJECT DISPLAY */
+
+    let imageBaseUrl;
+    if (i.image_small){
+      imageBaseUrl = "https://cn.opendesktop."+window.appHelpers.getHostNameSuffix+"/cache/167x167-0/img/"+i.image_small;
+    }
+    
     const projectDisplay = (
       <a href={"/p/"+i.project_id}>
         <div className="project">
-          <figure><img src={i.image_small}/></figure>
+          <figure><img src={imageBaseUrl}/></figure>
           <div className="project-info">
             <h3 className="project-title">{i.title}</h3>
             <span className="cat-title">{i.catTitle}</span>
