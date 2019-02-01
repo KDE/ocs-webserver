@@ -565,7 +565,7 @@ class CommunityListItemUserDisplay extends React.Component {
         infoDisplay = (
           <div className="user-hover-info">
             <span className="username">
-              {i.username} ICON {countrycity}
+              {i.username} ICON {userData.countrycity}
             </span>
             <span>{userData.cntProjects} products</span>
             <span>{userData.totalComments} comments</span>

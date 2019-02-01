@@ -664,7 +664,7 @@ class CommunityListItemUserDisplay extends React.Component {
             { className: "username" },
             i.username,
             " ICON ",
-            countrycity
+            userData.countrycity
           ),
           React.createElement(
             "span",
