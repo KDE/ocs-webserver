@@ -266,9 +266,12 @@ class UsersTab extends React.Component {
   render(){
     let usersDisplay;
     if (this.props.items && this.props.items.length > 0){
+      const selectedIndex = this.props.selectedIndex;
       usersDisplay = this.props.items.map((user,index) => (
         <CommunityListItem
           key={index}
+          index={index}
+          selectedIndex={selectedIndex}
           item={user}
           type={'user'}
         />
@@ -291,12 +294,14 @@ class CreatorsTab extends React.Component {
   render(){
     let creatorsDisplay;
     if (this.props.items && this.props.items.length > 0){
+      const selectedIndex = this.props.selectedIndex;
       creatorsDisplay = this.props.items.map((creator,index) => (
         <CommunityListItem
           key={index}
           item={creator}
           type={'creator'}
-          selectedIndex={this.props.selectedIndex}
+          index={index}
+          selectedIndex={selectedIndex}
         />
       ))
     }
@@ -427,9 +432,34 @@ class CommunityListItem extends React.Component {
       image_url:i.image_small
     }
 
+    let displayTemplate;
+    if (this.state.selectedIndex === 0 || this.state.selectedIndex === 4){
+      displayTemplate = (
+        <div className="list-item-template">
+          {usersDisplay}
+        </div>
+      );
+    } else if (this.state.selectedIndex === 1){
+      displayTemplate = (
+        <div className="list-item-template">
+          <div className="creator-wrapper">
+            <div className="list-ranking">{this.props.index}</div>
+            {usersDisplay}
+            <div className="score-container">
+              <span className="score">{i.cnt}</span>
+            </div>
+          </div>
+        </div>
+      )
+    } else if (this.state.selectedIndex === 2 || this.state.selectedIndex === 3){
+
+    } else if (this.state.selectedIndex === 5 || this.state.selectedIndex === 6){
+
+    }
+
     return(
       <li className="list-item">
-        {usersDisplay}
+        {displayTemplate}
       </li>
     );
   }

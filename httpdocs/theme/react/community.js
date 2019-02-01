@@ -299,8 +299,11 @@ class UsersTab extends React.Component {
   render() {
     let usersDisplay;
     if (this.props.items && this.props.items.length > 0) {
+      const selectedIndex = this.props.selectedIndex;
       usersDisplay = this.props.items.map((user, index) => React.createElement(CommunityListItem, {
         key: index,
+        index: index,
+        selectedIndex: selectedIndex,
         item: user,
         type: 'user'
       }));
@@ -326,11 +329,13 @@ class CreatorsTab extends React.Component {
   render() {
     let creatorsDisplay;
     if (this.props.items && this.props.items.length > 0) {
+      const selectedIndex = this.props.selectedIndex;
       creatorsDisplay = this.props.items.map((creator, index) => React.createElement(CommunityListItem, {
         key: index,
         item: creator,
         type: 'creator',
-        selectedIndex: this.props.selectedIndex
+        index: index,
+        selectedIndex: selectedIndex
       }));
     }
     return React.createElement(
@@ -484,10 +489,43 @@ class CommunityListItem extends React.Component {
       image_url: i.image_small
     };
 
+    let displayTemplate;
+    if (this.state.selectedIndex === 0 || this.state.selectedIndex === 4) {
+      displayTemplate = React.createElement(
+        "div",
+        { className: "list-item-template" },
+        usersDisplay
+      );
+    } else if (this.state.selectedIndex === 1) {
+      displayTemplate = React.createElement(
+        "div",
+        { className: "list-item-template" },
+        React.createElement(
+          "div",
+          { className: "creator-wrapper" },
+          React.createElement(
+            "div",
+            { className: "list-ranking" },
+            this.props.index
+          ),
+          usersDisplay,
+          React.createElement(
+            "div",
+            { className: "score-container" },
+            React.createElement(
+              "span",
+              { className: "score" },
+              i.cnt
+            )
+          )
+        )
+      );
+    } else if (this.state.selectedIndex === 2 || this.state.selectedIndex === 3) {} else if (this.state.selectedIndex === 5 || this.state.selectedIndex === 6) {}
+
     return React.createElement(
       "li",
       { className: "list-item" },
-      usersDisplay
+      displayTemplate
     );
   }
 }
