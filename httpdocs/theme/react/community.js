@@ -449,7 +449,7 @@ class CommunityListItem extends React.Component {
     }
     const userDisplay = React.createElement(
       "a",
-      { className: "user-display-container" },
+      { href: "/u/" + i.username + "/", className: "user-display-container" },
       React.createElement(
         "div",
         { className: "user" },
@@ -461,11 +461,7 @@ class CommunityListItem extends React.Component {
         React.createElement(
           "span",
           { className: "username" },
-          React.createElement(
-            "a",
-            { href: "/u/" + i.username + "/" },
-            i.username
-          )
+          i.username
         ),
         React.createElement(
           "span",

@@ -114,6 +114,14 @@ out: ../css/community.css, sourcemap: true, compress: true
 
         ul,ol {
           list-style-type: none;
+
+          .list-item {
+            .list-item-template {
+              width: 100%;
+              height: 100%;
+              display: block;
+            }
+          }
         }
 
         &.card-list-display {
@@ -183,7 +191,6 @@ out: ../css/community.css, sourcemap: true, compress: true
                   }
 
                   span.username {
-                    color: #333;
                     font-size: 13px;
                     font-weight: 700;
                     word-wrap: break-word;
@@ -197,6 +204,7 @@ out: ../css/community.css, sourcemap: true, compress: true
                   }
 
                   span.user-created {
+                    color: #333;
                     display: block;
                     position: absolute;
                     left: 0;
