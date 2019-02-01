@@ -617,7 +617,6 @@ class CommunityListItemUserDisplay extends React.Component {
       loading: true
     }, function () {
       const self = this;
-      '/member/' + userid + '/tooltip/';
       $.get('/member/' + this.props.item.member_id + '/tooltip/', function (data) {
         console.log(data);
         self.setState({ loading: false });
