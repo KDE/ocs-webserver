@@ -251,7 +251,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         $this->_sendErrorResponse(999, 'unknown request');
     }
 
-    protected function _sendErrorResponse($statuscode, $message = '')
+    protected function _sendErrorResponse($statuscode, $message = '', $local = false)
     {
         if ($this->_format == 'json') {
             $response = array(
@@ -269,7 +269,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             );
         }
 
-        $this->_sendResponse($response, $this->_format);
+        $this->_sendResponse($response, $this->_format, $xmlRootTag = 'ocs', $local);
     }
 
     protected function _sendResponse($response, $format = 'xml', $xmlRootTag = 'ocs', $local = false)
@@ -2004,6 +2004,11 @@ class Ocsv1Controller extends Zend_Controller_Action
             return $response;
         }
         return false;
+    }
+
+    public function voteAction()
+    {
+        $this->_sendErrorResponse(405, 'method not allowed', true);
     }
 
 }
