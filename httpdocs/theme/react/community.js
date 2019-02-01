@@ -443,7 +443,7 @@ class CommunityListItem extends React.Component {
     const i = this.props.item;
     console.log(this.props);
 
-    const usersDisplay = React.createElement(
+    const userDisplay = React.createElement(
       "a",
       { className: "user-display-container" },
       React.createElement(
@@ -483,7 +483,7 @@ class CommunityListItem extends React.Component {
       displayTemplate = React.createElement(
         "div",
         { className: "list-item-template" },
-        usersDisplay
+        userDisplay
       );
     } else if (this.state.selectedIndex === 1) {
       displayTemplate = React.createElement(
@@ -497,7 +497,7 @@ class CommunityListItem extends React.Component {
             { className: "list-ranking" },
             this.props.index
           ),
-          usersDisplay,
+          userDisplay,
           React.createElement(
             "div",
             { className: "score-container" },

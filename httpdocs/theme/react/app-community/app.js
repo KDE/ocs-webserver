@@ -404,7 +404,7 @@ class CommunityListItem extends React.Component {
     const i = this.props.item;
     console.log(this.props);
 
-    const usersDisplay = (
+    const userDisplay = (
       <a className="user-display-container">
         <div className="user">
           <figure><img src={i.profile_image_url}/></figure>
@@ -425,7 +425,7 @@ class CommunityListItem extends React.Component {
     if (this.state.selectedIndex === 0 || this.state.selectedIndex === 4){
       displayTemplate = (
         <div className="list-item-template">
-          {usersDisplay}
+          {userDisplay}
         </div>
       );
     } else if (this.state.selectedIndex === 1){
@@ -433,7 +433,7 @@ class CommunityListItem extends React.Component {
         <div className="list-item-template">
           <div className="creator-wrapper">
             <div className="list-ranking">{this.props.index}</div>
-            {usersDisplay}
+            {userDisplay}
             <div className="score-container">
               <span className="score">{i.cnt}</span>
             </div>
