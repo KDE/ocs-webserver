@@ -322,11 +322,14 @@ class PlingedProductsTab extends React.Component {
   render(){
     let products;
     if (this.props.items && this.props.items.length > 0){
+      const selectedIndex = this.props.selectedIndex;
       products = this.props.items.map((product,index) => (
         <CommunityListItem
           key={index}
           item={product}
           type={'product'}
+          index={index}
+          selectedIndex={selectedIndex}
         />
       ))
     }
@@ -361,11 +364,14 @@ class MemberScoresTab extends React.Component {
   render(){
     let members;
     if (this.props.items && this.props.items.length > 0){
+      const selectedIndex = this.props.selectedIndex;
       members = this.props.items.map((member,index) => (
         <CommunityListItem
           key={index}
           item={member}
           type={'score'}
+          index={index}
+          selectedIndex={selectedIndex}          
         />
       ));
     }
@@ -395,14 +401,12 @@ class MemberScoresTab extends React.Component {
 class CommunityListItem extends React.Component {
   constructor(props){
   	super(props);
-    console.log(this.props.item);
   	this.state = {};
   }
 
   render(){
 
     const i = this.props.item;
-    console.log(i);
 
     /* USER DISPLAY */
     let userCreatedAt;
