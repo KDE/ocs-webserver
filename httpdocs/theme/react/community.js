@@ -504,7 +504,7 @@ class CommunityListItem extends React.Component {
             React.createElement(
               "span",
               { className: "score" },
-              React.createElement("img", { src: "/images/system/pling-btn-active.png", style: "width: 15px; height: 15px" }),
+              React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
               i.cnt
             )
           )

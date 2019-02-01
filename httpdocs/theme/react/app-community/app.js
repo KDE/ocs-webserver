@@ -441,7 +441,7 @@ class CommunityListItem extends React.Component {
             {userDisplay}
             <div className="score-container">
               <span className="score">
-                <img src="/images/system/pling-btn-active.png" style="width: 15px; height: 15px"/>
+                <img src="/images/system/pling-btn-active.png"/>
                 {i.cnt}
               </span>
             </div>
