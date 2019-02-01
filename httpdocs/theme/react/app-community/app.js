@@ -500,7 +500,7 @@ class CommunityListItem extends React.Component {
             {userDisplay}
             <div className="list-ranking">
               <span className="rank">{this.props.index + 1}</span>
-              <span className="sum-plings">{i.sum_plings}</span>
+              <span className="sum-plings">{i.score}</span>
             </div>
           </div>
         </div>

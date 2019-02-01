@@ -271,6 +271,43 @@ out: ../css/community.css, sourcemap: true, compress: true
               }
             }
           }
+
+          &#score-tab {
+            ol,ul {
+              .list-item {
+                .scored-wrapper {
+                  width: 100%;
+                  height: 100%;
+
+                  .user {
+                    height: auto;
+                    .user-created {
+                      display: none;
+                    }
+                  }
+
+                  .list-ranking {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+
+                    .rank {
+                      float: left;
+                      font-size: 30px;
+                      font-size: 33px;
+                      line-height: 33px;
+                      letter-spacing: normal;
+                      text-align: center;
+                      font-weight: 700;
+                      letter-spacing: -1px;
+                      padding: 5px;                      
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
 
         &.top-list-display {

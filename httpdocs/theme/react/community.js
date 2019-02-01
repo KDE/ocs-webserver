@@ -615,7 +615,7 @@ class CommunityListItem extends React.Component {
             React.createElement(
               "span",
               { className: "sum-plings" },
-              i.sum_plings
+              i.score
             )
           )
         )
