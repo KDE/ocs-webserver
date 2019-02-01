@@ -514,17 +514,21 @@ class CommunityListItem extends React.Component {
 class CommunityListItemUserDisplay extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      showHoverDiv:false
+    };
     this.handleMouseIn = this.handleMouseIn.bind(this);
     this.handleMouseOut = this.handleMouseOut.bind(this);
   }
 
   handleMouseIn(){
     console.log('show tool tip now beeyotch');
+    this.setState({showHoverDiv:true});
   }
 
   handleMouseOut(){
     console.log('hide tool top now ***')
+    this.setState({showHoverDiv:false});
   }
 
   render(){
@@ -540,6 +544,25 @@ class CommunityListItemUserDisplay extends React.Component {
       byDisplay = <span className="by">by</span>;
     }
 
+    let userHoverDivDisplay;
+    if (this.state.showHoverDiv){
+      userHoverDivDisplay = (
+        <div className="user-hover-display">
+          <div className="user-hover-info">
+            <span className="username">
+              {i.username} ICON LOCATION
+            </span>
+            <span>x products</span>
+            <span>x comments</span>
+            <span>Liked x products</span>
+            <span>Got x Likes HEART</span>
+            <span>Last time active: TIME AGO</span>
+            <span>Member since: TIME AGO</span>
+          </div>
+        </div>
+      );
+    }
+
     return(
       <a href={"/u/"+i.username+"/"} className="user-display-container">
         <div className="user">
@@ -551,6 +574,7 @@ class CommunityListItemUserDisplay extends React.Component {
           <span className="username">{byDisplay}{i.username}</span>
           <span className="user-created">{userCreatedAt}</span>
         </div>
+        {userHoverDivDisplay}
       </a>
     );
   }

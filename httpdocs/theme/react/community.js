@@ -604,17 +604,21 @@ class CommunityListItem extends React.Component {
 class CommunityListItemUserDisplay extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      showHoverDiv: false
+    };
     this.handleMouseIn = this.handleMouseIn.bind(this);
     this.handleMouseOut = this.handleMouseOut.bind(this);
   }
 
   handleMouseIn() {
     console.log('show tool tip now beeyotch');
+    this.setState({ showHoverDiv: true });
   }
 
   handleMouseOut() {
     console.log('hide tool top now ***');
+    this.setState({ showHoverDiv: false });
   }
 
   render() {
@@ -631,6 +635,54 @@ class CommunityListItemUserDisplay extends React.Component {
         "span",
         { className: "by" },
         "by"
+      );
+    }
+
+    let userHoverDivDisplay;
+    if (this.state.showHoverDiv) {
+      userHoverDivDisplay = React.createElement(
+        "div",
+        { className: "user-hover-display" },
+        React.createElement(
+          "div",
+          { className: "user-hover-info" },
+          React.createElement(
+            "span",
+            { className: "username" },
+            i.username,
+            " ICON LOCATION"
+          ),
+          React.createElement(
+            "span",
+            null,
+            "x products"
+          ),
+          React.createElement(
+            "span",
+            null,
+            "x comments"
+          ),
+          React.createElement(
+            "span",
+            null,
+            "Liked x products"
+          ),
+          React.createElement(
+            "span",
+            null,
+            "Got x Likes HEART"
+          ),
+          React.createElement(
+            "span",
+            null,
+            "Last time active: TIME AGO"
+          ),
+          React.createElement(
+            "span",
+            null,
+            "Member since: TIME AGO"
+          )
+        )
       );
     }
 
@@ -658,7 +710,8 @@ class CommunityListItemUserDisplay extends React.Component {
           { className: "user-created" },
           userCreatedAt
         )
-      )
+      ),
+      userHoverDivDisplay
     );
   }
 }
