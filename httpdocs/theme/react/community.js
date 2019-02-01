@@ -564,19 +564,27 @@ class CommunityListItem extends React.Component {
           { className: "creator-wrapper" },
           React.createElement(
             "div",
-            { className: "list-ranking" },
-            this.props.index + 1
+            { className: "left-side-section" },
+            React.createElement(
+              "div",
+              { className: "list-ranking" },
+              this.props.index + 1
+            ),
+            projectDisplay
           ),
-          projectDisplay,
-          userDisplay,
           React.createElement(
             "div",
-            { className: "score-container" },
+            { className: "right-side-section" },
+            userDisplay,
             React.createElement(
-              "span",
-              { className: "score" },
-              React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
-              i.laplace_score
+              "div",
+              { className: "score-container" },
+              React.createElement(
+                "span",
+                { className: "score" },
+                React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
+                i.laplace_score
+              )
             )
           )
         )

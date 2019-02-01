@@ -435,7 +435,7 @@ class CommunityListItem extends React.Component {
     if (i.image_small){
       imageBaseUrl = "https://cn.opendesktop."+window.appHelpers.getHostNameSuffix+"/cache/167x167-0/img/"+i.image_small;
     }
-    
+
     const projectDisplay = (
       <a href={"/p/"+i.project_id}>
         <div className="project">
@@ -476,14 +476,18 @@ class CommunityListItem extends React.Component {
       displayTemplate = (
         <div className="list-item-template">
           <div className="creator-wrapper">
-            <div className="list-ranking">{this.props.index + 1}</div>
-            {projectDisplay}
-            {userDisplay}
-            <div className="score-container">
-              <span className="score">
-                <img src="/images/system/pling-btn-active.png"/>
-                {i.laplace_score}
-              </span>
+            <div className="left-side-section">
+              <div className="list-ranking">{this.props.index + 1}</div>
+              {projectDisplay}
+            </div>
+            <div className="right-side-section">
+              {userDisplay}
+              <div className="score-container">
+                <span className="score">
+                  <img src="/images/system/pling-btn-active.png"/>
+                  {i.laplace_score}
+                </span>
+              </div>              
             </div>
           </div>
         </div>
