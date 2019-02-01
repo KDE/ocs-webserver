@@ -555,7 +555,7 @@ class CommunityListItem extends React.Component {
         )
       );
     } else if (this.props.selectedIndex === 2 || this.props.selectedIndex === 3) {
-      console.log('what the fuck');
+      console.log(i);
       displayTemplate = React.createElement(
         "div",
         { className: "list-item-template" },

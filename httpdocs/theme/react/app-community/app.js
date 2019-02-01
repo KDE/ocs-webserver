@@ -472,7 +472,7 @@ class CommunityListItem extends React.Component {
         </div>
       );
     } else if (this.props.selectedIndex === 2 || this.props.selectedIndex === 3){
-      console.log('what the fuck');
+      console.log(i);
       displayTemplate = (
         <div className="list-item-template">
           <div className="creator-wrapper">
