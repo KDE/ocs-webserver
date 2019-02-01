@@ -458,7 +458,7 @@ class CommunityListItem extends React.Component {
       displayTemplate = (
         <div className="list-item-template">
           <div className="creator-wrapper">
-            <div className="list-ranking">{this.props.index}</div>
+            <div className="list-ranking">{this.props.index + 1}</div>
             {userDisplay}
             <div className="score-container">
               <span className="score">

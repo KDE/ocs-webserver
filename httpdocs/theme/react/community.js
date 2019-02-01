@@ -529,7 +529,7 @@ class CommunityListItem extends React.Component {
           React.createElement(
             "div",
             { className: "list-ranking" },
-            this.props.index
+            this.props.index + 1
           ),
           userDisplay,
           React.createElement(
