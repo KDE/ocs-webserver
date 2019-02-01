@@ -490,7 +490,7 @@ class CommunityListItem extends React.Component {
 
     let imageBaseUrl;
     if (i.image_small) {
-      imageBaseUrl = "https://cn.opendesktop." + window.appHelpers.getHostNameSuffix + "/cache/167x167-0/img/" + i.image_small;
+      imageBaseUrl = "https://cn.opendesktop." + window.appHelpers.getHostNameSuffix() + "/cache/167x167-0/img/" + i.image_small;
     }
 
     const projectDisplay = React.createElement(

@@ -433,7 +433,7 @@ class CommunityListItem extends React.Component {
 
     let imageBaseUrl;
     if (i.image_small){
-      imageBaseUrl = "https://cn.opendesktop."+window.appHelpers.getHostNameSuffix+"/cache/167x167-0/img/"+i.image_small;
+      imageBaseUrl = "https://cn.opendesktop."+window.appHelpers.getHostNameSuffix()+"/cache/167x167-0/img/"+i.image_small;
     }
 
     const projectDisplay = (
@@ -487,7 +487,7 @@ class CommunityListItem extends React.Component {
                   <img src="/images/system/pling-btn-active.png"/>
                   {i.laplace_score}
                 </span>
-              </div>              
+              </div>
             </div>
           </div>
         </div>
