@@ -499,7 +499,7 @@ class CommunityListItem extends React.Component {
     /* /PROJECT DISPLAY */
 
     /* DISPLAY TEMPLATE */
-    console.log(i);
+
     let displayTemplate;
     if (this.props.selectedIndex === 0 || this.props.selectedIndex === 4) {
       displayTemplate = React.createElement(
@@ -624,7 +624,6 @@ class CommunityListItemUserDisplay extends React.Component {
   }
 
   handleMouseOut() {
-    console.log('hide tool top now ***');
     // this.setState({showHoverDiv:false});
   }
 
