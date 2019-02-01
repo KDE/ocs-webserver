@@ -443,6 +443,10 @@ class CommunityListItem extends React.Component {
     const i = this.props.item;
     console.log(this.props);
 
+    let userCreatedAt;
+    if (i.created_at) {
+      userCreatedAt = window.appHelpers.formatDate(i.created_at);
+    }
     const userDisplay = React.createElement(
       "a",
       { className: "user-display-container" },
@@ -466,7 +470,7 @@ class CommunityListItem extends React.Component {
         React.createElement(
           "span",
           { className: "user-created" },
-          window.appHelpers.formatDate(i.created_at)
+          userCreatedAt
         )
       )
     );

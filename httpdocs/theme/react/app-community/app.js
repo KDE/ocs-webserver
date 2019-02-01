@@ -404,12 +404,17 @@ class CommunityListItem extends React.Component {
     const i = this.props.item;
     console.log(this.props);
 
+
+    let userCreatedAt;
+    if (i.created_at){
+      userCreatedAt = window.appHelpers.formatDate(i.created_at);
+    }
     const userDisplay = (
       <a className="user-display-container">
         <div className="user">
           <figure><img src={i.profile_image_url}/></figure>
           <span className="username"><a href={"/u/"+i.username+"/"}>{i.username}</a></span>
-          <span className="user-created">{window.appHelpers.formatDate(i.created_at)}</span>
+          <span className="user-created">{userCreatedAt}</span>
         </div>
       </a>
     );
