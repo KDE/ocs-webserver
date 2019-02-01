@@ -333,12 +333,12 @@ class PlingedProductsTab extends React.Component {
 
     let productsDisplay,
         tabContainerCssClass;
-    if (this.props.selectedIndex === 3){
+    if (this.props.selectedIndex === 2){
       productsDisplay = (
         <ol>{products}</ol>
       );
       tabContainerCssClass = "top-list-display";
-    } else if (this.props.selectedIndex === 2) {
+    } else if (this.props.selectedIndex === 3) {
       productsDisplay = (
         <ul>{products}</ul>
       );
