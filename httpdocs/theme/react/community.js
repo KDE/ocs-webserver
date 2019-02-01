@@ -442,17 +442,6 @@ class CommunityListItem extends React.Component {
 
     const i = this.props.item;
     console.log(this.props);
-    console.log(this.props.i);
-    let score;
-    if (this.props.type === 'user') {
-      // score = '';
-    } else if (this.props.type === 'creator') {
-      score = i.cnt;
-    } else if (this.props.type === 'product') {
-      score = i.laplace_score;
-    } else if (this.props.type === 'score') {
-      score = i.score;
-    }
 
     const usersDisplay = React.createElement(
       "a",
@@ -520,7 +509,11 @@ class CommunityListItem extends React.Component {
           )
         )
       );
-    } else if (this.state.selectedIndex === 2 || this.state.selectedIndex === 3) {} else if (this.state.selectedIndex === 5 || this.state.selectedIndex === 6) {}
+    } else if (this.state.selectedIndex === 2 || this.state.selectedIndex === 3) {
+      // displayTemplate
+    } else if (this.state.selectedIndex === 5 || this.state.selectedIndex === 6) {
+      // displayTemplate
+    }
 
     return React.createElement(
       "li",
