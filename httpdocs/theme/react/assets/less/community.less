@@ -146,7 +146,7 @@ out: ../css/community.css, sourcemap: true, compress: true
                     -moz-background-clip: padding;
                     background-clip: padding-box;
                   }
-                }                
+                }
               }
             }
           }
@@ -219,7 +219,26 @@ out: ../css/community.css, sourcemap: true, compress: true
         }
 
         &.top-list-display {
+          ul, ol {
+            background-color: #F5F5F5;
+            border: 1px solid #e4e4e4;
+            border-radius: 10px;
+            width: 100%;
+            float: left;
+            padding: 0 10px;
 
+            .list-item {
+              align-items: center;
+              justify-content: center;
+              display: flex;
+              flex-wrap: wrap;
+              padding: 10px 0;
+
+              .creator-wrapper {
+
+              }
+            }
+          }
         }
       }
     }
