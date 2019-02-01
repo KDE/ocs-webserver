@@ -409,23 +409,13 @@ class CommunityListItem extends React.Component {
     const i = this.props.item;
 
     /* USER DISPLAY */
-    let userCreatedAt;
-    if (i.created_at){
-      userCreatedAt = window.appHelpers.formatDate(i.created_at);
-    }
-    let byDisplay;
-    if (this.props.selectedIndex === 2){
-      byDisplay = <span className="by">by</span>;
-    }
+
     const userDisplay = (
-      <a href={"/u/"+i.username+"/"} className="user-display-container">
-        <div className="user">
-          <figure><img src={i.profile_image_url}/></figure>
-          <span className="username">{byDisplay}{i.username}</span>
-          <span className="user-created">{userCreatedAt}</span>
-        </div>
-      </a>
+      <CommunityListItemUserDisplay
+        item={i}
+      />
     );
+
     /* /USER DISPLAY */
 
 
@@ -512,6 +502,51 @@ class CommunityListItem extends React.Component {
       <li className="list-item">
         {displayTemplate}
       </li>
+    );
+  }
+}
+
+class CommunityListItemUserDisplay extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.handleMouseIn = this.handleMouseIn.bind(this);
+    this.handleMouseOut = this.handleMouseOut.bind(this);
+  }
+
+  handleMouseIn(){
+    console.log('show tool tip now beeyotch');
+  }
+
+  handleMouseOut(){
+    console.log('hide tool top now ***')
+  }
+
+  render(){
+
+    const i = this.props.item;
+
+    let userCreatedAt;
+    if (i.created_at){
+      userCreatedAt = window.appHelpers.formatDate(i.created_at);
+    }
+    let byDisplay;
+    if (this.props.selectedIndex === 2){
+      byDisplay = <span className="by">by</span>;
+    }
+
+    return(
+      <a href={"/u/"+i.username+"/"} className="user-display-container">
+        <div className="user">
+          <figure
+            onMouseOver={this.handleMouseIn}
+            onMouseOut={this.handleMouseOut}>
+            <img src={i.profile_image_url}/>
+          </figure>
+          <span className="username">{byDisplay}{i.username}</span>
+          <span className="user-created">{userCreatedAt}</span>
+        </div>
+      </a>
     );
   }
 }

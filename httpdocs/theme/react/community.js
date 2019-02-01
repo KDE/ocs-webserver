@@ -448,42 +448,11 @@ class CommunityListItem extends React.Component {
     const i = this.props.item;
 
     /* USER DISPLAY */
-    let userCreatedAt;
-    if (i.created_at) {
-      userCreatedAt = window.appHelpers.formatDate(i.created_at);
-    }
-    let byDisplay;
-    if (this.props.selectedIndex === 2) {
-      byDisplay = React.createElement(
-        "span",
-        { className: "by" },
-        "by"
-      );
-    }
-    const userDisplay = React.createElement(
-      "a",
-      { href: "/u/" + i.username + "/", className: "user-display-container" },
-      React.createElement(
-        "div",
-        { className: "user" },
-        React.createElement(
-          "figure",
-          null,
-          React.createElement("img", { src: i.profile_image_url })
-        ),
-        React.createElement(
-          "span",
-          { className: "username" },
-          byDisplay,
-          i.username
-        ),
-        React.createElement(
-          "span",
-          { className: "user-created" },
-          userCreatedAt
-        )
-      )
-    );
+
+    const userDisplay = React.createElement(CommunityListItemUserDisplay, {
+      item: i
+    });
+
     /* /USER DISPLAY */
 
     /* PROJECT DISPLAY */
@@ -627,6 +596,68 @@ class CommunityListItem extends React.Component {
       "li",
       { className: "list-item" },
       displayTemplate
+    );
+  }
+}
+
+class CommunityListItemUserDisplay extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.handleMouseIn = this.handleMouseIn.bind(this);
+    this.handleMouseOut = this.handleMouseOut.bind(this);
+  }
+
+  handleMouseIn() {
+    console.log('show tool tip now beeyotch');
+  }
+
+  handleMouseOut() {
+    console.log('hide tool top now ***');
+  }
+
+  render() {
+
+    const i = this.props.item;
+
+    let userCreatedAt;
+    if (i.created_at) {
+      userCreatedAt = window.appHelpers.formatDate(i.created_at);
+    }
+    let byDisplay;
+    if (this.props.selectedIndex === 2) {
+      byDisplay = React.createElement(
+        "span",
+        { className: "by" },
+        "by"
+      );
+    }
+
+    return React.createElement(
+      "a",
+      { href: "/u/" + i.username + "/", className: "user-display-container" },
+      React.createElement(
+        "div",
+        { className: "user" },
+        React.createElement(
+          "figure",
+          {
+            onMouseOver: this.handleMouseIn,
+            onMouseOut: this.handleMouseOut },
+          React.createElement("img", { src: i.profile_image_url })
+        ),
+        React.createElement(
+          "span",
+          { className: "username" },
+          byDisplay,
+          i.username
+        ),
+        React.createElement(
+          "span",
+          { className: "user-created" },
+          userCreatedAt
+        )
+      )
     );
   }
 }
