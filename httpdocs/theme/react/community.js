@@ -299,8 +299,11 @@ class UsersTab extends React.Component {
   render() {
     let usersDisplay;
     if (this.props.items && this.props.items.length > 0) {
+      const selectedIndex = this.props.selectedIndex;
       usersDisplay = this.props.items.map((user, index) => React.createElement(CommunityListItem, {
         key: index,
+        index: index,
+        selectedIndex: selectedIndex,
         item: user,
         type: 'user'
       }));
@@ -326,11 +329,13 @@ class CreatorsTab extends React.Component {
   render() {
     let creatorsDisplay;
     if (this.props.items && this.props.items.length > 0) {
+      const selectedIndex = this.props.selectedIndex;
       creatorsDisplay = this.props.items.map((creator, index) => React.createElement(CommunityListItem, {
         key: index,
         item: creator,
         type: 'creator',
-        selectedIndex: this.props.selectedIndex
+        index: index,
+        selectedIndex: selectedIndex
       }));
     }
     return React.createElement(
@@ -354,22 +359,25 @@ class PlingedProductsTab extends React.Component {
   render() {
     let products;
     if (this.props.items && this.props.items.length > 0) {
+      const selectedIndex = this.props.selectedIndex;
       products = this.props.items.map((product, index) => React.createElement(CommunityListItem, {
         key: index,
         item: product,
-        type: 'product'
+        type: 'product',
+        index: index,
+        selectedIndex: selectedIndex
       }));
     }
 
     let productsDisplay, tabContainerCssClass;
-    if (this.props.selectedIndex === 3) {
+    if (this.props.selectedIndex === 2) {
       productsDisplay = React.createElement(
         "ol",
         null,
         products
       );
       tabContainerCssClass = "top-list-display";
-    } else if (this.props.selectedIndex === 2) {
+    } else if (this.props.selectedIndex === 3) {
       productsDisplay = React.createElement(
         "ul",
         null,
@@ -379,7 +387,7 @@ class PlingedProductsTab extends React.Component {
     }
     return React.createElement(
       "div",
-      { className: "community-tab " + tabContainerCssClass, id: "most-pling-creators-tab" },
+      { className: "community-tab " + tabContainerCssClass, id: "most-pling-product-tab" },
       productsDisplay
     );
   }
@@ -394,10 +402,13 @@ class MemberScoresTab extends React.Component {
   render() {
     let members;
     if (this.props.items && this.props.items.length > 0) {
+      const selectedIndex = this.props.selectedIndex;
       members = this.props.items.map((member, index) => React.createElement(CommunityListItem, {
         key: index,
         item: member,
-        type: 'score'
+        type: 'score',
+        index: index,
+        selectedIndex: selectedIndex
       }));
     }
 
@@ -429,29 +440,29 @@ class MemberScoresTab extends React.Component {
 class CommunityListItem extends React.Component {
   constructor(props) {
     super(props);
-    console.log(this.props.item);
     this.state = {};
   }
 
   render() {
 
     const i = this.props.item;
-    console.log(this.props);
-    console.log(this.props.i);
-    let score;
-    if (this.props.type === 'user') {
-      // score = '';
-    } else if (this.props.type === 'creator') {
-      score = i.cnt;
-    } else if (this.props.type === 'product') {
-      score = i.laplace_score;
-    } else if (this.props.type === 'score') {
-      score = i.score;
-    }
 
-    const usersDisplay = React.createElement(
+    /* USER DISPLAY */
+    let userCreatedAt;
+    if (i.created_at) {
+      userCreatedAt = window.appHelpers.formatDate(i.created_at);
+    }
+    let byDisplay;
+    if (this.props.selectedIndex === 2) {
+      byDisplay = React.createElement(
+        "span",
+        { className: "by" },
+        "by"
+      );
+    }
+    const userDisplay = React.createElement(
       "a",
-      { className: "user-display-container" },
+      { href: "/u/" + i.username + "/", className: "user-display-container" },
       React.createElement(
         "div",
         { className: "user" },
@@ -463,31 +474,159 @@ class CommunityListItem extends React.Component {
         React.createElement(
           "span",
           { className: "username" },
-          React.createElement(
-            "a",
-            { href: "/u/" + i.username + "/" },
-            i.username
-          )
+          byDisplay,
+          i.username
         ),
         React.createElement(
           "span",
           { className: "user-created" },
-          window.appHelpers.formatDate(i.created_at)
+          userCreatedAt
         )
       )
     );
+    /* /USER DISPLAY */
 
-    const project = {
-      id: i.project_id,
-      title: i.title,
-      cat_title: i.catTitle,
-      image_url: i.image_small
-    };
+    /* PROJECT DISPLAY */
+
+    let imageBaseUrl;
+    if (i.image_small) {
+      imageBaseUrl = "https://cn.opendesktop." + window.appHelpers.getHostNameSuffix() + "/cache/167x167-0/img/" + i.image_small;
+    }
+
+    const projectDisplay = React.createElement(
+      "a",
+      { href: "/p/" + i.project_id },
+      React.createElement(
+        "div",
+        { className: "project" },
+        React.createElement(
+          "figure",
+          null,
+          React.createElement("img", { src: imageBaseUrl })
+        ),
+        React.createElement(
+          "div",
+          { className: "project-info" },
+          React.createElement(
+            "h3",
+            { className: "project-title" },
+            i.title,
+            " ",
+            React.createElement(
+              "span",
+              { className: "version" },
+              i.version
+            )
+          ),
+          React.createElement(
+            "span",
+            { className: "cat-title" },
+            i.catTitle
+          )
+        )
+      )
+    );
+    /* /PROJECT DISPLAY */
+
+    /* DISPLAY TEMPLATE */
+    console.log(i);
+    let displayTemplate;
+    if (this.props.selectedIndex === 0 || this.props.selectedIndex === 4) {
+      displayTemplate = React.createElement(
+        "div",
+        { className: "list-item-template" },
+        userDisplay
+      );
+    } else if (this.props.selectedIndex === 1) {
+      displayTemplate = React.createElement(
+        "div",
+        { className: "list-item-template" },
+        React.createElement(
+          "div",
+          { className: "creator-wrapper" },
+          React.createElement(
+            "div",
+            { className: "list-ranking" },
+            this.props.index + 1
+          ),
+          userDisplay,
+          React.createElement(
+            "div",
+            { className: "score-container" },
+            React.createElement(
+              "span",
+              { className: "score" },
+              React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
+              i.cnt
+            )
+          )
+        )
+      );
+    } else if (this.props.selectedIndex === 2 || this.props.selectedIndex === 3) {
+      displayTemplate = React.createElement(
+        "div",
+        { className: "list-item-template" },
+        React.createElement(
+          "div",
+          { className: "creator-wrapper" },
+          React.createElement(
+            "div",
+            { className: "left-side-section" },
+            React.createElement(
+              "div",
+              { className: "list-ranking" },
+              this.props.index + 1
+            ),
+            projectDisplay
+          ),
+          React.createElement(
+            "div",
+            { className: "right-side-section" },
+            userDisplay,
+            React.createElement(
+              "div",
+              { className: "score-container" },
+              React.createElement(
+                "span",
+                { className: "score" },
+                React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
+                i.laplace_score
+              )
+            )
+          )
+        )
+      );
+    } else if (this.props.selectedIndex === 5 || this.props.selectedIndex === 6) {
+      displayTemplate = React.createElement(
+        "div",
+        { className: "list-item-template" },
+        React.createElement(
+          "div",
+          { className: "scored-wrapper" },
+          userDisplay,
+          React.createElement(
+            "div",
+            { className: "list-ranking" },
+            React.createElement(
+              "span",
+              { className: "rank" },
+              this.props.index + 1
+            ),
+            React.createElement(
+              "span",
+              { className: "sum-plings" },
+              i.sum_plings
+            )
+          )
+        )
+      );
+    }
+    /* /DISPLAY TEMPLATE */
 
     return React.createElement(
       "li",
       { className: "list-item" },
-      usersDisplay
+      displayTemplate
     );
   }
 }

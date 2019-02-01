@@ -70,13 +70,15 @@ out: ../css/community.css, sourcemap: true, compress: true
       width:100%;
       border-bottom: 1px solid #ddd;
       margin-bottom: 20px;
+      text-align: center;
 
       .tab-menu-item {
         .transition();
-        float: left;
         border-bottom: 2px solid transparent;
         padding: 0 10px;
         margin-bottom: -1px;
+        float: none;
+        display: inline-block;
 
         a {
           .transition();
@@ -110,8 +112,44 @@ out: ../css/community.css, sourcemap: true, compress: true
         float: left;
         width: 100%;
 
-        ul {
+        ul,ol {
           list-style-type: none;
+
+          .list-item {
+            .list-item-template {
+              width: 100%;
+              height: 100%;
+              display: block;
+              .user {
+                figure {
+                  float: left;
+                  padding: .25em;
+                  border: 1px solid #dbdbdb;
+                  background: #f6f6f6;
+                  -webkit-border-radius: 999px;
+                  -moz-border-radius: 999px;
+                  border-radius: 999px;
+                  -webkit-background-clip: padding-box;
+                  -moz-background-clip: padding;
+                  background-clip: padding-box;
+                  width: 96px;
+                  height: 96px;
+
+                  img {
+                    vertical-align: middle;
+                    width: 100%;
+                    border: 1px solid #dbdbdb;
+                    -webkit-border-radius: 999px;
+                    -moz-border-radius: 999px;
+                    border-radius: 999px;
+                    -webkit-background-clip: padding-box;
+                    -moz-background-clip: padding;
+                    background-clip: padding-box;
+                  }
+                }
+              }
+            }
+          }
         }
 
         &.card-list-display {
@@ -143,45 +181,16 @@ out: ../css/community.css, sourcemap: true, compress: true
               position: relative;
               text-align: center;
               .transition();
+
               .user-display-container {
                 float: left;
                 width: 100%;
                 height: 100%;
                 position: relative;
-                .user-display-container {
 
-                }
                 .user {
 
-                  figure {
-                    float: left;
-                    padding: .25em;
-                    border: 1px solid #dbdbdb;
-                    background: #f6f6f6;
-                    -webkit-border-radius: 999px;
-                    -moz-border-radius: 999px;
-                    border-radius: 999px;
-                    -webkit-background-clip: padding-box;
-                    -moz-background-clip: padding;
-                    background-clip: padding-box;
-                    width: 96px;
-                    height: 96px;
-
-                    img {
-                      vertical-align: middle;
-                      width: 100%;
-                      border: 1px solid #dbdbdb;
-                      -webkit-border-radius: 999px;
-                      -moz-border-radius: 999px;
-                      border-radius: 999px;
-                      -webkit-background-clip: padding-box;
-                      -moz-background-clip: padding;
-                      background-clip: padding-box;
-                    }
-                  }
-
                   span.username {
-                    color: #333;
                     font-size: 13px;
                     font-weight: 700;
                     word-wrap: break-word;
@@ -195,12 +204,239 @@ out: ../css/community.css, sourcemap: true, compress: true
                   }
 
                   span.user-created {
+                    color: #333;
                     display: block;
                     position: absolute;
                     left: 0;
                     bottom: 0;
                     width: 100%;
                     font-size: 13px;
+                    text-align: right;
+                  }
+                }
+              }
+            }
+          }
+
+          &#most-pling-product-tab {
+            .list-item {
+              .list-ranking {
+                display: none;
+              }
+              .project {
+                figure {
+                  width: 100%;
+                  height: 80px;
+                  display: block;
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  overflow: hidden;
+
+                  img {
+                    width: 100%;
+                    height: auto;
+                  }
+                }
+                .project-info {
+                  display: none;
+                }
+              }
+              .user-display-container {
+                padding-top: 55px;
+                width: 100%;
+                height: 100%;
+                position: relative;
+
+                figure {
+                  width: 50px;
+                  height: 50px;
+                }
+
+                .user-created {
+                  display: none;
+                }
+              }
+              .score-container {
+                position: absolute;
+                bottom: 5px;
+                right: 5px;
+                font-size: 12px;
+
+                img {
+                  width: 15px;
+                  height: 15px;
+                  margin-right: 5px;
+                }
+              }
+            }
+          }
+        }
+
+        &.top-list-display {
+
+          ul, ol {
+            background-color: #F5F5F5;
+            border: 1px solid #e4e4e4;
+            border-radius: 10px;
+            width: 100%;
+            float: left;
+            padding: 0 10px;
+
+            .list-item {
+              align-items: center;
+              justify-content: center;
+              display: flex;
+              flex-wrap: wrap;
+              padding: 10px 0;
+              border-top: 1px solid #ccc;
+
+              .list-item-template {
+                width: auto;
+                height: auto;
+              }
+
+              .creator-wrapper {
+                display: flex;
+
+                .list-ranking,
+                .user-display-container,
+                .score-container {
+                  display: flex;
+                  flex-direction: column;
+                  padding: 0 15px;
+                }
+
+                .list-ranking {
+                  font-size: 33px;
+                  line-height: 33px;
+                  letter-spacing: normal;
+                  text-align: center;
+                  font-weight: 700;
+                  letter-spacing: -1px;
+                  padding: 30px 0;
+                  width: 50px;
+                }
+
+                .user {
+                  figure {
+                    padding: 0;
+                    border: 0;
+                  }
+                  .username {
+                    padding: 40px 30px 0;
+                    display: block;
+                    float: left;
+                    width: 170px;
+                    font-size: 12px;
+                    color: #4e4e4e;
+                  }
+                  .user-created {
+                    display: none;
+                  }
+                }
+
+                .score-container {
+                  font-size: 12px;
+                  display: block;
+                  padding-top: 40px;
+                  img {
+                    width: 15px;
+                    height: 15px;
+                    margin-right: 5px;
+                  }
+                }
+              }
+
+              &:first-of-type {
+                border-top: 0;
+              }
+            }
+          }
+
+          &#most-pling-creators-tab {
+            width: 100%;
+            max-width: 800px;
+            display: table;
+            margin: 0 auto;
+            float: none;
+          }
+
+          &#most-pling-product-tab {
+            width: 100%;
+            max-width: 800px;
+            display: table;
+            margin: 0 auto;
+            float: none;
+
+            .list-item {
+
+              .list-item-template {
+                width: 100%;
+
+                .creator-wrapper {
+                  width: 100%;
+                  display: block;
+
+                  .left-side-section {
+                    float: left;
+                    display: flex;
+
+                    .list-ranking {
+                      padding: 37px 0;
+                    }
+
+                    .project {
+                      display: flex;
+
+                      figure {
+                        height: 108px;
+                        width: 108px;
+                        margin-right: 10px;
+
+                        img {
+                          width: 100%;
+                          height: 100%;
+                        }
+                      }
+
+                      .project-info {
+                        padding: 30px 10px 0;
+
+                        .project-title {
+                          font-size: 24px;
+                          margin: 0;
+                        }
+
+                        .cat-title {
+                          color: #4e4e4e;
+                          font-size: 12px;
+                          font-weight: bold;
+                        }
+                      }
+                    }
+                  }
+                  .right-side-section {
+                    float: right;
+                    display: flex;
+                  }
+                  .user {
+
+                    figure {
+                      display: none;
+                    }
+                    .username {
+                      padding-top: 55px;
+                      color: #2673b0;
+                      .by {
+                        font-weight: bold;
+                        margin-right: 5px;
+                        color: #4e4e4e;
+                      }
+                    }
+                  }
+                  .score-container {
+                    padding-top: 55px;
                   }
                 }
               }

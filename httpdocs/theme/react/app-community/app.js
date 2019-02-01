@@ -266,9 +266,12 @@ class UsersTab extends React.Component {
   render(){
     let usersDisplay;
     if (this.props.items && this.props.items.length > 0){
+      const selectedIndex = this.props.selectedIndex;
       usersDisplay = this.props.items.map((user,index) => (
         <CommunityListItem
           key={index}
+          index={index}
+          selectedIndex={selectedIndex}
           item={user}
           type={'user'}
         />
@@ -291,12 +294,14 @@ class CreatorsTab extends React.Component {
   render(){
     let creatorsDisplay;
     if (this.props.items && this.props.items.length > 0){
+      const selectedIndex = this.props.selectedIndex;
       creatorsDisplay = this.props.items.map((creator,index) => (
         <CommunityListItem
           key={index}
           item={creator}
           type={'creator'}
-          selectedIndex={this.props.selectedIndex}
+          index={index}
+          selectedIndex={selectedIndex}
         />
       ))
     }
@@ -317,30 +322,33 @@ class PlingedProductsTab extends React.Component {
   render(){
     let products;
     if (this.props.items && this.props.items.length > 0){
+      const selectedIndex = this.props.selectedIndex;
       products = this.props.items.map((product,index) => (
         <CommunityListItem
           key={index}
           item={product}
           type={'product'}
+          index={index}
+          selectedIndex={selectedIndex}
         />
       ))
     }
 
     let productsDisplay,
         tabContainerCssClass;
-    if (this.props.selectedIndex === 3){
+    if (this.props.selectedIndex === 2){
       productsDisplay = (
         <ol>{products}</ol>
       );
       tabContainerCssClass = "top-list-display";
-    } else if (this.props.selectedIndex === 2) {
+    } else if (this.props.selectedIndex === 3) {
       productsDisplay = (
         <ul>{products}</ul>
       );
       tabContainerCssClass = "card-list-display"
     }
     return(
-      <div className={"community-tab " + tabContainerCssClass} id="most-pling-creators-tab">
+      <div className={"community-tab " + tabContainerCssClass} id="most-pling-product-tab">
         {productsDisplay}
       </div>
     );
@@ -356,11 +364,14 @@ class MemberScoresTab extends React.Component {
   render(){
     let members;
     if (this.props.items && this.props.items.length > 0){
+      const selectedIndex = this.props.selectedIndex;
       members = this.props.items.map((member,index) => (
         <CommunityListItem
           key={index}
           item={member}
           type={'score'}
+          index={index}
+          selectedIndex={selectedIndex}
         />
       ));
     }
@@ -390,46 +401,116 @@ class MemberScoresTab extends React.Component {
 class CommunityListItem extends React.Component {
   constructor(props){
   	super(props);
-    console.log(this.props.item);
   	this.state = {};
   }
 
   render(){
 
     const i = this.props.item;
-    console.log(this.props);
-    console.log(this.props.i)
-    let score;
-    if (this.props.type === 'user'){
-      // score = '';
-    } else if (this.props.type === 'creator'){
-      score = i.cnt;
-    } else if (this.props.type === 'product'){
-      score = i.laplace_score;
-    } else if (this.props.type === 'score'){
-      score = i.score
-    }
 
-    const usersDisplay = (
-      <a className="user-display-container">
+    /* USER DISPLAY */
+    let userCreatedAt;
+    if (i.created_at){
+      userCreatedAt = window.appHelpers.formatDate(i.created_at);
+    }
+    let byDisplay;
+    if (this.props.selectedIndex === 2){
+      byDisplay = <span className="by">by</span>;
+    }
+    const userDisplay = (
+      <a href={"/u/"+i.username+"/"} className="user-display-container">
         <div className="user">
           <figure><img src={i.profile_image_url}/></figure>
-          <span className="username"><a href={"/u/"+i.username+"/"}>{i.username}</a></span>
-          <span className="user-created">{window.appHelpers.formatDate(i.created_at)}</span>
+          <span className="username">{byDisplay}{i.username}</span>
+          <span className="user-created">{userCreatedAt}</span>
         </div>
       </a>
     );
+    /* /USER DISPLAY */
 
-    const project = {
-      id:i.project_id,
-      title:i.title,
-      cat_title:i.catTitle,
-      image_url:i.image_small
+
+    /* PROJECT DISPLAY */
+
+    let imageBaseUrl;
+    if (i.image_small){
+      imageBaseUrl = "https://cn.opendesktop."+window.appHelpers.getHostNameSuffix()+"/cache/167x167-0/img/"+i.image_small;
     }
+
+    const projectDisplay = (
+      <a href={"/p/"+i.project_id}>
+        <div className="project">
+          <figure><img src={imageBaseUrl}/></figure>
+          <div className="project-info">
+            <h3 className="project-title">{i.title} <span className="version">{i.version}</span></h3>
+            <span className="cat-title">{i.catTitle}</span>
+          </div>
+        </div>
+      </a>
+    );
+    /* /PROJECT DISPLAY */
+
+    /* DISPLAY TEMPLATE */
+    console.log(i);
+    let displayTemplate;
+    if (this.props.selectedIndex === 0 || this.props.selectedIndex === 4){
+      displayTemplate = (
+        <div className="list-item-template">
+          {userDisplay}
+        </div>
+      );
+    } else if (this.props.selectedIndex === 1){
+      displayTemplate = (
+        <div className="list-item-template">
+          <div className="creator-wrapper">
+            <div className="list-ranking">{this.props.index + 1}</div>
+            {userDisplay}
+            <div className="score-container">
+              <span className="score">
+                <img src="/images/system/pling-btn-active.png"/>
+                {i.cnt}
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+    } else if (this.props.selectedIndex === 2 || this.props.selectedIndex === 3){
+      displayTemplate = (
+        <div className="list-item-template">
+          <div className="creator-wrapper">
+            <div className="left-side-section">
+              <div className="list-ranking">{this.props.index + 1}</div>
+              {projectDisplay}
+            </div>
+            <div className="right-side-section">
+              {userDisplay}
+              <div className="score-container">
+                <span className="score">
+                  <img src="/images/system/pling-btn-active.png"/>
+                  {i.laplace_score}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    } else if (this.props.selectedIndex === 5 || this.props.selectedIndex === 6){
+      displayTemplate = (
+        <div className="list-item-template">
+          <div className="scored-wrapper">
+            {userDisplay}
+            <div className="list-ranking">
+              <span className="rank">{this.props.index + 1}</span>
+              <span className="sum-plings">{i.sum_plings}</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    /* /DISPLAY TEMPLATE */
 
     return(
       <li className="list-item">
-        {usersDisplay}
+        {displayTemplate}
       </li>
     );
   }
