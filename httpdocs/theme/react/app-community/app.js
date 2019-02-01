@@ -348,7 +348,7 @@ class PlingedProductsTab extends React.Component {
       tabContainerCssClass = "card-list-display"
     }
     return(
-      <div className={"community-tab " + tabContainerCssClass} id="most-pling-creators-tab">
+      <div className={"community-tab " + tabContainerCssClass} id="most-pling-product-tab">
         {productsDisplay}
       </div>
     );
@@ -371,7 +371,7 @@ class MemberScoresTab extends React.Component {
           item={member}
           type={'score'}
           index={index}
-          selectedIndex={selectedIndex}          
+          selectedIndex={selectedIndex}
         />
       ));
     }

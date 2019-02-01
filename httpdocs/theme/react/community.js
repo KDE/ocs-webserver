@@ -387,7 +387,7 @@ class PlingedProductsTab extends React.Component {
     }
     return React.createElement(
       "div",
-      { className: "community-tab " + tabContainerCssClass, id: "most-pling-creators-tab" },
+      { className: "community-tab " + tabContainerCssClass, id: "most-pling-product-tab" },
       productsDisplay
     );
   }
