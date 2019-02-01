@@ -431,7 +431,7 @@ class MemberScoresTab extends React.Component {
 
     return React.createElement(
       "div",
-      { className: "community-tab " + tabContainerCssClass, id: "supporters-tab" },
+      { className: "community-tab " + tabContainerCssClass, id: "score-tab" },
       membersDisplay
     );
   }

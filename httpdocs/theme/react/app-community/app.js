@@ -391,7 +391,7 @@ class MemberScoresTab extends React.Component {
     }
 
     return(
-      <div className={"community-tab " + tabContainerCssClass} id="supporters-tab">
+      <div className={"community-tab " + tabContainerCssClass} id="score-tab">
         {membersDisplay}
       </div>
     );
