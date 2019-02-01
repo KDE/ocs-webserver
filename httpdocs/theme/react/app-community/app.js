@@ -472,7 +472,6 @@ class CommunityListItem extends React.Component {
         </div>
       );
     } else if (this.props.selectedIndex === 2 || this.props.selectedIndex === 3){
-      console.log(i);
       displayTemplate = (
         <div className="list-item-template">
           <div className="creator-wrapper">
@@ -493,7 +492,18 @@ class CommunityListItem extends React.Component {
         </div>
       );
     } else if (this.props.selectedIndex === 5 || this.props.selectedIndex === 6){
-      // displayTemplate
+      console.log(i);
+      displayTemplate = (
+        <div className="list-item-template">
+          <div className="scored-wrapper">
+            {userDisplay}
+            <div className="list-ranking">
+              <span className="rank">{this.props.index + 1}</span>
+              <span className="sum-plings">{i.sum_plings}</span>
+            </div>
+          </div>
+        </div>
+      );
     }
 
     return(

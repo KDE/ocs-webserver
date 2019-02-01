@@ -555,7 +555,6 @@ class CommunityListItem extends React.Component {
         )
       );
     } else if (this.props.selectedIndex === 2 || this.props.selectedIndex === 3) {
-      console.log(i);
       displayTemplate = React.createElement(
         "div",
         { className: "list-item-template" },
@@ -590,7 +589,30 @@ class CommunityListItem extends React.Component {
         )
       );
     } else if (this.props.selectedIndex === 5 || this.props.selectedIndex === 6) {
-      // displayTemplate
+      console.log(i);
+      displayTemplate = React.createElement(
+        "div",
+        { className: "list-item-template" },
+        React.createElement(
+          "div",
+          { className: "scored-wrapper" },
+          userDisplay,
+          React.createElement(
+            "div",
+            { className: "list-ranking" },
+            React.createElement(
+              "span",
+              { className: "rank" },
+              this.props.index + 1
+            ),
+            React.createElement(
+              "span",
+              { className: "sum-plings" },
+              i.sum_plings
+            )
+          )
+        )
+      );
     }
 
     return React.createElement(
