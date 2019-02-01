@@ -451,8 +451,6 @@ class CommunityListItem extends React.Component {
       // displayTemplate
     }
 
-    console.log(displayTemplate);
-
     return(
       <li className="list-item">
         {displayTemplate}
