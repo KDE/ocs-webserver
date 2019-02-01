@@ -522,8 +522,17 @@ class CommunityListItemUserDisplay extends React.Component {
   }
 
   handleMouseIn(){
-    console.log('show tool tip now beeyotch');
-    this.setState({showHoverDiv:true});
+    this.setState({
+      showHoverDiv:true,
+      loading:true
+    },function(){
+      const self = this;
+      '/member/' + userid + '/tooltip/'
+      $.get('/member/' + this.props.item.member_id + '/tooltip/', function (data) {
+        console.log(data);
+        self.setState({loading:false});
+      });
+    });
   }
 
   handleMouseOut(){
@@ -546,8 +555,15 @@ class CommunityListItemUserDisplay extends React.Component {
 
     let userHoverDivDisplay;
     if (this.state.showHoverDiv){
-      userHoverDivDisplay = (
-        <div className="user-hover-display">
+      let infoDisplay;
+      if (this.state.loading){
+        infoDisplay = (
+          <div className="user-hover-info">
+            loading
+          </div>
+        )
+      } else {
+        infoDisplay = (
           <div className="user-hover-info">
             <span className="username">
               {i.username} ICON LOCATION
@@ -559,6 +575,11 @@ class CommunityListItemUserDisplay extends React.Component {
             <span>Last time active: TIME AGO</span>
             <span>Member since: TIME AGO</span>
           </div>
+        )
+      }
+      userHoverDivDisplay = (
+        <div className="user-hover-display">
+          {infoDisplay}
         </div>
       );
     }

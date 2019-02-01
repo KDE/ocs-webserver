@@ -612,8 +612,17 @@ class CommunityListItemUserDisplay extends React.Component {
   }
 
   handleMouseIn() {
-    console.log('show tool tip now beeyotch');
-    this.setState({ showHoverDiv: true });
+    this.setState({
+      showHoverDiv: true,
+      loading: true
+    }, function () {
+      const self = this;
+      '/member/' + userid + '/tooltip/';
+      $.get('/member/' + this.props.item.member_id + '/tooltip/', function (data) {
+        console.log(data);
+        self.setState({ loading: false });
+      });
+    });
   }
 
   handleMouseOut() {
@@ -640,10 +649,15 @@ class CommunityListItemUserDisplay extends React.Component {
 
     let userHoverDivDisplay;
     if (this.state.showHoverDiv) {
-      userHoverDivDisplay = React.createElement(
-        "div",
-        { className: "user-hover-display" },
-        React.createElement(
+      let infoDisplay;
+      if (this.state.loading) {
+        infoDisplay = React.createElement(
+          "div",
+          { className: "user-hover-info" },
+          "loading"
+        );
+      } else {
+        infoDisplay = React.createElement(
           "div",
           { className: "user-hover-info" },
           React.createElement(
@@ -682,7 +696,12 @@ class CommunityListItemUserDisplay extends React.Component {
             null,
             "Member since: TIME AGO"
           )
-        )
+        );
+      }
+      userHoverDivDisplay = React.createElement(
+        "div",
+        { className: "user-hover-display" },
+        infoDisplay
       );
     }
 
