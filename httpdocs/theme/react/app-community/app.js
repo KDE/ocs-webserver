@@ -528,7 +528,7 @@ class CommunityListItemUserDisplay extends React.Component {
 
   handleMouseOut(){
     console.log('hide tool top now ***')
-    this.setState({showHoverDiv:false});
+    // this.setState({showHoverDiv:false});
   }
 
   render(){
