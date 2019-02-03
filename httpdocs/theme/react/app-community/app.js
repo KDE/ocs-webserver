@@ -527,7 +527,6 @@ class CommunityListItemUserDisplay extends React.Component {
   }
 
   handleMouseIn(){
-    console.log(this.state);
     this.setState({
       showHoverDiv:true,
       loading:true
@@ -581,8 +580,16 @@ class CommunityListItemUserDisplay extends React.Component {
           </div>
         )
       }
+
+      let userHoverDivStyle;
+      if (this.state.imgHeight){
+        userHoverDivStyle = {
+          "marginTop":"-"+this.state.imgHeight
+        }
+      }
+
       userHoverDivDisplay = (
-        <div className="user-hover-display">
+        <div className="user-hover-display" style={userHoverDivStyle}>
           {infoDisplay}
         </div>
       );
