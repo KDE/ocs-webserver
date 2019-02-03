@@ -612,6 +612,9 @@ class CommunityListItemUserDisplay extends React.Component {
   }
 
   handleMouseIn() {
+    const rect = element.getBoundingClientRect();
+    console.log('elements position');
+    console.log(rect.top, rect.right, rect.bottom, rect.left);
     this.setState({
       showHoverDiv: true,
       loading: true
