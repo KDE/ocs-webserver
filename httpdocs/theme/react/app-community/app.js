@@ -565,11 +565,23 @@ class CommunityListItemUserDisplay extends React.Component {
           </div>
         )
       } else {
+
         const userData = this.state.userData;
+
+        let locationDisplay;
+        if (userData.countrycity){
+          locationDisplay = (
+            <span>
+              <span className="glyphicon glyphicon-map-marker"></span>
+              {userData.countrycity}
+            </span>
+          );
+        }
+
         infoDisplay = (
           <div className="user-hover-info">
             <span className="username">
-              {i.username} ICON {userData.countrycity}
+              {i.username} {locationDisplay}
             </span>
             <span>{userData.cntProjects} products</span>
             <span>{userData.totalComments} comments</span>

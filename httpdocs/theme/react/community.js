@@ -659,7 +659,19 @@ class CommunityListItemUserDisplay extends React.Component {
           "loading"
         );
       } else {
+
         const userData = this.state.userData;
+
+        let locationDisplay;
+        if (userData.countrycity) {
+          locationDisplay = React.createElement(
+            "span",
+            null,
+            React.createElement("span", { className: "glyphicon glyphicon-map-marker" }),
+            userData.countrycity
+          );
+        }
+
         infoDisplay = React.createElement(
           "div",
           { className: "user-hover-info" },
@@ -667,8 +679,8 @@ class CommunityListItemUserDisplay extends React.Component {
             "span",
             { className: "username" },
             i.username,
-            " ICON ",
-            userData.countrycity
+            " ",
+            locationDisplay
           ),
           React.createElement(
             "span",
