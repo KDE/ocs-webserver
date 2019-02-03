@@ -560,12 +560,12 @@ out: ../css/community.css, sourcemap: true, compress: true
 
     .user-hover-display {
       position: absolute;
-      width: 150px;
-      height: 200px;
+      width: 210px;
+      height: 160px;
       padding-left: 8px;
       left: 100%;
-      top: 0;
       z-index: 100;
+      top: -25px;
 
       &::before {
         content: "";
@@ -588,6 +588,12 @@ out: ../css/community.css, sourcemap: true, compress: true
         padding: 5px;
         border: 1px solid darken(@userHoverColor,5%);
         font-size: 12px;
+
+        span {
+          display: block;
+          width: 100%;
+          float: left;
+        }
       }
     }
   }
