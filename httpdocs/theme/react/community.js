@@ -611,10 +611,11 @@ class CommunityListItemUserDisplay extends React.Component {
     this.handleMouseOut = this.handleMouseOut.bind(this);
   }
 
-  handleMouseIn() {
-    const rect = element.getBoundingClientRect();
-    console.log('elements position');
-    console.log(rect.top, rect.right, rect.bottom, rect.left);
+  handleMouseIn(e) {
+    console.log(e);
+    // const rect = element.getBoundingClientRect();
+    // console.log('elements position');
+    // console.log(rect.top, rect.right, rect.bottom, rect.left);
     this.setState({
       showHoverDiv: true,
       loading: true
@@ -724,7 +725,7 @@ class CommunityListItemUserDisplay extends React.Component {
         React.createElement(
           "figure",
           {
-            onMouseOver: this.handleMouseIn,
+            onMouseOver: e => this.handleMouseIn(e),
             onMouseOut: this.handleMouseOut },
           React.createElement("img", { src: i.profile_image_url })
         ),
