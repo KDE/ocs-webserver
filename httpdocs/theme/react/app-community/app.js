@@ -522,6 +522,9 @@ class CommunityListItemUserDisplay extends React.Component {
   }
 
   handleMouseIn(e){
+    console.log(e);
+    console.log(e.element);
+    console.log(e.pageX);
     console.log(e.target);
     console.log(e.target.pageX,e.target.pageY,e.target.screenX,e.target.screemY);
     // const rect = element.getBoundingClientRect();
