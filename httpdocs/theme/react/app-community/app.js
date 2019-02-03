@@ -527,7 +527,7 @@ class CommunityListItemUserDisplay extends React.Component {
   }
 
   handleMouseIn(){
-    console.log(this.state.height);
+    console.log(this.state);
     this.setState({
       showHoverDiv:true,
       loading:true
