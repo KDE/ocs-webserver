@@ -706,7 +706,8 @@ class CommunityListItemUserDisplay extends React.Component {
             null,
             "Got ",
             userData.cntLikesGot,
-            " Likes HEART"
+            " Likes ",
+            React.createElement("span", { className: "glyphicon glyphicon-heart" })
           ),
           React.createElement(
             "span",

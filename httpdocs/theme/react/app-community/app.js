@@ -586,7 +586,7 @@ class CommunityListItemUserDisplay extends React.Component {
             <span>{userData.cntProjects} products</span>
             <span>{userData.totalComments} comments</span>
             <span>Liked {userData.cntLikesGave} products</span>
-            <span>Got {userData.cntLikesGot} Likes HEART</span>
+            <span>Got {userData.cntLikesGot} Likes <span className="glyphicon glyphicon-heart"></span></span>
             <span>Last time active: {userData.lastactive_at}</span>
             <span>Member since: {userData.created_at}</span>
           </div>
