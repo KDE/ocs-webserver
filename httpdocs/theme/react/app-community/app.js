@@ -589,7 +589,7 @@ class CommunityListItemUserDisplay extends React.Component {
       }
 
       userHoverDivDisplay = (
-        <div className="user-hover-display" style={userHoverDivStyle}>
+        <div className="user-hover-display">
           {infoDisplay}
         </div>
       );

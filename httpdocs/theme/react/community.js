@@ -720,7 +720,7 @@ class CommunityListItemUserDisplay extends React.Component {
 
       userHoverDivDisplay = React.createElement(
         "div",
-        { className: "user-hover-display", style: userHoverDivStyle },
+        { className: "user-hover-display" },
         infoDisplay
       );
     }
