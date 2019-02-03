@@ -521,15 +521,13 @@ class CommunityListItemUserDisplay extends React.Component {
     this.handleMouseOut = this.handleMouseOut.bind(this);
   }
 
-  handleMouseIn(e){
-    console.log(e);
-    console.log(e.element);
-    console.log(e.pageX);
-    console.log(e.target);
-    console.log(e.target.pageX,e.target.pageY,e.target.screenX,e.target.screemY);
-    // const rect = element.getBoundingClientRect();
-    // console.log('elements position');
-    // console.log(rect.top, rect.right, rect.bottom, rect.left);
+  componentDidMount() {
+    const height = this.divElement.clientHeight;
+    this.setState({imgHeight:height});
+  }
+
+  handleMouseIn(){
+    console.log(this.state.height);
     this.setState({
       showHoverDiv:true,
       loading:true
@@ -594,6 +592,7 @@ class CommunityListItemUserDisplay extends React.Component {
       <a href={"/u/"+i.username+"/"} className="user-display-container">
         <div className="user">
           <figure
+            ref={ (divElement) => this.divElement = divElement}
             onMouseOver={(e) => this.handleMouseIn(e)}
             onMouseOut={this.handleMouseOut}>
             <img src={i.profile_image_url}/>
