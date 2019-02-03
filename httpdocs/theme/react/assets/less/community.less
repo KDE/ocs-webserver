@@ -556,7 +556,7 @@ out: ../css/community.css, sourcemap: true, compress: true
   .user-display-container {
     position: relative;
 
-    @userHoverColor:#adadad;
+    @userHoverColor:#f1f1f1;
 
     .user-hover-display {
       position: absolute;
@@ -585,6 +585,7 @@ out: ../css/community.css, sourcemap: true, compress: true
         border-radius: 5px;
         background-color: @userHoverColor;
         padding: 5px;
+        border: 1px solid darken(@userHoverColor,5%);
       }
     }
   }
