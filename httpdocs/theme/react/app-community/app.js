@@ -195,7 +195,7 @@ class CommunityPageTabsContainer extends React.Component {
     let tabContent;
     if (this.state.loading){
 
-      tabContent = ( 
+      tabContent = (
         <div id="loading-container">
            <div className="ajax-loader"></div>
         </div>
@@ -539,7 +539,7 @@ class CommunityListItemUserDisplay extends React.Component {
   }
 
   handleMouseOut(){
-    // this.setState({showHoverDiv:false});
+    this.setState({showHoverDiv:false});
   }
 
   render(){
