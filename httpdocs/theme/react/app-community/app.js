@@ -593,15 +593,14 @@ class CommunityListItemUserDisplay extends React.Component {
         )
       }
 
-      let userHoverDivStyle;
-      if (this.state.imgHeight){
-        userHoverDivStyle = {
-          "marginTop":"-"+this.state.imgHeight
-        }
+
+      let userHoverCssClass;
+      if (this.state.loading){
+        userHoverCssClass = "loading-user"
       }
 
       userHoverDivDisplay = (
-        <div className="user-hover-display">
+        <div className={"user-hover-display " + }>
           {infoDisplay}
         </div>
       );
