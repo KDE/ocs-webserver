@@ -168,7 +168,8 @@ class CommunityPageTabsContainer extends React.Component {
         tabContent:{
           title:selectedTab.title,
           data:response.data
-        }// ,loading:false
+        },
+        loading:false
       })
     });
   }
