@@ -539,7 +539,7 @@ class CommunityListItemUserDisplay extends React.Component {
   }
 
   handleMouseOut(){
-    this.setState({showHoverDiv:false});
+    // this.setState({showHoverDiv:false});
   }
 
   render(){
@@ -600,7 +600,7 @@ class CommunityListItemUserDisplay extends React.Component {
       }
 
       userHoverDivDisplay = (
-        <div className={"user-hover-display " + }>
+        <div className={"user-hover-display " + userHoverCssClass}>
           {infoDisplay}
         </div>
       );
