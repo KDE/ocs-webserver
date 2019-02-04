@@ -600,7 +600,7 @@ class CommunityListItemUserDisplay extends React.Component {
 
 
       const userHoverDivStyle = {
-        "left":this.state.imgWidth
+        "left":this.state.imgWidth + "px";
       }
 
 
@@ -610,7 +610,7 @@ class CommunityListItemUserDisplay extends React.Component {
       }
 
       userHoverDivDisplay = (
-        <div className={"user-hover-display " + userHoverCssClass}>
+        <div className={"user-hover-display " + userHoverCssClass} style={userHoverDivStyle}>
           {infoDisplay}
         </div>
       );
