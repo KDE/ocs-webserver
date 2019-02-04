@@ -730,7 +730,7 @@ class CommunityListItemUserDisplay extends React.Component {
       }
 
       const userHoverDivStyle = {
-        "left": this.state.imgWidth + "px"
+        "marginTop": this.state.imgHeight / 2 + "px"
       };
 
       let userHoverCssClass = "";
