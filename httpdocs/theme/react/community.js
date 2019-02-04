@@ -634,7 +634,7 @@ class CommunityListItemUserDisplay extends React.Component {
   }
 
   handleMouseOut() {
-    // this.setState({showHoverDiv:false});
+    this.setState({ showHoverDiv: false });
   }
 
   render() {
@@ -730,6 +730,7 @@ class CommunityListItemUserDisplay extends React.Component {
       }
 
       const userHoverDivStyle = {
+        "left": this.state.imgWidth + "px",
         "marginTop": this.state.imgHeight / 2 + "px"
       };
 
