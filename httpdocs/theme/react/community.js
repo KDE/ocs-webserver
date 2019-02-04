@@ -634,7 +634,7 @@ class CommunityListItemUserDisplay extends React.Component {
   }
 
   handleMouseOut() {
-    this.setState({ showHoverDiv: false });
+    // this.setState({showHoverDiv:false});
   }
 
   render() {
