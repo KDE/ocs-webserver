@@ -613,7 +613,12 @@ class CommunityListItemUserDisplay extends React.Component {
 
   componentDidMount() {
     const height = this.divElement.clientHeight;
-    this.setState({ imgHeight: height });
+    const width = this.divElement.clientWidth;
+    console.log(height, width);
+    this.setState({
+      imgHeight: height,
+      imgWidth: width
+    });
   }
 
   handleMouseIn() {
