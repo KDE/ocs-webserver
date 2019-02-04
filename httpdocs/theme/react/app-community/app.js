@@ -195,9 +195,9 @@ class CommunityPageTabsContainer extends React.Component {
     let tabContent;
     if (this.state.loading){
 
-      tabContent = (
+      tabContent = ( 
         <div id="loading-container">
-           <span className="glyphicon glyphicon-refresh spin"></span>
+           <div className="ajax-loader"></div>
         </div>
       );
 
