@@ -4,6 +4,12 @@ out: ../css/community.css, sourcemap: true, compress: true
 #community-page {
   font-size: 14px;
 
+  .ajax-loader {
+    height: 24px;
+    width: 24px;
+    background-image: url('../img/ajax-loader.gif');
+  }
+
   #community-page-header {
     text-align: center;
     width: 100%;
@@ -560,7 +566,7 @@ out: ../css/community.css, sourcemap: true, compress: true
 
     .user-hover-display {
       position: absolute;
-      width: 225px; 
+      width: 225px;
       height: 160px;
       padding-left: 8px;
       left: 100%;
@@ -608,8 +614,13 @@ out: ../css/community.css, sourcemap: true, compress: true
           }
         }
       }
+
       &:hover {
         color: #333;
+      }
+
+      &.loading-user {
+        padding: 50px 170px 65px 8px;
       }
     }
   }

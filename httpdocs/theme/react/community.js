@@ -656,7 +656,7 @@ class CommunityListItemUserDisplay extends React.Component {
         infoDisplay = React.createElement(
           "div",
           { className: "user-hover-info" },
-          "loading"
+          React.createElement("div", { className: "ajax-loader" })
         );
       } else {
 
@@ -724,7 +724,7 @@ class CommunityListItemUserDisplay extends React.Component {
         );
       }
 
-      let userHoverCssClass;
+      let userHoverCssClass = "";
       if (this.state.loading) {
         userHoverCssClass = "loading-user";
       }
