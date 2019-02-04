@@ -202,10 +202,8 @@ class CommunityPageTabsContainer extends React.Component {
       self.setState({
         tabContent: {
           title: selectedTab.title,
-          data: response.data
-        },
-        loading: false
-      });
+          data: response.data // ,loading:false
+        } });
     });
   }
 
