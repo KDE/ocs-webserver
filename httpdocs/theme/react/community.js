@@ -607,14 +607,19 @@ class CommunityListItemUserDisplay extends React.Component {
     this.state = {
       showHoverDiv: false
     };
+    this.handleImageLoaded = this.handleImageLoaded.bind(this);
+    this.getImageElementDimensions = this.getImageElementDimensions.bind(this);
     this.handleMouseIn = this.handleMouseIn.bind(this);
     this.handleMouseOut = this.handleMouseOut.bind(this);
   }
 
   componentDidMount() {
+    this.getImageElementDimensions();
+  }
+
+  getImageElementDimensions() {
     const height = this.divElement.clientHeight;
     const width = this.divElement.clientWidth;
-    console.log(height, width);
     this.setState({
       imgHeight: height,
       imgWidth: width
@@ -635,6 +640,10 @@ class CommunityListItemUserDisplay extends React.Component {
 
   handleMouseOut() {
     this.setState({ showHoverDiv: false });
+  }
+
+  handleImageLoaded() {
+    this.getImageElementDimensions();
   }
 
   render() {
@@ -758,7 +767,9 @@ class CommunityListItemUserDisplay extends React.Component {
             ref: divElement => this.divElement = divElement,
             onMouseOver: e => this.handleMouseIn(e),
             onMouseOut: this.handleMouseOut },
-          React.createElement("img", { src: i.profile_image_url })
+          React.createElement("img", {
+            onLoad: this.handleImageLoaded,
+            src: i.profile_image_url })
         ),
         React.createElement(
           "span",
