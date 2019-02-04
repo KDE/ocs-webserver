@@ -599,6 +599,11 @@ class CommunityListItemUserDisplay extends React.Component {
       }
 
 
+      const userHoverDivStyle = {
+        "left":this.state.imgWidth
+      }
+
+
       let userHoverCssClass = "";
       if (this.state.loading){
         userHoverCssClass = "loading-user"
