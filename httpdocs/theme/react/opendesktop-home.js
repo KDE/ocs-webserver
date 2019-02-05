@@ -305,9 +305,7 @@ class ProductCarousel extends React.Component {
     }, function () {
       if (animateCarousel) {
         this.animateProductCarousel('right', animateCarousel);
-        console.log('animate carousel');
       } else if (this.state.finishedProducts) {
-        console.log('no animate carousel');
         this.setState({ disableRightArrow: true });
       }
     });
@@ -339,8 +337,6 @@ class ProductCarousel extends React.Component {
       }
 
       let disableRightArrow = false;
-      console.log(this.state.sliderPosition);
-      console.log(endPoint);
       if (this.state.sliderPosition >= endPoint && this.state.finishedProducts === true) {
         disableRightArrow = true;
       }
