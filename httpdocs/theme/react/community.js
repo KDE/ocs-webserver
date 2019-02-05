@@ -809,10 +809,26 @@ class CommunityListItemScoreDisplay extends React.Component {
           "Loading"
         );
       } else {
+
+        const scoreUsers = this.state.scoreUsers.map((su, index) => React.createElement(
+          "div",
+          { className: "score-user", key: index },
+          React.createElement(
+            "figure",
+            null,
+            React.createElement("img", { src: su.profile_image_url })
+          ),
+          React.createElement(
+            "span",
+            null,
+            su.username
+          )
+        ));
+
         scoreUsersDisplay = React.createElement(
           "div",
           { className: "score-users-display" },
-          "Done Loading"
+          scoreUsers
         );
       }
       scoreUsersHoverDiv = React.createElement(

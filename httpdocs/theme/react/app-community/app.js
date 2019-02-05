@@ -676,9 +676,19 @@ class CommunityListItemScoreDisplay extends React.Component {
           </div>
         );
       } else {
+
+        const scoreUsers = this.state.scoreUsers.map((su,index) => (
+          <div className="score-user" key={index}>
+            <figure>
+              <img src={su.profile_image_url}/>
+            </figure>
+            <span>{su.username}</span>
+          </div>
+        ));
+
         scoreUsersDisplay = (
           <div className="score-users-display">
-            Done Loading
+            {scoreUsers}
           </div>
         );
       }
@@ -688,8 +698,6 @@ class CommunityListItemScoreDisplay extends React.Component {
         </div>
       )
     }
-
-
 
     return(
       <div
