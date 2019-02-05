@@ -431,10 +431,19 @@ class ProductCarouselItem extends React.Component {
     );
 
     if (window.hpVersion === 2){
+
       paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
+
       let cDate = new Date(this.props.product.created_at);
+      console.log(jQuery.timeago(cDate))
       cDate = cDate.toString();
       const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
+
+      let scoreBarColorClass = "green";
+      if (this.props.product.laplace_score < 50){
+        scoreBarColorClass = "red";
+      }
+
       productInfoDisplay = (
         <div className="product-info">
           <span className="product-info-title">{this.props.product.title}</span>
@@ -446,7 +455,7 @@ class ProductCarouselItem extends React.Component {
               score {this.props.product.laplace_score + "%"}
             </div>
             <div className="score-bar-container">
-              <div className="score-bar" style={{"width":this.props.product.laplace_score + "%"}}></div>
+              <div className={"score-bar" + " " + scoreBarColorClass} style={{"width":this.props.product.laplace_score + "%"}}></div>
             </div>
           </div>
         </div>
