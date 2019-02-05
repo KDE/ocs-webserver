@@ -879,6 +879,7 @@ class CommunityListItemScoreDisplay extends React.Component {
       "div",
       {
         className: "score-container" },
+      scoreDisplay,
       scoreUsersHoverDiv
     );
   }

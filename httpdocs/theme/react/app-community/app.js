@@ -739,7 +739,7 @@ class CommunityListItemScoreDisplay extends React.Component {
     return(
       <div
         className="score-container">
-
+        {scoreDisplay}
         {scoreUsersHoverDiv}
       </div>
     );
