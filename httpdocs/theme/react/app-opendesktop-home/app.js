@@ -433,7 +433,7 @@ class ProductCarouselItem extends React.Component {
     if (window.hpVersion === 2){
 
       paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
-
+      console.log(this.props.product);
       let cDate = new Date(this.props.product.created_at);
       console.log(jQuery.timeago(cDate))
       cDate = cDate.toString();
