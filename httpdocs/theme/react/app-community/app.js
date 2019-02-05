@@ -699,7 +699,7 @@ class CommunityListItemScoreDisplay extends React.Component {
         onMouseOut={this.handleMouseOut}>
         <span className="score">
           <img src="/images/system/pling-btn-active.png"/>
-          {this.props.item.cnt}
+          {this.props.item.laplace_score}
         </span>
         {scoreUsersHoverDiv}
       </div>

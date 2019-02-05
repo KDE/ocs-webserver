@@ -833,7 +833,7 @@ class CommunityListItemScoreDisplay extends React.Component {
         "span",
         { className: "score" },
         React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
-        this.props.item.cnt
+        this.props.item.laplace_score
       ),
       scoreUsersHoverDiv
     );
