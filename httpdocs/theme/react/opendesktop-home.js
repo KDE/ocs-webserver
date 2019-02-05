@@ -303,7 +303,7 @@ class ProductCarousel extends React.Component {
       itemWidth: itemWidth,
       itemsPerRow: itemsPerRow - 1
     }, function () {
-      if (animateCarousel) {
+      if (animateCarousel || !animateCarousel && this.state.finishedProducts) {
         this.animateProductCarousel('right', animateCarousel);
       }
     });
