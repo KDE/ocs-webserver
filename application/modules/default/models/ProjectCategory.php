@@ -102,9 +102,7 @@ class Default_Model_ProjectCategory
             return array();
         }
 
-        if (APPLICATION_ENV == "development") {
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $store_id . ' - ' . json_encode($tags));
-        }
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $store_id . ' - ' . json_encode($tags));
 
         if (empty($tags)) {
             $statement = $this->_dataTable->getAdapter()->query("CALL fetchCatTreeForStore(:store_id)", array("store_id" => $store_id));

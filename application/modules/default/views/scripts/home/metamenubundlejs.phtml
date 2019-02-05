@@ -70,8 +70,7 @@ if(isset($_GET['url'])) {
     $thisurl = $_GET['url'];
 }
 
-Zend_Registry::get('logger')->info('metamenubundlejs.phtml redirect url- ===================================' );
-Zend_Registry::get('logger')->info($thisurl);
+Zend_Registry::get('logger')->info('metamenubundlejs.phtml  - redirect url : ' . $thisurl);
 
 $isExternal = 'var isExternal = true;';
 $is_external = true;
