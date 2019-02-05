@@ -781,7 +781,16 @@ class CommunityListItemScoreDisplay extends React.Component {
   }
 
   handleMouseIn() {
-    console.log('hi');
+    this.setState({
+      showHoverDiv: true,
+      loading: true
+    }, function () {
+      const self = this;
+      $.get('/plings/tooltip/id/' + this.props.item.project_id, function (res) {
+        console.log(res);
+        self.setState({ scoreUsers: res.data, loading: false });
+      });
+    });
   }
 
   handleMouseOut() {
@@ -792,10 +801,24 @@ class CommunityListItemScoreDisplay extends React.Component {
 
     let scoreUsersDisplay;
     if (this.state.showHoverDiv) {
-      scoreUsersDisplay = React.createElement(
+      let scoreUsersDisplay;
+      if (this.state.loading) {
+        scoreUsersDisplay = React.createElement(
+          "div",
+          { className: "score-users-list-container" },
+          "Loading"
+        );
+      } else {
+        scoreUsersDisplay = React.createElement(
+          "div",
+          { className: "score-users-list-container" },
+          "Done Loading"
+        );
+      }
+      scoreUsersHoverDiv = React.createElement(
         "div",
         { className: "score-hover-info" },
-        React.createElement("div", { className: "score-users-list-container" })
+        scoreUsersDisplay
       );
     }
 
@@ -812,7 +835,7 @@ class CommunityListItemScoreDisplay extends React.Component {
         React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
         this.props.item.cnt
       ),
-      scoreUsersDisplay
+      scoreUsersHoverDiv
     );
   }
 }

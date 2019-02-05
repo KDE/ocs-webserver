@@ -648,7 +648,16 @@ class CommunityListItemScoreDisplay extends React.Component {
   }
 
   handleMouseIn(){
-    console.log('hi');
+    this.setState({
+      showHoverDiv:true,
+      loading:true
+    },function(){
+      const self = this;
+      $.get('/plings/tooltip/id/' + this.props.item.project_id, function (res) {
+        console.log(res);
+        self.setState({scoreUsers:res.data,loading:false});
+      });
+    });
   }
 
   handleMouseOut(){
@@ -659,11 +668,23 @@ class CommunityListItemScoreDisplay extends React.Component {
 
     let scoreUsersDisplay;
     if (this.state.showHoverDiv){
-      scoreUsersDisplay = (
-        <div className="score-hover-info">
+      let scoreUsersDisplay;
+      if (this.state.loading){
+        scoreUsersDisplay = (
           <div className="score-users-list-container">
-            
+            Loading
           </div>
+        );
+      } else {
+        scoreUsersDisplay = (
+          <div className="score-users-list-container">
+            Done Loading
+          </div>
+        );
+      }
+      scoreUsersHoverDiv = (
+        <div className="score-hover-info">
+          {scoreUsersDisplay}
         </div>
       )
     }
@@ -678,7 +699,7 @@ class CommunityListItemScoreDisplay extends React.Component {
           <img src="/images/system/pling-btn-active.png"/>
           {this.props.item.cnt}
         </span>
-        {scoreUsersDisplay}
+        {scoreUsersHoverDiv}
       </div>
     );
   }
