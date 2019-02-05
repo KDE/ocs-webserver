@@ -810,7 +810,7 @@ class CommunityListItemScoreDisplay extends React.Component {
   }
 
   handleMouseOut() {
-    console.log('bye');
+    self.setState({ showHoverDiv: false });
   }
 
   render() {
