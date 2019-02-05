@@ -656,8 +656,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $q = $this->generateTagFilter($q, array(self::FILTER_NAME_TAG => $tagFilter));
         }
 
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $q->__toString());
-
         $result = $this->fetchAll($q);
 
         return $result;
