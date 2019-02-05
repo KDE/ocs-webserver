@@ -659,16 +659,37 @@ out: ../css/community.css, sourcemap: true, compress: true
       }
 
       .score-users-display {
-        width: 100%;
-        height: 100%;
+        width: auto;
+        max-width: 200px;
+        height: auto;
         border-radius: 5px;
         background-color: @userHoverColor;
         padding: 10px;
         border: 1px solid darken(@userHoverColor,5%);
         font-size: 12px;
         text-align: left;
-      }
 
+        .score-user {
+          float: left;
+          padding: 5px;
+
+          figure {
+            width: 40px;
+            height: 40px;
+            border-radius: 100%;
+            overflow: hidden;
+
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+
+          span {
+            text-align: center;
+          }
+        }
+      }
     }
   }
 }
