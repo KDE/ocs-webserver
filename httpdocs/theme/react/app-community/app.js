@@ -668,7 +668,8 @@ class CommunityListItemScoreDisplay extends React.Component {
 
     let scoreUsersHoverDiv;
     if (this.state.showHoverDiv){
-      let scoreUsersDisplay;
+      let scoreUsersDisplay,
+          scoreUsersHoverDivHeight;
       if (this.state.loading){
         scoreUsersDisplay = (
           <div className="score-users-display">
@@ -676,7 +677,6 @@ class CommunityListItemScoreDisplay extends React.Component {
           </div>
         );
       } else {
-
         const scoreUsers = this.state.scoreUsers.map((su,index) => (
           <div className="score-user" key={index}>
             <figure>
@@ -685,7 +685,8 @@ class CommunityListItemScoreDisplay extends React.Component {
             <span>{su.username}</span>
           </div>
         ));
-
+        const scoreUserNumRows = Math.ceil(this.state.scoreUsers.length / 4);
+        scoreUsersHoverDivHeight = scoreUserNumRows * 70;
         scoreUsersDisplay = (
           <div className="score-users-display">
             {scoreUsers}
@@ -693,7 +694,7 @@ class CommunityListItemScoreDisplay extends React.Component {
         );
       }
       scoreUsersHoverDiv = (
-        <div className="score-hover-container">
+        <div className="score-hover-container" style={{"top":"-" + scoreUsersHoverDivHeight / 2}}>
           {scoreUsersDisplay}
         </div>
       )

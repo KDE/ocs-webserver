@@ -801,7 +801,7 @@ class CommunityListItemScoreDisplay extends React.Component {
 
     let scoreUsersHoverDiv;
     if (this.state.showHoverDiv) {
-      let scoreUsersDisplay;
+      let scoreUsersDisplay, scoreUsersHoverDivHeight;
       if (this.state.loading) {
         scoreUsersDisplay = React.createElement(
           "div",
@@ -809,7 +809,6 @@ class CommunityListItemScoreDisplay extends React.Component {
           React.createElement("div", { className: "ajax-loader" })
         );
       } else {
-
         const scoreUsers = this.state.scoreUsers.map((su, index) => React.createElement(
           "div",
           { className: "score-user", key: index },
@@ -824,7 +823,8 @@ class CommunityListItemScoreDisplay extends React.Component {
             su.username
           )
         ));
-
+        const scoreUserNumRows = Math.ceil(this.state.scoreUsers.length / 4);
+        scoreUsersHoverDivHeight = scoreUserNumRows * 70;
         scoreUsersDisplay = React.createElement(
           "div",
           { className: "score-users-display" },
@@ -833,7 +833,7 @@ class CommunityListItemScoreDisplay extends React.Component {
       }
       scoreUsersHoverDiv = React.createElement(
         "div",
-        { className: "score-hover-container" },
+        { className: "score-hover-container", style: { "top": "-" + scoreUsersHoverDivHeight / 2 } },
         scoreUsersDisplay
       );
     }
