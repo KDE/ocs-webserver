@@ -149,6 +149,11 @@ class SpotlightProduct extends React.Component {
     cDate = cDate.toString();
     const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
 
+    let scoreBarColorClass = "green";
+    if (this.state.featuredProduct.laplace_score < 50){
+      scoreBarColorClass = "red";
+    }
+
     return(
       <div id="spotlight-product">
         <h2>In the Spotlight</h2>
@@ -172,7 +177,7 @@ class SpotlightProduct extends React.Component {
                     score {this.state.featuredProduct.laplace_score + "%"}
                   </div>
                   <div className="score-bar-container">
-                    <div className="score-bar" style={{"width":this.state.featuredProduct.laplace_score + "%"}}></div>
+                    <div className={"score-bar" + " " + scoreBarColorClass} style={{"width":this.state.featuredProduct.laplace_score + "%"}}></div>
                   </div>
                   <div className="score-bar-date">
                     {createdDate}

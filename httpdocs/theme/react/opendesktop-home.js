@@ -155,6 +155,11 @@ class SpotlightProduct extends React.Component {
     cDate = cDate.toString();
     const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
 
+    let scoreBarColorClass = "green";
+    if (this.state.featuredProduct.laplace_score < 50) {
+      scoreBarColorClass = "red";
+    }
+
     return React.createElement(
       "div",
       { id: "spotlight-product" },
@@ -219,7 +224,7 @@ class SpotlightProduct extends React.Component {
                 React.createElement(
                   "div",
                   { className: "score-bar-container" },
-                  React.createElement("div", { className: "score-bar", style: { "width": this.state.featuredProduct.laplace_score + "%" } })
+                  React.createElement("div", { className: "score-bar" + " " + scoreBarColorClass, style: { "width": this.state.featuredProduct.laplace_score + "%" } })
                 ),
                 React.createElement(
                   "div",
