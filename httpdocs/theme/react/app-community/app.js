@@ -620,6 +620,21 @@ class CommunityListItemUserDisplay extends React.Component {
       );
     }
 
+    let userNameDisplay;
+    if (this.props.selectedIndex === 2){
+      userNameDisplay = (
+        <span
+          ref={ (divElement) => this.divElement = divElement}
+          onMouseOver={(e) => this.handleMouseIn(e)}
+          onMouseOut={this.handleMouseOut}
+          className="username">{byDisplay}{i.username}</span>
+      )
+    } else {
+      userNameDisplay = (
+        <span className="username">{byDisplay}{i.username}</span>
+      )
+    }
+
     return(
       <a href={"/u/"+i.username+"/"} className="user-display-container">
         <div className="user">
@@ -631,7 +646,6 @@ class CommunityListItemUserDisplay extends React.Component {
               onLoad={this.handleImageLoaded}
               src={i.profile_image_url}/>
           </figure>
-          <span className="username">{byDisplay}{i.username}</span>
           <span className="user-created">{userCreatedAt}</span>
         </div>
         {userHoverDivDisplay}

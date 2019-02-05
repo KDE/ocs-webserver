@@ -740,6 +740,27 @@ class CommunityListItemUserDisplay extends React.Component {
       );
     }
 
+    let userNameDisplay;
+    if (this.props.selectedIndex === 2) {
+      userNameDisplay = React.createElement(
+        "span",
+        {
+          ref: divElement => this.divElement = divElement,
+          onMouseOver: e => this.handleMouseIn(e),
+          onMouseOut: this.handleMouseOut,
+          className: "username" },
+        byDisplay,
+        i.username
+      );
+    } else {
+      userNameDisplay = React.createElement(
+        "span",
+        { className: "username" },
+        byDisplay,
+        i.username
+      );
+    }
+
     return React.createElement(
       "a",
       { href: "/u/" + i.username + "/", className: "user-display-container" },
@@ -755,12 +776,6 @@ class CommunityListItemUserDisplay extends React.Component {
           React.createElement("img", {
             onLoad: this.handleImageLoaded,
             src: i.profile_image_url })
-        ),
-        React.createElement(
-          "span",
-          { className: "username" },
-          byDisplay,
-          i.username
         ),
         React.createElement(
           "span",
