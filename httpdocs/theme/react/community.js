@@ -855,6 +855,8 @@ class CommunityListItemScoreDisplay extends React.Component {
       );
     }
 
+    console.log(this.props.item);
+
     let scoreDisplay;
     if (this.props.selectedIndex === 2) {
       scoreDisplay = React.createElement(
