@@ -666,7 +666,7 @@ class CommunityListItemScoreDisplay extends React.Component {
 
   render(){
 
-    let scoreUsersDisplay;
+    let scoreUsersHoverDiv;
     if (this.state.showHoverDiv){
       let scoreUsersDisplay;
       if (this.state.loading){
