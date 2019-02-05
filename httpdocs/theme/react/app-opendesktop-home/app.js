@@ -257,6 +257,7 @@ class ProductCarousel extends React.Component {
   }
 
   animateProductCarousel(dir,animateCarousel){
+    console.log('animate product carousel');
     let newSliderPosition = this.state.sliderPosition;
     const endPoint = this.state.sliderWidth - (this.state.containerWidth - this.state.itemWidth);
 
@@ -265,14 +266,17 @@ class ProductCarousel extends React.Component {
         newSliderPosition = this.state.sliderPosition - (this.state.containerWidth - this.state.itemWidth);
       }
     } else {
+      console.log('dir right');
       if (Math.trunc(this.state.sliderPosition) < Math.trunc(endPoint)){
+        console.log('normal');
         newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
       } else {
+        console.log('past end point');
         if (!animateCarousel){
-            this.getNextProductsBatch();
-        } else {
           if (this.state.products.length === 5 || this.state.finishedProducts){
             newSliderPosition = 0;
+          } else {
+            this.getNextProductsBatch();
           }
         }
       }
