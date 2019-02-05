@@ -581,6 +581,7 @@ class Default_Model_Info
          * 
          */
 
+
         $sql .= '
             WHERE
                 `p`.`status` = 100                
@@ -1060,7 +1061,35 @@ class Default_Model_Info
 
 
    
+    public function getSupporters($limit = 20)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit);
 
+        if (false !== ($newSupporters = $cache->load($cacheName))) {
+            return $newSupporters;
+        }
+        $sql = '
+                        SELECT 
+                        s.member_id as supporter_id
+                        ,s.member_id
+                        ,(select username from member m where m.member_id = s.member_id) as username
+                        ,(select profile_image_url from member m where m.member_id = s.member_id) as profile_image_url
+                        ,min(s.active_time) as created_at
+                        from support s 
+                        where s.status_id = 2                         
+                        group by member_id
+                        order by s.active_time desc                                       
+        ';
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+        $cache->save($result, $cacheName, array(), 300);
+
+        return $result;
+    }
 
     public function getNewActiveSupporters($limit = 20)
     {
@@ -1307,6 +1336,29 @@ class Default_Model_Info
                         from support s                         
                         where s.status_id = 2  
                         and (DATE_ADD((s.active_time), INTERVAL 1 YEAR) > now())
+        ';
+
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+        $totalcnt = $result[0]['total_count'];
+        $cache->save($totalcnt, $cacheName, array(), 300);
+
+        return $totalcnt;
+    }
+
+    public function getCountAllSupporters()
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__;
+
+        if (false !== ($totalcnt = $cache->load($cacheName))) {
+            return $totalcnt;
+        }
+        $sql = '
+                        SELECT 
+                        count( distinct s.member_id) as total_count
+                        from support s                         
+                        where s.status_id = 2                         
         ';
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();

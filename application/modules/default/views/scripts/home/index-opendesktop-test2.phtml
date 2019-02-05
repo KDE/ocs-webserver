@@ -39,7 +39,7 @@ $productsApps = $modelInfo->getJsonLastProductsForHostStores(5,233);
 $productsAddons = $modelInfo->getJsonLastProductsForHostStores(5,"152");
 $productsWallpapersOriginal = $modelInfo->getJsonLastProductsForHostStores(5,"295,158",null,true);
 $productsWallpapers = $modelInfo->getJsonLastProductsForHostStores(5,"295,158",null,false);
-
+$this->countSupporters = $modelInfo->getCountAllSupporters();
 $featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
 if ($featuredProducts->getTotalItemCount()) {
     $request = Zend_Controller_Front::getInstance()->getRequest();
