@@ -806,7 +806,7 @@ class CommunityListItemScoreDisplay extends React.Component {
         scoreUsersDisplay = React.createElement(
           "div",
           { className: "score-users-display" },
-          "Loading"
+          React.createElement("div", { className: "ajax-loader" })
         );
       } else {
 

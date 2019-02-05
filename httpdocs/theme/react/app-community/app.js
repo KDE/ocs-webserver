@@ -672,7 +672,7 @@ class CommunityListItemScoreDisplay extends React.Component {
       if (this.state.loading){
         scoreUsersDisplay = (
           <div className="score-users-display">
-            Loading
+            <div className="ajax-loader"></div>
           </div>
         );
       } else {
