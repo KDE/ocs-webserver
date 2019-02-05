@@ -1,3 +1,66 @@
+window.appHelpers = (function(){
+
+  function dechex(number) {
+    //  discuss at: http://locutus.io/php/dechex/
+    // original by: Philippe Baumann
+    // bugfixed by: Onno Marsman (https://twitter.com/onnomarsman)
+    // improved by: http://stackoverflow.com/questions/57803/how-to-convert-decimal-to-hex-in-javascript
+    //    input by: pilus
+    //   example 1: dechex(10)
+    //   returns 1: 'a'
+    //   example 2: dechex(47)
+    //   returns 2: '2f'
+    //   example 3: dechex(-1415723993)
+    //   returns 3: 'ab9dc427'
+
+    if (number < 0) {
+      number = 0xFFFFFFFF + number + 1
+    }
+    return parseInt(number, 10).toString(16)
+  }
+
+  function calculateScoreColor(score){
+    let color;
+    let blue, red, green, defaultColor = 200;
+    if (score > 50){
+      red = this.dechex(defaultColor - ((score-50)*4));
+      green = this.dechex(defaultColor);
+      blue = this.dechex(defaultColor - ((score-50)*4));
+    } else if (score < 50){
+      red = this.dechex(defaultColor);
+      green = this.dechex(defaultColor - ((score-50)*4));
+      blue = this.dechex(defaultColor - ((score-50)*4));
+    }
+
+    if (green.length === 1) green = '0' + green;
+    if (red.length === 1) red = '0' + red;
+
+    /*$blue = $red = $green = $default=200;
+    $score = $this->widgetRating->laplace_score;
+    if($score==0)
+    	$score = 50;
+
+    if($score>50) {
+        $red=dechex($default-(($score-50)*4));
+        $green=dechex($default);
+        $blue=dechex($default-(($score-50)*4));
+    }elseif($score<51) {
+        $red=dechex($default);
+        $green=dechex($default-((50-$score)*4));
+        $blue=dechex($default-((50-$score)*4));
+    }
+    if(strlen($green)==1) $green='0'.$green;
+    if(strlen($red)==1) $red='0'.$red;*/
+
+    return red + "," + green + "," + blue;
+  }
+
+  return {
+    dechex,
+    calculateScoreColor
+  }
+}());
+
 class App extends React.Component {
   constructor(props){
   	super(props);
@@ -443,11 +506,7 @@ class ProductCarouselItem extends React.Component {
       paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
       const cDate = new Date(this.props.product.created_at);
       const createdDate = jQuery.timeago(cDate)
-
-      let scoreBarColorClass = "green";
-      if (this.props.product.laplace_score < 50){
-        scoreBarColorClass = "red";
-      }
+      const productScoreColor = window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
 
       productInfoDisplay = (
         <div className="product-info">
@@ -459,7 +518,7 @@ class ProductCarouselItem extends React.Component {
               score {this.props.product.laplace_score + "%"}
             </div>
             <div className="score-bar-container">
-              <div className={"score-bar" + " " + scoreBarColorClass} style={{"width":this.props.product.laplace_score + "%"}}></div>
+              <div className={"score-bar"} style={{"width":this.props.product.laplace_score + "%","backgroundColor":productScoreColor}}></div>
             </div>
           </div>
         </div>
