@@ -660,7 +660,7 @@ out: ../css/community.css, sourcemap: true, compress: true
 
       .score-users-display {
         width: auto;
-        max-width: 200px;
+        max-width: 210px;
         height: auto;
         border-radius: 5px;
         background-color: @userHoverColor;
@@ -668,10 +668,12 @@ out: ../css/community.css, sourcemap: true, compress: true
         border: 1px solid darken(@userHoverColor,5%);
         font-size: 12px;
         text-align: left;
+        float: left;
 
         .score-user {
           float: left;
           padding: 5px;
+          max-width: 50px;
 
           figure {
             width: 40px;
