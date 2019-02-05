@@ -448,16 +448,13 @@ class CommunityListItem extends React.Component {
     const i = this.props.item;
 
     /* USER DISPLAY */
-
     const userDisplay = React.createElement(CommunityListItemUserDisplay, {
       selectedIndex: this.props.selectedIndex,
       item: i
     });
-
     /* /USER DISPLAY */
 
     /* PROJECT DISPLAY */
-
     let imageBaseUrl;
     if (i.image_small) {
       imageBaseUrl = "https://cn.opendesktop." + window.appHelpers.getHostNameSuffix() + "/cache/167x167-0/img/" + i.image_small;
@@ -498,8 +495,13 @@ class CommunityListItem extends React.Component {
     );
     /* /PROJECT DISPLAY */
 
-    /* DISPLAY TEMPLATE */
+    /* SCORE DISPLAY */
+    const scoreDisplay = React.createElement(CommunityListItemScoreDisplay, {
+      item: i
+    });
+    /* /SCORE DISPLAY */
 
+    /* DISPLAY TEMPLATE */
     let displayTemplate;
     if (this.props.selectedIndex === 0 || this.props.selectedIndex === 4) {
       displayTemplate = React.createElement(
@@ -520,16 +522,7 @@ class CommunityListItem extends React.Component {
             this.props.index + 1
           ),
           userDisplay,
-          React.createElement(
-            "div",
-            { className: "score-container" },
-            React.createElement(
-              "span",
-              { className: "score" },
-              React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
-              i.cnt
-            )
-          )
+          scoreDisplay
         )
       );
     } else if (this.props.selectedIndex === 2 || this.props.selectedIndex === 3) {
@@ -553,16 +546,7 @@ class CommunityListItem extends React.Component {
             "div",
             { className: "right-side-section" },
             userDisplay,
-            React.createElement(
-              "div",
-              { className: "score-container" },
-              React.createElement(
-                "span",
-                { className: "score" },
-                React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
-                i.laplace_score
-              )
-            )
+            scoreDisplay
           )
         )
       );
@@ -784,6 +768,40 @@ class CommunityListItemUserDisplay extends React.Component {
         )
       ),
       userHoverDivDisplay
+    );
+  }
+}
+
+class CommunityListItemScoreDisplay extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.handleMouseIn = this.handleMouseIn.bind(this);
+    this.handleMouseOut = this.handleMouseOut.bind(this);
+  }
+
+  handleMouseIn() {
+    console.log('hi');
+  }
+
+  handleMouseOut() {
+    console.log('bye');
+  }
+
+  render() {
+    return React.createElement(
+      "div",
+      {
+        className: "score-container",
+        ref: divElement => this.divElement = divElement,
+        onMouseOver: this.handleMouseIn,
+        onMouseOut: this.handleMouseOut },
+      React.createElement(
+        "span",
+        { className: "score" },
+        React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
+        this.props.item.cnt
+      )
     );
   }
 }
