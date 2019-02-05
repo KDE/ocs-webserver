@@ -841,13 +841,13 @@ class CommunityListItemScoreDisplay extends React.Component {
     return React.createElement(
       "div",
       {
-        className: "score-container",
-        ref: divElement => this.divElement = divElement,
-        onMouseOver: this.handleMouseIn,
-        onMouseOut: this.handleMouseOut },
+        className: "score-container" },
       React.createElement(
         "span",
-        { className: "score" },
+        { className: "score",
+          ref: divElement => this.divElement = divElement,
+          onMouseOver: this.handleMouseIn,
+          onMouseOut: this.handleMouseOut },
         React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
         this.props.item.laplace_score
       ),

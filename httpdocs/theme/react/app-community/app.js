@@ -702,11 +702,11 @@ class CommunityListItemScoreDisplay extends React.Component {
 
     return(
       <div
-        className="score-container"
-        ref={ (divElement) => this.divElement = divElement}
-        onMouseOver={this.handleMouseIn}
-        onMouseOut={this.handleMouseOut}>
-        <span className="score">
+        className="score-container">
+        <span className="score"
+          ref={ (divElement) => this.divElement = divElement}
+          onMouseOver={this.handleMouseIn}
+          onMouseOut={this.handleMouseOut}>
           <img src="/images/system/pling-btn-active.png"/>
           {this.props.item.laplace_score}
         </span>
