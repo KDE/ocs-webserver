@@ -646,6 +646,7 @@ class CommunityListItemUserDisplay extends React.Component {
               onLoad={this.handleImageLoaded}
               src={i.profile_image_url}/>
           </figure>
+          {userNameDisplay}
           <span className="user-created">{userCreatedAt}</span>
         </div>
         {userHoverDivDisplay}
@@ -676,7 +677,7 @@ class CommunityListItemScoreDisplay extends React.Component {
   }
 
   handleMouseOut(){
-    self.setState({showHoverDiv:false});
+    this.setState({showHoverDiv:false});
   }
 
   render(){
