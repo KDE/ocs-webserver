@@ -715,9 +715,9 @@ class CommunityListItemScoreDisplay extends React.Component {
       )
     }
 
-    return(
-      <div
-        className="score-container">
+    let scoreDisplay;
+    if (this.props.selectedIndex === 2){
+      scoreDisplay = (
         <span className="score"
           ref={ (divElement) => this.divElement = divElement}
           onMouseOver={this.handleMouseIn}
@@ -725,6 +725,20 @@ class CommunityListItemScoreDisplay extends React.Component {
           <img src="/images/system/pling-btn-active.png"/>
           {this.props.item.laplace_score}
         </span>
+      );
+    } else {
+      scoreDisplay = (
+        <span className="score">
+          <img src="/images/system/pling-btn-active.png"/>
+          {this.props.item.cnt}
+        </span>
+      );
+    }
+
+    return(
+      <div
+        className="score-container">
+
         {scoreUsersHoverDiv}
       </div>
     );

@@ -854,11 +854,9 @@ class CommunityListItemScoreDisplay extends React.Component {
       );
     }
 
-    return React.createElement(
-      "div",
-      {
-        className: "score-container" },
-      React.createElement(
+    let scoreDisplay;
+    if (this.props.selectedIndex === 2) {
+      scoreDisplay = React.createElement(
         "span",
         { className: "score",
           ref: divElement => this.divElement = divElement,
@@ -866,7 +864,20 @@ class CommunityListItemScoreDisplay extends React.Component {
           onMouseOut: this.handleMouseOut },
         React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
         this.props.item.laplace_score
-      ),
+      );
+    } else {
+      scoreDisplay = React.createElement(
+        "span",
+        { className: "score" },
+        React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
+        this.props.item.cnt
+      );
+    }
+
+    return React.createElement(
+      "div",
+      {
+        className: "score-container" },
       scoreUsersHoverDiv
     );
   }
