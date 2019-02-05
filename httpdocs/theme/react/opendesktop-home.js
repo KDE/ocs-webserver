@@ -341,7 +341,7 @@ class ProductCarousel extends React.Component {
       let disableRightArrow = false;
       console.log(this.state.sliderPosition);
       console.log(endPoint);
-      if (this.state.sliderPosition <= endPoint && this.state.finishedProducts === true && dir === 'right') {
+      if (this.state.sliderPosition === endPoint && this.state.finishedProducts === true) {
         disableRightArrow = true;
       }
 
