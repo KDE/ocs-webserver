@@ -805,19 +805,19 @@ class CommunityListItemScoreDisplay extends React.Component {
       if (this.state.loading) {
         scoreUsersDisplay = React.createElement(
           "div",
-          { className: "score-users-list-container" },
+          { className: "score-users-display" },
           "Loading"
         );
       } else {
         scoreUsersDisplay = React.createElement(
           "div",
-          { className: "score-users-list-container" },
+          { className: "score-users-display" },
           "Done Loading"
         );
       }
       scoreUsersHoverDiv = React.createElement(
         "div",
-        { className: "score-hover-info" },
+        { className: "score-hover-container" },
         scoreUsersDisplay
       );
     }

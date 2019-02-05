@@ -671,23 +671,25 @@ class CommunityListItemScoreDisplay extends React.Component {
       let scoreUsersDisplay;
       if (this.state.loading){
         scoreUsersDisplay = (
-          <div className="score-users-list-container">
+          <div className="score-users-display">
             Loading
           </div>
         );
       } else {
         scoreUsersDisplay = (
-          <div className="score-users-list-container">
+          <div className="score-users-display">
             Done Loading
           </div>
         );
       }
       scoreUsersHoverDiv = (
-        <div className="score-hover-info">
+        <div className="score-hover-container">
           {scoreUsersDisplay}
         </div>
       )
     }
+
+
 
     return(
       <div
