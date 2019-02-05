@@ -656,6 +656,18 @@ class CommunityListItemScoreDisplay extends React.Component {
   }
 
   render(){
+
+    let scoreUsersDisplay;
+    if (this.state.showHoverDiv){
+      scoreUsersDisplay = (
+        <div className="score-hover-info">
+          <div className="score-users-list-container">
+            
+          </div>
+        </div>
+      )
+    }
+
     return(
       <div
         className="score-container"
@@ -666,6 +678,7 @@ class CommunityListItemScoreDisplay extends React.Component {
           <img src="/images/system/pling-btn-active.png"/>
           {this.props.item.cnt}
         </span>
+        {scoreUsersDisplay}
       </div>
     );
   }

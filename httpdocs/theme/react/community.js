@@ -789,6 +789,16 @@ class CommunityListItemScoreDisplay extends React.Component {
   }
 
   render() {
+
+    let scoreUsersDisplay;
+    if (this.state.showHoverDiv) {
+      scoreUsersDisplay = React.createElement(
+        "div",
+        { className: "score-hover-info" },
+        React.createElement("div", { className: "score-users-list-container" })
+      );
+    }
+
     return React.createElement(
       "div",
       {
@@ -801,7 +811,8 @@ class CommunityListItemScoreDisplay extends React.Component {
         { className: "score" },
         React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
         this.props.item.cnt
-      )
+      ),
+      scoreUsersDisplay
     );
   }
 }
