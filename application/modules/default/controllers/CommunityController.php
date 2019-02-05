@@ -148,7 +148,7 @@ class CommunityController extends Local_Controller_Action_DomainSwitch
     {
         $this->_helper->layout->disableLayout();
         $modelInfo = new Default_Model_Info();
-        $this->view->supporters = $modelInfo->getNewActiveSupporters(100);
+        $this->view->supporters = $modelInfo->getSupporters(100);
     }
     public function newmembersAction()
     {

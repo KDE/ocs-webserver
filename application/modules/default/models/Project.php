@@ -578,10 +578,25 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $filter = $filterArrayValue[self::FILTER_NAME_TAG];
 
         if (is_array($filter)) {
+            
+            $tagList = $filter;
+            //build where statement für projects
+            $selectAnd = $this->select()->from(array('project' => 'stat_projects'));
+
+            foreach($tagList as $item) {
+                #and
+                $selectAnd->where('find_in_set(?, tag_ids)', $item);
+            }
+            $statement->where(implode(' ', $selectAnd->getPart('where')));
+            
+            /*
             $statement->join(array(
                 'tags' => new Zend_Db_Expr('(SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in ('
                     . implode(',', $filter) . '))')
             ), 'project.project_id = tags.project_id', array());
+             * 
+             */
+            
         } else {
             $statement->where('find_in_set(?, tag_ids)', $filter);
         }
@@ -966,14 +981,35 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $sql = "SELECT count(1) AS `total_project_count` FROM `stat_projects`";
         if ($in_current_store) {
             $store_tags = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
+            /*
             if ($store_tags) {
                 $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $store_tags)
                     . ')) AS tags ON stat_projects.project_id = tags.project_id';
             }
+             * 
+             */
 
             $info = new Default_Model_Info();
             $activeCategories = $info->getActiveCategoriesForCurrentHost();
             $sql .= ' WHERE project_category_id IN (' . implode(',', $activeCategories) . ')';
+            
+            //Store Tag Filter
+            if ($store_tags) {
+                $tagList = $store_tags;
+                //build where statement für projects
+                $sql .= " AND (";
+
+                if(!is_array($tagList)) {
+                    $tagList = array($tagList);
+                }
+
+                foreach($tagList as $item) {
+                    #and
+                    $sql .= ' find_in_set('.$item.', tag_ids) AND ';
+                }
+                $sql .= ' 1=1)';;
+            }
+            
         }
         $result = $this->_db->fetchRow($sql);
 

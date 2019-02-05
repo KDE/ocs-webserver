@@ -276,7 +276,6 @@ class ProductCarousel extends React.Component {
   }
 
   updateDimensions(animateCarousel) {
-
     let itemsPerRow = 5;
     if (window.hpVersion === 2) {
       if (this.props.device === 'large') {
@@ -289,9 +288,9 @@ class ProductCarousel extends React.Component {
     }
 
     const containerWidth = $('#main-content').width();
-    const containerNumber = Math.ceil(this.state.products.length / itemsPerRow);
+    const containerNumber = Math.ceil(this.state.products.length / (itemsPerRow - 1));
     const itemWidth = containerWidth / itemsPerRow;
-    const sliderWidth = containerWidth * containerNumber;
+    const sliderWidth = (containerWidth - itemWidth) * containerNumber;
     let sliderPosition = 0;
     if (this.state.sliderPosition) {
       sliderPosition = this.state.sliderPosition;
@@ -302,26 +301,26 @@ class ProductCarousel extends React.Component {
       containerNumber: containerNumber,
       sliderWidth: sliderWidth,
       itemWidth: itemWidth,
-      offset: itemsPerRow,
       itemsPerRow: itemsPerRow - 1
     }, function () {
       if (animateCarousel) {
         this.animateProductCarousel('right', animateCarousel);
+      } else if (this.state.finishedProducts) {
+        this.setState({ disableRightArrow: true });
       }
     });
   }
 
   animateProductCarousel(dir, animateCarousel) {
-
     let newSliderPosition = this.state.sliderPosition;
-    const endPoint = this.state.sliderWidth - this.state.containerWidth;
+    const endPoint = this.state.sliderWidth - (this.state.containerWidth - this.state.itemWidth);
 
     if (dir === 'left') {
       if (this.state.sliderPosition > 0) {
         newSliderPosition = this.state.sliderPosition - (this.state.containerWidth - this.state.itemWidth);
       }
     } else {
-      if (this.state.sliderPosition < endPoint) {
+      if (Math.trunc(this.state.sliderPosition) < Math.trunc(endPoint)) {
         newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
       } else {
         if (!animateCarousel) {
@@ -338,7 +337,7 @@ class ProductCarousel extends React.Component {
       }
 
       let disableRightArrow = false;
-      if (this.state.finishedProducts === true) {
+      if (this.state.sliderPosition >= endPoint && this.state.finishedProducts === true) {
         disableRightArrow = true;
       }
 
@@ -347,25 +346,34 @@ class ProductCarousel extends React.Component {
   }
 
   getNextProductsBatch() {
-    let limit = this.state.itemsPerRow * (this.state.containerNumber + 1) - this.state.products.length;
-    if (limit <= 0) {
-      limit = this.state.itemsPerRow;
-    }
-    console.log(limit);
-    let url = "/home/showlastproductsjson/?page=1&limit=" + limit + "&offset=" + this.state.offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
-    const self = this;
-    $.ajax({ url: url, cache: false }).done(function (response) {
-      const products = self.state.products.concat(response);
-      const offset = self.state.offset + self.state.itemsPerRow;
-      let finishedProducts = false;
-      if (response.length < limit) {
-        finishedProducts = true;
+    this.setState({ disableRightArrow: true }, function () {
+      let limit = this.state.itemsPerRow * (this.state.containerNumber + 1) - this.state.products.length;
+      if (limit <= 0) {
+        limit = this.state.itemsPerRow;
       }
-      console.log(finishedProducts);
-      console.log(response.length);
-      self.setState({ products: products, offset: offset, finishedProducts: finishedProducts }, function () {
-        const animateCarousel = true;
-        self.updateDimensions(animateCarousel);
+      let url = "/home/showlastproductsjson/?page=1&limit=" + limit + "&offset=" + this.state.offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
+      const self = this;
+      $.ajax({ url: url, cache: false }).done(function (response) {
+
+        let products = self.state.products,
+            finishedProducts = false,
+            animateCarousel = true;
+
+        if (response.length > 0) {
+          products = products.concat(response);
+        } else {
+          finishedProducts = true;
+          animateCarousel = false;
+        }
+
+        const offset = self.state.offset + self.state.itemsPerRow;
+
+        self.setState({
+          products: products,
+          offset: offset + response.length,
+          finishedProducts: finishedProducts }, function () {
+          self.updateDimensions(animateCarousel);
+        });
       });
     });
   }

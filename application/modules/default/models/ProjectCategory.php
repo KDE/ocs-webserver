@@ -109,7 +109,7 @@ class Default_Model_ProjectCategory
         if (empty($tags)) {
             $statement = $this->_dataTable->getAdapter()->query("CALL fetchCatTreeForStore(:store_id)", array("store_id" => $store_id));
         } else {
-            $statement = $this->_dataTable->getAdapter()->query("CALL fetchCatTreeWithTags(:store_id,:tagids)", array("store_id"=>$store_id, "tagids" => implode(',',$tags)));
+            $statement = $this->_dataTable->getAdapter()->query("CALL fetchCatTreeWithTagsForStore(:store_id,:tagids)", array("store_id"=>$store_id, "tagids" => implode(',',$tags)));
         }
 
         $result = $statement->fetchAll();

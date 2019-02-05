@@ -204,17 +204,36 @@ class Default_Model_Info
                    STRAIGHT_JOIN `member` ON `comments`.`comment_member_id` = `member`.`member_id`
                    INNER JOIN `stat_projects` ON `comments`.`comment_target_id` = `stat_projects`.`project_id` ';
 
+        /*
         if (isset($tags)) {
             $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
                 . ')) AS store_tags ON stat_projects.project_id = store_tags.project_id';
         }
-
+        */
+        
         $sql .= ' WHERE comments.comment_active = 1            
             AND stat_projects.status = 100
             AND stat_projects.type_id = 1
             AND comments.comment_type = 0
             AND stat_projects.project_category_id IN (' . implode(',', $activeCategories) . ')                          
         ';
+        
+        //Store Tag Filter
+        if (isset($tags)) {
+            $tagList = $tags;
+            //build where statement für projects
+            $sql .= " AND (";
+
+            if(!is_array($tagList)) {
+                $tagList = array($tagList);
+            }
+            
+            foreach($tagList as $item) {
+                #and
+                $sql .= ' find_in_set('.$item.', tag_ids) AND ';
+            }
+            $sql .= ' 1=1)';;
+        }
 
         $sql .= '  ORDER BY comments.comment_created_at DESC ';
 
@@ -322,16 +341,36 @@ class Default_Model_Info
                 FROM `stat_downloads_quarter_year` `s`
                 INNER JOIN `stat_projects` `p` ON `s`.`project_id` = `p`.`project_id`';
 
+        /*
         if (isset($tags)) {
             $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
                 . ')) AS store_tags ON p.project_id = store_tags.project_id';
         }
+         * 
+         */
 
         $sql .= ' WHERE
                     p.status=100
                     and 
                     p.project_category_id IN (' . implode(',', $activeCategories) . ')          
             ';
+        
+        //Store Tag Filter
+        if (isset($tags)) {
+            $tagList = $tags;
+            //build where statement für projects
+            $sql .= " AND (";
+
+            if(!is_array($tagList)) {
+                $tagList = array($tagList);
+            }
+            
+            foreach($tagList as $item) {
+                #and
+                $sql .= ' find_in_set('.$item.', tag_ids) AND ';
+            }
+            $sql .= ' 1=1)';;
+        }
 
         $sql .= '  ORDER BY s.amount DESC ';
 
@@ -405,16 +444,36 @@ class Default_Model_Info
                 `stat_projects`  AS `p`
                 ';
 
+        /*
         if (isset($tags)) {
             $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
                 . ')) AS store_tags ON p.project_id = store_tags.project_id ';
         }
+         * 
+         */
 
         $sql .= '
             WHERE
                 `p`.`status` = 100                
                 AND `p`.`project_category_id` IN (' . implode(',', $activeCategories) . ')
                 AND `p`.`amount_reports` IS NULL';
+        
+        //Store Tag Filter
+        if (isset($tags)) {
+            $tagList = $tags;
+            //build where statement für projects
+            $sql .= " AND (";
+
+            if(!is_array($tagList)) {
+                $tagList = array($tagList);
+            }
+            
+            foreach($tagList as $item) {
+                #and
+                $sql .= ' find_in_set('.$item.', tag_ids) AND ';
+            }
+            $sql .= ' 1=1)';;
+        }
 
         if (isset($tag_isoriginal)) {
             if ($tag_isoriginal) {
@@ -514,16 +573,37 @@ class Default_Model_Info
             FROM
                 `stat_projects`  AS `p`';
 
+        /*
         if (isset($tags)) {
             $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
                 . ')) AS store_tags ON p.project_id = store_tags.project_id';
         }
+         * 
+         */
+
 
         $sql .= '
             WHERE
                 `p`.`status` = 100                
                 AND `p`.`project_category_id` IN (' . implode(',', $activeCategories) . ')
                 AND `p`.`amount_reports` IS NULL';
+        
+        //Store Tag Filter
+        if (isset($tags)) {
+            $tagList = $tags;
+            //build where statement für projects
+            $sql .= " AND (";
+
+            if(!is_array($tagList)) {
+                $tagList = array($tagList);
+            }
+            
+            foreach($tagList as $item) {
+                #and
+                $sql .= ' find_in_set('.$item.', tag_ids) AND ';
+            }
+            $sql .= ' 1=1)';;
+        }
 
         if (isset($tag_isoriginal)) {
             if ($tag_isoriginal) {
@@ -607,10 +687,13 @@ class Default_Model_Info
             FROM
                 `stat_projects`  AS `p`';
 
+        /*
         if (isset($tags)) {
             $sql .= ' JOIN (SELECT DISTINCT project_id FROM stat_project_tagids WHERE tag_id in (' . implode(',', $tags)
                 . ')) AS store_tags ON p.project_id = store_tags.project_id';
         }
+         * 
+         */
 
         $sql .= '
             WHERE
@@ -618,6 +701,23 @@ class Default_Model_Info
                 AND `p`.`project_category_id` IN (' . implode(',', $activeCategories) . ')
                 AND `p`.`amount_reports` IS NULL';
 
+        //Store Tag Filter
+        if (isset($tags)) {
+            $tagList = $tags;
+            //build where statement für projects
+            $sql .= " AND (";
+
+            if(!is_array($tagList)) {
+                $tagList = array($tagList);
+            }
+            
+            foreach($tagList as $item) {
+                #and
+                $sql .= ' find_in_set('.$item.', tag_ids) AND ';
+            }
+            $sql .= ' 1=1)';;
+        }
+        
         $sql .= ' ORDER BY (round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC, created_at DESC
             ';
         if (isset($limit)) {
@@ -961,7 +1061,35 @@ class Default_Model_Info
 
 
    
+    public function getSupporters($limit = 20)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit);
 
+        if (false !== ($newSupporters = $cache->load($cacheName))) {
+            return $newSupporters;
+        }
+        $sql = '
+                        SELECT 
+                        s.member_id as supporter_id
+                        ,s.member_id
+                        ,(select username from member m where m.member_id = s.member_id) as username
+                        ,(select profile_image_url from member m where m.member_id = s.member_id) as profile_image_url
+                        ,min(s.active_time) as created_at
+                        from support s 
+                        where s.status_id = 2                         
+                        group by member_id
+                        order by s.active_time desc                                       
+        ';
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+        $cache->save($result, $cacheName, array(), 300);
+
+        return $result;
+    }
 
     public function getNewActiveSupporters($limit = 20)
     {
@@ -1208,6 +1336,29 @@ class Default_Model_Info
                         from support s                         
                         where s.status_id = 2  
                         and (DATE_ADD((s.active_time), INTERVAL 1 YEAR) > now())
+        ';
+
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+        $totalcnt = $result[0]['total_count'];
+        $cache->save($totalcnt, $cacheName, array(), 300);
+
+        return $totalcnt;
+    }
+
+    public function getCountAllSupporters()
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__;
+
+        if (false !== ($totalcnt = $cache->load($cacheName))) {
+            return $totalcnt;
+        }
+        $sql = '
+                        SELECT 
+                        count( distinct s.member_id) as total_count
+                        from support s                         
+                        where s.status_id = 2                         
         ';
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();

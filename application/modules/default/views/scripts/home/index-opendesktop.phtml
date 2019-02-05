@@ -42,7 +42,7 @@ $this->productsApps = $modelInfo->getLastProductsForHostStores(5,233);
 $this->productsAddons = $modelInfo->getLastProductsForHostStores(5,"152");
 $this->productsWallpapersOriginal = $modelInfo->getLastProductsForHostStores(5,"295,158",null,true);
 $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,"295,158",null,false);
-$this->countSupporters = $modelInfo->getCountActiveSupporters();
+$this->countSupporters = $modelInfo->getCountAllSupporters();
 
 $featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
 if ($featuredProducts->getTotalItemCount()) {

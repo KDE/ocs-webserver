@@ -35,10 +35,27 @@ class Default_Model_ConfigStoreTags
     {
         $modelConfigStoreTags = new Default_Model_DbTable_ConfigStoreTags();
 
-        $sql = "SELECT `tag_id` FROM `config_store_tag` WHERE `store_id` = :store_id AND `is_active` = :active;";
+        $sql = "SELECT `tag_id` FROM `config_store_tag` WHERE `store_id` = :store_id AND `is_active` = :active ORDER BY `tag_id`;";
 
         $result = $modelConfigStoreTags->getAdapter()->fetchAll($sql, array('store_id' => $store_id, 'active' => ($onlyActive ? 1 : 0)), Zend_Db::FETCH_COLUMN);
 
+        if (0 == count($result)) {
+            return null;
+        }
+
+        return $result;
+    }
+
+    public function getPackageTagsForStore($store_id, $onlyActive = true)
+    {
+        $modelConfigStoreTags = new Default_Model_DbTable_ConfigStoreTags();
+
+        $sql = "
+                SELECT t.tag_id, t.tag_name FROM config_store_tag c , tag t
+                WHERE c.tag_id = t.tag_id
+                and  c.store_id = :store_id AND c.is_active = :active
+             ";
+        $result = $modelConfigStoreTags->getAdapter()->fetchAll($sql, array('store_id' => $store_id, 'active' => ($onlyActive ? 1 : 0)));
         if (0 == count($result)) {
             return null;
         }

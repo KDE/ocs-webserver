@@ -226,10 +226,8 @@ class Ocsv1Controller extends Zend_Controller_Action
      */
     protected function _getNameForStoreClient()
     {
-        $clientName = Zend_Registry::get('config')->settings->client->default->name; // default client
-        if (Zend_Registry::isRegistered('store_config_name')) {
-            $clientName = Zend_Registry::get('store_config_name');
-        }
+        $clientName = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config')->name : Zend_Registry::get('config')->settings->client->default->name;
+
 
         return $clientName;
     }
@@ -253,7 +251,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         $this->_sendErrorResponse(999, 'unknown request');
     }
 
-    protected function _sendErrorResponse($statuscode, $message = '')
+    protected function _sendErrorResponse($statuscode, $message = '', $local = false)
     {
         if ($this->_format == 'json') {
             $response = array(
@@ -271,7 +269,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             );
         }
 
-        $this->_sendResponse($response, $this->_format);
+        $this->_sendResponse($response, $this->_format, $xmlRootTag = 'ocs', $local);
     }
 
     protected function _sendResponse($response, $format = 'xml', $xmlRootTag = 'ocs', $local = false)
@@ -2006,6 +2004,11 @@ class Ocsv1Controller extends Zend_Controller_Action
             return $response;
         }
         return false;
+    }
+
+    public function voteAction()
+    {
+        $this->_sendErrorResponse(405, 'method not allowed', true);
     }
 
 }
