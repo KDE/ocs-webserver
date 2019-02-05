@@ -518,6 +518,7 @@ class CommunityListItemUserDisplay extends React.Component {
 
   componentDidMount() {
     this.getImageElementDimensions();
+    console.log(this.props.selectedIndex);
   }
 
   getImageElementDimensions(){
