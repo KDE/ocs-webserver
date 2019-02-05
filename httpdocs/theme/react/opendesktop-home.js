@@ -747,8 +747,7 @@ class ProductCarouselItem extends React.Component {
     if (window.hpVersion === 2) {
 
       paddingTop = this.props.itemWidth * 1.35 / 2 - 10;
-      let cDate = new Date(this.props.product.created_at);
-      cDate = cDate.toString();
+      const cDate = new Date(this.props.product.created_at);
       const createdDate = jQuery.timeago(cDate);
 
       let scoreBarColorClass = "green";
