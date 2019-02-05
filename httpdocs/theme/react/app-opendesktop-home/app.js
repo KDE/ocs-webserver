@@ -450,7 +450,6 @@ class ProductCarouselItem extends React.Component {
           <span className="product-info-title">{this.props.product.title}</span>
           <span className="product-info-category">{this.props.product.cat_title}</span>
           <span className="product-info-date">{createdDate}</span>
-          <span className="product-info-commentcount">{this.props.product.count_comments} comments</span>
           <div className="score-info">
             <div className="score-number">
               score {this.props.product.laplace_score + "%"}
