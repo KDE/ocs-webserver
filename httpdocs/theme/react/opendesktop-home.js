@@ -430,12 +430,6 @@ class SpotlightUser extends React.Component {
               "span",
               { className: "title" },
               p.title
-            ),
-            React.createElement(
-              "span",
-              { className: "plings" },
-              React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
-              p.sum_plings
             )
           )
         )
