@@ -1,0 +1,68 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$this->headTitle($_SERVER['HTTP_HOST'], 'SET');
+$this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
+$this->headMeta()->appendProperty('og:url', 'www.appimagehub.com');
+$this->headMeta()->appendProperty('og:type', 'website');
+$this->headMeta()->appendProperty('og:title', 'appimagehub.com');
+$this->headMeta()->appendProperty('og:site_name','www.appimagehub.com');
+$this->headMeta()->appendProperty('og:description','A community where developers and artists share applications, themes and other content');
+$this->headMeta()->appendProperty('og:image','https://www.appimagehub.com/images_sys/superstore/appimagehub-logo-4.png');
+
+
+  $modelInfo = new Default_Model_Info();
+  $host = $_SERVER['SERVER_NAME'];
+  $tags = $this->tag_filter;
+
+  if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
+    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(7,"33,112",$tags);
+    $this->topGames = $modelInfo->getTopProductsForHostStores(7,"112",$tags);
+    $this->topApps = $modelInfo->getTopProductsForHostStores(7,"33",$tags);
+  } else {
+    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(15,"6,234,239,243,244,245,388,391,392,450,481,492",$tags);
+    $this->topGames = $modelInfo->getTopProductsForHostStores(15,"6",$tags);
+    $this->topApps = $modelInfo->getTopProductsForHostStores(15,"234,239,243,244,245,388,391,392,450,481,492",$tags);
+  }
+  $modelProject = new Default_Model_Project();
+  $totalProjects = $modelProject->fetchTotalProjectsCount(true);
+?>
+test2
+<main id="explore-content"></main>
+<script type="text/javascript">
+
+  <?php
+    $js_latestProducts = json_encode($this->LatestProducts);
+    $js_topGames = json_encode($this->topGames);
+    $js_topApps = json_encode($this->topApps);
+  ?>
+
+  var products = {
+    LatestProducts:<?php echo $js_latestProducts ?>,
+    TopGames:<?php echo $js_topGames ?>,
+    TopApps:<?php echo $js_topApps ?>,
+    TotalProjects:<?php echo $totalProjects ?>
+  };
+  var filters = {};
+  var view = "home";
+  console.log(products);
+</script>
