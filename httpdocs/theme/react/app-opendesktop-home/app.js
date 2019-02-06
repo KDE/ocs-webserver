@@ -48,7 +48,7 @@ window.appHelpers = (function(){
     if(strlen($green)==1) $green='0'.$green;
     if(strlen($red)==1) $red='0'.$red;*/
 
-    return red + "," + green + "," + blue;
+    return red + green + blue;
   }
 
   return {
@@ -502,10 +502,7 @@ class ProductCarouselItem extends React.Component {
       paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
       const cDate = new Date(this.props.product.created_at);
       const createdDate = jQuery.timeago(cDate)
-      const rgb = window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
-      console.log(rgb);
-      const productScoreColor = "rgb("+rgb+")";
-      console.log(productScoreColor);
+      const productScoreColor = window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
 
       productInfoDisplay = (
         <div className="product-info">
