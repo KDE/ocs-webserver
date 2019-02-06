@@ -150,7 +150,8 @@ class SpotlightUser extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      page:1
+      page:1,
+      loading:true
     };
     this.getSpotlightUser = this.getSpotlightUser.bind(this);
     this.getNextSpotLightUser = this.getNextSpotLightUser.bind(this);
@@ -163,13 +164,13 @@ class SpotlightUser extends React.Component {
   getSpotlightUser(){
     const self = this;
     $.ajax({url: "/home/showspotlightjson?page="+this.state.page,cache: false}).done(function(response){
-      self.setState({user:response});
+      self.setState({user:response,loading:false});
     });
   }
 
   getNextSpotLightUser(){
     const page = this.state.page + 1;
-    this.setState({page:page},function(){
+    this.setState({page:page,loading:true},function(){
       this.getSpotlightUser();
     })
   }
@@ -177,8 +178,13 @@ class SpotlightUser extends React.Component {
   render(){
 
     let spotlightUserDisplay;
-    if (this.state.user){
-
+    if (this.state.loading){
+      spotlightUserDisplay = (
+        <div id="spotlight-user" className="loading">
+          <div className="ajax-loader"></div>
+        </div>
+      );
+    } else {
       const users = this.state.user.products.map((p,index) => (
         <div key={index} className="plinged-product">
           <div className="product-wrapper">
@@ -197,7 +203,6 @@ class SpotlightUser extends React.Component {
           </div>
         </div>
       ));
-
       spotlightUserDisplay = (
         <div id="spotlight-user">
           <div className="spotlight-user-image">
