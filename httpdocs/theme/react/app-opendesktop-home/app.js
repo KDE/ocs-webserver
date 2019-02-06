@@ -367,7 +367,7 @@ class ProductCarousel extends React.Component {
 
       const url = "/home/"+urlControllerAddress+"/?page=1&limit="+limit+"&offset="+this.state.offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
       console.log(url);
-      
+
       const self = this;
       $.ajax({url: url,cache: false}).done(function(response){
 
@@ -443,10 +443,16 @@ class ProductCarousel extends React.Component {
     let carouselArrowsMargin;
     if (window.hpVersion === 2 && this.state.itemWidth){
       hpVersionClass = "two";
+      let itemHeightMultiplier;
+      if (this.state.itemWidth > 150){
+        itemHeightMultiplier = 1.35;
+      } else {
+        itemHeightMultiplier = 1.85;
+      }
       carouselWrapperStyling = {
         "paddingLeft":this.state.itemWidth / 2,
         "paddingRight":this.state.itemWidth / 2,
-        "height":this.state.itemWidth * 1.35
+        "height":this.state.itemWidth * itemHeightMultiplier
       }
       carouselArrowsMargin = this.state.itemWidth / 4;
     }
