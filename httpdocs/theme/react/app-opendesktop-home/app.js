@@ -194,7 +194,9 @@ class SpotlightUser extends React.Component {
             </figure>
             <div className="product-info">
               <span className="title">
-                {p.title}
+                <a href={"/p/"+p.project_id}>
+                  {p.title}
+                </a>
               </span>
             </div>
           </div>
@@ -216,7 +218,7 @@ class SpotlightUser extends React.Component {
             </figure>
             <div className="user-info">
               <span className="username">
-                <a href={"/u/"+this.state.user.member_id}>{this.state.user.username}</a>
+                <a href={"/u/"+this.state.user.username}>{this.state.user.username}</a>
               </span>
               <span className="user-plings">
                 <img src="/images/system/pling-btn-active.png" />

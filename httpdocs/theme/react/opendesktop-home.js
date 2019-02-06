@@ -429,7 +429,11 @@ class SpotlightUser extends React.Component {
             React.createElement(
               "span",
               { className: "title" },
-              p.title
+              React.createElement(
+                "a",
+                { href: "/p/" + p.project_id },
+                p.title
+              )
             )
           )
         )
@@ -461,7 +465,7 @@ class SpotlightUser extends React.Component {
               { className: "username" },
               React.createElement(
                 "a",
-                { href: "/u/" + this.state.user.member_id },
+                { href: "/u/" + this.state.user.username },
                 this.state.user.username
               )
             ),
