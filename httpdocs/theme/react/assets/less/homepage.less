@@ -237,16 +237,32 @@ out: ../css/homepage.css, sourcemap: true, compress: true
     position: absolute;
 
     figure {
-      width: 180px;
-      height: 180px;
-      padding: 5px;
-      /* border-radius: 100%; */
-      margin: 0 auto;
+      width: 170px;
+      height: 170px;
+      padding: 0;
+      margin: 5px auto 0px;
 
       img {
         width: 100%;
         width: 100%;
         border-radius: 100%;
+      }
+    }
+
+    .user-info {
+      height: 25px;
+      line-height: 25px;
+      padding: 0 10px;
+
+      .user-plings {
+        font-size: 12px;
+        float: right;
+        font-weight: bold;
+
+        img {
+          height: 15px;
+          width: 15px;
+        }
       }
     }
   }
@@ -270,6 +286,12 @@ out: ../css/homepage.css, sourcemap: true, compress: true
         img {
           width: 100%;
         }
+      }
+
+      .product-info {
+        background-color: #eee;
+        padding: 5px;
+        font-size: 12px;        
       }
     }
   }
