@@ -823,7 +823,13 @@ class ProductCarouselItem extends React.Component {
     if (window.hpVersion === 2) {
 
       paddingTop = this.props.itemWidth * 1.35 / 2 - 10;
-      const cDate = new Date(this.props.product.changed_at);
+      let lastDate;
+      if (this.props.product.changed_at) {
+        lastDate = this.props.product.changed_at;
+      } else {
+        lastDate = this.props.product.created_at;
+      }
+      const cDate = new Date(lastDate);
       const createdDate = jQuery.timeago(cDate);
       const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
 
