@@ -420,6 +420,25 @@ class SpotlightUser extends React.Component {
             "figure",
             null,
             React.createElement("img", { src: this.state.user.profile_image_url })
+          ),
+          React.createElement(
+            "div",
+            { className: "user-info" },
+            React.createElement(
+              "span",
+              { className: "username" },
+              React.createElement(
+                "a",
+                { href: "/u/" + this.state.user.member_id },
+                this.state.user.username
+              )
+            ),
+            React.createElement(
+              "span",
+              { className: "user-plings" },
+              React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
+              this.state.user.cnt
+            )
           )
         ),
         React.createElement(

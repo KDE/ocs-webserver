@@ -186,6 +186,15 @@ class SpotlightUser extends React.Component {
             <figure>
               <img src={this.state.user.profile_image_url}/>
             </figure>
+            <div className="user-info">
+              <span className="username">
+                <a href={"/u/"+this.state.user.member_id}>{this.state.user.username}</a>
+              </span>
+              <span className="user-plings">
+                <img src="/images/system/pling-btn-active.png" />
+                {this.state.user.cnt}
+              </span>
+            </div>
           </div>
           <div className="spotlight-user-plinged-products">
             {users}
