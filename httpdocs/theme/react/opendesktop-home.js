@@ -413,7 +413,7 @@ class SpotlightUser extends React.Component {
 
       const users = this.state.user.products.map((p, index) => React.createElement(
         "div",
-        { className: "plinged-product" },
+        { key: index, className: "plinged-product" },
         React.createElement(
           "figure",
           null,

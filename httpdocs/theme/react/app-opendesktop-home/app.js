@@ -187,7 +187,7 @@ class SpotlightUser extends React.Component {
     if (this.state.user){
 
       const users = this.state.user.products.map((p,index) => (
-        <div className="plinged-product">
+        <div key={index} className="plinged-product">
           <figure>
             <img src={p.image_small}/>
           </figure>
