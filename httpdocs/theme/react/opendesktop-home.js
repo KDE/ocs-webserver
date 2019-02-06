@@ -259,9 +259,6 @@ window.appHelpers = function () {
       blue = this.dechex(defaultColor - (score - 50) * 4);
     }
 
-    if (green.length === 1) green = '0' + green;
-    if (red.length === 1) red = '0' + red;
-
     /*$blue = $red = $green = $default=200;
     $score = $this->widgetRating->laplace_score;
     if($score==0)
@@ -364,11 +361,11 @@ class App extends React.Component {
     if (this.state.loading === false) {
 
       productCarouselsContainer = this.state.productGroupsArray.map((pgc, index) => React.createElement(
-        'div',
-        { key: index, className: 'section' },
+        "div",
+        { key: index, className: "section" },
         React.createElement(
-          'div',
-          { className: 'container' },
+          "div",
+          { className: "container" },
           React.createElement(ProductCarousel, {
             products: pgc.products,
             device: this.state.device,
@@ -384,8 +381,8 @@ class App extends React.Component {
     const featuredProduct = JSON.parse(window.data['featureProducts']);
 
     return React.createElement(
-      'main',
-      { id: 'opendesktop-homepage' },
+      "main",
+      { id: "opendesktop-homepage" },
       React.createElement(SpotlightProduct, {
         env: this.state.env,
         featuredProduct: featuredProduct
@@ -434,9 +431,9 @@ class SpotlightProduct extends React.Component {
     let featuredLabelDisplay;
     if (this.state.featuredProduct.featured === "1") {
       featuredLabelDisplay = React.createElement(
-        'span',
-        { className: 'featured-label' },
-        'featured'
+        "span",
+        { className: "featured-label" },
+        "featured"
       );
     }
 
@@ -450,96 +447,96 @@ class SpotlightProduct extends React.Component {
     }
 
     return React.createElement(
-      'div',
-      { id: 'spotlight-product' },
+      "div",
+      { id: "spotlight-product" },
       React.createElement(
-        'h2',
+        "h2",
         null,
-        'In the Spotlight'
+        "In the Spotlight"
       ),
       React.createElement(
-        'div',
-        { className: 'container' },
+        "div",
+        { className: "container" },
         React.createElement(
-          'div',
-          { className: 'spotlight-image' },
-          React.createElement('img', { src: "https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.state.featuredProduct.image_small })
+          "div",
+          { className: "spotlight-image" },
+          React.createElement("img", { src: "https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.state.featuredProduct.image_small })
         ),
         React.createElement(
-          'div',
-          { className: 'spotlight-info' },
+          "div",
+          { className: "spotlight-info" },
           React.createElement(
-            'div',
-            { className: 'spotlight-info-wrapper' },
+            "div",
+            { className: "spotlight-info-wrapper" },
             featuredLabelDisplay,
             React.createElement(
-              'div',
-              { className: 'info-top' },
+              "div",
+              { className: "info-top" },
               React.createElement(
-                'h2',
+                "h2",
                 null,
                 React.createElement(
-                  'a',
+                  "a",
                   { href: "/p/" + this.state.featuredProduct.project_id },
                   this.state.featuredProduct.title
                 )
               ),
               React.createElement(
-                'h3',
+                "h3",
                 null,
                 this.state.featuredProduct.category
               ),
               React.createElement(
-                'div',
-                { className: 'user-info' },
-                React.createElement('img', { src: this.state.featuredProduct.profile_image_url }),
+                "div",
+                { className: "user-info" },
+                React.createElement("img", { src: this.state.featuredProduct.profile_image_url }),
                 this.state.featuredProduct.username
               ),
               React.createElement(
-                'span',
+                "span",
                 null,
                 this.state.featuredProduct.comment_count,
-                ' comments'
+                " comments"
               ),
               React.createElement(
-                'div',
-                { className: 'score-info' },
+                "div",
+                { className: "score-info" },
                 React.createElement(
-                  'div',
-                  { className: 'score-number' },
-                  'score ',
+                  "div",
+                  { className: "score-number" },
+                  "score ",
                   this.state.featuredProduct.laplace_score + "%"
                 ),
                 React.createElement(
-                  'div',
-                  { className: 'score-bar-container' },
-                  React.createElement('div', { className: "score-bar" + " " + scoreBarColorClass, style: { "width": this.state.featuredProduct.laplace_score + "%" } })
+                  "div",
+                  { className: "score-bar-container" },
+                  React.createElement("div", { className: "score-bar" + " " + scoreBarColorClass, style: { "width": this.state.featuredProduct.laplace_score + "%" } })
                 ),
                 React.createElement(
-                  'div',
-                  { className: 'score-bar-date' },
+                  "div",
+                  { className: "score-bar-date" },
                   createdDate
                 )
               )
             ),
             React.createElement(
-              'div',
-              { className: 'info-description' },
+              "div",
+              { className: "info-description" },
               description
             )
           ),
           React.createElement(
-            'div',
-            { className: 'spotlight-menu' },
+            "div",
+            { className: "spotlight-menu" },
             React.createElement(
-              'a',
+              "a",
               { onClick: () => this.onSpotlightMenuClick('random') },
-              'random'
+              "random"
             ),
             React.createElement(
-              'a',
+              "a",
               { onClick: () => this.onSpotlightMenuClick('featured') },
-              'featured'
+              "featured"
             )
           )
         )
@@ -694,30 +691,30 @@ class ProductCarousel extends React.Component {
     let carouselArrowLeftDisplay;
     if (this.state.disableleftArrow) {
       carouselArrowLeftDisplay = React.createElement(
-        'a',
-        { className: 'carousel-arrow arrow-left disabled' },
-        React.createElement('span', { className: 'glyphicon glyphicon-chevron-left' })
+        "a",
+        { className: "carousel-arrow arrow-left disabled" },
+        React.createElement("span", { className: "glyphicon glyphicon-chevron-left" })
       );
     } else {
       carouselArrowLeftDisplay = React.createElement(
-        'a',
-        { onClick: () => this.animateProductCarousel('left'), className: 'carousel-arrow arrow-left' },
-        React.createElement('span', { className: 'glyphicon glyphicon-chevron-left' })
+        "a",
+        { onClick: () => this.animateProductCarousel('left'), className: "carousel-arrow arrow-left" },
+        React.createElement("span", { className: "glyphicon glyphicon-chevron-left" })
       );
     }
 
     let carouselArrowRightDisplay;
     if (this.state.disableRightArrow) {
       carouselArrowRightDisplay = React.createElement(
-        'a',
-        { className: 'carousel-arrow arrow-right disabled' },
-        React.createElement('span', { className: 'glyphicon glyphicon-chevron-right' })
+        "a",
+        { className: "carousel-arrow arrow-right disabled" },
+        React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
       );
     } else {
       carouselArrowRightDisplay = React.createElement(
-        'a',
-        { onClick: () => this.animateProductCarousel('right'), className: 'carousel-arrow arrow-right' },
-        React.createElement('span', { className: 'glyphicon glyphicon-chevron-right' })
+        "a",
+        { onClick: () => this.animateProductCarousel('right'), className: "carousel-arrow arrow-right" },
+        React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
       );
     }
 
@@ -735,43 +732,43 @@ class ProductCarousel extends React.Component {
     }
 
     return React.createElement(
-      'div',
+      "div",
       { className: "product-carousel " + hpVersionClass },
       React.createElement(
-        'div',
-        { className: 'product-carousel-header' },
+        "div",
+        { className: "product-carousel-header" },
         React.createElement(
-          'h2',
+          "h2",
           null,
           React.createElement(
-            'a',
+            "a",
             { href: "/browse/cat/" + this.props.catIds + "/" },
             this.props.title,
-            ' ',
-            React.createElement('span', { className: 'glyphicon glyphicon-chevron-right' })
+            " ",
+            React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
           )
         )
       ),
       React.createElement(
-        'div',
-        { className: 'product-carousel-wrapper', style: carouselWrapperStyling },
+        "div",
+        { className: "product-carousel-wrapper", style: carouselWrapperStyling },
         React.createElement(
-          'div',
-          { className: 'product-carousel-left', style: { "left": carouselArrowsMargin } },
+          "div",
+          { className: "product-carousel-left", style: { "left": carouselArrowsMargin } },
           carouselArrowLeftDisplay
         ),
         React.createElement(
-          'div',
-          { className: 'product-carousel-container' },
+          "div",
+          { className: "product-carousel-container" },
           React.createElement(
-            'div',
-            { className: 'product-carousel-slider', style: { "width": this.state.sliderWidth, "left": "-" + this.state.sliderPosition + "px" } },
+            "div",
+            { className: "product-carousel-slider", style: { "width": this.state.sliderWidth, "left": "-" + this.state.sliderPosition + "px" } },
             carouselItemsDisplay
           )
         ),
         React.createElement(
-          'div',
-          { className: 'product-carousel-right', style: { "right": carouselArrowsMargin } },
+          "div",
+          { className: "product-carousel-right", style: { "right": carouselArrowsMargin } },
           carouselArrowRightDisplay
         )
       )
@@ -799,16 +796,16 @@ class ProductCarouselItem extends React.Component {
 
     let paddingTop;
     let productInfoDisplay = React.createElement(
-      'div',
-      { className: 'product-info' },
+      "div",
+      { className: "product-info" },
       React.createElement(
-        'span',
-        { className: 'product-info-title' },
+        "span",
+        { className: "product-info-title" },
         this.props.product.title
       ),
       React.createElement(
-        'span',
-        { className: 'product-info-user' },
+        "span",
+        { className: "product-info-user" },
         this.props.product.username
       )
     );
@@ -818,57 +815,57 @@ class ProductCarouselItem extends React.Component {
       paddingTop = this.props.itemWidth * 1.35 / 2 - 10;
       const cDate = new Date(this.props.product.created_at);
       const createdDate = jQuery.timeago(cDate);
-      const productScoreColor = window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
+      const productScoreColor = "rgb(" + window.appHelpers.calculateScoreColor(this.props.product.laplace_score) + ")";
 
       productInfoDisplay = React.createElement(
-        'div',
-        { className: 'product-info' },
+        "div",
+        { className: "product-info" },
         React.createElement(
-          'span',
-          { className: 'product-info-title' },
+          "span",
+          { className: "product-info-title" },
           this.props.product.title
         ),
         React.createElement(
-          'span',
-          { className: 'product-info-category' },
+          "span",
+          { className: "product-info-category" },
           this.props.product.cat_title
         ),
         React.createElement(
-          'span',
-          { className: 'product-info-date' },
+          "span",
+          { className: "product-info-date" },
           createdDate
         ),
         React.createElement(
-          'div',
-          { className: 'score-info' },
+          "div",
+          { className: "score-info" },
           React.createElement(
-            'div',
-            { className: 'score-number' },
-            'score ',
+            "div",
+            { className: "score-number" },
+            "score ",
             this.props.product.laplace_score + "%"
           ),
           React.createElement(
-            'div',
-            { className: 'score-bar-container' },
-            React.createElement('div', { className: "score-bar", style: { "width": this.props.product.laplace_score + "%", "backgroundColor": productScoreColor } })
+            "div",
+            { className: "score-bar-container" },
+            React.createElement("div", { className: "score-bar", style: { "width": this.props.product.laplace_score + "%", "backgroundColor": productScoreColor } })
           )
         )
       );
     }
 
     return React.createElement(
-      'div',
-      { className: 'product-carousel-item', style: { "width": this.props.itemWidth } },
+      "div",
+      { className: "product-carousel-item", style: { "width": this.props.itemWidth } },
       React.createElement(
-        'div',
-        { className: 'product-carousel-item-wrapper' },
+        "div",
+        { className: "product-carousel-item-wrapper" },
         React.createElement(
-          'a',
+          "a",
           { href: "/p/" + this.props.product.project_id, style: { "paddingTop": paddingTop } },
           React.createElement(
-            'figure',
+            "figure",
             { style: { "height": paddingTop } },
-            React.createElement('img', { className: 'very-rounded-corners', src: imageUrl })
+            React.createElement("img", { className: "very-rounded-corners", src: imageUrl })
           ),
           productInfoDisplay
         )

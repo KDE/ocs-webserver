@@ -32,9 +32,6 @@ window.appHelpers = (function(){
       blue = this.dechex(defaultColor - ((score-50)*4));
     }
 
-    if (green.length === 1) green = '0' + green;
-    if (red.length === 1) red = '0' + red;
-
     /*$blue = $red = $green = $default=200;
     $score = $this->widgetRating->laplace_score;
     if($score==0)
@@ -506,7 +503,7 @@ class ProductCarouselItem extends React.Component {
       paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
       const cDate = new Date(this.props.product.created_at);
       const createdDate = jQuery.timeago(cDate)
-      const productScoreColor = window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
+      const productScoreColor = "rgb("+window.appHelpers.calculateScoreColor(this.props.product.laplace_score) + ")";
 
       productInfoDisplay = (
         <div className="product-info">
