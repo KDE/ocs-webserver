@@ -328,7 +328,7 @@ class ProductCarousel extends React.Component {
         newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
       } else {
         if (!animateCarousel){
-          if (this.state.products.length === 5 || this.state.finishedProducts){
+          if (this.state.products.length === 15 || this.state.finishedProducts){
             newSliderPosition = 0;
           } else {
             this.getNextProductsBatch();
@@ -500,7 +500,7 @@ class ProductCarouselItem extends React.Component {
       const createdDate = jQuery.timeago(cDate)
       const productScoreColor = '#' + window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
       console.log(productScoreColor);
-      
+
       productInfoDisplay = (
         <div className="product-info">
           <span className="product-info-title">{this.props.product.title}</span>
