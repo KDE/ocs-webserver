@@ -407,12 +407,10 @@ class ProductCarousel extends React.Component {
           if (response.length < limit){
             finishedProducts = true;
           }
-
-          const offset = self.state.offset + self.state.itemsPerRow;
-
+          
           self.setState({
             products:products,
-            offset:offset + response.length,
+            offset:this.state.offset + response.length,
             finishedProducts:finishedProducts},function(){
               self.updateDimensions(animateCarousel);
           });
