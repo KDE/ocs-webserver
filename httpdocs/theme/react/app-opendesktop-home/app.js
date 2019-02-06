@@ -149,8 +149,11 @@ class App extends React.Component {
 class SpotlightUser extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      page:1
+    };
     this.getSpotlightUser = this.getSpotlightUser.bind(this);
+    this.getNextSpotLightUser = this.getNextSpotLightUser.bind(this);
   }
 
   componentDidMount() {
@@ -159,9 +162,16 @@ class SpotlightUser extends React.Component {
 
   getSpotlightUser(){
     const self = this;
-    $.ajax({url: "/home/showspotlightjson?page=1",cache: false}).done(function(response){
+    $.ajax({url: "/home/showspotlightjson?page="+this.state.page,cache: false}).done(function(response){
       self.setState({user:response});
     });
+  }
+
+  getNextSpotLightUser(){
+    const page = this.state.page + 1;
+    this.setState({page:page},function(){
+      this.getSpotlightUser();
+    })
   }
 
   render(){
@@ -206,6 +216,7 @@ class SpotlightUser extends React.Component {
           </div>
           <div className="spotlight-user-plinged-products">
             {users}
+            <a className="next-button" onClick={this.getNextSpotLightUser}>next</a>
           </div>
         </div>
       );
