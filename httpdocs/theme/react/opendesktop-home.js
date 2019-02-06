@@ -253,7 +253,7 @@ window.appHelpers = function () {
       red = this.dechex(defaultColor - (score - 50) * 4);
       green = this.dechex(defaultColor);
       blue = this.dechex(defaultColor - (score - 50) * 4);
-    } else if (score < 50) {
+    } else if (score < 51) {
       red = this.dechex(defaultColor);
       green = this.dechex(defaultColor - (score - 50) * 4);
       blue = this.dechex(defaultColor - (score - 50) * 4);
