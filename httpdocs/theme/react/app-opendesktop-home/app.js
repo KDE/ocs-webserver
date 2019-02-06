@@ -204,9 +204,8 @@ class SpotlightProduct extends React.Component {
       featuredLabelDisplay = <span className="featured-label">featured</span>
     }
 
-    let cDate = new Date(this.props.featuredProduct.created_at);
-    cDate = cDate.toString();
-    const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
+    const cDate = new Date(this.props.featuredProduct.created_at);
+    const createdDate = jQuery.timeago(cDate);
     const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.featuredProduct.laplace_score);
 
     return(
