@@ -156,6 +156,27 @@ class HomeController extends Local_Controller_Action_DomainSwitch
     }
 
     
+    public function showspotlightjsonAction()
+    {
+        
+        $this->_helper->layout->disableLayout();        
+        $this->_helper->viewRenderer->setNoRender(true);
+        $modelInfo = new Default_Model_Info();
+        $page = (int)$this->getParam('page');
+        $mostplingedcreateor = $modelInfo->getMostPlingedCreators(1,$page);
+
+        $creator = array_pop($mostplingedcreateor);
+        $helperImage = new Default_View_Helper_Image();        
+        $creator['profile_image_url'] = $helperImage->Image($creator['profile_image_url'], array('width' => 200, 'height' => 200));        
+        $products = $modelInfo->getMostPlingedProductsForUser($creator['member_id'],5,0);
+        foreach ($products as &$p) {
+            $p['image_small'] = $helperImage->Image($p['image_small'], array('width' => 200, 'height' => 200));   
+        }
+        $creator['products'] = $products;        
+        $this->_helper->json($creator);        
+    }
+
+
     public function metamenujsAction()
     {
         $this->_helper->layout()->disableLayout();

@@ -29,6 +29,9 @@ $this->headMeta()->appendProperty('og:description','A community where developers
 $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images/system/opendesktop-logo.png');
 
 $modelInfo = new Default_Model_Info();
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperImage = new Default_View_Helper_Image();
+$helpPrintDate = new Default_View_Helper_PrintDate();
 
 $productsPlinged = $modelInfo->getJsonNewActivePlingProduct(5);
 $productsThemesGTK = $modelInfo->getJsonLastProductsForHostStores(5,"366,363,273,267,138,125,131,153,154,414,133");
@@ -41,6 +44,7 @@ $productsAddons = $modelInfo->getJsonLastProductsForHostStores(5,"152");
 $productsWallpapersOriginal = $modelInfo->getJsonLastProductsForHostStores(5,"295,158",null,true);
 $productsWallpapers = $modelInfo->getJsonLastProductsForHostStores(5,"295,158",null,false);
 $this->countSupporters = $modelInfo->getCountAllSupporters();
+
 $featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
 if ($featuredProducts->getTotalItemCount()) {
     $request = Zend_Controller_Front::getInstance()->getRequest();
@@ -51,9 +55,7 @@ if ($featuredProducts->getTotalItemCount()) {
     $this->featureProducts = $featuredProducts;
 }
 
-$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
-$helperImage = new Default_View_Helper_Image();
-$helpPrintDate = new Default_View_Helper_PrintDate();
+
 
 $item;
 foreach ($this->featureProducts as $i) {

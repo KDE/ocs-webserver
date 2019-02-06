@@ -1319,6 +1319,43 @@ class Default_Model_Info
         return $result;
     }
 
+    public function getMostPlingedProductsForUser($member_id, $limit = 20,$offset = null)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit).md5((int)$offset);
+
+        if (false !== ($newSupporters = $cache->load($cacheName))) {
+            return $newSupporters;
+        }
+
+        $sql = '  
+                        select pl.project_id
+                        ,count(1) as sum_plings 
+                        ,p.title
+                        ,p.image_small                        
+                        ,p.cat_title as catTitle
+                        ,p.project_changed_at                        
+                        from project_plings pl
+                        inner join stat_projects p on pl.project_id = p.project_id and p.status = 100
+                        where pl.is_deleted = 0 and pl.is_active = 1 and p.member_id = :member_id
+                        group by pl.project_id
+                        order by sum_plings desc 
+                                                              
+        ';
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+        if (isset($offset)) {
+            $sql .= ' offset ' . (int)$offset;
+        }
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id))->fetchAll();
+
+        $cache->save($result, $cacheName, array(), 300);
+
+        return $result;
+    }
+
 
     public function getMostPlingedCreatorsTotalCnt(){
         $sql = '
