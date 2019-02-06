@@ -20,7 +20,6 @@ window.appHelpers = (function(){
   }
 
   function calculateScoreColor(score){
-    let color;
     let blue, red, green, defaultColor = 200;
     if (score > 50){
       red = this.dechex(defaultColor - ((score-50)*4));
@@ -503,7 +502,10 @@ class ProductCarouselItem extends React.Component {
       paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
       const cDate = new Date(this.props.product.created_at);
       const createdDate = jQuery.timeago(cDate)
-      const productScoreColor = "rgb("+window.appHelpers.calculateScoreColor(this.props.product.laplace_score) + ")";
+      const rgb = window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
+      console.log(rgb);
+      const productScoreColor = "rgb("+rgb+")";
+      console.log(productScoreColor);
 
       productInfoDisplay = (
         <div className="product-info">
