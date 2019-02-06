@@ -208,10 +208,7 @@ class SpotlightProduct extends React.Component {
     cDate = cDate.toString();
     const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
 
-    let scoreBarColorClass = "green";
-    if (this.state.featuredProduct.laplace_score < 50){
-      scoreBarColorClass = "red";
-    }
+    const productScoreColor = window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
 
     return(
       <div id="spotlight-product">
@@ -236,7 +233,7 @@ class SpotlightProduct extends React.Component {
                     score {this.state.featuredProduct.laplace_score + "%"}
                   </div>
                   <div className="score-bar-container">
-                    <div className={"score-bar" + " " + scoreBarColorClass} style={{"width":this.state.featuredProduct.laplace_score + "%"}}></div>
+                    <div className={"score-bar"} style={{"width":this.state.featuredProduct.laplace_score + "%","backgroundColor":productScoreColor}}></div>
                   </div>
                   <div className="score-bar-date">
                     {createdDate}
@@ -501,7 +498,6 @@ class ProductCarouselItem extends React.Component {
       const cDate = new Date(this.props.product.created_at);
       const createdDate = jQuery.timeago(cDate)
       const productScoreColor = window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
-      console.log(productScoreColor);
 
       productInfoDisplay = (
         <div className="product-info">
