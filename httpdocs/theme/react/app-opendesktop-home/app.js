@@ -22,13 +22,13 @@ window.appHelpers = (function(){
   function calculateScoreColor(score){
     let blue, red, green, defaultColor = 200;
     if (score > 50){
-      red = this.dechex(defaultColor - ((score-50)*4));
-      green = this.dechex(defaultColor);
-      blue = this.dechex(defaultColor - ((score-50)*4));
+      red = defaultColor - ((score-50)*4);
+      green = defaultColor;
+      blue = defaultColor - ((score-50)*4);
     } else if (score < 51){
-      red = this.dechex(defaultColor);
-      green = this.dechex(defaultColor - ((score-50)*4));
-      blue = this.dechex(defaultColor - ((score-50)*4));
+      red = defaultColor;
+      green = defaultColor - ((score-50)*4);
+      blue = defaultColor - ((score-50)*4);
     }
 
     /*$blue = $red = $green = $default=200;
@@ -48,7 +48,7 @@ window.appHelpers = (function(){
     if(strlen($green)==1) $green='0'.$green;
     if(strlen($red)==1) $red='0'.$red;*/
 
-    return red + green + blue;
+    return "rgb("+red+","+green+","+blue;
   }
 
   return {
@@ -498,7 +498,7 @@ class ProductCarouselItem extends React.Component {
       paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
       const cDate = new Date(this.props.product.created_at);
       const createdDate = jQuery.timeago(cDate)
-      const productScoreColor = '#' + window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
+      const productScoreColor = window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
       console.log(productScoreColor);
 
       productInfoDisplay = (
@@ -511,7 +511,7 @@ class ProductCarouselItem extends React.Component {
               score {this.props.product.laplace_score + "%"}
             </div>
             <div className="score-bar-container">
-              <div className={"score-bar"} style={{"width":this.props.product.laplace_score + "%"}}></div>
+              <div className={"score-bar"} style={{"width":this.props.product.laplace_score + "%","backgroundColor":productScoreColor}}></div>
             </div>
           </div>
         </div>
