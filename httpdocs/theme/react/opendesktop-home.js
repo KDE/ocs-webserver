@@ -439,7 +439,6 @@ class SpotlightProduct extends React.Component {
     let cDate = new Date(this.props.featuredProduct.created_at);
     cDate = cDate.toString();
     const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
-
     const productScoreColor = window.appHelpers.calculateScoreColor(this.props.featuredProduct.laplace_score);
 
     return React.createElement(
@@ -638,13 +637,22 @@ class ProductCarousel extends React.Component {
   }
 
   getNextProductsBatch() {
-    console.log(this.props.catIds);
     this.setState({ disableRightArrow: true }, function () {
       let limit = this.state.itemsPerRow * (this.state.containerNumber + 1) - this.state.products.length;
       if (limit <= 0) {
         limit = this.state.itemsPerRow;
       }
-      let url = "/home/showlastproductsjson/?page=1&limit=" + limit + "&offset=" + this.state.offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
+
+      let urlControllerAddress;
+      if (!this.props.catIds) {
+        urlControllerAddress = "getnewactiveplingedproductjson";
+      } else {
+        urlControllerAddress = "showlastproductsjson";
+      }
+
+      const url = "/home/" + urlControllerAddress + "/?page=1&limit=" + limit + "&offset=" + this.state.offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
+      console.log(url);
+
       const self = this;
       $.ajax({ url: url, cache: false }).done(function (response) {
 
