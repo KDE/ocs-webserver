@@ -730,6 +730,11 @@ class ProductCarousel extends React.Component {
       carouselArrowsMargin = this.state.itemWidth / 4;
     }
 
+    let titleLink = "/browse/cat/" + this.props.catIds + "/";
+    if (!this.props.catIds) {
+      titleLink = "/community#plingedproductsPanel";
+    }
+
     return React.createElement(
       "div",
       { className: "product-carousel " + hpVersionClass },
@@ -741,7 +746,7 @@ class ProductCarousel extends React.Component {
           null,
           React.createElement(
             "a",
-            { href: "/browse/cat/" + this.props.catIds + "/" },
+            { href: titleLink },
             this.props.title,
             " ",
             React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
