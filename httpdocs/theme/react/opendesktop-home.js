@@ -400,8 +400,9 @@ class SpotlightUser extends React.Component {
   }
 
   getSpotlightUser() {
+    const self = this;
     $.ajax({ url: "/home/showspotlightjson?page=1", cache: false }).done(function (response) {
-      this.setState({ user: response });
+      self.setState({ user: response });
     });
   }
 
@@ -832,7 +833,7 @@ class ProductCarouselItem extends React.Component {
       if (this.props.plingedProduct) {
         scoreDisplay = React.createElement(
           "div",
-          { className: "score-info" },
+          { className: "score-info plings" },
           React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
           this.props.product.sum_plings
         );

@@ -175,8 +175,9 @@ class SpotlightUser extends React.Component {
   }
 
   getSpotlightUser(){
+    const self = this;
     $.ajax({url: "/home/showspotlightjson?page=1",cache: false}).done(function(response){
-      this.setState({user:response});
+      self.setState({user:response});
     });
   }
 
@@ -566,7 +567,7 @@ class ProductCarouselItem extends React.Component {
       let scoreDisplay;
       if (this.props.plingedProduct){
         scoreDisplay = (
-          <div className="score-info">
+          <div className="score-info plings">
             <img src="/images/system/pling-btn-active.png" />
             {this.props.product.sum_plings}
           </div>
