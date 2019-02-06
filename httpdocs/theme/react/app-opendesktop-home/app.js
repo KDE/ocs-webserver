@@ -204,7 +204,7 @@ class SpotlightProduct extends React.Component {
       featuredLabelDisplay = <span className="featured-label">featured</span>
     }
 
-    const cDate = new Date(this.props.featuredProduct.created_at);
+    const cDate = new Date(this.props.featuredProduct.changed_at);
     const createdDate = jQuery.timeago(cDate);
     const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.featuredProduct.laplace_score);
 
@@ -510,7 +510,7 @@ class ProductCarouselItem extends React.Component {
     if (window.hpVersion === 2){
 
       paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
-      const cDate = new Date(this.props.product.created_at);
+      const cDate = new Date(this.props.product.changed_at);
       const createdDate = jQuery.timeago(cDate)
       const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
 
