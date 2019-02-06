@@ -1325,7 +1325,7 @@ class Default_Model_Info
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5((int)$limit).md5((int)$offset);
+        $cacheName = __FUNCTION__ . '_' .md5($member_id).md5((int)$limit).md5((int)$offset);
 
         if (false !== ($newSupporters = $cache->load($cacheName))) {
             return $newSupporters;
