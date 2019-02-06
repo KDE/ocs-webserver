@@ -481,6 +481,8 @@ class SpotlightUser extends React.Component {
     let versionClassCss;
     if (this.state.version === 2) {
       versionClassCss = "version-two";
+    } else if (this.state.version === 3) {
+      versionClassCss = "version-three";
     }
 
     return React.createElement(
