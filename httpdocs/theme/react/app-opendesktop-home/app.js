@@ -151,7 +151,8 @@ class SpotlightUser extends React.Component {
   	super(props);
   	this.state = {
       page:1,
-      loading:true
+      loading:true,
+      version:2
     };
     this.getSpotlightUser = this.getSpotlightUser.bind(this);
     this.getNextSpotLightUser = this.getNextSpotLightUser.bind(this);
@@ -177,7 +178,6 @@ class SpotlightUser extends React.Component {
   }
 
   render(){
-
     let spotlightUserDisplay;
     if (this.state.loading){
       spotlightUserDisplay = (
@@ -228,8 +228,13 @@ class SpotlightUser extends React.Component {
       );
     }
 
+    let versionClassCss;
+    if (this.state.version === 2){
+      versionClassCss = "version-two"
+    }
+
     return(
-      <div id="spotlight-user-container">
+      <div id="spotlight-user-container" className={versionClassCss}>
         <h2>In the spotlight</h2>
         {spotlightUserDisplay}
       </div>
