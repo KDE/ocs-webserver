@@ -1165,6 +1165,52 @@ class Default_Model_Info
     }
 
 
+    public function getJsonNewActivePlingProduct($limit = 20,$offset=null)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit).md5((int)$offset);;
+
+        if (false !== ($newSupporters = $cache->load($cacheName))) {
+            return $newSupporters;
+        }
+
+        $sql = '  
+                        select 
+                        pl.member_id as pling_member_id
+                        ,pl.project_id                        
+                        ,p.title
+                        ,p.image_small
+                        ,p.laplace_score
+                        ,p.count_likes
+                        ,p.count_dislikes   
+                        ,p.member_id 
+                        ,p.profile_image_url
+                        ,p.username
+                        ,p.cat_title as catTitle
+                        ,(
+                            select min(created_at) from project_plings pt where pt.member_id = pl.member_id and pt.project_id=pl.project_id
+                        ) as created_at
+                        ,(select count(1) from project_plings pl2 where pl2.project_id = p.project_id and pl2.is_active = 1 and pl2.is_deleted = 0  ) as sum_plings
+                        from project_plings pl
+                        inner join stat_projects p on pl.project_id = p.project_id and p.status > 30                        
+                        where pl.is_deleted = 0 and pl.is_active = 1 
+                        order by created_at desc                                                  
+        ';
+         if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+        if (isset($offset)) {
+            $sql .= ' offset ' . (int)$offset;
+        }
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+
+        $result = Zend_Json::encode($resultSet);
+        $cache->save($result, $cacheName, array(), 300);
+
+        return $result;
+    }
+
      /**
      * @param int $limit
      *
