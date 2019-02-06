@@ -652,17 +652,15 @@ class ProductCarousel extends React.Component {
       }
 
       const url = "/home/" + urlControllerAddress + "/?page=1&limit=" + limit + "&offset=" + this.state.offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
-      console.log(url);
 
       const self = this;
       $.ajax({ url: url, cache: false }).done(function (response) {
-        console.log(response);
 
         let products = self.state.products,
             finishedProducts = false,
             animateCarousel = true;
 
-        if (response.length > 0) {
+        if (response.length < limit) {
           products = products.concat(response);
         } else {
           finishedProducts = true;
