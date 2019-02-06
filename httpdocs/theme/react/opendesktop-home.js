@@ -400,7 +400,7 @@ class SpotlightUser extends React.Component {
   }
 
   getSpotlightUser() {
-    $.ajax({ url: "/showspotlightjson?page=1", cache: false }).done(function (response) {
+    $.ajax({ url: "/showspotlightjson/?page=1", cache: false }).done(function (response) {
       console.log(response);
     });
   }
