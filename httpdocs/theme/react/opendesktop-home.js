@@ -733,7 +733,7 @@ class ProductCarousel extends React.Component {
         { className: "product-carousel-wrapper", style: carouselWrapperStyling },
         React.createElement(
           "div",
-          { className: "product-carousel-left", style: { "left": carouselArrowsMargin } },
+          { className: "product-carousel-left", style: { "width": carouselArrowsMargin, "left": "0" } },
           carouselArrowLeftDisplay
         ),
         React.createElement(
@@ -747,7 +747,7 @@ class ProductCarousel extends React.Component {
         ),
         React.createElement(
           "div",
-          { className: "product-carousel-right", style: { "right": carouselArrowsMargin } },
+          { className: "product-carousel-right", style: { "width": carouselArrowsMargin, "right": "0" } },
           carouselArrowRightDisplay
         )
       )
