@@ -1146,11 +1146,11 @@ class Default_Model_Info
                         ,p.username
                         ,p.cat_title as catTitle
                         ,(
-                            select min(created_at) from project_plings pt where pt.member_id = pl.member_id and pt.project_id=pl.project_id
+                            select max(created_at) from project_plings pt where pt.member_id = pl.member_id and pt.project_id=pl.project_id
                         ) as created_at
                         ,(select count(1) from project_plings pl2 where pl2.project_id = p.project_id and pl2.is_active = 1 and pl2.is_deleted = 0  ) as sum_plings
                         from project_plings pl
-                        inner join stat_projects p on pl.project_id = p.project_id and p.status > 30                        
+                        inner join stat_projects p on pl.project_id = p.project_id and p.status=100                   
                         where pl.is_deleted = 0 and pl.is_active = 1 
                         order by created_at desc                                                  
         ';
@@ -1189,7 +1189,7 @@ class Default_Model_Info
                         ,p.username
                         ,p.cat_title 
                         ,(
-                            select min(created_at) from project_plings pt where pt.member_id = pl.member_id and pt.project_id=pl.project_id
+                            select max(created_at) from project_plings pt where pt.member_id = pl.member_id and pt.project_id=pl.project_id
                         ) as pling_created_at
                         ,(select count(1) from project_plings pl2 where pl2.project_id = p.project_id and pl2.is_active = 1 and pl2.is_deleted = 0  ) as sum_plings
                         ,p.project_changed_at as changed_at
@@ -1197,7 +1197,7 @@ class Default_Model_Info
                         from project_plings pl
                         inner join stat_projects p on pl.project_id = p.project_id and p.status > 30                        
                         where pl.is_deleted = 0 and pl.is_active = 1 
-                        order by created_at desc                                                  
+                        order by pling_created_at desc                                                  
         ';
          if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
