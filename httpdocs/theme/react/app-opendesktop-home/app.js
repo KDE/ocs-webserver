@@ -200,6 +200,12 @@ class SpotlightUser extends React.Component {
           </div>
         </div>
       ));
+
+      let productsContainerCssClass;
+      if (this.state.user.products.length < 3){
+        productsContainerCssClass = "one-row";
+      }
+
       spotlightUserDisplay = (
         <div id="spotlight-user">
           <div className="spotlight-user-image">
@@ -216,7 +222,7 @@ class SpotlightUser extends React.Component {
               </span>
             </div>
           </div>
-          <div className="spotlight-user-plinged-products">
+          <div className={"spotlight-user-plinged-products" + " " + productsContainerCssClass}>
             {users}
             <a className="next-button" onClick={this.getNextSpotLightUser}>next</a>
           </div>

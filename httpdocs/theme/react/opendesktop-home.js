@@ -434,6 +434,12 @@ class SpotlightUser extends React.Component {
           )
         )
       ));
+
+      let productsContainerCssClass;
+      if (this.state.user.products.length < 3) {
+        productsContainerCssClass = "one-row";
+      }
+
       spotlightUserDisplay = React.createElement(
         "div",
         { id: "spotlight-user" },
@@ -467,7 +473,7 @@ class SpotlightUser extends React.Component {
         ),
         React.createElement(
           "div",
-          { className: "spotlight-user-plinged-products" },
+          { className: "spotlight-user-plinged-products" + " " + productsContainerCssClass },
           users,
           React.createElement(
             "a",
