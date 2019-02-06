@@ -175,7 +175,13 @@ class SpotlightUser extends React.Component {
             <img src={p.image_small}/>
           </figure>
           <div className="product-info">
-            {p.title}
+            <span className="title">
+              {p.title}
+            </span>
+            <span className="plings">
+              <img src="/images/system/pling-btn-active.png" />
+              {p.sum_plings}
+            </span>
           </div>
         </div>
       ));
