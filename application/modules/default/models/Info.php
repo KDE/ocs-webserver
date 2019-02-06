@@ -625,7 +625,7 @@ class Default_Model_Info
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
         $imagehelper = new Default_View_Helper_Image();
         foreach ($resultSet as &$value) {
-            $value['project_image_small_uri'] = $imagehelper->Image($value['image_small'], array('width' => 80, 'height' => 80));
+            $value['image_small'] = $imagehelper->Image($value['image_small'], array('width' => 200, 'height' => 200));
         }
         if (count($resultSet) > 0) {
             $result = Zend_Json::encode($resultSet);
@@ -1204,6 +1204,11 @@ class Default_Model_Info
             $sql .= ' offset ' . (int)$offset;
         }
         $resultSet = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+
+        $imagehelper = new Default_View_Helper_Image();
+        foreach ($resultSet as &$value) {
+            $value['image_small'] = $imagehelper->Image($value['image_small'], array('width' => 200, 'height' => 200));
+        }
 
         $result = Zend_Json::encode($resultSet);
         $cache->save($result, $cacheName, array(), 300);
