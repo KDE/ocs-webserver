@@ -152,7 +152,7 @@ class SpotlightUser extends React.Component {
   	this.state = {
       page:1,
       loading:true,
-      version:3
+      version:1
     };
     this.getSpotlightUser = this.getSpotlightUser.bind(this);
     this.getNextSpotLightUser = this.getNextSpotLightUser.bind(this);
