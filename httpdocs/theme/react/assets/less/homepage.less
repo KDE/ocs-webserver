@@ -349,13 +349,22 @@ out: ../css/homepage.css, sourcemap: true, compress: true
       border-radius: 5px 0 0 0;
       text-transform: uppercase;
       cursor: pointer;
+      .transition();
+
+      &:hover {
+        background-color: lighten(#337ab7,5%);
+      }
+
+      &:active {
+        background-color: darken(#337ab7,5%);
+      }
     }
   }
 
   &.loading {
     text-align: center;
     padding-top: 88px;
-    padding-left: 0; 
+    padding-left: 0;
 
     .ajax-loader {
       margin: 0 auto;
