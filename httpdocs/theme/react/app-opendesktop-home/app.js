@@ -176,18 +176,44 @@ class SpotlightUser extends React.Component {
 
   getSpotlightUser(){
     $.ajax({url: "/home/showspotlightjson?page=1",cache: false}).done(function(response){
-      console.log(response);
+      this.setState({user:response});
     });
   }
 
   render(){
+
+    let spotlightUserDisplay;
+    if (this.state.user){
+
+      const users = this.state.user.products.map((p,index) => (
+        <div className="plinged-product">
+          <figure>
+            <img src={p.image_small}/>
+          </figure>
+          <div className="product-info">
+            {p.title}
+          </div>
+        </div>
+      ));
+
+      spotlightUserDisplay = (
+        <div id="spotlight-user">
+          <div className="spotlight-user-image">
+            <figure>
+              <img src={this.state.user.profile_image_url}/>
+            </figure>
+          </div>
+          <div className="spotlight-user-plinged-products">
+            {users}
+          </div>
+        </div>
+      );
+    }
+
     return(
       <div id="spotlight-user-container">
         <h2>creator in the spotlight</h2>
-        <div id="spotlight-user">
-          <div className="spotlight-user-image"></div>
-          <div className="spotlight-user-plinged-products"></div>
-        </div>
+        {spotlightUserDisplay}
       </div>
     );
   }
@@ -389,7 +415,7 @@ class ProductCarousel extends React.Component {
       } else {
         url = "/home/showlastproductsjson/?page=1&limit="+limit+"&offset="+this.state.offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
       }
-      console.log(url);
+
       const self = this;
       $.ajax({url: url,cache: false}).done(function(response){
 
@@ -421,12 +447,15 @@ class ProductCarousel extends React.Component {
   render(){
     let carouselItemsDisplay;
     if (this.state.products && this.state.products.length > 0){
+      let plingedProduct = false;
+      if (!this.props.catIds) plingedProduct = true;
       carouselItemsDisplay = this.state.products.map((product,index) => (
         <ProductCarouselItem
           key={index}
           product={product}
           itemWidth={this.state.itemWidth}
           env={this.props.env}
+          plingedProduct={plingedProduct}
         />
       ));
     }
@@ -511,16 +540,6 @@ class ProductCarouselItem extends React.Component {
   }
 
   render(){
-    /*let imageUrl = this.props.product.image_small;
-    if (imageUrl && this.props.product.image_small.indexOf('https://') === -1 && this.props.product.image_small.indexOf('http://') === -1){
-      let imageBaseUrl;
-      if (this.props.env === 'live') {
-        imageBaseUrl = 'cn.opendesktop.org';
-      } else {
-        imageBaseUrl = 'cn.opendesktop.cc';
-      }
-      imageUrl = 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small;
-    }*/
 
     let paddingTop;
     let productInfoDisplay = (
@@ -539,15 +558,21 @@ class ProductCarouselItem extends React.Component {
       } else {
         lastDate = this.props.product.created_at;
       }
+
       const cDate = new Date(lastDate);
       const createdDate = jQuery.timeago(cDate)
       const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
 
-      productInfoDisplay = (
-        <div className="product-info">
-          <span className="product-info-title">{this.props.product.title}</span>
-          <span className="product-info-category">{this.props.product.cat_title}</span>
-          <span className="product-info-date">{createdDate}</span>
+      let scoreDisplay;
+      if (this.props.plingedProduct){
+        scoreDisplay = (
+          <div className="score-info">
+            <img src="/images/system/pling-btn-active.png" />
+            {this.props.product.sum_plings}
+          </div>
+        );
+      } else {
+        scoreDisplay = (
           <div className="score-info">
             <div className="score-number">
               score {this.props.product.laplace_score + "%"}
@@ -556,6 +581,15 @@ class ProductCarouselItem extends React.Component {
               <div className={"score-bar"} style={{"width":this.props.product.laplace_score + "%","backgroundColor":productScoreColor}}></div>
             </div>
           </div>
+        );
+      }
+
+      productInfoDisplay = (
+        <div className="product-info">
+          <span className="product-info-title">{this.props.product.title}</span>
+          <span className="product-info-category">{this.props.product.cat_title}</span>
+          <span className="product-info-date">{createdDate}</span>
+          {scoreDisplay}
         </div>
       );
     }

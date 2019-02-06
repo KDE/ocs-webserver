@@ -401,11 +401,50 @@ class SpotlightUser extends React.Component {
 
   getSpotlightUser() {
     $.ajax({ url: "/home/showspotlightjson?page=1", cache: false }).done(function (response) {
-      console.log(response);
+      this.setState({ user: response });
     });
   }
 
   render() {
+
+    let spotlightUserDisplay;
+    if (this.state.user) {
+
+      const users = this.state.user.products.map((p, index) => React.createElement(
+        "div",
+        { className: "plinged-product" },
+        React.createElement(
+          "figure",
+          null,
+          React.createElement("img", { src: p.image_small })
+        ),
+        React.createElement(
+          "div",
+          { className: "product-info" },
+          p.title
+        )
+      ));
+
+      spotlightUserDisplay = React.createElement(
+        "div",
+        { id: "spotlight-user" },
+        React.createElement(
+          "div",
+          { className: "spotlight-user-image" },
+          React.createElement(
+            "figure",
+            null,
+            React.createElement("img", { src: this.state.user.profile_image_url })
+          )
+        ),
+        React.createElement(
+          "div",
+          { className: "spotlight-user-plinged-products" },
+          users
+        )
+      );
+    }
+
     return React.createElement(
       "div",
       { id: "spotlight-user-container" },
@@ -414,12 +453,7 @@ class SpotlightUser extends React.Component {
         null,
         "creator in the spotlight"
       ),
-      React.createElement(
-        "div",
-        { id: "spotlight-user" },
-        React.createElement("div", { className: "spotlight-user-image" }),
-        React.createElement("div", { className: "spotlight-user-plinged-products" })
-      )
+      spotlightUserDisplay
     );
   }
 }
@@ -619,7 +653,7 @@ class ProductCarousel extends React.Component {
       } else {
         url = "/home/showlastproductsjson/?page=1&limit=" + limit + "&offset=" + this.state.offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
       }
-      console.log(url);
+
       const self = this;
       $.ajax({ url: url, cache: false }).done(function (response) {
 
@@ -651,11 +685,14 @@ class ProductCarousel extends React.Component {
   render() {
     let carouselItemsDisplay;
     if (this.state.products && this.state.products.length > 0) {
+      let plingedProduct = false;
+      if (!this.props.catIds) plingedProduct = true;
       carouselItemsDisplay = this.state.products.map((product, index) => React.createElement(ProductCarouselItem, {
         key: index,
         product: product,
         itemWidth: this.state.itemWidth,
-        env: this.props.env
+        env: this.props.env,
+        plingedProduct: plingedProduct
       }));
     }
 
@@ -760,16 +797,6 @@ class ProductCarouselItem extends React.Component {
   }
 
   render() {
-    /*let imageUrl = this.props.product.image_small;
-    if (imageUrl && this.props.product.image_small.indexOf('https://') === -1 && this.props.product.image_small.indexOf('http://') === -1){
-      let imageBaseUrl;
-      if (this.props.env === 'live') {
-        imageBaseUrl = 'cn.opendesktop.org';
-      } else {
-        imageBaseUrl = 'cn.opendesktop.cc';
-      }
-      imageUrl = 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small;
-    }*/
 
     let paddingTop;
     let productInfoDisplay = React.createElement(
@@ -796,9 +823,36 @@ class ProductCarouselItem extends React.Component {
       } else {
         lastDate = this.props.product.created_at;
       }
+
       const cDate = new Date(lastDate);
       const createdDate = jQuery.timeago(cDate);
       const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
+
+      let scoreDisplay;
+      if (this.props.plingedProduct) {
+        scoreDisplay = React.createElement(
+          "div",
+          { className: "score-info" },
+          React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
+          this.props.product.sum_plings
+        );
+      } else {
+        scoreDisplay = React.createElement(
+          "div",
+          { className: "score-info" },
+          React.createElement(
+            "div",
+            { className: "score-number" },
+            "score ",
+            this.props.product.laplace_score + "%"
+          ),
+          React.createElement(
+            "div",
+            { className: "score-bar-container" },
+            React.createElement("div", { className: "score-bar", style: { "width": this.props.product.laplace_score + "%", "backgroundColor": productScoreColor } })
+          )
+        );
+      }
 
       productInfoDisplay = React.createElement(
         "div",
@@ -818,21 +872,7 @@ class ProductCarouselItem extends React.Component {
           { className: "product-info-date" },
           createdDate
         ),
-        React.createElement(
-          "div",
-          { className: "score-info" },
-          React.createElement(
-            "div",
-            { className: "score-number" },
-            "score ",
-            this.props.product.laplace_score + "%"
-          ),
-          React.createElement(
-            "div",
-            { className: "score-bar-container" },
-            React.createElement("div", { className: "score-bar", style: { "width": this.props.product.laplace_score + "%", "backgroundColor": productScoreColor } })
-          )
-        )
+        scoreDisplay
       );
     }
 
