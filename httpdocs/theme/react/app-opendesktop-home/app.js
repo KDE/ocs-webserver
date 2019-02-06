@@ -171,17 +171,19 @@ class SpotlightUser extends React.Component {
 
       const users = this.state.user.products.map((p,index) => (
         <div key={index} className="plinged-product">
-          <figure>
-            <img src={p.image_small}/>
-          </figure>
-          <div className="product-info">
-            <span className="title">
-              {p.title}
-            </span>
-            <span className="plings">
-              <img src="/images/system/pling-btn-active.png" />
-              {p.sum_plings}
-            </span>
+          <div className="product-wrapper">
+            <figure>
+              <img src={p.image_small}/>
+            </figure>
+            <div className="product-info">
+              <span className="title">
+                {p.title}
+              </span>
+              <span className="plings">
+                <img src="/images/system/pling-btn-active.png" />
+                {p.sum_plings}
+              </span>
+            </div>
           </div>
         </div>
       ));

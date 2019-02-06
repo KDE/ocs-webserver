@@ -399,23 +399,27 @@ class SpotlightUser extends React.Component {
         "div",
         { key: index, className: "plinged-product" },
         React.createElement(
-          "figure",
-          null,
-          React.createElement("img", { src: p.image_small })
-        ),
-        React.createElement(
           "div",
-          { className: "product-info" },
+          { className: "product-wrapper" },
           React.createElement(
-            "span",
-            { className: "title" },
-            p.title
+            "figure",
+            null,
+            React.createElement("img", { src: p.image_small })
           ),
           React.createElement(
-            "span",
-            { className: "plings" },
-            React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
-            p.sum_plings
+            "div",
+            { className: "product-info" },
+            React.createElement(
+              "span",
+              { className: "title" },
+              p.title
+            ),
+            React.createElement(
+              "span",
+              { className: "plings" },
+              React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
+              p.sum_plings
+            )
           )
         )
       ));
