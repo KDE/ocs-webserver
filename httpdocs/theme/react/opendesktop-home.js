@@ -843,7 +843,7 @@ class ProductCarouselItem extends React.Component {
           React.createElement(
             "div",
             { className: "score-bar-container" },
-            React.createElement("div", { className: "score-bar", style: { "width": this.props.product.laplace_score + "%", "backgroundColor": productScoreColor } })
+            React.createElement("div", { className: "score-bar", style: { "width": this.props.product.laplace_score + "%" } })
           )
         )
       );

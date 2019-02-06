@@ -511,7 +511,7 @@ class ProductCarouselItem extends React.Component {
               score {this.props.product.laplace_score + "%"}
             </div>
             <div className="score-bar-container">
-              <div className={"score-bar"} style={{"width":this.props.product.laplace_score + "%","backgroundColor":productScoreColor}}></div>
+              <div className={"score-bar"} style={{"width":this.props.product.laplace_score + "%"}}></div>
             </div>
           </div>
         </div>
