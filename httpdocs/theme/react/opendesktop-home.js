@@ -490,7 +490,7 @@ class SpotlightUser extends React.Component {
       React.createElement(
         "h2",
         null,
-        "creator in the spotlight"
+        "In the spotlight"
       ),
       spotlightUserDisplay
     );

@@ -230,7 +230,7 @@ class SpotlightUser extends React.Component {
 
     return(
       <div id="spotlight-user-container">
-        <h2>creator in the spotlight</h2>
+        <h2>In the spotlight</h2>
         {spotlightUserDisplay}
       </div>
     );
