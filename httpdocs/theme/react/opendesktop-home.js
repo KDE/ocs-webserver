@@ -640,7 +640,7 @@ class ProductCarousel extends React.Component {
 
         self.setState({
           products: products,
-          offset: this.state.offset + response.length,
+          offset: self.state.offset + response.length,
           finishedProducts: finishedProducts }, function () {
           self.updateDimensions(animateCarousel);
         });
