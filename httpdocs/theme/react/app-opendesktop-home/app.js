@@ -1,4 +1,4 @@
-window.appHelpers = (function(){
+window.hpHelpers = (function(){
 
   function dechex(number) {
     //  discuss at: http://locutus.io/php/dechex/
@@ -207,7 +207,7 @@ class SpotlightProduct extends React.Component {
     let cDate = new Date(this.props.featuredProduct.created_at);
     cDate = cDate.toString();
     const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
-    const productScoreColor = window.appHelpers.calculateScoreColor(this.props.featuredProduct.laplace_score);
+    const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.featuredProduct.laplace_score);
 
     return(
       <div id="spotlight-product">
@@ -512,7 +512,7 @@ class ProductCarouselItem extends React.Component {
       paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
       const cDate = new Date(this.props.product.created_at);
       const createdDate = jQuery.timeago(cDate)
-      const productScoreColor = window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
+      const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
 
       productInfoDisplay = (
         <div className="product-info">
