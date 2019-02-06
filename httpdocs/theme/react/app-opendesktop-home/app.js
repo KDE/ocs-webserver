@@ -542,7 +542,7 @@ class ProductCarouselItem extends React.Component {
         <div className="product-carousel-item-wrapper">
           <a href={"/p/"+this.props.product.project_id } style={{"paddingTop":paddingTop}}>
             <figure style={{"height":paddingTop}}>
-              <img className="very-rounded-corners" src={this.props.prouct.image_small} />
+              <img className="very-rounded-corners" src={this.props.product.image_small} />
             </figure>
             {productInfoDisplay}
           </a>

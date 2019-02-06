@@ -880,7 +880,7 @@ class ProductCarouselItem extends React.Component {
           React.createElement(
             "figure",
             { style: { "height": paddingTop } },
-            React.createElement("img", { className: "very-rounded-corners", src: this.props.prouct.image_small })
+            React.createElement("img", { className: "very-rounded-corners", src: this.props.product.image_small })
           ),
           productInfoDisplay
         )
