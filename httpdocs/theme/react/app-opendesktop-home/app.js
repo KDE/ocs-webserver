@@ -204,7 +204,6 @@ class SpotlightProduct extends React.Component {
       featuredLabelDisplay = <span className="featured-label">featured</span>
     }
 
-    console.log(this.props.featuredProduct);
     const cDate = new Date(this.props.featuredProduct.changed_at);
     const createdDate = jQuery.timeago(cDate);
     const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.featuredProduct.laplace_score);
@@ -520,9 +519,6 @@ class ProductCarouselItem extends React.Component {
       const cDate = new Date(lastDate);
       const createdDate = jQuery.timeago(cDate)
       const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
-
-      console.log(this.props.product.title);
-      console.log(this.props.product);
 
       productInfoDisplay = (
         <div className="product-info">
