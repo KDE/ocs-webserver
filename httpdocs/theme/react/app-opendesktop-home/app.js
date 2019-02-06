@@ -208,7 +208,7 @@ class SpotlightProduct extends React.Component {
     cDate = cDate.toString();
     const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
 
-    const productScoreColor = window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
+    const productScoreColor = window.appHelpers.calculateScoreColor(this.props.featuredProduct.laplace_score);
 
     return(
       <div id="spotlight-product">
