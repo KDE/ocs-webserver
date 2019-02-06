@@ -356,6 +356,7 @@ class ProductCarousel extends React.Component {
   }
 
   getNextProductsBatch(){
+    console.log(this.props.catIds);
     this.setState({disableRightArrow:true},function(){
       let limit = (this.state.itemsPerRow * (this.state.containerNumber + 1)) - this.state.products.length;
       if (limit <= 0){
