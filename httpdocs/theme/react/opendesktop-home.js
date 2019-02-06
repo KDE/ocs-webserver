@@ -610,8 +610,6 @@ class ProductCarousel extends React.Component {
         newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
       } else {
         if (!animateCarousel) {
-          console.log(this.state.products.length);
-          console.log(this.state.finishedProducts);
           if (this.state.products.length >= 15 || this.state.finishedProducts) {
             newSliderPosition = 0;
           } else {
@@ -652,11 +650,9 @@ class ProductCarousel extends React.Component {
       }
 
       const url = "/home/" + urlControllerAddress + "/?page=1&limit=" + limit + "&offset=" + this.state.offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
-      console.log(url);
 
       const self = this;
       $.ajax({ url: url, cache: false }).done(function (response) {
-        console.log(response);
 
         let products = self.state.products,
             finishedProducts = false,
