@@ -1367,7 +1367,7 @@ class Default_Model_Info
                 select distinct p.member_id
                 from stat_projects p
                 join project_plings pl on p.project_id = pl.project_id                       
-                where p.status = 100
+                where p.status = 100 and pl.is_deleted = 0 and pl.is_active = 1 
             ) t
         ';
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
@@ -1394,6 +1394,7 @@ class Default_Model_Info
                         join project_plings pl on p.project_id = pl.project_id
                         join member m on p.member_id = m.member_id
                         where p.status = 100
+                        and pl.is_deleted = 0 and pl.is_active = 1 
                         group by p.member_id
                         order by cnt desc                        
                                                               
