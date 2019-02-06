@@ -613,14 +613,12 @@ class ProductCarousel extends React.Component {
         limit = this.state.itemsPerRow;
       }
 
-      let urlControllerAddress;
+      let url;
       if (!this.props.catIds) {
-        urlControllerAddress = "getnewactiveplingedproductjson";
+        url = "/home/getnewactiveplingedproductjson/?limit=" + limit + "&offset=" + this.state.offset;
       } else {
-        urlControllerAddress = "showlastproductsjson";
+        url = "/home/showlastproductsjson/?page=1&limit=" + limit + "&offset=" + this.state.offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
       }
-
-      const url = "/home/" + urlControllerAddress + "/?page=1&limit=" + limit + "&offset=" + this.state.offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
 
       const self = this;
       $.ajax({ url: url, cache: false }).done(function (response) {
