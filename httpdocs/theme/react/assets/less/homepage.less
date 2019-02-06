@@ -226,159 +226,167 @@ out: ../css/homepage.css, sourcemap: true, compress: true
   }
 }
 
-#spotlight-user {
-  position: relative;
-  width: 100%;
-  padding-left: 200px;
-  height: 200px;
-  background: #eeeeee;
-  border-radius: 5px;
-  overflow: hidden;
-  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.15);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+#spotlight-user-container {
+  text-align: center;
 
-  .spotlight-user-image {
-    width: 200px;
-    height: 200px;
-    top: 0;
-    left: 0;
-    position: absolute;
-
-    figure {
-      width: 170px;
-      height: 170px;
-      padding: 0;
-      margin: 5px auto 0px;
-
-      img {
-        width: 100%;
-        width: 100%;
-        border-radius: 100%;
-      }
-    }
-
-    .user-info {
-      height: 25px;
-      line-height: 25px;
-      padding: 0 10px;
-
-      .user-plings {
-        font-size: 12px;
-        float: right;
-        font-weight: bold;
-
-        img {
-          height: 20px;
-          width: 20px;
-          margin-right: 3px;
-          margin-top: -2px;
-        }
-      }
-    }
-  }
-
-  .spotlight-user-plinged-products {
-    width: 100%;
-    padding: 5px;
-    height: 100%;
-    background: #f9f8f8;
+  #spotlight-user {
     position: relative;
+    width: 100%;
+    padding-left: 200px;
+    height: 200px;
+    background: #eeeeee;
+    border-radius: 5px;
+    overflow: hidden;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    max-width: 800px;
+    height: 230px;
+    margin: 0 auto;
 
-    .plinged-product {
-      float: left;
-      width: 20%;
-      padding: 5px;
-      height: 100%;
-
-      .product-wrapper {
-        -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.15);
-        box-shadow: 1px 1px 2px rgba(0,0,0,0.15);
-        width: 100%;
-        float: left;
-        border-radius: 2px;
-        height: 100%;
-        background-color: #eee;
-        position: relative;        
-      }
+    .spotlight-user-image {
+      width: 200px;
+      height: 200px;
+      top: 0;
+      left: 0;
+      position: absolute;
 
       figure {
-        width: 100%;
-        padding: 5px;
-        background-color: #eee;
-        float: left;
+        width: 170px;
+        height: 170px;
+        padding: 0;
+        margin: 5px auto 0px;
 
         img {
           width: 100%;
+          width: 100%;
+          border-radius: 100%;
         }
       }
 
-      .product-info {
-        background-color: #eee;
-        padding: 5px;
-        font-size: 12px;
-        float: left;
-        width: 100%;
+      .user-info {
+        height: 25px;
+        line-height: 25px;
+        padding: 0 10px;
 
-        .title {
-          float: left;
-          width: 100%;
-          margin-bottom: 5px;
-        }
-
-        .plings {
-          width: 100%;
-          float: left;
-          display: block;
-          text-align: right;
-          position: absolute;
-          bottom: 5px;
-          right: 5px;
+        .user-plings {
+          font-size: 12px;
+          float: right;
+          font-weight: bold;
 
           img {
-            height: 15px;
-            width: 15px;
+            height: 20px;
+            width: 20px;
             margin-right: 3px;
-            margin-top: -3px;
+            margin-top: -2px;
           }
         }
       }
     }
 
-    .next-button {
-      display: block;
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      padding: 4px 8px;
-      color: white;
-      background-color: #337ab7;
-      font-size: 13px;
-      /* font-weight: bold; */
-      border-radius: 5px 0 0 0;
-      text-transform: uppercase;
-      cursor: pointer;
-      z-index: 10;
-      .transition();
+    .spotlight-user-plinged-products {
+      width: 100%;
+      padding: 5px;
+      height: 100%;
+      background: #f9f8f8;
+      position: relative;
 
-      &:hover {
-        background-color: lighten(#337ab7,5%);
+      .plinged-product {
+        float: left;
+        width: 20%;
+        padding: 5px;
+        height: 100%;
+
+        .product-wrapper {
+          -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.15);
+          box-shadow: 1px 1px 2px rgba(0,0,0,0.15);
+          width: 100%;
+          float: left;
+          border-radius: 2px;
+          height: 100%;
+          background-color: #eee;
+          position: relative;
+        }
+
+        figure {
+          width: 100%;
+          padding: 5px;
+          background-color: #eee;
+          float: left;
+
+          img {
+            width: 100%;
+          }
+        }
+
+        .product-info {
+          background-color: #eee;
+          padding: 5px;
+          font-size: 12px;
+          float: left;
+          width: 100%;
+
+          .title {
+            float: left;
+            width: 100%;
+            margin-bottom: 5px;
+          }
+
+          .plings {
+            width: 100%;
+            float: left;
+            display: block;
+            text-align: right;
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+
+            img {
+              height: 15px;
+              width: 15px;
+              margin-right: 3px;
+              margin-top: -3px;
+            }
+          }
+        }
       }
 
-      &:active {
-        background-color: darken(#337ab7,5%);
+      .next-button {
+        display: block;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 4px 8px;
+        color: white;
+        background-color: #337ab7;
+        font-size: 13px;
+        /* font-weight: bold; */
+        border-radius: 5px 0 0 0;
+        text-transform: uppercase;
+        cursor: pointer;
+        z-index: 10;
+        .transition();
+
+        &:hover {
+          background-color: lighten(#337ab7,5%);
+        }
+
+        &:active {
+          background-color: darken(#337ab7,5%);
+        }
+      }
+    }
+
+    &.loading {
+      text-align: center;
+      padding-top: 88px;
+      padding-left: 0;
+
+      .ajax-loader {
+        margin: 0 auto;
       }
     }
   }
 
-  &.loading {
-    text-align: center;
-    padding-top: 88px;
-    padding-left: 0;
-
-    .ajax-loader {
-      margin: 0 auto;
-    }
-  }
 }
 
 .product-carousel {
