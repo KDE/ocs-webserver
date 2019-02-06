@@ -202,9 +202,9 @@ class SpotlightUser extends React.Component {
       ));
 
       let productsContainerCssClass;
-      if (this.state.user && this.state.user.products.length === 2){
+      if (this.state.user.products.length === 2){
         productsContainerCssClass = "one-row";
-      } else if (this.state.user && this.state.user.product.length === 1){
+      } else if (this.state.user.products.length === 1){
         productsContainerCssClass = "one-row single-product";
       }
 
