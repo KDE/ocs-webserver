@@ -31,23 +31,6 @@ window.hpHelpers = (function(){
       blue = defaultColor - ((score-50)*4);
     }
 
-    /*$blue = $red = $green = $default=200;
-    $score = $this->widgetRating->laplace_score;
-    if($score==0)
-    	$score = 50;
-
-    if($score>50) {
-        $red=dechex($default-(($score-50)*4));
-        $green=dechex($default);
-        $blue=dechex($default-(($score-50)*4));
-    }elseif($score<51) {
-        $red=dechex($default);
-        $green=dechex($default-((50-$score)*4));
-        $blue=dechex($default-((50-$score)*4));
-    }
-    if(strlen($green)==1) $green='0'.$green;
-    if(strlen($red)==1) $red='0'.$red;*/
-
     return "rgb("+red+","+green+","+blue+")";
   }
 
