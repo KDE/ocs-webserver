@@ -274,7 +274,7 @@ window.appHelpers = function () {
     if(strlen($green)==1) $green='0'.$green;
     if(strlen($red)==1) $red='0'.$red;*/
 
-    return "rgb(" + red + "," + green + "," + blue;
+    return "rgb(" + red + "," + green + "," + blue + ")";
   }
 
   return {
