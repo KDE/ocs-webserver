@@ -454,7 +454,7 @@ class SpotlightProduct extends React.Component {
         React.createElement(
           "div",
           { className: "spotlight-image" },
-          React.createElement("img", { src: "https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.state.featuredProduct.image_small })
+          React.createElement("img", { src: this.state.featuredProduct.image_small })
         ),
         React.createElement(
           "div",
@@ -792,8 +792,8 @@ class ProductCarouselItem extends React.Component {
   }
 
   render() {
-    let imageUrl = this.props.product.image_small;
-    if (imageUrl && this.props.product.image_small.indexOf('https://') === -1 && this.props.product.image_small.indexOf('http://') === -1) {
+    /*let imageUrl = this.props.product.image_small;
+    if (imageUrl && this.props.product.image_small.indexOf('https://') === -1 && this.props.product.image_small.indexOf('http://') === -1){
       let imageBaseUrl;
       if (this.props.env === 'live') {
         imageBaseUrl = 'cn.opendesktop.org';
@@ -801,7 +801,7 @@ class ProductCarouselItem extends React.Component {
         imageBaseUrl = 'cn.opendesktop.cc';
       }
       imageUrl = 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small;
-    }
+    }*/
 
     let paddingTop;
     let productInfoDisplay = React.createElement(
@@ -880,7 +880,7 @@ class ProductCarouselItem extends React.Component {
           React.createElement(
             "figure",
             { style: { "height": paddingTop } },
-            React.createElement("img", { className: "very-rounded-corners", src: imageUrl })
+            React.createElement("img", { className: "very-rounded-corners", src: this.props.prouct.image_small })
           ),
           productInfoDisplay
         )

@@ -213,7 +213,7 @@ class SpotlightProduct extends React.Component {
         <h2>In the Spotlight</h2>
         <div className="container">
           <div className="spotlight-image">
-            <img src={"https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.state.featuredProduct.image_small}/>
+            <img src={this.state.featuredProduct.image_small}/>
           </div>
           <div className="spotlight-info">
             <div className="spotlight-info-wrapper">
@@ -488,7 +488,7 @@ class ProductCarouselItem extends React.Component {
   }
 
   render(){
-    let imageUrl = this.props.product.image_small;
+    /*let imageUrl = this.props.product.image_small;
     if (imageUrl && this.props.product.image_small.indexOf('https://') === -1 && this.props.product.image_small.indexOf('http://') === -1){
       let imageBaseUrl;
       if (this.props.env === 'live') {
@@ -497,7 +497,7 @@ class ProductCarouselItem extends React.Component {
         imageBaseUrl = 'cn.opendesktop.cc';
       }
       imageUrl = 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small;
-    }
+    }*/
 
     let paddingTop;
     let productInfoDisplay = (
@@ -542,7 +542,7 @@ class ProductCarouselItem extends React.Component {
         <div className="product-carousel-item-wrapper">
           <a href={"/p/"+this.props.product.project_id } style={{"paddingTop":paddingTop}}>
             <figure style={{"height":paddingTop}}>
-              <img className="very-rounded-corners" src={imageUrl} />
+              <img className="very-rounded-corners" src={this.props.prouct.image_small} />
             </figure>
             {productInfoDisplay}
           </a>
