@@ -382,38 +382,68 @@ class App extends React.Component {
     return React.createElement(
       "main",
       { id: "opendesktop-homepage" },
-      React.createElement(SpotlightProduct, {
-        env: this.state.env,
-        featuredProduct: featuredProduct
-      }),
+      React.createElement(SpotlightUser, null),
       productCarouselsContainer
     );
   }
 }
 
-class SpotlightProduct extends React.Component {
+class SpotlightUser extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      featuredProduct: this.props.featuredProduct
-    };
-    this.onSpotlightMenuClick = this.onSpotlightMenuClick.bind(this);
+    this.state = {};
+    this.getSpotlightUser = this.getSpotlightUser.bind(this);
   }
 
-  onSpotlightMenuClick(val) {
-    let url = "/home/showfeaturejson/page/";
-    if (val === "random") {
-      url += "0";
-    } else {
-      url += "1";
-    }
-    const self = this;
-    $.ajax({ url: url, cache: false }).done(function (response) {
-      self.setState({ featuredProduct: response });
+  componentDidMount() {
+    this.getSpotlightUser();
+  }
+
+  getSpotlightUser() {
+    $.ajax({ url: "/showspotlightjson?page=1", cache: false }).done(function (response) {
+      console.log(response);
     });
   }
 
   render() {
+    return React.createElement(
+      "div",
+      { id: "spotlight-user-container" },
+      React.createElement(
+        "h2",
+        null,
+        "creator in the spotlight"
+      ),
+      React.createElement(
+        "div",
+        { id: "spotlight-user" },
+        React.createElement("div", { className: "spotlight-user-image" }),
+        React.createElement("div", { className: "spotlight-user-plinged-products" })
+      )
+    );
+  }
+}
+/*
+class SpotlightProduct extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {
+      featuredProduct:this.props.featuredProduct
+    };
+    this.onSpotlightMenuClick = this.onSpotlightMenuClick.bind(this);
+  }
+
+  onSpotlightMenuClick(val){
+    let url = "/home/showfeaturejson/page/";
+    if (val === "random"){ url += "0"; }
+    else { url += "1"; }
+    const self = this;
+    $.ajax({url: url,cache: false}).done(function(response){
+        self.setState({featuredProduct:response});
+    });
+  }
+
+  render(){
 
     let imageBaseUrl;
     if (this.props.env === 'live') {
@@ -423,122 +453,64 @@ class SpotlightProduct extends React.Component {
     }
 
     let description = this.state.featuredProduct.description;
-    if (description && description.length > 295) {
-      description = this.state.featuredProduct.description.substring(0, 295) + "...";
+    if (description && description.length > 295){
+      description = this.state.featuredProduct.description.substring(0,295) + "...";
     }
 
     let featuredLabelDisplay;
-    if (this.state.featuredProduct.featured === "1") {
-      featuredLabelDisplay = React.createElement(
-        "span",
-        { className: "featured-label" },
-        "featured"
-      );
+    if (this.state.featuredProduct.featured === "1"){
+      featuredLabelDisplay = <span className="featured-label">featured</span>
     }
 
     const cDate = new Date(this.props.featuredProduct.changed_at);
     const createdDate = jQuery.timeago(cDate);
     const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.featuredProduct.laplace_score);
 
-    return React.createElement(
-      "div",
-      { id: "spotlight-product" },
-      React.createElement(
-        "h2",
-        null,
-        "In the Spotlight"
-      ),
-      React.createElement(
-        "div",
-        { className: "container" },
-        React.createElement(
-          "div",
-          { className: "spotlight-image" },
-          React.createElement("img", { src: this.state.featuredProduct.image_small })
-        ),
-        React.createElement(
-          "div",
-          { className: "spotlight-info" },
-          React.createElement(
-            "div",
-            { className: "spotlight-info-wrapper" },
-            featuredLabelDisplay,
-            React.createElement(
-              "div",
-              { className: "info-top" },
-              React.createElement(
-                "h2",
-                null,
-                React.createElement(
-                  "a",
-                  { href: "/p/" + this.state.featuredProduct.project_id },
-                  this.state.featuredProduct.title
-                )
-              ),
-              React.createElement(
-                "h3",
-                null,
-                this.state.featuredProduct.category
-              ),
-              React.createElement(
-                "div",
-                { className: "user-info" },
-                React.createElement("img", { src: this.state.featuredProduct.profile_image_url }),
-                this.state.featuredProduct.username
-              ),
-              React.createElement(
-                "span",
-                null,
-                this.state.featuredProduct.comment_count,
-                " comments"
-              ),
-              React.createElement(
-                "div",
-                { className: "score-info" },
-                React.createElement(
-                  "div",
-                  { className: "score-number" },
-                  "score ",
-                  this.state.featuredProduct.laplace_score + "%"
-                ),
-                React.createElement(
-                  "div",
-                  { className: "score-bar-container" },
-                  React.createElement("div", { className: "score-bar", style: { "width": this.state.featuredProduct.laplace_score + "%", "backgroundColor": productScoreColor } })
-                ),
-                React.createElement(
-                  "div",
-                  { className: "score-bar-date" },
-                  createdDate
-                )
-              )
-            ),
-            React.createElement(
-              "div",
-              { className: "info-description" },
-              description
-            )
-          ),
-          React.createElement(
-            "div",
-            { className: "spotlight-menu" },
-            React.createElement(
-              "a",
-              { onClick: () => this.onSpotlightMenuClick('random') },
-              "random"
-            ),
-            React.createElement(
-              "a",
-              { onClick: () => this.onSpotlightMenuClick('featured') },
-              "featured"
-            )
-          )
-        )
-      )
+    return(
+      <div id="spotlight-product">
+        <h2>In the Spotlight</h2>
+        <div className="container">
+          <div className="spotlight-image">
+            <img src={this.state.featuredProduct.image_small}/>
+          </div>
+          <div className="spotlight-info">
+            <div className="spotlight-info-wrapper">
+              {featuredLabelDisplay}
+              <div className="info-top">
+                <h2><a href={"/p/" + this.state.featuredProduct.project_id}>{this.state.featuredProduct.title}</a></h2>
+                <h3>{this.state.featuredProduct.category}</h3>
+                <div className="user-info">
+                  <img src={this.state.featuredProduct.profile_image_url}/>
+                  {this.state.featuredProduct.username}
+                </div>
+                <span>{this.state.featuredProduct.comment_count} comments</span>
+                <div className="score-info">
+                  <div className="score-number">
+                    score {this.state.featuredProduct.laplace_score + "%"}
+                  </div>
+                  <div className="score-bar-container">
+                    <div className={"score-bar"} style={{"width":this.state.featuredProduct.laplace_score + "%","backgroundColor":productScoreColor}}></div>
+                  </div>
+                  <div className="score-bar-date">
+                    {createdDate}
+                  </div>
+                </div>
+              </div>
+              <div className="info-description">
+                {description}
+              </div>
+            </div>
+            <div className="spotlight-menu">
+              <a onClick={() => this.onSpotlightMenuClick('random')}>random</a>
+              <a onClick={() => this.onSpotlightMenuClick('featured')}>featured</a>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 }
-
+*/
 class ProductCarousel extends React.Component {
   constructor(props) {
     super(props);

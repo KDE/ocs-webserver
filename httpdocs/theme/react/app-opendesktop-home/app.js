@@ -156,16 +156,43 @@ class App extends React.Component {
 
     return (
       <main id="opendesktop-homepage">
-        <SpotlightProduct
-          env={this.state.env}
-          featuredProduct={featuredProduct}
-        />
+        <SpotlightUser />
         {productCarouselsContainer}
       </main>
     )
   }
 }
 
+class SpotlightUser extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.getSpotlightUser = this.getSpotlightUser.bind(this);
+  }
+
+  componentDidMount() {
+    this.getSpotlightUser();
+  }
+
+  getSpotlightUser(){
+    $.ajax({url: "/showspotlightjson?page=1",cache: false}).done(function(response){
+      console.log(response);
+    });
+  }
+
+  render(){
+    return(
+      <div id="spotlight-user-container">
+        <h2>creator in the spotlight</h2>
+        <div id="spotlight-user">
+          <div className="spotlight-user-image"></div>
+          <div className="spotlight-user-plinged-products"></div>
+        </div>
+      </div>
+    );
+  }
+}
+/*
 class SpotlightProduct extends React.Component {
   constructor(props){
   	super(props);
@@ -252,7 +279,7 @@ class SpotlightProduct extends React.Component {
     );
   }
 }
-
+*/
 class ProductCarousel extends React.Component {
   constructor(props){
   	super(props);
