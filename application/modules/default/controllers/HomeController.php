@@ -96,6 +96,18 @@ class HomeController extends Local_Controller_Action_DomainSwitch
     }
 
 
+    public function getnewactiveplingedproductjsonAction()
+    {
+
+        $this->_helper->layout->disableLayout();
+        $modelInfo = new Default_Model_Info();
+        $offset = (int)$this->getParam('offset',0);
+        $limit = (int)$this->getParam('limit',5);        
+        $response = $modelInfo->getJsonNewActivePlingProduct($limit,$offset);        
+        $this->_helper->json(Zend_Json::decode($response));        
+    }
+
+
     public function showfeaturejsonAction()
     {
         
