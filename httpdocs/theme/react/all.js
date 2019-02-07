@@ -2417,7 +2417,7 @@ class ProductCarouselV2 extends React.Component {
       if (this.props.device === 'large') {
         itemsPerRow = 6;
       } else if (this.props.device === 'mid') {
-        itemsPerRow = 5;
+        itemsPerRow = 6;
       } else if (this.props.device === 'tablet') {
         itemsPerRow = 2;
       }
