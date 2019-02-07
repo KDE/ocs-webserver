@@ -2657,7 +2657,7 @@ class ProductCarouselV2 extends React.Component {
           null,
           React.createElement(
             "a",
-            { href: "/browse/cat/" + this.props.catIds + "/" },
+            { href: this.props.link },
             this.props.title,
             " ",
             React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
