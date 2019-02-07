@@ -6,7 +6,7 @@ class App extends React.Component {
   	super(props);
   	this.state = {
       loading:true,
-      version:1
+      version:window.hpVersion
     };
     this.updateDimensions = this.updateDimensions.bind(this);
   }
