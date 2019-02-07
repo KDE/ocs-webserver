@@ -2164,6 +2164,7 @@ class ProductCarouselV2 extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props);
     this.updateDimensions();
   }
 
