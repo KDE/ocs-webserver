@@ -6,7 +6,6 @@ class SpotlightUser extends React.Component {
       loading: true,
       version: 2
     };
-    this.initSpotLight = this.initSpotLight.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.getSpotlightUser = this.getSpotlightUser.bind(this);
     this.getNextSpotLightUser = this.getNextSpotLightUser.bind(this);
@@ -15,12 +14,11 @@ class SpotlightUser extends React.Component {
   componentDidMount() {
     window.addEventListener("resize", this.updateDimensions);
     window.addEventListener("orientationchange", this.updateDimensions);
-    this.initSpotLight();
-  }
-
-  initSpotLight() {
-    this.updateDimensions();
-    this.getSpotlightUser();
+    const containerWidth = $('.content').width();
+    const containerPaddingLeft = $('.sidebar-left').width();
+    this.setState({ containerWidth: containerWidth, containerPaddingLeft: containerPaddingLeft }, function () {
+      this.getSpotlightUser();
+    });
   }
 
   updateDimensions() {
