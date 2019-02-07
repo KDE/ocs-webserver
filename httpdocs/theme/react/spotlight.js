@@ -83,6 +83,8 @@ class SpotlightUser extends React.Component {
         }
       }
 
+      console.log(this.state);
+
       spotlightUserDisplay = React.createElement(
         "div",
         { id: "spotlight-user" },
@@ -127,16 +129,9 @@ class SpotlightUser extends React.Component {
       );
     }
 
-    let versionClassCss;
-    if (this.state.version === 2) {
-      versionClassCss = "version-two";
-    } else if (this.state.version === 3) {
-      versionClassCss = "version-three";
-    }
-
     return React.createElement(
       "div",
-      { id: "spotlight-user-container", className: versionClassCss },
+      { id: "spotlight-user-container" },
       React.createElement(
         "h2",
         null,

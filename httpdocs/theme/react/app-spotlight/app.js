@@ -73,6 +73,8 @@ class SpotlightUser extends React.Component {
         }
       }
 
+      console.log(this.state);
+
       spotlightUserDisplay = (
         <div id="spotlight-user">
           <div className="spotlight-user-image">
@@ -97,15 +99,8 @@ class SpotlightUser extends React.Component {
       );
     }
 
-    let versionClassCss;
-    if (this.state.version === 2){
-      versionClassCss = "version-two";
-    } else if (this.state.version === 3){
-      versionClassCss = "version-three";
-    }
-
     return(
-      <div id="spotlight-user-container" className={versionClassCss}>
+      <div id="spotlight-user-container">
         <h2>In the spotlight</h2>
         {spotlightUserDisplay}
       </div>
