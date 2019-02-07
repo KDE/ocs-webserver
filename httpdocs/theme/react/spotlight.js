@@ -1,62 +1,3 @@
-window.appHelpers = function () {
-
-  function getHostNameSuffix() {
-    let hostNameSuffix = "org";
-    if (location.hostname.endsWith('cc')) {
-      hostNameSuffix = "cc";
-    } else if (location.hostname.endsWith('localhost')) {
-      hostNameSuffix = "localhost";
-    }
-    return hostNameSuffix;
-  }
-
-  function generateTabsMenuArray() {
-    const baseUrl = "https://www.opendesktop." + this.getHostNameSuffix();
-    const tabsMenuArray = [{
-      title: "Supporters",
-      url: baseUrl + "/community/getjson?e=supporters"
-    }, {
-      title: "Most plinged Creators",
-      url: baseUrl + "/community/getjson?e=mostplingedcreators"
-    }, {
-      title: "Most plinged Products",
-      url: baseUrl + "/community/getjson?e=mostplingedproducts"
-    }, {
-      title: "Recently plinged Products",
-      url: baseUrl + "/community/getjson?e=plingedprojects"
-    }, {
-      title: "New Members",
-      url: baseUrl + "/community/getjson?e=newmembers"
-    }, {
-      title: "Top Members",
-      url: baseUrl + "/community/getjson?e=topmembers"
-    }, {
-      title: "Top List Members",
-      url: baseUrl + "/community/getjson?e=toplistmembers"
-    }];
-    return tabsMenuArray;
-  }
-
-  function formatDate(dateString) {
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-    const date = dateString.split(' ')[0];
-    const year = date.split('-')[0];
-    const month = date.split('-')[1];
-    const day = date.split('-')[2];
-    const monthNameIndex = parseInt(month) - 1;
-    const monthName = monthNames[monthNameIndex];
-
-    return monthName + ' ' + day + ' ' + year;
-  }
-
-  return {
-    getHostNameSuffix,
-    generateTabsMenuArray,
-    formatDate
-  };
-}();
-
 class SpotlightUser extends React.Component {
   constructor(props) {
     super(props);
@@ -65,12 +6,25 @@ class SpotlightUser extends React.Component {
       loading: true,
       version: 2
     };
+    this.initSpotLight = this.initSpotLight.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
     this.getSpotlightUser = this.getSpotlightUser.bind(this);
     this.getNextSpotLightUser = this.getNextSpotLightUser.bind(this);
   }
 
   componentDidMount() {
+    this.initSpotLight();
+  }
+
+  initSpotLight() {
+    window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener("orientationchange", this.updateDimensions);
     this.getSpotlightUser();
+  }
+
+  updateDimensions() {
+    console.log($('.content').width());
+    console.log($('.sidebar-left').width());
   }
 
   getSpotlightUser() {
