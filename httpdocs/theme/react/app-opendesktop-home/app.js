@@ -371,14 +371,8 @@ class ProductCarousel extends React.Component {
       }
     }
 
-    let products = this.state.products,
-        offset = this.state.offset;
-    /*if (!this.state.offset){
-      offset =
-    }*/
-
     const containerWidth = $('#main-content').width();
-    const containerNumber = Math.ceil(products.length / (itemsPerRow - 1));
+    const containerNumber = Math.ceil(this.state.products.length / (itemsPerRow - 1));
     const itemWidth = containerWidth / itemsPerRow;
     const sliderWidth = (containerWidth - itemWidth) * containerNumber;
     let sliderPosition = 0;
@@ -413,7 +407,7 @@ class ProductCarousel extends React.Component {
       if (Math.trunc(this.state.sliderPosition) < Math.trunc(endPoint)){
         newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
       } else {
-        animateCarousel = 0;
+        newSliderPosition = 0
         /*if (!animateCarousel){
         if (this.state.products.length >= 15 || this.state.finishedProducts){
             newSliderPosition = 0;
