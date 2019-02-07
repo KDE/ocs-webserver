@@ -4210,7 +4210,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-
+    console.log(this.state.version);
     // domain
     store.dispatch(setDomain(window.location.hostname));
 
