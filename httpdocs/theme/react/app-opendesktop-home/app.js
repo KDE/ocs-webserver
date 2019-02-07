@@ -139,7 +139,9 @@ class App extends React.Component {
 
     return (
       <main id="opendesktop-homepage">
-        <SpotlightProduct />
+        <SpotlightProduct
+          featuredProduct={featuredProduct}
+         />
         {productCarouselsContainer}
       </main>
     )

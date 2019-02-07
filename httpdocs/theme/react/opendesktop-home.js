@@ -366,7 +366,9 @@ class App extends React.Component {
     return React.createElement(
       "main",
       { id: "opendesktop-homepage" },
-      React.createElement(SpotlightProduct, null),
+      React.createElement(SpotlightProduct, {
+        featuredProduct: featuredProduct
+      }),
       productCarouselsContainer
     );
   }
