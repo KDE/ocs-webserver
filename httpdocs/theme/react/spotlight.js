@@ -86,9 +86,17 @@ class SpotlightUser extends React.Component {
         }
       }
 
+      let spotlightContainerStyle;
+      if (this.state.containerWidth) {
+        spotlightContainerStyle = {
+          "width": this.state.containerWidth,
+          "marginLeft": this.state.containerPaddingLeft
+        };
+      }
+
       spotlightUserDisplay = React.createElement(
         "div",
-        { id: "spotlight-user" },
+        { id: "spotlight-user", style: spotlightContainerStyle },
         React.createElement(
           "div",
           { className: "spotlight-user-image" },
@@ -135,14 +143,6 @@ class SpotlightUser extends React.Component {
       versionClassCss = "version-two";
     } else if (this.state.version === 3) {
       versionClassCss = "version-three";
-    }
-
-    let spotlightContainerStyle;
-    if (this.state.containerWidth) {
-      spotlightContainerStyle = {
-        "width": this.state.containerWidth,
-        "paddingLeft": this.state.containerPaddingLeft
-      };
     }
 
     return React.createElement(

@@ -76,8 +76,16 @@ class SpotlightUser extends React.Component {
         }
       }
 
+      let spotlightContainerStyle;
+      if (this.state.containerWidth){
+        spotlightContainerStyle = {
+          "width":this.state.containerWidth,
+          "marginLeft":this.state.containerPaddingLeft
+        }
+      }
+
       spotlightUserDisplay = (
-        <div id="spotlight-user">
+        <div id="spotlight-user" style={spotlightContainerStyle}>
           <div className="spotlight-user-image">
             <figure>
               <img src={this.state.user.profile_image_url}/>
@@ -105,15 +113,6 @@ class SpotlightUser extends React.Component {
       versionClassCss = "version-two";
     } else if (this.state.version === 3){
       versionClassCss = "version-three";
-    }
-
-
-    let spotlightContainerStyle;
-    if (this.state.containerWidth){
-      spotlightContainerStyle = {
-        "width":this.state.containerWidth,
-        "paddingLeft":this.state.containerPaddingLeft
-      }
     }
 
     return(
