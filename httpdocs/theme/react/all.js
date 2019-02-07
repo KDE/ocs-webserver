@@ -2023,16 +2023,58 @@ class HomePage extends React.Component {
 
   render() {
 
-    return React.createElement(
-      "div",
-      { id: "homepage" },
-      React.createElement(
+    let hpDisplayWrapper;
+    if (window.hpVersion === 1) {
+      hpDisplayWrapper = React.createElement(
         "div",
-        { className: "hp-wrapper" },
-        React.createElement(Introduction, {
-          device: this.state.device,
-          count: this.state.products.TotalProjects
-        }),
+        null,
+        React.createElement(
+          "div",
+          { className: "section" },
+          React.createElement(
+            "div",
+            { className: "container" },
+            React.createElement(ProductCarousel, {
+              products: this.state.products.LatestProducts,
+              device: this.state.device,
+              title: 'New',
+              link: '/browse/ord/latest/'
+            })
+          )
+        ),
+        React.createElement(
+          "div",
+          { className: "section" },
+          React.createElement(
+            "div",
+            { className: "container" },
+            React.createElement(ProductCarousel, {
+              products: this.state.products.TopApps,
+              device: this.state.device,
+              title: 'Top Apps',
+              link: '/browse/ord/top/'
+            })
+          )
+        ),
+        React.createElement(
+          "div",
+          { className: "section" },
+          React.createElement(
+            "div",
+            { className: "container" },
+            React.createElement(ProductCarousel, {
+              products: this.state.products.TopGames,
+              device: this.state.device,
+              title: 'Top Games',
+              link: '/browse/cat/6/ord/top/'
+            })
+          )
+        )
+      );
+    } else if (window.hpVersion === 2) {
+      hpDisplayWrapper = React.createElement(
+        "div",
+        null,
         React.createElement(
           "div",
           { className: "section" },
@@ -2075,6 +2117,20 @@ class HomePage extends React.Component {
             })
           )
         )
+      );
+    }
+
+    return React.createElement(
+      "div",
+      { id: "homepage" },
+      React.createElement(
+        "div",
+        { className: "hp-wrapper" },
+        React.createElement(Introduction, {
+          device: this.state.device,
+          count: this.state.products.TotalProjects
+        }),
+        hpDisplayWrapper
       )
     );
   }

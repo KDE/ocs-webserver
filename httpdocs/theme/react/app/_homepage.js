@@ -22,13 +22,45 @@ class HomePage extends React.Component {
 
   render(){
 
-    return (
-      <div id="homepage">
-        <div className="hp-wrapper">
-          <Introduction
-            device={this.state.device}
-            count={this.state.products.TotalProjects}
-          />
+    let hpDisplayWrapper;
+    if (window.hpVersion === 1){
+      hpDisplayWrapper = (
+        <div>
+          <div className="section">
+            <div className="container">
+              <ProductCarousel
+                products={this.state.products.LatestProducts}
+                device={this.state.device}
+                title={'New'}
+                link={'/browse/ord/latest/'}
+              />
+            </div>
+          </div>
+          <div className="section">
+            <div className="container">
+              <ProductCarousel
+                products={this.state.products.TopApps}
+                device={this.state.device}
+                title={'Top Apps'}
+                link={'/browse/ord/top/'}
+              />
+            </div>
+          </div>
+          <div className="section">
+            <div className="container">
+              <ProductCarousel
+                products={this.state.products.TopGames}
+                device={this.state.device}
+                title={'Top Games'}
+                link={'/browse/cat/6/ord/top/'}
+              />
+            </div>
+          </div>
+        </div>
+      )
+    } else if (window.hpVersion === 2) {
+      hpDisplayWrapper = (
+        <div>
           <div className="section">
             <div className="container">
               <ProductCarouselV2
@@ -59,6 +91,18 @@ class HomePage extends React.Component {
               />
             </div>
           </div>
+        </div>
+      )
+    }
+
+    return (
+      <div id="homepage">
+        <div className="hp-wrapper">
+          <Introduction
+            device={this.state.device}
+            count={this.state.products.TotalProjects}
+          />
+          {hpDisplayWrapper}
         </div>
       </div>
     )
