@@ -518,15 +518,17 @@ class SpotlightProduct extends React.Component {
   }
 
   onSpotlightMenuClick(val) {
-    let url = "/home/showfeaturejson/page/";
-    if (val === "random") {
-      url += "0";
-    } else {
-      url += "1";
-    }
-    const self = this;
-    $.ajax({ url: url, cache: false }).done(function (response) {
-      self.setState({ featuredProduct: response });
+    this.setState({ loading: true }, function () {
+      let url = "/home/showfeaturejson/page/";
+      if (val === "random") {
+        url += "0";
+      } else {
+        url += "1";
+      }
+      const self = this;
+      $.ajax({ url: url, cache: false }).done(function (response) {
+        self.setState({ featuredProduct: response, loading: false });
+      });
     });
   }
 
@@ -553,9 +555,12 @@ class SpotlightProduct extends React.Component {
       );
     }
 
-    const cDate = new Date(this.props.featuredProduct.changed_at);
-    const createdDate = jQuery.timeago(cDate);
-    const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.featuredProduct.laplace_score);
+    let createdDate, productScoreColor;
+    if (!this.state.loading) {
+      const cDate = new Date(this.props.featuredProduct.changed_at);
+      createdDate = jQuery.timeago(cDate);
+      productScoreColor = window.hpHelpers.calculateScoreColor(this.props.featuredProduct.laplace_score);
+    }
 
     return React.createElement(
       "div",
