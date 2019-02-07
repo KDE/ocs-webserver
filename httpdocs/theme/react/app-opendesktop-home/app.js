@@ -139,7 +139,7 @@ class App extends React.Component {
 
     return (
       <main id="opendesktop-homepage">
-        <SpotlightUser />
+        /* <SpotlightUser /> */
         {productCarouselsContainer}
       </main>
     )
