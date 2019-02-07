@@ -2738,31 +2738,21 @@ class ProductCarouselItemV2 extends React.Component {
       const createdDate = jQuery.timeago(cDate);
       const productScoreColor = window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
 
-      let scoreDisplay;
-      if (this.props.plingedProduct) {
-        scoreDisplay = React.createElement(
+      const scoreDisplay = React.createElement(
+        "div",
+        { className: "score-info" },
+        React.createElement(
           "div",
-          { className: "score-info plings" },
-          React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
-          this.props.product.sum_plings
-        );
-      } else {
-        scoreDisplay = React.createElement(
+          { className: "score-number" },
+          "score ",
+          this.props.product.laplace_score + "%"
+        ),
+        React.createElement(
           "div",
-          { className: "score-info" },
-          React.createElement(
-            "div",
-            { className: "score-number" },
-            "score ",
-            this.props.product.laplace_score + "%"
-          ),
-          React.createElement(
-            "div",
-            { className: "score-bar-container" },
-            React.createElement("div", { className: "score-bar", style: { "width": this.props.product.laplace_score + "%", "backgroundColor": productScoreColor } })
-          )
-        );
-      }
+          { className: "score-bar-container" },
+          React.createElement("div", { className: "score-bar", style: { "width": this.props.product.laplace_score + "%", "backgroundColor": productScoreColor } })
+        )
+      );
 
       productInfoDisplay = React.createElement(
         "div",

@@ -606,26 +606,17 @@ class ProductCarouselItemV2 extends React.Component {
       const createdDate = jQuery.timeago(cDate)
       const productScoreColor = window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
 
-      let scoreDisplay;
-      if (this.props.plingedProduct){
-        scoreDisplay = (
-          <div className="score-info plings">
-            <img src="/images/system/pling-btn-active.png" />
-            {this.props.product.sum_plings}
+
+      const scoreDisplay = (
+        <div className="score-info">
+          <div className="score-number">
+            score {this.props.product.laplace_score + "%"}
           </div>
-        );
-      } else {
-        scoreDisplay = (
-          <div className="score-info">
-            <div className="score-number">
-              score {this.props.product.laplace_score + "%"}
-            </div>
-            <div className="score-bar-container">
-              <div className={"score-bar"} style={{"width":this.props.product.laplace_score + "%","backgroundColor":productScoreColor}}></div>
-            </div>
+          <div className="score-bar-container">
+            <div className={"score-bar"} style={{"width":this.props.product.laplace_score + "%","backgroundColor":productScoreColor}}></div>
           </div>
-        );
-      }
+        </div>
+      );
 
       productInfoDisplay = (
         <div className="product-info">
