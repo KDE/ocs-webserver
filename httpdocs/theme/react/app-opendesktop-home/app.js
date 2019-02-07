@@ -288,11 +288,24 @@ class SpotlightProduct extends React.Component {
       featuredLabelDisplay = <span className="featured-label">featured</span>
     }
 
-    let createdDate, productScoreColor;
+    let scoreDisplay;
     if (!this.state.loading){
       const cDate = new Date(this.props.featuredProduct.changed_at);
-      createdDate = jQuery.timeago(cDate);
-      productScoreColor = window.hpHelpers.calculateScoreColor(this.props.featuredProduct.laplace_score);
+      const createdDate = jQuery.timeago(cDate);
+      const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.featuredProduct.laplace_score);
+      scoreDisplay = (
+        <div className="score-info">
+          <div className="score-number">
+            score {this.state.featuredProduct.laplace_score + "%"}
+          </div>
+          <div className="score-bar-container">
+            <div className={"score-bar"} style={{"width":this.state.featuredProduct.laplace_score + "%","backgroundColor":productScoreColor}}></div>
+          </div>
+          <div className="score-bar-date">
+            {createdDate}
+          </div>
+        </div>
+      );
     }
 
     return(
@@ -313,17 +326,7 @@ class SpotlightProduct extends React.Component {
                   {this.state.featuredProduct.username}
                 </div>
                 <span>{this.state.featuredProduct.comment_count} comments</span>
-                <div className="score-info">
-                  <div className="score-number">
-                    score {this.state.featuredProduct.laplace_score + "%"}
-                  </div>
-                  <div className="score-bar-container">
-                    <div className={"score-bar"} style={{"width":this.state.featuredProduct.laplace_score + "%","backgroundColor":productScoreColor}}></div>
-                  </div>
-                  <div className="score-bar-date">
-                    {createdDate}
-                  </div>
-                </div>
+                {scoreDisplay}
               </div>
               <div className="info-description">
                 {description}
