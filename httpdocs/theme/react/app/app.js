@@ -12,14 +12,12 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    console.log('componentWillMount');
     // device
     this.updateDimensions();
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
-    console.log(this.state.version);
+
     // domain
     store.dispatch(setDomain(window.location.hostname));
 
@@ -34,8 +32,7 @@ class App extends React.Component {
     if (window.view) store.dispatch(setView(view));
 
     // products
-    console.log('products');
-    console.log(window.products);
+
     if (window.products) {
       store.dispatch(setProducts(products));
     }
@@ -116,7 +113,7 @@ class App extends React.Component {
   }
 
   render(){
-    console.log(store.getState());
+
     let displayView;
     if (!this.state.loading){
        displayView = <HomePageWrapper/>;

@@ -2008,10 +2008,6 @@ class HomePage extends React.Component {
     };
   }
 
-  componentDidMount() {
-    console.log(window.hpVersion);
-  }
-
   componentWillReceiveProps(nextProps) {
     if (nextProps.device) {
       this.setState({ device: nextProps.device });
@@ -2463,7 +2459,6 @@ class ProductCarouselV2 extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
     this.updateDimensions();
   }
 
@@ -2495,6 +2490,7 @@ class ProductCarouselV2 extends React.Component {
       itemWidth: itemWidth,
       itemsPerRow: itemsPerRow - 1
     }, function () {
+      console.log(this.state);
       if (animateCarousel) {
         this.animateProductCarousel('right', animateCarousel);
       } else if (this.state.finishedProducts) {
@@ -2557,11 +2553,9 @@ class ProductCarouselV2 extends React.Component {
         url = "/home/showlastproductsjson/?page=1&limit=" + limit + "&offset=" + this.state.offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
       }
 
-      console.log(url);
-
       const self = this;
       $.ajax({ url: url, cache: false }).done(function (response) {
-        console.log(response);
+
         let products = self.state.products,
             finishedProducts = false,
             animateCarousel = true;
@@ -4864,14 +4858,12 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    console.log('componentWillMount');
     // device
     this.updateDimensions();
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
-    console.log(this.state.version);
+
     // domain
     store.dispatch(setDomain(window.location.hostname));
 
@@ -4886,8 +4878,7 @@ class App extends React.Component {
     if (window.view) store.dispatch(setView(view));
 
     // products
-    console.log('products');
-    console.log(window.products);
+
     if (window.products) {
       store.dispatch(setProducts(products));
     }
@@ -4968,7 +4959,7 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(store.getState());
+
     let displayView;
     if (!this.state.loading) {
       displayView = React.createElement(HomePageWrapper, null);
@@ -4979,8 +4970,8 @@ class App extends React.Component {
       }
     }
     return React.createElement(
-      'div',
-      { id: 'app-root' },
+      "div",
+      { id: "app-root" },
       displayView
     );
   }

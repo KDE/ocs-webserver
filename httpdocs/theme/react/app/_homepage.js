@@ -7,10 +7,6 @@ class HomePage extends React.Component {
     };
   }
 
-  componentDidMount() {
-    console.log(window.hpVersion);
-  }
-
   componentWillReceiveProps(nextProps) {
     if (nextProps.device){
       this.setState({device:nextProps.device});
@@ -357,7 +353,6 @@ class ProductCarouselV2 extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
     this.updateDimensions();
   }
 
@@ -389,6 +384,7 @@ class ProductCarouselV2 extends React.Component {
       itemWidth:itemWidth,
       itemsPerRow:itemsPerRow - 1
     },function(){
+      console.log(this.state);
       if (animateCarousel){
         this.animateProductCarousel('right',animateCarousel);
       } else if (this.state.finishedProducts){
@@ -452,11 +448,9 @@ class ProductCarouselV2 extends React.Component {
         url = "/home/showlastproductsjson/?page=1&limit="+limit+"&offset="+this.state.offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
       }
 
-      console.log(url);
-
       const self = this;
       $.ajax({url: url,cache: false}).done(function(response){
-          console.log(response);
+
           let products = self.state.products,
               finishedProducts = false,
               animateCarousel = true;
