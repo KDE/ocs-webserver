@@ -18,7 +18,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount');    
+    console.log('componentDidMount');
     console.log(this.state.version);
     // domain
     store.dispatch(setDomain(window.location.hostname));
@@ -117,9 +117,12 @@ class App extends React.Component {
 
   render(){
     console.log(store.getState());
-    let displayView = <HomePageWrapper/>;
-    if (store.getState().view === 'explore'){ displayView = <ExplorePageWrapper/>; }
-    else if (store.getState().view === 'product'){ displayView = <ProductViewWrapper/>}
+    let displayView;
+    if (!this.state.loading){
+       displayView = <HomePageWrapper/>;
+       if (store.getState().view === 'explore'){ displayView = <ExplorePageWrapper/>; }
+       else if (store.getState().view === 'product'){ displayView = <ProductViewWrapper/>}
+    }
     return (
       <div id="app-root">
         {displayView}

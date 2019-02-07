@@ -1780,11 +1780,16 @@ class HomePage extends React.Component {
 
   render() {
 
-    let hpCarouselWrapperDisplay;
-    if (this.state.products) {
-      hpWrapperDisplay = React.createElement(
+    return React.createElement(
+      "div",
+      { id: "homepage" },
+      React.createElement(
         "div",
-        null,
+        { className: "hp-wrapper" },
+        React.createElement(Introduction, {
+          device: this.state.device,
+          count: this.state.products.TotalProjects
+        }),
         React.createElement(
           "div",
           { className: "section" },
@@ -1827,20 +1832,6 @@ class HomePage extends React.Component {
             })
           )
         )
-      );
-    }
-
-    return React.createElement(
-      "div",
-      { id: "homepage" },
-      React.createElement(
-        "div",
-        { className: "hp-wrapper" },
-        React.createElement(Introduction, {
-          device: this.state.device,
-          count: this.state.products.TotalProjects
-        }),
-        hpCarouselWrapperDisplay
       )
     );
   }
@@ -4682,11 +4673,14 @@ class App extends React.Component {
 
   render() {
     console.log(store.getState());
-    let displayView = React.createElement(HomePageWrapper, null);
-    if (store.getState().view === 'explore') {
-      displayView = React.createElement(ExplorePageWrapper, null);
-    } else if (store.getState().view === 'product') {
-      displayView = React.createElement(ProductViewWrapper, null);
+    let displayView;
+    if (!this.state.loading) {
+      displayView = React.createElement(HomePageWrapper, null);
+      if (store.getState().view === 'explore') {
+        displayView = React.createElement(ExplorePageWrapper, null);
+      } else if (store.getState().view === 'product') {
+        displayView = React.createElement(ProductViewWrapper, null);
+      }
     }
     return React.createElement(
       'div',

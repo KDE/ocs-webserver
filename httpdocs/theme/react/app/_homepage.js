@@ -22,10 +22,13 @@ class HomePage extends React.Component {
 
   render(){
 
-    let hpCarouselWrapperDisplay;
-    if (this.state.products){
-      hpWrapperDisplay = (
-        <div>
+    return (
+      <div id="homepage">
+        <div className="hp-wrapper">
+          <Introduction
+            device={this.state.device}
+            count={this.state.products.TotalProjects}
+          />
           <div className="section">
             <div className="container">
               <ProductCarouselV2
@@ -56,18 +59,6 @@ class HomePage extends React.Component {
               />
             </div>
           </div>
-        </div>
-      );
-    }
-
-    return (
-      <div id="homepage">
-        <div className="hp-wrapper">
-          <Introduction
-            device={this.state.device}
-            count={this.state.products.TotalProjects}
-          />
-          {hpCarouselWrapperDisplay}
         </div>
       </div>
     )
