@@ -2730,6 +2730,13 @@ class ProductCarouselItemV2 extends React.Component {
       );
     }
 
+    let imageBaseUrl;
+    if (store.getState().env === 'live') {
+      imageBaseUrl = 'cn.opendesktop.org';
+    } else {
+      imageBaseUrl = 'cn.pling.it';
+    }
+
     return React.createElement(
       "div",
       { className: "product-carousel-item", style: { "width": this.props.itemWidth } },
@@ -2742,7 +2749,7 @@ class ProductCarouselItemV2 extends React.Component {
           React.createElement(
             "figure",
             { style: { "height": paddingTop } },
-            React.createElement("img", { className: "very-rounded-corners", src: this.props.product.image_small })
+            React.createElement("img", { className: "very-rounded-corners", src: 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small })
           ),
           productInfoDisplay
         )
