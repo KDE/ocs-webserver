@@ -251,7 +251,7 @@ class SpotlightUser extends React.Component {
     );
   }
 }
-/*
+
 class SpotlightProduct extends React.Component {
   constructor(props){
   	super(props);
@@ -338,7 +338,7 @@ class SpotlightProduct extends React.Component {
     );
   }
 }
-*/
+
 class ProductCarousel extends React.Component {
   constructor(props){
   	super(props);
