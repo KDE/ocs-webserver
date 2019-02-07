@@ -106,7 +106,6 @@ window.appHelpers = (function(){
     return "rgb("+red+","+green+","+blue+")";
   }
 
-
   return {
     getEnv,
     getDeviceWidth,
