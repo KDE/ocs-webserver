@@ -372,7 +372,8 @@ class ProductCarousel extends React.Component {
         itemsPerRow = 2;
       }
     }
-    const products = this.state.products.slice(0,(itemsPerRow - 1))
+    const products = this.state.products.slice(0,(itemsPerRow - 1));
+    const offset = itemsPerRow - 1;
     const containerWidth = $('#main-content').width();
     const containerNumber = Math.ceil(products.length / (itemsPerRow - 1));
     const itemWidth = containerWidth / itemsPerRow;
@@ -388,7 +389,8 @@ class ProductCarousel extends React.Component {
       sliderWidth:sliderWidth,
       itemWidth:itemWidth,
       itemsPerRow:itemsPerRow - 1,
-      products:products
+      products:products,
+      offset:offset
     },function(){
       if (animateCarousel){
         this.animateProductCarousel('right',animateCarousel);
