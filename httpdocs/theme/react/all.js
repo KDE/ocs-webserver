@@ -4568,11 +4568,13 @@ class App extends React.Component {
   }
 
   componentWillMount() {
+    console.log('componentWillMount');
     // device
     this.updateDimensions();
   }
 
   componentDidMount() {
+    console.log('componentDidMount');
     console.log(this.state.version);
     // domain
     store.dispatch(setDomain(window.location.hostname));
@@ -4678,8 +4680,8 @@ class App extends React.Component {
       displayView = React.createElement(ProductViewWrapper, null);
     }
     return React.createElement(
-      "div",
-      { id: "app-root" },
+      'div',
+      { id: 'app-root' },
       displayView
     );
   }
