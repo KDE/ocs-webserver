@@ -116,7 +116,7 @@ class SpotlightUser extends React.Component {
     }
 
     return(
-      <div id="spotlight-user-container" className={versionClassCss} style={spotlightContainerStyle}>
+      <div id="spotlight-user-container" className={versionClassCss}>
         <h2>In the spotlight</h2>
         {spotlightUserDisplay}
       </div>

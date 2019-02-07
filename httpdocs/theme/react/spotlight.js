@@ -147,7 +147,7 @@ class SpotlightUser extends React.Component {
 
     return React.createElement(
       "div",
-      { id: "spotlight-user-container", className: versionClassCss, style: spotlightContainerStyle },
+      { id: "spotlight-user-container", className: versionClassCss },
       React.createElement(
         "h2",
         null,
