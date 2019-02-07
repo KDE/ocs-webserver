@@ -290,12 +290,19 @@ class SpotlightProduct extends React.Component {
     const createdDate = jQuery.timeago(cDate);
     const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.featuredProduct.laplace_score);
 
+    let imageBaseUrl;
+    if (store.getState().env === 'live') {
+      imageBaseUrl = 'cn.opendesktop.org';
+    } else {
+      imageBaseUrl = 'cn.pling.it';
+    }
+
     return(
       <div id="spotlight-product">
         <h2>In the Spotlight</h2>
         <div className="container">
           <div className="spotlight-image">
-            <img src={this.state.featuredProduct.image_small}/>
+            <img src={"https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.state.featuredProduct.image_small}/>
           </div>
           <div className="spotlight-info">
             <div className="spotlight-info-wrapper">
