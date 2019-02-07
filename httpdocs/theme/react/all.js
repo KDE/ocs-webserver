@@ -2680,7 +2680,7 @@ class ProductCarouselItemV2 extends React.Component {
 
       const cDate = new Date(lastDate);
       const createdDate = jQuery.timeago(cDate);
-      const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
+      const productScoreColor = window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
 
       let scoreDisplay;
       if (this.props.plingedProduct) {
