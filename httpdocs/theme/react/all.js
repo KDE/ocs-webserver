@@ -86,6 +86,24 @@ window.appHelpers = function () {
     return hash;
   }
 
+  function calculateScoreColor(score) {
+    let blue,
+        red,
+        green,
+        defaultColor = 200;
+    if (score > 50) {
+      red = defaultColor - (score - 50) * 4;
+      green = defaultColor;
+      blue = defaultColor - (score - 50) * 4;
+    } else if (score < 51) {
+      red = defaultColor;
+      green = defaultColor - (score - 50) * 4;
+      blue = defaultColor - (score - 50) * 4;
+    }
+
+    return "rgb(" + red + "," + green + "," + blue + ")";
+  }
+
   return {
     getEnv,
     getDeviceWidth,
@@ -93,7 +111,8 @@ window.appHelpers = function () {
     getTimeAgo,
     getFileSize,
     generateFilterUrl,
-    generateFileDownloadHash
+    generateFileDownloadHash,
+    calculateScoreColor
   };
 }();
 window.categoryHelpers = function () {
