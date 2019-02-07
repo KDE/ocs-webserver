@@ -555,32 +555,9 @@ class SpotlightProduct extends React.Component {
       );
     }
 
-    let scoreDisplay;
-    if (!this.state.loading) {
-      const cDate = new Date(this.props.featuredProduct.changed_at);
-      const createdDate = jQuery.timeago(cDate);
-      const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.featuredProduct.laplace_score);
-      scoreDisplay = React.createElement(
-        "div",
-        { className: "score-info" },
-        React.createElement(
-          "div",
-          { className: "score-number" },
-          "score ",
-          this.state.featuredProduct.laplace_score + "%"
-        ),
-        React.createElement(
-          "div",
-          { className: "score-bar-container" },
-          React.createElement("div", { className: "score-bar", style: { "width": this.state.featuredProduct.laplace_score + "%", "backgroundColor": productScoreColor } })
-        ),
-        React.createElement(
-          "div",
-          { className: "score-bar-date" },
-          createdDate
-        )
-      );
-    }
+    const cDate = new Date(this.state.featuredProduct.changed_at);
+    const createdDate = jQuery.timeago(cDate);
+    const productScoreColor = window.hpHelpers.calculateScoreColor(this.state.featuredProduct.laplace_score);
 
     return React.createElement(
       "div",
@@ -634,7 +611,26 @@ class SpotlightProduct extends React.Component {
                 this.state.featuredProduct.comment_count,
                 " comments"
               ),
-              scoreDisplay
+              React.createElement(
+                "div",
+                { className: "score-info" },
+                React.createElement(
+                  "div",
+                  { className: "score-number" },
+                  "score ",
+                  this.state.featuredProduct.laplace_score + "%"
+                ),
+                React.createElement(
+                  "div",
+                  { className: "score-bar-container" },
+                  React.createElement("div", { className: "score-bar", style: { "width": this.state.featuredProduct.laplace_score + "%", "backgroundColor": productScoreColor } })
+                ),
+                React.createElement(
+                  "div",
+                  { className: "score-bar-date" },
+                  createdDate
+                )
+              )
             ),
             React.createElement(
               "div",
