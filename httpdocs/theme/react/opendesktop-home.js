@@ -666,13 +666,14 @@ class ProductCarousel extends React.Component {
       if (Math.trunc(this.state.sliderPosition) < Math.trunc(endPoint)) {
         newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
       } else {
-        if (!animateCarousel) {
-          if (this.state.products.length >= 15 || this.state.finishedProducts) {
+        animateCarousel = 0;
+        /*if (!animateCarousel){
+        if (this.state.products.length >= 15 || this.state.finishedProducts){
             newSliderPosition = 0;
           } else {
             this.getNextProductsBatch();
           }
-        }
+        }*/
       }
     }
 
@@ -693,13 +694,13 @@ class ProductCarousel extends React.Component {
   }
 
   getNextProductsBatch() {
-    console.log('gnpb');
+
     this.setState({ disableRightArrow: true }, function () {
       let limit = this.state.itemsPerRow * (this.state.containerNumber + 1) - this.state.products.length;
       if (limit <= 0) {
         limit = this.state.itemsPerRow;
       }
-      console.log(limit);
+
       let url;
       if (!this.props.catIds) {
         url = "/home/getnewactiveplingedproductjson/?limit=" + limit + "&offset=" + this.state.offset;
