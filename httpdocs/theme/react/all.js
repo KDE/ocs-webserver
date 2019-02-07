@@ -2023,7 +2023,7 @@ class HomePage extends React.Component {
     if (window.hpVersion === 1) {
       hpDisplayWrapper = React.createElement(
         "div",
-        null,
+        { className: "carousels-wrapper" },
         React.createElement(
           "div",
           { className: "section" },
@@ -2070,7 +2070,7 @@ class HomePage extends React.Component {
     } else if (window.hpVersion === 2) {
       hpDisplayWrapper = React.createElement(
         "div",
-        null,
+        { className: "carousels-wrapper" },
         React.createElement(
           "div",
           { className: "section" },
