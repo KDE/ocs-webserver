@@ -113,7 +113,7 @@ class SpotlightUser extends React.Component {
     if (this.state.containerWidth){
       spotlightContainerStyle = {
         "width":this.state.containerWidth,
-        "paddingLeft":this.state.containerPaddingLeft;
+        "paddingLeft":this.state.containerPaddingLeft 
       }
     }
 
