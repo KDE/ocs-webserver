@@ -51,7 +51,7 @@ $this->headMeta()->appendProperty('og:image',$og_image);
 $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
 $modelInfo = new Default_Model_Info();
 
-$this->countSupporters = $modelInfo->getCountActiveSupporters();
+$this->countSupporters = $modelInfo->getCountAllSupporters();
 $this->supporters = $modelInfo->getNewActiveSupporters(7);
 $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
 
