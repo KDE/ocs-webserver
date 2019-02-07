@@ -174,8 +174,13 @@
                 is_client: {
                     title: 'is client config',
                     list: false,
-                    type: 'checkbox',
-                    values: { '0': 'No', '1': 'Yes' },
+                    //type: 'checkbox',
+                    //values: { '0': 'No', '1': 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
                     defaultValue: '0',
                     inputTitle: 'is client <small style="font-weight:normal; font-size: 0.7em">(If \'yes\' then don\'t forget to set the <b>config id</b> to right store which config is used)</small>'
                 },
@@ -212,26 +217,41 @@
                 cross_domain_login: {
                     title: 'cross domain login',
                     list: true,
-                    type: 'checkbox',
-                    values: { '0': 'No', '1': 'Yes' },
+                    //type: 'checkbox',
+                    //values: { '0': 'No', '1': 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
                     defaultValue: '0'
                 },
                  is_show_title: {
                     title: 'Title shown',                   
-                    type: 'checkbox',
+                    //type: 'checkbox',
                     create: true,
                     edit: true,
                     list:true,
-                    values: { 0: 'No', 1: 'Yes' },
+                    //values: { 0: 'No', 1: 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
                     defaultValue: 1
                 },
                  is_show_git_projects: {
                     title: 'Show Git-Project-List',                   
-                    type: 'checkbox',
+                    //type: 'checkbox',
                     create: true,
                     edit: true,
                     list:false,
-                    values: { 0: 'No', 1: 'Yes' },
+                    //values: { 0: 'No', 1: 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
                     defaultValue: 1
                 },
 /*                initSearchIndex: {
