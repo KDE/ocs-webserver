@@ -301,6 +301,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'updatepploadfile',
             'deletepploadfile',
             'deletepploadfiles',
+            'updatefiletag'
 
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
 
