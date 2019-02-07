@@ -209,7 +209,7 @@ class SpotlightUser extends React.Component {
           productsContainerCssClass = "one-row";
         } else if (this.state.user.products.length === 1){
           productsContainerCssClass = "one-row single-product";
-        }        
+        }
       }
 
       spotlightUserDisplay = (
@@ -372,9 +372,9 @@ class ProductCarousel extends React.Component {
         itemsPerRow = 2;
       }
     }
-
+    const products = this.state.products.slice(0,(itemsPerRow - 1))
     const containerWidth = $('#main-content').width();
-    const containerNumber = Math.ceil(this.state.products.length / (itemsPerRow - 1));
+    const containerNumber = Math.ceil(products.length / (itemsPerRow - 1));
     const itemWidth = containerWidth / itemsPerRow;
     const sliderWidth = (containerWidth - itemWidth) * containerNumber;
     let sliderPosition = 0;
@@ -387,7 +387,8 @@ class ProductCarousel extends React.Component {
       containerNumber:containerNumber,
       sliderWidth:sliderWidth,
       itemWidth:itemWidth,
-      itemsPerRow:itemsPerRow - 1
+      itemsPerRow:itemsPerRow - 1,
+      products:products
     },function(){
       if (animateCarousel){
         this.animateProductCarousel('right',animateCarousel);
