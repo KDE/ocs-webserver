@@ -359,11 +359,11 @@ class ProductCarouselV2 extends React.Component {
   updateDimensions(animateCarousel){
     let itemsPerRow = 5;
     if (window.hpVersion === 2){
-      if (this.props.device === 'large'){
+      if (this.props.device === 'very huge' || this.props.device === 'huge' || this.props.device === 'full' || this.props.device === 'large'){
         itemsPerRow = 6;
       } else if (this.props.device === 'mid'){
         itemsPerRow = 6;
-      } else if (this.props.device === 'tablet'){
+      } else if (this.props.device === 'tablet' || this.props.device === 'phone'){
         itemsPerRow = 2;
       }
     }
