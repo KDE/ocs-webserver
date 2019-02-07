@@ -23,8 +23,9 @@ class SpotlightUser extends React.Component {
   }
 
   updateDimensions(){
-    console.log($('.content').width());
-    console.log($('.sidebar-left').width());
+    const containerWidth = $('.content').width();
+    const containerPaddingLeft = $('.sidebar-left').width();
+    this.setState({containerWidth:containerWidth,containerPaddingLeft:containerPaddingLeft})
   }
 
   getSpotlightUser(){
@@ -108,8 +109,16 @@ class SpotlightUser extends React.Component {
     }
 
 
+    let spotlightContainerStyle;
+    if (this.state.containerWidth){
+      spotlightContainerStyle = {
+        "width":this.state.containerWidth;
+        "paddingLeft":this.state.containerPaddingLeft;
+      }
+    }
+
     return(
-      <div id="spotlight-user-container" className={versionClassCss}>
+      <div id="spotlight-user-container" className={versionClassCss} style={spotlightContainerStyle}>
         <h2>In the spotlight</h2>
         {spotlightUserDisplay}
       </div>
