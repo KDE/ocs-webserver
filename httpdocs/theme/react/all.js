@@ -1780,16 +1780,11 @@ class HomePage extends React.Component {
 
   render() {
 
-    return React.createElement(
-      "div",
-      { id: "homepage" },
-      React.createElement(
+    let hpCarouselWrapperDisplay;
+    if (this.state.products) {
+      hpWrapperDisplay = React.createElement(
         "div",
-        { className: "hp-wrapper" },
-        React.createElement(Introduction, {
-          device: this.state.device,
-          count: this.state.products.TotalProjects
-        }),
+        null,
         React.createElement(
           "div",
           { className: "section" },
@@ -1832,6 +1827,20 @@ class HomePage extends React.Component {
             })
           )
         )
+      );
+    }
+
+    return React.createElement(
+      "div",
+      { id: "homepage" },
+      React.createElement(
+        "div",
+        { className: "hp-wrapper" },
+        React.createElement(Introduction, {
+          device: this.state.device,
+          count: this.state.products.TotalProjects
+        }),
+        hpCarouselWrapperDisplay
       )
     );
   }
