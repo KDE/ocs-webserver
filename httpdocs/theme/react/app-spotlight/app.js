@@ -14,11 +14,8 @@ class SpotlightUser extends React.Component {
   componentDidMount() {
     window.addEventListener("resize", this.updateDimensions);
     window.addEventListener("orientationchange",this.updateDimensions);
-    const containerWidth = $('.content').width();
-    const containerPaddingLeft = $('.sidebar-left').width();
-    this.setState({containerWidth:containerWidth,containerPaddingLeft:containerPaddingLeft},function(){
-      this.getSpotlightUser();
-    })
+    this.updateDimensions();
+    this.getSpotlightUser();
   }
 
   updateDimensions(){
