@@ -86,17 +86,9 @@ class SpotlightUser extends React.Component {
         }
       }
 
-      let spotlightContainerStyle;
-      if (this.state.containerWidth) {
-        spotlightContainerStyle = {
-          "width": this.state.containerWidth,
-          "marginLeft": this.state.containerPaddingLeft
-        };
-      }
-
       spotlightUserDisplay = React.createElement(
         "div",
-        { id: "spotlight-user", style: spotlightContainerStyle },
+        { id: "spotlight-user" },
         React.createElement(
           "div",
           { className: "spotlight-user-image" },
