@@ -374,7 +374,7 @@ class ProductCarousel extends React.Component {
 
     let products = this.state.products;
     if (!this.state.offset){
-      const products = this.state.products.slice(0,itemsPerRow - 1);
+       products = this.state.products.slice(0,itemsPerRow - 1);
     }
     console.log(products);
     const containerWidth = $('#main-content').width();
