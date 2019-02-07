@@ -714,6 +714,8 @@ class ProductCarousel extends React.Component {
         url = "/home/showlastproductsjson/?page=1&limit=" + limit + "&offset=" + this.state.offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
       }
 
+      console.log(url);
+
       const self = this;
       $.ajax({ url: url, cache: false }).done(function (response) {
         console.log(response);
