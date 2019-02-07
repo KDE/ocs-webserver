@@ -373,10 +373,9 @@ class ProductCarousel extends React.Component {
       }
     }
 
-
-    console.log(this.state.products.slice(0,itemsPerRow - 1))
+    const products = this.state.products.slice(0,itemsPerRow - 1);
     const containerWidth = $('#main-content').width();
-    const containerNumber = Math.ceil(this.state.products.length / (itemsPerRow - 1));
+    const containerNumber = Math.ceil(products.length / (itemsPerRow - 1));
     const itemWidth = containerWidth / itemsPerRow;
     const sliderWidth = (containerWidth - itemWidth) * containerNumber;
     let sliderPosition = 0;
@@ -389,7 +388,9 @@ class ProductCarousel extends React.Component {
       containerNumber:containerNumber,
       sliderWidth:sliderWidth,
       itemWidth:itemWidth,
-      itemsPerRow:itemsPerRow - 1
+      itemsPerRow:itemsPerRow - 1,
+      products:products,
+      offset:itemsPerRow - 1
     },function(){
       if (animateCarousel){
         this.animateProductCarousel('right',animateCarousel);
@@ -439,12 +440,13 @@ class ProductCarousel extends React.Component {
   }
 
   getNextProductsBatch(){
+    console.log('gnpb');
     this.setState({disableRightArrow:true},function(){
       let limit = (this.state.itemsPerRow * (this.state.containerNumber + 1)) - this.state.products.length;
       if (limit <= 0){
         limit = this.state.itemsPerRow;
       }
-
+      console.log(limit);
       let url;
       if (!this.props.catIds){
         url = "/home/getnewactiveplingedproductjson/?limit="+limit+"&offset="+this.state.offset;
@@ -454,7 +456,7 @@ class ProductCarousel extends React.Component {
 
       const self = this;
       $.ajax({url: url,cache: false}).done(function(response){
-
+          console.log(response);
           let products = self.state.products,
               finishedProducts = false,
               animateCarousel = true;
