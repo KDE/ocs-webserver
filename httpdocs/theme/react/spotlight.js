@@ -13,12 +13,13 @@ class SpotlightUser extends React.Component {
   }
 
   componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener("orientationchange", this.updateDimensions);
     this.initSpotLight();
   }
 
   initSpotLight() {
-    window.addEventListener("resize", this.updateDimensions);
-    window.addEventListener("orientationchange", this.updateDimensions);
+    this.updateDimensions();
     this.getSpotlightUser();
   }
 

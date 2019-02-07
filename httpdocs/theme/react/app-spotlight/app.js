@@ -13,12 +13,13 @@ class SpotlightUser extends React.Component {
   }
 
   componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener("orientationchange",this.updateDimensions);
     this.initSpotLight();
   }
 
   initSpotLight(){
-    window.addEventListener("resize", this.updateDimensions);
-    window.addEventListener("orientationchange",this.updateDimensions);
+    this.updateDimensions();
     this.getSpotlightUser();
   }
 
@@ -113,7 +114,7 @@ class SpotlightUser extends React.Component {
     if (this.state.containerWidth){
       spotlightContainerStyle = {
         "width":this.state.containerWidth,
-        "paddingLeft":this.state.containerPaddingLeft 
+        "paddingLeft":this.state.containerPaddingLeft
       }
     }
 
