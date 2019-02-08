@@ -556,9 +556,9 @@ class SpotlightProduct extends React.Component {
       );
     }
 
-    const cDate = new Date(this.state.featuredProduct.changed_at);
-    const longDate = cDate.toString();
-    const createdDate = longDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
+    let cDate = new Date(this.state.featuredProduct.changed_at);
+    cDate = cDate.toString();
+    const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
     // const createdDate = jQuery.timeago(cDate);
     const productScoreColor = window.hpHelpers.calculateScoreColor(this.state.featuredProduct.laplace_score);
 
@@ -945,9 +945,9 @@ class ProductCarouselItem extends React.Component {
         lastDate = this.props.product.created_at;
       }
 
-      const cDate = new Date(lastDate);
-      const longDate = cDate.toString();
-      const createdDate = longDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
+      let cDate = new Date(lastDate);
+      cDate = cDate.toString();
+      const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
       // const createdDate = jQuery.timeago(cDate)
       const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
 
@@ -994,6 +994,12 @@ class ProductCarouselItem extends React.Component {
           "span",
           { className: "product-info-date" },
           createdDate
+        ),
+        React.createElement(
+          "span",
+          { className: "product-info-comments" },
+          this.props.comment_count,
+          " comments"
         ),
         scoreDisplay
       );

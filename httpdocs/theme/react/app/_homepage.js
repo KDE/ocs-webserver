@@ -52,7 +52,7 @@ class HomePage extends React.Component {
               />
             </div>
           </div>
-        </div> 
+        </div>
       )
     } else if (window.hpVersion === 2 ) {
       hpDisplayWrapper = (
@@ -362,11 +362,11 @@ class ProductCarouselV2 extends React.Component {
       if (this.props.device === 'very huge' || this.props.device === 'huge' || this.props.device === 'full'){
         itemsPerRow = 6;
       } else if ( this.props.device === 'large' || this.props.device === 'mid'){
-        itemsPerRow = 5;
+        itemsPerRow = 6;
       } else if (this.props.device === 'tablet'){
-        itemsPerRow = 3;
+        itemsPerRow = 6;
       } else if (this.props.device === 'phone'){
-        itemsPerRow = 2;
+        itemsPerRow = 6;
       }
     }
 
@@ -386,7 +386,7 @@ class ProductCarouselV2 extends React.Component {
       itemWidth:itemWidth,
       itemsPerRow:itemsPerRow - 1
     },function(){
-      console.log(this.state);
+
       if (animateCarousel){
         this.animateProductCarousel('right',animateCarousel);
       } else if (this.state.finishedProducts){
@@ -531,11 +531,11 @@ class ProductCarouselV2 extends React.Component {
     if (window.hpVersion === 2 && this.state.itemWidth){
       hpVersionClass = "two";
       let itemHeightMultiplier;
-      if (this.state.itemWidth > 150){
+      //if (this.state.itemWidth > 150){
         itemHeightMultiplier = 1.35;
-      } else {
+      /*} else {
         itemHeightMultiplier = 1.85;
-      }
+      }*/
       carouselWrapperStyling = {
         "paddingLeft":this.state.itemWidth / 2,
         "paddingRight":this.state.itemWidth / 2,
@@ -593,8 +593,9 @@ class ProductCarouselItemV2 extends React.Component {
         lastDate = this.props.product.created_at;
       }
 
-      const cDate = new Date(lastDate);
-      const createdDate = jQuery.timeago(cDate)
+      let cDate = new Date(lastDate);
+      cDate = cDate.toString();
+      const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
       const productScoreColor = window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
 
 
@@ -614,6 +615,7 @@ class ProductCarouselItemV2 extends React.Component {
           <span className="product-info-title">{this.props.product.title}</span>
           <span className="product-info-category">{this.props.product.cat_title}</span>
           <span className="product-info-date">{createdDate}</span>
+          <span className="product-info-comments">{this.props.comment_count} comments</span>
           {scoreDisplay}
         </div>
       );

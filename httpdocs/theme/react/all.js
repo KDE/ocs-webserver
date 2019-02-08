@@ -2468,11 +2468,11 @@ class ProductCarouselV2 extends React.Component {
       if (this.props.device === 'very huge' || this.props.device === 'huge' || this.props.device === 'full') {
         itemsPerRow = 6;
       } else if (this.props.device === 'large' || this.props.device === 'mid') {
-        itemsPerRow = 5;
+        itemsPerRow = 6;
       } else if (this.props.device === 'tablet') {
-        itemsPerRow = 3;
+        itemsPerRow = 6;
       } else if (this.props.device === 'phone') {
-        itemsPerRow = 2;
+        itemsPerRow = 6;
       }
     }
 
@@ -2492,7 +2492,7 @@ class ProductCarouselV2 extends React.Component {
       itemWidth: itemWidth,
       itemsPerRow: itemsPerRow - 1
     }, function () {
-      console.log(this.state);
+
       if (animateCarousel) {
         this.animateProductCarousel('right', animateCarousel);
       } else if (this.state.finishedProducts) {
@@ -2633,11 +2633,11 @@ class ProductCarouselV2 extends React.Component {
     if (window.hpVersion === 2 && this.state.itemWidth) {
       hpVersionClass = "two";
       let itemHeightMultiplier;
-      if (this.state.itemWidth > 150) {
-        itemHeightMultiplier = 1.35;
-      } else {
+      //if (this.state.itemWidth > 150){
+      itemHeightMultiplier = 1.35;
+      /*} else {
         itemHeightMultiplier = 1.85;
-      }
+      }*/
       carouselWrapperStyling = {
         "paddingLeft": this.state.itemWidth / 2,
         "paddingRight": this.state.itemWidth / 2,
@@ -2725,8 +2725,9 @@ class ProductCarouselItemV2 extends React.Component {
         lastDate = this.props.product.created_at;
       }
 
-      const cDate = new Date(lastDate);
-      const createdDate = jQuery.timeago(cDate);
+      let cDate = new Date(lastDate);
+      cDate = cDate.toString();
+      const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
       const productScoreColor = window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
 
       const scoreDisplay = React.createElement(
@@ -2762,6 +2763,12 @@ class ProductCarouselItemV2 extends React.Component {
           "span",
           { className: "product-info-date" },
           createdDate
+        ),
+        React.createElement(
+          "span",
+          { className: "product-info-comments" },
+          this.props.comment_count,
+          " comments"
         ),
         scoreDisplay
       );
@@ -3047,7 +3054,6 @@ class ProductViewHeaderLikes extends React.Component {
       const url = "/p/" + this.props.product.project_id + "/followproject/";
       const self = this;
       $.ajax({ url: url, cache: false }).done(function (response) {
-        console.log(response);
         // error
         if (response.status === "error") {
           self.setState({ msg: response.msg });
@@ -4095,7 +4101,6 @@ class CommentItem extends React.Component {
   }
 
   onConfirmReportClick(commentId, productId) {
-    console.log(commentId, productId);
     jQuery.ajax({
       data: {
         i: commentId,
@@ -4131,7 +4136,6 @@ class CommentItem extends React.Component {
   }
 
   render() {
-    console.log(this.props.comment);
     let commentRepliesContainer;
     const filteredComments = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments).filter(this.filterByCommentLevel);
     if (filteredComments.length > 0) {
