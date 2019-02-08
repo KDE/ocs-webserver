@@ -30,7 +30,7 @@ $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images
 
 $modelInfo = new Default_Model_Info();
 
-$productsThemesGTK = $modelInfo->getJsonLastProductsForHostStores(5,"366,363,273,267,138,125,131,153,154,414,133");
+$productsThemesGTK = $modelInfo->getJsonLastProductsForHostStores(5,"104");
 $productsThemesPlasma = $modelInfo->getJsonLastProductsForHostStores(5,"365,119,123,266,114,118,349,417,101,100,111,422,423,446,417");
 $productsWindowmanager = $modelInfo->getJsonLastProductsForHostStores(5,"117,267,139,143,142,140,141,144");
 $productsIconsCursors= $modelInfo->getJsonLastProductsForHostStores(5,"386,107");
@@ -80,7 +80,7 @@ $feature = array(
 );
 
 $response = array(
-  'productsThemesGTK' => array('title' =>'GTK/Gnome','catIds' =>'366','products' => $productsThemesGTK),
+  'productsThemesGTK' => array('title' =>'GTK/Gnome','catIds' =>'104','products' => $productsThemesGTK),
   'productsThemesPlasma' => array('title' =>'KDE Plasma','catIds' =>'365','products' => $productsThemesPlasma),
 
   'productsWindowmanager' =>array('title' =>'Window Managers','catIds' =>'147','products' => $productsWindowmanager),
