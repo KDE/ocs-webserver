@@ -519,6 +519,23 @@ class Default_Model_Info
         $tag_isoriginal = null,
         $offset = 0
     ) {
+        
+        $store_id = null;
+        
+        if (empty($store_id)) {
+            $store_config = Zend_Registry::get('store_config');
+            $store_id = $store_config->store_id;
+            $store_tags = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : array();
+            
+            if(empty($tags)) {
+               $tags = $store_tags; 
+            } else {
+                $tags = array_merge($tags, $store_tags);
+            }
+        }
+        
+        
+        
         $cat_ids = "";
         if ($project_category_id) {
             $cat_ids = str_replace(',', '_', (string)$project_category_id);
@@ -621,7 +638,7 @@ class Default_Model_Info
         if (isset($offset)) {
             $sql .= ' offset ' . (int)$offset;
         }
-
+        
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
         $imagehelper = new Default_View_Helper_Image();
         foreach ($resultSet as &$value) {
