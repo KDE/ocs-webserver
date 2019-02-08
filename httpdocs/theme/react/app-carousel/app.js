@@ -44,7 +44,7 @@ class CarouselsModule extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
-    this.initCarouselModule = this.initHomePage.bind(this);
+    this.initCarouselModule = this.initCarouselModule.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.convertDataObject = this.convertDataObject.bind(this);
   }
