@@ -176,7 +176,14 @@ class Carousel extends React.Component {
       }
     }
 
-    const containerWidth = $('#main-content').width();
+    let containerWidth;
+    console.log(window.page);
+    if (window.page === "opendesktop"){
+      containerWidth = $('#main-content').width();
+    } else if (window.page === "appimages"){
+      containerWidth = $('#introduction').find('.container').width();
+    }
+
     const containerNumber = Math.ceil(this.state.products.length / (itemsPerRow - 1));
     const itemWidth = containerWidth / itemsPerRow;
     const sliderWidth = (containerWidth - itemWidth) * containerNumber;
@@ -201,14 +208,17 @@ class Carousel extends React.Component {
   }
 
   animateProductCarousel(dir,animateCarousel){
+    console.log(dir,animateCarousel);
+    console.log(this.state);
     let newSliderPosition = this.state.sliderPosition;
     const endPoint = this.state.sliderWidth - (this.state.containerWidth - this.state.itemWidth);
-
+    console.log(endPoint);
     if (dir === 'left'){
       if (this.state.sliderPosition > 0){
         newSliderPosition = this.state.sliderPosition - (this.state.containerWidth - this.state.itemWidth);
       }
     } else {
+      console.log('what');
       if (Math.trunc(this.state.sliderPosition) < Math.trunc(endPoint)){
         newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
       } else {
