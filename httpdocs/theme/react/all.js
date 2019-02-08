@@ -2020,7 +2020,7 @@ class HomePage extends React.Component {
   render() {
 
     let hpDisplayWrapper;
-    if (window.hpVersion === 1 || window.hpVersion === 2) {
+    if (window.hpVersion === 1) {
       hpDisplayWrapper = React.createElement(
         "div",
         { className: "carousels-wrapper" },
@@ -2067,7 +2067,7 @@ class HomePage extends React.Component {
           )
         )
       );
-    } else if (window.hpVersion === 3) {
+    } else if (window.hpVersion === 2) {
       hpDisplayWrapper = React.createElement(
         "div",
         { className: "carousels-wrapper" },
