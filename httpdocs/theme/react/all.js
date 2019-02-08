@@ -1808,7 +1808,7 @@ class HomePage extends React.Component {
    */
 
   render() {
-
+    console.log(window.totalProjects);
     return React.createElement(
       "div",
       { id: "homepage" },

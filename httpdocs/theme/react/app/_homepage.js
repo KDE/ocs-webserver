@@ -50,7 +50,7 @@ class HomePage extends React.Component {
  */
 
   render(){
-
+    console.log(window.totalProjects);
     return (
       <div id="homepage">
         <div className="hp-wrapper">
