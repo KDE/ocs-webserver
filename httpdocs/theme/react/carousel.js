@@ -114,10 +114,35 @@ class CarouselsModule extends React.Component {
   }
 
   render() {
+
+    let productCarouselsContainer;
+    if (this.state.loading === false) {
+      productCarouselsContainer = this.state.productGroupsArray.map((pgc, index) => {
+        if (pgc.catIds) {
+          return React.createElement(
+            "div",
+            { key: index, className: "section" },
+            React.createElement(
+              "div",
+              { className: "container" },
+              React.createElement(ProductCarousel, {
+                products: pgc.products,
+                device: this.state.device,
+                title: pgc.title,
+                catIds: pgc.catIds,
+                link: '/',
+                env: this.state.env
+              })
+            )
+          );
+        }
+      });
+    }
+
     return React.createElement(
       "div",
       { id: "carousels-module" },
-      "carousels"
+      productCarouselsContainer
     );
   }
 }
