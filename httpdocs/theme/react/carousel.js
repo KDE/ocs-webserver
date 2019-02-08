@@ -488,4 +488,4 @@ class ProductCarouselItem extends React.Component {
   }
 }
 
-ReactDOM.render(React.createElement(App, null), document.getElementById('main-content'));
+ReactDOM.render(React.createElement(CarouselsModule, null), document.getElementById('carousel-module-container'));
