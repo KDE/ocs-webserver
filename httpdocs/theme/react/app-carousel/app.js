@@ -121,7 +121,7 @@ class CarouselsModule extends React.Component {
           return (
             <div key={index} className="section">
               <div className="container">
-                <ProductCarousel
+                <Carousel
                   products={pgc.products}
                   device={this.state.device}
                   title={pgc.title}
@@ -144,7 +144,7 @@ class CarouselsModule extends React.Component {
   }
 }
 
-class ProductCarousel extends React.Component {
+class Carousel extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
@@ -288,7 +288,7 @@ class ProductCarousel extends React.Component {
       let plingedProduct = false;
       if (!this.props.catIds) plingedProduct = true;
       carouselItemsDisplay = this.state.products.map((product,index) => (
-        <ProductCarouselItem
+        <CarouselItem
           key={index}
           product={product}
           itemWidth={this.state.itemWidth}
@@ -376,7 +376,7 @@ class ProductCarousel extends React.Component {
   }
 }
 
-class ProductCarouselItem extends React.Component {
+class CarouselItem extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};

@@ -125,7 +125,7 @@ class CarouselsModule extends React.Component {
             React.createElement(
               "div",
               { className: "container" },
-              React.createElement(ProductCarousel, {
+              React.createElement(Carousel, {
                 products: pgc.products,
                 device: this.state.device,
                 title: pgc.title,
@@ -147,7 +147,7 @@ class CarouselsModule extends React.Component {
   }
 }
 
-class ProductCarousel extends React.Component {
+class Carousel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -289,7 +289,7 @@ class ProductCarousel extends React.Component {
     if (this.state.products && this.state.products.length > 0) {
       let plingedProduct = false;
       if (!this.props.catIds) plingedProduct = true;
-      carouselItemsDisplay = this.state.products.map((product, index) => React.createElement(ProductCarouselItem, {
+      carouselItemsDisplay = this.state.products.map((product, index) => React.createElement(CarouselItem, {
         key: index,
         product: product,
         itemWidth: this.state.itemWidth,
@@ -397,7 +397,7 @@ class ProductCarousel extends React.Component {
   }
 }
 
-class ProductCarouselItem extends React.Component {
+class CarouselItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
