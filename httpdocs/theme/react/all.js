@@ -1774,6 +1774,39 @@ class HomePage extends React.Component {
     }
   }
 
+  /*
+  <div className="section">
+    <div className="container">
+      <ProductCarousel
+        products={this.state.products.LatestProducts}
+        device={this.state.device}
+        title={'New'}
+        link={'/browse/ord/latest/'}
+      />
+    </div>
+  </div>
+  <div className="section">
+    <div className="container">
+      <ProductCarousel
+        products={this.state.products.TopApps}
+        device={this.state.device}
+        title={'Top Apps'}
+        link={'/browse/ord/top/'}
+      />
+    </div>
+  </div>
+  <div className="section">
+    <div className="container">
+      <ProductCarousel
+        products={this.state.products.TopGames}
+        device={this.state.device}
+        title={'Top Games'}
+        link={'/browse/cat/6/ord/top/'}
+      />
+    </div>
+  </div>
+   */
+
   render() {
 
     return React.createElement(
@@ -1785,49 +1818,7 @@ class HomePage extends React.Component {
         React.createElement(Introduction, {
           device: this.state.device,
           count: this.state.products.TotalProjects
-        }),
-        React.createElement(
-          "div",
-          { className: "section" },
-          React.createElement(
-            "div",
-            { className: "container" },
-            React.createElement(ProductCarousel, {
-              products: this.state.products.LatestProducts,
-              device: this.state.device,
-              title: 'New',
-              link: '/browse/ord/latest/'
-            })
-          )
-        ),
-        React.createElement(
-          "div",
-          { className: "section" },
-          React.createElement(
-            "div",
-            { className: "container" },
-            React.createElement(ProductCarousel, {
-              products: this.state.products.TopApps,
-              device: this.state.device,
-              title: 'Top Apps',
-              link: '/browse/ord/top/'
-            })
-          )
-        ),
-        React.createElement(
-          "div",
-          { className: "section" },
-          React.createElement(
-            "div",
-            { className: "container" },
-            React.createElement(ProductCarousel, {
-              products: this.state.products.TopGames,
-              device: this.state.device,
-              title: 'Top Games',
-              link: '/browse/cat/6/ord/top/'
-            })
-          )
-        )
+        })
       )
     );
   }

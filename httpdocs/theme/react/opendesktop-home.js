@@ -7,7 +7,6 @@ class App extends React.Component {
     };
     this.initHomePage = this.initHomePage.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
-    this.convertDataObject = this.convertDataObject.bind(this);
   }
 
   componentWillMount() {
@@ -35,9 +34,7 @@ class App extends React.Component {
       env = "test";
     }
 
-    this.setState({ env: env }, function () {
-      this.convertDataObject();
-    });
+    this.setState({ env: env });
   }
 
   updateDimensions() {
@@ -55,53 +52,15 @@ class App extends React.Component {
     this.setState({ device: device });
   }
 
-  convertDataObject() {
-    let productGroupsArray = [];
-    for (var i in window.data) {
-      if (i !== "comments" && i !== "featureProducts") {
-        const productGroup = {
-          title: window.data[i].title,
-          catIds: window.data[i].catIds,
-          products: JSON.parse(window.data[i].products)
-        };
-        productGroupsArray.push(productGroup);
-      }
-    }
-    this.setState({ productGroupsArray: productGroupsArray, loading: false });
-  }
-
   render() {
-    let productCarouselsContainer;
-    if (this.state.loading === false) {
-
-      productCarouselsContainer = this.state.productGroupsArray.map((pgc, index) => React.createElement(
-        "div",
-        { key: index, className: "section" },
-        React.createElement(
-          "div",
-          { className: "container" },
-          React.createElement(ProductCarousel, {
-            products: pgc.products,
-            device: this.state.device,
-            title: pgc.title,
-            catIds: pgc.catIds,
-            link: '/',
-            env: this.state.env
-          })
-        )
-      ));
-    }
-
     const featuredProduct = JSON.parse(window.data['featureProducts']);
-
     return React.createElement(
       "main",
       { id: "opendesktop-homepage" },
       React.createElement(SpotlightProduct, {
         env: this.state.env,
         featuredProduct: featuredProduct
-      }),
-      productCarouselsContainer
+      })
     );
   }
 }
