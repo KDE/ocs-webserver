@@ -594,7 +594,8 @@ class ProductCarouselItemV2 extends React.Component {
       }
 
       const cDate = new Date(lastDate);
-      const createdDate = jQuery.timeago(cDate)
+      cDate = cDate.toString();
+      const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
       const productScoreColor = window.appHelpers.calculateScoreColor(this.props.product.laplace_score);
 
 

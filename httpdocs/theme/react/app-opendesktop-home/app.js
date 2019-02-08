@@ -290,11 +290,8 @@ class SpotlightProduct extends React.Component {
     }
 
     let cDate = new Date(this.state.featuredProduct.changed_at);
-    console.log(cDate);
     cDate = cDate.toString();
-    console.log(cDate);
     const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
-    console.log(createdDate);
     // const createdDate = jQuery.timeago(cDate);
     const productScoreColor = window.hpHelpers.calculateScoreColor(this.state.featuredProduct.laplace_score);
 
