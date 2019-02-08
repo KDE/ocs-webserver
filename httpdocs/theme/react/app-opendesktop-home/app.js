@@ -289,7 +289,7 @@ class SpotlightProduct extends React.Component {
       featuredLabelDisplay = <span className="featured-label">featured</span>
     }
 
-    const cDate = new Date(this.state.featuredProduct.changed_at);
+    let cDate = new Date(this.state.featuredProduct.changed_at);
     cDate = cDate.toString();
     const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
     // const createdDate = jQuery.timeago(cDate);
@@ -598,7 +598,7 @@ class ProductCarouselItem extends React.Component {
         lastDate = this.props.product.created_at;
       }
 
-      const cDate = new Date(lastDate);
+      let cDate = new Date(lastDate);
       cDate = cDate.toString();
       const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
       // const createdDate = jQuery.timeago(cDate)
