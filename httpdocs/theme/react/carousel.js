@@ -446,9 +446,9 @@ class CarouselItem extends React.Component {
       }
 
       let cDate = new Date(lastDate);
-      cDate = cDate.toString();
-      const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
-      // const createdDate = jQuery.timeago(cDate)
+      // cDate = cDate.toString();
+      // const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
+      const createdDate = jQuery.timeago(cDate);
       // const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
 
       let scoreDisplay;
