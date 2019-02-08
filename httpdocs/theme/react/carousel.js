@@ -435,7 +435,7 @@ class CarouselItem extends React.Component {
       cDate = cDate.toString();
       const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
       // const createdDate = jQuery.timeago(cDate)
-      const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
+      // const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
 
       let scoreDisplay;
       if (this.props.plingedProduct) {
@@ -458,7 +458,7 @@ class CarouselItem extends React.Component {
           React.createElement(
             "div",
             { className: "score-bar-container" },
-            React.createElement("div", { className: "score-bar", style: { "width": this.props.product.laplace_score + "%", "backgroundColor": productScoreColor } })
+            React.createElement("div", { className: "score-bar", style: { "width": this.props.product.laplace_score + "%" } })
           )
         );
       }
