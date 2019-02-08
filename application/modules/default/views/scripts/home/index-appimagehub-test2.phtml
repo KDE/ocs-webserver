@@ -37,6 +37,9 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 
 $host = $_SERVER['SERVER_NAME'];
 
+$modelProject = new Default_Model_Project();
+$totalProjects = $modelProject->fetchTotalProjectsCount(true);
+
 if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
     $products1 = $modelInfo->getJsonLastProductsForHostStores(15,"104");
     $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"105");
@@ -97,6 +100,7 @@ if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
   var hpVersion = 2;
   var page = "appimages";
   var data = <?php echo Zend_Json::encode($response)?>;
+  var totalProjects = <?php echo $totalProjects ?>;
   console.log(data);
 </script>
 <link type="text/css" rel="stylesheet" href="/theme/react/assets/css/carousel.css"/>
