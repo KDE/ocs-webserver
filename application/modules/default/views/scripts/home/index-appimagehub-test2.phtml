@@ -35,7 +35,6 @@ $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 $helpPrintDate = new Default_View_Helper_PrintDate();
 
-$productsPlinged = $modelInfo->getJsonNewActivePlingProduct(15);
 $productsThemesGTK = $modelInfo->getJsonLastProductsForHostStores(15,"366,363,273,267,138,125,131,153,154,414,133");
 $productsThemesPlasma = $modelInfo->getJsonLastProductsForHostStores(15,"365,119,123,266,114,118,349,417,101,100,111,422,423,446,417");
 $productsWindowmanager = $modelInfo->getJsonLastProductsForHostStores(15,"117,267,139,143,142,140,141,144");
@@ -59,82 +58,27 @@ if ($featuredProducts->getTotalItemCount()) {
 
 
 
-$item;
-foreach ($this->featureProducts as $i) {
-   $item = $i;
-   break;
-}
-$helpCategories = new Default_View_Helper_FetchCategoriesForProductAsString();
-$imagehelper = new Default_View_Helper_Image();
-$feature = array(
-    'project_id' => $item['project_id'],
-    'member_id' =>  $item['member_id'],
-    'username' =>  $item['username'],
-    'profile_image_url' =>  $imagehelper->Image($item['profile_image_url'],array('width' => 300, 'height' => 230, 'crop' => 1)),
-    'featured' =>  $item['featured'],
-    'description' =>  $item['description'],
-    'title' =>  $item['title'],
-    'category' =>  $helpCategories->fetchCategoriesForProductAsString($item['project_id']),
-    'image_small' =>  $item['image_small'],
-    'laplace_score' =>  $item['laplace_score'],
-    'count_likes' =>  $item['count_likes'],
-    'count_dislikes' =>  $item['count_dislikes'],
-    'changed_at' =>  $item['changed_at'],
-    'created_at' =>  $item['created_at'],
-    'count_comments' =>  $item['count_comments']
-);
 
 $response = array(
-  'productsPlinged' => array('title' =>'Plinged','catIds' =>'','products' => $productsPlinged),
-
   'productsThemesGTK' => array('title' =>'GTK/Gnome','catIds' =>'366','products' => $productsThemesGTK),
   'productsThemesPlasma' => array('title' =>'KDE Plasma','catIds' =>'365','products' => $productsThemesPlasma),
 
   'productsWindowmanager' =>array('title' =>'Window Managers','catIds' =>'147','products' => $productsWindowmanager),
   'productsIconsCursors' =>array('title' =>'Icons, Cursors','catIds' =>'386,107','products' => $productsIconsCursors),
 
-
-  'productsApps' =>array('title' =>'Applications','catIds' =>'233','products' => $productsApps),
-  'productsAddons' =>array('title' =>'App Add-Ons','catIds' =>'152','products' => $productsAddons),
-  'productsWallpapersOriginal' =>array('title' =>'Artwork, Wallpapers (Original)','catIds' =>'158,295','products' => $productsWallpapersOriginal),
   'productsWallpapers' =>array('title' =>'Artwork, Wallpapers','catIds' =>'158,295','products' => $productsWallpapers),
+  'productsWallpapersOriginal' =>array('title' =>'Artwork, Wallpapers (Original)','catIds' =>'158,295','products' => $productsWallpapersOriginal),
 
-  'productsScreenshots' =>array('title' =>'Concepts, Screenshots','catIds' =>'445,225','products' => $productsScreenshots),
-  "featureProducts" => Zend_Json::encode($feature)
+  'productsAddons' =>array('title' =>'App Add-Ons','catIds' =>'152','products' => $productsAddons),
+  'productsApps' =>array('title' =>'Applications','catIds' =>'233','products' => $productsApps),
+
+  'productsScreenshots' =>array('title' =>'Concepts, Screenshots','catIds' =>'445,225','products' => $productsScreenshots)
 );
 
-  $modelInfo = new Default_Model_Info();
-  $host = $_SERVER['SERVER_NAME'];
-  $tags = $this->tag_filter;
-
-  if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
-    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(7,"33,112",$tags);
-    $this->topGames = $modelInfo->getTopProductsForHostStores(7,"112",$tags);
-    $this->topApps = $modelInfo->getTopProductsForHostStores(7,"33",$tags);
-  } else {
-    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(15,"6,234,239,243,244,245,388,391,392,450,481,492",$tags);
-    $this->topGames = $modelInfo->getTopProductsForHostStores(15,"6",$tags);
-    $this->topApps = $modelInfo->getTopProductsForHostStores(15,"234,239,243,244,245,388,391,392,450,481,492",$tags);
-  }
-  $modelProject = new Default_Model_Project();
-  $totalProjects = $modelProject->fetchTotalProjectsCount(true);
 ?>
 
 <main id="explore-content"></main>
 <script type="text/javascript">
-
-  <?php
-    $js_latestProducts = json_encode($this->LatestProducts);
-    $js_topGames = json_encode($this->topGames);
-    $js_topApps = json_encode($this->topApps);
-  ?>
-
-  var products = {
-    LatestProducts:<?php echo $js_latestProducts ?>,
-    TopGames:<?php echo $js_topGames ?>,
-    TopApps:<?php echo $js_topApps ?>,
-    TotalProjects:<?php echo $totalProjects ?>
-  };
   var filters = {};
   var view = "home";
   var hpVersion = 2;
