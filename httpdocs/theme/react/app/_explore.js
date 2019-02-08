@@ -260,13 +260,11 @@ class Pagination extends React.Component {
   }
 
   componentDidMount() {
-    console.log('paginstion - component did mount');
-    console.log(store.getState());
     const itemsPerPage = 50;
     const numPages = Math.ceil(this.props.pagination.totalcount / itemsPerPage);
     const pagination = productHelpers.generatePaginationObject(numPages,window.location.pathname,this.props.currentCategoy,this.props.filters.order, this.props.pagination.page);
     this.setState({pagination:pagination},function(){
-      console.log(pagination);
+
     });
   }
 

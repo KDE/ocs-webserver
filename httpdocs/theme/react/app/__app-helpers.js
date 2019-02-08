@@ -7,7 +7,6 @@ window.appHelpers = (function(){
     } else {
       env = 'test';
     }
-    console.log(env);
     return env;
   }
 

@@ -207,7 +207,6 @@ class ProductViewHeaderLikes extends React.Component {
       const url = "/p/"+this.props.product.project_id+"/followproject/";
       const self = this;
       $.ajax({url: url,cache: false}).done(function(response){
-        console.log(response);
         // error
         if (response.status === "error"){
           self.setState({msg:response.msg});
@@ -298,7 +297,7 @@ class ProductViewHeaderRatings extends React.Component {
           store.dispatch(setProductRatings(response));
           if (modalResponse.status !== "ok") self.setState({errorMsg:modalResponse.status + " - " + modalResponse.message});
           self.setState({laplace_score:modalResponse.laplace_score},function(){
-            console.log(this.state.laplace_score);
+
           });
           $('#ratings-form-modal').modal('hide');
         }
@@ -1046,7 +1045,6 @@ class CommentItem extends React.Component {
   }
 
   onConfirmReportClick(commentId,productId){
-    console.log(commentId,productId);
     jQuery.ajax({
         data: {
           i:commentId,
@@ -1082,7 +1080,6 @@ class CommentItem extends React.Component {
   }
 
   render(){
-    console.log(this.props.comment);
     let commentRepliesContainer;
     const filteredComments = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments).filter(this.filterByCommentLevel);
     if (filteredComments.length > 0){
@@ -1306,7 +1303,6 @@ class ProductViewFilesTabItem extends React.Component {
                        "%2Fu%2F"+this.props.product.member_id+
                        "%2F"+f.title;
 
-    console.log(fileDownloadHash);
     this.setState({downloadLink:downloadLink});
   }
 
