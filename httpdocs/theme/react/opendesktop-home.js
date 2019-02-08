@@ -559,7 +559,8 @@ class SpotlightProduct extends React.Component {
     }
 
     const cDate = new Date(this.state.featuredProduct.changed_at);
-    const createdDate = jQuery.timeago(cDate);
+    const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
+    // const createdDate = jQuery.timeago(cDate);
     const productScoreColor = window.hpHelpers.calculateScoreColor(this.state.featuredProduct.laplace_score);
 
     return React.createElement(
@@ -950,7 +951,8 @@ class ProductCarouselItem extends React.Component {
 
       const cDate = new Date(lastDate);
       console.log(cDate);
-      const createdDate = jQuery.timeago(cDate);
+      const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
+      // const createdDate = jQuery.timeago(cDate)
       const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
 
       let scoreDisplay;
