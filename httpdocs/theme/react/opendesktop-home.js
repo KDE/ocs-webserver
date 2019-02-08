@@ -452,8 +452,6 @@ class SpotlightUser extends React.Component {
         }
       }
 
-      console.log(this.state);
-
       spotlightUserDisplay = React.createElement(
         "div",
         { id: "spotlight-user" },
@@ -772,11 +770,8 @@ class ProductCarousel extends React.Component {
         url = "/home/showlastproductsjson/?page=1&limit=" + limit + "&offset=" + this.state.offset + "&catIDs=" + this.props.catIds + "&isoriginal=0";
       }
 
-      console.log(url);
-
       const self = this;
       $.ajax({ url: url, cache: false }).done(function (response) {
-        console.log(response);
         let products = self.state.products,
             finishedProducts = false,
             animateCarousel = true;
@@ -950,7 +945,6 @@ class ProductCarouselItem extends React.Component {
       }
 
       const cDate = new Date(lastDate);
-      console.log(cDate);
       const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
       // const createdDate = jQuery.timeago(cDate)
       const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
