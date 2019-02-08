@@ -185,7 +185,7 @@ class Carousel extends React.Component {
     } else if (window.page === "appimages") {
       containerWidth = $('#introduction').find('.container').width();
     }
-
+    console.log(containerWidth);
     const containerNumber = Math.ceil(this.state.products.length / (itemsPerRow - 1));
     const itemWidth = containerWidth / itemsPerRow;
     const sliderWidth = (containerWidth - itemWidth) * containerNumber;
