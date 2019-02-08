@@ -628,8 +628,6 @@ class ProductCarouselItem extends React.Component {
         );
       }
 
-      console.log(this.props.product);
-
       productInfoDisplay = (
         <div className="product-info">
           <span className="product-info-title">{this.props.product.title}</span>
