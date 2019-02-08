@@ -211,14 +211,16 @@ class Carousel extends React.Component {
   }
 
   animateProductCarousel(dir, animateCarousel) {
+    console.log(dir, animateCarousel);
     let newSliderPosition = this.state.sliderPosition;
     const endPoint = this.state.sliderWidth - (this.state.containerWidth - this.state.itemWidth);
-
+    console.log(endPoint);
     if (dir === 'left') {
       if (this.state.sliderPosition > 0) {
         newSliderPosition = this.state.sliderPosition - (this.state.containerWidth - this.state.itemWidth);
       }
     } else {
+      console.log('what');
       if (Math.trunc(this.state.sliderPosition) < Math.trunc(endPoint)) {
         newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
       } else {
