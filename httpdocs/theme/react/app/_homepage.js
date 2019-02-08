@@ -615,6 +615,7 @@ class ProductCarouselItemV2 extends React.Component {
           <span className="product-info-title">{this.props.product.title}</span>
           <span className="product-info-category">{this.props.product.cat_title}</span>
           <span className="product-info-date">{createdDate}</span>
+          <span className="product-info-comments">{this.props.comment_count} comments</span>
           {scoreDisplay}
         </div>
       );
