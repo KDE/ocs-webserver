@@ -1817,7 +1817,7 @@ class HomePage extends React.Component {
         { className: "hp-wrapper" },
         React.createElement(Introduction, {
           device: this.state.device,
-          count: this.state.products.TotalProjects
+          count: window.totalProjects
         })
       )
     );

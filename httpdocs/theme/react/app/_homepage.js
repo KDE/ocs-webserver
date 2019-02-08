@@ -56,7 +56,7 @@ class HomePage extends React.Component {
         <div className="hp-wrapper">
           <Introduction
             device={this.state.device}
-            count={this.state.products.TotalProjects}
+            count={window.totalProjects}
           />
         </div>
       </div>
