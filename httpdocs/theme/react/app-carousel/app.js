@@ -177,7 +177,6 @@ class Carousel extends React.Component {
     }
 
     let containerWidth;
-    console.log(window.store);
     console.log(window.page);
     if (window.page === "opendesktop"){
       containerWidth = $('#main-content').width();
@@ -210,6 +209,7 @@ class Carousel extends React.Component {
 
   animateProductCarousel(dir,animateCarousel){
     console.log(dir,animateCarousel);
+    console.log(this.state);
     let newSliderPosition = this.state.sliderPosition;
     const endPoint = this.state.sliderWidth - (this.state.containerWidth - this.state.itemWidth);
     console.log(endPoint);
