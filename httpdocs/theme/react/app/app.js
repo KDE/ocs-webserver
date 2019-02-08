@@ -6,7 +6,7 @@ class App extends React.Component {
   	super(props);
   	this.state = {
       loading:true,
-      version:window.hpVersion
+      version:1
     };
     this.updateDimensions = this.updateDimensions.bind(this);
   }
@@ -32,7 +32,8 @@ class App extends React.Component {
     if (window.view) store.dispatch(setView(view));
 
     // products
-
+    console.log('products');
+    console.log(window.products);
     if (window.products) {
       store.dispatch(setProducts(products));
     }
@@ -113,13 +114,10 @@ class App extends React.Component {
   }
 
   render(){
-
-    let displayView;
-    if (!this.state.loading){
-       displayView = <HomePageWrapper/>;
-       if (store.getState().view === 'explore'){ displayView = <ExplorePageWrapper/>; }
-       else if (store.getState().view === 'product'){ displayView = <ProductViewWrapper/>}
-    }
+    console.log(store.getState());
+    let displayView = <HomePageWrapper/>;
+    if (store.getState().view === 'explore'){ displayView = <ExplorePageWrapper/>; }
+    else if (store.getState().view === 'product'){ displayView = <ProductViewWrapper/>}
     return (
       <div id="app-root">
         {displayView}

@@ -207,6 +207,7 @@ class ProductViewHeaderLikes extends React.Component {
       const url = "/p/"+this.props.product.project_id+"/followproject/";
       const self = this;
       $.ajax({url: url,cache: false}).done(function(response){
+        console.log(response);
         // error
         if (response.status === "error"){
           self.setState({msg:response.msg});
@@ -1045,6 +1046,7 @@ class CommentItem extends React.Component {
   }
 
   onConfirmReportClick(commentId,productId){
+    console.log(commentId,productId);
     jQuery.ajax({
         data: {
           i:commentId,
@@ -1080,6 +1082,7 @@ class CommentItem extends React.Component {
   }
 
   render(){
+    console.log(this.props.comment);
     let commentRepliesContainer;
     const filteredComments = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments).filter(this.filterByCommentLevel);
     if (filteredComments.length > 0){
