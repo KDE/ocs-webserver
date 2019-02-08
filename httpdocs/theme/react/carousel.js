@@ -195,7 +195,7 @@ class Carousel extends React.Component {
     }
 
     if (window.page === "appimages") {
-      $('#carousel-module-container').width(containerWidth + 20);
+      $('#carousel-module-container').width(containerWidth);
     }
 
     this.setState({
