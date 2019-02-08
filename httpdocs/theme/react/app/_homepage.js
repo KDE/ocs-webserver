@@ -19,7 +19,7 @@ class HomePage extends React.Component {
   render(){
 
     let hpDisplayWrapper;
-    if (window.hpVersion === 1 || window.hpVersion === 2){
+    if (window.hpVersion === 1){
       hpDisplayWrapper = (
         <div className="carousels-wrapper">
           <div className="section">
@@ -52,9 +52,9 @@ class HomePage extends React.Component {
               />
             </div>
           </div>
-        </div>
+        </div> 
       )
-    } else if (window.hpVersion === 3 ) {
+    } else if (window.hpVersion === 2 ) {
       hpDisplayWrapper = (
         <div className="carousels-wrapper">
           <div className="section">

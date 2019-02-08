@@ -62,6 +62,7 @@ $this->headMeta()->appendProperty('og:image','https://www.appimagehub.com/images
     TopApps:<?php echo $js_topApps ?>,
     TotalProjects:<?php echo $totalProjects ?>
   };
+  var data = <?php echo Zend_Json::encode($response)?>;  
   var filters = {};
   var view = "home";
   var hpVersion = 2;
