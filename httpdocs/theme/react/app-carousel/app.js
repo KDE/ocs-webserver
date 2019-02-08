@@ -178,6 +178,7 @@ class Carousel extends React.Component {
 
     let containerWidth;
     console.log(window.store);
+    console.log(window.page);
     if (window.page === "opendesktop"){
       containerWidth = $('#main-content').width();
     } else if (window.page === "appimages"){
