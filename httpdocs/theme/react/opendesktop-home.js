@@ -980,6 +980,8 @@ class ProductCarouselItem extends React.Component {
         );
       }
 
+      console.log(this.props.product);
+
       productInfoDisplay = React.createElement(
         "div",
         { className: "product-info" },
