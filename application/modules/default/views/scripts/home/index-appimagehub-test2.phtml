@@ -35,16 +35,31 @@ $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 $helpPrintDate = new Default_View_Helper_PrintDate();
 
-$productsThemesGTK = $modelInfo->getJsonLastProductsForHostStores(15,"366,363,273,267,138,125,131,153,154,414,133");
-$productsThemesPlasma = $modelInfo->getJsonLastProductsForHostStores(15,"365,119,123,266,114,118,349,417,101,100,111,422,423,446,417");
-$productsWindowmanager = $modelInfo->getJsonLastProductsForHostStores(15,"117,267,139,143,142,140,141,144");
-$productsIconsCursors= $modelInfo->getJsonLastProductsForHostStores(15,"386,107");
-$productsScreenshots= $modelInfo->getJsonLastProductsForHostStores(15,"225,445");
-$productsApps = $modelInfo->getJsonLastProductsForHostStores(15,233);
-$productsAddons = $modelInfo->getJsonLastProductsForHostStores(15,"152");
-$productsWallpapersOriginal = $modelInfo->getJsonLastProductsForHostStores(15,"295,158",null,true);
-$productsWallpapers = $modelInfo->getJsonLastProductsForHostStores(15,"295,158",null,false);
-$this->countSupporters = $modelInfo->getCountAllSupporters();
+$host = $_SERVER['SERVER_NAME'];
+
+if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
+    $productsThemesGTK = $modelInfo->getJsonLastProductsForHostStores(15,"366,363,273,267,138,125,131,153,154,414,133");
+    $productsThemesPlasma = $modelInfo->getJsonLastProductsForHostStores(15,"365,119,123,266,114,118,349,417,101,100,111,422,423,446,417");
+    $productsWindowmanager = $modelInfo->getJsonLastProductsForHostStores(15,"117,267,139,143,142,140,141,144");
+    $productsIconsCursors= $modelInfo->getJsonLastProductsForHostStores(15,"386,107");
+    $productsScreenshots= $modelInfo->getJsonLastProductsForHostStores(15,"225,445");
+    $productsApps = $modelInfo->getJsonLastProductsForHostStores(15,233);
+    $productsAddons = $modelInfo->getJsonLastProductsForHostStores(15,"152");
+    $productsWallpapersOriginal = $modelInfo->getJsonLastProductsForHostStores(15,"295,158",null,true);
+    $productsWallpapers = $modelInfo->getJsonLastProductsForHostStores(15,"295,158",null,false);
+
+  } else {
+    $productsThemesGTK = $modelInfo->getJsonLastProductsForHostStores(15,"366,363,273,267,138,125,131,153,154,414,133");
+    $productsThemesPlasma = $modelInfo->getJsonLastProductsForHostStores(15,"365,119,123,266,114,118,349,417,101,100,111,422,423,446,417");
+    $productsWindowmanager = $modelInfo->getJsonLastProductsForHostStores(15,"117,267,139,143,142,140,141,144");
+    $productsIconsCursors= $modelInfo->getJsonLastProductsForHostStores(15,"386,107");
+    $productsScreenshots= $modelInfo->getJsonLastProductsForHostStores(15,"225,445");
+    $productsApps = $modelInfo->getJsonLastProductsForHostStores(15,233);
+    $productsAddons = $modelInfo->getJsonLastProductsForHostStores(15,"152");
+    $productsWallpapersOriginal = $modelInfo->getJsonLastProductsForHostStores(15,"295,158",null,true);
+    $productsWallpapers = $modelInfo->getJsonLastProductsForHostStores(15,"295,158",null,false);
+  }
+
 
 $featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
 if ($featuredProducts->getTotalItemCount()) {
