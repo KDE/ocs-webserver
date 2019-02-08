@@ -7,7 +7,6 @@ window.appHelpers = function () {
     } else {
       env = 'test';
     }
-    console.log(env);
     return env;
   }
 
@@ -268,9 +267,7 @@ window.productHelpers = function () {
     let upvotes = 0;
     let downvotes = 0;
     ratings.forEach(function (rating, index) {
-      console.log(rating.active);
       if (rating.rating_active === "1") {
-        console.log(rating.user_like);
         if (rating.user_like === "1") {
           upvotes += 1;
         } else if (rating.user_like === "0") {
@@ -279,7 +276,6 @@ window.productHelpers = function () {
       }
     });
     laplace_score = Math.round((upvotes + 6) / (upvotes + downvotes + 12), 2) * 100;
-    console.log(laplace_score);
     return laplace_score;
   }
 
@@ -1232,14 +1228,10 @@ class Pagination extends React.Component {
   }
 
   componentDidMount() {
-    console.log('paginstion - component did mount');
-    console.log(store.getState());
     const itemsPerPage = 50;
     const numPages = Math.ceil(this.props.pagination.totalcount / itemsPerPage);
     const pagination = productHelpers.generatePaginationObject(numPages, window.location.pathname, this.props.currentCategoy, this.props.filters.order, this.props.pagination.page);
-    this.setState({ pagination: pagination }, function () {
-      console.log(pagination);
-    });
+    this.setState({ pagination: pagination }, function () {});
   }
 
   render() {
@@ -2384,7 +2376,6 @@ class ProductViewHeaderLikes extends React.Component {
       const url = "/p/" + this.props.product.project_id + "/followproject/";
       const self = this;
       $.ajax({ url: url, cache: false }).done(function (response) {
-        console.log(response);
         // error
         if (response.status === "error") {
           self.setState({ msg: response.msg });
@@ -2484,9 +2475,7 @@ class ProductViewHeaderRatings extends React.Component {
           // const laplace_score = productHelpers.calculateProductLaplaceScore(response);
           store.dispatch(setProductRatings(response));
           if (modalResponse.status !== "ok") self.setState({ errorMsg: modalResponse.status + " - " + modalResponse.message });
-          self.setState({ laplace_score: modalResponse.laplace_score }, function () {
-            console.log(this.state.laplace_score);
-          });
+          self.setState({ laplace_score: modalResponse.laplace_score }, function () {});
           $('#ratings-form-modal').modal('hide');
         }
       });
@@ -3432,7 +3421,6 @@ class CommentItem extends React.Component {
   }
 
   onConfirmReportClick(commentId, productId) {
-    console.log(commentId, productId);
     jQuery.ajax({
       data: {
         i: commentId,
@@ -3468,7 +3456,6 @@ class CommentItem extends React.Component {
   }
 
   render() {
-    console.log(this.props.comment);
     let commentRepliesContainer;
     const filteredComments = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments).filter(this.filterByCommentLevel);
     if (filteredComments.length > 0) {
@@ -3817,7 +3804,6 @@ class ProductViewFilesTabItem extends React.Component {
     const fileDownloadHash = appHelpers.generateFileDownloadHash(f, store.getState().env);
     let downloadLink = "https://" + baseUrl + "/p/" + this.props.product.project_id + "/startdownload?file_id=" + f.id + "&file_name=" + f.title + "&file_type=" + f.type + "&file_size=" + f.size + "&url=" + downloadLinkUrlAttr + "files%2Fdownload%2Fid%2F" + f.id + "%2Fs%2F" + fileDownloadHash + "%2Ft%2F" + timestamp + "%2Fu%2F" + this.props.product.member_id + "%2F" + f.title;
 
-    console.log(fileDownloadHash);
     this.setState({ downloadLink: downloadLink });
   }
 
@@ -4212,8 +4198,6 @@ class App extends React.Component {
     if (window.view) store.dispatch(setView(view));
 
     // products
-    console.log('products');
-    console.log(window.products);
     if (window.products) {
       store.dispatch(setProducts(products));
     }
@@ -4294,7 +4278,6 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(store.getState());
     let displayView = React.createElement(HomePageWrapper, null);
     if (store.getState().view === 'explore') {
       displayView = React.createElement(ExplorePageWrapper, null);

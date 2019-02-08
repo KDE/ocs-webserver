@@ -32,8 +32,6 @@ class App extends React.Component {
     if (window.view) store.dispatch(setView(view));
 
     // products
-    console.log('products');
-    console.log(window.products);
     if (window.products) {
       store.dispatch(setProducts(products));
     }
@@ -114,7 +112,6 @@ class App extends React.Component {
   }
 
   render(){
-    console.log(store.getState());
     let displayView = <HomePageWrapper/>;
     if (store.getState().view === 'explore'){ displayView = <ExplorePageWrapper/>; }
     else if (store.getState().view === 'product'){ displayView = <ProductViewWrapper/>}
