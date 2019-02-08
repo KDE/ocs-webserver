@@ -519,6 +519,23 @@ class Default_Model_Info
         $tag_isoriginal = null,
         $offset = 0
     ) {
+        
+        $store_id = null;
+        
+        if (empty($store_id)) {
+            $store_config = Zend_Registry::get('store_config');
+            $store_id = $store_config->store_id;
+            $store_tags = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : array();
+            
+            if(empty($tags)) {
+               $tags = $store_tags; 
+            } else {
+                $tags = array_merge($tags, $store_tags);
+            }
+        }
+        
+        
+        
         $cat_ids = "";
         if ($project_category_id) {
             $cat_ids = str_replace(',', '_', (string)$project_category_id);
@@ -621,11 +638,11 @@ class Default_Model_Info
         if (isset($offset)) {
             $sql .= ' offset ' . (int)$offset;
         }
-
+        
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
         $imagehelper = new Default_View_Helper_Image();
         foreach ($resultSet as &$value) {
-            $value['project_image_small_uri'] = $imagehelper->Image($value['image_small'], array('width' => 80, 'height' => 80));
+            $value['image_small'] = $imagehelper->Image($value['image_small'], array('width' => 200, 'height' => 200));
         }
         if (count($resultSet) > 0) {
             $result = Zend_Json::encode($resultSet);
@@ -1146,11 +1163,11 @@ class Default_Model_Info
                         ,p.username
                         ,p.cat_title as catTitle
                         ,(
-                            select min(created_at) from project_plings pt where pt.member_id = pl.member_id and pt.project_id=pl.project_id
+                            select max(created_at) from project_plings pt where pt.member_id = pl.member_id and pt.project_id=pl.project_id
                         ) as created_at
                         ,(select count(1) from project_plings pl2 where pl2.project_id = p.project_id and pl2.is_active = 1 and pl2.is_deleted = 0  ) as sum_plings
                         from project_plings pl
-                        inner join stat_projects p on pl.project_id = p.project_id and p.status > 30                        
+                        inner join stat_projects p on pl.project_id = p.project_id and p.status=100                   
                         where pl.is_deleted = 0 and pl.is_active = 1 
                         order by created_at desc                                                  
         ';
@@ -1164,6 +1181,59 @@ class Default_Model_Info
         return $result;
     }
 
+
+    public function getJsonNewActivePlingProduct($limit = 20,$offset=null)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit).md5((int)$offset);;
+
+        if (false !== ($newSupporters = $cache->load($cacheName))) {
+            return $newSupporters;
+        }
+
+        $sql = '  
+                        select 
+                        pl.member_id as pling_member_id
+                        ,pl.project_id                        
+                        ,p.title
+                        ,p.image_small
+                        ,p.laplace_score
+                        ,p.count_likes
+                        ,p.count_dislikes   
+                        ,p.member_id 
+                        ,p.profile_image_url
+                        ,p.username
+                        ,p.cat_title 
+                        ,(
+                            select max(created_at) from project_plings pt where pt.member_id = pl.member_id and pt.project_id=pl.project_id
+                        ) as pling_created_at
+                        ,(select count(1) from project_plings pl2 where pl2.project_id = p.project_id and pl2.is_active = 1 and pl2.is_deleted = 0  ) as sum_plings
+                        ,p.project_changed_at as changed_at
+                        ,p.project_created_at as created_at
+                        from project_plings pl
+                        inner join stat_projects p on pl.project_id = p.project_id and p.status > 30                        
+                        where pl.is_deleted = 0 and pl.is_active = 1 
+                        order by pling_created_at desc                                                  
+        ';
+         if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+        if (isset($offset)) {
+            $sql .= ' offset ' . (int)$offset;
+        }
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+
+        $imagehelper = new Default_View_Helper_Image();
+        foreach ($resultSet as &$value) {
+            $value['image_small'] = $imagehelper->Image($value['image_small'], array('width' => 200, 'height' => 200));
+        }
+
+        $result = Zend_Json::encode($resultSet);
+        $cache->save($result, $cacheName, array(), 300);
+
+        return $result;
+    }
 
      /**
      * @param int $limit
@@ -1268,6 +1338,43 @@ class Default_Model_Info
         return $result;
     }
 
+    public function getMostPlingedProductsForUser($member_id, $limit = 20,$offset = null)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' .md5($member_id).md5((int)$limit).md5((int)$offset);
+
+        if (false !== ($newSupporters = $cache->load($cacheName))) {
+            return $newSupporters;
+        }
+
+        $sql = '  
+                        select pl.project_id
+                        ,count(1) as sum_plings 
+                        ,p.title
+                        ,p.image_small                        
+                        ,p.cat_title as catTitle
+                        ,p.project_changed_at                        
+                        from project_plings pl
+                        inner join stat_projects p on pl.project_id = p.project_id and p.status = 100
+                        where pl.is_deleted = 0 and pl.is_active = 1 and p.member_id = :member_id
+                        group by pl.project_id
+                        order by sum_plings desc 
+                                                              
+        ';
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+        if (isset($offset)) {
+            $sql .= ' offset ' . (int)$offset;
+        }
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id))->fetchAll();
+
+        $cache->save($result, $cacheName, array(), 300);
+
+        return $result;
+    }
+
 
     public function getMostPlingedCreatorsTotalCnt(){
         $sql = '
@@ -1277,7 +1384,7 @@ class Default_Model_Info
                 select distinct p.member_id
                 from stat_projects p
                 join project_plings pl on p.project_id = pl.project_id                       
-                where p.status = 100
+                where p.status = 100 and pl.is_deleted = 0 and pl.is_active = 1 
             ) t
         ';
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
@@ -1304,6 +1411,7 @@ class Default_Model_Info
                         join project_plings pl on p.project_id = pl.project_id
                         join member m on p.member_id = m.member_id
                         where p.status = 100
+                        and pl.is_deleted = 0 and pl.is_active = 1 
                         group by p.member_id
                         order by cnt desc                        
                                                               

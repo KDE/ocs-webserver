@@ -120,29 +120,29 @@
                     create: false,
                     edit: false,
                     list: true,
-                    title: 'id',
+                    title: 'Id',
                     width: '5%',
                 },
                 host: {
-                    title: 'hostname',
+                    title: 'Hostname',
                     width: '10%',
                     list: true,
                     create: true,
                     inputTitle: 'hostname <small style="font-weight:normal; font-size: 0.7em">(45 chars)</small>'
                 },
                 mapping_id_name: {
-                    title: 'mapping id',
+                    title: 'Mapping Id',
                     width: '10%',
                     list: true,
                     create: true,
                     inputTitle: 'mapping id <small style="font-weight:normal; font-size: 0.7em">(45 chars) when set, should be unique</small>'
                 },
                 name: {
-                    title: 'store displayname',
+                    title: 'Store Displayname',
                     width: '10%',
                     list: true,
                     create: true,
-                    inputTitle: 'store displayname <small style="font-weight:normal; font-size: 0.7em">(45 chars)</small>',
+                    inputTitle: 'Store Displayname <small style="font-weight:normal; font-size: 0.7em">(45 chars)</small>',
                     input: function (data) {
                         if (data.record) {
                             return '<input type="text" name="name" style="width:200px" value="' + data.record.name + '" pattern="[-a-zA-Z0-9_]+" /> <span class="small light">[-a-zA-Z0-9_]</span>';
@@ -152,7 +152,7 @@
                     }
                 },
                 config_id_name: {
-                    title: 'config id',
+                    title: 'Config Id',
                     width: '10%',
                     list: true,
                     create: true,
@@ -166,21 +166,41 @@
                     }
                 },
                 order: {
-                    title: 'display order',
+                    title: 'Display Order',
                     width: '10%',
                     list: true,
                     create: true
                 },
+                 is_show_home: {
+                    title: 'Show a Startpage',  
+                    inputTitle: 'Startpage or Explore as default <small style="font-weight:normal; font-size: 0.7em">(If \'yes\' the a Startpage will be shown instead of the Explore-List)</small>',
+                    //type: 'checkbox',
+                    create: true,
+                    edit: true,
+                    list:false,
+                    //values: { 0: 'No', 1: 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
+                    defaultValue: 0
+                },
                 is_client: {
-                    title: 'is client config',
+                    title: 'Is Client Config',
                     list: false,
-                    type: 'checkbox',
-                    values: { '0': 'No', '1': 'Yes' },
+                    //type: 'checkbox',
+                    //values: { '0': 'No', '1': 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
                     defaultValue: '0',
-                    inputTitle: 'is client <small style="font-weight:normal; font-size: 0.7em">(If \'yes\' then don\'t forget to set the <b>config id</b> to right store which config is used)</small>'
+                    inputTitle: 'Is client <small style="font-weight:normal; font-size: 0.7em">(If \'yes\' then don\'t forget to set the <b>config id</b> to right store which config is used)</small>'
                 },
                 google_id: {
-                    title: 'google id',
+                    title: 'Google Id',
                     width: '10%'
                 },
                 tags_name: {
@@ -210,28 +230,43 @@
                     }
                 },
                 cross_domain_login: {
-                    title: 'cross domain login',
+                    title: 'Cross Domain Login',
                     list: true,
-                    type: 'checkbox',
-                    values: { '0': 'No', '1': 'Yes' },
+                    //type: 'checkbox',
+                    //values: { '0': 'No', '1': 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
                     defaultValue: '0'
                 },
                  is_show_title: {
-                    title: 'Title shown',                   
-                    type: 'checkbox',
+                    title: 'Is Title Shown',                   
+                    //type: 'checkbox',
                     create: true,
                     edit: true,
                     list:true,
-                    values: { 0: 'No', 1: 'Yes' },
+                    //values: { 0: 'No', 1: 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
                     defaultValue: 1
                 },
                  is_show_git_projects: {
                     title: 'Show Git-Project-List',                   
-                    type: 'checkbox',
+                    //type: 'checkbox',
                     create: true,
                     edit: true,
                     list:false,
-                    values: { 0: 'No', 1: 'Yes' },
+                    //values: { 0: 'No', 1: 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
                     defaultValue: 1
                 },
 /*                initSearchIndex: {

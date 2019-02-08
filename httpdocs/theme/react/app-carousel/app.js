@@ -1,14 +1,53 @@
-class App extends React.Component {
-  constructor(props){
-  	super(props);
-  	this.state = {
-      loading:true,
-      hpVersion:window.hpVersion
-    };
-    this.initHomePage = this.initHomePage.bind(this);
-    this.updateDimensions = this.updateDimensions.bind(this);
+window.hpHelpers = (function(){
+
+  function dechex(number) {
+    //  discuss at: http://locutus.io/php/dechex/
+    // original by: Philippe Baumann
+    // bugfixed by: Onno Marsman (https://twitter.com/onnomarsman)
+    // improved by: http://stackoverflow.com/questions/57803/how-to-convert-decimal-to-hex-in-javascript
+    //    input by: pilus
+    //   example 1: dechex(10)
+    //   returns 1: 'a'
+    //   example 2: dechex(47)
+    //   returns 2: '2f'
+    //   example 3: dechex(-1415723993)
+    //   returns 3: 'ab9dc427'
+
+    if (number < 0) {
+      number = 0xFFFFFFFF + number + 1
+    }
+    return parseInt(number, 10).toString(16)
   }
 
+  function calculateScoreColor(score){
+    let blue, red, green, defaultColor = 200;
+    if (score > 50){
+      red = defaultColor - ((score-50)*4);
+      green = defaultColor;
+      blue = defaultColor - ((score-50)*4);
+    } else if (score < 51){
+      red = defaultColor;
+      green = defaultColor - ((score-50)*4);
+      blue = defaultColor - ((score-50)*4);
+    }
+
+    return "rgb("+red+","+green+","+blue+")";
+  }
+
+  return {
+    dechex,
+    calculateScoreColor
+  }
+}());
+
+class CarouselsModule extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.initCarouselModule = this.initCarouselModule.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
+    this.convertDataObject = this.convertDataObject.bind(this);
+  }
 
   componentWillMount() {
     this.updateDimensions();
@@ -20,10 +59,10 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.initHomePage();
+    this.initCarouselModule();
   }
 
-  initHomePage(){
+  initCarouselModule(){
 
     window.addEventListener("resize", this.updateDimensions);
     window.addEventListener("orientationchange",this.updateDimensions);
@@ -35,7 +74,10 @@ class App extends React.Component {
       env = "test";
     }
 
-    this.setState({env:env});
+    this.setState({env:env},function(){
+      this.convertDataObject();
+    });
+
   }
 
   updateDimensions(){
@@ -54,112 +96,58 @@ class App extends React.Component {
 
   }
 
+  convertDataObject() {
+    let productGroupsArray = [];
+    for (var i in window.data) {
+      if (i !== "comments" && i !== "featureProducts"){
+        const productGroup = {
+          title:window.data[i].title,
+          catIds:window.data[i].catIds,
+          products:JSON.parse(window.data[i].products)
+        }
+        productGroupsArray.push(productGroup);
+      }
+    }
+    this.setState({productGroupsArray:productGroupsArray,loading:false});
+  }
+
   render(){
-    const featuredProduct = JSON.parse(window.data['featureProducts']);
+
+    let productCarouselsContainer;
+    if (this.state.loading === false){
+      productCarouselsContainer = this.state.productGroupsArray.map((pgc,index) => {
+        if (pgc.catIds){
+          return (
+            <div key={index} className="section">
+              <div className="container">
+                <Carousel
+                  products={pgc.products}
+                  device={this.state.device}
+                  title={pgc.title}
+                  catIds={pgc.catIds}
+                  link={'/'}
+                  env={this.state.env}
+                />
+              </div>
+            </div>
+          );
+        }
+      });
+    }
+
     return (
-      <main id="opendesktop-homepage">
-        <SpotlightProduct
-          env={this.state.env}
-          featuredProduct={featuredProduct}
-        />
-      </main>
+      <div id="carousels-module">
+        {productCarouselsContainer}
+      </div>
     )
   }
 }
 
-class SpotlightProduct extends React.Component {
-  constructor(props){
-  	super(props);
-  	this.state = {
-      featuredProduct:this.props.featuredProduct
-    };
-    this.onSpotlightMenuClick = this.onSpotlightMenuClick.bind(this);
-  }
-
-  onSpotlightMenuClick(val){
-    let url = "/home/showfeaturejson/page/";
-    if (val === "random"){ url += "0"; }
-    else { url += "1"; }
-    const self = this;
-    $.ajax({url: url,cache: false}).done(function(response){
-        self.setState({featuredProduct:response});
-    });
-  }
-
-  render(){
-
-    let imageBaseUrl;
-    if (this.props.env === 'live') {
-      imageBaseUrl = 'cn.opendesktop.org';
-    } else {
-      imageBaseUrl = 'cn.opendesktop.cc';
-    }
-
-    let description = this.state.featuredProduct.description;
-    if (description && description.length > 295){
-      description = this.state.featuredProduct.description.substring(0,295) + "...";
-    }
-
-    let featuredLabelDisplay;
-    if (this.state.featuredProduct.featured === "1"){
-      featuredLabelDisplay = "featured"
-    }
-
-    let cDate = new Date(this.props.featuredProduct.created_at);
-    cDate = cDate.toString();
-    const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
-
-    return(
-      <div id="spotlight-product">
-        <h2>In the Spotlight</h2>
-        <div className="container">
-          <div className="spotlight-image">
-            <img src={"https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.state.featuredProduct.image_small}/>
-          </div>
-          <div className="spotlight-info">
-            <div className="spotlight-info-wrapper">
-              <span className="featured-label">{featuredLabelDisplay}</span>
-              <div className="info-top">
-                <h2><a href={"/p/" + this.state.featuredProduct.project_id}>{this.state.featuredProduct.title}</a></h2>
-                <h3>{this.state.featuredProduct.category}</h3>
-                <div className="user-info">
-                  <img src={this.state.featuredProduct.profile_image_url}/>
-                  {this.state.featuredProduct.username}
-                </div>
-                <span>{this.state.featuredProduct.comment_count} comments</span>
-                <div className="score-info">
-                  <div className="score-number">
-                    score {this.state.featuredProduct.laplace_score + "%"}
-                  </div>
-                  <div className="score-bar-container">
-                    <div className="score-bar" style={{"width":this.state.featuredProduct.laplace_score + "%"}}></div>
-                  </div>
-                  <div className="score-bar-date">
-                    {createdDate}
-                  </div>
-                </div>
-              </div>
-              <div className="info-description">
-                {description}
-              </div>
-            </div>
-            <div className="spotlight-menu">
-              <a onClick={() => this.onSpotlightMenuClick('random')}>random</a>
-              <a onClick={() => this.onSpotlightMenuClick('featured')}>featured</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
-
-class ProductCarousel extends React.Component {
+class Carousel extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
       products:this.props.products,
-      offset:5,
       disableleftArrow:true
     };
     this.updateDimensions = this.updateDimensions.bind(this);
@@ -181,13 +169,19 @@ class ProductCarousel extends React.Component {
       if (this.props.device === 'large'){
         itemsPerRow = 6;
       } else if (this.props.device === 'mid'){
-        itemsPerRow = 5;
+        itemsPerRow = 6;
       } else if (this.props.device === 'tablet'){
         itemsPerRow = 2;
       }
     }
 
-    const containerWidth = $('#main-content').width();
+    let containerWidth;
+    if (window.page === "opendesktop"){
+      containerWidth = $('#main-content').width();
+    } else if (window.page === "appimages"){
+      containerWidth = $('#introduction').find('.container').width();
+    }
+
     const containerNumber = Math.ceil(this.state.products.length / (itemsPerRow - 1));
     const itemWidth = containerWidth / itemsPerRow;
     const sliderWidth = (containerWidth - itemWidth) * containerNumber;
@@ -195,6 +189,11 @@ class ProductCarousel extends React.Component {
     if (this.state.sliderPosition){
       sliderPosition = this.state.sliderPosition;
     }
+
+    if (window.page === "appimages"){
+      $('#carousel-module-container').width(containerWidth);
+    }
+
     this.setState({
       sliderPosition:sliderPosition,
       containerWidth:containerWidth,
@@ -212,6 +211,7 @@ class ProductCarousel extends React.Component {
   }
 
   animateProductCarousel(dir,animateCarousel){
+
     let newSliderPosition = this.state.sliderPosition;
     const endPoint = this.state.sliderWidth - (this.state.containerWidth - this.state.itemWidth);
 
@@ -220,12 +220,18 @@ class ProductCarousel extends React.Component {
         newSliderPosition = this.state.sliderPosition - (this.state.containerWidth - this.state.itemWidth);
       }
     } else {
+
       if (Math.trunc(this.state.sliderPosition) < Math.trunc(endPoint)){
         newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
       } else {
-        if (!animateCarousel){
-          this.getNextProductsBatch();
-        }
+        newSliderPosition = 0
+        /*if (!animateCarousel){
+        if (this.state.products.length >= 15 || this.state.finishedProducts){
+            newSliderPosition = 0;
+          } else {
+            this.getNextProductsBatch();
+          }
+        }*/
       }
     }
 
@@ -237,9 +243,9 @@ class ProductCarousel extends React.Component {
       }
 
       let disableRightArrow = false;
-      if (this.state.sliderPosition >= endPoint && this.state.finishedProducts === true){
+      /*if (this.state.sliderPosition >= endPoint && this.state.finishedProducts === true){
         disableRightArrow = true;
-      }
+      }*/
 
       this.setState({disableRightArrow:disableRightArrow,disableleftArrow:disableleftArrow});
 
@@ -247,15 +253,22 @@ class ProductCarousel extends React.Component {
   }
 
   getNextProductsBatch(){
+
     this.setState({disableRightArrow:true},function(){
       let limit = (this.state.itemsPerRow * (this.state.containerNumber + 1)) - this.state.products.length;
       if (limit <= 0){
         limit = this.state.itemsPerRow;
       }
-      let url = "/home/showlastproductsjson/?page=1&limit="+limit+"&offset="+this.state.offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
+
+      let url;
+      if (!this.props.catIds){
+        url = "/home/getnewactiveplingedproductjson/?limit="+limit+"&offset="+this.state.offset;
+      } else {
+        url = "/home/showlastproductsjson/?page=1&limit="+limit+"&offset="+this.state.offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
+      }
+
       const self = this;
       $.ajax({url: url,cache: false}).done(function(response){
-
           let products = self.state.products,
               finishedProducts = false,
               animateCarousel = true;
@@ -267,11 +280,13 @@ class ProductCarousel extends React.Component {
             animateCarousel = false;
           }
 
-          const offset = self.state.offset + self.state.itemsPerRow;
+          if (response.length < limit){
+            finishedProducts = true;
+          }
 
           self.setState({
             products:products,
-            offset:offset + response.length,
+            offset:self.state.offset + response.length,
             finishedProducts:finishedProducts},function(){
               self.updateDimensions(animateCarousel);
           });
@@ -282,12 +297,15 @@ class ProductCarousel extends React.Component {
   render(){
     let carouselItemsDisplay;
     if (this.state.products && this.state.products.length > 0){
+      let plingedProduct = false;
+      if (!this.props.catIds) plingedProduct = true;
       carouselItemsDisplay = this.state.products.map((product,index) => (
-        <ProductCarouselItem
+        <CarouselItem
           key={index}
           product={product}
           itemWidth={this.state.itemWidth}
           env={this.props.env}
+          plingedProduct={plingedProduct}
         />
       ));
     }
@@ -328,18 +346,29 @@ class ProductCarousel extends React.Component {
     let carouselArrowsMargin;
     if (window.hpVersion === 2 && this.state.itemWidth){
       hpVersionClass = "two";
+      let itemHeightMultiplier;
+      // if (this.state.itemWidth > 150){
+        itemHeightMultiplier = 1.35;
+      /*} else {
+        itemHeightMultiplier = 1.85;
+      }*/
       carouselWrapperStyling = {
         "paddingLeft":this.state.itemWidth / 2,
         "paddingRight":this.state.itemWidth / 2,
-        "height":this.state.itemWidth * 1.35
+        "height":this.state.itemWidth * itemHeightMultiplier
       }
       carouselArrowsMargin = this.state.itemWidth / 4;
+    }
+
+    let titleLink = "/browse/cat/" + this.props.catIds + "/";
+    if (!this.props.catIds){
+      titleLink = "/community#plingedproductsPanel";
     }
 
     return (
       <div className={"product-carousel " + hpVersionClass}>
         <div className="product-carousel-header">
-          <h2><a href={"/browse/cat/" + this.props.catIds + "/"}>{this.props.title} <span className="glyphicon glyphicon-chevron-right"></span></a></h2>
+          <h2><a href={titleLink}>{this.props.title} <span className="glyphicon glyphicon-chevron-right"></span></a></h2>
         </div>
         <div className="product-carousel-wrapper" style={carouselWrapperStyling}>
           <div className="product-carousel-left" style={{"left":carouselArrowsMargin}}>
@@ -359,23 +388,13 @@ class ProductCarousel extends React.Component {
   }
 }
 
-class ProductCarouselItem extends React.Component {
+class CarouselItem extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
   }
 
   render(){
-    let imageUrl = this.props.product.image_small;
-    if (imageUrl && this.props.product.image_small.indexOf('https://') === -1 && this.props.product.image_small.indexOf('http://') === -1){
-      let imageBaseUrl;
-      if (this.props.env === 'live') {
-        imageBaseUrl = 'cn.opendesktop.org';
-      } else {
-        imageBaseUrl = 'cn.opendesktop.cc';
-      }
-      imageUrl = 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small;
-    }
 
     let paddingTop;
     let productInfoDisplay = (
@@ -386,24 +405,48 @@ class ProductCarouselItem extends React.Component {
     );
 
     if (window.hpVersion === 2){
+
       paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
-      let cDate = new Date(this.props.product.created_at);
-      cDate = cDate.toString();
-      const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
-      productInfoDisplay = (
-        <div className="product-info">
-          <span className="product-info-title">{this.props.product.title}</span>
-          <span className="product-info-category">{this.props.product.cat_title}</span>
-          <span className="product-info-date">{createdDate}</span>
-          <span className="product-info-commentcount">{this.props.product.count_comments} comments</span>
+      let lastDate;
+      if (this.props.product.changed_at){
+        lastDate = this.props.product.changed_at;
+      } else {
+        lastDate = this.props.product.created_at;
+      }
+
+      let cDate = new Date(lastDate);
+      // cDate = cDate.toString();
+      // const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
+      const createdDate = jQuery.timeago(cDate)
+      const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
+
+      let scoreDisplay;
+      if (this.props.plingedProduct){
+        scoreDisplay = (
+          <div className="score-info plings">
+            <img src="/images/system/pling-btn-active.png" />
+            {this.props.product.sum_plings}
+          </div>
+        );
+      } else {
+        scoreDisplay = (
           <div className="score-info">
             <div className="score-number">
               score {this.props.product.laplace_score + "%"}
             </div>
             <div className="score-bar-container">
-              <div className="score-bar" style={{"width":this.props.product.laplace_score + "%"}}></div>
+              <div className={"score-bar"} style={{"width":this.props.product.laplace_score + "%"}}></div>
             </div>
           </div>
+        );
+      }
+
+      productInfoDisplay = (
+        <div className="product-info">
+          <span className="product-info-title">{this.props.product.title}</span>
+          <span className="product-info-category">{this.props.product.cat_title}</span>
+          <span className="product-info-date">{createdDate}</span>
+          {scoreDisplay}
         </div>
       );
     }
@@ -413,7 +456,7 @@ class ProductCarouselItem extends React.Component {
         <div className="product-carousel-item-wrapper">
           <a href={"/p/"+this.props.product.project_id } style={{"paddingTop":paddingTop}}>
             <figure style={{"height":paddingTop}}>
-              <img className="very-rounded-corners" src={imageUrl} />
+              <img className="very-rounded-corners" src={this.props.product.image_small} />
             </figure>
             {productInfoDisplay}
           </a>
@@ -424,6 +467,6 @@ class ProductCarouselItem extends React.Component {
 }
 
 ReactDOM.render(
-    <App />,
-    document.getElementById('main-content')
+    <CarouselsModule />,
+    document.getElementById('carousel-module-container')
 );
