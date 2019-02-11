@@ -635,7 +635,7 @@ var Partials = (function () {
     }
 })();
 
-var OpendownloadfileWerbung= (function () {
+var Opendownloadfile= (function () {
     return {
         setup: function () {
             $('body').on('click', 'a.opendownloadfile', function (event) {
@@ -656,7 +656,7 @@ var OpendownloadfileWerbung= (function () {
                     'type': 'iframe',
                     'width':'300',
                     'height':'200',
-                    'iframe': {'scrolling': 'yes'},
+                    'iframe': {'scrolling': 'no'},
                     'autoSize':false,
                     'id': 'opendownloadfilepopup',
                     helpers: {
