@@ -316,21 +316,8 @@ class SpotlightUser extends React.Component {
     if (this.state.loading) {
       spotlightUserDisplay = React.createElement(
         "div",
-        { id: "spotlight-user", className: "loading" },
-        React.createElement(
-          "div",
-          { className: "user-container" },
-          React.createElement("figure", null),
-          React.createElement("h2", null)
-        ),
-        React.createElement(
-          "div",
-          { className: "products-container" },
-          React.createElement("div", { className: "spotlight-user-product" }),
-          React.createElement("div", { className: "spotlight-user-product" }),
-          React.createElement("div", { className: "spotlight-user-product" }),
-          React.createElement("div", { className: "spotlight-user-product" })
-        )
+        { className: "loading-container" },
+        React.createElement("div", { className: "ajax-loader" })
       );
     } else {
       let userProducts;

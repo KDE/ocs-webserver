@@ -253,18 +253,8 @@ class SpotlightUser extends React.Component {
     let spotlightUserDisplay;
     if (this.state.loading){
       spotlightUserDisplay = (
-        <div id="spotlight-user" className="loading">
-          <div className="user-container">
-            <figure>
-            </figure>
-            <h2></h2>
-          </div>
-          <div className="products-container">
-            <div className="spotlight-user-product"></div>
-            <div className="spotlight-user-product"></div>
-            <div className="spotlight-user-product"></div>
-            <div className="spotlight-user-product"></div>
-          </div>
+        <div className="loading-container">
+          <div className="ajax-loader"></div>
         </div>
       );
     } else {
