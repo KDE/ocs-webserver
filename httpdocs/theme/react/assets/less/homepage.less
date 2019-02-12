@@ -177,7 +177,6 @@ out: ../css/homepage.css, sourcemap: true, compress: true
 }
 
 #spotlight-user-container {
-  display: none;
 
   #spotlight-user {
 
@@ -249,7 +248,7 @@ out: ../css/homepage.css, sourcemap: true, compress: true
           .product-title {
             padding: 5px 10px;
             background-color: rgba(0,0,0,0.5);
-            color: white; 
+            color: white;
             min-height: 44px;
             font-size: 14px;
           }
@@ -270,10 +269,44 @@ out: ../css/homepage.css, sourcemap: true, compress: true
             width: 20px;
             height: 20px;
             margin-right: 5px;
+            float: left;
+          }
+
+          span {
+            display: block;
+            height: 100%;
+            float: left;
+            line-height: 20px;
           }
         }
       }
     }
+  }
+
+  .spotlight-user-next {
+    padding: 5px 10px;
+    background-color: #2673b0;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    display: table;
+    margin: 10px auto;
+  }
+}
+
+.content-version-two {
+  padding: 0 !important;
+
+  #main-content,
+  #carousel-module-container {
+    padding: 0 30px;
+    float: left;
+    width: 100%;
+  }
+
+  #main-content {
+    background-color: #f9f6f6;
+    border-bottom: 1px solid #eee;
   }
 }
 

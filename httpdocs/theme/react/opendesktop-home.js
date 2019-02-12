@@ -102,11 +102,6 @@ class App extends React.Component {
     return React.createElement(
       "main",
       { id: "opendesktop-homepage" },
-      React.createElement(SpotlightProduct, {
-        env: this.state.env,
-        device: this.state.device,
-        featuredProduct: featuredProduct
-      }),
       React.createElement(SpotlightUser, {
         env: this.state.env,
         device: this.state.device
@@ -280,7 +275,8 @@ class SpotlightUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true
+      loading: true,
+      page: 1
     };
     this.updateDimensions = this.updateDimensions.bind(this);
     this.getSpotlightUser = this.getSpotlightUser.bind(this);
@@ -303,12 +299,12 @@ class SpotlightUser extends React.Component {
   }
 
   getSpotlightUser() {
-    // https://www.opendesktop.cc/home/
-    let url = "/home/showspotlightjson?page=1";
-    const self = this;
-    $.ajax({ url: url, cache: false }).done(function (response) {
-      console.log(response);
-      self.setState({ user: response, loading: false });
+    this.setState({ loading: true, page: this.state.page + 1 }, function () {
+      let url = "/home/showspotlightjson?page=" + this.state.page;
+      const self = this;
+      $.ajax({ url: url, cache: false }).done(function (response) {
+        self.setState({ user: response, loading: false });
+      });
     });
   }
 
@@ -363,7 +359,12 @@ class SpotlightUser extends React.Component {
         null,
         "In the Spotlight"
       ),
-      spotlightUserDisplay
+      spotlightUserDisplay,
+      React.createElement(
+        "a",
+        { onClick: this.getSpotlightUser, className: "spotlight-user-next" },
+        "Next"
+      )
     );
   }
 }

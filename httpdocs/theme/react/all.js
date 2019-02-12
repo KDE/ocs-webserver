@@ -1838,15 +1838,15 @@ class Introduction extends React.Component {
       );
       buttonsContainer = React.createElement(
         "div",
-        { className: "actions" },
+        { className: "actions green" },
         React.createElement(
           "a",
-          { href: "/products/add", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+          { href: "/s/LibreOffice/products/add", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
           "Add Extension"
         ),
         React.createElement(
           "a",
-          { href: "/browse", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+          { href: "/s/LibreOffice/browse", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
           "Browse all Extensions"
         )
       );
