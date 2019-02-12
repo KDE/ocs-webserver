@@ -262,9 +262,9 @@ class SpotlightUser extends React.Component {
       if (this.state.itemWidth){
         userProducts = this.state.user.products.map((p,index) => (
           <SpotlightUserProduct
-            key={index}
-            height={this.state.itemHeight}
-            width={this.state.itemWidth}
+            key={index} 
+            itemHeight={this.state.itemHeight}
+            itemWidth={this.state.itemWidth}
             product={p}
           />
         ));
@@ -303,8 +303,15 @@ class SpotlightUserProduct extends React.Component {
   }
 
   render(){
+    let userProductStyle;
+    if (this.props.itemWidth){
+      userProductStyle = {
+        "height":this.props.itemHeight,
+        "width":this.props.itemWidth
+      }
+    }
     return (
-      <div style={{"height":this.props.itemHeight,"width":this.props.itemWidth}} className="spotlight-user-product">
+      <div style={userProductStyle} className="spotlight-user-product">
         <figure>
           <img src={this.props.product.image_small}/>
         </figure>

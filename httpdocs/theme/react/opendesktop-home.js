@@ -322,8 +322,8 @@ class SpotlightUser extends React.Component {
       if (this.state.itemWidth) {
         userProducts = this.state.user.products.map((p, index) => React.createElement(SpotlightUserProduct, {
           key: index,
-          height: this.state.itemHeight,
-          width: this.state.itemWidth,
+          itemHeight: this.state.itemHeight,
+          itemWidth: this.state.itemWidth,
           product: p
         }));
       }
@@ -379,9 +379,16 @@ class SpotlightUserProduct extends React.Component {
   }
 
   render() {
+    let userProductStyle;
+    if (this.props.itemWidth) {
+      userProductStyle = {
+        "height": this.props.itemHeight,
+        "width": this.props.itemWidth
+      };
+    }
     return React.createElement(
       "div",
-      { style: { "height": this.props.itemHeight, "width": this.props.itemWidth }, className: "spotlight-user-product" },
+      { style: userProductStyle, className: "spotlight-user-product" },
       React.createElement(
         "figure",
         null,
