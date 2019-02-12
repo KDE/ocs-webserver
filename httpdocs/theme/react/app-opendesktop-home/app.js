@@ -95,7 +95,12 @@ class App extends React.Component {
     this.setState({device:device});
 
   }
-
+/*
+<SpotlightUser
+  env={this.state.env}
+  device={this.state.device}
+/>
+*/
   render(){
     const featuredProduct = JSON.parse(window.data['featureProducts']);
     return (
@@ -104,10 +109,6 @@ class App extends React.Component {
           env={this.state.env}
           device={this.state.device}
           featuredProduct={featuredProduct}
-        />
-        <SpotlightUser
-          env={this.state.env}
-          device={this.state.device}
         />
       </main>
     )
@@ -262,7 +263,7 @@ class SpotlightUser extends React.Component {
       if (this.state.itemWidth){
         userProducts = this.state.user.products.map((p,index) => (
           <SpotlightUserProduct
-            key={index} 
+            key={index}
             itemHeight={this.state.itemHeight}
             itemWidth={this.state.itemWidth}
             product={p}
