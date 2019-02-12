@@ -305,7 +305,12 @@ class SpotlightUser extends React.Component {
       let url = "/home/showspotlightjson?page=" + this.state.page;
       const self = this;
       $.ajax({ url: url, cache: false }).done(function (response) {
-        self.setState({ user: response, loading: false });
+        self.setState({ user: response, loading: false }, function () {
+          const height = $('#user-container').height();
+          if (height > 0) {
+            this.setState({ containerHeight: height });
+          }
+        });
       });
     });
   }
@@ -314,9 +319,15 @@ class SpotlightUser extends React.Component {
 
     let spotlightUserDisplay;
     if (this.state.loading) {
+      let loadingStyle;
+      if (this.state.containerHeight) {
+        loadingStyle = {
+          "height": this.state.containerHeight
+        };
+      }
       spotlightUserDisplay = React.createElement(
         "div",
-        { className: "loading-container" },
+        { className: "loading-container", style: loadingStyle },
         React.createElement("div", { className: "ajax-loader" })
       );
     } else {

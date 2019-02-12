@@ -43,7 +43,9 @@ window.hpHelpers = (function(){
 class CarouselsModule extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+  
+    };
     this.initCarouselModule = this.initCarouselModule.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.convertDataObject = this.convertDataObject.bind(this);
@@ -193,6 +195,9 @@ class Carousel extends React.Component {
     if (window.page === "appimages" || window.page === "libreoffice"){
       $('#carousel-module-container').width(containerWidth);
     }
+
+    console.log(window.page);
+    console.log(containerWidth);
 
     this.setState({
       sliderPosition:sliderPosition,
