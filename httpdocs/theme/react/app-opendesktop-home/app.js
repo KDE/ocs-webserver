@@ -288,7 +288,7 @@ class SpotlightUser extends React.Component {
     if (this.state.page > 0){
       prevButtonDisplay = (
         <a onClick={() => this.getSpotlightUser(this.state.page - 1)} className="spotlight-user-next">
-          prev
+          < Prev
         </a>
       );
     }
@@ -297,7 +297,7 @@ class SpotlightUser extends React.Component {
     if (this.state.page < 10){
       nextButtonDisplay = (
         <a onClick={() => this.getSpotlightUser(this.state.page + 1)} className="spotlight-user-next">
-          Next
+          Next >
         </a>
       );
     }
