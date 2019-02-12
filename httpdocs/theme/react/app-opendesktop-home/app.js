@@ -215,8 +215,7 @@ class SpotlightUser extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      loading:true,
-      page:0
+      loading:true
     };
     this.updateDimensions = this.updateDimensions.bind(this);
     this.getSpotlightUser = this.getSpotlightUser.bind(this);
@@ -238,8 +237,9 @@ class SpotlightUser extends React.Component {
     this.setState({itemWidth:userProductsDimensions,itemHeight:userProductsDimensions});
   }
 
-  getSpotlightUser(){
-    this.setState({loading:true,page: this.state.page + 1},function(){
+  getSpotlightUser(page){
+    if (!page) { page = 0 }
+    this.setState({loading:true,page: page},function(){
       let url = "/home/showspotlightjson?page=" + this.state.page;
       const self = this;
       $.ajax({url: url,cache: false}).done(function(response){
@@ -253,8 +253,18 @@ class SpotlightUser extends React.Component {
     let spotlightUserDisplay;
     if (this.state.loading){
       spotlightUserDisplay = (
-        <div id="loading-container">
-          <div className="ajax-loader"></div>
+        <div id="spotlight-user" className="loading">
+          <div className="user-container">
+            <figure>
+            </figure>
+            <h2></h2>
+          </div>
+          <div className="products-container">
+            <div className="spotlight-user-product"></div>
+            <div className="spotlight-user-product"></div>
+            <div className="spotlight-user-product"></div>
+            <div className="spotlight-user-product"></div>
+          </div>
         </div>
       );
     } else {
@@ -283,13 +293,33 @@ class SpotlightUser extends React.Component {
         </div>
       );
     }
+
+    let prevButtonDisplay;
+    if (this.state.page > 0){
+      prevButtonDisplay = (
+        <a onClick={() => this.getSpotlightUser(this.state.page - 1)} className="spotlight-user-next">
+          prev
+        </a>
+      );
+    }
+
+    let nextButtonDisplay;
+    if (this.state.page < 10){
+      nextButtonDisplay = (
+        <a onClick={() => this.getSpotlightUser(this.state.page + 1)} className="spotlight-user-next">
+          Next
+        </a>
+      );
+    }
+
     return(
       <div id="spotlight-user-container">
         <h2>In the Spotlight</h2>
         {spotlightUserDisplay}
-        <a onClick={this.getSpotlightUser} className="spotlight-user-next">
-          Next
-        </a>
+        <div className="spotlight-user-buttons">
+          {prevButtonDisplay}
+          {nextButtonDisplay}
+        </div>
       </div>
     )
   }

@@ -275,8 +275,7 @@ class SpotlightUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
-      page: 0
+      loading: true
     };
     this.updateDimensions = this.updateDimensions.bind(this);
     this.getSpotlightUser = this.getSpotlightUser.bind(this);
@@ -298,8 +297,11 @@ class SpotlightUser extends React.Component {
     this.setState({ itemWidth: userProductsDimensions, itemHeight: userProductsDimensions });
   }
 
-  getSpotlightUser() {
-    this.setState({ loading: true, page: this.state.page + 1 }, function () {
+  getSpotlightUser(page) {
+    if (!page) {
+      page = 0;
+    }
+    this.setState({ loading: true, page: page }, function () {
       let url = "/home/showspotlightjson?page=" + this.state.page;
       const self = this;
       $.ajax({ url: url, cache: false }).done(function (response) {
@@ -314,8 +316,21 @@ class SpotlightUser extends React.Component {
     if (this.state.loading) {
       spotlightUserDisplay = React.createElement(
         "div",
-        { id: "loading-container" },
-        React.createElement("div", { className: "ajax-loader" })
+        { id: "spotlight-user", className: "loading" },
+        React.createElement(
+          "div",
+          { className: "user-container" },
+          React.createElement("figure", null),
+          React.createElement("h2", null)
+        ),
+        React.createElement(
+          "div",
+          { className: "products-container" },
+          React.createElement("div", { className: "spotlight-user-product" }),
+          React.createElement("div", { className: "spotlight-user-product" }),
+          React.createElement("div", { className: "spotlight-user-product" }),
+          React.createElement("div", { className: "spotlight-user-product" })
+        )
       );
     } else {
       let userProducts;
@@ -355,6 +370,25 @@ class SpotlightUser extends React.Component {
         )
       );
     }
+
+    let prevButtonDisplay;
+    if (this.state.page > 0) {
+      prevButtonDisplay = React.createElement(
+        "a",
+        { onClick: () => this.getSpotlightUser(this.state.page - 1), className: "spotlight-user-next" },
+        "prev"
+      );
+    }
+
+    let nextButtonDisplay;
+    if (this.state.page < 10) {
+      nextButtonDisplay = React.createElement(
+        "a",
+        { onClick: () => this.getSpotlightUser(this.state.page + 1), className: "spotlight-user-next" },
+        "Next"
+      );
+    }
+
     return React.createElement(
       "div",
       { id: "spotlight-user-container" },
@@ -365,9 +399,10 @@ class SpotlightUser extends React.Component {
       ),
       spotlightUserDisplay,
       React.createElement(
-        "a",
-        { onClick: this.getSpotlightUser, className: "spotlight-user-next" },
-        "Next"
+        "div",
+        { className: "spotlight-user-buttons" },
+        prevButtonDisplay,
+        nextButtonDisplay
       )
     );
   }
