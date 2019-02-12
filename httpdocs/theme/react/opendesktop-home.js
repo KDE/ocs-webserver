@@ -105,6 +105,9 @@ class App extends React.Component {
       React.createElement(SpotlightProduct, {
         env: this.state.env,
         featuredProduct: featuredProduct
+      }),
+      React.createElement(SpotlightUser, {
+        env: this.state.env
       })
     );
   }
@@ -271,4 +274,18 @@ class SpotlightProduct extends React.Component {
   }
 }
 
+class SpotlightUser extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    // https://www.opendesktop.cc/home/showspotlightjson?page=1
+  }
+
+  render() {
+    return React.createElement("div", { id: "spotlight-user-container" });
+  }
+}
 ReactDOM.render(React.createElement(App, null), document.getElementById('main-content'));

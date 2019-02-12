@@ -104,6 +104,9 @@ class App extends React.Component {
           env={this.state.env}
           featuredProduct={featuredProduct}
         />
+        <SpotlightUser
+          env={this.state.env}
+        />
       </main>
     )
   }
@@ -209,6 +212,24 @@ class SpotlightProduct extends React.Component {
   }
 }
 
+class SpotlightUser extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  componentDidMount() {
+    // https://www.opendesktop.cc/home/showspotlightjson?page=1
+  }
+
+  render(){
+    return(
+      <div id="spotlight-user-container">
+
+      </div>
+    )
+  }
+}
 ReactDOM.render(
     <App />,
     document.getElementById('main-content')
