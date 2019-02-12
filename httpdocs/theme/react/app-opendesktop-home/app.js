@@ -220,7 +220,7 @@ class SpotlightUser extends React.Component {
 
   componentDidMount() {
     // https://www.opendesktop.cc/home/
-    let url = "showspotlightjson?page=1";
+    let url = "/home/showspotlightjson?page=1";
     const self = this;
     $.ajax({url: url,cache: false}).done(function(response){
       console.log(response);
