@@ -397,7 +397,11 @@ class SpotlightUserProduct extends React.Component {
       React.createElement(
         "div",
         { className: "product-title-overlay" },
-        this.props.product.title
+        React.createElement(
+          "div",
+          { className: "product-title" },
+          this.props.product.title
+        )
       )
     );
   }
