@@ -184,9 +184,11 @@ out: ../css/homepage.css, sourcemap: true, compress: true
       padding-left: 110px;
       position: relative;
       margin-bottom: 10px;
-      float: left;
-      width: 100%;
+      /* float: left; */
+      width: auto;
       height: 100px;
+      display: table;
+      margin: 0 auto;
 
       figure {
         border: 5px solid #eee;
@@ -196,6 +198,9 @@ out: ../css/homepage.css, sourcemap: true, compress: true
         overflow: hidden;
         width: 100px;
         height: 100px;
+        position: absolute;
+        left: 0;
+        top: 0;
 
         img {
           width: 100%;
@@ -211,11 +216,13 @@ out: ../css/homepage.css, sourcemap: true, compress: true
     }
 
     .products-container {
-      float: left;
-      width: 100%;
-      background: #eee;
+      /* float: left; */
+      /* width: 100%; */
+      /* background: #eee; */
       border-radius: 5px;
       overflow: hidden;
+      display: table;
+      margin: 20px auto;
 
       .spotlight-user-product {
         float: left;
