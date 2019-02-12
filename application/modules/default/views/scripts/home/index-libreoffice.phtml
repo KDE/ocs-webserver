@@ -47,31 +47,35 @@ if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
     $products4= $modelInfo->getJsonLastProductsForHostStores(15,"57");
     $products5= $modelInfo->getJsonLastProductsForHostStores(15,"53");
     $products6 = $modelInfo->getJsonLastProductsForHostStores(15,"52");
+    $products7 = $modelInfo->getJsonLastProductsForHostStores(15,"52");
 
     $response = array(
-        'products1' => array('title' =>'Clipart Gallaries','catIds' =>'104','products' => $products1),
+        'products3' => array('title' =>'Documentation','catIds' =>'52','products' => $products3),
+        'products4' => array('title' =>'Extensions','catIds' =>'98','products' => $products4),
+        'products7' => array('title' =>'Templates','catIds' =>'52','products' => $products7),
         'products2' => array('title' =>'Dictionaries','catIds' =>'105','products' => $products2),
-        'products3' => array('title' =>'Extensions','catIds' =>'98','products' => $products3),
-        'products4' => array('title' =>'Fonts','catIds' =>'57','products' => $products4),
-        'products5' => array('title' =>'LibreOffice Spalsh Screens','catIds' =>'53','products' => $products5),
-        'products6' => array('title' =>'Templates','catIds' =>'52','products' => $products6)
+        'products1' => array('title' =>'Clipart Galleries','catIds' =>'104','products' => $products1),
+        'products6' => array('title' =>'Splash Screens','catIds' =>'53','products' => $products6),
+        'products5' => array('title' =>'Fonts','catIds' =>'57','products' => $products5),
     );
 
   } else {
-    $products1 = $modelInfo->getJsonLastProductsForHostStores(15,"555");
-    $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"556");
-    $products3 = $modelInfo->getJsonLastProductsForHostStores(15,"547");
-    $products4= $modelInfo->getJsonLastProductsForHostStores(15,"103");
-    $products5= $modelInfo->getJsonLastProductsForHostStores(15,"271");
-    $products6 = $modelInfo->getJsonLastProductsForHostStores(15,"554");
+    $products1 = $modelInfo->getJsonLastProductsForHostStores(15,"559");
+    $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"547");
+    $products3 = $modelInfo->getJsonLastProductsForHostStores(15,"554");
+    $products4= $modelInfo->getJsonLastProductsForHostStores(15,"556");
+    $products5= $modelInfo->getJsonLastProductsForHostStores(15,"555");
+    $products6 = $modelInfo->getJsonLastProductsForHostStores(15,"271");
+    $products7 = $modelInfo->getJsonLastProductsForHostStores(15,"103");
 
     $response = array(
-        'products1' => array('title' =>'Clipart Gallaries','catIds' =>'555','products' => $products1),
-        'products2' => array('title' =>'Dictionaries','catIds' =>'556','products' => $products2),
-        'products3' => array('title' =>'Extensions','catIds' =>'547','products' => $products3),
-        'products4' => array('title' =>'Fonts','catIds' =>'103','products' => $products4),
-        'products5' => array('title' =>'LibreOffice Spalsh Screens','catIds' =>'271','products' => $products5),
-        'products6' => array('title' =>'Templates','catIds' =>'554','products' => $products6)
+        'products1' => array('title' =>'Documentation','catIds' =>'559','products' => $products1),
+        'products2' => array('title' =>'Extensions','catIds' =>'547','products' => $products2),
+        'products3' => array('title' =>'Templates','catIds' =>'554','products' => $products3),
+        'products4' => array('title' =>'Dictionaries','catIds' =>'556','products' => $products4),
+        'products5' => array('title' =>'Clipart Galleries','catIds' =>'555','products' => $products5),
+        'products6' => array('title' =>'Splash Screens','catIds' =>'271','products' => $products6),
+        'products7' => array('title' =>'Fonts','catIds' =>'103','products' => $products7),
     );
   }
 
