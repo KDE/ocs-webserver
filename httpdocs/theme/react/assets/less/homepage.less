@@ -243,13 +243,31 @@ out: ../css/homepage.css, sourcemap: true, compress: true
           position: absolute;
           bottom: 0;
           left: 0;
-          z-index: 100; 
+          z-index: 100;
           width: 100%;
 
           .product-title {
             padding: 5px 10px;
             background-color: rgba(0,0,0,0.5);
             color: white;
+            min-height: 50px;
+          }
+        }
+
+        .product-plings-counter {
+          position: absolute;
+          top: 5px;
+          left: 5px;
+          padding: 3px;
+          background: rgba(0,0,0,0.5);
+          border-radius: 17px;
+          color: white;
+          font-size: 12px;
+
+          img {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
           }
         }
       }
