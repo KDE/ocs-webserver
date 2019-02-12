@@ -16,41 +16,7 @@ class HomePage extends React.Component {
     }
   }
 
-/*
-<div className="section">
-  <div className="container">
-    <ProductCarousel
-      products={this.state.products.LatestProducts}
-      device={this.state.device}
-      title={'New'}
-      link={'/browse/ord/latest/'}
-    />
-  </div>
-</div>
-<div className="section">
-  <div className="container">
-    <ProductCarousel
-      products={this.state.products.TopApps}
-      device={this.state.device}
-      title={'Top Apps'}
-      link={'/browse/ord/top/'}
-    />
-  </div>
-</div>
-<div className="section">
-  <div className="container">
-    <ProductCarousel
-      products={this.state.products.TopGames}
-      device={this.state.device}
-      title={'Top Games'}
-      link={'/browse/cat/6/ord/top/'}
-    />
-  </div>
-</div>
- */
-
   render(){
-    console.log(window.totalProjects);
     return (
       <div id="homepage">
         <div className="hp-wrapper">
@@ -86,15 +52,32 @@ const HomePageWrapper = ReactRedux.connect(
 
 class Introduction extends React.Component {
   render(){
+
+    let introductionText, siteTitle;
+    if (window.page === "appimages"){
+      siteTitle = "AppImageHub";
+      introductionText = (
+        <p>
+          This catalog has AppImages and counting.<br/>
+          AppImages are self-contained apps which can simply be downloaded & run on any Linux distribution. For easy integration, download AppImageLauncher:
+        </p>
+      );
+    } else if (window.page === "libreoffice"){
+      siteTitle = "LibreOffice";
+      introductionText = (
+        <p>
+          Extensions add new features to your LibreOffice or make the use of already existing ones easier.<br/>
+          Currently there are {this.props.count} project(s) with 915 release(s) available.
+        </p>
+      );
+    }
+
     return (
       <div id="introduction" className="section">
         <div className="container">
           <article>
-            <h2 className="mdl-color-text--primary">Welcome to AppImageHub</h2>
-            <p>
-              This catalog has {this.props.count} AppImages and counting.<br/>
-              AppImages are self-contained apps which can simply be downloaded & run on any Linux distribution. For easy integration, download AppImageLauncher:
-            </p>
+            <h2 className="mdl-color-text--primary">Welcome to {siteTitle}</h2>
+            {introductionText}
             <div className="actions">
               <a href="/p/1228228" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
                 <img src="/theme/react/assets/img/icon-download_white.png"/> AppImageLauncher
