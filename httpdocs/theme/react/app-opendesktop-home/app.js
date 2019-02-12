@@ -96,10 +96,7 @@ class App extends React.Component {
 
   }
 /*
-<SpotlightUser
-  env={this.state.env}
-  device={this.state.device}
-/>
+
 */
   render(){
     const featuredProduct = JSON.parse(window.data['featureProducts']);
@@ -109,6 +106,10 @@ class App extends React.Component {
           env={this.state.env}
           device={this.state.device}
           featuredProduct={featuredProduct}
+        />
+        <SpotlightUser
+          env={this.state.env}
+          device={this.state.device}
         />
       </main>
     )
