@@ -158,47 +158,24 @@ class SpotlightProduct extends React.Component {
     const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
     const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.featuredProduct.laplace_score);
 
-    let spotlightProductDisplay;
+    let loadingContainerDisplay;
     if (this.state.loading) {
-      spotlightProductDisplay = React.createElement(
+      loadingContainerDisplay = React.createElement(
         "div",
-        { className: "container loading" },
-        React.createElement("div", { className: "spotlight-image" }),
-        React.createElement(
-          "div",
-          { className: "spotlight-info" },
-          React.createElement(
-            "div",
-            { className: "spotlight-info-wrapper" },
-            React.createElement(
-              "div",
-              { className: "info-top" },
-              React.createElement("h2", null),
-              React.createElement("h3", null),
-              React.createElement(
-                "div",
-                { className: "user-info" },
-                React.createElement("figure", null)
-              ),
-              React.createElement(
-                "div",
-                { className: "score-info" },
-                React.createElement("div", { className: "score-number" }),
-                React.createElement(
-                  "div",
-                  { className: "score-bar-container" },
-                  React.createElement("div", { className: "score-bar" })
-                ),
-                React.createElement("div", { className: "score-bar-date" })
-              )
-            ),
-            React.createElement("div", { className: "info-description" })
-          ),
-          React.createElement("div", { className: "spotlight-menu" })
-        )
+        { className: "loading-container" },
+        React.createElement("div", { className: "ajax-loader" })
       );
-    } else {
-      spotlightProductDisplay = React.createElement(
+    }
+
+    return React.createElement(
+      "div",
+      { id: "spotlight-product" },
+      React.createElement(
+        "h2",
+        null,
+        "In the Spotlight"
+      ),
+      React.createElement(
         "div",
         { className: "container" },
         React.createElement(
@@ -288,18 +265,8 @@ class SpotlightProduct extends React.Component {
             )
           )
         )
-      );
-    }
-
-    return React.createElement(
-      "div",
-      { id: "spotlight-product" },
-      React.createElement(
-        "h2",
-        null,
-        "In the Spotlight"
       ),
-      spotlightProductDisplay
+      loadingContainerDisplay
     );
   }
 }
