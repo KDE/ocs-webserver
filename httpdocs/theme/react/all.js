@@ -1832,9 +1832,7 @@ class Introduction extends React.Component {
       introductionText = React.createElement(
         "p",
         null,
-        "Extensions add new features to your LibreOffice or make the use of already existing ones easier.",
-        React.createElement("br", null),
-        "Currently there are ",
+        "Extensions add new features to your LibreOffice or make the use of already existing ones easier. Currently there are ",
         this.props.count,
         " project(s) available."
       );

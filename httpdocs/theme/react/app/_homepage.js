@@ -74,7 +74,7 @@ class Introduction extends React.Component {
       siteTitle = "LibreOffice";
       introductionText = (
         <p>
-          Extensions add new features to your LibreOffice or make the use of already existing ones easier.<br/>
+          Extensions add new features to your LibreOffice or make the use of already existing ones easier. 
           Currently there are {this.props.count} project(s) available.
         </p>
       );
