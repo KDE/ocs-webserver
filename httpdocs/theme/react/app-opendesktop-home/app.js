@@ -216,7 +216,7 @@ class SpotlightUser extends React.Component {
   	super(props);
   	this.state = {
       loading:true,
-      page:1
+      page:0
     };
     this.updateDimensions = this.updateDimensions.bind(this);
     this.getSpotlightUser = this.getSpotlightUser.bind(this);
