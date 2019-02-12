@@ -53,7 +53,7 @@ const HomePageWrapper = ReactRedux.connect(
 class Introduction extends React.Component {
   render(){
     console.log(window.page);
-    let introductionText, siteTitle;
+    let introductionText, siteTitle, buttonsContainer;
     if (window.page === "appimages"){
       siteTitle = "AppImageHub";
       introductionText = (
@@ -62,13 +62,26 @@ class Introduction extends React.Component {
           AppImages are self-contained apps which can simply be downloaded & run on any Linux distribution. For easy integration, download AppImageLauncher:
         </p>
       );
+      buttonsContainer = (
+        <div className="actions">
+          <a href="/p/1228228" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
+            <img src="/theme/react/assets/img/icon-download_white.png"/> AppImageLauncher
+          </a>
+          <a href="/browse" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">Browse all apps</a>
+        </div>
+      );
     } else if (window.page === "libreoffice"){
       siteTitle = "LibreOffice";
       introductionText = (
         <p>
           Extensions add new features to your LibreOffice or make the use of already existing ones easier.<br/>
-          Currently there are {this.props.count} project(s) with 915 release(s) available.
+          Currently there are {this.props.count} project(s) available.
         </p>
+      );
+      buttonsContainer = (
+        <div className="actions">
+          <a href="/products/add" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">Add Extension</a>
+        </div>
       );
     }
 
@@ -78,12 +91,7 @@ class Introduction extends React.Component {
           <article>
             <h2 className="mdl-color-text--primary">Welcome to {siteTitle}</h2>
             {introductionText}
-            <div className="actions">
-              <a href="/p/1228228" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
-                <img src="/theme/react/assets/img/icon-download_white.png"/> AppImageLauncher
-              </a>
-              <a href="/browse" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">Browse all apps</a>
-            </div>
+            {buttonsContainer}
           </article>
         </div>
       </div>

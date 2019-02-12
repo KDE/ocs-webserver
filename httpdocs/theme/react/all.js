@@ -1802,7 +1802,7 @@ const HomePageWrapper = ReactRedux.connect(mapStateToHomePageProps, mapDispatchT
 class Introduction extends React.Component {
   render() {
     console.log(window.page);
-    let introductionText, siteTitle;
+    let introductionText, siteTitle, buttonsContainer;
     if (window.page === "appimages") {
       siteTitle = "AppImageHub";
       introductionText = React.createElement(
@@ -1811,6 +1811,21 @@ class Introduction extends React.Component {
         "This catalog has AppImages and counting.",
         React.createElement("br", null),
         "AppImages are self-contained apps which can simply be downloaded & run on any Linux distribution. For easy integration, download AppImageLauncher:"
+      );
+      buttonsContainer = React.createElement(
+        "div",
+        { className: "actions" },
+        React.createElement(
+          "a",
+          { href: "/p/1228228", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+          React.createElement("img", { src: "/theme/react/assets/img/icon-download_white.png" }),
+          " AppImageLauncher"
+        ),
+        React.createElement(
+          "a",
+          { href: "/browse", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+          "Browse all apps"
+        )
       );
     } else if (window.page === "libreoffice") {
       siteTitle = "LibreOffice";
@@ -1821,7 +1836,16 @@ class Introduction extends React.Component {
         React.createElement("br", null),
         "Currently there are ",
         this.props.count,
-        " project(s) with 915 release(s) available."
+        " project(s) available."
+      );
+      buttonsContainer = React.createElement(
+        "div",
+        { className: "actions" },
+        React.createElement(
+          "a",
+          { href: "/products/add", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+          "Add Extension"
+        )
       );
     }
 
@@ -1841,21 +1865,7 @@ class Introduction extends React.Component {
             siteTitle
           ),
           introductionText,
-          React.createElement(
-            "div",
-            { className: "actions" },
-            React.createElement(
-              "a",
-              { href: "/p/1228228", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
-              React.createElement("img", { src: "/theme/react/assets/img/icon-download_white.png" }),
-              " AppImageLauncher"
-            ),
-            React.createElement(
-              "a",
-              { href: "/browse", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
-              "Browse all apps"
-            )
-          )
+          buttonsContainer
         )
       )
     );
