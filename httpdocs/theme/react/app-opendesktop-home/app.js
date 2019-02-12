@@ -95,9 +95,7 @@ class App extends React.Component {
     this.setState({device:device});
 
   }
-/*
 
-*/
   render(){
     const featuredProduct = JSON.parse(window.data['featureProducts']);
     return (
