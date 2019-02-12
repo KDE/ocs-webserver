@@ -315,6 +315,9 @@ class SpotlightUserProduct extends React.Component {
         <figure>
           <img src={this.props.product.image_small}/>
         </figure>
+        <div className="product-title-overlay">
+          {this.props.product.title}
+        </div>
       </div>
     )
   }
