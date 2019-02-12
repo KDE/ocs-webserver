@@ -406,7 +406,10 @@ class CarouselItem extends React.Component {
 
     if (window.hpVersion === 2){
 
-      paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
+      if (this.props.itemWidth){
+        paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
+      }
+
       let lastDate;
       if (this.props.product.changed_at){
         lastDate = this.props.product.changed_at;
