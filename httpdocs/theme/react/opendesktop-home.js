@@ -96,13 +96,7 @@ class App extends React.Component {
 
     this.setState({ device: device });
   }
-  /*
-  <SpotlightProduct
-    env={this.state.env}
-    device={this.state.device}
-    featuredProduct={featuredProduct}
-  />
-  */
+
   render() {
     const featuredProduct = JSON.parse(window.data['featureProducts']);
     return React.createElement(
@@ -364,7 +358,12 @@ class SpotlightUser extends React.Component {
         null,
         "In the Spotlight"
       ),
-      spotlightUserDisplay
+      spotlightUserDisplay,
+      React.createElement(
+        "a",
+        { onClick: this.getSpotlightUser, className: "spotlight-user-next" },
+        "Next"
+      )
     );
   }
 }
