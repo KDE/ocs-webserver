@@ -224,6 +224,7 @@ class SpotlightUser extends React.Component {
 
   componentDidMount() {
     const containerWidth = $('#main-content').width();
+    console.log(containerWidth);
     // https://www.opendesktop.cc/home/
     let url = "/home/showspotlightjson?page=1";
     const self = this;
