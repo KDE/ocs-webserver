@@ -1843,6 +1843,11 @@ class Introduction extends React.Component {
           "a",
           { href: "/products/add", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
           "Add Extension"
+        ),
+        React.createElement(
+          "a",
+          { href: "/browse", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+          "Browse all apps"
         )
       );
     }
