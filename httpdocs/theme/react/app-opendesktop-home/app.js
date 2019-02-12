@@ -95,16 +95,17 @@ class App extends React.Component {
     this.setState({device:device});
 
   }
-
+/*
+<SpotlightProduct
+  env={this.state.env}
+  device={this.state.device}
+  featuredProduct={featuredProduct}
+/>
+*/
   render(){
     const featuredProduct = JSON.parse(window.data['featureProducts']);
     return (
       <main id="opendesktop-homepage">
-        <SpotlightProduct
-          env={this.state.env}
-          device={this.state.device}
-          featuredProduct={featuredProduct}
-        />
         <SpotlightUser
           env={this.state.env}
           device={this.state.device}
