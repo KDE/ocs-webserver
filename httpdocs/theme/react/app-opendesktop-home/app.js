@@ -315,6 +315,15 @@ class SpotlightUserProduct extends React.Component {
         <figure>
           <img src={this.props.product.image_small}/>
         </figure>
+        <div className="product-title-overlay">
+          <div className="product-title">
+            {this.props.product.title}
+          </div>
+        </div>
+        <div className="product-plings-counter">
+          <img src="/images/system/pling-btn-active.png"/>
+          <span>{this.props.product.sum_plings}</span>
+        </div>
       </div>
     )
   }

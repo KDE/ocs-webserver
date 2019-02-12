@@ -393,6 +393,25 @@ class SpotlightUserProduct extends React.Component {
         "figure",
         null,
         React.createElement("img", { src: this.props.product.image_small })
+      ),
+      React.createElement(
+        "div",
+        { className: "product-title-overlay" },
+        React.createElement(
+          "div",
+          { className: "product-title" },
+          this.props.product.title
+        )
+      ),
+      React.createElement(
+        "div",
+        { className: "product-plings-counter" },
+        React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
+        React.createElement(
+          "span",
+          null,
+          this.props.product.sum_plings
+        )
       )
     );
   }

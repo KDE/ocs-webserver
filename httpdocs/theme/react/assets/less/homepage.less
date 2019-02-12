@@ -178,6 +178,7 @@ out: ../css/homepage.css, sourcemap: true, compress: true
 
 #spotlight-user-container {
   display: none;
+
   #spotlight-user {
 
     .user-container {
@@ -216,18 +217,16 @@ out: ../css/homepage.css, sourcemap: true, compress: true
     }
 
     .products-container {
-      /* float: left; */
-      /* width: 100%; */
-      /* background: #eee; */
+      background: #eee;
       border-radius: 5px;
       overflow: hidden;
       display: table;
-      margin: 20px auto;
+      margin: 10px auto 20px auto;
 
       .spotlight-user-product {
         float: left;
-        border: 10px solid #eee;
         overflow: hidden;
+        position: relative;
 
         figure {
           width: 100%;
@@ -236,6 +235,41 @@ out: ../css/homepage.css, sourcemap: true, compress: true
           img {
             width: 100%;
             height: 100%;
+          }
+        }
+
+        .product-title-overlay {
+          padding: 5px;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          z-index: 100;
+          width: 100%;
+
+          .product-title {
+            padding: 5px 10px;
+            background-color: rgba(0,0,0,0.5);
+            color: white; 
+            min-height: 44px;
+            font-size: 14px;
+          }
+        }
+
+        .product-plings-counter {
+          position: absolute;
+          top: 5px;
+          left: 5px;
+          padding: 3px;
+          background: rgba(0,0,0,0.5);
+          border-radius: 17px;
+          color: white;
+          font-size: 12px;
+          padding-right: 10px;
+
+          img {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
           }
         }
       }
