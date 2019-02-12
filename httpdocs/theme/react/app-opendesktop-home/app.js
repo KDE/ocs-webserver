@@ -40,7 +40,6 @@ window.hpHelpers = (function(){
   }
 }());
 
-
 class App extends React.Component {
   constructor(props){
   	super(props);
@@ -153,7 +152,7 @@ class SpotlightProduct extends React.Component {
     let cDate = new Date(this.props.featuredProduct.created_at);
     cDate = cDate.toString();
     const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
-    const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
+    const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.featuredProduct.laplace_score);
 
     let spotlightProductDisplay;
     if (this.state.loading){
