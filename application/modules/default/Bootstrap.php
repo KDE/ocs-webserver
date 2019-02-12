@@ -380,10 +380,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'action'     => 'index'
                 )));
 
-        $router->addRoute('store_browse', new Zend_Controller_Router_Route('/s/:domain_store_id/browse/*', array(
+        $router->addRoute('store_browse',      new Zend_Controller_Router_Route('/s/:domain_store_id/browse/*', array(
                     'module'     => 'default',
                     'controller' => 'explore',
                     'action'     => 'index'
+                )));
+
+        $router->addRoute('store_product_add', new Zend_Controller_Router_Route('/s/:domain_store_id/add', array(
+                    'module'     => 'default',
+                    'controller' => 'product',
+                    'action'     => 'add'
                 )));
 
         $router->addRoute('store_product', new Zend_Controller_Router_Route('/s/:domain_store_id/p/:project_id/:action/*', array(
@@ -392,12 +398,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'action'     => 'show'
                 )));
         
-        $router->addRoute('store_product_add', new Zend_Controller_Router_Route('/s/:domain_store_id/product/add', array(
-                    'module'     => 'default',
-                    'controller' => 'product',
-                    'action'     => 'add'
-                )));
-
         $router->addRoute('store_user', new Zend_Controller_Router_Route('/s/:domain_store_id/member/:member_id/:action/*', array(
                     'module'     => 'default',
                     'controller' => 'user',
