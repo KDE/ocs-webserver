@@ -1801,7 +1801,7 @@ const HomePageWrapper = ReactRedux.connect(mapStateToHomePageProps, mapDispatchT
 
 class Introduction extends React.Component {
   render() {
-
+    console.log(window.page);
     let introductionText, siteTitle;
     if (window.page === "appimages") {
       siteTitle = "AppImageHub";
