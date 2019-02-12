@@ -275,7 +275,8 @@ class SpotlightUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true
+      loading: true,
+      page: 1
     };
     this.updateDimensions = this.updateDimensions.bind(this);
     this.getSpotlightUser = this.getSpotlightUser.bind(this);
@@ -298,8 +299,8 @@ class SpotlightUser extends React.Component {
   }
 
   getSpotlightUser() {
-    this.setState({ loading: true }, function () {
-      let url = "/home/showspotlightjson?page=1";
+    this.setState({ loading: true, page: this.state.page + 1 }, function () {
+      let url = "/home/showspotlightjson?page=" + this.state.page;
       const self = this;
       $.ajax({ url: url, cache: false }).done(function (response) {
         self.setState({ user: response, loading: false });
