@@ -318,7 +318,7 @@ class SpotlightUser extends React.Component {
     if (this.state.loading) {
       spotlightUserDisplay = "loading";
     } else {
-      const userProducts = this.state.user.products.map((u, index) => React.createElement(SpotlightUserProduct, {
+      const userProducts = this.state.user.products.map((p, index) => React.createElement(SpotlightUserProduct, {
         key: index,
         height: this.state.itemHeight,
         width: this.state.itemWidth,
@@ -327,7 +327,24 @@ class SpotlightUser extends React.Component {
       spotlightUserDisplay = React.createElement(
         "div",
         { id: "spotlight-user" },
-        React.createElement("div", { className: "user-container" }),
+        React.createElement(
+          "div",
+          { className: "user-container" },
+          React.createElement(
+            "figure",
+            null,
+            React.createElement("img", { src: this.state.user.profile_image_url })
+          ),
+          React.createElement(
+            "h2",
+            null,
+            React.createElement(
+              "a",
+              { href: "/u/" + this.state.user.username },
+              this.state.user.username
+            )
+          )
+        ),
         React.createElement(
           "div",
           { className: "products-container" },
@@ -358,7 +375,11 @@ class SpotlightUserProduct extends React.Component {
     return React.createElement(
       "div",
       { style: { "height": this.props.itemHeight, "width": this.props.itemWidth }, className: "spotlight-user-product" },
-      React.createElement("figure", null)
+      React.createElement(
+        "figure",
+        null,
+        React.createElement("img", { src: this.props.product.image_small })
+      )
     );
   }
 }

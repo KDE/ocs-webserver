@@ -258,7 +258,7 @@ class SpotlightUser extends React.Component {
     if (this.state.loading){
       spotlightUserDisplay = "loading";
     } else {
-      const userProducts = this.state.user.products.map((u,index) => (
+      const userProducts = this.state.user.products.map((p,index) => (
         <SpotlightUserProduct
           key={index}
           height={this.state.itemHeight}
@@ -268,7 +268,12 @@ class SpotlightUser extends React.Component {
       ));
       spotlightUserDisplay = (
         <div id="spotlight-user">
-          <div className="user-container"></div>
+          <div className="user-container">
+            <figure>
+              <img src={this.state.user.profile_image_url}/>
+            </figure>
+            <h2><a href={"/u/"+this.state.user.username}>{this.state.user.username}</a></h2>
+          </div>
           <div className="products-container">
             {userProducts}
           </div>
@@ -294,6 +299,7 @@ class SpotlightUserProduct extends React.Component {
     return (
       <div style={{"height":this.props.itemHeight,"width":this.props.itemWidth}} className="spotlight-user-product">
         <figure>
+          <img src={this.props.product.image_small}/>
         </figure>
       </div>
     )
