@@ -405,7 +405,7 @@ class Carousel extends React.Component {
     let containerWidth;
     if (window.page === "opendesktop") {
       containerWidth = $('#main-content').width();
-    } else if (window.page === "appimages") {
+    } else if (window.page === "appimages" || window.page === "libreoffice") {
       containerWidth = $('#introduction').find('.container').width();
     }
 
@@ -417,9 +417,12 @@ class Carousel extends React.Component {
       sliderPosition = this.state.sliderPosition;
     }
 
-    if (window.page === "appimages") {
+    if (window.page === "appimages" || window.page === "libreoffice") {
       $('#carousel-module-container').width(containerWidth);
     }
+
+    console.log(window.page);
+    console.log(containerWidth);
 
     this.setState({
       sliderPosition: sliderPosition,
@@ -583,7 +586,12 @@ class Carousel extends React.Component {
       carouselArrowsMargin = this.state.itemWidth / 4;
     }
 
-    let titleLink = "/browse/cat/" + this.props.catIds + "/";
+    let urlSuffix;
+    if (window.page === "libreoffice") {
+      urlSuffix = "/s/LibreOffice";
+    }
+
+    let titleLink = urlSuffix + "/browse/cat/" + this.props.catIds + "/";
     if (!this.props.catIds) {
       titleLink = "/community#plingedproductsPanel";
     }
@@ -659,7 +667,10 @@ class CarouselItem extends React.Component {
 
     if (window.hpVersion === 2) {
 
-      paddingTop = this.props.itemWidth * 1.35 / 2 - 10;
+      if (this.props.itemWidth) {
+        paddingTop = this.props.itemWidth * 1.35 / 2 - 10;
+      }
+
       let lastDate;
       if (this.props.product.changed_at) {
         lastDate = this.props.product.changed_at;
@@ -671,7 +682,7 @@ class CarouselItem extends React.Component {
       // cDate = cDate.toString();
       // const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
       const createdDate = jQuery.timeago(cDate);
-      const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
+      // const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
 
       let scoreDisplay;
       if (this.props.plingedProduct) {
