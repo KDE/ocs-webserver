@@ -402,6 +402,12 @@ class SpotlightUserProduct extends React.Component {
           { className: "product-title" },
           this.props.product.title
         )
+      ),
+      React.createElement(
+        "div",
+        { className: "product-plings-counter" },
+        React.createElement("img", { src: "/images/system/pling-btn-active.png" }),
+        this.props.product.sum_plings
       )
     );
   }
