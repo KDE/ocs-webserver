@@ -322,7 +322,7 @@ class SpotlightUserProduct extends React.Component {
         </div>
         <div className="product-plings-counter">
           <img src="/images/system/pling-btn-active.png"/>
-          {this.props.product.sum_plings}
+          <span>{this.props.product.sum_plings}</span>
         </div>
       </div>
     )
