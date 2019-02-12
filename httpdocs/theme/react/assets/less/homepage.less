@@ -180,6 +180,36 @@ out: ../css/homepage.css, sourcemap: true, compress: true
 
   #spotlight-user {
 
+    .user-container {
+      padding-left: 110px;
+      position: relative;
+      margin-bottom: 10px;
+      float: left;
+      width: 100%;
+      height: 100px;
+
+      figure {
+        border: 5px solid #eee;
+        float: left;
+        margin-right: 10px;
+        border-radius: 100%;
+        overflow: hidden;
+        width: 100px;
+        height: 100px;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      h2 {
+        margin: 0;
+        height: 100px;
+        line-height: 100px;        
+      }
+    }
+
     .products-container {
       float: left;
       width: 100%;
@@ -192,7 +222,12 @@ out: ../css/homepage.css, sourcemap: true, compress: true
 
         figure {
           width: 100%;
-          height: 100%;          
+          height: 100%;
+
+          img {
+            width: 100%;
+            height: 100%;
+          }
         }
       }
     }
