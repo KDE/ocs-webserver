@@ -102,10 +102,12 @@ class App extends React.Component {
       <main id="opendesktop-homepage">
         <SpotlightProduct
           env={this.state.env}
+          device={this.state.device}
           featuredProduct={featuredProduct}
         />
         <SpotlightUser
           env={this.state.env}
+          device={this.state.device}
         />
       </main>
     )
@@ -221,6 +223,7 @@ class SpotlightUser extends React.Component {
   }
 
   componentDidMount() {
+    const containerWidth = $('#main-content').width();
     // https://www.opendesktop.cc/home/
     let url = "/home/showspotlightjson?page=1";
     const self = this;

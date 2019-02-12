@@ -104,10 +104,12 @@ class App extends React.Component {
       { id: "opendesktop-homepage" },
       React.createElement(SpotlightProduct, {
         env: this.state.env,
+        device: this.state.device,
         featuredProduct: featuredProduct
       }),
       React.createElement(SpotlightUser, {
-        env: this.state.env
+        env: this.state.env,
+        device: this.state.device
       })
     );
   }
@@ -281,6 +283,7 @@ class SpotlightUser extends React.Component {
   }
 
   componentDidMount() {
+    const containerWidth = $('#main-content').width();
     // https://www.opendesktop.cc/home/
     let url = "/home/showspotlightjson?page=1";
     const self = this;
