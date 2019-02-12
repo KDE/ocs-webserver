@@ -1,6 +1,15 @@
 out: ../css/homepage.css, sourcemap: true, compress: true
 @import "elements.less";
 
+
+.ajax-loader {
+  height: 24px;
+  width: 24px;
+  background-image: url('../img/ajax-loader.gif');
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
 .startpage-store {
   background-color: #f1f1f1;
   position: relative;
@@ -221,6 +230,7 @@ out: ../css/homepage.css, sourcemap: true, compress: true
       overflow: hidden;
       display: table;
       margin: 10px auto 20px auto;
+      border: 1px solid #ccc;
 
       .spotlight-user-product {
         float: left;
@@ -291,6 +301,16 @@ out: ../css/homepage.css, sourcemap: true, compress: true
     border-radius: 5px;
     display: table;
     margin: 10px auto;
+  }
+
+  #loading-container {
+    width: 100%;
+    padding: 50px 0;
+
+    .ajax-loader {
+      display: table;
+      margin:  0 auto;
+    }
   }
 }
 

@@ -252,7 +252,11 @@ class SpotlightUser extends React.Component {
 
     let spotlightUserDisplay;
     if (this.state.loading){
-      spotlightUserDisplay = "loading";
+      spotlightUserDisplay = (
+        <div id="loading-container">
+          <div className="ajax-loader"></div>
+        </div>
+      );
     } else {
       let userProducts;
       if (this.state.itemWidth){
