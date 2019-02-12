@@ -298,6 +298,10 @@ class SpotlightUserProduct extends React.Component {
   	this.state = {};
   }
 
+  componentDidMount() {
+    console.log(this.props);
+  }
+
   render(){
     return (
       <div style={{"height":this.props.itemHeight,"width":this.props.itemWidth}} className="spotlight-user-product">

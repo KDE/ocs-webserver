@@ -374,6 +374,10 @@ class SpotlightUserProduct extends React.Component {
     this.state = {};
   }
 
+  componentDidMount() {
+    console.log(this.props);
+  }
+
   render() {
     return React.createElement(
       "div",
