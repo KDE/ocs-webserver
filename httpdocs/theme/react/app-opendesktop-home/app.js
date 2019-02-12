@@ -109,9 +109,39 @@ class SpotlightProduct extends React.Component {
     cDate = cDate.toString();
     const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
 
-    return(
-      <div id="spotlight-product">
-        <h2>In the Spotlight</h2>
+    let spotlightProductDisplay;
+    if (this.state.loading){
+      spotlightProductDisplay = (
+        <div className="container loading">
+          <div className="spotlight-image">
+          </div>
+          <div className="spotlight-info">
+            <div className="spotlight-info-wrapper">
+              <div className="info-top">
+                <h2></h2>
+                <h3></h3>
+                <div className="user-info">
+                  <figure></figure>
+                </div>
+                <div className="score-info">
+                  <div className="score-number">
+                  </div>
+                  <div className="score-bar-container">
+                    <div className="score-bar"></div>
+                  </div>
+                  <div className="score-bar-date"></div>
+                </div>
+              </div>
+              <div className="info-description">
+              </div>
+            </div>
+            <div className="spotlight-menu">
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      spotlightProductDisplay = (
         <div className="container">
           <div className="spotlight-image">
             <img src={"https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.state.featuredProduct.image_small}/>
@@ -149,6 +179,13 @@ class SpotlightProduct extends React.Component {
             </div>
           </div>
         </div>
+      );
+    }
+
+    return(
+      <div id="spotlight-product">
+        <h2>In the Spotlight</h2>
+        {spotlightProductDisplay}
       </div>
     );
   }
