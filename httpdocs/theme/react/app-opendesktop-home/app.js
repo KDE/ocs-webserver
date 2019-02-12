@@ -219,7 +219,9 @@ class SpotlightProduct extends React.Component {
 class SpotlightUser extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      loading:true
+    };
     this.updateDimensions = this.updateDimensions.bind(this);
     this.getSpotlightUser = this.getSpotlightUser.bind(this);
   }
@@ -234,7 +236,9 @@ class SpotlightUser extends React.Component {
 
   updateDimensions(){
     const containerWidth = $('#main-content').width();
-    console.log(containerWidth);
+    const userProductsPerRow = 4;
+    const userProductsDimensions = containerWidth / userProductsPerRow;
+    this.setState({itemWidth:userProductsDimensions,itemHeight:userProductsDimensions})
   }
 
   getSpotlightUser(){
@@ -243,20 +247,58 @@ class SpotlightUser extends React.Component {
     const self = this;
     $.ajax({url: url,cache: false}).done(function(response){
       console.log(response);
+      self.setState({user:response,loading:false});
     });
   }
 
-
-
-
   render(){
+
+    let spotlightUserDisplay;
+    if (this.state.loading){
+      spotlightUserDisplay = "loading";
+    } else {
+      const userProducts = this.state.user.products.map((u,index) => (
+        <SpotlightUserProduct
+          key={index}
+          height={this.state.itemHeight}
+          width={this.state.itemWidth}
+          product={p}
+        />
+      ));
+      spotlightUserDisplay = (
+        <div id="spotlight-user">
+          <div className="user-container"></div>
+          <div className="products-container">
+            {userProducts}
+          </div>
+        </div>
+      );
+    }
     return(
       <div id="spotlight-user-container">
-
+        <h2>In the Spotlight</h2>
+        {spotlightUserDisplay}
       </div>
     )
   }
 }
+
+class SpotlightUserProduct extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    return (
+      <div style={{"height":this.props.itemHeight,"width":this.props.itemWidth}} className="spotlight-user-product">
+        <figure>
+        </figure>
+      </div>
+    )
+  }
+}
+
 ReactDOM.render(
     <App />,
     document.getElementById('main-content')

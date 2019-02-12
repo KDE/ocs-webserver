@@ -279,7 +279,9 @@ class SpotlightProduct extends React.Component {
 class SpotlightUser extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      loading: true
+    };
     this.updateDimensions = this.updateDimensions.bind(this);
     this.getSpotlightUser = this.getSpotlightUser.bind(this);
   }
@@ -294,7 +296,9 @@ class SpotlightUser extends React.Component {
 
   updateDimensions() {
     const containerWidth = $('#main-content').width();
-    console.log(containerWidth);
+    const userProductsPerRow = 4;
+    const userProductsDimensions = containerWidth / userProductsPerRow;
+    this.setState({ itemWidth: userProductsDimensions, itemHeight: userProductsDimensions });
   }
 
   getSpotlightUser() {
@@ -303,11 +307,59 @@ class SpotlightUser extends React.Component {
     const self = this;
     $.ajax({ url: url, cache: false }).done(function (response) {
       console.log(response);
+      self.setState({ user: response, loading: false });
     });
   }
 
   render() {
-    return React.createElement("div", { id: "spotlight-user-container" });
+
+    let spotlightUserDisplay;
+    if (this.state.loading) {
+      spotlightUserDisplay = "loading";
+    } else {
+      const userProducts = this.state.user.products.map((u, index) => React.createElement(SpotlightUserProduct, {
+        key: index,
+        height: this.state.itemHeight,
+        width: this.state.itemWidth,
+        product: p
+      }));
+      spotlightUserDisplay = React.createElement(
+        "div",
+        { id: "spotlight-user" },
+        React.createElement("div", { className: "user-container" }),
+        React.createElement(
+          "div",
+          { className: "products-container" },
+          userProducts
+        )
+      );
+    }
+    return React.createElement(
+      "div",
+      { id: "spotlight-user-container" },
+      React.createElement(
+        "h2",
+        null,
+        "In the Spotlight"
+      ),
+      spotlightUserDisplay
+    );
   }
 }
+
+class SpotlightUserProduct extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return React.createElement(
+      "div",
+      { style: { "height": this.props.itemHeight, "width": this.props.itemWidth }, className: "spotlight-user-product" },
+      React.createElement("figure", null)
+    );
+  }
+}
+
 ReactDOM.render(React.createElement(App, null), document.getElementById('main-content'));
