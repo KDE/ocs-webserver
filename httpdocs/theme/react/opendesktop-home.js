@@ -292,6 +292,7 @@ class SpotlightUser extends React.Component {
 
   componentDidMount() {
     this.updateDimensions();
+    this.getSpotlightUser();
   }
 
   updateDimensions() {

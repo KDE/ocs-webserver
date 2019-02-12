@@ -232,13 +232,14 @@ class SpotlightUser extends React.Component {
 
   componentDidMount() {
     this.updateDimensions();
+    this.getSpotlightUser();
   }
 
   updateDimensions(){
     const containerWidth = $('#main-content').width();
     const userProductsPerRow = 4;
     const userProductsDimensions = containerWidth / userProductsPerRow;
-    this.setState({itemWidth:userProductsDimensions,itemHeight:userProductsDimensions})
+    this.setState({itemWidth:userProductsDimensions,itemHeight:userProductsDimensions});
   }
 
   getSpotlightUser(){
