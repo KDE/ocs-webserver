@@ -391,6 +391,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'controller' => 'product',
                     'action'     => 'show'
                 )));
+        
+        $router->addRoute('store_product_add', new Zend_Controller_Router_Route('/s/:domain_store_id/product/add', array(
+                    'module'     => 'default',
+                    'controller' => 'product',
+                    'action'     => 'add'
+                )));
 
         $router->addRoute('store_user', new Zend_Controller_Router_Route('/s/:domain_store_id/member/:member_id/:action/*', array(
                     'module'     => 'default',
