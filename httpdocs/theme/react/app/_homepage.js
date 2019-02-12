@@ -52,7 +52,7 @@ const HomePageWrapper = ReactRedux.connect(
 
 class Introduction extends React.Component {
   render(){
-    console.log(window.page);
+
     let introductionText, siteTitle, buttonsContainer;
     if (window.page === "appimages"){
       siteTitle = "AppImageHub";
@@ -74,7 +74,7 @@ class Introduction extends React.Component {
       siteTitle = "LibreOffice";
       introductionText = (
         <p>
-          Extensions add new features to your LibreOffice or make the use of already existing ones easier. 
+          Extensions add new features to your LibreOffice or make the use of already existing ones easier.
           Currently there are {this.props.count} project(s) available.
         </p>
       );
