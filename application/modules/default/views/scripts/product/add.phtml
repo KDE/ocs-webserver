@@ -159,6 +159,10 @@ $this->inlineScript()->appendScript('
             float: left;
         }
     </style>
+    
+    <link rel="stylesheet" href="/tools/bootstrap-multiselect/css/bootstrap-multiselect.css" type="text/css">
+    <script type="text/javascript" src="/tools/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+    
     <main class="user-admin-page">
 
         <section class="head-wrap">
@@ -373,7 +377,7 @@ $this->inlineScript()->appendScript('
                             
                             <h3>Files</h3>
                             <section id="files">
-
+                                
                                 <!-- ppload -->
 
                                 <div id="modal-ppload" aria-labelledby="modal-ppload-label"
@@ -957,8 +961,10 @@ $this->inlineScript()->appendScript('
                                     var fileId = this.id;
 
                                     if(tagGroupsCount>0) {
+                                        
                                         $.each(tagGroups, function() {
                                             tableString += '<td>';
+                                            //tableString +='<select multiple="multiple" id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
                                             tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
                                             tableString += '<option value=\"\"></option>';
 
@@ -973,6 +979,7 @@ $this->inlineScript()->appendScript('
                                             tableString += '</select>';
                                             tableString += '</td>';
                                         });
+                                        
                                     } else {
                                     
                                         if(fileTagsArraySize>0) {
@@ -1758,6 +1765,11 @@ $this->inlineScript()->appendScript('
                     deleteFileTag($fileId, $tagId);
                 });
 
+                /*
+                $(this).find('select[data-tag-group]').multiselect({
+                    includeSelectAllOption: true
+                });
+                */
                 
         });
 
@@ -2113,5 +2125,8 @@ $this->inlineScript()->appendScript('
             ProductForm.setup();
             ProductGallery.setup();
             Opendownloadfile.setup();
+            $(\'#demo\').multiselect({
+                    includeSelectAllOption: true
+            });
         });
     ');
