@@ -1766,41 +1766,7 @@ class HomePage extends React.Component {
     }
   }
 
-  /*
-  <div className="section">
-    <div className="container">
-      <ProductCarousel
-        products={this.state.products.LatestProducts}
-        device={this.state.device}
-        title={'New'}
-        link={'/browse/ord/latest/'}
-      />
-    </div>
-  </div>
-  <div className="section">
-    <div className="container">
-      <ProductCarousel
-        products={this.state.products.TopApps}
-        device={this.state.device}
-        title={'Top Apps'}
-        link={'/browse/ord/top/'}
-      />
-    </div>
-  </div>
-  <div className="section">
-    <div className="container">
-      <ProductCarousel
-        products={this.state.products.TopGames}
-        device={this.state.device}
-        title={'Top Games'}
-        link={'/browse/cat/6/ord/top/'}
-      />
-    </div>
-  </div>
-   */
-
   render() {
-    console.log(window.totalProjects);
     return React.createElement(
       "div",
       { id: "homepage" },
@@ -1835,6 +1801,57 @@ const HomePageWrapper = ReactRedux.connect(mapStateToHomePageProps, mapDispatchT
 
 class Introduction extends React.Component {
   render() {
+
+    let introductionText, siteTitle, buttonsContainer;
+    if (window.page === "appimages") {
+      siteTitle = "AppImageHub";
+      introductionText = React.createElement(
+        "p",
+        null,
+        "This catalog has AppImages and counting.",
+        React.createElement("br", null),
+        "AppImages are self-contained apps which can simply be downloaded & run on any Linux distribution. For easy integration, download AppImageLauncher:"
+      );
+      buttonsContainer = React.createElement(
+        "div",
+        { className: "actions" },
+        React.createElement(
+          "a",
+          { href: "/p/1228228", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+          React.createElement("img", { src: "/theme/react/assets/img/icon-download_white.png" }),
+          " AppImageLauncher"
+        ),
+        React.createElement(
+          "a",
+          { href: "/browse", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+          "Browse all apps"
+        )
+      );
+    } else if (window.page === "libreoffice") {
+      siteTitle = "LibreOffice";
+      introductionText = React.createElement(
+        "p",
+        null,
+        "Extensions add new features to your LibreOffice or make the use of already existing ones easier. Currently there are ",
+        this.props.count,
+        " project(s) available."
+      );
+      buttonsContainer = React.createElement(
+        "div",
+        { className: "actions green" },
+        React.createElement(
+          "a",
+          { href: "/s/LibreOffice/product/add", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+          "Add Extension"
+        ),
+        React.createElement(
+          "a",
+          { href: "/s/LibreOffice/browse", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+          "Browse all Extensions"
+        )
+      );
+    }
+
     return React.createElement(
       "div",
       { id: "introduction", className: "section" },
@@ -1847,32 +1864,11 @@ class Introduction extends React.Component {
           React.createElement(
             "h2",
             { className: "mdl-color-text--primary" },
-            "Welcome to AppImageHub"
+            "Welcome to ",
+            siteTitle
           ),
-          React.createElement(
-            "p",
-            null,
-            "This catalog has ",
-            this.props.count,
-            " AppImages and counting.",
-            React.createElement("br", null),
-            "AppImages are self-contained apps which can simply be downloaded & run on any Linux distribution. For easy integration, download AppImageLauncher:"
-          ),
-          React.createElement(
-            "div",
-            { className: "actions" },
-            React.createElement(
-              "a",
-              { href: "/p/1228228", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
-              React.createElement("img", { src: "/theme/react/assets/img/icon-download_white.png" }),
-              " AppImageLauncher"
-            ),
-            React.createElement(
-              "a",
-              { href: "/browse", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
-              "Browse all apps"
-            )
-          )
+          introductionText,
+          buttonsContainer
         )
       )
     );
