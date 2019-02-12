@@ -190,7 +190,7 @@ class Carousel extends React.Component {
       sliderPosition = this.state.sliderPosition;
     }
 
-    if (window.page === "appimages"){
+    if (window.page === "appimages" || window.page === "libreoffice"){
       $('#carousel-module-container').width(containerWidth);
     }
 
