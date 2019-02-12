@@ -306,7 +306,7 @@ class SpotlightUser extends React.Component {
     }
 
     let nextButtonDisplay;
-    if (this.state.page < 10){
+    if (this.state.page < 8){
       nextButtonDisplay = (
         <a onClick={() => this.getSpotlightUser(this.state.page + 1)} className="spotlight-user-next">
           {"Next >"}
