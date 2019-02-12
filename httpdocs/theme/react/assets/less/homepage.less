@@ -177,7 +177,7 @@ out: ../css/homepage.css, sourcemap: true, compress: true
 }
 
 #spotlight-user-container {
-
+  display: none;
   #spotlight-user {
 
     .user-container {
@@ -206,7 +206,7 @@ out: ../css/homepage.css, sourcemap: true, compress: true
       h2 {
         margin: 0;
         height: 100px;
-        line-height: 100px;        
+        line-height: 100px;
       }
     }
 
@@ -214,6 +214,8 @@ out: ../css/homepage.css, sourcemap: true, compress: true
       float: left;
       width: 100%;
       background: #eee;
+      border-radius: 5px;
+      overflow: hidden;
 
       .spotlight-user-product {
         float: left;
