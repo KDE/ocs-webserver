@@ -290,11 +290,11 @@ class SpotlightUser extends React.Component {
 
   componentDidMount() {
     this.updateDimensions();
-    console.log(containerWidth);
   }
 
   updateDimensions() {
     const containerWidth = $('#main-content').width();
+    console.log(containerWidth);
   }
 
   getSpotlightUser() {
