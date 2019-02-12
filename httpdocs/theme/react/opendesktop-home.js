@@ -318,12 +318,15 @@ class SpotlightUser extends React.Component {
     if (this.state.loading) {
       spotlightUserDisplay = "loading";
     } else {
-      const userProducts = this.state.user.products.map((p, index) => React.createElement(SpotlightUserProduct, {
-        key: index,
-        height: this.state.itemHeight,
-        width: this.state.itemWidth,
-        product: p
-      }));
+      let userProducts;
+      if (this.state.itemWidth) {
+        userProducts = this.state.user.products.map((p, index) => React.createElement(SpotlightUserProduct, {
+          key: index,
+          height: this.state.itemHeight,
+          width: this.state.itemWidth,
+          product: p
+        }));
+      }
       spotlightUserDisplay = React.createElement(
         "div",
         { id: "spotlight-user" },
