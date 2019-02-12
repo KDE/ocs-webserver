@@ -77,12 +77,14 @@ class SpotlightProduct extends React.Component {
   }
 
   onSpotlightMenuClick(val){
-    let url = "/home/showfeaturejson/page/";
-    if (val === "random"){ url += "0"; }
-    else { url += "1"; }
-    const self = this;
-    $.ajax({url: url,cache: false}).done(function(response){
-        self.setState({featuredProduct:response});
+    this.setState({loading:true},function(){
+      let url = "/home/showfeaturejson/page/";
+      if (val === "random"){ url += "0"; }
+      else { url += "1"; }
+      const self = this;
+      $.ajax({url: url,cache: false}).done(function(response){
+          self.setState({featuredProduct:response,loading:false});
+      });
     });
   }
 
