@@ -1847,7 +1847,7 @@ class Introduction extends React.Component {
         React.createElement(
           "a",
           { href: "/browse", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
-          "Browse all apps"
+          "Browse all Extensions"
         )
       );
     }
