@@ -1,3 +1,48 @@
+window.hpHelpers = function () {
+
+  function dechex(number) {
+    //  discuss at: http://locutus.io/php/dechex/
+    // original by: Philippe Baumann
+    // bugfixed by: Onno Marsman (https://twitter.com/onnomarsman)
+    // improved by: http://stackoverflow.com/questions/57803/how-to-convert-decimal-to-hex-in-javascript
+    //    input by: pilus
+    //   example 1: dechex(10)
+    //   returns 1: 'a'
+    //   example 2: dechex(47)
+    //   returns 2: '2f'
+    //   example 3: dechex(-1415723993)
+    //   returns 3: 'ab9dc427'
+
+    if (number < 0) {
+      number = 0xFFFFFFFF + number + 1;
+    }
+    return parseInt(number, 10).toString(16);
+  }
+
+  function calculateScoreColor(score) {
+    let blue,
+        red,
+        green,
+        defaultColor = 200;
+    if (score > 50) {
+      red = defaultColor - (score - 50) * 4;
+      green = defaultColor;
+      blue = defaultColor - (score - 50) * 4;
+    } else if (score < 51) {
+      red = defaultColor;
+      green = defaultColor - (score - 50) * 4;
+      blue = defaultColor - (score - 50) * 4;
+    }
+
+    return "rgb(" + red + "," + green + "," + blue + ")";
+  }
+
+  return {
+    dechex,
+    calculateScoreColor
+  };
+}();
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -75,15 +120,17 @@ class SpotlightProduct extends React.Component {
   }
 
   onSpotlightMenuClick(val) {
-    let url = "/home/showfeaturejson/page/";
-    if (val === "random") {
-      url += "0";
-    } else {
-      url += "1";
-    }
-    const self = this;
-    $.ajax({ url: url, cache: false }).done(function (response) {
-      self.setState({ featuredProduct: response });
+    this.setState({ loading: true }, function () {
+      let url = "/home/showfeaturejson/page/";
+      if (val === "random") {
+        url += "0";
+      } else {
+        url += "1";
+      }
+      const self = this;
+      $.ajax({ url: url, cache: false }).done(function (response) {
+        self.setState({ featuredProduct: response });
+      });
     });
   }
 
@@ -109,16 +156,49 @@ class SpotlightProduct extends React.Component {
     let cDate = new Date(this.props.featuredProduct.created_at);
     cDate = cDate.toString();
     const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
+    const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
 
-    return React.createElement(
-      "div",
-      { id: "spotlight-product" },
-      React.createElement(
-        "h2",
-        null,
-        "In the Spotlight"
-      ),
-      React.createElement(
+    let spotlightProductDisplay;
+    if (this.state.loading) {
+      spotlightProductDisplay = React.createElement(
+        "div",
+        { className: "container loading" },
+        React.createElement("div", { className: "spotlight-image" }),
+        React.createElement(
+          "div",
+          { className: "spotlight-info" },
+          React.createElement(
+            "div",
+            { className: "spotlight-info-wrapper" },
+            React.createElement(
+              "div",
+              { className: "info-top" },
+              React.createElement("h2", null),
+              React.createElement("h3", null),
+              React.createElement(
+                "div",
+                { className: "user-info" },
+                React.createElement("figure", null)
+              ),
+              React.createElement(
+                "div",
+                { className: "score-info" },
+                React.createElement("div", { className: "score-number" }),
+                React.createElement(
+                  "div",
+                  { className: "score-bar-container" },
+                  React.createElement("div", { className: "score-bar" })
+                ),
+                React.createElement("div", { className: "score-bar-date" })
+              )
+            ),
+            React.createElement("div", { className: "info-description" })
+          ),
+          React.createElement("div", { className: "spotlight-menu" })
+        )
+      );
+    } else {
+      spotlightProductDisplay = React.createElement(
         "div",
         { className: "container" },
         React.createElement(
@@ -178,7 +258,7 @@ class SpotlightProduct extends React.Component {
                 React.createElement(
                   "div",
                   { className: "score-bar-container" },
-                  React.createElement("div", { className: "score-bar", style: { "width": this.state.featuredProduct.laplace_score + "%" } })
+                  React.createElement("div", { className: "score-bar", style: { "width": this.state.featuredProduct.laplace_score + "%", "backgroundColor": productScoreColor } })
                 ),
                 React.createElement(
                   "div",
@@ -208,7 +288,18 @@ class SpotlightProduct extends React.Component {
             )
           )
         )
-      )
+      );
+    }
+
+    return React.createElement(
+      "div",
+      { id: "spotlight-product" },
+      React.createElement(
+        "h2",
+        null,
+        "In the Spotlight"
+      ),
+      spotlightProductDisplay
     );
   }
 }
