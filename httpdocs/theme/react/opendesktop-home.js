@@ -298,12 +298,12 @@ class SpotlightUser extends React.Component {
   }
 
   getSpotlightUser() {
-    // https://www.opendesktop.cc/home/
-    let url = "/home/showspotlightjson?page=1";
-    const self = this;
-    $.ajax({ url: url, cache: false }).done(function (response) {
-      console.log(response);
-      self.setState({ user: response, loading: false });
+    this.setState({ loading: true }, function () {
+      let url = "/home/showspotlightjson?page=1";
+      const self = this;
+      $.ajax({ url: url, cache: false }).done(function (response) {
+        self.setState({ user: response, loading: false });
+      });
     });
   }
 
