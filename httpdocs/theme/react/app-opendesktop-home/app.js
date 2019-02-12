@@ -220,11 +220,24 @@ class SpotlightUser extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
+    this.updateDimensions = this.updateDimensions.bind(this);
+    this.getSpotlightUser = this.getSpotlightUser.bind(this);
+  }
+
+  componentWillMount() {
+    window.addEventListener("resize", this.updateDimensions);
   }
 
   componentDidMount() {
-    const containerWidth = $('#main-content').width();
+    this.updateDimensions();
     console.log(containerWidth);
+  }
+
+  updateDimensions(){
+    const containerWidth = $('#main-content').width();
+  }
+
+  getSpotlightUser(){
     // https://www.opendesktop.cc/home/
     let url = "/home/showspotlightjson?page=1";
     const self = this;
@@ -232,6 +245,9 @@ class SpotlightUser extends React.Component {
       console.log(response);
     });
   }
+
+
+
 
   render(){
     return(
