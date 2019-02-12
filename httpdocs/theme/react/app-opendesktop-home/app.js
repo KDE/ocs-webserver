@@ -149,7 +149,9 @@ class SpotlightProduct extends React.Component {
 
     let featuredLabelDisplay;
     if (this.state.featuredProduct.featured === "1"){
-      featuredLabelDisplay = "featured"
+      featuredLabelDisplay = (
+        <span className="featured-label">featured</span>
+      );
     }
 
     let cDate = new Date(this.state.featuredProduct.created_at);
@@ -175,7 +177,7 @@ class SpotlightProduct extends React.Component {
           </div>
           <div className="spotlight-info">
             <div className="spotlight-info-wrapper">
-              <span className="featured-label">{featuredLabelDisplay}</span>
+              {featuredLabelDisplay}
               <div className="info-top">
                 <h2><a href={"/p/" + this.state.featuredProduct.project_id}>{this.state.featuredProduct.title}</a></h2>
                 <h3>{this.state.featuredProduct.category}</h3>

@@ -153,7 +153,11 @@ class SpotlightProduct extends React.Component {
 
     let featuredLabelDisplay;
     if (this.state.featuredProduct.featured === "1") {
-      featuredLabelDisplay = "featured";
+      featuredLabelDisplay = React.createElement(
+        "span",
+        { className: "featured-label" },
+        "featured"
+      );
     }
 
     let cDate = new Date(this.state.featuredProduct.created_at);
@@ -192,11 +196,7 @@ class SpotlightProduct extends React.Component {
           React.createElement(
             "div",
             { className: "spotlight-info-wrapper" },
-            React.createElement(
-              "span",
-              { className: "featured-label" },
-              featuredLabelDisplay
-            ),
+            featuredLabelDisplay,
             React.createElement(
               "div",
               { className: "info-top" },
