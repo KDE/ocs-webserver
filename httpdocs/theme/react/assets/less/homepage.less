@@ -315,8 +315,12 @@ out: ../css/homepage.css, sourcemap: true, compress: true
     }
   }
 
-
   &.v-two {
+
+    .loading-container {
+      padding: 88px 0 88px 0;
+    }
+
     #spotlight-user {
       position: relative;
       padding-left: 200px;
@@ -324,6 +328,7 @@ out: ../css/homepage.css, sourcemap: true, compress: true
       border: 1px solid #eee;
       background-color: white;
       border-radius: 5px;
+      overflow: hidden;
 
       .user-container {
         width: 200px;
@@ -334,6 +339,7 @@ out: ../css/homepage.css, sourcemap: true, compress: true
         top: 0;
         padding: 20px 30px 0 30px;
         background-color: #eee;
+        display: block;
 
         figure {
           width: 140px;
@@ -365,6 +371,7 @@ out: ../css/homepage.css, sourcemap: true, compress: true
         padding: 11px 5px;
         margin: 0;
         height: 200px;
+        border-radius: 0;
 
         .spotlight-user-product {
           width: auto !important;
