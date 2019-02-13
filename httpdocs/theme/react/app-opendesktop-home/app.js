@@ -200,7 +200,6 @@ class SpotlightProduct extends React.Component {
     }
 
     let commentCount;
-    console.log(this.state.featuredProduct);
     if (this.state.featuredProduct.count_comments){
       commentCount = this.state.featuredProduct.count_comments;
     } else {
