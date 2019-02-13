@@ -114,13 +114,15 @@ class SpotlightProduct extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      featuredProduct:this.props.featuredProduct
+      featuredProduct:this.props.featuredProduct,
+      type:"featured"
     };
     this.onSpotlightMenuClick = this.onSpotlightMenuClick.bind(this);
   }
 
   onSpotlightMenuClick(val){
-    this.setState({loading:true},function(){
+    console.log(this.state.type);
+    this.setState({loading:true,type:val},function(){
       let url = "/home/showfeaturejson/page/";
       if (val === "random"){ url += "0"; }
       else { url += "1"; }
@@ -212,6 +214,7 @@ class SpotlightProduct extends React.Component {
             <div className="spotlight-menu">
               <a onClick={() => this.onSpotlightMenuClick('random')}>random</a>
               <a onClick={() => this.onSpotlightMenuClick('featured')}>featured</a>
+              <a onClick={() => this.onSpotlightMenuClick('plinged')}>plinged</a>
             </div>
           </div>
         </div>
