@@ -140,7 +140,7 @@ class SpotlightProduct extends React.Component {
       } else {
         url += "1";
       }
-
+      console.log(url);
       const self = this;
 
       $.ajax({ url: url, cache: false }).done(function (response) {
