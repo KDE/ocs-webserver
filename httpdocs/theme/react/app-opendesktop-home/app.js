@@ -171,7 +171,7 @@ class SpotlightProduct extends React.Component {
         <h2>In the Spotlight</h2>
         <div className="container">
           <div className="spotlight-image">
-            <img src={"https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.state.featuredProduct.image_small}/>
+            <img className="product-image" src={"https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.state.featuredProduct.image_small}/>
             <figure className="user-avatar">
               <img src={this.state.featuredProduct.profile_image_url}/>
             </figure>
