@@ -150,9 +150,7 @@ class SpotlightProduct extends React.Component {
           featuredProduct = response[0];
         }
 
-        self.setState({ featuredProduct: featuredProduct, page: page }, function () {
-          console.log(self.state.featuredProduct);
-        });
+        self.setState({ featuredProduct: featuredProduct, page: page });
       });
     });
   }
@@ -208,8 +206,8 @@ class SpotlightProduct extends React.Component {
 
     let commentCount;
     console.log(this.state.featuredProduct);
-    if (this.state.featuredProduct.comment_count) {
-      commentCount = this.state.featuredProduct.comment_count;
+    if (this.state.featuredProduct.count_comments) {
+      commentCount = this.state.featuredProduct.count_comments;
     } else {
       commentCount = "0";
     }
