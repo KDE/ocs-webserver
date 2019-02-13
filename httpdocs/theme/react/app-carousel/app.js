@@ -185,6 +185,7 @@ class Carousel extends React.Component {
     }
 
     console.log(containerWidth);
+    console.log($('#main-content').width());
 
     const containerNumber = Math.ceil(this.state.products.length / (itemsPerRow - 1));
     const itemWidth = containerWidth / itemsPerRow;
