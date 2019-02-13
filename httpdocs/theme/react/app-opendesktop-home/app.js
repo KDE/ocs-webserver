@@ -116,9 +116,14 @@ class SpotlightProduct extends React.Component {
   	this.state = {
       featuredProduct:this.props.featuredProduct,
       type:"featured",
-      page:0
+      page:0,
+      loading:true
     };
     this.onSpotlightMenuClick = this.onSpotlightMenuClick.bind(this);
+  }
+
+  componentDidMount() {
+    this.onSpotlightMenuClick('plinged');
   }
 
   onSpotlightMenuClick(val){
