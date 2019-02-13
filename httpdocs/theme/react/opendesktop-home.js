@@ -122,7 +122,6 @@ class SpotlightProduct extends React.Component {
   }
 
   onSpotlightMenuClick(val) {
-    console.log(this.state.type);
     this.setState({ loading: true, type: val }, function () {
       let url = "/home/showfeaturejson/page/";
       if (val === "random") {
@@ -152,11 +151,17 @@ class SpotlightProduct extends React.Component {
     }
 
     let featuredLabelDisplay;
-    if (this.state.featuredProduct.featured === "1") {
+    if (this.state.type === "featured") {
       featuredLabelDisplay = React.createElement(
         "span",
         { className: "featured-label" },
         "featured"
+      );
+    } else if (this.state.type === "plinged") {
+      featuredLabelDisplay = React.createElement(
+        "span",
+        { className: "featured-label plinged" },
+        "plinged"
       );
     }
 
