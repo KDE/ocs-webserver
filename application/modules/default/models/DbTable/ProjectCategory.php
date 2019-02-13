@@ -1509,8 +1509,19 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
      */
     public function fetchMainCatForSelect($orderBy = self::ORDERED_HIERARCHIC)
     {
+        
         $root = $this->fetchRoot();
         $resultRows = $this->fetchImmediateChildren($root['project_category_id'], $orderBy);
+        
+        /*
+        $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+        if(null == $storeCatIds) {
+            $root = $this->fetchRoot();
+            $resultRows = $this->fetchImmediateChildren($root['project_category_id'], $orderBy);
+        } else {
+            $resultRows = $this->fetchImmediateChildren($storeCatIds, $orderBy, false);
+        }
+        */
 
         $resultForSelect = $this->prepareDataForFormSelect($resultRows);
 
@@ -1525,7 +1536,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
      * @throws Zend_Cache_Exception
      * @throws Zend_Db_Statement_Exception
      */
-    public function fetchImmediateChildren($nodeId, $orderBy = 'lft')
+    public function fetchImmediateChildren($nodeId, $orderBy = 'lft', $search_fo_parent = true)
     {
         $str = is_array($nodeId) ? implode(',', $nodeId) : $nodeId;
         /** @var Zend_Cache_Core $cache */
@@ -1541,7 +1552,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
             SELECT node.*, (SELECT parent.project_category_id FROM project_category AS parent WHERE parent.lft < node.lft AND parent.rgt > node.rgt ORDER BY parent.rgt-node.rgt LIMIT 1) AS parent
             FROM project_category AS node
             WHERE node.is_active = 1
-            HAVING parent IN (' . $inQuery . ')
+            HAVING ' . ($search_fo_parent?'parent':'node.project_category_id') . ' IN (' . $inQuery . ')
             ORDER BY node.' . $orderBy . '
             ';
             $children = $this->_db->query($sql, $nodeId)->fetchAll();

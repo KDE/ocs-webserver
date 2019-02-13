@@ -237,6 +237,17 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                     var downloadLinkFilename = shortFilename(this.name);
 
                                     var link = '';
+                                    
+                                    if (this.tags) {
+                                        fileTags = this.tags;
+
+                                        $.each(fileTags.split(','), function () {
+                                            var tagStr = this.split('##');
+                                            if (tagStr.length == 2 && tagStr[0] == 'link') {
+                                                link = tagStr[1];
+                                            }
+                                        });
+                                    }
 
                                     var fileDescription = '';
                                     if (this.description) {
