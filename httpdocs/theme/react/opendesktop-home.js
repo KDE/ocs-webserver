@@ -123,6 +123,7 @@ class SpotlightProduct extends React.Component {
   }
 
   onSpotlightMenuClick(val) {
+
     this.setState({ loading: true, type: val }, function () {
 
       let url = "/home/showfeaturejson/page/";
@@ -139,11 +140,15 @@ class SpotlightProduct extends React.Component {
       const self = this;
 
       $.ajax({ url: url, cache: false }).done(function (response) {
+
         let featuredProduct = response;
         if (self.state.type === "plinged") {
           featuredProduct = response[0];
         }
-        self.setState({ featuredProduct: featuredProduct, page: page });
+
+        self.setState({ featuredProduct: featuredProduct, page: page }, function () {
+          console.log(this.staet.featuredProduct);
+        });
       });
     });
   }
@@ -194,8 +199,9 @@ class SpotlightProduct extends React.Component {
     let commentCount;
     if (this.state.featuredProduct.comment_count) {
       commentCount = this.state.featuredProduct.comment_count;
+    } else {
+      commentCount = "0";
     }
-    commentCount = "0";
 
     return React.createElement(
       "div",
@@ -251,7 +257,7 @@ class SpotlightProduct extends React.Component {
               React.createElement(
                 "span",
                 null,
-                this.state.featuredProduct.comment_count,
+                commentCount,
                 " comments"
               ),
               React.createElement(
