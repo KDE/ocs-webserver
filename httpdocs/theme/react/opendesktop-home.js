@@ -128,7 +128,7 @@ class SpotlightProduct extends React.Component {
 
   onSpotlightMenuClick(val) {
 
-    this.setState({ loading: true, type: val }, function () {
+    this.setState({ type: val }, function () {
 
       let url = "/home/showfeaturejson/page/";
 
