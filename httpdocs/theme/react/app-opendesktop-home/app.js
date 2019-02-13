@@ -125,7 +125,7 @@ class SpotlightProduct extends React.Component {
     this.setState({loading:true,type:val},function(){
       let url = "/home/showfeaturejson/page/";
       if (this.state.type === "plinged"){
-        url = "/home/getnewactiveplingedproductjson/page/";
+        url = "/home/getnewactiveplingedproductjson?limit=1&offset=" + this.state.page;
         page = this.state.page + 1;
       }
       if (val === "random"){ url += "0"; }
