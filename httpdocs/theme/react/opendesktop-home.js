@@ -155,11 +155,17 @@ class SpotlightProduct extends React.Component {
 
   render() {
 
-    let imageBaseUrl;
-    if (this.props.env === 'live') {
-      imageBaseUrl = 'cn.opendesktop.org';
+    let productImageUrl;
+    if (this.state.type === "plinged") {
+      productImageUrl = this.state.featuredProduct.image_small;
     } else {
-      imageBaseUrl = 'cn.opendesktop.cc';
+      let imageBaseUrl;
+      if (this.props.env === 'live') {
+        imageBaseUrl = 'cn.opendesktop.org';
+      } else {
+        imageBaseUrl = 'cn.opendesktop.cc';
+      }
+      productImageUrl = "https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.state.featuredProduct.image_small;
     }
 
     let description = this.state.featuredProduct.description;
@@ -217,7 +223,7 @@ class SpotlightProduct extends React.Component {
         React.createElement(
           "div",
           { className: "spotlight-image" },
-          React.createElement("img", { className: "product-image", src: "https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.state.featuredProduct.image_small }),
+          React.createElement("img", { className: "product-image", src: productImageUrl }),
           React.createElement(
             "figure",
             { className: "user-avatar" },
