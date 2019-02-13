@@ -1849,14 +1849,20 @@ $this->inlineScript()->appendScript('
                       var nextElementName = form_elem_name.substring(0, form_elem_name.length - 1) + (level + 1);
                       var new_html_element = '<select name="' + form_elem_name + '" id="' + form_elem_name + '" class="required form-control product_select_cat" data-target="'+nextElementName+'" data-level="'+level+'">';
                       new_html_element += '<option value=""> </option>';
+                      var hasNoRoot = true;
                       for (var form_select_option in this.cat_id_data[form_elem_name]) {
                           var attr_selected = '';
                           if (form_select_option == this.cat_id_path[level]) {
-                              attr_selected = ' selected="selected"'
+                              attr_selected = ' selected="selected"';
+                              hasNoRoot = false;
                           }
                           new_html_element += '<option value="' + form_select_option + '" ' + attr_selected + '>' + this.cat_id_data[form_elem_name][form_select_option] + '</option>';
                       }
                       new_html_element += '</select>';
+                      
+                      if(hasNoRoot == true) {
+                          //alert('We will redirect you to the Main Store...');
+                      }
 
                       $('#wrapper_cat_id').append(new_html_element);
                       this.sortOptionByValue(form_elem_name);

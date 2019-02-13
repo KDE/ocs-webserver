@@ -1483,6 +1483,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     {
         $level = 0;
         $ancestors = array("catLevel-{$level}" => $this->fetchMainCatForSelect(Default_Model_DbTable_ProjectCategory::ORDERED_TITLE));
+        
         $level++;
 
         if (false == empty($valueCatId)) {
@@ -1490,8 +1491,9 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
             if ($categoryAncestors) {
                 $categoryPath = explode(',', $categoryAncestors['ancestors']);
                 foreach ($categoryPath as $element) {
-                    $ancestors["catLevel-{$level}"] = $this->prepareDataForFormSelect($this->fetchImmediateChildren($element,
-                        Default_Model_DbTable_ProjectCategory::ORDERED_TITLE));
+                    $catResult = $this->fetchImmediateChildren($element, Default_Model_DbTable_ProjectCategory::ORDERED_TITLE);
+                    $ancestors["catLevel-{$level}"] = $this->prepareDataForFormSelect($catResult);
+                    
                     $level++;
                 }
             }
@@ -1510,10 +1512,10 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     public function fetchMainCatForSelect($orderBy = self::ORDERED_HIERARCHIC)
     {
         
-        $root = $this->fetchRoot();
-        $resultRows = $this->fetchImmediateChildren($root['project_category_id'], $orderBy);
+        //$root = $this->fetchRoot();
+        //$resultRows = $this->fetchImmediateChildren($root['project_category_id'], $orderBy);
         
-        /*
+        
         $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
         if(null == $storeCatIds) {
             $root = $this->fetchRoot();
@@ -1521,7 +1523,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         } else {
             $resultRows = $this->fetchImmediateChildren($storeCatIds, $orderBy, false);
         }
-        */
+        
 
         $resultForSelect = $this->prepareDataForFormSelect($resultRows);
 
@@ -1541,7 +1543,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         $str = is_array($nodeId) ? implode(',', $nodeId) : $nodeId;
         /** @var Zend_Cache_Core $cache */
         $cache = $this->cache;
-        $cacheName = __FUNCTION__ . '_' . md5($str . $orderBy);
+        $cacheName = __FUNCTION__ . '_' . md5($str . $orderBy . $search_fo_parent);
 
         if (false === ($children = $cache->load($cacheName))) {
             $inQuery = '?';
