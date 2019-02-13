@@ -130,7 +130,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                      var $plingMusic = $pploadCollection.find('iframe[data-pling-music-uri]');
                      var pploadApiUri = $pploadCollection.attr('data-ppload-api-uri');
                      var hasFilesPanelOpened = false;
-
+                     var externalIcon = ' <i class="fa fa-external-link"></i>';
                      function keysrt(key, asc) {
                          if(asc) {
                               return function(a,b){
@@ -405,12 +405,13 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
 
 
                                         if (isExternLink) {
+                                            
                                             $fileserverLink = $("#data-link" + this.id).attr('href');
                                             $("#data-link" + this.id).attr('href', decodeURIComponent(link));
                                             $("#data-link" + this.id).attr('data-link-org', $fileserverLink);
 
                                             $("#data-link" + this.id).attr('target','_blank');
-                                            $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
+                                            $("#data-link" + this.id).html($("#data-link" + this.id).html()+ externalIcon );
 
                                             /*
                                             $("#data-link" + this.id).click(function (event) {
@@ -426,7 +427,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
 
                                             $("#data-link-dl" + this.id).attr('target','_blank');
 
-                                            $("#download-link-filename" + this.id).html($("#download-link-filename" + this.id).html() + " (External Link)");
+                                            $("#download-link-filename" + this.id).html($("#download-link-filename" + this.id).html()+ externalIcon );
 
                                             /*
                                             $("#data-link-dl" + this.id).click(function (event) {
@@ -436,7 +437,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                             });
                                             */
 
-                                            $("#install-link-filename" + this.id).html($("#install-link-filename" + this.id).html() + " (External Link)");
+                                            $("#install-link-filename" + this.id).html($("#install-link-filename" + this.id).html() + externalIcon );
                                         }
 
 
@@ -572,7 +573,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                          if (isExternLink) {
                                             //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
                                                 $("#data-link" + this.id).attr('target','_blank');
-                                            $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
+                                            $("#data-link" + this.id).html($("#data-link" + this.id).html() + externalIcon );
                                          }
 
 
