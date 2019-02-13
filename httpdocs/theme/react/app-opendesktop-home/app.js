@@ -206,7 +206,6 @@ class SpotlightProduct extends React.Component {
             </div>
           </div>
         </div>
-        {loadingContainerDisplay}
       </div>
     );
   }

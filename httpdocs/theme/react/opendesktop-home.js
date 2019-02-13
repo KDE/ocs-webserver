@@ -266,8 +266,7 @@ class SpotlightProduct extends React.Component {
             )
           )
         )
-      ),
-      loadingContainerDisplay
+      )
     );
   }
 }
