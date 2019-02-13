@@ -103,6 +103,24 @@ out: ../css/homepage.css, sourcemap: true, compress: true
       position: absolute;
       top: 0;
       left: 0;
+
+      figure.user-avatar {
+        position: absolute;
+        top: 40px;
+        left: 25%;
+        width: 150px;
+        height: 150px;
+        overflow: hidden;
+        border-radius: 100%;
+        border: 5px solid white;
+
+        img {
+          width: 100%;
+          height: 100%;
+          background-color: #eee;
+        }
+      }
+
     }
 
     .spotlight-info {
@@ -436,27 +454,12 @@ out: ../css/homepage.css, sourcemap: true, compress: true
             position: relative;
             border-bottom: 1px solid #ccc;
             max-width: 100%;
-            
+
             img {
               width: 100%;
               max-width: 100%;
             }
-            figure.user-avatar {
-              position: absolute;
-              top: 40px;
-              left: 25%;
-              width: 150px;
-              height: 150px;
-              overflow: hidden;
-              border-radius: 100%;
-              border: 5px solid white;
 
-              img {
-                width: 100%;
-                height: 100%;
-                background-color: #eee;
-              }
-            }
           }
         }
       }
