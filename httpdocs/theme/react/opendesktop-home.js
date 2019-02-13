@@ -153,8 +153,7 @@ class SpotlightProduct extends React.Component {
 
         self.setState({
           featuredProduct: featuredProduct,
-          featuredPage: featuredPage,
-          loading: false
+          featuredPage: featuredPage
         });
       });
     });
