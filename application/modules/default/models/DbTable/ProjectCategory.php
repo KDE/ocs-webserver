@@ -1509,6 +1509,10 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
      */
     public function fetchMainCatForSelect($orderBy = self::ORDERED_HIERARCHIC)
     {
+        
+        $root = $this->fetchRoot();
+        $resultRows = $this->fetchImmediateChildren($root['project_category_id'], $orderBy);
+        /*
         $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
         if(null == $storeCatIds) {
             $root = $this->fetchRoot();
@@ -1516,9 +1520,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         } else {
             $resultRows = $this->fetchImmediateChildren($storeCatIds, $orderBy, false);
         }
-        
-        
-        
+        */
 
         $resultForSelect = $this->prepareDataForFormSelect($resultRows);
 
