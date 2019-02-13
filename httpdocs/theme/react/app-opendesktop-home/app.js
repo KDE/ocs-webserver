@@ -116,7 +116,7 @@ class SpotlightProduct extends React.Component {
   	this.state = {
       featuredProduct:this.props.featuredProduct,
       type:"featured",
-      page:0
+      featuredPage:0
     };
     this.onSpotlightMenuClick = this.onSpotlightMenuClick.bind(this);
   }
@@ -130,10 +130,10 @@ class SpotlightProduct extends React.Component {
     this.setState({type:val},function(){
 
       let url = "/home/showfeaturejson/page/";
-
+      let featuredPage = this.state.featuredPage;
       if (this.state.type === "plinged"){
-        url = "/home/getnewactiveplingedproductjson?limit=1&offset=" + this.state.page;
-        page = this.state.page + 1;
+        url = "/home/getnewactiveplingedproductjson?limit=1&offset=" + this.state.featuredPage;
+        featuredPage = this.state.featuredPage + 1;
       } else if (this.state.type === "random"){
         url += "0";
       } else {
@@ -149,7 +149,7 @@ class SpotlightProduct extends React.Component {
           featuredProduct = response[0];
         }
 
-        self.setState({featuredProduct:featuredProduct,page:page});
+        self.setState({featuredProduct:featuredProduct,page:featuredPage});
       });
     });
   }
