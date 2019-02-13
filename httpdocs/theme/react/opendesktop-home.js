@@ -136,8 +136,11 @@ class SpotlightProduct extends React.Component {
       }
       const self = this;
       $.ajax({ url: url, cache: false }).done(function (response) {
-        console.log(response);
-        self.setState({ featuredProduct: response, page: page });
+        let featuredProduct = response;
+        if (this.state.type === "plinged") {
+          featuredProduct = response[0];
+        }
+        self.setState({ featuredProduct: featuredProduct, page: page });
       });
     });
   }
