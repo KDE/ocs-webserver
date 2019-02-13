@@ -149,7 +149,7 @@ class SpotlightProduct extends React.Component {
           featuredProduct = response[0];
         }
 
-        self.setState({featuredProduct:featuredProduct,page:featuredPage});
+        self.setState({featuredProduct:featuredProduct,featuredPage:featuredPage});
       });
     });
   }
