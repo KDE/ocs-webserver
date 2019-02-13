@@ -150,10 +150,10 @@ class SpotlightProduct extends React.Component {
         if (self.state.type === "plinged") {
           featuredProduct = response[0];
         }
-
         self.setState({
           featuredProduct: featuredProduct,
-          featuredPage: featuredPage
+          featuredPage: featuredPage,
+          loading: false
         });
       });
     });
