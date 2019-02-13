@@ -104,6 +104,11 @@ class App extends React.Component {
           env={this.state.env}
           device={this.state.device}
         />
+        <SpotlightProduct
+          env={this.state.env}
+          device={this.state.device}
+          featuredProduct={featuredProduct}
+        />
       </main>
     )
   }
