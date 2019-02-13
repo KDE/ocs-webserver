@@ -1202,6 +1202,7 @@ class Default_Model_Info
                         ,p.count_likes
                         ,p.count_dislikes   
                         ,p.member_id 
+                        ,p.description
                         ,p.profile_image_url
                         ,p.username
                         ,p.cat_title 

@@ -82,6 +82,11 @@ class Default_Model_PpLoad
 
         if ($projectData->ppload_collection_id <> $fileResponse->file->collection_id) {
             $projectData->ppload_collection_id = $fileResponse->file->collection_id;
+            $projectData->changed_at = new Zend_Db_Expr('NOW()');
+            $projectData->save();
+        }else
+        {
+            $projectData->changed_at = new Zend_Db_Expr('NOW()');
             $projectData->save();
         }
 
