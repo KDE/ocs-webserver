@@ -120,11 +120,7 @@ class SpotlightProduct extends React.Component {
     };
     this.onSpotlightMenuClick = this.onSpotlightMenuClick.bind(this);
   }
-
-  componentDidMount() {
-    this.onSpotlightMenuClick('plinged');
-  }
-
+  
   onSpotlightMenuClick(val){
 
     this.setState({loading:true,type:val},function(){
