@@ -146,7 +146,7 @@ class SpotlightProduct extends React.Component {
         }
 
         self.setState({featuredProduct:featuredProduct,page:page},function(){
-          console.log(this.staet.featuredProduct);
+          console.log(self.state.featuredProduct);
         });
       });
     });
