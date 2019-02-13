@@ -124,20 +124,23 @@ class SpotlightProduct extends React.Component {
 
   onSpotlightMenuClick(val) {
     this.setState({ loading: true, type: val }, function () {
+
       let url = "/home/showfeaturejson/page/";
+
       if (this.state.type === "plinged") {
         url = "/home/getnewactiveplingedproductjson?limit=1&offset=" + this.state.page;
         page = this.state.page + 1;
-      }
-      if (val === "random") {
+      } else if (this.state.type === "random") {
         url += "0";
       } else {
         url += "1";
       }
+
       const self = this;
+
       $.ajax({ url: url, cache: false }).done(function (response) {
         let featuredProduct = response;
-        if (this.state.type === "plinged") {
+        if (self.state.type === "plinged") {
           featuredProduct = response[0];
         }
         self.setState({ featuredProduct: featuredProduct, page: page });
