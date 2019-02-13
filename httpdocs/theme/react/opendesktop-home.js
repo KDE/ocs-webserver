@@ -172,6 +172,12 @@ class SpotlightProduct extends React.Component {
       );
     }
 
+    let commentCount;
+    if (this.state.featuredProduct.comment_count) {
+      commentCount = this.state.featuredProduct.comment_count;
+    }
+    commentCount = "0";
+
     return React.createElement(
       "div",
       { id: "spotlight-product" },
