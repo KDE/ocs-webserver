@@ -381,6 +381,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   `p`.`uuid` AS `project_uuid`,
                   `p`.`status` AS `project_status`,
                   `p`.`created_at` AS `project_created_at`,
+                  `p`.`major_updated_at` AS `project_major_updated_at`,
                   `p`.`changed_at` AS `project_changed_at`,
                   `p`.`member_id` AS `project_member_id`,
                   `p`.`source_pk` AS `project_source_pk`,
@@ -1192,12 +1193,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
             /** @var Zend_Db_Table_Rowset $fetchedElements */
             $fetchedElements = $this->fetchAll($statement);
-
             $statement->reset('limitcount')->reset('limitoffset');
             $statement->reset('columns')->columns(array('count' => new Zend_Db_Expr('count(*)')));
             $countElements = $this->fetchRow($statement);
-            $returnValue = array('elements' => $fetchedElements, 'total_count' => $countElements->count);
-
+            $returnValue = array('elements' => $fetchedElements, 'total_count' => $countElements->count);            
             $cache->save($returnValue, $cacheName, array(), 120);
         }
 
@@ -1290,7 +1289,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
         switch ($filterValue) {
             case 'latest':
-                $statement->order('project.changed_at DESC');
+                $statement->order('project.major_updated_at DESC');
+                //$statement->order('project.changed_at DESC');
                 break;
 
             case 'top':
