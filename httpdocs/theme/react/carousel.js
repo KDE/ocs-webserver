@@ -404,13 +404,12 @@ class Carousel extends React.Component {
 
     let containerWidth;
     if (window.page === "opendesktop") {
-      containerWidth = $('#explore-content').find('.content').width();
+      containerWidth = $('#main-content').width();
     } else if (window.page === "appimages" || window.page === "libreoffice") {
       containerWidth = $('#introduction').find('.container').width();
     }
 
     console.log(containerWidth);
-    console.log($('#main-content').width());
 
     const containerNumber = Math.ceil(this.state.products.length / (itemsPerRow - 1));
     const itemWidth = containerWidth / itemsPerRow;
