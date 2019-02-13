@@ -102,10 +102,6 @@ class App extends React.Component {
     return React.createElement(
       "main",
       { id: "opendesktop-homepage" },
-      React.createElement(SpotlightUser, {
-        env: this.state.env,
-        device: this.state.device
-      }),
       React.createElement(SpotlightProduct, {
         env: this.state.env,
         device: this.state.device,
