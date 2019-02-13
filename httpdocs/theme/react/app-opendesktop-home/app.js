@@ -215,7 +215,8 @@ class SpotlightUser extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      loading:true
+      loading:true,
+      version:2
     };
     this.updateDimensions = this.updateDimensions.bind(this);
     this.getSpotlightUser = this.getSpotlightUser.bind(this);
@@ -305,7 +306,7 @@ class SpotlightUser extends React.Component {
     }
 
     let nextButtonDisplay;
-    if (this.state.page < 10){
+    if (this.state.page < 8){
       nextButtonDisplay = (
         <a onClick={() => this.getSpotlightUser(this.state.page + 1)} className="spotlight-user-next">
           {"Next >"}
@@ -313,8 +314,13 @@ class SpotlightUser extends React.Component {
       );
     }
 
+    let versionCssClass;
+    if (this.state.version === 2){
+      versionCssClass = "v-two"
+    }
+
     return(
-      <div id="spotlight-user-container">
+      <div id="spotlight-user-container" className={versionCssClass}>
         <h2>In the Spotlight</h2>
         {spotlightUserDisplay}
         <div className="spotlight-user-buttons">

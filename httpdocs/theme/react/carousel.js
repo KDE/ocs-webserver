@@ -421,9 +421,6 @@ class Carousel extends React.Component {
       $('#carousel-module-container').width(containerWidth);
     }
 
-    console.log(window.page);
-    console.log(containerWidth);
-
     this.setState({
       sliderPosition: sliderPosition,
       containerWidth: containerWidth,

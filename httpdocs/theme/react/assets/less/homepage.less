@@ -186,6 +186,8 @@ out: ../css/homepage.css, sourcemap: true, compress: true
 }
 
 #spotlight-user-container {
+  max-width: 800px;
+  margin: 0 auto;
 
   #spotlight-user {
 
@@ -298,6 +300,10 @@ out: ../css/homepage.css, sourcemap: true, compress: true
     display: table;
     margin: 10px auto;
 
+    a {
+      cursor: pointer;
+    }
+
     a + a{
       margin-left: 5px;
     }
@@ -310,6 +316,72 @@ out: ../css/homepage.css, sourcemap: true, compress: true
     .ajax-loader {
       display: table;
       margin:  0 auto;
+    }
+  }
+
+  &.v-two {
+
+    .loading-container {
+      padding: 88px 0 88px 0;
+    }
+
+    #spotlight-user {
+      position: relative;
+      padding-left: 200px;
+      height: 200px;
+      border: 1px solid #eee;
+      background-color: white;
+      border-radius: 5px;
+      overflow: hidden;
+
+      .user-container {
+        width: 200px;
+        height: 200px;
+        margin: 0;
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 20px 30px 0 30px;
+        background-color: #eee;
+        display: block;
+
+        figure {
+          width: 140px;
+          height: 140px;
+          position: relative;
+          border-color: white;
+        }
+
+        h2 {
+          float: left;
+          width: 100%;
+          height: auto;
+          line-height: inherit;
+          text-align: center;
+          font-size: 20px;
+        }
+      }
+
+      .product-container {
+        background: #eee;
+        border-radius: 5px;
+        overflow: hidden;
+        display: table;
+        margin: 10px auto 20px auto;
+        border: 1px solid #ccc;
+        width: 100%;
+        border: 0;
+        background-color: transparent;
+        padding: 11px 5px;
+        margin: 0;
+        height: 200px;
+        border-radius: 0;
+
+        .spotlight-user-product {
+          width: 33.3% !important;
+          height: 100% !important;
+        }
+      }
     }
   }
 }

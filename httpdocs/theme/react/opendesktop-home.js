@@ -275,7 +275,8 @@ class SpotlightUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true
+      loading: true,
+      version: 2
     };
     this.updateDimensions = this.updateDimensions.bind(this);
     this.getSpotlightUser = this.getSpotlightUser.bind(this);
@@ -379,7 +380,7 @@ class SpotlightUser extends React.Component {
     }
 
     let nextButtonDisplay;
-    if (this.state.page < 10) {
+    if (this.state.page < 8) {
       nextButtonDisplay = React.createElement(
         "a",
         { onClick: () => this.getSpotlightUser(this.state.page + 1), className: "spotlight-user-next" },
@@ -387,9 +388,14 @@ class SpotlightUser extends React.Component {
       );
     }
 
+    let versionCssClass;
+    if (this.state.version === 2) {
+      versionCssClass = "v-two";
+    }
+
     return React.createElement(
       "div",
-      { id: "spotlight-user-container" },
+      { id: "spotlight-user-container", className: versionCssClass },
       React.createElement(
         "h2",
         null,
