@@ -117,7 +117,8 @@ class SpotlightProduct extends React.Component {
     this.state = {
       featuredProduct: this.props.featuredProduct,
       type: "featured",
-      featuredPage: 0
+      featuredPage: 0,
+      loading: true
     };
     this.onSpotlightMenuClick = this.onSpotlightMenuClick.bind(this);
   }
@@ -128,7 +129,7 @@ class SpotlightProduct extends React.Component {
 
   onSpotlightMenuClick(val) {
 
-    this.setState({ type: val }, function () {
+    this.setState({ type: val, loading: true }, function () {
 
       let url = "/home/showfeaturejson/page/";
       let featuredPage = this.state.featuredPage;
@@ -150,7 +151,11 @@ class SpotlightProduct extends React.Component {
           featuredProduct = response[0];
         }
 
-        self.setState({ featuredProduct: featuredProduct, featuredPage: featuredPage });
+        self.setState({
+          featuredProduct: featuredProduct,
+          featuredPage: featuredPage,
+          loading: false
+        });
       });
     });
   }
@@ -211,15 +216,15 @@ class SpotlightProduct extends React.Component {
       commentCount = "0";
     }
 
-    return React.createElement(
-      "div",
-      { id: "spotlight-product" },
-      React.createElement(
-        "h2",
-        null,
-        "In the Spotlight"
-      ),
-      React.createElement(
+    let spotlightProductDisplay;
+    if (this.state.loading) {
+      spotlightProductDisplay = React.createElement(
+        "div",
+        { id: "loading-container" },
+        React.createElement("div", { className: "ajax-loader" })
+      );
+    } else {
+      spotlightProductDisplay = React.createElement(
         "div",
         { className: "container" },
         React.createElement(
@@ -315,7 +320,18 @@ class SpotlightProduct extends React.Component {
             )
           )
         )
-      )
+      );
+    }
+
+    return React.createElement(
+      "div",
+      { id: "spotlight-product" },
+      React.createElement(
+        "h2",
+        null,
+        "In the Spotlight"
+      ),
+      spotlightProductDisplay
     );
   }
 }
