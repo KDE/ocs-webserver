@@ -22,7 +22,6 @@
 
 $model = new Default_Model_Tags();
 $tags = $model->getTagsSystemList($this->product->project_id); 
-if (false === empty($tags)) {
 ?>
 <div class="prod-widget-box right details">
 
@@ -52,4 +51,3 @@ if (false === empty($tags)) {
     </div>
 
 </div>
-<?php }

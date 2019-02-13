@@ -483,7 +483,8 @@ class Default_Model_Info
             }
         }
 
-        $sql .= ' ORDER BY IFNULL(p.changed_at,p.created_at)  DESC';
+        //$sql .= ' ORDER BY IFNULL(p.changed_at,p.created_at)  DESC';
+        $sql .= ' ORDER BY p.major_updated_at  DESC';
 
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
