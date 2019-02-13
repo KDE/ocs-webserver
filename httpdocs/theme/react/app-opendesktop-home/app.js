@@ -115,7 +115,8 @@ class SpotlightProduct extends React.Component {
   	super(props);
   	this.state = {
       featuredProduct:this.props.featuredProduct,
-      type:"featured"
+      type:"featured",
+      page:0
     };
     this.onSpotlightMenuClick = this.onSpotlightMenuClick.bind(this);
   }
@@ -123,12 +124,16 @@ class SpotlightProduct extends React.Component {
   onSpotlightMenuClick(val){
     this.setState({loading:true,type:val},function(){
       let url = "/home/showfeaturejson/page/";
+      if (this.state.type === "plinged"){
+        url = "/home/showspotlightjson?page=" + this.state.page;
+        page = this.state.page + 1;
+      }
       if (val === "random"){ url += "0"; }
       else { url += "1"; }
       const self = this;
       $.ajax({url: url,cache: false}).done(function(response){
         console.log(response);
-        self.setState({featuredProduct:response});
+        self.setState({featuredProduct:response,page:page});
       });
     });
   }
