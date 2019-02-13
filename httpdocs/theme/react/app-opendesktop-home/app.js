@@ -123,7 +123,7 @@ class SpotlightProduct extends React.Component {
   }
 
   componentDidMount() {
-    this.onSpotlightMenuClick('plinged');
+    // this.onSpotlightMenuClick('plinged');
   }
 
   onSpotlightMenuClick(val){
