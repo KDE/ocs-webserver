@@ -289,7 +289,7 @@ class SpotlightProductDummy extends React.Component {
                 <figure><span className="glyphicon glyphicon-user"></span></figure>
                 <span></span>
               </div>
-              <span></span>
+              <span className="comments-count"></span>
               <div className="score-info">
                 <div className="score-number"></div>
                 <div className="score-bar-container">

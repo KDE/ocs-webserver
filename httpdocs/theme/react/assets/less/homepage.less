@@ -248,6 +248,7 @@ out: ../css/homepage.css, sourcemap: true, compress: true
             .user-info {
               float: left;
               width: 100%;
+              margin-bottom: 10px;
 
               figure {
                 height: 30px;
@@ -255,13 +256,15 @@ out: ../css/homepage.css, sourcemap: true, compress: true
                 border: 3px solid #eee;
                 border-radius: 100%;
                 overflow: hidden;
- 
+                float: left;
+
                 span {
-                  width: 100%;
-                  height: 100%;
+                  height: 12px;
                   display: block;
-                  font-size: 26px;
-                  text-align: center;
+                  width: 30%;
+                  float: left;
+                  background-color: #eee;
+                  margin: 8px 0 0 10px;
                 }
               }
 
@@ -272,6 +275,14 @@ out: ../css/homepage.css, sourcemap: true, compress: true
                 float: left;
                 background-color: #eee;
               }
+            }
+
+            .comments-count {
+              display: block;
+              float: left;
+              width: 50%;
+              background-color: #eee;
+              height: 12px;              
             }
           }
 

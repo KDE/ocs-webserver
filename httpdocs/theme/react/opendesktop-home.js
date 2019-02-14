@@ -366,7 +366,7 @@ class SpotlightProductDummy extends React.Component {
               ),
               React.createElement("span", null)
             ),
-            React.createElement("span", null),
+            React.createElement("span", { className: "comments-count" }),
             React.createElement(
               "div",
               { className: "score-info" },
