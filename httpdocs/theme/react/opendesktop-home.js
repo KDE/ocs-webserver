@@ -141,7 +141,6 @@ class SpotlightProduct extends React.Component {
       } else {
         url += "1";
       }
-      console.log(url);
       const self = this;
 
       $.ajax({ url: url, cache: false }).done(function (response) {
@@ -150,6 +149,9 @@ class SpotlightProduct extends React.Component {
         if (self.state.type === "plinged") {
           featuredProduct = response[0];
         }
+
+        console.log(featuredProduct);
+
         self.setState({
           featuredProduct: featuredProduct,
           featuredPage: featuredPage,
