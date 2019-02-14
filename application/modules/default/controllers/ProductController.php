@@ -2040,7 +2040,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     // Save collection ID
                     $projectData->ppload_collection_id = $fileResponse->file->collection_id;
                     //20180219 ronald: we set the changed_at only by new files or new updates
-                    $projectData->changed_at = new Zend_Db_Expr('NOW()');
+                    if($this->_authMember->member_id==$projectData->member_id)
+                    {
+                        $projectData->changed_at = new Zend_Db_Expr('NOW()');
+                    }
                     $projectData->ghns_excluded = 0;
                     $projectData->save();
 
@@ -2086,9 +2089,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $this->_updatePploadMediaCollectionthumbnail($projectData);
                 } else {
                     //20180219 ronald: we set the changed_at only by new files or new updates
-                    $projectData->changed_at = new Zend_Db_Expr('NOW()');
+                    if($this->_authMember->member_id==$projectData->member_id)
+                    {
+                        $projectData->changed_at = new Zend_Db_Expr('NOW()');
+                    }                       
                     $projectData->ghns_excluded = 0;
-                    $projectData->save();
+                    $projectData->save();                    
                 }
 
                 $this->_helper->json(array(
