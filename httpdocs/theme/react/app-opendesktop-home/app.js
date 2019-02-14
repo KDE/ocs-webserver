@@ -210,6 +210,10 @@ class SpotlightProduct extends React.Component {
         commentCount = "0";
       }
 
+      let categoryDisplay = this.state.featuredProduct.category;
+      if (this.state.type === "plinged"){
+        categoryDisplay = this.state.featuredProduct.cat_title;
+      }
 
       spotlightProductDisplay = (
         <div className="container">
@@ -224,7 +228,7 @@ class SpotlightProduct extends React.Component {
               {featuredLabelDisplay}
               <div className="info-top">
                 <h2><a href={"/p/" + this.state.featuredProduct.project_id}>{this.state.featuredProduct.title}</a></h2>
-                <h3>{this.state.featuredProduct.category}</h3>
+                <h3>{categoryDisplay}</h3>
                 <div className="user-info">
                   <img src={this.state.featuredProduct.profile_image_url}/>
                   {this.state.featuredProduct.username}

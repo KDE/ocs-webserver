@@ -213,6 +213,11 @@ class SpotlightProduct extends React.Component {
         commentCount = "0";
       }
 
+      let categoryDisplay = this.state.featuredProduct.category;
+      if (this.state.type === "plinged") {
+        categoryDisplay = this.state.featuredProduct.cat_title;
+      }
+
       spotlightProductDisplay = React.createElement(
         "div",
         { className: "container" },
@@ -248,7 +253,7 @@ class SpotlightProduct extends React.Component {
               React.createElement(
                 "h3",
                 null,
-                this.state.featuredProduct.category
+                categoryDisplay
               ),
               React.createElement(
                 "div",
