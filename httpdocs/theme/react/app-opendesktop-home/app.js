@@ -204,8 +204,8 @@ class SpotlightProduct extends React.Component {
       // const productScoreColor = window.hpHelpers.calculateScoreColor(this.state.featuredProduct.laplace_score);
 
       let commentCount;
-      if (this.state.featuredProduct.count_comment){
-        commentCount = this.state.featuredProduct.count_comment;
+      if (this.state.featuredProduct.count_comments){
+        commentCount = this.state.featuredProduct.count_comments;
       } else {
         commentCount = "0";
       }
