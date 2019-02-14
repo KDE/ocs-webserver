@@ -222,87 +222,88 @@ out: ../css/homepage.css, sourcemap: true, compress: true
 
       .spotlight-image {
         background-color: #eee;
+      }
+      
+      .spotlight-info {
+        .spotlight-info-wrapper {
+          .info-top {
+            padding-right: 40%;
+            position: relative;
+            margin-bottom: 20px;
+            float: left;
+            width: 100%;
 
-        .spotlight-info {
-          .spotlight-info-wrapper {
-            .info-top {
-              padding-right: 40%;
-              position: relative;
-              margin-bottom: 20px;
+            h2 {
+              height: 16px;
+              width: 80%;
+              background-color: #eee;
+            }
+
+            h3 {
+              height: 14px;
+              width: 90%;
+              background-color: #eee;
+            }
+
+            .user-info {
               float: left;
               width: 100%;
 
-              h2 {
-                height: 16px;
-                width: 80%;
-                background-color: #eee;
-              }
+              figure {
+                height: 25px;
+                width: 25px;
+                border: 3px solid #eee;
+                border-radius: 100%;
+                overflow: hidden;
 
-              h3 {
-                height: 14px;
-                width: 90%;
-                background-color: #eee;
-              }
-
-              .user-info {
-                float: left;
-                width: 100%;
-
-                figure {
-                  height: 25px;
-                  width: 25px;
-                  border: 3px solid #eee;
-                  border-radius: 100%;
-                  overflow: hidden;
-
-                  span {
-                    width: 100%;
-                    height: 100%;
-                    display: block;
-                    font-size: 18px;
-                    text-align: center;
-                  }
-                }
-
-                > span {
-                  height: 12px;
+                span {
+                  width: 100%;
+                  height: 100%;
                   display: block;
-                  width: 50%;
-                  float: left;
-                  background-color: #eee;
+                  font-size: 18px;
+                  text-align: center;
                 }
               }
-            }
 
-            .score-info {
-              .score-bar-container {
-                .score-bar {
-                    height: 9px;
-                    background-color: #eee;
-                    border-bottom: 0;
-                }
-              }
-            }
-
-            .info-description {
-              float: left;
-              width: 100%;
-
-              span {
+              > span {
                 height: 12px;
                 display: block;
+                width: 50%;
                 float: left;
                 background-color: #eee;
-                width: 100%;
+              }
+            }
+          }
 
-                &.half {
-                  width: 50%;
-                }
+          .score-info {
+            .score-bar-container {
+              .score-bar {
+                  height: 9px;
+                  background-color: #eee;
+                  border-bottom: 0;
+              }
+            }
+          }
+
+          .info-description {
+            float: left;
+            width: 100%;
+
+            span {
+              height: 12px;
+              display: block;
+              float: left;
+              background-color: #eee;
+              width: 100%;
+
+              &.half {
+                width: 50%;
               }
             }
           }
         }
       }
+
     }
   }
 
