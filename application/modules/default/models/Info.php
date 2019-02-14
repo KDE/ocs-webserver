@@ -1207,6 +1207,7 @@ class Default_Model_Info
                         ,p.profile_image_url
                         ,p.username
                         ,p.cat_title 
+                        ,p.count_comments
                         ,(
                             select max(created_at) from project_plings pt where pt.member_id = pl.member_id and pt.project_id=pl.project_id
                         ) as pling_created_at
