@@ -357,7 +357,11 @@ class SpotlightProductDummy extends React.Component {
             React.createElement(
               "div",
               { className: "user-info" },
-              React.createElement("figure", null),
+              React.createElement(
+                "figure",
+                null,
+                React.createElement("span", { className: "glyphicon glyphicon-user" })
+              ),
               React.createElement("span", null)
             ),
             React.createElement("span", null),

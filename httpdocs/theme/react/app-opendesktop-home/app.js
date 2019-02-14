@@ -284,7 +284,7 @@ class SpotlightProductDummy extends React.Component {
               <h2></h2>
               <h3></h3>
               <div className="user-info">
-                <figure></figure>
+                <figure><span className="glyphicon glyphicon-user"></span></figure>
                 <span></span>
               </div>
               <span></span>
