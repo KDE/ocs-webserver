@@ -160,57 +160,6 @@ class SpotlightProduct extends React.Component {
 
   render(){
 
-    let productImageUrl;
-    if (this.state.type === "plinged"){
-      productImageUrl = this.state.featuredProduct.image_small;
-    } else {
-      let imageBaseUrl;
-      if (this.props.env === 'live') {
-        imageBaseUrl = 'cn.opendesktop.org';
-      } else {
-        imageBaseUrl = 'cn.opendesktop.cc';
-      }
-      productImageUrl = "https://" + imageBaseUrl + "/cache/300x230-1/img/" +  this.state.featuredProduct.image_small;
-    }
-
-    let description = this.state.featuredProduct.description;
-    if (description && description.length > 295){
-      description = this.state.featuredProduct.description.substring(0,295) + "...";
-    }
-
-    let featuredLabelDisplay;
-    if (this.state.type === "featured"){
-      featuredLabelDisplay = (
-        <span className="featured-label">featured</span>
-      );
-    } else if (this.state.type === "plinged"){
-      featuredLabelDisplay = (
-        <span className="featured-label plinged">plinged</span>
-      );
-    }
-
-    let cDate = new Date(this.state.featuredProduct.created_at);
-    cDate = cDate.toString();
-    const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
-    // const productScoreColor = window.hpHelpers.calculateScoreColor(this.state.featuredProduct.laplace_score);
-
-    let loadingContainerDisplay;
-    if (this.state.loading){
-      loadingContainerDisplay = (
-        <div className="loading-container">
-          <div className="ajax-loader"></div>
-        </div>
-      );
-    }
-
-    let commentCount;
-    console.log(this.state.featuredProduct);
-    if (this.state.featuredProduct.count_comment){
-      commentCount = this.state.featuredProduct.count_comment;
-    } else {
-      commentCount = "0";
-    }
-
     let spotlightProductDisplay;
     if (this.state.loading){
       spotlightProductDisplay = (
@@ -219,6 +168,49 @@ class SpotlightProduct extends React.Component {
         </div>
       );
     } else {
+
+      let productImageUrl;
+      if (this.state.type === "plinged"){
+        productImageUrl = this.state.featuredProduct.image_small;
+      } else {
+        let imageBaseUrl;
+        if (this.props.env === 'live') {
+          imageBaseUrl = 'cn.opendesktop.org';
+        } else {
+          imageBaseUrl = 'cn.opendesktop.cc';
+        }
+        productImageUrl = "https://" + imageBaseUrl + "/cache/300x230-1/img/" +  this.state.featuredProduct.image_small;
+      }
+
+      let description = this.state.featuredProduct.description;
+      if (description && description.length > 295){
+        description = this.state.featuredProduct.description.substring(0,295) + "...";
+      }
+
+      let featuredLabelDisplay;
+      if (this.state.type === "featured"){
+        featuredLabelDisplay = (
+          <span className="featured-label">featured</span>
+        );
+      } else if (this.state.type === "plinged"){
+        featuredLabelDisplay = (
+          <span className="featured-label plinged">plinged</span>
+        );
+      }
+
+      let cDate = new Date(this.state.featuredProduct.created_at);
+      cDate = cDate.toString();
+      const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
+      // const productScoreColor = window.hpHelpers.calculateScoreColor(this.state.featuredProduct.laplace_score);
+
+      let commentCount;
+      if (this.state.featuredProduct.count_comment){
+        commentCount = this.state.featuredProduct.count_comment;
+      } else {
+        commentCount = "0";
+      }
+
+
       spotlightProductDisplay = (
         <div className="container">
           <div className="spotlight-image">
@@ -284,7 +276,6 @@ class SpotlightProductDummy extends React.Component {
     return(
       <div className="container dummy-product">
         <div className="spotlight-image">
-          <img className="product-image" src={productImageUrl}/>
           <figure className="user-avatar"></figure>
         </div>
         <div className="spotlight-info">

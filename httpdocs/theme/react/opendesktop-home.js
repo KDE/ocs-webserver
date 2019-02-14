@@ -161,61 +161,6 @@ class SpotlightProduct extends React.Component {
 
   render() {
 
-    let productImageUrl;
-    if (this.state.type === "plinged") {
-      productImageUrl = this.state.featuredProduct.image_small;
-    } else {
-      let imageBaseUrl;
-      if (this.props.env === 'live') {
-        imageBaseUrl = 'cn.opendesktop.org';
-      } else {
-        imageBaseUrl = 'cn.opendesktop.cc';
-      }
-      productImageUrl = "https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.state.featuredProduct.image_small;
-    }
-
-    let description = this.state.featuredProduct.description;
-    if (description && description.length > 295) {
-      description = this.state.featuredProduct.description.substring(0, 295) + "...";
-    }
-
-    let featuredLabelDisplay;
-    if (this.state.type === "featured") {
-      featuredLabelDisplay = React.createElement(
-        "span",
-        { className: "featured-label" },
-        "featured"
-      );
-    } else if (this.state.type === "plinged") {
-      featuredLabelDisplay = React.createElement(
-        "span",
-        { className: "featured-label plinged" },
-        "plinged"
-      );
-    }
-
-    let cDate = new Date(this.state.featuredProduct.created_at);
-    cDate = cDate.toString();
-    const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
-    // const productScoreColor = window.hpHelpers.calculateScoreColor(this.state.featuredProduct.laplace_score);
-
-    let loadingContainerDisplay;
-    if (this.state.loading) {
-      loadingContainerDisplay = React.createElement(
-        "div",
-        { className: "loading-container" },
-        React.createElement("div", { className: "ajax-loader" })
-      );
-    }
-
-    let commentCount;
-    console.log(this.state.featuredProduct);
-    if (this.state.featuredProduct.count_comment) {
-      commentCount = this.state.featuredProduct.count_comment;
-    } else {
-      commentCount = "0";
-    }
-
     let spotlightProductDisplay;
     if (this.state.loading) {
       spotlightProductDisplay = React.createElement(
@@ -224,6 +169,52 @@ class SpotlightProduct extends React.Component {
         React.createElement("div", { className: "ajax-loader" })
       );
     } else {
+
+      let productImageUrl;
+      if (this.state.type === "plinged") {
+        productImageUrl = this.state.featuredProduct.image_small;
+      } else {
+        let imageBaseUrl;
+        if (this.props.env === 'live') {
+          imageBaseUrl = 'cn.opendesktop.org';
+        } else {
+          imageBaseUrl = 'cn.opendesktop.cc';
+        }
+        productImageUrl = "https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.state.featuredProduct.image_small;
+      }
+
+      let description = this.state.featuredProduct.description;
+      if (description && description.length > 295) {
+        description = this.state.featuredProduct.description.substring(0, 295) + "...";
+      }
+
+      let featuredLabelDisplay;
+      if (this.state.type === "featured") {
+        featuredLabelDisplay = React.createElement(
+          "span",
+          { className: "featured-label" },
+          "featured"
+        );
+      } else if (this.state.type === "plinged") {
+        featuredLabelDisplay = React.createElement(
+          "span",
+          { className: "featured-label plinged" },
+          "plinged"
+        );
+      }
+
+      let cDate = new Date(this.state.featuredProduct.created_at);
+      cDate = cDate.toString();
+      const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
+      // const productScoreColor = window.hpHelpers.calculateScoreColor(this.state.featuredProduct.laplace_score);
+
+      let commentCount;
+      if (this.state.featuredProduct.count_comment) {
+        commentCount = this.state.featuredProduct.count_comment;
+      } else {
+        commentCount = "0";
+      }
+
       spotlightProductDisplay = React.createElement(
         "div",
         { className: "container" },
@@ -350,7 +341,6 @@ class SpotlightProductDummy extends React.Component {
       React.createElement(
         "div",
         { className: "spotlight-image" },
-        React.createElement("img", { className: "product-image", src: productImageUrl }),
         React.createElement("figure", { className: "user-avatar" })
       ),
       React.createElement(
