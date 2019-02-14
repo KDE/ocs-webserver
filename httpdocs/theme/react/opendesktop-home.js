@@ -165,11 +165,7 @@ class SpotlightProduct extends React.Component {
 
     let spotlightProductDisplay;
     if (this.state.loading) {
-      spotlightProductDisplay = React.createElement(
-        "div",
-        { id: "loading-container" },
-        React.createElement("div", { className: "ajax-loader" })
-      );
+      spotlightProductDisplay = React.createElement(SpotlightProductDummy, null);
     } else {
 
       let productImageUrl;
@@ -324,8 +320,7 @@ class SpotlightProduct extends React.Component {
         null,
         "In the Spotlight"
       ),
-      spotlightProductDisplay,
-      React.createElement(SpotlightProductDummy, null)
+      spotlightProductDisplay
     );
   }
 }
@@ -343,7 +338,11 @@ class SpotlightProductDummy extends React.Component {
       React.createElement(
         "div",
         { className: "spotlight-image" },
-        React.createElement("figure", { className: "user-avatar" })
+        React.createElement(
+          "figure",
+          { className: "user-avatar" },
+          React.createElement("div", { className: "ajax-loader" })
+        )
       ),
       React.createElement(
         "div",

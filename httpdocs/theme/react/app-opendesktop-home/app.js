@@ -165,9 +165,7 @@ class SpotlightProduct extends React.Component {
     let spotlightProductDisplay;
     if (this.state.loading){
       spotlightProductDisplay = (
-        <div id="loading-container">
-          <div className="ajax-loader"></div>
-        </div>
+        <SpotlightProductDummy />
       );
     } else {
 
@@ -262,7 +260,6 @@ class SpotlightProduct extends React.Component {
       <div id="spotlight-product">
         <h2>In the Spotlight</h2>
         {spotlightProductDisplay}
-        <SpotlightProductDummy />
       </div>
     );
   }
@@ -278,7 +275,9 @@ class SpotlightProductDummy extends React.Component {
     return(
       <div className="container dummy-product">
         <div className="spotlight-image">
-          <figure className="user-avatar"></figure>
+          <figure className="user-avatar">
+            <div className="ajax-loader"></div>
+          </figure>
         </div>
         <div className="spotlight-info">
           <div className="spotlight-info-wrapper">
