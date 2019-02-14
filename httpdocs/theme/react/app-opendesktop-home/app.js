@@ -268,6 +268,51 @@ class SpotlightProduct extends React.Component {
       <div id="spotlight-product">
         <h2>In the Spotlight</h2>
         {spotlightProductDisplay}
+        <SpotlightProductDummy />
+      </div>
+    );
+  }
+}
+
+class SpotlightProductDummy extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    return(
+      <div className="container dummy-product">
+        <div className="spotlight-image">
+          <img className="product-image" src={productImageUrl}/>
+          <figure className="user-avatar"></figure>
+        </div>
+        <div className="spotlight-info">
+          <div className="spotlight-info-wrapper">
+            <div className="info-top">
+              <h2></h2>
+              <h3></h3>
+              <div className="user-info">
+                <figure></figure>
+                <span></span>
+              </div>
+              <span></span>
+              <div className="score-info">
+                <div className="score-number"></div>
+                <div className="score-bar-container">
+                  <div className="score-bar" style={{"width":"50%"}}></div>
+                </div>
+                <div className="score-bar-date"></div>
+              </div>
+            </div>
+            <div className="info-description">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span className="half"></span>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

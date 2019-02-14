@@ -331,7 +331,68 @@ class SpotlightProduct extends React.Component {
         null,
         "In the Spotlight"
       ),
-      spotlightProductDisplay
+      spotlightProductDisplay,
+      React.createElement(SpotlightProductDummy, null)
+    );
+  }
+}
+
+class SpotlightProductDummy extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return React.createElement(
+      "div",
+      { className: "container dummy-product" },
+      React.createElement(
+        "div",
+        { className: "spotlight-image" },
+        React.createElement("img", { className: "product-image", src: productImageUrl }),
+        React.createElement("figure", { className: "user-avatar" })
+      ),
+      React.createElement(
+        "div",
+        { className: "spotlight-info" },
+        React.createElement(
+          "div",
+          { className: "spotlight-info-wrapper" },
+          React.createElement(
+            "div",
+            { className: "info-top" },
+            React.createElement("h2", null),
+            React.createElement("h3", null),
+            React.createElement(
+              "div",
+              { className: "user-info" },
+              React.createElement("figure", null),
+              React.createElement("span", null)
+            ),
+            React.createElement("span", null),
+            React.createElement(
+              "div",
+              { className: "score-info" },
+              React.createElement("div", { className: "score-number" }),
+              React.createElement(
+                "div",
+                { className: "score-bar-container" },
+                React.createElement("div", { className: "score-bar", style: { "width": "50%" } })
+              ),
+              React.createElement("div", { className: "score-bar-date" })
+            )
+          ),
+          React.createElement(
+            "div",
+            { className: "info-description" },
+            React.createElement("span", null),
+            React.createElement("span", null),
+            React.createElement("span", null),
+            React.createElement("span", { className: "half" })
+          )
+        )
+      )
     );
   }
 }
