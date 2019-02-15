@@ -1,4 +1,7 @@
 
+-- drop old procedure
+drop procedure generate_tmp_cat_tag_proj;
+
        
 DROP TABLE IF EXISTS stat_cat_tree_hierachie;
 
@@ -44,11 +47,13 @@ CREATE TABLE `tmp_project_system_tag` (
   `project_category_id` INT(11) NOT NULL,
   `tag_id` INT(11) NOT NULL,
   `ancestor_id_path` VARCHAR(50) NULL DEFAULT NULL,
-  PRIMARY KEY (`project_id`, `project_category_id`, `tag_id`)
+   INDEX(`project_id`, `project_category_id`, `tag_id`)
 );
 
+drop procedure IF EXISTS  generate_tmp_cat_tag_proj_init;
 
-CREATE DEFINER=`root`@`%` PROCEDURE `generate_tmp_cat_tag_proj_init`()
+DELIMITER $$
+CREATE PROCEDURE `generate_tmp_cat_tag_proj_init`()
 BEGIN
 
     TRUNCATE table tmp_project_system_tag;  
@@ -101,34 +106,54 @@ BEGIN
     join category_tag c on c.category_id = t.catid6    
     WHERE p.`status` = 100  
     ;  
-
+  
+    
+    DROP TABLE IF EXISTS tmp_tag_object_to_delete;
+    CREATE TEMPORARY TABLE tmp_tag_object_to_delete
+    (PRIMARY KEY `primary` (tag_item_id))
+      ENGINE MyISAM
+      AS
+        SELECT 
+        o.tag_item_id
+    FROM 
+        tag_object o
+        LEFT JOIN tmp_project_system_tag t on t.project_id = o.tag_object_id and t.tag_id = o.tag_id 
+    WHERE 
+        o.tag_group_id = 6 and o.is_deleted = 0 and t.project_id is null
+    ;
+    
     /*DELETE SYSTEM TAGS -- 12155 TO DELETE*/
-    update tag_object p set is_deleted = 1 , tag_changed = now()
-    where p.tag_item_id in
+    update tag_object  set is_deleted = 1 , tag_changed = now()
+    where tag_item_id in
     (
       SELECT 
         o.tag_item_id
       FROM 
-        tag_object o
-        LEFT JOIN tmp_project_system_tag t on t.project_id = o.tag_object_id and t.tag_id = o.tag_id 
-      WHERE 
-        o.tag_group_id = 6 and o.is_deleted = 0 and t.project_id is null
-    )
+        tmp_tag_object_to_delete o
+    );
 
 
     /*INSERT SYSTEM TAGS -- 50360  TO INSERT*/
 
-    INSERT INTO tag_object
-    SELECT null AS tag_item_id, p.tag_id, 1 AS tag_type_id, 6 AS tag_group_id,p.project_id AS tag_object_id,NOW() AS tag_created, null AS tag_changed 
-    FROM (
-      SELECT 
+  DROP TABLE IF EXISTS tmp_tag_object_to_insert;
+    CREATE TEMPORARY TABLE tmp_tag_object_to_insert
+    /*(INDEX (project_id,project_category_id,tag_id))*/
+      ENGINE MyISAM
+      AS
+        SELECT 
         t.*
       FROM 
         tmp_project_system_tag t
         LEFT JOIN tag_object o on t.project_id = o.tag_object_id and t.tag_id = o.tag_id and o.tag_group_id = 6
       WHERE 
         o.tag_item_id is null
-    ) p
+    ;
+
+    INSERT INTO tag_object
+    SELECT null AS tag_item_id, p.tag_id, 1 AS tag_type_id, 6 AS tag_group_id,p.project_id AS tag_object_id,null as tag_parenet_object_id,NOW() AS tag_created, null AS tag_changed, 0 as is_deleted
+    FROM (
+      select DISTINCT * from tmp_tag_object_to_insert
+    ) p;
 
       /*
     DELETE FROM tag_object
@@ -139,4 +164,6 @@ BEGIN
     FROM tmp_cat_tag_proj p
     ; 
       */    
-END
+END;
+$$
+DELIMITER ;
