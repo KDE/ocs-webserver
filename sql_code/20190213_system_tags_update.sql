@@ -44,10 +44,10 @@ CREATE TABLE `tmp_project_system_tag` (
   `project_category_id` INT(11) NOT NULL,
   `tag_id` INT(11) NOT NULL,
   `ancestor_id_path` VARCHAR(50) NULL DEFAULT NULL,
-  PRIMARY KEY (`project_id`, `project_category_id`, `tag_id`)
+   INDEX(`project_id`, `project_category_id`, `tag_id`)
 );
 
-
+drop procedure IF EXISTS  generate_tmp_cat_tag_proj_init;
 
 DELIMITER $$
 CREATE PROCEDURE `generate_tmp_cat_tag_proj_init`()
@@ -149,7 +149,7 @@ BEGIN
     INSERT INTO tag_object
     SELECT null AS tag_item_id, p.tag_id, 1 AS tag_type_id, 6 AS tag_group_id,p.project_id AS tag_object_id,null as tag_parenet_object_id,NOW() AS tag_created, null AS tag_changed, 0 as is_deleted
     FROM (
-      select * from tmp_tag_object_to_insert
+      select DISTINCT * from tmp_tag_object_to_insert
     ) p;
 
       /*
