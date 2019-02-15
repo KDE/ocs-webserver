@@ -32,6 +32,7 @@ $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images
 
 $modelInfo = new Default_Model_Info();
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperBuildBaseUrl = new Default_View_Helper_BuildBaseUrl();
 $helperImage = new Default_View_Helper_Image();
 $helpPrintDate = new Default_View_Helper_PrintDate();
 
@@ -39,6 +40,8 @@ $host = $_SERVER['SERVER_NAME'];
 
 $modelProject = new Default_Model_Project();
 $totalProjects = $modelProject->fetchTotalProjectsCount(true);
+
+$basrUrl = $helperBuildBaseUrl->buildBaserUrl();
 
 if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
     $products1 = $modelInfo->getJsonLastProductsForHostStores(15,"104");
@@ -110,6 +113,7 @@ if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
   var page = "libreoffice";
   var data = <?php echo Zend_Json::encode($response)?>;
   var totalProjects = <?php echo $totalProjects ?>;
+  var baseUrl = <?php echo Zend_Json::encode($basrUrl)?>;
 </script>
 <link type="text/css" rel="stylesheet" href="/theme/react/assets/css/carousel.css"/>
 <div id="carousel-module-container" class="app-images-hub">
