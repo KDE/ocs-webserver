@@ -1,4 +1,7 @@
 
+-- drop old procedure
+drop procedure generate_tmp_cat_tag_proj;
+
        
 DROP TABLE IF EXISTS stat_cat_tree_hierachie;
 
