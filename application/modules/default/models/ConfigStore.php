@@ -47,6 +47,7 @@ class Default_Model_ConfigStore
     public $layout_pagedetail;
     public $layout;
     public $render_view_postfix;
+    public $stay_in_context;
     public $created_at;
     public $changed_at;
     public $deleted_at;
@@ -75,6 +76,7 @@ class Default_Model_ConfigStore
             $this->layout_pagedetail = $storeConfig['layout_pagedetail'];
             $this->layout = $storeConfig['layout'];
             $this->render_view_postfix = $storeConfig['render_view_postfix'];
+            $this->stay_in_context = $storeConfig['stay_in_context'];
             $this->created_at = $storeConfig['created_at'];
             $this->changed_at = $storeConfig['changed_at'];
             $this->deleted_at = $storeConfig['deleted_at'];

@@ -21,7 +21,8 @@ class SiteHeader extends React.Component {
       cat_title_left:window.json_cat_title_left,
       tabs_left:window.tabs_left,
       template:window.json_template,
-      status:""
+      status:"",
+      url_logout:window.json_logouturl
     };
     this.updateDimensions = this.updateDimensions.bind(this);
   }
@@ -200,8 +201,8 @@ class SiteHeaderLoginMenu extends React.Component {
     return (
       <div id="site-header-login-menu">
         <ul>
-          <li style={menuItemCssClass} className={registerButtonCssClass}><a href={"/register"}>Register</a></li>
-          <li style={menuItemCssClass} className={loginButtonCssClass}><a href={"/login" + this.props.redirectString}>Login</a></li>
+          <li style={menuItemCssClass} className={registerButtonCssClass}><a href={this.props.baseUrl + "/register"}>Register</a></li>
+          <li style={menuItemCssClass} className={loginButtonCssClass}><a href={this.props.baseUrl + "/login" + this.props.redirectString}>Login</a></li>
         </ul>
       </div>
     )
@@ -252,11 +253,11 @@ class SiteHeaderUserMenu extends React.Component {
           </a>
           <ul id="user-profile-menu" >
             <div className="dropdown-header"></div>
-            <li><a href="/product/add">Add Product</a></li>
-            <li><a href={window.json_baseurl + "/u/" + this.props.user.username + "/products"}>Products</a></li>
-            <li><a href={window.json_baseurl + "/u/" + this.props.user.username + "/plings"}>Plings</a></li>
-            <li><a href="/settings">Settings</a></li>
-            <li><a href="/logout">Logout</a></li>
+            <li><a href={window.json_baseurl + "product/add"}>Add Product</a></li>
+            <li><a href={window.json_baseurl + "u/" + this.props.user.username + "/products"}>Products</a></li>
+            <li><a href={window.json_baseurl + "u/" + this.props.user.username + "/plings"}>Plings</a></li>
+            <li><a href={window.json_baseurl + "settings"}>Settings</a></li>
+            <li><a href="{window.url_logout}">Logout</a></li>
           </ul>
         </li>
       </ul>

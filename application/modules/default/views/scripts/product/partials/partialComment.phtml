@@ -22,6 +22,7 @@
 
 $helperHumanTiming = new Default_View_Helper_HumanTiming();
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperBuildBaseUrl = new Default_View_Helper_BuildBaseUrl();
 $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
 $helperImage = new Default_View_Helper_Image();
 $comment = $this->comment;
@@ -80,7 +81,7 @@ $age = $helperHumanTiming->humanTiming($comment['comment_created_at']);
 
                     <div class="maker-comment comment-content">
                         <div class="popover-content">
-                            <form class="full-width" action="/productcomment/addreply/">
+                            <form class="full-width" action="<?= $helperBuildBaseUrl->buildBaserUrl('productcomment/addreply') ?>">
                                 <input type="hidden" name="i" value="<?= $comment['comment_id'] ?>">
                                 <input type="hidden" name="p" value="<?= $comment['comment_target_id'] ?>">
                                 <input type="hidden" name="m" value="<?= $identity->member_id ?>">

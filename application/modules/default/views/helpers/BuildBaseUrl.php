@@ -20,7 +20,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
+class Default_View_Helper_BuildBaseUrl extends Zend_View_Helper_Abstract
 {
 
     /**
@@ -31,7 +31,7 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
      * @return string
      * @throws Zend_Exception
      */
-    public function buildMemberUrl($member_ident, $action = '', $params = null)
+    public function buildBaserUrl($action = '', $params = null)
     {
         /** @var Zend_Controller_Request_Http $request */
         $request = Zend_Controller_Front::getInstance()->getRequest();
@@ -71,18 +71,10 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
         }
 
         if ($action != '') {
-            $action = $action . '/';
+            $action = $action;
         }
         
-        $member_ident = strtolower($member_ident);
-        $member_ident = urlencode($member_ident);
-        
-        $memberLink = "u";
-        if(is_int($member_ident)) {
-            $memberLink = "member";
-        }
-
-        return "{$baseurl}/{$memberLink}/{$member_ident}/{$action}{$url_param}";
+        return "{$baseurl}/{$action}{$url_param}";
     }
 
 

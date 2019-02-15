@@ -25,16 +25,20 @@ $this->tab = 'add';
 $helperImage = new Default_View_Helper_Image();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helpProductUrl = new Default_View_Helper_BuildProductUrl();
+$helpBaseUrl = new Default_View_Helper_BaseUrl();
 
 $modelCategory = new Default_Model_DbTable_ProjectCategory();
 $valueCatId = $this->form->project_category_id->getValue();
 //$valueCatId = 55;
+$storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
 $categories = $modelCategory->fetchCategoriesForForm($valueCatId);
 $categoryAncestors = $modelCategory->fetchAncestorsAsId($valueCatId);
+
 if (count($categoryAncestors) > 0) {
     $categoryPath = explode(',',$categoryAncestors['ancestors']);
 }
 $categoryPath[] = $valueCatId;
+
 
 $this->headLink()->appendStylesheet('/theme/flatui/css/chosen.css');
 $this->inlineScript()->appendFile('/theme/flatui/js/lib/chosen.jquery.min.js');
@@ -1835,7 +1839,8 @@ $this->inlineScript()->appendScript('
               errors: "",
               cat_id_data: <?=json_encode($categories)?>,
               cat_id_path: <?=json_encode($categoryPath)?>,
-              
+              store_cat_ids: <?=json_encode($storeCatIds)?>,
+              value_cat_id: <?=json_encode($valueCatId)?>,
 
               setup: function () {
                   this.setupCategorySelect();
@@ -1845,27 +1850,34 @@ $this->inlineScript()->appendScript('
 
               setupCategorySelect: function() {
                   var level = 0;
+                  var hasNoRoot = true;
+                  
                   for (var form_elem_name in this.cat_id_data) {
                       var nextElementName = form_elem_name.substring(0, form_elem_name.length - 1) + (level + 1);
                       var new_html_element = '<select name="' + form_elem_name + '" id="' + form_elem_name + '" class="required form-control product_select_cat" data-target="'+nextElementName+'" data-level="'+level+'">';
                       new_html_element += '<option value=""> </option>';
-                      var hasNoRoot = true;
+                      
+                      hasNoRoot = true;
+                      
                       for (var form_select_option in this.cat_id_data[form_elem_name]) {
                           var attr_selected = '';
-                          if (form_select_option == this.cat_id_path[level]) {
+                          
+                          if (form_select_option == this.cat_id_path[level] || form_select_option == this.value_cat_id) {
                               attr_selected = ' selected="selected"';
                               hasNoRoot = false;
                           }
                           new_html_element += '<option value="' + form_select_option + '" ' + attr_selected + '>' + this.cat_id_data[form_elem_name][form_select_option] + '</option>';
                       }
-                      new_html_element += '</select>';
                       
-                      if(hasNoRoot == true) {
-                          //alert('We will redirect you to the Main Store...');
+                      if(hasNoRoot == true && this.cat_id_path != '0') {
+                          var url = "<?= $helpBaseUrl->baseUrl().'/p/'. $this->project_id . '/edit' ?>";
+                          alert("Redir: "+url);
+                          document.location.href = url;
                       }
-
+                      
+                      new_html_element += '</select>';
                       $('#wrapper_cat_id').append(new_html_element);
-                      this.sortOptionByValue(form_elem_name);
+                        this.sortOptionByValue(form_elem_name);
 
                       var size = <?=count($categories)?>;
                       if((size-1) == level) {

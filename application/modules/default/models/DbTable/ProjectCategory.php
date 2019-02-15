@@ -1482,15 +1482,24 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     public function fetchCategoriesForForm($valueCatId)
     {
         $level = 0;
-        $ancestors = array("catLevel-{$level}" => $this->fetchMainCatForSelect(Default_Model_DbTable_ProjectCategory::ORDERED_TITLE));
+        $mainCatArray = $this->fetchMainCatForSelect(Default_Model_DbTable_ProjectCategory::ORDERED_TITLE);
+        $ancestors = array("catLevel-{$level}" => $mainCatArray);
         
         $level++;
 
         if (false == empty($valueCatId)) {
+            
+            foreach (array_keys($mainCatArray) as $element) {
+                if($element == $valueCatId) {
+                    return $ancestors;
+                }
+            }
+            
             $categoryAncestors = $this->fetchAncestorsAsId($valueCatId);
             if ($categoryAncestors) {
                 $categoryPath = explode(',', $categoryAncestors['ancestors']);
                 foreach ($categoryPath as $element) {
+                    
                     $catResult = $this->fetchImmediateChildren($element, Default_Model_DbTable_ProjectCategory::ORDERED_TITLE);
                     $ancestors["catLevel-{$level}"] = $this->prepareDataForFormSelect($catResult);
                     
