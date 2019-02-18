@@ -1870,7 +1870,7 @@ $this->inlineScript()->appendScript('
                       }
                       
                       if(hasNoRoot == true && this.cat_id_path != '0') {
-                          var url = "<?= $helpBaseUrl->buildMainBaserUrl().'/p/'. $this->project_id . '/edit' ?>";
+                          var url = "<?= $helpBaseUrl->buildMainBaserUrl().'p/'. $this->project_id . '/edit' ?>";
                           //alert("Redir: "+url);
                           document.location.href = url;
                       }
