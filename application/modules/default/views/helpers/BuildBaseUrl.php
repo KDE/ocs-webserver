@@ -76,6 +76,24 @@ class Default_View_Helper_BuildBaseUrl extends Zend_View_Helper_Abstract
         
         return "{$baseurl}/{$action}{$url_param}";
     }
+    
+    
+    public function buildMainBaserUrl($action = '', $params = null)
+    {
+        $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+
+        $url_param = '';
+        if (is_array($params)) {
+            array_walk($params, create_function('&$i,$k', '$i="$k/$i/";'));
+            $url_param = implode('/', $params);
+        }
+
+        if ($action != '') {
+            $action = $action;
+        }
+        
+        return "{$baseurl}/{$action}{$url_param}";
+    }
 
 
     /**

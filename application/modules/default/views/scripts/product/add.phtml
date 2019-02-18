@@ -25,7 +25,7 @@ $this->tab = 'add';
 $helperImage = new Default_View_Helper_Image();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helpProductUrl = new Default_View_Helper_BuildProductUrl();
-$helpBaseUrl = new Default_View_Helper_BaseUrl();
+$helpBaseUrl = new Default_View_Helper_BuildBaseUrl();
 
 $modelCategory = new Default_Model_DbTable_ProjectCategory();
 $valueCatId = $this->form->project_category_id->getValue();
@@ -1870,7 +1870,7 @@ $this->inlineScript()->appendScript('
                       }
                       
                       if(hasNoRoot == true && this.cat_id_path != '0') {
-                          var url = "<?= $helpBaseUrl->baseUrl().'/p/'. $this->project_id . '/edit' ?>";
+                          var url = "<?= $helpBaseUrl->buildMainBaserUrl().'/p/'. $this->project_id . '/edit' ?>";
                           //alert("Redir: "+url);
                           document.location.href = url;
                       }
