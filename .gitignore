@@ -80,3 +80,6 @@ node_modules/*
 .ftpconfig
 appimagehub-bu/*
 /nbproject/
+
+#ignore hidden files
+.*
