@@ -1841,12 +1841,12 @@ class Introduction extends React.Component {
         { className: "actions green" },
         React.createElement(
           "a",
-          { href: "/s/LibreOffice/product/add", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+          { href: window.baseUrl + "product/add", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
           "Add Extension"
         ),
         React.createElement(
           "a",
-          { href: "/s/LibreOffice/browse", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+          { href: window.baseUrl + "browse", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
           "Browse all Extensions"
         )
       );
