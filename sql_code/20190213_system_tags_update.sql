@@ -166,4 +166,19 @@ BEGIN
       */    
 END;
 $$
+
+
+
+
+
+CREATE EVENT `e_generate_tmp_cat_tag_proj_init`
+	ON SCHEDULE
+		EVERY 1 DAY STARTS '2019-02-19 17:00:00'
+	ON COMPLETION NOT PRESERVE
+	ENABLE
+	COMMENT ''
+	DO BEGIN
+	call generate_tmp_cat_tag_proj_init();
+END$$
+
 DELIMITER ;
