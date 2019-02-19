@@ -219,5 +219,22 @@ class Default_Model_TagGroup
             $this->getAdapter()->query($sql);
         }
     }
+    
+    public function updateTagGroupsPerStore($store_id,$taggroups)
+    {
+        $sql = "delete from config_store_tag_group where store_id=:store_id";
+        $this->getAdapter()->query($sql, array('store_id' => $store_id));
+
+        if($taggroups){
+            $taggroup_id =explode(',', $taggroups);
+            $prepared_insert =
+                array_map(function ($id) use ($store_id) { return "({$store_id},{$id})"; },
+                    $taggroup_id);
+            $sql = "INSERT IGNORE INTO config_store_tag_group (store_id, tag_group_id) VALUES " . implode(',',
+                    $prepared_insert);
+          
+            $this->getAdapter()->query($sql);
+        }
+    }
 
 }

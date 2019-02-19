@@ -622,6 +622,21 @@ class Default_Model_Tags
         $result = $this->getAdapter()->fetchAll($sql);
         return $result;
     }
+    
+    
+    public function getAllTagGroupsForStoreFilter()
+    {
+          $sql = "
+                         select 
+                            tag_group.group_id, 
+                            tag_group.group_name as group_name
+                            from tag_group
+                            order by tag_group.group_name
+
+                    ";
+        $result = $this->getAdapter()->fetchAll($sql);
+        return $result;
+    }
 
 
     public function saveLicenseTagForProject($object_id, $tag_id) {

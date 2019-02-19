@@ -134,12 +134,29 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $filter['category'] = $inputCatId ? $inputCatId : $storeCatIds;
         $filter['order'] = preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('ord', self::DEFAULT_ORDER));
         $filter['original'] = $inputFilterOriginal == 1 ? self::TAG_ISORIGINAL : null;
+        
         $filter['tag'] = Zend_Registry::isRegistered('config_store_tags') ?  Zend_Registry::get('config_store_tags') : null;
         if (APPLICATION_ENV == "development") {
             Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . json_encode($filter));
         }
         
         $tagFilter  = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
+        
+        
+        $tagGroupFilter  = Zend_Registry::isRegistered('config_store_taggroups') ? Zend_Registry::get('config_store_taggroups') : null;
+        if(!empty($tagGroupFilter)) {
+            $filterArray = array();
+            foreach ($tagGroupFilter as $tagGroupId) {
+                $inputFilter = $this->getFilterTagFromCookie($tagGroupId);
+                $filterArray[$tagGroupId] = $inputFilter;
+                if(!empty($inputFilter)) {
+                    $filter['tag'][] = $inputFilter;
+                }
+            }
+            $this->view->tag_group_filter = $filterArray;
+        }
+        
+        
 
         $page = (int)$this->getParam('page', 1);
 
@@ -381,6 +398,44 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
 
         return $storedInCookie;
+    }
+    
+    
+    private function storeFilterTagInCookie($group, $tag)
+    {
+        $storedInCookie = $this->getFilterTagFromCookie($group);
+
+        if (isset($tag) AND ($tag != $storedInCookie)) {
+                $config = Zend_Registry::get('config');
+                $cookieName = $config->settings->session->filter_browse_original.$group;
+                $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
+                $cookieExpire = time() + $remember_me_seconds;
+                setcookie($cookieName, $tag, $cookieExpire, '/');
+        }
+    }
+
+    private function getFilterTagFromCookie($group)
+    {
+        $config = Zend_Registry::get('config');
+        $cookieName = $config->settings->session->filter_browse_original.$group;
+
+        $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
+
+        return $storedInCookie;
+    }
+    
+    
+    public function savetaggroupfilterAction()
+    {
+        // Filter-Parameter
+        $tagGroupId = (int)$this->getParam('group_id', null);
+        $tagId = (int)$this->getParam('tag_id', null);
+        
+        $this->storeFilterTagInCookie($tagGroupId, $tagId);
+
+        $response = array();
+        $response['Result'] = 'OK';
+        $this->_helper->json($response);
     }
 
 }

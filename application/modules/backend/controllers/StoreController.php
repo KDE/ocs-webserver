@@ -119,6 +119,11 @@ class Backend_StoreController extends Local_Controller_Action_Backend
             $tagsid = $this->getParam('tags_id', null);
             $tagmodel  = new Default_Model_Tags();
             $tagmodel->updateTagsPerStore($values['store_id'], $tagsid);
+            
+            $groupsid = $this->getParam('groups_id', null);
+            $groupmodel  = new Default_Model_TagGroup();
+            $groupmodel->updateTagGroupsPerStore($values['store_id'], $groupsid);
+            
 
             $jTableResult = array();
             $jTableResult['Result'] = self::RESULT_OK;
@@ -176,14 +181,22 @@ class Backend_StoreController extends Local_Controller_Action_Backend
 
         $select = $this->_model->select()->from($this->_model, array(
             '*',
-            'tags_id' => new Zend_Db_Expr('(SELECT GROUP_CONCAT(CASE WHEN `tag`.`tag_fullname` IS NULL THEN `tag`.`tag_name` ELSE `tag`.`tag_fullname` END)
+            'groups_id' => new Zend_Db_Expr('(SELECT GROUP_CONCAT(CASE WHEN `tag`.`tag_fullname` IS NULL THEN `tag`.`tag_name` ELSE `tag`.`tag_fullname` END)
                 FROM `config_store_tag`,`tag`            
                 WHERE `tag`.`tag_id` = `config_store_tag`.`tag_id` AND `config_store_tag`.`store_id` = `config_store`.`store_id`        
                 GROUP BY `config_store_tag`.`store_id`) AS `tags_name`,
                 (SELECT GROUP_CONCAT(`tag`.`tag_id`)
                 FROM `config_store_tag`,`tag`            
                 WHERE `tag`.`tag_id` = `config_store_tag`.`tag_id` AND `config_store_tag`.`store_id` = `config_store`.`store_id`        
-                GROUP BY `config_store_tag`.`store_id`)')
+                GROUP BY `config_store_tag`.`store_id`) AS `tags_id`,
+                (SELECT GROUP_CONCAT(`tag_group`.`group_name`)
+                FROM `config_store_tag_group`,`tag_group`            
+                WHERE `tag_group`.`group_id` = `config_store_tag_group`.`tag_group_id` AND `config_store_tag_group`.`store_id` = `config_store`.`store_id`        
+                GROUP BY `config_store_tag_group`.`store_id`) AS `groups_name`,
+                (SELECT GROUP_CONCAT(`tag_group`.`group_id`)
+                FROM `config_store_tag_group`,`tag_group`            
+                WHERE `tag_group`.`group_id` = `config_store_tag_group`.`tag_group_id` AND `config_store_tag_group`.`store_id` = `config_store`.`store_id`        
+                GROUP BY `config_store_tag_group`.`store_id`)')
         ))->order($sorting)->limit($pageSize, $startIndex)->setIntegrityCheck(false);
         
         foreach ($filter as $key => $value) {
@@ -289,8 +302,37 @@ class Backend_StoreController extends Local_Controller_Action_Backend
         try {
                 $resultRows = $tagmodel->getAllTagsForStoreFilter();
                 $resultForSelect = array();
+                $resultForSelect[] = array('DisplayText' => '', 'Value' => '');
                 foreach ($resultRows as $row) {         
                     $resultForSelect[] = array('DisplayText' => $row['tag_name'].'['.$row['tag_id'].']', 'Value' => $row['tag_id']);
+                }
+
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
+            $result = false;
+            $records = array();
+        }
+
+        $jTableResult = array();
+        $jTableResult['Result'] = ($result == true) ? self::RESULT_OK : self::RESULT_ERROR;
+        $jTableResult['Options'] = $resultForSelect;
+
+        $this->_helper->json($jTableResult);
+    }
+    
+    
+    public function alltaggroupsAction()
+    {
+
+        $result = true;
+        $tagmodel  = new Default_Model_TagGroup();
+        
+        try {
+                $resultRows = $tagmodel->fetchAllGroups();
+                $resultForSelect = array();
+                $resultForSelect[] = array('DisplayText' => '', 'Value' => '');
+                foreach ($resultRows as $row) {         
+                    $resultForSelect[] = array('DisplayText' => $row['group_name'].'['.$row['group_id'].']', 'Value' => $row['group_id']);
                 }
 
         } catch (Exception $e) {
