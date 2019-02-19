@@ -561,6 +561,36 @@ class Default_Model_Tags
         return $r;
     }
 
+    public function validateCategoryTags($cat_id,$tags)
+    {
+        if($tags == null) return true;
+        //check if $cat_id children has tag already
+        $sql = '
+            select * from category_tag where tag_id in ('.$tags.') and category_id in
+            (
+                select c.project_category_id 
+                from project_category c 
+                join project_category d where d.project_category_id = '.$cat_id.' and c.lft> d.lft and c.rgt<d.rgt    
+            )
+        ';
+     
+        
+        $r = $this->getAdapter()->fetchAll($sql);
+        if(sizeof($r)>0) return false;
+
+        // check parent
+        $sql = ' select ancestor_id_path from stat_cat_tree where project_category_id = '.$cat_id;
+        $r = $this->getAdapter()->fetchRow($sql);
+        $sql = '
+            select * from category_tag where category_id in ('.$r['ancestor_id_path'].') and category_id <> '.$cat_id.' and tag_id in ('.$tags.')';       
+
+       
+        $r = $this->getAdapter()->fetchAll($sql);
+        if(sizeof($r)>0) return false;
+
+        return true;
+    }   
+
     public function updateTagsPerCategory($cat_id,$tags)
     {
         $sql = "delete from category_tag  where category_id=:cat_id";

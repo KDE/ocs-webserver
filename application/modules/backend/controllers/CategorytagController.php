@@ -47,58 +47,66 @@ class Backend_CategorytagController extends Local_Controller_Action_Backend
         
     }
 
-    public function createAction()
-    {
+    // public function createAction()
+    // {
 
-        $jTableResult = array();
-        try {
-            $params = $this->getAllParams();
-            if (empty($params['rgt'])) {
-                $root = $this->_model->fetchRoot();
-                $params['rgt'] = $root->rgt - 1;
-            }
-            $resultRow = $this->_model->addNewElement($params)->toArray();
+    //     $jTableResult = array();
+    //     try {
+    //         $params = $this->getAllParams();
+    //         if (empty($params['rgt'])) {
+    //             $root = $this->_model->fetchRoot();
+    //             $params['rgt'] = $root->rgt - 1;
+    //         }
+    //         $resultRow = $this->_model->addNewElement($params)->toArray();
 
-            if (false === empty($params['parent'])) {
-                $this->_model->moveToParent($resultRow['project_category_id'], (int)$params['parent'], 'bottom');
-                $resultRow = $this->_model->fetchElement($resultRow['project_category_id']);
-            }
+    //         if (false === empty($params['parent'])) {
+    //             $this->_model->moveToParent($resultRow['project_category_id'], (int)$params['parent'], 'bottom');
+    //             $resultRow = $this->_model->fetchElement($resultRow['project_category_id']);
+    //         }
 
-            $jTableResult['Result'] = self::RESULT_OK;
-            $jTableResult['Record'] = $resultRow;
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
-            $translate = Zend_Registry::get('Zend_Translate');
-            $jTableResult['Result'] = self::RESULT_ERROR;
-            $jTableResult['Message'] = $translate->_('Error while processing data.');
-        }
+    //         $jTableResult['Result'] = self::RESULT_OK;
+    //         $jTableResult['Record'] = $resultRow;
+    //     } catch (Exception $e) {
+    //         Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
+    //         $translate = Zend_Registry::get('Zend_Translate');
+    //         $jTableResult['Result'] = self::RESULT_ERROR;
+    //         $jTableResult['Message'] = $translate->_('Error while processing data.');
+    //     }
 
-        $this->_helper->json($jTableResult);
-    }
+    //     $this->_helper->json($jTableResult);
+    // }
 
-    private function startsWith($haystack, $needle) {
-        // search backwards starting from haystack length characters from the end
-        return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== false;
-    }
+    // private function startsWith($haystack, $needle) {
+    //     // search backwards starting from haystack length characters from the end
+    //     return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== false;
+    // }
 
-    private function endsWith($haystack, $needle) {
-        // search forward starting from end minus needle length characters
-        return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
-    }
+    // private function endsWith($haystack, $needle) {
+    //     // search forward starting from end minus needle length characters
+    //     return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
+    // }
 
     public function updateAction()
     {
 
         $jTableResult = array();
-        try {
-            
-            //$this->_model->moveToParent((int)$this->getParam('project_category_id', null), (int)$this->getParam('parent', null));            
-            //$record = $this->_model->save($this->getAllParams());
+        try {                    
             $tagsid = $this->getParam('tags_id', null);
             $tagmodel  = new Default_Model_Tags();
-            $tagmodel->updateTagsPerCategory((int)$this->getParam('project_category_id', null), $tagsid);
-            $jTableResult = array();
-            $jTableResult['Result'] = self::RESULT_OK;
+            $isvalid = $tagmodel->validateCategoryTags((int)$this->getParam('project_category_id', null), $tagsid);
+            if($isvalid)
+            {
+                $tagmodel->updateTagsPerCategory((int)$this->getParam('project_category_id', null), $tagsid);
+                $jTableResult = array();
+                $jTableResult['Result'] = self::RESULT_OK;
+            }else
+            {
+                $jTableResult = array();
+                $jTableResult['Result'] = self::RESULT_ERROR;
+                $translate = Zend_Registry::get('Zend_Translate');
+                $jTableResult['Message'] = $translate->_('duplicated! please check parent/children catgory tags');
+            }
+            
            // $jTableResult['Record'] = $record->toArray();
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
