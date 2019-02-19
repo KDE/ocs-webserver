@@ -2096,7 +2096,7 @@ class ProductCarouselItem extends React.Component {
       { className: "product-carousel-item", style: { "width": this.props.itemWidth } },
       React.createElement(
         "a",
-        { href: window.baseUrl + "/p/" + this.props.product.project_id },
+        { href: window.baseUrl + "p/" + this.props.product.project_id },
         React.createElement(
           "figure",
           null,
