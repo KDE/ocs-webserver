@@ -188,6 +188,7 @@ if($this->inputFilterOriginal ==1)
                   <?php //Insert flexible tag-group-filter
                   $tagGroupFilter  = Zend_Registry::isRegistered('config_store_taggroups') ? Zend_Registry::get('config_store_taggroups') : null;
                   $tagGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
+                  
                   if(!empty($tagGroupFilter)) {
                       foreach ($tagGroupFilter as $tagGroup ) {
                           $tags = $tagGroupHelper->fetchList($tagGroup);

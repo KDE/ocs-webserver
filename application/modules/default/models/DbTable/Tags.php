@@ -168,12 +168,12 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
      * @param int|array $groupId
      * @return array
      */
-    public function fetchForGroupForSelect($groupId)
+    public function fetchForGroupForSelect($groupId, $withGroup = false)
     {
         $str = is_array($groupId) ? implode(',', $groupId) : $groupId;
         /** @var Zend_Cache_Core $cache */
         $cache = $this->cache;
-        $cacheName = __FUNCTION__ . '_' . md5($str);
+        $cacheName = __FUNCTION__ . '_' . md5($str . $withGroup);
 
         if (false === ($tags = $cache->load($cacheName))) {
             $inQuery = '?';
@@ -182,17 +182,22 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
             }
 
             $sql = "
-                SELECT t.* FROM tag t
+                SELECT t.*,case when tg.group_display_name IS NULL OR LENGTH(tg.group_display_name) = 0 then tg.group_name ELSE tg.group_display_name END AS group_name  FROM tag t
                 JOIN tag_group_item g on g.tag_id = t.tag_id
+                JOIN tag_group tg ON tg.group_id = g.tag_group_id
                 WHERE g.tag_group_id IN ($inQuery)
                 and is_active = 1
                 ORDER BY t.tag_fullname
                 ";
 
             $tagsList = $this->_db->query($sql, $groupId)->fetchAll();
+
+            if($withGroup) {
+                $tags['header'] = $tagsList[0]['group_name']; 
+            }
             
             foreach ($tagsList as $tag) {
-               $tags[$tag['tag_id']] = $tag['tag_fullname']; 
+                $tags[$tag['tag_id']] = $tag['tag_fullname']; 
             }
             
             if (count($tags) == 0) {

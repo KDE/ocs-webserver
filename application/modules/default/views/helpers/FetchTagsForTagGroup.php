@@ -23,11 +23,19 @@
 class Default_View_Helper_FetchTagsForTagGroup extends Zend_View_Helper_Abstract
 {
 
-    public function fetchList($groupId)
+    public function fetchList($groupId, $withHeader = false)
     {
         
         $tableTags = new Default_Model_DbTable_Tags();
-        $tags = $tableTags->fetchForGroupForSelect($groupId);         
+        $tags = array();
+        if($withHeader) {
+            $tags = $tableTags->fetchForGroupForSelect($groupId, true);
+            $tags['header'] = 'Filter for: ' . $tags['header'];
+        } else {
+            $tags = $tableTags->fetchForGroupForSelect($groupId);
+        }
+        
+                 
         return $tags;
     }
     
