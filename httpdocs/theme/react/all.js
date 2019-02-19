@@ -425,7 +425,7 @@ class ProductGroupItem extends React.Component {
           { className: "product-wrapper mdl-shadow--2dp" },
           React.createElement(
             "a",
-            { href: "/p/" + this.props.product.project_id },
+            { href: window.baseUrl + "/p/" + this.props.product.project_id },
             React.createElement(
               "div",
               { className: "product-image-container" },
@@ -2001,7 +2001,8 @@ class ProductCarousel extends React.Component {
       carouselItemsDisplay = this.props.products.map((product, index) => React.createElement(ProductCarouselItem, {
         key: index,
         product: product,
-        itemWidth: this.state.itemWidth
+        itemWidth: this.state.itemWidth,
+        baseUrl: this.props.baseUrl
       }));
     }
 
@@ -2095,7 +2096,7 @@ class ProductCarouselItem extends React.Component {
       { className: "product-carousel-item", style: { "width": this.props.itemWidth } },
       React.createElement(
         "a",
-        { href: "/p/" + this.props.product.project_id },
+        { href: window.baseUrl + "/p/" + this.props.product.project_id },
         React.createElement(
           "figure",
           null,
