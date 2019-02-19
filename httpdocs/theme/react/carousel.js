@@ -737,7 +737,7 @@ class CarouselItem extends React.Component {
         { className: "product-carousel-item-wrapper" },
         React.createElement(
           "a",
-          { href: window.baseUrl + "p/" + this.props.product.project_id, style: { "paddingTop": paddingTop } },
+          { href: "/p/" + this.props.product.project_id, style: { "paddingTop": paddingTop } },
           React.createElement(
             "figure",
             { style: { "height": paddingTop } },
