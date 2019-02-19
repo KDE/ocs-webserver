@@ -24,7 +24,9 @@
   $modelInfo = new Default_Model_Info();
   
   $this->supporters = $modelInfo->getNewActiveSupporters(7);
-
+  
+  $helperBuildBaseUrl = new Default_View_Helper_BuildBaseUrl();
+  $basrUrl = $helperBuildBaseUrl->buildBaserUrl();
 ?>
 
 <main id="explore-content"></main>
@@ -43,5 +45,6 @@
     page:<?php echo $this->page ?>
   }
   var view = "explore";
+  var baseUrl = <?php echo Zend_Json::encode($basrUrl)?>;
 </script>
 <script type="text/javascript" src="/theme/react/all.js"></script>
