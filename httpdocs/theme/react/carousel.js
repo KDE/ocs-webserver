@@ -823,7 +823,7 @@ function (_React$Component3) {
       var productUrl = "";
 
       if (window.page === "libreoffice") {
-        productUrl = "/p/" + this.props.product.project_id;
+        productUrl = window.baseUrl + "/s/libreoffice/p/" + this.props.product.project_id;
       } else {
         productUrl = window.baseUrl + "/p/" + this.props.product.project_id;
       }
