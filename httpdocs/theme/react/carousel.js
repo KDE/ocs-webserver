@@ -820,14 +820,6 @@ function (_React$Component3) {
         }, createdDate), scoreDisplay);
       }
 
-      var productUrl = "";
-
-      if (window.page === "libreoffice") {
-        productUrl = window.baseUrl + "/s/libreoffice/p/" + this.props.product.project_id;
-      } else {
-        productUrl = window.baseUrl + "/p/" + this.props.product.project_id;
-      }
-
       return React.createElement("div", {
         className: "product-carousel-item",
         style: {
@@ -836,7 +828,7 @@ function (_React$Component3) {
       }, React.createElement("div", {
         className: "product-carousel-item-wrapper"
       }, React.createElement("a", {
-        href: productUrl,
+        href: window.baseUrl + "/p/" + this.props.product.project_id,
         style: {
           "paddingTop": paddingTop
         }
