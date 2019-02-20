@@ -2231,10 +2231,10 @@ function (_React$Component2) {
         buttonsContainer = React.createElement("div", {
           className: "actions green"
         }, React.createElement("a", {
-          href: "{window.baseUrl}product/add",
+          href: window.baseUrl + "product/add",
           className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary"
         }, "Add Extension"), React.createElement("a", {
-          href: "{window.baseUrl}browse",
+          href: window.baseUrl + "browse",
           className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary"
         }, "Browse all Extensions"));
       }
