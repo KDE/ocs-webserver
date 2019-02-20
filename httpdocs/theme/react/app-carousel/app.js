@@ -461,10 +461,18 @@ class CarouselItem extends React.Component {
       );
     }
 
+    let productUrl = "";
+    if (window.page === "libreoffice"){
+      productUrl = "/p/"+this.props.product.project_id;
+    }else{
+       productUrl = window.baseUrl + "/p/"+this.props.product.project_id;
+    }
+    
+
     return (
       <div className="product-carousel-item" style={{"width":this.props.itemWidth}}>
         <div className="product-carousel-item-wrapper">
-          <a href={window.baseUrl + "/p/"+this.props.product.project_id } style={{"paddingTop":paddingTop}}>
+          <a href={productUrl} style={{"paddingTop":paddingTop}}>
             <figure style={{"height":paddingTop}}>
               <img className="very-rounded-corners" src={this.props.product.image_small} />
             </figure>
