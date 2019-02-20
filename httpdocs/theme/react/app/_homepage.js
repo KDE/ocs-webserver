@@ -80,8 +80,8 @@ class Introduction extends React.Component {
       );
       buttonsContainer = (
         <div className="actions green">
-          <a href="{window.baseUrl}product/add" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">Add Extension</a>
-          <a href="{window.baseUrl}browse" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">Browse all Extensions</a>
+          <a href={window.baseUrl+"product/add"} className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">Add Extension</a>
+          <a href={window.baseUrl+"browse"} className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">Browse all Extensions</a>
         </div>
       );
     }
