@@ -828,7 +828,7 @@ function (_React$Component3) {
       }, React.createElement("div", {
         className: "product-carousel-item-wrapper"
       }, React.createElement("a", {
-        href: window.baseUrl + "/p/" + this.props.product.project_id,
+        href: window.baseUrl + "p/" + this.props.product.project_id,
         style: {
           "paddingTop": paddingTop
         }
