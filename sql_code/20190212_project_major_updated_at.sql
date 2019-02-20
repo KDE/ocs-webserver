@@ -19,8 +19,9 @@ DELIMITER ;
 
 -- 3 alter generate_stat_projects procedure
 
-
-CREATE DEFINER=`root`@`%` PROCEDURE `generate_stat_project`()
+DELIMITER $$
+drop procedure IF EXISTS generate_stat_project$$
+CREATE PROCEDURE `generate_stat_project`()
 BEGIN
     DROP TABLE IF EXISTS tmp_reported_projects;
     CREATE TEMPORARY TABLE tmp_reported_projects
@@ -192,5 +193,6 @@ BEGIN
     RENAME TABLE stat_projects TO old_stat_projects, tmp_stat_projects TO stat_projects;
 
     DROP TABLE IF EXISTS old_stat_projects;
-  END
+  END$$
+DELIMITER ;
 
