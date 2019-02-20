@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -18,25 +19,31 @@
  *
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- **/
-
-class Default_View_Helper_FetchTagsForTagGroup extends Zend_View_Helper_Abstract
+ *
+ * Created: 23.01.2019
+ */
+class Default_Model_ConfigStoreTagGroups
 {
 
-    public function fetchList($groupId, $withHeader = false)
+    /**
+     * @param int  $store_id
+     * @param bool $onlyActive
+     *
+     * @return null|array
+     */
+    public function getTagGroupsAsIdForStore($store_id, $onlyActive = true)
     {
-        
-        $tableTags = new Default_Model_DbTable_Tags();
-        $tags = array();
-        if($withHeader) {
-            $tags = $tableTags->fetchForGroupForSelect($groupId, true);
-            $tags['header'] = 'Filter for: ' . $tags['header'];
-        } else {
-            $tags = $tableTags->fetchForGroupForSelect($groupId);
+        $modelConfigStoreTagGroups = new Default_Model_DbTable_ConfigStoreTagGroups();
+
+        $sql = "SELECT `tag_group_id` FROM `config_store_tag_group` WHERE `store_id` = :store_id AND `is_active` = :active ORDER BY `tag_group_id`;";
+
+        $result = $modelConfigStoreTagGroups->getAdapter()->fetchAll($sql, array('store_id' => $store_id, 'active' => ($onlyActive ? 1 : 0)), Zend_Db::FETCH_COLUMN);
+
+        if (0 == count($result)) {
+            return null;
         }
-        
-                 
-        return $tags;
+
+        return $result;
     }
-    
-} 
+
+}

@@ -229,9 +229,35 @@
                         return '/backend/store/tagsall';
                     }
                 },
+                groups_name: {
+                    title: 'TagGroup-Filter Names',
+                    type: 'textarea',
+                    create: true,
+                    edit: true,
+                    width: '15%'
+                },                
+                groups_id: {
+                    title: 'TagGroup-Filter IDs',
+                    type: 'textarea',
+                    create: true,
+                    edit: true,
+                    list:false,
+                    width: '30%'
+                }
+                ,
+                groups_all: {
+                    title: 'TagGroup Helper -> Click to Select',
+                    create: false,
+                    edit: true,
+                    list: false,
+                    options: function (data) {
+                        data.clearCache();                        
+                        return '/backend/store/alltaggroups';
+                    }
+                },
                 cross_domain_login: {
                     title: 'Cross Domain Login',
-                    list: true,
+                    list: false,
                     //type: 'checkbox',
                     //values: { '0': 'No', '1': 'Yes' },
                     type:'radiobutton',
@@ -246,7 +272,7 @@
                     //type: 'checkbox',
                     create: true,
                     edit: true,
-                    list:true,
+                    list:false,
                     //values: { 0: 'No', 1: 'Yes' },
                     type:'radiobutton',
                     options:{  
@@ -269,6 +295,20 @@
                     },
                     defaultValue: 1
                 },
+                stay_in_context : {
+                    title: 'Stay in Store Context with all links',                   
+                    //type: 'checkbox',
+                    create: true,
+                    edit: true,
+                    list:false,
+                    //values: { 0: 'No', 1: 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
+                    defaultValue: 1
+                },       
 /*                initSearchIndex: {
                     title: '',
                     width: '1%',
@@ -323,8 +363,28 @@
                     }
                     
                      $('#jtable-edit-form').find('#Edit-tags_id').val(tids);
-                  })
-                  ;
+                })
+                ;
+                
+                $('#jtable-edit-form').find('#Edit-groups_name').prop("disabled", true);
+                $('#jtable-edit-form').find('#Edit-groups_all').change(function () {
+                    var str = "";
+                    $( "select#Edit-groups_all option:selected" ).each(function() {
+                      str = $( this ).val() ;
+                    });
+
+                    var t = $('#jtable-edit-form').find('#Edit-groups_id').val();
+                    var tids ='';
+                    if($.trim(t)){
+                        tids = t+','+str;
+                    }else{
+                        tids = str;
+                    }
+                    
+                     $('#jtable-edit-form').find('#Edit-groups_id').val(tids);
+                })
+                ;
+                  
             }
         });
 

@@ -151,6 +151,10 @@ if($this->inputFilterOriginal ==1)
       padding: 0;
     }
   }
+  
+  .filter_browse_tag_group {
+      margin-right: 5px;
+  }
 
 </style>
 
@@ -179,7 +183,34 @@ if($this->inputFilterOriginal ==1)
                   </li>
                   <li style="float: right">
                       <input type="checkbox" name="filter_browse_original" value="1" id="filter_browse_original" <?=$checkedOriginal?> >  Original
-                  </li>
+                 
+                  
+                  <?php //Insert flexible tag-group-filter
+                  $tagGroupFilter  = Zend_Registry::isRegistered('config_store_taggroups') ? Zend_Registry::get('config_store_taggroups') : null;
+                  $tagGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
+                  
+                  if(!empty($tagGroupFilter)) {
+                      foreach ($tagGroupFilter as $tagGroup ) {
+                          $tags = $tagGroupHelper->fetchList($tagGroup);
+                          $select = $this->tag_group_filter[$tagGroup];
+                          echo "<select id='tag_group_filter_".$tagGroup."' data_group_id='".$tagGroup."' class='filter_browse_tag_group'>";
+                          echo "<option value=''></option>";
+                          foreach (array_keys($tags) as $tag_id) {
+                              if($select == $tag_id) {
+                                  echo "<option value='".$tag_id."' selected>".$tags[$tag_id]."</option>";
+                              } else {
+                                  echo "<option value='".$tag_id."'>".$tags[$tag_id]."</option>";
+                              }
+                              
+                          }
+                          
+                          echo "</select>";
+                      }
+                      
+                      
+                  }
+                  ?>
+                  </li> 
               </ul>
             </div>
 
@@ -267,5 +298,6 @@ $time_start = microtime(true);
             TooltipUser.setup("tooltipuserleft","left");
             TooltipUser.setup("tooltipuser","right");
             FilterBrowseOriginalFn.setup();
+            FilterBrowseTagGroupFn.setup();
         });
     ');

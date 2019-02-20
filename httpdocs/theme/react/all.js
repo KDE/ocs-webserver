@@ -1841,12 +1841,12 @@ class Introduction extends React.Component {
         { className: "actions green" },
         React.createElement(
           "a",
-          { href: "/s/LibreOffice/product/add", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+          { href: window.baseUrl + "product/add", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
           "Add Extension"
         ),
         React.createElement(
           "a",
-          { href: "/s/LibreOffice/browse", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+          { href: window.baseUrl + "browse", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
           "Browse all Extensions"
         )
       );
@@ -2001,7 +2001,8 @@ class ProductCarousel extends React.Component {
       carouselItemsDisplay = this.props.products.map((product, index) => React.createElement(ProductCarouselItem, {
         key: index,
         product: product,
-        itemWidth: this.state.itemWidth
+        itemWidth: this.state.itemWidth,
+        baseUrl: this.props.baseUrl
       }));
     }
 
@@ -2095,7 +2096,7 @@ class ProductCarouselItem extends React.Component {
       { className: "product-carousel-item", style: { "width": this.props.itemWidth } },
       React.createElement(
         "a",
-        { href: "/p/" + this.props.product.project_id },
+        { href: "p/" + this.props.product.project_id },
         React.createElement(
           "figure",
           null,

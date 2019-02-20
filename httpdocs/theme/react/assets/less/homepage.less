@@ -103,6 +103,36 @@ out: ../css/homepage.css, sourcemap: true, compress: true
       position: absolute;
       top: 0;
       left: 0;
+      overflow: hidden;
+      width: 300px;
+      height: 230px;
+
+      .product-image {
+        filter: blur(2px);
+        width: 100%;
+        height: 100%;
+      }
+
+      figure.user-avatar {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 170px;
+        height: 170px;
+        overflow: hidden;
+        border-radius: 100%;
+        border: 5px solid white;
+        margin-left: -85px;
+        margin-top: -85px;
+        box-shadow: 0px 2px 5px rgba(0,0,0,0.5);
+
+        img {
+          width: 100%;
+          height: 100%;
+          background-color: #eee;
+        }
+      }
+
     }
 
     .spotlight-info {
@@ -129,6 +159,10 @@ out: ../css/homepage.css, sourcemap: true, compress: true
         font-size: 12px;
         background-color: #5bc0de;
         color: white;
+
+        &.plinged {
+          background-color: #ee6d09;
+        }
       }
 
       .info-top {
@@ -152,13 +186,14 @@ out: ../css/homepage.css, sourcemap: true, compress: true
         }
 
         .user-info {
-          margin: 20px 0 0 0;
+          margin: 20px 0 5px 0;
 
           img {
             width: 30px;
             height: 30px;
             border-radius: 50%;
             margin-right: 10px;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.5);
           }
         }
 
@@ -182,10 +217,129 @@ out: ../css/homepage.css, sourcemap: true, compress: true
         }
       }
     }
+
+    &.dummy-product {
+
+      .spotlight-image {
+        background-color: #eee;
+        figure {
+          .ajax-loader {
+            margin: 68px auto;
+          }
+        }
+      }
+
+      .spotlight-info {
+        .spotlight-info-wrapper {
+          .info-top {
+            padding-right: 40%;
+            position: relative;
+            margin-bottom: 20px;
+            float: left;
+            width: 100%;
+
+            h2 {
+              height: 16px;
+              width: 80%;
+              background-color: #eee;
+              margin-bottom: 5px;
+            }
+
+            h3 {
+              height: 14px;
+              width: 90%;
+              background-color: #eee;
+            }
+
+            .user-info {
+              float: left;
+              width: 100%;
+              margin-bottom: 10px;
+
+              figure {
+                height: 30px;
+                width: 30px;
+                border: 3px solid #eee;
+                border-radius: 100%;
+                overflow: hidden;
+                float: left;
+                box-shadow: 0 2px 2px rgba(0,0,0,0.5);
+
+                span {
+                  font-size: 24px;
+                  text-align: center;
+                }
+              }
+
+              > span {
+                height: 12px;
+                display: block;
+                width: 30%;
+                float: left;
+                background-color: #eee;
+                margin: 8px 0 0 10px;
+              }
+            }
+
+            .comments-count {
+              display: block;
+              float: left;
+              width: 50%;
+              background-color: #eee;
+              height: 12px;
+            }
+          }
+
+          .score-info {
+            .score-bar-container {
+              .score-bar {
+                  height: 9px;
+                  background-color: #eee;
+                  border-bottom: 0;
+              }
+            }
+          }
+
+          .info-description {
+            float: left;
+            width: 100%;
+
+            span {
+              height: 12px;
+              display: block;
+              float: left;
+              background-color: #eee;
+              width: 100%;
+              margin-bottom: 5px;
+
+              &.half {
+                width: 60%;
+              }
+            }
+          }
+        }
+      }
+
+    }
+  }
+
+  #loading-container {
+    width: 100%;
+    height: 230px;
+    float: left;
+
+    .ajax-loader {
+      display: table;
+      margin: 95px auto;
+      float: none;
+    }
   }
 }
 
+
 #spotlight-user-container {
+  max-width: 800px;
+  margin: 0 auto;
 
   #spotlight-user {
 
@@ -261,6 +415,7 @@ out: ../css/homepage.css, sourcemap: true, compress: true
             color: white;
             min-height: 44px;
             font-size: 14px;
+            border-radius: 3px;
           }
         }
 
@@ -293,23 +448,92 @@ out: ../css/homepage.css, sourcemap: true, compress: true
     }
   }
 
-  .spotlight-user-next {
-    padding: 5px 10px;
-    background-color: #2673b0;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
+  .spotlight-user-buttons {
     display: table;
     margin: 10px auto;
+
+    a {
+      cursor: pointer;
+    }
+
+    a + a{
+      margin-left: 5px;
+    }
   }
 
-  #loading-container {
+  .loading-container {
     width: 100%;
-    padding: 120px 0;
+    padding: 127px 0 128px 0;
 
     .ajax-loader {
       display: table;
       margin:  0 auto;
+    }
+  }
+
+  &.v-two {
+
+    .loading-container {
+      padding: 88px 0 88px 0;
+    }
+
+    #spotlight-user {
+      position: relative;
+      padding-left: 200px;
+      height: 200px;
+      border: 1px solid #eee;
+      background-color: white;
+      border-radius: 5px;
+      overflow: hidden;
+
+      .user-container {
+        width: 200px;
+        height: 200px;
+        margin: 0;
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 20px 30px 0 30px;
+        background-color: #eee;
+        display: block;
+
+        figure {
+          width: 140px;
+          height: 140px;
+          position: relative;
+          border-color: white;
+        }
+
+        h2 {
+          float: left;
+          width: 100%;
+          height: auto;
+          line-height: inherit;
+          text-align: center;
+          font-size: 20px;
+        }
+      }
+
+      .product-container {
+        background: #eee;
+        border-radius: 5px;
+        overflow: hidden;
+        display: table;
+        margin: 10px auto 20px auto;
+        border: 1px solid #ccc;
+        width: 100%;
+        border: 0;
+        background-color: transparent;
+        padding: 11px 5px;
+        margin: 0;
+        height: 200px;
+        border-radius: 0;
+
+        .spotlight-user-product {
+          width: 33.3% !important;
+          height: 100% !important;
+        }
+      }
     }
   }
 }
@@ -325,9 +549,15 @@ out: ../css/homepage.css, sourcemap: true, compress: true
   }
 
   #main-content {
-    background-color: #f9f6f6;
-    border-bottom: 1px solid #eee;
+    margin-top: 15px;
+    // background-color: #f9f6f6;
+    // border-bottom: 1px solid #eee;
   }
+}
+
+#main-content {
+  width: 100%;
+  float: left;
 }
 
 @media (min-width:900px) and (max-width:1100px){
@@ -368,6 +598,7 @@ out: ../css/homepage.css, sourcemap: true, compress: true
               width: 100%;
               max-width: 100%;
             }
+
           }
         }
       }

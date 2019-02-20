@@ -20,12 +20,15 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+$helperBuildBaseUrl = new Default_View_Helper_BuildBaseUrl();
+//$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+$baseurl = $helperBuildBaseUrl->buildBaserUrl();
 $sname = Zend_Registry::get('store_host');
 $store_config = Zend_Registry::get('store_config');
 
 $getAuthUser = new Default_View_Helper_GetAuthUser();
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+
 $helperImage = new Default_View_Helper_Image();
 $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
@@ -44,6 +47,10 @@ $logoWidth = (int)$this->template['header-logo']['width'];
 $cat_title_left = $logoWidth+60;
 $tabs_left = (int)$this->template['header-nav-tabs']['absolute-left'];
 $tabs_left += $cat_title_length*10;
+
+$filter = new Local_Filter_Url_Encrypt();
+$thisurl = $helperBuildBaseUrl->buildBaserUrl();
+$url_logout = "/logout?redirect=".$filter->filter($thisurl);
 
 
 ?>
@@ -143,10 +150,10 @@ $tabs_left += $cat_title_length*10;
               <ul>
                   <li role="presentation"
                       class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
-                      <a href="<?=$serverUrl?>/register" rel="nofollow">Register</a></li>
+                      <a href="<?=$baseurl?>register" rel="nofollow">Register</a></li>
                   <li role="presentation"
                       class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'login') ? 'active' : '') ?>">
-                      <a href="<?=$serverUrl?>/login<?php echo strpos($_SERVER["REQUEST_URI"], 'login') ? '' : $redirectString ?>" rel="nofollow">Login</a>
+                      <a href="<?=$baseurl?>login<?php echo strpos($_SERVER["REQUEST_URI"], 'login') ? '' : $redirectString ?>" rel="nofollow">Login</a>
                   </li>
               </ul>
             </div>
@@ -183,7 +190,7 @@ $tabs_left += $cat_title_length*10;
                             <ul class="profile-menu menu-dropdown">
                                 <div class="dropdown-header"></div>
                                 <li class="link first">
-                                    <a href="/product/add/"><?= $this->translate('Add Product') ?></a>
+                                    <a href="<?= $helperBuildBaseUrl->buildBaserUrl('product/add') ?>"><?= $this->translate('Add Product') ?></a>
                                 </li>
                                 <li class="link">
                                     <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->username, 'products') ?>"><?= $this->translate('Products') ?></a>
@@ -192,10 +199,10 @@ $tabs_left += $cat_title_length*10;
                                     <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->username, 'plings') ?>"><?= $this->translate('Plings') ?></a>
                                 </li>
                                 <li class="link">
-                                    <a href="/settings/"><?= $this->translate('Settings') ?></a>
+                                    <a href="<?= $helperBuildBaseUrl->buildBaserUrl('settings') ?>"><?= $this->translate('Settings') ?></a>
                                 </li>
                                 <li class="link">
-                                    <a href="<?=$serverUrl?>/logout/"><?= $this->translate('Logout') ?></a>
+                                    <a href="<?= $url_logout ?>"><?= $this->translate('Logout') ?></a>
                                 </li>
                             </ul>
                         </li>

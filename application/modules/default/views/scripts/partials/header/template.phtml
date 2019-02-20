@@ -24,6 +24,7 @@ $helperFetchCategory = new Default_View_Helper_CatTitle();
 $helperFetchCatParent = new Default_View_Helper_CatParent();
 $getAuthUser = new Default_View_Helper_GetAuthUser();
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperBuildBaseUrl = new Default_View_Helper_BuildBaseUrl();
 $helperImage = new Default_View_Helper_Image();
 $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
@@ -48,7 +49,8 @@ if($member && !empty($member->username)){
 
 $serverUrl = $this->serverUrl();
 
-$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+//$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+$baseurl = $helperBuildBaseUrl->buildBaserUrl();
 $searchbaseurl = $this->buildSearchBaseUrl();
 $sname = Zend_Registry::get('store_host');
 $store_config = Zend_Registry::get('store_config');
@@ -68,6 +70,12 @@ $request = Zend_Controller_Front::getInstance()->getRequest();
 $http_scheme = $request->getScheme();
 
 $json_menu = $this->fetchMetaheaderMenuJson();
+
+
+$filter = new Local_Filter_Url_Encrypt();
+$thisurl = $helperBuildBaseUrl->buildBaserUrl();
+$url_logout = "/logout?redirect=".$filter->filter($thisurl);
+$url_login = "/logint?redirect=".$filter->filter($thisurl);
 
 
 $cat_title = $helperFetchCategory->catTitle($this->cat_id);
@@ -410,6 +418,9 @@ echo $this->render('partials/header/metaheader.phtml');
     var json_logoWidth = <?php echo  Zend_Json::encode($logoWidth);?>;
     var json_cat_title_left = <?php echo  Zend_Json::encode($cat_title_left);?>;
     var json_tabs_left = <?php echo  Zend_Json::encode($tabs_left);?>;
+    
+    var json_loginurl = <?php echo Zend_Json::encode($url_login); ?>;  
+    var json_logouturl = <?php echo Zend_Json::encode($url_logout); ?>;  
     
 </script>
 <link href="/theme/react/assets/css/header.css" type="text/css" rel="stylesheet" />

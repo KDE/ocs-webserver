@@ -27,6 +27,7 @@ $productUrl = $helpProductUrl->buildProductUrl($this->product->project_id);
 $loginUrl = '/login?redirect=' . $helperEncryptUrl->encryptUrl($productUrl.'#comments_block', true);
 $helperHumanTiming = new Default_View_Helper_HumanTiming();
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperBuildBaseUrl = new Default_View_Helper_BuildBaseUrl();
 $helperImage = new Default_View_Helper_Image();
 $identity = Zend_Auth::getInstance()->getStorage()->read();
 $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountPerPage();
@@ -57,7 +58,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         <small class="small"> Add a comment</small>
                     </p>
                     <div class="collapse in" id="add-comment" style="padding-top: 8px;">
-                        <form class="full-width product-add-comment" action="/productcomment/addreply/" id="product-add-comment1">
+                        <form class="full-width product-add-comment" action="<?= $helperBuildBaseUrl->buildBaserUrl('productcomment/addreply') ?>" id="product-add-comment1">
                             <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
                             <input type="hidden" name="m" value="<?= $identity->member_id ?>">
                             <textarea name="msg" class="full-width" required="required"></textarea>
@@ -186,7 +187,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         </div>
                         <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
                         <div class="collapse" id="reply-<?= $comment['comment_id'] ?>">
-                            <form class="full-width product-add-comment" action="/productcomment/addreply/" id="product-add-comment2">
+                            <form class="full-width product-add-comment" action="<?= $helperBuildBaseUrl->buildBaserUrl('productcomment/addreply') ?>" id="product-add-comment2">
                                 <input type="hidden" name="i" value="<?= $comment['comment_id'] ?>">
                                 <input type="hidden" name="p" value="<?= $comment['comment_target_id'] ?>">
                                 <input type="hidden" name="m" value="<?= $identity->member_id ?>">

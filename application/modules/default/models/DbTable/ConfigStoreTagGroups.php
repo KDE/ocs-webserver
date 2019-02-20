@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,24 +20,31 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
-class Default_View_Helper_FetchTagsForTagGroup extends Zend_View_Helper_Abstract
+class Default_Model_DbTable_ConfigStoreTagGroups extends Local_Model_Table
 {
 
-    public function fetchList($groupId, $withHeader = false)
+    protected $_name = "config_store_tag_group";
+
+    protected $_keyColumnsForRow = array('config_store_taggroup_id');
+
+    protected $_key = 'config_store_taggroup_id';
+
+    public function delete($where)
     {
-        
-        $tableTags = new Default_Model_DbTable_Tags();
-        $tags = array();
-        if($withHeader) {
-            $tags = $tableTags->fetchForGroupForSelect($groupId, true);
-            $tags['header'] = 'Filter for: ' . $tags['header'];
-        } else {
-            $tags = $tableTags->fetchForGroupForSelect($groupId);
-        }
-        
-                 
-        return $tags;
+        $where = parent::_whereExpr($where);
+
+        /**
+         * Build the DELETE statement
+         */
+        $sql = "UPDATE " . parent::getAdapter()->quoteIdentifier($this->_name, true) . " SET `is_active` = 0, `deleted_at` = NOW() " . (($where) ? " WHERE $where" : '');
+
+        /**
+         * Execute the statement and return the number of affected rows
+         */
+        $stmt = parent::getAdapter()->query($sql);
+        $result = $stmt->rowCount();
+
+        return $result;
     }
-    
+
 } 

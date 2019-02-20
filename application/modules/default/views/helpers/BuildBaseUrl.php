@@ -20,7 +20,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
+class Default_View_Helper_BuildBaseUrl extends Zend_View_Helper_Abstract
 {
 
     /**
@@ -31,7 +31,7 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
      * @return string
      * @throws Zend_Exception
      */
-    public function buildMemberUrl($member_ident, $action = '', $params = null)
+    public function buildBaserUrl($action = '', $params = null)
     {
         /** @var Zend_Controller_Request_Http $request */
         $request = Zend_Controller_Front::getInstance()->getRequest();
@@ -71,18 +71,28 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
         }
 
         if ($action != '') {
-            $action = $action . '/';
+            $action = $action;
         }
         
-        $member_ident = strtolower($member_ident);
-        $member_ident = urlencode($member_ident);
-        
-        $memberLink = "u";
-        if(is_int($member_ident)) {
-            $memberLink = "member";
+        return "{$baseurl}/{$action}{$url_param}";
+    }
+    
+    
+    public function buildMainBaserUrl($action = '', $params = null)
+    {
+        $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+
+        $url_param = '';
+        if (is_array($params)) {
+            array_walk($params, create_function('&$i,$k', '$i="$k/$i/";'));
+            $url_param = implode('/', $params);
         }
 
-        return "{$baseurl}/{$memberLink}/{$member_ident}/{$action}{$url_param}";
+        if ($action != '') {
+            $action = $action;
+        }
+        
+        return "{$baseurl}/{$action}{$url_param}";
     }
 
 

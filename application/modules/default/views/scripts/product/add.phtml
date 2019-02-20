@@ -25,16 +25,20 @@ $this->tab = 'add';
 $helperImage = new Default_View_Helper_Image();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helpProductUrl = new Default_View_Helper_BuildProductUrl();
+$helpBaseUrl = new Default_View_Helper_BuildBaseUrl();
 
 $modelCategory = new Default_Model_DbTable_ProjectCategory();
 $valueCatId = $this->form->project_category_id->getValue();
 //$valueCatId = 55;
+$storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
 $categories = $modelCategory->fetchCategoriesForForm($valueCatId);
 $categoryAncestors = $modelCategory->fetchAncestorsAsId($valueCatId);
+
 if (count($categoryAncestors) > 0) {
     $categoryPath = explode(',',$categoryAncestors['ancestors']);
 }
 $categoryPath[] = $valueCatId;
+
 
 $this->headLink()->appendStylesheet('/theme/flatui/css/chosen.css');
 $this->inlineScript()->appendFile('/theme/flatui/js/lib/chosen.jquery.min.js');
@@ -65,7 +69,7 @@ $this->inlineScript()->appendScript('
         }
 
         input[type=checkbox] {
-            display: none;
+            /*display: none;*/
         }
 
         div.datafiledroparea{
@@ -158,7 +162,15 @@ $this->inlineScript()->appendScript('
             width: 25px;
             float: left;
         }
+        
+        .wizard > .content > .body ul.multiselect-container {
+            list-style: none !important;
+        }
     </style>
+    
+    <link rel="stylesheet" href="/tools/bootstrap-multiselect/css/bootstrap-multiselect.css" type="text/css">
+    <script type="text/javascript" src="/tools/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+    
     <main class="user-admin-page">
 
         <section class="head-wrap">
@@ -373,7 +385,7 @@ $this->inlineScript()->appendScript('
                             
                             <h3>Files</h3>
                             <section id="files">
-
+                                
                                 <!-- ppload -->
 
                                 <div id="modal-ppload" aria-labelledby="modal-ppload-label"
@@ -491,6 +503,12 @@ $this->inlineScript()->appendScript('
 
     <script>
         $(document).ready(function () {
+            
+            /*
+            $('.multiple').multiselect({
+                includeSelectAllOption: true
+            });
+            */
 
             var formElement = $('#add-product-form');
             var validator = formElement.validate({
@@ -957,8 +975,10 @@ $this->inlineScript()->appendScript('
                                     var fileId = this.id;
 
                                     if(tagGroupsCount>0) {
+                                        
                                         $.each(tagGroups, function() {
                                             tableString += '<td>';
+                                            //tableString +='<select multiple="multiple" id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="multi" style="width: 150px;">';
                                             tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
                                             tableString += '<option value=\"\"></option>';
 
@@ -973,6 +993,7 @@ $this->inlineScript()->appendScript('
                                             tableString += '</select>';
                                             tableString += '</td>';
                                         });
+                                        
                                     } else {
                                     
                                         if(fileTagsArraySize>0) {
@@ -1012,6 +1033,12 @@ $this->inlineScript()->appendScript('
                                         $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
                                     }
                                 });
+                                
+                                /*
+                                $('.multi').multiselect({
+                                        includeSelectAllOption: true
+                                });
+                                */
 
                                 $modalPpload.find('p[data-file-upload-msg]').show();
                                 $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
@@ -1491,8 +1518,8 @@ $this->inlineScript()->appendScript('
                 $modalPpload.attr('data-updatepploadfile-uri', $(this).attr('data-updatepploadfile-uri'));
                 $modalPpload.attr('data-deletepploadfile-uri', $(this).attr('data-deletepploadfile-uri'));
                 $modalPpload.find('div[data-file-upload]').css({
-                    'min-height': '200px',
-                    'max-height': '400px',
+                    'min-height': '400px',
+                    'max-height': '600px',
                     'border-width': '5px',
                     'border-style': 'dashed',
                     'border-color': '#cccccc',
@@ -1759,6 +1786,11 @@ $this->inlineScript()->appendScript('
                 });
 
                 
+                $('.multi').multiselect({
+                    includeSelectAllOption: true
+                });
+                
+                
         });
 
 
@@ -1823,7 +1855,8 @@ $this->inlineScript()->appendScript('
               errors: "",
               cat_id_data: <?=json_encode($categories)?>,
               cat_id_path: <?=json_encode($categoryPath)?>,
-              
+              store_cat_ids: <?=json_encode($storeCatIds)?>,
+              value_cat_id: <?=json_encode($valueCatId)?>,
 
               setup: function () {
                   this.setupCategorySelect();
@@ -1833,21 +1866,34 @@ $this->inlineScript()->appendScript('
 
               setupCategorySelect: function() {
                   var level = 0;
+                  var hasNoRoot = true;
+                  
                   for (var form_elem_name in this.cat_id_data) {
                       var nextElementName = form_elem_name.substring(0, form_elem_name.length - 1) + (level + 1);
                       var new_html_element = '<select name="' + form_elem_name + '" id="' + form_elem_name + '" class="required form-control product_select_cat" data-target="'+nextElementName+'" data-level="'+level+'">';
                       new_html_element += '<option value=""> </option>';
+                      
+                      hasNoRoot = true;
+                      
                       for (var form_select_option in this.cat_id_data[form_elem_name]) {
                           var attr_selected = '';
-                          if (form_select_option == this.cat_id_path[level]) {
-                              attr_selected = ' selected="selected"'
+                          
+                          if (form_select_option == this.cat_id_path[level] || form_select_option == this.value_cat_id) {
+                              attr_selected = ' selected="selected"';
+                              hasNoRoot = false;
                           }
                           new_html_element += '<option value="' + form_select_option + '" ' + attr_selected + '>' + this.cat_id_data[form_elem_name][form_select_option] + '</option>';
                       }
+                      
+                      if(hasNoRoot == true && this.cat_id_path != '0') {
+                          var url = "<?= $helpBaseUrl->buildMainBaserUrl().'p/'. $this->project_id . '/edit' ?>";
+                          //alert("Redir: "+url);
+                          document.location.href = url;
+                      }
+                      
                       new_html_element += '</select>';
-
                       $('#wrapper_cat_id').append(new_html_element);
-                      this.sortOptionByValue(form_elem_name);
+                        this.sortOptionByValue(form_elem_name);
 
                       var size = <?=count($categories)?>;
                       if((size-1) == level) {
@@ -2112,6 +2158,6 @@ $this->inlineScript()->appendScript('
             ImagePreview.setup();
             ProductForm.setup();
             ProductGallery.setup();
-            OpendownloadfileWerbung.setup();
+            Opendownloadfile.setup();
         });
     ');

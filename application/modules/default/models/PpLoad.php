@@ -31,6 +31,17 @@ class Default_Model_PpLoad
     {
     }
 
+    public function isAuthmemberProjectCreator($creator_id)    
+    {
+        $auth = Zend_Auth::getInstance();
+        $authMember = $auth->getStorage()->read();
+        if($authMember->member_id == $creator_id)
+        {
+            return true;
+        }
+        return false;        
+    }
+
     public function uploadEmptyFileWithLink($projectId, $url, $filename, $fileDescription)
     {
         $projectId = (int)$projectId;
@@ -82,12 +93,18 @@ class Default_Model_PpLoad
 
         if ($projectData->ppload_collection_id <> $fileResponse->file->collection_id) {
             $projectData->ppload_collection_id = $fileResponse->file->collection_id;
-            $projectData->changed_at = new Zend_Db_Expr('NOW()');
+            if($this->isAuthmemberProjectCreator($projectData->member_id))
+            {
+                $projectData->changed_at = new Zend_Db_Expr('NOW()');
+            }
             $projectData->save();
         }else
         {
-            $projectData->changed_at = new Zend_Db_Expr('NOW()');
-            $projectData->save();
+            if($this->isAuthmemberProjectCreator($projectData->member_id))
+            {
+                $projectData->changed_at = new Zend_Db_Expr('NOW()');
+                $projectData->save();
+            }
         }
 
         return $fileResponse;

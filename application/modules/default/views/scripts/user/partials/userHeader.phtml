@@ -20,6 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 $helperMember = new Default_View_Helper_BuildMemberUrl();
+$helperBase = new Default_View_Helper_BuildBaseUrl();
 ?>
 <div  class="pling-nav-tabs">
 <ul class="nav nav-tabs">
@@ -31,7 +32,7 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
                 <?= $this->translate('Edit Product') ?>
             </a>
         <?php else : ?>
-            <a href="/product/add/">
+        <a href="<?php echo $helperBase->buildBaserUrl('product/add'); ?>">
                 <span class="glyphicon glyphicon-plus"></span>
                 <?= $this->translate('Add Product') ?>
             </a>
@@ -74,7 +75,7 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
     </li>
     
     <li class="header-menu-left-item <?php echo $this->tab == 'settings' ? 'active' : ''; ?>">
-        <a href="/settings/">
+        <a href="<?php echo $helperBase->buildBaserUrl('settings'); ?>">
             <span class="glyphicon glyphicon-cog"></span>
             <?= $this->translate('Settings') ?>
         </a>
@@ -83,7 +84,7 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
     $identity = Zend_Auth::getInstance()->getStorage()->read();
     ?>
     <li class="header-menu-left-item <?php echo $this->tab == 'supporterbox' ? 'active' : ''; ?>">
-        <a href="/supporterbox/<?=$identity->member_id?>">            
+        <a href="<?php echo $helperBase->buildBaserUrl('supporterbox'); ?>/<?=$identity->member_id?>">            
             <i class="fa fa-user"></i>
             <?= $this->translate('Supporter box') ?>
         </a>

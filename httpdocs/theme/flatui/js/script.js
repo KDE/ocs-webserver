@@ -635,7 +635,7 @@ var Partials = (function () {
     }
 })();
 
-var OpendownloadfileWerbung= (function () {
+var Opendownloadfile= (function () {
     return {
         setup: function () {
             $('body').on('click', 'a.opendownloadfile', function (event) {
@@ -656,7 +656,7 @@ var OpendownloadfileWerbung= (function () {
                     'type': 'iframe',
                     'width':'300',
                     'height':'200',
-                    'iframe': {'scrolling': 'yes'},
+                    'iframe': {'scrolling': 'no'},
                     'autoSize':false,
                     'id': 'opendownloadfilepopup',
                     helpers: {
@@ -2391,25 +2391,48 @@ var productRatingToggle = (function () {
 })();
 
 var FilterBrowseOriginalFn= (function () {
-                        return {
-                            setup: function () {
-                                           $('body').on('click', 'input#filter_browse_original', function (event) {
-                                                var checked = $(this).is( ":checked" );
-                                                var url  = window.location.href;
-                                                if(url.indexOf("browse")<0)
-                                                {
-                                                    url = url+'/browse/';
-                                                }
-                                                if(url.indexOf("filteroriginal")>0)
-                                                {
-                                                    url = url.substring(0,url.indexOf("filteroriginal"));
-                                                }
-                                                if(checked){
-                                                   window.location.href = url+'filteroriginal/1';
-                                                }else{
-                                                    window.location.href = url+'filteroriginal/0';
-                                                }
-                                           });
+    return {
+        setup: function () {
+                       $('body').on('click', 'input#filter_browse_original', function (event) {
+                            var checked = $(this).is( ":checked" );
+                            var url  = window.location.href;
+                            if(url.indexOf("browse")<0)
+                            {
+                                url = url+'/browse/';
                             }
-                        }
+                            if(url.indexOf("filteroriginal")>0)
+                            {
+                                url = url.substring(0,url.indexOf("filteroriginal"));
+                            }
+                            if(checked){
+                               window.location.href = url+'filteroriginal/1';
+                            }else{
+                                window.location.href = url+'filteroriginal/0';
+                            }
+                       });
+        }
+    }
+})();
+
+
+var FilterBrowseTagGroupFn= (function () {
+    return {
+        setup: function () {
+            $('body').on('change', 'select.filter_browse_tag_group', function (event) {
+                var filterVal = $(this).val();
+                var groupId = $(this).attr('data_group_id');
+                
+                $.ajax({
+                    url: '/explore/savetaggroupfilter?group_id='+groupId+'&tag_id='+filterVal,
+                    cache: false
+                  })
+                  .done(function( response ) {
+                      var url  = window.location.href;
+                      window.location.href = url;
+                  });
+                
+                
+            });
+        }
+    }
 })();

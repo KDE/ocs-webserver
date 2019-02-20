@@ -28,7 +28,7 @@
                 <img src="<?php echo $this->Image($file->image_small, array('width' => 80, 'height' => 80)); ?>" class="downloadhistory-image" />
             </figure>   
             <div>
-                <a href="/p/<?=$file->project_id?>"><?=$file->title?></a>
+                <a href="<?= $this->buildProductUrl($file->project_id) ?>"><?=$file->title?></a>
                 <p><?=$file->cat_title?> 
             </div>
         </div>      

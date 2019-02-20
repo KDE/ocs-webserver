@@ -1,3 +1,45 @@
+window.hpHelpers = (function(){
+
+  function dechex(number) {
+    //  discuss at: http://locutus.io/php/dechex/
+    // original by: Philippe Baumann
+    // bugfixed by: Onno Marsman (https://twitter.com/onnomarsman)
+    // improved by: http://stackoverflow.com/questions/57803/how-to-convert-decimal-to-hex-in-javascript
+    //    input by: pilus
+    //   example 1: dechex(10)
+    //   returns 1: 'a'
+    //   example 2: dechex(47)
+    //   returns 2: '2f'
+    //   example 3: dechex(-1415723993)
+    //   returns 3: 'ab9dc427'
+
+    if (number < 0) {
+      number = 0xFFFFFFFF + number + 1
+    }
+    return parseInt(number, 10).toString(16)
+  }
+
+  function calculateScoreColor(score){
+    let blue, red, green, defaultColor = 200;
+    if (score > 50){
+      red = defaultColor - ((score-50)*4);
+      green = defaultColor;
+      blue = defaultColor - ((score-50)*4);
+    } else if (score < 51){
+      red = defaultColor;
+      green = defaultColor - ((score-50)*4);
+      blue = defaultColor - ((score-50)*4);
+    }
+
+    return "rgb("+red+","+green+","+blue+")";
+  }
+
+  return {
+    dechex,
+    calculateScoreColor
+  }
+}());
+
 class App extends React.Component {
   constructor(props){
   	super(props);
@@ -60,6 +102,7 @@ class App extends React.Component {
       <main id="opendesktop-homepage">
         <SpotlightProduct
           env={this.state.env}
+          device={this.state.device}
           featuredProduct={featuredProduct}
         />
       </main>
@@ -71,62 +114,126 @@ class SpotlightProduct extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      featuredProduct:this.props.featuredProduct
+      featuredProduct:this.props.featuredProduct,
+      type:"featured",
+      featuredPage:0,
+      loading:true
     };
     this.onSpotlightMenuClick = this.onSpotlightMenuClick.bind(this);
   }
 
+  componentDidMount() {
+    this.onSpotlightMenuClick('plinged');
+  }
+
   onSpotlightMenuClick(val){
-    let url = "/home/showfeaturejson/page/";
-    if (val === "random"){ url += "0"; }
-    else { url += "1"; }
-    const self = this;
-    $.ajax({url: url,cache: false}).done(function(response){
-        self.setState({featuredProduct:response});
+
+    this.setState({type:val,loading:true},function(){
+
+      let url = "/home/showfeaturejson/page/";
+      let featuredPage = this.state.featuredPage;
+      if (this.state.type === "plinged"){
+        url = "/home/getnewactiveplingedproductjson?limit=1&offset=" + this.state.featuredPage;
+        featuredPage = this.state.featuredPage + 1;
+      } else if (this.state.type === "random"){
+        url += "0";
+      } else {
+        url += "1";
+      }
+      const self = this;
+
+      $.ajax({url: url,cache: false}).done(function(response){
+
+        let featuredProduct = response;
+        if (self.state.type === "plinged"){
+          featuredProduct = response[0];
+        }
+
+        console.log(featuredProduct);
+
+        self.setState({
+          featuredProduct:featuredProduct,
+          featuredPage:featuredPage,
+          loading:false
+        });
+      });
     });
   }
 
   render(){
 
-    let imageBaseUrl;
-    if (this.props.env === 'live') {
-      imageBaseUrl = 'cn.opendesktop.org';
+    let spotlightProductDisplay;
+    if (this.state.loading){
+      spotlightProductDisplay = (
+        <SpotlightProductDummy />
+      );
     } else {
-      imageBaseUrl = 'cn.opendesktop.cc';
-    }
 
-    let description = this.state.featuredProduct.description;
-    if (description && description.length > 295){
-      description = this.state.featuredProduct.description.substring(0,295) + "...";
-    }
+      let productImageUrl;
+      if (this.state.type === "plinged"){
+        productImageUrl = this.state.featuredProduct.image_small;
+      } else {
+        let imageBaseUrl;
+        if (this.props.env === 'live') {
+          imageBaseUrl = 'cn.opendesktop.org';
+        } else {
+          imageBaseUrl = 'cn.opendesktop.cc';
+        }
+        productImageUrl = "https://" + imageBaseUrl + "/cache/300x230-1/img/" +  this.state.featuredProduct.image_small;
+      }
 
-    let featuredLabelDisplay;
-    if (this.state.featuredProduct.featured === "1"){
-      featuredLabelDisplay = "featured"
-    }
+      let description = this.state.featuredProduct.description;
+      if (description && description.length > 295){
+        description = this.state.featuredProduct.description.substring(0,295) + "...";
+      }
 
-    let cDate = new Date(this.props.featuredProduct.created_at);
-    cDate = cDate.toString();
-    const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
+      let featuredLabelDisplay;
+      if (this.state.type === "featured"){
+        featuredLabelDisplay = (
+          <span className="featured-label">featured</span>
+        );
+      } else if (this.state.type === "plinged"){
+        featuredLabelDisplay = (
+          <span className="featured-label plinged">plinged</span>
+        );
+      }
 
-    return(
-      <div id="spotlight-product">
-        <h2>In the Spotlight</h2>
+      let cDate = new Date(this.state.featuredProduct.created_at);
+      cDate = cDate.toString();
+      const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
+      // const productScoreColor = window.hpHelpers.calculateScoreColor(this.state.featuredProduct.laplace_score);
+
+      let commentCount;
+      if (this.state.featuredProduct.count_comments){
+        commentCount = this.state.featuredProduct.count_comments;
+      } else {
+        commentCount = "0";
+      }
+
+      let categoryDisplay = this.state.featuredProduct.category;
+      if (this.state.type === "plinged"){
+        categoryDisplay = this.state.featuredProduct.cat_title;
+      }
+
+      spotlightProductDisplay = (
         <div className="container">
           <div className="spotlight-image">
-            <img src={"https://" + imageBaseUrl + "/cache/300x230-1/img/" + this.state.featuredProduct.image_small}/>
+            <img className="product-image" src={productImageUrl}/>
+            <figure className="user-avatar">
+              <img src={this.state.featuredProduct.profile_image_url}/>
+            </figure>
           </div>
           <div className="spotlight-info">
             <div className="spotlight-info-wrapper">
-              <span className="featured-label">{featuredLabelDisplay}</span>
+              {featuredLabelDisplay}
               <div className="info-top">
                 <h2><a href={"/p/" + this.state.featuredProduct.project_id}>{this.state.featuredProduct.title}</a></h2>
-                <h3>{this.state.featuredProduct.category}</h3>
+                <h3>{categoryDisplay}</h3>
                 <div className="user-info">
                   <img src={this.state.featuredProduct.profile_image_url}/>
                   {this.state.featuredProduct.username}
                 </div>
-                <span>{this.state.featuredProduct.comment_count} comments</span>
+                <span>{commentCount} comments</span>
                 <div className="score-info">
                   <div className="score-number">
                     score {this.state.featuredProduct.laplace_score + "%"}
@@ -146,6 +253,59 @@ class SpotlightProduct extends React.Component {
             <div className="spotlight-menu">
               <a onClick={() => this.onSpotlightMenuClick('random')}>random</a>
               <a onClick={() => this.onSpotlightMenuClick('featured')}>featured</a>
+              <a onClick={() => this.onSpotlightMenuClick('plinged')}>plinged</a>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return(
+      <div id="spotlight-product">
+        <h2>In the Spotlight</h2>
+        {spotlightProductDisplay}
+      </div>
+    );
+  }
+}
+
+class SpotlightProductDummy extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    return(
+      <div className="container dummy-product">
+        <div className="spotlight-image">
+          <figure className="user-avatar">
+            <div className="ajax-loader"></div>
+          </figure>
+        </div>
+        <div className="spotlight-info">
+          <div className="spotlight-info-wrapper">
+            <div className="info-top">
+              <h2></h2>
+              <h3></h3>
+              <div className="user-info">
+                <figure><span className="glyphicon glyphicon-user"></span></figure>
+                <span></span>
+              </div>
+              <span className="comments-count"></span>
+              <div className="score-info">
+                <div className="score-number"></div>
+                <div className="score-bar-container">
+                  <div className="score-bar" style={{"width":"50%"}}></div>
+                </div>
+                <div className="score-bar-date"></div>
+              </div>
+            </div>
+            <div className="info-description">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span className="half"></span>
             </div>
           </div>
         </div>
@@ -154,17 +314,15 @@ class SpotlightProduct extends React.Component {
   }
 }
 
-class ProductCarousel extends React.Component {
+class SpotlightUser extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      products:this.props.products,
-      offset:5,
-      disableleftArrow:true
+      loading:true,
+      version:2
     };
     this.updateDimensions = this.updateDimensions.bind(this);
-    this.animateProductCarousel = this.animateProductCarousel.bind(this);
-    this.getNextProductsBatch = this.getNextProductsBatch.bind(this);
+    this.getSpotlightUser = this.getSpotlightUser.bind(this);
   }
 
   componentWillMount() {
@@ -173,250 +331,141 @@ class ProductCarousel extends React.Component {
 
   componentDidMount() {
     this.updateDimensions();
+    this.getSpotlightUser();
   }
 
-  updateDimensions(animateCarousel){
-    let itemsPerRow = 5;
-    if (window.hpVersion === 2){
-      if (this.props.device === 'large'){
-        itemsPerRow = 6;
-      } else if (this.props.device === 'mid'){
-        itemsPerRow = 5;
-      } else if (this.props.device === 'tablet'){
-        itemsPerRow = 2;
-      }
-    }
-
+  updateDimensions(){
     const containerWidth = $('#main-content').width();
-    const containerNumber = Math.ceil(this.state.products.length / (itemsPerRow - 1));
-    const itemWidth = containerWidth / itemsPerRow;
-    const sliderWidth = (containerWidth - itemWidth) * containerNumber;
-    let sliderPosition = 0;
-    if (this.state.sliderPosition){
-      sliderPosition = this.state.sliderPosition;
-    }
-    this.setState({
-      sliderPosition:sliderPosition,
-      containerWidth:containerWidth,
-      containerNumber:containerNumber,
-      sliderWidth:sliderWidth,
-      itemWidth:itemWidth,
-      itemsPerRow:itemsPerRow - 1
-    },function(){
-      if (animateCarousel){
-        this.animateProductCarousel('right',animateCarousel);
-      } else if (this.state.finishedProducts){
-        this.setState({disableRightArrow:true});
-      }
-    });
+    const userProductsPerRow = 4;
+    const userProductsDimensions = containerWidth / userProductsPerRow;
+    this.setState({itemWidth:userProductsDimensions,itemHeight:userProductsDimensions});
   }
 
-  animateProductCarousel(dir,animateCarousel){
-    let newSliderPosition = this.state.sliderPosition;
-    const endPoint = this.state.sliderWidth - (this.state.containerWidth - this.state.itemWidth);
-
-    if (dir === 'left'){
-      if (this.state.sliderPosition > 0){
-        newSliderPosition = this.state.sliderPosition - (this.state.containerWidth - this.state.itemWidth);
-      }
-    } else {
-      if (Math.trunc(this.state.sliderPosition) < Math.trunc(endPoint)){
-        newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
-      } else {
-        if (!animateCarousel){
-          this.getNextProductsBatch();
-        }
-      }
-    }
-
-    this.setState({sliderPosition:newSliderPosition},function(){
-
-      let disableleftArrow = false;
-      if (this.state.sliderPosition <= 0){
-        disableleftArrow = true;
-      }
-
-      let disableRightArrow = false;
-      if (this.state.sliderPosition >= endPoint && this.state.finishedProducts === true){
-        disableRightArrow = true;
-      }
-
-      this.setState({disableRightArrow:disableRightArrow,disableleftArrow:disableleftArrow});
-
-    });
-  }
-
-  getNextProductsBatch(){
-    this.setState({disableRightArrow:true},function(){
-      let limit = (this.state.itemsPerRow * (this.state.containerNumber + 1)) - this.state.products.length;
-      if (limit <= 0){
-        limit = this.state.itemsPerRow;
-      }
-      let url = "/home/showlastproductsjson/?page=1&limit="+limit+"&offset="+this.state.offset+"&catIDs="+this.props.catIds+"&isoriginal=0";
+  getSpotlightUser(page){
+    if (!page) { page = 0 }
+    this.setState({loading:true,page: page},function(){
+      let url = "/home/showspotlightjson?page=" + this.state.page;
       const self = this;
       $.ajax({url: url,cache: false}).done(function(response){
-
-          let products = self.state.products,
-              finishedProducts = false,
-              animateCarousel = true;
-
-          if (response.length > 0){
-            products = products.concat(response);
-          } else {
-            finishedProducts = true;
-            animateCarousel = false;
+        self.setState({user:response,loading:false},function(){
+          const height = $('#user-container').height();
+          if (height > 0){
+            this.setState({containerHeight:height});
           }
-
-          const offset = self.state.offset + self.state.itemsPerRow;
-
-          self.setState({
-            products:products,
-            offset:offset + response.length,
-            finishedProducts:finishedProducts},function(){
-              self.updateDimensions(animateCarousel);
-          });
+        });
       });
     });
   }
 
   render(){
-    let carouselItemsDisplay;
-    if (this.state.products && this.state.products.length > 0){
-      carouselItemsDisplay = this.state.products.map((product,index) => (
-        <ProductCarouselItem
-          key={index}
-          product={product}
-          itemWidth={this.state.itemWidth}
-          env={this.props.env}
-        />
-      ));
-    }
 
-    let carouselArrowLeftDisplay;
-    if (this.state.disableleftArrow){
-      carouselArrowLeftDisplay = (
-        <a className="carousel-arrow arrow-left disabled">
-          <span className="glyphicon glyphicon-chevron-left"></span>
-        </a>
-      )
-    } else {
-      carouselArrowLeftDisplay = (
-        <a onClick={() => this.animateProductCarousel('left')} className="carousel-arrow arrow-left">
-          <span className="glyphicon glyphicon-chevron-left"></span>
-        </a>
-      );
-    }
-
-    let carouselArrowRightDisplay;
-    if (this.state.disableRightArrow){
-      carouselArrowRightDisplay = (
-        <a className="carousel-arrow arrow-right disabled">
-          <span className="glyphicon glyphicon-chevron-right"></span>
-        </a>
-      )
-    } else {
-      carouselArrowRightDisplay = (
-        <a onClick={() => this.animateProductCarousel('right')} className="carousel-arrow arrow-right">
-          <span className="glyphicon glyphicon-chevron-right"></span>
-        </a>
-      );
-    }
-
-
-    let hpVersionClass = "one";
-    let carouselWrapperStyling = {};
-    let carouselArrowsMargin;
-    if (window.hpVersion === 2 && this.state.itemWidth){
-      hpVersionClass = "two";
-      carouselWrapperStyling = {
-        "paddingLeft":this.state.itemWidth / 2,
-        "paddingRight":this.state.itemWidth / 2,
-        "height":this.state.itemWidth * 1.35
+    let spotlightUserDisplay;
+    if (this.state.loading){
+      let loadingStyle;
+      if (this.state.containerHeight){
+        loadingStyle = {
+          "height":this.state.containerHeight
+        }
       }
-      carouselArrowsMargin = this.state.itemWidth / 4;
+      spotlightUserDisplay = (
+        <div className="loading-container" style={loadingStyle}>
+          <div className="ajax-loader"></div>
+        </div>
+      );
+    } else {
+      let userProducts;
+      if (this.state.itemWidth){
+        userProducts = this.state.user.products.map((p,index) => (
+          <SpotlightUserProduct
+            key={index}
+            itemHeight={this.state.itemHeight}
+            itemWidth={this.state.itemWidth}
+            product={p}
+          />
+        ));
+      }
+      spotlightUserDisplay = (
+        <div id="spotlight-user">
+          <div className="user-container">
+            <figure>
+              <img src={this.state.user.profile_image_url}/>
+            </figure>
+            <h2><a href={"/u/"+this.state.user.username}>{this.state.user.username}</a></h2>
+          </div>
+          <div className="products-container">
+            {userProducts}
+          </div>
+        </div>
+      );
     }
 
-    return (
-      <div className={"product-carousel " + hpVersionClass}>
-        <div className="product-carousel-header">
-          <h2><a href={"/browse/cat/" + this.props.catIds + "/"}>{this.props.title} <span className="glyphicon glyphicon-chevron-right"></span></a></h2>
-        </div>
-        <div className="product-carousel-wrapper" style={carouselWrapperStyling}>
-          <div className="product-carousel-left" style={{"left":carouselArrowsMargin}}>
-            {carouselArrowLeftDisplay}
-          </div>
-          <div className="product-carousel-container">
-            <div className="product-carousel-slider" style={{"width":this.state.sliderWidth,"left":"-"+this.state.sliderPosition + "px"}}>
-              {carouselItemsDisplay}
-            </div>
-          </div>
-          <div className="product-carousel-right" style={{"right":carouselArrowsMargin}}>
-            {carouselArrowRightDisplay}
-          </div>
+    let prevButtonDisplay;
+    if (this.state.page > 0){
+      prevButtonDisplay = (
+        <a onClick={() => this.getSpotlightUser(this.state.page - 1)} className="spotlight-user-next">
+          {"< Prev"}
+        </a>
+      );
+    }
+
+    let nextButtonDisplay;
+    if (this.state.page < 8){
+      nextButtonDisplay = (
+        <a onClick={() => this.getSpotlightUser(this.state.page + 1)} className="spotlight-user-next">
+          {"Next >"}
+        </a>
+      );
+    }
+
+    let versionCssClass;
+    if (this.state.version === 2){
+      versionCssClass = "v-two"
+    }
+
+    return(
+      <div id="spotlight-user-container" className={versionCssClass}>
+        <h2>In the Spotlight</h2>
+        {spotlightUserDisplay}
+        <div className="spotlight-user-buttons">
+          {prevButtonDisplay}
+          {nextButtonDisplay}
         </div>
       </div>
     )
   }
 }
 
-class ProductCarouselItem extends React.Component {
+class SpotlightUserProduct extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
   }
 
+  componentDidMount() {
+    console.log(this.props);
+  }
+
   render(){
-    let imageUrl = this.props.product.image_small;
-    if (imageUrl && this.props.product.image_small.indexOf('https://') === -1 && this.props.product.image_small.indexOf('http://') === -1){
-      let imageBaseUrl;
-      if (this.props.env === 'live') {
-        imageBaseUrl = 'cn.opendesktop.org';
-      } else {
-        imageBaseUrl = 'cn.opendesktop.cc';
+    let userProductStyle;
+    if (this.props.itemWidth){
+      userProductStyle = {
+        "height":this.props.itemHeight,
+        "width":this.props.itemWidth
       }
-      imageUrl = 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small;
     }
-
-    let paddingTop;
-    let productInfoDisplay = (
-      <div className="product-info">
-        <span className="product-info-title">{this.props.product.title}</span>
-        <span className="product-info-user">{this.props.product.username}</span>
-      </div>
-    );
-
-    if (window.hpVersion === 2){
-      paddingTop = ((this.props.itemWidth * 1.35) / 2) - 10;
-      let cDate = new Date(this.props.product.created_at);
-      cDate = cDate.toString();
-      const createdDate = cDate.split(' ')[1] + " " + cDate.split(' ')[2] + " " + cDate.split(' ')[3];
-      productInfoDisplay = (
-        <div className="product-info">
-          <span className="product-info-title">{this.props.product.title}</span>
-          <span className="product-info-category">{this.props.product.cat_title}</span>
-          <span className="product-info-date">{createdDate}</span>
-          <span className="product-info-commentcount">{this.props.product.count_comments} comments</span>
-          <div className="score-info">
-            <div className="score-number">
-              score {this.props.product.laplace_score + "%"}
-            </div>
-            <div className="score-bar-container">
-              <div className="score-bar" style={{"width":this.props.product.laplace_score + "%"}}></div>
-            </div>
+    return (
+      <div style={userProductStyle} className="spotlight-user-product">
+        <figure>
+          <img src={this.props.product.image_small}/>
+        </figure>
+        <div className="product-title-overlay">
+          <div className="product-title">
+            {this.props.product.title}
           </div>
         </div>
-      );
-    }
-
-    return (
-      <div className="product-carousel-item" style={{"width":this.props.itemWidth}}>
-        <div className="product-carousel-item-wrapper">
-          <a href={"/p/"+this.props.product.project_id } style={{"paddingTop":paddingTop}}>
-            <figure style={{"height":paddingTop}}>
-              <img className="very-rounded-corners" src={imageUrl} />
-            </figure>
-            {productInfoDisplay}
-          </a>
+        <div className="product-plings-counter">
+          <img src="/images/system/pling-btn-active.png"/>
+          <span>{this.props.product.sum_plings}</span>
         </div>
       </div>
     )

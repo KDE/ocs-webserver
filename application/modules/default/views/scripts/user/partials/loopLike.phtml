@@ -6,7 +6,7 @@
 		    <img src="<?php echo $this->Image($this->file->image_small, array('width' => 80, 'height' => 80)); ?>" class="downloadhistory-image" />
 		</figure>	
 		<div>
-			<a href="/p/<?=$this->file->project_id?>"><?=$this->file->title?></a>
+			<a href="<?= $this->buildProductUrl($this->file->project_id) ?>"><?=$this->file->title?></a>
 			<p><?=$this->file->cat_title?> 
 		</div>
 	</div>		

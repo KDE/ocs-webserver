@@ -50,7 +50,8 @@ class SiteHeader extends React.Component {
       cat_title_left: window.json_cat_title_left,
       tabs_left: window.tabs_left,
       template: window.json_template,
-      status: ""
+      status: "",
+      url_logout:window.json_logouturl
     };
     this.updateDimensions = this.updateDimensions.bind(this);
   }
@@ -246,7 +247,7 @@ class SiteHeaderLoginMenu extends React.Component {
           { style: menuItemCssClass, className: registerButtonCssClass },
           React.createElement(
             "a",
-            { href: "/register" },
+            { href: this.props.baseUrl + "register" },
             "Register"
           )
         ),
@@ -255,7 +256,7 @@ class SiteHeaderLoginMenu extends React.Component {
           { style: menuItemCssClass, className: loginButtonCssClass },
           React.createElement(
             "a",
-            { href: "/login" + this.props.redirectString },
+            { href: this.props.baseUrl + "login" + this.props.redirectString },
             "Login"
           )
         )
@@ -322,7 +323,7 @@ class SiteHeaderUserMenu extends React.Component {
             null,
             React.createElement(
               "a",
-              { href: "/product/add" },
+              { href: window.json_baseurl + "product/add" },
               "Add Product"
             )
           ),
@@ -331,7 +332,7 @@ class SiteHeaderUserMenu extends React.Component {
             null,
             React.createElement(
               "a",
-              { href: window.json_baseurl + "/u/" + this.props.user.username + "/products" },
+              { href: window.json_baseurl + "u/" + this.props.user.username + "/products" },
               "Products"
             )
           ),
@@ -340,7 +341,7 @@ class SiteHeaderUserMenu extends React.Component {
             null,
             React.createElement(
               "a",
-              { href: window.json_baseurl + "/u/" + this.props.user.username + "/plings" },
+              { href: window.json_baseurl + "u/" + this.props.user.username + "/plings" },
               "Plings"
             )
           ),
@@ -349,7 +350,7 @@ class SiteHeaderUserMenu extends React.Component {
             null,
             React.createElement(
               "a",
-              { href: "/settings" },
+              { href: window.json_baseurl + "settings" },
               "Settings"
             )
           ),
@@ -358,7 +359,7 @@ class SiteHeaderUserMenu extends React.Component {
             null,
             React.createElement(
               "a",
-              { href: "/logout" },
+              { href: window.json_logouturl },
               "Logout"
             )
           )

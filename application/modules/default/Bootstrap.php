@@ -380,10 +380,34 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'action'     => 'index'
                 )));
 
-        $router->addRoute('store_browse', new Zend_Controller_Router_Route('/s/:domain_store_id/browse/*', array(
+        $router->addRoute('store_browse',      new Zend_Controller_Router_Route('/s/:domain_store_id/browse/*', array(
                     'module'     => 'default',
                     'controller' => 'explore',
                     'action'     => 'index'
+                )));
+
+        $router->addRoute('store_product_add', new Zend_Controller_Router_Route('/s/:domain_store_id/product/add', array(
+                    'module'     => 'default',
+                    'controller' => 'product',
+                    'action'     => 'add'
+                )));
+        
+        $router->addRoute('store_settings', new Zend_Controller_Router_Route('/s/:domain_store_id/settings', array(
+                    'module'     => 'default',
+                    'controller' => 'settings',
+                    'action'     => 'index'
+                )));
+        
+        $router->addRoute('store_pling_box_show', new Zend_Controller_Router_Route('/s/:domain_store_id/supporterbox/:memberid', array(
+                    'module'     => 'default',
+                    'controller' => 'plingbox',
+                    'action'     => 'index'
+                )));
+        
+        $router->addRoute('store_pling_box_show', new Zend_Controller_Router_Route('/s/:domain_store_id/productcomment/addreply/*', array(
+                    'module'     => 'default',
+                    'controller' => 'productcomment',
+                    'action'     => 'addreply'
                 )));
 
         $router->addRoute('store_product', new Zend_Controller_Router_Route('/s/:domain_store_id/p/:project_id/:action/*', array(
@@ -391,7 +415,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'controller' => 'product',
                     'action'     => 'show'
                 )));
-
+        
         $router->addRoute('store_user', new Zend_Controller_Router_Route('/s/:domain_store_id/member/:member_id/:action/*', array(
                     'module'     => 'default',
                     'controller' => 'user',
@@ -403,6 +427,20 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'controller' => 'user',
                     'action'     => 'index'
                 )));
+        
+        $router->addRoute('store_login', new Zend_Controller_Router_Route('/s/:domain_store_id/login/*', array(
+                    'module'     => 'default',
+                    'controller' => 'authorization',
+                    'action'     => 'login'
+                )));
+        
+        $router->addRoute('store_register', new Zend_Controller_Router_Route('/s/:domain_store_id/register', array(
+                    'module'     => 'default',
+                    'controller' => 'authorization',
+                    'action'     => 'register'
+                )));
+        
+        
 
         /** general routing rules */
         $router->addRoute('home', new Zend_Controller_Router_Route('/', array(
