@@ -58,7 +58,7 @@ class Introduction extends React.Component {
       siteTitle = "AppImageHub";
       introductionText = (
         <p>
-          This catalog has AppImages and counting.<br/>
+          This catalog has {this.props.count} AppImages and counting.<br/>
           AppImages are self-contained apps which can simply be downloaded & run on any Linux distribution. For easy integration, download AppImageLauncher:
         </p>
       );
