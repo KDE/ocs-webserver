@@ -583,7 +583,7 @@ class Carousel extends React.Component {
       carouselArrowsMargin = this.state.itemWidth / 4;
     }
 
-    let urlSuffix;
+    let urlSuffix = "";
     if (window.page === "libreoffice") {
       urlSuffix = "/s/LibreOffice";
     }
