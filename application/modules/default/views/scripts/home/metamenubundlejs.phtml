@@ -50,6 +50,7 @@ $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
 $url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
+$url_riot = Zend_Registry::get('config')->settings->client->default->url_riot;
 $url_myopendesktop = Zend_Registry::get('config')->settings->client->default->url_myopendesktop;
 $url_cloudopendesktop = Zend_Registry::get('config')->settings->client->default->url_cloudopendesktop;
 $url_musicopendesktop = Zend_Registry::get('config')->settings->client->default->url_musicopendesktop;
@@ -82,7 +83,11 @@ if($target == 'opendesktop') {
 } else if($target == 'gitlab') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_gitlab);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_gitlab);
-} else if($target == 'forum') {
+} else if($target == 'riot') {
+    $url_login = $baseurl."/login/redirect/".$filter->filter($url_riot);
+    $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_riot);
+}
+else if($target == 'forum') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_forum);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_forum);
 } else if($target == 'myopendesktop') {
@@ -136,6 +141,7 @@ $response = array(
     "forumUrl" => $url_forum,
     "mastodonUrl" => $url_mastodon,
     "gitlabUrl" => $url_gitlab,
+    "riotUrl" => $url_riot,
     "loginUrl" => $url_login,
     "logoutUrl" => $url_logout,
     "sName" => $sname
