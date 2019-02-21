@@ -1660,7 +1660,9 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
         if (false === ($children = $cache->load($cacheName))) {
             $proCatModel = new Default_Model_ProjectCategory();
-            $rows = $proCatModel->fetchTreeForView();
+            $store_config = Zend_Registry::get('store_config');
+            $store_id = $store_config->store_id;
+            $rows = $proCatModel->fetchTreeForView($store_id);
             $children = array();
             
             if (is_array($nodeId)) {
