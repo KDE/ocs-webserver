@@ -766,6 +766,12 @@ class UserContextMenuContainer extends React.Component {
               <span>Talk</span>
             </a>
           </li>
+          <li id="chat-link-item">
+            <a href={"https://chat.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Chat</span>
+            </a>
+          </li>
         </ul>
       );
     } else {
