@@ -107,13 +107,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $selectedTag = null;
                 if(!empty($fileId)) {
                     $selectedTags = $catTagModel->getTagsArray($fileId, Default_Model_DbTable_Tags::TAG_TYPE_FILE,$group['tag_group_id']);
-                    if(!empty($selectedTags) && count($selectedTags) == 1) {
-                        $selectedTag = $selectedTags[0]['tag_id'];
-                    }
                 }
                 
                 $group['tag_list'] = $tags;
-                $group['selected_tag'] = $selectedTag;
+                $group['selected_tags'] = $selectedTags;
                 $result[] = $group;
             }
             

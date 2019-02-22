@@ -171,6 +171,12 @@ $this->inlineScript()->appendScript('
         .wizard > .content > .body ul.multiselect-container {
             list-style: none !important;
         }
+        
+        .wizard > .content > .body button.multiselect {
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+        
     </style>
     
     <link rel="stylesheet" href="/tools/bootstrap-multiselect/css/bootstrap-multiselect.css" type="text/css">
@@ -983,15 +989,20 @@ $this->inlineScript()->appendScript('
                                         
                                         $.each(tagGroups, function() {
                                             tableString += '<td>';
-                                            //tableString +='<select multiple="multiple" id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="multi" style="width: 150px;">';
-                                            tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
-                                            tableString += '<option value=\"\"></option>';
+                                            tableString +='<select multiple="multiple" id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="multi" style="width: 150px;">';
+                                            //tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
+                                            //tableString += '<option value=\"\"></option>';
 
-                                            for(key in this.tag_list){
+                                            for(key in this.tag_list) {
                                                 tableString += '<option value=\"'+key+'\"';
-                                                if(null != this.selected_tag && key == this.selected_tag) {
-                                                    tableString += ' selected="selected"';
+                                                if(null != this.selected_tags) {
+                                                    $.each(this.selected_tags, function() {
+                                                        if(key == this.tag_id) {
+                                                            tableString += ' selected="selected"';
+                                                        }
+                                                    })
                                                 }
+                                                
                                                 tableString += '>' + this.tag_list[key] + '</option>';
                                             }
 
@@ -1039,11 +1050,12 @@ $this->inlineScript()->appendScript('
                                     }
                                 });
                                 
-                                /*
+                                
                                 $('.multi').multiselect({
-                                        includeSelectAllOption: true
+                                        includeSelectAllOption: true,
+                                        buttonClass: 'btn btn-native btn-xs'
                                 });
-                                */
+                                
 
                                 $modalPpload.find('p[data-file-upload-msg]').show();
                                 $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');

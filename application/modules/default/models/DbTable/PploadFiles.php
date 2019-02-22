@@ -52,6 +52,12 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
     {
 
         $sql = " select * 
+                     from ppload.ppload_files f 
+                     where f.collection_id = :collection_id     
+                     order by f.created_timestamp desc               
+                   ";        
+        /*
+        $sql = " select * 
                      ,
                      (select tag.tag_fullname from tag_object, tag where tag_type_id = 3 and tag_group_id = 8 and tag_object.tag_id = tag.tag_id and tag_object.is_deleted = 0
                      and tag_object_id = f.id ) packagename
@@ -63,6 +69,8 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
                      where f.collection_id = :collection_id     
                      order by f.created_timestamp desc               
                    ";        
+         * 
+         */
         $result = $this->_db->query($sql,array('collection_id' => $collection_id))->fetchAll();      
         return $result;
     }        
