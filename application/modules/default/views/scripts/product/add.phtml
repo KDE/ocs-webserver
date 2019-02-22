@@ -78,8 +78,8 @@ $this->inlineScript()->appendScript('
         }
 
         div.datafiledroparea{
-            overflow-y: scroll !important;
-            overflow-x: scroll !important;
+            /*overflow-x: scroll !important;
+            overflow-y: scroll !important;*/
         }
 
         /*
@@ -1042,6 +1042,11 @@ $this->inlineScript()->appendScript('
                                     tableString += '<td>' + deletePploadFileBtnPerFile + '</td>';
                                     tableString += '</tr>';
                                     $modalPpload.find('table[data-ppload-files] tbody').append(tableString);
+                                    
+                                    $('.multi').multiselect({
+                                        includeSelectAllOption: true,
+                                        buttonClass: 'btn btn-native btn-xs'
+                                    });
 
                                     if ((typeof link != 'undefined') && (link != "")) {
                                         //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
@@ -1049,13 +1054,6 @@ $this->inlineScript()->appendScript('
                                         $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
                                     }
                                 });
-                                
-                                
-                                $('.multi').multiselect({
-                                        includeSelectAllOption: true,
-                                        buttonClass: 'btn btn-native btn-xs'
-                                });
-                                
 
                                 $modalPpload.find('p[data-file-upload-msg]').show();
                                 $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
@@ -1257,17 +1255,9 @@ $this->inlineScript()->appendScript('
                             if(tagGroupsCount>0) {
                                 $.each(tagGroups, function() {
                                     tableString += '<td>';
-                                    tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
-                                    tableString += '<option value=\"\"></option>';
-
-
-                                    for(key in this.tag_list){
-                                        tableString += '<option value=\"'+key+'\"';
-                                        if(null != this.selected_tag && key == this.selected_tag) {
-                                            tableString += ' selected="selected"';
-                                        }
-                                        tableString += '>' + this.tag_list[key] + '</option>';
-                                    }
+                                    tableString +='<select multiple="multiple" id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="multi" style="width: 150px;">';
+                                    //tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
+                                    //tableString += '<option value=\"\"></option>';
 
                                     tableString += '</select>';
                                     tableString += '</td>';
@@ -1283,6 +1273,11 @@ $this->inlineScript()->appendScript('
                             tableString += '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a></td>';
                             tableString += '</tr>';
                             $modalPpload.find('table[data-ppload-files] tbody').append(tableString);
+                            
+                            $('.multi').multiselect({
+                                    includeSelectAllOption: true,
+                                    buttonClass: 'btn btn-native btn-xs'
+                            });
 
                             //UserTags.activateSelect(fileId, '');
 
@@ -1535,8 +1530,7 @@ $this->inlineScript()->appendScript('
                 $modalPpload.attr('data-updatepploadfile-uri', $(this).attr('data-updatepploadfile-uri'));
                 $modalPpload.attr('data-deletepploadfile-uri', $(this).attr('data-deletepploadfile-uri'));
                 $modalPpload.find('div[data-file-upload]').css({
-                    'min-height': '400px',
-                    'max-height': '600px',
+                    'min-height': '250px',
                     'border-width': '5px',
                     'border-style': 'dashed',
                     'border-color': '#cccccc',
