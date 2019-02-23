@@ -681,9 +681,10 @@ class UserMenu extends React.Component {
       }
 
       let switchItem;
-      if (this.props.user && this.props.user.member_id){
-        switchItem =(<li><SwitchItem enabled={true} onSwitchStyle={this.props.onSwitchStyle}/></li>);
-      }
+      // if (this.props.user && this.props.user.member_id){
+      //   switchItem =(<li><SwitchItem enabled={true} onSwitchStyle={this.props.onSwitchStyle}/></li>);
+      // }
+      switchItem =(<li><SwitchItem enabled={true} onSwitchStyle={this.props.onSwitchStyle}/></li>);
 
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
