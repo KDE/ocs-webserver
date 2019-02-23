@@ -120,10 +120,13 @@ class MetaHeader extends React.Component {
       user:config.user,
       showModal:false,
       modalUrl:'',
+      metamenuTheme:'',
       isAdmin:config.json_isAdmin
     };
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
+    this.onSwitchStyle = this.onSwitchStyle.bind(this);
+
     //this.getUser = this.getUser.bind(this);
   }
 
@@ -146,6 +149,28 @@ class MetaHeader extends React.Component {
     window.addEventListener("resize", this.updateDimensions);
     window.addEventListener("orientationchange",this.updateDimensions);
     //this.getUser();
+  }
+
+  // initMetamenuTheme()
+  // {
+  //     fetch('https://api.mydomain.com')
+  //       .then(response => response.json())
+  //       .then(data => this.setState({ data }));
+  // }
+
+  // change metamenu class
+  onSwitchStyle(evt){
+     if(evt.target.checked){
+        this.setState({metamenuTheme:'metamenu-theme-dark'});
+     }else {
+       this.setState({metamenuTheme:''});
+     }
+
+     fetch('https://jsonplaceholder.typicode.com/todos?_limit=5')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+      });
   }
 
   getUser(){
@@ -204,10 +229,11 @@ class MetaHeader extends React.Component {
         />
       )
     }
+    const metamenuCls = `metamenu ${this.state.metamenuTheme}`;
 
     return (
       <nav id="metaheader-nav" className="metaheader">
-        <div style={{"display":"none"}} className="metamenu">
+        <div style={{"display":"none"}} className={metamenuCls}>
           {domainsMenuDisplay}
           <UserMenu
             device={this.state.device}
@@ -219,6 +245,7 @@ class MetaHeader extends React.Component {
             logoutUrl={this.state.logoutUrl}
             gitlabUrl={this.state.gitlabUrl}
             isAdmin={this.state.isAdmin}
+            onSwitchStyle={this.onSwitchStyle}
           />
         </div>
       </nav>
@@ -580,11 +607,32 @@ class DomainsMenuGroup extends React.Component {
   }
 }
 
+class SwitchItem extends React.Component{
+  constructor(props){
+    super(props);
+    this.state = {};
+  }
+  render() {
+     return (
+       <div>
+        <label className="switch">
+        <input type="checkbox" onChange={this.props.onSwitchStyle}/>
+        <span className="slider round"></span>
+        </label>
+       </div>
+     )
+  }
+}
+
+
+
 class UserMenu extends React.Component {
   constructor(props){
     super(props);
     this.state = {};
   }
+
+
 
   render(){
     let userDropdownDisplay, userAppsContextDisplay, developmentAppMenuDisplay;
@@ -632,6 +680,11 @@ class UserMenu extends React.Component {
         aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={config.baseUrl + "/#about"}>About</a></li>);
       }
 
+      let switchItem;
+      if (this.props.user && this.props.user.member_id){
+        switchItem =(<li><SwitchItem enabled={true} onSwitchStyle={this.props.onSwitchStyle}/></li>);
+      }
+
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
@@ -640,6 +693,7 @@ class UserMenu extends React.Component {
           {faqLinkItem}
           {apiLinkItem}
           {aboutLinkItem}
+          {switchItem}
           {developmentAppMenuDisplay}
           {userAppsContextDisplay}
           {userDropdownDisplay}
@@ -1649,7 +1703,10 @@ customElements.define('opendesktop-metaheader', class extends HTMLElement {
     }
     else if (location.hostname.endsWith('localhost')) {
       stylesheetElement.href = 'https://www.opendesktop.cc/theme/react/assets/css/metaheader.css';
-    }else{
+    }else if (location.hostname.endsWith('local')) {
+      stylesheetElement.href = '/theme/react/assets/css/metaheader.css';
+    }
+    else{
        stylesheetElement.href = 'https://www.opendesktop.org/theme/react/assets/css/metaheader.css';
     }
     this.appendChild(stylesheetElement);
