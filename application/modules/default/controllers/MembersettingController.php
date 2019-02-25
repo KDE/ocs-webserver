@@ -136,11 +136,7 @@ class MembersettingController extends Zend_Controller_Action
 
     public function setsettingsAction()
     {
-			// $this->_initResponseHeader();
-
-			header('Access-Control-Allow-Origin: *');
-			header('Access-Control-Allow-Methods: GET, POST');
-			header("Access-Control-Allow-Headers: X-Requested-With");
+			$this->_initResponseHeader();
     	$identity = Zend_Auth::getInstance()->getStorage()->read();
     	if($identity==null || $identity->member_id==null)
     	{
