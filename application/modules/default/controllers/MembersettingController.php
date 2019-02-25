@@ -36,7 +36,7 @@ class MembersettingController extends Zend_Controller_Action
     {
         // Disable render view
         $this->_helper->layout->disableLayout();
-        //$this->_helper->viewRenderer->setNoRender(true);
+        $this->_helper->viewRenderer->setNoRender(true);
     }
 
     public function indexAction()
@@ -82,14 +82,14 @@ class MembersettingController extends Zend_Controller_Action
     	echo json_encode($response);
     }
 
-    public function getsettingsAction()
+    /*public function getsettingsAction()
     {            
         $this->_helper->layout->disableLayout();
-    }
-    
-    /*public function getsettingsAction()
+    }*/
+
+    public function getsettingsAction()
     {			 
-			$this->_initResponseHeader();
+		$this->_initResponseHeader();
     	$identity = Zend_Auth::getInstance()->getStorage()->read();
     	if($identity==null || $identity->member_id==null)
     	{
@@ -110,7 +110,7 @@ class MembersettingController extends Zend_Controller_Action
                 'results'    => $results
             );
     	$this->_sendResponse($response, $this->_format);
-    }*/
+    }
 
 
     public function setsettingsAction()
