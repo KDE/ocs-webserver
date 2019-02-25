@@ -1,4 +1,6 @@
-import '@babel/polyfill';
+//import '@babel/polyfill';
+import "core-js/shim";
+import "regenerator-runtime/runtime";
 import '@webcomponents/custom-elements'
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -137,6 +139,8 @@ class MetaHeader extends React.Component {
 
   componentDidMount() {
     this.initMetaHeader();
+    this.initMetamenuTheme();
+
   }
 
   componentWillUnmount(){
@@ -151,26 +155,31 @@ class MetaHeader extends React.Component {
     //this.getUser();
   }
 
-  // initMetamenuTheme()
-  // {
-  //     fetch('https://api.mydomain.com')
-  //       .then(response => response.json())
-  //       .then(data => this.setState({ data }));
-  // }
+  initMetamenuTheme(){
+     const key ='metamenuTheme';
+     let theme = localStorage.getItem(key);
+     if(theme){
+       this.setState({metamenuTheme:theme});
+     }
+  }
 
   // change metamenu class
   onSwitchStyle(evt){
      if(evt.target.checked){
         this.setState({metamenuTheme:'metamenu-theme-dark'});
+        localStorage.setItem('metamenuTheme', 'metamenu-theme-dark');
      }else {
-       this.setState({metamenuTheme:''});
+        this.setState({metamenuTheme:''});
+        localStorage.setItem('metamenuTheme', '');
      }
 
-     fetch('https://jsonplaceholder.typicode.com/todos?_limit=5')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-      });
+
+
+     // fetch('https://jsonplaceholder.typicode.com/todos?_limit=5')
+     //  .then(response => response.json())
+     //  .then(data => {
+     //    console.log(data);
+     //  });
   }
 
   getUser(){
@@ -230,7 +239,10 @@ class MetaHeader extends React.Component {
       )
     }
     const metamenuCls = `metamenu ${this.state.metamenuTheme}`;
-
+    let paraChecked = false;
+    if(this.state.metamenuTheme){
+        paraChecked=true;
+    }
     return (
       <nav id="metaheader-nav" className="metaheader">
         <div style={{"display":"none"}} className={metamenuCls}>
@@ -246,6 +258,7 @@ class MetaHeader extends React.Component {
             gitlabUrl={this.state.gitlabUrl}
             isAdmin={this.state.isAdmin}
             onSwitchStyle={this.onSwitchStyle}
+            onSwitchStyleChecked={paraChecked}
           />
         </div>
       </nav>
@@ -607,33 +620,23 @@ class DomainsMenuGroup extends React.Component {
   }
 }
 
-class SwitchItem extends React.Component{
-  constructor(props){
-    super(props);
-    this.state = {};
-  }
-  render() {
-     return (
-       <div>
-        <label className="switch">
-        <input type="checkbox" onChange={this.props.onSwitchStyle}/>
-        <span className="slider round"></span>
-        </label>
-       </div>
-     )
-  }
+function SwitchItem(props){
+  return(
+    <div>
+     <label className="switch">
+     <input type="checkbox" checked={props.onSwitchStyleChecked} onChange={props.onSwitchStyle}/>
+     <span className="slider round"></span>
+     </label>
+    </div>
+  )
 }
-
-
 
 class UserMenu extends React.Component {
   constructor(props){
     super(props);
     this.state = {};
   }
-
-
-
+  
   render(){
     let userDropdownDisplay, userAppsContextDisplay, developmentAppMenuDisplay;
     if (this.props.user && this.props.user.member_id){
@@ -684,7 +687,8 @@ class UserMenu extends React.Component {
       // if (this.props.user && this.props.user.member_id){
       //   switchItem =(<li><SwitchItem enabled={true} onSwitchStyle={this.props.onSwitchStyle}/></li>);
       // }
-      switchItem =(<li><SwitchItem enabled={true} onSwitchStyle={this.props.onSwitchStyle}/></li>);
+      switchItem =(<li><SwitchItem onSwitchStyle={this.props.onSwitchStyle}
+                  onSwitchStyleChecked={this.props.onSwitchStyleChecked}/></li>);
 
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
