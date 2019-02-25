@@ -36,7 +36,7 @@ class MembersettingController extends Zend_Controller_Action
     {
         // Disable render view
         $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
+        //$this->_helper->viewRenderer->setNoRender(true);
     }
 
     public function indexAction()
@@ -46,15 +46,6 @@ class MembersettingController extends Zend_Controller_Action
 
     protected function _initResponseHeader()
     {
-  //   	http_response_code(200);
-  //       header('Access-Control-Allow-Origin: *', true);
-  //       header('Access-Control-Allow-Credentials: true', true);
-  //       header('Access-Control-Max-Age: 1728000', true);
-  //       header('Access-Control-Allow-Methods: ' . implode(', ', array_unique([
-  //           'OPTIONS', 'HEAD', 'GET', 'POST'])), true);
-  //       header('Access-Control-Expose-Headers: Authorization, Content-Type, Accept', true);
-		// header("Access-Control-Allow-Headers: X-Requested-With");
-
         http_response_code(200);
 
         if (!empty($_SERVER['HTTP_ORIGIN'])) {
@@ -89,37 +80,15 @@ class MembersettingController extends Zend_Controller_Action
 
     	header('Content-Type: application/json; charset=UTF-8');
     	echo json_encode($response);
-
-        // header('Pragma: public');
-        // header('Cache-Control: cache, must-revalidate');
-        // $duration = 1800; // in seconds
-        // $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
-        // header('Expires: ' . $expires);
-        // $callback = $this->getParam('callback');
-        // if ($callback != "")
-        // {
-        //     header('Content-Type: text/javascript; charset=UTF-8');
-        //     // strip all non alphanumeric elements from callback
-        //     $callback = preg_replace('/[^a-zA-Z0-9_]/', '', $callback);
-        //     echo $callback. '('. json_encode($response). ')';
-        // }else{
-        //      header('Content-Type: application/json; charset=UTF-8');
-        //      echo json_encode($response);
-        // }
-        // exit;
     }
 
     public function getsettingsAction()
-    {
-			 header('Access-Control-Allow-Origin: *');
-
-        $this->getResponse()
-             ->setHeader('Access-Control-Allow-Origin', '*')
-             ->setHeader('Access-Control-Allow-Credentials', 'true')
-             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
-        ;
-
+    {            
+        $this->_helper->layout->disableLayout();
+    }
+    
+    /*public function getsettingsAction()
+    {			 
 			$this->_initResponseHeader();
     	$identity = Zend_Auth::getInstance()->getStorage()->read();
     	if($identity==null || $identity->member_id==null)
@@ -141,7 +110,7 @@ class MembersettingController extends Zend_Controller_Action
                 'results'    => $results
             );
     	$this->_sendResponse($response, $this->_format);
-    }
+    }*/
 
 
     public function setsettingsAction()
@@ -154,7 +123,7 @@ class MembersettingController extends Zend_Controller_Action
              ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
              ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
         ;
-				
+
     	$identity = Zend_Auth::getInstance()->getStorage()->read();
     	if($identity==null || $identity->member_id==null)
     	{
