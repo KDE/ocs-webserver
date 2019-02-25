@@ -85,7 +85,7 @@ class MembersettingController extends Zend_Controller_Action
 
     protected function _sendResponse($response, $format = 'json', $xmlRootTag = 'ocs')
     {
-			$this->_initResponseHeader();
+
     	header('Content-Type: application/json; charset=UTF-8');
     	echo json_encode($response);
 
@@ -110,6 +110,7 @@ class MembersettingController extends Zend_Controller_Action
 
     public function getsettingsAction()
     {
+			$this->_initResponseHeader();
     	$identity = Zend_Auth::getInstance()->getStorage()->read();
     	if($identity==null || $identity->member_id==null)
     	{
@@ -135,7 +136,7 @@ class MembersettingController extends Zend_Controller_Action
 
     public function setsettingsAction()
     {
-
+			$this->_initResponseHeader();
     	$identity = Zend_Auth::getInstance()->getStorage()->read();
     	if($identity==null || $identity->member_id==null)
     	{
