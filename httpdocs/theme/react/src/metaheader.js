@@ -185,7 +185,7 @@ class MetaHeader extends React.Component {
   // change metamenu class
   onSwitchStyle(evt){
 
-     let url = 'https://www.opendesktop.cc/membersetting/setsettings/itemid/1/itemvalue/';
+     let url = 'https://www.opendesktop.org/membersetting/setsettings/itemid/1/itemvalue/';
      if (location.hostname.endsWith('cc') || location.hostname.endsWith('local')) {
        url = 'https://www.opendesktop.cc/membersetting/setsettings/itemid/1/itemvalue/';
      }
@@ -197,15 +197,16 @@ class MetaHeader extends React.Component {
                 })
       .then(response => response.json())
       .then(data => {
-         if(data.status=='ok')
-         {
-           if(isChecked)
-           {
-             this.setState({metamenuTheme:'metamenu-theme-dark'});
-           }else {
-             this.setState({metamenuTheme:''});
-           }
-         }
+          this.setState({metamenuTheme:`${isChecked?'metamenu-theme-dark':''}`});
+         // if(data.status=='ok')
+         // {
+         //   if(isChecked)
+         //   {
+         //     this.setState({metamenuTheme:'metamenu-theme-dark'});
+         //   }else {
+         //     this.setState({metamenuTheme:''});
+         //   }
+         // }
 
       });
 
