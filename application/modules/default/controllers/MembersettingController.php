@@ -88,7 +88,7 @@ class MembersettingController extends Zend_Controller_Action
 
     protected function _sendResponse($response, $format = 'json', $xmlRootTag = 'ocs')
     {
-			this._initResponseHeader();
+			$this->_initResponseHeader();
     	header('Content-Type: application/json; charset=UTF-8');
     	echo json_encode($response);
 
