@@ -56,12 +56,12 @@ class MembersettingController extends Zend_Controller_Action
 		// header("Access-Control-Allow-Headers: X-Requested-With");
 
         http_response_code(200);
-				header('Access-Control-Allow-Origin: *', true);
-        // if (!empty($_SERVER['HTTP_ORIGIN'])) {
-        //     header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN'], true);
-        //     header('Access-Control-Allow-Credentials: true', true);
-        //     header('Access-Control-Max-Age: 1728000', true);
-        // }
+
+        if (!empty($_SERVER['HTTP_ORIGIN'])) {
+            header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN'], true);
+            header('Access-Control-Allow-Credentials: true', true);
+            header('Access-Control-Max-Age: 1728000', true);
+        }
 
 
         if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
@@ -111,6 +111,15 @@ class MembersettingController extends Zend_Controller_Action
 
     public function getsettingsAction()
     {
+			 header('Access-Control-Allow-Origin: *');
+
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', '*')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+
 			$this->_initResponseHeader();
     	$identity = Zend_Auth::getInstance()->getStorage()->read();
     	if($identity==null || $identity->member_id==null)
@@ -137,7 +146,15 @@ class MembersettingController extends Zend_Controller_Action
 
     public function setsettingsAction()
     {
-			$this->_initResponseHeader();
+			header('Access-Control-Allow-Origin: *');
+
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', '*')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+				
     	$identity = Zend_Auth::getInstance()->getStorage()->read();
     	if($identity==null || $identity->member_id==null)
     	{
