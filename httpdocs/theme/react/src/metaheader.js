@@ -156,30 +156,59 @@ class MetaHeader extends React.Component {
   }
 
   initMetamenuTheme(){
-     const key ='metamenuTheme';
-     let theme = localStorage.getItem(key);
-     if(theme){
-       this.setState({metamenuTheme:theme});
+
+     let url = 'https://www.opendesktop.org/membersetting/getsettings';
+     if (location.hostname.endsWith('cc') || location.hostname.endsWith('local')) {
+       url = 'https://www.opendesktop.cc/membersetting/getsettings';
      }
+
+     fetch(url,{
+                mode: 'cors',
+                credentials: 'include'
+                })
+      .then(response => response.json())
+      .then(data => {
+        const results = data.results;
+        if(results.length>0)
+        {
+          const theme = results.filter(r => r.member_setting_item_id == 1);
+          if(theme.length>0 && theme[0].value==1)
+          {
+             this.setState({metamenuTheme:'metamenu-theme-dark'});
+          }
+        }
+      });
+
+
   }
 
   // change metamenu class
   onSwitchStyle(evt){
-     if(evt.target.checked){
-        this.setState({metamenuTheme:'metamenu-theme-dark'});
-        localStorage.setItem('metamenuTheme', 'metamenu-theme-dark');
-     }else {
-        this.setState({metamenuTheme:''});
-        localStorage.setItem('metamenuTheme', '');
+
+     let url = 'https://www.opendesktop.cc/membersetting/setsettings/itemid/1/itemvalue/';
+     if (location.hostname.endsWith('cc') || location.hostname.endsWith('local')) {
+       url = 'https://www.opendesktop.cc/membersetting/setsettings/itemid/1/itemvalue/';
      }
+     url = url +(evt.target.checked?'1':'0');
+     const isChecked = evt.target.checked;
+     fetch(url,{
+                mode: 'cors',
+                credentials: 'include'
+                })
+      .then(response => response.json())
+      .then(data => {
+         if(data.status=='ok')
+         {
+           if(isChecked)
+           {
+             this.setState({metamenuTheme:'metamenu-theme-dark'});
+           }else {
+             this.setState({metamenuTheme:''});
+           }
+         }
 
+      });
 
-
-     // fetch('https://jsonplaceholder.typicode.com/todos?_limit=5')
-     //  .then(response => response.json())
-     //  .then(data => {
-     //    console.log(data);
-     //  });
   }
 
   getUser(){
@@ -636,7 +665,7 @@ class UserMenu extends React.Component {
     super(props);
     this.state = {};
   }
-  
+
   render(){
     let userDropdownDisplay, userAppsContextDisplay, developmentAppMenuDisplay;
     if (this.props.user && this.props.user.member_id){
@@ -684,11 +713,11 @@ class UserMenu extends React.Component {
       }
 
       let switchItem;
-      // if (this.props.user && this.props.user.member_id){
-      //   switchItem =(<li><SwitchItem enabled={true} onSwitchStyle={this.props.onSwitchStyle}/></li>);
-      // }
+
+      if (this.props.user && this.props.user.member_id){
       switchItem =(<li><SwitchItem onSwitchStyle={this.props.onSwitchStyle}
                   onSwitchStyleChecked={this.props.onSwitchStyleChecked}/></li>);
+      }
 
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
