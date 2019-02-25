@@ -24,12 +24,12 @@ class MembersettingController extends Zend_Controller_Action
 {
 
 	const GROUP_METAHEADER = 1;
-	protected $_format = 'json';	
+	protected $_format = 'json';
 	public function init()
     {
         parent::init();
         $this->initView();
-        $this->_initResponseHeader();
+        // $this->_initResponseHeader();
     }
 
     public function initView()
@@ -49,18 +49,22 @@ class MembersettingController extends Zend_Controller_Action
   //   	http_response_code(200);
   //       header('Access-Control-Allow-Origin: *', true);
   //       header('Access-Control-Allow-Credentials: true', true);
-  //       header('Access-Control-Max-Age: 1728000', true);            
+  //       header('Access-Control-Max-Age: 1728000', true);
   //       header('Access-Control-Allow-Methods: ' . implode(', ', array_unique([
-  //           'OPTIONS', 'HEAD', 'GET', 'POST'])), true);        
+  //           'OPTIONS', 'HEAD', 'GET', 'POST'])), true);
   //       header('Access-Control-Expose-Headers: Authorization, Content-Type, Accept', true);
-		// header("Access-Control-Allow-Headers: X-Requested-With");    
-		
+		// header("Access-Control-Allow-Headers: X-Requested-With");
+
         http_response_code(200);
-        if (!empty($_SERVER['HTTP_ORIGIN'])) {        	
-            header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN'], true);
-            header('Access-Control-Allow-Credentials: true', true);
-            header('Access-Control-Max-Age: 1728000', true);            
-        }
+        // if (!empty($_SERVER['HTTP_ORIGIN'])) {
+        //     header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN'], true);
+        //     header('Access-Control-Allow-Credentials: true', true);
+        //     header('Access-Control-Max-Age: 1728000', true);
+        // }
+
+				header('Access-Control-Allow-Origin: *', true);
+        header('Access-Control-Allow-Credentials: true', true);
+        header('Access-Control-Max-Age: 1728000', true);
 
         if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
             header('Access-Control-Allow-Methods: ' . implode(', ', array_unique([
@@ -84,7 +88,7 @@ class MembersettingController extends Zend_Controller_Action
 
     protected function _sendResponse($response, $format = 'json', $xmlRootTag = 'ocs')
     {
-    	
+			this._initResponseHeader();
     	header('Content-Type: application/json; charset=UTF-8');
     	echo json_encode($response);
 
@@ -108,13 +112,13 @@ class MembersettingController extends Zend_Controller_Action
     }
 
     public function getsettingsAction()
-    {    	
+    {
     	$identity = Zend_Auth::getInstance()->getStorage()->read();
     	if($identity==null || $identity->member_id==null)
     	{
     			$response = array(
-    		            'status'     => 'error',   
-    		            'msg'	 => 'no user found'    		            
+    		            'status'     => 'error',
+    		            'msg'	 => 'no user found'
     		        );
     			$this->_sendResponse($response, $this->_format);
     			return;
@@ -124,8 +128,8 @@ class MembersettingController extends Zend_Controller_Action
 
     	$results = $model->findMemberSettings($member_id,$this::GROUP_METAHEADER);
     	$response = array(
-                'status'     => 'ok',   
-                'member_id'  => $member_id,            
+                'status'     => 'ok',
+                'member_id'  => $member_id,
                 'results'    => $results
             );
     	$this->_sendResponse($response, $this->_format);
@@ -133,13 +137,13 @@ class MembersettingController extends Zend_Controller_Action
 
     public function setsettingsAction()
     {
-    	
+
     	$identity = Zend_Auth::getInstance()->getStorage()->read();
     	if($identity==null || $identity->member_id==null)
     	{
     			$response = array(
-    		            'status'     => 'error',   
-    		            'msg'	 => 'no user found'    		            
+    		            'status'     => 'error',
+    		            'msg'	 => 'no user found'
     		        );
     	}else
     	{
@@ -149,9 +153,9 @@ class MembersettingController extends Zend_Controller_Action
     		$value = $this->getParam('itemvalue');
     		$model->updateOrInsertSetting($member_id,$member_setting_item_id,null,$value);
     		$response = array(
-                'status'     => 'ok'                
-            );	
-    	}    	    	
+                'status'     => 'ok'
+            );
+    	}
     	$this->_sendResponse($response, $this->_format);
     }
 
