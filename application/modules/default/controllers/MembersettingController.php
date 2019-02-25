@@ -65,7 +65,7 @@ class MembersettingController extends Zend_Controller_Action
 
         if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
             header('Access-Control-Allow-Methods: ' . implode(', ', array_unique([
-                'OPTIONS', 'HEAD', 'GET', 'POST',
+                'OPTIONS', 'HEAD', 'GET', 'POST','PUT',
                 strtoupper($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])
             ])), true);
         }
@@ -131,6 +131,7 @@ class MembersettingController extends Zend_Controller_Action
             );
     	$this->_sendResponse($response, $this->_format);
     }
+
 
     public function setsettingsAction()
     {
