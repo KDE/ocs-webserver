@@ -3,7 +3,7 @@ class SiteHeader extends React.Component {
   	super(props);
   	this.state = {
       baseUrl:window.json_baseurl,
-      searchbaseurl:window.json_searchbaseurl,
+      searchBaseUrl:window.json_searchbaseurl,
       cat_title:window.json_cat_title,
       hasIdentity:window.json_hasIdentity,
       is_show_title:window.json_is_show_title,
@@ -103,7 +103,7 @@ class SiteHeader extends React.Component {
             <div id="site-header-right-top" className={siteHeaderTopRightCssClass}>
               <SiteHeaderSearchForm
                 baseUrl={this.state.baseUrl}
-                searchbaseurl={this.state.searchbaseurl}
+                searchBaseUrl={this.state.searchBaseUrl}
               />
               {userMenuDisplay}
             </div>
@@ -114,12 +114,16 @@ class SiteHeader extends React.Component {
         </section>
       );
     } else {
+
+
+
       HeaderDisplay = (
         <MobileSiteHeader
           logoLink={logoLink}
           template={this.state.template}
           user={this.state.user}
           baseUrl={this.state.baseUrl}
+          searchBaseUrl={this.state.searchBaseUrl}
           serverUrl={this.state.serverUrl}
           store={this.state.store}
           redirectString={this.state.redirectString}
@@ -160,7 +164,7 @@ class SiteHeaderSearchForm extends React.Component {
 
   onSearchFormSubmit(e){
     e.preventDefault();
-    window.location.href = this.props.searchbaseurl  + this.state.searchText;
+    window.location.href = this.props.searchBaseUrl  + this.state.searchText;
   }
 
   render(){
@@ -274,6 +278,7 @@ class MobileSiteHeader extends React.Component {
     this.showMobileUserMenu = this.showMobileUserMenu.bind(this);
     this.showMobileSearchForm = this.showMobileSearchForm.bind(this);
     this.showMobileSwitchMenu = this.showMobileSwitchMenu.bind(this);
+
   }
 
   showMobileUserMenu(){
@@ -289,7 +294,6 @@ class MobileSiteHeader extends React.Component {
   }
 
   render(){
-
     const menuItemCssClass = {
       "borderColor":this.props.template['header-nav-tabs']['border-color'],
       "backgroundColor":this.props.template['header-nav-tabs']['background-color']
