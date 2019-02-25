@@ -83,12 +83,12 @@ class MembersettingController extends Zend_Controller_Action
     }
 
     /*public function getsettingsAction()
-    {            
+    {
         $this->_helper->layout->disableLayout();
     }*/
 
     public function getsettingsAction()
-    {			 
+    {
 		$this->_initResponseHeader();
     	$identity = Zend_Auth::getInstance()->getStorage()->read();
     	if($identity==null || $identity->member_id==null)
@@ -115,15 +115,7 @@ class MembersettingController extends Zend_Controller_Action
 
     public function setsettingsAction()
     {
-			header('Access-Control-Allow-Origin: *');
-
-        $this->getResponse()
-             ->setHeader('Access-Control-Allow-Origin', '*')
-             ->setHeader('Access-Control-Allow-Credentials', 'true')
-             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
-        ;
-
+			$this->_initResponseHeader();
     	$identity = Zend_Auth::getInstance()->getStorage()->read();
     	if($identity==null || $identity->member_id==null)
     	{
