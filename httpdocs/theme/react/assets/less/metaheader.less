@@ -68,7 +68,7 @@ body.drawer-open {
     .active>a:hover {
         color: #222;
         text-decoration: none;
-        background-color: #eee !important;
+        background-color: #eee;
     }
 
 
@@ -126,7 +126,7 @@ body.drawer-open {
           .slider {
             position: absolute;
             cursor: pointer;
-            top: 0; 
+            top: 0;
             left: 0;
             right: 0;
             bottom: 0;
@@ -350,7 +350,7 @@ body.drawer-open {
               width: 200px;
               top: 45px;
               right: auto;
-              min-height: 84px;
+              min-height: 104px;
 
               &::before {
                 right: 156px;
@@ -410,8 +410,10 @@ body.drawer-open {
           &#admins-dropdown-menu {
             .dropdown-menu {
               right: auto;
+              /*
               min-height: 61px;
               height: auto;
+              */
             }
           }
 
@@ -1371,11 +1373,17 @@ body.drawer-open {
   }
 }
 
-
 /* metamenu dark theme*/
-.metamenu-theme-dark{
-  background-color: #000;
+#metaheader #metaheader-nav .metamenu-theme-dark
+{
+  background-color: #3D3D3E;
   ul.metaheader-menu > li >a {
-        color:#fff !important;
+        color:#E7F3F8 ;
+        &:hover{
+              color:#24292E ;
+        }
+  }
+  ul.metaheader-menu > li.active >a {
+        color:#3D3D3E ;
   }
 }
