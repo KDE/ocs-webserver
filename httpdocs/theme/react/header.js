@@ -397,7 +397,7 @@ function (_React$Component4) {
       }, "Plings")), React.createElement("li", null, React.createElement("a", {
         href: window.json_baseurl + "settings"
       }, "Settings")), React.createElement("li", null, React.createElement("a", {
-        href: window.url_logout
+        href: window.json_logouturl
       }, "Logout")))));
     }
   }]);
