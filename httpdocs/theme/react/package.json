@@ -15,10 +15,12 @@
     "@babel/core": "*",
     "@babel/preset-env": "*",
     "@babel/preset-react": "*",
-    "@babel/polyfill": "*",
     "babel-loader": "*",
     "@webcomponents/custom-elements": "*",
     "react": "*",
     "react-dom": "*"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.2.5"
   }
 }

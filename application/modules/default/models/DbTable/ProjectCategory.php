@@ -1510,6 +1510,45 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
         return $ancestors;
     }
+    
+    /**
+     * @param $valueCatId
+     *
+     * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Statement_Exception
+     */
+    public function fetchCategoriesForFormNew($valueCatId)
+    {
+        $level = 0;
+        $mainCatArray = $this->fetchMainCatForSelectNew(Default_Model_DbTable_ProjectCategory::ORDERED_TITLE);
+        $ancestors = array("catLevel-{$level}" => $mainCatArray);
+        
+        $level++;
+
+        if (false == empty($valueCatId)) {
+            
+            foreach (array_keys($mainCatArray) as $element) {
+                if($element == $valueCatId) {
+                    return $ancestors;
+                }
+            }
+            
+            $categoryAncestors = $this->fetchAncestorsAsId($valueCatId);
+            if ($categoryAncestors) {
+                $categoryPath = explode(',', $categoryAncestors['ancestors']);
+                foreach ($categoryPath as $element) {
+                    
+                    $catResult = $this->fetchImmediateChildren($element, Default_Model_DbTable_ProjectCategory::ORDERED_TITLE);
+                    $ancestors["catLevel-{$level}"] = $this->prepareDataForFormSelect($catResult);
+                    
+                    $level++;
+                }
+            }
+        }
+
+        return $ancestors;
+    }
 
     /**
      * @param string $orderBy
@@ -1535,6 +1574,34 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         
 
         $resultForSelect = $this->prepareDataForFormSelect($resultRows);
+
+        return $resultForSelect;
+    }
+    
+    /**
+     * @param string $orderBy
+     *
+     * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Statement_Exception
+     */
+    public function fetchMainCatForSelectNew($orderBy = self::ORDERED_HIERARCHIC)
+    {
+        
+        //$root = $this->fetchRoot();
+        //$resultRows = $this->fetchImmediateChildrenNew($root['project_category_id'], $orderBy);
+        
+        
+        $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+        if(null == $storeCatIds) {
+            $root = $this->fetchRoot();
+            $resultRows = $this->fetchImmediateChildrenNew($root['project_category_id'], $orderBy);
+        } else {
+            $resultRows = $this->fetchImmediateChildrenNew($storeCatIds, $orderBy, false);
+        }
+        
+
+        $resultForSelect = $this->prepareDataForFormSelectNew($resultRows);
 
         return $resultForSelect;
     }
@@ -1575,6 +1642,53 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
         return $children;
     }
+    
+    /**
+     * @param int|array $nodeId
+     * @param string    $orderBy
+     *
+     * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Statement_Exception
+     */
+    public function fetchImmediateChildrenNew($nodeId, $orderBy = 'lft')
+    {
+        $str = is_array($nodeId) ? implode(',', $nodeId) : $nodeId;
+        /** @var Zend_Cache_Core $cache */
+        $cache = $this->cache;
+        $cacheName = __FUNCTION__ . '_' . md5($str . $orderBy);
+
+        if (false === ($children = $cache->load($cacheName))) {
+            $proCatModel = new Default_Model_ProjectCategory();
+            $store_config = Zend_Registry::get('store_config');
+            $store_id = $store_config->store_id;
+            $rows = $proCatModel->fetchTreeForView($store_id);
+            $children = array();
+            
+            if (is_array($nodeId)) {
+                $inQuery = implode(',', array_fill(0, count($nodeId), '?'));
+                foreach ($rows as $row) {
+                    foreach ($nodeId as $node) {
+                        if($row['id'] == $node) {
+                            $children[] = $row;
+                        }
+                    }
+                }
+            } else {
+                foreach ($rows as $row) {
+                    if($row['parent_id'] == $nodeId) {
+                        $children[] = $row;
+                    }
+                }
+            }
+            if (count($children) == 0) {
+                $children = array();
+            }
+            $cache->save($children, $cacheName, array(), 3600);
+        }
+
+        return $children;
+    }
 
     /**
      * @param $resultRows
@@ -1587,6 +1701,22 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         //$resultForSelect[''] = '';
         foreach ($resultRows as $row) {
             $resultForSelect[$row['project_category_id']] = $row['title'];
+        }
+
+        return $resultForSelect;
+    }
+    
+    /**
+     * @param $resultRows
+     *
+     * @return array
+     */
+    protected function prepareDataForFormSelectNew($resultRows)
+    {
+        $resultForSelect = array();
+        //$resultForSelect[''] = '';
+        foreach ($resultRows as $row) {
+            $resultForSelect[$row['id']] = $row['title'];
         }
 
         return $resultForSelect;

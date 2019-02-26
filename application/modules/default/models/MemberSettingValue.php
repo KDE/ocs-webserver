@@ -59,6 +59,19 @@ class Default_Model_MemberSettingValue
                 );
     }
 
+    public function fetchMemberSettingItem($member_id,$item_id)
+    {
+        $sql = "
+            select             
+             v.member_setting_item_id            
+            ,v.value             
+            from member_setting_value v                        
+            where v.member_id = :member_id and  member_setting_item_id =:item_id
+        ";
+        $result = $this->getAdapter()->fetchRow($sql, array('member_id' => $member_id,'item_id' => $item_id));
+        return $result;
+    }
+
     public function findMemberSettings($memberid,$groupid)
     {
         $sql = "

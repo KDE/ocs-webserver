@@ -24,6 +24,14 @@ $tagGroups = $catTagGropuModel->fetchTagGroupsForCategory($this->product->projec
 $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
 ?>
 
+<style>
+    
+    #product-page-content #product-panels #files-panel table.table-ocs-file td {
+        vertical-align: top !important;
+    }
+    
+</style>
+
   <!-- ppload -->
          <?php if ($this->product->ppload_collection_id): ?>
              <?php
@@ -332,12 +340,26 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                                     $.each(tagGroups, function() {
                                                         tableString += '<td>';
                                                         for(key in this.tag_list){
+                                                            if(null != this.selected_tags) {
+                                                                $tag_name = this.tag_list[key];
+                                                                $.each(this.selected_tags, function() {
+                                                                    if(key == this.tag_id) {
+                                                                        tableString += '<span>'+$tag_name+'</span>';
+                                                                        if($tag_name.toUpperCase() == 'APPIMAGE'){
+                                                                            tableString += ' <i class="fa fa-question-circle appimagequestion" style="cursor: pointer;"></i>';
+                                                                        }
+                                                                        tableString += '<br>';
+                                                                    }
+                                                                })
+                                                            }
+                                                            /*
                                                             if(null != this.selected_tag && key == this.selected_tag) {
                                                                 tableString += '<span>'+this.tag_list[key]+'</span>';
                                                                 if(this.tag_list[key].toUpperCase() == 'APPIMAGE'){
                                                                     tableString += ' <i class="fa fa-question-circle appimagequestion" style="cursor: pointer;"></i>';
                                                                 }
-                                                            }
+                                                            }*/
+                                                            
                                                         }
                                                     });
                                                     return;
@@ -544,9 +566,22 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                                     $.each(tagGroups, function() {
                                                         tableString += '<td>';
                                                         for(key in this.tag_list){
+                                                            if(null != this.selected_tags) {
+                                                                $tag_name = this.tag_list[key];
+                                                                $.each(this.selected_tags, function() {
+                                                                    if(key == this.tag_id) {
+                                                                        tableString += '<span>'+$tag_name+'</span>';
+                                                                        if($tag_name.toUpperCase() == 'APPIMAGE'){
+                                                                            tableString += ' <i class="fa fa-question-circle appimagequestion" style="cursor: pointer;"></i>';
+                                                                        }
+                                                                        tableString += '<br>';
+                                                                    }
+                                                                })
+                                                            }
+                                                            /*
                                                             if(null != this.selected_tag && key == this.selected_tag) {
                                                                 tableString += '<span>'+this.tag_list[key]+'</span>';
-                                                            }
+                                                            }*/
                                                         }
                                                     });
                                                     return;

@@ -31,8 +31,13 @@ $modelCategory = new Default_Model_DbTable_ProjectCategory();
 $valueCatId = $this->form->project_category_id->getValue();
 //$valueCatId = 55;
 $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
-$categories = $modelCategory->fetchCategoriesForForm($valueCatId);
+
+//$categories = $modelCategory->fetchCategoriesForForm($valueCatId);
 $categoryAncestors = $modelCategory->fetchAncestorsAsId($valueCatId);
+
+$categories = $modelCategory->fetchCategoriesForFormNew($valueCatId);
+//$categories2 = array();
+
 
 if (count($categoryAncestors) > 0) {
     $categoryPath = explode(',',$categoryAncestors['ancestors']);
@@ -73,8 +78,8 @@ $this->inlineScript()->appendScript('
         }
 
         div.datafiledroparea{
-            overflow-y: scroll !important;
-            overflow-x: scroll !important;
+            /*overflow-x: scroll !important;
+            overflow-y: scroll !important;*/
         }
 
         /*
@@ -166,6 +171,12 @@ $this->inlineScript()->appendScript('
         .wizard > .content > .body ul.multiselect-container {
             list-style: none !important;
         }
+        
+        .wizard > .content > .body button.multiselect {
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+        
     </style>
     
     <link rel="stylesheet" href="/tools/bootstrap-multiselect/css/bootstrap-multiselect.css" type="text/css">
@@ -978,15 +989,20 @@ $this->inlineScript()->appendScript('
                                         
                                         $.each(tagGroups, function() {
                                             tableString += '<td>';
-                                            //tableString +='<select multiple="multiple" id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="multi" style="width: 150px;">';
-                                            tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
-                                            tableString += '<option value=\"\"></option>';
+                                            tableString +='<select multiple="multiple" id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="multi" style="width: 150px;">';
+                                            //tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
+                                            //tableString += '<option value=\"\"></option>';
 
-                                            for(key in this.tag_list){
+                                            for(key in this.tag_list) {
                                                 tableString += '<option value=\"'+key+'\"';
-                                                if(null != this.selected_tag && key == this.selected_tag) {
-                                                    tableString += ' selected="selected"';
+                                                if(null != this.selected_tags) {
+                                                    $.each(this.selected_tags, function() {
+                                                        if(key == this.tag_id) {
+                                                            tableString += ' selected="selected"';
+                                                        }
+                                                    })
                                                 }
+                                                
                                                 tableString += '>' + this.tag_list[key] + '</option>';
                                             }
 
@@ -1026,6 +1042,11 @@ $this->inlineScript()->appendScript('
                                     tableString += '<td>' + deletePploadFileBtnPerFile + '</td>';
                                     tableString += '</tr>';
                                     $modalPpload.find('table[data-ppload-files] tbody').append(tableString);
+                                    
+                                    $('.multi').multiselect({
+                                        includeSelectAllOption: true,
+                                        buttonClass: 'btn btn-native btn-xs'
+                                    });
 
                                     if ((typeof link != 'undefined') && (link != "")) {
                                         //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
@@ -1033,12 +1054,6 @@ $this->inlineScript()->appendScript('
                                         $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
                                     }
                                 });
-                                
-                                /*
-                                $('.multi').multiselect({
-                                        includeSelectAllOption: true
-                                });
-                                */
 
                                 $modalPpload.find('p[data-file-upload-msg]').show();
                                 $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
@@ -1240,17 +1255,9 @@ $this->inlineScript()->appendScript('
                             if(tagGroupsCount>0) {
                                 $.each(tagGroups, function() {
                                     tableString += '<td>';
-                                    tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
-                                    tableString += '<option value=\"\"></option>';
-
-
-                                    for(key in this.tag_list){
-                                        tableString += '<option value=\"'+key+'\"';
-                                        if(null != this.selected_tag && key == this.selected_tag) {
-                                            tableString += ' selected="selected"';
-                                        }
-                                        tableString += '>' + this.tag_list[key] + '</option>';
-                                    }
+                                    tableString +='<select multiple="multiple" id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="multi" style="width: 150px;">';
+                                    //tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
+                                    //tableString += '<option value=\"\"></option>';
 
                                     tableString += '</select>';
                                     tableString += '</td>';
@@ -1266,6 +1273,11 @@ $this->inlineScript()->appendScript('
                             tableString += '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a></td>';
                             tableString += '</tr>';
                             $modalPpload.find('table[data-ppload-files] tbody').append(tableString);
+                            
+                            $('.multi').multiselect({
+                                    includeSelectAllOption: true,
+                                    buttonClass: 'btn btn-native btn-xs'
+                            });
 
                             //UserTags.activateSelect(fileId, '');
 
@@ -1518,8 +1530,7 @@ $this->inlineScript()->appendScript('
                 $modalPpload.attr('data-updatepploadfile-uri', $(this).attr('data-updatepploadfile-uri'));
                 $modalPpload.attr('data-deletepploadfile-uri', $(this).attr('data-deletepploadfile-uri'));
                 $modalPpload.find('div[data-file-upload]').css({
-                    'min-height': '400px',
-                    'max-height': '600px',
+                    'min-height': '250px',
                     'border-width': '5px',
                     'border-style': 'dashed',
                     'border-color': '#cccccc',
@@ -1885,11 +1896,13 @@ $this->inlineScript()->appendScript('
                           new_html_element += '<option value="' + form_select_option + '" ' + attr_selected + '>' + this.cat_id_data[form_elem_name][form_select_option] + '</option>';
                       }
                       
+                      
                       if(hasNoRoot == true && this.cat_id_path != '0') {
                           var url = "<?= $helpBaseUrl->buildMainBaserUrl().'p/'. $this->project_id . '/edit' ?>";
                           //alert("Redir: "+url);
                           document.location.href = url;
                       }
+                      
                       
                       new_html_element += '</select>';
                       $('#wrapper_cat_id').append(new_html_element);

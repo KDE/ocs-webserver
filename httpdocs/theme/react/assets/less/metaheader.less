@@ -19,7 +19,6 @@ body.drawer-open {
   left: 0;
   z-index: 1001;
   background-color: white;
-
   .metamenu {
     display: block !important;
   }
@@ -69,7 +68,7 @@ body.drawer-open {
     .active>a:hover {
         color: #222;
         text-decoration: none;
-        background-color: #eee !important;
+        background-color: #eee;
     }
 
 
@@ -78,6 +77,8 @@ body.drawer-open {
   .metamenu {
     height: 34px;
   }
+
+
 
   #metaheader-nav {
     width: 100%;
@@ -111,6 +112,64 @@ body.drawer-open {
       > li {
         float: left;
         padding: 5px;
+
+        .switch {
+          position: relative;
+          display: inline-block;
+          width: 60px;
+          height: 24px;
+          input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+          }
+          .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+          }
+
+          .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 24px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+          }
+          input:checked + .slider {
+            background-color: #2196F3;
+          }
+
+          input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+          }
+
+          input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+          }
+
+          /* Rounded sliders */
+          .slider.round {
+            border-radius: 34px;
+          }
+
+          .slider.round:before {
+            border-radius: 50%;
+          }
+
+        }
 
         > a {
           color: #6a7686;
@@ -157,6 +216,8 @@ body.drawer-open {
           }
         }
       }
+
+
 
       &#domains-menu {
         margin-left: 10px;
@@ -289,8 +350,8 @@ body.drawer-open {
               width: 200px;
               top: 45px;
               right: auto;
-              min-height: 84px;
-
+              min-height: 104px;
+              bottom: auto !important;
               &::before {
                 right: 156px;
               }
@@ -351,6 +412,7 @@ body.drawer-open {
               right: auto;
               min-height: 61px;
               height: auto;
+
             }
           }
 
@@ -929,6 +991,15 @@ body.drawer-open {
               }
             }
 
+            &#chat-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-riot.svg);
+                  background-size: 45px;
+                }
+              }
+            }
+
             &:hover {
               border:1px solid #e5e5e5;
               a {
@@ -1299,4 +1370,25 @@ body.drawer-open {
     padding: 10px;
     box-shadow: 0px 1px 2px rgba(0,0,0,0.25);
   }
+}
+
+/* metamenu dark theme*/
+#metaheader #metaheader-nav .metamenu-theme-dark
+{
+  background-color: #3D3D3E;
+  ul.metaheader-menu > li >a {
+        color:#E7F3F8 ;
+        &:hover{
+              color:#24292E ;
+        }
+  }
+  ul.metaheader-menu > li.active >a {
+        background-color: #2185D0;
+        color:#E7F3F8 ;
+  }
+
+  #user-context-menu-container .user-dropdown .th-icon {
+          background-image: url(../img/glyphicons-th-light.svg);
+        }
+
 }

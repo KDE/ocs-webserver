@@ -790,9 +790,19 @@ class Default_Model_Tags
 
         $this->getAdapter()->query($sql, array('tag_group_id' => $tag_group_id, 'tag_type_id' => $this::TAG_TYPE_FILE, 'tag_object_id' => $file_id, 'tag_parent_object_id' => $project_id));
 
-        if($tag_id) {
-            $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_parent_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_parent_object_id, :tag_group_id)";
-            $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_FILE, 'tag_object_id' => $file_id, 'tag_parent_object_id' => $project_id, 'tag_group_id' => $tag_group_id));
+        if(!empty($tag_id)) {
+            if(is_array($tag_id)) {
+                foreach ($tag_id as $tag) {
+                    $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_parent_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_parent_object_id, :tag_group_id)";
+                    $this->getAdapter()->query($sql, array('tag_id' => $tag, 'tag_type_id' => $this::TAG_TYPE_FILE, 'tag_object_id' => $file_id, 'tag_parent_object_id' => $project_id, 'tag_group_id' => $tag_group_id));
+                }
+                
+            } else {
+                $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_parent_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_parent_object_id, :tag_group_id)";
+                $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_FILE, 'tag_object_id' => $file_id, 'tag_parent_object_id' => $project_id, 'tag_group_id' => $tag_group_id));
+            }
+            
+            
         }
             
         

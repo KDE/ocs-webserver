@@ -1,4 +1,6 @@
-import '@babel/polyfill';
+//import '@babel/polyfill';
+import "core-js/shim";
+import "regenerator-runtime/runtime";
 import '@webcomponents/custom-elements'
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -120,10 +122,13 @@ class MetaHeader extends React.Component {
       user:config.user,
       showModal:false,
       modalUrl:'',
+      metamenuTheme:config.metamenuTheme,
       isAdmin:config.json_isAdmin
     };
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
+    this.onSwitchStyle = this.onSwitchStyle.bind(this);
+
     //this.getUser = this.getUser.bind(this);
   }
 
@@ -134,6 +139,8 @@ class MetaHeader extends React.Component {
 
   componentDidMount() {
     this.initMetaHeader();
+    //this.initMetamenuTheme();
+
   }
 
   componentWillUnmount(){
@@ -146,6 +153,52 @@ class MetaHeader extends React.Component {
     window.addEventListener("resize", this.updateDimensions);
     window.addEventListener("orientationchange",this.updateDimensions);
     //this.getUser();
+  }
+
+  fetchMetaheaderThemeSettings(){
+
+     let url = 'https://www.opendesktop.org/membersetting/getsettings';
+     if (location.hostname.endsWith('cc') || location.hostname.endsWith('local')) {
+       url = 'https://www.opendesktop.cc/membersetting/getsettings';
+     }
+
+     fetch(url,{
+                mode: 'cors',
+                credentials: 'include'
+                })
+      .then(response => response.json())
+      .then(data => {
+        const results = data.results;
+        if(results.length>0)
+        {
+          const theme = results.filter(r => r.member_setting_item_id == 1);
+          if(theme.length>0 && theme[0].value==1)
+          {
+             this.setState({metamenuTheme:'metamenu-theme-dark'});
+          }
+        }
+      });
+
+
+  }
+
+  // change metamenu class
+  onSwitchStyle(evt){
+
+     let url = 'https://www.opendesktop.org/membersetting/setsettings/itemid/1/itemvalue/';
+     if (location.hostname.endsWith('cc') || location.hostname.endsWith('local')) {
+       url = 'https://www.opendesktop.cc/membersetting/setsettings/itemid/1/itemvalue/';
+     }
+     url = url +(evt.target.checked?'1':'0');
+     const isChecked = evt.target.checked;
+     fetch(url,{
+                mode: 'cors',
+                credentials: 'include'
+                })
+      .then(response => response.json())
+      .then(data => {
+          this.setState({metamenuTheme:`${isChecked?'metamenu-theme-dark':''}`});         
+      });
   }
 
   getUser(){
@@ -204,10 +257,14 @@ class MetaHeader extends React.Component {
         />
       )
     }
-
+    const metamenuCls = `metamenu ${this.state.metamenuTheme}`;
+    let paraChecked = false;
+    if(this.state.metamenuTheme){
+        paraChecked=true;
+    }
     return (
       <nav id="metaheader-nav" className="metaheader">
-        <div style={{"display":"none"}} className="metamenu">
+        <div style={{"display":"none"}} className={metamenuCls}>
           {domainsMenuDisplay}
           <UserMenu
             device={this.state.device}
@@ -219,6 +276,8 @@ class MetaHeader extends React.Component {
             logoutUrl={this.state.logoutUrl}
             gitlabUrl={this.state.gitlabUrl}
             isAdmin={this.state.isAdmin}
+            onSwitchStyle={this.onSwitchStyle}
+            onSwitchStyleChecked={paraChecked}
           />
         </div>
       </nav>
@@ -580,6 +639,17 @@ class DomainsMenuGroup extends React.Component {
   }
 }
 
+function SwitchItem(props){
+  return(
+    <div>
+     <label className="switch">
+     <input type="checkbox" checked={props.onSwitchStyleChecked} onChange={props.onSwitchStyle}/>
+     <span className="slider round"></span>
+     </label>
+    </div>
+  )
+}
+
 class UserMenu extends React.Component {
   constructor(props){
     super(props);
@@ -632,6 +702,13 @@ class UserMenu extends React.Component {
         aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={config.baseUrl + "/#about"}>About</a></li>);
       }
 
+      let switchItem;
+
+      if (this.props.user && this.props.user.member_id && this.props.isAdmin){
+      switchItem =(<li><SwitchItem onSwitchStyle={this.props.onSwitchStyle}
+                  onSwitchStyleChecked={this.props.onSwitchStyleChecked}/></li>);
+      }
+
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
@@ -640,6 +717,7 @@ class UserMenu extends React.Component {
           {faqLinkItem}
           {apiLinkItem}
           {aboutLinkItem}
+          {switchItem}
           {developmentAppMenuDisplay}
           {userAppsContextDisplay}
           {userDropdownDisplay}
@@ -764,6 +842,12 @@ class UserContextMenuContainer extends React.Component {
             <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/spreed/"}>
               <div className="icon"></div>
               <span>Talk</span>
+            </a>
+          </li>
+          <li id="chat-link-item">
+            <a href={"https://chat.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Chat</span>
             </a>
           </li>
         </ul>
@@ -1643,7 +1727,10 @@ customElements.define('opendesktop-metaheader', class extends HTMLElement {
     }
     else if (location.hostname.endsWith('localhost')) {
       stylesheetElement.href = 'https://www.opendesktop.cc/theme/react/assets/css/metaheader.css';
-    }else{
+    }else if (location.hostname.endsWith('local')) {
+      stylesheetElement.href = '/theme/react/assets/css/metaheader.css';
+    }
+    else{
        stylesheetElement.href = 'https://www.opendesktop.org/theme/react/assets/css/metaheader.css';
     }
     this.appendChild(stylesheetElement);
