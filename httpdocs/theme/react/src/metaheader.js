@@ -715,7 +715,7 @@ class UserMenu extends React.Component {
 
       let switchItem;
 
-      if (this.props.user && this.props.user.member_id){
+      if (this.props.user && this.props.user.member_id && this.props.isAdmin){
       switchItem =(<li><SwitchItem onSwitchStyle={this.props.onSwitchStyle}
                   onSwitchStyleChecked={this.props.onSwitchStyleChecked}/></li>);
       }
