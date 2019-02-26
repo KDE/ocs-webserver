@@ -122,7 +122,7 @@ class MetaHeader extends React.Component {
       user:config.user,
       showModal:false,
       modalUrl:'',
-      metamenuTheme:'',
+      metamenuTheme:config.metamenuTheme,
       isAdmin:config.json_isAdmin
     };
     this.initMetaHeader = this.initMetaHeader.bind(this);
@@ -139,7 +139,7 @@ class MetaHeader extends React.Component {
 
   componentDidMount() {
     this.initMetaHeader();
-    this.initMetamenuTheme();
+    //this.initMetamenuTheme();
 
   }
 
@@ -155,7 +155,7 @@ class MetaHeader extends React.Component {
     //this.getUser();
   }
 
-  initMetamenuTheme(){
+  fetchMetaheaderThemeSettings(){
 
      let url = 'https://www.opendesktop.org/membersetting/getsettings';
      if (location.hostname.endsWith('cc') || location.hostname.endsWith('local')) {
@@ -197,19 +197,8 @@ class MetaHeader extends React.Component {
                 })
       .then(response => response.json())
       .then(data => {
-          this.setState({metamenuTheme:`${isChecked?'metamenu-theme-dark':''}`});
-         // if(data.status=='ok')
-         // {
-         //   if(isChecked)
-         //   {
-         //     this.setState({metamenuTheme:'metamenu-theme-dark'});
-         //   }else {
-         //     this.setState({metamenuTheme:''});
-         //   }
-         // }
-
+          this.setState({metamenuTheme:`${isChecked?'metamenu-theme-dark':''}`});         
       });
-
   }
 
   getUser(){
