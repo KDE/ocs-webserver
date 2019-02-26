@@ -261,7 +261,7 @@ class SiteHeaderUserMenu extends React.Component {
             <li><a href={window.json_baseurl + "u/" + this.props.user.username + "/products"}>Products</a></li>
             <li><a href={window.json_baseurl + "u/" + this.props.user.username + "/plings"}>Plings</a></li>
             <li><a href={window.json_baseurl + "settings"}>Settings</a></li>
-            <li><a href="{window.url_logout}">Logout</a></li>
+            <li><a href={window.url_logout}>Logout</a></li>
           </ul>
         </li>
       </ul>
