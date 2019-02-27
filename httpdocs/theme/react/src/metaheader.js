@@ -197,7 +197,7 @@ class MetaHeader extends React.Component {
                 })
       .then(response => response.json())
       .then(data => {
-          this.setState({metamenuTheme:`${isChecked?'metamenu-theme-dark':''}`});         
+          this.setState({metamenuTheme:`${isChecked?'metamenu-theme-dark':''}`});
       });
   }
 
@@ -765,7 +765,8 @@ class UserContextMenuContainer extends React.Component {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         const res = JSON.parse(this.response);
-        const gitlabLink = self.state.gitlabLink + res[0].id;
+        //const gitlabLink = self.state.gitlabLink + res[0].id;
+        const gitlabLink = self.state.gitlabLink;
         self.setState({gitlabLink:gitlabLink,loading:false});
       }
     };
