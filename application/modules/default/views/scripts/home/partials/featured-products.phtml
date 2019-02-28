@@ -26,20 +26,26 @@
         $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
         $helpDate = new Default_View_Helper_PrintDate();
         //$pageCount = $this->featureProducts->count();
+
+
 ?>
     <div id="featureProducts"  class="carousel slide" data-ride="carousel" data-interval="false">       
        
         <div id="featureProducts-content"  class="carousel-inner">
         <?php        
-        foreach ($this->featureProducts as $this->product): ?>            
-                    <div style=" " class="feature_container">                      
-                        
-                            <span  class="feature_title">In the Spotlight</span>
+        foreach ($this->featureProducts as $this->product): 
+
+            $this->product['description'] = Default_Model_HtmlPurify::purify($this->product['description']);
+          ?>            
+                    <div  class="feature_container">       
+                          
+
+                            <span  class="feature_title">In the Spotlight </span>
                          
                         <div  class="main_container">
                                
-                             <span class="small label label-info label_featured" style="float: right; <?php if($this->product['featured']<>1) echo 'visibility:hidden'; ?>">                                    
-                                    Featured
+                             <span class="small label label-info label_featured <?=($this->type=='Plinged'?'label_plinged':'')?>" style="float: right;">                             
+                                   <?php   echo $this->type.($this->type=='Plinged'?': '.$this->product['sum_plings']:''); ?> 
                             </span>   
                                                         
                               <a class="feature_image"  title="<?=$helpTruncate->truncate($this->product['description'], 200, '...', false, true)?>" href="<?=$helpProductUrl->buildProductUrl($this->product['project_id'],'')?>">
@@ -97,7 +103,9 @@
                                   <div style="clear: left"></div>
                                   <span class="button_next small">
                                          <a type="button" class="ajaxPartialFeatureProduct" style="padding-right: 20px" href="/showfeatureajax/page/0">random</a>                                          
-                                         <a type="button" class="ajaxPartialFeatureProduct" href="/showfeatureajax/page/1">featured</a>                                          
+                                         <a type="button" class="ajaxPartialFeatureProduct" style="padding-right: 20px" href="/showfeatureajax/page/1">featured</a>   
+
+                                          <a type="button" class="ajaxPartialFeatureProduct" href="/showfeatureajax/page/2">plinged</a>                                          
                                  </span>   
 
                           </div>      

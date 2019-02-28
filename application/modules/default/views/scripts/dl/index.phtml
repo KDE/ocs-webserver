@@ -26,134 +26,84 @@
     <title>Download/Install</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    
+    <link href="tools/spectre/spectre.css" rel="stylesheet" type="text/css"/>
+    <link href="tools/spectre/spectre-icons.css" rel="stylesheet" type="text/css"/>
+    <link href="tools/spectre/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     <style>
         
-        *{
-                padding: 0;
-                margin: 0;
-        }
-
-        html, body{
-                font-family: 'Open Sans';
-                font-weight: lighter;
-                font-size: 12px;
-                width: 100%;
-                height: 100%;
-        }
-
-        #success, #fail{
-                display: none;
-
-        }
-
-        #message, #success, #fail{
-                margin-top: 10px;
-                margin-bottom: 10px;
-        }
-
-        .container{
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-        }
-
-        p{
-                display: inline;
-                margin-right: 5px;
-        }
-
-        input, button{
-                font-family: 'Open Sans';
-                font-weight: lighter;
-                font-size: 12px;
-        }
-
-        input{
-                border: 1px solid #000000;
-                width: 30px;
-                height: 20px;
-                text-align: center;
-        }
-
-        button{
-                border: none;
-            border-radius: 0.3em;
-            color: #FFF;
-            background: #000000;
-            padding: 2.5px 10px;
-            height: 30px;
-            cursor: pointer;
-            transition: background .5s ease-in-out;
-        }
-
-        button:hover:enabled{
-                background: #303030;
-        }
-
-        button:disabled{
-                opacity: .5;
-                cursor: default;
-        }
+        
         
     </style>
     
 </head>
 <body>
-    <main id="ads-page">   
-        <center>
-            <div style="height: 100%; width: 100%">            
-                <div class="">
-                    <div class="" style="margin-top:0px;margin-bottom:15px;">
+    <main id="ads-page">
+        
+        <div class="columns" style="background-color: #f8f9fa;">
+            <div class="col-8 col-md-12 col-xs-12 col-sm-12 column">
+                <div class="toast toast-success" style="margin-bottom: 10px;">
+                    <?php if($this->link_type == 'download') { ?>
+                    Prepare download successful. Please click the "Download" button to download.
+                    <?php } else { ?>
+                    Prepare download successful. Please click the "Install" button to download.
+                    <?php } ?>
+                    
+                </div>
+                <section class="empty">
+                    <div class="empty-icon">
+                        <i class="icon icon-link"></i>
+                    </div>
+                    <h1 class="empty-title"><?= $this->project_title ?></h1>
+                    <div class="empty-action">
                         
-                        <div class="" style="width:90%">
+                        <?php
+                        if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
+                            //echo '<a href="'.$this->url.'">Please click here</a>';
+                            echo '<script>top.location.href = "'.$this->url.'"; parent.jQuery.fancybox.close();</script>';
+
+                        } else {
+                        ?>
+                        <form id="Form1" name="Form1" action="" method="POST">    
+
+                         <?php if($this->link_type == 'download') { ?>
+                         <button type="submit" value="Continue Download" class="btn btn-success btn-lg"><i class="icon icon-time"></i> Download (<?= $this->file_size_human ?>)</button>
+                         <?php } else { ?>
+                         <button type="submit" value="Continue Installation" class="btn btn-success btn-lg"><i class="icon icon-time"></i> Installation</button>
+                         <br><br><p>*Needs <a href="https://www.opendesktop.org/p/1136805/" target="_NEW">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW">ocs-store</a> to install things</p>
+                         <?php } ?>
+                         
+                         <?php
+                        }
+                         ?>
+
+                        </form>   
+                        
+                        
+                    </div>
+                    <center style="margin: 10px 0 0;">
+                        <!--
+                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+                        <input type="hidden" name="cmd" value="_s-xclick">
+                        <input type="hidden" name="hosted_button_id" value="MYAVVME9CMX28">
+                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online!" border="0">
+                        <img alt="" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1" border="0">
+                        </form>
+                        -->
+                        <p style="font-size: 18px; line-height: 40px;">
                             <?php 
                                     $identity = Zend_Auth::getInstance()->getIdentity();
                                     if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
                             ?>
-                            <h3>Please consider to become a <a href="/support" target="_TOP">supporter</a> to help the site grow.</h3>
+                            Please consider to become a <a href="/support" target="_TOP">supporter</a> to help the site grow.
                             <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
-                            <h3>Thank you for your support!</h3>
-                            <?php   }?>
-                            <br/><br/>
-                            <?php
-                            if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
-                                //echo '<a href="'.$this->url.'">Please click here</a>';
-                                echo '<script>top.location.href = "'.$this->url.'"; parent.jQuery.fancybox.close();</script>';
-                                
-                            } else {
-                            ?>
-                            <form id="Form1" name="Form1" action="" method="POST">    
-                                
-                            <?php /*    
-                            <p id="question"></p><input id="ans" type="text">
-                            <div id="message">Please verify.</div>
-                            <div id="success">Validation complete</div>
-                            <div id="fail">Validation failed</div>
-                            */ ?>
-                                
-                             <?php if($this->link_type == 'download') { ?>
-                             <button type="submit" value="Continue Download">Continue Download</button>
-                             <?php } else { ?>
-                             <button type="submit" value="Continue Installation">Continue Installation</button>
-                             <br><br><p>*Needs <a href="https://www.opendesktop.org/p/1136805/" target="_NEW">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW">ocs-store</a> to install things</p>
-                             <?php } ?>
-                             <?php /*  
-                             <button type="reset" value="reset">Reset</button>
-                             */ ?>
-                             <?php
-                            }
-                             ?>
-                             
-                            </form>   
-                        </div>  
-                    </div>
-                </div>
-                      
+                            Thank you for your support!
+                            <?php   }?>                            
+                            
+                        </p>
+                    </center>
+                </section>
             </div>
-        </center>        
+        </div>
     </main>
 
 </body>

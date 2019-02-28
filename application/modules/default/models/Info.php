@@ -778,6 +778,34 @@ class Default_Model_Info
         return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
     }
 
+    public function getRandPlingedProduct()
+    {
+        $pid = $this->getRandomPlingedProjectIds();
+        $project_id = $pid['project_id'];
+
+        $sql = '
+            SELECT 
+                `p`.*
+                ,laplace_score(`p`.`count_likes`, `p`.`count_dislikes`) AS `laplace_score`
+                ,`m`.`profile_image_url`
+                ,`m`.`username`
+                ,(select count(1) from project_plings pp where pp.project_id = p.project_id and pp.is_deleted = 0) as sum_plings
+            FROM
+                `project` AS `p`
+            JOIN 
+                `member` AS `m` ON `m`.`member_id` = `p`.`member_id`
+            WHERE
+               `p`.`project_id` = :project_id
+            ';
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('project_id' => $project_id));
+        if (count($resultSet) > 0) {
+            return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
+        }
+
+        return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
+    }
+
+
     public function getRandomStoreProjectIds()
     {
         /** @var Zend_Cache_Core $cache */
@@ -810,37 +838,30 @@ class Default_Model_Info
         return $resultSet[$irandom];
     }
 
+    public function getRandomPlingedProjectIds()
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ ;
 
-    // public function getRandProduct_(){
-    //    $activeCategories = $this->getActiveCategoriesForCurrentHost();            
-    //     if (count($activeCategories) == 0) {
-    //         return array();
-    //     }
+        $resultSet = $cache->load($cacheName);
 
-    //     $sql = '
-    //         SELECT 
-    //             p.*
-    //             ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
-    //             ,m.profile_image_url
-    //             ,m.username
-    //         FROM
-    //             project AS p
-    //         JOIN 
-    //             member AS m ON m.member_id = p.member_id
-    //         WHERE
-    //             p.status = 100
-    //             AND p.type_id = 1               
-    //             AND p.project_category_id IN ('. implode(',', $activeCategories).')                
-    //             ORDER BY RAND() LIMIT 1
-    //         ';
-    //     $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
-    //       if (count($resultSet) > 0) {                          
-    //           return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
-    //       } else {
-    //           return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
-    //       }
-    // }
+        if (false == $resultSet) {
+            $sql="      select    
+                            p.project_id
+                        from project_plings pl
+                        inner join stat_projects p on pl.project_id = p.project_id            
+                        where pl.is_deleted = 0 and pl.is_active = 1 ";
+            $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+            $cache->save($resultSet, $cacheName, array(), 3600 * 24); //cache is cleaned once a day
+        }
 
+        $irandom = rand(0, sizeof($resultSet));
+
+        return $resultSet[$irandom];
+    }
+
+ 
     /**
      * @param int  $limit
      * @param null $project_category_id

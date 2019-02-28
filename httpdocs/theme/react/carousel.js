@@ -407,21 +407,20 @@ function (_React$Component) {
 
       if (this.state.loading === false) {
         productCarouselsContainer = this.state.productGroupsArray.map(function (pgc, index) {
-          if (pgc.catIds) {
-            return React.createElement("div", {
-              key: index,
-              className: "section"
-            }, React.createElement("div", {
-              className: "container"
-            }, React.createElement(Carousel, {
-              products: pgc.products,
-              device: _this2.state.device,
-              title: pgc.title,
-              catIds: pgc.catIds,
-              link: '/',
-              env: _this2.state.env
-            })));
-          }
+          //if (pgc.catIds){
+          return React.createElement("div", {
+            key: index,
+            className: "section"
+          }, React.createElement("div", {
+            className: "container"
+          }, React.createElement(Carousel, {
+            products: pgc.products,
+            device: _this2.state.device,
+            title: pgc.title,
+            catIds: pgc.catIds,
+            link: '/',
+            env: _this2.state.env
+          }))); //}
         });
       }
 
@@ -786,28 +785,50 @@ function (_React$Component3) {
 
         var createdDate = jQuery.timeago(cDate); // const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
 
-        var scoreDisplay;
+        var infoDisplay;
+        var scoreDisplay = React.createElement("div", {
+          className: "score-info"
+        }, React.createElement("div", {
+          className: "score-number"
+        }, "score ", this.props.product.laplace_score + "%"), React.createElement("div", {
+          className: "score-bar-container"
+        }, React.createElement("div", {
+          className: "score-bar",
+          style: {
+            "width": this.props.product.laplace_score + "%"
+          }
+        })));
+        infoDisplay = scoreDisplay;
 
         if (this.props.plingedProduct) {
-          scoreDisplay = React.createElement("div", {
-            className: "score-info plings"
+          var plingDisplay = React.createElement("div", {
+            className: "plings"
           }, React.createElement("img", {
             src: "/images/system/pling-btn-active.png"
           }), this.props.product.sum_plings);
-        } else {
-          scoreDisplay = React.createElement("div", {
-            className: "score-info"
-          }, React.createElement("div", {
-            className: "score-number"
-          }, "score ", this.props.product.laplace_score + "%"), React.createElement("div", {
-            className: "score-bar-container"
-          }, React.createElement("div", {
-            className: "score-bar",
-            style: {
-              "width": this.props.product.laplace_score + "%"
-            }
-          })));
+          infoDisplay = React.createElement("div", null, plingDisplay, scoreDisplay);
         }
+        /*let scoreDisplay;
+        if (this.props.plingedProduct){
+          scoreDisplay = (
+            <div className="score-info plings">
+              <img src="/images/system/pling-btn-active.png" />
+              {this.props.product.sum_plings}
+            </div>
+          );
+        } else {
+          scoreDisplay = (
+            <div className="score-info">
+              <div className="score-number">
+                score {this.props.product.laplace_score + "%"}
+              </div>
+              <div className="score-bar-container">
+                <div className={"score-bar"} style={{"width":this.props.product.laplace_score + "%"}}></div>
+              </div>
+            </div>
+          );
+        }*/
+
 
         productInfoDisplay = React.createElement("div", {
           className: "product-info"
@@ -817,7 +838,7 @@ function (_React$Component3) {
           className: "product-info-category"
         }, this.props.product.cat_title), React.createElement("span", {
           className: "product-info-date"
-        }, createdDate), scoreDisplay);
+        }, createdDate), infoDisplay);
       }
 
       var projectUrl = "";
