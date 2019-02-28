@@ -118,7 +118,7 @@ class CarouselsModule extends React.Component {
     let productCarouselsContainer;
     if (this.state.loading === false){
       productCarouselsContainer = this.state.productGroupsArray.map((pgc,index) => {
-        if (pgc.catIds){
+        //if (pgc.catIds){
           return (
             <div key={index} className="section">
               <div className="container">
@@ -133,7 +133,7 @@ class CarouselsModule extends React.Component {
               </div>
             </div>
           );
-        }
+        //}
       });
     }
 
@@ -180,12 +180,12 @@ class Carousel extends React.Component {
     let containerWidth;
     if (window.page === "opendesktop"){
       containerWidth = $('#main-content').width();
+
     } else if (window.page === "appimages" || window.page === "libreoffice"){
       containerWidth = $('#introduction').find('.container').width();
-    }
-
+    }       
     const containerNumber = Math.ceil(this.state.products.length / (itemsPerRow - 1));
-    const itemWidth = containerWidth / itemsPerRow;
+    const itemWidth = containerWidth / itemsPerRow;    
     const sliderWidth = (containerWidth - itemWidth) * containerNumber;
     let sliderPosition = 0;
     if (this.state.sliderPosition){
@@ -430,7 +430,38 @@ class CarouselItem extends React.Component {
       const createdDate = jQuery.timeago(cDate)
       // const productScoreColor = window.hpHelpers.calculateScoreColor(this.props.product.laplace_score);
 
-      let scoreDisplay;
+      let infoDisplay;
+      let scoreDisplay=(
+          <div className="score-info">
+            <div className="score-number">
+              score {this.props.product.laplace_score + "%"}
+            </div>
+            <div className="score-bar-container">
+              <div className={"score-bar"} style={{"width":this.props.product.laplace_score + "%"}}></div>
+            </div>
+          </div>
+        );
+      infoDisplay = scoreDisplay;
+
+
+      if (this.props.plingedProduct){
+        let plingDisplay = (
+          <div className="plings">
+            <img src="/images/system/pling-btn-active.png" />
+            {this.props.product.sum_plings}
+          </div>
+        );
+
+        infoDisplay=(
+          <div>
+            {plingDisplay}
+            {scoreDisplay}
+          </div>
+        );
+      }
+
+
+      /*let scoreDisplay;
       if (this.props.plingedProduct){
         scoreDisplay = (
           <div className="score-info plings">
@@ -449,14 +480,14 @@ class CarouselItem extends React.Component {
             </div>
           </div>
         );
-      }
+      }*/
 
       productInfoDisplay = (
         <div className="product-info">
           <span className="product-info-title">{this.props.product.title}</span>
           <span className="product-info-category">{this.props.product.cat_title}</span>
           <span className="product-info-date">{createdDate}</span>
-          {scoreDisplay}
+          {infoDisplay}
         </div>
       );
     }
