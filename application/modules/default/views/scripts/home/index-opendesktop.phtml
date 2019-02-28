@@ -54,6 +54,14 @@ if ($featuredProducts->getTotalItemCount()) {
     $this->featureProducts = $featuredProducts;
 }
 
+ $json_productsPlinged = $modelInfo->getJsonNewActivePlingProduct(15);
+
+
+$response = array(
+  'productsThemesGTK' => array('title' =>'Plinged','catIds' =>'','products' => $json_productsPlinged),
+);
+
+
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 $helpPrintDate = new Default_View_Helper_PrintDate();
@@ -175,15 +183,28 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 
   }
 
+
+.product-carousel-header
+{
+  padding-left: 20px;
+}
+
+#carousel-module-container
+{
+  padding-bottom: 20px;
+}
 </style>
 
+
+<link type="text/css" rel="stylesheet" href="/theme/react/assets/css/carousel.css"/>
 <main id="explore-content" class="startpage-store">
   <div class="GridFlex">
     <div class="GridFlex-cell sidebar-left">
             <?php  echo $this->render('explore/partials/filter.phtml'); ?>
     </div>
-    <div class="GridFlex-cell content">
-            <div class="contentcontainer">
+
+    <div class="GridFlex-cell content" id="main-content">
+            <div class="contentcontainer">                          
 
                             <div class="row"  id="featureProductsContainer">
 
@@ -195,6 +216,10 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                             </div>
 
                             <div class="row">
+                                <div id="carousel-module-container"></div>                                                                                                              
+                            </div>
+
+                            <div class="row" id="productgroup1">
                             <?php
                                         echo $this->partial('/home/partials/product_group.phtml', array(
                                                 "title"  => "GTK/Gnome",
@@ -280,46 +305,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                             ?>
                             </div>
 
-                            <?php /*
-
-                            <div class="row blockpadding supportersrow">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <?php
-                                            echo $this->partial('/home/partials/plingprojects.phtml', array(
-                                                    "title"  => "Recently plinged Products",
-                                                    "projects" => $this->plingproducts
-                                                )
-                                            );
-                                ?>
-                                </div>
-                            </div>
-
-                            <div class="row blockpadding supportersrow">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <?php
-                                            echo $this->partial('/home/partials/users.phtml', array(
-                                                    "title"  => "Latest Supporters",
-                                                    "users" => $this->supporters
-                                                )
-                                            );
-                                ?>
-                                </div>
-                            </div>
-
-                            <div class="row blockpadding">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <?php
-                                            echo $this->partial('/home/partials/users.phtml', array(
-                                                    "title"  => "Latest  Community Members ",
-                                                    "users" => $this->users
-                                                )
-                                            );
-                                ?>
-                                </div>
-                            </div>
-
-                            */
-                            ?>
+                           
                  </div>
     </div>
     <div class="GridFlex-cell sidebar-right">
@@ -371,7 +357,13 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
             return false;
         });
     });
+
+
+  var page = "opendesktop";
+  var hpVersion = 2;
+  var data = <?php echo Zend_Json::encode($response)?>;                                
 </script>
+<script src="/theme/react/carousel.js" type="text/javascript"></script>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
