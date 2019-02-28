@@ -54,7 +54,34 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         $this->forward('index', 'explore', 'default', $params);        
     }
 
-    public function showfeatureajaxAction()
+     public function showfeatureajaxAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $modelInfo = new Default_Model_Info();
+         $page = (int)$this->getParam('page');
+         $type='';
+         if($page==0){
+                $featureProducts = $modelInfo->getRandProduct();               
+                $type='';
+                
+            }elseif($page==1){
+                $featureProducts = $modelInfo->getRandFeaturedProduct();                
+                $type='Featured';
+               
+            }
+            elseif($page==2){
+                $featureProducts = $modelInfo->getRandPlingedProduct();                
+                $type='Plinged';
+
+            }
+
+       
+        $this->view->featureProducts = $featureProducts;
+        $this->view->type=$type;            
+        $this->_helper->viewRenderer('/partials/featuredProducts');        
+    }
+
+   /* public function showfeatureajaxAction()
     {
         $this->_helper->layout->disableLayout();
         $modelInfo = new Default_Model_Info();
@@ -92,7 +119,7 @@ class HomeController extends Local_Controller_Action_DomainSwitch
             $this->view->type=$type;            
             $this->_helper->viewRenderer('/partials/featuredProducts');            
         }
-    }
+    }*/
     
     public function showlastproductsjsonAction()
     {

@@ -44,15 +44,8 @@ $this->productsWallpapersOriginal = $modelInfo->getLastProductsForHostStores(5,"
 $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,"295,158",null,false);
 $this->countSupporters = $modelInfo->getCountAllSupporters();
 
-$featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
-if ($featuredProducts->getTotalItemCount()) {
-    $request = Zend_Controller_Front::getInstance()->getRequest();
-    $offset = (int)$request->getParam('page');
-    $irandom = rand(1,$featuredProducts->getTotalItemCount());
-    $featuredProducts->setItemCountPerPage(1);
-    $featuredProducts->setCurrentPageNumber($irandom);
-    $this->featureProducts = $featuredProducts;
-}
+$this->featureProducts = $modelInfo->getRandFeaturedProduct();
+$this->type='Featured';
 
  $json_productsPlinged = $modelInfo->getJsonNewActivePlingProduct(15);
 

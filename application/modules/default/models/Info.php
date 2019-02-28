@@ -770,12 +770,14 @@ class Default_Model_Info
             WHERE
                `p`.`project_id` = :project_id
             ';
-        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('project_id' => $project_id));
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql, array('project_id' => $project_id));
+        return $resultSet;
+        /*$resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('project_id' => $project_id));
         if (count($resultSet) > 0) {
             return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
         }
 
-        return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
+        return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));*/
     }
 
     public function getRandPlingedProduct()
@@ -797,14 +799,37 @@ class Default_Model_Info
             WHERE
                `p`.`project_id` = :project_id
             ';
-        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('project_id' => $project_id));
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql, array('project_id' => $project_id));
+        return $resultSet;
+        /*$resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('project_id' => $project_id));
         if (count($resultSet) > 0) {
             return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
         }
 
-        return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
+        return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));*/
     }
 
+    public function getRandFeaturedProduct()
+    {
+        $pid = $this->getRandomFeaturedProjectIds();
+        $project_id = $pid['project_id'];
+
+        $sql = '
+            SELECT 
+                `p`.*
+                ,laplace_score(`p`.`count_likes`, `p`.`count_dislikes`) AS `laplace_score`
+                ,`m`.`profile_image_url`
+                ,`m`.`username`               
+            FROM
+                `project` AS `p`
+            JOIN 
+                `member` AS `m` ON `m`.`member_id` = `p`.`member_id`
+            WHERE
+               `p`.`project_id` = :project_id
+            ';
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql, array('project_id' => $project_id));
+        return $resultSet;
+    }
 
     public function getRandomStoreProjectIds()
     {
@@ -833,7 +858,7 @@ class Default_Model_Info
             $cache->save($resultSet, $cacheName, array(), 3600 * 24);
         }
 
-        $irandom = rand(0, sizeof($resultSet));
+        $irandom = rand(0, sizeof($resultSet)-1);
 
         return $resultSet[$irandom];
     }
@@ -856,7 +881,27 @@ class Default_Model_Info
             $cache->save($resultSet, $cacheName, array(), 3600 * 24); //cache is cleaned once a day
         }
 
-        $irandom = rand(0, sizeof($resultSet));
+        $irandom = rand(0, sizeof($resultSet)-1);
+
+        return $resultSet[$irandom];
+    }
+
+
+    public function getRandomFeaturedProjectIds()
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ ;
+
+        $resultSet = $cache->load($cacheName);
+
+        if (false == $resultSet) {
+            $sql="select project_id from  project p where p.status = 100 and p.featured = 1 ";
+            $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+            $cache->save($resultSet, $cacheName, array(), 3600 * 24); //cache is cleaned once a day
+        }
+
+        $irandom = rand(0, sizeof($resultSet)-1);
 
         return $resultSet[$irandom];
     }

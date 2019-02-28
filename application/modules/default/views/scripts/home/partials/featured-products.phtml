@@ -26,16 +26,15 @@
         $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
         $helpDate = new Default_View_Helper_PrintDate();
         //$pageCount = $this->featureProducts->count();
-
+        $this->product = $this->featureProducts;
+        $this->product['description'] = Default_Model_HtmlPurify::purify($this->product['description']);
 
 ?>
     <div id="featureProducts"  class="carousel slide" data-ride="carousel" data-interval="false">       
        
         <div id="featureProducts-content"  class="carousel-inner">
-        <?php        
-        foreach ($this->featureProducts as $this->product): 
-
-            $this->product['description'] = Default_Model_HtmlPurify::purify($this->product['description']);
+        <?php                
+            
           ?>            
                     <div  class="feature_container">       
                           
@@ -111,17 +110,11 @@
                           </div>      
                                                                    
                     </div>                           
-        <?php endforeach;?>        
+       
         
       </div>
 
-         
-           <?php /*
-       <?php if ($pageCount > 1) echo $this->paginationControl($this->featureProducts, 'Sliding', 'home/partials/paginationControl.phtml',
-                    array('params' => array(), 'dom_target' => 'div#featureProductsContainer')); 
-                    ?>
-                    */
-              ?>
+       
         
     </div>
 
