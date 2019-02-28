@@ -38,7 +38,14 @@ class DlController extends Local_Controller_Action_DomainSwitch
             $linkType = "download";
         }
         
+        $modelProduct = new Default_Model_Project();
+        $productInfo = $modelProduct->fetchProductInfo($projectId);
+        
         $this->view->link_type = $linkType;
+        $this->view->file_name = $file_name;
+        $this->view->file_size = $file_size;
+        $this->view->file_size_human = $this->humanFileSize($file_size);
+        $this->view->project_title = $productInfo->title;
         
         $memberId = $this->_authMember->member_id;
 
@@ -48,9 +55,6 @@ class DlController extends Local_Controller_Action_DomainSwitch
                 $data = array('project_id' => $projectId, 'member_id' => $memberId, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size);
                 $memberDlHistory->createRow($data)->save();
             }
-            
-            $modelProduct = new Default_Model_Project();
-            $productInfo = $modelProduct->fetchProductInfo($projectId);
             
             //create ppload download hash: secret + collection_id + expire-timestamp
             $salt = PPLOAD_DOWNLOAD_SECRET;
@@ -74,6 +78,38 @@ class DlController extends Local_Controller_Action_DomainSwitch
         }
         
 
+    }
+    
+    function formatBytes($bytes, $precision = 2) { 
+        $units = array('B', 'KB', 'MB', 'GB', 'TB'); 
+
+        $bytes = max($bytes, 0); 
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
+        $pow = min($pow, count($units) - 1); 
+
+        // Uncomment one of the following alternatives
+        // $bytes /= pow(1024, $pow);
+        // $bytes /= (1 << (10 * $pow)); 
+
+        return round($bytes, $precision) . ' ' . $units[$pow]; 
+    } 
+    
+    function humanFileSize($bytes) {
+        if(!empty(bytes))
+        {
+            $size = round($bytes / 1048576, 2);
+            if($size == 0.0)
+            {
+               return '0.01 MB';
+            }else
+            {
+               return $size.' MB';
+            }
+        }
+        else
+        {
+           return null;
+        }
     }
 
    
