@@ -30,9 +30,7 @@ $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images
 
 $modelInfo = new Default_Model_Info();
 $this->comments = $modelInfo->getLatestComments(10);
-//$this->users = $modelInfo->getNewActiveMembers(18);
-//$this->supporters = $modelInfo->getNewActiveSupporters(9);
-//$this->plingproducts = $modelInfo->getNewActivePlingProduct(9);
+
 $this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(5,"366,363,273,267,138,125,131,153,154,414,133");
 $this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(5,"365,119,123,266,114,118,349,417,101,100,111,422,423,446,417");
 $this->productsWindowmanager = $modelInfo->getLastProductsForHostStores(5,"117,267,139,143,142,140,141,144");
@@ -44,17 +42,10 @@ $this->productsWallpapersOriginal = $modelInfo->getLastProductsForHostStores(5,"
 $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,"295,158",null,false);
 $this->countSupporters = $modelInfo->getCountAllSupporters();
 
-$featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
-if ($featuredProducts->getTotalItemCount()) {
-    $request = Zend_Controller_Front::getInstance()->getRequest();
-    $offset = (int)$request->getParam('page');
-    $irandom = rand(1,$featuredProducts->getTotalItemCount());
-    $featuredProducts->setItemCountPerPage(1);
-    $featuredProducts->setCurrentPageNumber($irandom);
-    $this->featureProducts = $featuredProducts;
-}
+$this->featureProducts = $modelInfo->getRandFeaturedProduct();
+$this->type='Featured';
 
- $json_productsPlinged = $modelInfo->getJsonNewActivePlingProduct(15);
+$json_productsPlinged = $modelInfo->getJsonNewActivePlingProduct(15);
 
 
 $response = array(
