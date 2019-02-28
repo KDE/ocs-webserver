@@ -95,7 +95,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
     } 
     
     function humanFileSize($bytes) {
-        if(!empty(bytes))
+        if(!empty($bytes))
         {
             $size = round($bytes / 1048576, 2);
             if($size == 0.0)
