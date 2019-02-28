@@ -858,7 +858,7 @@ class Default_Model_Info
             $cache->save($resultSet, $cacheName, array(), 3600 * 24);
         }
 
-        $irandom = rand(0, sizeof($resultSet));
+        $irandom = rand(0, sizeof($resultSet)-1);
 
         return $resultSet[$irandom];
     }
@@ -881,7 +881,7 @@ class Default_Model_Info
             $cache->save($resultSet, $cacheName, array(), 3600 * 24); //cache is cleaned once a day
         }
 
-        $irandom = rand(0, sizeof($resultSet));
+        $irandom = rand(0, sizeof($resultSet)-1);
 
         return $resultSet[$irandom];
     }
@@ -901,7 +901,7 @@ class Default_Model_Info
             $cache->save($resultSet, $cacheName, array(), 3600 * 24); //cache is cleaned once a day
         }
 
-        $irandom = rand(0, sizeof($resultSet));
+        $irandom = rand(0, sizeof($resultSet)-1);
 
         return $resultSet[$irandom];
     }
