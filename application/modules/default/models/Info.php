@@ -789,6 +789,7 @@ class Default_Model_Info
                 ,laplace_score(`p`.`count_likes`, `p`.`count_dislikes`) AS `laplace_score`
                 ,`m`.`profile_image_url`
                 ,`m`.`username`
+                ,(select count(1) from project_plings pp where pp.project_id = p.project_id and pp.is_deleted = 0) as sum_plings
             FROM
                 `project` AS `p`
             JOIN 
