@@ -65,6 +65,7 @@ class HomeController extends Local_Controller_Action_DomainSwitch
                 $featureProducts->setItemCountPerPage(1);
                 $featureProducts->setCurrentPageNumber(1);
                 $type='';
+                
             }elseif($page==1){
                 $featureProducts = $modelInfo->getFeaturedProductsForHostStores(100);
                 if($featureProducts->getTotalItemCount() > 0){
@@ -75,18 +76,20 @@ class HomeController extends Local_Controller_Action_DomainSwitch
                     $featureProducts->isFeatured = true;
                 }
                 $type='Featured';
+               
             }
             elseif($page==2){
                 $featureProducts = $modelInfo->getRandPlingedProduct();
                 $featureProducts->setItemCountPerPage(1);
                 $featureProducts->setCurrentPageNumber(1);
                 $type='Plinged';
+
             }
 
        
         if ($featureProducts->getTotalItemCount() > 0) {
             $this->view->featureProducts = $featureProducts;
-            $this->view->type=$type;
+            $this->view->type=$type;            
             $this->_helper->viewRenderer('/partials/featuredProducts');            
         }
     }

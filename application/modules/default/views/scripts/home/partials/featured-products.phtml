@@ -45,9 +45,7 @@
                         <div  class="main_container">
                                
                              <span class="small label label-info label_featured <?=($this->type=='Plinged'?'label_plinged':'')?>" style="float: right;">                             
-                                   <?php                                       
-                                      echo $this->type;
-                                   ?> 
+                                   <?php   echo $this->type.($this->type=='Plinged'?': '.$this->product['sum_plings']:''); ?> 
                             </span>   
                                                         
                               <a class="feature_image"  title="<?=$helpTruncate->truncate($this->product['description'], 200, '...', false, true)?>" href="<?=$helpProductUrl->buildProductUrl($this->product['project_id'],'')?>">
