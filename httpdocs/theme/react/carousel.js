@@ -692,7 +692,7 @@ function (_React$Component2) {
         carouselArrowsMargin = this.state.itemWidth / 4;
       }
 
-      var urlSuffix;
+      var urlSuffix = '';
 
       if (window.page === "libreoffice") {
         urlSuffix = "/s/LibreOffice";
@@ -702,6 +702,8 @@ function (_React$Component2) {
 
       if (!this.props.catIds) {
         titleLink = "/community#plingedproductsPanel";
+      } else if (this.props.catIds.indexOf(',') > 0) {
+        titleLink = urlSuffix + "/browse/";
       }
 
       return React.createElement("div", {
