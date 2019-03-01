@@ -218,8 +218,8 @@ BEGIN
       ) as tags          
     FROM project
       JOIN member ON member.member_id = project.member_id
-      LEFT JOIN tmp_solr_cat_store AS tcs ON project.project_category_id = tcs.project_category_id     
-   WHERE project_id = projectID;
+      LEFT JOIN tmp_solr_cat_store AS tcs ON project.project_category_id = tcs.project_category_id          
+   WHERE project_id = projectID and project.status=100 and member.is_active=1;
    
 
 END$$
