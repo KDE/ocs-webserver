@@ -702,6 +702,8 @@ function (_React$Component2) {
 
       if (!this.props.catIds) {
         titleLink = "/community#plingedproductsPanel";
+      } else if (this.props.catIds.indexOf(',')) {
+        titleLink = urlSuffix + "/browse/";
       }
 
       return React.createElement("div", {
