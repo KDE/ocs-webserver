@@ -362,15 +362,17 @@ class Carousel extends React.Component {
       carouselArrowsMargin = this.state.itemWidth / 4;
     }
 
-    let urlSuffix;
+    let urlSuffix='';    
     if (window.page === "libreoffice"){
-      urlSuffix = "/s/LibreOffice";
+      urlSuffix = "/s/LibreOffice";      
     }
-
     let titleLink = urlSuffix + "/browse/cat/" + this.props.catIds + "/";
     if (!this.props.catIds){
       titleLink = "/community#plingedproductsPanel";
+    }else if(this.props.catIds.indexOf(',')){
+      titleLink  = urlSuffix + "/browse/";
     }    
+
 
     return (
       <div className={"product-carousel " + hpVersionClass}>
