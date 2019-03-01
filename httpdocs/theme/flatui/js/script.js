@@ -655,7 +655,7 @@ var Opendownloadfile= (function () {
                     'transitionOut': 'elastic',
                     'type': 'iframe',
                     'width':'600',
-                    'height':'auto',
+                    'height':'400',
                     'iframe': {'scrolling': 'no'},
                     'autoSize':false,
                     'id': 'opendownloadfilepopup',
