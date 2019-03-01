@@ -41,53 +41,21 @@ $modelProject = new Default_Model_Project();
 $totalProjects = $modelProject->fetchTotalProjectsCount(true);
 
 if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
-    $products1 = $modelInfo->getJsonLastProductsForHostStores(15,"104");
-    $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"105");
-    $products3 = $modelInfo->getJsonLastProductsForHostStores(15,"98");
-    $products4= $modelInfo->getJsonLastProductsForHostStores(15,"57");
-    $products5= $modelInfo->getJsonLastProductsForHostStores(15,"53");
-    $products6 = $modelInfo->getJsonLastProductsForHostStores(15,"52");
-    $products7 = $modelInfo->getJsonLastProductsForHostStores(15,"48");
-    $products8 = $modelInfo->getJsonLastProductsForHostStores(15,"295,158");
-    $products9 = $modelInfo->getJsonLastProductsForHostStores(15,"295,158");
-    $products10 = $modelInfo->getJsonLastProductsForHostStores(15,"295,158");
-
+    $products1 = $modelInfo->getJsonLastProductsForHostStores(15,"105,98,57,53,52,48,295,158");    
+    $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"104");
+    
     $response = array(
-        'products1' => array('title' =>'Audio','catIds' =>'104','products' => $products1),
-        'products2' => array('title' =>'Education','catIds' =>'105','products' => $products2),
-        'products3' => array('title' =>'Games','catIds' =>'98','products' => $products3),
-        'products4' => array('title' =>'Graphics','catIds' =>'57','products' => $products4),
-        'products5' => array('title' =>'Internet','catIds' =>'53','products' => $products5),
-        'products6' => array('title' =>'IoT','catIds' =>'52','products' => $products6),
-        'products7' => array('title' =>'Office','catIds' =>'48','products' => $products7),
-        'products8' => array('title' =>'Programming','catIds' =>'104','products' => $products8),
-        'products9' => array('title' =>'System & Tools','catIds' =>'104','products' => $products9),
-        'products10' => array('title' =>'Video','catIds' =>'104','products' => $products10),
+        'products1' => array('title' =>'Apps','catIds' =>'105','products' => $products1),
+        'products2' => array('title' =>'Gams','catIds' =>'104','products' => $products2),       
     );
 
   } else {
-    $products1 = $modelInfo->getJsonLastProductsForHostStores(15,"392");
-    $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"544");
-    $products3 = $modelInfo->getJsonLastProductsForHostStores(15,"6");
-    $products4= $modelInfo->getJsonLastProductsForHostStores(15,"526");
-    $products5= $modelInfo->getJsonLastProductsForHostStores(15,"492");
-    $products6 = $modelInfo->getJsonLastProductsForHostStores(15,"542");
-    $products7 = $modelInfo->getJsonLastProductsForHostStores(15,"450");
-    $products8 = $modelInfo->getJsonLastProductsForHostStores(15,"388");
-    $products9 = $modelInfo->getJsonLastProductsForHostStores(15,"391");
-    $products10 = $modelInfo->getJsonLastProductsForHostStores(15,"481");
+    $products1 = $modelInfo->getJsonLastProductsForHostStores(15,"391,392,544,526,492,542,450,388,481");    
+    $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"6");
 
     $response = array(
-        'products1' => array('title' =>'Audio','catIds' =>'392','products' => $products1),
-        'products2' => array('title' =>'Education','catIds' =>'544','products' => $products2),
-        'products3' => array('title' =>'Games','catIds' =>'6','products' => $products3),
-        'products4' => array('title' =>'Graphics','catIds' =>'526','products' => $products4),
-        'products5' => array('title' =>'Internet','catIds' =>'492','products' => $products5),
-        'products6' => array('title' =>'IoT','catIds' =>'542','products' => $products6),
-        'products7' => array('title' =>'Office','catIds' =>'450','products' => $products7),
-        'products8' => array('title' =>'Programming','catIds' =>'388','products' => $products8),
-        'products9' => array('title' =>'System & Tools','catIds' =>'391','products' => $products9),
-        'products10' => array('title' =>'Video','catIds' =>'481','products' => $products10),
+        'products1' => array('title' =>'Apps','catIds' =>'391','products' => $products1),
+        'products2' => array('title' =>'Games','catIds' =>'6','products' => $products2),       
     );
   }
   
