@@ -36,7 +36,23 @@
     </style>
     
 </head>
-<body>
+<body style="height: 350px; background-color: #f8f9fa;">
+    
+    <?php
+    
+    $fileName = $this->file_name;
+    $lastIndex = strripos($fileName, '.');
+    $fileExt = "";
+    if(!empty($lastIndex)) {
+        $fileExt = substr($fileName, $lastIndex+1);
+    }
+    $fileExt = strtoupper($fileExt);
+    $isAppimage = false;
+    if($fileExt == 'APPIMAGE') {
+        $isAppimage = true;
+    }
+    
+    ?>
     <main id="ads-page">
         
         <div class="columns" style="background-color: #f8f9fa;">
@@ -54,7 +70,9 @@
                         <i class="icon icon-link"></i>
                     </div>
                     <h1 class="empty-title"><?= $this->project_title ?></h1>
-                    <div class="empty-action">
+                    
+                    
+                    <div class="empty-action" style="height: 100px;">
                         
                         <?php
                         if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
@@ -66,11 +84,18 @@
                         <form id="Form1" name="Form1" action="" method="POST">    
 
                          <?php if($this->link_type == 'download') { ?>
-                         <button type="submit" value="Continue Download" class="btn btn-success btn-lg"><i class="icon icon-time"></i> Download (<?= $this->file_size_human ?>)</button>
+                         <button type="submit" value="Continue Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;"><i class="icon icon-time"></i> Download (<?= $this->file_size_human ?>)</button>
                          <?php } else { ?>
-                         <button type="submit" value="Continue Installation" class="btn btn-success btn-lg"><i class="icon icon-time"></i> Installation</button>
-                         <br><br><p>*Needs <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a> to install things</p>
+                         <button type="submit" value="Continue Installation" class="btn btn-success btn-lg" style="margin: 0 0 10px;"><i class="icon icon-time"></i> Installation (<?= $this->file_size_human ?>)</button>
+                         <p style="margin: 0;">*Needs <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a> to install things</p>
                          <?php } ?>
+                         
+                         <?php
+                         if($isAppimage) {
+                             echo("<p style='margin: 0;'>For Appimages we recommend <a href='https://www.opendesktop.org/p/1228228' target='_NEW' style='color: #0088d7;text-decoration: underline;'>AppImageLauncher</a> for system integration</p>");
+                         }
+                         ?>
+                         
                          
                          <?php
                         }
@@ -80,7 +105,9 @@
                         
                         
                     </div>
-                    <center style="margin: 10px 0 0;">
+                    
+                    
+                    <div class="empty-action" style="height: 100px;">
                         <!--
                         <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
                         <input type="hidden" name="cmd" value="_s-xclick">
@@ -90,7 +117,7 @@
                         </form>
                         -->
                         <br>
-                        <p style="font-size: 18px; line-height: 40px;">
+                        <p style="font-size: 18px; position: absolute; bottom: 0px; right: 10%;">
                             <?php 
                                     $identity = Zend_Auth::getInstance()->getIdentity();
                                     if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
@@ -101,7 +128,7 @@
                             <?php   }?>                            
                             
                         </p>
-                    </center>
+                    </div>
                 </section>
             </div>
         </div>
