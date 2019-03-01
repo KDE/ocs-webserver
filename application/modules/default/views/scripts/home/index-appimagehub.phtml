@@ -45,7 +45,7 @@ if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
     $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"104");
     
     $response = array(
-        'products1' => array('title' =>'Apps','catIds' =>'105','products' => $products1),
+        'products1' => array('title' =>'Apps','catIds' =>'105,98','products' => $products1),
         'products2' => array('title' =>'Games','catIds' =>'104','products' => $products2),       
     );
 
@@ -54,7 +54,7 @@ if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
     $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"6");
 
     $response = array(
-        'products1' => array('title' =>'Apps','catIds' =>'391','products' => $products1),
+        'products1' => array('title' =>'Apps','catIds' =>'391,392','products' => $products1),
         'products2' => array('title' =>'Games','catIds' =>'6','products' => $products2),       
     );
   }
