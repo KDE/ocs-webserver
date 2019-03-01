@@ -692,7 +692,7 @@ function (_React$Component2) {
         carouselArrowsMargin = this.state.itemWidth / 4;
       }
 
-      var urlSuffix;
+      var urlSuffix = '';
 
       if (window.page === "libreoffice") {
         urlSuffix = "/s/LibreOffice";
