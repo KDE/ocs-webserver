@@ -37,6 +37,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
         } else {
             $linkType = "download";
         }
+        $isExternal = $this->getParam('is_external');
         
         $modelProduct = new Default_Model_Project();
         $productInfo = $modelProduct->fetchProductInfo($projectId);
@@ -46,6 +47,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
         $this->view->file_size = $file_size;
         $this->view->file_size_human = $this->humanFileSize($file_size);
         $this->view->project_title = $productInfo->title;
+        $this->view->is_external = $isExternal;
         
         $memberId = $this->_authMember->member_id;
 

@@ -646,6 +646,8 @@ var Opendownloadfile= (function () {
                 var file_size = $(this).attr('data-file_size');
                 var project_id = $(this).attr('data-project_id');
                 var link_type = $(this).attr('data-link_type');
+                var is_external = $(this).attr('data-is-external-link');
+                
                 $.fancybox({
                     'hideOnContentClick': true,
                     'autoScale': true,
@@ -664,7 +666,7 @@ var Opendownloadfile= (function () {
                             locked: false
                         }
                     },
-                    href:'/dl?file_id='+file_id+'&file_type='+file_type+'&file_name='+file_name+'&file_size='+file_size+'&project_id='+project_id+'&link_type='+link_type
+                    href:'/dl?file_id='+file_id+'&file_type='+file_type+'&file_name='+file_name+'&file_size='+file_size+'&project_id='+project_id+'&link_type='+link_type+'&is_external='+is_external
 
                 });
                 return false;

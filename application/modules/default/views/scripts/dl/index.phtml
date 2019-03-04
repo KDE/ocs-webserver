@@ -29,12 +29,7 @@
     <link href="tools/spectre/spectre.css" rel="stylesheet" type="text/css"/>
     <link href="tools/spectre/spectre-icons.css" rel="stylesheet" type="text/css"/>
     <link href="tools/spectre/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-    <style>
-        
-        
-        
-    </style>
-    
+    <link rel="stylesheet" href="/theme/flatui/css/fontawsome/font-awesome.min.css"  crossorigin="anonymous">
 </head>
 <body style="height: 350px; background-color: #f8f9fa;">
     
@@ -52,6 +47,8 @@
         $isAppimage = true;
     }
     
+    $isExternal = ($this->is_external == "true");
+    
     ?>
     <main id="ads-page">
         
@@ -67,7 +64,17 @@
                 </div>
                 <section class="empty">
                     <div class="empty-icon">
+                        <?php 
+                            if($isExternal == true) {
+                        ?>
+                        <i class="fa fa-external-link"></i>
+                        <?php
+                            } else {
+                        ?>
                         <i class="icon icon-link"></i>
+                        <?php
+                            }
+                        ?>
                     </div>
                     <h1 class="empty-title"><?= $this->project_title ?></h1>
                     
