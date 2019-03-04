@@ -680,6 +680,7 @@ class UserMenu extends React.Component {
           forumUrl={this.props.forumUrl}
           gitlabUrl={this.props.gitlabUrl}
           isAdmin={this.props.isAdmin}
+          baseUrl={this.props.baseUrl}
         />
       );
     } else {
