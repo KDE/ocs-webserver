@@ -903,9 +903,7 @@ class UserContextMenuContainer extends React.Component {
 class DevelopmentAppMenu extends React.Component {
   constructor(props){
     super(props);
-    this.state = {
-      gitlabLink:config.gitlabUrl+"/dashboard/issues?assignee_id="
-    };
+    this.state = {};
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -917,18 +915,7 @@ class DevelopmentAppMenu extends React.Component {
     document.removeEventListener('mousedown',this.handleClick, false);
   }
 
-  componentDidMount() {
-    const self = this;
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        const res = JSON.parse(this.response);
-        const gitlabLink = self.state.gitlabLink + res[0].id;
-        self.setState({gitlabLink:gitlabLink,loading:false});
-      }
-    };
-    xhttp.open("GET", config.gitlabUrl+"/api/v4/users?username="+this.props.user.username, true);
-    xhttp.send();
+  componentDidMount() {   
   }
 
   handleClick(e){
@@ -949,8 +936,7 @@ class DevelopmentAppMenu extends React.Component {
 
   render(){
 
-    const urlEnding = config.baseUrl.split('opendesktop.')[1];
-
+   
     return (
       <li ref={node => this.node = node} id="development-app-menu-container">
         <div className={"user-dropdown " + this.state.dropdownClass}>
@@ -959,16 +945,22 @@ class DevelopmentAppMenu extends React.Component {
             <span className="th-icon"></span>
           </button>
           <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
-            <li id="opencode-link-item">
-              <a href={this.props.gitlabUrl+"/dashboard/projects"}>
+            <li id="addproduct-link-item">
+              <a href={this.props.baseUrl+"/product/add"}>
                 <div className="icon"></div>
-                <span>Projects</span>
+                <span>Add Product</span>
               </a>
             </li>
-            <li id="issues-link-item">
-              <a href={this.state.gitlabLink}>
+            <li id="listproduct-link-item">
+              <a href={this.props.baseUrl + "/u/" + this.props.user.username + "/products"}>
                 <div className="icon"></div>
-                <span>Issues</span>
+                <span>Products</span>
+              </a>
+            </li>
+            <li id="plings-link-item">
+              <a href={this.props.baseUrl + "/u/" + this.props.user.username + "/plings"}>
+                <div className="icon"></div>
+                <span>Plings</span>
               </a>
             </li>
           </ul>
