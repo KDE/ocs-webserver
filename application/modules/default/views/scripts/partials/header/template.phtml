@@ -73,7 +73,11 @@ $json_menu = $this->fetchMetaheaderMenuJson();
 
 
 $filter = new Local_Filter_Url_Encrypt();
-$thisurl = $helperBuildBaseUrl->buildBaserUrl();
+//$thisurl = $helperBuildBaseUrl->buildBaserUrl();
+$thisurl = "/";
+if(isset($_GET['url'])) {
+    $thisurl = $_GET['url'];
+}
 $url_logout = "/logout?redirect=".$filter->filter($thisurl);
 $url_login = "/logint?redirect=".$filter->filter($thisurl);
 
