@@ -804,7 +804,20 @@ class UserContextMenuContainer extends React.Component {
    if (this.props.isAdmin){
       contextMenuDisplay = (
         <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
-          <li id="chat-link-item">
+          <li id="opencode-link-item">
+              <a href={this.props.gitlabUrl+"/dashboard/projects"}>
+                <div className="icon"></div>
+                <span>Projects</span>
+              </a>
+            </li>
+          <li id="issues-link-item">
+            <a href={this.state.gitlabLink}>
+              <div className="icon"></div>
+              <span>Issues</span>
+            </a>
+          </li>
+
+          <li id="chat-link-item" className="clear-left">
             <a href={"https://chat.opendesktop." + urlEnding}>
               <div className="icon"></div>
               <span>Chat</span>
@@ -816,18 +829,12 @@ class UserContextMenuContainer extends React.Component {
               <span>Messages</span>
             </a>
           </li>
-          <li id="opencode-link-item">
-              <a href={this.props.gitlabUrl+"/dashboard/projects"}>
-                <div className="icon"></div>
-                <span>Projects</span>
-              </a>
-            </li>
-            <li id="issues-link-item">
-              <a href={this.state.gitlabLink}>
-                <div className="icon"></div>
-                <span>Issues</span>
-              </a>
-            </li>
+          <li id="contacts-link-item">
+            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
+              <div className="icon"></div>
+              <span>Contacts</span>
+            </a>
+          </li>
 
           <li id="storage-link-item">
             <a href={"https://cloud.opendesktop." + urlEnding}>
@@ -841,12 +848,7 @@ class UserContextMenuContainer extends React.Component {
               <span>Docs</span>
             </a>
           </li>
-          <li id="contacts-link-item">
-            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
-              <div className="icon"></div>
-              <span>Contacts</span>
-            </a>
-          </li>
+
           <li id="calendar-link-item">
             <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
               <div className="icon"></div>
@@ -858,35 +860,35 @@ class UserContextMenuContainer extends React.Component {
               <div className="icon"></div>
               <span>Music</span>
             </a>
-          </li>                
+          </li>
 
         </ul>
       );
     } else {
       contextMenuDisplay = (
         <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
-          <li id="messages-link-item">
+          <li id="opencode-link-item">
+             <a href={this.props.gitlabUrl+"/dashboard/projects"}>
+               <div className="icon"></div>
+               <span>Projects</span>
+             </a>
+           </li>
+           <li id="issues-link-item">
+             <a href={this.state.gitlabLink}>
+               <div className="icon"></div>
+               <span>Issues</span>
+             </a>
+           </li>
+          <li id="messages-link-item" className="clear-left">
             <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
               <div className="icon"></div>
               <span>Messages</span>
             </a>
           </li>
-          <li id="opencode-link-item">
-              <a href={this.props.gitlabUrl+"/dashboard/projects"}>
-                <div className="icon"></div>
-                <span>Projects</span>
-              </a>
-            </li>
-            <li id="issues-link-item">
-              <a href={this.state.gitlabLink}>
-                <div className="icon"></div>
-                <span>Issues</span>
-              </a>
-            </li>
+
         </ul>
       );
     }
-
     return (
       <li ref={node => this.node = node} id="user-context-menu-container">
         <div className={"user-dropdown " + this.state.dropdownClass}>
