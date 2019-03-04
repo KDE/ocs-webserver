@@ -569,41 +569,41 @@
             },
             recordsLoaded: function () {
                 $(".jtable").attr('style', 'position:inherit;'); // corrects the position for dragged element.
-                $(".jtable tbody").sortable({
-                    cursor: 'move',
-                    opacity: 0.9,
-                    axis: 'y',
-                    containment: 'parent',
-                    start: function (event, ui) {
-                        ui.item.startPos = ui.item.index() + 1;
-                        ui.item.lft = $('.jtable tbody tr:nth-child(' + (ui.item.startPos) + ') td:nth-child(2)').text();
-                        ui.item.rgt = $('.jtable tbody tr:nth-child(' + (ui.item.startPos) + ') td:nth-child(3)').text();
-                    },
-                    stop: function (event, ui) {
-                        lft = $('.jtable tbody tr:nth-child(' + (ui.item.index() + 2) + ') td:nth-child(2)').text();
-                        rgt = $('.jtable tbody tr:nth-child(' + (ui.item.index() + 2) + ') td:nth-child(3)').text();
-                        newPosition = ui.item.lft;
-                        if (parseInt(lft) > 0) {
-                            newPosition = parseInt(lft);
-                        }
-
-                        jQuery.ajax({
-                            data: {'data': {'lft': ui.item.lft, 'rgt': ui.item.rgt}, 'newPosition': newPosition},
-                            url: '/backend/categories/dragdrop/',
-                            type: 'post',
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                $(".alert").alert().fadeIn('slow');
-                                return false;
-                            },
-                            success: function (data, textStatus, jqXHR) {
-                                $('#TableContainer').jtable('reload');
-                                return false;
-                            }
-                        });
-
-                    }
-
-                }).disableSelection();
+                // $(".jtable tbody").sortable({
+                //     cursor: 'move',
+                //     opacity: 0.9,
+                //     axis: 'y',
+                //     containment: 'parent',
+                //     start: function (event, ui) {
+                //         ui.item.startPos = ui.item.index() + 1;
+                //         ui.item.lft = $('.jtable tbody tr:nth-child(' + (ui.item.startPos) + ') td:nth-child(2)').text();
+                //         ui.item.rgt = $('.jtable tbody tr:nth-child(' + (ui.item.startPos) + ') td:nth-child(3)').text();
+                //     },
+                //     stop: function (event, ui) {
+                //         lft = $('.jtable tbody tr:nth-child(' + (ui.item.index() + 2) + ') td:nth-child(2)').text();
+                //         rgt = $('.jtable tbody tr:nth-child(' + (ui.item.index() + 2) + ') td:nth-child(3)').text();
+                //         newPosition = ui.item.lft;
+                //         if (parseInt(lft) > 0) {
+                //             newPosition = parseInt(lft);
+                //         }
+                //
+                //         jQuery.ajax({
+                //             data: {'data': {'lft': ui.item.lft, 'rgt': ui.item.rgt}, 'newPosition': newPosition},
+                //             url: '/backend/categories/dragdrop/',
+                //             type: 'post',
+                //             error: function (jqXHR, textStatus, errorThrown) {
+                //                 $(".alert").alert().fadeIn('slow');
+                //                 return false;
+                //             },
+                //             success: function (data, textStatus, jqXHR) {
+                //                 $('#TableContainer').jtable('reload');
+                //                 return false;
+                //             }
+                //         });
+                //
+                //     }
+                //
+                // }).disableSelection();
                 $('tr.jtable-data-row').hover(function () {
                     $(this).addClass('highlight');
                 }, function () {
