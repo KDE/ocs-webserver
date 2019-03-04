@@ -524,6 +524,19 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                      if (this.description) {
                                          fileDescription = this.description;
                                      }
+                                     
+                                     var link = '';
+                                    
+                                     if (this.tags) {
+                                        fileTags = this.tags;
+
+                                        $.each(fileTags.split(','), function () {
+                                            var tagStr = this.split('##');
+                                            if (tagStr.length == 2 && tagStr[0] == 'link') {
+                                                link = tagStr[1];
+                                            }
+                                        });
+                                     }
 
 
                                      //if(this.active == '1') {
