@@ -747,7 +747,7 @@ class UserContextMenuContainer extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      gitlabLink:config.gitlabUrl+"/dashboard/issues?assignee_id="
+      gitlabLink:props.gitlabUrl+"/dashboard/issues?assignee_id="
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -766,8 +766,8 @@ class UserContextMenuContainer extends React.Component {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         const res = JSON.parse(this.response);
-        //const gitlabLink = self.state.gitlabLink + res[0].id;
-        const gitlabLink = self.state.gitlabLink;
+        const gitlabLink = self.state.gitlabLink + res[0].id;
+        //const gitlabLink = self.state.gitlabLink;
         self.setState({gitlabLink:gitlabLink,loading:false});
       }
     };
