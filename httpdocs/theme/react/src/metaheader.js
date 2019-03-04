@@ -197,7 +197,7 @@ class MetaHeader extends React.Component {
                 })
       .then(response => response.json())
       .then(data => {
-          this.setState({metamenuTheme:`${isChecked?'metamenu-theme-dark':''}`});         
+          this.setState({metamenuTheme:`${isChecked?'metamenu-theme-dark':''}`});
       });
   }
 
@@ -765,7 +765,8 @@ class UserContextMenuContainer extends React.Component {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         const res = JSON.parse(this.response);
-        const gitlabLink = self.state.gitlabLink + res[0].id;
+        //const gitlabLink = self.state.gitlabLink + res[0].id;
+        const gitlabLink = self.state.gitlabLink;
         self.setState({gitlabLink:gitlabLink,loading:false});
       }
     };
@@ -799,25 +800,38 @@ class UserContextMenuContainer extends React.Component {
     const urlEnding = config.baseUrl.split('opendesktop.')[1];
 
     let contextMenuDisplay;
-    if (this.props.isAdmin){
+   if (this.props.isAdmin){
       contextMenuDisplay = (
         <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
+          <li id="chat-link-item">
+            <a href={"https://chat.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Chat</span>
+            </a>
+          </li>
           <li id="messages-link-item">
             <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
               <div className="icon"></div>
               <span>Messages</span>
             </a>
           </li>
+          <li id="opencode-link-item">
+              <a href={this.props.gitlabUrl+"/dashboard/projects"}>
+                <div className="icon"></div>
+                <span>Projects</span>
+              </a>
+            </li>
+            <li id="issues-link-item">
+              <a href={this.state.gitlabLink}>
+                <div className="icon"></div>
+                <span>Issues</span>
+              </a>
+            </li>
+
           <li id="storage-link-item">
             <a href={"https://cloud.opendesktop." + urlEnding}>
               <div className="icon"></div>
               <span>Storage</span>
-            </a>
-          </li>
-          <li id="music-link-item">
-            <a href={"https://music.opendesktop." + urlEnding}>
-              <div className="icon"></div>
-              <span>Music</span>
             </a>
           </li>
           <li id="docs-link-item">
@@ -838,18 +852,13 @@ class UserContextMenuContainer extends React.Component {
               <span>Calendar</span>
             </a>
           </li>
-          <li id="talk-link-item">
-            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/spreed/"}>
+          <li id="music-link-item">
+            <a href={"https://music.opendesktop." + urlEnding}>
               <div className="icon"></div>
-              <span>Talk</span>
+              <span>Music</span>
             </a>
-          </li>
-          <li id="chat-link-item">
-            <a href={"https://chat.opendesktop." + urlEnding}>
-              <div className="icon"></div>
-              <span>Chat</span>
-            </a>
-          </li>
+          </li>                
+
         </ul>
       );
     } else {
@@ -861,6 +870,18 @@ class UserContextMenuContainer extends React.Component {
               <span>Messages</span>
             </a>
           </li>
+          <li id="opencode-link-item">
+              <a href={this.props.gitlabUrl+"/dashboard/projects"}>
+                <div className="icon"></div>
+                <span>Projects</span>
+              </a>
+            </li>
+            <li id="issues-link-item">
+              <a href={this.state.gitlabLink}>
+                <div className="icon"></div>
+                <span>Issues</span>
+              </a>
+            </li>
         </ul>
       );
     }
