@@ -231,19 +231,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
 
                                     count_downloads = this.downloaded_count || 0;
                                     downloaded_count_total = downloaded_count_total+parseInt(count_downloads);
-
-                                    //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
-                                    var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size;
-                                    var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '" class="opendownloadfile" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>"  data-link_type="download">' + this.name + '</a>';
-
-                                    /*
-                                    var fileNameBtnLink = this.name;
-                                    if(fileNameBtnLink.length > 25) {
-                                        fileNameBtnLink = fileNameBtnLink.substring(0,22) + '...';
-                                    }*/
-                                    var downloadBtnLink = downloadUrl;
-                                    var downloadLinkFilename = shortFilename(this.name);
-
+                                    
                                     var link = '';
                                     
                                     if (this.tags) {
@@ -256,6 +244,24 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                             }
                                         });
                                     }
+                                    var isExternLink = false;
+                                    if ((typeof link != 'undefined') && (link != "")) {
+                                       isExternLink = true;
+                                    }
+
+                                    //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
+                                    var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size;
+                                    var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '" class="opendownloadfile" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>" data-link_type="download" data-is-external-link="'+isExternLink+'">' + this.name + '</a>';
+
+                                    /*
+                                    var fileNameBtnLink = this.name;
+                                    if(fileNameBtnLink.length > 25) {
+                                        fileNameBtnLink = fileNameBtnLink.substring(0,22) + '...';
+                                    }*/
+                                    var downloadBtnLink = downloadUrl;
+                                    var downloadLinkFilename = shortFilename(this.name);
+
+                                    
 
                                     var fileDescription = '';
                                     if (this.description) {
@@ -303,10 +309,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                     
 
                                     if(this.version==null) {version = '';} else{version = this.version;}
-                                    var isExternLink = false;
-                                    if ((typeof link != 'undefined') && (link != "")) {
-                                       isExternLink = true;
-                                    }
+                                    
 
 
 
@@ -511,38 +514,52 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                     var count_downloads = this.downloaded_count || 0;
 
                                     downloaded_count_total = downloaded_count_total+parseInt(count_downloads);
+                                    
+                                    var link = '';
+                                    
+                                    if (this.tags) {
+                                        fileTags = this.tags;
+
+                                        $.each(fileTags.split(','), function () {
+                                            var tagStr = this.split('##');
+                                            if (tagStr.length == 2 && tagStr[0] == 'link') {
+                                                link = tagStr[1];
+                                            }
+                                        });
+                                    }
+                                    var isExternLink = false;
+                                    if ((typeof link != 'undefined') && (link != "")) {
+                                       isExternLink = true;
+                                       downloadLink = '<a href="' + decodeURIComponent(link) + '" id="data-link' + this.id + '" style="color: #ccc;">' + this.name + '</a>';
+                                    }
 
                                     var hash = '<?= $this->download_hash ?>';
                                     var timetamp = '<?= $this->download_timestamp ?>';
                                     var userid = '<?= $this->product->member_id?>';
                                     var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/download/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
                                     //var downloadLink = '<a class="inactiverows" style="color: #ccc; display:none;" href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
-                                    var downloadLink = '<a class="inactiverows opendownloadfile" style="color: #ccc; display:none;" href="' + downloadUrl + '" id="data-link' + this.id + '" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>"  data-link_type="download">' + this.name + '</a>';
+                                    var downloadLink = '<a class="inactiverows opendownloadfile" style="color: #ccc; display:none;" href="' + downloadUrl + '" id="data-link' + this.id + '" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>"  data-link_type="download" data-is-external-link="'+isExternLink+'">' + this.name + '</a>';
 
 
-                                     var fileDescription = '';
-                                     if (this.description) {
-                                         fileDescription = this.description;
-                                     }
+                                    var fileDescription = '';
+                                    if (this.description) {
+                                        fileDescription = this.description;
+                                    }
+                                     
+                                    
 
 
-                                     //if(this.active == '1') {
-                                       var greyText = ' class="inactiverows" style="color: #ccc; display:none;"';
+                                    //if(this.active == '1') {
+                                    var greyText = ' class="inactiverows" style="color: #ccc; display:none;"';
 
-                                       if(this.version==null) {version = '';} else{version = this.version;}
+                                    if(this.version==null) {version = '';} else{version = this.version;}
+                                    var mnt = moment(this.created_timestamp);
 
-                                         var isExternLink = false;
-                                         if ((typeof link != 'undefined') && (link != "")) {
-                                            isExternLink = true;
-                                            downloadLink = '<a href="' + decodeURIComponent(link) + '" id="data-link' + this.id + '" style="color: #ccc;">' + this.name + '</a>';
-                                         }
-                                         var mnt = moment(this.created_timestamp);
-                                         
-                                        var tableString = "";
-                                        tableString += '<tr data-ppload-file-id="' + this.id + '"' + greyText + '>';
-                                        tableString += '<td>' + downloadLink + '</td>';
-                                        tableString += '<td>' + version + '</td>';
-                                        tableString += '<td>' + fileDescription + '</td>';
+                                    var tableString = "";
+                                    tableString += '<tr data-ppload-file-id="' + this.id + '"' + greyText + '>';
+                                    tableString += '<td>' + downloadLink + '</td>';
+                                    tableString += '<td>' + version + '</td>';
+                                    tableString += '<td>' + fileDescription + '</td>';
 
                                         <?php
                                             //Show all Tag-Groups for this Category and show them as Dropdowns

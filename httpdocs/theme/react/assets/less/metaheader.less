@@ -112,12 +112,12 @@ body.drawer-open {
       > li {
         float: left;
         padding: 5px;
-
+        height: 24px;
         .switch {
           position: relative;
           display: inline-block;
-          width: 60px;
-          height: 24px;
+          width: 45px;
+          height: 22px;
           input {
             opacity: 0;
             width: 0;
@@ -138,10 +138,10 @@ body.drawer-open {
           .slider:before {
             position: absolute;
             content: "";
-            height: 16px;
-            width: 24px;
-            left: 4px;
-            bottom: 4px;
+            height: 18px;
+            width: 18px;
+            left: 0px;
+            bottom: 2px;
             background-color: white;
             -webkit-transition: .4s;
             transition: .4s;
@@ -308,7 +308,7 @@ body.drawer-open {
                     a {
                       padding: 3px 20px;
                       font-size: 12px;
-                      color: black;
+                      color:#6a7686;
                       cursor: pointer;
                     }
                     ul {
@@ -322,6 +322,7 @@ body.drawer-open {
                           width: 100%;
                           height: 24px;
                           line-height: 24px;
+                          color:#6a7686;
                         }
                         &:hover {
                           background-color: #eee;
@@ -440,7 +441,7 @@ body.drawer-open {
 
     .user-dropdown {
       position: relative;
-      height: 40px;
+      height: auto;
       z-index: 1000;
 
       &.open,
@@ -848,7 +849,7 @@ body.drawer-open {
             height: auto;
             width: 86px;
             border: 1px solid white;
-            margin: 5px 0;
+            margin: 5px 0 10px 0;
 
             a {
               display: block;
@@ -864,7 +865,7 @@ body.drawer-open {
               .icon {
                 width: 55px;
                 height: 55px;
-                margin: 10px auto;
+                margin: 5px auto;
                 background-size: 50px;
                 background-position: center center;
                 background-repeat: no-repeat;
@@ -925,7 +926,7 @@ body.drawer-open {
 
             &#addproduct-link-item {
               a {
-                .icon { 
+                .icon {
                   background-image: url(../img/add.svg);
                   background-size: 40px;
                 }
@@ -1424,5 +1425,8 @@ body.drawer-open {
   #user-context-menu-container .user-dropdown .th-icon {
           background-image: url(../img/glyphicons-th-light.svg);
         }
+  #development-app-menu-container .user-dropdown .th-icon {
+        background-image: url(../img/development-app-menu-item-white.png);
+      }
 
 }
