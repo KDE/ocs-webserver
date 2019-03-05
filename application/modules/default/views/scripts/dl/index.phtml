@@ -124,13 +124,15 @@
                         </form>
                         -->
                         <br>
-                        <p style="font-size: 18px; position: absolute; bottom: 0px; right: 10%;">
+                        
                             <?php 
                                     $identity = Zend_Auth::getInstance()->getIdentity();
                                     if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
                             ?>
+                        <p style="font-size: 18px; position: absolute; bottom: 0px; right: 10%;">
                             Please consider to become a <a href="/support" target="_TOP" style="color: #0088d7;text-decoration: underline;">supporter</a> to help the site grow.
                             <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
+                        <p style="font-size: 18px; position: absolute; bottom: 0px; right: 32%;">
                             Thank you for your support!
                             <?php   }?>                            
                             
