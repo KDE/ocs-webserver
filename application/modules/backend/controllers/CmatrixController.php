@@ -25,8 +25,8 @@
 class Backend_CmatrixController extends Local_Controller_Action_CliAbstract
 {
 
-    const filename = "members";
-    const filename_errors = "members";
+    const filename = "matrix";
+    const filename_errors = "matrix_error";
 
     protected $logfile;
     protected $errorlogfile;
@@ -44,7 +44,7 @@ class Backend_CmatrixController extends Local_Controller_Action_CliAbstract
     ) {
         parent::__construct($request, $response, $invokeArgs);
         $this->config = Zend_Registry::get('config')->settings->server->chat;
-        $this->log = new Local_Log_File('oauth', self::filename);
+        $this->log = new Local_Log_File('matrix', self::filename);
         $this->_helper->viewRenderer->setNoRender(false);
     }
 

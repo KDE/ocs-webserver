@@ -141,7 +141,8 @@ class Default_Model_Ocs_Matrix
                 'ods'  => 'application/vnd.oasis.opendocument.spreadsheet',
             );
 
-            $ext = strtolower(array_pop(explode('.', $filename)));
+            $filename_parts = explode('.', $filename);
+            $ext = strtolower(array_pop($filename_parts));
             if (array_key_exists($ext, $mime_types)) {
                 return $mime_types[$ext];
             } else if (function_exists('finfo_open')) {
