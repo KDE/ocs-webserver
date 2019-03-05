@@ -66,7 +66,10 @@ class Default_Model_Ocs_Matrix
         $this->messages = array();
 
         try {
-            list($fileAvatar,$content_type) = $this->fetchAvatarFile($member_data['profile_image_url']);
+            $helperImage = new Default_View_Helper_Image();
+            $memberAvatarUrl = $helperImage->Image($member_data['profile_image_url']);
+
+            list($fileAvatar,$content_type) = $this->fetchAvatarFile($memberAvatarUrl);
             $mime_type = $this->checkValidMimeType($content_type) ? $content_type : $this->get_mime_content_type($member_data['profile_image_url']);
             $contentUri = $this->uploadAvatar($fileAvatar, $mime_type);
             $matrixUserId = $this->generateUserId($member_data['username']);
