@@ -60,7 +60,7 @@ class Backend_CmatrixController extends Local_Controller_Action_CliAbstract
         $force = (boolean)$this->getParam('force', false);
         $method = $this->getParam('method', 'create');
 
-        $this->log->info("METHOD: {$method}\n--------------\n");
+        $this->log->info("--------------" . PHP_EOL . "METHOD: {$method}" . PHP_EOL);
 
         if ('create' == $method) {
             if ($this->hasParam('member_id')) {
