@@ -22,7 +22,7 @@
  *
  * Created: 06.08.2018
  */
-class Backend_CoauthController extends Local_Controller_Action_CliAbstract
+class Backend_CmatrixController extends Local_Controller_Action_CliAbstract
 {
 
     const filename = "members";
@@ -43,7 +43,7 @@ class Backend_CoauthController extends Local_Controller_Action_CliAbstract
         array $invokeArgs = array()
     ) {
         parent::__construct($request, $response, $invokeArgs);
-        $this->config = Zend_Registry::get('config')->settings->server->oauth;
+        $this->config = Zend_Registry::get('config')->settings->server->chat;
         $this->log = new Local_Log_File('oauth', self::filename);
         $this->_helper->viewRenderer->setNoRender(false);
     }
@@ -62,27 +62,32 @@ class Backend_CoauthController extends Local_Controller_Action_CliAbstract
 
         $this->log->info("METHOD: {$method}\n--------------\n");
 
-        if ($this->hasParam('member_id')) {
-            $memberId = $this->getParam('member_id');
-            $operator = $this->getParam('op', null);
-            $members = $this->getMemberList($memberId, $operator);
-        } else {
-            $members = $this->getMemberList();
-        }
-
         if ('create' == $method) {
+            if ($this->hasParam('member_id')) {
+                $memberId = $this->getParam('member_id');
+                $operator = $this->getParam('op', null);
+                $members = $this->getMemberList($memberId, $operator);
+            } else {
+                $members = $this->getMemberList();
+            }
             $this->exportMembers($members, $force);
 
             return;
         }
+        if ('avatar' == $method) {
+            $members = $this->getNewChatUser();
+            $this->updateAvatar($members);
+
+            return;
+        }
         if ('update' == $method) {
-            $this->updateMembers($members);
+            //$this->updateMembers($members);
             echo "not implemented";
 
             return;
         }
         if ('validate' == $method) {
-            $this->validateMembers($members);
+            //$this->validateMembers($members);
             echo "not implemented";
 
             return;
@@ -113,7 +118,7 @@ class Backend_CoauthController extends Local_Controller_Action_CliAbstract
         }
 
         $sql = "
-            SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`, `m`.`biography`, `me`.`email_address` as `mail`, IF(ISNULL(`me`.`email_checked`),0,1) AS `mail_checked`, `m`.`password_type`, `m`.`is_active`, `m`.`is_deleted`
+            SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`, `m`.`biography`, `me`.`email_address` AS `mail`, IF(ISNULL(`me`.`email_checked`),0,1) AS `mail_checked`, `m`.`password_type`, `m`.`is_active`, `m`.`is_deleted`
             FROM `member` AS `m`
             LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
             LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
@@ -148,7 +153,7 @@ class Backend_CoauthController extends Local_Controller_Action_CliAbstract
         // only usernames which are valid in github/gitlab
         $usernameValidChars = new Local_Validate_UsernameValid();
         $emailValidate = new Zend_Validate_EmailAddress();
-        $modelOAuth = new Default_Model_Ocs_Matrix($this->config);
+        $modelOcs = new Default_Model_Ocs_Matrix($this->config);
 
         while ($member = $members->fetch()) {
             $this->log->info("process " . Zend_Json::encode($member));
@@ -163,15 +168,33 @@ class Backend_CoauthController extends Local_Controller_Action_CliAbstract
             }
             try {
                 //Export User, if he not exists
-                $modelOAuth->createUserFromArray($member, $force);
+                $modelOcs->createUserFromArray($member, $force);
             } catch (Exception $e) {
                 $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
-            $messages = $modelOAuth->getMessages();
+            $messages = $modelOcs->getMessages();
             $this->log->info("messages " . Zend_Json::encode($messages));
         }
 
         return true;
+    }
+
+    private function getNewChatUser()
+    {
+        $home_server = $this->config->home_server;
+
+        $sql = "
+            SELECT `user_id`, `username`, `profile_image_url`, `member_id`
+            FROM `member_matrix_data`
+            JOIN `member` ON `member_matrix_data`.`user_id` = concat('@',`member`.`username`,':','{$home_server}')
+            WHERE `member_matrix_data`.`is_imported` = 0
+        ";
+
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql);
+
+        $this->log->info("Load : " . $result->rowCount() . " members...");
+
+        return $result;
     }
 
     /**
@@ -181,48 +204,38 @@ class Backend_CoauthController extends Local_Controller_Action_CliAbstract
      * @throws Zend_Db_Statement_Exception
      * @throws Zend_Exception
      */
-    private function updateMembers($members)
+    private function updateAvatar($members)
     {
-        $modelOAuth = new Default_Model_Ocs_OAuth($this->config);
+        $model = new Default_Model_Ocs_Matrix($this->config);
 
         while ($member = $members->fetch()) {
             $this->log->info("process " . Zend_Json::encode($member));
             try {
-                $modelOAuth->updateUser($member);
+                $successful = $model->setAvatarFromArray($member);
+                if ($successful) {
+                    $this->setAvatarUpdated($member['user_id']);
+                }
             } catch (Exception $e) {
                 $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
-            $messages = $modelOAuth->getMessages();
+            $messages = $model->getMessages();
             $this->log->info("messages " . Zend_Json::encode($messages));
         }
 
         return true;
     }
 
-    /**
-     * @param Zend_Db_Statement_Interface $members
-     *
-     * @return bool
-     * @throws Zend_Db_Statement_Exception
-     * @throws Zend_Exception
-     */
-    private function validateMembers($members)
+    private function setAvatarUpdated($user_id)
     {
-        $modelOAuth = new Default_Model_Ocs_OAuth($this->config);
+        $sql = "
+            UPDATE `member_matrix_data` 
+            SET `is_imported` = 1, `imported_at` = NOW()
+            WHERE `user_id` = '{$user_id}'
+        ";
 
-        while ($member = $members->fetch()) {
-            $this->log->info("process " . Zend_Json::encode($member));
-            try {
-                $result = $modelOAuth->validateUser($member);
-            } catch (Exception $e) {
-                $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
-            }
-            $messages = $modelOAuth->getMessages();
-            $this->log->info("messages " . Zend_Json::encode($messages));
-        }
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql);
 
-        return true;
+        return $result;
     }
-
 
 }
