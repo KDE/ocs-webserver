@@ -25,8 +25,8 @@
 class Backend_CmatrixController extends Local_Controller_Action_CliAbstract
 {
 
-    const filename = "matrix";
-    const filename_errors = "matrix_error";
+    const filename = "member";
+    const filename_errors = "member_error";
 
     protected $logfile;
     protected $errorlogfile;
