@@ -72,7 +72,7 @@ class Default_Model_Ocs_Matrix
             list($fileAvatar,$content_type) = $this->fetchAvatarFile($memberAvatarUrl);
             $mime_type = $this->checkValidMimeType($content_type) ? $content_type : $this->get_mime_content_type($member_data['profile_image_url']);
             $contentUri = $this->uploadAvatar($fileAvatar, $mime_type);
-            $matrixUserId = $this->generateUserId($member_data['username']);
+            $matrixUserId = $this->generateUserId(strtolower($member_data['username']));
             $result = $this->setAvatarUrl($matrixUserId, $contentUri);
             if (false === $result) {
                 $this->messages[] = "Fail ";
