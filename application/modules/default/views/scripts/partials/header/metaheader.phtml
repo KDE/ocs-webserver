@@ -28,8 +28,104 @@
 <script src="/home/metamenujs?target=opendesktop&url=<?= $this->serverUrl(). $this->url() ?>&v=1.8" ></script>
 <script type="text/javascript" src="/theme/react/metaheader.js?v=1.8"></script>
 <link href="/theme/react/assets/css/metaheader.css" rel="stylesheet">
+
+// version 2
+<opendesktop-metaheader config-target="opendesktop"> </opendesktop-metaheader>
+<script src="/theme/react-app/bundle/metaheader-bundle.js?<?= APPLICATION_VERSION ?>"></script>
+
+// version 3 local no ajax
 */
 ?>
 
-<opendesktop-metaheader config-target="opendesktop"> </opendesktop-metaheader>
-<script src="/theme/react/bundle/metaheader-bundle.js?<?= APPLICATION_VERSION ?>"></script>
+
+
+<?php 
+$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
+$url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
+$url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
+$url_riot = Zend_Registry::get('config')->settings->client->default->url_riot;
+$url_myopendesktop = Zend_Registry::get('config')->settings->client->default->url_myopendesktop;
+$url_cloudopendesktop = Zend_Registry::get('config')->settings->client->default->url_cloudopendesktop;
+$url_musicopendesktop = Zend_Registry::get('config')->settings->client->default->url_musicopendesktop;
+$url_mastodon = Zend_Registry::get('config')->settings->client->default->url_mastodon;
+
+$filter = new Local_Filter_Url_Encrypt();
+$url_login;
+$url_logout;
+
+$target = 'opendesktop';
+if(isset($_GET['target'])) {
+    $target = $_GET['target'];
+}
+
+$thisurl = "/";
+if(isset($_GET['url'])) {
+    $thisurl = $_GET['url'];
+}
+$url_login = "/login/redirect/".$filter->filter($thisurl);
+$url_logout = "/logout?redirect=".$filter->filter($thisurl);
+$isExternal = 'var isExternal = false;';
+$is_external = false;
+
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+$isAdmin = false;
+if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+    $isAdmin = true;
+}
+
+$user = null;
+$metamenuTheme = '';
+if (Zend_Auth::getInstance()->hasIdentity()){
+    $identity = Zend_Auth::getInstance()->getStorage()->read();
+    $helperImage = new Default_View_Helper_Image();
+    $avatar = $helperImage->image($identity->profile_image_url,array('width' => 100, 'height' => 100, 'crop' => 2));
+    
+    $user = array(
+        "username" => $identity->username,
+        "member_id" => $identity->member_id,
+        "mail" => $identity->mail,
+        "avatar" => $avatar, 
+        "roleName" =>$identity->roleName
+    );
+  
+    $settingmodel = new Default_Model_MemberSettingValue();
+    $result = $settingmodel->fetchMemberSettingItem($identity->member_id,1);
+    if($result && $result['value']==1)
+    {
+        $metamenuTheme = 'metamenu-theme-dark';
+    } 
+
+
+}
+
+$sname = Zend_Registry::get('store_host');
+$json_menu = $this->fetchMetaheaderMenuJson();
+
+$response = array(
+    "isAdmin" => $isAdmin,
+    "isExternal" => $is_external,
+    "domains" => Zend_Json::decode($json_menu),
+    "user" => $user,
+    "baseUrl" => $baseurl,
+    "blogUrl" => $url_blog,
+    "forumUrl" => $url_forum,
+    "mastodonUrl" => $url_mastodon,
+    "gitlabUrl" => $url_gitlab,
+    "riotUrl" => $url_riot,
+    "loginUrl" => $url_login,
+    "logoutUrl" => $url_logout,
+    "sName" => $sname,
+    "metamenuTheme" => $metamenuTheme
+);
+
+
+?>
+
+<div id="metaheader"></div>
+<script type="text/javascript">
+	var config=<?=json_encode($response)?>;
+</script>
+
+<script src="/theme/react/bundle/metaheader-local-bundle.js?<?= APPLICATION_VERSION ?>"></script>

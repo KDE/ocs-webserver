@@ -1,8 +1,10 @@
 module.exports = {
-  entry: './src/metaheader.js',
+  entry: {'metaheader':'./src/entry-metaheader.js',
+          'metaheader-local':'./src/entry-metaheader-local.js',
+         },
   output: {
-    path: `${__dirname}/bundle`,
-    filename: 'metaheader-bundle.js'
+     path: `${__dirname}/bundle`,
+    filename: '[name]-bundle.js'
   },
   module: {
     rules: [
