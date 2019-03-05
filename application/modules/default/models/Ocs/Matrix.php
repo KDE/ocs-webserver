@@ -27,6 +27,21 @@ class Default_Model_Ocs_Matrix
     protected $messages;
     protected $auth;
     private $httpServer;
+    private $image_mime_types = array(
+        // images
+        'png'  => 'image/png',
+        'jpe'  => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'jpg'  => 'image/jpeg',
+        'gif'  => 'image/gif',
+        'bmp'  => 'image/bmp',
+        'ico'  => 'image/vnd.microsoft.icon',
+        'tiff' => 'image/tiff',
+        'tif'  => 'image/tiff',
+        'svg'  => 'image/svg+xml',
+        'svgz' => 'image/svg+xml'
+    );
+
 
     /**
      * @inheritDoc
@@ -51,8 +66,8 @@ class Default_Model_Ocs_Matrix
         $this->messages = array();
 
         try {
-            $fileAvatar = $this->fetchAvatarFile($member_data['profile_image_url']);
-            $mime_type = $this->get_mime_content_type($member_data['profile_image_url']);
+            list($fileAvatar,$content_type) = $this->fetchAvatarFile($member_data['profile_image_url']);
+            $mime_type = $this->checkValidMimeType($content_type) ? $content_type : $this->get_mime_content_type($member_data['profile_image_url']);
             $contentUri = $this->uploadAvatar($fileAvatar, $mime_type);
             $matrixUserId = $this->generateUserId($member_data['username']);
             $result = $this->setAvatarUrl($matrixUserId, $contentUri);
@@ -82,8 +97,9 @@ class Default_Model_Ocs_Matrix
         }
         $filename = IMAGES_UPLOAD_PATH . 'tmp/' . md5($profile_image_url);
         file_put_contents($filename, $response->getBody());
+        $content_type = $response->getHeader('content-type');
 
-        return $filename;
+        return array($filename,$content_type);
     }
 
     private function get_mime_content_type($filename)
@@ -152,6 +168,15 @@ class Default_Model_Ocs_Matrix
         } else {
             return 'image/png';
         }
+    }
+
+    private function checkValidMimeType($mime_type)
+    {
+        if (in_array(strtolower($mime_type), $this->image_mime_types)) {
+            return true;
+        }
+
+        return false;
     }
 
     private function uploadAvatar($fileAvatar, $mime_type = 'image/png')
