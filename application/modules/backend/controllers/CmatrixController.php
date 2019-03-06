@@ -187,7 +187,7 @@ class Backend_CmatrixController extends Local_Controller_Action_CliAbstract
             SELECT `user_id`, `username`, `profile_image_url`, `member_id`
             FROM `member_matrix_data`
             JOIN `member` ON `member_matrix_data`.`user_id` = concat('@',lower(`member`.`username`),':','{$home_server}')
-            WHERE `member_matrix_data`.`is_imported` = 0
+            WHERE `member_matrix_data`.`is_imported` = 0 AND `member`.`is_active` = 1
         ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql);
