@@ -1,10 +1,9 @@
 import React from 'react';
 class DevelopmentDropDownMenu extends React.Component {
   constructor(props){
-    super(props);
-    this.state = {};
+    super(props);    
     this.state = {
-      gitlabLink:this.props.gitlabUrl+"/dashboard/issues?assignee_id="
+      /*gitlabLink:this.props.gitlabUrl+"/dashboard/issues?assignee_id="*/
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -49,6 +48,8 @@ class DevelopmentDropDownMenu extends React.Component {
 
   render(){
     let issuesMenuItem;
+
+   
     if (this.props.isAdmin){
       issuesMenuItem = (
         <li><a href={this.props.gitlabUrl + "/dashboard/issues?milestone_title=No+Milestone&state=all"}>Issues</a></li>

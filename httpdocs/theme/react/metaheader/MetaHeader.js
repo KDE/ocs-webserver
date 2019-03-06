@@ -8,7 +8,7 @@ import UserMenu from './UserMenu';
 class MetaHeader extends React.Component {
   constructor(props){
     super(props);
-    this.state = {};
+    this.state = {...this.props.config};
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.onSwitchStyle = this.onSwitchStyle.bind(this);
@@ -19,7 +19,7 @@ class MetaHeader extends React.Component {
 
   componentWillMount() {
     this.updateDimensions();
-    this.setState({...this.props.config});
+    //this.setState({...this.props.config});
   }
 
    componentDidMount() {
@@ -99,12 +99,12 @@ class MetaHeader extends React.Component {
   // change metamenu class
   onSwitchStyle(evt){
 
-     let url = 'https://www.opendesktop.org/membersetting/setsettings/itemid/1/itemvalue/';     
-     if(this.props.isExternal)
+     let url = 'https://www.opendesktop.org/membersetting/setsettings/itemid/1/itemvalue/';
+     if(this.state.isExternal)
      {
        if (this.props.hostname.endsWith('cc') || this.props.hostname.endsWith('local')) {
-       url = 'https://www.opendesktop.cc/membersetting/setsettings/itemid/1/itemvalue/';
-     }
+         url = 'https://www.opendesktop.cc/membersetting/setsettings/itemid/1/itemvalue/';
+       }
      }else
      {
        url = '/membersetting/setsettings/itemid/1/itemvalue/';
@@ -145,7 +145,7 @@ class MetaHeader extends React.Component {
   }
 
   render(){
-    
+
     let domainsMenuDisplay;
     if (this.state.device === "tablet"){
       domainsMenuDisplay = (
@@ -158,7 +158,7 @@ class MetaHeader extends React.Component {
           forumUrl={this.state.forumUrl}
           sName={this.state.sName}
           isAdmin={this.state.isAdmin}
-
+          isExternal={this.state.isExternal}
           gitlabUrl={this.state.gitlabUrl}
         />
       )
@@ -174,6 +174,8 @@ class MetaHeader extends React.Component {
           forumUrl={this.state.forumUrl}
           sName={this.state.sName}
           isAdmin={this.state.isAdmin}
+          gitlabUrl={this.state.gitlabUrl}
+          isExternal={this.state.isExternal}
         />
       )
     }
@@ -198,6 +200,7 @@ class MetaHeader extends React.Component {
             isAdmin={this.state.isAdmin}
             onSwitchStyle={this.onSwitchStyle}
             onSwitchStyleChecked={paraChecked}
+            isExternal={this.state.isExternal}
           />
         </div>
       </nav>
@@ -206,5 +209,3 @@ class MetaHeader extends React.Component {
 }
 
 export default MetaHeader;
-
-

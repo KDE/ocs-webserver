@@ -33,15 +33,26 @@ class UserContextMenuContainer extends React.Component {
   handleClick(e){
     let dropdownClass = "";
     if (this.node.contains(e.target)){
-      if (this.state.dropdownClass === "open"){
-        if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle"){
+      if(e.target.className === "btn btn-default dropdown-toggle")
+      {
+        // only btn click open dropdown
+        if (this.state.dropdownClass === "open"){
           dropdownClass = "";
-        } else {
+        }else{
           dropdownClass = "open";
         }
-      } else {
-        dropdownClass = "open";
+      }else{
+        dropdownClass = "";
       }
+      // if (this.state.dropdownClass === "open"){
+      //   if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle"){
+      //     dropdownClass = "";
+      //   } else {
+      //     dropdownClass = "open";
+      //   }
+      // } else {
+      //   dropdownClass = "open";
+      // }
     }
     this.setState({dropdownClass:dropdownClass});
   }
@@ -54,11 +65,11 @@ class UserContextMenuContainer extends React.Component {
     */
 
     const urlEnding = this.props.baseUrl.split('opendesktop.')[1];
-    
+
     let contextMenuDisplay;
     if (this.props.isAdmin){
       contextMenuDisplay = (
-        <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">          
+        <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
 
           <li id="chat-link-item">
             <a href={"https://chat.opendesktop." + urlEnding}>
@@ -109,14 +120,8 @@ class UserContextMenuContainer extends React.Component {
       );
     } else {
       contextMenuDisplay = (
-        <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">          
-          <li id="chat-link-item">
-            <a href={"https://chat.opendesktop." + urlEnding}>
-              <div className="icon"></div>
-              <span>Chat</span>
-            </a>
-          </li>
-          <li id="messages-link-item" className="clear-left">
+        <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
+          <li id="messages-link-item" >
             <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
               <div className="icon"></div>
               <span>Messages</span>
