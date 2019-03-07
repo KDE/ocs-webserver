@@ -7,20 +7,23 @@
   "main": "src/metaheader.js",
   "scripts": {
     "build": "webpack --mode production",
-    "watch": "webpack --mode production --watch"
+    "watch": "webpack --mode production --watch",
+    "babel": "npx babel src/metaheader --out-file metaheadertest.js"
   },
   "devDependencies": {
-    "webpack": "*",
-    "webpack-cli": "*",
-    "@babel/core": "*",
-    "@babel/preset-env": "*",
-    "@babel/preset-react": "*",
-    "babel-loader": "*",
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/preset-react": "^7.0.0",
     "@webcomponents/custom-elements": "*",
+    "axios": "^0.18.0",
+    "babel-loader": "*",
     "react": "*",
-    "react-dom": "*"
+    "react-dom": "*",
+    "react-timeago": "^4.4.0",
+    "webpack": "*",
+    "webpack-cli": "*"
   },
-  "dependencies": {
-    "@babel/polyfill": "^7.2.5"
-  }
+  "dependencies": {}
 }

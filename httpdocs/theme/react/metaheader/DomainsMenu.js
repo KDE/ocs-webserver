@@ -24,6 +24,7 @@ class DomainsMenu extends React.Component {
           isAdmin={this.props.isAdmin}
           user={this.props.user}
           gitlabUrl={this.props.gitlabUrl}
+          isExternal = {this.props.isExternal}
         />
       )
     }
@@ -47,6 +48,7 @@ class DomainsMenu extends React.Component {
           baseUrl={this.props.baseUrl}
           gitlabUrl={this.props.gitlabUrl}
           isAdmin={this.props.isAdmin}
+          isExternal = {this.props.isExternal}
         />
         {moreMenuItemDisplay}
       </ul>

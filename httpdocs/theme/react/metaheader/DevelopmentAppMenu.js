@@ -33,15 +33,27 @@ class DevelopmentAppMenu extends React.Component {
   handleClick(e){
     let dropdownClass = "";
     if (this.node.contains(e.target)){
-      if (this.state.dropdownClass === "open"){
-        if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle"){
+      if(e.target.className === "btn btn-default dropdown-toggle")
+      {
+        // only btn click open dropdown
+        if (this.state.dropdownClass === "open"){
           dropdownClass = "";
-        } else {
+        }else{
           dropdownClass = "open";
         }
-      } else {
-        dropdownClass = "open";
+      }else{
+        dropdownClass = "";
       }
+
+      // if (this.state.dropdownClass === "open"){
+      //   if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle"){
+      //     dropdownClass = "";
+      //   } else {
+      //     dropdownClass = "open";
+      //   }
+      // } else {
+      //   dropdownClass = "open";
+      // }
     }
     this.setState({dropdownClass:dropdownClass});
   }
@@ -57,7 +69,7 @@ class DevelopmentAppMenu extends React.Component {
             className="btn btn-default dropdown-toggle" type="button" onClick={this.toggleDropDown}>
             <span className="th-icon"></span>
           </button>
-          <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">            
+          <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
             <li id="addproduct-link-item">
               <a href={this.props.baseUrl+"/product/add"}>
                 <div className="icon"></div>
