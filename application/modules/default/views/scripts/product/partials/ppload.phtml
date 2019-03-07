@@ -393,7 +393,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                         ?>
                                         var username = '<?= $this->product->username?>';
                                         $('#dropdown_downloads').append(
-                                            '<li><a data-username="' + username + '" href="' + downloadBtnLink + '" style="white-space: normal; color: #23527c;" class="opendownloadfile" id="data-link-dl' + this.id + '" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>" data-link_type="download"><span id="download-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + downloadLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
+                                            '<li><a data-username="' + username + '" href="' + downloadBtnLink + '" style="white-space: normal; color: #23527c;" class="opendownloadfile" id="data-link-dl' + this.id + '" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>" data-link_type="download" data-is-external-link="'+isExternLink+'"><span id="download-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + downloadLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
                                         );
                                         $('#dropdown_downloads').addClass("active");
                                         $('#dropdown_downloads').removeClass('hide');
@@ -412,7 +412,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                             $('#project_btn_grp_install').removeClass("hide");
 
                                             $('#dropdown_installs').append(
-                                                '<li><a href="' + downloadBtnLink + '" style="white-space: normal; color: #23527c;" class="opendownloadfile" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>" data-link_type="install"><span id="install-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + installLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
+                                                '<li><a href="' + downloadBtnLink + '" style="white-space: normal; color: #23527c;" class="opendownloadfile" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>" data-link_type="install" data-is-external-link="'+isExternLink+'"><span id="install-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + installLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
 
                                             );
                                         }
@@ -434,6 +434,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                             $fileserverLink = $("#data-link" + this.id).attr('href');
                                             $("#data-link" + this.id).attr('href', decodeURIComponent(link));
                                             $("#data-link" + this.id).attr('data-link-org', $fileserverLink);
+                                            $("#data-link" + this.id).attr('data-is-external-link', isExternLink);
 
                                             $("#data-link" + this.id).attr('target','_blank');
                                             $("#data-link" + this.id).html($("#data-link" + this.id).html()+ externalIcon );
@@ -449,6 +450,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                             $fileserverLink = $("#data-link-dl" + this.id).attr('href');
                                             $("#data-link-dl" + this.id).attr('href', decodeURIComponent(link));
                                             $("#data-link-dl" + this.id).attr('data-link-org', $fileserverLink);
+                                            $("#data-link" + this.id).attr('data-is-external-link', isExternLink);
 
                                             $("#data-link-dl" + this.id).attr('target','_blank');
 
