@@ -287,7 +287,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
 
                                      if ( ocsUrl) {
                                             if(this.active && this.ocs_compatible == 1){
-                                                installButton = '<a href="' + downloadUrl + '" class="opendownloadfile btn btn-native btn-min-width" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>"  data-link_type="install">Install</a>';
+                                                installButton = '<a href="' + downloadUrl + '" class="opendownloadfile btn btn-native btn-min-width" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>"  data-link_type="install" data-is-external-link="'+isExternLink+'">Install</a>';
                                                 installLink = downloadUrl;
                                                 installLinkFilename = shortFilename(this.name);
 
@@ -305,7 +305,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                     }
 
                                     var downloadButton = '';
-                                    downloadButton = '<a href="'+downloadUrl+'" data-username="'+username+'" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>"  data-link_type="download" class="btn btn-native btn-min-width opendownloadfile" ><img src="/images/system/download.svg" alt="download" style="width:20px; height:20px"></a>' ;
+                                    downloadButton = '<a href="'+downloadUrl+'" data-username="'+username+'" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>"  data-link_type="download" data-is-external-link="'+isExternLink+'" class="btn btn-native btn-min-width opendownloadfile" ><img src="/images/system/download.svg" alt="download" style="width:20px; height:20px"></a>' ;
                                     
 
                                     if(this.version==null) {version = '';} else{version = this.version;}
