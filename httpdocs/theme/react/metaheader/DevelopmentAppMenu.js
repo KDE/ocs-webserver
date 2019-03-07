@@ -9,11 +9,12 @@ class DevelopmentAppMenu extends React.Component {
   }
 
   componentWillMount() {
-    document.addEventListener('mousedown',this.handleClick, false);
+    //document.addEventListener('mousedown',this.handleClick, false);
+    document.addEventListener('click',this.handleClick, false);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mousedown',this.handleClick, false);
+    document.removeEventListener('click',this.handleClick, false);
   }
 
   componentDidMount() {
