@@ -9,11 +9,12 @@ class DevelopmentAppMenu extends React.Component {
   }
 
   componentWillMount() {
-    document.addEventListener('mousedown',this.handleClick, false);
+    //document.addEventListener('mousedown',this.handleClick, false);
+    document.addEventListener('click',this.handleClick, false);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mousedown',this.handleClick, false);
+    document.removeEventListener('click',this.handleClick, false);
   }
 
   componentDidMount() {
@@ -86,6 +87,12 @@ class DevelopmentAppMenu extends React.Component {
               <a href={this.props.baseUrl + "/u/" + this.props.user.username + "/plings"}>
                 <div className="icon"></div>
                 <span>Plings</span>
+              </a>
+            </li>
+            <li id="addproduct-link-item">
+              <a href={this.props.gitlabUrl+"/projects/new"}>
+                <div className="icon"></div>
+                <span>Add Project</span>
               </a>
             </li>
             <li id="opencode-link-item">
