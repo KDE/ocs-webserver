@@ -52,6 +52,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     public function aboutmeAction()
     {
+        
         $tableMember = new Default_Model_Member();
         $tableProject = new Default_Model_Project();
         $earnModel = new Default_Model_StatDownload();
@@ -59,9 +60,10 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $pageLimit = 500;
         $projectpage = (int)$this->getParam('projectpage', 1);
 
-        $this->view->authMember = $this->_authMember;
-        //$this->view->member = $tableMember->find($this->_memberId)->current();
+        $this->view->authMember = $this->_authMember;        
         $this->view->member = $tableMember->fetchMemberData($this->_memberId);
+
+         $this->view->headTitle($this->view->member->username . ' - ' . $this->getHeadTitle(), 'SET');
         if (null == $this->view->member) {
             $this->redirect("/");
         }

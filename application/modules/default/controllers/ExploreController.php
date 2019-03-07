@@ -123,7 +123,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $helperFetchCategory = new Default_View_Helper_CatTitle();
             $catTitle = $helperFetchCategory->catTitle($inputCatId);
 
-            $this->view->headTitle($catTitle . ' - ' . $_SERVER['HTTP_HOST'], 'SET');
+            //$this->view->headTitle($catTitle . ' - ' . $_SERVER['HTTP_HOST'], 'SET');
+            $this->view->headTitle($catTitle . ' - ' . $this->getHeadTitle(), 'SET');
         }
 
         $this->view->cat_id = $inputCatId;
