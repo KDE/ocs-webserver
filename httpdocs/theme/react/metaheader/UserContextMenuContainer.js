@@ -9,11 +9,12 @@ class UserContextMenuContainer extends React.Component {
   }
 
   componentWillMount() {
-    document.addEventListener('mousedown',this.handleClick, false);
+    //document.addEventListener('mousedown',this.handleClick, false);    
+    document.addEventListener('click',this.handleClick,false);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mousedown',this.handleClick, false);
+    document.removeEventListener('click',this.handleClick, false);
   }
 
   componentDidMount() {
@@ -44,6 +45,7 @@ class UserContextMenuContainer extends React.Component {
       }else{
         dropdownClass = "";
       }
+
       // if (this.state.dropdownClass === "open"){
       //   if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle"){
       //     dropdownClass = "";
@@ -53,6 +55,7 @@ class UserContextMenuContainer extends React.Component {
       // } else {
       //   dropdownClass = "open";
       // }
+
     }
     this.setState({dropdownClass:dropdownClass});
   }
@@ -121,6 +124,12 @@ class UserContextMenuContainer extends React.Component {
     } else {
       contextMenuDisplay = (
         <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
+          <li id="chat-link-item">
+            <a href={"https://chat.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Chat</span>
+            </a>
+          </li>
           <li id="messages-link-item" >
             <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
               <div className="icon"></div>
