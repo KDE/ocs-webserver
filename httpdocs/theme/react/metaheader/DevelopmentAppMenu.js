@@ -92,7 +92,7 @@ class DevelopmentAppMenu extends React.Component {
             <li id="addproduct-link-item">
               <a href={this.props.gitlabUrl+"/projects/new"}>
                 <div className="icon"></div>
-                <span>Add Project</span>
+                <span>New Project</span>
               </a>
             </li>
             <li id="opencode-link-item">
