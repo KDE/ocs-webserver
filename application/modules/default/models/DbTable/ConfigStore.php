@@ -236,6 +236,25 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
     {
         $sql = "DELETE FROM `config_store` WHERE {$this->_key} = ?";
         $this->_db->query($sql, $dataId)->execute();
+//        return $this->delete(array('store_id = ?' => (int)$dataId));
+    }
+
+    public function delete($where)
+    {
+        $where = parent::_whereExpr($where);
+
+        /**
+         * Build the DELETE statement
+         */
+        $sql = "UPDATE " . parent::getAdapter()->quoteIdentifier($this->_name, true) . " SET `deleted_at` = NOW() " . (($where) ? " WHERE $where" : '');
+
+        /**
+         * Execute the statement and return the number of affected rows
+         */
+        $stmt = parent::getAdapter()->query($sql);
+        $result = $stmt->rowCount();
+
+        return $result;
     }
 
     /**

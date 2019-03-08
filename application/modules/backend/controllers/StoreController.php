@@ -52,7 +52,7 @@ class Backend_StoreController extends Local_Controller_Action_Backend
         try {
             $allParams = $this->getAllParams();
             $resultWalk = array_walk($allParams, function (&$value) {
-                $value = empty($value) ? null : $value;
+                $value = strlen($value) == 0 ? null : $value;
             });
             if (false === $resultWalk) {
                 throw new Exception('array_walk through input parameters failed.');
@@ -89,7 +89,7 @@ class Backend_StoreController extends Local_Controller_Action_Backend
     {
         $jTableResult = array();
         try {
-            $values = $this->getAllParams();            
+            $values = $this->getAllParams();
 
             foreach ($values as $key => $value) {
                 if ($value == '') {
@@ -98,32 +98,30 @@ class Backend_StoreController extends Local_Controller_Action_Backend
             }
 
             // patch checkbox is_show_title get no parameter when is_show_title = 0
-            if(!isset($values['is_show_title'])){
+            if (!isset($values['is_show_title'])) {
                 $values['is_show_title'] = 0;
             }
-            if(!isset($values['is_show_git_projects'])){
+            if (!isset($values['is_show_git_projects'])) {
                 $values['is_show_git_projects'] = 0;
             }
-            if(!isset($values['cross_domain_login'])){
+            if (!isset($values['cross_domain_login'])) {
                 $values['cross_domain_login'] = 0;
             }
-            if(!isset($values['is_client'])){
+            if (!isset($values['is_client'])) {
                 $values['is_client'] = 0;
             }
-            
 
             $record = $this->_model->save($values);
 
             $this->initCache($record->store_id);
-            
+
             $tagsid = $this->getParam('tags_id', null);
-            $tagmodel  = new Default_Model_Tags();
+            $tagmodel = new Default_Model_Tags();
             $tagmodel->updateTagsPerStore($values['store_id'], $tagsid);
-            
+
             $groupsid = $this->getParam('groups_id', null);
-            $groupmodel  = new Default_Model_TagGroup();
+            $groupmodel = new Default_Model_TagGroup();
             $groupmodel->updateTagGroupsPerStore($values['store_id'], $groupsid);
-            
 
             $jTableResult = array();
             $jTableResult['Result'] = self::RESULT_OK;
@@ -197,8 +195,9 @@ class Backend_StoreController extends Local_Controller_Action_Backend
                 FROM `config_store_tag_group`,`tag_group`            
                 WHERE `tag_group`.`group_id` = `config_store_tag_group`.`tag_group_id` AND `config_store_tag_group`.`store_id` = `config_store`.`store_id`        
                 GROUP BY `config_store_tag_group`.`store_id`)')
-        ))->order($sorting)->limit($pageSize, $startIndex)->setIntegrityCheck(false);
-        
+        ))->order($sorting)->limit($pageSize, $startIndex)->setIntegrityCheck(false)
+        ;
+
         foreach ($filter as $key => $value) {
             if (false === empty($value)) {
                 $select->where("{$key} like ?", $value);
@@ -206,7 +205,7 @@ class Backend_StoreController extends Local_Controller_Action_Backend
         }
 
         $reports = $this->_model->fetchAll($select);
-        
+
         $select = $this->_model->select()->from($this->_model)->setIntegrityCheck(false);
         foreach ($filter as $key => $value) {
             if (false === empty($value)) {
@@ -293,20 +292,19 @@ class Backend_StoreController extends Local_Controller_Action_Backend
 
         $this->_helper->json($jTableResult);
     }
-    
+
     public function tagsallAction()
     {
 
         $result = true;
-        $tagmodel  = new Default_Model_Tags();
+        $tagmodel = new Default_Model_Tags();
         try {
-                $resultRows = $tagmodel->getAllTagsForStoreFilter();
-                $resultForSelect = array();
-                $resultForSelect[] = array('DisplayText' => '', 'Value' => '');
-                foreach ($resultRows as $row) {         
-                    $resultForSelect[] = array('DisplayText' => $row['tag_name'].'['.$row['tag_id'].']', 'Value' => $row['tag_id']);
-                }
-
+            $resultRows = $tagmodel->getAllTagsForStoreFilter();
+            $resultForSelect = array();
+            $resultForSelect[] = array('DisplayText' => '', 'Value' => '');
+            foreach ($resultRows as $row) {
+                $resultForSelect[] = array('DisplayText' => $row['tag_name'] . '[' . $row['tag_id'] . ']', 'Value' => $row['tag_id']);
+            }
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
             $result = false;
@@ -319,22 +317,22 @@ class Backend_StoreController extends Local_Controller_Action_Backend
 
         $this->_helper->json($jTableResult);
     }
-    
-    
+
+
     public function alltaggroupsAction()
     {
 
         $result = true;
-        $tagmodel  = new Default_Model_TagGroup();
-        
-        try {
-                $resultRows = $tagmodel->fetchAllGroups();
-                $resultForSelect = array();
-                $resultForSelect[] = array('DisplayText' => '', 'Value' => '');
-                foreach ($resultRows as $row) {         
-                    $resultForSelect[] = array('DisplayText' => $row['group_name'].'['.$row['group_id'].']', 'Value' => $row['group_id']);
-                }
+        $tagmodel = new Default_Model_TagGroup();
 
+        try {
+            $resultRows = $tagmodel->fetchAllGroups();
+            $resultForSelect = array();
+            $resultForSelect[] = array('DisplayText' => '', 'Value' => '');
+            foreach ($resultRows as $row) {
+                $resultForSelect[] =
+                    array('DisplayText' => $row['group_name'] . '[' . $row['group_id'] . ']', 'Value' => $row['group_id']);
+            }
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
             $result = false;
