@@ -23,7 +23,7 @@
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 $helpTruncate = new Default_View_Helper_Truncate();
-$this->headTitle($this->member->username . ' - ' . $_SERVER['HTTP_HOST'], 'SET');
+
 $this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
 $desc=  isset($this->mainProject->description) ? nl2br(strip_tags($this->mainProject->description)): $this->member->username;
 $this->headMeta()->setName('description',
