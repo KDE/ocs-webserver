@@ -69,7 +69,7 @@ class Introduction extends React.Component {
           </a>
           <a href="/browse" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">Browse all apps</a>
 
-          <a href="https://chat.opendesktop.org/#/room/#appimagehub:chat.opendesktop.org" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" style={{ "margin-left":"50px"}}>Join our chat #@AppImageHub</a>
+          <a href="https://chat.opendesktop.org/#/room/#appimagehub:chat.opendesktop.org" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" style={{ "margin-left":"50px"}}>Join our chat #AppImageHub</a>
         </div>
       );
     } else if (window.page === "libreoffice"){
