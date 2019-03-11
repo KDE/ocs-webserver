@@ -228,6 +228,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 if($isAdmin)
                 {
                     $userinfo = $userinfo.' ('.$userProjectCategories[0]['cnt'].').';
+                }else{
+                    $userinfo = $userinfo.'.';
                 }
             }else if($cnt==2)
             {
@@ -240,6 +242,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 if($isAdmin)
                 { 
                     $userinfo = $userinfo.'('.$userProjectCategories[1]['cnt'].').';
+                }else{
+                    $userinfo = $userinfo.'.';
                 }
             }else if($cnt==3)
             {
@@ -257,6 +261,9 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 if($isAdmin)
                 { 
                     $userinfo = $userinfo.' ('.$userProjectCategories[2]['cnt'].').';
+                }
+                else{
+                    $userinfo = $userinfo.'.';
                 }
             }else if($cnt>3)
             {
