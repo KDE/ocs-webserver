@@ -6,6 +6,7 @@
   "repository": "https://cgit.kde.org/ocs-webserver.git/",
   "main": "src/metaheader.js",
   "scripts": {
+    "dev": "webpack --mode development",
     "build": "webpack --mode production",
     "watch": "webpack --mode production --watch",
     "babel": "npx babel src/metaheader --out-file metaheadertest.js"
@@ -25,5 +26,7 @@
     "webpack": "*",
     "webpack-cli": "*"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@material-ui/core": "^3.9.2"
+  }
 }
