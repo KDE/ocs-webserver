@@ -1160,11 +1160,11 @@ class Default_Model_Info
                         ,s.member_id
                         ,(select username from member m where m.member_id = s.member_id) as username
                         ,(select profile_image_url from member m where m.member_id = s.member_id) as profile_image_url
-                        ,min(s.active_time) as created_at
+                        ,max(s.active_time) as created_at
                         from support s 
                         where s.status_id = 2                         
                         group by member_id
-                        order by s.active_time desc                                       
+                        order by created_at desc                                       
         ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
