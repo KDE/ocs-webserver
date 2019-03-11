@@ -221,59 +221,59 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
         if($cnt>0)
         {
-            $userinfo = "Hi, I am <b>".$username."</b> and I contribute to ";
+            $userinfo = "Hi, I am <b>".$username."</b> and I create ";
             if($cnt==1)
             {
                 $userinfo = $userinfo.' <b>'.$userProjectCategories[0]['category1'].'</b>';
                 if($isAdmin)
                 {
-                    $userinfo = $userinfo.'['.$userProjectCategories[0]['cnt'].'].';
+                    $userinfo = $userinfo.' ('.$userProjectCategories[0]['cnt'].').';
                 }
             }else if($cnt==2)
             {
                 $userinfo = $userinfo.' <b>'.$userProjectCategories[0]['category1'].'</b>';
                 if($isAdmin)
                 {
-                $userinfo = $userinfo.'['.$userProjectCategories[0]['cnt'].']';
+                $userinfo = $userinfo.' ('.$userProjectCategories[0]['cnt'].')';
                 }
                 $userinfo = $userinfo.' and <b>'.$userProjectCategories[1]['category1'].'</b>';
                 if($isAdmin)
                 { 
-                    $userinfo = $userinfo.'['.$userProjectCategories[1]['cnt'].'].';
+                    $userinfo = $userinfo.'('.$userProjectCategories[1]['cnt'].').';
                 }
             }else if($cnt==3)
             {
                 $userinfo = $userinfo.' <b>'.$userProjectCategories[0]['category1'].'</b>';
                 if($isAdmin)
                 { 
-                    $userinfo = $userinfo.'['.$userProjectCategories[0]['cnt'].']';
+                    $userinfo = $userinfo.' ('.$userProjectCategories[0]['cnt'].')';
                 }
                 $userinfo = $userinfo.',<b> '.$userProjectCategories[1]['category1'].'</b>';
                 if($isAdmin)
                 { 
-                    $userinfo = $userinfo.'['.$userProjectCategories[1]['cnt'].']';
+                    $userinfo = $userinfo.' ('.$userProjectCategories[1]['cnt'].')';
                 }
                 $userinfo = $userinfo.' and <b>'.$userProjectCategories[2]['category1'].'</b>';
                 if($isAdmin)
                 { 
-                    $userinfo = $userinfo.'['.$userProjectCategories[2]['cnt'].'].';
+                    $userinfo = $userinfo.' ('.$userProjectCategories[2]['cnt'].').';
                 }
             }else if($cnt>3)
             {
                 $userinfo = $userinfo.' <b>'.$userProjectCategories[0]['category1'].'</b>';
                 if($isAdmin)
                 { 
-                $userinfo = $userinfo.'['.$userProjectCategories[0]['cnt'].']';
+                $userinfo = $userinfo.' ('.$userProjectCategories[0]['cnt'].')';
                 }
                 $userinfo = $userinfo.', <b>'.$userProjectCategories[1]['category1'].'</b>';
                 if($isAdmin)
                 { 
-                $userinfo = $userinfo.'['.$userProjectCategories[1]['cnt'].']';
+                $userinfo = $userinfo.' ('.$userProjectCategories[1]['cnt'].')';
                 }
                 $userinfo = $userinfo.', <b>'.$userProjectCategories[2]['category1'].'</b>';
                 if($isAdmin)
                 { 
-                $userinfo = $userinfo.'['.$userProjectCategories[2]['cnt'].']';
+                $userinfo = $userinfo.' ('.$userProjectCategories[2]['cnt'].')';
                 }
                 $userinfo = $userinfo.' and more.';
             }                                                

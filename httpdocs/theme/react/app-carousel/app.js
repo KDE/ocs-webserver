@@ -219,12 +219,14 @@ class Carousel extends React.Component {
 
     if (dir === 'left'){
       if (this.state.sliderPosition > 0){
-        newSliderPosition = this.state.sliderPosition - (this.state.containerWidth - this.state.itemWidth);
+        //newSliderPosition = this.state.sliderPosition - (this.state.containerWidth - this.state.itemWidth);
+        newSliderPosition = this.state.sliderPosition - this.state.itemWidth;
       }
     } else {
 
       if (Math.trunc(this.state.sliderPosition) < Math.trunc(endPoint)){
-        newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
+        //newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
+        newSliderPosition = this.state.sliderPosition + this.state.itemWidth;
       } else {
         newSliderPosition = 0
         /*if (!animateCarousel){
@@ -236,6 +238,7 @@ class Carousel extends React.Component {
         }*/
       }
     }
+    
 
     this.setState({sliderPosition:newSliderPosition},function(){
 

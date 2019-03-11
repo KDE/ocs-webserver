@@ -255,11 +255,11 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 window.hpHelpers = function () {
   function dechex(number) {
@@ -318,9 +318,9 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(CarouselsModule).call(this, props));
     _this.state = {};
-    _this.initCarouselModule = _this.initCarouselModule.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.updateDimensions = _this.updateDimensions.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.convertDataObject = _this.convertDataObject.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.initCarouselModule = _this.initCarouselModule.bind(_assertThisInitialized(_this));
+    _this.updateDimensions = _this.updateDimensions.bind(_assertThisInitialized(_this));
+    _this.convertDataObject = _this.convertDataObject.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -448,9 +448,9 @@ function (_React$Component2) {
       products: _this3.props.products,
       disableleftArrow: true
     };
-    _this3.updateDimensions = _this3.updateDimensions.bind(_assertThisInitialized(_assertThisInitialized(_this3)));
-    _this3.animateProductCarousel = _this3.animateProductCarousel.bind(_assertThisInitialized(_assertThisInitialized(_this3)));
-    _this3.getNextProductsBatch = _this3.getNextProductsBatch.bind(_assertThisInitialized(_assertThisInitialized(_this3)));
+    _this3.updateDimensions = _this3.updateDimensions.bind(_assertThisInitialized(_this3));
+    _this3.animateProductCarousel = _this3.animateProductCarousel.bind(_assertThisInitialized(_this3));
+    _this3.getNextProductsBatch = _this3.getNextProductsBatch.bind(_assertThisInitialized(_this3));
     return _this3;
   }
 
@@ -525,11 +525,13 @@ function (_React$Component2) {
 
       if (dir === 'left') {
         if (this.state.sliderPosition > 0) {
-          newSliderPosition = this.state.sliderPosition - (this.state.containerWidth - this.state.itemWidth);
+          //newSliderPosition = this.state.sliderPosition - (this.state.containerWidth - this.state.itemWidth);
+          newSliderPosition = this.state.sliderPosition - this.state.itemWidth;
         }
       } else {
         if (Math.trunc(this.state.sliderPosition) < Math.trunc(endPoint)) {
-          newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
+          //newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
+          newSliderPosition = this.state.sliderPosition + this.state.itemWidth;
         } else {
           newSliderPosition = 0;
           /*if (!animateCarousel){

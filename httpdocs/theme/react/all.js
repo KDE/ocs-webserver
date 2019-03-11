@@ -309,11 +309,11 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 var ProductGroupScrollWrapper =
 /*#__PURE__*/
@@ -330,8 +330,8 @@ function (_React$Component) {
       products: [],
       offset: 0
     };
-    _this.onProductGroupScroll = _this.onProductGroupScroll.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.loadMoreProducts = _this.loadMoreProducts.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.onProductGroupScroll = _this.onProductGroupScroll.bind(_assertThisInitialized(_this));
+    _this.loadMoreProducts = _this.loadMoreProducts.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -1285,11 +1285,11 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 var ExplorePage =
 /*#__PURE__*/
@@ -1306,7 +1306,7 @@ function (_React$Component) {
       device: store.getState().device,
       minHeight: 'auto'
     };
-    _this.updateContainerHeight = _this.updateContainerHeight.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.updateContainerHeight = _this.updateContainerHeight.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -2224,7 +2224,13 @@ function (_React$Component2) {
         }), " AppImageLauncher"), React.createElement("a", {
           href: "/browse",
           className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary"
-        }, "Browse all apps"));
+        }, "Browse all apps"), React.createElement("a", {
+          href: "https://chat.opendesktop.org/#/room/#appimagehub:chat.opendesktop.org",
+          className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary",
+          style: {
+            "margin-left": "50px"
+          }
+        }, "Join our chat #appimagehub"));
       } else if (window.page === "libreoffice") {
         siteTitle = "LibreOffice";
         introductionText = React.createElement("p", null, "Extensions add new features to your LibreOffice or make the use of already existing ones easier. Currently there are ", this.props.count, " project(s) available.");
@@ -2319,8 +2325,8 @@ function (_React$Component4) {
       showRightArrow: true,
       showLeftArrow: false
     };
-    _this3.updateDimensions = _this3.updateDimensions.bind(_assertThisInitialized(_assertThisInitialized(_this3)));
-    _this3.animateProductCarousel = _this3.animateProductCarousel.bind(_assertThisInitialized(_assertThisInitialized(_this3)));
+    _this3.updateDimensions = _this3.updateDimensions.bind(_assertThisInitialized(_this3));
+    _this3.animateProductCarousel = _this3.animateProductCarousel.bind(_assertThisInitialized(_this3));
     return _this3;
   }
 
@@ -2513,11 +2519,11 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 var ProductView =
 /*#__PURE__*/
@@ -2534,8 +2540,8 @@ function (_React$Component) {
       tab: 'comments',
       showDownloadSection: false
     };
-    _this.toggleTab = _this.toggleTab.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.toggleDownloadSection = _this.toggleDownloadSection.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.toggleTab = _this.toggleTab.bind(_assertThisInitialized(_this));
+    _this.toggleDownloadSection = _this.toggleDownloadSection.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -2759,7 +2765,7 @@ function (_React$Component3) {
 
     _this3 = _possibleConstructorReturn(this, _getPrototypeOf(ProductViewHeaderLikes).call(this, props));
     _this3.state = {};
-    _this3.onUserLike = _this3.onUserLike.bind(_assertThisInitialized(_assertThisInitialized(_this3)));
+    _this3.onUserLike = _this3.onUserLike.bind(_assertThisInitialized(_this3));
     return _this3;
   }
 
@@ -2859,7 +2865,7 @@ function (_React$Component4) {
       action: '',
       laplace_score: _this4.props.product.laplace_score
     };
-    _this4.onRatingFormResponse = _this4.onRatingFormResponse.bind(_assertThisInitialized(_assertThisInitialized(_this4)));
+    _this4.onRatingFormResponse = _this4.onRatingFormResponse.bind(_assertThisInitialized(_this4));
     return _this4;
   }
 
@@ -3027,8 +3033,8 @@ function (_React$Component5) {
     _this6.state = {
       action: _this6.props.action
     };
-    _this6.submitRatingForm = _this6.submitRatingForm.bind(_assertThisInitialized(_assertThisInitialized(_this6)));
-    _this6.onTextAreaInputChange = _this6.onTextAreaInputChange.bind(_assertThisInitialized(_assertThisInitialized(_this6)));
+    _this6.submitRatingForm = _this6.submitRatingForm.bind(_assertThisInitialized(_this6));
+    _this6.onTextAreaInputChange = _this6.onTextAreaInputChange.bind(_assertThisInitialized(_this6));
     return _this6;
   }
 
@@ -3193,10 +3199,10 @@ function (_React$Component6) {
       currentItem: 1,
       galleryWrapperMarginLeft: 0
     };
-    _this7.updateDimensions = _this7.updateDimensions.bind(_assertThisInitialized(_assertThisInitialized(_this7)));
-    _this7.onLeftArrowClick = _this7.onLeftArrowClick.bind(_assertThisInitialized(_assertThisInitialized(_this7)));
-    _this7.onRightArrowClick = _this7.onRightArrowClick.bind(_assertThisInitialized(_assertThisInitialized(_this7)));
-    _this7.animateGallerySlider = _this7.animateGallerySlider.bind(_assertThisInitialized(_assertThisInitialized(_this7)));
+    _this7.updateDimensions = _this7.updateDimensions.bind(_assertThisInitialized(_this7));
+    _this7.onLeftArrowClick = _this7.onLeftArrowClick.bind(_assertThisInitialized(_this7));
+    _this7.onRightArrowClick = _this7.onRightArrowClick.bind(_assertThisInitialized(_this7));
+    _this7.animateGallerySlider = _this7.animateGallerySlider.bind(_assertThisInitialized(_this7));
     return _this7;
   }
 
@@ -3365,11 +3371,11 @@ function (_React$Component7) {
       currentItem: currentItem,
       loading: true
     };
-    _this9.updateDimensions = _this9.updateDimensions.bind(_assertThisInitialized(_assertThisInitialized(_this9)));
-    _this9.toggleNextGalleryItem = _this9.toggleNextGalleryItem.bind(_assertThisInitialized(_assertThisInitialized(_this9)));
-    _this9.togglePrevGalleryItem = _this9.togglePrevGalleryItem.bind(_assertThisInitialized(_assertThisInitialized(_this9)));
-    _this9.animateGallerySlider = _this9.animateGallerySlider.bind(_assertThisInitialized(_assertThisInitialized(_this9)));
-    _this9.onThumbnailClick = _this9.onThumbnailClick.bind(_assertThisInitialized(_assertThisInitialized(_this9)));
+    _this9.updateDimensions = _this9.updateDimensions.bind(_assertThisInitialized(_this9));
+    _this9.toggleNextGalleryItem = _this9.toggleNextGalleryItem.bind(_assertThisInitialized(_this9));
+    _this9.togglePrevGalleryItem = _this9.togglePrevGalleryItem.bind(_assertThisInitialized(_this9));
+    _this9.animateGallerySlider = _this9.animateGallerySlider.bind(_assertThisInitialized(_this9));
+    _this9.onThumbnailClick = _this9.onThumbnailClick.bind(_assertThisInitialized(_this9));
     return _this9;
   }
 
@@ -3787,9 +3793,9 @@ function (_React$Component12) {
       errorTitle: '',
       loading: false
     };
-    _this15.updateCommentText = _this15.updateCommentText.bind(_assertThisInitialized(_assertThisInitialized(_this15)));
-    _this15.submitComment = _this15.submitComment.bind(_assertThisInitialized(_assertThisInitialized(_this15)));
-    _this15.updateComments = _this15.updateComments.bind(_assertThisInitialized(_assertThisInitialized(_this15)));
+    _this15.updateCommentText = _this15.updateCommentText.bind(_assertThisInitialized(_this15));
+    _this15.submitComment = _this15.submitComment.bind(_assertThisInitialized(_this15));
+    _this15.updateComments = _this15.updateComments.bind(_assertThisInitialized(_this15));
     return _this15;
   }
 
@@ -3950,10 +3956,10 @@ function (_React$Component13) {
     _this16.state = {
       showCommentReplyForm: false
     };
-    _this16.filterByCommentLevel = _this16.filterByCommentLevel.bind(_assertThisInitialized(_assertThisInitialized(_this16)));
-    _this16.onToggleReplyForm = _this16.onToggleReplyForm.bind(_assertThisInitialized(_assertThisInitialized(_this16)));
-    _this16.onReportComment = _this16.onReportComment.bind(_assertThisInitialized(_assertThisInitialized(_this16)));
-    _this16.onConfirmReportClick = _this16.onConfirmReportClick.bind(_assertThisInitialized(_assertThisInitialized(_this16)));
+    _this16.filterByCommentLevel = _this16.filterByCommentLevel.bind(_assertThisInitialized(_this16));
+    _this16.onToggleReplyForm = _this16.onToggleReplyForm.bind(_assertThisInitialized(_this16));
+    _this16.onReportComment = _this16.onReportComment.bind(_assertThisInitialized(_this16));
+    _this16.onConfirmReportClick = _this16.onConfirmReportClick.bind(_assertThisInitialized(_this16));
     return _this16;
   }
 
@@ -4325,10 +4331,10 @@ function (_React$Component17) {
     _this21.state = {
       filter: 'active'
     };
-    _this21.filterLikes = _this21.filterLikes.bind(_assertThisInitialized(_assertThisInitialized(_this21)));
-    _this21.filterDislikes = _this21.filterDislikes.bind(_assertThisInitialized(_assertThisInitialized(_this21)));
-    _this21.filterActive = _this21.filterActive.bind(_assertThisInitialized(_assertThisInitialized(_this21)));
-    _this21.setFilter = _this21.setFilter.bind(_assertThisInitialized(_assertThisInitialized(_this21)));
+    _this21.filterLikes = _this21.filterLikes.bind(_assertThisInitialized(_this21));
+    _this21.filterDislikes = _this21.filterDislikes.bind(_assertThisInitialized(_this21));
+    _this21.filterActive = _this21.filterActive.bind(_assertThisInitialized(_this21));
+    _this21.setFilter = _this21.setFilter.bind(_assertThisInitialized(_this21));
     return _this21;
   }
 
@@ -4655,11 +4661,11 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 var _ReactRedux = ReactRedux,
     Provider = _ReactRedux.Provider,
@@ -4681,7 +4687,7 @@ function (_React$Component) {
       loading: true,
       version: 1
     };
-    _this.updateDimensions = _this.updateDimensions.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.updateDimensions = _this.updateDimensions.bind(_assertThisInitialized(_this));
     return _this;
   }
 
