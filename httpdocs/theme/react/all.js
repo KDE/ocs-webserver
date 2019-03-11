@@ -2230,7 +2230,7 @@ function (_React$Component2) {
           style: {
             "margin-left": "50px"
           }
-        }, "Join our chat #@appimagehub"));
+        }, "Join our chat #@AppImageHub"));
       } else if (window.page === "libreoffice") {
         siteTitle = "LibreOffice";
         introductionText = React.createElement("p", null, "Extensions add new features to your LibreOffice or make the use of already existing ones easier. Currently there are ", this.props.count, " project(s) available.");
