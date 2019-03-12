@@ -230,7 +230,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     }
 
     public function indexAction()
-    {
+    {        
 
         if (!empty($this->_collectionId)) {
             $modelProduct = new Default_Model_Project();
@@ -252,6 +252,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $modelProduct = new Default_Model_Project();
         $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
         $this->view->product = $productInfo;
+        $this->view->headTitle($productInfo->title . ' - ' . $this->getHeadTitle(), 'SET');
         if (empty($this->view->product)) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }

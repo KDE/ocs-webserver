@@ -105,6 +105,15 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
         return $clientName;
     }
 
+    public function getHeadTitle()
+    {
+        $headTitle = $this->templateConfigData['head']['browser_title'];
+        if($headTitle==$this::METAHEADER_DEFAULT){
+                $headTitle=$this::METAHEADER_DEFAULT_TITLE;
+        }
+        return $headTitle;
+    }
+
     public function initView()
     {
 

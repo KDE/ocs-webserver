@@ -50,7 +50,7 @@ $this->product->facebook_code = Default_Model_HtmlPurify::purify($this->product-
 $this->product->twitter_code = Default_Model_HtmlPurify::purify($this->product->twitter_code,Default_Model_HtmlPurify::ALLOW_URL);
 $this->product->google_code = Default_Model_HtmlPurify::purify($this->product->google_code,Default_Model_HtmlPurify::ALLOW_URL);
 
-$this->headTitle($this->product->title . ' - ' . $_SERVER['HTTP_HOST'], 'SET');
+
 $this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
 
 $this->headMeta()->setName('description',

@@ -19,7 +19,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-$this->headTitle($_SERVER['HTTP_HOST'], 'SET');
 $this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
 $this->headMeta()->appendProperty('og:url', 'www.opendesktop.org');
 $this->headMeta()->appendProperty('og:type', 'website');
@@ -49,7 +48,7 @@ $json_productsPlinged = $modelInfo->getJsonNewActivePlingProduct(15);
 
 
 $response = array(
-  'productsThemesGTK' => array('title' =>'Plinged','catIds' =>'','products' => $json_productsPlinged),
+  'productsThemesGTK' => array('title' =>'Supporters Favourites','catIds' =>'','products' => $json_productsPlinged),
 );
 
 
@@ -192,6 +191,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
   <div class="GridFlex">
     <div class="GridFlex-cell sidebar-left">
             <?php  echo $this->render('explore/partials/filter.phtml'); ?>
+
     </div>
 
     <div class="GridFlex-cell content" id="main-content">
