@@ -51,6 +51,10 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
     public function fetchFilesForProject($collection_id)
     {
 
+        if(empty($collection_id)) {
+            return null;
+        }
+        
         $sql = " select * 
                      from ppload.ppload_files f 
                      where f.collection_id = :collection_id     
@@ -78,6 +82,10 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
     public function fetchFilesCntForProject($collection_id)
     {
 
+        if(empty($collection_id)) {
+            return 0;
+        }
+        
         $sql = " select  count(1) as cnt
                      from ppload.ppload_files f 
                      where f.collection_id = :collection_id and f.active = 1                  
@@ -89,7 +97,10 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
     
     public function fetchCountDownloadsTodayForProject($collection_id)
     {
-
+        if(empty($collection_id)) {
+            return 0;
+        }
+        
         $today = (new DateTime())->modify('-1 day');
         $filterDownloadToday = $today->format("Y-m-d H:i:s");
 
@@ -105,6 +116,10 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
     
     private function fetchAllFiles($collection_id, $ignore_status = true, $activeFiles = false)
     {
+        
+        if(empty($collection_id)) {
+            return null;
+        }
 
         $sql = "    select  *
                      from ppload.ppload_files f 
