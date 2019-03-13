@@ -873,9 +873,9 @@ $this->inlineScript()->appendScript(
                         $modalPpload.find('#github_picker').attr('disabled', 'disabled');
                     }
 
-                    if (data.pagination.next) {
+                    /*if (data.pagination !== 'undefined' && data.pagination.next) {
                         getPploadFiles(data.pagination.next);
-                    }
+                    }*/
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     return;
@@ -1321,6 +1321,7 @@ $this->inlineScript()->appendScript(
         }
 
         $('a[href="#modal-ppload"]').on('click', function (event) {
+            alert('Click on popup...');
             event.preventDefault();
             $modalPpload.attr('data-ppload-collection-id', $(this).attr('data-ppload-collection-id'));
             $modalPpload.attr('data-product-id', $(this).attr('data-product-id'));

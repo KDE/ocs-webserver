@@ -714,9 +714,9 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                   */
 
 
-                                 if (data.pagination.next) {
-                                     getPploadFiles(data.pagination.next);
-                                 }
+                                /*if (data.pagination !== 'undefined' && data.pagination.next) {
+                                    getPploadFiles(data.pagination.next);
+                                }*/
 
                              },
                              error: function (jqXHR, textStatus, errorThrown) {
