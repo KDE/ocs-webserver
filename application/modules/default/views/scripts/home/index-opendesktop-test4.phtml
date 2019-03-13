@@ -29,17 +29,26 @@ $this->headMeta()->appendProperty('og:description','A community where developers
 $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images/system/opendesktop-logo.png');
 
 $modelInfo = new Default_Model_Info();
-$productsThemesPlasma = $modelInfo->getLastProductsForHostStores(5,33);
-foreach ($productsThemesPlasma as &$p) {
+// $productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'152,233');
+// $productsThemes = $modelInfo->getLastProductsForHostStores(5,'158,509,330,404,148,491,445,295');
+$productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'33,233');
+$productsThemes = $modelInfo->getLastProductsForHostStores(5,'33,295');
+foreach ($productsAppAddons as &$p) {
+  $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
+}
+foreach ($productsThemes as &$p) {
   $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
 }
 /*'products' => array('title' =>'KDE Plasma','catIds' =>'365','products' => $productsThemesPlasma),*/
 $response = array(
   'comments' => $modelInfo->getLatestComments(5),
-  'products' => $productsThemesPlasma
+  'products' => $productsAppAddons,
+  'productsThemes' => $productsThemes,
+
 );
 
 ?>
+
 <link type="text/css" rel="stylesheet" href="/theme/react/assets/css/home-main-container.css"/>
 
 <div class="tooltip_templates" style="display:none">
@@ -48,7 +57,7 @@ $response = array(
       </span>
 </div>
 
-<main class="startpage-store">
+<main class="startpage-store-new">
       <div id="main-content"></div>
       <script type="text/javascript">
         var page = "opendesktop";

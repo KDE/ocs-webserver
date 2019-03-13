@@ -27,6 +27,7 @@
     "webpack-cli": "*"
   },
   "dependencies": {
-    "@material-ui/core": "^3.9.2"
+    "@material-ui/core": "^3.9.2",
+    "react-text-truncate": "^0.14.0"
   }
 }
