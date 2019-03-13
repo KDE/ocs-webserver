@@ -850,7 +850,8 @@ $this->inlineScript()->appendScript('
                         return;
                     } else {
                         $.ajax({
-                            url: pploadApiUri + 'files/index',
+                            //url: pploadApiUri + 'files/index',
+                            url: '/p/'+prodId+'/getfilesajax',
                             type: 'GET',
                             data: {
                                 collection_id: collectionId,

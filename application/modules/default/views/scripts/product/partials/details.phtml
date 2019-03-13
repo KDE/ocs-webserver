@@ -32,6 +32,13 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
     $isGhnsExcluded = true;
 }
 
+$filesTable = new Default_Model_DbTable_PploadFiles();
+$countDownloadsToday = $filesTable->fetchCountDownloadsTodayForProject($this->product->ppload_collection_id);
+
+if(empty($countDownloadsToday)) {
+    $countDownloadsToday = 0;
+}
+
 
 // $heute = date("Y-m-d H:i:s");
 $today = (new DateTime())->modify('-1 day');
@@ -74,11 +81,20 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">added</span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->printDate($this->product->project_created_at) ?></span>
     </div>
+
+    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
     <div class="row">
-        <span class=" col-lg-6 col-md-6 col-sm-6 col-xs-6">downloads today</span>
+        <span class=" col-lg-6 col-md-6 col-sm-6 col-xs-6">downloads today api</span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <div id="downloadscnt">0</div></span>
     </div>
-
+    <?php endif; ?>
+    
+     <div class="row">
+        <span class=" col-lg-6 col-md-6 col-sm-6 col-xs-6">downloads today</span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <div id="downloadscntdb"><?= $countDownloadsToday ?></div></span>
+    </div>
+    
+    
     <div class="row">
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">page views today </span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->projectPageviewsToday($this->product->project_id) ?></span>
@@ -308,8 +324,9 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
 
        
     <?php endif; ?>
-
-
+<?php
+if(Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName){
+?>    
     <script>
         (function (collection_id) {
             if (!collection_id) {
@@ -339,7 +356,11 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
                 }
             });
         }(<?=$this->product->ppload_collection_id?>));
+        
     </script>
+<?php
+}
+?>    
 </div>
 
 <?php

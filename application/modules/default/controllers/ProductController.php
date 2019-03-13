@@ -123,6 +123,46 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     }
     
     
+    public function getfilesajaxAction() {
+        $this->_helper->layout()->disableLayout();
+        
+        $collection_id = null;
+        $file_status = null;
+        $ignore_status_code = null;
+        
+        if($this->hasParam('status')) {
+            $file_status = $this->getParam('status');
+        }
+        if($this->hasParam('ignore_status_code')) {
+            $ignore_status_code = $this->getParam('ignore_status_code');
+        }
+        
+        $filesTable = new Default_Model_DbTable_PploadFiles();
+        
+        if($this->hasParam('collection_id')) {
+            $collection_id = $this->getParam('collection_id');
+            $result = array();
+            
+            if($ignore_status_code == 0 && $file_status == 'active') {
+                $files = $filesTable->fetchAllActiveFilesForProject($collection_id);
+            } else {
+                $files = $filesTable->fetchAllFilesForProject($collection_id);
+            }
+            
+
+            foreach ($files as $file) {
+                $result[] = $file;
+            }
+            
+            $this->_helper->json(array('status' => 'success', 'ResultSize' => count($result), 'files' => $result));
+
+            return;
+        }
+
+        $this->_helper->json(array('status' => 'error'));
+    }
+    
+    
     public function getfiletagsajaxAction() {
         $this->_helper->layout()->disableLayout();
         

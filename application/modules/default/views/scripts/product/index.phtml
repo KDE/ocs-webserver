@@ -101,6 +101,10 @@ $isowner = false;
 if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->product->member_id){
     $isowner = true;
 }
+
+$filesTable = new Default_Model_DbTable_PploadFiles();
+$countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collection_id);
+
 ?>
 
 
@@ -525,7 +529,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                             <?php } ?>
                             */?>
 
-                            <li><a href="#files-panel" data-toggle="tab">Files <span id="files-counter"></span></a></li>
+                            <li><a href="#files-panel" data-toggle="tab">Files <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?><span id="files-counter"></span><?php endif; ?> <span id="files-counter-db"><?= (!empty($countFiles)?'('.$countFiles.')':'') ?></span></a></li>
                         <?php if(count($this->updates)>0){ ?>
                             <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php echo '('.count($this->updates).')';  ?></a></li>
                         <?php } ?>
@@ -1064,6 +1068,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));</script>
 
+<?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>    
 <script>
     (function (collection_id) {
         if (!collection_id) {
@@ -1090,8 +1095,10 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
             }
         });
     }(<?=$this->product->ppload_collection_id?>));
+    
+    
 </script>
-
+<?php endif; ?>
 
 <script type="application/javascript">
     // tool tips

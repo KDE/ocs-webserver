@@ -599,7 +599,8 @@ $this->inlineScript()->appendScript(
                 $modalPpload.find('table[data-ppload-files] tbody').empty();
             }
             $.ajax({
-                url: pploadApiUri + 'files/index',
+                //url: pploadApiUri + 'files/index',
+                url: '/p/'+prodId+'/getfilesajax',
                 type: 'GET',
                 data: {
                     collection_id: collectionId,

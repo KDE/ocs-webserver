@@ -173,7 +173,8 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                              page = 1;
                          }
                          $.ajax({
-                             url: pploadApiUri + 'files/index',
+                             //url: pploadApiUri + 'files/index',
+                             url: '/p/<?= $this->product->project_id ?>/getfilesajax',
                              type: 'GET',
                              data: {
                                  format: 'json',

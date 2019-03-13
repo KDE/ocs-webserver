@@ -30,6 +30,11 @@ class Default_View_Helper_ProjectFilesDownloadsToday extends Zend_View_Helper_Ab
      */
     public function projectFilesDownloadsToday($ppload_collection_id)
     {
+        
+        $filesTable = new Default_Model_DbTable_PploadFiles();
+        $cnt = $filesTable->fetchCountDownloadsTodayForProject($this->product->ppload_collection_id);
+        
+        /*
         $pploadApi = new Ppload_Api(array(
             'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,
@@ -57,6 +62,8 @@ class Default_View_Helper_ProjectFilesDownloadsToday extends Zend_View_Helper_Ab
                 }
             }
         }
+         * 
+         */
 
         return $cnt;
     }

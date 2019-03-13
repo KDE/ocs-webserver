@@ -30,6 +30,13 @@ class Default_View_Helper_ProjectFiles extends Zend_View_Helper_Abstract
      */
     public function projectFiles($ppload_collection_id)
     {
+        
+        $filesTable = new Default_Model_DbTable_PploadFiles();
+        $countFiles = $filesTable->fetchFilesCntForProject($ppload_collection_id);
+        $filesInfos = array();
+        $filesInfos['fileCount'] = $countFiles;
+        
+        /*
         $filesInfos = array();
         $pploadApi = new Ppload_Api(array(
             'apiUri'   => PPLOAD_API_URI,
@@ -52,6 +59,8 @@ class Default_View_Helper_ProjectFiles extends Zend_View_Helper_Abstract
             }
         }
         $filesInfos['fileCount'] = $fileCount;
+         * 
+         */
 
         return $filesInfos;
     }
