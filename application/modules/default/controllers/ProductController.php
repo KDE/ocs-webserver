@@ -2378,8 +2378,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
                     return;
                 } else {
-                    $error_text .= 'Response: $pploadApi->putFile(): ' . json_encode($fileResponse)
-                        . '; $fileResponse->status: ' . $fileResponse->status;
+                    $error_text .= 'Response: $pploadApi->putFile(): ' . json_encode($fileResponse);
                 }
             }
         }
