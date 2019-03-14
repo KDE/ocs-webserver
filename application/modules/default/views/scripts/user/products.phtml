@@ -873,7 +873,7 @@ $this->tab = 'products';
                         cache: false,
                         success: function (data, textStatus, jqXHR) {
                             if (data.status != 'ok') {
-                                alert('Error: ' + data.error_text);
+                                //alert('Error: ' + data.error_text);
                                 return;
                             }
                             $modalPpload.find('table[data-ppload-files] thead').html('');
