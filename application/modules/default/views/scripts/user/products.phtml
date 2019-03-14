@@ -147,6 +147,8 @@ $this->tab = 'products';
                     $.ajax({
                         url: '/file/link/',
                         type: 'post',
+                        async: false,
+                        cache: false,
                         data: {
                             project_id: $('#modal-ppload').attr('data-product-id'),
                             u: $('#get-url').val()
@@ -218,6 +220,8 @@ $this->tab = 'products';
                         //url: pploadApiUri + 'files/index',
                         url: '/p/'+prodId+'/getfilesajax',
                         type: 'GET',
+                        async: false,
+                        cache: false,
                         data: {
                             collection_id: collectionId,
                             perpage: 1000,
@@ -598,6 +602,8 @@ $this->tab = 'products';
                         dataType: 'json',
                         contentType: false,
                         processData: false,
+                        async: false,
+                        cache: false,
                         success: function (data, textStatus, jqXHR) {
                             if (data.status != 'ok') {
                                 return;
@@ -736,6 +742,8 @@ $this->tab = 'products';
                     $.ajax({
                         url: $modalPpload.attr('data-updatepploadfile-uri'),
                         type: 'POST',
+                        async: false,
+                        cache: false,
                         data: {
                             file_id: fileId,
                             file_description: fileDescription,
@@ -759,6 +767,8 @@ $this->tab = 'products';
                     $.ajax({
                         url: $modalPpload.attr('data-updatefiletag-uri'),
                         type: 'POST',
+                        async: false,
+                        cache: false,
                         data: {
                             file_id: fileId,
                             tag_id: tagId,
@@ -782,6 +792,8 @@ $this->tab = 'products';
                     $.ajax({
                         url: $modalPpload.attr('data-deletefiletag-uri'),
                         type: 'POST',
+                        async: false,
+                        cache: false,
                         data: {
                             file_id: fileId,
                             tag_id: tagId
@@ -807,6 +819,8 @@ $this->tab = 'products';
                     $.ajax({
                         url: $modalPpload.attr('data-updatepploadfile-uri'),
                         type: 'POST',
+                        async: false,
+                        cache: false,
                         data: {
                             file_id: fileId,
                             file_version: version
@@ -829,6 +843,8 @@ $this->tab = 'products';
                     $.ajax({
                         url: $modalPpload.attr('data-updatepploadfile-uri'),
                         type: 'POST',
+                        async: false,
+                        cache: false,
                         data: {
                             file_id: fileId,
                             file_tags: fileTags
@@ -853,6 +869,8 @@ $this->tab = 'products';
                         type: 'POST',
                         data: {file_id: fileId},
                         dataType: 'json',
+                        async: false,
+                        cache: false,
                         success: function (data, textStatus, jqXHR) {
                             if (data.status != 'ok') {
                                 alert('Error: ' + data.error_text);
@@ -892,6 +910,8 @@ $this->tab = 'products';
                     $.ajax({
                         url: $modalPpload.attr('data-deletepploadfiles-uri'),
                         type: 'POST',
+                        async: false,
+                        cache: false,
                         data: {},
                         dataType: 'json',
                         success: function (data, textStatus, jqXHR) {
@@ -1184,6 +1204,8 @@ $this->tab = 'products';
                     $.ajax({
                         url: '/p/'+productId+'/getupdatesajax/',
                         type: 'GET',
+                        async: false,
+                        cache: false,
                         data: {
                             format: 'json',
                             ignore_status_code: 1
