@@ -127,16 +127,13 @@ function (_React$Component) {
           user: this.state.user
         });
         siteHeaderTopRightCssClass = "w-user";
-      } // else {
-      //   loginMenuDisplay = (
-      //     <SiteHeaderLoginMenu
-      //       baseUrl={this.state.baseUrl}
-      //       redirectString={this.state.redirectString}
-      //       template={this.state.template}
-      //     />
-      //   );
-      // }
-
+      } else {
+        loginMenuDisplay = React.createElement(SiteHeaderLoginMenu, {
+          baseUrl: this.state.baseUrl,
+          redirectString: this.state.redirectString,
+          template: this.state.template
+        });
+      }
 
       var logoLink = this.state.serverUrl;
 
@@ -299,16 +296,12 @@ function (_React$Component3) {
 
       var menuItemCssClass = {
         "borderColor": this.props.template['header-nav-tabs']['border-color'],
-        "backgroundColor": this.props.template['header-nav-tabs']['background-color']
+        "backgroundColor": this.props.template['header-nav-tabs']['background-color'] //<li style={menuItemCssClass} className={registerButtonCssClass}><a href={this.props.baseUrl + "/register"}>Register</a></li>
+
       };
       return React.createElement("div", {
         id: "site-header-login-menu"
       }, React.createElement("ul", null, React.createElement("li", {
-        style: menuItemCssClass,
-        className: registerButtonCssClass
-      }, React.createElement("a", {
-        href: this.props.baseUrl + "/register"
-      }, "Register")), React.createElement("li", {
         style: menuItemCssClass,
         className: loginButtonCssClass
       }, React.createElement("a", {

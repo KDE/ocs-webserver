@@ -21,7 +21,7 @@ class AboutMenu extends React.Component {
 
     if (this.node.contains(e.target)){
 
-      if(e.target.className === "about-menu-link-item")
+      if(e.target.className === "about-menu-link-item" || "th-icon"===e.target.className)
       {
         // only btn click open dropdown
         if (this.state.dropdownClass === "open"){
@@ -51,7 +51,7 @@ class AboutMenu extends React.Component {
 
     return (
       <li ref={node => this.node = node} id="about-dropdown-menu" className={this.state.dropdownClass}>
-        <a className="about-menu-link-item"> About </a>
+        <a className="about-menu-link-item"> About &#8964; </a>
         <ul className="dropdown-menu dropdown-menu-right">
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
           {faqLinkItem}

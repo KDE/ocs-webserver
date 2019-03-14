@@ -61,16 +61,15 @@ class SiteHeader extends React.Component {
         />
       );
       siteHeaderTopRightCssClass = "w-user";
+    } else {
+      loginMenuDisplay = (
+        <SiteHeaderLoginMenu
+          baseUrl={this.state.baseUrl}
+          redirectString={this.state.redirectString}
+          template={this.state.template}
+        />
+      );
     }
-    // else {
-    //   loginMenuDisplay = (
-    //     <SiteHeaderLoginMenu
-    //       baseUrl={this.state.baseUrl}
-    //       redirectString={this.state.redirectString}
-    //       template={this.state.template}
-    //     />
-    //   );
-    // }
 
     let logoLink = this.state.serverUrl;
     if (this.state.serverUri.indexOf('/s/') > -1){
@@ -202,11 +201,10 @@ class SiteHeaderLoginMenu extends React.Component {
       "borderColor":this.props.template['header-nav-tabs']['border-color'],
       "backgroundColor":this.props.template['header-nav-tabs']['background-color']
     }
-
+    //<li style={menuItemCssClass} className={registerButtonCssClass}><a href={this.props.baseUrl + "/register"}>Register</a></li>
     return (
       <div id="site-header-login-menu">
         <ul>
-          <li style={menuItemCssClass} className={registerButtonCssClass}><a href={this.props.baseUrl + "/register"}>Register</a></li>
           <li style={menuItemCssClass} className={loginButtonCssClass}><a href={this.props.baseUrl + "/login" + this.props.redirectString}>Login</a></li>
         </ul>
       </div>
@@ -384,8 +382,7 @@ class MobileUserContainer extends React.Component {
           user={this.props.user}
         />
       );
-    }
-    else {
+    } else {
       userDisplay = (
         <SiteHeaderLoginMenu
           user={this.props.user}

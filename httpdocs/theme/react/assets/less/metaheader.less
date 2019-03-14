@@ -94,7 +94,7 @@ body.drawer-open {
       padding: 0 12px !important;
       border-radius: 2px !important;
       color: white !important;
-      font-size: 12px !important;
+      font-size: 13px !important;
       height: 26px !important;
       line-height: 25px !important;
       font-weight: bold;
@@ -339,7 +339,7 @@ body.drawer-open {
             }
           }
 
-          &#discussion-boards, &#admins-dropdown-menu,&#about-dropdown-menu, &#more-dropdown-menu, &#cd-dropdown-menu {
+          &#discussion-boards, &#admins-dropdown-menu, &#more-dropdown-menu, &#cd-dropdown-menu {
 
             position: relative;
             cursor: pointer;
@@ -441,12 +441,35 @@ body.drawer-open {
             padding: 5px;
             margin-top: 1px;
           }
+          &#user-register-container {
+            padding: 5px;
+            margin-top: 1px;
+            a{
+              font-size: 11pt;
+            }
+          }
 
             &#about-dropdown-menu{
 
             position: relative;
             cursor: pointer;
             z-index: 1000;
+            a.about-menu-link-item
+            {
+
+
+              .th-icon {
+                height: 18px;
+                width: 18px;
+                display: block;
+                background-image: url(../img/down-arrow.svg);
+                background-size: 15px;
+                background-position: bottom right;
+                cursor: pointer;
+                background-repeat: no-repeat;
+                float: right;
+              }
+            }
 
             &.open {
               .dropdown-menu {
@@ -477,10 +500,6 @@ body.drawer-open {
                   display: block;
                   color: #6a7686;
 
-                  &.admins-menu-link-item,
-                  &.cd-menu-link-item {
-                    font-weight: bold;
-                  }
                 }
 
                 > ul {
@@ -494,7 +513,7 @@ body.drawer-open {
                   height: auto;
                   min-height: auto;
                   width: 100%;
-                  box-shadow: none; 
+                  box-shadow: none;
                   margin: 0;
 
                   &::before {
