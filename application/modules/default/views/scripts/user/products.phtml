@@ -101,7 +101,7 @@ $this->tab = 'products';
             },
             
             initBtnPublish: function () {
-                $('body').on('click', 'a[data-target]', function (event) {
+                $('body').off('click', 'a[data-target]').on('click', 'a[data-target]', function (event) {
                     event.preventDefault();
                     var url = this.href;
                     var target = $(this).attr("data-target");
@@ -120,7 +120,7 @@ $this->tab = 'products';
             
             initFilesPopup: function () {
                 
-                $('body').on("click", "#github_picker", function (event) {
+                $('body').off("click", "#github_picker").on("click", "#github_picker", function (event) {
 
                     html = '<form id="get-url-form">' +
                         '<div class="form-group">' +
@@ -139,7 +139,7 @@ $this->tab = 'products';
 
                 });
 
-                $('body').on('submit', '#get-url-form', function(event) {
+                $('body').off('submit', '#get-url-form').on('submit', '#get-url-form', function(event) {
                     if (! $('#get-url-form').validate()) {
                         return true;
                     }
@@ -147,8 +147,6 @@ $this->tab = 'products';
                     $.ajax({
                         url: '/file/link/',
                         type: 'post',
-                        async: false,
-                        cache: false,
                         data: {
                             project_id: $('#modal-ppload').attr('data-product-id'),
                             u: $('#get-url').val()
@@ -173,7 +171,7 @@ $this->tab = 'products';
                     });
                 });
 
-                $('body').on('change', '#get-url', function(event) {
+                $('body').off('change', '#get-url').on('change', '#get-url', function(event) {
                     $('#get-url-help').empty();
                 });
 
@@ -220,8 +218,6 @@ $this->tab = 'products';
                         //url: pploadApiUri + 'files/index',
                         url: '/p/'+prodId+'/getfilesajax',
                         type: 'GET',
-                        async: false,
-                        cache: false,
                         data: {
                             collection_id: collectionId,
                             perpage: 1000,
@@ -242,8 +238,6 @@ $this->tab = 'products';
                             $.ajax({
                                 url: '/p/'+prodId+'/gettaggroupsforcatajax',
                                 type: 'GET',
-                                async: false,
-                                cache: false,
                                 timeout: 30000,
                                 data: {project_cat_id: catId},
                                 dataType: 'json',
@@ -304,8 +298,6 @@ $this->tab = 'products';
                                     $.ajax({
                                         url: '/p/'+prodId+'/gettaggroupsforcatajax',
                                         type: 'GET',
-                                        async: false,
-                                        cache: false,
                                         timeout: 30000,
                                         data: {project_cat_id: catId, file_id: this.id, test: false},
                                         dataType: 'json',
@@ -324,8 +316,6 @@ $this->tab = 'products';
                                     $.ajax({
                                         url: '/p/'+prodId+'/getfiletagsajax',
                                         type: 'GET',
-                                        async: false,
-                                        cache: false,
                                         timeout: 30000,
                                         data: {file_id: this.id},
                                         dataType: 'json',
@@ -602,8 +592,6 @@ $this->tab = 'products';
                         dataType: 'json',
                         contentType: false,
                         processData: false,
-                        async: false,
-                        cache: false,
                         success: function (data, textStatus, jqXHR) {
                             if (data.status != 'ok') {
                                 return;
@@ -663,8 +651,6 @@ $this->tab = 'products';
                             $.ajax({
                                 url: '/p/'+$modalPpload.attr('data-product-id')+'/gettaggroupsforcatajax',
                                 type: 'GET',
-                                async: false,
-                                cache: false,
                                 timeout: 30000,
                                 data: {project_cat_id: catId},
                                 dataType: 'json',
@@ -742,8 +728,6 @@ $this->tab = 'products';
                     $.ajax({
                         url: $modalPpload.attr('data-updatepploadfile-uri'),
                         type: 'POST',
-                        async: false,
-                        cache: false,
                         data: {
                             file_id: fileId,
                             file_description: fileDescription,
@@ -767,8 +751,6 @@ $this->tab = 'products';
                     $.ajax({
                         url: $modalPpload.attr('data-updatefiletag-uri'),
                         type: 'POST',
-                        async: false,
-                        cache: false,
                         data: {
                             file_id: fileId,
                             tag_id: tagId,
@@ -792,8 +774,6 @@ $this->tab = 'products';
                     $.ajax({
                         url: $modalPpload.attr('data-deletefiletag-uri'),
                         type: 'POST',
-                        async: false,
-                        cache: false,
                         data: {
                             file_id: fileId,
                             tag_id: tagId
@@ -819,8 +799,6 @@ $this->tab = 'products';
                     $.ajax({
                         url: $modalPpload.attr('data-updatepploadfile-uri'),
                         type: 'POST',
-                        async: false,
-                        cache: false,
                         data: {
                             file_id: fileId,
                             file_version: version
@@ -843,8 +821,6 @@ $this->tab = 'products';
                     $.ajax({
                         url: $modalPpload.attr('data-updatepploadfile-uri'),
                         type: 'POST',
-                        async: false,
-                        cache: false,
                         data: {
                             file_id: fileId,
                             file_tags: fileTags
@@ -869,8 +845,6 @@ $this->tab = 'products';
                         type: 'POST',
                         data: {file_id: fileId},
                         dataType: 'json',
-                        async: false,
-                        cache: false,
                         success: function (data, textStatus, jqXHR) {
                             if (data.status != 'ok') {
                                 //alert('Error: ' + data.error_text);
@@ -910,8 +884,6 @@ $this->tab = 'products';
                     $.ajax({
                         url: $modalPpload.attr('data-deletepploadfiles-uri'),
                         type: 'POST',
-                        async: false,
-                        cache: false,
                         data: {},
                         dataType: 'json',
                         success: function (data, textStatus, jqXHR) {
@@ -956,7 +928,7 @@ $this->tab = 'products';
                     return size;
                 }
 
-                $('a[href="#modal-ppload"]').on('click', function (event) {
+                $('a[href="#modal-ppload"]').off('click').on('click', function (event) {
                     event.preventDefault();
                     $modalPpload.attr('data-ppload-collection-id', $(this).attr('data-ppload-collection-id'));
                     $modalPpload.attr('data-product-id', $(this).attr('data-product-id'));
@@ -1001,21 +973,21 @@ $this->tab = 'products';
 
                 });
 
-                $modalPpload.on('dragover', 'div[data-file-upload]', function (event) {
+                $modalPpload.off('dragover', 'div[data-file-upload]').on('dragover', 'div[data-file-upload]', function (event) {
                     event.preventDefault();
                 });
 
-                $modalPpload.on('dragenter', 'div[data-file-upload]', function (event) {
+                $modalPpload.off('dragenter', 'div[data-file-upload]').on('dragenter', 'div[data-file-upload]', function (event) {
                     event.preventDefault();
                     $(this).css('border-color', '#00ccff');
                 });
 
-                $modalPpload.on('dragleave', 'div[data-file-upload]', function (event) {
+                $modalPpload.off('dragleave', 'div[data-file-upload]').on('dragleave', 'div[data-file-upload]', function (event) {
                     event.preventDefault();
                     $(this).css('border-color', '#cccccc');
                 });
 
-                $modalPpload.on('drop', 'div[data-file-upload]', function (event) {
+                $modalPpload.off('drop', 'div[data-file-upload]').on('drop', 'div[data-file-upload]', function (event) {
                     event.preventDefault();
                     $.each(event.originalEvent.dataTransfer.files, function () {
                         addFileToPploadUploadQueue(null, this);
@@ -1024,19 +996,19 @@ $this->tab = 'products';
                     $(this).css('border-color', '#cccccc');
                 });
 
-                $modalPpload.on('change', 'input[data-file-upload]', function (event) {
+                $modalPpload.off('change', 'input[data-file-upload]').on('change', 'input[data-file-upload]', function (event) {
                     $.each(this.files, function () {
                         addFileToPploadUploadQueue(null, this);
                     });
                     startUploadPploadFiles();
                 });
 
-                $modalPpload.on('click', 'button[data-addpploadfile-btn]', function (event) {
+                $modalPpload.off('click', 'button[data-addpploadfile-btn]').on('click', 'button[data-addpploadfile-btn]', function (event) {
                     event.preventDefault();
                     $modalPpload.find('input[data-file-upload]').click();
                 });
 
-                $modalPpload.on('change', 'input[data-file-upload-update]', function (event) {
+                $modalPpload.off('change', 'input[data-file-upload-update]').on('change', 'input[data-file-upload-update]', function (event) {
                     if ($(this).attr('data-ppload-file-id')) {
                         var fileId = $(this).attr('data-ppload-file-id');
                         $modalPpload.find('tr[data-ppload-file-id="' + fileId + '"]').hide();
@@ -1045,14 +1017,14 @@ $this->tab = 'products';
                     }
                 });
 
-                $modalPpload.on('click', 'tr[data-ppload-file-id] a[data-updatepploadfile-btn]', function (event) {
+                $modalPpload.off('click', 'tr[data-ppload-file-id] a[data-updatepploadfile-btn]').on('click', 'tr[data-ppload-file-id] a[data-updatepploadfile-btn]', function (event) {
                     event.preventDefault();
                     var $inputForm = $modalPpload.find('input[data-file-upload-update]');
                     $inputForm.attr('data-ppload-file-id', $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id'));
                     $inputForm.click();
                 });
 
-                $modalPpload.on('click', 'input[data-accept-checkbox]', function (event) {
+                $modalPpload.off('click', 'input[data-accept-checkbox]').on('click', 'input[data-accept-checkbox]', function (event) {
                     if ($modalPpload.find('input[data-accept-checkbox]').is(':checked')) {
                         $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
                         $modalPpload.find('#github_picker').removeAttr('disabled');
@@ -1062,29 +1034,29 @@ $this->tab = 'products';
                     }
                 });
 
-                $modalPpload.on('click', 'tr[data-ppload-file-id] a[data-deletepploadfile-btn]', function (event) {
+                $modalPpload.off('click', 'tr[data-ppload-file-id] a[data-deletepploadfile-btn]').on('click', 'tr[data-ppload-file-id] a[data-deletepploadfile-btn]', function (event) {
                     event.preventDefault();
                     deletePploadFile($(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id'));
                 });
 
-                $modalPpload.on('click', 'button[data-deletepploadfiles-btn]', function (event) {
+                $modalPpload.off('click', 'button[data-deletepploadfiles-btn]').on('click', 'button[data-deletepploadfiles-btn]', function (event) {
                     event.preventDefault();
                     deletePploadFiles();
                 });
 
-                $modalPpload.on('click', 'button[data-ppload-cancel-btn]', function (event) {
+                $modalPpload.off('click', 'button[data-ppload-cancel-btn]').on('click', 'button[data-ppload-cancel-btn]', function (event) {
                     event.preventDefault();
                     $modalPpload.modal('hide');
                 });
 
-                $modalPpload.on('click', 'button[data-file-upload-cancel-btn]', function (event) {
+                $modalPpload.off('click', 'button[data-file-upload-cancel-btn]').on('click', 'button[data-file-upload-cancel-btn]', function (event) {
                     event.preventDefault();
                     pploadUploads.uploading.abort();
                     pploadUploads.queue = {};
                     $modalPpload.find('table[data-file-upload] tbody').html('');
                 });
 
-                $modalPpload.on('click', 'tr[data-file-upload-id] a[data-file-upload-cancel-btn]', function (event) {
+                $modalPpload.off('click', 'tr[data-file-upload-id] a[data-file-upload-cancel-btn]').on('click', 'tr[data-file-upload-id] a[data-file-upload-cancel-btn]', function (event) {
                     event.preventDefault();
                     var uploadId = $(this).closest('tr[data-file-upload-id]').attr('data-file-upload-id');
                     if (uploadId == pploadUploads.currentUploadId) {
@@ -1096,7 +1068,7 @@ $this->tab = 'products';
                     }
                 });
 
-                $modalPpload.on('change', 'input[data-ppload-file-description]', function (event) {
+                $modalPpload.off('change', 'input[data-ppload-file-description]').on('change', 'input[data-ppload-file-description]', function (event) {
                     event.preventDefault();
                     var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
                     var fileDescription = $(this).closest('input[data-ppload-file-description]').val();
@@ -1108,14 +1080,14 @@ $this->tab = 'products';
                     updatePploadFile(fileId, fileDescription, fileCategory, fileTags);
                 });
 
-                $modalPpload.on('change', 'input[data-ppload-file-version]', function (event) {
+                $modalPpload.off('change', 'input[data-ppload-file-version]').on('change', 'input[data-ppload-file-version]', function (event) {
                     event.preventDefault();
                     var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
                     var fileVersion = $(this).closest('input[data-ppload-file-version]').val();
                     updatePploadFileVersion(fileId, fileVersion);
                 });
 
-                $modalPpload.on('change', 'select[data-tag-group]', function(event) {
+                $modalPpload.off('change', 'select[data-tag-group]').on('change', 'select[data-tag-group]', function(event) {
                     event.preventDefault();
                     var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
                     var fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
@@ -1142,7 +1114,7 @@ $this->tab = 'products';
                 });
 
 
-                $modalPpload.on('click', 'span[data-file-tag-id]', function (event) {
+                $modalPpload.off('click', 'span[data-file-tag-id]').on('click', 'span[data-file-tag-id]', function (event) {
                     event.preventDefault();
 
                     $tagId = $(this).attr('data-file-tag-id');
@@ -1180,7 +1152,7 @@ $this->tab = 'products';
 
                 var $modalUpdates = $('#modal-updates');
 
-                $('a[href="#modal-updates"]').on('click', function (event) {
+                $('a[href="#modal-updates"]').off('click').on('click', function (event) {
                     event.preventDefault();
                     
                     $modalUpdates.attr('data-product-id', $(this).attr('data-product-id'));
@@ -1204,8 +1176,6 @@ $this->tab = 'products';
                     $.ajax({
                         url: '/p/'+productId+'/getupdatesajax/',
                         type: 'GET',
-                        async: false,
-                        cache: false,
                         data: {
                             format: 'json',
                             ignore_status_code: 1
@@ -1270,7 +1240,7 @@ $this->tab = 'products';
 
                 }
 
-                $modalUpdates.on('click', 'button[data-add-update-btn]', function (event) {
+                $modalUpdates.off('click', 'button[data-add-update-btn]').on('click', 'button[data-add-update-btn]', function (event) {
                     //var product_version = $modalPpload.find('#product-version').val();
                     var update_id = $modalUpdates.find('#update-id').val();
                     var title = $modalUpdates.find('#update-title').val();
@@ -1281,8 +1251,6 @@ $this->tab = 'products';
                     $.ajax({
                         url: '/p/'+productId+'/saveupdateajax',
                         type: 'POST',
-                        async: false,
-                        cache: false,
                         data: {title: title, text: text, update_id: update_id/*, product_version: product_version*/},
                         dataType: 'json',
                         success: function (data, textStatus, jqXHR) {
@@ -1309,7 +1277,7 @@ $this->tab = 'products';
                 });
 
 
-                $modalUpdates.on('click', 'button[data-delete-update-btn]', function (event) {
+                $modalUpdates.off('click', 'button[data-delete-update-btn]').on('click', 'button[data-delete-update-btn]', function (event) {
                     var updateId = $(this).attr('data-delete-update-btn');
                     var productId = $modalUpdates.attr('data-product-id');
                         event.preventDefault();
@@ -1317,8 +1285,6 @@ $this->tab = 'products';
                     $.ajax({
                         url: '/p/'+productId+'/deleteupdateajax',
                         type: 'POST',
-                        async: false,
-                        cache: false,
                         data: {update_id: updateId},
                         dataType: 'json',
                         success: function (data, textStatus, jqXHR) {
@@ -1335,7 +1301,7 @@ $this->tab = 'products';
 
                 });
 
-                $modalUpdates.on('click', 'button[data-change-update-btn]', function (event) {
+                $modalUpdates.off('click', 'button[data-change-update-btn]').on('click', 'button[data-change-update-btn]', function (event) {
                     var updateId = $(this).attr('data-change-update-btn');
                     var title = $(this).attr('data-change-title');
                     var text = $(this).attr('data-change-text');
@@ -1350,7 +1316,7 @@ $this->tab = 'products';
 
                 });
 
-                $modalUpdates.on('click', 'button[data-updates-cancel-btn]', function (event) {
+                $modalUpdates.off('click', 'button[data-updates-cancel-btn]').on('click', 'button[data-updates-cancel-btn]', function (event) {
                     event.preventDefault();
                     $modalUpdates.modal('hide');
                 });
@@ -1490,7 +1456,8 @@ $this->tab = 'products';
                         TagingLoopMyProducts.setup();
                         Opendownloadfile.setup();
                         myProducts.setup();
-                        Partials.setup();                    });
+                        Partials.setup();                    
+                     });
                 ');
 
      ?>
