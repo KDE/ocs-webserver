@@ -3,6 +3,7 @@ import UserLoginMenuContainer from './UserLoginMenuContainer';
 import UserContextMenuContainer from './UserContextMenuContainer';
 import DevelopmentAppMenu from './DevelopmentAppMenu';
 import SwitchItem from './SwitchItem';
+import AboutMenu from './AboutMenu';
 class UserMenu extends React.Component {
   constructor(props){
     super(props);
@@ -48,23 +49,17 @@ class UserMenu extends React.Component {
       );
     } else {
       userDropdownDisplay = (
+        <React.Fragment>
         <li id="user-login-container"><a href={this.props.loginUrl} className="btn btn-metaheader">Login</a></li>
-      )
+        <li id="user-register-container">or <a href='https://www.opendesktop.org/register'>Register</a></li>
+        </React.Fragment>
+    )
     }
 
     let userMenuContainerDisplay;
     if (this.props.device === "large"){
 
-      let faqLinkItem, apiLinkItem, aboutLinkItem;
-      if (this.props.isExternal === false){
-        faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>FAQ</a></li>);
-        apiLinkItem = (<li><a className="popuppanel" id="api" href={"/partials/ocsapicontent.phtml"}>API</a></li>);
-        aboutLinkItem = (<li><a className="popuppanel" id="about" href={"/partials/about.phtml"}>About</a></li>);
-      } else {
-        faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={this.props.baseUrl + "/#faq"}>FAQ</a></li>);
-        apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={this.props.baseUrl + "/#api"}>API</a></li>);
-        aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={this.props.baseUrl + "/#about"}>About</a></li>);
-      }
+
 
       let switchItem;
 
@@ -73,14 +68,16 @@ class UserMenu extends React.Component {
                   onSwitchStyleChecked={this.props.onSwitchStyleChecked}/></li>);
       }
 
+      const aboutMenu = <AboutMenu blogUrl={this.props.blogUrl}
+                                  isExternal={this.props.isExternal}
+                                  baseUrl={this.props.baseUrl}
+                                  />
+
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
-          <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-          {faqLinkItem}
-          {apiLinkItem}
-          {aboutLinkItem}
+          {aboutMenu}
           {switchItem}
           {developmentAppMenuDisplay}
           {userAppsContextDisplay}
