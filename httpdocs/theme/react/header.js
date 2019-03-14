@@ -42,11 +42,11 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 var SiteHeader =
 /*#__PURE__*/
@@ -82,7 +82,7 @@ function (_React$Component) {
       status: "",
       url_logout: window.json_logouturl
     };
-    _this.updateDimensions = _this.updateDimensions.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.updateDimensions = _this.updateDimensions.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -127,13 +127,16 @@ function (_React$Component) {
           user: this.state.user
         });
         siteHeaderTopRightCssClass = "w-user";
-      } else {
-        loginMenuDisplay = React.createElement(SiteHeaderLoginMenu, {
-          baseUrl: this.state.baseUrl,
-          redirectString: this.state.redirectString,
-          template: this.state.template
-        });
-      }
+      } // else {
+      //   loginMenuDisplay = (
+      //     <SiteHeaderLoginMenu
+      //       baseUrl={this.state.baseUrl}
+      //       redirectString={this.state.redirectString}
+      //       template={this.state.template}
+      //     />
+      //   );
+      // }
+
 
       var logoLink = this.state.serverUrl;
 
@@ -226,8 +229,8 @@ function (_React$Component2) {
     _this2.state = {
       searchText: ''
     };
-    _this2.onSearchTextChange = _this2.onSearchTextChange.bind(_assertThisInitialized(_assertThisInitialized(_this2)));
-    _this2.onSearchFormSubmit = _this2.onSearchFormSubmit.bind(_assertThisInitialized(_assertThisInitialized(_this2)));
+    _this2.onSearchTextChange = _this2.onSearchTextChange.bind(_assertThisInitialized(_this2));
+    _this2.onSearchFormSubmit = _this2.onSearchFormSubmit.bind(_assertThisInitialized(_this2));
     return _this2;
   }
 
@@ -329,7 +332,7 @@ function (_React$Component4) {
 
     _this4 = _possibleConstructorReturn(this, _getPrototypeOf(SiteHeaderUserMenu).call(this, props));
     _this4.state = {};
-    _this4.handleClick = _this4.handleClick.bind(_assertThisInitialized(_assertThisInitialized(_this4)));
+    _this4.handleClick = _this4.handleClick.bind(_assertThisInitialized(_this4));
     return _this4;
   }
 
@@ -419,9 +422,9 @@ function (_React$Component5) {
     _this6.state = {
       status: "switch"
     };
-    _this6.showMobileUserMenu = _this6.showMobileUserMenu.bind(_assertThisInitialized(_assertThisInitialized(_this6)));
-    _this6.showMobileSearchForm = _this6.showMobileSearchForm.bind(_assertThisInitialized(_assertThisInitialized(_this6)));
-    _this6.showMobileSwitchMenu = _this6.showMobileSwitchMenu.bind(_assertThisInitialized(_assertThisInitialized(_this6)));
+    _this6.showMobileUserMenu = _this6.showMobileUserMenu.bind(_assertThisInitialized(_this6));
+    _this6.showMobileSearchForm = _this6.showMobileSearchForm.bind(_assertThisInitialized(_this6));
+    _this6.showMobileSwitchMenu = _this6.showMobileSwitchMenu.bind(_assertThisInitialized(_this6));
     return _this6;
   }
 

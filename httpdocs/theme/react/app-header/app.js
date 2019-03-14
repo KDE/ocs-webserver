@@ -61,15 +61,16 @@ class SiteHeader extends React.Component {
         />
       );
       siteHeaderTopRightCssClass = "w-user";
-    } else {
-      loginMenuDisplay = (
-        <SiteHeaderLoginMenu
-          baseUrl={this.state.baseUrl}
-          redirectString={this.state.redirectString}
-          template={this.state.template}
-        />
-      );
     }
+    // else {
+    //   loginMenuDisplay = (
+    //     <SiteHeaderLoginMenu
+    //       baseUrl={this.state.baseUrl}
+    //       redirectString={this.state.redirectString}
+    //       template={this.state.template}
+    //     />
+    //   );
+    // }
 
     let logoLink = this.state.serverUrl;
     if (this.state.serverUri.indexOf('/s/') > -1){
@@ -383,7 +384,8 @@ class MobileUserContainer extends React.Component {
           user={this.props.user}
         />
       );
-    } else {
+    }
+    else {
       userDisplay = (
         <SiteHeaderLoginMenu
           user={this.props.user}
