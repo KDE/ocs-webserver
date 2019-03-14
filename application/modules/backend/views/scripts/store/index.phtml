@@ -282,7 +282,35 @@
                     defaultValue: 1
                 },
                  is_show_git_projects: {
-                    title: 'Show Git-Project-List',                   
+                    title: 'Sidebar: Show Git-Project-List',                   
+                    //type: 'checkbox',
+                    create: true,
+                    edit: true,
+                    list:false,
+                    //values: { 0: 'No', 1: 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
+                    defaultValue: 1
+                },
+                 is_show_blog_news: {
+                    title: 'Sidebar: Show Blog-News',                   
+                    //type: 'checkbox',
+                    create: true,
+                    edit: true,
+                    list:false,
+                    //values: { 0: 'No', 1: 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
+                    defaultValue: 1
+                },
+                 is_show_forum_news: {
+                    title: 'Sidebar: Show Last Forums-Posts',                   
                     //type: 'checkbox',
                     create: true,
                     edit: true,
