@@ -32,9 +32,7 @@ class DevelopmentAppMenu extends React.Component {
   }
 
   handleClick(e){
-    let dropdownClass = "";
-    console.log('>>>>>>>>>>>>>>');
-    console.log(e.target);
+    let dropdownClass = "";    
     if (this.node.contains(e.target)){
       if(e.target.className === "btn btn-default dropdown-toggle"
           || e.target.className === "th-icon")
