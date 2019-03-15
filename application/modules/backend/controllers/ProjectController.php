@@ -178,13 +178,14 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
 
     public function deleteAction()
     {
+        $identity = Zend_Auth::getInstance()->getIdentity();
         $dataId = (int)$this->getParam(self::DATA_ID_NAME, null);
 
-        $this->_model->setDeleted($dataId);
+        $this->_model->setDeleted($identity->member_id, $dataId);
 
         $product = $this->_model->find($dataId)->current();
 
-        $identity = Zend_Auth::getInstance()->getIdentity();
+        
         Default_Model_ActivityLog::logActivity($dataId, $dataId, $identity->member_id,
             Default_Model_ActivityLog::BACKEND_PROJECT_DELETE, $product);
 
