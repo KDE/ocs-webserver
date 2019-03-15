@@ -306,7 +306,7 @@ function (_React$Component3) {
         className: loginButtonCssClass
       }, React.createElement("a", {
         href: this.props.baseUrl + "/login" + this.props.redirectString
-      }, "Login"))));
+      }, "Sign in"))));
     }
   }]);
 

@@ -205,7 +205,7 @@ class SiteHeaderLoginMenu extends React.Component {
     return (
       <div id="site-header-login-menu">
         <ul>
-          <li style={menuItemCssClass} className={loginButtonCssClass}><a href={this.props.baseUrl + "/login" + this.props.redirectString}>Login</a></li>
+          <li style={menuItemCssClass} className={loginButtonCssClass}><a href={this.props.baseUrl + "/login" + this.props.redirectString}>Sign in</a></li>
         </ul>
       </div>
     )
