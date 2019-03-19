@@ -183,9 +183,9 @@ class Carousel extends React.Component {
 
     } else if (window.page === "appimages" || window.page === "libreoffice"){
       containerWidth = $('#introduction').find('.container').width();
-    }       
+    }
     const containerNumber = Math.ceil(this.state.products.length / (itemsPerRow - 1));
-    const itemWidth = containerWidth / itemsPerRow;    
+    const itemWidth = containerWidth / itemsPerRow;
     const sliderWidth = (containerWidth - itemWidth) * containerNumber;
     let sliderPosition = 0;
     if (this.state.sliderPosition){
@@ -220,13 +220,13 @@ class Carousel extends React.Component {
     if (dir === 'left'){
       if (this.state.sliderPosition > 0){
         //newSliderPosition = this.state.sliderPosition - (this.state.containerWidth - this.state.itemWidth);
-        newSliderPosition = this.state.sliderPosition - this.state.itemWidth;
+        newSliderPosition = this.state.sliderPosition - this.state.itemWidth *2 ;
       }
     } else {
 
       if (Math.trunc(this.state.sliderPosition) < Math.trunc(endPoint)){
         //newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
-        newSliderPosition = this.state.sliderPosition + this.state.itemWidth;
+        newSliderPosition = this.state.sliderPosition + this.state.itemWidth *2 ;
       } else {
         newSliderPosition = 0
         /*if (!animateCarousel){
@@ -238,7 +238,7 @@ class Carousel extends React.Component {
         }*/
       }
     }
-    
+
 
     this.setState({sliderPosition:newSliderPosition},function(){
 
@@ -365,16 +365,16 @@ class Carousel extends React.Component {
       carouselArrowsMargin = this.state.itemWidth / 4;
     }
 
-    let urlSuffix='';    
+    let urlSuffix='';
     if (window.page === "libreoffice"){
-      urlSuffix = "/s/LibreOffice";      
+      urlSuffix = "/s/LibreOffice";
     }
     let titleLink = urlSuffix + "/browse/cat/" + this.props.catIds + "/";
     if (!this.props.catIds){
       titleLink = "/community#plingedproductsPanel";
     }else if(this.props.catIds.indexOf(',')>0){
       titleLink  = urlSuffix + "/browse/";
-    }    
+    }
 
 
     return (
