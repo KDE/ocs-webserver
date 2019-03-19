@@ -119,7 +119,7 @@ class Default_Model_ProjectComments
                 FROM comments 
                 STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id 
                 WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id <> 0 
-                ORDER BY comment_created_at, comment_id
+                ORDER BY comment_created_at DESC
                 ";
         $rowset2 = $this->_dataTable->getAdapter()->fetchAll($sql, array(
                 'status_active' => 1,
