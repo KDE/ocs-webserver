@@ -18,18 +18,20 @@ class DiscussionBoardsDropDownMenu extends React.Component {
   }
 
   loadNotification(){
-    let api_key = 'fbd262ef8762bb647e1356c9455e65c4ef0d332bd27d27f3eabf9ffadee79e39';
-    let url = this.props.forumUrl+'/notifications.json?api_key='+api_key
-              +'&api_username='+this.props.user.username;
-    fetch(url)
-    .then(response => response.json())
-    .then(data => {
-        const nots = data.notifications.filter(note => note.read==false);
-        if(nots.length>0 && this.state.notification_count !== nots.length)
-        {
-            this.setState(prevState => ({ notification: true, notification_count:nots.length }))
-        }
-     });
+    if(this.props.user){
+      let api_key = 'fbd262ef8762bb647e1356c9455e65c4ef0d332bd27d27f3eabf9ffadee79e39';
+      let url = this.props.forumUrl+'/notifications.json?api_key='+api_key
+                +'&api_username='+this.props.user.username;
+      fetch(url)
+      .then(response => response.json())
+      .then(data => {
+          const nots = data.notifications.filter(note => note.read==false);
+          if(nots.length>0 && this.state.notification_count !== nots.length)
+          {
+              this.setState(prevState => ({ notification: true, notification_count:nots.length }))
+          }
+       });
+     }
   }
 
   componentDidMount(){
