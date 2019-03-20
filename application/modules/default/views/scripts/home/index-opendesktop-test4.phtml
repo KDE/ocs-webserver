@@ -29,10 +29,10 @@ $this->headMeta()->appendProperty('og:description','A community where developers
 $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images/system/opendesktop-logo.png');
 
 $modelInfo = new Default_Model_Info();
-// $productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'152,233');
-// $productsThemes = $modelInfo->getLastProductsForHostStores(5,'158,509,330,404,148,491,445,295');
-$productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'33,233');
-$productsThemes = $modelInfo->getLastProductsForHostStores(5,'33,295');
+$productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'152,233');
+$productsThemes = $modelInfo->getLastProductsForHostStores(5,'158,509,330,404,148,491,445,295');
+//$productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'33,233');
+//$productsThemes = $modelInfo->getLastProductsForHostStores(5,'33,295');
 foreach ($productsAppAddons as &$p) {
   $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
 }
