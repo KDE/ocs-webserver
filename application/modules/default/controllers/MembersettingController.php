@@ -89,7 +89,7 @@ class MembersettingController extends Zend_Controller_Action
 
     public function getsettingsAction()
     {
-		$this->_initResponseHeader();
+			$this->_initResponseHeader();
     	$identity = Zend_Auth::getInstance()->getStorage()->read();
     	if($identity==null || $identity->member_id==null)
     	{
@@ -139,7 +139,7 @@ class MembersettingController extends Zend_Controller_Action
 
 		public function notificationAction()
 		{
-			$this->_initResponseHeader();
+
     	$identity = Zend_Auth::getInstance()->getStorage()->read();
     	if($identity==null || $identity->member_id==null)
     	{
@@ -149,7 +149,7 @@ class MembersettingController extends Zend_Controller_Action
     		        );
 					$this->_sendResponse($response, $this->_format);
     	}else
-    	{				
+    	{
 				$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 				$api_key = Zend_Registry::get('config')->settings->client->default->forum_api_key;
 				$url=$url_forum.'/notifications.json?api_key='.$api_key.'&api_username='.$identity->username;
@@ -163,10 +163,8 @@ class MembersettingController extends Zend_Controller_Action
 
         curl_close($ch);
 
-				header('Content-Type: application/json; charset=UTF-8');
+				$this->_initResponseHeader();				
     		echo $data;
-				return;
-
     	}
 
 		}
