@@ -9,9 +9,9 @@ class CommentsContainer extends React.Component {
           <div className="cm-content">
             <span className="cm-userinfo">
               <img src={cm.profile_image_url}/>
-              <span className="username"><a href={"/p/"+cm.comment_target_id}>{cm.username}</a></span>
+              <span className="username"><a href={"/member/"+cm.member_id}>{cm.username}</a></span>
             </span>
-            <a className="title" href={"/member/"+cm.member_id}><span>{cm.title}</span></a>
+            <a className="title" href={"/p/"+cm.comment_target_id}>{cm.title}</a>
             <span className="content">
               {cm.comment_text}
             </span>
