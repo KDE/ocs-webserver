@@ -42,6 +42,8 @@ class DomainsMenu extends React.Component {
         />
         <DiscussionBoardsDropDownMenu
           forumUrl={this.props.forumUrl}
+          user={this.props.user}
+          baseUrl={this.props.baseUrl}
         />
         <DevelopmentDropDownMenu
           user={this.props.user}

@@ -32,6 +32,13 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
     $isGhnsExcluded = true;
 }
 
+$filesTable = new Default_Model_DbTable_PploadFiles();
+$countDownloadsToday = $filesTable->fetchCountDownloadsTodayForProject($this->product->ppload_collection_id);
+
+if(empty($countDownloadsToday)) {
+    $countDownloadsToday = 0;
+}
+
 
 // $heute = date("Y-m-d H:i:s");
 $today = (new DateTime())->modify('-1 day');
@@ -74,11 +81,13 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">added</span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->printDate($this->product->project_created_at) ?></span>
     </div>
+
     <div class="row">
         <span class=" col-lg-6 col-md-6 col-sm-6 col-xs-6">downloads today</span>
-        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <div id="downloadscnt">0</div></span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <div id="downloadscntdb"><?= $countDownloadsToday ?></div></span>
     </div>
-
+    
+    
     <div class="row">
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">page views today </span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->projectPageviewsToday($this->product->project_id) ?></span>
@@ -308,38 +317,7 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
 
        
     <?php endif; ?>
-
-
-    <script>
-        (function (collection_id) {
-            if (!collection_id) {
-                return;
-            }            
-            var current_date = '<?php echo $filterDownloadToday; ?>';       
-            $.ajax({
-                url: '<?= PPLOAD_API_URI ?>files/index',
-                type: 'GET',
-                data: {
-                    format: 'json',
-                    status: 'active',
-                    collection_id: collection_id,
-                    downloaded_timeperiod_begin: current_date,
-                    perpage: 1000
-                },
-                dataType: 'json',
-                success: function (response_data, textStatus, jqXHR) {
-                    var amount = 0;
-                    if (response_data.status === 'success') {
-                        var files = response_data.files;
-                        $.each(files, function(index, data_file) {
-                            amount += parseInt(data_file.downloaded_timeperiod_count);
-                        });
-                        $('#downloadscnt').empty().append(amount);
-                    }
-                }
-            });
-        }(<?=$this->product->ppload_collection_id?>));
-    </script>
+ 
 </div>
 
 <?php

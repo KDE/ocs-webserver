@@ -137,5 +137,39 @@ class MembersettingController extends Zend_Controller_Action
     	$this->_sendResponse($response, $this->_format);
     }
 
+		public function notificationAction()
+		{
+			$this->_initResponseHeader();
+    	$identity = Zend_Auth::getInstance()->getStorage()->read();
+    	if($identity==null || $identity->member_id==null)
+    	{
+    			$response = array(
+    		            'status'     => 'error',
+    		            'msg'	 => 'no user found'
+    		        );
+					$this->_sendResponse($response, $this->_format);
+    	}else
+    	{				
+				$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
+				$api_key = Zend_Registry::get('config')->settings->client->default->forum_api_key;
+				$url=$url_forum.'/notifications.json?api_key='.$api_key.'&api_username='.$identity->username;
+				$ch = curl_init();
+        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        $data = curl_exec($ch);
+
+        curl_close($ch);
+
+				header('Content-Type: application/json; charset=UTF-8');
+    		echo $data;
+				return;
+
+    	}
+
+		}
+
 
 }

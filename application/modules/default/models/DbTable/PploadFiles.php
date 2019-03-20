@@ -51,6 +51,10 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
     public function fetchFilesForProject($collection_id)
     {
 
+        if(empty($collection_id)) {
+            return null;
+        }
+        
         $sql = " select * 
                      from ppload.ppload_files f 
                      where f.collection_id = :collection_id     
@@ -78,12 +82,72 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
     public function fetchFilesCntForProject($collection_id)
     {
 
+        if(empty($collection_id)) {
+            return 0;
+        }
+        
         $sql = " select  count(1) as cnt
                      from ppload.ppload_files f 
                      where f.collection_id = :collection_id and f.active = 1                  
                    ";        
         $result = $this->_db->query($sql,array('collection_id' => $collection_id))->fetchAll();      
         return $result[0]['cnt'];
-    }        
+    }     
+    
+    
+    public function fetchCountDownloadsTodayForProject($collection_id)
+    {
+        if(empty($collection_id)) {
+            return 0;
+        }
+        
+        $today = (new DateTime())->modify('-1 day');
+        $filterDownloadToday = $today->format("Y-m-d H:i:s");
 
+        $sql = "    SELECT COUNT(1) AS cnt
+                    FROM ppload.ppload_files_downloaded f
+                    WHERE f.collection_id = " . $collection_id . " 
+                    AND f.downloaded_timestamp >= '" . $filterDownloadToday . "'               
+                   ";        
+        $result = $this->_db->query($sql)->fetchAll();      
+        return $result[0]['cnt'];
+    }     
+
+    
+    private function fetchAllFiles($collection_id, $ignore_status = true, $activeFiles = false)
+    {
+        
+        if(empty($collection_id)) {
+            return null;
+        }
+
+        $sql = "    select  *
+                     from ppload.ppload_files f 
+                     where f.collection_id = :collection_id 
+                   ";        
+        if($ignore_status == FALSE && $activeFiles == TRUE) {
+           $sql .= " and f.active = 1";
+        }
+        if($ignore_status == FALSE && $activeFiles == FALSE) {
+           $sql .= " and f.active = 0";
+        }
+        $result = $this->_db->query($sql,array('collection_id' => $collection_id, ))->fetchAll();      
+        return $result;
+    }
+    
+    public function fetchAllFilesForProject($collection_id)
+    {
+        return $this->fetchAllFiles($collection_id, true);
+    }   
+    
+    public function fetchAllActiveFilesForProject($collection_id)
+    {
+        return $this->fetchAllFiles($collection_id, false, true);
+    }   
+
+    public function fetchAllInactiveFilesForProject($collection_id)
+    {
+        return $this->fetchAllFiles($collection_id, false, false);
+    }   
+    
 }

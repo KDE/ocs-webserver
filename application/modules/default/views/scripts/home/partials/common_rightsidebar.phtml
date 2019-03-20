@@ -139,17 +139,36 @@ $git_url = Zend_Registry::get('config')->settings->server->opencode->host;
                        <?php 
                 }
             ?>
+                       
+            <?php
+                
+                $store_config = Zend_Registry::get('store_config');
+                $is_show_blog_news = $store_config->is_show_blog_news;
+                if($is_show_blog_news==1) {
+            ?>           
             
             <span class="newsTitle"> News </span>
             <div class="prod-widget-box right bgwhite " id="rss-feeds"> </div>                  
-
+            
+            <?php
+                }
+            ?>
+            
+            <?php
+                
+                $is_show_forum_news = $store_config->is_show_forum_news;
+                if($is_show_forum_news==1) {
+            ?>
         
             <span class="newsTitle"> Forum </span>
             <div class="prod-widget-box right bgwhite " id="blogJson"> </div>     
            
             <?php
+                }
+            ?>            
+            
+            <?php
                 
-                $store_config = Zend_Registry::get('store_config');
                 $is_show_git_projects = $store_config->is_show_git_projects;
                 if($is_show_git_projects==1 && $this->show_git == true) {
             ?>

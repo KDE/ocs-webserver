@@ -30,7 +30,7 @@ body.drawer-open {
   }
 
   a {
-    cursor: pointer; 
+    cursor: pointer;
     text-decoration: none !important;
   }
 
@@ -94,7 +94,7 @@ body.drawer-open {
       padding: 0 12px !important;
       border-radius: 2px !important;
       color: white !important;
-      font-size: 12px !important;
+      font-size: 13px !important;
       height: 26px !important;
       line-height: 25px !important;
       font-weight: bold;
@@ -350,6 +350,26 @@ body.drawer-open {
                 display: block;
               }
             }
+            span.badge-notification{
+              display: inline-block;
+              font-weight: normal;
+              white-space: nowrap;
+              border-radius: 10px;
+              padding: 3px 5px;
+              min-width: 8px;
+              vertical-align: middle;
+              color: #fff;
+              font-size: .7579em;
+              line-height: 1;
+              text-align: center;
+              background-color: #bdbdbd;
+              position: absolute;
+              z-index: 1;            
+              min-width: 6px;
+              left: auto;
+              right: 12px;
+              background: #090;
+            }
 
             .dropdown-menu {
               width: 200px;
@@ -421,6 +441,8 @@ body.drawer-open {
             }
           }
 
+
+
           &#cd-dropdown-menu {
             .dropdown-menu {
               right: auto;
@@ -439,6 +461,90 @@ body.drawer-open {
             padding: 5px;
             margin-top: 1px;
           }
+          &#user-register-container {
+            padding: 5px;
+            margin-top: 1px;
+            a{
+              font-size: 11pt;
+            }
+          }
+
+            &#about-dropdown-menu{
+
+            position: relative;
+            cursor: pointer;
+            z-index: 1000;
+            a.about-menu-link-item
+            {
+
+
+              .th-icon {
+                height: 18px;
+                width: 18px;
+                display: block;
+                background-image: url(../img/down-arrow.svg);
+                background-size: 15px;
+                background-position: bottom right;
+                cursor: pointer;
+                background-repeat: no-repeat;
+                float: right;
+              }
+            }
+
+            &.open {
+              .dropdown-menu {
+                display: block;
+              }
+            }
+
+            .dropdown-menu {
+              width: 200px;
+              top: 45px;
+              right: auto;
+              min-height: 104px;
+              bottom: auto !important;
+              &::before {
+                right: 156px;
+              }
+
+              li {
+                padding: 0;
+
+                a {
+                  margin: 0;
+                  font-size: 13px;
+                  height: 24px;
+                  line-height: 24px;
+                  padding: 0 20px;
+                  border-radius: 0;
+                  display: block;
+                  color: #6a7686;
+
+                }
+
+                > ul {
+                  position: relative;
+                  float: left;
+                  top: 0;
+                  left: 0;
+                  padding: 5px;
+                  padding-top: 0;
+                  border: 0;
+                  height: auto;
+                  min-height: auto;
+                  width: 100%;
+                  box-shadow: none;
+                  margin: 0;
+
+                  &::before {
+                    display: none;
+                  }
+                }
+              }
+            }
+          }
+
+
         }
       }
     }
@@ -827,6 +933,7 @@ body.drawer-open {
     }
 
     #user-context-menu-container,
+    #about-menu-container,
     #development-app-menu-container {
 
       .user-dropdown {

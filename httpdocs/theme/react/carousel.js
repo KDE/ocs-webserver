@@ -526,12 +526,12 @@ function (_React$Component2) {
       if (dir === 'left') {
         if (this.state.sliderPosition > 0) {
           //newSliderPosition = this.state.sliderPosition - (this.state.containerWidth - this.state.itemWidth);
-          newSliderPosition = this.state.sliderPosition - this.state.itemWidth;
+          newSliderPosition = this.state.sliderPosition - this.state.itemWidth * 2;
         }
       } else {
         if (Math.trunc(this.state.sliderPosition) < Math.trunc(endPoint)) {
           //newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
-          newSliderPosition = this.state.sliderPosition + this.state.itemWidth;
+          newSliderPosition = this.state.sliderPosition + this.state.itemWidth * 2;
         } else {
           newSliderPosition = 0;
           /*if (!animateCarousel){

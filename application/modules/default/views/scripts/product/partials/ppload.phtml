@@ -173,7 +173,8 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                              page = 1;
                          }
                          $.ajax({
-                             url: pploadApiUri + 'files/index',
+                             //url: pploadApiUri + 'files/index',
+                             url: '/p/<?= $this->product->project_id ?>/getfilesajax',
                              type: 'GET',
                              data: {
                                  format: 'json',
@@ -713,9 +714,9 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                   */
 
 
-                                 if (data.pagination.next) {
-                                     getPploadFiles(data.pagination.next);
-                                 }
+                                /*if (data.pagination !== 'undefined' && data.pagination.next) {
+                                    getPploadFiles(data.pagination.next);
+                                }*/
 
                              },
                              error: function (jqXHR, textStatus, errorThrown) {

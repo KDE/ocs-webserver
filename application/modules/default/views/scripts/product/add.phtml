@@ -850,7 +850,8 @@ $this->inlineScript()->appendScript('
                         return;
                     } else {
                         $.ajax({
-                            url: pploadApiUri + 'files/index',
+                            //url: pploadApiUri + 'files/index',
+                            url: '/p/'+prodId+'/getfilesajax',
                             type: 'GET',
                             data: {
                                 collection_id: collectionId,
@@ -1066,9 +1067,9 @@ $this->inlineScript()->appendScript('
                                     $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
                                     $modalPpload.find('#github_picker').attr('disabled', 'disabled');
                                 }
-                                if (data.pagination.next) {
+                                /*if (data.pagination !== 'undefined' && data.pagination.next) {
                                     getPploadFiles(data.pagination.next);
-                                }
+                                }*/
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
                                 return;
