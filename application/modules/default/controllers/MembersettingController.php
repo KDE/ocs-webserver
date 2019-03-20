@@ -149,10 +149,10 @@ class MembersettingController extends Zend_Controller_Action
     		        );
 					$this->_sendResponse($response, $this->_format);
     	}else
-    	{
-				$api_key = 'd373b0fa6ba9bc52502ddc4cf4c0e3233dd7c5913010d16179328e6a3f3c12e1'; // live
-				$api_key = 'fbd262ef8762bb647e1356c9455e65c4ef0d332bd27d27f3eabf9ffadee79e39'; // cc
-				$url='https://forum.opendesktop.cc/notifications.json?api_key='.$api_key.'&api_username='.$identity->username;
+    	{				
+				$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
+				$api_key = Zend_Registry::get('config')->settings->client->default->forum_api_key;
+				$url=$url_forum.'/notifications.json?api_key='.$api_key.'&api_username='.$identity->username;
 				$ch = curl_init();
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
         curl_setopt($ch, CURLOPT_HEADER, 0);
