@@ -8,13 +8,15 @@ class ProductsContainer extends React.Component {
     let container;
     if (this.props.products){
       const products = this.props.products.map((product,index) => (
-        <div className="row" key={index}><Product product={product}/></div>
+        <li key={index}>
+        <Product product={product}/>
+        </li>
       ));
-     container = <div>{products}</div>
+     container = <ul>{products}</ul>
     }
     return (
       <div className="panelContainer">
-        <div className="title">Products</div>
+        <div className="title">{this.props.title}</div>
         {container}
       </div>
     )
