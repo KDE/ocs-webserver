@@ -19,12 +19,13 @@ class DiscussionBoardsDropDownMenu extends React.Component {
 
   loadNotification(){
     if(this.props.user){
-      let api_key = 'fbd262ef8762bb647e1356c9455e65c4ef0d332bd27d27f3eabf9ffadee79e39';
-      if(this.props.forumUrl.endsWith('org')){
-        api_key = 'd373b0fa6ba9bc52502ddc4cf4c0e3233dd7c5913010d16179328e6a3f3c12e1';
-      }
-      let url = this.props.forumUrl+'/notifications.json?api_key='+api_key
-                +'&api_username='+this.props.user.username;
+      // let api_key = 'fbd262ef8762bb647e1356c9455e65c4ef0d332bd27d27f3eabf9ffadee79e39';
+      // if(this.props.forumUrl.endsWith('org')){
+      //   api_key = 'd373b0fa6ba9bc52502ddc4cf4c0e3233dd7c5913010d16179328e6a3f3c12e1';
+      // }
+      // let url = this.props.forumUrl+'/notifications.json?api_key='+api_key
+      //           +'&api_username='+this.props.user.username;
+      let url = this.props.baseUrl+'/membersetting/notification';
       fetch(url)
       .then(response => response.json())
       .then(data => {
@@ -45,7 +46,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
             () => {
                 this.loadNotification();
             },
-            1000*60*3
+            1000*30
         );
        }
      }
