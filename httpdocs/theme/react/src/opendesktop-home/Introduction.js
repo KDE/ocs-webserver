@@ -4,14 +4,14 @@ function Introduction(props) {
   return (
     <div className="introduction">
       <h1> Welcome to opendesktop</h1>
-      <h4> Opendesktop is community based portal. dedicated to Libre content,opencode,free software and operating system.</h4>
+      <h4> Opendesktop is community based portal, dedicated to libre content, opencode, free software and operating system.</h4>
       <ul>
-        <li>Pling.com</li>
-        <li>Opencode on Gitlab</li>
-        <li>Discourse Forum</li>
-        <li>Riot on Matrix</li>
+        <li><a href="https://opendesktop.org">Pling.com</a></li>
+        <li><a href="https://git.opendesktop.org">Opencode</a></li>
+        <li><a href="https://forum.opendesktop.org">Discourse</a></li>
+        <li><a href="https://chat.opendesktop.org">Riot</a></li>
         <li>Mastodon</li>
-        <li>Nextcloud</li>
+        <li><a href="https://my.opendesktop.org">Nextcloud</a></li>
       </ul>
     </div>
   )
