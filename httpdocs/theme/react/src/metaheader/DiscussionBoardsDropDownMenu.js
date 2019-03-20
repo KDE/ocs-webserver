@@ -44,7 +44,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
             () => {
                 this.loadNotification();
             },
-            1000*10
+            1000*60*3
         );
        }
      }
