@@ -73,15 +73,19 @@ class UserMenu extends React.Component {
                                   baseUrl={this.props.baseUrl}
                                   />
 
+       let chatItem;
+       const urlEnding = this.props.baseUrl.split('opendesktop.')[1];
+       if (this.props.user && this.props.user.member_id ){
+         chatItem=(<li id="chat-link-item"><a href={"https://chat.opendesktop."+urlEnding}>
+           <img src="/theme/react/assets/img/logo-riot.svg" className="riotIcon"></img>Chat
+         </a></li>);
+       }
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
           {aboutMenu}
-          <li id="chat-link-item"><a href={"https://chat.opendesktop.org"}>
-            <img src="/theme/react/assets/img/logo-riot.svg" className="riotIcon"></img>Chat
-          </a>
-          </li>
+          {chatItem}
           {switchItem}
           {userAppsContextDisplay}
           {developmentAppMenuDisplay}
