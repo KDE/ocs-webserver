@@ -78,17 +78,21 @@ class UserMenu extends React.Component {
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
           {aboutMenu}
+          <li id="chat-link-item"><a href={"https://chat.opendesktop.org"}>
+            <img src="/theme/react/assets/img/logo-riot.svg" className="riotIcon"></img>Chat
+          </a>
+          </li>
           {switchItem}
-          {developmentAppMenuDisplay}
           {userAppsContextDisplay}
+          {developmentAppMenuDisplay}
           {userDropdownDisplay}
         </ul>
       );
     } else {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
-          {developmentAppMenuDisplay}
           {userAppsContextDisplay}
+          {developmentAppMenuDisplay}
           {userDropdownDisplay}
         </ul>
       );
