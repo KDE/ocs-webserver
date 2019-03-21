@@ -64,7 +64,7 @@ $memberProfile = $helperImage->Image($this->member->profile_image_url,array('wid
 div#preloaded-images {
    position: absolute;
    overflow: hidden;
-   left: -9999px; 
+   left: -9999px;
    top: -9999px;
    height: 1px;
    width: 1px;
@@ -82,8 +82,8 @@ div#preloaded-images {
             <!-- HEADER -->
 
             <section class="wrapper">
-                
- 
+
+
                 <!-- banner -->
 
                 <section class="header">
@@ -93,19 +93,19 @@ div#preloaded-images {
                         <article class="well" style="width: 100%;">
                             <div class="about-title">
                                 <figure class="relative inline profile-image-container">
-                                    <?php if( $isSupporter) { ?><span class="supporter-badge">S</span>                                                  
-                                    <?php }?>                                                                        
+                                    <?php if( $isSupporter) { ?><span class="supporter-badge">S</span>
+                                    <?php }?>
                                     <img src="<?php echo $memberProfile ; ?>"
                                          alt="profile-image"
                                          width="110"
                                          height="110">
 
                                      <?php if( $this->member->roleId==Default_Model_DbTable_Member::ROLE_ID_MODERATOR) { ?>
-                                            <div class="mod-badge">MODERATOR</div>                                                  
+                                            <div class="mod-badge">MODERATOR</div>
                                     <?php }?>
                                 </figure>
-                                
-                                <h1><span class="lightblue"><?php echo $this->member->username; ?></span>    
+
+                                <h1><span class="lightblue"><?php echo $this->member->username; ?></span>
                                </h1>
                                 <?php if($this->member->firstname ) :?>
                                 <span class="glyphicon glyphicon-user"></span>
@@ -117,19 +117,19 @@ div#preloaded-images {
                                 <span class="text"><?php echo $textCountryCity ?></span>
                                <?php endif; ?>
 
-                           
+
                             </div>
-                            <div class="about-footer">                                                            
-                             
-                               
+                            <div class="about-footer">
+
+
 
                             <div class="col-container" >
                                 <div class="details info" >
-                                   
-                                    <?php 
-                                        echo $this->aboutmeUserInfo. ' '. $this->earnInfo;                                                                              
+
+                                    <?php
+                                        echo $this->aboutmeUserInfo. ' '. $this->earnInfo;
                                     ?>
-                                   
+
                                 </div>
                             <div class="details stat" >
 
@@ -142,14 +142,14 @@ div#preloaded-images {
                                        <span class="cnt"><?=$this->stat['cntComments']?> </span> Comments
                                     </div>
 
-                                   
+
                                     <div class="row">
                                        Plinged <span class="cnt"> <?=$this->stat['cntPlingsHeGave']?> </span>Products
                                     </div>
                                     <div class="row">
                                        Got <span class="cnt"> <?=$this->stat['cntPlingsHeGot']?> </span><img  src="/images/system/pling-btn-active.png" style="width:20px; height:20px" />
                                     </div>
-                               
+
 
                                     <div class="row">
                                        Likes <span class="cnt"> <?=$this->stat['cntLikesHeGave']?> </span>Products
@@ -158,38 +158,38 @@ div#preloaded-images {
                                        Got <span class="cnt"> <?=$this->stat['cntLikesHeGot']?> </span>Likes <i class="fa fa-heart" style="color:#8e44ad" aria-hidden="true"></i>
 
                                     </div>
-                                   
-                                  <?php 
+
+                                  <?php
                                       if($this->stat['donationMax'] !=null && !$isSupporter){ // inactive supporter
                                   ?>
                                    <div class="row">
-                                     <span class="cnt">Inactive supporter since: <?=$helperPrintDate->printDate(date('Y-m-d H:i:s', strtotime($this->stat['donationMax'] . ' +1 year')))?></span> 
+                                     <span class="cnt">Inactive supporter since: <?=$helperPrintDate->printDate(date('Y-m-d H:i:s', strtotime($this->stat['donationMax'] . ' +1 year')))?></span>
                                   </div>
                                   <?php } ?>
 
-                                    <?php 
+                                    <?php
                                         if($isSupporter){
-                                    ?>                                     
-                                     <div class="row">                                     
-                                       <span>Supporter since: <?=$helperPrintDate->printDate($this->stat['donationMin'])?> </span> 
+                                    ?>
+                                     <div class="row">
+                                       <span>Supporter since: <?=$helperPrintDate->printDate($this->stat['donationMin'])?> </span>
                                     </div>
-                                      <div class="row">                                     
-                                       <span>Supporter until: <?=$helperPrintDate->printDate(date('Y-m-d H:i:s', strtotime($this->stat['donationMax'] . ' +1 year')))?> </span> 
-                                    </div>                                     
+                                      <div class="row">
+                                       <span>Supporter until: <?=$helperPrintDate->printDate(date('Y-m-d H:i:s', strtotime($this->stat['donationMax'] . ' +1 year')))?> </span>
+                                    </div>
                                     <?php } ?>
-                                     <div class="row">                                     
-                                       <span class="">Last time active : <?=$helperPrintDate->printDate($this->stat['userLastActiveTime'])?> </span> 
+                                     <div class="row">
+                                       <span class="">Last time active : <?=$helperPrintDate->printDate($this->stat['userLastActiveTime'])?> </span>
                                     </div>
-                                     <div class="row">                                                                            
-                                        <span class="text">Joined : <?=$helperPrintDate->printDate($this->member->created_at);?></span>                                       
+                                     <div class="row">
+                                        <span class="text">Joined : <?=$helperPrintDate->printDate($this->member->created_at);?></span>
                                     </div>
-                                    
-                                   
+
+
                                 </div>
                             </div>
                         </div>
 
-                             
+
                             </div>
                             <?php
                             $helperUserRole = new Backend_View_Helper_UserRole();
@@ -224,8 +224,8 @@ div#preloaded-images {
 
                                         return false;
                                     });
-                                    
-                                    
+
+
                                     $('#pling-excluded-checkbox').on('click', function (event) {
                                         event.stopPropagation();
                                         var status = 0;
@@ -277,7 +277,7 @@ div#preloaded-images {
         <section class="body-wrap">
 
             <section class="wrapper">
-               
+
 
                 <!-- PAGE BODY -->
 
@@ -302,7 +302,7 @@ div#preloaded-images {
                                 </a>
                             </li>
                             <?php }?>
-                             
+
                             <li>
                                 <a href="#user-comments" data-toggle="tab" role="tab"  aria-controls="user-comments">
                                     Comments (<?=$this->comments->getTotalItemCount()?>)
@@ -338,7 +338,7 @@ div#preloaded-images {
                                 </a>
                             </li>
                           <?php } ?>
-                          
+
                         </ul>
                         </div>
                         <!-- /tabs nav -->
@@ -348,62 +348,62 @@ div#preloaded-images {
                         <div class="tab-content">
 
                             <div role="tabpanel" class="tab-pane active" id="user-aboutme">
-                                <?php if ($this->userProducts) { ?>                                
-                                     <div class="my-products-list" id="my-products-list">                                                                       
-                                        <?php echo $this->render('user/partials/aboutme-products.phtml'); ?>                                       
+                                <?php if ($this->userProducts) { ?>
+                                     <div class="my-products-list" id="my-products-list">
+                                        <?php echo $this->render('user/partials/aboutme-products.phtml'); ?>
                                     </div>
                                 <?php } ?>
                             </div>
 
                             <?php if($this->stat['cntFProducts']>0){ ?>
                                 <div role="tabpanel" class="tab-pane " id="user-featuredproducts">
-                                    <?php 
+                                    <?php
                                            $this->userProducts = $this->userFeaturedProducts;
                                            $this->projectpage = 1;
                                            $this->total_records=0;
-                                        if ($this->userProducts) { ?>                                
-                                         <div class="my-products-list" id="my-products-list">                                                                       
-                                            <?php echo $this->render('user/partials/aboutme-featured.phtml'); ?>                                       
+                                        if ($this->userProducts) { ?>
+                                         <div class="my-products-list" id="my-products-list">
+                                            <?php echo $this->render('user/partials/aboutme-featured.phtml'); ?>
                                         </div>
                                     <?php } ?>
                                 </div>
                              <?php } ?>
-   
-                            <div  role="tabpanel" class="tab-pane " id="user-comments">                                    
+
+                            <div  role="tabpanel" class="tab-pane " id="user-comments">
                                   <?php echo $this->render('user/partials/loopMyComments.phtml'); ?>
                             </div>
 
                              <?php if($this->likes->getTotalItemCount()>0){ ?>
-                            <div  role="tabpanel" class="tab-pane " id="user-favs">       
-                                    <div class="my-fav-list">                                                                   
+                            <div  role="tabpanel" class="tab-pane " id="user-favs">
+                                    <div class="my-fav-list">
                                   <?php echo $this->render('user/partials/aboutme-likes.phtml'); ?>
                                   </div>
-                            </div> 
-                            <?php } ?>  
+                            </div>
+                            <?php } ?>
 
                             <?php if( $this->plings->getTotalItemCount()>0){ ?>
-                            <div  role="tabpanel" class="tab-pane " id="user-plings">       
-                                    <div class="my-fav-list">                                                                   
+                            <div  role="tabpanel" class="tab-pane " id="user-plings">
+                                    <div class="my-fav-list">
                                   <?php echo $this->render('user/partials/aboutme-plings.phtml'); ?>
                                   </div>
-                            </div> 
-                            <?php } ?>  
+                            </div>
+                            <?php } ?>
 
                             <?php if($this->supportersplings->getTotalItemCount()>0){ ?>
-                            <div  role="tabpanel" class="tab-pane " id="supporters-plings">       
-                                    <div class="my-fav-list">                                                                   
-                                        <?php echo $this->render('user/partials/aboutme-supporters.phtml'); ?>       
+                            <div  role="tabpanel" class="tab-pane " id="supporters-plings">
+                                    <div class="my-fav-list">
+                                        <?php echo $this->render('user/partials/aboutme-supporters.phtml'); ?>
                                   </div>
-                            </div> 
-                            <?php } ?>  
+                            </div>
+                            <?php } ?>
 
 
                              <?php if(count($this->rated)>0){ ?>
-                            <div  role="tabpanel" class="tab-pane " id="user-rated">    
-                                <div class="my-fav-list">                               
+                            <div  role="tabpanel" class="tab-pane " id="user-rated">
+                                <div class="my-fav-list">
                                   <?php echo $this->render('user/partials/loopRated.phtml'); ?>
-                                  </div>                               
-                            </div>                         
+                                  </div>
+                            </div>
                             <?php } ?>
 
                         </div>
@@ -419,7 +419,7 @@ div#preloaded-images {
 
                     <aside class="col-md-4 col-lg-4 col-sm-4 col-xs-12">
                         <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') { ?>
-                        <?php 
+                        <?php
                             $scoreArray= $helperMemberScore->fetchScore($this->member->member_id);
                         ?>
                         <div class="col-container">
@@ -429,15 +429,15 @@ div#preloaded-images {
                                 </div>
 
                                 <?php
-                                
+
                                     if($this->stat['cntDuplicateSourceurl']>0)
                                     {
                                         echo '<span>Duplicates: '.$this->stat['cntDuplicateSourceurl'].'</span>';
                                     }
-                                    
-                                    echo '<br/><span>Email adress: '.$this->member->mail.' </span>';
-                                    echo '<br/><span>Paypal adress: '.$this->member->paypal_mail.' </span>';
-                                                                       
+
+                                    echo '<br/><span>Email address: '.$this->member->mail.' </span>';
+                                    echo '<br/><span>Paypal address: '.$this->member->paypal_mail.' </span>';
+
                                 ?>
                             </div>
                         </div>
@@ -451,7 +451,7 @@ div#preloaded-images {
                                 </div>
                             </div>
                         </div>
-                      
+
                         <div class="col-container">
                             <div class="well details">
                                 <h3>Connected Acounts</h3>
@@ -463,22 +463,22 @@ div#preloaded-images {
                                             <img src="/images_sys/gitlab.png" class="accounts_icon">
                                         </div>
                                         <div class="text">
-                                    
+
                                             <a href="<?= $url_gitlab ?>/<?php echo $this->member->username;?>">
                                             <span style="font-size: 16px; font-weight: normal;">
-                                                <?php 
+                                                <?php
                                                 $cntGitp = 0;
                                                 if(!empty($this->member->gitlab_user_id)) {
                                                 $gitlab = new Default_Model_Ocs_Gitlab();
                                                 $gitProjects = $gitlab->getUserProjects($this->member->gitlab_user_id);
-                                                $cntGitp = count($gitProjects);               
+                                                $cntGitp = count($gitProjects);
                                                 }
                                                 $gittext = $this->member->username . ' on git-opendesktop';
                                                 if($cntGitp>0){
                                                     $gittext = $gittext.' ('.$cntGitp.')';
                                                 }
                                                 echo $gittext;
-                                                ?> 
+                                                ?>
                                             </span>
                                             </a>
                                         </div>
@@ -486,7 +486,7 @@ div#preloaded-images {
 
                                     <?php if (isset($this->member->link_github) && $this->member->link_github != ''): ?>
                                         <div class="github">
-                                            <div class="label">                                               
+                                            <div class="label">
                                                 <img src="/theme/flatui/img/email5.png" class="accounts_icon">
                                             </div>
                                             <div class="text">
@@ -516,7 +516,7 @@ div#preloaded-images {
                                         ?>
                                         <div class="facebook">
                                             <div class="label">
-                                                
+
                                                  <img src="/theme/flatui/img/email2.png" class="accounts_icon">
                                             </div>
                                             <div class="text">
@@ -531,7 +531,7 @@ div#preloaded-images {
                                         ?>
                                         <div class="twitter">
                                             <div class="label">
-                                               
+
                                                 <img src="/theme/flatui/img/email3.png" class="accounts_icon">
                                             </div>
                                             <div class="text">
@@ -540,13 +540,13 @@ div#preloaded-images {
                                             </div>
                                         </div>
                                     <?php endif; ?>
-                                    <?php if (isset($this->member->link_google) && $this->member->link_google != ''): 
+                                    <?php if (isset($this->member->link_google) && $this->member->link_google != ''):
                                     $helpTwitterLink = new Default_View_Helper_GoogleplusLink();
                                     $googleplusLink = $helpTwitterLink->googleplusLink($this->member->link_google);
                                     ?>
                                         <div class="google">
                                             <div class="label">
-                                               
+
                                                 <img src="/theme/flatui/img/email4.png" class="accounts_icon">
                                             </div>
                                             <div class="text">
@@ -556,11 +556,11 @@ div#preloaded-images {
                                         </div>
                                     <?php endif; ?>
 
-                                    
+
 
                                         <div class="email">
                                             <div class="label">
-                                               
+
                                                 <img src="/theme/flatui/img/email.png" class="accounts_icon">
                                             </div>
                                             <div class="text">
@@ -568,12 +568,12 @@ div#preloaded-images {
                                             </diV>
                                         </div>
 
-                                    
+
                                 </div>
                             </div>
                         </div>
-                      
-                         
+
+
                     </aside>
 
                     <!-- side bar -->
@@ -596,9 +596,8 @@ div#preloaded-images {
     '    $(document).ready(function(){
             InitActiveHashTab.setup();
             AboutMeMyProjectsPaging.setup();
-            AboutMeMyProjectsPagingButton.setup();        
-            TooltipUser.setup("tooltipuser","right");   
+            AboutMeMyProjectsPagingButton.setup();
+            TooltipUser.setup("tooltipuser","right");
             $(\'[data-toggle="popover"]\').popover();
         });
     ');
-
