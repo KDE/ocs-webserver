@@ -71,7 +71,7 @@
                         <?php
                             } else {
                         ?>
-                        <i class="icon icon-link"></i>
+                        <i class="icon"></i>
                         <?php
                             }
                         ?>
@@ -91,9 +91,9 @@
                         <form id="Form1" name="Form1" action="" method="POST">    
 
                          <?php if($this->link_type == 'download') { ?>
-                         <button type="submit" value="Continue Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;"><i class="icon icon-time"></i> Download (<?= $this->file_size_human ?>)</button>
+                         <button type="submit" value="Continue Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download (<?= $this->file_size_human ?>)</button>
                          <?php } else { ?>
-                         <button type="submit" value="Continue Installation" class="btn btn-success btn-lg" style="margin: 0 0 10px;"><i class="icon icon-time"></i> Installation (<?= $this->file_size_human ?>)</button>
+                         <button type="submit" value="Continue Installation" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Installation (<?= $this->file_size_human ?>)</button>
                          <p style="margin: 0;">*Needs <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a> to install things</p>
                          <?php } ?>
                          
