@@ -46,10 +46,10 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
         </a>
     </li>
 
-    <li class="header-menu-left-item <?php echo $this->tab == 'plings' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'plings'); ?>">
+    <li class="header-menu-left-item <?php echo $this->tab == 'payout' ? 'active' : ''; ?>">
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payout'); ?>">
             <span class="glyphicon glyphicon-usd"></span>
-            <?= $this->translate('Plings') ?>
+            <?= $this->translate('Payout') ?>
         </a>
     </li>
 

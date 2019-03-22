@@ -258,7 +258,7 @@ class SiteHeaderUserMenu extends React.Component {
             <div className="dropdown-header"></div>
             <li><a href={window.json_baseurl + "product/add"}>Add Product</a></li>
             <li><a href={window.json_baseurl + "u/" + this.props.user.username + "/products"}>Products</a></li>
-            <li><a href={window.json_baseurl + "u/" + this.props.user.username + "/plings"}>Plings</a></li>
+            <li><a href={window.json_baseurl + "u/" + this.props.user.username + "/payout"}>Payout</a></li>
             <li><a href={window.json_baseurl + "settings"}>Settings</a></li>
             <li><a href={window.json_logouturl}>Logout</a></li>
           </ul>

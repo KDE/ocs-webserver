@@ -389,8 +389,8 @@ function (_React$Component4) {
       }, "Add Product")), React.createElement("li", null, React.createElement("a", {
         href: window.json_baseurl + "u/" + this.props.user.username + "/products"
       }, "Products")), React.createElement("li", null, React.createElement("a", {
-        href: window.json_baseurl + "u/" + this.props.user.username + "/plings"
-      }, "Plings")), React.createElement("li", null, React.createElement("a", {
+        href: window.json_baseurl + "u/" + this.props.user.username + "/payout"
+      }, "Payout")), React.createElement("li", null, React.createElement("a", {
         href: window.json_baseurl + "settings"
       }, "Settings")), React.createElement("li", null, React.createElement("a", {
         href: window.json_logouturl
