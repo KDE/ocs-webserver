@@ -702,9 +702,15 @@ body.drawer-open {
 
           #user-tabs-menu-item {
             height: 100%;
-            overflow: scroll;
+            overflow: auto;
             background-color: white;
-
+            padding:10px;
+            .autosuggest
+            {
+              flex: 1;
+              display: flex;
+              flex-direction:row; 
+            }
             #user-tabs-container {
               position: relative;
               padding-top: 40px;
@@ -727,13 +733,13 @@ body.drawer-open {
 
                   li {
                     float: left;
-                    height: 40px;
+                    height: 20px;
                     width: auto;
-                    line-height: 40px;
+                    line-height: 20px;
 
                     a {
                       display: block;
-                      padding: 0 10px;
+                      padding: 10px 10px;
                       height: 40px;
                       border-bottom: 2px solid transparent;
 
@@ -748,9 +754,17 @@ body.drawer-open {
                         border-radius: 5px;
                         border: 1px solid #ccc;
                         padding: 0 5px;
-                        float: left;
+
                         margin: 7px 0;
                         color:  #888;
+                        background-image: url('http://i.stack.imgur.com/MFpLm.png');
+                        background-repeat: no-repeat;
+                        background-position: 0 -30px;
+                        border: 1px solid #a9e2ff;
+                        padding: 3px;
+                        width: 200px;
+                        font-size: 1em;
+                        padding-left: 20px;
                       }
 
                       span.search-button {
@@ -766,14 +780,15 @@ body.drawer-open {
 
                     &#search-form-container {
                       position: relative;
+
                       ul {
                         position: absolute;
                         background: white;
                         padding: 5px;
                         border: 1px solid #ccc;
                         border-radius: 0 0 5px 5px;
-                        top: 30px;
-                        left: 10px;
+                        top: 32px;
+                        left: 140px;
                         width: 159px;
                         z-index: 10;
 
@@ -794,24 +809,41 @@ body.drawer-open {
               #user-tabs-content {
                 height: 100%;
                 padding: 10px;
-                overflow: scroll;
+              /*  overflow: scroll;*/
 
                 #user-comments-tab-container {
-
+                  .userinfo
+                  {
+                    color:#687a86;
+                    padding: 10px;
+                    .header{
+                      font-size: 16px;
+                      border-bottom: 1px solid #F1F1F1;
+                    }
+                    .statistic{
+                      .statisticRow
+                      {
+                        display: block;
+                        span.title{
+                          font-weight: bold;
+                        }
+                      }
+                    }
+                  }
                   .user-comments-thread-container {
                     width: 100%;
                     float: left;
                     padding: 10px;
-
+                    padding-bottom: 20px;
                     .thread-header {
                       float: left;
                       width: 100%;
-
+                      border-bottom: 1px solid #f1f1f1;
                       .thread-subtitle {
                         float: left;
                         width: 100%;
                         font-size: 14px;
-                        margin: 10px 0;
+                        margin: 5px 0;
                         p {
                           float: left;
                           color: #687a86;
@@ -836,7 +868,7 @@ body.drawer-open {
                         h2 {
                           float: left;
                           margin: 0 0 10px 0;
-                          font-size: 20px;
+                          font-size: 16px;
                         }
                       }
                     }
@@ -844,6 +876,16 @@ body.drawer-open {
                       float: left;
                       width: 100%;
 
+                      .thread-title {
+                        float: left;
+                        width: 100%;
+
+                        h2 {
+                          float: left;
+                          margin: 0 0 10px 0;
+                          font-size: 18px;
+                        }
+                      }
                       .comment-item {
                         position: relative;
                         height: auto;
@@ -1524,6 +1566,73 @@ body.drawer-open {
     box-shadow: 0px 1px 2px rgba(0,0,0,0.25);
   }
 }
+
+/*********autosuggestion**********/
+.react-autosuggest_status {
+  display: block;
+  line-height: 30px;
+  min-height: 30px;
+}
+.react-autosuggest__container {
+  position: relative;
+}
+
+.react-autosuggest__input {
+  width: 240px;
+  height: 30px;
+  padding: 10px 0px;
+  font-family: Helvetica, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+}
+
+.react-autosuggest__input--focused {
+  outline: none;
+}
+
+.react-autosuggest__input--open {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.react-autosuggest__suggestions-container {
+  display: none;
+}
+
+.react-autosuggest__suggestions-container--open {
+  display: block;
+  position: absolute;
+  top: 29px;
+  width: 280px;
+  border: 1px solid #aaa;
+  background-color: #fff;
+  font-family: Helvetica, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  z-index: 2;
+}
+
+.react-autosuggest__suggestions-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.react-autosuggest__suggestion {
+  cursor: pointer;
+  padding: 10px 20px;
+}
+
+.react-autosuggest__suggestion--highlighted {
+  background-color: #ddd;
+}
+
+/******************end of autosuggestion ******************/
+
 
 /* metamenu dark theme*/
 #metaheader #metaheader-nav .metamenu-theme-dark

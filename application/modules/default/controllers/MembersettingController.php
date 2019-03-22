@@ -163,39 +163,50 @@ class MembersettingController extends Zend_Controller_Action
         $data = curl_exec($ch);
         curl_close($ch);
 				$results = json_decode($data);
-    	// $response = array(
-      //           'status'     => 'ok',
-      //           'results'    => $results
-      //       );
+
     	$this->_sendResponse($results, $this->_format);
 
-    	// $identity = Zend_Auth::getInstance()->getStorage()->read();
-    	// if($identity==null || $identity->member_id==null)
-    	// {
-    	// 		$response = array(
-    	// 	            'status'     => 'error',
-    	// 	            'msg'	 => 'no user found'
-    	// 	        );
-			// 		$this->_sendResponse($response, $this->_format);
-    	// }else
-    	// {
-			// 	$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
-			// 	$api_key = Zend_Registry::get('config')->settings->client->default->forum_api_key;
-			// 	$url=$url_forum.'/notifications.json?api_key='.$api_key.'&api_username='.$identity->username;
-			// 	$ch = curl_init();
-      //   curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-      //   curl_setopt($ch, CURLOPT_HEADER, 0);
-      //   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-      //   curl_setopt($ch, CURLOPT_URL, $url);
-      //   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-      //   $data = curl_exec($ch);
-			//
-      //   curl_close($ch);
-			//
-			// 	$this->_initResponseHeader();
-    	// 	echo $data;
-    	// }
+		}
 
+		public function memberjsonAction()
+    {
+				$this->_initResponseHeader();
+  			$identity = Zend_Auth::getInstance()->getStorage()->read();
+	    	$member_id = $this->getParam('member_id');
+        $results = null;
+        if($member_id){
+            $info = new Default_Model_Info();
+            $commentsOpendeskop = $info->getDiscussionOpendeskop($member_id);
+            $results=array('commentsOpendeskop' => $commentsOpendeskop);
+        }
+        $this->_sendResponse($results, $this->_format);
+    }
+
+		public function searchmemberAction()
+    {
+        $this->_initResponseHeader();
+        $username = $this->getParam('username');
+        $results = null;
+        if(strlen(trim($username))>2)
+        {
+            $model = new Default_Model_Member();
+            $results = $model->findActiveMemberByName($username);
+            $helperImage = new Default_View_Helper_Image();
+            foreach ($results as &$value) {
+                $avatar = $helperImage->image($value['profile_image_url'],array('width' => 100, 'height' => 100, 'crop' => 2));
+                $value['profile_image_url'] = $avatar;
+            }
+        }
+				$this->_sendResponse($results, $this->_format);
+    }
+
+		public function userinfoAction()
+		{
+			$this->_initResponseHeader();
+			$member_id = $this->getParam('member_id');
+			$info = new Default_Model_Info();
+			$data = $info->getTooptipForMember($member_id);
+			$this->_sendResponse($data, $this->_format);
 		}
 
 

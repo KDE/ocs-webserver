@@ -146,6 +146,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_gateway',
             'default_hive',
             'default_home',
+            'default_membersetting',
             'default_ocsv1', // OCS API
             'default_embedv1', // embed API
             'default_productcategory',

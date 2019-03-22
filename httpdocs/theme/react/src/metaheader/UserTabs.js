@@ -1,11 +1,12 @@
 import React from 'react';
 import UserCommentsTab from './UserCommentsTab';
 import UserSearchTab from './UserSearchTab';
+import UserAutoCompleteInput from './UserAutoCompleteInput';
 class UserTabs extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      currentTab:'comments',
+      currentTab:'autocompletetest',
       searchPhrase:''
     };
     this.onTabMenuItemClick = this.onTabMenuItemClick.bind(this);
@@ -34,16 +35,16 @@ class UserTabs extends React.Component {
   }
 
   getUsersAutocompleteList(searchPhrase){
-      const self = this;
-      const xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          const res = JSON.parse(this.response);
-          self.setState({usersList:res,showUserList:true});
-        }
-      };
-      xhttp.open("GET", "https://www.opendesktop.cc/home/searchmember?username="+searchPhrase, true);
-      xhttp.send();
+
+    let url = this.props.baseUrl+'/membersetting/searchmember?username='+searchPhrase;
+     fetch(url,{
+                mode: 'cors',
+                credentials: 'include'
+                })
+      .then(response => response.json())
+      .then(data => {
+        this.setState({usersList:data,showUserList:true});
+      });
   }
 
   selectUserFromAutocompleteList(user){
@@ -80,6 +81,7 @@ class UserTabs extends React.Component {
         tabContentDisplay = (
           <UserSearchTab
             user={this.state.selectedUser}
+            baseUrl={this.props.baseUrl}
           />
         );
       } else {
@@ -87,6 +89,8 @@ class UserTabs extends React.Component {
           <p>search user</p>
         );
       }
+    }else if(this.state.currentTab === 'autocompletetest'){
+      tabContentDisplay = <UserAutoCompleteInput />
     }
 
     return(
@@ -94,18 +98,20 @@ class UserTabs extends React.Component {
         <div id="user-tabs-menu">
           <ul>
             <li>
-              <a className={this.state.currentTab === "comments" ? "active" : ""}
-                onClick={() => this.onTabMenuItemClick('comments')}>
-                Comments
+              <a className={this.state.currentTab === "autocompletetest" ? "active" : ""}
+                onClick={() => this.onTabMenuItemClick('autocompletetest')} >
+                Search User
               </a>
             </li>
+            {/*
             <li id="search-form-container">
               <a className={this.state.currentTab === "search" ? "active" : ""}
                 onClick={() => this.onTabMenuItemClick('search')}>
-                <input value={this.state.searchPhrase} type="text" onChange={this.onUserSearchInputChange}/>
+                Member Search: <input className="searchInput" value={this.state.searchPhrase} type="text" onChange={this.onUserSearchInputChange}/>
               </a>
               {usersAutocompleteList}
             </li>
+            */}
           </ul>
         </div>
         <div id="user-tabs-content">

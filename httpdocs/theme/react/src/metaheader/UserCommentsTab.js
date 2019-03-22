@@ -17,30 +17,17 @@ class UserCommentsTab extends React.Component {
   }
 
   getUserOdComments(){
-      let url = 'https://www.opendesktop.org/home/memberjson?member_id='+this.props.user.member_id;
+      let url = '/membersetting/memberjson?member_id='+this.props.user.member_id;
        fetch(url,{
                   mode: 'cors',
                   credentials: 'include'
                   })
         .then(response => response.json())
         .then(data => {
-             console.log(data);
+          this.setState({odComments:data.commentsOpendeskop,loading:false},function(){
+               this.getUserForumComments();
+             });
         });
-
-    // const user = this.props.user;
-    // const self = this;
-    // const xhttp = new XMLHttpRequest();
-    // xhttp.onreadystatechange = function() {
-    //   if (this.readyState == 4 && this.status == 200) {
-    //     const res = JSON.parse(this.response);
-    //     self.setState({odComments:res.commentsOpendeskop,loading:false},function(){
-    //       self.getUserForumComments();
-    //     });
-    //   }
-    // };
-    // xhttp.open("GET", "home/memberjson?member_id="+user.member_id, true);
-    // xhttp.send();
-
   }
 
   getUserForumComments(){
