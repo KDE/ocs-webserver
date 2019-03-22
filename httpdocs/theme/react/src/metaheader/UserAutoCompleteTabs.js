@@ -114,7 +114,9 @@ class UserAutoCompleteTabs extends React.Component {
           </ul>
         </div>
         <div id="user-tabs-content">
+          <div class="user-comments-tab-container">
           {tabContentDisplay}
+          </div>
         </div>
       </div>
     );

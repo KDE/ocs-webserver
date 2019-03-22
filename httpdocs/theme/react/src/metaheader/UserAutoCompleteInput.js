@@ -118,7 +118,7 @@ class UserAutoCompleteInput extends React.Component {
             {status}
           </div>
       </div>
-      <div>
+      <div >
         {contentTabs}
       </div>
       </div>

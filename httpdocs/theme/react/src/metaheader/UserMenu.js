@@ -1,7 +1,7 @@
 import React from 'react';
 import UserLoginMenuContainer from './UserLoginMenuContainer';
 import UserContextMenuContainer from './UserContextMenuContainer';
-
+import UserLoginMenuContainerVersionTwo from './UserLoginMenuContainerVersionTwo';
 import DevelopmentAppMenu from './DevelopmentAppMenu';
 import SwitchItem from './SwitchItem';
 import AboutMenu from './AboutMenu';
@@ -14,21 +14,21 @@ class UserMenu extends React.Component {
   render(){
     let userDropdownDisplay, userAppsContextDisplay, developmentAppMenuDisplay;
     if (this.props.user && this.props.user.member_id){
-      // userDropdownDisplay = (
-      //   <UserLoginMenuContainerVersionTwo
-      //     user={this.props.user}
-      //     logoutUrl={this.props.logoutUrl}
-      //     baseUrl={this.props.baseUrl}
-      //   />
-      // );
-
       userDropdownDisplay = (
-        <UserLoginMenuContainer
+        <UserLoginMenuContainerVersionTwo
           user={this.props.user}
           logoutUrl={this.props.logoutUrl}
           baseUrl={this.props.baseUrl}
         />
       );
+
+      // userDropdownDisplay = (
+      //   <UserLoginMenuContainer
+      //     user={this.props.user}
+      //     logoutUrl={this.props.logoutUrl}
+      //     baseUrl={this.props.baseUrl}
+      //   />
+      // );
 
       userAppsContextDisplay = (
         <UserContextMenuContainer
