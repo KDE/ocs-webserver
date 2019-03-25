@@ -35,9 +35,10 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
 $filesTable = new Default_Model_DbTable_PploadFiles();
 $countDownloadsToday = $filesTable->fetchCountDownloadsTodayForProject($this->product->ppload_collection_id);
 
-if(empty($countDownloadsToday)) {
-    $countDownloadsToday = 0;
-}
+$countPageviews = $this->projectDetailCounts($this->product->project_id);
+$countPageviewsToday = $countPageviews[0]['count_views'];
+$countPageviewsTotal = $countPageviews[1]['count_views'];
+
 
 
 // $heute = date("Y-m-d H:i:s");
@@ -90,7 +91,12 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
     
     <div class="row">
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">page views today </span>
-        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->projectPageviewsToday($this->product->project_id) ?></span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countPageviewsToday ?></span>
+    </div>
+
+    <div class="row">
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">page views total </span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countPageviewsTotal ?></span>
     </div>
 
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
