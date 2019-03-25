@@ -537,7 +537,8 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
 
 
                         <?php if($this->product->show_gitlab_project_issues){ 
-                                $cntGitIssues = count($this->gitlab_project_issues);
+                                //$cntGitIssues = count($this->gitlab_project_issues);
+                                $cntGitIssues = $this->gitlab_project['open_issues_count'];
                             ?>
                             <li><a href="#gitlabissues-panel" data-toggle="tab">Issues <?php echo '('.$cntGitIssues.')';  ?></a></li>
                         <?php } ?>
@@ -770,7 +771,8 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                         </div>
                         <?php } ?>
                         
-                        <?php  if ($this->product->show_gitlab_project_issues) { ?>
+                        <?php  if ($this->product->show_gitlab_project_issues) {                                
+                            ?>
                             <div class="tab-pane" id="gitlabissues-panel">
                                 <div id="gitlabissues-panel-wrapper" class="col-lg-9 col-md-9 col-sm-9 col-xs-12 ">
                                 
@@ -786,7 +788,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                         }
                                     }
                                 ?>
-                                <span class="center showmore"><a href="<?= $this->gitlab_project_issues_url ?>" target="_NEW">Show all <?= count($issues) ?> Issues</a></span>
+                                <span class="center showmore"><a href="<?= $this->gitlab_project_issues_url ?>" target="_NEW">Show all <?= $this->gitlab_project['open_issues_count'] ?> Issues</a></span>
 
                                 </div>
                             </div>
