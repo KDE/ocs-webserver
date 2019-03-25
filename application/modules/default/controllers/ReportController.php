@@ -183,6 +183,10 @@ class ReportController extends Zend_Controller_Action
                     if(trim($project_clone)=='')
                     {
                         $project_clone = null;
+                    }else
+                    {
+                        $project_clone = preg_replace("/[^\d]/", "", $project_clone);
+
                     }
                     if (Zend_Auth::getInstance()->hasIdentity()) {
                         $reported_by = (int)Zend_Auth::getInstance()->getStorage()->read()->member_id;
