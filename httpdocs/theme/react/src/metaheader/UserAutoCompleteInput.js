@@ -11,6 +11,13 @@ function renderSuggestion(suggestion) {
   );
 }
 
+const renderInputComponent = inputProps => (
+  <div className="react-autosuggest__inputContainer">
+    <img className="react-autosuggest__icon" src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-128.png" />
+    <input {...inputProps} />
+  </div>
+);
+
 class UserAutoCompleteInput extends React.Component {
   constructor() {
     super();
@@ -20,7 +27,9 @@ class UserAutoCompleteInput extends React.Component {
       suggestions: [],
       showTabs:false,
       userSelected:[],
-      isLoading: false
+      isLoading: false,
+      userinfo:[],
+      odComments:[]
     };
 
     this.onChange = this.onChange.bind(this);
@@ -29,6 +38,9 @@ class UserAutoCompleteInput extends React.Component {
     this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this);
     this.shouldRenderSuggestions = this.shouldRenderSuggestions.bind(this);
     this.onSuggestionSelected = this.onSuggestionSelected.bind(this);
+
+    this.getUserInfo = this.getUserInfo.bind(this);
+    this.getUserOdComments = this.getUserOdComments.bind(this);
   }
 
   loadSuggestions(value) {
@@ -52,11 +64,15 @@ class UserAutoCompleteInput extends React.Component {
   }
 
   onChange(event, { newValue, method }){
-    this.setState({
-      value: newValue,
-      showTabs: false,
-    });
+    this.setState({value:newValue});
   }
+
+  // onChange(event, { newValue, method }){
+  //   this.setState({
+  //     value: newValue,
+  //     showTabs: false
+  //   });
+  // }
 
   shouldRenderSuggestions(value) {
     return value.trim().length > 2;
@@ -72,10 +88,39 @@ class UserAutoCompleteInput extends React.Component {
     });
   }
 
+  getUserInfo(member_id){
+    let url = `${this.props.baseUrl}/membersetting/userinfo?member_id=${member_id}`;
+     fetch(url,{
+                mode: 'cors',
+                credentials: 'include'
+                })
+      .then(response => response.json())
+      .then(data => {
+        this.setState({userinfo:data},function(){
+              this.getUserOdComments(member_id);
+           });
+      });
+  }
+
+  getUserOdComments(member_id){
+      let url = `${this.props.baseUrl}/membersetting/memberjson?member_id=${member_id}`;
+       fetch(url,{
+                  mode: 'cors',
+                  credentials: 'include'
+                  })
+        .then(response => response.json())
+        .then(data => {
+          this.setState({odComments:data.commentsOpendeskop,showTabs: true},function(){
+               //this.getUserForumComments();
+             });
+        });
+  }
+
+
   onSuggestionSelected(event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method })
   {
+    this.getUserInfo(suggestion.member_id);
     this.setState({
-      showTabs: true,
       userSelected:suggestion
     });
   }
@@ -83,7 +128,7 @@ class UserAutoCompleteInput extends React.Component {
   render() {
     const { value, suggestions, isLoading } = this.state;
     const inputProps = {
-      placeholder: "Type to search member min.3 chars",
+      placeholder: "Type to search min.3 chars",
       value,
       onChange: this.onChange
 
@@ -91,13 +136,14 @@ class UserAutoCompleteInput extends React.Component {
     const status = (isLoading ? 'Loading...' : '');
 
     let contentTabs;
-    if(this.state.showTabs && this.state.userSelected)
+    if(this.state.showTabs)
     {
-      contentTabs = (<UserAutoCompleteTabs
+      contentTabs = <UserAutoCompleteTabs
                       user={this.state.userSelected}
+                      userinfo={this.state.userinfo}
                       baseUrl={this.props.baseUrl}
+                      odComments={this.state.odComments}
                       />
-                    )
     }
 
     return (
@@ -112,15 +158,17 @@ class UserAutoCompleteInput extends React.Component {
           onSuggestionSelected ={this.onSuggestionSelected}
           getSuggestionValue={getSuggestionValue}
           renderSuggestion={renderSuggestion}
-          inputProps={inputProps} />
+          inputProps={inputProps}
+          renderInputComponent={renderInputComponent}
+          />
 
           <div className="react-autosuggest_status">
             {status}
           </div>
       </div>
-      <div >
+      <div>
         {contentTabs}
-      </div>
+        </div>
       </div>
     );
   }

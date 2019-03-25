@@ -7,59 +7,13 @@ class UserAutoCompleteTabs extends React.Component {
   	super(props);
   	this.state = {
       currentTab:'userinfo',
-      odComments:[],
-      forumComments:[],
       loading:true
     };
     this.onTabMenuItemClick = this.onTabMenuItemClick.bind(this);
-    this.getUserOdComments = this.getUserOdComments.bind(this);
-    this.getUserInfo = this.getUserInfo.bind(this);
-    //this.getUserForumComments = this.getUserForumComments.bind(this);
   }
 
   onTabMenuItemClick(val){
     this.setState({currentTab:val});
-  }
-
-  // static getDerivedStateFromProps(nextProps, prevState) {
-  //   if (nextProps.user.member_id !== prevState.user.member_id) {
-  //       return ({ user: nextProps.user,loading:false})
-  //   }
-  // }
-
-  componentDidMount() {
-    this.getUserInfo();
-    // this.setState({odComments:[],forumComments:[],loading:true},function(){
-    //   this.getUserInfo();
-    // });
-  }
-
-  getUserInfo(){
-    let url = `${this.props.baseUrl}/membersetting/userinfo?member_id=${this.props.user.member_id}`;
-     fetch(url,{
-                mode: 'cors',
-                credentials: 'include'
-                })
-      .then(response => response.json())
-      .then(data => {
-        this.setState({userinfo:data,loading:false},function(){
-              this.getUserOdComments();
-           });
-      });
-  }
-
-  getUserOdComments(){
-      let url = `${this.props.baseUrl}/membersetting/memberjson?member_id=${this.props.user.member_id}`;
-       fetch(url,{
-                  mode: 'cors',
-                  credentials: 'include'
-                  })
-        .then(response => response.json())
-        .then(data => {
-          this.setState({odComments:data.commentsOpendeskop,loading:false},function(){
-               //this.getUserForumComments();
-             });
-        });
   }
 
   // getUserForumComments(){
@@ -80,16 +34,16 @@ class UserAutoCompleteTabs extends React.Component {
   render(){
 
     let tabContentDisplay;
-    if (this.state.currentTab === 'userinfo' && this.state.userinfo){
+    if (this.state.currentTab === 'userinfo'){
 
-        tabContentDisplay = <UserInfo user={this.props.user} userinfo={this.state.userinfo} />
+        tabContentDisplay = <UserInfo  userinfo={this.props.userinfo} />
 
-    }else if(this.state.currentTab === 'comment' && this.state.odComments.length>0){
+    }else if(this.state.currentTab === 'comment' && this.props.odComments.length>0){
       tabContentDisplay =
         <UserCommentsTabThreadsContainer
           type={'od'}
           user={this.props.user}
-          comments={this.state.odComments}
+          comments={this.props.odComments}
           uType={'search'}
         />
     }

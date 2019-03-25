@@ -702,7 +702,7 @@ body.drawer-open {
 
           #user-tabs-menu-item {
             height: 100%;
-            overflow: auto;
+
             background-color: white;
             padding:10px;
             .autosuggest
@@ -812,6 +812,8 @@ body.drawer-open {
               /*  overflow: scroll;*/
 
                 .user-comments-tab-container {
+                  max-height: 600px;
+                  overflow: auto;
                   .userinfo
                   {
                     color:#687a86;
@@ -1580,7 +1582,7 @@ body.drawer-open {
 .react-autosuggest__input {
   width: 280px;
   height: 30px;
-  padding: 10px 0px;
+  padding: 10px 25px;
   font-family: Helvetica, sans-serif;
   font-weight: 300;
   font-size: 16px;
@@ -1631,6 +1633,16 @@ body.drawer-open {
   background-color: #ddd;
 }
 
+.react-autosuggest__inputContainer{
+   position: relative;
+   .react-autosuggest__icon {
+    position: absolute;
+    top: 4px;
+    left: 0px;
+    width: 24px;
+    height: 24px;
+  }
+}
 /******************end of autosuggestion ******************/
 
 
