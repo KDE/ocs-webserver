@@ -1582,7 +1582,7 @@ body.drawer-open {
 .react-autosuggest__input {
   width: 280px;
   height: 30px;
-  padding: 10px 25px;
+  padding: 10px 25px !important;
   font-family: Helvetica, sans-serif;
   font-weight: 300;
   font-size: 16px;
@@ -1622,6 +1622,9 @@ body.drawer-open {
   margin: 0;
   padding: 0;
   list-style-type: none;
+  li{
+    display: block;
+  }
 }
 
 .react-autosuggest__suggestion {
