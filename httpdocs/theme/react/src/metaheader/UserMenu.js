@@ -1,6 +1,7 @@
 import React from 'react';
 import UserLoginMenuContainer from './UserLoginMenuContainer';
 import UserContextMenuContainer from './UserContextMenuContainer';
+//import UserLoginMenuContainerVersionTwo from './UserLoginMenuContainerVersionTwo';
 import DevelopmentAppMenu from './DevelopmentAppMenu';
 import SwitchItem from './SwitchItem';
 import AboutMenu from './AboutMenu';
@@ -73,22 +74,30 @@ class UserMenu extends React.Component {
                                   baseUrl={this.props.baseUrl}
                                   />
 
+       let chatItem;
+       const urlEnding = this.props.baseUrl.split('opendesktop.')[1];
+       if (this.props.user && this.props.user.member_id ){
+         chatItem=(<li id="chat-link-item"><a href={"https://chat.opendesktop."+urlEnding}>
+           <img src={this.props.baseUrl+"/theme/react/assets/img/logo-riot.svg"} className="riotIcon"></img>Chat
+         </a></li>);
+       }
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
           {aboutMenu}
+          {chatItem}
           {switchItem}
-          {developmentAppMenuDisplay}
           {userAppsContextDisplay}
+          {developmentAppMenuDisplay}
           {userDropdownDisplay}
         </ul>
       );
     } else {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
-          {developmentAppMenuDisplay}
           {userAppsContextDisplay}
+          {developmentAppMenuDisplay}
           {userDropdownDisplay}
         </ul>
       );

@@ -22,11 +22,13 @@ class UserCommentsTabThreadsContainer extends React.Component {
 
     let threads = [];
     this.props.comments.forEach(function(c,index){
-      if (threads.indexOf(c.title) === -1){
+      let pos = threads.map(function(e) { return e.id; }).indexOf(c.project_id);
+      if(pos===-1)
+      {
         const thread = {
-          title:c.title,
-          id:c.project_id
-        }
+            title:c.title,
+            id:c.project_id
+          }
         threads.push(thread)
       }
     });
@@ -40,6 +42,7 @@ class UserCommentsTabThreadsContainer extends React.Component {
     const user = this.props.user;
     let headerDisplay, threadsDisplay, threadCommentsDisplay;
     if (this.state.threads){
+  
       threadsDisplay = this.state.threads.map((tr,index) => (
         <UserCommentsTabThread
           key={index}
@@ -55,7 +58,6 @@ class UserCommentsTabThreadsContainer extends React.Component {
             <p>Discussion on <b><a href={this.state.siteInfo.url}>{this.state.siteInfo.address}</a></b></p>
             <p><span>{this.state.comments.length} comments</span></p>
           </div>
-          {threadsDisplay}
         </div>
       );
     }
@@ -64,7 +66,7 @@ class UserCommentsTabThreadsContainer extends React.Component {
       <div className="user-comments-thread-container">
         {headerDisplay}
         <div className="thread-comments">
-          {threadCommentsDisplay}
+          {threadsDisplay}
         </div>
       </div>
     )

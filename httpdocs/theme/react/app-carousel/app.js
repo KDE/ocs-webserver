@@ -214,19 +214,30 @@ class Carousel extends React.Component {
 
   animateProductCarousel(dir,animateCarousel){
 
-    let newSliderPosition = this.state.sliderPosition;
+    let newSliderPosition = this.state.sliderPosition;    
     const endPoint = this.state.sliderWidth - (this.state.containerWidth - this.state.itemWidth);
 
     if (dir === 'left'){
       if (this.state.sliderPosition > 0){
         //newSliderPosition = this.state.sliderPosition - (this.state.containerWidth - this.state.itemWidth);
-        newSliderPosition = this.state.sliderPosition - this.state.itemWidth *2 ;
+        if(this.state.containerWidth<(this.state.itemWidth*3))
+        {
+            newSliderPosition = this.state.sliderPosition - this.state.itemWidth;
+        }else {
+          newSliderPosition = this.state.sliderPosition - this.state.itemWidth *2 ;
+        }
+
       }
     } else {
 
       if (Math.trunc(this.state.sliderPosition) < Math.trunc(endPoint)){
         //newSliderPosition = this.state.sliderPosition + (this.state.containerWidth - this.state.itemWidth);
-        newSliderPosition = this.state.sliderPosition + this.state.itemWidth *2 ;
+        if(this.state.containerWidth<(this.state.itemWidth*3))
+        {
+            newSliderPosition = this.state.sliderPosition + this.state.itemWidth;
+        }else {
+          newSliderPosition = this.state.sliderPosition + this.state.itemWidth *2 ;
+        }
       } else {
         newSliderPosition = 0
         /*if (!animateCarousel){
@@ -238,7 +249,7 @@ class Carousel extends React.Component {
         }*/
       }
     }
-
+    console.log('newSliderPosition2:'+newSliderPosition);
 
     this.setState({sliderPosition:newSliderPosition},function(){
 

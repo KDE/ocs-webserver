@@ -1,5 +1,6 @@
 import React from 'react';
 import UserCommentsTabThreadsContainer from './UserCommentsTabThreadsContainer';
+import UserInfo from './UserInfo';
 class UserSearchTab extends React.Component {
   constructor(props){
   	super(props);
@@ -7,32 +8,43 @@ class UserSearchTab extends React.Component {
       loading:true
     };
     this.getUserOdComments = this.getUserOdComments.bind(this);
+    this.getUserInfo = this.getUserInfo.bind(this);
     this.getUserForumComments = this.getUserForumComments.bind(this);
   }
 
   componentDidMount() {
-    this.setState({odComments:[],forumComments:[],loading:true},function(){
-      this.getUserOdComments();
+    this.setState({odComments:[],forumComments:[],userinfo:[],loading:true},function(){
+      //this.getUserOdComments();
+      this.getUserInfo();
     });
   }
 
+  getUserInfo(){
+    let url = `${this.props.baseUrl}/membersetting/userinfo?member_id=${this.props.user.member_id}`;
+     fetch(url,{
+                mode: 'cors',
+                credentials: 'include'
+                })
+      .then(response => response.json())
+      .then(data => {
+        this.setState({userinfo:data,loading:false},function(){
+              this.getUserOdComments();
+           });
+      });
+  }
+
   getUserOdComments(){
-    const user = this.props.user;
-    const self = this;
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        const res = JSON.parse(this.response);
-        self.setState({odComments:res.commentsOpendeskop,loading:false},function(){
-          self.getUserForumComments();
+      let url = `${this.props.baseUrl}/membersetting/memberjson?member_id=${this.props.user.member_id}`;
+       fetch(url,{
+                  mode: 'cors',
+                  credentials: 'include'
+                  })
+        .then(response => response.json())
+        .then(data => {        
+          this.setState({odComments:data.commentsOpendeskop,loading:false},function(){
+               //this.getUserForumComments();
+             });
         });
-      } else {
-        console.log('what happends here');
-        console.log(this);
-      }
-    };
-    xhttp.open("GET", "home/memberjson?member_id="+user.member_id, true);
-    xhttp.send();
   }
 
   getUserForumComments(){
@@ -53,7 +65,7 @@ class UserSearchTab extends React.Component {
   render(){
     let contentDisplay;
     if (!this.state.loading){
-      let odCommentsDisplay, forumCommentsDisplay;
+      let odCommentsDisplay, forumCommentsDisplay, userinfoDisplay;
       if (this.state.odComments.length > 0){
         odCommentsDisplay = (
           <UserCommentsTabThreadsContainer
@@ -63,6 +75,10 @@ class UserSearchTab extends React.Component {
             uType={'search'}
           />
         );
+      }
+      if(this.state.userinfo)
+      {
+        userinfoDisplay = <UserInfo userinfo={this.state.userinfo} />
       }
       if (this.state.forumComments.length > 0){
         forumCommentsDisplay = (
@@ -77,6 +93,7 @@ class UserSearchTab extends React.Component {
 
       contentDisplay = (
         <div>
+          {userinfoDisplay}
           {odCommentsDisplay}
           {forumCommentsDisplay}
         </div>

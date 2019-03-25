@@ -65,7 +65,12 @@ class UserContextMenuContainer extends React.Component {
 
     /*
     // BU CODE
-
+    <li id="chat-link-item">
+      <a href={"https://chat.opendesktop." + urlEnding}>
+        <div className="icon"></div>
+        <span>Chat</span>
+      </a>
+    </li>
     */
 
     const urlEnding = this.props.baseUrl.split('opendesktop.')[1];
@@ -75,12 +80,6 @@ class UserContextMenuContainer extends React.Component {
       contextMenuDisplay = (
         <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
 
-          <li id="chat-link-item">
-            <a href={"https://chat.opendesktop." + urlEnding}>
-              <div className="icon"></div>
-              <span>Chat</span>
-            </a>
-          </li>
           <li id="messages-link-item">
             <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
               <div className="icon"></div>
@@ -125,12 +124,6 @@ class UserContextMenuContainer extends React.Component {
     } else {
       contextMenuDisplay = (
         <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
-          <li id="chat-link-item">
-            <a href={"https://chat.opendesktop." + urlEnding}>
-              <div className="icon"></div>
-              <span>Chat</span>
-            </a>
-          </li>
           <li id="messages-link-item" >
             <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
               <div className="icon"></div>

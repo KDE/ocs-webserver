@@ -961,9 +961,9 @@ class DevelopmentAppMenu extends React.Component {
               </a>
             </li>
             <li id="plings-link-item">
-              <a href={this.props.baseUrl + "/u/" + this.props.user.username + "/plings"}>
+              <a href={this.props.baseUrl + "/u/" + this.props.user.username + "/payout"}>
                 <div className="icon"></div>
-                <span>Plings</span>
+                <span>Payout</span>
               </a>
             </li>
           </ul>

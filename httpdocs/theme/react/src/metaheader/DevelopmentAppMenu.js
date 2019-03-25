@@ -32,7 +32,7 @@ class DevelopmentAppMenu extends React.Component {
   }
 
   handleClick(e){
-    let dropdownClass = "";    
+    let dropdownClass = "";
     if (this.node.contains(e.target)){
       if(e.target.className === "btn btn-default dropdown-toggle"
           || e.target.className === "th-icon")
@@ -85,9 +85,9 @@ class DevelopmentAppMenu extends React.Component {
               </a>
             </li>
             <li id="plings-link-item">
-              <a href={this.props.baseUrl + "/u/" + this.props.user.username + "/plings"}>
+              <a href={this.props.baseUrl + "/u/" + this.props.user.username + "/payout"}>
                 <div className="icon"></div>
-                <span>Plings</span>
+                <span>Payout</span>
               </a>
             </li>
             <li id="addproduct-link-item">

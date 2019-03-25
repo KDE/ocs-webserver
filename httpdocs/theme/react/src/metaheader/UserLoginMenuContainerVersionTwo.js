@@ -1,5 +1,5 @@
 import React from 'react';
-import UserTabs from './UserTabs';
+import UserAutoCompleteInput from './UserAutoCompleteInput';
 class UserLoginMenuContainerVersionTwo extends React.Component {
   constructor(props){
     super(props);
@@ -73,7 +73,13 @@ class UserLoginMenuContainerVersionTwo extends React.Component {
                 </div>
               </li>
               <li id="user-tabs-menu-item">
-                <UserTabs user={this.props.user}/>
+                {/*
+                <UserTabs user={this.props.user}
+                          baseUrl={this.props.baseUrl}
+                  />
+                  */
+                }
+                <UserAutoCompleteInput baseUrl={this.props.baseUrl}/>
               </li>
             </ul>
           </div>
