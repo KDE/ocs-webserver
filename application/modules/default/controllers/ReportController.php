@@ -182,17 +182,12 @@ class ReportController extends Zend_Controller_Action
                     $link = $this->getParam('l');
                     if($project_clone)
                     {
-                        $text = $text.' '.$project_clone;
+                        $text = $text . ' '.$project_clone;
                     }
-                    if (!is_numeric($project_clone)) {
+                    if(!is_numeric($project_clone))
                     {
                         $project_clone = null;
                     }
-                    /*else
-                    {
-                        $project_clone = preg_replace("/[^\d]/", "", $project_clone);
-
-                    }*/
                     if (Zend_Auth::getInstance()->hasIdentity()) {
                         $reported_by = (int)Zend_Auth::getInstance()->getStorage()->read()->member_id;
                         $reportProducts = new Default_Model_DbTable_ProjectClone();                 
@@ -208,8 +203,9 @@ class ReportController extends Zend_Controller_Action
             'data'    => array()
         ));
     }
-    public function memberAction()
+
+  /*  public function memberAction()
     {
-    }
+    }*/
 
 }
