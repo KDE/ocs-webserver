@@ -1722,6 +1722,23 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         return $result[0]['cnt'];
     }
 
+
+    public function getSourceUrlProjects($source_url)
+    {
+        $last = substr($source_url, -1);
+        if ($last == '/') {
+            $source_url = substr($source_url, 0, -1);
+        }
+        $sql = "
+            SELECT * FROM 
+            `stat_projects_source_url` `p`  
+            WHERE `p`.`source_url`= :source_url        
+      ";
+        $result = $this->_db->fetchAll($sql, array('source_url' => $source_url));
+
+        return $result;
+    }
+
     /**
      * @param int $member_id
      *

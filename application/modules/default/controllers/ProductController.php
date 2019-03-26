@@ -155,6 +155,23 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         return null;
     }
     
+    public function listsamesourceurlAction()
+    {        
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);                
+        $modelProduct = new Default_Model_Project();     
+        $productInfo = $modelProduct->fetchProductInfo($this->_projectId);   
+        $result = $modelProduct->getSourceUrlProjects($productInfo->source_url);
+        $response='<ul class="list-group" style="min-height:300px;min-width:350px; max-height:500px; overflow:auto">';
+        foreach ($result as $value) {
+            $response=$response.'<li class="list-group-item"><a href="/p/'.$value['project_id'].'">'.$value['project_id'].'</a></li>';
+        }
+        $response=$response.'</ul>';
+        echo $response;
+
+    }  
+       
+ 
     
     public function getfilesajaxAction() {
         $this->_helper->layout()->disableLayout();
