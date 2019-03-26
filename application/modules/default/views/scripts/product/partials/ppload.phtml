@@ -327,53 +327,26 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                             if(!empty($tagGroups)) {
 
                                         ?>        
-                                        var tagGroups = null;
-                                        //get cat-tag-groups
-                                        $.ajax({
-                                            url: '/p/<?= $this->product->project_id ?>/gettaggroupsforcatajax',
-                                            type: 'GET',
-                                            async: false,
-                                            cache: false,
-                                            timeout: 30000,
-                                            data: {project_cat_id: <?= $this->product->project_category_id ?>, file_id: this.id, test: false},
-                                            dataType: 'json',
-                                            success: function (data, textStatus, jqXHR) {
-                                                if (data.status != 'success') {
-                                                    tagGroups = data.tag_groups;
-                                                    var fileId = this.id;
-                                                    $.each(tagGroups, function() {
-                                                        tableString += '<td>';
-                                                        for(key in this.tag_list){
-                                                            if(null != this.selected_tags) {
-                                                                $tag_name = this.tag_list[key];
-                                                                $.each(this.selected_tags, function() {
-                                                                    if(key == this.tag_id) {
-                                                                        tableString += '<span>'+$tag_name+'</span>';
-                                                                        if($tag_name.toUpperCase() == 'APPIMAGE'){
-                                                                            tableString += ' <i class="fa fa-question-circle appimagequestion" style="cursor: pointer;"></i>';
-                                                                        }
-                                                                        tableString += '<br>';
-                                                                    }
-                                                                })
+                                        var tagGroups = this.tag_groups;
+                                        
+                                        var fileId = this.id;
+                                        $.each(tagGroups, function() {
+                                            tableString += '<td>';
+                                            for(key in this.tag_list){
+                                                if(null != this.selected_tags) {
+                                                    $tag_name = this.tag_list[key];
+                                                    $.each(this.selected_tags, function() {
+                                                        if(key == this.tag_id) {
+                                                            tableString += '<span>'+$tag_name+'</span>';
+                                                            if($tag_name.toUpperCase() == 'APPIMAGE'){
+                                                                tableString += ' <i class="fa fa-question-circle appimagequestion" style="cursor: pointer;"></i>';
                                                             }
-                                                            /*
-                                                            if(null != this.selected_tag && key == this.selected_tag) {
-                                                                tableString += '<span>'+this.tag_list[key]+'</span>';
-                                                                if(this.tag_list[key].toUpperCase() == 'APPIMAGE'){
-                                                                    tableString += ' <i class="fa fa-question-circle appimagequestion" style="cursor: pointer;"></i>';
-                                                                }
-                                                            }*/
-                                                            
+                                                            tableString += '<br>';
                                                         }
-                                                    });
-                                                    return;
+                                                    })
                                                 }
-                                            },
-                                            error: function (jqXHR, textStatus, errorThrown) {
-                                                return;
                                             }
                                         });
-                                        
                                         <?php
                                             }
                                         ?>
@@ -569,46 +542,23 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                             if(!empty($tagGroups)) {
 
                                         ?>        
-                                        var tagGroups = null;
-                                        //get cat-tag-groups
-                                        $.ajax({
-                                            url: '/p/<?= $this->product->project_id ?>/gettaggroupsforcatajax',
-                                            type: 'GET',
-                                            async: false,
-                                            cache: false,
-                                            timeout: 30000,
-                                            data: {project_cat_id: <?= $this->product->project_category_id ?>, file_id: this.id, test: false},
-                                            dataType: 'json',
-                                            success: function (data, textStatus, jqXHR) {
-                                                if (data.status != 'success') {
-                                                    tagGroups = data.tag_groups;
-                                                    var fileId = this.id;
-                                                    $.each(tagGroups, function() {
-                                                        tableString += '<td>';
-                                                        for(key in this.tag_list){
-                                                            if(null != this.selected_tags) {
-                                                                $tag_name = this.tag_list[key];
-                                                                $.each(this.selected_tags, function() {
-                                                                    if(key == this.tag_id) {
-                                                                        tableString += '<span>'+$tag_name+'</span>';
-                                                                        if($tag_name.toUpperCase() == 'APPIMAGE'){
-                                                                            tableString += ' <i class="fa fa-question-circle appimagequestion" style="cursor: pointer;"></i>';
-                                                                        }
-                                                                        tableString += '<br>';
-                                                                    }
-                                                                })
+                                        var tagGroups = this.tag_groups;
+                                        var fileId = this.id;
+                                        $.each(tagGroups, function() {
+                                            tableString += '<td>';
+                                            for(key in this.tag_list){
+                                                if(null != this.selected_tags) {
+                                                    $tag_name = this.tag_list[key];
+                                                    $.each(this.selected_tags, function() {
+                                                        if(key == this.tag_id) {
+                                                            tableString += '<span>'+$tag_name+'</span>';
+                                                            if($tag_name.toUpperCase() == 'APPIMAGE'){
+                                                                tableString += ' <i class="fa fa-question-circle appimagequestion" style="cursor: pointer;"></i>';
                                                             }
-                                                            /*
-                                                            if(null != this.selected_tag && key == this.selected_tag) {
-                                                                tableString += '<span>'+this.tag_list[key]+'</span>';
-                                                            }*/
+                                                            tableString += '<br>';
                                                         }
-                                                    });
-                                                    return;
+                                                    })
                                                 }
-                                            },
-                                            error: function (jqXHR, textStatus, errorThrown) {
-                                                return;
                                             }
                                         });
                                         
