@@ -83,10 +83,12 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_password'));
         $this->addResource(new Zend_Acl_Resource ('default_verify'));
         $this->addResource(new Zend_Acl_Resource ('default_login'));
+        $this->addResource(new Zend_Acl_Resource ('default_collection'));
 
         $this->addResource(new Zend_Acl_Resource ('default_stati'));
         $this->addResource(new Zend_Acl_Resource ('default_tag'));
 
+        
         $this->addResource(new Zend_Acl_Resource ('backend_categories'));
         $this->addResource(new Zend_Acl_Resource ('backend_vcategories'));
         $this->addResource(new Zend_Acl_Resource ('backend_categorytag'));
@@ -161,7 +163,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_stati',
             'default_password',
             'default_verify',
-            'default_login'
+            'default_login',
+            'default_collection'
         ));
 
         $this->allow(self::ROLENAME_SYSUSER, array(
@@ -237,6 +240,23 @@ class Default_Plugin_AclRules extends Zend_Acl
             'gettaggroupsforcatajax',
             'getfilesajax'
         ));
+        
+        // resource default_product
+        $this->allow(self::ROLENAME_GUEST, 'default_collection', array(
+            'index',
+            'show',
+            'getupdatesajax',
+            'updates',
+            'follows',
+            'fetch',
+            'search',
+            //'startdownload',
+            //'ppload',
+            'loadratings',
+            //'loadinstallinstruction',
+            //'getfilesajax',
+            'gettaggroupsforcatajax'
+        ));
 
         // resource default_product
         $this->allow(self::ROLENAME_SYSUSER, 'default_product', array(
@@ -261,6 +281,23 @@ class Default_Plugin_AclRules extends Zend_Acl
             'followproject',
             'unplingproject',
             'add',
+            'pling',
+            'pay',
+            'dwolla',
+            'paymentok',
+            'paymentcancel',
+            'saveproduct',
+            'claim'
+        ));
+        
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_collection', array(
+            'add',
+            'rating',
+            'follow',
+            'unfollow',
+            'plingproject',
+            'followproject',
+            'unplingproject',
             'pling',
             'pay',
             'dwolla',

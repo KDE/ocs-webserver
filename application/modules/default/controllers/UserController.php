@@ -468,6 +468,29 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $modelMember = new Default_Model_Member();
         $this->view->member = $modelMember->fetchMemberData($this->_authMember->member_id);
     }
+    
+    public function collectionsAction()
+    {
+        $pageLimit = 25;
+        $page = (int)$this->getParam('page', 1);
+
+        $this->view->member_id = null;
+        if (null != $this->_authMember && null != $this->_authMember->member_id) {
+            $this->view->member_id = $this->_authMember->member_id;
+        }
+
+        $modelProject = new Default_Model_Collection();
+        $userProjects = $modelProject->fetchAllCollectionsForMember($this->_authMember->member_id, $pageLimit, ($page - 1) * $pageLimit);
+
+        $paginator = Local_Paginator::factory($userProjects);
+        $paginator->setItemCountPerPage($pageLimit);
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setTotalItemCount($modelProject->countAllCollectionsForMember($this->_authMember->member_id));
+
+        $this->view->products = $paginator;
+        $modelMember = new Default_Model_Member();
+        $this->view->member = $modelMember->fetchMemberData($this->_authMember->member_id);
+    }
 
     public function activitiesAction()
     {

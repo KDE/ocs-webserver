@@ -39,10 +39,31 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
         <?php endif ?>
     </li>
     
+    <li class="header-menu-left-item <?php echo $this->tab == 'addcollection' ? 'active' : ''; ?>">
+        <?php if ($this->mode == 'editcollection') : ?>
+            <a href="<?= Zend_Controller_Front::getInstance()->getRequest()->getRequestUri() ?>">
+                <span class="glyphicon glyphicon-pencil"></span>
+                <?= $this->translate('Edit Collection') ?>
+            </a>
+        <?php else : ?>
+        <a href="<?php echo $helperBase->buildBaserUrl('collection/add'); ?>">
+                <span class="glyphicon glyphicon-plus"></span>
+                <?= $this->translate('Add Collection') ?>
+            </a>
+        <?php endif ?>
+    </li>
+    
     <li class="<?php echo $this->tab == 'products' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'products'); ?>">
             <span class="glyphicon glyphicon-th-list"></span>
             <?= $this->translate('Products') ?>
+        </a>
+    </li>
+
+    <li class="<?php echo $this->tab == 'collections' ? 'active' : ''; ?>">
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'collections'); ?>">
+            <span class="glyphicon glyphicon-th-list"></span>
+            <?= $this->translate('Collections') ?>
         </a>
     </li>
 

@@ -531,7 +531,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'action'     => 'show'
                 )));
 
-        $router->addRoute('product_collectionid_url', new Zend_Controller_Router_Route('/c/:collection_id', array(
+        $router->addRoute('product_collectionid_url', new Zend_Controller_Router_Route('/co/:collection_id', array(
                     'module'     => 'default',
                     'controller' => 'product',
                     'action'     => 'show'
@@ -561,6 +561,52 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'controller' => 'product',
                     'action'     => 'saveproduct'
                 )));
+        
+        
+        
+        /**
+         * Collection
+         */
+        $router->addRoute('collection_short_url', new Zend_Controller_Router_Route('/c/:project_id/:action/*', array(
+                    'module'     => 'default',
+                    'controller' => 'collection',
+                    'action'     => 'show'
+                )));
+
+        $router->addRoute('collection_referrer_url', new Zend_Controller_Router_Route('/c/:project_id/er/:er/*', array(
+                    'module'     => 'default',
+                    'controller' => 'collection',
+                    'action'     => 'show'
+                )));
+
+        $router->addRoute('collection_add', new Zend_Controller_Router_Route('/collection/add', array(
+                    'module'     => 'default',
+                    'controller' => 'collection',
+                    'action'     => 'add'
+                )));
+
+        /**
+        $router->addRoute('search', new Zend_Controller_Router_Route('/search/*', array(
+                    'module'     => 'default',
+                    'controller' => 'collection',
+                    'action'     => 'search'
+                )));
+
+        $router->addRoute('search_domain',new Zend_Controller_Router_Route('/s/:domain_store_id/search/*',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'product',
+                    'action'     => 'search'
+                )));
+        */
+        $router->addRoute('collection_save', new Zend_Controller_Router_Route('/c/save/*', array(
+                    'module'     => 'default',
+                    'controller' => 'collection',
+                    'action'     => 'saveproduct'
+                )));
+        
+        
+        
 
         /**
          * Member

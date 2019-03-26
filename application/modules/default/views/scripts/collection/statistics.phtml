@@ -1,0 +1,236 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$loginUrl = '/login?redirect=' . $this->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(), true);
+$txtUserFollows = '';
+$urlUserFollows = $this->buildProductUrl($this->product->project_id, 'unfollow');
+$imgFile = '/theme/flatui/img/icon-like-color.png';
+if (false == $this->userFollowsProject($this->authMember->member_id, $this->product->project_id)) {
+    $txtUserFollows = '';
+    $urlUserFollows = $this->buildProductUrl($this->product->project_id, 'follow');
+    $imgFile = '/theme/flatui/img/icon-like.png';
+}
+$titleImage = $this->Image($this->product->image_big, array('width' => 1170, 'height' => 300));
+$imageTag = '<img src="' . $titleImage . '">';
+if (strpos($titleImage, 'default.png') !== false) {
+    $imageTag = '';
+}
+?>
+<?php //<script src="https://www.paypalobjects.com/js/external/apdg.js"></script> ?>
+
+    <div class="container page-container">
+
+        <!-- HEADER -->
+
+        <?php
+        echo $this->render('product/partials/productTopHeader.phtml',
+            array(
+                "member" => $this->member,
+                "project" => $this->product,
+                "loginUrl" => $loginUrl,
+                'product_views' => $this->product_views,
+                'tab' => 'statistics',
+                'txtUserFollows' => $this->txtUserFollows,
+                'urlUserFollows' => $urlUserFollows,
+                'imgFile' => $this->imgFile
+            ));
+        ?>
+
+
+        <!-- /HEADER -->
+
+        <!-- PAGE BODY -->
+
+        <div class="product-right full-width statistics-page">
+
+            <!-- page content -->
+
+            <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8 product-details">
+
+                <!--Load the AJAX API-->
+                <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+                <script type="text/javascript">
+
+                    // Load the Visualization API and the piechart package.
+                    google.load('visualization', '1', {'packages': ['corechart']});
+
+                    // Set a callback to run when the Google Visualization API is loaded.
+                    google.setOnLoadCallback(drawChart);
+
+                    function drawChart() {
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '/statistics/daily/ajax/project_id/<?php echo $this->product->project_id; ?>/year/<?php echo $this->year; ?>/month/<?php echo $this->month; ?>/day/<?php echo $this->day; ?>',
+
+                            beforeSend: function () {
+                                // this is where we append a loading image
+                                $('#chart_div_daily').html('<h5>Daily Statistic</h5><div class="loading"><img src="/images/system/ajax-loader.gif" alt="Loading..." /></div>');
+                            },
+                            success: function (response) {
+                                try {
+                                    if (response == 'null') {
+                                        throw new Error('no data found');
+                                    }
+
+                                    // Create our data table out of JSON data loaded from server.
+                                    var data = google.visualization.arrayToDataTable(response);
+
+                                    // Instantiate and draw our chart, passing in some options.
+                                    var chart = new google.visualization.ColumnChart(document.getElementById('chart_div_daily'));
+                                    chart.draw(data, {title: 'Daily Statistic', width: 600, height: 400});
+
+                                } catch (e) {
+                                    $('#chart_div_daily').html('<h5>Daily Statistic</h5><p>' + e.message + '</p>');
+                                }
+
+                                // successful request; do something with the data
+                                $('#ajax-panel').empty();
+                                $(data).find('item').each(function (i) {
+                                    $('#ajax-panel').append('<h4>' + $(this).find('title').text() + '</h4><p>' + $(this).find('link').text() + '</p>');
+                                });
+                            },
+                            error: function () {
+                                // failed request; give feedback to user
+                                $('#chart_div_daily').html('<h5>Daily Statistic</h5><p class="error"><strong>Oops!</strong> Try that again in a few moments.</p>');
+                            }
+                        });
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '/statistics/weekly/ajax/project_id/<?php echo $this->product->project_id; ?>/yearweek/<?php echo $this->yearweek; ?>/',
+
+                            beforeSend: function () {
+                                // this is where we append a loading image
+                                $('#chart_div_weekly').html('<h5>Weekly Statistic</h5><div class="loading"><img src="/images/system/ajax-loader.gif" alt="Loading..." /></div>');
+                            },
+                            success: function (response) {
+                                try {
+                                    if (response == 'null') {
+                                        throw new Error('no data found');
+                                    }
+
+                                    // Create our data table out of JSON data loaded from server.
+                                    var dataTable = google.visualization.arrayToDataTable(response);
+
+                                    // Instantiate and draw our chart, passing in some options.
+                                    var chart = new google.visualization.LineChart(document.getElementById('chart_div_weekly'));
+                                    chart.draw(dataTable, {
+                                        title: 'Weekly Statistic',
+                                        width: 600,
+                                        height: 400,
+                                        hAxis: {
+                                            title: 'day',
+                                            format: '#',
+                                            gridlines: {count: dataTable.getNumberOfRows()}
+                                        }
+                                    });
+
+                                } catch (e) {
+                                    $('#chart_div_weekly').html('<h5>Weekly Statistic</h5><p>' + e.message + '</p>');
+                                }
+
+                            },
+                            error: function () {
+                                // failed request; give feedback to user
+                                $('#chart_div_weekly').html('<h5>Weekly Statistic</h5><p class="error"><strong>Oops!</strong> Try that again in a few moments.</p>');
+                            }
+                        });
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '/statistics/monthly/ajax/project_id/<?php echo $this->product->project_id; ?>/year/<?php echo $this->year; ?>/month/<?php echo $this->month; ?>/',
+
+                            beforeSend: function () {
+                                // this is where we append a loading image
+                                $('#chart_div_monthly').html('<h5>Monthly Statistic</h5><div class="loading"><img src="/images/system/ajax-loader.gif" alt="Loading..." /></div>');
+                            },
+                            success: function (response) {
+                                try {
+                                    if (response == 'null') {
+                                        throw new Error('no data found');
+                                    }
+
+                                    // Create our data table out of JSON data loaded from server.
+                                    var dataTable = google.visualization.arrayToDataTable(response);
+
+                                    // Instantiate and draw our chart, passing in some options.
+                                    var chart = new google.visualization.LineChart(document.getElementById('chart_div_monthly'));
+                                    chart.draw(dataTable, {
+                                        title: 'MonthlyStatistic',
+                                        width: 600,
+                                        height: 400,
+                                        hAxis: {
+                                            title: 'week',
+                                            format: '#',
+                                            gridlines: {count: dataTable.getNumberOfRows()}
+                                        }
+                                    });
+
+                                } catch (e) {
+                                    $('#chart_div_monthly').html('<h5>Monthly Statistic</h5><p>' + e.message + '</p>');
+                                }
+
+                            },
+                            error: function () {
+                                // failed request; give feedback to user
+                                $('#chart_div_monthly').html('<h5>Monthly Statistic</h5><p class="error"><strong>Oops!</strong> Try that again in a few moments.</p>');
+                            }
+                        });
+
+                    }
+                </script>
+                <div id="chart_div_daily" name="chart_div_daily"></div>
+                <div id="chart_div_weekly" name="chart_div_weekly"></div>
+                <div id="chart_div_monthly" name="chart_div_monthly"></div>
+
+            </div>
+            <!-- /.product-details -->
+
+            <!-- /page content -->
+
+            <!-- sidebar -->
+
+            <?php echo $this->render('product/partials/sidebar.phtml',
+                array(
+                    'member' => $this->member,
+                    'project' => $this->product,
+                    'comments' => $this->comments,
+                    'supporter' => $this->supporter,
+                    'relatedProducts' => $this->relatedProducts,
+                ));
+            ?>
+
+            <!-- /sidebar -->
+
+        </div>
+
+        <!-- PAGE BODY -->
+
+    </div>
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+
+        });
+    ');
+

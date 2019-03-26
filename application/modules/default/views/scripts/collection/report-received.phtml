@@ -1,0 +1,56 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div class="report-form">
+    <button type="button" class="close report-close" data-dismiss="modal" aria-hidden="true">×</button>
+    <div class="report-container">
+        <h3 class="report-heading lightblue"><?= $this->translate('Report This Product') ?></h3>
+        <hr>
+        <?php if ($this->auth->hasIdentity()): ?>
+            <?php if ($this->form): ?>
+                <form class="standard-form form-report modal-form"
+                      action="<?= $this->form->getAction(); ?>"
+                      method="<?= $this->form->getMethod(); ?>"
+                      data-target="#modal-dialog">
+                    <div class="field">
+                        <?= $this->form->project_report_category_id ?>
+                    </div>
+                    <div class="field">
+                        <?= $this->form->short_text ?>
+                    </div>
+                    <div class="field purple italic">
+                        You can help us if you write a short description of the problem.
+                    </div>
+                    <div class="center"><?= $this->form->send ?></div>
+                </form>
+            <?php else: ?>
+                <?= $this->saveText; ?>
+            <?php endif; ?>
+        <?php else: ?>
+            <?= $this->translate('projects.report.login') ?>
+        <?php endif; ?>
+    </div>
+</div><!-- /.report -->
+<!-- javascripts -->
+<script type="text/javascript">
+
+</script>

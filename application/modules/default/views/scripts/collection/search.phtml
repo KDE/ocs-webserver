@@ -1,0 +1,106 @@
+<?php
+$filterScore = $this->ls ? 'laplace_score:['.$this->ls.' TO '.($this->ls+9).']':null;
+$filterCat = $this->pci ? 'project_category_id:('.$this->pci.')' : null;
+$filterTags = $this->t ? 'tags:('.$this->t.')' : null;
+$filterPkg = $this->pkg ? 'package_names:('.$this->pkg.')' : null;
+$filterArch = $this->arch ? 'arch_names:('.$this->arch.')' : null;
+$filterLic = $this->lic ? 'license_names:('.$this->lic.')' : null;
+$store = $this->store;
+$param = array('q' => $this->searchText ,'store'=>$store,'page' => $this->page, 'count' => 10, 'qf' => $this->searchField, 'fq' => array($filterCat, $filterScore, $filterTags,$filterPkg,$filterArch,$filterLic));
+
+$modelSearch = new Default_Model_Solr();
+try {
+    $this->result = $modelSearch->search($param);
+} catch (Exception $e) {
+    Zend_Registry::get('logger')->err(__FILE__.'('.__LINE__.') -- params: '.print_r($param, true)."\n".' message: '."\n".$e->getMessage());
+
+    $this->result = array('hits' => array(), 'highlighting' =>array(),'response' => array('numFound' => 0));
+}
+$this->pagination = $pagination = $modelSearch->getPagination();
+$this->products = $this->result['hits'];
+
+$this->highlighting = $this->result['highlighting'];
+
+$this->headTitle('Search: '.$this->searchText, 'SET');
+
+$helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
+$modelInfo = new Default_Model_Info();
+$this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
+$this->countSupporters = $modelInfo->getCountAllSupporters();
+$this->supporters = $modelInfo->getNewActiveSupporters(18);
+
+?>
+<main id="explore-content" class="searchresults">
+    <section class="wrapper" id="products-wrapper">
+        <span class="glyphicon  togglesidebar" id="btnTogglesidebar" ></span>
+        <div class="GridFlex">
+            <div class="GridFlex-cell sidebar-left" >
+                <?php  $time_start = microtime(true);echo $this->render('product/partials/searchFilter.phtml'); $time_elapsed = microtime(true) - $time_start; ?>
+                <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                    echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
+                }?>
+            </div>
+            <div class="GridFlex-cell content">
+                <section class="explore-products" id="explore-products">
+
+                    <h1 class="search-heading">Search results for "<?= $this->searchText; ?>"</h1>
+
+                    <ul id="sort" class="nav nav-tabs">
+                        <li class="text-right" style="text-align: right; width: 50%; float: right;">
+                            <small><?=$this->result['response']['numFound']?> hit(s)</small>
+                        </li>
+                    </ul>
+
+                    <div class="product-list">
+                        <?php
+                        if (count($this->products) == 0) { ?>
+                            <p>Your search - <?=$this->searchText?> - did not match any documents.</p>
+
+                            <p>Suggestions:
+                            <ul>
+                            <li>Make sure all words are spelled correctly.</li>
+                            <li>Try keywords which are min 3 characters long.</li>
+                            <li>Try different keywords.</li>
+                            <li>Try more general keywords.</li>
+                            <li>Try fewer keywords.</li>
+                            <li>Use key words which start without wildcard symbols like "*" or "?".</li>
+                            </ul>
+                        <?php
+                        } else {
+                            $time_start = microtime(true);
+                            echo $this->render('product/partials/listProducts.phtml');
+                            $time_elapsed = microtime(true) - $time_start;
+                        }
+                        ?>
+                        <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                            echo '<div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+                            echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
+                            echo '</div>';
+                        }?>
+                    </div>
+
+
+                    <section class="explore-footer">
+                        <?php echo $this->paginationControl($this->pagination, 'Sliding', 'partials/paginationControl.phtml', array('params' => array('projectSearchText' => $this->searchText,'domain_store_id'=>$this->store), 'dom_target' => 'section.explore-products')); ?>
+                    </section>
+                </section>
+            </div>
+
+        
+            
+        </div>
+    </section>
+    <div class="tooltip_templates" style="display: none">
+    <span id="tooltip_content">
+        <i class="fa fa-spinner"></i>
+    </span>
+</div>
+</main>
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){                               
+              
+                TooltipUser.setup("tooltipuser","right");
+                TooltipUser.setup("tooltipuserleft","left");             
+            });
+        ');

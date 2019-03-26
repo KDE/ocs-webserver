@@ -1,0 +1,142 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$plingData = $this->userPlings($this->product->project_id);
+$auth = Zend_Auth::getInstance();
+$btnName = $auth->hasIdentity() ? 'Confirm Donation' : 'Anonymous Pling';
+$this->headScript()
+    ->appendFile('https://www.paypalobjects.com/js/external/dg.js');
+?>
+    <form id="support-form"
+          class="standard-form partialpaypal"
+          method="post"
+          action="<?= $this->urlPay ?>"
+          data-target="#overlays">
+
+        <h3><?= $this->translate('Support ') ?><?= nl2br(strip_tags($this->product->title)) ?></h3>
+
+        <div class="form-body">
+            <input type="hidden" name="provider" id="provider" value="<?= $this->paymentProvider ?>">
+            <input type="hidden" name="amount" id="amount" value="<?= $this->paymentAmount ?>">
+
+            <div class="form-container">
+                <div class="controls controls-row">
+                    <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+                        <label for="payment_amount"><?= $this->translate('Support with') ?></label>
+                        <span class="glyphicon glyphicon-usd"></span>
+                        <span id="txt_payment_amount"><?= $this->paymentAmount ?></span>
+                    </div>
+                    <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
+                        <label class="payment-label"
+                               for="payment_provider"><?= $this->translate('Payment Provider') ?></label>
+
+                        <div class="payment-options">
+                            <?php if ($this->paymentProvider == 'paypal') { ?>
+                                <div class="input-group">
+                                <span>
+                                    <img src="/theme/flatui/img/logo_paypal.png"/>
+                                </span>
+                                </div>
+                            <?php } ?>
+                            <?php if ($this->paymentProvider == 'dwolla') { ?>
+                                <div class="input-group">
+                                <span>
+                                    <img src="/theme/flatui/img/dwolla-btn-pay-lg.png"/>
+                                </span>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="controls controls-row">
+                    <textarea id="comment" name="comment"
+                              placeholder="&nbsp;<?= $this->translate('Write a comment (publicly visible)') ?>" rows="4"
+                              class="col-md-12 col-lg-12 col-sm-12 col-xs-12"></textarea>
+                </div>
+                <div class="controls controls-row">
+                </div>
+            </div>
+        </div>
+
+        <?php /* 
+        <div class="form-footer">
+            <?php if($auth->hasIdentity()) { ?>
+            <div class="row small" style="margin:0;">
+                <span class="glyphicon glyphicon-question-sign pull-right has-popup"  style="margin-left:2px;"
+                      data-trigger="hover"
+                      data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"
+                      data-content="<span class='small'>The identity is only hidden from public by replacing your username with 'anonymous' as well as showing your comment as been written by 'anonymous'. Pling as well as the maker will still know from whom the donation came from.</span>"
+                    ></span>
+                <label for="hideId" class="pull-right"><?=$this->translate('Hide my identity from public');?><input type="checkbox" name="hideId" id="hideId" value="1" style="width:auto;height:auto;padding:5px;margin-left:5px;position:relative;top:2px;"></label>
+            </div>
+            <?php } ?>
+            <div class="row" style="margin:0;">
+            <a href="<?=$this->buildProductUrl($this->product->project_id)?>" role="button" class="btn btn-native pull-left">
+                <?= $this->translate('Cancel') ?>
+            </a>
+            <button type="submit" id="submit_pling" class="btn btn-native pull-right" >
+                <?= $this->translate($btnName) ?>
+            </button>
+            </div>
+        </div>
+        */ ?>
+        <div class="form-footer">
+            <div class="row" style="margin:0;">
+                <a href="<?= $this->buildProductUrl($this->product->project_id) ?>"
+                   role="button"
+                   class="btn btn-native pull-left">
+                    <?= $this->translate('Cancel') ?>
+                </a>
+                <?php if ($auth->hasIdentity()) { ?>
+                    <button type="submit" id="submit_pling" class="btn btn-native pull-right">
+                        <?= $this->translate($btnName) ?>
+                    </button>
+                <?php } else { ?>
+                    <a href="javascript:;" class="btn btn-native disabled pull-right ">
+                        Please login to donate
+                    </a>
+                <?php } ?>
+            </div>
+        </div>
+
+    </form>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#submit_pling').click(function () {
+                if ($('input[id=provider]').val() == 'dwolla') {
+                    var newWindow = window.open(null, "dwollaFrame", "width=300,height=400,left=100,top=200");
+                }
+            });
+
+            $('.has-popup').hover(function () {
+                $(this).popover('show');
+            });
+        });
+    </script>
+
+<?php
+$this->inlineScript()->appendScript(
+    '$(document).ready(function(){
+        PartialPayPal.initPayPalForm();
+    });'
+);
