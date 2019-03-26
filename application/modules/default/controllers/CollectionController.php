@@ -64,7 +64,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
 
 
     public function initJsonForReact(){
-            $modelProduct = new Default_Model_Project();
+            $modelProduct = new Default_Model_Collection();
             $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
             $this->view->product = $productInfo;
             if (empty($this->view->product)) {
@@ -112,7 +112,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             $plings = $projectplings->fetchPlingsForProject($this->_projectId);
             $this->view->projectplingsJson = Zend_Json::encode($plings);
 
-            $tableProject = new Default_Model_Project();
+            $tableProject = new Default_Model_Collection();
             $galleryPictures = $tableProject->getGalleryPictureSources($this->_projectId);
             $this->view->galleryPicturesJson = Zend_Json::encode($galleryPictures);
 
@@ -200,8 +200,9 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
     {
         $this->view->member = $this->_authMember;
         $this->view->mode = 'addcollection';
+        $this->view->collection_cat_id = Zend_Registry::get('config')->settings->client->default->collection_cat_id;
         
-        $form = new Default_Form_Product(array('member_id' => $this->view->member->member_id));
+        $form = new Default_Form_Collection(array('member_id' => $this->view->member->member_id));
         $this->view->form = $form;
         
         if ($this->_request->isGet()) {
@@ -220,6 +221,8 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         }
 
         $values = $form->getValues();
+        
+        
 
         $imageModel = new Default_Model_DbTable_Image();
         try {
@@ -232,24 +235,24 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $values['status'] = Default_Model_DbTable_Project::PROJECT_ACTIVE;
 
         // save new project
-        $modelProject = new Default_Model_Project();
+        $modelProject = new Default_Model_Collection();
 
         Zend_Registry::get('logger')->info(__METHOD__ . ' - $post: ' . print_r($_POST, true));
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - $files: ' . print_r($_FILES, true));
         Zend_Registry::get('logger')->info(__METHOD__ . ' _ input values: ' . print_r($values, true));
 
         $newProject = null;
         try {
             if (isset($values['project_id'])) {
-                $newProject = $modelProject->updateProject($values['project_id'], $values);
+                $newProject = $modelProject->updateCollection($values['project_id'], $values);
             } else {
-                $newProject = $modelProject->createProject($this->_authMember->member_id, $values, $this->_authMember->username);
+                $newProject = $modelProject->createCollection($this->_authMember->member_id, $values, $this->_authMember->username);
                 //$this->createSystemPlingForNewProject($newProject->project_id);
             }
         } catch (Exception $exc) {
             Zend_Registry::get('logger')->warn(__METHOD__ . ' - traceString: ' . $exc->getTraceAsString());
+            Zend_Registry::get('logger')->info(__METHOD__ . ' _ Exception: ' . print_r($exc, true));
         }
-
+        
         if (!$newProject) {
             $this->_helper->flashMessenger->addMessage('<p class="text-error">You did not choose a Category in the last level.</p>');
             $this->forward('add');
@@ -311,7 +314,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             Zend_Registry::get('logger')->err($e->getMessage());
         }
 
-        $this->redirect('/member/' . $newProject->member_id . '/products/');
+        $this->redirect('/member/' . $newProject->member_id . '/collections/');
     }
 
     private function saveGalleryPics($form_element)
@@ -352,9 +355,10 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->viewRenderer('add'); // we use the same view as you can see at add a product
         $this->view->mode = 'editcollection';
+        $this->view->collection_cat_id = Zend_Registry::get('config')->settings->client->default->collection_cat_id;
 
         $projectTable = new Default_Model_DbTable_Project();
-        $projectModel = new Default_Model_Project();
+        $projectModel = new Default_Model_Collection();
         $modelTags = new Default_Model_Tags();
         $tagTable = new Default_Model_DbTable_Tags();
 
@@ -391,7 +395,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         //get the gitlab projects for this user
 
         //setup form
-        $form = new Default_Form_Product(array('pictures' => $sources, 'member_id' => $this->view->member_id));
+        $form = new Default_Form_Collection(array('pictures' => $sources, 'member_id' => $this->view->member_id));
         if (false === empty($projectData->image_small)) {
             $form->getElement('image_small_upload')->setRequired(false);
         }
@@ -511,7 +515,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         }
 
         $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
-        $this->redirect($helperBuildMemberUrl->buildMemberUrl($member->username, 'products'));
+        $this->redirect($helperBuildMemberUrl->buildMemberUrl($member->username, 'collections'));
     }
 
     public function getupdatesajaxAction()
@@ -590,7 +594,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             $update_id = $rowset->project_update_id;
 
             //20180219 ronald: we set the changed_at only by new files or new updates
-            $projectTable = new Default_Model_Project();
+            $projectTable = new Default_Model_Collection();
             $projectUpdateRow = $projectTable->find($this->_projectId)->current();
             if (count($projectUpdateRow) == 1) {
                 $projectUpdateRow->changed_at = new Zend_Db_Expr('NOW()');
@@ -625,7 +629,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
     public function updatesAction()
     {
         $this->view->authMember = $this->_authMember;
-        $tableProject = new Default_Model_Project();
+        $tableProject = new Default_Model_Collection();
         $this->view->product = $tableProject->fetchProductInfo($this->_projectId);
         if (false === isset($this->view->product)) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
@@ -658,7 +662,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $this->_helper->viewRenderer('add');
 
         $form = new Default_Form_ProjectUpdate();
-        $projectTable = new Default_Model_Project();
+        $projectTable = new Default_Model_Collection();
         $projectData = null;
         $projectUpdateId = (int)$this->getParam('upid');
 
@@ -703,7 +707,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             $projectUpdateRow->start_date = new Zend_Db_Expr('NOW()');
             $projectUpdateRow->member_id = $this->_authMember->member_id;
             $projectUpdateRow->creator_id = $this->_authMember->member_id;
-            $projectUpdateRow->status = Default_Model_Project::PROJECT_ACTIVE;
+            $projectUpdateRow->status = Default_Model_Collection::PROJECT_ACTIVE;
             $projectUpdateRow->type_id = 2;
             $projectUpdateRow->pid = $this->_projectId;
         } else {
@@ -717,7 +721,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         //New Project in Session, for AuthValidation (owner)
         $this->_auth->getIdentity()->projects[$lastId] = array('project_id' => $lastId);
 
-        $tableProduct = new Default_Model_Project();
+        $tableProduct = new Default_Model_Collection();
         $product = $tableProduct->find($this->_projectId)->current();
         $activityLogValues = $projectUpdateRow->toArray();
         $activityLogValues['image_small'] = $product->image_small;
@@ -747,11 +751,11 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         }
 
         if (isset($_POST['save'])) {
-            $projectTable = new Default_Model_Project();
-            $projectTable->setStatus(Default_Model_Project::PROJECT_INACTIVE, $this->_projectId);
+            $projectTable = new Default_Model_Collection();
+            $projectTable->setStatus(Default_Model_Collection::PROJECT_INACTIVE, $this->_projectId);
 
             //todo: maybe we have to delete the project data from database otherwise we produce many zombies
-            $this->redirect('/member/' . $this->_authMember->member_id . '/products/');
+            $this->redirect('/member/' . $this->_authMember->member_id . '/collections/');
         }
 
         if (isset($_POST['back'])) {
@@ -768,11 +772,11 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
-        $projectTable = new Default_Model_Project();
-        $projectTable->setStatus(Default_Model_Project::PROJECT_ACTIVE, $this->_projectId);
+        $projectTable = new Default_Model_Collection();
+        $projectTable->setStatus(Default_Model_Collection::PROJECT_ACTIVE, $this->_projectId);
 
         // add to search index
-        $modelProject = new Default_Model_Project();
+        $modelProject = new Default_Model_Collection();
         $productInfo = $modelProject->fetchProductInfo($this->_projectId);
         $modelSearch = new Default_Model_Search_Lucene();
         $modelSearch->addDocument($productInfo->toArray());
@@ -782,7 +786,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
 
     protected function fetchDataForIndexView()
     {
-        $tableProject = new Default_Model_Project();
+        $tableProject = new Default_Model_Collection();
         $this->view->product = $tableProject->fetchProductInfo($this->_projectId);
         if (false === isset($this->view->product)) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
@@ -943,7 +947,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
 
-        $tableProject = new Default_Model_Project();
+        $tableProject = new Default_Model_Collection();
         $this->view->supporting = $tableProject->fetchProjectSupporterWithPlings($this->_projectId);
     }
 
@@ -952,7 +956,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
     public function payAction()
     {
         $this->_helper->layout()->disableLayout();
-        $tableProject = new Default_Model_Project();
+        $tableProject = new Default_Model_Collection();
         $project = $tableProject->fetchProductInfo($this->_projectId);
 
         //get parameter
@@ -1107,7 +1111,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
-        $tableProduct = new Default_Model_Project();
+        $tableProduct = new Default_Model_Collection();
         $tableProduct->setDeleted($this->_authMember->member_id,$this->_projectId);
 
         $product = $tableProduct->find($this->_projectId)->current();
@@ -1143,12 +1147,12 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
-        $tableProduct = new Default_Model_Project();
+        $tableProduct = new Default_Model_Collection();
         $tableProduct->setInActive($this->_projectId, $memberId);
 
         $product = $tableProduct->find($this->_projectId)->current();
 
-        if (isset($product->type_id) && $product->type_id == Default_Model_Project::PROJECT_TYPE_UPDATE) {
+        if (isset($product->type_id) && $product->type_id == Default_Model_Collection::PROJECT_TYPE_UPDATE) {
             $parentProduct = $tableProduct->find($product->pid)->current();
             $product->image_small = $parentProduct->image_small;
         }
@@ -1175,12 +1179,12 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
-        $tableProduct = new Default_Model_Project();
+        $tableProduct = new Default_Model_Collection();
         $tableProduct->setActive($this->_authMember->member_id,$this->_projectId);
 
         $product = $tableProduct->find($this->_projectId)->current();
 
-        if (isset($product->type_id) && $product->type_id == Default_Model_Project::PROJECT_TYPE_UPDATE) {
+        if (isset($product->type_id) && $product->type_id == Default_Model_Collection::PROJECT_TYPE_UPDATE) {
             $parentProduct = $tableProduct->find($product->pid)->current();
             $product->image_small = $parentProduct->image_small;
         }
@@ -1241,7 +1245,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
 
         if (null === $result) {
             $projectFollowTable->createRow($newVals)->save();
-            $tableProduct = new Default_Model_Project();
+            $tableProduct = new Default_Model_Collection();
             $product = $tableProduct->find($this->_projectId)->current();
 
             $activityLog = new Default_Model_ActivityLog();
@@ -1265,7 +1269,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             . $this->_projectId);
 
 
-        $tableProduct = new Default_Model_Project();
+        $tableProduct = new Default_Model_Collection();
         $product = $tableProduct->find($this->_projectId)->current();
 
         $activityLog = new Default_Model_ActivityLog();
@@ -1297,7 +1301,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
 
         if (null === $result) {
              $projectFollowTable->createRow($newVals)->save();
-            $tableProduct = new Default_Model_Project();
+            $tableProduct = new Default_Model_Collection();
             $product = $tableProduct->find($this->_projectId)->current();
             $activityLog = new Default_Model_ActivityLog();
             $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
@@ -1319,7 +1323,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             . $this->_projectId);
 
 
-        $tableProduct = new Default_Model_Project();
+        $tableProduct = new Default_Model_Collection();
         $product = $tableProduct->find($this->_projectId)->current();
 
         $activityLog = new Default_Model_ActivityLog();
@@ -1330,7 +1334,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
 
     protected function logActivity($logId)
     {
-        $tableProduct = new Default_Model_Project();
+        $tableProduct = new Default_Model_Collection();
         $product = $tableProduct->find($this->_projectId)->current();
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
@@ -1563,7 +1567,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             $this->view->authMember = $this->_authMember;
 
             $this->fetchDataForIndexView();
-            $tableProject = new Default_Model_Project();
+            $tableProject = new Default_Model_Collection();
             $this->view->supporting = $tableProject->fetchProjectSupporterWithPlings($this->_projectId);
 
             if (false === isset($this->view->product)) {
@@ -1588,9 +1592,9 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
 
     public function claimAction()
     {
-        $modelProduct = new Default_Model_Project();
+        $modelProduct = new Default_Model_Collection();
         $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
-        if ($productInfo->claimable != Default_Model_Project::PROJECT_CLAIMABLE) {
+        if ($productInfo->claimable != Default_Model_Collection::PROJECT_CLAIMABLE) {
             throw new Zend_Controller_Action_Exception('Method not available', 404);
         }
         $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
@@ -1635,7 +1639,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         } else {
             $this->view->widgetConfig = $widgetDefault;
-            $productModel = new Default_Model_Project();
+            $productModel = new Default_Model_Collection();
             $this->view->product = $productModel->fetchProductDataFromMV($widgetProjectId);
             $this->view->supporting = $productModel->fetchProjectSupporterWithPlings($widgetProjectId);
             $plingModel = new Default_Model_DbTable_Plings();
@@ -1649,7 +1653,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
 
     public function saveproductAction()
     {
-        $form = new Default_Form_Product();
+        $form = new Default_Form_Collection();
 
         // we don't need to test a file which doesn't exist in this case. The Framework stumbles if $_FILES is empty.
         if ($this->_request->isXmlHttpRequest() AND (count($_FILES) == 0)) {
@@ -1666,11 +1670,11 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         }
 
         $formValues = $form->getValues();
-        $formValues['status'] = Default_Model_Project::PROJECT_INCOMPLETE;
+        $formValues['status'] = Default_Model_Collection::PROJECT_INCOMPLETE;
 
-        $modelProject = new Default_Model_Project();
+        $modelProject = new Default_Model_Collection();
         $newProject =
-            $modelProject->createProject($this->_authMember->member_id, $formValues, $this->_authMember->username);
+            $modelProject->createCollection($this->_authMember->member_id, $formValues, $this->_authMember->username);
         //$this->createSystemPlingForNewProject($newProject->project_id);
         //New Project in Session, for AuthValidation (owner)
         $this->_auth->getIdentity()->projects[$newProject->project_id] = array('project_id' => $newProject->project_id);
@@ -1792,7 +1796,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $tableMember = new Default_Model_Member();
         $this->view->member = $tableMember->find($memberId)->current();
 
-        $tableProduct = new Default_Model_Project();
+        $tableProduct = new Default_Model_Collection();
         $this->view->products = $tableProduct->fetchAllProjectsForMember($memberId);
     }
 
@@ -1877,7 +1881,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             $gitProject = $gitlab->getProject($gitProjectId);
         } catch (Exception $exc) {
             //Project is gone
-            $modelProject = new Default_Model_Project();
+            $modelProject = new Default_Model_Collection();
             $modelProject->updateProject($this->_projectId, array('is_gitlab_project' => 0, 'gitlab_project_id' => null, 'show_gitlab_project_issues' => 0, 'use_gitlab_project_readme' => 0));
             $gitProject = null;
         }
@@ -1892,7 +1896,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             $gitProjectIssues = $gitlab->getProjectIssues($gitProjectId);
         } catch (Exception $exc) {
             //Project is gone
-            $modelProject = new Default_Model_Project();
+            $modelProject = new Default_Model_Collection();
             $modelProject->updateProject($this->_projectId, array('is_gitlab_project' => 0, 'gitlab_project_id' => null, 'show_gitlab_project_issues' => 0, 'use_gitlab_project_readme' => 0));
 
             $gitProjectIssues = null;

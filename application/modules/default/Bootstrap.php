@@ -570,13 +570,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $router->addRoute('collection_short_url', new Zend_Controller_Router_Route('/c/:project_id/:action/*', array(
                     'module'     => 'default',
                     'controller' => 'collection',
-                    'action'     => 'show'
+                    'action'     => 'index'
                 )));
 
         $router->addRoute('collection_referrer_url', new Zend_Controller_Router_Route('/c/:project_id/er/:er/*', array(
                     'module'     => 'default',
                     'controller' => 'collection',
-                    'action'     => 'show'
+                    'action'     => 'index'
                 )));
 
         $router->addRoute('collection_add', new Zend_Controller_Router_Route('/collection/add', array(

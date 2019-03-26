@@ -35,6 +35,7 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
     const ITEM_TYPE_DUMMY = 0;
     const ITEM_TYPE_PRODUCT = 1;
     const ITEM_TYPE_UPDATE = 2;
+    const ITEM_TYPE_COLLECTION = 3;
 
     const TAG_LICENCE_GID = 7;
     const TAG_TYPE_ID = 1;
@@ -1373,7 +1374,7 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
      * @throws Exception
      * @throws Zend_Db_Table_Exception
      */
-    public function createProject($member_id, $values, $username)
+    public function createCollection($member_id, $values, $username)
     {
         $values = (array)$values;
         if (empty($member_id)) {
@@ -1386,7 +1387,7 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
         $values['uuid'] = (!array_key_exists('uuid', $values)) ? Local_Tools_UUID::generateUUID() : $values['uuid'];
         $values['member_id'] = (!array_key_exists('member_id', $values)) ? $member_id : $values['member_id'];
         $values['status'] = (!array_key_exists('status', $values)) ? self::PROJECT_INACTIVE : $values['status'];
-        $values['type_id'] = (!array_key_exists('type_id', $values)) ? self::ITEM_TYPE_PRODUCT : $values['type_id'];
+        $values['type_id'] = (!array_key_exists('type_id', $values)) ? self::PROJECT_TYPE_COLLECTION : $values['type_id'];
         $values['created_at'] = (!array_key_exists('created_at', $values)) ? new Zend_Db_Expr('NOW()') : $values['created_at'];
         $values['start_date'] = (!array_key_exists('start_date', $values)) ? new Zend_Db_Expr('NULL') : $values['start_date'];
         $values['creator_id'] = (!array_key_exists('creator_id', $values)) ? $member_id : $values['creator_id'];
@@ -1408,7 +1409,7 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
      * @throws Exception
      * @throws Zend_Db_Table_Exception
      */
-    public function updateProject($project_id, $values)
+    public function updateCollection($project_id, $values)
     {
         $values = (array)$values;
         $projectData = $this->find($project_id)->current();

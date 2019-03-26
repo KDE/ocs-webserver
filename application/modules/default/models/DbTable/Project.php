@@ -64,9 +64,10 @@ class Default_Model_DbTable_Project extends Local_Model_Table
     );
 
     protected $_types = array(
-        'person'     => self::PROJECT_TYPE_PERSONAL,
-        'collection' => self::PROJECT_TYPE_STANDARD,
-        'item'       => self::PROJECT_TYPE_UPDATE
+        'person'        => self::PROJECT_TYPE_PERSONAL,
+        'project'       => self::PROJECT_TYPE_STANDARD,
+        'item'          => self::PROJECT_TYPE_UPDATE,
+        'collection'    => self::PROJECT_TYPE_COLLECTION
     );
 
     protected $_allowedStatusTypes = array(

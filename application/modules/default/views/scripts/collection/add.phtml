@@ -21,7 +21,7 @@
  **/
 
 //$this->os = Zend_Registry::get('application_os');
-$this->tab = 'add';
+$this->tab = 'addcollection';
 $helperImage = new Default_View_Helper_Image();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helpProductUrl = new Default_View_Helper_BuildProductUrl();
@@ -236,6 +236,8 @@ $this->inlineScript()->appendScript('
                     <section class="add-product-page">
 
                         <form enctype="multipart/form-data" role="application" class="wizard clearfix" action="" method="post" id="add-product-form">
+                            <input type="hidden" name="project_category_id" value="<?= $this->collection_cat_id ?>">
+                            <input type="hidden" name="type_id" value="3">
                             <?= $this->form->project_id ?>
                             <h3>Basics</h3>
                             <section id="required">
@@ -276,20 +278,33 @@ $this->inlineScript()->appendScript('
                                         <?php } ?>
                                     </div>
                                 </div>
+                                
+                                <?= $this->form->description ?>
 
+                                <?php /*
                                 <?= $this->form->project_category_id ?>
                                 <?= $this->form->project_subcategory_id ?>
                                 <?= $this->form->project_sub_subcategory_id ?>
-                                <?= $this->form->description ?>
+                                 */?>
+                                <?= $this->form->user_category ?>
+                                
+                                
+                                
                                 <?= $this->form->version ?>
 
+                                <?php /*
                                 <?= $this->form->source_url ?>
+                                */?>
+                                
+                                <?php /*
 
                                 <div class="form-group">
                                 <div class="col-sm-12 margin-top-15">
                                  <?= $this->form->is_original ?>  Check this box, if this is your own original work and not based on something else      
                                 </div>
-                                </div>                               
+                                </div>  
+                                 * 
+                                 */?>                             
                                 
                                 <?= $this->form->license_tag_id ?>
                                  <?php
@@ -330,6 +345,11 @@ $this->inlineScript()->appendScript('
 
                             </section>
                             
+                            <h3>Products</h3>
+                            <section id="products">
+                                    
+                                <!-- products -->
+                            </section>
                             
                         <?php if(isset($this->project_id)) { ?>
                             <h3>Changelog</h3>
@@ -435,7 +455,7 @@ $this->inlineScript()->appendScript('
                         }
 
                         if (formElement.valid()) {
-                            if (ProductForm.mode == 'add' && (ProductForm.project_id == '' || ProductForm.project_id == undefined)) {
+                            if (ProductForm.mode == 'addcollection' && (ProductForm.project_id == '' || ProductForm.project_id == undefined)) {
                                 var result = ProductForm.saveSection(formElement.find('.body:eq(' + currentIndex + ')').attr('id'));
                                 if (result == false) {
                                     validator.showErrors(ProductForm.errors);
@@ -444,7 +464,6 @@ $this->inlineScript()->appendScript('
                                 formElement.find("#modal-ppload").attr('data-product-id', ProductForm.project_id);
                                 formElement.find("#modal-changlog").attr('data-product-id', ProductForm.project_id);
                             }
-                            getPploadFiles();
                             return true;
                         }
                         return false;
@@ -470,7 +489,7 @@ $this->inlineScript()->appendScript('
                         if (ImagePreview.hasError) {
                             return false;
                         }
-                        if (ProductForm.mode == 'add' && (ProductForm.project_id == '' || ProductForm.project_id == undefined)) {
+                        if (ProductForm.mode == 'addcollection' && (ProductForm.project_id == '' || ProductForm.project_id == undefined)) {
                             var result = ProductForm.saveSection(formElement.find('.body:eq(' + currentIndex + ')').attr('id'));
                             if (result == false) {
                                 validator.showErrors(ProductForm.errors);
@@ -1744,7 +1763,7 @@ $this->inlineScript()->appendScript('
           ProductForm = {
 
               mode: "<?=$this->mode?>",
-              project_id: <?php echo ($this->mode == 'edit') ? $this->project_id : '$(\'#project_id\').val()'?>,
+              project_id: <?php echo ($this->mode == 'editcollection') ? $this->project_id : '$(\'#project_id\').val()'?>,
               errors: "",
               cat_id_data: <?=json_encode($categories)?>,
               cat_id_path: <?=json_encode($categoryPath)?>,
@@ -1752,11 +1771,11 @@ $this->inlineScript()->appendScript('
               value_cat_id: <?=json_encode($valueCatId)?>,
 
               setup: function () {
-                  this.setupCategorySelect();
+                  //this.setupCategorySelect();
                   this.setupCategoryAjax();
                   this.setGitlabProjectNameSelect();
               },
-
+              /*
               setupCategorySelect: function() {
                   var level = 0;
                   var hasNoRoot = true;
@@ -1797,7 +1816,7 @@ $this->inlineScript()->appendScript('
 
                       level++;
                   }
-              },
+              },*/
 
               setSourceNeededForCategoryInfo: function(element_id, cat_id) {
 
@@ -1892,12 +1911,12 @@ $this->inlineScript()->appendScript('
               },
 
               saveSection: function (sectionId) {
-                  var pid = <?php echo ($this->mode == 'edit') ? $this->project_id : '$(\'#project_id\').val()'?>;
+                  var pid = <?php echo ($this->mode == 'editcollection') ? $this->project_id : '$(\'#project_id\').val()'?>;
                   if (pid != '') {
                       return;
                   }
 
-                  var url = '/p/save/';
+                  var url = '/c/save/';
                   var data = $('#' + sectionId + ' :input').serialize();
                   var result = false;
 
