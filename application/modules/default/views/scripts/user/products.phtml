@@ -222,6 +222,8 @@ $this->tab = 'products';
                             collection_id: collectionId,
                             perpage: 1000,
                             page: page,
+                            async: false,
+                            cache: false,
                             format: 'json',
                             ignore_status_code: 0,
                             status: 'active'
@@ -239,6 +241,8 @@ $this->tab = 'products';
                                 url: '/p/'+prodId+'/gettaggroupsforcatajax',
                                 type: 'GET',
                                 timeout: 30000,
+                                async: false,
+                                cache: false,
                                 data: {project_cat_id: catId},
                                 dataType: 'json',
                                 success: function (data, textStatus, jqXHR) {
@@ -299,6 +303,8 @@ $this->tab = 'products';
                                         url: '/p/'+prodId+'/gettaggroupsforcatajax',
                                         type: 'GET',
                                         timeout: 30000,
+                                        async: false,
+                                        cache: false,
                                         data: {project_cat_id: catId, file_id: this.id, test: false},
                                         dataType: 'json',
                                         success: function (data, textStatus, jqXHR) {
@@ -317,6 +323,8 @@ $this->tab = 'products';
                                         url: '/p/'+prodId+'/getfiletagsajax',
                                         type: 'GET',
                                         timeout: 30000,
+                                        async: false,
+                                        cache: false,
                                         data: {file_id: this.id},
                                         dataType: 'json',
                                         success: function (data, textStatus, jqXHR) {
@@ -399,7 +407,6 @@ $this->tab = 'products';
                                 tableString += '<td>' + inputFileDescription + '</td>';
 
                                 var fileId = this.id;
-
                                 if(tagGroupsCount>0) {
                                     $.each(tagGroups, function() {
                                         tableString += '<td>';
@@ -425,7 +432,6 @@ $this->tab = 'products';
                                         tableString += '</td>';
                                     });
                                 } else {
-
                                     if(fileTagsArraySize>0) {
                                         tableString += '<td>';
 
