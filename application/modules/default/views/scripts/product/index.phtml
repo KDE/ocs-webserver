@@ -401,7 +401,9 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                         {
                                             $cntSameSource = $tableProject->getCountSourceurl($this->product->source_url);
                                             if($cntSameSource>1){
-                                                echo '<span style="color:red">['.$cntSameSource.']</span>';
+                                                $link = '/p/'.$this->product->project_id.'/listsamesourceurl';
+                                                echo '<span><a style="color:red" class="popuppanel" href="'.$link.'">
+                                                ['.$cntSameSource.']</a></span>';
                                             }
                                         }
                                         
@@ -940,8 +942,9 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                 <div id="project_btn_grp_install" class="btn-group dropleft hide" style="width: 100%; padding-top: 10px;">
                                     <button style="width: 100%" id="project_btn_install" class="btn btn-primary dropdown-toggle disabled hide" type="button" data-toggle="dropdown">Install
                                     <span class="caret"></span></button>
-                                    <ul class="dropdown-menu hide" id="dropdown_installs" style="min-width: 270px;">
+                                    <ul class="dropdown-menu hide" id="dropdown_installs" style="min-width: 270px; top:50px">
                                     </ul>
+                                    <span style="display: absolute; bottom:0">*Needs <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a> to install things</span>
                                 </div>
 
 
