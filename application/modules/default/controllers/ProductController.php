@@ -123,6 +123,39 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     }
     
     
+    private function getTagGroupsForCat($fileId) {
+        $modelProduct = new Default_Model_Project();
+        $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
+        $catId = $productInfo->project_category_id;
+        
+        if(!empty($catId)) {
+            $catTagModel  = new Default_Model_Tags();
+            $catTagGropuModel  = new Default_Model_TagGroup();
+            $tagGroups = $catTagGropuModel->fetchTagGroupsForCategory($catId);
+            
+            $tableTags = new Default_Model_DbTable_Tags();
+            
+            $result = array();
+            
+            foreach ($tagGroups as $group) {
+                $tags = $tableTags->fetchForGroupForSelect($group['tag_group_id']); 
+                $selectedTags = null;
+                if(!empty($fileId)) {
+                    $selectedTags = $catTagModel->getTagsArray($fileId, Default_Model_DbTable_Tags::TAG_TYPE_FILE,$group['tag_group_id']);
+                }
+                
+                $group['tag_list'] = $tags;
+                $group['selected_tags'] = $selectedTags;
+                $result[] = $group;
+            }
+            
+            return $result;
+        }
+        
+        return null;
+    }
+    
+    
     public function getfilesajaxAction() {
         $this->_helper->layout()->disableLayout();
         
@@ -151,6 +184,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             
 
             foreach ($files as $file) {
+                $groups = $this->getTagGroupsForCat($file['id']);
+                
+                $file['tag_groups'] = $groups;
                 $result[] = $file;
             }
             
