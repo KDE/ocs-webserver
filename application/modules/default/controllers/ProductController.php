@@ -193,17 +193,25 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $collection_id = $this->getParam('collection_id');
             $result = array();
             
+            //Load files from DB
             if($ignore_status_code == 0 && $file_status == 'active') {
                 $files = $filesTable->fetchAllActiveFilesForProject($collection_id);
             } else {
                 $files = $filesTable->fetchAllFilesForProject($collection_id);
             }
             
+            //Check, if the project category has tag-grous
+            $modelProduct = new Default_Model_Project();
+            $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
+            $catTagGropuModel  = new Default_Model_TagGroup();
+            $tagGroups = $catTagGropuModel->fetchTagGroupsForCategory($productInfo->project_category);
 
             foreach ($files as $file) {
-                $groups = $this->getTagGroupsForCat($file['id']);
-                
-                $file['tag_groups'] = $groups;
+                //add tag grous, if needed
+                if(!empty($tagGroups)) {
+                    $groups = $this->getTagGroupsForCat($file['id']);
+                    $file['tag_groups'] = $groups;
+                }
                 $result[] = $file;
             }
             
