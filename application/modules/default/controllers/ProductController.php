@@ -204,7 +204,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $modelProduct = new Default_Model_Project();
             $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
             $catTagGropuModel  = new Default_Model_TagGroup();
-            $tagGroups = $catTagGropuModel->fetchTagGroupsForCategory($productInfo->project_category);
+            $tagGroups = $catTagGropuModel->fetchTagGroupsForCategory($productInfo->project_category_id);
 
             foreach ($files as $file) {
                 //add tag grous, if needed
