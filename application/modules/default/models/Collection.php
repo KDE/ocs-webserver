@@ -411,7 +411,7 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
         $result = $this->_db->fetchRow($sql, array(
             'projectId'       => $project_id,
             'projectStatus'   => self::PROJECT_INACTIVE,
-            'typeId'          => self::PROJECT_TYPE_STANDARD,
+            'typeId'          => self::PROJECT_TYPE_COLLECTION,
             'tag_licence_gid' => self::TAG_LICENCE_GID,
             'tag_type_id'     => self::TAG_TYPE_ID
 
