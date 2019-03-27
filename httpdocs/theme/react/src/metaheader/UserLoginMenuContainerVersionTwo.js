@@ -1,5 +1,6 @@
 import React from 'react';
 import UserAutoCompleteInput from './UserAutoCompleteInput';
+import SwitchItem from './SwitchItem';
 class UserLoginMenuContainerVersionTwo extends React.Component {
   constructor(props){
     super(props);
@@ -71,6 +72,11 @@ class UserLoginMenuContainerVersionTwo extends React.Component {
                     </ul>
                   </div>
                 </div>
+              </li>
+
+              <li className="user-settings-item">
+                <SwitchItem onSwitchStyle={this.props.onSwitchStyle}
+                            onSwitchStyleChecked={this.props.onSwitchStyleChecked}/>
               </li>
               <li id="user-tabs-menu-item">
                 {/*

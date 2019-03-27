@@ -214,7 +214,7 @@ class Carousel extends React.Component {
 
   animateProductCarousel(dir,animateCarousel){
 
-    let newSliderPosition = this.state.sliderPosition;    
+    let newSliderPosition = this.state.sliderPosition;
     const endPoint = this.state.sliderWidth - (this.state.containerWidth - this.state.itemWidth);
 
     if (dir === 'left'){
@@ -249,8 +249,7 @@ class Carousel extends React.Component {
         }*/
       }
     }
-    console.log('newSliderPosition2:'+newSliderPosition);
-
+    
     this.setState({sliderPosition:newSliderPosition},function(){
 
       let disableleftArrow = false;

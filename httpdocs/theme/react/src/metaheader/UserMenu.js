@@ -3,7 +3,7 @@ import UserLoginMenuContainer from './UserLoginMenuContainer';
 import UserContextMenuContainer from './UserContextMenuContainer';
 //import UserLoginMenuContainerVersionTwo from './UserLoginMenuContainerVersionTwo';
 import DevelopmentAppMenu from './DevelopmentAppMenu';
-import SwitchItem from './SwitchItem';
+//import SwitchItem from './SwitchItem';
 import AboutMenu from './AboutMenu';
 class UserMenu extends React.Component {
   constructor(props){
@@ -19,6 +19,8 @@ class UserMenu extends React.Component {
       //     user={this.props.user}
       //     logoutUrl={this.props.logoutUrl}
       //     baseUrl={this.props.baseUrl}
+      //      onSwitchStyle={this.props.onSwitchStyle}
+      //      onSwitchStyleChecked={this.props.onSwitchStyleChecked}
       //   />
       // );
 
@@ -27,6 +29,8 @@ class UserMenu extends React.Component {
           user={this.props.user}
           logoutUrl={this.props.logoutUrl}
           baseUrl={this.props.baseUrl}
+          onSwitchStyle={this.props.onSwitchStyle}
+          onSwitchStyleChecked={this.props.onSwitchStyleChecked}
         />
       );
 
@@ -60,14 +64,12 @@ class UserMenu extends React.Component {
     let userMenuContainerDisplay;
     if (this.props.device === "large"){
 
-
-
-      let switchItem;
-
-      if (this.props.user && this.props.user.member_id ){
-      switchItem =(<li><SwitchItem onSwitchStyle={this.props.onSwitchStyle}
-                  onSwitchStyleChecked={this.props.onSwitchStyleChecked}/></li>);
-      }
+      // let switchItem;
+      //
+      // if (this.props.user && this.props.user.member_id ){
+      // switchItem =(<li><SwitchItem onSwitchStyle={this.props.onSwitchStyle}
+      //             onSwitchStyleChecked={this.props.onSwitchStyleChecked}/></li>);
+      // }
 
       const aboutMenu = <AboutMenu blogUrl={this.props.blogUrl}
                                   isExternal={this.props.isExternal}
@@ -87,7 +89,6 @@ class UserMenu extends React.Component {
           <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
           {aboutMenu}
           {chatItem}
-          {switchItem}
           {userAppsContextDisplay}
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
