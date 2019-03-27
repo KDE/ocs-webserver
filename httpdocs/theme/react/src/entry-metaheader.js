@@ -8,10 +8,10 @@ async function initConfig(target, redirect)
          if (window.location.hostname.endsWith('cc')) {
             url = `https://www.opendesktop.cc/home/metamenubundlejs?target=${target}&url=${redirect}`;
           }
-          else if (location.hostname.endsWith('localhost')) {
-            url = `http://localhost:${location.port}/config-dummy.php`;
-          }
-         
+          // else if (location.hostname.endsWith('localhost')) {
+          //   url = `http://localhost:${location.port}/config-dummy.php`;
+          // }
+
           try {
             const response = await fetch(url, {
               mode: 'cors',
@@ -74,7 +74,7 @@ customElements.define('opendesktop-metaheader', class extends HTMLElement {
     const metaheaderElement = document.createElement('div');
     metaheaderElement.id = 'metaheader';
     let config = await initConfig(this.getAttribute('config-target'),window.location.href); // wait till the promise resolves (*)
-    
+
 
     ReactDOM.render(<MetaHeader config={config} hostname={window.location.hostname}/>, metaheaderElement);
 
