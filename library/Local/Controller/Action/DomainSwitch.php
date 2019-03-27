@@ -23,20 +23,20 @@
 class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
 {
 
+    const METAHEADER_DEFAULT = 'meta_keywords';
+    const METAHEADER_DEFAULT_TITLE = 'opendesktop.org';
+    const METAHEADER_DEFAULT_DESCRIPTION = 'A community where developers and artists share applications, themes and other content';
+    const METAHEADER_DEFAULT_KEYWORDS = 'opendesktop,linux,kde,gnome,themes,apps,desktops,applications,addons,artwork,wallpapers';
     /**
      * Zend_Controller_Request_Abstract object wrapping the request environment
      * @var Zend_Controller_Request_Http
      */
     protected $_request = null;
-
     /** @var  object */
     protected $_authMember;
     protected $templateConfigData;
     protected $defaultConfigName;
-    const METAHEADER_DEFAULT = 'meta_keywords';
-    const METAHEADER_DEFAULT_TITLE='opendesktop.org';
-    const METAHEADER_DEFAULT_DESCRIPTION='A community where developers and artists share applications, themes and other content';
-    const METAHEADER_DEFAULT_KEYWORDS='opendesktop,linux,kde,gnome,themes,apps,desktops,applications,addons,artwork,wallpapers';
+
     public function init()
     {
         $this->initDefaultConfigName();
@@ -67,36 +67,33 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
         }
     }
 
+    /**
+     * @throws Zend_Controller_Action_Exception
+     * @throws Zend_Exception
+     */
     private function initTemplateData()
     {
         if (Zend_Registry::isRegistered('store_template')) {
             $this->templateConfigData = Zend_Registry::get('store_template');
         } else {
-            $fileNameConfig = APPLICATION_PATH . '/configs/client' . $this->getDomainPostfix() . '.ini.php';
+            $fileNameConfig = APPLICATION_PATH . '/configs/client_' . $this->getNameForStoreClient() . '.ini.php';
             if (file_exists($fileNameConfig)) {
-                $this->templateConfigData = require APPLICATION_PATH . '/configs/client' . $this->getDomainPostfix() . '.ini.php';
+                $this->templateConfigData = require $fileNameConfig;
             } else {
-                $this->templateConfigData = require APPLICATION_PATH . '/configs/client_' . $this->defaultConfigName . '.ini.php';
+                throw new Zend_Controller_Action_Exception('template file not exists or not accessible in ' . $fileNameConfig);
             }
         }
-    }
-
-    /**
-     * @return string
-     */
-    protected function getDomainPostfix()
-    {
-        return '_' . $this->getNameForStoreClient();
     }
 
     /**
      * Returns the name for the client. If no name were found, the name for the standard client will be returned.
      *
      * @return string
+     * @throws Zend_Exception
      */
     public function getNameForStoreClient()
     {
-        $clientName = 'pling'; // set to default
+        $clientName = $this->defaultConfigName; //set to default
 
         if (Zend_Registry::isRegistered('store_config_name')) {
             $clientName = Zend_Registry::get('store_config_name');
@@ -116,37 +113,32 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
 
     public function initView()
     {
+        if (!Zend_Registry::isRegistered('headMetaSet')) {
 
-        if(!Zend_Registry::isRegistered('headMetaSet'))
-        {
-        
             $headTitle = $this->templateConfigData['head']['browser_title'];
             $headDesc = $this->templateConfigData['head']['meta_description'];
-            $headKeywords =$this->templateConfigData['head']['meta_keywords'];
+            $headKeywords = $this->templateConfigData['head']['meta_keywords'];
             //set default site-title
             $this->view->headTitle($headTitle, Zend_View_Helper_Placeholder_Container_Abstract::SET);
 
-            if($headTitle==$this::METAHEADER_DEFAULT){
-                $headTitle=$this::METAHEADER_DEFAULT_TITLE;
+            if ($headTitle == $this::METAHEADER_DEFAULT) {
+                $headTitle = $this::METAHEADER_DEFAULT_TITLE;
             }
-            if($headDesc==$this::METAHEADER_DEFAULT){
-                $headDesc=$this::METAHEADER_DEFAULT_DESCRIPTION;
+            if ($headDesc == $this::METAHEADER_DEFAULT) {
+                $headDesc = $this::METAHEADER_DEFAULT_DESCRIPTION;
             }
-            if($headKeywords==$this::METAHEADER_DEFAULT){
-                $headKeywords=$this::METAHEADER_DEFAULT_KEYWORDS;
+            if ($headKeywords == $this::METAHEADER_DEFAULT) {
+                $headKeywords = $this::METAHEADER_DEFAULT_KEYWORDS;
             }
 
-            $this->view->headMeta()
-            ->appendName('author', $this->templateConfigData['head']['meta_author'])
-            ->appendName('robots', 'all')
-            ->appendName('robots', 'index')
-            ->appendName('robots', 'follow')
-            ->appendName('revisit-after', '3 days')
-            ->appendName('title', $headTitle)
-            ->appendName('description', $headDesc, array('lang' => 'en-US'))
-            ->appendName('keywords', $headKeywords, array('lang' => 'en-US'));
-             
-             Zend_Registry::set('headMetaSet', true);
+            $this->view->headMeta()->appendName('author', $this->templateConfigData['head']['meta_author'])
+                       ->appendName('robots', 'all')->appendName('robots', 'index')->appendName('robots', 'follow')
+                       ->appendName('revisit-after', '3 days')->appendName('title', $headTitle)
+                       ->appendName('description', $headDesc, array('lang' => 'en-US'))
+                       ->appendName('keywords', $headKeywords, array('lang' => 'en-US'))
+            ;
+
+            Zend_Registry::set('headMetaSet', true);
         }
 
         $this->view->template = $this->templateConfigData;
@@ -155,13 +147,12 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
     protected function setLayout()
     {
         $layoutName = 'flat_ui_template';
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;      
-        if($storeConfig  && $storeConfig->layout)
-        {
-             $this->_helper->layout()->setLayout($storeConfig->layout);
-        }else{
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        if ($storeConfig && $storeConfig->layout) {
+            $this->_helper->layout()->setLayout($storeConfig->layout);
+        } else {
             $this->_helper->layout()->setLayout($layoutName);
-        }              
+        }
     }
 
     protected function _initResponseHeader()
@@ -169,15 +160,12 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
         $duration = 1800; // in seconds
         $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
 
-        $this->getResponse()
-            ->setHeader('X-FRAME-OPTIONS', 'ALLOWALL', true)
+        $this->getResponse()->setHeader('X-FRAME-OPTIONS', 'ALLOWALL', true)
 //            ->setHeader('Last-Modified', $modifiedTime, true)
-            ->setHeader('Expires', $expires, true)
-            ->setHeader('Pragma', 'no-cache', true)
-            ->setHeader('Cache-Control', 'private, no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
-                true)
+             ->setHeader('Expires', $expires, true)->setHeader('Pragma', 'no-cache', true)
+             ->setHeader('Cache-Control', 'private, no-store, no-cache, must-revalidate, post-check=0, pre-check=0', true)
         ;
-   }
+    }
 
     private function _initAdminDbLogger()
     {
@@ -188,7 +176,7 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
             // Attach the profiler to your db adapter
             Zend_Db_Table::getDefaultAdapter()->setProfiler($profiler);
             /** @var Zend_Db_Adapter_Abstract $db */
-            $db =  Zend_Registry::get('db');
+            $db = Zend_Registry::get('db');
             $db->setProfiler($profiler);
             Zend_Registry::set('db', $db);
         }
