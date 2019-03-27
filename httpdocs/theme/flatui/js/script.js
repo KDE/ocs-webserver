@@ -1965,6 +1965,26 @@ var InitActiveHashTab = (function () {
 })();
 
 
+var AboutmeTab= (function () {
+    return {
+        setup: function () {
+            var indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';
+            $('body').on('click', 'a.aboutmetab', function (event) {
+               event.preventDefault();
+               var el = $(this).attr('href');               
+               var url = $(this).attr('data-href');
+               if($(el).find('.product').length==0)
+               {    // only load once
+                    $(el).append(indicator).load(url,function (){                           
+                                            
+                       });              
+               }
+            });            
+        }
+    }
+})();
+
+
 
 
 
