@@ -1746,7 +1746,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
            SELECT count(1) AS `cnt`
            FROM
            (
-              SELECT DISTINCT `p`.`source_url`
+              SELECT  `p`.`source_url`
               ,(SELECT count(1) FROM `stat_projects_source_url` `pp` WHERE `pp`.`source_url`=`p`.`source_url`) `cnt` 
               FROM `stat_projects_source_url` `p` 
               WHERE `p`.`member_id` = :member_id 
