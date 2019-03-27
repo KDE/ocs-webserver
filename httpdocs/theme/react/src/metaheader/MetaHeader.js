@@ -19,15 +19,11 @@ class MetaHeader extends React.Component {
 
   componentWillMount() {
     this.updateDimensions();
-    //this.setState({...this.props.config});
   }
 
    componentDidMount() {
 
     this.initMetaHeader();
-
-    //this.initMetamenuTheme();
-    //this.fetchState();
 
   }
 
@@ -40,65 +36,10 @@ class MetaHeader extends React.Component {
   initMetaHeader(){
     window.addEventListener("resize", this.updateDimensions);
     window.addEventListener("orientationchange",this.updateDimensions);
-    //this.getUser();
   }
-
-  // async fetchState()
-  // {
-  //         let url = `https://www.opendesktop.org/home/metamenubundlejs?
-  //               target=${this.props.target}
-  //               &url=${this.props.redirect}`;
-  //               try {
-  //                 const response = await fetch(url, {
-  //                   mode: 'cors',
-  //                   credentials: 'include'
-  //                 });
-  //                 if (!response.ok) {
-  //                   throw new Error('Network response error');
-  //                 }
-  //                 let config = await response.json();
-  //                 config.isAdmin = config.json_isAdmin;
-  //                 this.setState({...config});
-  //                 return true;
-  //               }
-  //               catch (error) {
-  //                 console.error(error);
-  //                 return false;
-  //               }
-  //
-  //
-  // }
-
-  // fetchMetaheaderThemeSettings(){
-  //
-  //    let url = 'https://www.opendesktop.org/membersetting/getsettings';
-  //    if (location.hostname.endsWith('cc') || location.hostname.endsWith('local')) {
-  //      url = 'https://www.opendesktop.cc/membersetting/getsettings';
-  //    }
-  //
-  //    fetch(url,{
-  //               mode: 'cors',
-  //               credentials: 'include'
-  //               })
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       const results = data.results;
-  //       if(results.length>0)
-  //       {
-  //         const theme = results.filter(r => r.member_setting_item_id == 1);
-  //         if(theme.length>0 && theme[0].value==1)
-  //         {
-  //            this.setState({metamenuTheme:'metamenu-theme-dark'});
-  //         }
-  //       }
-  //     });
-  //
-  //
-  // }
 
   // change metamenu class
   onSwitchStyle(evt){
-
      let url = 'https://www.opendesktop.org/membersetting/setsettings/itemid/1/itemvalue/';
      if(this.state.isExternal)
      {

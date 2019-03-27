@@ -32,6 +32,19 @@ class UserContextMenuContainer extends React.Component {
   }
 
   handleClick(e){
+    // let dropdownClass = "";
+    // if (this.node.contains(e.target)){
+    //   if (this.state.dropdownClass === "open"){
+    //     if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle"){
+    //       dropdownClass = "";
+    //     } else {
+    //       dropdownClass = "open";
+    //     }
+    //   } else {
+    //     dropdownClass = "open";
+    //   }
+    // }
+    // this.setState({dropdownClass:dropdownClass});
     let dropdownClass = "";
     if (this.node.contains(e.target)){
       if(e.target.className === "btn btn-default dropdown-toggle"
@@ -46,17 +59,6 @@ class UserContextMenuContainer extends React.Component {
       }else{
         dropdownClass = "";
       }
-
-      // if (this.state.dropdownClass === "open"){
-      //   if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle"){
-      //     dropdownClass = "";
-      //   } else {
-      //     dropdownClass = "open";
-      //   }
-      // } else {
-      //   dropdownClass = "open";
-      // }
-
     }
     this.setState({dropdownClass:dropdownClass});
   }

@@ -552,7 +552,6 @@ function (_React$Component2) {
         }
       }
 
-      console.log('newSliderPosition2:' + newSliderPosition);
       this.setState({
         sliderPosition: newSliderPosition
       }, function () {

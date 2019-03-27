@@ -1,5 +1,5 @@
 import React from 'react';
-
+import SwitchItem from './SwitchItem';
 class UserLoginMenuContainer extends React.Component {
   constructor(props){
     super(props);
@@ -8,7 +8,6 @@ class UserLoginMenuContainer extends React.Component {
   }
 
   componentWillMount() {
-    //document.addEventListener('mousedown',this.handleClick, false);
     document.addEventListener('click',this.handleClick, false);
   }
 
@@ -19,34 +18,22 @@ class UserLoginMenuContainer extends React.Component {
   handleClick(e){
     let dropdownClass = "";
     if (this.node.contains(e.target)){
-      if(e.target.className === "btn btn-default dropdown-toggle"
-        || e.target.className === "th-icon")
-      {
-        // only btn click open dropdown
-        if (this.state.dropdownClass === "open"){
+      if (this.state.dropdownClass === "open"){
+        if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle"){
           dropdownClass = "";
-        }else{
+        } else {
           dropdownClass = "open";
         }
-      }else{
-        dropdownClass = "";
+      } else {
+        dropdownClass = "open";
       }
-
-      // if (this.state.dropdownClass === "open"){
-      //   if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle"){
-      //     dropdownClass = "";
-      //   } else {
-      //     dropdownClass = "open";
-      //   }
-      // } else {
-      //   dropdownClass = "open";
-      // }
     }
     this.setState({dropdownClass:dropdownClass});
+
   }
 
-
   render(){
+    const theme = this.props.onSwitchStyleChecked?"Metaheader theme dark":"Metaheader theme light";
     return (
       <li id="user-login-menu-container" ref={node => this.node = node}>
         <div className={"user-dropdown " + this.state.dropdownClass}>
@@ -75,6 +62,12 @@ class UserLoginMenuContainer extends React.Component {
             <li className="buttons">
               <a href={this.props.baseUrl + "/settings/"} className="btn btn-default btn-metaheader"><span>Settings</span></a>
               <a href={this.props.logoutUrl} className="btn btn-default pull-right btn-metaheader"><span>Logout</span></a>
+            </li>
+            <li className="user-settings-item">
+             <span className="user-settings-item-title">{theme}</span>
+               <SwitchItem onSwitchStyle={this.props.onSwitchStyle}
+                        onSwitchStyleChecked={this.props.onSwitchStyleChecked}/>
+
             </li>
           </ul>
         </div>

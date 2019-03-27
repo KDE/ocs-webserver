@@ -207,6 +207,23 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
     }
 
+    public function duplicatesAction()
+    {
+         $tableProject = new Default_Model_Project();
+        $pageLimit = 1000;
+        $projectpage = 1;
+        $total_records = $tableProject->countAllProjectsForMemberCatFilter($this->_memberId, true, null);
+        $this->view->pageLimit = $pageLimit;
+        $this->view->projectpage = $projectpage;
+        $this->view->total_records = $total_records;        
+        
+        $this->view->userProducts =
+            $tableProject->getUserActiveProjectsDuplicatedSourceurl($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit);
+
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer('partials/aboutmeProducts');
+    
+    }
     public function getAboutmeUserInfo($member_id,$username)
     {
         $tableProject = new Default_Model_Project();
