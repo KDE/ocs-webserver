@@ -59,16 +59,17 @@ class UserLoginMenuContainer extends React.Component {
                 </div>
               </div>
             </li>
+            <li className="user-settings-item">
+             <span className="user-settings-item-title">Metaheader theme light</span>
+               <SwitchItem onSwitchStyle={this.props.onSwitchStyle}
+                        onSwitchStyleChecked={this.props.onSwitchStyleChecked}/>
+              <span className="user-settings-item-title">dark</span>
+            </li>
             <li className="buttons">
               <a href={this.props.baseUrl + "/settings/"} className="btn btn-default btn-metaheader"><span>Settings</span></a>
               <a href={this.props.logoutUrl} className="btn btn-default pull-right btn-metaheader"><span>Logout</span></a>
             </li>
-            <li className="user-settings-item">
-             <span className="user-settings-item-title">{theme}</span>
-               <SwitchItem onSwitchStyle={this.props.onSwitchStyle}
-                        onSwitchStyleChecked={this.props.onSwitchStyleChecked}/>
 
-            </li>
           </ul>
         </div>
       </li>

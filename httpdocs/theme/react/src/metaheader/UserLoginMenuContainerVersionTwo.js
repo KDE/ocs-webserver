@@ -43,6 +43,7 @@ class UserLoginMenuContainerVersionTwo extends React.Component {
 
 
   render(){
+    const theme = this.props.onSwitchStyleChecked?"Metaheader theme dark":"Metaheader theme light";
     return (
       <li id="user-login-menu-container" ref={node => this.node = node}>
         <div className={"user-dropdown " + this.state.dropdownClass}>
@@ -75,8 +76,10 @@ class UserLoginMenuContainerVersionTwo extends React.Component {
               </li>
 
               <li className="user-settings-item">
-                <SwitchItem onSwitchStyle={this.props.onSwitchStyle}
-                            onSwitchStyleChecked={this.props.onSwitchStyleChecked}/>
+               <span className="user-settings-item-title">{theme}</span>
+                 <SwitchItem onSwitchStyle={this.props.onSwitchStyle}
+                          onSwitchStyleChecked={this.props.onSwitchStyleChecked}/>
+
               </li>
               <li id="user-tabs-menu-item">
                 {/*
