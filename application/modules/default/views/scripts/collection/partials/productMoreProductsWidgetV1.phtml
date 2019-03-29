@@ -32,7 +32,7 @@ $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
                 <?php
                 foreach ($this->moreProducts as $product):
                     $imgUrl = $helpImage->Image($product->image_small, array('width' => 200, 'height' => 160));
-                    $title = substr($product->title, 0, 20) . ' - ' . substr($product->catTitle, 0, 20);
+                    $title = substr($product->title, 0, 20);
                     $title = str_replace('"', '&#8221;', $title);
                     ?>
                     <!-- product item -->

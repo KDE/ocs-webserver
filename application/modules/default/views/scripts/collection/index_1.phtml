@@ -64,7 +64,7 @@ $this->headMeta()->appendProperty('og:description',
     $helpTruncate->truncate($this->product->description, 200, '...', false, true));
 $this->headMeta()->appendProperty('og:image',
     $helpImage->Image($this->product->image_small, array('width' => 400, 'height' => 400)));
-$tableProject = new Default_Model_Project();
+$tableCollection = new Default_Model_Project();
 
 $tableProjectUpdates = new Default_Model_ProjectUpdates();
 $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->project_id);
@@ -396,7 +396,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                         
                                         if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName)
                                         {
-                                            $cntSameSource = $tableProject->getCountSourceurl($this->product->source_url);
+                                            $cntSameSource = $tableCollection->getCountSourceurl($this->product->source_url);
                                             if($cntSameSource>1){
                                                 echo '<span style="color:red">['.$cntSameSource.']</span>';
                                             }
@@ -452,7 +452,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                     endif; ?>
 
                                     <?php
-                                    $this->galleryPictures = $tableProject->getGalleryPictureSources($this->product->project_id);
+                                    $this->galleryPictures = $tableCollection->getGalleryPictureSources($this->product->project_id);
                                     if (count($this->galleryPictures) > 0) {
                                         foreach ($this->galleryPictures as $picture): ?>
                                             <li data-target="#myCarousel" data-slide-to="<?php echo $cnt ?>"
@@ -941,7 +941,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 
                         <div>
                             <?php
-                            $this->moreProducts = $tableProject->fetchMoreProjects($this->product, 6);
+                            $this->moreProducts = $tableCollection->fetchMoreProjects($this->product, 6);
                             $this->moreProductsTitle = 'More ' . $this->product->cat_title . ' from ' . $this->product->username;
 
                             if (count($this->moreProducts) > 0) {
@@ -951,7 +951,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 
                         <div>
                             <?php
-                            $this->moreProducts = $tableProject->fetchMoreProjectsOfOtherUsr($this->product, 6);
+                            $this->moreProducts = $tableCollection->fetchMoreProjectsOfOtherUsr($this->product, 6);
                             $this->moreProductsTitle = 'Other ' . $this->product->cat_title;
 
                             if (count($this->moreProducts) > 0) {

@@ -516,7 +516,7 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
         $count = (int)$count;
         $sql = "
                 SELECT *
-                FROM `stat_projects` AS `p`
+                FROM `project` AS `p`
                 WHERE `p`.`project_category_id` = :cat_id AND `project_id` <> :project_id
                 ORDER BY `p`.`changed_at` DESC
                 LIMIT {$count}
@@ -537,22 +537,21 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
      * @return Zend_Db_Table_Rowset_Abstract
      * @throws Zend_Exception
      */
-    public function fetchMoreProjects($project, $count = 6)
+    public function fetchMoreCollections($project, $count = 6)
     {
-        $q = $this->select()->from(array('project' => 'stat_projects'), array(
+        $q = $this->select()->from(array('project' => 'project'), array(
             'project_id',
             'image_small',
-            'title',
-            'catTitle' => 'cat_title'
+            'title'
         ))->setIntegrityCheck(false)
           ->where('project.status = ?', self::PROJECT_ACTIVE)
           ->where('project.member_id = ?', $project->member_id, 'INTEGER')
           ->where('project.project_id != ?', $project->project_id, 'INTEGER')
-          ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)
-          ->where('project.amount_reports is null')
+          ->where('project.type_id = ?', self::PROJECT_TYPE_COLLECTION)
+          //->where('project.amount_reports is null')
           ->where('project.project_category_id = ?', $project->project_category_id, 'INTEGER')
           ->limit($count)
-          ->order('project.project_created_at DESC')
+          ->order('project.created_at DESC')
         ;
 
         $tagFilter  = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
@@ -616,11 +615,11 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
      * @throws Zend_Exception
      * @todo improve processing speed
      */
-    public function fetchMoreProjectsOfOtherUsr($project, $count = 8)
+    public function fetchMoreCollectionsOfOtherUsr($project, $count = 8)
     {
         $sql = "
                 SELECT count(1) AS `count`
-                FROM `stat_projects`
+                FROM `project`
                 WHERE `status` = :current_status
                   AND `member_id` <> :current_member_id
                   AND `project_category_id` = :category_id
@@ -631,7 +630,7 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
             'current_status'    => self::PROJECT_ACTIVE,
             'current_member_id' => $project->member_id,
             'category_id'       => $project->project_category_id,
-            'project_type'      => self::PROJECT_TYPE_STANDARD
+            'project_type'      => self::PROJECT_TYPE_COLLECTION
         ))->fetch()
         ;
 
@@ -641,16 +640,15 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
             $offset = 0;
         }
 
-        $q = $this->select()->from(array('project' => 'stat_projects'), array(
+        $q = $this->select()->from(array('project' => 'project'), array(
             'project_id',
             'image_small',
-            'title',
-            'catTitle' => 'cat_title'
+            'title'
         ))->setIntegrityCheck(false)->where('status = ?', self::PROJECT_ACTIVE)
                   ->where('member_id != ?', $project->member_id, 'INTEGER')->where('type_id = ?', 1)
-                  ->where('amount_reports is null')
+                  //->where('amount_reports is null')
                   ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')->limit($count, $offset)
-                  ->order('project_created_at DESC')
+                  ->order('created_at DESC')
         ;
 
         $tagFilter  = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;

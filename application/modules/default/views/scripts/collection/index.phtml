@@ -64,7 +64,7 @@ $this->headMeta()->appendProperty('og:description',
     $helpTruncate->truncate($this->product->description, 200, '...', false, true));
 $this->headMeta()->appendProperty('og:image',
     $helpImage->Image($this->product->image_small, array('width' => 400, 'height' => 400)));
-$tableProject = new Default_Model_Project();
+$tableCollection = new Default_Model_Collection();
 
 $tableProjectUpdates = new Default_Model_ProjectUpdates();
 $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->project_id);
@@ -377,39 +377,6 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                     echo '</span>';
                                      ?>
 
-                                    <p class="light small">
-                                    <span class="source">Source (link to git-repo or to original if based on someone elses unmodified work): </span>
-                                    <?php if (false === empty($this->product->gitlab_project_id)) {
-                                        $url = $this->gitlab_project['web_url'];
-                                        $url = str_replace("http://", "https://", $url);
-                                        
-                                        echo '<img src="/images_sys/gitlab.png" width="15"> <a href="' . $url . '" rel="nofollow">' . $url
-                                            . ' <span class="fa fa-external-link"></span></a>';
-                                    } else if (false === empty($this->product->source_url)) {
-                                        $target='_blank';
-                                        if (strpos($this->product->source_url, 'git.opendesktop.org') !== false) {
-                                            $target='_self';
-                                        }
-                                        echo '<a target="'.$target.'" href="' . $this->product->source_url . '" rel="nofollow">' . $this->product->source_url
-                                            . ' <span class="fa fa-external-link"></span>
-                                            </a>';
-                                        
-                                        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName)
-                                        {
-                                            $cntSameSource = $tableProject->getCountSourceurl($this->product->source_url);
-                                            if($cntSameSource>1){
-                                                echo '<span style="color:red">['.$cntSameSource.']</span>';
-                                            }
-                                        }
-                                        
-
-                                    } else {
-                                            echo '<span class="source" > Add the source-code for this project on </span><a href="https://git.opendesktop.org/'.$this->product->username.'">git.opendesktop.org</a>';                                                                                                                    
-                                    }
-                                    ?>
-                                    
-
-
                                 </div>
                             </div>
 
@@ -452,7 +419,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                     endif; ?>
 
                                     <?php
-                                    $this->galleryPictures = $tableProject->getGalleryPictureSources($this->product->project_id);
+                                    $this->galleryPictures = $tableCollection->getGalleryPictureSources($this->product->project_id);
                                     if (count($this->galleryPictures) > 0) {
                                         foreach ($this->galleryPictures as $picture): ?>
                                             <li data-target="#myCarousel" data-slide-to="<?php echo $cnt ?>"
@@ -512,7 +479,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                     <!-- TABS -->
                     <div id="product-tabs" class="pling-nav-tabs">
                         <ul class="nav nav-tabs ">
-                            <li class="active"><a href="#about-panel" data-toggle="tab">Collection</a></li>
+                            <li class="active"><a href="#about-panel" data-toggle="tab">Info</a></li>
                         <?php if(count($this->updates)>0){ ?>
                             <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php echo '('.count($this->updates).')';  ?></a></li>
                         <?php } ?>
@@ -827,135 +794,23 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                             </div>
                         <?php } ?>
 
-                        <div class="prod-widget-box right ">
-
-                                <div class="projectdtailHeart">
-
-
-                                    <div id="container-pling<?=$this->product->project_id?>" class="container-pling" >
-                                    <?php
-                                        echo $this->partial(
-                                            '/product/partials/projectplings.phtml',
-                                            array(
-                                                "authMember"  => $identity,
-                                                "project_id" => $this->product->project_id,
-                                                "ppload_collection_id" => $this->product->ppload_collection_id,
-                                                "project_category_id" => $this->product->project_category_id
-                                            )
-                                        );
-                                    ?>
-                                    </div>
-                                </div>
-                        </div>
-
-                        <div>
-                            <div class="prod-widget-box right">
-                                <div  class="btn-group dropleft" style="width: 100%">
-                                    <button style="width: 100%" id="project_btn_download" class="btn dropdown-toggle disabled" type="button" data-toggle="dropdown">Download
-                                    <span class="caret"></span></button>
-                                    <ul class="dropdown-menu hide" id="dropdown_downloads" style="min-width: 270px;">
-                                    </ul>
-                                </div>
-
-                                <div id="project_btn_grp_install" class="btn-group dropleft hide" style="width: 100%; padding-top: 10px;">
-                                    <button style="width: 100%" id="project_btn_install" class="btn btn-primary dropdown-toggle disabled hide" type="button" data-toggle="dropdown">Install
-                                    <span class="caret"></span></button>
-                                    <ul class="dropdown-menu hide" id="dropdown_installs" style="min-width: 270px;">
-                                    </ul>
-                                </div>
-
-
-                                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                                    <div id="get-it-container" class="btn-group dropleft " style="width: 100%; padding-top: 10px;">
-                                     </div>
-                               <?php endif; ?>
-                            </div>
-                        </div>
-
-
-                       <!-- origins-->
-                       <div>
-                           <div class="prod-widget-box right">
-                                <div style="float: right">
-
-                                <?php if (Zend_Auth::getInstance()->hasIdentity()) {      ?>
-                                       <a data-toggle="modal" data-target="#report-product-clone-<?= $this->product->project_id ?>" role="button"
-                                          href="#report-product-clone-<?= $this->product->project_id ?>">
-                                            report clone / derivative
-                                       </a>
-                                   <?php }else{ ?>
-                                            <a data-toggle="modal" data-target="#like-product-modal" role="button">
-                                                report clone / derivative
-                                            </a>
-                                   <?php } ?>
-
-                               </div>
-
-                                <?php
-                                $modelClone = new Default_Model_ProjectClone();
-
-                               $origins =  $modelClone->fetchOrigins($this->product->project_id);
-                               $this->moreProducts = $origins;
-                               $this->moreProductsTitle = 'Based on';
-                               if (count($this->moreProducts) > 0) {
-                                       echo $this->render('product/partials/productCloneFrom.phtml');
-
-                               } ?>
-
-
-                               <?php
-                              $relatednew=array();
-                              $related =  $modelClone->fetchRelatedProducts($this->product->project_id);
-                              $bflag = false;
-                              foreach ($related as $r){
-                                    $rid = $r->project_id;
-                                    $bflag = false;
-                                    foreach ($origins as $o){
-                                          $oid = $o->project_id;
-                                          if($rid == $oid){
-                                                $bflag = true;
-                                                break;
-                                          }
-                                    }
-                                    if(!$bflag)
-                                    {
-                                        $relatednew[] = $r;
-                                    }
-                              }
-
-                              $this->moreProducts = $relatednew;
-
-                              $this->moreProductsTitle = 'Variants';
-                              if (count($this->moreProducts) > 0) {
-                                      echo $this->render('product/partials/productCloneFrom.phtml');
-
-                              } ?>
-
-                           </div>
-                       </div>
-
-
-
-
-                        <!-- MORE PRODUCTS -->
-
                         <div>
                             <?php
-                            $this->moreProducts = $tableProject->fetchMoreProjects($this->product, 6);
+                            $this->moreProducts = $tableCollection->fetchMoreCollections($this->product, 6);
                             $this->moreProductsTitle = 'More ' . $this->product->cat_title . ' from ' . $this->product->username;
 
                             if (count($this->moreProducts) > 0) {
-                            echo $this->render('product/partials/productMoreProductsWidgetV1.phtml');
+                            echo $this->render('collection/partials/productMoreProductsWidgetV1.phtml');
                             } ?>
                         </div>
-
+                        
                         <div>
                             <?php
-                            $this->moreProducts = $tableProject->fetchMoreProjectsOfOtherUsr($this->product, 6);
+                            $this->moreProducts = $tableCollection->fetchMoreCollectionsOfOtherUsr($this->product, 6);
                             $this->moreProductsTitle = 'Other ' . $this->product->cat_title;
 
                             if (count($this->moreProducts) > 0) {
-                            echo $this->render('product/partials/productMoreProductsWidgetV1.phtml');
+                            echo $this->render('collection/partials/productMoreProductsWidgetV1.phtml');
                             } ?>
                         </div>
                         <!-- /MORE PRODUCTS -->
@@ -963,9 +818,9 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 
                         <?php echo $this->render('partials/sidebarCcLicense.phtml'); ?>
 
-                        <?php echo $this->render('product/partials/details.phtml'); ?>                                                
+                        <?php echo $this->render('collection/partials/details.phtml'); ?>                                                
 
-                      <?php echo $this->render('product/partials/tags.phtml'); ?>
+                      <?php echo $this->render('collection/partials/tags.phtml'); ?>
 
 
 
