@@ -68,9 +68,12 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         
         $collectionProjectsTable = new Default_Model_DbTable_CollectionProjects();
         $projectsArray = $collectionProjectsTable->getCollectionProjects($project_id);
+        $helperImage = new Default_View_Helper_Image();
         
         $result = array();
         foreach ($projectsArray as $project) {
+            $imgUrl = $helperImage->Image($project['image_small'], array('width' => 140, 'height' => 98));
+            $project['image_url'] = $imgUrl;
             $result[] = $project;
         }
         $this->_helper->json(array('status' => 'success', 'ResultSize' => count($result), 'projects' => $result));
@@ -97,7 +100,12 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             $projectsArray = $collectionProjectsTable->getProjectsForMember($this->_projectId, $member_id);
 
             $result = array();
+            $helperImage = new Default_View_Helper_Image();
+            
             foreach ($projectsArray as $project) {
+                $imgUrl = $helperImage->Image($project['image_small'], array('width' => 140, 'height' => 98));
+                $project['image_url'] = $imgUrl;
+                
                 $result[] = $project;
             }
             $this->_helper->json(array('status' => 'success', 'ResultSize' => count($result), 'projects' => $result));
@@ -386,6 +394,14 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($newProject->project_id, $newProject->member_id, Default_Model_ActivityLog::PROJECT_CREATED, $newProject->toArray());
 
+        
+        //save collection products
+        $projectIds = $_POST['collection_project_id'];
+        
+        $modeCollection = new  Default_Model_DbTable_CollectionProjects();
+        $modeCollection->setCollectionProjects($this->_projectId, $projectIds);
+        
+        
         try {
             if (100 < $this->_authMember->roleId) {
                 if (Default_Model_Spam::hasSpamMarkers($newProject->toArray())) {

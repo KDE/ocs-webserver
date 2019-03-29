@@ -38,7 +38,9 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
             </a>
         <?php endif ?>
     </li>
-    
+    <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin'){
+    $identity = Zend_Auth::getInstance()->getStorage()->read();
+    ?>
     <li class="header-menu-left-item <?php echo $this->tab == 'addcollection' ? 'active' : ''; ?>">
         <?php if ($this->mode == 'editcollection') : ?>
             <a href="<?= Zend_Controller_Front::getInstance()->getRequest()->getRequestUri() ?>">
@@ -52,6 +54,7 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
             </a>
         <?php endif ?>
     </li>
+    <?php } ?>
     
     <li class="<?php echo $this->tab == 'products' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'products'); ?>">
@@ -59,13 +62,18 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
             <?= $this->translate('Products') ?>
         </a>
     </li>
+    
 
+    <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin'){
+    $identity = Zend_Auth::getInstance()->getStorage()->read();
+    ?>
     <li class="<?php echo $this->tab == 'collections' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'collections'); ?>">
             <span class="glyphicon glyphicon-th-list"></span>
             <?= $this->translate('Collections') ?>
         </a>
     </li>
+     <?php } ?>
 
     <li class="header-menu-left-item <?php echo $this->tab == 'payout' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payout'); ?>">

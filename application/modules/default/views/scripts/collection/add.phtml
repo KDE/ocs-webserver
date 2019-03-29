@@ -24,7 +24,7 @@
 $this->tab = 'addcollection';
 $helperImage = new Default_View_Helper_Image();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
-$helpProductUrl = new Default_View_Helper_BuildProductUrl();
+$helpCollectionUrl = new Default_View_Helper_BuildCollectionUrl();
 $helpBaseUrl = new Default_View_Helper_BuildBaseUrl();
 
 $modelCategory = new Default_Model_DbTable_ProjectCategory();
@@ -178,11 +178,14 @@ $this->inlineScript()->appendScript('
             padding-bottom: 3px;
         }
         
+        
+        
         .tables_ui {
           display:inline-block;
           /*margin:2px 2%;
           border:2px solid #3333fe;*/
           border-spacing:0;
+          border: 0;
         }
         .tables_ui ul li {
           min-width: 200px;
@@ -198,10 +201,10 @@ $this->inlineScript()->appendScript('
         .tables_ui th,td {
           text-align: right;
           padding: 2px 4px;
-          border: 1px solid;
         }
         .t_sortable tr, .ui-sortable-helper {
           cursor: move;
+          border: 1px solid;
         }
         
         .t_sortable tr:first-child {
@@ -387,28 +390,30 @@ $this->inlineScript()->appendScript('
                                 
                                 <h3>Products</h3>
                                 
-                                <div id="div-collection-projects" style="width: 25%;float: left;">
-                                    <caption style="width: 100%;"><h4>Collection Products</h4></caption>
-                                    <table class="tables_ui" id="t_draggable1" data-collection-projects="" style="width: 300px;height: 400px; padding: 10px; overflow-x: auto;">
+                                <div id="div-collection-projects" style="width: 500px;float: left;">
+                                    <caption style="width: 100%;"><h4>Drop the Products here</h4></caption>
+                                    <table class="tables_ui" id="t_draggable1" data-collection-projects="" style="width: 500px;height: 600px; padding: 10px; overflow-x: auto;">
                                         <tbody class="t_sortable">
                                             <tr>
-                                                <th colspan="2">Drop the Products here</th>
+                                                <th colspan="2"></th>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div> 
-                                <div id="div-projects" style="width: 25%;float: left;">
-                                    <caption style="width: 100%;"><h4>Your Products</h4></caption>
-                                    <table class="tables_ui" id="t_draggable2" data-projects="" style="width: 300px;height: 400px; padding: 10px; overflow-x: auto;">
+                                <div id="div-projects" style="width: 500px;float: left;">
+                                    <caption style="width: 100%;"><h4>Drag the Products from here</h4></caption>
+                                    <table class="tables_ui" id="t_draggable2" data-projects="" style="width: 500px;height: 600px; padding: 10px; overflow-x: auto;">
                                         <tbody class="t_sortable">
                                             <tr>
-                                                <th colspan="2">Drag the Products from here</th>
+                                                <th colspan="2"></th>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div> 
                                 <!-- products -->
                             </section>
+                            
+                            
                             
                         <?php if(isset($this->project_id)) { ?>
                             <h3>Changelog</h3>
@@ -467,6 +472,49 @@ $this->inlineScript()->appendScript('
                 includeSelectAllOption: true
             });
             */
+           
+           function scrolify(tblAsJQueryObject, height) {
+                var oTbl = tblAsJQueryObject;
+
+                // for very large tables you can remove the four lines below
+                // and wrap the table with <div> in the mark-up and assign
+                // height and overflow property  
+                var oTblDiv = $("<div/>");
+                oTblDiv.css('height', height);
+                oTblDiv.css('overflow', 'scroll');
+                oTbl.wrap(oTblDiv);
+
+                // save original width
+                oTbl.attr("data-item-original-width", oTbl.width());
+                oTbl.find('thead tr td').each(function() {
+                  $(this).attr("data-item-original-width", $(this).width());
+                });
+                oTbl.find('tbody tr:eq(0) td').each(function() {
+                  $(this).attr("data-item-original-width", $(this).width());
+                });
+
+
+                // clone the original table
+                var newTbl = oTbl.clone();
+
+                // remove table header from original table
+                oTbl.find('thead tr').remove();
+                // remove table body from new table
+                newTbl.find('tbody tr').remove();
+
+                oTbl.parent().parent().prepend(newTbl);
+                newTbl.wrap("<div/>");
+
+                // replace ORIGINAL COLUMN width				
+                newTbl.width(newTbl.attr('data-item-original-width'));
+                newTbl.find('thead tr td').each(function() {
+                  $(this).width($(this).attr("data-item-original-width"));
+                });
+                oTbl.width(oTbl.attr('data-item-original-width'));
+                oTbl.find('tbody tr:eq(0) td').each(function() {
+                  $(this).width($(this).attr("data-item-original-width"));
+                });
+            }
 
             var formElement = $('#add-product-form');
             var validator = formElement.validate({
@@ -651,17 +699,17 @@ $this->inlineScript()->appendScript('
                                 
                                 $divCollectionProjects.find('table[data-collection-projects] tbody').html('');
                                 
-                                tableString = "<tr><th colspan='2'>Drop the Products here</th></tr>";
+                                tableString = "<tr><td style='align-content: center;text-align: center; width: 60px;'></td><td style='text-align: left; width: 440px;'></td></tr>";
                                 
-                                
+                                $i = 1;
                                 $.each(projects, function() {
-                                    tableString += "<tr data-project-id=" + this.project_id + ">";
-                                    tableString += "<td>" + this.project_id + "</td>";
-                                    tableString += "<td>" + this.title.trim().trunc(25) + "</td>";
+                                    tableString += "<tr style='background-color: white;' data-project-id=" + this.project_id + ">";
+                                    tableString += "<td style='align-content: center;text-align: center; width: 60px;'><img style='height: 50px;' src='" + this.image_url + "'></td>";
+                                    tableString += "<td style='text-align: left; width: 440px;'>" + this.title.trim().trunc(25) + "</td>";
                                     tableString += "</tr>";
                                     
-                                    $divCollectionProjects.append("<input type='hidden' id='collection_project_id" + this.project_id + "' name='collection_project_id[]' value='" + this.project_id + "'>");
-                          
+                                    $divCollectionProjects.append("<input type='hidden' class='collection_project_id_item' id='collection_project_id" + this.project_id + "' name='collection_project_id["+$i+"]' value='" + this.project_id + "'>");
+                                    $i++;
                                     
                                 });
                                 
@@ -692,13 +740,13 @@ $this->inlineScript()->appendScript('
                                 
                                 $divProjects.find('table[data-projects] tbody').html('');
                                 
-                                tableString = "<tr><th colspan='2'>Drag the Products from here</th></tr>";
+                                tableString = "<tr><td style='align-content: center;text-align: center; width: 60px;'></td><td style='text-align: left; width: 440px;'></td></tr>";
                                 
                                 
                                 $.each(projects, function() {
-                                    tableString += "<tr data-project-id=" + this.project_id + ">";
-                                    tableString += "<td>" + this.project_id + "</td>";
-                                    tableString += "<td>" + this.title.trim().trunc(25) + "</td>";
+                                    tableString += "<tr style='background-color: white;' data-project-id=" + this.project_id + ">";
+                                    tableString += "<td style='align-content: center;text-align: center; width: 60px;'><img style='height: 50px;' src='" + this.image_url + "'></td>";
+                                    tableString += "<td style='text-align: left; width: 440px;'>" + this.title.trim().trunc(25) + "</td>";
                                     tableString += "</tr>";
                                 });
                                 
@@ -715,16 +763,32 @@ $this->inlineScript()->appendScript('
                       items: "> tr:not(:first)",
                       appendTo: $tabs,
                       helper:"clone",
-                      zIndex: 999990
+                      zIndex: 999990,
+                      update: function (event, ui) {
+                        $('.collection_project_id_item').remove();
+                        $index = -1;
+                        $divCollectionProjects.find('table').find('tr').each(function() {
+                            $index = $(this).index();
+                            if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
+                                $divCollectionProjects.append("<input class='collection_project_id_item' type='hidden' id='collection_project_id" + $(this).attr('data-project-id') + "' name='collection_project_id["+$index+"]' value='" + $(this).attr('data-project-id') + "'>");
+                            }
+                        });
+                      }   
                     }).disableSelection();
 
                     var $tab_items = $divCollectionProjects.find('table[data-collection-projects] tbody').droppable({
                       accept: ".t_sortable tr",
                       hoverClass: "ui-state-hover",
                       drop: function( event, ui ) { 
-                          $divCollectionProjects.find('#collection_project_id' + ui.draggable.attr('data-project-id')).remove();
-                          $divCollectionProjects.append("<input type='hidden' id='collection_project_id" + ui.draggable.attr('data-project-id') + "' name='collection_project_id[]' value='" + ui.draggable.attr('data-project-id') + "'>");
-                          return false; 
+                            $('.collection_project_id_item').remove();
+                            $index = -1;
+                            $divCollectionProjects.find('table').find('tr').each(function() {
+                                $index = $(this).index();
+                                if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
+                                    $divCollectionProjects.append("<input class='collection_project_id_item' type='hidden' id='collection_project_id" + $(this).attr('data-project-id') + "' name='collection_project_id["+$index+"]' value='" + $(this).attr('data-project-id') + "'>");
+                                }
+                            });
+                            return false; 
                       },
                       out: function( event, ui ) { 
                           $divCollectionProjects.find('#collection_project_id' + ui.draggable.attr('data-project-id')).remove();
@@ -732,6 +796,8 @@ $this->inlineScript()->appendScript('
                       }
                     });
                     
+                    //scrolify($('#t_draggable1'), 500); // 160 is height
+                    //scrolify($('#t_draggable2'), 500); // 160 is height
                     
                     
                 }
@@ -741,7 +807,7 @@ $this->inlineScript()->appendScript('
                     $modalChanglog.find('#update-list').html('');
                     var productId = <?= isset($this->project_id)?$this->project_id:0 ?>;
                     $.ajax({
-                        url: '<?=$helpProductUrl->buildProductUrl($this->project_id, 'getupdatesajax')?>',
+                        url: '<?=$helpCollectionUrl->buildCollectionUrl($this->project_id, 'getupdatesajax')?>',
                         type: 'GET',
                         data: {
                             format: 'json',
@@ -835,7 +901,7 @@ $this->inlineScript()->appendScript('
                     event.preventDefault();
 
                     $.ajax({
-                        url: '<?=$helpProductUrl->buildProductUrl($this->project_id, 'saveupdateajax')?>',
+                        url: '<?=$helpCollectionUrl->buildCollectionUrl($this->project_id, 'saveupdateajax')?>',
                         type: 'POST',
                         data: {title: title, text: text, update_id: update_id},
                         dataType: 'json',
@@ -861,7 +927,7 @@ $this->inlineScript()->appendScript('
                     event.preventDefault();
 
                     $.ajax({
-                        url: '<?=$helpProductUrl->buildProductUrl($this->project_id, 'deleteupdateajax')?>',
+                        url: '<?=$helpCollectionUrl->buildCollectionUrl($this->project_id, 'deleteupdateajax')?>',
                         type: 'POST',
                         data: {update_id: updateId},
                         dataType: 'json',

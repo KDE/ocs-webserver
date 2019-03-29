@@ -115,11 +115,13 @@ $helperImage = new Default_View_Helper_Image();
         </span>
         </div>
 
+        
         <!-- info -->
         <div class="info">
             <ul>
+                <!--
                 <li><span>in</span><span><?php echo $this->catTitle; ?></span></li>
-
+                -->
                 <?php /**<li><span><?= $this->translate('supporters') ?> </span><span><?= $plingData['plingers'] ?></span></li>
                 <li><span><?= $this->translate('collected') ?> </span><span><?= $plingData['plings'] ?></span></li> **/?>
             </ul>
@@ -162,12 +164,13 @@ $helperImage = new Default_View_Helper_Image();
 
             <!--  manage -->
             <div class="manage-btns pull-right margin-left-20">
-                <a role="button" href="<?= $helperBuildCollectionUrl->buildCollectionUrl($this->project_id, 'edit') ?>" class="btn btn-native">
+                <a role="button" href="<?= $helperBuildCollectionUrl->buildCollectionUrl($this->project_id, 'edit') ?>" class="btn btn-native" style="padding: 3px 6px;font-size: 12px;">
                     <?= $this->translate('Edit') ?>
                 </a>
                 
                 <!-- updates -->
                 <a role="button" class="btn btn-native" href="#modal-updates"
+                    style="padding: 3px 6px;font-size: 12px;"
                    data-toggle="modal"
                    data-product-id="<?= $this->project_id ?>"
                    data-product-title="<?= $this->title ?>"
@@ -175,6 +178,7 @@ $helperImage = new Default_View_Helper_Image();
                 
                 <?php if ($this->link_1) { ?>
                     <a href="#msg-box-code-<?= $loopProductId ?>"
+                        style="padding: 3px 6px;font-size: 12px;"
                        class="btn btn-native margin-right-10"
                        data-toggle="modal"><?= $this->translate('Verification') ?></a>
                 <?php } ?>
@@ -191,7 +195,7 @@ $helperImage = new Default_View_Helper_Image();
                 <span class="publish-product-wrapper">
                     <?php $p_action = $this->isProjectActive($this->project_status) ? 'unpublish' : 'publish' ?>
                     <a href="<?= $helperBuildCollectionUrl->buildCollectionUrl($this->project_id, $p_action, array('m' => $this->member_id)) ?>"
-                       class="btn btn-native <?=($p_action=='unpublish')?'btn-pling-green':'btn-pling-red'?> " data-target="#<?= $loopProductId ?> .publish-product-wrapper">
+                        style="padding: 3px 6px;font-size: 12px;" class="btn btn-native <?=($p_action=='unpublish')?'btn-pling-green':'btn-pling-red'?> " data-target="#<?= $loopProductId ?> .publish-product-wrapper">
                         <?=ucfirst($p_action) ?>
                     </a>
                 </span>

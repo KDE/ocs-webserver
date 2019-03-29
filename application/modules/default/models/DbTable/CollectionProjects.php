@@ -67,6 +67,9 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
     {
         
         $withoutProjectIds = implode(',',$this->getCollectionProjectIds($collection_id));
+        if(empty($withoutProjectIds)) {
+            $withoutProjectIds = "0";
+        }
         
         $sql = " SELECT project.*
                  FROM project
@@ -126,6 +129,7 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
     
     public function setCollectionProjects($collectionId, $projectIds) {
         
+        
         //Delete old projects
         $oldIds = $this->getCollectionProjects($collectionId);
         
@@ -134,10 +138,9 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
         }
         
         //Insert new ones
-        $i = 0;
-        foreach ($projectIds as $projectId) {
-            $this->createCollectionProject($collectionId, $projectId, $i);
-            $i++;
+        foreach (array_keys($projectIds) as $fieldKey) {
+            $projectId = $projectIds[$fieldKey];
+            $this->createCollectionProject($collectionId, $projectId, $fieldKey);
         }
         
     }
