@@ -90,7 +90,7 @@
                         <form id="Form1" name="Form1" action="" method="POST">    
 
                          <?php if($isExternal) {?>
-                         <button type="submit" value="External Link" class="btn btn-success btn-lg" style="margin: 0 0 10px;">External Link (<?= $this->file_size_human ?>)</button>   
+                            <button type="submit" value="External Link" class="btn btn-success btn-lg" style="margin: 0 0 10px;"><img src="/images_sys/external_link_blue.png"> External Link (<?= $this->file_size_human ?>)</button>   
                          <?php } else if($this->link_type == 'download') { ?>
                          <button type="submit" value="Continue Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download (<?= $this->file_size_human ?>)</button>
                          <?php } else { ?>
