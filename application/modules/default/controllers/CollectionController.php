@@ -61,6 +61,25 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
     }
     
     
+    private function getCollectionProjects() {
+        $project_id = $this->_projectId;
+        
+        $collectionProjectsTable = new Default_Model_DbTable_CollectionProjects();
+        $projectsArray = $collectionProjectsTable->getCollectionProjects($project_id);
+        $helperImage = new Default_View_Helper_Image();
+        
+        $result = array();
+        foreach ($projectsArray as $project) {
+            $imgUrl = $helperImage->Image($project['image_small'], array('width' => 140, 'height' => 98));
+            $project['image_url'] = $imgUrl;
+            $result[] = $project;
+        }
+
+        return $result;
+        
+    }
+    
+    
     
     public function getcollectionprojectsajaxAction() {
         $this->_helper->layout()->disableLayout();
@@ -251,6 +270,9 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $modelProduct = new Default_Model_Collection();
         $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
         $this->view->product = $productInfo;
+        
+        $this->view->collection_projects = $this->getCollectionProjects(); 
+        
         $this->view->headTitle($productInfo->title . ' - ' . $this->getHeadTitle(), 'SET');
         if (empty($this->view->product)) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);

@@ -21,7 +21,7 @@
  **/
 
 $helpImage = new Default_View_Helper_Image();
-$helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helpBuildCollectionUrl = new Default_View_Helper_BuildCollectionUrl();
 ?>
 <div class="prod-widget-box right moreproducts">
 
@@ -52,7 +52,7 @@ $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
                                 </div>">
                         <!-- product thumbnail -->
                         <a
-                            href="<?= $helpBuildProductUrl->buildProductUrl($product->project_id) ?>"
+                            href="<?= $helpBuildCollectionUrl->buildCollectionUrl($product->project_id) ?>"
                             title="<?= $product->title ?>">
                             <img src="<?= $helpImage->Image($product->image_small, array('width' => 200, 'height' => 200)); ?>"
                                  alt="product">
