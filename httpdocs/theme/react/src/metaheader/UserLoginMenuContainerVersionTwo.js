@@ -76,9 +76,10 @@ class UserLoginMenuContainerVersionTwo extends React.Component {
               </li>
 
               <li className="user-settings-item">
-               <span className="user-settings-item-title">{theme}</span>
-                 <SwitchItem onSwitchStyle={this.props.onSwitchStyle}
-                          onSwitchStyleChecked={this.props.onSwitchStyleChecked}/>
+                <span className="user-settings-item-title">Metaheader theme light</span>
+                  <SwitchItem onSwitchStyle={this.props.onSwitchStyle}
+                           onSwitchStyleChecked={this.props.onSwitchStyleChecked}/>
+                 <span className="user-settings-item-title">dark</span>
 
               </li>
               <li id="user-tabs-menu-item">
