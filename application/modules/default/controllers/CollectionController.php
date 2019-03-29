@@ -59,6 +59,90 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $modelRating = new Default_Model_DbTable_ProjectRating();
         $modelRating->rateForProject($this->_projectId, $this->_authMember->member_id, $userRating);
     }
+    
+    
+    
+    public function getcollectionprojectsajaxAction() {
+        $this->_helper->layout()->disableLayout();
+        $project_id = $this->_projectId;
+        
+        $collectionProjectsTable = new Default_Model_DbTable_CollectionProjects();
+        $projectsArray = $collectionProjectsTable->getCollectionProjects($project_id);
+        
+        $result = array();
+        foreach ($projectsArray as $project) {
+            $result[] = $project;
+        }
+        $this->_helper->json(array('status' => 'success', 'ResultSize' => count($result), 'projects' => $result));
+        //$this->_helper->json($result);
+
+        return;
+        
+    }
+    
+    
+    public function getprojectsajaxAction() {
+        $this->_helper->layout()->disableLayout();
+        $member_id = null;
+        $identity = Zend_Auth::getInstance()->getStorage()->read();
+        if (Zend_Auth::getInstance()->hasIdentity()){
+            $member_id = $identity->member_id;
+        }
+        
+        if(!$member_id) {
+            $this->_helper->json(array('status' => 'success', 'ResultSize' => 0, 'projects' => array()));
+            
+        } else {
+            $collectionProjectsTable = new Default_Model_DbTable_CollectionProjects();
+            $projectsArray = $collectionProjectsTable->getProjectsForMember($this->_projectId, $member_id);
+
+            $result = array();
+            foreach ($projectsArray as $project) {
+                $result[] = $project;
+            }
+            $this->_helper->json(array('status' => 'success', 'ResultSize' => count($result), 'projects' => $result));
+            //$this->_helper->json($result);
+        }
+        
+
+        return;
+        
+    }
+    
+    public function searchprojectsajaxAction() {
+        $this->_helper->layout()->disableLayout();
+        $result = null;
+        $search = "";
+        if($this->hasParam('search')) {
+            $search = $this->getParam('search');
+        }
+        
+        $store->getParam('domain_store_id');
+        
+        $param = array('q' => $search ,'store'=>$store,'page' => 0, 'count' => 10, 'qf' => 'f', 'fq' => array());
+
+        $modelSearch = new Default_Model_Solr();
+        $searchResult = null;
+        try {
+            $searchResult = $modelSearch->search($param);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__FILE__.'('.__LINE__.') -- params: '.print_r($param, true)."\n".' message: '."\n".$e->getMessage());
+
+            $searchResult = array('hits' => array(), 'highlighting' =>array(),'response' => array('numFound' => 0));
+        }
+        $pagination = $pagination = $modelSearch->getPagination();
+        $products = $searchResult['hits'];
+        
+        
+        $result = array();
+        foreach ($products as $project) {
+            $result[] = $project;
+        }
+        $this->_helper->json(array('status' => 'success', 'ResultSize' => count($result), 'projects' => $result));
+
+        return;
+        
+    }
 
 
 
@@ -502,6 +586,12 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
 
+        //save collection products
+        $projectIds = $_POST['collection_project_id'];
+        
+        $modeCollection = new  Default_Model_DbTable_CollectionProjects();
+        $modeCollection->setCollectionProjects($this->_projectId, $projectIds);
+        
         try {
             if (100 < $this->_authMember->roleId) {
                 if (Default_Model_Spam::hasSpamMarkers($projectData->toArray())) {

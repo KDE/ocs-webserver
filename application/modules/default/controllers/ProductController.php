@@ -122,7 +122,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json(array('status' => 'error'));
     }
     
-    
     public function getfilesajaxAction() {
         $this->_helper->layout()->disableLayout();
         
