@@ -30,6 +30,35 @@
     <link href="tools/spectre/spectre-icons.css" rel="stylesheet" type="text/css"/>
     <link href="tools/spectre/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="/theme/flatui/css/fontawsome/font-awesome.min.css"  crossorigin="anonymous">
+    
+    <style>
+        .btn.btn-lg {
+            font-size: 1.6rem;
+            height: 4rem;
+            padding: .9rem .8rem;
+        }
+        
+        .btn span.icon {
+            background: url(/images_sys/external_link_blue.png) no-repeat;
+            background-size: cover;
+            float: left;
+            width: 18px;
+            height: 18px;
+            margin-right: 5px;
+        }
+        
+        .btn:hover span.icon {
+            background: url(/images_sys/external_link_white.png) no-repeat;
+            background-size: cover;
+            float: left;
+            width: 18px;
+            height: 18px;
+            margin-right: 5px;
+        }
+
+        
+    </style>
+    
 </head>
 <body style="height: 350px; background-color: #f8f9fa;">
     
@@ -90,7 +119,7 @@
                         <form id="Form1" name="Form1" action="" method="POST">    
 
                          <?php if($isExternal) {?>
-                            <button type="submit" value="External Link" class="btn btn-success btn-lg" style="margin: 0 0 10px;"><img src="/images_sys/external_link_blue.png"> External Link (<?= $this->file_size_human ?>)</button>   
+                            <button type="submit" value="External Link" class="btn btn-success btn-lg" style="margin: 0 0 10px;"><span class="icon"></span> External Link (<?= $this->file_size_human ?>)</button>   
                          <?php } else if($this->link_type == 'download') { ?>
                          <button type="submit" value="Continue Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download (<?= $this->file_size_human ?>)</button>
                          <?php } else { ?>
