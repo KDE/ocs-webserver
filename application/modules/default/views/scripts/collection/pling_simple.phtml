@@ -1,0 +1,147 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$plingData = $this->userPlings($this->product->project_id);
+$auth = Zend_Auth::getInstance();
+$btnName = $auth->hasIdentity() ? 'pling' : 'anonymous pling';
+?>
+
+    <div class="support modal-dialog content-modal">
+
+        <script src="https://www.paypalobjects.com/js/external/apdg.js"></script>
+
+        <div class="modal-content">
+
+            <!-- modal header -->
+
+            <div class="modal-header">
+                <button type="button" class="close support-close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 class="center"><?= $this->translate('Support ') ?><?= nl2br(strip_tags($this->product->title)) ?></h3>
+            </div>
+
+            <!-- /modal header -->
+
+            <!-- support form -->
+
+            <form id="support-form" class="standard-form partialpaypal" method="post" action="<?= $this->urlPay ?>"
+                  data-target="#overlays">
+
+                <!-- modal body -->
+
+                <div class="modal-body">
+                    <input type="hidden" name="test_provider" id="test_provider" value="paypal">
+                    <input type="hidden" name="test_amount" id="test_amount" value="0">
+
+                    <div class="form-container clearfix">
+                        <div class="controls controls-row">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                <label for="payment_amount"><?= $this->translate('Support with') ?></label>
+                            </div>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                <span class="glyphicon glyphicon-usd"></span>
+                                <span id="txt_payment_amount">1</span>
+                            </div>
+                        </div>
+                        <div class="controls controls-row">
+                            <textarea id="comment" name="comment"
+                                      placeholder="&nbsp;<?= $this->translate('Write a Comment') ?>" rows="4"
+                                      class="col-md-12 col-lg-12 col-sm-12 col-xs-12"></textarea>
+                        </div>
+                        <div class="controls controls-row">
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                                <?php if (false === empty($this->product->paypal_mail)) { ?>
+                                    <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <input type="radio" name="payment_provider" value="paypal">
+                                    </span>
+                                    <span>
+                                        <img src="/theme/flatui/img/logo_paypal.png"/>
+                                    </span>
+                                    </div>
+                                <?php } ?>
+                                <?php if (false === empty($this->product->dwolla_id)) { ?>
+                                    <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <input type="radio" name="payment_provider" value="dwolla">
+                                    </span>
+                                    <span>
+                                        <img src="/theme/flatui/img/dwolla-btn-pay-lg.png"/>
+                                    </span>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                            <!-- <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <input type="radio" name="amount_plings" value="1" >
+                                    </span>
+                                    <span>
+                                        <img src="/theme/flatui/img/logo_bitcoin.png" />
+                                    </span>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- /modal body -->
+
+                <!-- modal footer -->
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-native pull-left" data-dismiss="modal" aria-hidden="true">
+                        <?= $this->translate('Cancel') ?>
+                    </button>
+                    <button type="submit" id="submit_pling"
+                            class="btn btn-native pull-right">
+                        <?= $this->translate($btnName) ?>
+                    </button>
+                </div>
+                <!--/modal footer -->
+
+            </form>
+
+            <!-- /support form -->
+
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var payment_amount = $('.payment-options').find('input[type="number"]').val();
+            $('#support-form').find('#txt_payment_amount').text(payment_amount);
+            $('#support-form').find('#payment_amount').val(payment_amount);
+            $('#submit_pling').click(function () {
+                if ($('input[name=payment_provider]:checked').val() == 'dwolla') {
+                    var newWindow = window.open(null, "dwollaFrame", "width=300,height=400,left=100,top=200");
+                }
+            });
+        });
+    </script>
+
+<?php
+$this->inlineScript()->appendScript(
+    '$(document).ready(function(){
+        PartialPayPal.initPayPalForm();
+    });'
+);

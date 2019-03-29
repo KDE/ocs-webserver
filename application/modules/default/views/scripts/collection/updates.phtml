@@ -1,0 +1,145 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$auth = Zend_Auth::getInstance();
+$loginUrl = '/login?redirect=' . $this->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(), true);
+$txtUserFollows = '';
+$urlUserFollows = $this->buildProductUrl($this->product->project_id, 'unfollow');
+$imgFile = '/theme/flatui/img/icon-like-color.png';
+if (false == $this->userFollowsProject($this->authMember->member_id, $this->product->project_id)) {
+    $txtUserFollows = '';
+    $urlUserFollows = $this->buildProductUrl($this->product->project_id, 'follow');
+    $imgFile = '/theme/flatui/img/icon-like.png';
+}
+$titleImage = $this->Image($this->product->image_big, array('width' => 1170, 'height' => 300));
+$imageTag = '<img src="' . $titleImage . '">';
+if (strpos($titleImage, 'default.png') !== false) {
+    $imageTag = '';
+}
+?>
+<?php //<script src="https://www.paypalobjects.com/js/external/apdg.js"></script>
+//</script> ?>
+
+    <div class="container page-container">
+
+        <?php echo $this->render('product/partials/productTopHeader.phtml', array("member" => $this->member, "project" => $this->product, "loginUrl" => $loginUrl, 'product_views' => $this->product_views)); ?>
+
+        <div class="about-me-header-menu row-fluid">
+            <div class="pull-left header-menu-left">
+            <span class="header-menu-left-item">
+              <a href="<?= $this->buildProductUrl($this->product->project_id) ?>"><?= $this->translate('Product') ?></a>
+            </span>
+            <span class="header-menu-left-item">
+              <a href="<?= $this->buildProductUrl($this->product->project_id, 'supporter') ?>"><?= $this->translate('Supporters') ?></a>
+            </span>
+            <span class="header-menu-left-item active">
+              <a href="<?= $this->buildProductUrl($this->product->project_id, 'updates') ?>"><?= $this->translate('Updates') ?></a>
+            </span>
+            </div>
+            <!-- /.header-menu-left -->
+            <div class="pull-right header-menu-right">
+                <?php if ($auth->hasIdentity()) { ?>
+                    <span class="header-menu-right-item" id="container-follow">
+                <a href="<?= $urlUserFollows ?>" class="purple partial love-it" data-target="#container-follow">
+                    <?= $txtUserFollows ?><img src="<?= $imgFile ?>"
+                                               alt="<?= $this->translate('Add to favorites') ?>"
+                                               title="<?= $this->translate('Add to favorites') ?>">
+                </a>
+            </span>
+                <?php } else { ?>
+                    <span class="header-menu-right-item" id="container-follow">
+                <a href="<?= $loginUrl ?>"
+                   class="purple partial  love-it"
+                   data-target="#modal-dialog"
+                   data-toggle="#modal-dialog">
+                    <span><?= $txtUserFollows ?></span>
+                    <em class="icon heart-icon" alt="love it" title="Follow Product"></em>
+                </a>
+            </span>
+                <?php } ?>
+                <span class="header-menu-right-item">
+            <a href="<?= $this->buildProductUrl($this->product->project_id, 'share') ?>"
+               class="partial  share-it"
+               role="button"
+               data-target="#modal-dialog"
+               data-toggle="#modal-dialog">
+                <em class="icon share-icon" alt="share" title="Share Product"></em>
+            </a>
+        </span>
+                <?php if ($auth->hasIdentity()) { ?>
+                    <span class="header-menu-right-item">
+            <a href="<?= $this->buildProductUrl($this->product->project_id, 'report') ?>"
+               class="partial report-it"
+               role="button"
+               data-target="#modal-dialog"
+               data-toggle="#modal-dialog">
+                <em class="icon report-icon" alt="share" title="Report Product"></em>
+            </a>
+        </span>
+                <?php } else { ?>
+                    <span class="header-menu-right-item">
+            <a href="<?= $loginUrl ?>"
+               class="partial report-it"
+               role="button"
+               data-target="#modal-dialog"
+               data-toggle="#modal-dialog">
+                <em class="icon report-icon" alt="share" title="Report Product"></em>
+            </a>
+        </span>
+                <?php } ?>
+
+            </div>
+            <!-- /.header-menu-right -->
+        </div>
+        <!-- /.about-me-header-menu -->
+
+        <div class="row-fluid product-right">
+
+            <div class="span8 product-details">
+
+                <?php if (count($this->updates->toArray()) > 0) { ?>
+                    <div class="product-updates">
+                        <?php /*<h3 class="update-heading purple"><?=$this->translate('UPDATES')?></h3>*/ ?>
+                        <?= $this->partialLoop('product/partials/productUpdates.phtml', $this->updates->toArray()); ?>
+                    </div>
+                <?php } ?>
+
+            </div>
+            <!-- /.product-details -->
+
+            <?php echo $this->render('product/partials/sidebar.phtml',
+                array(
+                    'member' => $this->member,
+                    'project' => $this->product,
+                    'comments' => $this->comments,
+                    'supporter' => $this->supporter,
+                    'relatedProducts' => $this->relatedProducts,
+                )); ?>
+        </div>
+        <!-- /.about-me -->
+    </div> <!-- /.container -->
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+
+        });
+    ');
