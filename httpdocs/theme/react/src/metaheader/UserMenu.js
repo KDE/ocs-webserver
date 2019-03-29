@@ -1,6 +1,6 @@
 import React from 'react';
-import UserLoginMenuContainer from './UserLoginMenuContainer';
-// import UserLoginMenuContainerVersionTwo from './UserLoginMenuContainerVersionTwo';
+//import UserLoginMenuContainer from './UserLoginMenuContainer';
+import UserLoginMenuContainerVersionTwo from './UserLoginMenuContainerVersionTwo';
 import UserContextMenuContainer from './UserContextMenuContainer';
 import DevelopmentAppMenu from './DevelopmentAppMenu';
 //import SwitchItem from './SwitchItem';
@@ -14,25 +14,25 @@ class UserMenu extends React.Component {
   render(){
     let userDropdownDisplay, userAppsContextDisplay, developmentAppMenuDisplay;
     if (this.props.user && this.props.user.member_id){
-      // userDropdownDisplay = (
-      //   <UserLoginMenuContainerVersionTwo
-      //     user={this.props.user}
-      //     logoutUrl={this.props.logoutUrl}
-      //     baseUrl={this.props.baseUrl}
-      //      onSwitchStyle={this.props.onSwitchStyle}
-      //      onSwitchStyleChecked={this.props.onSwitchStyleChecked}
-      //   />
-      // );
-
       userDropdownDisplay = (
-        <UserLoginMenuContainer
+        <UserLoginMenuContainerVersionTwo
           user={this.props.user}
           logoutUrl={this.props.logoutUrl}
           baseUrl={this.props.baseUrl}
-          onSwitchStyle={this.props.onSwitchStyle}
-          onSwitchStyleChecked={this.props.onSwitchStyleChecked}
+           onSwitchStyle={this.props.onSwitchStyle}
+           onSwitchStyleChecked={this.props.onSwitchStyleChecked}
         />
       );
+
+      // userDropdownDisplay = (
+      //   <UserLoginMenuContainer
+      //     user={this.props.user}
+      //     logoutUrl={this.props.logoutUrl}
+      //     baseUrl={this.props.baseUrl}
+      //     onSwitchStyle={this.props.onSwitchStyle}
+      //     onSwitchStyleChecked={this.props.onSwitchStyleChecked}
+      //   />
+      // );
 
       userAppsContextDisplay = (
         <UserContextMenuContainer
