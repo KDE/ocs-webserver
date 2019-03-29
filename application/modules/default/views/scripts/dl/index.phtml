@@ -85,7 +85,7 @@
             <div class="col-8 col-md-12 col-xs-12 col-sm-12 column">
                 <div class="toast toast-success" style="margin-bottom: 10px;">
                     <?php if($isExternal) { ?>
-                    Click below to follow external link.
+                    Click button below to follow external link.
                     <?php } else if($this->link_type == 'download') { ?>
                     Download prepared successfully, click the button below to start.
                     <?php } else { ?>
@@ -94,14 +94,14 @@
                     
                 </div>
                 <section class="empty">
-                    <?php 
+                    <?php /*
                         if($isExternal == true) {
                     ?>
                     <div class="empty-icon">
                         <i class="fa fa-external-link"></i>
                     </div>
                     <?php
-                        }
+                        }*/
                     ?>
                     
                     <h1 class="empty-title"><?= $this->project_title ?></h1>
