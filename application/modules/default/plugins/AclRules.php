@@ -76,6 +76,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_spam'));
         $this->addResource(new Zend_Acl_Resource ('default_moderation'));
         $this->addResource(new Zend_Acl_Resource ('default_duplicates'));
+        $this->addResource(new Zend_Acl_Resource ('default_newproducts'));
         $this->addResource(new Zend_Acl_Resource ('default_misuse'));
         $this->addResource(new Zend_Acl_Resource ('default_credits'));
         $this->addResource(new Zend_Acl_Resource ('default_ads'));
@@ -319,6 +320,9 @@ class Default_Plugin_AclRules extends Zend_Acl
             'index','list'
         ));
         $this->allow(self::ROLENAME_MODERATOR, 'default_duplicates', array(
+            'index'
+        ));
+        $this->allow(self::ROLENAME_MODERATOR, 'default_newproducts', array(
             'index'
         ));
 
