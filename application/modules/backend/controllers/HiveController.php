@@ -333,6 +333,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         $contentTable = new Default_Model_DbTable_HiveContent();
         $memberTable = new Default_Model_Member();
         $projectTable = new Default_Model_Project();
+        $hiveMemeberTable = new Default_Model_DbTable_HiveUser();
         try {
             $projects = $contentTable->fetchAllProjectsForCategory($cat_id, $startIndex, $limit);
 
@@ -354,7 +355,10 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                 //$info .= " - Project ";
                 //$start = microtime(true);
                 try {
-                    $projectId = $this->createUpdateOcsProjects($project, $ocs_cat_id, $cnFilePath);
+                    $hiveUser = $hiveMemeberTable->fetchRow('user = ' . $project['user']);
+                    if(!empty($hiveUser)) {
+                        $projectId = $this->createUpdateOcsProjects($hiveUser, $project, $ocs_cat_id, $cnFilePath);
+                    }
                 } catch (Exception $e) {
                     //Error: log error and go on
                     $error = array();
@@ -685,7 +689,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         return $response;
     }
 
-    private function createUpdateOcsProjects($project, $ocs_cat_id, $cnFilePath)
+    private function createUpdateOcsProjects($hiveUser, $project, $ocs_cat_id, $cnFilePath)
     {
         $projectTable = new Default_Model_Project();
         $memberTable = new Default_Model_Member();
@@ -708,7 +712,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
 
         $memberId = null;
         try {
-            $member = $memberTable->fetchMemberFromHiveUserName($project['user']);
+            $member = $memberTable->fetchMemberFromHiveUserId($hiveUser['id']);
             if ($member) {
                 $info .= "Member load successfull: " . $member['member_id'];
                 $memberId = $member['member_id'];
@@ -1263,6 +1267,8 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         $contentTable = new Default_Model_DbTable_HiveContent();
         $memberTable = new Default_Model_Member();
         $projectTable = new Default_Model_Project();
+        $hiveMemeberTable = new Default_Model_DbTable_HiveUser();
+        
         try {
             $projects = $contentTable->fetchAllProjectsForCategory($cat_id, $startIndex, $limit);
 
@@ -1284,7 +1290,10 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                 //$info .= " - Project ";
                 //$start = microtime(true);
                 try {
-                    $projectId = $this->createUpdateOcsProjects($project, $ocs_cat_id, $cnFilePath);
+                    $hiveUser = $hiveMemeberTable->fetchRow('user = ' . $project['user']);
+                    if(!empty($hiveUser)) {
+                        $projectId = $this->createUpdateOcsProjects($hiveUser, $project, $ocs_cat_id, $cnFilePath);
+                    }
                 } catch (Exception $e) {
                     //Error: log error and go on
                     $error = array();

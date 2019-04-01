@@ -397,6 +397,23 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
         return $this->_db->fetchRow($sql, array('sourceId' => Default_Model_Member::SOURCE_HIVE, 'userName' => $user_name));
     }
+    
+    /**
+     * @param string $user_name
+     *
+     * @return Zend_Db_Table_Row
+     */
+    public function fetchMemberFromHiveUserId($user_id)
+    {
+        $sql = "
+                SELECT *
+                FROM `member`
+        	WHERE `source_id` = :sourceId
+                AND `source_pk` = :userId
+                ";
+
+        return $this->_db->fetchRow($sql, array('sourceId' => Default_Model_Member::SOURCE_HIVE, 'userId' => $user_id));
+    }
 
     /**
      * @param int $member_id
