@@ -355,7 +355,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                 //$info .= " - Project ";
                 //$start = microtime(true);
                 try {
-                    $hiveUser = $hiveMemeberTable->fetchRow('user = ' . $project['user']);
+                    $hiveUser = $hiveMemeberTable->fetchRow("login = '" . $project['user']."'");
                     if(!empty($hiveUser)) {
                         $projectId = $this->createUpdateOcsProjects($hiveUser, $project, $ocs_cat_id, $cnFilePath);
                     }
