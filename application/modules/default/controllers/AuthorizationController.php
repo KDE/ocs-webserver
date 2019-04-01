@@ -376,10 +376,10 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         if (false == $authResult->isValid()) { // authentication fail
             Zend_Registry::get('logger')->info(__METHOD__
+                . PHP_EOL . ' - authentication fail.'
                 . PHP_EOL . ' - user: ' . $values['mail']
                 . PHP_EOL . ' - remember_me: ' . $values['remember_me']
                 . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
-                . PHP_EOL . ' - authentication fail: '
                 . PHP_EOL . print_r($authResult->getMessages(), true)
             );
 
@@ -407,7 +407,9 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         Zend_Registry::get('logger')->info(__METHOD__
             . PHP_EOL . ' - authentication successful.'
-            . PHP_EOL . ' - auth_user: ' . print_r($values['mail'], true)
+            . PHP_EOL . ' - user: ' . $values['mail']
+            . PHP_EOL . ' - user_id: ' . isset(Zend_Auth::getInstance()->getStorage()->read()->member_id) ? Zend_Auth::getInstance()->getStorage()->read()->member_id : ''
+            . PHP_EOL . ' - remember_me: ' . $values['remember_me']
             . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
         );
         
@@ -442,7 +444,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $modelReviewProfile = new Default_Model_ReviewProfileData();
         if (false === $modelReviewProfile->hasValidProfile($auth->getStorage()->read())) {
             Zend_Registry::get('logger')->info(__METHOD__
-                . PHP_EOL . ' - User has to change userdata!'
+                . PHP_EOL . ' - User has to change user data!'
                 . PHP_EOL . ' - error code: ' . print_r($modelReviewProfile->getErrorCode(), true)
             );
             
@@ -468,40 +470,49 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
      * @param int $userId
      *
      * @throws Zend_Controller_Action_Exception
+     * @throws Zend_Filter_Exception
      */
     protected function handleRedirect($userId)
     {
-        if (false === empty($this->view->redirect)) {
-            $redirect = $this->decodeString($this->view->redirect);
-            if (false !== strpos('/register', $redirect)) {
-                $redirect = '/member/' . $userId . '/activities/';
-            }
+        if (empty($this->view->redirect)) {
+
+            Zend_Registry::get('logger')->info(__METHOD__ . PHP_EOL . ' - user_id: ' . $userId . PHP_EOL . ' - redirect: empty');
+
             if ($this->_request->isXmlHttpRequest()) {
-
-                $redirect = '/home/redirectme?redirect=' . $this->view->redirect;
+                $redirect_url = $this->encodeString('/member/' . $userId . '/activities/');
+                $redirect = '/home/redirectme?redirect=' . $redirect_url;
                 $this->_helper->json(array('status' => 'ok', 'redirect' => $redirect));
-            } else {
 
-                //show redirect_me page
-                $redirect = '/home/redirectme?redirect=' . $this->view->redirect;
-                $this->redirect($redirect);
+                return;
             }
 
-            return;
-        }
-
-        if ($this->_request->isXmlHttpRequest()) {
-            $redirect_url = $this->encodeString('/member/' . $userId . '/activities/');
-            $redirect = '/home/redirectme?redirect=' . $redirect_url;
-            $this->_helper->json(array('status' => 'ok', 'redirect' => $redirect));
-        } else {
             $this->getRequest()->setParam('member_id', $userId);
             $redirect_url = $this->encodeString('/member/' . $userId . '/activities/');
             $redirect = '/home/redirectme?redirect=' . $redirect_url;
             $this->redirect($redirect, $this->getAllParams());
+
+            return;
         }
+
+        $redirect = $this->decodeString($this->view->redirect);
+        Zend_Registry::get('logger')->info(__METHOD__ . PHP_EOL . ' - user_id: ' . $userId . PHP_EOL . ' - redirect: ' . $redirect);
+        if (false !== strpos('/register', $redirect)) {
+            $redirect = '/member/' . $userId . '/activities/';
+        }
+
+        $redirect = '/home/redirectme?redirect=' . $this->encodeString($redirect);
+        if ($this->_request->isXmlHttpRequest()) {
+
+            $this->_helper->json(array('status' => 'ok', 'redirect' => $redirect));
+
+            return;
+        }
+
+        $this->redirect($redirect);
+
+        return;
     }
-    
+
     /**
      * @throws Exception
      * @throws Zend_Exception
