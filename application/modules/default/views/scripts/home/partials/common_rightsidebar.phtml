@@ -144,7 +144,7 @@ $git_url = Zend_Registry::get('config')->settings->server->opencode->host;
                 
                 $store_config = Zend_Registry::get('store_config');
                 $is_show_blog_news = $store_config->is_show_blog_news;
-                if($is_show_blog_news==1) {
+                if($is_show_blog_news==1 && $this->is_startpage == true) {
             ?>           
             
             <span class="newsTitle"> News </span>
