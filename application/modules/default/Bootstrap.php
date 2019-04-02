@@ -416,12 +416,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'action'     => 'show'
                 )));
         
+        /*
         $router->addRoute('store_product', new Zend_Controller_Router_Route('/s/:domain_store_id/c/:project_id/:action/*', array(
                     'module'     => 'default',
                     'controller' => 'collection',
                     'action'     => 'show'
                 )));
-        
+        */
         $router->addRoute('store_user', new Zend_Controller_Router_Route('/s/:domain_store_id/member/:member_id/:action/*', array(
                     'module'     => 'default',
                     'controller' => 'user',
