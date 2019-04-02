@@ -197,7 +197,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
             // $stat['cntSupporters'] = $cntmb;
             $stat['userLastActiveTime'] = $tableMember->fetchLastActiveTime($this->_memberId);
 
-            
+            $stat['cntDuplicateSourceurl'] = 0;
             $userRoleName = $helperUserRole->userRole();
             if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
                 $stat['cntDuplicateSourceurl'] = $tableProject->getCountProjectsDuplicateSourceurl($this->_memberId);
