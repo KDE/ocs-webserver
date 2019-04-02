@@ -34,8 +34,8 @@ class Default_Model_ReviewProfileData
     const INVALID_EMAIL_DEACTIVATED = 20;
     const INVALID_EMAIL_NOT_UNIQUE = 21;
 
-    const USERNAME_DEACTIVATED_TEXT = "_deactivated";
-    const EMAIL_DEACTIVATED_TEXT = "_deactivated";
+    const USERNAME_DEACTIVATED_TEXT = "_double";
+    const EMAIL_DEACTIVATED_TEXT = "_double";
 
 
     protected $message;

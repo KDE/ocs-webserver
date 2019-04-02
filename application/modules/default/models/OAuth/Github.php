@@ -390,7 +390,7 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
             AND
               `member_email`.`email_primary` = 1
             AND
-            ( LOWER(`member_email`.`email_address`) = LOWER(:mail) OR LOWER(`member_email`.`email_address`) = CONCAT(LOWER(:mail),'_deactivated') )";
+            ( LOWER(`member_email`.`email_address`) = LOWER(:mail) OR LOWER(`member_email`.`email_address`) = CONCAT(LOWER(:mail),'_double') )";
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(

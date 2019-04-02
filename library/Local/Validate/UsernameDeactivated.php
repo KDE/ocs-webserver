@@ -23,7 +23,7 @@
 class Local_Validate_UsernameDeactivated extends Zend_Validate_Abstract
 {
 
-    const USERNAME_DEACTIVATED_TEXT = "_deactivated";
+    const USERNAME_DEACTIVATED_TEXT = "_double";
     const DEACTIVATED = 'username_deactivated';
 
     protected $_messageTemplates = array(

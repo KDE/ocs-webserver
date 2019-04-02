@@ -26,7 +26,8 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     const MD5 = 'enc01';
     const SHA = 'enc02';
     const PASSWORDSALT = 'ghdfklsdfgjkldfghdklgioerjgiogkldfgndfohgfhhgfhgfhgfhgfhfghfgnndf';
-    const USER_DEAVIVATED = '_deactivated';
+    const USER_DEAVIVATED = '_double';
+    const EMAIL_DEAVIVATED = '_double';
 
     protected $_db;
     protected $_tableName;
@@ -127,7 +128,7 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             'deleted'          => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
             'login'            => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
             'mail'             => $this->_identity,
-            'user_deactivated' => $this::USER_DEAVIVATED,
+            'user_deactivated' => $this::EMAIL_DEAVIVATED,
             'pwd'              => $this->_credential
         ));
 
