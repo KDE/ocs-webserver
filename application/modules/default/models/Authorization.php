@@ -343,6 +343,8 @@ class Default_Model_Authorization
         $authResult = $this->authenticateCredentials($identity, $credential, $loginMethod);
 
         if ($authResult->isValid()) {
+            Zend_Session::regenerateId();
+            $this->_storeAuthSessionData();
             return $this->_authUserData;
         }
 
