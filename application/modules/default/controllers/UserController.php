@@ -63,7 +63,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $this->view->authMember = $this->_authMember;        
         $this->view->member = $tableMember->fetchMemberData($this->_memberId);
 
-        $this->view->headTitle($this->view->member->username . ' - ' . $this->getHeadTitle(), 'SET');
+        
         if (null == $this->view->member) {
             $this->redirect("/");
         }
@@ -71,6 +71,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->redirect("/");
         }
 
+        $this->view->headTitle($this->view->member->username . ' - ' . $this->getHeadTitle(), 'SET');
         $this->view->mainProject = $this->view->member->findDependentRowset($tableProject, 'MainProject')->current();
 
         $this->view->userProjectCategories = $tableProject->getUserCreatingCategorys($this->_memberId);
