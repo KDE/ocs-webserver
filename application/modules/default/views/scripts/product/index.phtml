@@ -421,7 +421,8 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                             <div class="product-title-right" >
 
 
-                                <div class="projectdtailHeart">
+                                <div class="projectdtailHeart tooltipheart"  title="Become a fan" >
+
                                         <div id="container-follow<?=$this->product->project_id?>" class="container-pling">
                                         <?php
                                             echo $this->partial(
@@ -549,7 +550,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                             <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
                         <?php } ?>
                          <?php if(count($this->likes)>0){ ?>
-                            <li><a href="#likes-panel" data-toggle="tab">Favs <?php echo '('.count($this->likes).')';  ?></a></li>
+                            <li><a href="#likes-panel" data-toggle="tab">Fans <?php echo '('.count($this->likes).')';  ?></a></li>
                         <?php } ?>
                         <?php if(count($this->projectplings)>0){ ?>
                             <li><a href="#plings-panel" data-toggle="tab">Plings <?php echo '('.count($this->projectplings).')';  ?></a></li>
@@ -1105,5 +1106,10 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
             TooltipUser.setup("tooltipuserleft","left");
             AppimagequestionOnClick.setup();
             Opendownloadfile.setup();
+            $(\'.tooltipheart\').tooltipster({theme: [\'tooltipster-light\', \'tooltipster-light-customized\'],
+                    contentCloning: true,
+                    contentAsHTML: true,
+                    interactive: true});
+
         });
     ');
