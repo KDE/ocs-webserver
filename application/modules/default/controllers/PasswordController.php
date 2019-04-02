@@ -65,7 +65,7 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
 
         if (empty($member->member_id)) {
 
-            $member = $modelMember->findActiveMemberByMail($email.'_deactivated');
+            $member = $modelMember->findActiveMemberByMail($email.'_double');
 
             if (empty($member->member_id)) {
                 Zend_Registry::get('logger')->debug(__METHOD__ . ' - no active member found. ' . $email);

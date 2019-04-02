@@ -76,6 +76,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_spam'));
         $this->addResource(new Zend_Acl_Resource ('default_moderation'));
         $this->addResource(new Zend_Acl_Resource ('default_duplicates'));
+        $this->addResource(new Zend_Acl_Resource ('default_newproducts'));
         $this->addResource(new Zend_Acl_Resource ('default_misuse'));
         $this->addResource(new Zend_Acl_Resource ('default_credits'));
         $this->addResource(new Zend_Acl_Resource ('default_ads'));
@@ -83,10 +84,12 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_password'));
         $this->addResource(new Zend_Acl_Resource ('default_verify'));
         $this->addResource(new Zend_Acl_Resource ('default_login'));
+        $this->addResource(new Zend_Acl_Resource ('default_collection'));
 
         $this->addResource(new Zend_Acl_Resource ('default_stati'));
         $this->addResource(new Zend_Acl_Resource ('default_tag'));
 
+        
         $this->addResource(new Zend_Acl_Resource ('backend_categories'));
         $this->addResource(new Zend_Acl_Resource ('backend_vcategories'));
         $this->addResource(new Zend_Acl_Resource ('backend_categorytag'));
@@ -161,7 +164,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_stati',
             'default_password',
             'default_verify',
-            'default_login'
+            'default_login',
+            'default_collection'
         ));
 
         $this->allow(self::ROLENAME_SYSUSER, array(
@@ -237,6 +241,23 @@ class Default_Plugin_AclRules extends Zend_Acl
             'gettaggroupsforcatajax',
             'getfilesajax'
         ));
+        
+        // resource default_product
+        $this->allow(self::ROLENAME_GUEST, 'default_collection', array(
+            'index',
+            'show',
+            'getupdatesajax',
+            'updates',
+            'follows',
+            'fetch',
+            'search',
+            //'startdownload',
+            //'ppload',
+            'loadratings',
+            //'loadinstallinstruction',
+            //'getfilesajax',
+            'gettaggroupsforcatajax'
+        ));
 
         // resource default_product
         $this->allow(self::ROLENAME_SYSUSER, 'default_product', array(
@@ -269,6 +290,23 @@ class Default_Plugin_AclRules extends Zend_Acl
             'saveproduct',
             'claim'
         ));
+        
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_collection', array(
+            'add',
+            'rating',
+            'follow',
+            'unfollow',
+            'plingproject',
+            'followproject',
+            'unplingproject',
+            'pling',
+            'pay',
+            'dwolla',
+            'paymentok',
+            'paymentcancel',
+            'saveproduct',
+            'claim'
+        ));
 
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_membersetting', array(
             'getsettings','setsettings','notification'
@@ -282,6 +320,9 @@ class Default_Plugin_AclRules extends Zend_Acl
             'index','list'
         ));
         $this->allow(self::ROLENAME_MODERATOR, 'default_duplicates', array(
+            'index'
+        ));
+        $this->allow(self::ROLENAME_MODERATOR, 'default_newproducts', array(
             'index'
         ));
 
@@ -303,7 +344,9 @@ class Default_Plugin_AclRules extends Zend_Acl
             'updatepploadfile',
             'deletepploadfile',
             'deletepploadfiles',
-            'updatefiletag'
+            'updatefiletag',
+            'getcollectionprojectsajax',
+            'getprojectsajax'
 
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
 

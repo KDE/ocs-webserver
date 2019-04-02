@@ -67,13 +67,6 @@ class UserAutoCompleteInput extends React.Component {
     this.setState({value:newValue});
   }
 
-  // onChange(event, { newValue, method }){
-  //   this.setState({
-  //     value: newValue,
-  //     showTabs: false
-  //   });
-  // }
-
   shouldRenderSuggestions(value) {
     return value.trim().length > 2;
   }
@@ -160,6 +153,7 @@ class UserAutoCompleteInput extends React.Component {
           renderSuggestion={renderSuggestion}
           inputProps={inputProps}
           renderInputComponent={renderInputComponent}
+          
           />
 
           <div className="react-autosuggest_status">

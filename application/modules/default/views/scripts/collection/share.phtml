@@ -1,0 +1,103 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div class="share-form modal-dialog content-modal">
+
+    <div class="modal-content">
+        <!-- modal header -->
+        <div class="modal-header">
+            <button type="button" class="close share-close" data-dismiss="modal" aria-hidden="true">×</button>
+            <figure>
+                <img src="<?= $this->Image($this->product->image_small, array('width' => 120, 'height' => 90)); ?>"/>
+            </figure>
+            <h3><?php echo $this->product->title; ?></h3>
+        </div>
+        <!-- /modal header -->
+
+        <!-- modal body -->
+        <form class="standard-form form-share modal-form partialjson"
+              action="<?= $this->form->getAction(); ?>"
+              method="<?= $this->form->getMethod(); ?>"
+              data-target="#modal-dialog">
+            <div class="modal-body">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#share-social-option" data-toggle="tab">Please share your love</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <!-- via social -->
+                    <div class="tab-pane active social-container" id="share-social-option">
+                        <div class="clearfix">
+                            <div class="facebook social left">
+                                <a class="partial-popup"
+                                   rel="nofollow"
+                                   target="_blank"
+                                   href="http://www.facebook.com/sharer.php?u=<?= urlencode($this->permaLink) ?>&t=<?php echo urlencode('ocs - open content store'); ?>"
+                                   title="Share this post on Facebook"><em class="icon icon-facebook"></em>
+                                </a>
+                            </div>
+                            <div class="twitter social left">
+                                <a class="partial-popup"
+                                   rel="nofollow"
+                                   target="_blank"
+                                   href="http://twitter.com/home?status=i love <?php echo $this->product->title; ?> by <?php echo $this->product->username; ?>: <?= $this->permaLink; ?>"
+                                   title="Share this article with your Twitter followers"><em class="icon icon-twitter"></em>
+                                </a>
+                            </div>
+                            <div class="google social left">
+                                <a class="partial-popup"
+                                   rel="nofollow"
+                                   target="_blank"
+                                   href="https://plus.google.com/share?url=<?= $this->permaLink ?>"
+                                   title="Share this post on Google+"><em class="icon icon-google"></em>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /via social -->
+                    <!-- via email -->
+                    <div class="tab-pane well" id="share-email-option">
+                        <h4><?= $this->translate('Email') ?></h4>
+
+                        <label for="">Sender Email</label>
+
+                        <div class="clearfix margin-bottom-10">
+                            <div class="pull-left full-width"><?= $this->form->sender_mail ?></div>
+                        </div>
+                        <label for="">Receiver Email</label>
+
+                        <div class="clearfix margin-bottom-10">
+                            <div class="pull-left full-width"><?= $this->form->mail ?></div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="pull-right"><?= $this->form->send ?></div>
+                        </div>
+                    </div>
+                    <!-- /via email -->
+                </div>
+
+            </div>
+        </form>
+        <!-- modal body -->
+    </div>
+</div><!-- /.share -->

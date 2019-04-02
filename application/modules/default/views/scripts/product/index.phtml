@@ -64,7 +64,7 @@ $this->headMeta()->appendProperty('og:description',
     $helpTruncate->truncate($this->product->description, 200, '...', false, true));
 $this->headMeta()->appendProperty('og:image',
     $helpImage->Image($this->product->image_small, array('width' => 400, 'height' => 400)));
-$tableProject = new Default_Model_Project();
+$tableCollection = new Default_Model_Project();
 
 $tableProjectUpdates = new Default_Model_ProjectUpdates();
 $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->project_id);
@@ -170,18 +170,16 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                                <h2 class="modal-title">This product is based on:</h2>
+                                <span class="modal-title">If you know another product that uses some or all parts of <?=$this->product->title?>, please fill in the ID so we can give "ORIGINALAUTHOR" credits:</span>
                 </div>
                 <form id="product-report-clone" class="full-width partialjson" action="/report/productclone/"
                       data-target="#report-product-clone-<?= $this->product->project_id ?>-message">
                     <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
                     <div id="report-product-clone-<?= $this->product->project_id ?>-message" class="message" style="padding: 20px">
                         <div>
-                            <label class="form-label">Original product ID on opendesktop:  </label><br/>
-                            <input name="pc" /><br/><br/>
-                            <label class="form-label">External link to original product: </label><br/>
-                            <input name="l" style="width: 440px;" />
-                            <br/><br/>
+                            <label class="form-label">ID of the Clone on opendesktop:  </label><br/>
+                            <input name="pc" /><br/><br/>                            
+                           
                             <label class="form-label">Additional message: </label>
                             <br/>
                            <textarea class="" id="report-text" name="t"  rows="3" style="width: 440px;"></textarea>
@@ -399,7 +397,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                         
                                         if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName)
                                         {
-                                            $cntSameSource = $tableProject->getCountSourceurl($this->product->source_url);
+                                            $cntSameSource = $tableCollection->getCountSourceurl($this->product->source_url);
                                             if($cntSameSource>1){
                                                 $link = '/p/'.$this->product->project_id.'/listsamesourceurl';
                                                 echo '<span><a style="color:red" class="popuppanel" href="'.$link.'">
@@ -421,7 +419,8 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                             <div class="product-title-right" >
 
 
-                                <div class="projectdtailHeart">
+                                <div class="projectdtailHeart tooltipheart"  title="Become a fan" >
+
                                         <div id="container-follow<?=$this->product->project_id?>" class="container-pling">
                                         <?php
                                             echo $this->partial(
@@ -457,7 +456,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                     endif; ?>
 
                                     <?php
-                                    $this->galleryPictures = $tableProject->getGalleryPictureSources($this->product->project_id);
+                                    $this->galleryPictures = $tableCollection->getGalleryPictureSources($this->product->project_id);
                                     if (count($this->galleryPictures) > 0) {
                                         foreach ($this->galleryPictures as $picture): ?>
                                             <li data-target="#myCarousel" data-slide-to="<?php echo $cnt ?>"
@@ -549,7 +548,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                             <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
                         <?php } ?>
                          <?php if(count($this->likes)>0){ ?>
-                            <li><a href="#likes-panel" data-toggle="tab">Favs <?php echo '('.count($this->likes).')';  ?></a></li>
+                            <li><a href="#likes-panel" data-toggle="tab">Fans <?php echo '('.count($this->likes).')';  ?></a></li>
                         <?php } ?>
                         <?php if(count($this->projectplings)>0){ ?>
                             <li><a href="#plings-panel" data-toggle="tab">Plings <?php echo '('.count($this->projectplings).')';  ?></a></li>
@@ -964,11 +963,11 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                 <?php if (Zend_Auth::getInstance()->hasIdentity()) {      ?>
                                        <a data-toggle="modal" data-target="#report-product-clone-<?= $this->product->project_id ?>" role="button"
                                           href="#report-product-clone-<?= $this->product->project_id ?>">
-                                            report clone / derivative
+                                            add clone / derivative
                                        </a>
                                    <?php }else{ ?>
                                             <a data-toggle="modal" data-target="#like-product-modal" role="button">
-                                                report clone / derivative
+                                                add clone / derivative
                                             </a>
                                    <?php } ?>
 
@@ -1024,7 +1023,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
 
                         <div>
                             <?php
-                            $this->moreProducts = $tableProject->fetchMoreProjects($this->product, 6);
+                            $this->moreProducts = $tableCollection->fetchMoreProjects($this->product, 6);
                             $this->moreProductsTitle = 'More ' . $this->product->cat_title . ' from ' . $this->product->username;
 
                             if (count($this->moreProducts) > 0) {
@@ -1034,7 +1033,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
 
                         <div>
                             <?php
-                            $this->moreProducts = $tableProject->fetchMoreProjectsOfOtherUsr($this->product, 6);
+                            $this->moreProducts = $tableCollection->fetchMoreProjectsOfOtherUsr($this->product, 6);
                             $this->moreProductsTitle = 'Other ' . $this->product->cat_title;
 
                             if (count($this->moreProducts) > 0) {
@@ -1105,5 +1104,10 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
             TooltipUser.setup("tooltipuserleft","left");
             AppimagequestionOnClick.setup();
             Opendownloadfile.setup();
+            $(\'.tooltipheart\').tooltipster({theme: [\'tooltipster-light\', \'tooltipster-light-customized\'],
+                    contentCloning: true,
+                    contentAsHTML: true,
+                    interactive: true});
+
         });
     ');

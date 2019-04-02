@@ -485,6 +485,29 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $modelMember = new Default_Model_Member();
         $this->view->member = $modelMember->fetchMemberData($this->_authMember->member_id);
     }
+    
+    public function collectionsAction()
+    {
+        $pageLimit = 25;
+        $page = (int)$this->getParam('page', 1);
+
+        $this->view->member_id = null;
+        if (null != $this->_authMember && null != $this->_authMember->member_id) {
+            $this->view->member_id = $this->_authMember->member_id;
+        }
+
+        $modelProject = new Default_Model_Collection();
+        $userProjects = $modelProject->fetchAllCollectionsForMember($this->_authMember->member_id, $pageLimit, ($page - 1) * $pageLimit);
+
+        $paginator = Local_Paginator::factory($userProjects);
+        $paginator->setItemCountPerPage($pageLimit);
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setTotalItemCount($modelProject->countAllCollectionsForMember($this->_authMember->member_id));
+
+        $this->view->products = $paginator;
+        $modelMember = new Default_Model_Member();
+        $this->view->member = $modelMember->fetchMemberData($this->_authMember->member_id);
+    }
 
     public function activitiesAction()
     {
@@ -761,6 +784,80 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->view->member = $this->_authMember;
         }
     }
+
+    public function payouthistoryAction()
+    {
+
+        $tableMember = new Default_Model_Member();
+        $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+
+        //backdoor for admins
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+        }
+
+        // these are already payed
+        $sql="select yearmonth, amount from member_payout where member_id = :member_id order by yearmonth asc";
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql,array('member_id' =>$this->view->member->member_id));
+
+        
+        // there are probably payed last 2 months
+        // current month
+        $date = new DateTime();
+        $ym = $date->format('Ym');
+        $is_in = false;
+        foreach ($resultSet as $value) {
+            if($ym==$value['yearmonth'])
+            {
+                $is_in = true;
+                break;
+            }
+        }
+
+        if(!$is_in){
+            $model = new Default_Model_StatDownload();
+            $result = $model->getUserDownloadsForMonth($this->view->member->member_id, $ym);
+            $amount = 0;
+            foreach ($result as $value) {
+                $amount = $amount + $value['probably_payout_amount'];
+            }
+            $currentMonth = array('yearmonth' => $ym, 'amount' => $amount);
+
+            // test last month too
+            $interval = new DateInterval('P1M');//2 months
+            $lastmonthdate = $date->sub($interval);
+            $ym = $lastmonthdate->format('Ym');
+            $is_in = false;
+            foreach ($resultSet as $value) {
+                    if($ym==$value['yearmonth'])
+                    {
+                        $is_in = true;
+                        break;
+                    }
+                }
+            if(!$is_in){
+                $model = new Default_Model_StatDownload();
+                $result = $model->getUserDownloadsForMonth($this->view->member->member_id, $ym);
+                $amount = 0;
+                foreach ($result as $value) {
+                    $amount = $amount + $value['probably_payout_amount'];
+                }
+                $lastMonth = array('yearmonth' => $ym, 'amount' => $amount);
+                array_push($resultSet,$lastMonth);
+            }
+            array_push($resultSet,$currentMonth);
+        }
+
+        $this->view->payouthistory=$resultSet;
+
+
+    }
+    
+
 
     /**
      * @return Default_Form_Settings

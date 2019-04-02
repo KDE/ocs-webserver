@@ -1725,9 +1725,17 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $source_url = substr($source_url, 0, -1);
         }
         $sql = "
-            SELECT * FROM
-            `stat_projects_source_url` `p`
-            WHERE `p`.`source_url`= :source_url
+            SELECT 
+                p.project_id,
+                pj.title,
+                pj.member_id,
+                pj.created_at,
+                pj.changed_at,
+                m.username
+                FROM stat_projects_source_url p
+                inner join project pj on p.project_id = pj.project_id and pj.status=100
+                inner join member m on pj.member_id = m.member_id
+            WHERE p.source_url= :source_url
       ";
         $result = $this->_db->fetchAll($sql, array('source_url' => $source_url));
 

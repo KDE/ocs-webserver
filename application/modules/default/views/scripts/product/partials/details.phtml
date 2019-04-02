@@ -20,8 +20,8 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$tableProject = new Default_Model_Project();
-$this->product_views = $tableProject->fetchProjectViews($this->product->project_id);
+$tableCollection = new Default_Model_Project();
+$this->product_views = $tableCollection->fetchProjectViews($this->product->project_id);
  $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
 

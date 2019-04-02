@@ -1,0 +1,75 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperImage = new Default_View_Helper_Image();
+?>
+<div id="slideshow-container">
+
+    <div id="slides">
+        <?php
+        $i = 1;
+        foreach ($this->galleryPictures as $picture): ?>
+            <img rel="<?php echo $i; ?>"
+                 src="<?php echo $helperImage->Image($picture, array('width' => '770', 'height' => '540')); ?>"/>
+            <?php
+            $i++;
+        endforeach;
+        ?>
+    </div>
+
+    <div id="slideshow-controls">
+
+        <div id="arrows">
+            <a id="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+            <a id="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+        </div>
+
+        <div id="navigation">
+            <?php
+            $i = 1;
+            foreach ($this->galleryPictures as $picture): ?>
+                <a rel="<?php echo $i; ?>">
+                    <span></span>
+                    <figure>
+                        <img
+                            src="<?php echo $helperImage->Image($picture, array('width' => '100', 'height' => '100')); ?>"/>
+                    </figure>
+                </a>
+                <?php
+                $i++;
+            endforeach;
+            ?>
+        </div>
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(window).load(function () {
+        var slideShowInterval;
+        SlideShowRender.setup();
+        ProductSlideShow.setup();
+    });
+
+
+</script>

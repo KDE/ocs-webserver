@@ -1,8 +1,9 @@
 import React from 'react';
 import UserLoginMenuContainer from './UserLoginMenuContainer';
+// import UserLoginMenuContainerVersionTwo from './UserLoginMenuContainerVersionTwo';
 import UserContextMenuContainer from './UserContextMenuContainer';
-//import UserLoginMenuContainerVersionTwo from './UserLoginMenuContainerVersionTwo';
 import DevelopmentAppMenu from './DevelopmentAppMenu';
+import SearchMenuContainer from './SearchMenuContainer';
 //import SwitchItem from './SwitchItem';
 import AboutMenu from './AboutMenu';
 class UserMenu extends React.Component {
@@ -12,6 +13,11 @@ class UserMenu extends React.Component {
   }
 
   render(){
+    let searchMenuDisplay;
+    if (this.props.user && this.props.isAdmin ){
+      searchMenuDisplay = <SearchMenuContainer baseUrl={this.props.baseUrl}/>
+    }
+
     let userDropdownDisplay, userAppsContextDisplay, developmentAppMenuDisplay;
     if (this.props.user && this.props.user.member_id){
       // userDropdownDisplay = (
@@ -88,6 +94,7 @@ class UserMenu extends React.Component {
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
           {aboutMenu}
+          {searchMenuDisplay}
           {chatItem}
           {userAppsContextDisplay}
           {developmentAppMenuDisplay}

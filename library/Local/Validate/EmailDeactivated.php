@@ -22,7 +22,7 @@
  **/
 class Local_Validate_EmailDeactivated extends Zend_Validate_Abstract
 {
-    const EMAIL_DEACTIVATED_TEXT = "_deactivated";
+    const EMAIL_DEACTIVATED_TEXT = "_double";
     const EXISTS = 'already_exists';
     const DEACTIVATED = 'mail_deactivated';
 

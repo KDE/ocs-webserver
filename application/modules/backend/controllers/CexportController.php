@@ -82,8 +82,8 @@ class Backend_CexportController extends Local_Controller_Action_CliAbstract
               AND `m`.`is_deleted` = 0 
               AND `me`.`email_checked` IS NOT NULL 
               AND `me`.`email_deleted` = 0
-              AND LOCATE('_deactivated', `m`.username) = 0 
-              AND LOCATE('_deactivated', `me`.`email_address`) = 0
+              AND LOCATE('_double', `m`.username) = 0 
+              AND LOCATE('_double', `me`.`email_address`) = 0
             ORDER BY `m`.`member_id` ASC
             # LIMIT 200
         ";

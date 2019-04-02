@@ -1,0 +1,93 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperBaseUrl = new Default_View_Helper_BaseUrl();
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helperServerUrl = new Zend_View_Helper_ServerUrl();
+$helperTruncate = new Default_View_Helper_Truncate();
+$helperImage = new Default_View_Helper_Image();
+$helperGetAuthUser = new Default_View_Helper_GetAuthUser();
+$auth = Zend_Auth::getInstance();
+?>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+    <div class="prod-widget-box left">
+        <div id="pling-it-box">
+
+            <div class="claim-it">
+
+                <?php if (false == empty($this->product->claimed_by_member)) { ?>
+                    <a role="button" id="claim-it" href="javascript:;">
+                        <span class="btn-pling-2 disabled"><?= $this->translate('claim requested') ?></span>
+                    </a>
+                <?php } else {
+                    if ($auth->hasIdentity()) { ?>
+                        <a role="button" id="claim-it" href="#modalClaim" data-toggle="modal">
+                            <span class="btn-pling-2"><?= $this->translate('claimable') ?></span>
+                        </a>
+                    <?php } else { ?>
+                        <a id="claim-it" href="/register" data-target="#modal-dialog"
+                           data-toggle="#modal-dialog">
+                            <span class="btn-pling-2"><?= $this->translate('join community to claim') ?></span>
+                        </a>
+                    <?php }
+                } ?>
+
+            </div>
+
+            <!-- confirm claim modal -->
+
+            <div id="modalClaim" class="modal fade">
+                <div class="modal-dialog content-modal">
+                    <div class="modal-content">
+                        <!-- dialog contents -->
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 class="center"><?= $this->translate('Claim Confirmation') ?></h3>
+                        </div>
+                        <div class="modal-body">
+                            <?= $this->translate('You are the owner and want to claim this product?') ?><br/>
+                            <?= $this->translate('Click YES to agree and have read <a href="/content/terms" target="_blank">"terms and conditions"</a>.') ?>
+                        </div>
+                        <!-- dialog buttons -->
+                        <div class="modal-footer">
+                            <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product->project_id, 'claim',
+                                array('m' => $this->member->member_id)) ?>"
+                               role="button" class="btn btn-primary">
+                                <?= $this->translate('YES') ?>
+                            </a>
+                            <a href="#"
+                               role="button"
+                               class="btn btn-primary"
+                               data-dismiss="modal"
+                               aria-hidden="true"><?= $this->translate('NO') ?></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /confirm claim modal -->
+
+
+        </div>
+    </div>
+</div>
+
+<!-- /pling it box -->

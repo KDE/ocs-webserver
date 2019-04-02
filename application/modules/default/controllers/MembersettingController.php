@@ -189,6 +189,7 @@ class MembersettingController extends Zend_Controller_Action
         $results = null;
         if(strlen(trim($username))>2)
         {
+						$username = str_replace("_","\_",$username);
             $model = new Default_Model_Member();
             $results = $model->findActiveMemberByName($username);
             $helperImage = new Default_View_Helper_Image();

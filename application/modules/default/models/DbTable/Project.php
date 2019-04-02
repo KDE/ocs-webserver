@@ -26,6 +26,7 @@ class Default_Model_DbTable_Project extends Local_Model_Table
     const PROJECT_TYPE_PERSONAL = 0;
     const PROJECT_TYPE_STANDARD = 1;
     const PROJECT_TYPE_UPDATE = 2;
+    const PROJECT_TYPE_COLLECTION = 3;
     const PROJECT_FAULTY = 0;       // project data contains errors
     const PROJECT_INCOMPLETE = 10;  // process for adding the product was not successfully completed
     const PROJECT_ILLEGAL = 20;     // project data is complete, but the project doesn't accord to our rules
@@ -63,9 +64,10 @@ class Default_Model_DbTable_Project extends Local_Model_Table
     );
 
     protected $_types = array(
-        'person'     => self::PROJECT_TYPE_PERSONAL,
-        'collection' => self::PROJECT_TYPE_STANDARD,
-        'item'       => self::PROJECT_TYPE_UPDATE
+        'person'        => self::PROJECT_TYPE_PERSONAL,
+        'project'       => self::PROJECT_TYPE_STANDARD,
+        'item'          => self::PROJECT_TYPE_UPDATE,
+        'collection'    => self::PROJECT_TYPE_COLLECTION
     );
 
     protected $_allowedStatusTypes = array(

@@ -1,12 +1,13 @@
  out: ../css/metaheader.css, sourcemap: true, compress: true
 
 @import "elements.less";
-
+/*
 body.drawer-open {
   height: 100%;
   overflow: hidden;
   max-width: 100%;
 }
+*/
 
 #metaheader {
   float: left;
@@ -987,6 +988,182 @@ body.drawer-open {
       }
     }
 
+    #user-search-menu-container {
+      .user-dropdown {
+        .th-icon {
+          height: 24px;
+          width: 24px;
+          display: block;
+          background-image: url(../img/glyphicons-th.svg);
+          background-size: 20px;
+          background-position: center 3px;
+          cursor: pointer;
+          background-repeat: no-repeat;
+        }
+        .dropdown-toggle {
+          img {
+            height: 26px;
+            width: 26px;
+            border-radius: 100%;
+            margin-top: -1px;
+          }
+        }
+        .dropdown-menu {
+          &::before {
+            right: 9px;
+          }
+
+          #user-info-menu-item {
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+          }
+
+          #user-info-section {
+            height: auto;
+            padding: 20px;
+            background: white;
+            float: left;
+            padding-left: 116px;
+            position: relative;
+            width: 100%;
+            min-height: 136px;
+            box-sizing: border-box;
+
+            .user-avatar {
+              height: 96px;
+              width: 96px;
+              float: left;
+              border-radius: 100%;
+              overflow: hidden;
+              position: absolute;
+              top: 20px;
+              left: 20px;
+
+              .no-avatar-user-letter {
+                border-radius: 100%;
+                height: 100%;
+                width: 100%;
+                background-color: #c1c1c1;
+                text-align: center;
+                line-height: 80px;
+                font-size: 50px;
+                color: white;
+                overflow: hidden;
+                position: relative;
+
+                img {
+                  height: 96px;
+                  width: 96px;
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                }
+
+                .change-profile-pic {
+                  width: 100%;
+                  position: absolute;
+                  bottom: 0;
+                  font-size: 9px;
+                  height: 26px;
+                  left: 0;
+                  background-color: rgba(0,0,0,0.4);
+                  line-height: 30px;
+                  color: white;
+                  cursor: pointer;
+                  font-weight: bold;
+                }
+              }
+            }
+            .user-details {
+              width: 175px;
+              padding-left: 20px;
+              float: left;
+              margin-top: -4px;
+
+              ul {
+                padding: 0;
+                margin: 0;
+                list-style-type: none;
+                float: left;
+                width: 100%;
+
+                li {
+                  width: 100%;
+                  float: left;
+                  height: auto;
+                  line-height: 15px;
+                  font-size: 13px;
+                  min-height: 8px;
+                  color: #6a7686;
+
+                  a {
+                    color: #36c;
+                  }
+
+                  b {
+                    color: black;
+                  }
+
+                  button {
+                    margin-top: 16px;
+                  }
+                }
+              }
+            }
+          }
+          &#right-panel {
+            padding-top:10px;
+          }
+
+          li.buttons {
+            padding: 10px 20px;
+            background-color: #f5f5f5;
+            width: 100%;
+
+            .btn {
+              width: auto;
+              display: block;
+              border-radius: 2px;
+              padding: 6px 16px !important;
+              font-size: 12px;
+              height: 30px;
+              font-weight: normal;
+              color: #666 !important;
+              background: #f8f8f8;
+              border: 1px solid #c6c6c6;
+              float: left;
+              clear: none;
+              line-height: 12px !important;
+
+              &.pull-right {
+                float: right;
+              }
+
+              &:hover {
+                -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+                box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+                border-color: #c6c6c6;
+                color: #222;
+                background-color: #fff;
+                background-image: -webkit-gradient(linear,left top,left bottom,from(#fff),to(#f8f8f8));
+                background-image: -webkit-linear-gradient(top,#fff,#f8f8f8);
+                background-image: -webkit-linear-gradient(top,#fff,#f8f8f8);
+                background-image: linear-gradient(top,#fff,#f8f8f8);
+              }
+
+              span {
+                display: block;
+                float: left;
+                height: 12px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+
+
     #user-context-menu-container,
     #about-menu-container,
     #development-app-menu-container {
@@ -1255,14 +1432,19 @@ body.drawer-open {
           }
           .user-settings-item {
             width: 100%;
-            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
             padding: 10px 20px;
             background-color: #f5f5f5;
+            div.switchContainer{
+              display: inline-block;
+              vertical-align: middle;
+              margin-right: 5px;
+              margin-left: 5px;
+              padding-top:5px;
+            }
             span.user-settings-item-title{
               display: inline-block;
-              float: left;
-              padding-right: 10px;
-              
+
             }
           }
           #user-info-section {
@@ -1684,5 +1866,7 @@ body.drawer-open {
   #development-app-menu-container .user-dropdown .th-icon {
         background-image: url(../img/development-app-menu-item-white.png);
       }
-
+      #user-search-menu-container .user-dropdown .th-icon {
+            background-image: url(../img/search-light.svg);
+          }
 }

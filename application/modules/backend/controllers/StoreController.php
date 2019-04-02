@@ -351,5 +351,78 @@ class Backend_StoreController extends Local_Controller_Action_Backend
 
         $this->_helper->json($jTableResult);
     }
+    
+    
+    public function createaboutAction()
+    {
+        $store_id = (int)$this->getParam('c');
+        $config = Zend_Registry::get('config');
+        $static_config = $config->settings->static;
+        $include_path = $static_config->include_path . 'store_about/';
+        try {
+            if (touch($include_path . '/' . $store_id . '.phtml')) {
+                $result = true;
+            } else {
+                $result = false;
+            }
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
+            $result = false;
+        }
+
+        $jTableResult = array();
+        $jTableResult['Result'] = ($result == true) ? self::RESULT_OK : self::RESULT_ERROR;
+
+        $this->_helper->json($jTableResult);
+    }
+
+    public function readaboutAction()
+    {
+        $store_id = (int)$this->getParam('c');
+        $config = Zend_Registry::get('config');
+        $static_config = $config->settings->static;
+        $include_path = $static_config->include_path . 'store_about/';
+        $filecontent = '';
+        $result = true;
+
+        try {
+            if (file_exists($include_path . '/' . $store_id . '.phtml')) {
+                $filecontent = file_get_contents($include_path . '/' . $store_id . '.phtml');
+            }
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
+            $result = false;
+        }
+
+        $jTableResult = array();
+        $jTableResult['Result'] = ($result == true) ? self::RESULT_OK : self::RESULT_ERROR;
+        $jTableResult['c'] = $store_id;
+        $jTableResult['CatAbout'] = $filecontent;
+
+        $this->_helper->json($jTableResult);
+    }
+
+    public function saveaboutAction()
+    {
+        $store_id = (int)$this->getParam('c');
+        $cat_about = $this->getParam('ca');
+
+        $config = Zend_Registry::get('config');
+        $static_config = $config->settings->static;
+        $include_path = $static_config->include_path . 'store_about/';
+
+        try {
+            file_put_contents($include_path . '/' . $store_id . '.phtml', $cat_about);
+            $result = true;
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
+            $result = false;
+        }
+
+        $jTableResult = array();
+        $jTableResult['Result'] = ($result == true) ? self::RESULT_OK : self::RESULT_ERROR;
+
+        $this->_helper->json($jTableResult);
+    }
 
 }

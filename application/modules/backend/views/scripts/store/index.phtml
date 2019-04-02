@@ -66,8 +66,116 @@
 </div>
 <div id="TableContainer"></div>
 <div id="dialog-form" title="Store Config"></div>
-<script type="text/javascript">
 
+
+<div id="dialog-cat-about" title="Create/Edit Store About Page">
+    <form id="edit-cat-about" class="" action="/backend/store/saveabout" method="post">
+        <input type="hidden" value="" id="text-cat-id" name="c"/>
+        <textarea class="" id="text-cat-about" name="ca"></textarea>
+    </form>
+</div>
+
+<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+
+<script type="text/javascript">
+    $(document).on('focusin', function(e) {
+        if ($(e.target).closest(".mce-window, .moxman-window").length) {
+            e.stopImmediatePropagation();
+        }
+    });
+
+    tinymce.init({
+        selector: "#text-cat-about",
+        width: '100%',
+        height: 400,
+        autoresize_min_height: 400,
+        autoresize_max_height: 600,
+        menubar: false,
+        plugins: [
+            'autoresize advlist autolink lists link image charmap print preview anchor textcolor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table contextmenu paste code help wordcount'
+        ],
+        toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+        content_css: [
+            '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+            '//www.tinymce.com/css/codepen.min.css']
+    });
+
+    $("#dialog-cat-about").dialog({
+        autoOpen: false,
+        height: 480,
+        width: 640,
+        modal: true,
+        open: function (event, ui) {
+            tinymce.get("text-cat-about").load();
+        },
+        buttons: {
+            Cancel: function () {
+                $(this).dialog("close");
+            },
+            Save: function () {
+                tinymce.get("text-cat-about").save();
+                $('#edit-cat-about').submit();
+                $(this).dialog("close");
+            }
+        },
+        close: function () {
+        }
+    });
+
+    $('body').on("submit", '#edit-cat-about', function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        jQuery.ajax({
+            data: $(this).serialize(),
+            url: this.action,
+            type: this.method,
+            error: function (jqXHR, textStatus, errorThrown) {
+                $(".alert-danger .alert-body").empty().html('<span class="error">Operation not possible.</span>');
+                $(".alert-danger").alert().fadeIn('slow');
+                return false;
+            },
+            success: function (data, textStatus, jqXHR) {
+                return false;
+            }
+        });
+
+        return false;
+    });
+    
+    $('body').on("click", 'a.create-about', function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        var elementRecord = $(this).data("record");
+
+        jQuery.ajax({
+            data: {'c': elementRecord},
+            url: '/backend/store/readabout/',
+            type: 'post',
+            error: function (jqXHR, textStatus, errorThrown) {
+                $(".alert-danger .alert-body").empty().html('<span class="error">Operation failed.</span>');
+                $(".alert-danger").alert().fadeIn('slow');
+                return false;
+            },
+            success: function (data, textStatus, jqXHR) {
+//                    $(".alert-success .alert-body").empty().html('<span class="success">Please find the category about page in : /httpdocs/partials/category-about/'+elementRecord+'.phtml .</span>');
+//                    $(".alert-success").alert().fadeIn('slow');
+                $('#text-cat-about').val(data.CatAbout);
+                $('#text-cat-id').val(data.c);
+                $('#dialog-cat-about').dialog('open');
+                return false;
+            },
+            complete: function (data, textStatus, errorThrown) {
+                return false;
+            }
+        });
+
+        return false;
+    });
+        
     $("#dialog-form").dialog({
         autoOpen: false,
         //height: 350,
@@ -368,6 +476,19 @@
                                     return '<a role="button" title="edit template config" class="btn btn-info btn-xs edit-config" style="color:white;"  data-record="' + data.record.config_id_name + '"><span>config</span></a>';
                                 }
                             }
+                        }
+                    }
+                },
+                about: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record) {
+                            return '<a title="create/edit about page" href="javascript:return false;" class="create-about" role="button" data-record=\'' + data.record.store_id + ' \'><span class="glyphicon glyphicon-open-file" aria-hidden="true"></span></a>';
                         }
                     }
                 }

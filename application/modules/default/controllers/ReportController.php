@@ -179,7 +179,7 @@ class ReportController extends Zend_Controller_Action
                     $project_id = (int)$this->getParam('p');
                     $text = $this->getParam('t');
                     $project_clone = $this->getParam('pc');
-                    $link = $this->getParam('l');
+                  
                     if($project_clone)
                     {
                         $text = $text . ' '.$project_clone;
@@ -191,7 +191,7 @@ class ReportController extends Zend_Controller_Action
                     if (Zend_Auth::getInstance()->hasIdentity()) {
                         $reported_by = (int)Zend_Auth::getInstance()->getStorage()->read()->member_id;
                         $reportProducts = new Default_Model_DbTable_ProjectClone();                 
-                        $reportProducts->save(array('project_id' => $project_id, 'member_id' => $reported_by,'text' => $text, 'project_id_parent' =>$project_clone,'external_link' => $link));                             
+                        $reportProducts->save(array('project_id' => $project_clone, 'member_id' => $reported_by,'text' => $text, 'project_id_parent' =>$project_id));                             
                     }                                                                                               
         }
 

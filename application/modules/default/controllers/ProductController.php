@@ -122,7 +122,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json(array('status' => 'error'));
     }
     
-    
     private function getTagGroupsForCat($fileId) {
         $modelProduct = new Default_Model_Project();
         $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
@@ -162,12 +161,25 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $modelProduct = new Default_Model_Project();     
         $productInfo = $modelProduct->fetchProductInfo($this->_projectId);   
         $result = $modelProduct->getSourceUrlProjects($productInfo->source_url);
-        $response='<ul class="list-group" style="min-height:300px;min-width:350px; max-height:500px; overflow:auto">';
+        $r = '<div class="container containerduplicates">';
+        foreach ($result as $value) {
+            $r=$r.'<div class="row"><div class="col-lg-2"><a href="/p/'.$value['project_id'].'">'.$value['project_id'].'</a></div>'
+                .'<div class="col-lg-4">'.$value['title'].'</div>'
+                .'<div class="col-lg-2"><a href="/u/'.$value['username'].'">'.$value['username'].'</a></div>'
+                .'<div class="col-lg-2">'.$value['created_at'].'</div>'
+                .'<div class="col-lg-2">'.$value['changed_at'].'</div>'
+                .'</div>';
+        }
+
+        $r = $r.'</div>';
+            
+  
+        /*$response='<ul class="list-group" style="min-height:300px;min-width:1000px; max-height:500px; overflow:auto">';
         foreach ($result as $value) {
             $response=$response.'<li class="list-group-item"><a href="/p/'.$value['project_id'].'">'.$value['project_id'].'</a></li>';
         }
-        $response=$response.'</ul>';
-        echo $response;
+        $response=$response.'</ul>';*/
+        echo $r;
 
     }  
        
