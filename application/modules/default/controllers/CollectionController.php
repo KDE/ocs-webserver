@@ -423,6 +423,8 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $modeCollection = new  Default_Model_DbTable_CollectionProjects();
         $modeCollection->setCollectionProjects($this->_projectId, $projectIds);
         
+        $modelTags->processTagProductOriginal($newProject->project_id);
+        
         
         try {
             if (100 < $this->_authMember->roleId) {
