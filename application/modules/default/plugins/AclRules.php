@@ -382,6 +382,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'payments',
             'income',
             'payout',
+            'payouthistory',
             'plings',
             'plingsold',
             'plingsajax',
