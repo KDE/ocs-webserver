@@ -165,7 +165,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         foreach ($result as $value) {
             $r=$r.'<div class="row"><div class="col-lg-2"><a href="/p/'.$value['project_id'].'">'.$value['project_id'].'</a></div>'
                 .'<div class="col-lg-4">'.$value['title'].'</div>'
-                .'<div class="col-lg-2"><a href="/u/'.$value['username'].'">'.$value['username'].'</div>'
+                .'<div class="col-lg-2"><a href="/u/'.$value['username'].'">'.$value['username'].'</a></div>'
                 .'<div class="col-lg-2">'.$value['created_at'].'</div>'
                 .'<div class="col-lg-2">'.$value['changed_at'].'</div>'
                 .'</div>';
