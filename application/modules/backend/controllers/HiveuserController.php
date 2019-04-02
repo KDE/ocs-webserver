@@ -177,8 +177,8 @@ class Backend_HiveuserController extends Local_Controller_Action_Backend
                 $member = $memberTable->fetchRow('source_id = 1 AND source_pk = ' . $user['id']);
 
                 if ($member) {
-                    $info .= " - Update Member; ";
-                    $info .= $this->updateMember($user);
+                    //$info .= " - Update Member; ";
+                    //$info .= $this->updateMember($user);
                 } else {
                     $info .= " - Insert Member; ";
                     $info .= $this->insertMember($user);
