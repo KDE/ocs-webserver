@@ -36,8 +36,9 @@ $filesTable = new Default_Model_DbTable_PploadFiles();
 $countDownloadsToday = $filesTable->fetchCountDownloadsTodayForProject($this->product->ppload_collection_id);
 
 $countPageviews = $this->projectDetailCounts($this->product->project_id);
+$countPageviewsTotal = 0;
 $countPageviewsToday = $countPageviews[0]['count_views'];
-$countPageviewsTotal = $countPageviews[1]['count_views'];
+if(sizeof($countPageviews)==2) $countPageviewsTotal = $countPageviews[1]['count_views'];
 
 
 
