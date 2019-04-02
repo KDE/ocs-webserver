@@ -170,18 +170,16 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                                <h2 class="modal-title">This product is based on:</h2>
+                                <span class="modal-title">If you know another product that uses some or all parts of <?=$this->product->title?>, please fill in the ID so we can give "ORIGINALAUTHOR" credits:</span>
                 </div>
                 <form id="product-report-clone" class="full-width partialjson" action="/report/productclone/"
                       data-target="#report-product-clone-<?= $this->product->project_id ?>-message">
                     <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
                     <div id="report-product-clone-<?= $this->product->project_id ?>-message" class="message" style="padding: 20px">
                         <div>
-                            <label class="form-label">Original product ID on opendesktop:  </label><br/>
-                            <input name="pc" /><br/><br/>
-                            <label class="form-label">External link to original product: </label><br/>
-                            <input name="l" style="width: 440px;" />
-                            <br/><br/>
+                            <label class="form-label">ID of the Clone on opendesktop:  </label><br/>
+                            <input name="pc" /><br/><br/>                            
+                           
                             <label class="form-label">Additional message: </label>
                             <br/>
                            <textarea class="" id="report-text" name="t"  rows="3" style="width: 440px;"></textarea>
@@ -965,11 +963,11 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                 <?php if (Zend_Auth::getInstance()->hasIdentity()) {      ?>
                                        <a data-toggle="modal" data-target="#report-product-clone-<?= $this->product->project_id ?>" role="button"
                                           href="#report-product-clone-<?= $this->product->project_id ?>">
-                                            report clone / derivative
+                                            add clone / derivative
                                        </a>
                                    <?php }else{ ?>
                                             <a data-toggle="modal" data-target="#like-product-modal" role="button">
-                                                report clone / derivative
+                                                add clone / derivative
                                             </a>
                                    <?php } ?>
 
