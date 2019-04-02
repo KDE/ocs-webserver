@@ -152,10 +152,10 @@ div#preloaded-images {
 
 
                                     <div class="row">
-                                       Likes <span class="cnt"> <?=$this->stat['cntLikesHeGave']?> </span>Products
+                                       Fan of <span class="cnt"> <?=$this->stat['cntLikesHeGave']?> </span>Products
                                     </div>
                                     <div class="row">
-                                       Got <span class="cnt"> <?=$this->stat['cntLikesHeGot']?> </span>Likes <i class="fa fa-heart" style="color:#8e44ad" aria-hidden="true"></i>
+                                       Got <span class="cnt"> <?=$this->stat['cntLikesHeGot']?> </span>Fan-Likes <i class="fa fa-heart" style="color:#8e44ad" aria-hidden="true"></i>
 
                                     </div>
 
@@ -318,7 +318,7 @@ div#preloaded-images {
                              <?php if($this->likes->getTotalItemCount()>0){ ?>
                             <li>
                                 <a href="#user-favs" data-toggle="tab" role="tab"  aria-controls="user-favs">
-                                    Favs (<?=$this->likes->getTotalItemCount()?>)
+                                    Fan of (<?=$this->likes->getTotalItemCount()?>)
                                 </a>
                             </li>
                           <?php } ?>
@@ -339,7 +339,7 @@ div#preloaded-images {
                             </li>
                           <?php } ?>
 
-                           <?php if(Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' && $this->stat['cntDuplicateSourceurl']>0) { ?>                          
+                           <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' && $this->stat['cntDuplicateSourceurl']>0) { ?>                          
                             <li>
                                 <a class="aboutmetab" data-href="/u/<?php echo $this->member->username;?>/duplicates"  href="#user-duplicates" data-toggle="tab" role="tab"  aria-controls="user-duplicates">
                                     Duplicates (<?=$this->stat['cntDuplicateSourceurl']?>)
@@ -405,7 +405,7 @@ div#preloaded-images {
                             </div>
                             <?php } ?>
 
-                          <?php if(Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' && $this->stat['cntDuplicateSourceurl']>0) { ?>
+                          <?php if( Zend_Auth::getInstance()->hasIdentity() AND  Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' && $this->stat['cntDuplicateSourceurl']>0) { ?>
                             <div  role="tabpanel" class="tab-pane " id="user-duplicates">
                                  
                             </div>                          
