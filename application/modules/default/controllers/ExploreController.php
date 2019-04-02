@@ -128,6 +128,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         }
 
         $this->view->cat_id = $inputCatId;
+        
+        
 
         $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
 
@@ -180,6 +182,9 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $pageLimit = 10;
             $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);
         }
+        if($storeConfig) {
+            $this->view->storeabout = $this->getStoreAbout($storeConfig->store_id);
+        }
 
         $paginator = Local_Paginator::factory($requestedElements['elements']);
         $paginator->setItemCountPerPage($pageLimit);
@@ -212,6 +217,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
         return null;
     }
+    
+    
 
     /**
      * @param array $inputFilterParams
@@ -337,11 +344,14 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
      * @param Zend_Config $static_config
      * @return string|null
      */
-    protected function getStoreAbout($static_config)
+    protected function getStoreAbout($storeId)
     {
-        $include_path = $static_config->include_path . 'store_about/' . $this->view->filterStore . '.phtml';
-        if (file_exists($include_path)) {
-            return $include_path;
+        $config = Zend_Registry::get('config');
+        $static_config = $config->settings->static;
+
+        $include_path_cat = $static_config->include_path . 'store_about/' . $storeId . '.phtml';
+        if (file_exists($include_path_cat)) {
+            return $include_path_cat;
         }
 
         return null;
