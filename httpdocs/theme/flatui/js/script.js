@@ -1030,6 +1030,51 @@ var PartialForms = (function () {
     }
 })();
 
+
+var PartialJsonClone = (function () {
+    return {
+        setup: function () {
+            $('body').on("submit", 'form.partialjsonclone', function (event) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+
+                var target = $(this).attr("data-target");
+                var trigger = $(this).attr("data-trigger");
+                var projectid = $(this).attr("data-projectid");
+                jQuery.ajax({
+                    data: $(this).serialize(),
+                    url: this.action,
+                    type: this.method,
+                    dataType: "json",
+                    error: function () {
+                        $(target).empty().html("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    },
+                    success: function (data, textStatus) {                       
+
+                        $('form#product-report-clone').find('#clonePId').val('');
+                        $('form#product-report-clone').find('#report-text').val('')                                               
+                        $('#report-product-clone-'+projectid).modal('hide');
+
+                        var msgBox = $('#generic-dialog');                        
+                        msgBox.find('.modal-header-text').empty();
+                        msgBox.find('.modal-body').empty().append(data.message);
+                        setTimeout(function () {
+                            msgBox.modal('show');
+                        }, 900);
+
+
+                       
+                    }
+                });
+
+                return false;
+            });
+        }
+    }
+})();
+
+
+
 var PartialJson = (function () {
     return {
         setup: function () {

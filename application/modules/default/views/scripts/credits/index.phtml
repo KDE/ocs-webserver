@@ -180,7 +180,8 @@ $credits = $model->fetchCredits();
                                         } ?>
                             </div>
 
-                            <div class="explore-product-details col-lg-3">                                    
+                            <div class="explore-product-details col-lg-3">      
+                                <?php if($this->product->title): ?>                              
                                       <div class="mini-card">
                                             <div class="u-wrap">
                                                 <a href="<?= $this->buildProductUrl($this->product->project_id, '', null, true); ?>">
@@ -208,6 +209,7 @@ $credits = $model->fetchCredits();
                                                 echo $this->render('partials/widgetRating.phtml'); ?>
                                             </div>
                                       </div>
+                                  <?php endif; ?>
                             </div>
                             <div class="col-lg-3">
                                     <?php   echo $this->product->external_link ; ?>
