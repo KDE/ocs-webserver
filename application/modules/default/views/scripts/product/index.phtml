@@ -547,12 +547,13 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                         <?php if(count($this->ratings)>0){ ?>
                             <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
                         <?php } ?>
-                         <?php if(count($this->likes)>0){ ?>
-                            <li><a href="#likes-panel" data-toggle="tab">Fans <?php echo '('.count($this->likes).')';  ?></a></li>
-                        <?php } ?>
                         <?php if(count($this->projectplings)>0){ ?>
                             <li><a href="#plings-panel" data-toggle="tab">Plings <?php echo '('.count($this->projectplings).')';  ?></a></li>
                         <?php } ?>
+                         <?php if(count($this->likes)>0){ ?>
+                            <li><a href="#likes-panel" data-toggle="tab">Fans <?php echo '('.count($this->likes).')';  ?></a></li>
+                        <?php } ?>
+                        
                         </ul>
                     </div>
                     <!-- /TABS -->
