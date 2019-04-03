@@ -62,7 +62,12 @@ if(isset($_GET['target'])) {
 $thisurl = "/";
 if(isset($_GET['url'])) {
     $thisurl = $_GET['url'];
+}else
+{
+   $thisurl= Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"];
 }
+
+
 $url_login = "/login/redirect/".$filter->filter($thisurl);
 $url_logout = "/logout?redirect=".$filter->filter($thisurl);
 $isExternal = 'var isExternal = false;';

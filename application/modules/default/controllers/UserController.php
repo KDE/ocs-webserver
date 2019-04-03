@@ -824,6 +824,10 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $result = $model->getUserDownloadsForMonth($this->view->member->member_id, $ym);
             $amount = 0;
             foreach ($result as $value) {
+                 if($value['is_license_missing_now'] == 1 
+                        || $value['is_source_missing_now'] == 1
+                        || $value['is_pling_excluded_now'] == 1                                            
+                    ) continue;
                 $amount = $amount + $value['probably_payout_amount'];
             }
             $currentMonth = array('yearmonth' => $ym, 'amount' => $amount);
@@ -844,7 +848,11 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 $model = new Default_Model_StatDownload();
                 $result = $model->getUserDownloadsForMonth($this->view->member->member_id, $ym);
                 $amount = 0;
-                foreach ($result as $value) {
+                foreach ($result as $value) {                    
+                    if($value['is_license_missing'] == 1 
+                        || $value['is_source_missing'] == 1
+                        || $value['is_pling_excluded'] == 1                                            
+                    ) continue;
                     $amount = $amount + $value['probably_payout_amount'];
                 }
                 $lastMonth = array('yearmonth' => $ym, 'amount' => $amount);

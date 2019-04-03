@@ -160,10 +160,10 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                       ,pp.member_id parent_member_id
                       ,pp.username parent_username
                       FROM project_clone c
-                      JOIN stat_projects p on p.project_id = c.project_id
+                      join stat_projects pp on  pp.project_id =c.project_id_parent 
                       join member m on m.member_id = c.member_id
-                      left join stat_projects pp on  pp.project_id =c.project_id_parent 
-                      WHERE c.is_deleted = 0 and c.is_valid = 0  AND p.status = 100
+                      left JOIN stat_projects p on p.project_id = c.project_id                                            
+                      WHERE c.is_deleted = 0 and c.is_valid = 0  AND pp.status = 100
                       order by c.created_at desc
 
           ";
