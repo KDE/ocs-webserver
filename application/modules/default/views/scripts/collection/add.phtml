@@ -395,7 +395,7 @@ $this->inlineScript()->appendScript('
                                 
                                 <div id="div-collection-projects" style="width: 500px;float: left;">
                                     
-                                    <caption style="width: 100%;padding-top: 34px;"><h4>Drop the Products here</h4></caption>
+                                    <caption style="width: 100%;padding-top: 34px;"> <h4>Drop the Products here</h4> </caption>
                                     
                                     <table class="tables_ui" id="t_draggable1" data-collection-projects="" style="width: 500px;height: 600px; padding: 10px; overflow-x: auto;">
                                         <tbody class="t_sortable">
@@ -408,6 +408,7 @@ $this->inlineScript()->appendScript('
                                 
                                 <div id="div-projects" style="width: 550px;float: left;">
                                     <input class="form-control" width="10" type="text" id="search_products" alt="" placeholder="Search (min 3 Chars)">
+                                    
                                     <caption style="width: 100%;"><h4>Drag the Products from here (activily published)</h4></caption>
                                     
                                     <div id="tabs">
@@ -581,10 +582,10 @@ $this->inlineScript()->appendScript('
                         var gallery = $('.product-gallery div:first-child');
                         var galleryPic = gallery.find('.image');
 
-                        if (!logoSrc && !galleryPic.attr('style')) {
+                        if (!logoSrc) {
                             var msg = $('#preview_img_msg');
                             msg.text('');
-                            msg.append('<label id="description-error" class="error" for="product-gallery">Please add a product logo or at least one product gallery picture!</label>');
+                            msg.append('<label id="description-error" class="error" for="product-gallery">Please add a product logo!</label>');
 
                             return false;
                         }
@@ -617,10 +618,10 @@ $this->inlineScript()->appendScript('
                     var gallery = $('.product-gallery div:first-child');
                     var galleryPic = gallery.find('.image');
 
-                    if (!logoSrc && !galleryPic.attr('style')) {
+                    if (!logoSrc) {
                         var msg = $('#preview_img_msg');
                         msg.text('');
-                        msg.append('<label id="description-error" class="error" for="product-gallery">Please add a product logo or at least one product gallery picture!</label>');
+                        msg.append('<label id="description-error" class="error" for="product-gallery">Please add a product logo!</label>');
 
                         return false;
                     }
