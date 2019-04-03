@@ -269,14 +269,15 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         //        $this->fetchDataForIndexView();
         $modelProduct = new Default_Model_Collection();
         $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
+        if (empty($productInfo)) {
+            throw new Zend_Controller_Action_Exception('This page does not exist', 404);
+        }
         $this->view->product = $productInfo;
         
         $this->view->collection_projects = $this->getCollectionProjects(); 
         
         $this->view->headTitle($productInfo->title . ' - ' . $this->getHeadTitle(), 'SET');
-        if (empty($this->view->product)) {
-            throw new Zend_Controller_Action_Exception('This page does not exist', 404);
-        }
+        
         $this->view->cat_id = $this->view->product->project_category_id;
 
         $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
