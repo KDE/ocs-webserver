@@ -85,13 +85,13 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
     <li class="header-menu-left-item <?php echo $this->tab == 'payouthistory' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payouthistory'); ?>">           
             <i class="glyphicon glyphicon-stats"></i>
-            <?= $this->translate('Payout History') ?>
+            <?= $this->translate('Payout-History') ?>
         </a>
     </li>
     <li class="<?php echo $this->tab == 'downloadhistory' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'downloadhistory'); ?>">
             <span class="glyphicon glyphicon-star"></span>
-            <?= $this->translate('Download History') ?>
+            <?= $this->translate('Download-History') ?>
         </a>
     </li>
 
