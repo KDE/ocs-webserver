@@ -19,20 +19,26 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+$collection_cat_id = Zend_Registry::get('config')->settings->client->default->collection_cat_id;
+$ranking_cat_id = Zend_Registry::get('config')->settings->client->default->ranking_cat_id;
 ?>
 <div class="form-group">
   <div class="col-sm-12 margin-top-15">
       <?php if ($this->element->isRequired()) { ?>
         <div class="small grey bold-font pull-left margin-right-5">*</div>
       <?php } ?>
-    <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">Category</label>
+    <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">What type is your product?</label>
   </div>
   <div id="wrapper_form_cat" class="col-sm-5">
-    <input type="hidden"
+    <select class="required form-control product_select_cat"
            id="<?= $this->escape($this->element->getName()) ?>"
            name="<?= $this->escape($this->element->getName()) ?>"
            value="<?= $this->escape($this->element->getValue()) ?>"
-           >
+           >>
+        <option value="<?= $collection_cat_id ?>">Collection</option>
+        <option value="<?= $ranking_cat_id ?>">Ranking</option>
+        
+    </select>
     <div id="wrapper_cat_id">
     </div>
       <?php if ($this->element->getMessages()) {
