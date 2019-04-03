@@ -119,9 +119,15 @@ $helperImage = new Default_View_Helper_Image();
         <!-- info -->
         <div class="info">
             <ul>
-                <!--
-                <li><span>in</span><span><?php echo $this->catTitle; ?></span></li>
-                -->
+                <?php
+                $collection_cat_id = Zend_Registry::get('config')->settings->client->default->collection_cat_id;
+                $ranking_cat_id = Zend_Registry::get('config')->settings->client->default->ranking_cat_id;
+                $catText = "Collection";
+                if($this->project_category_id == $ranking_cat_id) {
+                    $catText = "Ranking";
+                }
+                ?>
+                <li><span>in</span><span><?php echo $catText; ?></span></li>
                 <?php /**<li><span><?= $this->translate('supporters') ?> </span><span><?= $plingData['plingers'] ?></span></li>
                 <li><span><?= $this->translate('collected') ?> </span><span><?= $plingData['plings'] ?></span></li> **/?>
             </ul>

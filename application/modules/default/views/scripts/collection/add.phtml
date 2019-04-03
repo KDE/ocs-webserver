@@ -274,7 +274,6 @@ $this->inlineScript()->appendScript('
                     <section class="add-product-page">
 
                         <form enctype="multipart/form-data" role="application" class="wizard clearfix" action="" method="post" id="add-product-form">
-                            <input type="hidden" name="project_category_id" value="<?= $this->collection_cat_id ?>">
                             <input type="hidden" name="type_id" value="3">
                             <?= $this->form->project_id ?>
                             <h3>Basics</h3>
@@ -318,9 +317,9 @@ $this->inlineScript()->appendScript('
                                 </div>
                                 
                                 <?= $this->form->description ?>
-
-                                <?php /*
                                 <?= $this->form->project_category_id ?>
+                                <?php /*
+                                
                                 <?= $this->form->project_subcategory_id ?>
                                 <?= $this->form->project_sub_subcategory_id ?>
                                  */?>
