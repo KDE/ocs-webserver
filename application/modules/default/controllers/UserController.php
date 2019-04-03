@@ -799,6 +799,10 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->view->member = $this->view->view_member;
         } else {
             $this->view->member = $this->_authMember;
+            if($this->_memberId!=$this->_authMember->member_id)
+            {
+                throw new Zend_Controller_Action_Exception('no authorization found');
+            }
         }
 
         // these are already payed
