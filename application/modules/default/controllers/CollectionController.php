@@ -115,8 +115,26 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             $this->_helper->json(array('status' => 'success', 'ResultSize' => 0, 'projects' => array()));
             
         } else {
+            $search = null;
+            if($this->hasParam('search')) {
+                $search = $this->getParam('search');
+            }
+            $searchAll = false;
+            if($this->hasParam('search_all')) {
+                $searchAll = $this->getParam('search_all') == 'true';
+            }
+            if(empty($search)) {
+                $this->_helper->json(array('status' => 'success', 'ResultSize' => 0, 'projects' => array()));
+                return;
+            }
+            
+            
             $collectionProjectsTable = new Default_Model_DbTable_CollectionProjects();
-            $projectsArray = $collectionProjectsTable->getProjectsForMember($this->_projectId, $member_id);
+            if(!$searchAll) {
+                $projectsArray = $collectionProjectsTable->getProjectsForMember($this->_projectId, $member_id, $search);
+            } else {
+                $projectsArray = $collectionProjectsTable->getProjectsForAllMembers($this->_projectId, $member_id, $search);
+            }
 
             $result = array();
             $helperImage = new Default_View_Helper_Image();
@@ -127,7 +145,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
                 
                 $result[] = $project;
             }
-            $this->_helper->json(array('status' => 'success', 'ResultSize' => count($result), 'projects' => $result));
+            $this->_helper->json(array('status' => 'success', 'ResultSize' => count($result), 'projects' => $result, 'Search' => $search, 'SearchAll' => $searchAll));
             //$this->_helper->json($result);
         }
         
@@ -531,11 +549,12 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         if ($this->_request->isGet()) {
             $form->populate($projectData->toArray());
            // $form->populate(array('tags' => $modelTags->getTags($projectData->project_id, Default_Model_Tags::TAG_TYPE_PROJECT)));
-            $form->populate(array('tagsuser' => $modelTags->getTagsUser($projectData->project_id, Default_Model_Tags::TAG_TYPE_PROJECT)));
+            //$form->populate(array('tagsuser' => $modelTags->getTagsUser($projectData->project_id, Default_Model_Tags::TAG_TYPE_PROJECT)));
             $form->getElement('image_small')->setValue($projectData->image_small);
             //Bilder voreinstellen
             $form->getElement(self::IMAGE_SMALL_UPLOAD)->setValue($projectData->image_small);
-
+            
+            /*
             $licenseTags = $tagTable->fetchLicenseTagsForProject($this->_projectId);
             $licenseTag = null;
             if($licenseTags) {
@@ -547,6 +566,8 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             if($is_original){
                 $form->getElement('is_original')->checked= true;                
             }
+             * 
+             */
  
             $this->view->form = $form;
 
@@ -566,7 +587,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
 
         $values = $form->getValues();
 
-
+        /**
         //set license, if needed
         $tagList = $modelTags->getTagsArray($this->_projectId, $modelTags::TAG_TYPE_PROJECT, $modelTags::TAG_LICENSE_GROUPID);
         $oldLicenseTagId = null;
@@ -589,7 +610,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             $values['gitlab_project_id'] = null;
         }
 
-
+        */
 
         $imageModel = new Default_Model_DbTable_Image();
         try {
@@ -602,11 +623,13 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         // save changes
         $projectData->setFromArray($values);
 
+        /**
         //update the gallery pics
         $pictureSources = array_merge($values['gallery']['online_picture'],
             $this->saveGalleryPics($form->gallery->upload->upload_picture));
         $projectModel->updateGalleryPictures($this->_projectId, $pictureSources);
-
+        */
+        
         //If there is no Logo, we take the 1. gallery pic
         if (!isset($projectData->image_small) || $projectData->image_small == '') {
             $projectData->image_small = $pictureSources[0];
@@ -615,15 +638,16 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         //$projectData->changed_at = new Zend_Db_Expr('NOW()');
         $projectData->save();
         
-        $modelTags->processTagProductOriginal($this->_projectId,$values['is_original']);
+        //$modelTags->processTagProductOriginal($this->_projectId,$values['is_original']);
 
+        /*
         if($values['tagsuser']) {
             $modelTags->processTagsUser($this->_projectId,implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);
         }else
         {
             $modelTags->processTagsUser($this->_projectId,null, Default_Model_Tags::TAG_TYPE_PROJECT);
         }
-
+        */
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
 
