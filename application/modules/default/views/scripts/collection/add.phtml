@@ -857,7 +857,7 @@ $this->inlineScript()->appendScript('
                     $("tbody.t_sortable").sortable({
                       connectWith: ".t_sortable",
                       items: "> tr:not(:first)",
-                      appendTo: $tabsOwn,
+                      //appendTo: $tabsOwn,
                       helper:"clone",
                       zIndex: 999990,
                       update: function (event, ui) {
@@ -873,14 +873,14 @@ $this->inlineScript()->appendScript('
                       }   
                     }).disableSelection();
                     
-                    /*
+                    
                     var $tabsAll = $('#t_draggableAll');
                     $("tbody.t_sortable").sortable({
                       connectWith: ".t_sortable",
                       items: "> tr:not(:first)",
-                      appendTo: $tabsAll,
+                      //appendTo: $tabsAll,
                       helper:"clone",
-                      zIndex: 999990,
+                      zIndex: 999999,
                       update: function (event, ui) {
                         $('.collection_project_id_item').remove();
                         $index = -1;
@@ -893,7 +893,7 @@ $this->inlineScript()->appendScript('
                         });
                       }   
                     }).disableSelection();
-                    */
+                    
 
                     var $tab_items = $divCollectionProjects.find('table[data-collection-projects] tbody').droppable({
                       accept: ".t_sortable tr",
