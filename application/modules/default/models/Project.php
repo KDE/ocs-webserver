@@ -404,12 +404,13 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   LEFT JOIN `view_reported_projects` ON ((`view_reported_projects`.`project_id` = `p`.`project_id`))
                 WHERE
                   `p`.`project_id` = :projectId
-                  AND `p`.`status` >= :projectStatus AND `p`.`type_id` = :typeId
+                  AND `p`.`status` >= :projectStatus AND (`p`.`type_id` = :typeIdStd OR `p`.`type_id` = :typeIdColl)
         ';
         $result = $this->_db->fetchRow($sql, array(
             'projectId'       => $project_id,
             'projectStatus'   => self::PROJECT_INACTIVE,
-            'typeId'          => self::PROJECT_TYPE_STANDARD,
+            'typeIdStd'          => self::PROJECT_TYPE_STANDARD,
+            'typeIdColl'          => self::PROJECT_TYPE_COLLECTION,
             'tag_licence_gid' => self::TAG_LICENCE_GID,
             'tag_type_id'     => self::TAG_TYPE_ID
 
@@ -1236,7 +1237,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $statement->from(array('project' => 'stat_projects'), array(
             '*'
         ));
-        $statement->where('project.status = ?', self::PROJECT_ACTIVE)->where('project.type_id=?', self::PROJECT_TYPE_STANDARD);
+        $statement->where('project.status = ?', self::PROJECT_ACTIVE)->where('project.type_id IN (?)', array(self::PROJECT_TYPE_STANDARD, self::PROJECT_TYPE_COLLECTION));
 
         return $statement;
     }

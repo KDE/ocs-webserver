@@ -368,6 +368,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if (empty($productInfo)) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
+        
+        //Check if this is a collection
+        $collCatId = Zend_Registry::get('config')->settings->client->default->collection_cat_id;
+        if($collCatId == $productInfo->project_category_id) {
+            $this->redirect('/c/'.$this->_projectId);
+        }
+        
         $this->view->product = $productInfo;
         $this->view->headTitle($productInfo->title . ' - ' . $this->getHeadTitle(), 'SET');
         $this->view->cat_id = $this->view->product->project_category_id;
