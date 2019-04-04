@@ -315,6 +315,13 @@ div#preloaded-images {
                                 </a>
                             </li>
                             <?php } ?>
+                              <?php if( $this->plings->getTotalItemCount()>0){ ?>
+                            <li>
+                                <a href="#user-plings" data-toggle="tab" role="tab"  aria-controls="user-plings">
+                                    Plinged (<?=$this->plings->getTotalItemCount()?>)
+                                </a>
+                            </li>
+                          <?php } ?>
                              <?php if($this->likes->getTotalItemCount()>0){ ?>
                             <li>
                                 <a href="#user-favs" data-toggle="tab" role="tab"  aria-controls="user-favs">
@@ -323,13 +330,7 @@ div#preloaded-images {
                             </li>
                           <?php } ?>
 
-                          <?php if( $this->plings->getTotalItemCount()>0){ ?>
-                            <li>
-                                <a href="#user-plings" data-toggle="tab" role="tab"  aria-controls="user-plings">
-                                    Plinged (<?=$this->plings->getTotalItemCount()?>)
-                                </a>
-                            </li>
-                          <?php } ?>
+                        
 
                           <?php if( $this->supportersplings->getTotalItemCount()>0){ ?>
                             <li>

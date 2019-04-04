@@ -189,4 +189,22 @@ class Default_Model_StatDownload
     }
 
 
+    public function getPayoutHistory($member_id)
+    {
+        $sql="
+                SELECT pl.yearmonth
+                ,TRUNCATE(sum(probably_payout_amount), 2) amount
+                ,(select count(1) from member_payout p where p.yearmonth=pl.yearmonth and p.member_id = pl.member_id) cnt
+                from member_dl_plings pl
+                where pl.member_id =:member_id and yearmonth > 201704
+                and is_license_missing = 0
+                and is_source_missing = 0
+                and is_pling_excluded = 0
+                group by yearmonth
+                order by yearmonth
+        ";
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('member_id' => $member_id));
+        return $resultSet;
+    }
+
 }
