@@ -936,7 +936,7 @@ $this->inlineScript()->appendScript('
                     $modalChanglog.find('#update-list').html('');
                     var productId = <?= isset($this->project_id)?$this->project_id:0 ?>;
                     $.ajax({
-                        url: '<?=$helpCollectionUrl->buildProjectUrl($this->project_id, 'getupdatesajax')?>',
+                        url: '<?=$helpCollectionUrl->buildProductUrl($this->project_id, 'getupdatesajax')?>',
                         type: 'GET',
                         data: {
                             format: 'json',
@@ -1030,7 +1030,7 @@ $this->inlineScript()->appendScript('
                     event.preventDefault();
 
                     $.ajax({
-                        url: '<?=$helpCollectionUrl->buildProjectUrl($this->project_id, 'saveupdateajax')?>',
+                        url: '<?=$helpCollectionUrl->buildProductUrl($this->project_id, 'saveupdateajax')?>',
                         type: 'POST',
                         data: {title: title, text: text, update_id: update_id},
                         dataType: 'json',
@@ -1056,7 +1056,7 @@ $this->inlineScript()->appendScript('
                     event.preventDefault();
 
                     $.ajax({
-                        url: '<?=$helpCollectionUrl->buildProjectUrl($this->project_id, 'deleteupdateajax')?>',
+                        url: '<?=$helpCollectionUrl->buildProductUrl($this->project_id, 'deleteupdateajax')?>',
                         type: 'POST',
                         data: {update_id: updateId},
                         dataType: 'json',
