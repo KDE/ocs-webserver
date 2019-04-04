@@ -805,6 +805,34 @@ class UserController extends Local_Controller_Action_DomainSwitch
             }
         }
 
+        $model = new Default_Model_StatDownload();
+        $resultSet = $model->getPayoutHistory($this->view->member->member_id);        
+
+        $this->view->payouthistory=$resultSet;
+
+
+    }
+    
+
+    public function _payouthistoryAction()
+    {
+
+        $tableMember = new Default_Model_Member();
+        $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+
+        //backdoor for admins
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+            if($this->_memberId!=$this->_authMember->member_id)
+            {
+                throw new Zend_Controller_Action_Exception('no authorization found');
+            }
+        }
+
         // these are already payed
         $sql="select yearmonth, amount from member_payout where member_id = :member_id order by yearmonth asc";
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql,array('member_id' =>$this->view->member->member_id));

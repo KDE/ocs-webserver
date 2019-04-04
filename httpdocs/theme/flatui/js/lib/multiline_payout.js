@@ -1,7 +1,6 @@
 
 function makeLineChart(dataset, xName, yObjs, axisLables) {
-    var chartObj = {};
-     console.log(dataset);
+    var chartObj = {};     
     var color = d3.scaleOrdinal().range(["#1F77B4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c"
         ,"#98df8a","#d62728","#ff9896","#9467bd","#c5b0d5"
         ,"#8c564b","#c49c94","#e377c2","#f7b6d2","#7f7f7f"
@@ -175,6 +174,40 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
 
 
         chartObj.svg.append("g").attr("class", "y axis").call(chartObj.yAxis).append("text").attr("class", "label").attr("transform", "rotate(-90)").attr("y", -42).attr("x", -chartObj.height / 2).attr("dy", ".71em").style("text-anchor", "middle").text(chartObj.yAxisLable);
+
+       
+        
+        var datasetNotDone = dataset.filter(d => d.cnt == 0);
+        var datasetDone = dataset.filter(d => d.cnt == 1);
+        
+        
+         for (var y  in yObjs) {
+        // Appends a circle for each datapoint 
+            chartObj.svg.selectAll(".dot")
+            .data(datasetDone)
+            .enter().append("circle") // Uses the enter().append() method
+            .attr("class", "dot") // Assign a class for styling
+            .attr("cx", function(d) { return chartObj.xScale(chartObj.xFunct(d)) })
+            .attr("cy", function(d) { return chartObj.yScale(yObjs[y].yFunct(d)) })
+            .attr("r", 5);
+                
+            }
+
+          for (var y  in yObjs) {
+        // Appends a circle for each datapoint 
+            chartObj.svg.selectAll(".dotRed")
+            .data(datasetNotDone)
+            .enter().append("circle") // Uses the enter().append() method
+            .attr("class", "dotRed") // Assign a class for styling
+            .attr("cx", function(d) { return chartObj.xScale(chartObj.xFunct(d)) })
+            .attr("cy", function(d) { return chartObj.yScale(yObjs[y].yFunct(d)) })
+            .attr("r", 5);
+                
+            }
+
+         
+
+
 
         //Draw tooltips
         var focus = chartObj.svg.append("g").attr("class", "focus").style("display", "none");
