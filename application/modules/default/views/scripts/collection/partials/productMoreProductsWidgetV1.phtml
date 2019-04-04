@@ -52,7 +52,7 @@ $helpBuildCollectionUrl = new Default_View_Helper_BuildCollectionUrl();
                                 </div>">
                         <!-- product thumbnail -->
                         <a
-                            href="<?= $helpBuildCollectionUrl->buildCollectionUrl($product->project_id) ?>"
+                            href="<?= $helpBuildCollectionUrl->buildProjectUrl($product->project_id) ?>"
                             title="<?= $product->title ?>">
                             <img src="<?= $helpImage->Image($product->image_small, array('width' => 200, 'height' => 200)); ?>"
                                  alt="product">

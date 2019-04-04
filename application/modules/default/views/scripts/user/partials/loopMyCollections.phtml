@@ -56,7 +56,7 @@ $helperImage = new Default_View_Helper_Image();
                 $versionTextOnly = $version = Default_Model_HtmlPurify::purify($this->version);
               	$description = Default_Model_HtmlPurify::purify($object_text);
            	?>
-            <h3><a href="<?= $helperBuildCollectionUrl->buildCollectionUrl($this->project_id) ?>"><?php echo $this->title; ?> <?php echo $version; ?></a><span  style="font-weight: normal; font-size: small; color: #4e4e4e"> added </span><span  style="font-weight: 700; font-size: small; color: #4e4e4e"><?= $addedOnText ?> ago</span><span style="font-weight: 700; font-size: small; float: right; color: #4e4e4e"> <?= $updatedOnText ?> ago</span><span style="font-weight: normal; font-size: small; float: right; color: #4e4e4e">updated&nbsp;</span></h3>
+            <h3><a href="<?= $helperBuildCollectionUrl->buildProjectUrl($this->project_id) ?>"><?php echo $this->title; ?> <?php echo $version; ?></a><span  style="font-weight: normal; font-size: small; color: #4e4e4e"> added </span><span  style="font-weight: 700; font-size: small; color: #4e4e4e"><?= $addedOnText ?> ago</span><span style="font-weight: 700; font-size: small; float: right; color: #4e4e4e"> <?= $updatedOnText ?> ago</span><span style="font-weight: normal; font-size: small; float: right; color: #4e4e4e">updated&nbsp;</span></h3>
 
         </div>
         <!-- /title -->
@@ -170,7 +170,7 @@ $helperImage = new Default_View_Helper_Image();
 
             <!--  manage -->
             <div class="manage-btns pull-right margin-left-20">
-                <a role="button" href="<?= $helperBuildCollectionUrl->buildCollectionUrl($this->project_id, 'edit') ?>" class="btn btn-native" style="padding: 3px 6px;font-size: 12px;">
+                <a role="button" href="<?= $helperBuildCollectionUrl->buildProjectUrl($this->project_id, 'edit') ?>" class="btn btn-native" style="padding: 3px 6px;font-size: 12px;">
                     <?= $this->translate('Edit') ?>
                 </a>
                 
@@ -200,12 +200,12 @@ $helperImage = new Default_View_Helper_Image();
                 <!-- /updates -->
                 <span class="publish-product-wrapper">
                     <?php $p_action = $this->isProjectActive($this->project_status) ? 'unpublish' : 'publish' ?>
-                    <a href="<?= $helperBuildCollectionUrl->buildCollectionUrl($this->project_id, $p_action, array('m' => $this->member_id)) ?>"
+                    <a href="<?= $helperBuildCollectionUrl->buildProjectUrl($this->project_id, $p_action, array('m' => $this->member_id)) ?>"
                         style="padding: 3px 6px;font-size: 12px;" class="btn btn-native <?=($p_action=='unpublish')?'btn-pling-green':'btn-pling-red'?> " data-target="#<?= $loopProductId ?> .publish-product-wrapper">
                         <?=ucfirst($p_action) ?>
                     </a>
                 </span>
-                <form method="post" action="<?= $helperBuildCollectionUrl->buildCollectionUrl($this->project_id, 'delete', array('m' => $this->member_id)) ?>" class="inline">
+                <form method="post" action="<?= $helperBuildCollectionUrl->buildProjectUrl($this->project_id, 'delete', array('m' => $this->member_id)) ?>" class="inline">
                     <button data-title="Delete Confirmation" data-callback="defaultCallbackConfirmation" data-message="Do you really want to delete this product?<br>This is permanent and can not be undone!" aria-label="Delete" class="btn btn-native btn-pling-red remove" style="font-size: 12px;padding: 3px 6px;">
                         Delete
                     </button>

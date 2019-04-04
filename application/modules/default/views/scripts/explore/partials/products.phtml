@@ -21,14 +21,21 @@
  **/
 
 $helperPrintDate = new Default_View_Helper_PrintDate();
-$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+
+
+//Check if this is a collection
+$collCatId = Zend_Registry::get('config')->settings->client->default->collection_cat_id;
+
+        
 $helperImage = new Default_View_Helper_Image();
 
 $this->rownum = (1 + (($this->page - 1) * 10));
 foreach ($this->products as $this->product) {
     $updateTime = $helperPrintDate->printDate($this->product->project_changed_at);
-
-
+    $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+    if($collCatId == $this->product->project_category_id) {
+        $helperBuildProductUrl = new Default_View_Helper_BuildCollectionUrl();
+    }
 ?>
 <div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12">
     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">

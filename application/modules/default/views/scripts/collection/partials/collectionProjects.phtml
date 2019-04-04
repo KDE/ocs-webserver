@@ -32,7 +32,7 @@
         </div> 
         <div class="col-lg-5 col-md-5">
             <figure>
-                <img src="<?php echo $this->Image($project->image_small, array('width' => 80, 'height' => 80)); ?>" class="downloadhistory-image" />
+                <img width="80" src="<?php echo $this->Image($project->image_small, array('width' => 80, 'height' => 80)); ?>" class="downloadhistory-image" />
             </figure>   
             <div>
                 <a href="<?= $this->buildProductUrl($project->project_id) ?>"><?=$project->title?></a>

@@ -32,7 +32,7 @@ class Default_View_Helper_BuildCollectionUrl
      *
      * @return string
      */
-    public function buildCollectionUrl($product_id, $action = '', $params = null, $withHost = false, $scheme = null)
+    public function buildProductUrl($product_id, $action = '', $params = null, $withHost = false, $scheme = null)
     {
         if (empty($product_id)) {
             return '';
@@ -76,5 +76,5 @@ class Default_View_Helper_BuildCollectionUrl
 
         return "{$host}/{$storeId}c/{$product_id}/{$action}{$url_param}";
     }
-
+    
 }
