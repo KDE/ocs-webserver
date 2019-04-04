@@ -394,8 +394,8 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         }
 
         //update the gallery pics
-        $mediaServerUrls = $this->saveGalleryPics($form->gallery->upload->upload_picture);
-        $modelProject->updateGalleryPictures($newProject->project_id, $mediaServerUrls);
+        //$mediaServerUrls = $this->saveGalleryPics($form->gallery->upload->upload_picture);
+        //$modelProject->updateGalleryPictures($newProject->project_id, $mediaServerUrls);
 
         //If there is no Logo, we take the 1. gallery pic
         if (!isset($values['image_small']) || $values['image_small'] == '') {
@@ -406,6 +406,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         //New Project in Session, for AuthValidation (owner)
         $this->_auth->getIdentity()->projects[$newProject->project_id] = array('project_id' => $newProject->project_id);
 
+        /*
         $modelTags = new Default_Model_Tags();
         if ($values['tagsuser']) {
             $modelTags->processTagsUser($newProject->project_id, implode(',', $values['tagsuser']),Default_Model_Tags::TAG_TYPE_PROJECT);
@@ -431,6 +432,8 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         if ($isGitlabProject && $gitlabProjectId == 0) {
             $values['gitlab_project_id'] = null;
         }
+         * 
+         */
 
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($newProject->project_id, $newProject->member_id, Default_Model_ActivityLog::PROJECT_CREATED, $newProject->toArray());
@@ -442,7 +445,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $modeCollection = new  Default_Model_DbTable_CollectionProjects();
         $modeCollection->setCollectionProjects($this->_projectId, $projectIds);
         
-        $modelTags->processTagProductOriginal($newProject->project_id);
+        //$modelTags->processTagProductOriginal($newProject->project_id);
         
         
         try {
