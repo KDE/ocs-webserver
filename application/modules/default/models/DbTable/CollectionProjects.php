@@ -79,7 +79,7 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
                  AND project.type_id = 1
                  AND project.status = 100
                  AND project.project_id not in ($withoutProjectIds)
-                 AND (project.title like('%".$search."%') OR project.description like('%".$search."%'))
+                 AND (project.title like('%".$search."%'))
                  ORDER BY project.changed_at desc, project.created_at DESC
                  LIMIT 50";
         $resultSet = $this->getAdapter()->fetchAll($sql, array('member_id' => $member_id));
@@ -104,7 +104,7 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
                  AND project.type_id = 1
                  AND project.status = 100
                  AND project.project_id not in ($withoutProjectIds)
-                 AND (project.title like('%".$search."%') OR project.description like('%".$search."%'))
+                 AND (project.title like('%".$search."%'))
                  ORDER BY project.changed_at desc, project.created_at DESC
                  LIMIT 50";
         $resultSet = $this->getAdapter()->fetchAll($sql, array('member_id' => $member_id));

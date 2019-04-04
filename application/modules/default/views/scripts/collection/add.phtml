@@ -393,7 +393,7 @@ $this->inlineScript()->appendScript('
                                 
                                 <h3>Products</h3>
                                 
-                                <div id="div-collection-projects" style="width: 500px;float: left;">
+                                <div id="div-collection-projects" style="width: 550px;float: left;margin-top: 35px;">
                                     
                                     <caption style="width: 100%;padding-top: 34px;"> <h4>Drop the Products here</h4> </caption>
                                     
@@ -404,12 +404,15 @@ $this->inlineScript()->appendScript('
                                             </tr>
                                         </tbody>
                                     </table>
+                                    
+                                    
                                 </div> 
                                 
                                 <div id="div-projects" style="width: 550px;float: left;">
                                     <input class="form-control" width="10" type="text" id="search_products" alt="" placeholder="Search (min 3 Chars)">
                                     
                                     <caption style="width: 100%;"><h4>Drag the Products from here (activily published)</h4></caption>
+                                    
                                     
                                     <div id="tabs">
                                         <ul>
@@ -896,7 +899,12 @@ $this->inlineScript()->appendScript('
                     }).disableSelection();
                     
 
-                    var $tab_items = $divCollectionProjects.find('table[data-collection-projects] tbody').droppable({
+
+
+
+
+                    //var $tab_items = $divCollectionProjects.find('table[data-collection-projects] tbody').droppable({
+                    var $tab_items = $divCollectionProjects.find('table[data-collection-projects]').droppable({
                       accept: ".t_sortable tr",
                       hoverClass: "ui-state-hover",
                       drop: function( event, ui ) { 
