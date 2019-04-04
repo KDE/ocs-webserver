@@ -1114,7 +1114,7 @@ $this->tab = 'products';
 
                     }
                     newFileTags += ','+tagGroupName+'id-'+tagId;
-                    updatePploadFileTags(fileId, newFileTags);
+                    //updatePploadFileTags(fileId, newFileTags);
                     $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
                     updateFileTag(fileId, tagId, tagGroupId);
                 });
