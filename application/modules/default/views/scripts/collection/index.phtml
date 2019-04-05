@@ -813,6 +813,27 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                 </div>
                             </div>
                         <?php } ?>
+                        
+                        <div class="prod-widget-box right ">
+
+                                <div class="projectdtailHeart">
+
+
+                                    <div id="container-pling<?=$this->product->project_id?>" class="container-pling" >
+                                    <?php
+                                        echo $this->partial(
+                                            '/collection/partials/projectplings.phtml',
+                                            array(
+                                                "authMember"  => $identity,
+                                                "project_id" => $this->product->project_id,
+                                                "ppload_collection_id" => $this->product->ppload_collection_id,
+                                                "project_category_id" => $this->product->project_category_id
+                                            )
+                                        );
+                                    ?>
+                                    </div>
+                                </div>
+                        </div>
 
                         <div>
                             <?php
