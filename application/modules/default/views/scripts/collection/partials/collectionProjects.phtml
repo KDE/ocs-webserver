@@ -31,17 +31,17 @@
             </figure>   
         </div> 
         <div class="col-lg-5 col-md-5">
-            <figure>
+            <figure style="display: block;float: left;">
                 <img width="80" src="<?php echo $this->Image($project->image_small, array('width' => 80, 'height' => 80)); ?>" class="downloadhistory-image" />
             </figure>   
-            <div>
-                <a href="<?= $this->buildProductUrl($project->project_id) ?>"><?=$project->title?></a>
-                
+            <div style="margin-left: 95px">
+                <a href="<?= $this->buildProductUrl($project->project_id) ?>"><?=$project->title?></a>                
             </div>
         </div>      
                     
         <div class="col-lg-2 col-md-2">  
-            <!--
+            by <a href="/u/<?php echo $project->username?>"><?php echo $project->username?></a>
+           <?php /*
             <div class="rating text-center" >               
                 <?php                
                         $this->widgetRating = new stdClass();
@@ -52,13 +52,13 @@
                         echo $this->render('partials/widgetRating.phtml'); 
                 ?>          
             </div>            
-            -->
+            */?>
         </div>
 
         <div class="col-lg-3" >                                                                    
-            <!--
+            <?php /*
                     <?=$this->printDate($project->created_at)?>
-            -->
+            */?>
         </div>
 
       </div>
