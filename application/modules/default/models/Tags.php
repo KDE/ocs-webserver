@@ -39,9 +39,6 @@ class Default_Model_Tags
     const TAG_PRODUCT_ORIGINAL_GROUPID = 11;
     const TAG_PRODUCT_ORIGINAL_ID = 2451;
     
-    const TAG_COLLECTION_GROUPID = 24;
-    const TAG_COLLECTION_ID = 3196;
-    
     const TAG_PRODUCT_EBOOK_GROUPID = 14;
     const TAG_PRODUCT_EBOOK_AUTHOR_GROUPID = 15;
     const TAG_PRODUCT_EBOOK_EDITOR_GROUPID = 16;
@@ -1091,5 +1088,43 @@ class Default_Model_Tags
             $tag_names[]=$tag['tag_fullname'];
         }
         return $tag_names;
+    }
+    
+    
+    
+    public function saveCollectionTypeTagForProject($object_id, $tag_id) {
+        
+        $tableTags = new Default_Model_DbTable_Tags();
+        
+        $collectionTagGroup = Zend_Registry::get('config')->settings->client->default->tag_group_collection_type_id;
+        
+        
+        $tags = $tableTags->fetchTagsForProject($object_id, $collectionTagGroup);        
+        if(count($tags) ==0){
+            //insert new tag
+            if($tag_id) {
+                $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_group_id)";
+                $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_PROJECT, 'tag_object_id' => $object_id, 'tag_group_id' => $collectionTagGroup));
+            }
+        }else
+        {
+            $tag = $tags[0];
+            
+            //remove tag license
+            if(!$tag_id) {
+                //$sql = "DELETE FROM tag_object WHERE tag_item_id = :tagItemId";
+                $sql = "UPDATE tag_object set tag_changed = NOW() , is_deleted = 1  WHERE tag_item_id = :tagItemId";
+                $this->getAdapter()->query($sql, array('tagItemId' => $tag['tag_item_id']));
+            } else {
+                //Update old tag
+                if($tag_id <> $tag['tag_id']) {
+                    $sql = "UPDATE tag_object SET tag_changed = NOW(),tag_id = :tag_id WHERE tag_item_id = :tagItemId";
+                    $this->getAdapter()->query($sql, array('tagItemId' => $tag['tag_item_id'], 'tag_id' => $tag_id));
+                }
+            }
+
+        }
+        
+        
     }
 }

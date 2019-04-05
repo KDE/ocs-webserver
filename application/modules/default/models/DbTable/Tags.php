@@ -263,8 +263,8 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     {
         return $this->fetchTagsForProject($projectId, $this::TAG_GROUP_LICENSE);
     }
-        
-
+    
+    
     /**
      * @param int $projectId
      * @return array
