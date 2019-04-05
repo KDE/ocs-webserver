@@ -107,8 +107,11 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                              </tr>
                              </thead>
                              <tbody></tbody>
+                             <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                              <tfoot>
                              </tfoot>
+                                 <?php endif; ?>
+                             
                          </table>
 
 
@@ -622,19 +625,21 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
 
                                 ?>
                                 
-
-                                 $pploadCollection.find('table[data-ppload-files] tfoot').append(
-                                     '<tr>'
-                                     + '<th colspan="' + colsStart + '">' + myArrayActive.length + ' <?= $this->translate("files")?> (<span style="color: #ccc;" ><a style="cursor:pointer" onclick="fnToggleInactiveFiles();return false;">'+myArrayInactive.length+' archived</a></span>)</th>'
-                             
-                                     + '<th style="text-align: right">' + downloaded_count_total + '</th>'
-                                     + '<th></th>'
-                                    + '<th style="text-align: right">' + fileSizeSum.toFixed(2) + ' MB</th>'
-                                     //+ '<th style="text-align: right">' + humanFileSize(fileSizeSum) + '</th>'
-                                     + '<th></th>'
-                                       + '<th></th>'
-                                     + '</tr>'
-                                 );
+                                if($pploadCollection.find('table[data-ppload-files] tfoot'))
+                                {
+                                     $pploadCollection.find('table[data-ppload-files] tfoot').append(
+                                         '<tr>'
+                                         + '<th colspan="' + colsStart + '">' + myArrayActive.length + ' <?= $this->translate("files")?> (<span style="color: #ccc;" ><a style="cursor:pointer" onclick="fnToggleInactiveFiles();return false;">'+myArrayInactive.length+' archived</a></span>)</th>'
+                                 
+                                         + '<th style="text-align: right">' + downloaded_count_total + '</th>'
+                                         + '<th></th>'
+                                        + '<th style="text-align: right">' + fileSizeSum.toFixed(2) + ' MB</th>'
+                                         //+ '<th style="text-align: right">' + humanFileSize(fileSizeSum) + '</th>'
+                                         + '<th></th>'
+                                           + '<th></th>'
+                                         + '</tr>'
+                                     );
+                                 }
 
                                  $pploadCollection.find('a[data-ppload-download-link]').attr(
                                      'href',
