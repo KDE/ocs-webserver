@@ -21,7 +21,12 @@
  **/
 
 $model = new Default_Model_Tags();
+$tableTags = new Default_Model_DbTable_Tags();
 $tags = $model->getTagsSystemList($this->product->project_id); 
+$collectionTagGroup = Zend_Registry::get('config')->settings->client->default->tag_group_collection_type_id;
+$tagsCollection = $tableTags->fetchTagsForProject($this->product->project_id, $collectionTagGroup);  
+$tags = array_merge($tags,$tagsCollection);
+
 ?>
 <div class="prod-widget-box right details">
 
@@ -30,7 +35,7 @@ $tags = $model->getTagsSystemList($this->product->project_id);
     <span class="row">
         <?php if(false === empty($tags))
         {
-        foreach ($tags as $tag) {            
+        foreach ($tags as $tag) {  
                 $filterfield = 'tags';
                 if($tag['tag_group_id']==Default_Model_Tags::TAG_LICENSE_GROUPID){
                         $filterfield = 'license_names';

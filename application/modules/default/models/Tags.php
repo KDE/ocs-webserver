@@ -256,7 +256,7 @@ class Default_Model_Tags
 
     
 
-      /**
+    /**
      * @param int $object_id
      * @param int $tag_type
      *

@@ -294,7 +294,7 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     {
            $typeId = $this::TAG_TYPE_PROJECT;        
             $sql = "
-                SELECT `to`.*, t.tag_fullname FROM tag_object `to`
+                SELECT `to`.*, t.tag_fullname, t.tag_name FROM tag_object `to`
                 JOIN tag t on t.tag_id = to.tag_id
                 JOIN tag_group_item g on g.tag_id = t.tag_id 
                 WHERE g.tag_group_id = $groupId
