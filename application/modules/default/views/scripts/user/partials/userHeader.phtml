@@ -83,8 +83,9 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
     </li>
     
     <li class="header-menu-left-item <?php echo $this->tab == 'payouthistory' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payouthistory'); ?>">           
-            <i class="glyphicon glyphicon-stats"></i>
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payouthistory'); ?>"                       
+            <i class="fa fa-line-chart" aria-hidden="true"></i>
+
             <?= $this->translate('Payout-History') ?>
         </a>
     </li>
