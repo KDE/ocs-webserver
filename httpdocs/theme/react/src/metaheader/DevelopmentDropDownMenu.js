@@ -67,7 +67,7 @@ class DevelopmentDropDownMenu extends React.Component {
       <li ref={node => this.node = node} id="admins-dropdown-menu" className={this.state.dropdownClass}>
         <a className="admins-menu-link-item">Development</a>
         <ul className="dropdown-menu dropdown-menu-right">
-          <li><a href={this.props.gitlabUrl + "/explore/projects"}>Projects</a></li>
+          <li><a href={this.props.gitlabUrl + "/explore/projects"}>Opencode.net</a></li>
           {issuesMenuItem}
           {gitfaqLinkItem}
         </ul>

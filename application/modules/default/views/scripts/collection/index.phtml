@@ -103,6 +103,26 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 }
 
 ?>
+<style type="text/css">
+    .collection-panels{
+        background: none repeat scroll 0 0 #fff;
+        height: auto;     
+        border-radius: 0;
+        padding: 15px;
+        float: left;
+        width: 100%;
+        margin: 0;
+      
+    }
+    span.downloadlink
+    {
+        white-space: normal; color: #23527c;
+    }
+    span.filesize
+    {
+        float: right;
+    }
+</style>
 
 
     <link href="/theme/react/assets/css/get-it.css" type="text/css" rel="stylesheet"/>
@@ -404,6 +424,26 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                 </div>
                             </div>
                         </div>
+
+                        <div style="padding-left: 25px;">   
+                            <?php
+                                    if($this->product->is_gitlab_project && $this->product->use_gitlab_project_readme && null != $this->gitlab_project['readme_url']) {
+                                    ?>
+                                    <article>
+                                        <b>Description:</b> <br/><br/>
+                                        <?=$this->readme ?><br/><br/>
+                                    </article>
+                                    <?php
+                                        } else {
+                                    ?>
+                                    <article>
+                                        <b>Description:</b> <br/><br/>
+                                        <?=$this->product->description ?>
+                                     </article>
+                                  <?php  }?>
+                        </div>
+
+                        <?php /* replace carousel part with info description
                         <div id="carouselContainer" class="carouselContainer">
                             <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
 
@@ -467,21 +507,25 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                     <a class="right carousel-control" href="#myCarousel" data-slide="next">
                                         <span class="glyphicon glyphicon-chevron-right"></span>
                                     </a>
-                                <?php } ?>
+                                <?php } ?> 
                             </div><!-- End Carousel -->
                         </div>
-
+                    */?>
 
                     </div>
                 </div>
+
+                
 
                 <div class="flex-item-24" id="product-tabs-container">
                     <!-- TABS -->
                     <div id="product-tabs" class="pling-nav-tabs">
                         <ul class="nav nav-tabs ">
+                            <?php /*
                             <li class="active"><a href="#about-panel" data-toggle="tab">Info</a></li>
+                            */?>
                         <?php if(count($this->collection_projects)>0){ ?>
-                            <li><a href="#products-panel" data-toggle="tab">Products <?php echo '('.count($this->collection_projects).')';  ?></a></li>
+                            <li class="active"><a href="#products-panel" data-toggle="tab">Products <?php echo '('.count($this->collection_projects).')';  ?></a></li>
                         <?php } ?>
                         <?php if(count($this->updates)>0){ ?>
                             <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php echo '('.count($this->updates).')';  ?></a></li>
@@ -502,12 +546,11 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 
                     <!-- PANELS -->
 
-                    <div class="tab-content row" id="product-panels">
+                    <div class="tab-content row collection-panels">
 
                         <!-- ABOUT -->
-                        <div class="tab-pane active" id="about-panel">
-
-
+                        <?php /*
+                        <div class="tab-pane active" id="about-panel">                            
                             <div id="product-about" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 
                                 <div>
@@ -690,12 +733,13 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 
 
                         </div>
-                        <!-- /ABOUT -->
-                        
+                        <!-- /ABOUT -->                        
+                        */?>
+
                         <!-- collectionProducts -->
                         <?php
                         if (count($this->collection_projects) > 0) { ?>
-                        <div class="tab-pane" id="products-panel">
+                        <div class="tab-pane active" id="products-panel">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 
                             <article>
@@ -896,5 +940,6 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
             PartialsButtonPlingProject.setup();
             TooltipUser.setup("tooltipuserleft","left");
             AppimagequestionOnClick.setup();
+            Opendownloadfile.setup();
         });
     ');

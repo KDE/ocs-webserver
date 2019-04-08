@@ -25,6 +25,7 @@ $helperImage = new Default_View_Helper_Image();
 $helpTruncate = new Default_View_Helper_Truncate();
 
 $this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
+
 $desc=  isset($this->mainProject->description) ? nl2br(strip_tags($this->mainProject->description)): $this->member->username;
 $this->headMeta()->setName('description',
     $helpTruncate->truncate($desc, 200, '...', false, true));
@@ -460,8 +461,8 @@ div#preloaded-images {
                             <div class="well details about">
                                 <h3>About me</h3>
 
-                                <div>
-                                    <?php echo isset($this->mainProject->description) ? nl2br(strip_tags($this->mainProject->description)): ''; ?>
+                                <div>                                    
+                                 <?php  echo isset($this->mainProject->description) ? $this->Bbcode2html($this->mainProject->description): ''; ?>
                                 </div>
                             </div>
                         </div>

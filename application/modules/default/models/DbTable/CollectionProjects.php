@@ -27,9 +27,11 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
 
     public function getCollectionProjects($project_id)
     {
-        $sql = " SELECT project.*, collection_projects.order
+        $sql = " SELECT project.title, project.project_id, project.image_small, member.username, member.member_id,collection_projects.order, project.ppload_collection_id
+
                  FROM collection_projects
                  JOIN project ON project.project_id = collection_projects.project_id
+                 JOIN member ON member.member_id = project.member_id
                  WHERE collection_projects.collection_id = :project_id
                  AND collection_projects.active = 1
                  AND project.type_id = 1
@@ -63,7 +65,7 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
     }
     
     
-    public function getProjectsForMember($collection_id, $member_id)
+    public function getProjectsForMember($collection_id, $member_id, $search)
     {
         
         $withoutProjectIds = implode(',',$this->getCollectionProjectIds($collection_id));
@@ -71,14 +73,41 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
             $withoutProjectIds = "0";
         }
         
-        $sql = " SELECT project.*
+        $sql = " SELECT project.title, project.project_id, project.image_small, member.username, member.member_id
                  FROM project
+                 JOIN member ON member.member_id = project.member_id
                  WHERE project.member_id = :member_id
                  AND project.type_id = 1
                  AND project.status = 100
                  AND project.project_id not in ($withoutProjectIds)
+                 AND (project.title like('%".$search."%'))
                  ORDER BY project.changed_at desc, project.created_at DESC
-                 LIMIT 100";
+                 LIMIT 50";
+        $resultSet = $this->getAdapter()->fetchAll($sql, array('member_id' => $member_id));
+        
+        
+        return $resultSet;
+    }
+    
+    
+    public function getProjectsForAllMembers($collection_id, $member_id, $search)
+    {
+        
+        $withoutProjectIds = implode(',',$this->getCollectionProjectIds($collection_id));
+        if(empty($withoutProjectIds)) {
+            $withoutProjectIds = "0";
+        }
+        
+        $sql = " SELECT project.title, project.project_id, project.image_small, member.username, member.member_id
+                 FROM project
+                 JOIN member ON member.member_id = project.member_id
+                 WHERE project.member_id <> :member_id
+                 AND project.type_id = 1
+                 AND project.status = 100
+                 AND project.project_id not in ($withoutProjectIds)
+                 AND (project.title like('%".$search."%'))
+                 ORDER BY project.changed_at desc, project.created_at DESC
+                 LIMIT 50";
         $resultSet = $this->getAdapter()->fetchAll($sql, array('member_id' => $member_id));
         
         
