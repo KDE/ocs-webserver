@@ -20,7 +20,8 @@
         d.label = d.username+'['+d.amount+']';
         d.value = +d.amount;
         d.member = +d.member_id;
-        d.username = d.username;      
+        d.username = d.username;            
+
     });
 
     var amountTotal = 0;
@@ -96,11 +97,12 @@
                 console.log(a);
                 d3.select('#detailContainer').html('');
 
-                var dh='<table>';
+                 var dh='<table>';
                  var da = a.data.groupedData;                   
-                 dh=dh+'<tr><td>#'+da.length+'</td><td>'+a.data.value+'</td></tr>';
-                 da.forEach(function(d, i) {
-                      dh=dh+'<tr><td><a target="_blank" href="https://opendesktop.org/member/'+d.member+'">'+d.member+'</a></td><td>'+d.value+'</td></tr>';                      
+                 dh=dh+'<tr><td>#'+da.length+'</td><td>'+a.data.value+'</td><td colspan="3"></td></tr>';
+                 dh=dh+'<tr><td>id</td><td>payout</td><td>username</td><td>mail</td><td>paypal</td></tr>';                 
+                 da.forEach(function(d, i) {                      
+                      dh=dh+'<tr><td style="padding-right:20px"><a target="_blank" href="https://opendesktop.org/member/'+d.member+'">'+d.member+'</a></td><td>'+d.value+'</td><td>'+d.username+'</td><td>'+d.mail+'</td><td>'+d.paypal_mail+'</td></tr>';                      
                   });
                  dh=dh+'</table>';
                 d3.select('#detailContainer').html(dh);
