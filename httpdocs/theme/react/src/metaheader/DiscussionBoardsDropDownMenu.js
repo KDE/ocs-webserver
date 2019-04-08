@@ -80,7 +80,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
           <li><a href={this.props.forumUrl }>General</a></li>
           <li><a href={this.props.forumUrl + "/c/themes"}>Themes</a></li>
           <li><a href={this.props.forumUrl + "/c/apps"}>Apps</a></li>
-          <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
+          <li><a href={this.props.forumUrl + "/c/openocde"}>Opencode</a></li>
         </ul>
       </li>
     );
