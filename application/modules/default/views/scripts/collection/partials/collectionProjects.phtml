@@ -20,8 +20,17 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
     $i = 0;
+    
+
     foreach ($this->collection_projects as $project): 
-        $project=(object)$project;
+        $project=(object)$project;   
+        $ppload_collection_id = $project->ppload_collection_id;
+        $files=array();
+        $files_toinstall=array();
+        foreach ($this->collection_projects_dls as $f) {
+            if($f['collection_id']==$ppload_collection_id) $files[]=$f;
+            if($f['collection_id']==$ppload_collection_id && $f['ocs_compatible']==1) $files_toinstall[]=$f;
+        }
         $i++;
 ?>
 <div class="row smaller " style="padding-bottom: 10px;border-bottom: 1px solid lightgray;margin-top: 10px;" >
@@ -37,9 +46,13 @@
             <div style="margin-left: 95px">
                 <a href="<?= $this->buildProductUrl($project->project_id) ?>"><?=$project->title?></a>                
             </div>
+
+             <div style="margin-left: 95px">
+                <a href="<?= $this->buildProductUrl($project->project_id) ?>"><?=$project->ppload_collection_id?></a>                
+            </div>
         </div>      
                     
-        <div class="col-lg-2 col-md-2">  
+        <div class="col-lg-2 col-md-1">  
             by <a href="/u/<?php echo $project->username?>"><?php echo $project->username?></a>
            <?php /*
             <div class="rating text-center" >               
@@ -54,6 +67,40 @@
             </div>            
             */?>
         </div>
+        <div class="col-lg-2 col-md-1">  
+           <?php 
+             if(sizeof($files)>0)
+             {
+            ?>
+            <div  class="btn-group dropleft" style="width: 100%">
+                <button style="width: 100%" id="project_btn_download" class="btn active btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Download
+                <span class="caret"></span></button>
+                <ul class="dropdown-menu active" id="dropdown_downloads" style="min-width: 270px;">   
+                <?php
+                foreach ($files as $f) {
+                    echo '<li>'.$this->buildDownloadLink($f,$project,'download').'</li>';
+                }
+                ?>                
+                </ul>
+            </div>
+            <?php } ?>
+            <?php 
+             if(sizeof($files_toinstall)>0)
+             {
+            ?>
+            <div id="project_btn_grp_install" class="btn-group dropleft " style="width: 100%; padding-top: 10px;">
+                <button style="width: 100%" id="project_btn_install" class="btn btn-primary dropdown-toggle disabled hide" type="button" data-toggle="dropdown">Install
+                <span class="caret"></span></button>
+                <ul class="dropdown-menu hide" id="dropdown_installs" style="min-width: 270px; top:50px">           <?php
+                foreach ($files_toinstall as $f) {
+                    echo '<li>'.$this->buildDownloadLink($f,$project,'install').'</li>';
+                }
+                ?>           
+                </ul>                
+            </div>
+        <?php } ?>
+            
+        </div>
 
         <div class="col-lg-3" >                                                                    
             <?php /*
@@ -64,5 +111,6 @@
       </div>
 
  <?php endforeach; ?>
+
 
  

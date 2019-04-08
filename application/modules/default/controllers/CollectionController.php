@@ -293,7 +293,17 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $this->view->product = $productInfo;
         
         $this->view->collection_projects = $this->getCollectionProjects(); 
-        
+
+        $collection_ids = array();
+        foreach ($this->view->collection_projects as $value) {
+            if($value['ppload_collection_id']) $collection_ids[] = $value['ppload_collection_id'];
+        }
+
+        $filesmodel = new Default_Model_DbTable_PploadFiles();
+        $this->view->collection_projects_dls = $filesmodel->fetchAllFilesForCollection($collection_ids); 
+
+        //$this->view->collection_ids = $collection_ids;
+
         $this->view->headTitle($productInfo->title . ' - ' . $this->getHeadTitle(), 'SET');
         
         $this->view->cat_id = $this->view->product->project_category_id;

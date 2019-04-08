@@ -40,11 +40,6 @@ class DomainsMenu extends React.Component {
         <DomainsDropDownMenu
           domains={this.props.domains}
         />
-        <DiscussionBoardsDropDownMenu
-          forumUrl={this.props.forumUrl}
-          user={this.props.user}
-          baseUrl={this.props.baseUrl}
-        />
         <DevelopmentDropDownMenu
           user={this.props.user}
           baseUrl={this.props.baseUrl}
@@ -52,6 +47,12 @@ class DomainsMenu extends React.Component {
           isAdmin={this.props.isAdmin}
           isExternal = {this.props.isExternal}
         />
+        <DiscussionBoardsDropDownMenu
+          forumUrl={this.props.forumUrl}
+          user={this.props.user}
+          baseUrl={this.props.baseUrl}
+        />
+        
         {moreMenuItemDisplay}
       </ul>
     )

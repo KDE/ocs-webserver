@@ -103,6 +103,26 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 }
 
 ?>
+<style type="text/css">
+    .collection-panels{
+        background: none repeat scroll 0 0 #fff;
+        height: auto;     
+        border-radius: 0;
+        padding: 15px;
+        float: left;
+        width: 100%;
+        margin: 0;
+      
+    }
+    span.downloadlink
+    {
+        white-space: normal; color: #23527c;
+    }
+    span.filesize
+    {
+        float: right;
+    }
+</style>
 
 
     <link href="/theme/react/assets/css/get-it.css" type="text/css" rel="stylesheet"/>
@@ -526,7 +546,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 
                     <!-- PANELS -->
 
-                    <div class="tab-content row" id="product-panels">
+                    <div class="tab-content row collection-panels">
 
                         <!-- ABOUT -->
                         <?php /*
@@ -837,27 +857,6 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                 </div>
                             </div>
                         <?php } ?>
-                        
-                        <div class="prod-widget-box right ">
-
-                                <div class="projectdtailHeart">
-
-
-                                    <div id="container-pling<?=$this->product->project_id?>" class="container-pling" >
-                                    <?php
-                                        echo $this->partial(
-                                            '/collection/partials/projectplings.phtml',
-                                            array(
-                                                "authMember"  => $identity,
-                                                "project_id" => $this->product->project_id,
-                                                "ppload_collection_id" => $this->product->ppload_collection_id,
-                                                "project_category_id" => $this->product->project_category_id
-                                            )
-                                        );
-                                    ?>
-                                    </div>
-                                </div>
-                        </div>
 
                         <div>
                             <?php
