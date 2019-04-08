@@ -58,7 +58,7 @@ class DevelopmentDropDownMenu extends React.Component {
 
     let gitfaqLinkItem;
     if (this.props.isExternal === false){
-      gitfaqLinkItem = (<li><a className="popuppanel" id="gitfaq" href={"/gitfaq"}>Git FAQ</a></li>);
+      gitfaqLinkItem = (<li><a className="popuppanel" id="gitfaq" href={"/gitfaq"}>FAQ</a></li>);
     } else {
       gitfaqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={this.props.baseUrl + "/#gitfaq"}>Git FAQ</a></li>);
     }
