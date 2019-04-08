@@ -47,6 +47,26 @@ class Default_View_Helper_BuildDownloadLink extends Zend_View_Helper_Abstract
                     return $returnString;
     }
 
+    public function humanFileSize($bytes,$isExternLink) {
+                    if($isExternLink) return '----';
+                         if($bytes>0)
+                         {
+                             $size = '';
+                             $size = round(($bytes / 1048576),2);
+                             if($size == '0.00')
+                             {
+                                return '0.01 MB';
+                             }else
+                             {
+                                return $size.' MB';
+                             }
+                         }
+                         else
+                         {
+                            return '0.00 MB';
+                         }
+    }
+
     public function buildDownloadLink($file,$project,$dataLinkType)
     {
 
@@ -76,10 +96,9 @@ class Default_View_Helper_BuildDownloadLink extends Zend_View_Helper_Abstract
                         ."&file_type=".$file['type']
                         ."&file_size=".$file['size'];
 
-        $truncateHelper = new Default_View_Helper_Truncate();
-        $filesizeHelper = new Default_View_Helper_HumanFilesize();
-
+        
         $fileShortName = $this->shortFilename($file['name']);
+        $filesize = $this->humanFileSize($file['size'],$isExternLink);
         // $fileShortName = $file['name'];
         $downloadLink = '<a href="'.$downloadUrl.'" id="data-link-dl'.$file['id'].'" class="opendownloadfile" data-file_id="'.$file['id']
             .'" data-username="'.$project->username 
@@ -92,7 +111,7 @@ class Default_View_Helper_BuildDownloadLink extends Zend_View_Helper_Abstract
             .$isExternLink
             .'">'
             .'<span id="'.$dataLinkType.'"-link-filename'.$file['id'].'" class="downloadlink '.($isExternLink?'isExternal':'').'" >'
-            .$fileShortName.'</span><span class="downloadlink filesize">'.$filesizeHelper->humanFilesize($file['size'])
+            .$fileShortName.'</span><span class="downloadlink filesize">'.$filesize
             .'</span>'
             .'</a>';
         return $downloadLink;

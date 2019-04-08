@@ -344,7 +344,6 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $this->view->member = $this->_authMember;
         $this->view->mode = 'addcollection';
         $this->view->collection_cat_id = Zend_Registry::get('config')->settings->client->default->collection_cat_id;
-        $this->view->ranking_cat_id = Zend_Registry::get('config')->settings->client->default->ranking_cat_id;
         
         $form = new Default_Form_Collection(array('member_id' => $this->view->member->member_id));
         $this->view->form = $form;
@@ -454,24 +453,10 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $projectIds = $_POST['collection_project_id'];
         
         $modeCollection = new  Default_Model_DbTable_CollectionProjects();
-        $modeCollection->setCollectionProjects($newProject->project_id, $projectIds);
+        $modeCollection->setCollectionProjects($this->_projectId, $projectIds);
         
         //$modelTags->processTagProductOriginal($newProject->project_id);
         
-        //set collection system tag
-        $collectionTagCollection = Zend_Registry::get('config')->settings->client->default->tag_collection_type_collection_id;
-        $collectionTagRanking = Zend_Registry::get('config')->settings->client->default->tag_collection_type_ranking_id;
-        $modelTags = new Default_Model_Tags();
-        $tag_id = null;
-        if($newProject->project_category_id == $this->view->collection_cat_id) {
-            $tag_id = $collectionTagCollection;
-        }
-        if($newProject->project_category_id == $this->view->ranking_cat_id) {
-            $tag_id = $collectionTagRanking;
-        }
-        if(!empty($tag_id)) {
-            $modelTags->saveCollectionTypeTagForProject($newProject->project_id, $tag_id);
-        }
         
         try {
             if (100 < $this->_authMember->roleId) {
@@ -684,21 +669,6 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         
         $modeCollection = new  Default_Model_DbTable_CollectionProjects();
         $modeCollection->setCollectionProjects($this->_projectId, $projectIds);
-        
-        //set collection system tag
-        $collectionTagCollection = Zend_Registry::get('config')->settings->client->default->tag_collection_type_collection_id;
-        $collectionTagRanking = Zend_Registry::get('config')->settings->client->default->tag_collection_type_ranking_id;
-        $modelTags = new Default_Model_Tags();
-        $tag_id = null;
-        if($projectData->project_category_id == $this->view->collection_cat_id) {
-            $tag_id = $collectionTagCollection;
-        }
-        if($projectData->project_category_id == $this->view->ranking_cat_id) {
-            $tag_id = $collectionTagRanking;
-        }
-        if(!empty($tag_id)) {
-            $modelTags->saveCollectionTypeTagForProject($this->_projectId, $tag_id);
-        }
         
         try {
             if (100 < $this->_authMember->roleId) {
