@@ -22,15 +22,15 @@
  *
  * Created: 11.01.2019
  */
-class Backend_SpamkeywordsController extends Local_Controller_Action_Backend
+class Backend_ProjectcloneController extends Local_Controller_Action_Backend
 {
     const RESULT_OK = "OK";
     const RESULT_ERROR = "ERROR";
 
-    /** @var Default_Model_DbTable_SpamKeywords */
+    /** @var Default_Model_DbTable_ProjectClone */
     protected $_model;
 
-    protected $_modelName = 'Default_Model_DbTable_SpamKeywords';
+    protected $_modelName = 'Default_Model_DbTable_ProjectClone';
 
 
     /**
@@ -40,7 +40,7 @@ class Backend_SpamkeywordsController extends Local_Controller_Action_Backend
     {
         $this->_model = new $this->_modelName();
 
-        $this->view->pageTitle = 'Manage Spam Keywords';
+        $this->view->pageTitle = 'Manage Project Clones';
 
         parent::init();
     }
@@ -90,9 +90,9 @@ class Backend_SpamkeywordsController extends Local_Controller_Action_Backend
 
     public function deleteAction()
     {
-        $id = (int)$this->getParam('spam_key_id', null);
+        $id = (int)$this->getParam('project_clone_id', null);
 
-        $this->_model->Delete(array('spam_key_id = ?' => $id));
+        $this->_model->Delete(array('project_clone_id = ?' => $id));
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
