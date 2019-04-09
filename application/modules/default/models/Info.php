@@ -1677,7 +1677,7 @@ class Default_Model_Info
             return $instruction;
         }
         $config = Zend_Registry::get('config')->settings->server->opencode;
-        $readme = 'https://git.opendesktop.org/OCS/ocs-url/raw/master/docs/How-to-install.md?inline=false';
+        $readme = 'https://opencode.net/OCS/ocs-url/raw/master/docs/How-to-install.md?inline=false';
 
         $httpClient = new Zend_Http_Client($readme, array('keepalive' => true, 'strictredirects' => true));
         $httpClient->resetParameters();
