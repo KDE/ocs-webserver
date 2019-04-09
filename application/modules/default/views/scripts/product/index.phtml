@@ -388,7 +388,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                             . ' <span class="fa fa-external-link"></span></a>';
                                     } else if (false === empty($this->product->source_url)) {
                                         $target='_blank';
-                                        if (strpos($this->product->source_url, 'git.opendesktop.org') !== false) {
+                                        if (strpos($this->product->source_url, 'opencode.net') !== false) {
                                             $target='_self';
                                         }
                                         echo '<a target="'.$target.'" href="' . $this->product->source_url . '" rel="nofollow">' . $this->product->source_url
@@ -407,7 +407,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                         
 
                                     } else {
-                                            echo '<span class="source" > Add the source-code for this project on </span><a href="https://git.opendesktop.org/'.$this->product->username.'">git.opendesktop.org</a>';                                                                                                                    
+                                            echo '<span class="source" > Add the source-code for this project on </span><a href="https://opencode.net/'.$this->product->username.'">opencode.net</a>';                                                                                                                    
                                     }
                                     ?>
                                     

@@ -4,7 +4,7 @@ import TextTruncate from 'react-text-truncate';
 class ProductGit extends React.Component {
   constructor(props){
   	super(props);
-    this.gitBaseUrl='https://git.opendesktop.org/';
+    this.gitBaseUrl='https://opencode.net/';
   }
   render(){
 
