@@ -154,6 +154,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_embedv1', // embed API
             'default_productcategory',
             'default_rss',
+            'default_support',
             'default_supporterbox',
             'default_plingbox',
             'default_oauth',
@@ -198,8 +199,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->allow(self::ROLENAME_COOKIEUSER, array(
             'default_logout',
             'default_productcomment',
-            'default_settings',
-            'default_support',
+            'default_settings',            
             'default_tag',
             'default_rectification'
         ));
@@ -351,6 +351,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
 
         // resource default_support
+        $this->allow(self::ROLENAME_GUEST, 'default_support', array('index'));
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_support', array('index', 'pay', 'paymentok', 'paymentcancel'));
 
         // resource default_support

@@ -92,7 +92,7 @@ class UserMenu extends React.Component {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
-          <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
+          <li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>
           {aboutMenu}
           {searchMenuDisplay}
           {chatItem}
