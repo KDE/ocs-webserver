@@ -38,10 +38,11 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
                         , project.description
                         , project.count_likes
                         , project.count_dislikes
-
+                        , project_category.title as catTitle
                  FROM collection_projects
                  JOIN project ON project.project_id = collection_projects.project_id
                  JOIN member ON member.member_id = project.member_id
+                 JOIN project_category on project.project_category_id = project_category.project_category_id
                  WHERE collection_projects.collection_id = :project_id
                  AND collection_projects.active = 1
                  AND project.type_id = 1

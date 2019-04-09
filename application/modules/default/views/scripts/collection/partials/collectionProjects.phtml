@@ -51,9 +51,11 @@
                     <img width="80" src="<?php echo $this->Image($project->image_small, array('width' => 80, 'height' => 80)); ?>" class="downloadhistory-image" />
                 </figure>   
                 <div style="margin-left: 95px">
-                    <a href="<?= $this->buildProductUrl($project->project_id) ?>"><?=$project->title?></a>                
+                    <a href="<?= $this->buildProductUrl($project->project_id) ?>"><?=$project->title?></a>                           
                 </div>
-
+                <div style="margin-left: 95px; font-size: small;">
+                    <?=$project->catTitle?>                           
+                </div>
               
             </div>      
                     
@@ -105,7 +107,7 @@
       <div class="row row-detail" style="display: none" id="row-<?=$project->project_id?>">
         <div class="col-lg-1 col-md-1">
         </div>
-        <div class="col-lg-11 col-md-11">
+        <div class="col-lg-7 col-md-7">
             <div>
                 <?php echo $project->description?>
 
