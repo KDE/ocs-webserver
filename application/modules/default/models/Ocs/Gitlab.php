@@ -1317,8 +1317,13 @@ class Default_Model_Ocs_Gitlab
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
         $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
         $this->httpClient->setMethod(Zend_Http_Client::GET);
-
-        $response = $this->httpClient->request();
+        $response = null;
+        try {
+            $response = $this->httpClient->request();
+            
+        } catch (Exception $ex) {
+            $response = null;
+        }
         
         if($response && !empty($response)) {
 
