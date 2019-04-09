@@ -27,7 +27,17 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
 
     public function getCollectionProjects($project_id)
     {
-        $sql = " SELECT project.title, project.project_id, project.image_small, member.username, member.member_id,collection_projects.order, project.ppload_collection_id
+        $sql = " SELECT project.title
+                        , project.project_id
+                        , project.image_small
+                        , member.username
+                        , member.member_id
+                        , collection_projects.order
+                        , project.ppload_collection_id
+                        , project.project_category_id
+                        , project.description
+                        , project.count_likes
+                        , project.count_dislikes
 
                  FROM collection_projects
                  JOIN project ON project.project_id = collection_projects.project_id
