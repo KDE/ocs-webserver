@@ -34,7 +34,7 @@ class Local_Payment_PayPal_Response
             return new Local_Payment_PayPal_Masspay_ResponseMasspay($rawResponse);
         } else    
         if (isset($rawResponse['txn_type']) AND ($rawResponse['txn_type'] == 'subscr_payment')) {
-            return new Local_Payment_PayPal_Support_ResponseSupport($rawResponse);
+            return new Local_Payment_PayPal_Subscription_ResponseSupport($rawResponse);
         } else    
         if (isset($rawResponse['responseEnvelope_ack'])) {
             return new Local_Payment_PayPal_AdaptivePayment_ResponsePayRequest($rawResponse);
