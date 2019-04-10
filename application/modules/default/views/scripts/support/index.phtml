@@ -30,22 +30,24 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
         <div class="container-fluid">
             <div class="row">
                 <div class="sidebar-left col-md-2"></div>
+                <form class="donation-form" id="new_donation" action="/support/pay" accept-charset="UTF-8" data-remote="true" method="post">  
+                <input type="hidden" id="currency-symbol" value="$">
+                <input type="hidden" name="provider" value="paypal" id="provider">
+   
                 <div class="content col-md-8">
                     <h2>Become a Supporter</h2>
-                    <p>Your donation will be 100% used to supports <?=$countActiveMembers?> creators on opendesktop.org
-                    and help creators to make the product better for everyone.</p> 
-                    <p>Please choose your compfortable way.</p>                                                          
+                    <p>Your donation supports <?=$countActiveMembers?> creators on opendesktop.org.
+                    </p> 
+                                                                          
                     <div class="tabs donation-widget ">
-                    
-                        <form class="donation-form" id="new_donation" action="/support/pay" accept-charset="UTF-8" data-remote="true" method="post">
-	                    
-                                <input type="hidden" id="currency-symbol" value="$">
-                                <input type="hidden" name="provider" value="paypal" id="provider">
-
+                       
+                            <div class="row">
+                                <div class="col-lg-6">                                                           
+                                
                                 <div class="tabs-header non-selectable basic-color-background">
                                   <div class="header-content">
                                     <span class="display-amount">
-                                      <span class="step-1 active">Choose amount for a year</span>
+                                      <span class="step-1 active">Choose monthly option</span>
                                     </span>
                                   </div>
                                 </div>
@@ -62,27 +64,14 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                                 <span class="unit-wrapper">
                                                   <span class="unit">$</span>
                                                 </span>
-                                                <span class="amount">0.99 monthly</span>
-                                                <span class="extrasmall">+ 30 cents paypal = 1.29 + 19% taxes = 1.53 monthly * 12 = 18.36 yearly</span>
+                                                <span class="amount">0.99 </span>
+                                                <span class="extrasmall">+ 30 cents paypal = 1.29 + 19% taxes = 1.53 monthly </span>
                                               </span>
                                             </span>
                                           <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
                                         </li>
 
-                                        <li class="amount-item">
-                                          <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-15" data-upgraded=",MaterialRadio">
-                                              <input class="suggested-amount mdl-radio__button"  id="sam-15" type="radio" value="14.50" name="amount_predefined">
-                                            <span class="mdl-radio__label">
-                                              <span class="item-text">
-                                                <span class="unit-wrapper">
-                                                  <span class="unit">$</span>
-                                                </span>
-                                                <span class="amount">0.99 monthly</span>
-                                                <span class="extrasmall">* 12 = 11.88 + 30 cents paypal = 12.18 + 19% taxes = 14.50 yearly</span>
-                                              </span>
-                                            </span>
-                                          <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
-                                        </li>
+                                        
 
                                         <li class="amount-item">
                                           <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-15" data-upgraded=",MaterialRadio">
@@ -92,12 +81,55 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                                 <span class="unit-wrapper">
                                                   <span class="unit">$</span>
                                                 </span>
-                                                <span class="amount">2 monthly</span>
-                                                <span class="extrasmall">+ 30 cents paypal = 2.3 + 19% taxes = 2.73 monthly * 12 = 32.84 yearly</span>
+                                                <span class="amount">2 </span>
+                                                <span class="extrasmall">+ 30 cents paypal = 2.3 + 19% taxes = 2.73 monthly </span>
                                               </span>
                                             </span>
                                           <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
                                         </li>
+
+                                       
+                                       
+                                    </ul>
+                                   
+                                  </div> 
+                                  
+                               
+                                </div>
+                                </div>
+                                <div class="col-lg-6">
+                                   
+
+                                <div class="tabs-header non-selectable basic-color-background">
+                                  <div class="header-content">
+                                    <span class="display-amount">
+                                      <span class="step-1 active">Choose yearly option</span>
+                                    </span>
+                                  </div>
+                                </div>
+
+                                <div class="tabs-content">
+                                  <div class="content step-1 active" id="donor-form-step-1"> 
+                                    <ul class="suggested-amounts less-margin">
+
+                                        
+
+                                        <li class="amount-item">
+                                          <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-15" data-upgraded=",MaterialRadio">
+                                              <input class="suggested-amount mdl-radio__button"  id="sam-15" type="radio" value="14.50" name="amount_predefined">
+                                            <span class="mdl-radio__label">
+                                              <span class="item-text">
+                                                <span class="unit-wrapper">
+                                                  <span class="unit">$</span>
+                                                </span>
+                                                <span class="amount">0.99 </span>
+                                                <span class="extrasmall">* 12 = 11.88 + 30 cents paypal = 12.18 + 19% taxes = 14.50 yearly</span>
+                                              </span>
+                                            </span>
+                                          <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
+                                        </li>
+
+                                       
 
                                         <li class="amount-item">
                                           <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-15" data-upgraded=",MaterialRadio">
@@ -107,7 +139,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                                 <span class="unit-wrapper">
                                                   <span class="unit">$</span>
                                                 </span>
-                                                <span class="amount">2 monthly</span>
+                                                <span class="amount">2 </span>
                                                 <span class="extrasmall">* 12 = 24 + 30 cents paypal = 24.3 + 19% taxes = 28.92 yearly</span>
                                               </span>
                                             </span>
@@ -141,32 +173,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                             </span>
                                           <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
                                         </li>
-                                        <li class="amount-item">
-                                          <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-50" data-upgraded=",MaterialRadio">
-                                              <input class="suggested-amount mdl-radio__button" id="sam-50" type="radio" value="20 " name="amount_predefined">
-                                            <span class="mdl-radio__label">
-                                              <span class="item-text">
-                                                <span class="unit-wrapper">
-                                                  <span class="unit">$</span>
-                                                </span>
-                                                <span class="amount">20 </span>
-                                              </span>
-                                            </span>
-                                          <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
-                                        </li>
-                                        <li class="amount-item">
-                                          <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-100" data-upgraded=",MaterialRadio">
-                                              <input class="suggested-amount mdl-radio__button" id="sam-100" type="radio" value="100 " name="amount_predefined">
-                                            <span class="mdl-radio__label">
-                                              <span class="item-text">
-                                                <span class="unit-wrapper">
-                                                  <span class="unit">$</span>
-                                                </span>
-                                                <span class="amount">100 </span>
-                                              </span>
-                                            </span>
-                                          <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
-                                        </li>
+                                        
                                         <li class="amount-item">
                                           <label class="mdl-radio mdl-js-radio is-upgraded" for="custom_amount_item" data-upgraded=",MaterialRadio">
                                             <input class="suggested-amount mdl-radio__button" id="custom_amount_item" type="radio" value="0" name="amount_predefined">
@@ -184,40 +191,34 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                           <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
                                         </li>
                                     </ul>
-                                    <!--
-                                    <div class="mdl-grid ">
-                                        <div class="mdl-cell mdl-cell--12-col">
-                                            <div class="mdl-btn-group active-basic-color-background">
-                                                <div value="" style="" class="active">One time</div>
-                                                <div value="true" style="">Yearly</div>
-                                            </div>
-
-                                            <input type="hidden" name="recurring" id="recurring" value="">
-                                        </div>
-                                    </div>            
-                                    -->
+                                    
                                   </div> 
                                   
-                                <div class="tabs-footer">
-                                    <?php if (Zend_Auth::getInstance()->hasIdentity()) {?>
-                                  <button type="submit" class="dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
-                                    <span class="donate" id="linkButton">
-                                      <span class="amount">
-                                        <span isolate="">Donate via PayPal</span>
-                                      </span>
-                                    </span>
-                                    </button>
-                                     <?php }else{
-                                        echo "Please login to donate";
-                                    }?>
-                                </div>
+                                
                            
-                          </form>
+                         
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tabs-footer">
+                            <?php if (Zend_Auth::getInstance()->hasIdentity()) {?>
+                          <button type="submit" class="dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
+                            <span class="donate" id="linkButton">
+                              <span class="amount">
+                                <span isolate="">Donate via PayPal</span>
+                              </span>
+                            </span>
+                            </button>
+                             <?php }else{
+                                echo "Please login to donate";
+                            }?>
+                        </div>
                     </div>
                     
                     
                 </div>
                 <div class="sidebar-right col-md-2"></div>
+                 </form>
             </div>
             <section class="explore-footer text-center">
                 
