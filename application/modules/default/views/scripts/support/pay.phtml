@@ -55,7 +55,7 @@ if ($this->error) {
         </form>
         */?>
         
-        <form action="<?= $this->form_endpoint ?>" method="post" target="_top">
+        <form action="<?= $this->form_endpoint ?>" method="post" target="_top" id="payform">
             <input type="hidden" name="cmd" value="_xclick-subscriptions">
             <input type="hidden" name="business" value="merchant@pling.com">
             <input type="hidden" name="lc" value="US">
