@@ -36,7 +36,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
    
                 <div class="content col-md-8">
                     <h2>Become a Supporter</h2>
-                    <p>Your donation supports <?=$countActiveMembers?> creators on opendesktop.org.
+                    <p>Your donation supports <b> <?=$countActiveMembers?></b> creators on opendesktop.org.
                     </p> 
                                                                           
                     <div class="tabs donation-widget ">
@@ -47,7 +47,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                 <div class="tabs-header non-selectable basic-color-background">
                                   <div class="header-content">
                                     <span class="display-amount">
-                                      <span class="step-1 active">Choose monthly option</span>
+                                      <span class="step-1 active">Choose monthly tier</span>
                                     </span>
                                   </div>
                                 </div>
@@ -65,7 +65,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                                   <span class="unit">$</span>
                                                 </span>
                                                 <span class="amount">0.99 </span>
-                                                <span class="extrasmall">+ 30 cents paypal = 1.29 + 19% taxes = 1.53 monthly </span>
+                                                <span class="extrasmall">($0.99 + 30 cents paypal = $1.29 + 19% taxes = $1.53 monthly) </span>
                                               </span>
                                             </span>
                                           <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
@@ -82,7 +82,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                                   <span class="unit">$</span>
                                                 </span>
                                                 <span class="amount">2 </span>
-                                                <span class="extrasmall">+ 30 cents paypal = 2.3 + 19% taxes = 2.73 monthly </span>
+                                                <span class="extrasmall">($2 + 30 cents paypal = $2.3 + 19% taxes = $2.73 monthly) </span>
                                               </span>
                                             </span>
                                           <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
@@ -103,7 +103,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                 <div class="tabs-header non-selectable basic-color-background">
                                   <div class="header-content">
                                     <span class="display-amount">
-                                      <span class="step-1 active">Choose yearly option</span>
+                                      <span class="step-1 active">Choose yearly tier</span>
                                     </span>
                                   </div>
                                 </div>
@@ -122,9 +122,13 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                                 <span class="unit-wrapper">
                                                   <span class="unit">$</span>
                                                 </span>
-                                                <span class="amount">0.99 </span>
-                                                <span class="extrasmall">* 12 = 11.88 + 30 cents paypal = 12.18 + 19% taxes = 14.50 yearly</span>
+                                                <span class="amount">14.50 </span>
+                                                <span class="extrasmall">
+                                                    ($0.99 * 12 = $11.88 + 30 cents paypal = $12.18 + 19% taxes = $14.50 yearly)
+                                                </span>
                                               </span>
+
+
                                             </span>
                                           <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
                                         </li>
@@ -139,9 +143,12 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                                 <span class="unit-wrapper">
                                                   <span class="unit">$</span>
                                                 </span>
-                                                <span class="amount">2 </span>
-                                                <span class="extrasmall">* 12 = 24 + 30 cents paypal = 24.3 + 19% taxes = 28.92 yearly</span>
+                                                <span class="amount">28.92</span>
+                                                <span class="extrasmall">
+                                                    ($2* 12 = $24 + 30 cents paypal = $24.3 + 19% taxes = $28.92 yearly)
+                                                </span>
                                               </span>
+
                                             </span>
                                           <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
                                         </li>
