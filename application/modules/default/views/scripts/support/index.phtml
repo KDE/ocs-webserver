@@ -25,14 +25,49 @@ $modelInfo = new Default_Model_Info();
 $countActiveMembers = $modelInfo->countTotalActiveMembers();
 ?>
 <link href="/theme/flatui/css/support.css" rel="stylesheet">
+<style type="text/css">
+    li.amount-item
+    {
+       border-bottom: 0px !important;
+    }
+  
+    ul.suggested-amounts.less-margin
+    {
+       margin: 10px !important;
+    }
+    .tabs .row
+    {
+        border-bottom: dotted thin #E7E7E7 !important;
+        padding: 16px 0 7px;
+        padding:0px;
+        margin-left: 20px;
+        margin-right: 20px;
+      
+    }
+
+    .tabs .row:first-child
+    {
+        margin:0px;
+        margin-right: -15px;
+        margin-left: -15px;
+        border-bottom: 0px !important;
+    }
+    .tabs .row:last-child
+    {
+        padding:20px;
+    }
+
+
+</style>
 <main>
     <section class="wrapper" id="products-wrapper">
+        <form class="donation-form" id="new_donation" action="/support/pay" accept-charset="UTF-8" data-remote="true" method="post">  
+                <input type="hidden" id="currency-symbol" value="$">
+                <input type="hidden" name="provider" value="paypal" id="provider">
         <div class="container-fluid">
             <div class="row">
                 <div class="sidebar-left col-md-2"></div>
-                <form class="donation-form" id="new_donation" action="/support/pay" accept-charset="UTF-8" data-remote="true" method="post">  
-                <input type="hidden" id="currency-symbol" value="$">
-                <input type="hidden" name="provider" value="paypal" id="provider">
+                
    
                 <div class="content col-md-8">
                     <h2>Become a Supporter</h2>
@@ -40,150 +75,94 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                     </p> 
                                                                           
                     <div class="tabs donation-widget ">
-                       
-                            <div class="row">
-                                <div class="col-lg-6">                                                           
-                                
-                                <div class="tabs-header non-selectable basic-color-background">
-                                  <div class="header-content">
-                                    <span class="display-amount">
-                                      <span class="step-1 active">Choose monthly tier</span>
-                                    </span>
-                                  </div>
-                                </div>
 
-                                <div class="tabs-content">
-                                  <div class="content step-1 active" id="donor-form-step-1"> 
+                            <div class="row disply-flex">
+                                    <div class="col-lg-6">        
+                                            <div class="tabs-header non-selectable basic-color-background">
+                                              <div class="header-content">
+                                                <span class="display-amount">
+                                                  <span class="step-1 active">Choose monthly tier</span>
+                                                </span>
+                                              </div>
+                                            </div>                                                  
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="tabs-header non-selectable basic-color-background">
+                                          <div class="header-content">
+                                            <span class="display-amount">
+                                              <span class="step-1 active">Choose yearly tier</span>
+                                            </span>
+                                          </div>
+                                        </div>                                               
+                                    </div>
+                            </div> <!--end of row-->
+                            <div class="row disply-flex">
+                                <div class="col-lg-6">  
+                               <?php
+                                    echo $this->partial('/support/partials/option.phtml',
+                                        array(
+                                            "value"  => 1.53,
+                                            "amount" => 0.99,
+                                            "text" => "($0.99 + 30 cents paypal = $1.29 + 19% taxes = $1.53 monthly)"
+                                        )
+                                    );
+                                ?>
+                                </div>
+                                <div class="col-lg-6">  
+                                    <?php
+                                    echo $this->partial('/support/partials/option.phtml',
+                                        array(
+                                            "value"  => 14.5,
+                                            "amount" => 14.5,
+                                            "text" => "($0.99 * 12 = $11.88 + 30 cents paypal = $12.18 + 19% taxes = $14.50 yearly)"
+                                        )
+                                    );
+                                ?>                                    
+                                </div>
+                            </div> <!--end of row-->
+
+                            <div class="row disply-flex">
+                                <div class="col-lg-6">  
+                               <?php
+                                    echo $this->partial('/support/partials/option.phtml',
+                                        array(
+                                            "value"  => 2.73,
+                                            "amount" => 2,
+                                            "text" => "($2 + 30 cents paypal = $2.3 + 19% taxes = $2.73 monthly)"
+                                        )
+                                    );
+                                ?>
+                                </div>
+                                <div class="col-lg-6">  
+                                    <?php
+                                    echo $this->partial('/support/partials/option.phtml',
+                                        array(
+                                            "value"  => 28.92,
+                                            "amount" => 28.92,
+                                            "text" => "($2* 12 = $24 + 30 cents paypal = $24.3 + 19% taxes = $28.92 yearly)"
+                                        )
+                                    );
+                                ?>                                    
+                                </div>
+                            </div> <!--end of row-->
+                            
+                            <div class="row disply-flex">
+                                <div class="col-lg-6">  
+                               <?php
+                                    echo $this->partial('/support/partials/option.phtml',
+                                        array(
+                                            "value"  => 5,
+                                            "amount" => 5,
+                                            "text" => ""
+                                        )
+                                    );
+                                ?>
+                                </div>
+                                <div class="col-lg-6">  
                                     <ul class="suggested-amounts less-margin">
-
-                                        <li class="amount-item">
-                                          <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-15" data-upgraded=",MaterialRadio">
-                                              <input class="suggested-amount mdl-radio__button" checked id="sam-15" type="radio" value="Option1" name="amount_predefined">
-                                            <span class="mdl-radio__label">
-                                              <span class="item-text">
-                                                <span class="unit-wrapper">
-                                                  <span class="unit">$</span>
-                                                </span>
-                                                <span class="amount">0.99 </span>
-                                                <span class="extrasmall">($0.99 + 30 cents paypal = $1.29 + 19% taxes = $1.53 monthly) </span>
-                                              </span>
-                                            </span>
-                                          <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
-                                        </li>
-
-                                        
-
-                                        <li class="amount-item">
-                                          <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-15" data-upgraded=",MaterialRadio">
-                                              <input class="suggested-amount mdl-radio__button"  id="sam-15" type="radio" value="Option2" name="amount_predefined">
-                                            <span class="mdl-radio__label">
-                                              <span class="item-text">
-                                                <span class="unit-wrapper">
-                                                  <span class="unit">$</span>
-                                                </span>
-                                                <span class="amount">2 </span>
-                                                <span class="extrasmall">($2 + 30 cents paypal = $2.3 + 19% taxes = $2.73 monthly) </span>
-                                              </span>
-                                            </span>
-                                          <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
-                                        </li>
-
-                                       
-                                       
-                                    </ul>
-                                   
-                                  </div> 
-                                  
-                               
-                                </div>
-                                </div>
-                                <div class="col-lg-6">
-                                   
-
-                                <div class="tabs-header non-selectable basic-color-background">
-                                  <div class="header-content">
-                                    <span class="display-amount">
-                                      <span class="step-1 active">Choose yearly tier</span>
-                                    </span>
-                                  </div>
-                                </div>
-
-                                <div class="tabs-content">
-                                  <div class="content step-1 active" id="donor-form-step-1"> 
-                                    <ul class="suggested-amounts less-margin">
-
-                                        
-
-                                        <li class="amount-item">
-                                          <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-15" data-upgraded=",MaterialRadio">
-                                              <input class="suggested-amount mdl-radio__button"  id="sam-15" type="radio" value="Option3" name="amount_predefined">
-                                            <span class="mdl-radio__label">
-                                              <span class="item-text">
-                                                <span class="unit-wrapper">
-                                                  <span class="unit">$</span>
-                                                </span>
-                                                <span class="amount">14.50 </span>
-                                                <span class="extrasmall">
-                                                    ($0.99 * 12 = $11.88 + 30 cents paypal = $12.18 + 19% taxes = $14.50 yearly)
-                                                </span>
-                                              </span>
-
-
-                                            </span>
-                                          <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
-                                        </li>
-
-                                       
-
-                                        <li class="amount-item">
-                                          <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-15" data-upgraded=",MaterialRadio">
-                                              <input class="suggested-amount mdl-radio__button"  id="sam-15" type="radio" value="Option4" name="amount_predefined">
-                                            <span class="mdl-radio__label">
-                                              <span class="item-text">
-                                                <span class="unit-wrapper">
-                                                  <span class="unit">$</span>
-                                                </span>
-                                                <span class="amount">28.92</span>
-                                                <span class="extrasmall">
-                                                    ($2* 12 = $24 + 30 cents paypal = $24.3 + 19% taxes = $28.92 yearly)
-                                                </span>
-                                              </span>
-
-                                            </span>
-                                          <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
-                                        </li>
-
-                                        <li class="amount-item">
-                                          <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-25" data-upgraded=",MaterialRadio">
-                                              <input class="suggested-amount mdl-radio__button" id="sam-25" type="radio" value="Option5" name="amount_predefined">
-                                            <span class="mdl-radio__label">
-                                              <span class="item-text">
-                                                <span class="unit-wrapper">
-                                                  <span class="unit">$</span>
-                                                </span>
-                                                <span class="amount">5</span>
-                                              </span>
-                                            </span>
-                                          <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
-                                        </li>
-                                      
-                                        <li class="amount-item">
-                                          <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-25" data-upgraded=",MaterialRadio">
-                                              <input class="suggested-amount mdl-radio__button" id="sam-25" type="radio" value="Option6" name="amount_predefined">
-                                            <span class="mdl-radio__label">
-                                              <span class="item-text">
-                                                <span class="unit-wrapper">
-                                                  <span class="unit">$</span>
-                                                </span>
-                                                <span class="amount">10</span>
-                                              </span>
-                                            </span>
-                                          <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
-                                        </li>
-                                        
-                                        <li class="amount-item">
+                                    <li class="amount-item last">
                                           <label class="mdl-radio mdl-js-radio is-upgraded" for="custom_amount_item" data-upgraded=",MaterialRadio">
-                                            <input class="suggested-amount mdl-radio__button" id="custom_amount_item" type="radio" value="Option7" name="amount_predefined">
+                                            <input class="suggested-amount mdl-radio__button" id="custom_amount_item" type="radio" value="0" name="amount_predefined">
                                             <span class="mdl-radio__label">
                                               <span class="item-text">
                                                 <span class="unit-wrapper">
@@ -198,39 +177,55 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                           <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
                                         </li>
                                     </ul>
-                                    
-                                  </div> 
-                                  
-                                
-                           
-                         
+                                                                   
                                 </div>
-                            </div>
-                        </div>
-                        <div class="tabs-footer">
-                            <?php if (Zend_Auth::getInstance()->hasIdentity()) {?>
-                          <button type="submit" class="dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
-                            <span class="donate" id="linkButton">
-                              <span class="amount">
-                                <span isolate="">Donate via PayPal</span>
-                              </span>
-                            </span>
-                            </button>
-                             <?php }else{
-                                echo "Please login to donate";
-                            }?>
-                        </div>
-                    </div>
+                            </div> <!--end of row-->
+
+                            <div class="row disply-flex">
+                                <div class="col-lg-6">  
+                               <?php
+                                    echo $this->partial('/support/partials/option.phtml',
+                                        array(
+                                            "value"  => 10,
+                                            "amount" => 10,
+                                            "text" => "",
+                                            "islast" => true,
+                                        )
+                                    );
+                                ?>
+                                </div>
+                                <div class="col-lg-6">  
+                                                                   
+                                </div>
+                            </div> <!--end of row-->
+            
+                        <div class="row disply-flex">
+                              <div class="col-lg-12">  
+                                <div class="tabs-footer">
+                                    <?php if (Zend_Auth::getInstance()->hasIdentity()) {?>
+                                  <button type="submit" class="dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
+                                    <span class="donate" id="linkButton">
+                                      <span class="amount">
+                                        <span isolate="">Donate via PayPal</span>
+                                      </span>
+                                    </span>
+                                    </button>
+                                     <?php }else{
+                                        echo "Please login to donate";
+                                    }?>
+                                </div>
+                                    </div>
+                        </div> <!--end of row-->
+                    </div> <!--end of tabs-->
                     
                     
-                </div>
+                </div> <!--end of content-->
                 <div class="sidebar-right col-md-2"></div>
-                 </form>
-            </div>
-            <section class="explore-footer text-center">
                 
-            </section>
+            </div>
+            
         </div>
+         </form>
     </section>
 </main>
 
