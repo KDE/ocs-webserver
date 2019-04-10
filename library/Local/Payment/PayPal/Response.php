@@ -36,6 +36,9 @@ class Local_Payment_PayPal_Response
         if (isset($rawResponse['txn_type']) AND ($rawResponse['txn_type'] == 'subscr_payment')) {
             return new Local_Payment_PayPal_Subscription_ResponseSupport($rawResponse);
         } else    
+        if (isset($rawResponse['txn_type']) AND ($rawResponse['txn_type'] == 'subscr_signup')) {
+            return new Local_Payment_PayPal_SubscriptionSignup_ResponseSupport($rawResponse);
+        } else    
         if (isset($rawResponse['responseEnvelope_ack'])) {
             return new Local_Payment_PayPal_AdaptivePayment_ResponsePayRequest($rawResponse);
         } else 
