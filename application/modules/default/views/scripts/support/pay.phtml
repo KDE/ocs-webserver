@@ -27,6 +27,8 @@ if ($this->error) {
     <div style="text-align: center;">
         <h3>Please wait. We will redirect you to PayPal. </h3>
         <p>Or press the Donate button:</p>
+        
+        <?php /*
         <form action="<?= $this->form_endpoint ?>" method="post" target="_top" id="payform">
             <input type="hidden" name="cmd" value="_donations">
             <!--<input type="hidden" name="business" value="paypal@opendesktop.org">-->
@@ -51,10 +53,78 @@ if ($this->error) {
                 <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
             </div>
         </form>
+        */?>
+        
+        <form action="<?= $this->form_endpoint ?>" method="post" target="_top">
+            <input type="hidden" name="cmd" value="_xclick-subscriptions">
+            <input type="hidden" name="business" value="merchant@pling.com">
+            <input type="hidden" name="lc" value="US">
+            <input type="hidden" name="item_name" value="Thank you for supporting opendesktop.org">
+            <input type="hidden" name="item_number" value="S1">
+            <input type="hidden" name="no_note" value="1">
+            <input type="hidden" name="no_shipping" value="1">
+            <input type="hidden" name="rm" value="1">
+            <input type="hidden" name="return" value="<?= $this->form_return_url_ok ?>">
+            <input type="hidden" name="cancel_return" value="<?= $this->form_return_url_cancel ?>">
+            <input type="hidden" name="notify_url" value="<?= $this->form_ipn_endpoint ?>">
+            <input type="hidden" name="src" value="1">
+            <input type="hidden" name="currency_code" value="USD">
+            <input type="hidden" name="bn" value="PP-SubscriptionsBF:btn_subscribeCC_LG.gif:NonHosted">
+            <input type="hidden" name="custom" value="<?= $this->transaction_id ?>">
+            <input type="hidden" name="on0" value="">
+            <select name="os0" id="os0Select">
+                    <option value="Option1" <?php if($this->payment_option == "Option1") echo "selected=selected"; ?>>Option 1 : $1.53 USD - monthly</option>
+                    <option value="Option2" <?php if($this->payment_option == "Option2") echo "selected=selected"; ?>>Option 2 : $2.73 USD - monthly</option>
+                    <option value="Option3" <?php if($this->payment_option == "Option3") echo "selected=selected"; ?>>Option 3 : $14.50 USD - yearly</option>
+                    <option value="Option4" <?php if($this->payment_option == "Option4") echo "selected=selected"; ?>>Option 4 : $28.92 USD - yearly</option>
+                    <option value="Option5" <?php if($this->payment_option == "Option5") echo "selected=selected"; ?>>Option 5 : $60.00 USD - yearly</option>
+                    <option value="Option6" <?php if($this->payment_option == "Option6") echo "selected=selected"; ?>>Option 6 : $120.00 USD - yearly</option>
+                    <option value="Option7" <?php if($this->payment_option == "Option7") echo "selected=selected"; ?>>Option 7 : <?= $this->amount ?> USD - yearly</option>
+            </select> 
+            <br><br>
+            <input type="hidden" name="option_select0" value="Option1">
+            <input type="hidden" name="option_amount0" value="1.53">
+            <input type="hidden" name="option_period0" value="M">
+            <input type="hidden" name="option_frequency0" value="1">
+            <input type="hidden" name="option_select1" value="Option2">
+            <input type="hidden" name="option_amount1" value="2.73">
+            <input type="hidden" name="option_period1" value="M">
+            <input type="hidden" name="option_frequency1" value="1">
+            <input type="hidden" name="option_select2" value="Option3">
+            <input type="hidden" name="option_amount2" value="14.50">
+            <input type="hidden" name="option_period2" value="Y">
+            <input type="hidden" name="option_frequency2" value="1">
+            <input type="hidden" name="option_select3" value="Option4">
+            <input type="hidden" name="option_amount3" value="28.92">
+            <input type="hidden" name="option_period3" value="Y">
+            <input type="hidden" name="option_frequency3" value="1">
+            <input type="hidden" name="option_select4" value="Option5">
+            <input type="hidden" name="option_amount4" value="60.00">
+            <input type="hidden" name="option_period4" value="Y">
+            <input type="hidden" name="option_frequency4" value="1">
+            <input type="hidden" name="option_select5" value="Option6">
+            <input type="hidden" name="option_amount5" value="120.00">
+            <input type="hidden" name="option_period5" value="Y">
+            <input type="hidden" name="option_frequency5" value="1">
+            <input type="hidden" name="option_select6" value="Option7">
+            <input type="hidden" name="option_amount6" value="<?= $this->amount ?>">
+            <input type="hidden" name="option_period6" value="Y">
+            <input type="hidden" name="option_frequency6" value="1">
+            
+            <input type="hidden" name="option_index" value="0">
+            <input type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+            <img alt="" border="0" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+        </form>
+
+
+        
+        
     </div>
     <script>
         //var dgFlow = new PAYPAL.apps.DGFlow({trigger: 'submitBtn'});
-        document.getElementById("payform").submit();
+        
+        //document.getElementById("payform").submit();
+        //
         //document.location.href = "<?= $this->checkoutEndpoint ?>?cmd=_ap-payment&paykey=<?= $this->paymentKey ?>";
     </script>
 <?php } ?>
