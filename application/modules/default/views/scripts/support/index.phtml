@@ -25,42 +25,7 @@ $modelInfo = new Default_Model_Info();
 $countActiveMembers = $modelInfo->countTotalActiveMembers();
 ?>
 <link href="/theme/flatui/css/support.css" rel="stylesheet">
-<style type="text/css">
-    li.amount-item
-    {
-       border-bottom: 0px !important;
-    }
-  
-    ul.suggested-amounts.less-margin
-    {
-       margin: 10px !important;
-       padding-left: 0px;
-    }
-    .tabs .row
-    {
-        border-bottom: dotted thin #E7E7E7 !important;
-        padding: 16px 0 7px;
-        padding:0px;
-        margin-left: 20px;
-        margin-right: 20px;
-      
-    }
 
-    .tabs .row:first-child
-    {
-        margin:0px;
-        margin-right: -15px;
-        margin-left: -15px;
-        border-bottom: 0px !important;
-    }
-    .tabs .row:last-child
-    {
-        padding:20px;
-    }
-
-
-
-</style>
 <main>
     <section class="wrapper" id="products-wrapper">
         <form class="donation-form" id="new_donation" action="/support/pay" accept-charset="UTF-8" data-remote="true" method="post">  
@@ -79,7 +44,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                     <div class="tabs donation-widget ">
 
                             <div class="row disply-flex">
-                                    <div class="col-lg-6">        
+                                    <div class="col-lg-6 col-md-12">        
                                             <div class="tabs-header non-selectable basic-color-background">
                                               <div class="header-content">
                                                 <span class="display-amount">
@@ -88,7 +53,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                               </div>
                                             </div>                                                  
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-6 col-md-12">
                                         <div class="tabs-header non-selectable basic-color-background">
                                           <div class="header-content">
                                             <span class="display-amount">
@@ -99,14 +64,14 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                     </div>
                             </div> <!--end of row-->
                             <div class="row disply-flex">
-                                <div class="col-lg-6">  
+                                <div class="col-lg-6 col-md-12">  
                                <?php
                                     echo $this->partial('/support/partials/option.phtml',
                                         $this->payment_options['Option1']
                                     );
                                 ?>
                                 </div>
-                                <div class="col-lg-6">  
+                                <div class="col-lg-6 col-md-12">  
                                     <?php
                                     echo $this->partial('/support/partials/option.phtml',
                                         $this->payment_options['Option5']
@@ -116,14 +81,14 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                             </div> <!--end of row-->
 
                             <div class="row disply-flex">
-                                <div class="col-lg-6">  
+                                <div class="col-lg-6 col-md-12">  
                                <?php
                                     echo $this->partial('/support/partials/option.phtml',
                                         $this->payment_options['Option2']
                                     );
                                 ?>
                                 </div>
-                                <div class="col-lg-6">  
+                                <div class="col-lg-6 col-md-12">  
                                     <?php
                                     echo $this->partial('/support/partials/option.phtml',
                                         $this->payment_options['Option6']
@@ -133,20 +98,20 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                             </div> <!--end of row-->
                             
                             <div class="row disply-flex">
-                                <div class="col-lg-6">  
+                                <div class="col-lg-6 col-md-12">  
                                <?php
                                     echo $this->partial('/support/partials/option.phtml',
                                         $this->payment_options['Option3']
                                     );
                                 ?>
                                 </div>
-                                <div class="col-lg-6">  
+                                <div class="col-lg-6 col-md-12">  
                                     <ul class="suggested-amounts less-margin">
                                     <li class="amount-item last">
-                                          <label class="mdl-radio mdl-js-radio is-upgraded" for="custom_amount_item" data-upgraded=",MaterialRadio">
+                                          <label class="mdl-radio mdl-js-radio is-upgraded" for="custom_amount_item" data-upgraded=",MaterialRadio" style="padding:0px">
                                             <input class="suggested-amount mdl-radio__button" id="custom_amount_item" type="radio" value="0" name="amount_predefined">
-                                            <span class="mdl-radio__label">
-                                              <span class="item-text">
+                                            <div class="mdl-radio__label">
+                                              <div class="item-text">
                                                 <span class="unit-wrapper">
                                                   <span class="unit">$</span>
                                                 </span>
@@ -154,9 +119,9 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                                   <input id="custom_amount" min="16" step="any" inputmode="numeric" type="number" name="amount_handish">
                                                 </span>
                                                 <span class="desc">Enter a free amount > $15</span>
-                                              </span>
-                                            </span>
-                                          <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
+                                              </div>
+                                            </div>
+                                          </label>
                                         </li>
                                     </ul>
                                                                    
@@ -164,20 +129,20 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                             </div> <!--end of row-->
 
                             <div class="row disply-flex">
-                                <div class="col-lg-6">  
+                                <div class="col-lg-6 col-md-12">  
                                <?php
                                     echo $this->partial('/support/partials/option.phtml',
                                         $this->payment_options['Option4']
                                     );
                                 ?>
                                 </div>
-                                <div class="col-lg-6">  
+                                <div class="col-lg-6 col-md-12">  
                                                                    
                                 </div>
                             </div> <!--end of row-->
             
                         <div class="row disply-flex">
-                              <div class="col-lg-12">  
+                              <div class="col-lg-12 col-md-12">  
                                 <div class="tabs-footer">
                                     <?php if (Zend_Auth::getInstance()->hasIdentity()) {?>
                                   <button type="submit" class="dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
