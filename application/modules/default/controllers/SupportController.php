@@ -193,7 +193,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
         //Add pling
         $modelSupport = new Default_Model_DbTable_Support();
         //$supportId = $modelSupport->createNewSupport($this->view->transaction_id, $this->_authMember->member_id, $amount);
-        if($isHandish) {
+        if($paymentOption == "Option7") {
             $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id, $this->_authMember->member_id, $amount, $this::SUPPORT_OPTIONS[$paymentOption]['period_short']);
         } else {
             $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id, $this->_authMember->member_id, $this::SUPPORT_OPTIONS[$paymentOption]['value'], $this::SUPPORT_OPTIONS[$paymentOption]['period_short']);
