@@ -39,7 +39,9 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                             "amount" => 0.99,
                                             "text" => "($0.99 + 35 cents paypal + 26 cents taxes = $1.60 monthly)",
                                             "checked" =>"checked",
-                                            "period" => "monthly"
+                                            "period" => "monthly",
+                                            "period_short" => "M",
+                                            "period_frequency" => "1",
                                         ),
                                     'Option2' => array(
                                             "name" => "Option2",
@@ -47,7 +49,9 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                             "amount" => 2,
                                             "checked" =>"",
                                             "text" => "($2 + 30 cents paypal = $2.3 + 19% taxes = $2.73 monthly)",
-                                            "period" => "monthly"
+                                            "period" => "monthly",
+                                            "period_short" => "M",
+                                            "period_frequency" => "1",
                                         ),
                                     'Option3' => array(
                                             "name" => "Option3",
@@ -55,7 +59,9 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                             "amount" => 5,
                                             "checked" =>"",
                                             "text" => "",
-                                            "period" => "monthly"
+                                            "period" => "monthly",
+                                            "period_short" => "M",
+                                            "period_frequency" => "1",
                                         ),
                                     'Option4' => array(
                                             "name" => "Option4",
@@ -64,7 +70,9 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                             "text" => "",
                                             "checked" =>"",
                                             "islast" => true,
-                                            "period" => "monthly"
+                                            "period" => "monthly",
+                                            "period_short" => "M",
+                                            "period_frequency" => "1",
                                         ),
                                     'Option5' => array(
                                             "name" => "Option5",
@@ -72,7 +80,9 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                             "amount" => 15.09,
                                             "checked" =>"",
                                             "text" => "($0.99 * 12 = $11.88 + $0.80 paypal + $2.41 taxes = $15.09 yearly or $1.26 monthly)",
-                                            "period" => "yearly"
+                                            "period" => "yearly",
+                                            "period_short" => "Y",
+                                            "period_frequency" => "1",
                                             
                                         ),
                                     'Option6' => array(
@@ -81,7 +91,9 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                             "amount" => 28.92,
                                             "checked" =>"",
                                             "text" => "($2* 12 = $24 + 30 cents paypal = $24.3 + 19% taxes = $28.92 yearly)",
-                                            "period" => "yearly"
+                                            "period" => "yearly",
+                                            "period_short" => "Y",
+                                            "period_frequency" => "1",
                                         ),
                                     'Option7' => array(
                                             "name" => "Option7",
@@ -89,7 +101,9 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                             "amount" => 0,
                                             "checked" =>"",
                                             "text" => "",
-                                            "period" => "yearly"
+                                            "period" => "yearly",
+                                            "period_short" => "Y",
+                                            "period_frequency" => "1",
                                         ),
                                     
         );
@@ -140,12 +154,17 @@ class SupportController extends Local_Controller_Action_DomainSwitch
         $amount_predefined = (float)$this->getParam('amount_predefined', 1);
         $amount_handish  = (float)$this->getParam('amount_handish', 1);
         
+        $isHandish = false;
+        
         $amount = 0;
         if(null != ($this->getParam('amount_predefined') && $amount_predefined > 0)) {
             $amount = $amount_predefined;
         } else {
+            $isHandish = true;
             $amount = $amount_handish;
         }
+        
+        
         
         $comment = Default_Model_HtmlPurify::purify($this->getParam('comment'));
         $paymentProvider =
@@ -167,13 +186,18 @@ class SupportController extends Local_Controller_Action_DomainSwitch
         $this->view->form_merchant = $merchantid;
         $this->view->member_id = $this->_authMember->member_id;
         $this->view->transaction_id = $this->_authMember->member_id . '_' . time();
+        
         $this->view->amount = $amount;
         $this->view->payment_option = $paymentOption;
         
         //Add pling
         $modelSupport = new Default_Model_DbTable_Support();
         //$supportId = $modelSupport->createNewSupport($this->view->transaction_id, $this->_authMember->member_id, $amount);
-        $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id, $this->_authMember->member_id, $amount);
+        if($isHandish) {
+            $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id, $this->_authMember->member_id, $amount, $this::SUPPORT_OPTIONS[$paymentOption]['period_short']);
+        } else {
+            $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id, $this->_authMember->member_id, $this::SUPPORT_OPTIONS[$paymentOption]['value'], $this::SUPPORT_OPTIONS[$paymentOption]['period_short']);
+        }
         
         
         
