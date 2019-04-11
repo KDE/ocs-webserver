@@ -211,7 +211,7 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
         $updateValues = array(
             'status_id' => self::STATUS_DELETED,
             'payment_raw_Message' => serialize($payment_response->getRawMessage()),
-            'deleted_time' => new Zend_Db_Expr ('Now()')
+            'delete_time' => new Zend_Db_Expr ('Now()')
         );
 
         $this->update($updateValues, "payment_reference_key='" . $payment_response->getCustom() . "' AND type_id = 1");
