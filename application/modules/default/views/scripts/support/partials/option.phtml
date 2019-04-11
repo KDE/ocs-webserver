@@ -1,10 +1,8 @@
-<ul class="suggested-amounts less-margin">
-<li class="amount-item <?=(isset($this->islast) ? 'last':'')?>">
-  <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-15" data-upgraded=",MaterialRadio" style="padding:0px">
-     <div style="display: block; float: left">
+<ul class="x-suggested-amounts">
+<li class="amount-item <?=(isset($this->islast) ? 'last':'')?>">  
+     <div class="radiocontainer">
       <input class="suggested-amount mdl-radio__button" <?=$this->checked?> id="sam-15" type="radio" value="<?=$this->name?>" name="amount_predefined">
     </div>
-    <div class="mdl-radio__label">
       <div class="item-text">
         <span class="unit-wrapper">
           <span class="unit">$</span>
@@ -12,7 +10,6 @@
         <span class="amount"><?=$this->amount?> </span>
         <span class="extrasmall"><?=$this->text?></span>
       </div>
-    </div>
-  </label>
+    
 </li>
 </ul>

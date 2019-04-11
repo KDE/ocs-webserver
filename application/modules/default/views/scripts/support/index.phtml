@@ -41,105 +41,101 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                     <p>Your donation supports <b> <?=$countActiveMembers?></b> creators on opendesktop.org.
                     </p> 
                                                                           
-                    <div class="tabs donation-widget ">
+                    <div class="x-donation-widget">
+                        <div class="row disply-flex">
+                            <div class="col-lg-6 col-md-12">        
+                                <div class="x-tabs-header ">
+                                  <div class="header-content">                                                
+                                    Choose monthly tier                                                
+                                  </div>
+                                </div>                                                  
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                            <div class="x-tabs-header ">
+                              <div class="header-content">                                                
+                                Choose yearly tier                                                
+                              </div>
+                            </div>                                                                                     
+                            </div>
+                        </div> <!--end of row-->
+                        <div class="row disply-flex">
+                            <div class="col-lg-6 col-md-12">  
+                           <?php
+                                echo $this->partial('/support/partials/option.phtml',
+                                        $this->payment_options['Option1']
+                                );
+                            ?>
+                            </div>
+                            <div class="col-lg-6 col-md-12">  
+                                <?php
+                                echo $this->partial('/support/partials/option.phtml',
+                                        $this->payment_options['Option5']
+                                );
+                            ?>                                    
+                            </div>
+                        </div> <!--end of row-->
 
-                            <div class="row disply-flex">
-                                    <div class="col-lg-6 col-md-12">        
-                                            <div class="tabs-header non-selectable basic-color-background">
-                                              <div class="header-content">
-                                                <span class="display-amount">
-                                                  <span class="step-1 active">Choose monthly tier</span>
-                                                </span>
-                                              </div>
-                                            </div>                                                  
-                                    </div>
-                                    <div class="col-lg-6 col-md-12">
-                                        <div class="tabs-header non-selectable basic-color-background">
-                                          <div class="header-content">
-                                            <span class="display-amount">
-                                              <span class="step-1 active">Choose yearly tier</span>
-                                            </span>
-                                          </div>
-                                        </div>                                               
-                                    </div>
-                            </div> <!--end of row-->
-                            <div class="row disply-flex">
-                                <div class="col-lg-6 col-md-12">  
-                               <?php
-                                    echo $this->partial('/support/partials/option.phtml',
-                                            $this->payment_options['Option1']
-                                    );
-                                ?>
-                                </div>
-                                <div class="col-lg-6 col-md-12">  
-                                    <?php
-                                    echo $this->partial('/support/partials/option.phtml',
-                                            $this->payment_options['Option5']
-                                    );
-                                ?>                                    
-                                </div>
-                            </div> <!--end of row-->
-
-                            <div class="row disply-flex">
-                                <div class="col-lg-6 col-md-12">  
-                               <?php
-                                    echo $this->partial('/support/partials/option.phtml',
-                                            $this->payment_options['Option2']
-                                    );
-                                ?>
-                                </div>
-                                <div class="col-lg-6 col-md-12">  
-                                    <?php
-                                    echo $this->partial('/support/partials/option.phtml',
-                                            $this->payment_options['Option6']
-                                    );
-                                ?>                                    
-                                </div>
-                            </div> <!--end of row-->
+                        <div class="row disply-flex">
+                            <div class="col-lg-6 col-md-12">  
+                           <?php
+                                echo $this->partial('/support/partials/option.phtml',
+                                        $this->payment_options['Option2']
+                                );
+                            ?>
+                            </div>
+                            <div class="col-lg-6 col-md-12">  
+                                <?php
+                                echo $this->partial('/support/partials/option.phtml',
+                                        $this->payment_options['Option6']
+                                );
+                            ?>                                    
+                            </div>
+                        </div> <!--end of row-->
                             
-                            <div class="row disply-flex">
-                                <div class="col-lg-6 col-md-12">  
-                               <?php
-                                    echo $this->partial('/support/partials/option.phtml',
-                                            $this->payment_options['Option3']
-                                    );
-                                ?>
-                                </div>
-                                <div class="col-lg-6 col-md-12">  
-                                    <ul class="suggested-amounts less-margin">
-                                    <li class="amount-item last">
-                                          <label class="mdl-radio mdl-js-radio is-upgraded" for="custom_amount_item" data-upgraded=",MaterialRadio" style="padding:0px">
-                                            <input class="suggested-amount mdl-radio__button" id="custom_amount_item" type="radio" value="Option7" name="amount_predefined">
-                                            <div class="mdl-radio__label">
-                                              <div class="item-text">
-                                                <span class="unit-wrapper">
-                                                  <span class="unit">$</span>
-                                                </span>
-                                                <span class="amount">
-                                                  <input id="custom_amount" min="16" step="any" inputmode="numeric" type="number" name="amount_handish">
-                                                </span>
-                                                <span class="desc">Enter a free amount > $15</span>
-                                              </div>
-                                            </div>
-                                          </label>
-                                        </li>
-                                    </ul>
-                                                                   
-                                </div>
-                            </div> <!--end of row-->
+                        <div class="row disply-flex">
+                            <div class="col-lg-6 col-md-12">  
+                           <?php
+                                echo $this->partial('/support/partials/option.phtml',
+                                        $this->payment_options['Option3']
+                                );
+                            ?>
+                            </div>
+                            <div class="col-lg-6 col-md-12">  
+                               
 
-                            <div class="row disply-flex">
-                                <div class="col-lg-6 col-md-12">  
-                               <?php
-                                    echo $this->partial('/support/partials/option.phtml',
-                                            $this->payment_options['Option4']
-                                    );
-                                ?>
-                                </div>
-                                <div class="col-lg-6 col-md-12">  
-                                                                   
-                                </div>
-                            </div> <!--end of row-->
+                                <ul class="x-suggested-amounts">
+                                <li class="amount-item <?=(isset($this->islast) ? 'last':'')?>">  
+                                     <div class="radiocontainer">
+                                      <input class="suggested-amount custom_amount_item" <?=$this->checked?> id="custom_amount_item" type="radio" value="Option7" name="amount_predefined">
+                                    </div>
+                                      <div class="item-text">
+                                        <span class="unit-wrapper">
+                                          <span class="unit">$</span>
+                                        </span>
+                                        <span class="amount"><input id="custom_amount" min="16" step="any" inputmode="numeric" type="number" name="amount_handish"> </span>
+                                        <span class="desc">Enter a free amount > $15</span>
+                                      </div>
+                                    
+                                </li>
+                                </ul>
+
+                               
+                                                               
+                            </div>
+                        </div> <!--end of row-->
+
+                        <div class="row disply-flex">
+                            <div class="col-lg-6 col-md-12">  
+                           <?php
+                                echo $this->partial('/support/partials/option.phtml',
+                                        $this->payment_options['Option4']
+                                );
+                            ?>
+                            </div>
+                            <div class="col-lg-6 col-md-12">  
+                                                               
+                            </div>
+                        </div> <!--end of row-->
             
                         <div class="row disply-flex">
                               <div class="col-lg-12 col-md-12">  
@@ -176,11 +172,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
         $("#custom_amount").click(function(){
             $('.mdl-radio__button').removeAttr('checked');
             $('#custom_amount_item').prop("checked", true);            
-        });
-
-        $('#plingListOpen').click(function(){
-            $('#plingList').trigger( "click" );       
-        });
+        });      
 
     });
 </script>
