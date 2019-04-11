@@ -146,11 +146,7 @@ ul.suggested-amounts.less-margin {
 ul.suggested-amounts li.amount-item:hover .item-text .amount, ul.suggested-amounts li.amount-item:hover .item-text #custom_amount, ul.suggested-amounts li.amount-item .mdl-radio.is-checked .item-text .amount, ul.suggested-amounts li.amount-item .mdl-radio.is-checked .item-text #custom_amount {
     opacity: .95;
 }
-ul.suggested-amounts li.amount-item .item-text {
-    display: inline-block;
-    position: relative;
-    margin-left: 23px;
-}
+
 ul.suggested-amounts li.amount-item .item-text .unit-wrapper {
     position: absolute;
     display: inline-block;
@@ -215,9 +211,9 @@ label {
 }
 
 ul.suggested-amounts li.amount-item .item-text {
-    display: inline-block;
+    
     position: relative;
-    margin-left: 23px;
+    margin-left: 45px;
 }
 
 ul.suggested-amounts li.amount-item .item-text .unit-wrapper {
@@ -409,3 +405,36 @@ span.extrasmall{
     display: block;
     padding-top: 15px;
 }
+li.amount-item
+    {
+       border-bottom: 0px !important;
+    }
+  
+    ul.suggested-amounts.less-margin
+    {
+       margin: 10px !important;
+       padding: 0px;
+
+    }
+    .tabs .row
+    {
+        border-bottom: dotted thin #E7E7E7 !important;
+        padding: 16px 0 7px;
+        padding:0px;
+        margin-left: 20px;
+        margin-right: 20px;
+      
+    }
+
+    .tabs .row:first-child
+    {
+        margin:0px;
+        margin-right: -15px;
+        margin-left: -15px;
+        border-bottom: 0px !important;
+    }
+    .tabs .row:last-child
+    {
+        padding:20px;
+    }
+   
