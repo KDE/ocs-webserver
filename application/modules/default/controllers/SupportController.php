@@ -45,10 +45,10 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                         ),
                                     'Option2' => array(
                                             "name" => "Option2",
-                                            "value"  => 2.86,
+                                            "value"  => 2.83,
                                             "amount" => 2,
                                             "checked" =>"",
-                                            "text" => "($2 + 40 cents paypal = $2.4 + 46cents taxes = $2.86 monthly)",
+                                            "text" => "($2 + 38 cents paypal = $2.38 + 45cents taxes = $2.83 monthly)",
                                             "period" => "monthly",
                                             "period_short" => "M",
                                             "period_frequency" => "1",
