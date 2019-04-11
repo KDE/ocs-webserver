@@ -145,12 +145,11 @@ abstract class Local_Payment_PayPal_SubscriptionSignup_Ipn extends Local_Payment
 
     protected function processSubscription()
     {
-        $this->_logger->info(' ' . __FUNCTION__ . ' IPN: ' . print_r($this->_ipnMessage, true) . ' Subscription ID: '
-            . $this->_ipnMessage->getSubscriptionId);
+        $this->_logger->info(' ' . __FUNCTION__ . ' IPN: ' . print_r($this->_ipnMessage, true));
         
         $this->_processSubscription();
         
-        $this->_logger->info(' ' . __FUNCTION__ . ' Status = ' . $this->_ipnMessage->getStatus() . ' DONE');
+        $this->_logger->info(' ' . __FUNCTION__ . ' DONE');
     }
 
     /**
