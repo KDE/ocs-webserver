@@ -145,8 +145,7 @@ abstract class Local_Payment_PayPal_SubscriptionCancel_Ipn extends Local_Payment
 
     protected function processSubscriptionCancel()
     {
-        $this->_logger->info(' ' . __FUNCTION__ . ' IPN: ' . print_r($this->_ipnMessage, true) . ' Subscription ID: '
-            . $this->_ipnMessage->getSubscriptionId);
+        $this->_logger->info(' ' . __FUNCTION__ . ' IPN: ' . print_r($this->_ipnMessage, true));
         
         $this->_processSubscriptionCancel();
         
