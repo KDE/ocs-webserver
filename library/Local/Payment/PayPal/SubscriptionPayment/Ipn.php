@@ -176,7 +176,7 @@ abstract class Local_Payment_PayPal_SubscriptionPayment_Ipn extends Local_Paymen
         $this->_logger->info(' ' . __FUNCTION__ . ' set Status');
 
         $Table = new Default_Model_DbTable_Support();
-        $Table->activateSupportFromResponse($this->_ipnMessage);
+        $Table->createNewSupportSubscriptionPaymentFromResponse($this->_ipnMessage);
     }
 
     public function getCharset($rawDataIpn)
