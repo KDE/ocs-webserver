@@ -20,7 +20,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Local_Payment_PayPal_SubscriptionSignup_ResponseSupport implements Local_Payment_PayPal_PaymentInterface
+class Local_Payment_PayPal_SubscriptionSignup_Response implements Local_Payment_PayPal_PaymentInterface
 {
 
     /** @var array|null */
