@@ -143,25 +143,13 @@ abstract class Local_Payment_PayPal_SubscriptionSignup_Ipn extends Local_Payment
         return true;
     }
 
-    protected function processPaymentStatus()
+    protected function processSubscription()
     {
-        $this->_logger->info(' ' . __FUNCTION__ . ' IPN: ' . print_r($this->_ipnMessage, true) . ' Status: '
-            . $this->_ipnMessage->getStatus());
-        switch ($this->_ipnMessage->getStatus()) {
-            case 'COMPLETED':
-                $this->_statusCompleted();
-                break;
-            /*case 'Denied':
-                $this->_statusDenied();
-                break;
-            case 'Processed':
-                $this->_statusProcessed();
-                break;*/
-            default:
-                $this->_logger->info(' ' . __FUNCTION__ . ' Status not found: . IPN: ' . print_r($this->_ipnMessage, true)
-                    . ' Status: ' . print_r($this->_ipnMessage->getStatus(), true));
-                throw new Local_Payment_Exception('Unknown status from PayPal: ' . print_r($this->_ipnMessage));
-        }
+        $this->_logger->info(' ' . __FUNCTION__ . ' IPN: ' . print_r($this->_ipnMessage, true) . ' Subscription ID: '
+            . $this->_ipnMessage->getSubscriptionId);
+        
+        $this->_processSubscription();
+        
         $this->_logger->info(' ' . __FUNCTION__ . ' Status = ' . $this->_ipnMessage->getStatus() . ' DONE');
     }
 
@@ -171,12 +159,12 @@ abstract class Local_Payment_PayPal_SubscriptionSignup_Ipn extends Local_Payment
      * For Mass Payments, this means that all of your payments have been claimed,
      * or after a period of 30 days, unclaimed payments have been returned to you.
      */
-    protected function _statusCompleted()
+    protected function _processSubscription()
     {
         $this->_logger->info(' ' . __FUNCTION__ . ' set Status');
 
         $Table = new Default_Model_DbTable_Support();
-        $Table->activateSupportFromResponse($this->_ipnMessage);
+        $Table->activateSupportSubscriptionSignupFromResponse($this->_ipnMessage);
     }
 
     public function getCharset($rawDataIpn)
@@ -273,26 +261,5 @@ abstract class Local_Payment_PayPal_SubscriptionSignup_Ipn extends Local_Payment
 
         return false;
     }
-
-    /**
-     * For Mass Payments, this means that your funds were not sent and the Mass Payment was not initiated.
-     * This may have been caused by lack of funds.
-     */
-    protected function _statusDenied()
-    {
-        $this->_logger->info(' _statusDenied');
-
-        $Table = new Default_Model_DbTable_Support();
-        $Table->deactivateSupportFromResponse($this->_ipnMessage);
-    }
-
-    /**
-     * Your Mass Payment has been processed and all payments have been sent.
-     */
-    protected function _statusProcessed()
-    {
-        $this->_logger->info(' _statusProcessed');
-    }
-
 
 } 

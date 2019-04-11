@@ -191,7 +191,7 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
     {
         $updateValues = array(
             'status_id' => self::STATUS_DONATED,
-            'payment_transaction_id' => $payment_response->getTransactionId(),
+            'subscription_id' => $payment_response->getSubscriptionId(),
             'payment_raw_Message' => serialize($payment_response->getRawMessage()),
             'active_time' => new Zend_Db_Expr ('Now()')
         );

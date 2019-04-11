@@ -20,7 +20,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Local_Payment_PayPal_SubscriptionSignup_Response implements Local_Payment_PayPal_PaymentInterface
+class Local_Payment_PayPal_SubscriptionSignup_Response implements Local_Payment_PayPal_SubscriptionSignupInterface
 {
 
     /** @var array|null */
@@ -36,21 +36,7 @@ class Local_Payment_PayPal_SubscriptionSignup_Response implements Local_Payment_
         }
     }
 
-    /**
-     * @return bool
-     */
-    public function isSuccessful()
-    {
-        return true;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStatus()
-    {
-        return strtoupper($this->_rawResponse['payment_status']);
-    }
+    
 
     /**
      * @return mixed
@@ -68,60 +54,7 @@ class Local_Payment_PayPal_SubscriptionSignup_Response implements Local_Payment_
         return strtoupper($this->_rawResponse['subscr_date']);
     }
     
-    /**
-     * @return mixed
-     */
-    public function getPeriod()
-    {
-        $period = null;
-        
-        for ($index = 0; $index < 6; $index++) {
-            if(array_key_exists('period'.$index, $this->_rawResponse)) {
-                $period = $this->_rawResponse['period'.$index];
-            }
-                    
-        }
-        
-        return $period;
-    }
     
-    /**
-     * @return mixed
-     */
-    public function getPeriodAmount()
-    {
-        $period = null;
-        
-        for ($index = 0; $index < 6; $index++) {
-            if(array_key_exists('amount'.$index, $this->_rawResponse)) {
-                $period = $this->_rawResponse['amount'.$index];
-            }
-                    
-        }
-        
-        return $period;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTransactionId()
-    {
-        return $this->_rawResponse['txn_id'];
-    }
-
-    public function getTransactionStatus()
-    {
-        return ($this->_rawResponse['payment_status']);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPaymentId()
-    {
-        return null;
-    }
 
     /**
      * @param $name
@@ -149,14 +82,35 @@ class Local_Payment_PayPal_SubscriptionSignup_Response implements Local_Payment_
         return 'paypal';
     }
 
-    public function getTransactionAmount()
-    {
-        return null;
+    public function getSubscriptionAmount() {
+        $period = null;
+        
+        for ($index = 0; $index < 6; $index++) {
+            if(array_key_exists('amount'.$index, $this->_rawResponse)) {
+                $period = $this->_rawResponse['amount'.$index];
+            }
+                    
+        }
+        
+        return $period;
     }
 
-    public function getTransactionReceiver()
-    {
-        return null;
+    public function getSubscriptionId() {
+        return strtoupper($this->_rawResponse['subscr_id']);
     }
 
+    public function getSubscriptionPeriod() {
+        $period = null;
+        
+        for ($index = 0; $index < 6; $index++) {
+            if(array_key_exists('period'.$index, $this->_rawResponse)) {
+                $period = $this->_rawResponse['period'.$index];
+            }
+                    
+        }
+        
+        return $period;
+    }
+
+    
 }

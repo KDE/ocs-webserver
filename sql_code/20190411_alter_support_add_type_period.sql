@@ -6,3 +6,6 @@ ALTER TABLE `support`
 UPDATE support p
 SET p.type_id = 2
 WHERE p.type_id = 1;
+
+ALTER TABLE `support`
+	ADD COLUMN `subscription_id` VARCHAR(255) NULL AFTER `type_id`;
