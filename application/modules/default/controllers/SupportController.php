@@ -41,7 +41,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                             "checked" =>"checked",
                                             "period" => "monthly"
                                         ),
-                                    'Option12' => array(
+                                    'Option2' => array(
                                             "name" => "Option2",
                                             "value"  => 2.73,
                                             "amount" => 2,
@@ -49,7 +49,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                             "text" => "($2 + 30 cents paypal = $2.3 + 19% taxes = $2.73 monthly)",
                                             "period" => "monthly"
                                         ),
-                                    'Option13' => array(
+                                    'Option3' => array(
                                             "name" => "Option3",
                                             "value"  => 5,
                                             "amount" => 5,
@@ -57,7 +57,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                             "text" => "",
                                             "period" => "monthly"
                                         ),
-                                    'Option14' => array(
+                                    'Option4' => array(
                                             "name" => "Option4",
                                             "value"  => 10,
                                             "amount" => 10,
@@ -66,7 +66,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                             "islast" => true,
                                             "period" => "monthly"
                                         ),
-                                    'Option15' => array(
+                                    'Option5' => array(
                                             "name" => "Option5",
                                             "value"  => 15.09,
                                             "amount" => 15.09,
@@ -75,7 +75,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                             "period" => "yearly"
                                             
                                         ),
-                                    'Option16' => array(
+                                    'Option6' => array(
                                             "name" => "Option6",
                                             "value"  => 28.92,
                                             "amount" => 28.92,
@@ -83,7 +83,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                             "text" => "($2* 12 = $24 + 30 cents paypal = $24.3 + 19% taxes = $28.92 yearly)",
                                             "period" => "yearly"
                                         ),
-                                    'Option17' => array(
+                                    'Option7' => array(
                                             "name" => "Option7",
                                             "value"  => 0,
                                             "amount" => 0,
