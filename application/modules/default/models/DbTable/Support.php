@@ -60,7 +60,7 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
     {
         $new_row = $this->createRow();
         
-        $signUp = $this->fetchRow('custom = '. $payment_response->getCustom() . ' AND type_id = 1');
+        $signUp = $this->fetchRow("payment_reference_key = '". $payment_response->getCustom() . "' AND type_id = 1");
         if(!empty($signUp)) {
             $new_row->member_id = $signUp['member_id'];
             $new_row->subscription_id = $signUp['subscription_id'];
