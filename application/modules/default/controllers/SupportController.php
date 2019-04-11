@@ -76,10 +76,10 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                         ),
                                     'Option5' => array(
                                             "name" => "Option5",
-                                            "value"  => 15.09,
-                                            "amount" => 15.09,
+                                            "value"  => 15.02,
+                                            "amount" => 15.02,
                                             "checked" =>"",
-                                            "text" => "($0.99 * 12 = $11.88 + $0.80 paypal + $2.41 taxes = $15.09 yearly or $1.26 monthly)",
+                                            "text" => "($0.99 * 12 = $11.88 + $0.80 paypal + $2.41 taxes = $15.02 yearly or $1.26 monthly)",
                                             "period" => "yearly",
                                             "period_short" => "Y",
                                             "period_frequency" => "1",
@@ -193,7 +193,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
         //Add pling
         $modelSupport = new Default_Model_DbTable_Support();
         //$supportId = $modelSupport->createNewSupport($this->view->transaction_id, $this->_authMember->member_id, $amount);
-        if($paymentOption == "Option7") {
+        if($isHandish) {
             $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id, $this->_authMember->member_id, $amount, $this::SUPPORT_OPTIONS[$paymentOption]['period_short']);
         } else {
             $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id, $this->_authMember->member_id, $this::SUPPORT_OPTIONS[$paymentOption]['value'], $this::SUPPORT_OPTIONS[$paymentOption]['period_short']);
