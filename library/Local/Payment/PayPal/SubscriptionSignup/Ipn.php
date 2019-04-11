@@ -63,7 +63,7 @@ abstract class Local_Payment_PayPal_SubscriptionSignup_Ipn extends Local_Payment
             return;
         }
 
-        $this->processPaymentStatus();
+        $this->processSubscription();
     }
 
     /**

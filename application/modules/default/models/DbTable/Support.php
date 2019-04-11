@@ -56,14 +56,17 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
      * @return mixed The primary key value(s), as an associative array if the
      *     key is compound, or a scalar if the key is single-column.
      */
-    public function createNewSupportSubscriptionSignupFromResponse($payment_response, $member_id, $amount, $comment = null)
+    public function createNewSupportSubscriptionPaymentFromResponse($payment_response)
     {
         $new_row = $this->createRow();
+        
+        $member_id = substr($payment_response->getPaymentId(), str_split($payment_response->getPaymentId(), '_')[0]);
         $new_row->member_id = $member_id;
-        $new_row->amount = $amount;
-        $new_row->comment = $comment;
+        //$new_row->amount = $amount;
+        //$new_row->comment = $comment;
+        
         $new_row->donation_time = new Zend_Db_Expr ('Now()');
-        $new_row->status_id = self::STATUS_NEW;
+        $new_row->status_id = self::STATUS_DONATED;
 
         $new_row->payment_reference_key = $payment_response->getPaymentId();
         $new_row->payment_provider = $payment_response->getProviderName();
@@ -184,7 +187,7 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
      * Mark donations as payed.
      * So they can be used to donation.
      *
-     * @param Local_Payment_ResponseInterface $payment_response
+     * @param Local_Payment_ResponseSubscriptionSignupInterface $payment_response
      *
      */
     public function activateSupportSubscriptionSignupFromResponse($payment_response)
@@ -196,7 +199,7 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
             'active_time' => new Zend_Db_Expr ('Now()')
         );
 
-        $this->update($updateValues, "payment_reference_key='" . $payment_response->getCustom() . "'");
+        $this->update($updateValues, "payment_reference_key='" . $payment_response->getCustom() . "' AND type_id = 1");
     }
 
     /**
