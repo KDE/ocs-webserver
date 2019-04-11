@@ -79,7 +79,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                             "value"  => 15.02,
                                             "amount" => 15.02,
                                             "checked" =>"",
-                                            "text" => "($0.99 * 12 = $11.88 + $0.80 paypal + $2.41 taxes = $15.02 yearly or $1.26 monthly)",
+                                            "text" => "($0.99 * 12 = $11.88 + $0.74 paypal + $2.40 taxes = $15.02 yearly or $1.25 monthly)",
                                             "period" => "yearly",
                                             "period_short" => "Y",
                                             "period_frequency" => "1",
