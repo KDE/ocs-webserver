@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-abstract class Local_Payment_PayPal_Subscription_Ipn extends Local_Payment_PayPal_Base
+abstract class Local_Payment_PayPal_SubscriptionSignup_Ipn extends Local_Payment_PayPal_Base
 {
 
     const VERIFIED = 'VERIFIED';

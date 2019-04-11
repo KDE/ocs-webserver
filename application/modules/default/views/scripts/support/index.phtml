@@ -102,24 +102,14 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                 <div class="col-lg-6">  
                                <?php
                                     echo $this->partial('/support/partials/option.phtml',
-                                        array(
-                                            "value"  => 1.60,
-                                            "amount" => 0.99,
-                                            "text" => "($0.99 + 35 cents paypal + 26 cents taxes = $1.60 monthly)",
-                                            "checked" =>"checked"
-                                        )
+                                        $this->payment_options['Option1']
                                     );
                                 ?>
                                 </div>
                                 <div class="col-lg-6">  
                                     <?php
                                     echo $this->partial('/support/partials/option.phtml',
-                                        array(
-                                            "value"  => 15.09,
-                                            "amount" => 15.09,
-                                            "checked" =>"",
-                                            "text" => "($0.99 * 12 = $11.88 + $0.80 paypal + $2.41 taxes = $15.09 yearly or $1.26 monthly)"
-                                        )
+                                        $this->payment_options['Option5']
                                     );
                                 ?>                                    
                                 </div>
@@ -129,24 +119,14 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                 <div class="col-lg-6">  
                                <?php
                                     echo $this->partial('/support/partials/option.phtml',
-                                        array(
-                                            "value"  => 2.73,
-                                            "amount" => 2,
-                                            "checked" =>"",
-                                            "text" => "($2 + 30 cents paypal = $2.3 + 19% taxes = $2.73 monthly)"
-                                        )
+                                        $this->payment_options['Option2']
                                     );
                                 ?>
                                 </div>
                                 <div class="col-lg-6">  
                                     <?php
                                     echo $this->partial('/support/partials/option.phtml',
-                                        array(
-                                            "value"  => 28.92,
-                                            "amount" => 28.92,
-                                            "checked" =>"",
-                                            "text" => "($2* 12 = $24 + 30 cents paypal = $24.3 + 19% taxes = $28.92 yearly)"
-                                        )
+                                        $this->payment_options['Option6']
                                     );
                                 ?>                                    
                                 </div>
@@ -156,12 +136,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                 <div class="col-lg-6">  
                                <?php
                                     echo $this->partial('/support/partials/option.phtml',
-                                        array(
-                                            "value"  => 5,
-                                            "amount" => 5,
-                                            "checked" =>"",
-                                            "text" => ""
-                                        )
+                                        $this->payment_options['Option3']
                                     );
                                 ?>
                                 </div>
@@ -192,13 +167,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                 <div class="col-lg-6">  
                                <?php
                                     echo $this->partial('/support/partials/option.phtml',
-                                        array(
-                                            "value"  => 10,
-                                            "amount" => 10,
-                                            "text" => "",
-                                            "checked" =>"",
-                                            "islast" => true,
-                                        )
+                                        $this->payment_options['Option4']
                                     );
                                 ?>
                                 </div>

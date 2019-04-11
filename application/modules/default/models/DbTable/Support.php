@@ -29,6 +29,9 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
     const STATUS_FINISHED = 4;
     const STATUS_ERROR = 90;
     const STATUS_DELETED = 99;
+    
+    const SUPPORT_TYPE_SIGNUP = 1;
+    const SUPPORT_TYPE_PAYMENT = 2;
 
     /**
      * @var string
@@ -41,6 +44,34 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
     protected $_dependentTables = array(
         'Default_Model_DbTable_Member'
     );
+    
+    
+    /**
+     * Support Subscription Signup.
+     *
+     * @param Local_Payment_ResponseInterface $payment_response
+     * @param int $member_id Id of the Sender
+     * @param float $amount amount donations/dollars
+     * @param string|null $comment Comment from the buyer
+     * @return mixed The primary key value(s), as an associative array if the
+     *     key is compound, or a scalar if the key is single-column.
+     */
+    public function createNewSupportSubscriptionSignupFromResponse($payment_response, $member_id, $amount, $comment = null)
+    {
+        $new_row = $this->createRow();
+        $new_row->member_id = $member_id;
+        $new_row->amount = $amount;
+        $new_row->comment = $comment;
+        $new_row->donation_time = new Zend_Db_Expr ('Now()');
+        $new_row->status_id = self::STATUS_NEW;
+
+        $new_row->payment_reference_key = $payment_response->getPaymentId();
+        $new_row->payment_provider = $payment_response->getProviderName();
+        $new_row->payment_status = $payment_response->getStatus();
+        $new_row->payment_raw_message = serialize($payment_response->getRawMessage());
+
+        return $new_row->save();
+    }
 
     /**
      * Support.
@@ -97,6 +128,36 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
         return $new_row->save();
     }
     
+    
+        /**
+     * Support.
+     *
+     * @param Local_Payment_ResponseInterface $payment_response
+     * @param int $member_id Id of the Sender
+     * @param float $amount amount donations/dollars
+     * @param string|null $comment Comment from the buyer
+     * @return mixed The primary key value(s), as an associative array if the
+     *     key is compound, or a scalar if the key is single-column.
+     */
+    public function createNewSupportSubscriptionSignup($transaction_id, $member_id, $amount, $period, $comment = null)
+    {
+        $new_row = $this->createRow();
+        $new_row->member_id = $member_id;
+        $new_row->type_id = $this::SUPPORT_TYPE_SIGNUP;
+        $new_row->amount = $amount;
+        $new_row->period = $period;
+        $new_row->comment = $comment;
+        $new_row->donation_time = new Zend_Db_Expr ('Now()');
+        $new_row->status_id = self::STATUS_NEW;
+
+        $new_row->payment_reference_key = $transaction_id;
+        $new_row->payment_provider = 'paypal';
+        $new_row->payment_status = $this::STATUS_NEW;
+        $new_row->payment_raw_message = '';
+
+        return $new_row->save();
+    }
+    
 
     /**
      * Mark donations as payed.
@@ -112,6 +173,26 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
             'payment_transaction_id' => $payment_response->getTransactionId(),
             'payment_raw_Message' => serialize($payment_response->getRawMessage()),
             'payment_status' => $payment_response->getTransactionStatus(),
+            'active_time' => new Zend_Db_Expr ('Now()')
+        );
+
+        $this->update($updateValues, "payment_reference_key='" . $payment_response->getCustom() . "'");
+    }
+    
+    
+    /**
+     * Mark donations as payed.
+     * So they can be used to donation.
+     *
+     * @param Local_Payment_ResponseInterface $payment_response
+     *
+     */
+    public function activateSupportSubscriptionSignupFromResponse($payment_response)
+    {
+        $updateValues = array(
+            'status_id' => self::STATUS_DONATED,
+            'payment_transaction_id' => $payment_response->getTransactionId(),
+            'payment_raw_Message' => serialize($payment_response->getRawMessage()),
             'active_time' => new Zend_Db_Expr ('Now()')
         );
 

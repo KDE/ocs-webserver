@@ -32,11 +32,73 @@ class SupportController extends Local_Controller_Action_DomainSwitch
     /** @var  int */
     /** @var  Zend_Auth */
     protected $_auth;
+    
+    const SUPPORT_OPTIONS = array(  'Option1' => array(
+                                            "name" => "Option1",
+                                            "value"  => 1.60,
+                                            "amount" => 0.99,
+                                            "text" => "($0.99 + 35 cents paypal + 26 cents taxes = $1.60 monthly)",
+                                            "checked" =>"checked",
+                                            "period" => "monthly"
+                                        ),
+                                    'Option12' => array(
+                                            "name" => "Option2",
+                                            "value"  => 2.73,
+                                            "amount" => 2,
+                                            "checked" =>"",
+                                            "text" => "($2 + 30 cents paypal = $2.3 + 19% taxes = $2.73 monthly)",
+                                            "period" => "monthly"
+                                        ),
+                                    'Option13' => array(
+                                            "name" => "Option3",
+                                            "value"  => 5,
+                                            "amount" => 5,
+                                            "checked" =>"",
+                                            "text" => "",
+                                            "period" => "monthly"
+                                        ),
+                                    'Option14' => array(
+                                            "name" => "Option4",
+                                            "value"  => 10,
+                                            "amount" => 10,
+                                            "text" => "",
+                                            "checked" =>"",
+                                            "islast" => true,
+                                            "period" => "monthly"
+                                        ),
+                                    'Option15' => array(
+                                            "name" => "Option5",
+                                            "value"  => 15.09,
+                                            "amount" => 15.09,
+                                            "checked" =>"",
+                                            "text" => "($0.99 * 12 = $11.88 + $0.80 paypal + $2.41 taxes = $15.09 yearly or $1.26 monthly)",
+                                            "period" => "yearly"
+                                            
+                                        ),
+                                    'Option16' => array(
+                                            "name" => "Option6",
+                                            "value"  => 28.92,
+                                            "amount" => 28.92,
+                                            "checked" =>"",
+                                            "text" => "($2* 12 = $24 + 30 cents paypal = $24.3 + 19% taxes = $28.92 yearly)",
+                                            "period" => "yearly"
+                                        ),
+                                    'Option17' => array(
+                                            "name" => "Option7",
+                                            "value"  => 0,
+                                            "amount" => 0,
+                                            "checked" =>"",
+                                            "text" => "",
+                                            "period" => "yearly"
+                                        ),
+                                    
+        );
 
     public function init()
     {
         parent::init();
         $this->_auth = Zend_Auth::getInstance();
+        $this->view->payment_options = $this::SUPPORT_OPTIONS;
     }
 
     public function indexAction()
@@ -110,7 +172,9 @@ class SupportController extends Local_Controller_Action_DomainSwitch
         
         //Add pling
         $modelSupport = new Default_Model_DbTable_Support();
-        $supportId = $modelSupport->createNewSupport($this->view->transaction_id, $this->_authMember->member_id, $amount);
+        //$supportId = $modelSupport->createNewSupport($this->view->transaction_id, $this->_authMember->member_id, $amount);
+        $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id, $this->_authMember->member_id, $amount);
+        
         
         
         /**
