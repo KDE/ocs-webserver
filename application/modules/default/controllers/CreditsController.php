@@ -60,17 +60,17 @@ class CreditsController extends Local_Controller_Action_DomainSwitch
 
      public function editAction()
     {
-       	$this->_helper->layout->disableLayout();
-	$id =  (int)$this->getParam('id');
-	$text =$this->getParam('t');
-	$project_id_parent =  (int)$this->getParam('p');
-	$link =  $this->getParam('l');
-	$m = new Default_Model_ProjectClone();
+        $this->_helper->layout->disableLayout();
+      	$id =  (int)$this->getParam('id'); 
+      	$text =$this->getParam('t');
+      	$project_id =  (int)$this->getParam('p'); // cloneID
+      	//$link =  $this->getParam('l');
+      	$m = new Default_Model_ProjectClone();
        	              	
 
-	$m->update(array( 'text' => $text
-	 		     , 'project_id_parent' =>$project_id_parent
-	 		     , 'external_link' => $link) , 'project_clone_id='.$id);                             
+	    $m->update(array( 'text' => $text
+	 		     , 'project_id' =>$project_id
+	 		    ) , 'project_clone_id='.$id);                             
 	
        	$this->_helper->json(array(
        	    'status'  => 'ok',

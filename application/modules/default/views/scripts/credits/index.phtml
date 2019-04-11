@@ -74,10 +74,8 @@ $credits = $model->fetchCredits();
                 <input type="hidden" name="id" value="">
                 <div id="report-product-clone-message" class="message" style="padding: 20px">
                     <div>                            
-                        <label class="form-label">Original product ID on opendesktop:  </label><br/>
-                        <input name="p" onkeyup="this.value=this.value.replace(/[^\d]/,'')"/><br/><br/>
-                        <label class="form-label">External link to original product: </label><br/>
-                        <input name="l" style="width: 440px;" />
+                        <label class="form-label">ID of the Clone on opendesktop:  </label><br/>
+                        <input name="p" id="clonePId"/><br/><br/>     
                         <br/><br/>
                         <label class="form-label">Additional message: </label>
                         <br/>
@@ -243,7 +241,7 @@ $credits = $model->fetchCredits();
 
                               <a 
                                           class="btn btn-default eventmodal" 
-                                          data-p="<?=$this->product->project_id_parent?>"
+                                          data-p="<?=$this->product->project_id?>"
                                           data-t="<?=$this->product->text?>"
                                           data-l="<?=$this->product->external_link?>"
                                           data-id="<?=$this->product->project_clone_id?>">
@@ -296,6 +294,7 @@ $credits = $model->fetchCredits();
     $('body').on('click', 'a.eventmodal', function (event) {
              event.stopPropagation();
              $('#report-product-clone').modal('toggle');           
+             console.log($(this));
              $('#report-product-clone').find('input[name="id"]').val($(this).attr('data-id'));
              $('#report-product-clone').find('input[name="p"]').val($(this).attr('data-p'));
              $('#report-product-clone').find('input[name="l"]').val($(this).attr('data-l'));
