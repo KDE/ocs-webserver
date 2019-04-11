@@ -149,7 +149,7 @@ abstract class Local_Payment_PayPal_SubscriptionCancel_Ipn extends Local_Payment
         
         $this->_processSubscriptionCancel();
         
-        $this->_logger->info(' ' . __FUNCTION__ . ' Status = ' . $this->_ipnMessage->getStatus() . ' DONE');
+        $this->_logger->info(' ' . __FUNCTION__ . ' DONE');
     }
 
     /**
