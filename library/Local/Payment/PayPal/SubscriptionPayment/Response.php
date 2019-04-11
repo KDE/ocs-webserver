@@ -109,7 +109,7 @@ class Local_Payment_PayPal_SubscriptionPayment_Response implements Local_Payment
 
     public function getTransactionAmount()
     {
-        return null;
+        return ($this->_rawResponse['payment_gross']);
     }
 
     public function getTransactionReceiver()

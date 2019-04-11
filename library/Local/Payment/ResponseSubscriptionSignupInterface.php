@@ -34,5 +34,7 @@ interface Local_Payment_ResponseSubscriptionSignupInterface
     public function getRawMessage();
 
     public function getProviderName();
+    
+    public function getCustom();
 
 } 

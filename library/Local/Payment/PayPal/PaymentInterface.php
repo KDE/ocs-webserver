@@ -40,5 +40,7 @@ interface Local_Payment_PayPal_PaymentInterface extends Local_Payment_ResponseIn
     public function getRawMessage();
 
     public function getProviderName();
+    
+    public function getCustom();
 
 } 

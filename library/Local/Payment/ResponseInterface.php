@@ -36,5 +36,7 @@ interface Local_Payment_ResponseInterface
     public function getRawMessage();
 
     public function getProviderName();
+    
+    public function getCustom();
 
 } 

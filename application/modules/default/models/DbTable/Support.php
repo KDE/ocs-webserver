@@ -49,7 +49,7 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
     /**
      * Support Subscription Signup.
      *
-     * @param Local_Payment_ResponseInterface $payment_response
+     * @param Local_Payment_ResponseSubscriptionSignupInterface $payment_response
      * @param int $member_id Id of the Sender
      * @param float $amount amount donations/dollars
      * @param string|null $comment Comment from the buyer
@@ -60,12 +60,16 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
     {
         $new_row = $this->createRow();
         
-        $member_id = substr($payment_response->getPaymentId(), str_split($payment_response->getPaymentId(), '_')[0]);
+        $member_id = explode('_', $payment_response->getCustom())[0];
+        
         $new_row->member_id = $member_id;
-        //$new_row->amount = $amount;
+        $new_row->amount = $payment_response->getTransactionAmount();
         //$new_row->comment = $comment;
         
+        $new_row->subscription_id = $payment_response->getSubscriptionId();
+        
         $new_row->donation_time = new Zend_Db_Expr ('Now()');
+        $new_row->active_time = new Zend_Db_Expr ('Now()');
         $new_row->status_id = self::STATUS_DONATED;
         $new_row->type_id = self::SUPPORT_TYPE_PAYMENT;
 
