@@ -67,6 +67,7 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
         
         $new_row->donation_time = new Zend_Db_Expr ('Now()');
         $new_row->status_id = self::STATUS_DONATED;
+        $new_row->type_id = self::SUPPORT_TYPE_PAYMENT;
 
         $new_row->payment_reference_key = $payment_response->getPaymentId();
         $new_row->payment_provider = $payment_response->getProviderName();
@@ -200,6 +201,21 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
         );
 
         $this->update($updateValues, "payment_reference_key='" . $payment_response->getCustom() . "' AND type_id = 1");
+    }
+    
+    /**
+     * @param Local_Payment_ResponseInterface $payment_response
+     */
+    public function deactivateSupportSubscriptionSignupFromResponse($payment_response)
+    {
+        $updateValues = array(
+            'status_id' => self::STATUS_DELETED,
+            'payment_raw_Message' => serialize($payment_response->getRawMessage()),
+            'deleted_time' => new Zend_Db_Expr ('Now()')
+        );
+
+        $this->update($updateValues, "payment_reference_key='" . $payment_response->getCustom() . "' AND type_id = 1");
+
     }
 
     /**
