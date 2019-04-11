@@ -23,6 +23,8 @@
  */
 $modelInfo = new Default_Model_Info();
 $countActiveMembers = $modelInfo->countTotalActiveMembers();
+
+
 ?>
 <link href="/theme/flatui/css/support.css" rel="stylesheet">
 
@@ -42,15 +44,23 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                     </p> 
                                                                           
                     <div class="x-donation-widget">
-                        <div class="row disply-flex">
-                            <div class="col-lg-6 col-md-12">        
+                         <div class="row disply-flex">
+                            <div class="col-lg-2 col-md-2" style="padding-left: 15px;">        
+                                <div class="x-tabs-header ">
+                                  <div class="header-content">                                                
+                                    Tier                                      
+                                  </div>
+                                </div>                                                  
+                            </div>                        
+
+                            <div class="col-lg-5 col-md-12">        
                                 <div class="x-tabs-header ">
                                   <div class="header-content">                                                
                                     Monthly Payment                                           
                                   </div>
                                 </div>                                                  
                             </div>
-                            <div class="col-lg-6 col-md-12">
+                            <div class="col-lg-5 col-md-12" style="padding-right: 15px;">
                             <div class="x-tabs-header ">
                               <div class="header-content">                                                
                                  Yearly Payment                                               
@@ -59,14 +69,20 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                             </div>
                         </div> <!--end of row-->
                         <div class="row disply-flex">
-                            <div class="col-lg-6 col-md-12">  
+                            <div class="col-lg-2 col-md-12">  
+                            <?php
+                                echo $this->partial('/support/partials/tier.phtml',
+                                        array('tier' => '0.99'));
+                            ?>
+                            </div>
+                            <div class="col-lg-5 col-md-12">  
                            <?php
-                                echo $this->partial('/support/partials/option.phtml',
+                                echo $this->partial('/support/partials/option_monthly.phtml',
                                         $this->payment_options['Option1']
                                 );
                             ?>
                             </div>
-                            <div class="col-lg-6 col-md-12">  
+                            <div class="col-lg-5 col-md-12">  
                                 <?php
                                 echo $this->partial('/support/partials/option.phtml',
                                         $this->payment_options['Option5']
@@ -76,14 +92,20 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                         </div> <!--end of row-->
 
                         <div class="row disply-flex">
-                            <div class="col-lg-6 col-md-12">  
+                            <div class="col-lg-2 col-md-12">  
+                                <?php
+                                echo $this->partial('/support/partials/tier.phtml',
+                                        array('tier' => '2'));
+                                ?>
+                            </div>
+                            <div class="col-lg-5 col-md-12">  
                            <?php
-                                echo $this->partial('/support/partials/option.phtml',
+                                echo $this->partial('/support/partials/option_monthly.phtml',
                                         $this->payment_options['Option2']
                                 );
                             ?>
                             </div>
-                            <div class="col-lg-6 col-md-12">  
+                            <div class="col-lg-5 col-md-12">  
                                 <?php
                                 echo $this->partial('/support/partials/option.phtml',
                                         $this->payment_options['Option6']
@@ -93,14 +115,20 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                         </div> <!--end of row-->
                             
                         <div class="row disply-flex">
-                            <div class="col-lg-6 col-md-12">  
+                            <div class="col-lg-2 col-md-12">  
+                            <?php
+                                echo $this->partial('/support/partials/tier.phtml',
+                                        array('tier' => '5'));
+                            ?>
+                            </div>
+                            <div class="col-lg-5 col-md-12">  
                            <?php
-                                echo $this->partial('/support/partials/option.phtml',
+                                echo $this->partial('/support/partials/option_monthly.phtml',
                                         $this->payment_options['Option3']
                                 );
                             ?>
                             </div>
-                            <div class="col-lg-6 col-md-12">  
+                            <div class="col-lg-5 col-md-12">  
                                
 
                                 <ul class="x-suggested-amounts">
@@ -125,14 +153,20 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                         </div> <!--end of row-->
 
                         <div class="row disply-flex">
-                            <div class="col-lg-6 col-md-12">  
+                            <div class="col-lg-2 col-md-12">  
+                                <?php
+                                echo $this->partial('/support/partials/tier.phtml',
+                                        array('tier' => '10'));
+                            ?>
+                            </div>
+                            <div class="col-lg-5 col-md-12">  
                            <?php
-                                echo $this->partial('/support/partials/option.phtml',
+                                echo $this->partial('/support/partials/option_monthly.phtml',
                                         $this->payment_options['Option4']
                                 );
                             ?>
                             </div>
-                            <div class="col-lg-6 col-md-12">  
+                            <div class="col-lg-5 col-md-12">  
                                                                
                             </div>
                         </div> <!--end of row-->
