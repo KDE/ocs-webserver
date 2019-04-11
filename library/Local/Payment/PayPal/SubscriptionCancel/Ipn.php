@@ -63,7 +63,7 @@ abstract class Local_Payment_PayPal_SubscriptionCancel_Ipn extends Local_Payment
             return;
         }
 
-        $this->processSubscription();
+        $this->processSubscriptionCancel();
     }
 
     /**
@@ -143,12 +143,12 @@ abstract class Local_Payment_PayPal_SubscriptionCancel_Ipn extends Local_Payment
         return true;
     }
 
-    protected function processSubscription()
+    protected function processSubscriptionCancel()
     {
         $this->_logger->info(' ' . __FUNCTION__ . ' IPN: ' . print_r($this->_ipnMessage, true) . ' Subscription ID: '
             . $this->_ipnMessage->getSubscriptionId);
         
-        $this->_processSubscription();
+        $this->_processSubscriptionCancel();
         
         $this->_logger->info(' ' . __FUNCTION__ . ' Status = ' . $this->_ipnMessage->getStatus() . ' DONE');
     }
@@ -159,12 +159,12 @@ abstract class Local_Payment_PayPal_SubscriptionCancel_Ipn extends Local_Payment
      * For Mass Payments, this means that all of your payments have been claimed,
      * or after a period of 30 days, unclaimed payments have been returned to you.
      */
-    protected function _processSubscription()
+    protected function _processSubscriptionCancel()
     {
         $this->_logger->info(' ' . __FUNCTION__ . ' set Status');
 
         $Table = new Default_Model_DbTable_Support();
-        $Table->activateSupportSubscriptionSignupFromResponse($this->_ipnMessage);
+        $Table->deactivateSupportSubscriptionSignupFromResponse($this->_ipnMessage);
     }
 
     public function getCharset($rawDataIpn)
