@@ -114,18 +114,25 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
             <?= $this->translate('Settings') ?>
         </a>
     </li>
- <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin'){
-    $identity = Zend_Auth::getInstance()->getStorage()->read();
-    ?>
-    <li class="header-menu-left-item <?php echo $this->tab == 'supporterbox' ? 'active' : ''; ?>">
+    
+    <?php  if($this->isSupporter($this->member->member_id)){?>
+    <li class="header-menu-left-item <?php echo $this->tab == 'supporter' ? 'active' : ''; ?>">           
+         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'supporter'); ?>">        
+            <i class="fa fa-user"></i>
+            <?= $this->translate('Supporter') ?>
+        </a>
+    </li>
+    <?php }?>
+    
+
+   <?php /*
+
+   <li class="header-menu-left-item <?php echo $this->tab == 'supporterbox' ? 'active' : ''; ?>">
         <a href="<?php echo $helperBase->buildBaserUrl('supporterbox'); ?>/<?=$identity->member_id?>">            
             <i class="fa fa-user"></i>
             <?= $this->translate('Supporter box') ?>
         </a>
     </li>
-    <?php } ?>
-
-   <?php /*
     <li class="header-menu-left-item <?php echo $this->tab == 'earnings' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'income'); ?>">
             <span class="glyphicon glyphicon-usd"></span>
