@@ -67,6 +67,7 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
         //$new_row->comment = $comment;
         
         //$new_row->subscription_id = $payment_response->getSubscriptionId();
+        $new_row->payment_transaction_id = $payment_response->getTransactionId();
         
         $new_row->donation_time = new Zend_Db_Expr ('Now()');
         $new_row->active_time = new Zend_Db_Expr ('Now()');
