@@ -63,7 +63,7 @@ abstract class Local_Payment_PayPal_SubscriptionPayment_Ipn extends Local_Paymen
             return;
         }
 
-        $this->processPaymentStatus();
+        $this->processSubscriptionPaymentStatus();
     }
 
     /**
@@ -143,13 +143,13 @@ abstract class Local_Payment_PayPal_SubscriptionPayment_Ipn extends Local_Paymen
         return true;
     }
 
-    protected function processPaymentStatus()
+    protected function processSubscriptionPaymentStatus()
     {
         $this->_logger->info(' ' . __FUNCTION__ . ' IPN: ' . print_r($this->_ipnMessage, true) . ' Status: '
             . $this->_ipnMessage->getStatus());
         switch ($this->_ipnMessage->getStatus()) {
             case 'COMPLETED':
-                $this->_statusCompleted();
+                $this->_statusSubscriptionPaymentCompleted();
                 break;
             /*case 'Denied':
                 $this->_statusDenied();
@@ -171,7 +171,7 @@ abstract class Local_Payment_PayPal_SubscriptionPayment_Ipn extends Local_Paymen
      * For Mass Payments, this means that all of your payments have been claimed,
      * or after a period of 30 days, unclaimed payments have been returned to you.
      */
-    protected function _statusCompleted()
+    protected function _statusSubscriptionPaymentCompleted()
     {
         $this->_logger->info(' ' . __FUNCTION__ . ' set Status');
 
