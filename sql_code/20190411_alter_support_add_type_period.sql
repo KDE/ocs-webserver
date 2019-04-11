@@ -8,3 +8,6 @@ SET p.type_id = 0;
 
 ALTER TABLE `support`
 	ADD COLUMN `subscription_id` VARCHAR(255) NULL AFTER `type_id`;
+
+ALTER TABLE `support`
+	ADD COLUMN `period_frequency` VARCHAR(50) NULL DEFAULT NULL AFTER `period`;

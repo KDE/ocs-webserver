@@ -60,21 +60,21 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
     {
         $new_row = $this->createRow();
         
-        $member_id = explode('_', $payment_response->getCustom())[0];
-        
-        $new_row->member_id = $member_id;
+        $signUp = $this->fetchRow('custom = '. $payment_response->getCustom() . ' AND type_id = 1');
+        if(!empty($signUp)) {
+            $new_row->member_id = $signUp['member_id'];
+            $new_row->subscription_id = $signUp['subscription_id'];
+            $new_row->period = $signUp['period'];
+            $new_row->period_frequency = $signUp['period_frequency'];
+        }
+
         $new_row->amount = $payment_response->getTransactionAmount();
-        //$new_row->comment = $comment;
-        
-        //$new_row->subscription_id = $payment_response->getSubscriptionId();
         $new_row->payment_transaction_id = $payment_response->getTransactionId();
-        
         $new_row->donation_time = new Zend_Db_Expr ('Now()');
         $new_row->active_time = new Zend_Db_Expr ('Now()');
         $new_row->status_id = self::STATUS_DONATED;
         $new_row->type_id = self::SUPPORT_TYPE_PAYMENT;
-
-        $new_row->payment_reference_key = $payment_response->getPaymentId();
+        $new_row->payment_reference_key = $payment_response->getCustom();
         $new_row->payment_provider = $payment_response->getProviderName();
         $new_row->payment_status = $payment_response->getStatus();
         $new_row->payment_raw_message = serialize($payment_response->getRawMessage());
@@ -148,13 +148,14 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
      * @return mixed The primary key value(s), as an associative array if the
      *     key is compound, or a scalar if the key is single-column.
      */
-    public function createNewSupportSubscriptionSignup($transaction_id, $member_id, $amount, $period, $comment = null)
+    public function createNewSupportSubscriptionSignup($transaction_id, $member_id, $amount, $period, $period_frequency, $comment = null)
     {
         $new_row = $this->createRow();
         $new_row->member_id = $member_id;
         $new_row->type_id = $this::SUPPORT_TYPE_SIGNUP;
         $new_row->amount = $amount;
         $new_row->period = $period;
+        $new_row->period_frequency = $period_frequency;
         $new_row->comment = $comment;
         $new_row->donation_time = new Zend_Db_Expr ('Now()');
         $new_row->status_id = self::STATUS_NEW;
