@@ -53,6 +53,7 @@ $textCountryCity = $this->member->city;
 $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
 $helperMemberScore = new Default_View_Helper_FetchMemberScore();
 $isSupporter = $this->stat['donationIssupporter'];
+$isSubscriber = $this->stat['subscriptionIssupporter'];
 
 $url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
 $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
@@ -94,7 +95,7 @@ div#preloaded-images {
                         <article class="well" style="width: 100%;">
                             <div class="about-title">
                                 <figure class="relative inline profile-image-container">
-                                    <?php if( $isSupporter) { ?><span class="supporter-badge">S</span>
+                                    <?php if( $isSupporter || $isSubscriber ) { ?><span class="supporter-badge">S</span>
                                     <?php }?>
                                     <img src="<?php echo $memberProfile ; ?>"
                                          alt="profile-image"
@@ -178,6 +179,18 @@ div#preloaded-images {
                                        <span>Supporter until: <?=$helperPrintDate->printDate(date('Y-m-d H:i:s', strtotime($this->stat['donationMax'] . ' +1 year')))?> </span>
                                     </div>
                                     <?php } ?>
+                                    
+                                    <?php
+                                        if($isSubscriber){
+                                    ?>
+                                     <div class="row">
+                                       <span>Supporter since: <?=$helperPrintDate->printDate($this->stat['subscriptionStart'])?> </span>
+                                    </div>
+                                      <div class="row">
+                                       <span>Supporter with: $<?= $this->stat['subscriptionAmount'] ?> <?= $this->stat['subscriptionPeriodText'] ?> </span>
+                                    </div>
+                                    <?php } ?>
+                                    
                                      <div class="row">
                                        <span class="">Last time active : <?=$helperPrintDate->printDate($this->stat['userLastActiveTime'])?> </span>
                                     </div>

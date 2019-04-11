@@ -194,6 +194,26 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 $stat['donationMin'] = $donationinfo['active_time_min'];
                 $stat['donationCnt'] = $donationinfo['cnt'];
             }
+            
+            $subscriptioninfo = $tableMember->fetchSupporterSubscriptionInfo($this->_memberId);
+            if ($subscriptioninfo) {
+                $stat['subscriptionIssupporter'] = true;
+                $stat['subscriptionStart'] = $subscriptioninfo['create_time'];
+                $stat['subscriptionAmount'] = $subscriptioninfo['amount'];
+                $stat['subscriptionPeriod'] = $subscriptioninfo['period'];
+                if($subscriptioninfo['period'] == 'M') {
+                    $stat['subscriptionPeriodText'] = 'monthly';
+                } else if($subscriptioninfo['period'] == 'Y') {
+                    $stat['subscriptionPeriodText'] = 'yearly';
+                } else {
+                    $stat['subscriptionPeriodText'] = '';
+                }
+                    
+                
+                $stat['subscriptionPeriodFreq'] = $subscriptioninfo['period_frequency'];
+            } else {
+                $stat['subscriptionIssupporter'] = false;
+            }
             //  $cntmb = $tableMember->fetchCntSupporters($this->_memberId);
             // $stat['cntSupporters'] = $cntmb;
             $stat['userLastActiveTime'] = $tableMember->fetchLastActiveTime($this->_memberId);

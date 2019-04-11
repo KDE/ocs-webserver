@@ -1001,6 +1001,17 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
         return $result;
     }
+    
+    public function fetchSupporterSubscriptionInfo($member_id)
+    {
+        $sql = 'SELECT create_time,amount,period,period_frequency from support  where status_id = 2 AND type_id = 1 
+                AND member_id = 376921
+                ORDER BY create_time desc
+                LIMIT 1';
+        $result = $this->getAdapter()->fetchRow($sql, array('member_id' => $member_id));
+
+        return $result;
+    }
 
     public function fetchLastActiveTime($member_id)
     {
