@@ -76,11 +76,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
                                         ),
                                     'Option5' => array(
                                             "name" => "Option5",
-<<<<<<< HEAD
                                             "value"  => 15.00,
-=======
-                                            "value"  => 15.01,
->>>>>>> 1c8908d0b4924f2dc27dc36a980ce3d1c8a7df0e
+
                                             "amount" => 0.99,
                                             "checked" =>"",
                                             "text" => "($0.99 * 12 = $11.88 + $0.74 paypal + $2.40 taxes = $15.02 yearly or $1.25 monthly)",
