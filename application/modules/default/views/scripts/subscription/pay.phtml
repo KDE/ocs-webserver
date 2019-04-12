@@ -28,33 +28,6 @@ if ($this->error) {
         <h3>Please wait. We will redirect you to PayPal. </h3>
         <p>Or press the Donate button:</p>
         
-        <?php /*
-        <form action="<?= $this->form_endpoint ?>" method="post" target="_top" id="payform">
-            <input type="hidden" name="cmd" value="_donations">
-            <!--<input type="hidden" name="business" value="paypal@opendesktop.org">-->
-            <input type="hidden" name="business" value="<?= $this->form_merchant ?>">
-
-            <input type="hidden" name="lc" value="US">
-            <input type="hidden" name="item_name" value="Thank you for supporting opendesktop.org">
-            <input type="hidden" name="item_number" value="1">
-            <input type="hidden" name="currency_code" value="USD">
-            <input type="hidden" name="no_note" value="1">
-            <input type="hidden" name="no_shipping" value="1">
-            <input type="hidden" name="rm" value="1">
-            <input type="hidden" name="return" value="<?= $this->form_return_url_ok ?>">
-            <input type="hidden" name="cancel_return" value="<?= $this->form_return_url_cancel ?>">
-            <input type="hidden" name="notify_url" value="<?= $this->form_ipn_endpoint ?>">
-            <input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_LG.gif:NonHosted">
-            <input type="hidden" name="custom" value="<?= $this->transaction_id ?>">
-            <input type="hidden" name="amount" value="<?= $this->amount ?>">
-            
-            <div class="Actions">
-                <input  id="submitBtn" type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-                <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-            </div>
-        </form>
-        */?>
-        
         <form action="<?= $this->form_endpoint ?>" method="post" target="_top" id="payform">
             <input type="hidden" name="cmd" value="_xclick-subscriptions">
             <input type="hidden" name="business" value="<?= $this->form_merchant ?>">
@@ -103,7 +76,7 @@ if ($this->error) {
     <script>
         //var dgFlow = new PAYPAL.apps.DGFlow({trigger: 'submitBtn'});
         
-       //document.getElementById("payform").submit();
+       document.getElementById("payform").submit();
         
         //
         //document.location.href = "<?= $this->checkoutEndpoint ?>?cmd=_ap-payment&paykey=<?= $this->paymentKey ?>";
