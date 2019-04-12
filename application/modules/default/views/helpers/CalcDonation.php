@@ -29,7 +29,8 @@ class Default_View_Helper_CalcDonation extends Zend_View_Helper_Abstract
 
     public function calcDonation($tier)
     {
-        $v = ($tier + self::paypal_fix)/( 1- ( ( self::paypal_var/(1+self::paypal_var)) + (self::tax/(1+self::tax)) ));
+        //$v = ($tier + self::paypal_fix)/( 1- ( ( self::paypal_var/(1+self::paypal_var)) + (self::tax/(1+self::tax)) ));
+        $v = ($tier + self::paypal_fix)/( 1- ( ( self::paypal_var) + (self::tax/(1+self::tax)) ));
         return number_format($v, 2);
     }
 
