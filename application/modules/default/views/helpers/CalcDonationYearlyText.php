@@ -35,8 +35,8 @@ class Default_View_Helper_CalcDonationYearlyText extends Zend_View_Helper_Abstra
 		$total = $tier*12 + $paypal;
 		$t=$total*self::tax;
 		$g = $total+$t;
-        $r = '($'.$tier.'*12 + $'.number_format($paypal, 2).' paypal + $'.number_format($t, 2).' tax = $'
-        		.number_format($g,2).' monthly)';
+        $r = '($'.$tier.'*12 = '.number_format($tier*12,2).' + $'.number_format($paypal, 2).' paypal + $'.number_format($t, 2).' tax = $'
+        		.number_format($g,2).' yearly)';
         return $r;
     }
 
