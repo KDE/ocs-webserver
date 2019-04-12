@@ -30,7 +30,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
 
 <main>
     <section class="wrapper" id="products-wrapper">
-        <form class="donation-form" id="new_donation" action="/support/pay" accept-charset="UTF-8" data-remote="true" method="post">  
+        <form class="donation-form" id="new_donation" action="<?= $this->urlPay ?>" accept-charset="UTF-8" data-remote="true" method="post">  
                 <input type="hidden" id="currency-symbol" value="$">
                 <input type="hidden" name="provider" value="paypal" id="provider">
         <div class="container-fluid">
