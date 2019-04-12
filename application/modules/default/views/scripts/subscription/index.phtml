@@ -174,31 +174,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                             </div>
                         </div> <!--end of row-->
 
-                        <div class="row disply-flex">
-                            <div class="col-lg-2 col-md-12">  
-                                <?php
-                                echo $this->partial('/subscription/partials/tier.phtml',
-                                        array('tier' => '100'));
-                            ?>
-                            </div>
-                            <div class="col-lg-5 col-md-12">  
-                                <?php
-                                echo $this->partial('/subscription/partials/option_monthly.phtml',
-                                        $this->payment_options['Option9']
-                                );
-                                 ?>  
-                            </div>
-                            <div class="col-lg-5 col-md-12">  
-
-                                
-                                 <?php
-                                echo $this->partial('/subscription/partials/option.phtml',
-                                        $this->payment_options['Option9']
-                                );
-                                 ?>  
-                                                               
-                            </div>
-                        </div> <!--end of row-->
+                        
             
                         <div class="row disply-flex">
                               <div class="col-lg-12 col-md-12">  
