@@ -65,7 +65,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
                                         ),
                                     'Option4' => array(
                                             "name" => "Option4",
-                                            "value"  => 12.68,
+                                            "value"  => 12.70,
                                             "amount" => 10,
                                             "text" => "",
                                             "checked" =>"",
@@ -76,7 +76,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
                                         ),
                                     'Option5' => array(
                                             "name" => "Option5",
-                                            "value"  => 15.00,
+                                            "value"  => 15.01,
 
                                             "amount" => 0.99,
                                             "checked" =>"",
@@ -108,24 +108,14 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
                                         ),
                                     'Option8' => array(
                                             "name" => "Option8",
-                                            "value"  => 74.25,
+                                            "value"  => 74.32,
                                             "amount" => 5,
                                             "checked" =>"",
                                             "text" => "",
                                             "period" => "yearly",
                                             "period_short" => "Y",
                                             "period_frequency" => "1",
-                                        ),
-                                    'Option9' => array(
-                                            "name" => "Option9",
-                                            "value"  => 1200,
-                                            "amount" => 100,
-                                            "checked" =>"",
-                                            "text" => "",
-                                            "period" => "yearly",
-                                            "period_short" => "Y",
-                                            "period_frequency" => "1",
-                                        ),
+                                        )
                                     
         );
 
