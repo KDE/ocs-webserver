@@ -78,9 +78,9 @@ if ($this->error) {
                     $amount = $this->amount; 
                 } else {
                     if($this->payment_options[$this->payment_option]['period_short'] == 'M') {
-                        $amount = $this->calcDonation($this->amount); 
+                        $amount = $this->calcDonation($this->payment_options[$this->payment_option]['amount']); 
                     } else if($this->payment_options[$this->payment_option]['period_short'] == 'Y') {
-                        $amount = $this->calcDonation($this->amount*12); 
+                        $amount = $this->calcDonation($this->payment_options[$this->payment_option]['amount']*12); 
                     }
                 }
             ?>

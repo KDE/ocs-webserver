@@ -209,7 +209,14 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         if($paymentOption == "Option7") {
             $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id, $this->_authMember->member_id, $amount, $this::SUPPORT_OPTIONS[$paymentOption]['period_short'], $this::SUPPORT_OPTIONS[$paymentOption]['period_frequency']);
         } else {
-            $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id, $this->_authMember->member_id, $this::SUPPORT_OPTIONS[$paymentOption]['value'], $this::SUPPORT_OPTIONS[$paymentOption]['period_short'], $this::SUPPORT_OPTIONS[$paymentOption]['period_frequency']);
+            $amount = null;
+            $viewhelper = new Default_View_Helper_CalcDonation();
+            if($this::SUPPORT_OPTIONS[$paymentOption]['period_short'] == 'M') {
+                $amount = $viewhelper->calcDonation($this::SUPPORT_OPTIONS[$paymentOption]['amount']); 
+            } else if($this::SUPPORT_OPTIONS[$paymentOption]['period_short'] == 'Y') {
+                $amount = $viewhelper->calcDonation($this::SUPPORT_OPTIONS[$paymentOption]['amount']*12); 
+            }
+            $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id, $this->_authMember->member_id, $amount, $this::SUPPORT_OPTIONS[$paymentOption]['period_short'], $this::SUPPORT_OPTIONS[$paymentOption]['period_frequency']);
         }
         
         
