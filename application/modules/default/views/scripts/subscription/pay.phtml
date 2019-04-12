@@ -72,11 +72,24 @@ if ($this->error) {
             <input type="hidden" name="bn" value="PP-SubscriptionsBF:btn_subscribeCC_LG.gif:NonHosted">
             <input type="hidden" name="custom" value="<?= $this->transaction_id ?>">
             
-            <input type="hidden" name="a3" value="<?php if($this->payment_option == "Option7") echo $this->amount; else echo $this->payment_options[$this->payment_option]['value'] ?>">
+            <?php 
+                $amount = $this->amount;
+                if($this->payment_option == "Option7") {
+                    $amount = $this->amount; 
+                } else {
+                    if($this->payment_options[$this->payment_option]['period_short'] == 'M') {
+                        $amount = $this->calcDonation($this->amount); 
+                    } else if($this->payment_options[$this->payment_option]['period_short'] == 'Y') {
+                        $amount = $this->calcDonation($this->amount*12); 
+                    }
+                }
+            ?>
+            
+            <input type="hidden" name="a3" value="<?= $amount ?>">
             <input type="hidden" name="p3" value="<?= $this->payment_options[$this->payment_option]['period_frequency'] ?>">
             <input type="hidden" name="t3" value="<?= $this->payment_options[$this->payment_option]['period_short'] ?>">
             
-            <p>You choose: $<?php if($this->payment_option == "Option7") echo $this->amount; else echo $this->payment_options[$this->payment_option]['value'] ?> <?= $this->payment_options[$this->payment_option]['period'] ?></p>
+            <p>You choose: $<?= $amount ?> <?= $this->payment_options[$this->payment_option]['period'] ?></p>
             
             
             <input type="hidden" name="option_index" value="0">
@@ -90,7 +103,7 @@ if ($this->error) {
     <script>
         //var dgFlow = new PAYPAL.apps.DGFlow({trigger: 'submitBtn'});
         
-       document.getElementById("payform").submit();
+       //document.getElementById("payform").submit();
         
         //
         //document.location.href = "<?= $this->checkoutEndpoint ?>?cmd=_ap-payment&paykey=<?= $this->paymentKey ?>";
