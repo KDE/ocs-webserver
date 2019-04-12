@@ -20,7 +20,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class SupportController extends Local_Controller_Action_DomainSwitch
+class SubscriptionController extends Local_Controller_Action_DomainSwitch
 {
 
     /**
@@ -32,16 +32,94 @@ class SupportController extends Local_Controller_Action_DomainSwitch
     /** @var  int */
     /** @var  Zend_Auth */
     protected $_auth;
+    
+    const SUPPORT_OPTIONS = array(  'Option1' => array(
+                                            "name" => "Option1",
+                                            "value"  => 1.60,
+                                            "amount" => 0.99,
+                                            "text" => "($<b>0.99</b> + 35 cents paypal + 26 cents taxes = $<b>1.60 monthly</b>)",
+                                            "checked" =>"checked",
+                                            "period" => "monthly",
+                                            "period_short" => "M",
+                                            "period_frequency" => "1",
+                                        ),
+                                    'Option2' => array(
+                                            "name" => "Option2",
+                                            "value"  => 2.83,
+                                            "amount" => 2,
+                                            "checked" =>"",
+                                            "text" => "($2 + 38 cents paypal = $2.38 + 45cents taxes = $2.83 monthly)",
+                                            "period" => "monthly",
+                                            "period_short" => "M",
+                                            "period_frequency" => "1",
+                                        ),
+                                    'Option3' => array(
+                                            "name" => "Option3",
+                                            "value"  => 6.60,
+                                            "amount" => 5,
+                                            "checked" =>"",
+                                            "text" => "($5 + 55 cents paypal = $5.55 + $1.05 taxes = $6.60 monthly)",
+                                            "period" => "monthly",
+                                            "period_short" => "M",
+                                            "period_frequency" => "1",
+                                        ),
+                                    'Option4' => array(
+                                            "name" => "Option4",
+                                            "value"  => 10,
+                                            "amount" => 10,
+                                            "text" => "",
+                                            "checked" =>"",
+                                            "islast" => true,
+                                            "period" => "monthly",
+                                            "period_short" => "M",
+                                            "period_frequency" => "1",
+                                        ),
+                                    'Option5' => array(
+                                            "name" => "Option5",
+                                            "value"  => 15.02,
+                                            "amount" => 15.02,
+                                            "checked" =>"",
+                                            "text" => "($0.99 * 12 = $11.88 + $0.74 paypal + $2.40 taxes = $15.02 yearly or $1.25 monthly)",
+                                            "period" => "yearly",
+                                            "period_short" => "Y",
+                                            "period_frequency" => "1",
+                                            
+                                        ),
+                                    'Option6' => array(
+                                            "name" => "Option6",
+                                            "value"  => 28.92,
+                                            "amount" => 28.92,
+                                            "checked" =>"",
+                                            "text" => "($2* 12 = $24 + 30 cents paypal = $24.3 + 19% taxes = $28.92 yearly)",
+                                            "period" => "yearly",
+                                            "period_short" => "Y",
+                                            "period_frequency" => "1",
+                                        ),
+                                    'Option7' => array(
+                                            "name" => "Option7",
+                                            "value"  => 0,
+                                            "amount" => 0,
+                                            "checked" =>"",
+                                            "text" => "",
+                                            "period" => "yearly",
+                                            "period_short" => "Y",
+                                            "period_frequency" => "1",
+                                        ),
+                                    
+        );
 
     public function init()
     {
         parent::init();
         $this->_auth = Zend_Auth::getInstance();
+        $this->view->payment_options = $this::SUPPORT_OPTIONS;
     }
 
     public function indexAction()
     {
         $this->view->authMember = $this->_authMember;
+        $httpHost = $this->getRequest()->getHttpHost();
+        $this->view->urlPay =  '/subscription/pay';
     }
 
     public function showAction()
@@ -60,7 +138,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
         $request = Zend_Controller_Front::getInstance()->getRequest();
 
         $httpHost = $this->getRequest()->getHttpHost();
-        $this->view->urlPay =  'https://' . $httpHost . '/support/pay';
+        $this->view->urlPay =  'https://' . $httpHost . '/subscription/pay';
         $this->view->amount = (float)$this->getParam('amount', 1);
         $this->view->comment = html_entity_decode(strip_tags($this->getParam('comment'), null), ENT_QUOTES, 'utf-8');
         $this->view->provider =
@@ -74,15 +152,21 @@ class SupportController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout()->disableLayout();
         
         //get parameter
+        $paymentOption = $this->getParam('amount_predefined');
         $amount_predefined = (float)$this->getParam('amount_predefined', 1);
         $amount_handish  = (float)$this->getParam('amount_handish', 1);
+        
+        $isHandish = false;
         
         $amount = 0;
         if(null != ($this->getParam('amount_predefined') && $amount_predefined > 0)) {
             $amount = $amount_predefined;
         } else {
+            $isHandish = true;
             $amount = $amount_handish;
         }
+        
+        
         
         $comment = Default_Model_HtmlPurify::purify($this->getParam('comment'));
         $paymentProvider =
@@ -93,8 +177,8 @@ class SupportController extends Local_Controller_Action_DomainSwitch
         
         $form_url = $config->third_party->paypal->form->endpoint . '/cgi-bin/webscr';
         $ipn_endpoint =  'http://'.$httpHost.'/gateway/paypal';
-        $return_url_success =  'http://'.$httpHost.'/support/paymentok';
-        $return_url_cancel =   'http://'.$httpHost.'/support/paymentcancel';
+        $return_url_success =  'http://'.$httpHost.'/subscription/paymentok';
+        $return_url_cancel =   'http://'.$httpHost.'/subscription/paymentcancel';
         $merchantid = $config->third_party->paypal->merchantid;
         
         $this->view->form_endpoint = $form_url;
@@ -104,12 +188,19 @@ class SupportController extends Local_Controller_Action_DomainSwitch
         $this->view->form_merchant = $merchantid;
         $this->view->member_id = $this->_authMember->member_id;
         $this->view->transaction_id = $this->_authMember->member_id . '_' . time();
+        
         $this->view->amount = $amount;
-        $this->view->amount_predefined = $amount_predefined;
+        $this->view->payment_option = $paymentOption;
         
         //Add pling
         $modelSupport = new Default_Model_DbTable_Support();
-        $supportId = $modelSupport->createNewSupport($this->view->transaction_id, $this->_authMember->member_id, $amount);
+        //$supportId = $modelSupport->createNewSupport($this->view->transaction_id, $this->_authMember->member_id, $amount);
+        if($paymentOption == "Option7") {
+            $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id, $this->_authMember->member_id, $amount, $this::SUPPORT_OPTIONS[$paymentOption]['period_short'], $this::SUPPORT_OPTIONS[$paymentOption]['period_frequency']);
+        } else {
+            $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id, $this->_authMember->member_id, $this::SUPPORT_OPTIONS[$paymentOption]['value'], $this::SUPPORT_OPTIONS[$paymentOption]['period_short'], $this::SUPPORT_OPTIONS[$paymentOption]['period_frequency']);
+        }
+        
         
         
         /**

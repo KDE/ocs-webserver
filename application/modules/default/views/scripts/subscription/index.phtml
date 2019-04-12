@@ -1,0 +1,178 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created: 31.05.2017
+ */
+$modelInfo = new Default_Model_Info();
+$countActiveMembers = $modelInfo->countTotalActiveMembers();
+?>
+<link href="/theme/flatui/css/support.css" rel="stylesheet">
+
+<main>
+    <section class="wrapper" id="products-wrapper">
+        <form class="donation-form" id="new_donation" action="<?= $this->urlPay ?>" accept-charset="UTF-8" data-remote="true" method="post">  
+                <input type="hidden" id="currency-symbol" value="$">
+                <input type="hidden" name="provider" value="paypal" id="provider">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="sidebar-left col-md-2"></div>
+                
+   
+                <div class="content col-md-8">
+                    <h2>Become a Supporter</h2>
+                    <p>Your donation supports <b> <?=$countActiveMembers?></b> creators on opendesktop.org.
+                    </p> 
+                                                                          
+                    <div class="x-donation-widget">
+                        <div class="row disply-flex">
+                            <div class="col-lg-6 col-md-12">        
+                                <div class="x-tabs-header ">
+                                  <div class="header-content">                                                
+                                    Monthly Payment                                           
+                                  </div>
+                                </div>                                                  
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                            <div class="x-tabs-header ">
+                              <div class="header-content">                                                
+                                 Yearly Payment                                               
+                              </div>
+                            </div>                                                                                     
+                            </div>
+                        </div> <!--end of row-->
+                        <div class="row disply-flex">
+                            <div class="col-lg-6 col-md-12">  
+                           <?php
+                                echo $this->partial('/support/partials/option.phtml',
+                                        $this->payment_options['Option1']
+                                );
+                            ?>
+                            </div>
+                            <div class="col-lg-6 col-md-12">  
+                                <?php
+                                echo $this->partial('/support/partials/option.phtml',
+                                        $this->payment_options['Option5']
+                                );
+                            ?>                                    
+                            </div>
+                        </div> <!--end of row-->
+
+                        <div class="row disply-flex">
+                            <div class="col-lg-6 col-md-12">  
+                           <?php
+                                echo $this->partial('/support/partials/option.phtml',
+                                        $this->payment_options['Option2']
+                                );
+                            ?>
+                            </div>
+                            <div class="col-lg-6 col-md-12">  
+                                <?php
+                                echo $this->partial('/support/partials/option.phtml',
+                                        $this->payment_options['Option6']
+                                );
+                            ?>                                    
+                            </div>
+                        </div> <!--end of row-->
+                            
+                        <div class="row disply-flex">
+                            <div class="col-lg-6 col-md-12">  
+                           <?php
+                                echo $this->partial('/support/partials/option.phtml',
+                                        $this->payment_options['Option3']
+                                );
+                            ?>
+                            </div>
+                            <div class="col-lg-6 col-md-12">  
+                               
+
+                                <ul class="x-suggested-amounts">
+                                <li class="amount-item <?=(isset($this->islast) ? 'last':'')?>">  
+                                     <div class="radiocontainer">
+                                      <input class="suggested-amount custom_amount_item" <?=$this->checked?> id="custom_amount_item" type="radio" value="Option7" name="amount_predefined">
+                                    </div>
+                                      <div class="item-text">
+                                        <span class="unit-wrapper">
+                                          <span class="unit">$</span>
+                                        </span>
+                                        <span class="amount"><input id="custom_amount" min="16" step="any" inputmode="numeric" type="number" name="amount_handish"> </span>
+                                        <span class="desc">Enter a free amount > $15</span>
+                                      </div>
+                                    
+                                </li>
+                                </ul>
+
+                               
+                                                               
+                            </div>
+                        </div> <!--end of row-->
+
+                        <div class="row disply-flex">
+                            <div class="col-lg-6 col-md-12">  
+                           <?php
+                                echo $this->partial('/support/partials/option.phtml',
+                                        $this->payment_options['Option4']
+                                );
+                            ?>
+                            </div>
+                            <div class="col-lg-6 col-md-12">  
+                                                               
+                            </div>
+                        </div> <!--end of row-->
+            
+                        <div class="row disply-flex">
+                              <div class="col-lg-12 col-md-12">  
+                                <div class="tabs-footer">
+                                    <?php if (Zend_Auth::getInstance()->hasIdentity()) {?>
+                                  <button type="submit" class="dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
+                                    <span class="donate" id="linkButton">
+                                      <span class="amount">
+                                        <span isolate="">Donate via PayPal</span>
+                                      </span>
+                                    </span>
+                                    </button>
+                                     <?php }else{
+                                        echo "Please login to donate";
+                                    }?>
+                                </div>
+                                    </div>
+                        </div> <!--end of row-->
+                    </div> <!--end of tabs-->
+                    
+                    
+                </div> <!--end of content-->
+                <div class="sidebar-right col-md-2"></div>
+                
+            </div>
+            
+        </div>
+         </form>
+    </section>
+</main>
+
+<script>
+    $(document).ready(function(){
+        $("#custom_amount").click(function(){
+            $('.mdl-radio__button').removeAttr('checked');
+            $('#custom_amount_item').prop("checked", true);            
+        });      
+
+    });
+</script>

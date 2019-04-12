@@ -51,6 +51,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_discovery'));
         $this->addResource(new Zend_Acl_Resource ('default_donationlist'));
         $this->addResource(new Zend_Acl_Resource ('default_support'));
+        $this->addResource(new Zend_Acl_Resource ('default_subscription'));
         $this->addResource(new Zend_Acl_Resource ('default_error'));
         $this->addResource(new Zend_Acl_Resource ('default_explore'));
         $this->addResource(new Zend_Acl_Resource ('default_gateway'));
@@ -156,6 +157,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_productcategory',
             'default_rss',
             'default_support',
+            'default_subscription',
             'default_supporterbox',
             'default_plingbox',
             'default_oauth',
@@ -354,8 +356,12 @@ class Default_Plugin_AclRules extends Zend_Acl
         // resource default_support
         $this->allow(self::ROLENAME_GUEST, 'default_support', array('index'));
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_support', array('index', 'pay', 'paymentok', 'paymentcancel'));
+        
+        // resource default_subscription
+        $this->allow(self::ROLENAME_GUEST, 'default_subscription', array('index'));
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_subscription', array('index', 'pay', 'paymentok', 'paymentcancel'));
 
-        // resource default_support
+        // resource default_report
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_report', array('comment', 'product', 'productfraud', 'productclone'));
 
         // resource default_widget
