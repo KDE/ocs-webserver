@@ -89,10 +89,17 @@ class UserMenu extends React.Component {
            <img src={this.props.baseUrl+"/theme/react/assets/img/logo-riot.svg"} className="riotIcon"></img>Chat
          </a></li>);
        }
+
+       let subscriptionItem;
+        if (this.props.user && this.props.isAdmin ){
+         subscriptionItem=(<li><a href={this.props.baseUrl + "/subscription"}>Subscription</a></li>);
+       }
+
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>
+          {subscriptionItem}
           {aboutMenu}
           {searchMenuDisplay}
           {chatItem}
