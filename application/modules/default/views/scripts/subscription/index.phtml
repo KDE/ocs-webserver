@@ -182,7 +182,11 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                             ?>
                             </div>
                             <div class="col-lg-5 col-md-12">  
-                           
+                                <?php
+                                echo $this->partial('/subscription/partials/option_monthly.phtml',
+                                        $this->payment_options['Option9']
+                                );
+                                 ?>  
                             </div>
                             <div class="col-lg-5 col-md-12">  
 
