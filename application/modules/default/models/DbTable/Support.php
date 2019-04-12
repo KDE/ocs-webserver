@@ -56,10 +56,10 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
      * @return mixed The primary key value(s), as an associative array if the
      *     key is compound, or a scalar if the key is single-column.
      */
-    public function createNewSupportSubscriptionPaymentFromResponse($payment_response)
+    public function createNewSupportSubscriptionSignupFromResponse($payment_response, $member_id, $amount, $comment = null)
     {
         $new_row = $this->createRow();
-        
+   
         $signUp = $this->fetchRow("payment_reference_key = '". $payment_response->getCustom() . "' AND type_id = 1");
         if(!empty($signUp)) {
             $new_row->member_id = $signUp['member_id'];
@@ -75,6 +75,7 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
         $new_row->status_id = self::STATUS_DONATED;
         $new_row->type_id = self::SUPPORT_TYPE_PAYMENT;
         $new_row->payment_reference_key = $payment_response->getCustom();
+
         $new_row->payment_provider = $payment_response->getProviderName();
         $new_row->payment_status = $payment_response->getStatus();
         $new_row->payment_raw_message = serialize($payment_response->getRawMessage());
@@ -194,34 +195,19 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
      * Mark donations as payed.
      * So they can be used to donation.
      *
-     * @param Local_Payment_ResponseSubscriptionSignupInterface $payment_response
+     * @param Local_Payment_ResponseInterface $payment_response
      *
      */
     public function activateSupportSubscriptionSignupFromResponse($payment_response)
     {
         $updateValues = array(
             'status_id' => self::STATUS_DONATED,
-            'subscription_id' => $payment_response->getSubscriptionId(),
+            'payment_transaction_id' => $payment_response->getTransactionId(),
             'payment_raw_Message' => serialize($payment_response->getRawMessage()),
             'active_time' => new Zend_Db_Expr ('Now()')
         );
 
-        $this->update($updateValues, "payment_reference_key='" . $payment_response->getCustom() . "' AND type_id = 1");
-    }
-    
-    /**
-     * @param Local_Payment_ResponseInterface $payment_response
-     */
-    public function deactivateSupportSubscriptionSignupFromResponse($payment_response)
-    {
-        $updateValues = array(
-            'status_id' => self::STATUS_DELETED,
-            'payment_raw_Message' => serialize($payment_response->getRawMessage()),
-            'delete_time' => new Zend_Db_Expr ('Now()')
-        );
-
-        $this->update($updateValues, "payment_reference_key='" . $payment_response->getCustom() . "' AND type_id = 1");
-
+        $this->update($updateValues, "payment_reference_key='" . $payment_response->getCustom() . "'");
     }
 
     /**
@@ -462,4 +448,19 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
         return $this->fetchAll($sel)->current();
     }
 
+    /**
+     * @return Zend_Db_Table_Row_Abstract
+     * @deprecated
+     */
+    public function getSupporterDonationList($member_id)
+    {
+        $sel = $this->select()->from($this->_name)
+            ->where('status_id >= ' . self::STATUS_DONATED.' and member_id = ' . $member_id)
+            ->order('active_time DESC');
+        return $this->fetchAll($sel);
+    }
+
 }
+
+
+

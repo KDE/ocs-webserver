@@ -785,6 +785,28 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->view->likes = array();
         }
     }
+    public function supporterAction()
+    {
+        
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+             $tableMember = new Default_Model_Member();
+            $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+        }
+
+        $model = new Default_Model_DbTable_Support();
+        $this->view->supporterlist = $model->getSupporterDonationList($this->view->member->member_id);
+        
+
+        // $tableMembers = new Default_Model_Member();
+        // $row = $tableMembers->fetchSupporterDonationInfo($this->view->member->member_id);
+        // $this->view->issupporter = $row['issupporter'];
+        // $this->view->supporter = $row;
+    }
 
     public function payoutAction()
     {
