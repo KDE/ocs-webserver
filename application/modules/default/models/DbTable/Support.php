@@ -194,19 +194,34 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
      * Mark donations as payed.
      * So they can be used to donation.
      *
-     * @param Local_Payment_ResponseInterface $payment_response
+     * @param Local_Payment_ResponseSubscriptionSignupInterface $payment_response
      *
      */
     public function activateSupportSubscriptionSignupFromResponse($payment_response)
     {
         $updateValues = array(
-            'status_id' => self::STATUS_DONATED, 
-            //'payment_transaction_id' => $payment_response->getTransactionId(),
+            'status_id' => self::STATUS_DONATED,
+            'subscription_id' => $payment_response->getSubscriptionId(),
             'payment_raw_Message' => serialize($payment_response->getRawMessage()),
             'active_time' => new Zend_Db_Expr ('Now()')
         );
 
-        $this->update($updateValues, "payment_reference_key='" . $payment_response->getCustom() . "'");
+        $this->update($updateValues, "payment_reference_key='" . $payment_response->getCustom() . "' AND type_id = 1");
+    }
+    
+    /**
+     * @param Local_Payment_ResponseInterface $payment_response
+     */
+    public function deactivateSupportSubscriptionSignupFromResponse($payment_response)
+    {
+        $updateValues = array(
+            'status_id' => self::STATUS_DELETED,
+            'payment_raw_Message' => serialize($payment_response->getRawMessage()),
+            'delete_time' => new Zend_Db_Expr ('Now()')
+        );
+
+        $this->update($updateValues, "payment_reference_key='" . $payment_response->getCustom() . "' AND type_id = 1");
+
     }
 
     /**
