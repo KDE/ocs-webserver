@@ -77,7 +77,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                     'Option5' => array(
                                             "name" => "Option5",
                                             "value"  => 15.02,
-                                            "amount" => 15.02,
+                                            "amount" => 0.99,
                                             "checked" =>"",
                                             "text" => "($0.99 * 12 = $11.88 + $0.74 paypal + $2.40 taxes = $15.02 yearly or $1.25 monthly)",
                                             "period" => "yearly",
@@ -87,8 +87,8 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                         ),
                                     'Option6' => array(
                                             "name" => "Option6",
-                                            "value"  => 28.92,
-                                            "amount" => 28.92,
+                                            "value"  => 29.92,
+                                            "amount" => 2,
                                             "checked" =>"",
                                             "text" => "($2* 12 = $24 + 30 cents paypal = $24.3 + 19% taxes = $28.92 yearly)",
                                             "period" => "yearly",
@@ -105,6 +105,17 @@ class SupportController extends Local_Controller_Action_DomainSwitch
                                             "period_short" => "Y",
                                             "period_frequency" => "1",
                                         ),
+                                    'Option8' => array(
+                                            "name" => "Option8",
+                                            "value"  => 74.25,
+                                            "amount" => 5,
+                                            "checked" =>"",
+                                            "text" => "",
+                                            "period" => "yearly",
+                                            "period_short" => "Y",
+                                            "period_frequency" => "1",
+                                        ),
+                                    
                                     
         );
 

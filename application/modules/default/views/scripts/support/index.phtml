@@ -130,24 +130,11 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                             </div>
                             <div class="col-lg-5 col-md-12">  
                                
-
-                                <ul class="x-suggested-amounts">
-                                <li class="amount-item <?=(isset($this->islast) ? 'last':'')?>">  
-                                     <div class="radiocontainer">
-                                      <input class="suggested-amount custom_amount_item" <?=$this->checked?> id="custom_amount_item" type="radio" value="Option7" name="amount_predefined">
-                                    </div>
-                                      <div class="item-text">
-                                        <span class="unit-wrapper">
-                                          <span class="unit">$</span>
-                                        </span>
-                                        <span class="amount"><input id="custom_amount" min="16" step="any" inputmode="numeric" type="number" name="amount_handish"> </span>
-                                        <span class="desc">Enter a free amount > $15</span>
-                                      </div>
-                                    
-                                </li>
-                                </ul>
-
-                               
+                                 <?php
+                                echo $this->partial('/support/partials/option.phtml',
+                                        $this->payment_options['Option8']
+                                );
+                                 ?>                                                                    
                                                                
                             </div>
                         </div> <!--end of row-->
@@ -167,6 +154,22 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                             ?>
                             </div>
                             <div class="col-lg-5 col-md-12">  
+
+                                 <ul class="x-suggested-amounts">
+                                <li class="amount-item <?=(isset($this->islast) ? 'last':'')?>">  
+                                     <div class="radiocontainer">
+                                      <input class="suggested-amount custom_amount_item" <?=$this->checked?> id="custom_amount_item" type="radio" value="Option7" name="amount_predefined">
+                                    </div>
+                                      <div class="item-text">
+                                        <span class="unit-wrapper">
+                                          <span class="unit">$</span>
+                                        </span>
+                                        <span class="amount"><input id="custom_amount" min="16" step="any" inputmode="numeric" type="number" name="amount_handish"> </span>
+                                        <span class="desc">Enter a free amount > $15</span>
+                                      </div>
+                                    
+                                </li>
+                                </ul>
                                                                
                             </div>
                         </div> <!--end of row-->
