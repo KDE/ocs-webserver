@@ -116,6 +116,16 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
                                             "period_short" => "Y",
                                             "period_frequency" => "1",
                                         ),
+                                    'Option9' => array(
+                                            "name" => "Option9",
+                                            "value"  => 1200,
+                                            "amount" => 100,
+                                            "checked" =>"",
+                                            "text" => "",
+                                            "period" => "yearly",
+                                            "period_short" => "Y",
+                                            "period_frequency" => "1",
+                                        ),
                                     
         );
 
