@@ -213,7 +213,7 @@ class Default_Model_Info
         
         $sql .= ' WHERE comments.comment_active = 1            
             AND stat_projects.status = 100
-            AND stat_projects.type_id = 1
+            AND stat_projects.type_id in (1,3)
             AND comments.comment_type = 0
             AND stat_projects.project_category_id IN (' . implode(',', $activeCategories) . ')                          
         ';
