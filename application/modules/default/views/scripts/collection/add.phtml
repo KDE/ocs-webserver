@@ -930,6 +930,22 @@ $this->inlineScript()->appendScript('
                                     $(this).find('.counter').html($index+'.');
                                 }
                             });
+                            
+                            $('.proj_remove').on('click', function (event) {
+                                event.preventDefault();
+
+                                $(this).parent().parent().remove();
+                                $('.collection_project_id_item').remove();
+                                $index = -1;
+                                $divCollectionProjects.find('table').find('tr').each(function() {
+                                    $index = $(this).index();
+                                    if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
+                                        $divCollectionProjects.append("<input class='collection_project_id_item' type='hidden' id='collection_project_id" + $(this).attr('data-project-id') + "' name='collection_project_id["+$index+"]' value='" + $(this).attr('data-project-id') + "'>");
+                                        $(this).find('.counter').html($index+'.');
+                                    }
+                                });
+                            });
+                            
                             return false; 
                       },
                       out: function( event, ui ) { 
