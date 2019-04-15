@@ -824,6 +824,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $projectIds = array();
         
         if(!empty($projectIdsString)) {
+            $projectIdsString = rtrim($projectIdsString,',');
             $projectIds = explode(',', $projectIdsString);
         }
         

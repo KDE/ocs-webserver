@@ -873,7 +873,6 @@ $this->inlineScript()->appendScript('
                             $collection_project_ids += $(this).attr('data-project-id') + ',';
                         }
                     });
-                    $collection_project_ids = rtrim($collection_project_ids,',');
                     
                     $.ajax({
                         url: '<?=$helpCollectionUrl->buildProductUrl($this->project_id, 'updatecollectionprojectsajax')?>',
