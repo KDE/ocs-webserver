@@ -92,7 +92,8 @@ $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
 
 
-$productJson = Zend_Json::encode($this->product);
+ $productJson = Zend_Json::encode($this->product);
+ $filesJson = $this->filesJson;
 $helperCatXdgType = new Default_View_Helper_CatXdgType();
 $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->project_category_id));
 
@@ -705,16 +706,16 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                     
 
 
-                                    <?php /*
-                                    if (count($this->updates) > 0) {
-                                        $this->productUpdate = $this->updates[0];
-                                        ?>
-                                        <article class="lastchangelog">
-                                        <b>Last changelog:</b>
+                                        <?php
+                                        if (count($this->updates) > 0) {
+                                            $this->productUpdate = $this->updates[0];
+                                            ?>
+                                            <article class="lastchangelog">
+                                            <b>Last changelog:</b>
 
-                                        <?= $this->render('product/partials/productUpdatesV1.phtml'); ?>
-                                        </article>
-                                    <?php } */?>
+                                            <?= $this->render('product/partials/productUpdatesV1.phtml'); ?>
+                                            </article>
+                                        <?php } ?>
 
 
                                     <!-- comments -->
@@ -1088,6 +1089,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
 
 <script type="text/javascript">
   var product = <?php echo $productJson ?>;
+  var filesJson  = <?php echo $filesJson ?>;
   var xdgTypeJson = <?php echo $xdgTypeJson ?>;
 </script>
 
