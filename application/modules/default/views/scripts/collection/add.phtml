@@ -942,7 +942,6 @@ $this->inlineScript()->appendScript('
                     $('.proj_remove').on('click', function (event) {
                         event.preventDefault();
                         
-                        alert($(this).parent().parent().attr('data-project-id'));
                         $(this).parent().parent().remove();
                         $('.collection_project_id_item').remove();
                         $index = -1;
