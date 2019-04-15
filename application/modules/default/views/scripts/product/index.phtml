@@ -92,8 +92,7 @@ $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
 
 
- $productJson = Zend_Json::encode($this->product);
- $filesJson = $this->filesJson;
+$productJson = Zend_Json::encode($this->product);
 $helperCatXdgType = new Default_View_Helper_CatXdgType();
 $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->project_category_id));
 
@@ -1089,7 +1088,6 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
 
 <script type="text/javascript">
   var product = <?php echo $productJson ?>;
-  var filesJson  = <?php echo $filesJson ?>;
   var xdgTypeJson = <?php echo $xdgTypeJson ?>;
 </script>
 
