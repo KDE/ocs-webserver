@@ -105,6 +105,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
         $this->view->member_id = $this->_authMember->member_id;
         $this->view->transaction_id = $this->_authMember->member_id . '_' . time();
         $this->view->amount = $amount;
+        $this->view->amount_predefined = $amount_predefined;
         
         //Add pling
         $modelSupport = new Default_Model_DbTable_Support();

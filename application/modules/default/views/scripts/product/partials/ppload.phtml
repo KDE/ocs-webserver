@@ -107,10 +107,16 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                              </tr>
                              </thead>
                              <tbody></tbody>
-                             <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                             <?php 
+                             
+                             if(Zend_Auth::getInstance()->hasIdentity()){
+                               $idt = Zend_Auth::getInstance()->getStorage()->read();
+                             if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName
+                                || $this->product->member_id==$idt->member_id
+                             ) { ?>
                              <tfoot>
                              </tfoot>
-                                 <?php endif; ?>
+                                 <?php }} ?>
                              
                          </table>
 

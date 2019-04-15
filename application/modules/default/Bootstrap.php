@@ -219,30 +219,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
 
     /**
-     * @throws Zend_Log_Exception
+     * @throws Zend_Application_Bootstrap_Exception
      */
     protected function _initLogger()
     {
-        $settings = $this->getOption('settings');
-        $log = new Zend_Log();
-
-        $writer = new Zend_Log_Writer_Stream($settings['log']['path'] . 'all_' . date("Y-m-d"));
-        $writer->addFilter(new Local_Log_Filter_MinMax(Zend_Log::WARN, Zend_Log::DEBUG));
-
-        $log->addWriter($writer);
-
-        $errorWriter = new Zend_Log_Writer_Stream($settings['log']['path'] . 'err_' . date('Y-m-d'));
-        $errorWriter->addFilter(new Zend_Log_Filter_Priority(Zend_Log::ERR));
-
-        $log->addWriter($errorWriter);
-
-        Zend_Registry::set('logger', $log);
-
-        if ((APPLICATION_ENV == 'development') OR (APPLICATION_ENV == 'testing')) {
-            $firebugWriter = new Zend_Log_Writer_Firebug();
-            $firebugLog = new Zend_Log($firebugWriter);
-            Zend_Registry::set('firebug_log', $firebugLog);
-        }
+        /** @var Zend_Log $logger */
+        $logger = $this->getPluginResource('log')->getLog();
+        $logger->registerErrorHandler();
+        Zend_Registry::set('logger', $logger);
     }
 
     protected function _initGlobals()

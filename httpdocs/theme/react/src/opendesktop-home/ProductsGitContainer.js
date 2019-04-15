@@ -4,8 +4,8 @@ import ProductGit from './ProductGit';
 class ProductsGitContainer extends React.Component {
   constructor(props){
   	super(props);
-    this.gitUrl='https://git.opendesktop.org/api/v4/projects?order_by=created_at&sort=desc&visibility=public&page=1&per_page=5';
-    this.gitUserUrl='https://git.opendesktop.org/api/v4/users?username=';
+    this.gitUrl='https://opencode.net/api/v4/projects?order_by=created_at&sort=desc&visibility=public&page=1&per_page=5';
+    this.gitUserUrl='https://opencode.net/api/v4/users?username=';
     this.state = {items:[]};
   }
 

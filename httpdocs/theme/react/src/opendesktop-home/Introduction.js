@@ -7,7 +7,7 @@ function Introduction(props) {
       <h4> Opendesktop is community based portal, dedicated to libre content, opencode, free software and operating system.</h4>
       <ul>
         <li><a href="https://opendesktop.org">Pling.com</a></li>
-        <li><a href="https://git.opendesktop.org">Opencode</a></li>
+        <li><a href="https://opencode.net">Opencode</a></li>
         <li><a href="https://forum.opendesktop.org">Discourse</a></li>
         <li><a href="https://chat.opendesktop.org">Riot</a></li>
         <li>Mastodon</li>

@@ -194,6 +194,26 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 $stat['donationMin'] = $donationinfo['active_time_min'];
                 $stat['donationCnt'] = $donationinfo['cnt'];
             }
+            
+            $subscriptioninfo = $tableMember->fetchSupporterSubscriptionInfo($this->_memberId);
+            if ($subscriptioninfo) {
+                $stat['subscriptionIssupporter'] = true;
+                $stat['subscriptionStart'] = $subscriptioninfo['create_time'];
+                $stat['subscriptionAmount'] = $subscriptioninfo['amount'];
+                $stat['subscriptionPeriod'] = $subscriptioninfo['period'];
+                if($subscriptioninfo['period'] == 'M') {
+                    $stat['subscriptionPeriodText'] = 'monthly';
+                } else if($subscriptioninfo['period'] == 'Y') {
+                    $stat['subscriptionPeriodText'] = 'yearly';
+                } else {
+                    $stat['subscriptionPeriodText'] = '';
+                }
+                    
+                
+                $stat['subscriptionPeriodFreq'] = $subscriptioninfo['period_frequency'];
+            } else {
+                $stat['subscriptionIssupporter'] = false;
+            }
             //  $cntmb = $tableMember->fetchCntSupporters($this->_memberId);
             // $stat['cntSupporters'] = $cntmb;
             $stat['userLastActiveTime'] = $tableMember->fetchLastActiveTime($this->_memberId);
@@ -764,6 +784,28 @@ class UserController extends Local_Controller_Action_DomainSwitch
         } else {
             $this->view->likes = array();
         }
+    }
+    public function supporterAction()
+    {
+        
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+             $tableMember = new Default_Model_Member();
+            $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+        }
+
+        $model = new Default_Model_DbTable_Support();
+        $this->view->supporterlist = $model->getSupporterDonationList($this->view->member->member_id);
+        
+
+        // $tableMembers = new Default_Model_Member();
+        // $row = $tableMembers->fetchSupporterDonationInfo($this->view->member->member_id);
+        // $this->view->issupporter = $row['issupporter'];
+        // $this->view->supporter = $row;
     }
 
     public function payoutAction()

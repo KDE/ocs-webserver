@@ -215,6 +215,16 @@ $this->inlineScript()->appendScript('
         .ui-sortable-placeholder {
           background: yellow;
         }
+        
+        .cat_title {
+            font-size: x-small;
+            font-weight: bold;
+        }
+        
+        .proj_remove {
+            color: red;
+            cursor: pointer;
+        }
 
         
     </style>
@@ -555,7 +565,7 @@ $this->inlineScript()->appendScript('
             formElement.steps({
                 headerTag: "h3",
                 bodyTag: "section",
-                enableAllSteps: <?php echo ($this->mode == 'edit') ? "true" : "false"; ?>,
+                enableAllSteps: <?php echo ($this->mode == 'editcollection') ? "true" : "false"; ?>,
                 enableCancelButton: true,
                 showFinishButtonAlways: true,
                 transitionEffect: "slideLeft",
@@ -584,6 +594,8 @@ $this->inlineScript()->appendScript('
                         var logoSrc = $('#product-picture-preview').attr('src');
                         var gallery = $('.product-gallery div:first-child');
                         var galleryPic = gallery.find('.image');
+                        
+                        getCollectionProjects();
 
                         if (!logoSrc) {
                             var msg = $('#preview_img_msg');
@@ -722,8 +734,6 @@ $this->inlineScript()->appendScript('
                     function(n){
                         return (this.length > n) ? this.substr(0, n-1) + '&hellip;' : this;
                     };
-                    
-                    
                 
                 function getCollectionProjects() {
                     
@@ -753,7 +763,8 @@ $this->inlineScript()->appendScript('
                                     tableString += "<tr style='background-color: white;' data-project-id=" + this.project_id + ">";
                                     tableString += "<td style='align-content: left;text-align: left;'><span class='counter'>" + $i + ".</span></td>";
                                     tableString += "<td style='align-content: center;text-align: center; width: 10%;'><img style='height: 50px;width: 50px;' src='" + this.image_url + "'></td>";
-                                    tableString += "<td style='text-align: left; width: 90%;'>" + this.title.trim().trunc(25) + "</td>";
+                                    tableString += "<td style='text-align: left; width: 90%;'>" + this.title.trim().trunc(25) + "<p class='cat_title'>" + this.cat_title +"</p></td>";
+                                    tableString += "<td style='align-content: center;text-align: center;'><span class='proj_action glyphicon glyphicon-remove proj_remove'></span></td>";
                                     tableString += "</tr>";
                                     
                                     $divCollectionProjects.append("<input type='hidden' class='collection_project_id_item' id='collection_project_id" + this.project_id + "' name='collection_project_id["+$i+"]' value='" + this.project_id + "'>");
@@ -798,7 +809,8 @@ $this->inlineScript()->appendScript('
                                         tableString += "<tr style='background-color: white;' data-project-id=" + this.project_id + ">";
                                         tableString += "<td style='align-content: left;text-align: left;'><span class='counter'></span></td>";
                                         tableString += "<td style='align-content: center;text-align: center; width: 10%;'><img style='height: 50px;width: 50px;' src='" + this.image_url + "'></td>";
-                                        tableString += "<td style='text-align: left; width: 90%;'>" + this.title.trim().trunc(25) + "</td>";
+                                        tableString += "<td style='text-align: left; width: 90%;'>" + this.title.trim().trunc(25) + "<p class='cat_title'>" + this.cat_title +"</p></td>";
+                                        tableString += "<td style='align-content: center;text-align: center;'><span class='proj_action'></span></td>";
                                         tableString += "</tr>";
                                     });
                                 }
@@ -839,11 +851,11 @@ $this->inlineScript()->appendScript('
                                         tableString += "<td style='align-content: left;text-align: left;'><span class='counter'></span></td>";
                                         tableString += "<td style='align-content: center;text-align: center; width: 10%;'><img style='height: 50px;width: 50px;' src='" + this.image_url + "'></td>";
                                         tableString += "<td style='text-align: left; width: 90%;'>";
-                                        tableString += "<div style='float: left;'>"+this.title.trim().trunc(25)+"</div>";
+                                        tableString += "<div style='float: left;'>"+this.title.trim().trunc(25)+"<p class='cat_title'>" + this.cat_title +"</p></div>";
                                         tableString += "<div style='float: right;'> by "+this.username+"</div>";
                                         
                                         tableString += "</td>";
-                                        
+                                        tableString += "<td style='align-content: center;text-align: center;'><span class='proj_action'></span></td>";
                                         tableString += "</tr>";
                                     });
                                 }
@@ -853,6 +865,34 @@ $this->inlineScript()->appendScript('
                         }
                     })
                 }
+                
+                function updateCollectionProjects() {
+                    $collection_project_ids = "";
+                    $divCollectionProjects.find('table').find('tr').each(function() {
+                        if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
+                            $collection_project_ids += $(this).attr('data-project-id') + ',';
+                        }
+                    });
+                    
+                    $collId = ProductForm.project_id;
+                    
+                    $.ajax({
+                        url: '/c/'+ $collId + '/updatecollectionprojectsajax',
+                        type: 'POST',
+                        data: {collection_project_ids: $collection_project_ids},
+                        dataType: 'json',
+                        async: false,
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'success') {
+                                return;
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            return;
+                        }
+                    });
+                }
+
                 
                 function initDragDrop() {
                     $( "#tabs" ).tabs();
@@ -874,6 +914,7 @@ $this->inlineScript()->appendScript('
                                 $(this).find('.counter').html($index+'.');
                             }
                         });
+                        updateCollectionProjects();
                       }   
                     }).disableSelection();
                     
@@ -895,6 +936,7 @@ $this->inlineScript()->appendScript('
                                 $(this).find('.counter').html($index+'.');
                             }
                         });
+                        updateCollectionProjects();
                       }   
                     }).disableSelection();
                     
@@ -910,6 +952,8 @@ $this->inlineScript()->appendScript('
                       drop: function( event, ui ) { 
                             $('.collection_project_id_item').remove();
                             $index = -1;
+                            ui.draggable.find('.proj_action').removeClass('glyphicon glyphicon-remove proj_remove');
+                            ui.draggable.find('.proj_action').addClass('glyphicon glyphicon-remove proj_remove');
                             $divCollectionProjects.find('table').find('tr').each(function() {
                                 $index = $(this).index();
                                 if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
@@ -917,16 +961,51 @@ $this->inlineScript()->appendScript('
                                     $(this).find('.counter').html($index+'.');
                                 }
                             });
+                            
+                            $('.proj_remove').on('click', function (event) {
+                                event.preventDefault();
+
+                                $(this).parent().parent().remove();
+                                $('.collection_project_id_item').remove();
+                                $index = -1;
+                                $divCollectionProjects.find('table').find('tr').each(function() {
+                                    $index = $(this).index();
+                                    if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
+                                        $divCollectionProjects.append("<input class='collection_project_id_item' type='hidden' id='collection_project_id" + $(this).attr('data-project-id') + "' name='collection_project_id["+$index+"]' value='" + $(this).attr('data-project-id') + "'>");
+                                        $(this).find('.counter').html($index+'.');
+                                    }
+                                });
+                            });
+                            
+                            updateCollectionProjects();
+                            
                             return false; 
                       },
                       out: function( event, ui ) { 
                           $divCollectionProjects.find('#collection_project_id' + ui.draggable.attr('data-project-id')).remove();
+                          updateCollectionProjects();
                           return false; 
                       }
                     });
                     
                     //scrolify($('#t_draggable1'), 500); // 160 is height
                     //scrolify($('#t_draggable2'), 500); // 160 is height
+                    
+                    $('.proj_remove').on('click', function (event) {
+                        event.preventDefault();
+                        
+                        $(this).parent().parent().remove();
+                        $('.collection_project_id_item').remove();
+                        $index = -1;
+                        $divCollectionProjects.find('table').find('tr').each(function() {
+                            $index = $(this).index();
+                            if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
+                                $divCollectionProjects.append("<input class='collection_project_id_item' type='hidden' id='collection_project_id" + $(this).attr('data-project-id') + "' name='collection_project_id["+$index+"]' value='" + $(this).attr('data-project-id') + "'>");
+                                $(this).find('.counter').html($index+'.');
+                            }
+                        });
+                        updateCollectionProjects();
+                    });
                     
                     
                 }
@@ -1019,9 +1098,7 @@ $this->inlineScript()->appendScript('
                      }*/
                     return size;
                 }
-
                 
-
                 $modalChanglog.on('click', 'button[data-add-update-btn]', function (event) {
                     var update_id = $modalChanglog.find('#update-id').val();
                     var title = $modalChanglog.find('#update-title').val();

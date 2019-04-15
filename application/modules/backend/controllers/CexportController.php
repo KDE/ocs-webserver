@@ -180,7 +180,11 @@ class Backend_CexportController extends Local_Controller_Action_CliAbstract
      */
     private function logErrorMsg($errMsg)
     {
-        @file_put_contents($this->errorlogfile, $errMsg . "\n\n", FILE_APPEND);
+        try {
+            Zend_Registry::get('logger')->err($errMsg . PHP_EOL);
+        } catch (Zend_Exception $e) {
+            error_log(__METHOD__ . ' - ' . $e->getMessage());
+        }
     }
 
 }

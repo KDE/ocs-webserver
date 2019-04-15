@@ -30,19 +30,17 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
         $sql = " SELECT project.title
                         , project.project_id
                         , project.image_small
-                        , member.username
-                        , member.member_id
+                        , project.username
+                        , project.member_id
                         , collection_projects.order
                         , project.ppload_collection_id
                         , project.project_category_id
                         , project.description
                         , project.count_likes
                         , project.count_dislikes
-                        , project_category.title as catTitle
+                        , project.cat_title
                  FROM collection_projects
-                 JOIN project ON project.project_id = collection_projects.project_id
-                 JOIN member ON member.member_id = project.member_id
-                 JOIN project_category on project.project_category_id = project_category.project_category_id
+                 JOIN stat_projects project ON project.project_id = collection_projects.project_id
                  WHERE collection_projects.collection_id = :project_id
                  AND collection_projects.active = 1
                  AND project.type_id = 1
@@ -84,9 +82,8 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
             $withoutProjectIds = "0";
         }
         
-        $sql = " SELECT project.title, project.project_id, project.image_small, member.username, member.member_id
-                 FROM project
-                 JOIN member ON member.member_id = project.member_id
+        $sql = " SELECT project.title, project.project_id, project.image_small, project.username, project.member_id, project.cat_title
+                 FROM stat_projects project
                  WHERE project.member_id = :member_id
                  AND project.type_id = 1
                  AND project.status = 100
@@ -109,9 +106,8 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
             $withoutProjectIds = "0";
         }
         
-        $sql = " SELECT project.title, project.project_id, project.image_small, member.username, member.member_id
-                 FROM project
-                 JOIN member ON member.member_id = project.member_id
+        $sql = " SELECT project.title, project.project_id, project.image_small, project.username, project.member_id, project.cat_title
+                 FROM stat_projects project
                  WHERE project.member_id <> :member_id
                  AND project.type_id = 1
                  AND project.status = 100

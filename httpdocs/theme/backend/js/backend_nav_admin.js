@@ -39,6 +39,7 @@ var aItemData = [
             id: "projects",
             itemdata: [
                 {text: "Products", url: "/backend/project"},
+                {text: "Clones", url: "/backend/projectclone"},
                 {text: "Claims", url: "/backend/claim"}
             ]
         }
