@@ -33,7 +33,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
     /** @var  Zend_Auth */
     protected $_auth;
     
-    const SUPPORT_OPTIONS = array(  'Option1' => array(
+    public static $SUPPORT_OPTIONS = array(  'Option1' => array(
                                             "name" => "Option1",
                                             "value"  => 1.59,
                                             "amount" => 0.99,
@@ -123,7 +123,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
     {
         parent::init();
         $this->_auth = Zend_Auth::getInstance();
-        $this->view->payment_options = $this::SUPPORT_OPTIONS;
+        $this->view->payment_options = $this::$SUPPORT_OPTIONS;
     }
 
     public function indexAction()
@@ -207,9 +207,9 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $modelSupport = new Default_Model_DbTable_Support();
         //$supportId = $modelSupport->createNewSupport($this->view->transaction_id, $this->_authMember->member_id, $amount);
         if($paymentOption == "Option7") {
-            $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id, $this->_authMember->member_id, $amount, $this::SUPPORT_OPTIONS[$paymentOption]['period_short'], $this::SUPPORT_OPTIONS[$paymentOption]['period_frequency']);
+            $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id, $this->_authMember->member_id, $amount, $this::$SUPPORT_OPTIONS[$paymentOption]['period_short'], $this::$SUPPORT_OPTIONS[$paymentOption]['period_frequency']);
         } else {
-            $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id, $this->_authMember->member_id, $this::SUPPORT_OPTIONS[$paymentOption]['value'], $this::SUPPORT_OPTIONS[$paymentOption]['period_short'], $this::SUPPORT_OPTIONS[$paymentOption]['period_frequency']);
+            $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id, $this->_authMember->member_id, $this::$SUPPORT_OPTIONS[$paymentOption]['value'], $this::$SUPPORT_OPTIONS[$paymentOption]['period_short'], $this::$SUPPORT_OPTIONS[$paymentOption]['period_frequency']);
         }
         
         
