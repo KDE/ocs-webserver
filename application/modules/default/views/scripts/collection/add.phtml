@@ -866,6 +866,32 @@ $this->inlineScript()->appendScript('
                     })
                 }
                 
+                function updateCollectionProjects() {
+                    $collection_project_ids = "";
+                    $divCollectionProjects.find('table').find('tr').each(function() {
+                        if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
+                            $collection_project_ids += $(this).attr('data-project-id') + ',';
+                        }
+                    });
+                    $collection_project_ids = rtrim($collection_project_ids,',');
+                    
+                    $.ajax({
+                        url: '<?=$helpCollectionUrl->buildProductUrl($this->project_id, 'updatecollectionprojectsajax')?>',
+                        type: 'POST',
+                        data: {collection_project_ids: $collection_project_ids},
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'success') {
+                                return;
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            return;
+                        }
+                    });
+                }
+
+                
                 function initDragDrop() {
                     $( "#tabs" ).tabs();
                     
@@ -886,6 +912,7 @@ $this->inlineScript()->appendScript('
                                 $(this).find('.counter').html($index+'.');
                             }
                         });
+                        updateCollectionProjects();
                       }   
                     }).disableSelection();
                     
@@ -907,6 +934,7 @@ $this->inlineScript()->appendScript('
                                 $(this).find('.counter').html($index+'.');
                             }
                         });
+                        updateCollectionProjects();
                       }   
                     }).disableSelection();
                     
@@ -947,10 +975,13 @@ $this->inlineScript()->appendScript('
                                 });
                             });
                             
+                            updateCollectionProjects();
+                            
                             return false; 
                       },
                       out: function( event, ui ) { 
                           $divCollectionProjects.find('#collection_project_id' + ui.draggable.attr('data-project-id')).remove();
+                          updateCollectionProjects();
                           return false; 
                       }
                     });
@@ -971,6 +1002,7 @@ $this->inlineScript()->appendScript('
                                 $(this).find('.counter').html($index+'.');
                             }
                         });
+                        updateCollectionProjects();
                     });
                     
                     
@@ -1064,9 +1096,7 @@ $this->inlineScript()->appendScript('
                      }*/
                     return size;
                 }
-
                 
-
                 $modalChanglog.on('click', 'button[data-add-update-btn]', function (event) {
                     var update_id = $modalChanglog.find('#update-id').val();
                     var title = $modalChanglog.find('#update-title').val();

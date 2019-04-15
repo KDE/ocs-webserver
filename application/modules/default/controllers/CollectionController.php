@@ -448,13 +448,6 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($newProject->project_id, $newProject->member_id, Default_Model_ActivityLog::PROJECT_CREATED, $newProject->toArray());
 
-        
-        //save collection products
-        $projectIds = $_POST['collection_project_id'];
-        
-        $modeCollection = new  Default_Model_DbTable_CollectionProjects();
-        $modeCollection->setCollectionProjects($this->_projectId, $projectIds);
-        
         //$modelTags->processTagProductOriginal($newProject->project_id);
         
         
@@ -817,6 +810,30 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $tablePageViews = new Default_Model_DbTable_StatPageViews();
         $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
             $this->_authMember->member_id);
+    }
+    
+    public function updatecollectionprojectsajaxAction() {
+        $this->_helper->layout()->disableLayout();
+
+        $this->view->project_id = $this->_projectId;
+        $this->view->authMember = $this->_authMember;
+        
+        
+        //save collection products
+        $projectIdsString = $this->getParam('collection_project_ids');
+        $projectIds = array();
+        
+        if(!empty($projectIdsString)) {
+            $projectIds = explode(',', $projectIdsString);
+        }
+        
+        $modeCollection = new  Default_Model_DbTable_CollectionProjects();
+        $modeCollection->setCollectionProjects($this->_projectId, $projectIds);
+        
+        $this->_helper->json(array(
+            'status' => 'ok',
+            'msg'   => 'Success.'
+        ));
     }
 
     public function updateAction()
