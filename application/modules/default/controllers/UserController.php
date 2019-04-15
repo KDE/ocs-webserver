@@ -178,6 +178,16 @@ class UserController extends Local_Controller_Action_DomainSwitch
             } else {
                 $stat['cntFProducts'] = 0;
             }
+            
+            if ($this->view->userCollections) {
+                $cnt = 0;
+                foreach ($this->view->userCollections as $tmp) {
+                    $cnt++;
+                }
+                $stat['cntCollections'] = $cnt;
+            } else {
+                $stat['cntCollections'] = 0;
+            }
 
             $stat['cntComments'] = $paginationComments->getTotalItemCount();
             $tblFollower = new Default_Model_DbTable_ProjectFollower();
