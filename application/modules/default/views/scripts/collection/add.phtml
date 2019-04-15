@@ -753,7 +753,7 @@ $this->inlineScript()->appendScript('
                                     tableString += "<tr style='background-color: white;' data-project-id=" + this.project_id + ">";
                                     tableString += "<td style='align-content: left;text-align: left;'><span class='counter'>" + $i + ".</span></td>";
                                     tableString += "<td style='align-content: center;text-align: center; width: 10%;'><img style='height: 50px;width: 50px;' src='" + this.image_url + "'></td>";
-                                    tableString += "<td style='text-align: left; width: 90%;'>" + this.title.trim().trunc(25) + "</td>";
+                                    tableString += "<td style='text-align: left; width: 90%;'>" + this.title.trim().trunc(25) + "<span class='cat_title'>" + this.cat_title +"</span></td>";
                                     tableString += "</tr>";
                                     
                                     $divCollectionProjects.append("<input type='hidden' class='collection_project_id_item' id='collection_project_id" + this.project_id + "' name='collection_project_id["+$i+"]' value='" + this.project_id + "'>");
@@ -798,7 +798,7 @@ $this->inlineScript()->appendScript('
                                         tableString += "<tr style='background-color: white;' data-project-id=" + this.project_id + ">";
                                         tableString += "<td style='align-content: left;text-align: left;'><span class='counter'></span></td>";
                                         tableString += "<td style='align-content: center;text-align: center; width: 10%;'><img style='height: 50px;width: 50px;' src='" + this.image_url + "'></td>";
-                                        tableString += "<td style='text-align: left; width: 90%;'>" + this.title.trim().trunc(25) + "</td>";
+                                        tableString += "<td style='text-align: left; width: 90%;'>" + this.title.trim().trunc(25) + "<span class='cat_title'>" + this.cat_title +"</span></td>";
                                         tableString += "</tr>";
                                     });
                                 }
@@ -839,7 +839,7 @@ $this->inlineScript()->appendScript('
                                         tableString += "<td style='align-content: left;text-align: left;'><span class='counter'></span></td>";
                                         tableString += "<td style='align-content: center;text-align: center; width: 10%;'><img style='height: 50px;width: 50px;' src='" + this.image_url + "'></td>";
                                         tableString += "<td style='text-align: left; width: 90%;'>";
-                                        tableString += "<div style='float: left;'>"+this.title.trim().trunc(25)+"</div>";
+                                        tableString += "<div style='float: left;'>"+this.title.trim().trunc(25)+"<span class='cat_title'>" + this.cat_title +"</span></div>";
                                         tableString += "<div style='float: right;'> by "+this.username+"</div>";
                                         
                                         tableString += "</td>";

@@ -30,19 +30,17 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
         $sql = " SELECT project.title
                         , project.project_id
                         , project.image_small
-                        , member.username
-                        , member.member_id
+                        , project.username
+                        , project.member_id
                         , collection_projects.order
                         , project.ppload_collection_id
                         , project.project_category_id
                         , project.description
                         , project.count_likes
                         , project.count_dislikes
-                        , project_category.title as catTitle
+                        , project.cat_title as catTitle
                  FROM collection_projects
-                 JOIN project ON project.project_id = collection_projects.project_id
-                 JOIN member ON member.member_id = project.member_id
-                 JOIN project_category on project.project_category_id = project_category.project_category_id
+                 JOIN stat_projects project ON project.project_id = collection_projects.project_id
                  WHERE collection_projects.collection_id = :project_id
                  AND collection_projects.active = 1
                  AND project.type_id = 1
