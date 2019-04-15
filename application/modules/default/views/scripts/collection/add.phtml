@@ -220,6 +220,11 @@ $this->inlineScript()->appendScript('
             font-size: x-small;
             font-weight: bold;
         }
+        
+        .proj_remove {
+            color: red;
+            cursor: pointer;
+        }
 
         
     </style>
@@ -759,7 +764,7 @@ $this->inlineScript()->appendScript('
                                     tableString += "<td style='align-content: left;text-align: left;'><span class='counter'>" + $i + ".</span></td>";
                                     tableString += "<td style='align-content: center;text-align: center; width: 10%;'><img style='height: 50px;width: 50px;' src='" + this.image_url + "'></td>";
                                     tableString += "<td style='text-align: left; width: 90%;'>" + this.title.trim().trunc(25) + "<p class='cat_title'>" + this.cat_title +"</p></td>";
-                                    tableString += "<td style='align-content: center;text-align: center;'><span class='glyphicon glyphicon-remove'></span></td>";
+                                    tableString += "<td style='align-content: center;text-align: center;'><span class='glyphicon glyphicon-remove proj_remove'></span></td>";
                                     tableString += "</tr>";
                                     
                                     $divCollectionProjects.append("<input type='hidden' class='collection_project_id_item' id='collection_project_id" + this.project_id + "' name='collection_project_id["+$i+"]' value='" + this.project_id + "'>");
@@ -933,6 +938,22 @@ $this->inlineScript()->appendScript('
                     
                     //scrolify($('#t_draggable1'), 500); // 160 is height
                     //scrolify($('#t_draggable2'), 500); // 160 is height
+                    
+                    $('.proj_remove').on('click', function (event) {
+                        event.preventDefault();
+                        
+                        alert($(this).parent().attr('data-project-id'));
+                        $(this).parent().remove();
+                        $('.collection_project_id_item').remove();
+                        $index = -1;
+                        $divCollectionProjects.find('table').find('tr').each(function() {
+                            $index = $(this).index();
+                            if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
+                                $divCollectionProjects.append("<input class='collection_project_id_item' type='hidden' id='collection_project_id" + $(this).attr('data-project-id') + "' name='collection_project_id["+$index+"]' value='" + $(this).attr('data-project-id') + "'>");
+                                $(this).find('.counter').html($index+'.');
+                            }
+                        });
+                    });
                     
                     
                 }
