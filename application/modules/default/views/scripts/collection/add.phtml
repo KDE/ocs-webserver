@@ -877,7 +877,7 @@ $this->inlineScript()->appendScript('
                     $collId = ProductForm.project_id;
                     
                     $.ajax({
-                        url: 'p/'+ $collId + '/updatecollectionprojectsajax',
+                        url: '/c/'+ $collId + '/updatecollectionprojectsajax',
                         type: 'POST',
                         data: {collection_project_ids: $collection_project_ids},
                         dataType: 'json',
