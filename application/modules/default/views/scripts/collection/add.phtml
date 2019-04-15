@@ -594,6 +594,8 @@ $this->inlineScript()->appendScript('
                         var logoSrc = $('#product-picture-preview').attr('src');
                         var gallery = $('.product-gallery div:first-child');
                         var galleryPic = gallery.find('.image');
+                        
+                        getCollectionProjects();
 
                         if (!logoSrc) {
                             var msg = $('#preview_img_msg');
