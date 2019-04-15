@@ -30,6 +30,8 @@ $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images
 $modelInfo = new Default_Model_Info();
 $this->comments = $modelInfo->getLatestComments(10);
 
+$this->productsCollections = $modelInfo->getLastProductsForHostStores(5,"567");
+
 $this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(5,"366,363,273,267,138,125,131,153,154,414,133");
 $this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(5,"365,119,123,266,114,118,349,417,101,100,111,422,423,446,417");
 $this->productsWindowmanager = $modelInfo->getLastProductsForHostStores(5,"117,267,139,143,142,140,141,144");
@@ -209,8 +211,26 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                             <div class="row">
                                 <div id="carousel-module-container"></div>                                                                                                              
                             </div>
-
+                
                             <div class="row" id="productgroup1">
+                            <?php
+                                        echo $this->partial('/home/partials/product_group.phtml', array(
+                                                "title"  => "Collections/Rankings",
+                                                "products" => $this->productsCollections,
+                                                "catIDs" =>"567"
+                                            )
+                                        );
+
+                                        echo $this->partial('/home/partials/product_group.phtml', array(
+                                                "title"  => "Concepts, Screenshots",
+                                                "products" => $this->productsScreenshots,
+                                                "catIDs" =>"445,225"
+                                            )
+                                        );        
+                            ?>
+                            </div>
+
+                            <div class="row blockpadding">
                             <?php
                                         echo $this->partial('/home/partials/product_group.phtml', array(
                                                 "title"  => "GTK/Gnome",
@@ -246,6 +266,24 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                             ?>
                             </div>
 
+                            <div class="row blockpadding" >
+                             <?php
+                                         echo $this->partial('/home/partials/product_group.phtml', array(
+                                                 "title"  => "App Add-Ons",
+                                                 "products" => $this->productsAddons,
+                                                 "catIDs" =>"152"
+                                             )
+                                         );
+
+                                         echo $this->partial('/home/partials/product_group.phtml', array(
+                                                 "title"  => "Applications",
+                                                 "products" => $this->productsApps,
+                                                 "catIDs" =>"233"
+                                             )
+                                         );
+
+                             ?>
+                            </div>
                             <div class="row blockpadding">
                             <?php
                                     echo $this->partial('/home/partials/product_group.phtml', array(
@@ -265,37 +303,6 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                                         );
                             ?>
                             </div>
-                            <div class="row blockpadding" >
-                             <?php
-                                         echo $this->partial('/home/partials/product_group.phtml', array(
-                                                 "title"  => "App Add-Ons",
-                                                 "products" => $this->productsAddons,
-                                                 "catIDs" =>"152"
-                                             )
-                                         );
-
-                                         echo $this->partial('/home/partials/product_group.phtml', array(
-                                                 "title"  => "Applications",
-                                                 "products" => $this->productsApps,
-                                                 "catIDs" =>"233"
-                                             )
-                                         );
-
-                             ?>
-                            </div>
-
-                            <div class="row blockpadding">
-                            <?php
-                                               echo $this->partial('/home/partials/product_group.phtml', array(
-                                                "title"  => "Concepts, Screenshots",
-                                                "products" => $this->productsScreenshots,
-                                                "catIDs" =>"445,225"
-                                            )
-                                        );
-
-                            ?>
-                            </div>
-
                            
                  </div>
     </div>
