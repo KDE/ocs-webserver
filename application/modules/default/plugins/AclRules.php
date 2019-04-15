@@ -385,6 +385,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'unfollow',
             'settings',
             'products',
+            'collections',
             'news',
             'activities',
             'payments',
