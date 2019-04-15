@@ -657,12 +657,6 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
 
-        //save collection products
-        $projectIds = $_POST['collection_project_id'];
-        
-        $modeCollection = new  Default_Model_DbTable_CollectionProjects();
-        $modeCollection->setCollectionProjects($this->_projectId, $projectIds);
-        
         try {
             if (100 < $this->_authMember->roleId) {
                 if (Default_Model_Spam::hasSpamMarkers($projectData->toArray())) {
