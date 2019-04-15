@@ -47,11 +47,6 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
         </a>
     </li>
     
-
-    
-    <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin'){
-    $identity = Zend_Auth::getInstance()->getStorage()->read();
-    ?>
     <li class="header-menu-left-item <?php echo $this->tab == 'addcollection' ? 'active' : ''; ?>">
         <?php if ($this->mode == 'editcollection') : ?>
             <a href="<?= Zend_Controller_Front::getInstance()->getRequest()->getRequestUri() ?>">
@@ -71,7 +66,6 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
             <?= $this->translate('Collections') ?>
         </a>
     </li>
-     <?php } ?>
 
     <li class="header-menu-left-item <?php echo $this->tab == 'payout' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payout'); ?>">
