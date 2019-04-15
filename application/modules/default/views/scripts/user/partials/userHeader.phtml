@@ -114,13 +114,19 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
         </a>
     </li>
     
-    <?php  if($this->isSupporter($this->member->member_id)){?>
-    <li class="header-menu-left-item <?php echo $this->tab == 'supporter' ? 'active' : ''; ?>">           
-         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'supporter'); ?>">        
-            <i class="fa fa-user"></i>
-            <?= $this->translate('Supporter') ?>
-        </a>
-    </li>
+    <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin'){
+    $identity = Zend_Auth::getInstance()->getStorage()->read();
+    ?>
+    
+        <?php  if($this->isSupporter($this->member->member_id)){?>
+        <li class="header-menu-left-item <?php echo $this->tab == 'supporter' ? 'active' : ''; ?>">           
+             <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'supporter'); ?>">        
+                <i class="fa fa-user"></i>
+                <?= $this->translate('Supporter') ?>
+            </a>
+        </li>
+        <?php }?>
+    
     <?php }?>
     
 
