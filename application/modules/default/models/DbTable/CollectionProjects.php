@@ -38,7 +38,7 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
                         , project.description
                         , project.count_likes
                         , project.count_dislikes
-                        , project.cat_title as catTitle
+                        , project.cat_title
                  FROM collection_projects
                  JOIN stat_projects project ON project.project_id = collection_projects.project_id
                  WHERE collection_projects.collection_id = :project_id
