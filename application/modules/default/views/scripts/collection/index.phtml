@@ -92,8 +92,7 @@ $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
 
 
- $productJson = Zend_Json::encode($this->product);
- $filesJson = $this->filesJson;
+$productJson = Zend_Json::encode($this->product);
 $helperCatXdgType = new Default_View_Helper_CatXdgType();
 $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->project_category_id));
 
@@ -140,6 +139,12 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
     {
         padding-top: 10px;
         font-size: small;
+    }
+    
+    #product-discussion h3 {
+        color: #2673b0;
+        margin-bottom: 20px;
+        margin-top: 0;
     }
 </style>
 
@@ -761,14 +766,44 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                         <div class="tab-pane active" id="products-panel">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 
-                            <article>
-                                <div id="collectionProductsContainer">
-                                <?php
-                                       echo $this->render('collection/partials/collectionProjects.phtml');
-                                  ?>
-                                  </div>
-                            </article>
+                                <article>
+                                    <div id="collectionProductsContainer">
+                                    <?php
+                                           echo $this->render('collection/partials/collectionProjects.phtml');
+                                      ?>
+                                      </div>
+                                </article>
+                                
+                                <?php /*
+                                    if (count($this->updates) > 0) {
+                                        $this->productUpdate = $this->updates[0];
+                                        ?>
+                                        <article class="lastchangelog">
+                                        <b>Last changelog:</b>
+
+                                        <?= $this->render('collection/partials/productUpdatesV1.phtml'); ?>
+                                        </article>
+                                    <?php } */?>
+
+
+                                    <!-- comments -->
+                                    <div id="product-discussion">
+                                        <?php
+                                        $modelComments = new Default_Model_ProjectComments();
+                                        $offset = $this->paramPageId;
+                                        $testComments = $modelComments->getCommentTreeForProject($this->product->project_id);
+                                        $testComments->setItemCountPerPage(25);
+                                        $testComments->setCurrentPageNumber($offset);
+                                        $this->comments = $testComments;
+                                        echo $this->render('collection/partials/productCommentsUX1.phtml');
+                                        ?>
+                                    </div>
+                                    <!-- /comments -->
+                                
                             </div>
+                            
+                            
+                                
                         </div>
                         <?php } ?>
 
@@ -944,7 +979,6 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 
 <script type="text/javascript">
   var product = <?php echo $productJson ?>;
-  var filesJson  = <?php echo $filesJson ?>;
   var xdgTypeJson = <?php echo $xdgTypeJson ?>;
 </script>
 

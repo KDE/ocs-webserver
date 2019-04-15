@@ -78,28 +78,44 @@ class DevelopmentAppMenu extends React.Component {
                 <span>Add Product</span>
               </a>
             </li>
+            <li id="addproduct-link-item">
+              <a href={this.props.baseUrl+"/collection/add"}>
+                <div className="icon"></div>
+                <span>Add Collection</span>
+              </a>
+            </li>
+            
+            <li id="addproduct-link-item">
+              <a href={this.props.gitlabUrl+"/projects/new"}>
+                <div className="icon"></div>
+                <span>Add Project</span>
+              </a>
+            </li>
+            
             <li id="listproduct-link-item">
               <a href={this.props.baseUrl + "/u/" + this.props.user.username + "/products"}>
                 <div className="icon"></div>
                 <span>Products</span>
               </a>
             </li>
-            <li id="plings-link-item">
-              <a href={this.props.baseUrl + "/u/" + this.props.user.username + "/payout"}>
+            <li id="listproduct-link-item">
+              <a href={this.props.baseUrl + "/u/" + this.props.user.username + "/collections"}>
                 <div className="icon"></div>
-                <span>Payout</span>
-              </a>
-            </li>
-            <li id="addproduct-link-item">
-              <a href={this.props.gitlabUrl+"/projects/new"}>
-                <div className="icon"></div>
-                <span>Create Project</span>
+                <span>Collections</span>
               </a>
             </li>
             <li id="opencode-link-item">
               <a href={this.props.gitlabUrl+"/dashboard/projects"}>
                 <div className="icon"></div>
                 <span>Projects</span>
+              </a>
+            </li>
+            
+            
+            <li id="plings-link-item">
+              <a href={this.props.baseUrl + "/u/" + this.props.user.username + "/payout"}>
+                <div className="icon"></div>
+                <span>Payout</span>
               </a>
             </li>
             <li id="issues-link-item">

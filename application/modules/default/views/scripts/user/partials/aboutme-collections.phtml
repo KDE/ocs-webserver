@@ -1,0 +1,74 @@
+
+
+<?php
+    $helperBuildProductUrl = new Default_View_Helper_BuildCollectionUrl();
+    $helperImage = new Default_View_Helper_Image();
+    $helperPrintDate = new Default_View_Helper_PrintDate();
+    if($this->userProducts == null || count($this->userProducts)==0) return;
+   
+    foreach ($this->userProducts as $product): 
+           
+        ?>
+        <div class="product mini-card col-lg-2 col-md-2 col-sm-3 col-xs-2">
+            <div class="u-wrap">
+                <a href="<?= $helperBuildProductUrl->buildProductUrl($product['project_id'], '', null, true); ?>">
+                    <figure>
+                        <img src="<?php echo $helperImage->Image($product['image_small'], array('width' => 280, 'height' => 171)); ?>"
+                             class="explore-product-image" width="101" height="81" />
+                    </figure>
+                    <div class="u-content">
+                        <h3><?php echo $product['title']; ?></h3>
+                        <span class="productCategory"> <?php echo $product['catTitle']; ?> </span>
+
+                        <span class="productCategory" style="width: 100%; float: left;">
+                            <?= $helperPrintDate->printDate($product['project_changed_at']) ?>
+                        </span>
+                    </div>
+                </a>
+                
+                <?php
+                if($product['countplings'] >0)
+                {
+                ?>
+                <div class="countplings"> <span class="num"><?=$product['countplings']?></span> <img src="/images/system/pling-btn-active.png"/> </div>
+                <?php 
+                }
+                ?>
+                
+                <?php
+                $this->widgetRating = new stdClass();
+                $this->widgetRating->project_id = $product['project_id'];
+                $this->widgetRating->laplace_score = $product['laplace_score'];
+                $this->widgetRating->count_likes = $product['count_likes'];
+                $this->widgetRating->count_dislikes = $product['count_dislikes'];
+                echo $this->render('partials/widgetRating.phtml'); ?>
+            </div>
+        </div>
+ <?php 
+endforeach; ?>
+
+  <?php
+        $total_pages = ceil($this->total_records / $this->pageLimit);                                                                                
+        
+        if($this->projectpage<$total_pages){
+            echo '<button id="btnshowmoreproducts" data-page='.($this->projectpage+1).'>Show More</button>';
+        }
+        ?>
+
+
+<style type="text/css">
+        .countplings 
+        {
+            position: absolute;
+            bottom: 10px;
+            left: 8px;
+            font-size: 11px;
+
+        }
+        .countplings img
+        {
+            width: 20px;
+            height: 20px;
+        }
+
+</style>

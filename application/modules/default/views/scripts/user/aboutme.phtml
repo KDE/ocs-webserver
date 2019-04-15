@@ -316,6 +316,14 @@ div#preloaded-images {
                                 </a>
                             </li>
                             <?php }?>
+                            
+                            <?php if($this->stat['cntCollections']>0){ ?>
+                            <li role="presentation">
+                                <a href="#user-collections" data-toggle="tab" role="tab"  aria-controls="user-collections" >
+                                    Collections<?=' ('.$this->stat['cntCollections'].') '?>
+                                </a>
+                            </li>
+                            <?php }?>
 
                             <li>
                                 <a href="#user-comments" data-toggle="tab" role="tab"  aria-controls="user-comments">
@@ -387,6 +395,20 @@ div#preloaded-images {
                                         if ($this->userProducts) { ?>
                                          <div class="my-products-list" id="my-products-list">
                                             <?php echo $this->render('user/partials/aboutme-featured.phtml'); ?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                             <?php } ?>
+                            
+                            <?php if($this->stat['cntCollections']>0){ ?>
+                                <div role="tabpanel" class="tab-pane " id="user-collections">
+                                    <?php
+                                           $this->userProducts = $this->userCollections;
+                                           $this->projectpage = 1;
+                                           $this->total_records=0;
+                                        if ($this->userCollections) { ?>
+                                         <div class="my-products-list" id="my-products-list">
+                                            <?php echo $this->render('user/partials/aboutme-collections.phtml'); ?>
                                         </div>
                                     <?php } ?>
                                 </div>
