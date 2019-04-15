@@ -128,6 +128,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 $tableProject->getUserActiveProjects($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit);
        
             $this->view->userFeaturedProducts = $tableProject->fetchAllFeaturedProjectsForMember($this->_memberId);
+            $this->view->userCollections = $tableProject->fetchAllCollectionsForMember($this->_memberId);
 
             $paginationComments = $tableMember->fetchComments($this->_memberId);
             if ($paginationComments) {
