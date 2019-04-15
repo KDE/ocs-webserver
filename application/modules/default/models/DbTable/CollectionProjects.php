@@ -84,9 +84,8 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
             $withoutProjectIds = "0";
         }
         
-        $sql = " SELECT project.title, project.project_id, project.image_small, member.username, member.member_id
-                 FROM project
-                 JOIN member ON member.member_id = project.member_id
+        $sql = " SELECT project.title, project.project_id, project.image_small, project.username, project.member_id, project.cat_title
+                 FROM stat_projects project
                  WHERE project.member_id = :member_id
                  AND project.type_id = 1
                  AND project.status = 100
@@ -109,9 +108,8 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
             $withoutProjectIds = "0";
         }
         
-        $sql = " SELECT project.title, project.project_id, project.image_small, member.username, member.member_id
-                 FROM project
-                 JOIN member ON member.member_id = project.member_id
+        $sql = " SELECT project.title, project.project_id, project.image_small, project.username, project.member_id, project.cat_title
+                 FROM stat_projects project
                  WHERE project.member_id <> :member_id
                  AND project.type_id = 1
                  AND project.status = 100
