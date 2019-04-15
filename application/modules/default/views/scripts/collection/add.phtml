@@ -879,6 +879,7 @@ $this->inlineScript()->appendScript('
                         type: 'POST',
                         data: {collection_project_ids: $collection_project_ids},
                         dataType: 'json',
+                        async: falasyse,
                         success: function (data, textStatus, jqXHR) {
                             if (data.status != 'success') {
                                 return;
@@ -1343,7 +1344,7 @@ $this->inlineScript()->appendScript('
                       data: data,
                       url: url,
                       type: 'post',
-                      async: false
+                      async: falasyse
                   }).done(function (data, textStatus, jqXHR) {
                       if (data.project_id == undefined) {
                           ProductForm.project_id = '';
