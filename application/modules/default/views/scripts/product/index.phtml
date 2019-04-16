@@ -64,7 +64,8 @@ $this->headMeta()->appendProperty('og:description',
     $helpTruncate->truncate($this->product->description, 200, '...', false, true));
 $this->headMeta()->appendProperty('og:image',
     $helpImage->Image($this->product->image_small, array('width' => 400, 'height' => 400)));
-$tableCollection = new Default_Model_Project();
+$tableProject = new Default_Model_Project();
+$tableCollection = new Default_Model_Collection();
 
 $tableProjectUpdates = new Default_Model_ProjectUpdates();
 $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->project_id);
@@ -397,7 +398,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                         
                                         if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName)
                                         {
-                                            $cntSameSource = $tableCollection->getCountSourceurl($this->product->source_url);
+                                            $cntSameSource = $tableProject->getCountSourceurl($this->product->source_url);
                                             if($cntSameSource>1){
                                                 $link = '/p/'.$this->product->project_id.'/listsamesourceurl';
                                                 echo '<span><a style="color:red" class="popuppanel" href="'.$link.'">
@@ -456,7 +457,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                     endif; ?>
 
                                     <?php
-                                    $this->galleryPictures = $tableCollection->getGalleryPictureSources($this->product->project_id);
+                                    $this->galleryPictures = $tableProject->getGalleryPictureSources($this->product->project_id);
                                     if (count($this->galleryPictures) > 0) {
                                         foreach ($this->galleryPictures as $picture): ?>
                                             <li data-target="#myCarousel" data-slide-to="<?php echo $cnt ?>"
@@ -1018,13 +1019,31 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                        </div>
 
 
+                       
+                       <?php 
+                            $cntCollections = $tableCollection->countAllCollectionsForProject($this->product->project_id);
+                            if($cntCollections>0) {
+                       ?>
+                       <!-- is part of collection -->
+                        <div>
+                            <?php
+                            $this->moreProducts = $tableCollection->fetchAllCollectionsForProject($this->product->project_id, 6);
+                            $this->moreProductsTitle = 'Is Part of these Collections';
 
+                            if (count($this->moreProducts) > 0) {
+                            echo $this->render('product/partials/productMoreProductsWidgetV1.phtml');
+                            } ?>
+                        </div>
+                        <!-- /is part of colelction -->
+                        <?php   
+                            } 
+                        ?>
 
                         <!-- MORE PRODUCTS -->
 
                         <div>
                             <?php
-                            $this->moreProducts = $tableCollection->fetchMoreProjects($this->product, 6);
+                            $this->moreProducts = $tableProject->fetchMoreProjects($this->product, 6);
                             $this->moreProductsTitle = 'More ' . $this->product->cat_title . ' from ' . $this->product->username;
 
                             if (count($this->moreProducts) > 0) {
@@ -1034,7 +1053,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
 
                         <div>
                             <?php
-                            $this->moreProducts = $tableCollection->fetchMoreProjectsOfOtherUsr($this->product, 6);
+                            $this->moreProducts = $tableProject->fetchMoreProjectsOfOtherUsr($this->product, 6);
                             $this->moreProductsTitle = 'Other ' . $this->product->cat_title;
 
                             if (count($this->moreProducts) > 0) {

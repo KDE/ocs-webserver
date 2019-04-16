@@ -300,7 +300,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         }
 
         $filesmodel = new Default_Model_DbTable_PploadFiles();
-        $this->view->collection_projects_dls = $filesmodel->fetchAllFilesForCollection($collection_ids); 
+        $this->view->collection_projects_dls = $filesmodel->fetchAllActiveFilesForCollection($collection_ids); 
 
         //$this->view->collection_ids = $collection_ids;
 
@@ -416,18 +416,18 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         //New Project in Session, for AuthValidation (owner)
         $this->_auth->getIdentity()->projects[$newProject->project_id] = array('project_id' => $newProject->project_id);
 
-        /*
+        
         $modelTags = new Default_Model_Tags();
         if ($values['tagsuser']) {
             $modelTags->processTagsUser($newProject->project_id, implode(',', $values['tagsuser']),Default_Model_Tags::TAG_TYPE_PROJECT);
         } else {
             $modelTags->processTagsUser($newProject->project_id, null, Default_Model_Tags::TAG_TYPE_PROJECT);
         }
-
+        /*
         if ($values['is_original']) {
             $modelTags->processTagProductOriginal($newProject->project_id, $values['is_original']);
         }
-
+        
         //set license, if needed
         $licenseTag = $form->getElement('license_tag_id')->getValue();
         //only set/update license tags if something was changed
@@ -646,14 +646,14 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         
         //$modelTags->processTagProductOriginal($this->_projectId,$values['is_original']);
 
-        /*
+        
         if($values['tagsuser']) {
             $modelTags->processTagsUser($this->_projectId,implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);
         }else
         {
             $modelTags->processTagsUser($this->_projectId,null, Default_Model_Tags::TAG_TYPE_PROJECT);
         }
-        */
+        
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
 
