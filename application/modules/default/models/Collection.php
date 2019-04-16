@@ -701,8 +701,7 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
             'image_small',
             'title'
         ))->setIntegrityCheck(false)->where('status = ?', self::PROJECT_ACTIVE)
-                  ->where('member_id != ?', $project->member_id, 'INTEGER')->where('type_id = ?', 1)
-                  //->where('amount_reports is null')
+                  ->where('member_id != ?', $project->member_id, 'INTEGER')
                   ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')
                   ->where('type_id = ?', self::PROJECT_TYPE_COLLECTION, 'INTEGER')
                   ->limit($count, $offset)
