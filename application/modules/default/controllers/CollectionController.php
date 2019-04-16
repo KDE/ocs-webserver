@@ -300,7 +300,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         }
 
         $filesmodel = new Default_Model_DbTable_PploadFiles();
-        $this->view->collection_projects_dls = $filesmodel->fetchAllFilesForCollection($collection_ids); 
+        $this->view->collection_projects_dls = $filesmodel->fetchAllActiveFilesForCollection($collection_ids); 
 
         //$this->view->collection_ids = $collection_ids;
 

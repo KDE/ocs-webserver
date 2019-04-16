@@ -183,6 +183,23 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
 
         return $resultSet[0]['countAll'];
     }
+    
+    /**
+     * @param int  $project_id
+     * @param bool $onlyActiveProjects
+     *
+     * @return mixed
+     */
+    public function countAllCollectionsForProject($project_id, $onlyActiveProjects = true)
+    {
+        $q = $this->select()->from('collection_projects', array('countAll' => new Zend_Db_Expr('count(*)')))->setIntegrityCheck(false)
+                  ->where('collection_projects.active = 1')
+                  ->where('collection_projects.project_id = ?', $project_id, 'INTEGER')
+        ;
+        $resultSet = $q->query()->fetchAll();
+
+        return $resultSet[0]['countAll'];
+    }
 
     /**
      * @param int  $member_id
@@ -264,6 +281,45 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
         ))->setIntegrityCheck(false)->join('member', 'project.member_id = member.member_id', array('username'))
                   ->where('project.status >= ?', ($onlyActiveProjects ? self::PROJECT_ACTIVE : self::PROJECT_INACTIVE))
                   ->where('project.member_id = ?', $member_id, 'INTEGER')
+                  ->where('project.type_id = ?', self::PROJECT_TYPE_COLLECTION)
+                  ->order('project_changed_at DESC')
+        ;
+        if (isset($limit)) {
+            $q->limit($limit, $offset);
+        }
+
+        return $this->generateRowSet($q->query()->fetchAll());
+    }
+    
+    
+    /**
+     * By default it will show all projects for a project included the unpublished elements.
+     *
+     * @param int      $project_id
+     * @param int|null $limit
+     * @param int|null $offset
+     * @param bool     $onlyActiveProjects
+     *
+     * @return Zend_Db_Table_Rowset_Abstract
+     */
+    public function fetchAllCollectionsForProject($project_id, $limit = null, $offset = null, $onlyActiveProjects = true)
+    {
+        $q = $this->select()->from('collection_projects', array(
+            '*',
+            'project_validated'  => 'project.validated',
+            'project_uuid'       => 'project.uuid',
+            'project_status'     => 'project.status',
+            'project_created_at' => 'project.created_at',
+            'project_changed_at' => 'project.changed_at',
+            'member_type'        => 'member.type',
+            'laplace_score'      => new Zend_Db_Expr('laplace_score(count_likes,count_dislikes)'),
+            'catTitle'           => new Zend_Db_Expr('(SELECT title FROM project_category WHERE project_category_id = project.project_category_id)')
+        ))->setIntegrityCheck(false)
+                  ->join('project', 'collection_projects.collection_id = project.project_id')
+                  ->join('member', 'project.member_id = member.member_id', array('username'))
+                  ->where('collection_projects.active = 1')
+                  ->where('collection_projects.project_id = ?', $project_id, 'INTEGER')
+                  ->where('project.status >= ?', ($onlyActiveProjects ? self::PROJECT_ACTIVE : self::PROJECT_INACTIVE))
                   ->where('project.type_id = ?', self::PROJECT_TYPE_COLLECTION)
                   ->order('project_changed_at DESC')
         ;
@@ -647,7 +703,9 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
         ))->setIntegrityCheck(false)->where('status = ?', self::PROJECT_ACTIVE)
                   ->where('member_id != ?', $project->member_id, 'INTEGER')->where('type_id = ?', 1)
                   //->where('amount_reports is null')
-                  ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')->limit($count, $offset)
+                  ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')
+                  ->where('type_id = ?', self::PROJECT_TYPE_COLLECTION, 'INTEGER')
+                  ->limit($count, $offset)
                   ->order('created_at DESC')
         ;
 

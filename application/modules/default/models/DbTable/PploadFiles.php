@@ -147,13 +147,13 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
 
         $sql = "    select  *
                      from ppload.ppload_files f 
-                     where f.collection_id in (".implode(',',$collection_ids).")";        
+                     where f.collection_id in (".implode(',',$collection_ids).") ";        
 
         if($ignore_status == FALSE && $activeFiles == TRUE) {
-           $sql .= " and f.active = 1";
+           $sql .= " and f.active = 1 ";
         }
         if($ignore_status == FALSE && $activeFiles == FALSE) {
-           $sql .= " and f.active = 0";
+           $sql .= " and f.active = 0 ";
         }
 
         $sql.="order by f.collection_id,f.created_timestamp desc ";
@@ -171,6 +171,11 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
     public function fetchAllFilesForCollection($collection_ids)
     {
         return $this->fetchAllFilesExtended($collection_ids, true);
+    } 
+    
+    public function fetchAllActiveFilesForCollection($collection_ids)
+    {
+        return $this->fetchAllFilesExtended($collection_ids, false, true);
     } 
     
     public function fetchAllActiveFilesForProject($collection_id)

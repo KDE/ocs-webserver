@@ -47,7 +47,7 @@ class Default_View_Helper_BuildDownloadLink extends Zend_View_Helper_Abstract
                     return $returnString;
     }
 
-    public function humanFileSize($bytes,$isExternLink) {
+    public function humanFileSize($bytes,$isExternLink=false) {
                     if($isExternLink) return '----';
                          if($bytes>0)
                          {
@@ -98,7 +98,7 @@ class Default_View_Helper_BuildDownloadLink extends Zend_View_Helper_Abstract
 
         
         $fileShortName = $this->shortFilename($file['name']);
-        $filesize = $this->humanFileSize($file['size'],$isExternLink);
+        $filesize = $this->humanFileSize($file['size']);
         // $fileShortName = $file['name'];
         $downloadLink = '<a href="'.$downloadUrl.'" id="data-link-dl'.$file['id'].'" class="opendownloadfile" data-file_id="'.$file['id']
             .'" data-username="'.$project->username 
@@ -108,10 +108,12 @@ class Default_View_Helper_BuildDownloadLink extends Zend_View_Helper_Abstract
             .'" data-project_id="'.$project->project_id
             .'" data-link_type="'.$dataLinkType
             .'" data-is-external-link="'
-            .$isExternLink
+            .($isExternLink==1?'true':'false')
             .'">'
             .'<span id="'.$dataLinkType.'"-link-filename'.$file['id'].'" class="downloadlink '.($isExternLink?'isExternal':'').'" >'
-            .$fileShortName.'</span><span class="downloadlink filesize">'.$filesize
+            .$fileShortName
+            .($isExternLink?' <i class="fa fa-external-link"></i>':'')
+            .'</span><span class="downloadlink filesize">'.$filesize
             .'</span>'
             .'</a>';
         return $downloadLink;

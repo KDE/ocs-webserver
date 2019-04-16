@@ -48,22 +48,43 @@
             </div> 
             <div class="col-lg-5 col-md-5">
                 <figure style="display: block;float: left;">
-                    <img width="80" src="<?php echo $this->Image($project->image_small, array('width' => 80, 'height' => 80)); ?>" class="downloadhistory-image" />
+                    <a href="<?= $this->buildProductUrl($project->project_id) ?>"><img width="80" src="<?php echo $this->Image($project->image_small, array('width' => 80, 'height' => 80)); ?>" class="downloadhistory-image" /></a>
                 </figure>   
                 <div style="margin-left: 95px">
                     <a href="<?= $this->buildProductUrl($project->project_id) ?>"><?=$project->title?></a>                           
                 </div>
                 <div style="margin-left: 95px; font-size: small;">
-                    <?=$project->cat_title?>                           
+                     by <a href="/u/<?php echo $project->username?>"><?php echo $project->username?></a>                          
                 </div>
               
             </div>      
                     
             <div class="col-lg-2 col-md-1">  
-                by <a href="/u/<?php echo $project->username?>"><?php echo $project->username?></a>                                          
+                <?=$project->cat_title?>                                          
             </div>
             <div class="col-lg-2 col-md-1">  
-               <?php 
+               
+                <?php 
+                 if(sizeof($files_toinstall)>0)
+                 {
+                ?>
+                <div id="project_btn_grp_install" class="btn-group dropleft " style="width: 100%;">
+                    <button style="width: 100%" id="project_btn_install" class="btn active btn-primary dropdown-toggle " type="button" data-toggle="dropdown">Install
+                    <span class="caret"></span></button>
+                    <ul class="dropdown-menu active" id="dropdown_installs" style="min-width: 270px; top:50px">           
+                    <?php
+                    foreach ($files_toinstall as $f) {
+                        echo '<li>'.$this->buildDownloadLink($f,$project,'install').'</li>';
+                    }
+                    ?>           
+                    </ul>                
+                </div>
+            <?php } ?>
+                
+            </div>
+
+            <div class="col-lg-2 col-md-1" >                                                                    
+                <?php 
                  if(sizeof($files)>0)
                  {
                 ?>
@@ -79,39 +100,20 @@
                     </ul>
                 </div>
                 <?php } ?>
-                <?php 
-                 if(sizeof($files_toinstall)>0)
-                 {
-                ?>
-                <div id="project_btn_grp_install" class="btn-group dropleft " style="width: 100%; padding-top: 10px;">
-                    <button style="width: 100%" id="project_btn_install" class="btn active btn-primary dropdown-toggle " type="button" data-toggle="dropdown">Install
-                    <span class="caret"></span></button>
-                    <ul class="dropdown-menu active" id="dropdown_installs" style="min-width: 270px; top:50px">           <?php
-                    foreach ($files_toinstall as $f) {
-                        echo '<li>'.$this->buildDownloadLink($f,$project,'install').'</li>';
-                    }
-                    ?>           
-                    </ul>                
-                </div>
-            <?php } ?>
-                
-            </div>
-
-            <div class="col-lg-3" >                                                                    
-                <?php /*
-                        <?=$this->printDate($project->created_at)?>
-                */?>
             </div>
 
       </div>
       <div class="row row-detail" style="display: none" id="row-<?=$project->project_id?>">
         <div class="col-lg-1 col-md-1">
         </div>
-        <div class="col-lg-7 col-md-7">
+        <div class="col-lg-9 col-md-9">
             <div>
                 <?php echo $project->description?>
 
             </div>
+              
+        </div>
+        <div class="col-lg-2 col-md-1" >
             <div class="rating text-center" style="width: 80px; padding-top: 10px;float: right ">               
                 <?php                
                         $this->widgetRating = new stdClass();
@@ -121,9 +123,8 @@
                         $this->widgetRating->count_dislikes =$project->count_dislikes;
                         echo $this->render('partials/widgetRating.phtml'); 
                 ?>          
-            </div>  
+            </div>
         </div>
-        
              
       </div>
 
