@@ -129,6 +129,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
     public function indexAction()
     {
         $this->view->authMember = $this->_authMember;
+        $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
         $httpHost = $this->getRequest()->getHttpHost();
         $this->view->urlPay =  '/subscription/pay';
     }
@@ -136,6 +137,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
     public function showAction()
     {
         $this->view->authMember = $this->_authMember;
+        $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
         $this->_helper->viewRenderer('index');
         $this->indexAction();
     }
@@ -145,6 +147,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
     {
 
         $this->view->authMember = $this->_authMember;
+        $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
 
         $request = Zend_Controller_Front::getInstance()->getRequest();
 
@@ -161,6 +164,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
     public function payAction()
     {
         $this->_helper->layout()->disableLayout();
+        $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
         
         //get parameter
         $paymentOption = $this->getParam('amount_predefined');
@@ -326,6 +330,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         //$this->_helper->layout()->disableLayout();
         $this->view->paymentStatus = 'success';
         $this->view->paymentMessage = 'Payment successful.';
+        $this->view->headTitle('Thank you for your support - ' . $this->getHeadTitle(), 'SET');
     }
 
     public function paymentcancelAction()
@@ -333,6 +338,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         //$this->_helper->layout()->disableLayout();
         $this->view->paymentStatus = 'danger';
         $this->view->paymentMessage = 'Payment cancelled.';
+        $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
     }
 
 
