@@ -947,6 +947,25 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                         </div>
                             */
                         ?>
+                        
+                        <?php 
+                            $cntCollections = $tableCollection->countAllCollectionsForProject($this->product->project_id);
+                            if($cntCollections>0) {
+                       ?>
+                       <!-- is part of collection -->
+                        <div>
+                            <?php
+                            $this->moreProducts = $tableCollection->fetchAllCollectionsForProject($this->product->project_id, 6);
+                            $this->moreProductsTitle = 'Is part of these Collections';
+
+                            if (count($this->moreProducts) > 0) {
+                            echo $this->render('product/partials/productMoreProductsWidgetV1.phtml');
+                            } ?>
+                        </div>
+                        <!-- /is part of colelction -->
+                        <?php   
+                            } 
+                        ?>
 
                         <div>
                             <div class="prod-widget-box right">
@@ -1037,24 +1056,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
 
 
                        
-                       <?php 
-                            $cntCollections = $tableCollection->countAllCollectionsForProject($this->product->project_id);
-                            if($cntCollections>0) {
-                       ?>
-                       <!-- is part of collection -->
-                        <div>
-                            <?php
-                            $this->moreProducts = $tableCollection->fetchAllCollectionsForProject($this->product->project_id, 6);
-                            $this->moreProductsTitle = 'Is Part of these Collections';
-
-                            if (count($this->moreProducts) > 0) {
-                            echo $this->render('product/partials/productMoreProductsWidgetV1.phtml');
-                            } ?>
-                        </div>
-                        <!-- /is part of colelction -->
-                        <?php   
-                            } 
-                        ?>
+                       
 
                         <!-- MORE PRODUCTS -->
 
