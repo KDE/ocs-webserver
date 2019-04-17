@@ -163,7 +163,7 @@
                                     if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
                             ?>
                         <p style="font-size: 18px; position: absolute; bottom: 0px; right: 22%;">
-                            Become a <a href="/support" target="_TOP" style="color: #0088d7;text-decoration: underline;">Supporter</a> to help the Creators.
+                            Become a <a href="/support" target="_TOP" style="color: #0088d7;text-decoration: underline;">Supporter</a> to help <?= $this->project_owner ?> and others.
                             <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
                         <p style="font-size: 18px; position: absolute; bottom: 0px; right: 32%;">
                             Thank you for your support!
