@@ -370,8 +370,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
         
         //Check if this is a collection
-        $collCatId = Zend_Registry::get('config')->settings->client->default->collection_cat_id;
-        if($collCatId == $productInfo->project_category_id) {
+        if($productInfo->type_id == $modelProduct::PROJECT_TYPE_COLLECTION) {
             $this->redirect('/c/'.$this->_projectId);
         }
         

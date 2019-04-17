@@ -711,6 +711,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 )));
 
         // **** static routes
+        $router->addRoute('static_faq_old', new Zend_Controller_Router_Route_Static('/faq-old', array(
+                    'module'     => 'default',
+                    'controller' => 'content',
+                    'action'     => 'index',
+                    'page'       => 'faqold'
+                )));
+        
         $router->addRoute('static_faq', new Zend_Controller_Router_Route_Static('/faq', array(
                     'module'     => 'default',
                     'controller' => 'content',

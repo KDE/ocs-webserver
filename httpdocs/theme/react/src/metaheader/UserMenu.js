@@ -61,8 +61,8 @@ class UserMenu extends React.Component {
     } else {
       userDropdownDisplay = (
         <React.Fragment>
+        <li id="user-register-container"><a href={this.props.baseUrl + "/register"}>Register</a> or</li>
         <li id="user-login-container"><a href={this.props.loginUrl} className="btn btn-metaheader">Login</a></li>
-        <li id="user-register-container">or <a href={this.props.baseUrl + "/register"}>Register</a></li>
         </React.Fragment>
     )
     }

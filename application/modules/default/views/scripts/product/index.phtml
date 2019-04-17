@@ -467,6 +467,14 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                             <?php
                                             $cnt++;
                                         endforeach;
+                                    } else {
+                                    ?>    
+                                        <li data-target="#myCarousel" data-slide-to="<?php echo $cnt ?>"
+                                                class="<?php if (!$this->product->ppload_collection_id && $cnt == 1) {
+                                                    echo 'active';
+                                                } ?>">
+                                        </li>
+                                    <?php    
                                     }
                                     ?>
                                 </ol>
@@ -485,16 +493,25 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                     endif; ?>
 
                                     <?php
-
-                                    foreach ($this->galleryPictures as $picture): ?>
+                                    if (count($this->galleryPictures) > 0) {
+                                        foreach ($this->galleryPictures as $picture): ?>
+                                            <div class="item <?php if (!$this->product->ppload_collection_id && $cnt == 1) {
+                                                echo 'active';
+                                            } ?>">
+                                                <img src="<?php echo $helpImage->Image($picture, array('height' => '600')); ?>"/>
+                                            </div>
+                                            <?php
+                                            $cnt++;
+                                        endforeach;
+                                    } else {?>
                                         <div class="item <?php if (!$this->product->ppload_collection_id && $cnt == 1) {
                                             echo 'active';
                                         } ?>">
-                                            <img src="<?php echo $helpImage->Image($picture, array('height' => '600')); ?>"/>
+                                            <img src="<?php echo $helpImage->Image($this->product->image_small, array('height' => '600')); ?>"/>
                                         </div>
-                                        <?php
-                                        $cnt++;
-                                    endforeach; ?>
+                                    <?php
+                                    }
+                                    ?>
                                 </div><!-- End Carousel Inner -->
 
                                 <!-- Controls -->
@@ -930,6 +947,25 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                         </div>
                             */
                         ?>
+                        
+                        <?php 
+                            $cntCollections = $tableCollection->countAllCollectionsForProject($this->product->project_id);
+                            if($cntCollections>0) {
+                       ?>
+                       <!-- is part of collection -->
+                        <div>
+                            <?php
+                            $this->moreProducts = $tableCollection->fetchAllCollectionsForProject($this->product->project_id, 6);
+                            $this->moreProductsTitle = 'Is part of these Collections';
+
+                            if (count($this->moreProducts) > 0) {
+                            echo $this->render('product/partials/productMoreProductsWidgetV1.phtml');
+                            } ?>
+                        </div>
+                        <!-- /is part of colelction -->
+                        <?php   
+                            } 
+                        ?>
 
                         <div>
                             <div class="prod-widget-box right">
@@ -1020,24 +1056,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
 
 
                        
-                       <?php 
-                            $cntCollections = $tableCollection->countAllCollectionsForProject($this->product->project_id);
-                            if($cntCollections>0) {
-                       ?>
-                       <!-- is part of collection -->
-                        <div>
-                            <?php
-                            $this->moreProducts = $tableCollection->fetchAllCollectionsForProject($this->product->project_id, 6);
-                            $this->moreProductsTitle = 'Is Part of these Collections';
-
-                            if (count($this->moreProducts) > 0) {
-                            echo $this->render('product/partials/productMoreProductsWidgetV1.phtml');
-                            } ?>
-                        </div>
-                        <!-- /is part of colelction -->
-                        <?php   
-                            } 
-                        ?>
+                       
 
                         <!-- MORE PRODUCTS -->
 
