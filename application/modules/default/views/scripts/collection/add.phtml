@@ -695,6 +695,7 @@ $this->inlineScript()->appendScript('
             
             $('#search_products').bind('input', function(e) {
                 e.preventDefault();
+                wait(700);
                 //$(this).next().stop(true, true).fadeIn(0).html('[input event fired!]: ' + $(this).val()).fadeOut(2000);
                 $(this).next();
                 $val = $(this).val(); 

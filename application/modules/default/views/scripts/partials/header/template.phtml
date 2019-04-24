@@ -176,6 +176,37 @@ echo $this->render('partials/header/metaheader.phtml');
         ul.menu-nav-tabs li.active {
             background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0;
         }
+        
+        
+        
+        
+        
+        #category-tree-container ul li.active > a {
+            background-color: <?=$this->template['header-nav-tabs']['background-color']?> !important;
+            color: #ffffff !important;
+        }
+        
+        #category-tree-container ul li a:hover {
+            background-color: <?=$this->template['header-nav-tabs']['background-color']?> !important;
+            color: #ffffff !important;
+        }
+        
+        #category-tree-container ul li a {
+            display: block;
+            width: 100%;
+            float: left;
+            background-color: transparent !important;
+            color: #2673b0 !important;
+            padding-left: 3px;
+            padding-right: 40px;
+            position: relative;
+            -webkit-transition: all .2s ease-out;
+            -moz-transition: all .2s ease-out;
+            -o-transition: all .2s ease-out;
+            transition: all .2s ease-out;
+        }
+        
+        
 
         .absolute-left {
             left: <?=$tabs_left?>px;
