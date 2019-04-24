@@ -1,0 +1,5 @@
+{
+    "presets": ["babel-preset-react","babel-preset-es2015","babel-preset-stage-0"],
+    "plugins": ["transform-es2015-arrow-functions","transform-object-rest-spread"]
+  }
+  
