@@ -290,6 +290,12 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         if (empty($productInfo)) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
+        
+        //Check if this is a collection
+        if($productInfo->type_id != $modelProduct::PROJECT_TYPE_COLLECTION) {
+            $this->redirect('/p/'.$this->_projectId);
+        }
+        
         $this->view->product = $productInfo;
         
         $this->view->collection_projects = $this->getCollectionProjects(); 
