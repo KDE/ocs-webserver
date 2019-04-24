@@ -1,3 +1,512 @@
+'use strict';
+
+var reducer = Redux.combineReducers({
+  products: productsReducer,
+  product: productReducer,
+  lightboxGallery: lightboxGalleryReducer,
+  pagination: paginationReducer,
+  topProducts: topProductsReducer,
+  categories: categoriesReducer,
+  comments: commentsReducer,
+  users: usersReducer,
+  user: userReducer,
+  supporters: supportersReducer,
+  domain: domainReducer,
+  env: envReducer,
+  device: deviceReducer,
+  view: viewReducer,
+  filters: filtersReducer
+});
+
+/* reducers */
+
+function productsReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  if (action.type === 'SET_PRODUCTS') {
+    return action.products;
+  } else {
+    return state;
+  }
+}
+
+function productReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  if (action.type === 'SET_PRODUCT') {
+    return action.product;
+  } else if (action.type === 'SET_PRODUCT_FILES') {
+    var s = Object.assign({}, state, {
+      r_files: action.files
+    });
+    return s;
+  } else if (action.type === 'SET_PRODUCT_UPDATES') {
+    var _s = Object.assign({}, state, {
+      r_updates: action.updates
+    });
+    return _s;
+  } else if (action.type === 'SET_PRODUCT_RATINGS') {
+    var _s2 = Object.assign({}, state, {
+      r_ratings: action.ratings
+    });
+    return _s2;
+  } else if (action.type === 'SET_PRODUCT_LIKES') {
+    var _s3 = Object.assign({}, state, {
+      r_likes: action.likes
+    });
+    return _s3;
+  } else if (action.type === 'SET_PRODUCT_PLINGS') {
+    var _s4 = Object.assign({}, state, {
+      r_plings: action.plings
+    });
+    return _s4;
+  } else if (action.type === 'SET_PRODUCT_USER_RATINGS') {
+    var _s5 = Object.assign({}, state, {
+      r_userRatings: action.userRatings
+    });
+    return _s5;
+  } else if (action.type === 'SET_PRODUCT_GALLERY') {
+    var _s6 = Object.assign({}, state, {
+      r_gallery: action.gallery
+    });
+    return _s6;
+  } else if (action.type === 'SET_PRODUCT_COMMENTS') {
+    var _s7 = Object.assign({}, state, {
+      r_comments: action.comments
+    });
+    return _s7;
+  } else if (action.type === 'SET_PRODUCT_ORIGINS') {
+    var _s8 = Object.assign({}, state, {
+      r_origins: action.origins
+    });
+    return _s8;
+  } else if (action.type === 'SET_PRODUCT_RELATED') {
+    var _s9 = Object.assign({}, state, {
+      r_related: action.related
+    });
+    return _s9;
+  } else if (action.type === 'SET_PRODUCT_MORE_PRODUCTS') {
+    var _s10 = Object.assign({}, state, {
+      r_more_products: action.products
+    });
+    return _s10;
+  } else if (action.type === 'SET_PRODUCT_MORE_PRODUCTS_OTHER_USERS') {
+    var _s11 = Object.assign({}, state, {
+      r_more_products_other_users: action.products
+    });
+    return _s11;
+  } else if (action.type === 'SET_PRODUCT_TAGS') {
+    var _s12 = Object.assign({}, state, {
+      r_tags_user: action.userTags,
+      r_tags_system: action.systemTags
+    });
+    return _s12;
+  } else {
+    return state;
+  }
+}
+
+function lightboxGalleryReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  if (action.type === 'SHOW_LIGHTBOX') {
+    var s = Object.assign({}, state, {
+      show: true,
+      currentItem: action.item
+    });
+    return s;
+  } else if (action.type === 'HIDE_LIGHTBOX') {
+    var _s13 = Object.assign({}, state, {
+      show: false
+    });
+    return _s13;
+  } else {
+    return state;
+  }
+}
+
+function paginationReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  if (action.type === 'SET_PAGINATION') {
+    return action.pagination;
+  } else {
+    return state;
+  }
+}
+
+function topProductsReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  if (action.type === 'SET_TOP_PRODUCTS') {
+    return action.products;
+  } else {
+    return state;
+  }
+}
+
+function categoriesReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  if (action.type === 'SET_CATEGORIES') {
+    var s = Object.assign({}, state, {
+      items: categories
+    });
+    return s;
+  } else if (action.type === 'SET_CURRENT_CAT') {
+    var _s14 = Object.assign({}, state, {
+      current: action.cat
+    });
+    return _s14;
+  } else if (action.type === 'SET_CURRENT_SUBCAT') {
+    var _s15 = Object.assign({}, state, {
+      currentSub: action.cat
+    });
+    return _s15;
+  } else if (action.type === 'SET_CURRENT_SECONDSUBCAT') {
+    var _s16 = Object.assign({}, state, {
+      currentSecondSub: action.cat
+    });
+    return _s16;
+  } else {
+    return state;
+  }
+}
+
+function commentsReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  if (action.type === 'SET_COMMENTS') {
+    return action.comments;
+  } else {
+    return state;
+  }
+}
+
+function usersReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  if (action.type === 'SET_USERS') {
+    return action.users;
+  } else {
+    return state;
+  }
+}
+
+function userReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  if (action.type === 'SET_USER') {
+    return action.user;
+  } else {
+    return state;
+  }
+}
+
+function supportersReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  if (action.type === 'SET_SUPPORTERS') {
+    return action.supporters;
+  } else {
+    return state;
+  }
+}
+
+function domainReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  if (action.type === 'SET_DOMAIN') {
+    return action.domain;
+  } else {
+    return state;
+  }
+}
+
+function envReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  if (action.type === 'SET_ENV') {
+    return action.env;
+  } else {
+    return state;
+  }
+}
+
+function deviceReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  if (action.type === 'SET_DEVICE') {
+    return action.device;
+  } else {
+    return state;
+  }
+}
+
+function viewReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  if (action.type === 'SET_VIEW') {
+    return action.view;
+  } else {
+    return state;
+  }
+}
+
+function filtersReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  if (action.type === 'SET_FILTERS') {
+    return action.filters;
+  } else {
+    return state;
+  }
+}
+
+/* /reducers */
+
+/* dispatch */
+
+function setProducts(products) {
+  return {
+    type: 'SET_PRODUCTS',
+    products: products
+  };
+}
+
+function setProduct(product) {
+  return {
+    type: 'SET_PRODUCT',
+    product: product
+  };
+}
+
+function setProductFiles(files) {
+  return {
+    type: 'SET_PRODUCT_FILES',
+    files: files
+  };
+}
+
+function setProductUpdates(updates) {
+  return {
+    type: 'SET_PRODUCT_UPDATES',
+    updates: updates
+  };
+}
+
+function setProductRatings(ratings) {
+  return {
+    type: 'SET_PRODUCT_RATINGS',
+    ratings: ratings
+  };
+}
+
+function setProductLikes(likes) {
+  return {
+    type: 'SET_PRODUCT_LIKES',
+    likes: likes
+  };
+}
+
+function setProductPlings(plings) {
+  return {
+    type: 'SET_PRODUCT_PLINGS',
+    plings: plings
+  };
+}
+
+function setProductUserRatings(userRatings) {
+  return {
+    type: 'SET_PRODUCT_USER_RATINGS',
+    userRatings: userRatings
+  };
+}
+
+function setProductGallery(gallery) {
+  return {
+    type: 'SET_PRODUCT_GALLERY',
+    gallery: gallery
+  };
+}
+
+function setProductComments(comments) {
+  return {
+    type: 'SET_PRODUCT_COMMENTS',
+    comments: comments
+  };
+}
+
+function setProductOrigins(origins) {
+  return {
+    type: 'SET_PRODUCT_ORIGINS',
+    origins: origins
+  };
+}
+
+function setProductRelated(related) {
+  return {
+    type: 'SET_PRODUCT_RELATED',
+    related: related
+  };
+}
+
+function setProductMoreProducts(products) {
+  return {
+    type: 'SET_PRODUCT_MORE_PRODUCTS',
+    products: products
+  };
+}
+
+function setProductMoreProductsOtherUsers(products) {
+  return {
+    type: 'SET_PRODUCT_MORE_PRODUCTS_OTHER_USERS',
+    products: products
+  };
+}
+
+function setProductTags(userTags, systemTags) {
+  return {
+    type: 'SET_PRODUCT_TAGS',
+    userTags: userTags,
+    systemTags: systemTags
+  };
+}
+
+function showLightboxGallery(num) {
+  return {
+    type: 'SHOW_LIGHTBOX',
+    item: num
+  };
+}
+
+function hideLightboxGallery() {
+  return {
+    type: 'HIDE_LIGHTBOX'
+  };
+}
+
+function setPagination(pagination) {
+  return {
+    type: 'SET_PAGINATION',
+    pagination: pagination
+  };
+}
+
+function setTopProducts(topProducts) {
+  return {
+    type: 'SET_TOP_PRODUCTS',
+    products: topProducts
+  };
+}
+
+function setCategories(categories) {
+  return {
+    type: 'SET_CATEGORIES',
+    categories: categories
+  };
+}
+
+function setCurrentCategory(cat) {
+  return {
+    type: 'SET_CURRENT_CAT',
+    cat: cat
+  };
+}
+
+function setCurrentSubCategory(cat) {
+  return {
+    type: 'SET_CURRENT_SUBCAT',
+    cat: cat
+  };
+}
+
+function setCurrentSecondSubCategory(cat) {
+  return {
+    type: 'SET_CURRENT_SECONDSUBCAT',
+    cat: cat
+  };
+}
+
+function setComments(comments) {
+  return {
+    type: 'SET_COMMENTS',
+    comments: comments
+  };
+}
+
+function setUsers(users) {
+  return {
+    type: 'SET_USERS',
+    users: users
+  };
+}
+
+function setUser(user) {
+  return {
+    type: 'SET_USER',
+    user: user
+  };
+}
+
+function setSupporters(supporters) {
+  return {
+    type: 'SET_SUPPORTERS',
+    supporters: supporters
+  };
+}
+
+function setDomain(domain) {
+  return {
+    type: 'SET_DOMAIN',
+    domain: domain
+  };
+}
+
+function setEnv(env) {
+  return {
+    type: 'SET_ENV',
+    env: env
+  };
+}
+
+function setDevice(device) {
+  return {
+    type: 'SET_DEVICE',
+    device: device
+  };
+}
+
+function setView(view) {
+  return {
+    type: 'SET_VIEW',
+    view: view
+  };
+}
+
+function setFilters(filters) {
+  return {
+    type: 'SET_FILTERS',
+    filters: filters
+  };
+}
+
+/* /dispatch */
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -4544,512 +5053,3 @@ var ProductGroupItem = function (_React$Component3) {
 
   return ProductGroupItem;
 }(React.Component);
-'use strict';
-
-var reducer = Redux.combineReducers({
-  products: productsReducer,
-  product: productReducer,
-  lightboxGallery: lightboxGalleryReducer,
-  pagination: paginationReducer,
-  topProducts: topProductsReducer,
-  categories: categoriesReducer,
-  comments: commentsReducer,
-  users: usersReducer,
-  user: userReducer,
-  supporters: supportersReducer,
-  domain: domainReducer,
-  env: envReducer,
-  device: deviceReducer,
-  view: viewReducer,
-  filters: filtersReducer
-});
-
-/* reducers */
-
-function productsReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments[1];
-
-  if (action.type === 'SET_PRODUCTS') {
-    return action.products;
-  } else {
-    return state;
-  }
-}
-
-function productReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments[1];
-
-  if (action.type === 'SET_PRODUCT') {
-    return action.product;
-  } else if (action.type === 'SET_PRODUCT_FILES') {
-    var s = Object.assign({}, state, {
-      r_files: action.files
-    });
-    return s;
-  } else if (action.type === 'SET_PRODUCT_UPDATES') {
-    var _s = Object.assign({}, state, {
-      r_updates: action.updates
-    });
-    return _s;
-  } else if (action.type === 'SET_PRODUCT_RATINGS') {
-    var _s2 = Object.assign({}, state, {
-      r_ratings: action.ratings
-    });
-    return _s2;
-  } else if (action.type === 'SET_PRODUCT_LIKES') {
-    var _s3 = Object.assign({}, state, {
-      r_likes: action.likes
-    });
-    return _s3;
-  } else if (action.type === 'SET_PRODUCT_PLINGS') {
-    var _s4 = Object.assign({}, state, {
-      r_plings: action.plings
-    });
-    return _s4;
-  } else if (action.type === 'SET_PRODUCT_USER_RATINGS') {
-    var _s5 = Object.assign({}, state, {
-      r_userRatings: action.userRatings
-    });
-    return _s5;
-  } else if (action.type === 'SET_PRODUCT_GALLERY') {
-    var _s6 = Object.assign({}, state, {
-      r_gallery: action.gallery
-    });
-    return _s6;
-  } else if (action.type === 'SET_PRODUCT_COMMENTS') {
-    var _s7 = Object.assign({}, state, {
-      r_comments: action.comments
-    });
-    return _s7;
-  } else if (action.type === 'SET_PRODUCT_ORIGINS') {
-    var _s8 = Object.assign({}, state, {
-      r_origins: action.origins
-    });
-    return _s8;
-  } else if (action.type === 'SET_PRODUCT_RELATED') {
-    var _s9 = Object.assign({}, state, {
-      r_related: action.related
-    });
-    return _s9;
-  } else if (action.type === 'SET_PRODUCT_MORE_PRODUCTS') {
-    var _s10 = Object.assign({}, state, {
-      r_more_products: action.products
-    });
-    return _s10;
-  } else if (action.type === 'SET_PRODUCT_MORE_PRODUCTS_OTHER_USERS') {
-    var _s11 = Object.assign({}, state, {
-      r_more_products_other_users: action.products
-    });
-    return _s11;
-  } else if (action.type === 'SET_PRODUCT_TAGS') {
-    var _s12 = Object.assign({}, state, {
-      r_tags_user: action.userTags,
-      r_tags_system: action.systemTags
-    });
-    return _s12;
-  } else {
-    return state;
-  }
-}
-
-function lightboxGalleryReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments[1];
-
-  if (action.type === 'SHOW_LIGHTBOX') {
-    var s = Object.assign({}, state, {
-      show: true,
-      currentItem: action.item
-    });
-    return s;
-  } else if (action.type === 'HIDE_LIGHTBOX') {
-    var _s13 = Object.assign({}, state, {
-      show: false
-    });
-    return _s13;
-  } else {
-    return state;
-  }
-}
-
-function paginationReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments[1];
-
-  if (action.type === 'SET_PAGINATION') {
-    return action.pagination;
-  } else {
-    return state;
-  }
-}
-
-function topProductsReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments[1];
-
-  if (action.type === 'SET_TOP_PRODUCTS') {
-    return action.products;
-  } else {
-    return state;
-  }
-}
-
-function categoriesReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments[1];
-
-  if (action.type === 'SET_CATEGORIES') {
-    var s = Object.assign({}, state, {
-      items: categories
-    });
-    return s;
-  } else if (action.type === 'SET_CURRENT_CAT') {
-    var _s14 = Object.assign({}, state, {
-      current: action.cat
-    });
-    return _s14;
-  } else if (action.type === 'SET_CURRENT_SUBCAT') {
-    var _s15 = Object.assign({}, state, {
-      currentSub: action.cat
-    });
-    return _s15;
-  } else if (action.type === 'SET_CURRENT_SECONDSUBCAT') {
-    var _s16 = Object.assign({}, state, {
-      currentSecondSub: action.cat
-    });
-    return _s16;
-  } else {
-    return state;
-  }
-}
-
-function commentsReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments[1];
-
-  if (action.type === 'SET_COMMENTS') {
-    return action.comments;
-  } else {
-    return state;
-  }
-}
-
-function usersReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments[1];
-
-  if (action.type === 'SET_USERS') {
-    return action.users;
-  } else {
-    return state;
-  }
-}
-
-function userReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments[1];
-
-  if (action.type === 'SET_USER') {
-    return action.user;
-  } else {
-    return state;
-  }
-}
-
-function supportersReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments[1];
-
-  if (action.type === 'SET_SUPPORTERS') {
-    return action.supporters;
-  } else {
-    return state;
-  }
-}
-
-function domainReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments[1];
-
-  if (action.type === 'SET_DOMAIN') {
-    return action.domain;
-  } else {
-    return state;
-  }
-}
-
-function envReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments[1];
-
-  if (action.type === 'SET_ENV') {
-    return action.env;
-  } else {
-    return state;
-  }
-}
-
-function deviceReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments[1];
-
-  if (action.type === 'SET_DEVICE') {
-    return action.device;
-  } else {
-    return state;
-  }
-}
-
-function viewReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments[1];
-
-  if (action.type === 'SET_VIEW') {
-    return action.view;
-  } else {
-    return state;
-  }
-}
-
-function filtersReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments[1];
-
-  if (action.type === 'SET_FILTERS') {
-    return action.filters;
-  } else {
-    return state;
-  }
-}
-
-/* /reducers */
-
-/* dispatch */
-
-function setProducts(products) {
-  return {
-    type: 'SET_PRODUCTS',
-    products: products
-  };
-}
-
-function setProduct(product) {
-  return {
-    type: 'SET_PRODUCT',
-    product: product
-  };
-}
-
-function setProductFiles(files) {
-  return {
-    type: 'SET_PRODUCT_FILES',
-    files: files
-  };
-}
-
-function setProductUpdates(updates) {
-  return {
-    type: 'SET_PRODUCT_UPDATES',
-    updates: updates
-  };
-}
-
-function setProductRatings(ratings) {
-  return {
-    type: 'SET_PRODUCT_RATINGS',
-    ratings: ratings
-  };
-}
-
-function setProductLikes(likes) {
-  return {
-    type: 'SET_PRODUCT_LIKES',
-    likes: likes
-  };
-}
-
-function setProductPlings(plings) {
-  return {
-    type: 'SET_PRODUCT_PLINGS',
-    plings: plings
-  };
-}
-
-function setProductUserRatings(userRatings) {
-  return {
-    type: 'SET_PRODUCT_USER_RATINGS',
-    userRatings: userRatings
-  };
-}
-
-function setProductGallery(gallery) {
-  return {
-    type: 'SET_PRODUCT_GALLERY',
-    gallery: gallery
-  };
-}
-
-function setProductComments(comments) {
-  return {
-    type: 'SET_PRODUCT_COMMENTS',
-    comments: comments
-  };
-}
-
-function setProductOrigins(origins) {
-  return {
-    type: 'SET_PRODUCT_ORIGINS',
-    origins: origins
-  };
-}
-
-function setProductRelated(related) {
-  return {
-    type: 'SET_PRODUCT_RELATED',
-    related: related
-  };
-}
-
-function setProductMoreProducts(products) {
-  return {
-    type: 'SET_PRODUCT_MORE_PRODUCTS',
-    products: products
-  };
-}
-
-function setProductMoreProductsOtherUsers(products) {
-  return {
-    type: 'SET_PRODUCT_MORE_PRODUCTS_OTHER_USERS',
-    products: products
-  };
-}
-
-function setProductTags(userTags, systemTags) {
-  return {
-    type: 'SET_PRODUCT_TAGS',
-    userTags: userTags,
-    systemTags: systemTags
-  };
-}
-
-function showLightboxGallery(num) {
-  return {
-    type: 'SHOW_LIGHTBOX',
-    item: num
-  };
-}
-
-function hideLightboxGallery() {
-  return {
-    type: 'HIDE_LIGHTBOX'
-  };
-}
-
-function setPagination(pagination) {
-  return {
-    type: 'SET_PAGINATION',
-    pagination: pagination
-  };
-}
-
-function setTopProducts(topProducts) {
-  return {
-    type: 'SET_TOP_PRODUCTS',
-    products: topProducts
-  };
-}
-
-function setCategories(categories) {
-  return {
-    type: 'SET_CATEGORIES',
-    categories: categories
-  };
-}
-
-function setCurrentCategory(cat) {
-  return {
-    type: 'SET_CURRENT_CAT',
-    cat: cat
-  };
-}
-
-function setCurrentSubCategory(cat) {
-  return {
-    type: 'SET_CURRENT_SUBCAT',
-    cat: cat
-  };
-}
-
-function setCurrentSecondSubCategory(cat) {
-  return {
-    type: 'SET_CURRENT_SECONDSUBCAT',
-    cat: cat
-  };
-}
-
-function setComments(comments) {
-  return {
-    type: 'SET_COMMENTS',
-    comments: comments
-  };
-}
-
-function setUsers(users) {
-  return {
-    type: 'SET_USERS',
-    users: users
-  };
-}
-
-function setUser(user) {
-  return {
-    type: 'SET_USER',
-    user: user
-  };
-}
-
-function setSupporters(supporters) {
-  return {
-    type: 'SET_SUPPORTERS',
-    supporters: supporters
-  };
-}
-
-function setDomain(domain) {
-  return {
-    type: 'SET_DOMAIN',
-    domain: domain
-  };
-}
-
-function setEnv(env) {
-  return {
-    type: 'SET_ENV',
-    env: env
-  };
-}
-
-function setDevice(device) {
-  return {
-    type: 'SET_DEVICE',
-    device: device
-  };
-}
-
-function setView(view) {
-  return {
-    type: 'SET_VIEW',
-    view: view
-  };
-}
-
-function setFilters(filters) {
-  return {
-    type: 'SET_FILTERS',
-    filters: filters
-  };
-}
-
-/* /dispatch */
