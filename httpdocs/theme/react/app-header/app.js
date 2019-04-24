@@ -32,7 +32,8 @@ class SiteHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('this is header react');
+    console.log(this.state);
+    console.log('**********');
     window.addEventListener("resize", this.updateDimensions);
     window.addEventListener("orientationchange",this.updateDimensions);
   }

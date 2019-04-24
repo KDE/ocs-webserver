@@ -82,7 +82,8 @@ var SiteHeader = function (_React$Component) {
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      console.log('this is header react');
+      console.log(this.state);
+      console.log('**********');
       window.addEventListener("resize", this.updateDimensions);
       window.addEventListener("orientationchange", this.updateDimensions);
     }
