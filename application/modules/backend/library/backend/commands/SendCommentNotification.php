@@ -49,6 +49,7 @@ class Backend_Commands_SendCommentNotification implements Local_Queue_CommandInt
         $newPasMail->setReceiverAlias($this->data->username);
 
         $newPasMail->setTemplateVar('username', $this->data->username);
+        $newPasMail->setTemplateVar('username_sender', $this->data->username_sender);
         $newPasMail->setTemplateVar('product_title', $this->data->title);
         $newPasMail->setTemplateVar('product_id', $this->data->project_id);
         $newPasMail->setTemplateVar('comment_text', $this->comment);
