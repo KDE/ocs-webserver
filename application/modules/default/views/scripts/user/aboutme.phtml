@@ -523,7 +523,7 @@ div#preloaded-images {
                                                 $gitProjects = $gitlab->getUserProjects($this->member->gitlab_user_id);
                                                 $cntGitp = count($gitProjects);
                                                 }
-                                                $gittext = $this->member->username . ' on opencode.net';
+                                                $gittext = 'https://www.opencode.net/'.$this->member->username;
                                                 if($cntGitp>0){
                                                     $gittext = $gittext.' ('.$cntGitp.')';
                                                 }
