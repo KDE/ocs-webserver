@@ -77,12 +77,12 @@ var SiteHeader = function (_React$Component) {
   _createClass(SiteHeader, [{
     key: "componentWillMount",
     value: function componentWillMount() {
-      console.log('this is header react');
       this.updateDimensions();
     }
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
+      console.log('this is header react');
       window.addEventListener("resize", this.updateDimensions);
       window.addEventListener("orientationchange", this.updateDimensions);
     }

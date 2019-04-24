@@ -53,12 +53,18 @@ if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
     );
 
   } else {
-    $products1 = $modelInfo->getJsonLastProductsForHostStores(15,"391,392,544,526,492,542,450,388,481");    
-    $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"6");
+    //$products1 = $modelInfo->getJsonLastProductsForHostStores(15,"391,392,544,526,492,542,450,388,481");    
+    //$products2 = $modelInfo->getJsonLastProductsForHostStores(15,"6");
+
+    $products1 = $modelInfo->getJsonLastProductsForHostStores(15);
+    $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"391,392,544,526,492,542,450,388,481,6");    
+
+    //'products1' => array('title' =>'Apps','catIds' =>'391,392','products' => $products1),
+    //'products2' => array('title' =>'Games','catIds' =>'6','products' => $products2),    
 
     $response = array(
-        'products1' => array('title' =>'Apps','catIds' =>'391,392','products' => $products1),
-        'products2' => array('title' =>'Games','catIds' =>'6','products' => $products2),       
+        'products1' => array('title' =>'Latest','products' => $products1),
+        'products2' => array('title' =>'APP & Games','catIds' =>'391,392,6','products' => $products2),       
     );
   }
   

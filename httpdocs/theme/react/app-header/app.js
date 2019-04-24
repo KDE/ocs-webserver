@@ -28,11 +28,11 @@ class SiteHeader extends React.Component {
   }
 
   componentWillMount() {
-    console.log('this is header react');
     this.updateDimensions();
   }
 
   componentDidMount() {
+    console.log('this is header react');
     window.addEventListener("resize", this.updateDimensions);
     window.addEventListener("orientationchange",this.updateDimensions);
   }
