@@ -633,7 +633,6 @@ $this->inlineScript()->appendScript('
                                     validator.showErrors(ProductForm.errors);
                                     return result;
                                 }
-                                formElement.find("#modal-ppload").attr('data-product-id', ProductForm.project_id);
                                 formElement.find("#modal-changlog").attr('data-product-id', ProductForm.project_id);
                             }
                             getCollectionProjects();
@@ -672,8 +671,7 @@ $this->inlineScript()->appendScript('
                                 validator.showErrors(ProductForm.errors);
                                 return result;
                             }
-                            formElement.find("#modal-ppload").attr('data-product-id', ProductForm.project_id);
-                             formElement.find("#modal-changlog").attr('data-product-id', ProductForm.project_id);
+                            formElement.find("#modal-changlog").attr('data-product-id', ProductForm.project_id);
                         }
                     }
 
@@ -688,13 +686,15 @@ $this->inlineScript()->appendScript('
 
             });
             
-            $('body').on("keyup", "#search_products", function (event) {
-                $val = $( this ).val();
-                alert($(this).val()); 
-                
+            $(window).keydown(function(event){
+                if(event.keyCode == 13) {
+                  event.preventDefault();
+                  return false;
+                }
             });
             
-            $('#search_products').bind('input', function() {
+            $('#search_products').bind('input', function(e) {
+                e.preventDefault();
                 //$(this).next().stop(true, true).fadeIn(0).html('[input event fired!]: ' + $(this).val()).fadeOut(2000);
                 $(this).next();
                 $val = $(this).val(); 
@@ -703,6 +703,19 @@ $this->inlineScript()->appendScript('
                     getAllProjects($val);
                 }
                 //alert($val); 
+            });
+            
+            $('#search_products').bind("enterKey",function(e){
+                //do stuff here
+                e.preventDefault();
+                return false;
+            });
+            $('#search_products').keyup(function(e){
+                e.preventDefault();
+                if(e.keyCode == 13)
+                {
+                    return false;
+                }
             });
 
 
@@ -806,6 +819,8 @@ $this->inlineScript()->appendScript('
                         prodId = 0;
                     }
                     
+                    $divProjects.find('table[data-own-projects] tbody').html('<img src="/images/system/ajax-loader.gif">');
+                    
                     $.ajax({
                         url: '/c/'+prodId+'/getprojectsajax',
                         type: 'GET',
@@ -846,6 +861,8 @@ $this->inlineScript()->appendScript('
                     if(!prodId) {
                         prodId = 0;
                     }
+                    
+                    $divProjects.find('table[data-all-projects] tbody').html('<img src="/images/system/ajax-loader.gif">');
                     
                     $.ajax({
                         url: '/c/'+prodId+'/getprojectsajax',
@@ -1089,8 +1106,7 @@ $this->inlineScript()->appendScript('
                                 divEl.append(btnDelete);
                                 divEl.append('<br/><br/><br/><br/>');
 
-                                // $modalPpload.find('#update-list').append(divEl);
-                                 $modalChanglog.find('#update-list').append(divEl);
+                                $modalChanglog.find('#update-list').append(divEl);
                             });
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
