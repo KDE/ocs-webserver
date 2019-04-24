@@ -990,7 +990,13 @@ $this->inlineScript()->appendScript('
                                         
                                         $.each(tagGroups, function() {
                                             tableString += '<td>';
-                                            tableString +='<select multiple="multiple" id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="multi" style="width: 150px;">';
+                                            //Tag-Group Multiselect?
+                                            if(this.is_multi_select == 1) {
+                                                tableString +='<select multiple="multiple" id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="multi" style="width: 150px;">';
+                                            } else {
+                                                tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="" style="width: 150px;">';
+                                                tableString +='<option value=""></option>';
+                                            }
                                             //tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
                                             //tableString += '<option value=\"\"></option>';
 
@@ -1240,11 +1246,8 @@ $this->inlineScript()->appendScript('
                                 data: {project_cat_id: catId},
                                 dataType: 'json',
                                 success: function (data, textStatus, jqXHR) {
-                                    if (data.status != 'success') {
-                                        tagGroups = data.tag_groups;
-                                        tagGroupsCount = data.ResultSize;
-                                        return;
-                                    }
+                                    tagGroups = data.tag_groups;
+                                    tagGroupsCount = data.ResultSize;
                                 },
                                 error: function (jqXHR, textStatus, errorThrown) {
                                     return;
@@ -1256,7 +1259,16 @@ $this->inlineScript()->appendScript('
                             if(tagGroupsCount>0) {
                                 $.each(tagGroups, function() {
                                     tableString += '<td>';
-                                    tableString +='<select multiple="multiple" id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="multi" style="width: 150px;">';
+                                    
+                                    
+                                    //Tag-Group Multiselect?
+                                    if(this.is_multi_select == 1) {
+                                        tableString +='<select multiple="multiple" id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="multi" style="width: 150px;">';
+                                    } else {
+                                        tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="" style="width: 150px;">';
+                                        tableString +='<option value=""></option>';
+                                    }
+                                    
                                     //tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
                                     //tableString += '<option value=\"\"></option>';
                                     

@@ -90,7 +90,14 @@ class Backend_TagsController extends Local_Controller_Action_Backend
     {
         $jTableResult = array();
         try {
-            $record = $this->_model->save($this->getAllParams());
+            
+            $values = $this->getAllParams();
+            // patch checkbox is_multi_select get no parameter when is_multi_select = 0
+            if (!isset($values['is_multi_select'])) {
+                $values['is_multi_select'] = 0;
+            }
+            $record = $this->_model->save($values);
+            //$record = $this->_model->save($this->getAllParams());
 
             $jTableResult = array();
             $jTableResult['Result'] = self::RESULT_OK;

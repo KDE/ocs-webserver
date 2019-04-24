@@ -191,6 +191,7 @@ class Default_Model_TagGroup
                         , tag_group.group_name
                         , tag_group.group_display_name
                         , tag_group.group_legacy_name
+                        , tag_group.is_multi_select
                         , category_tag_group.category_id
                         , project_category.title
                  FROM category_tag_group
