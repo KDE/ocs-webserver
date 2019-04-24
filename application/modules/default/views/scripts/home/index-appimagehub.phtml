@@ -41,12 +41,15 @@ $modelProject = new Default_Model_Project();
 $totalProjects = $modelProject->fetchTotalProjectsCount(true);
 
 if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
-    $products1 = $modelInfo->getJsonLastProductsForHostStores(15,"105,98,57,53,52,48,295,158");    
-    $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"104");
+    //$products1 = $modelInfo->getJsonLastProductsForHostStores(15,"105,98,57,53,52,48,295,158");    
+    //$products2 = $modelInfo->getJsonLastProductsForHostStores(15,"104");
     
+    $products1 = $modelInfo->getJsonLastProductsForHostStores(15);
+    $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"105,104,98,57,53,52,48,295,158");    
+
     $response = array(
-        'products1' => array('title' =>'Apps','catIds' =>'105,98','products' => $products1),
-        'products2' => array('title' =>'Games','catIds' =>'104','products' => $products2),       
+        'products1' => array('title' =>'Latest','products' => $products1),
+        'products2' => array('title' =>'Apps & Games','catIds' =>'104,105,98','products' => $products2),       
     );
 
   } else {
