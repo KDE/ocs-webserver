@@ -4907,7 +4907,6 @@ var App = function (_React$Component) {
   _createClass(App, [{
     key: "componentWillMount",
     value: function componentWillMount() {
-      console.log('component will mount');
       // device
       this.updateDimensions();
     }

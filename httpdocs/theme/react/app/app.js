@@ -12,7 +12,6 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    console.log('component will mount');
     // device
     this.updateDimensions();
   }
