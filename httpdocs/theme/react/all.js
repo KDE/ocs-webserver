@@ -1,5 +1,521 @@
 'use strict';
 
+window.appHelpers = function () {
+
+  function getEnv(domain) {
+    var env = void 0;
+    if (this.splitByLastDot(domain) === 'com' || this.splitByLastDot(domain) === 'org') {
+      env = 'live';
+    } else {
+      env = 'test';
+    }
+    return env;
+  }
+
+  function getDeviceWidth(width) {
+    var device = void 0;
+    if (width > 1720) {
+      device = "very-huge";
+    } else if (width < 1720 && width > 1500) {
+      device = "huge";
+    } else if (width < 1500 && width > 1250) {
+      device = "full";
+    } else if (width < 1250 && width >= 1000) {
+      device = "large";
+    } else if (width < 1000 && width >= 661) {
+      device = "mid";
+    } else if (width < 661 && width >= 400) {
+      device = "tablet";
+    } else if (width < 400) {
+      device = "phone";
+    }
+    return device;
+  }
+
+  function splitByLastDot(text) {
+    var index = text.lastIndexOf('.');
+    return text.slice(index + 1);
+  }
+
+  function getTimeAgo(datetime) {
+    var a = timeago().format(datetime);
+    return a;
+  }
+
+  function getFileSize(size) {
+    if (isNaN(size)) size = 0;
+
+    if (size < 1024) return size + ' Bytes';
+
+    size /= 1024;
+
+    if (size < 1024) return size.toFixed(2) + ' Kb';
+
+    size /= 1024;
+
+    if (size < 1024) return size.toFixed(2) + ' Mb';
+
+    size /= 1024;
+
+    if (size < 1024) return size.toFixed(2) + ' Gb';
+
+    size /= 1024;
+
+    return size.toFixed(2) + ' Tb';
+  }
+
+  function generateFilterUrl(location, currentCat) {
+    var link = {};
+    if (currentCat && currentCat !== 0) {
+      link.base = "/browse/cat/" + currentCat + "/ord/";
+    } else {
+      link.base = "/browse/ord/";
+    }
+    if (location.search) link.search = location.search;
+    return link;
+  }
+
+  function generateFileDownloadHash(file, env) {
+    var salt = void 0;
+    if (env === "test") {
+      salt = "vBHnf7bbdhz120bhNsd530LsA2mkMvh6sDsCm4jKlm23D186Fj";
+    } else {
+      salt = "Kcn6cv7&dmvkS40Hna§4ffcvl=021nfMs2sdlPs123MChf4s0K";
+    }
+    var timestamp = Math.floor(new Date().getTime() / 1000 + 3600);
+    var hash = md5(salt + file.collection_id + timestamp);
+    return hash;
+  }
+
+  return {
+    getEnv: getEnv,
+    getDeviceWidth: getDeviceWidth,
+    splitByLastDot: splitByLastDot,
+    getTimeAgo: getTimeAgo,
+    getFileSize: getFileSize,
+    generateFilterUrl: generateFilterUrl,
+    generateFileDownloadHash: generateFileDownloadHash
+  };
+}();
+"use strict";
+
+window.categoryHelpers = function () {
+
+  function findCurrentCategories(categories, catId) {
+    var currentCategories = {};
+    categories.forEach(function (mc, index) {
+      if (parseInt(mc.id) === catId) {
+        currentCategories.category = mc;
+      } else {
+        var cArray = categoryHelpers.convertCatChildrenObjectToArray(mc.children);
+        cArray.forEach(function (sc, index) {
+          if (parseInt(sc.id) === catId) {
+            currentCategories.category = mc;
+            currentCategories.subcategory = sc;
+          } else {
+            var scArray = categoryHelpers.convertCatChildrenObjectToArray(sc.children);
+            scArray.forEach(function (ssc, index) {
+              if (parseInt(ssc.id) === catId) {
+                currentCategories.category = mc;
+                currentCategories.subcategory = sc;
+                currentCategories.secondSubCategory = ssc;
+              }
+            });
+          }
+        });
+      }
+    });
+    return currentCategories;
+  }
+
+  function convertCatChildrenObjectToArray(children) {
+    var cArray = [];
+    for (var i in children) {
+      cArray.push(children[i]);
+    }
+    return cArray;
+  }
+
+  return {
+    findCurrentCategories: findCurrentCategories,
+    convertCatChildrenObjectToArray: convertCatChildrenObjectToArray
+  };
+}();
+"use strict";
+
+window.productHelpers = function () {
+
+  function getNumberOfProducts(device, numRows) {
+    var num = void 0;
+    if (device === "very-huge") {
+      num = 7;
+    } else if (device === "huge") {
+      num = 6;
+    } else if (device === "full") {
+      num = 5;
+    } else if (device === "large") {
+      num = 4;
+    } else if (device === "mid") {
+      num = 3;
+    } else if (device === "tablet") {
+      num = 2;
+    } else if (device === "phone") {
+      num = 1;
+    }
+    if (numRows) num = num * numRows;
+    return num;
+  }
+
+  function generatePaginationObject(numPages, pathname, currentCategoy, order, page) {
+    var pagination = [];
+
+    var baseHref = "/browse";
+    if (pathname.indexOf('cat') > -1) {
+      baseHref += "/cat/" + currentCategoy;
+    }
+
+    if (page > 1) {
+      var prev = {
+        number: 'previous',
+        link: baseHref + "/page/" + parseInt(page - 1) + "/ord/" + order
+      };
+      pagination.push(prev);
+    }
+
+    for (var i = 0; i < numPages; i++) {
+      var p = {
+        number: parseInt(i + 1),
+        link: baseHref + "/page/" + parseInt(i + 1) + "/ord/" + order
+      };
+      pagination.push(p);
+    }
+
+    if (page < numPages) {
+      var next = {
+        number: 'next',
+        link: baseHref + "/page/" + parseInt(page + 1) + "/ord/" + order
+      };
+      pagination.push(next);
+    }
+
+    return pagination;
+  }
+
+  function calculateProductRatings(ratings) {
+    var pRating = void 0;
+    var totalUp = 0,
+        totalDown = 0;
+    ratings.forEach(function (r, index) {
+      if (r.rating_active === "1") {
+        if (r.user_like === "1") {
+          totalUp += 1;
+        } else if (r.user_dislike === "1") {
+          totalDown += 1;
+        }
+      }
+    });
+    pRating = 100 / ratings.length * (totalUp - totalDown);
+    return pRating;
+  }
+
+  function getActiveRatingsNumber(ratings) {
+    var activeRatingsNumber = 0;
+    ratings.forEach(function (r, index) {
+      if (r.rating_active === "1") {
+        activeRatingsNumber += 1;
+      }
+    });
+    return activeRatingsNumber;
+  }
+
+  function getFilesSummary(files) {
+    var summery = {
+      downloads: 0,
+      archived: 0,
+      fileSize: 0,
+      total: 0
+    };
+    files.forEach(function (file, index) {
+      summery.total += 1;
+      summery.fileSize += parseInt(file.size);
+      summery.downloads += parseInt(file.downloaded_count);
+    });
+
+    return summery;
+  }
+
+  function checkIfLikedByUser(user, likes) {
+    var likedByUser = false;
+    likes.forEach(function (like, index) {
+      if (user.member_id === like.member_id) {
+        likedByUser = true;
+      }
+    });
+    return likedByUser;
+  }
+
+  function getLoggedUserRatingOnProduct(user, ratings) {
+    var userRating = -1;
+    ratings.forEach(function (r, index) {
+      if (r.member_id === user.member_id) {
+        if (r.user_like === "1") {
+          userRating = 1;
+        } else {
+          userRating = 0;
+        }
+      }
+    });
+    return userRating;
+  }
+
+  function calculateProductLaplaceScore(ratings) {
+    var laplace_score = 0;
+    var upvotes = 0;
+    var downvotes = 0;
+    ratings.forEach(function (rating, index) {
+      if (rating.rating_active === "1") {
+        if (rating.user_like === "1") {
+          upvotes += 1;
+        } else if (rating.user_like === "0") {
+          downvotes += 1;
+        }
+      }
+    });
+    laplace_score = Math.round((upvotes + 6) / (upvotes + downvotes + 12), 2) * 100;
+    return laplace_score;
+  }
+
+  return {
+    getNumberOfProducts: getNumberOfProducts,
+    generatePaginationObject: generatePaginationObject,
+    calculateProductRatings: calculateProductRatings,
+    getActiveRatingsNumber: getActiveRatingsNumber,
+    getFilesSummary: getFilesSummary,
+    checkIfLikedByUser: checkIfLikedByUser,
+    getLoggedUserRatingOnProduct: getLoggedUserRatingOnProduct,
+    calculateProductLaplaceScore: calculateProductLaplaceScore
+  };
+}();
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ProductGroupScrollWrapper = function (_React$Component) {
+  _inherits(ProductGroupScrollWrapper, _React$Component);
+
+  function ProductGroupScrollWrapper(props) {
+    _classCallCheck(this, ProductGroupScrollWrapper);
+
+    var _this = _possibleConstructorReturn(this, (ProductGroupScrollWrapper.__proto__ || Object.getPrototypeOf(ProductGroupScrollWrapper)).call(this, props));
+
+    _this.state = {
+      products: [],
+      offset: 0
+    };
+    _this.onProductGroupScroll = _this.onProductGroupScroll.bind(_this);
+    _this.loadMoreProducts = _this.loadMoreProducts.bind(_this);
+    return _this;
+  }
+
+  _createClass(ProductGroupScrollWrapper, [{
+    key: "componentWillMount",
+    value: function componentWillMount() {
+      window.addEventListener("scroll", this.onProductGroupScroll);
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.loadMoreProducts();
+    }
+  }, {
+    key: "onProductGroupScroll",
+    value: function onProductGroupScroll() {
+      var end = $("footer").offset().top;
+      var viewEnd = $(window).scrollTop() + $(window).height();
+      var distance = end - viewEnd;
+      if (distance < 0 && this.state.loadingMoreProducts !== true) {
+        this.setState({ loadingMoreProducts: true }, function () {
+          this.loadMoreProducts();
+        });
+      }
+    }
+  }, {
+    key: "loadMoreProducts",
+    value: function loadMoreProducts() {
+      var itemsPerScroll = 50;
+      var moreProducts = store.getState().products.slice(this.state.offset, this.state.offset + itemsPerScroll);
+      var products = this.state.products.concat(moreProducts);
+      var offset = this.state.offset + itemsPerScroll;
+      this.setState({
+        products: products,
+        offset: offset,
+        loadingMoreProducts: false
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var loadingMoreProductsDisplay = void 0;
+      if (this.state.loadingMoreProducts) {
+        loadingMoreProductsDisplay = React.createElement(
+          "div",
+          { className: "product-group-scroll-loading-container" },
+          React.createElement(
+            "div",
+            { className: "icon-wrapper" },
+            React.createElement("span", { className: "glyphicon glyphicon-refresh spinning" })
+          )
+        );
+      }
+      return React.createElement(
+        "div",
+        { className: "product-group-scroll-wrapper" },
+        React.createElement(ProductGroup, {
+          products: this.state.products,
+          device: this.props.device
+        }),
+        loadingMoreProductsDisplay
+      );
+    }
+  }]);
+
+  return ProductGroupScrollWrapper;
+}(React.Component);
+
+var ProductGroup = function (_React$Component2) {
+  _inherits(ProductGroup, _React$Component2);
+
+  function ProductGroup() {
+    _classCallCheck(this, ProductGroup);
+
+    return _possibleConstructorReturn(this, (ProductGroup.__proto__ || Object.getPrototypeOf(ProductGroup)).apply(this, arguments));
+  }
+
+  _createClass(ProductGroup, [{
+    key: "render",
+    value: function render() {
+      var products = void 0;
+      if (this.props.products) {
+        var productsArray = this.props.products;
+        if (this.props.numRows) {
+          var limit = productHelpers.getNumberOfProducts(this.props.device, this.props.numRows);
+          productsArray = productsArray.slice(0, limit);
+        }
+        products = productsArray.map(function (product, index) {
+          return React.createElement(ProductGroupItem, {
+            key: index,
+            product: product
+          });
+        });
+      }
+
+      var sectionHeader = void 0;
+      if (this.props.title) {
+        sectionHeader = React.createElement(
+          "div",
+          { className: "section-header" },
+          React.createElement(
+            "h3",
+            { className: "mdl-color-text--primary" },
+            this.props.title
+          ),
+          React.createElement(
+            "div",
+            { className: "actions" },
+            React.createElement(
+              "a",
+              { href: this.props.link, className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
+              "see more"
+            )
+          )
+        );
+      }
+      return React.createElement(
+        "div",
+        { className: "products-showcase" },
+        sectionHeader,
+        React.createElement(
+          "div",
+          { className: "products-container row" },
+          products
+        )
+      );
+    }
+  }]);
+
+  return ProductGroup;
+}(React.Component);
+
+var ProductGroupItem = function (_React$Component3) {
+  _inherits(ProductGroupItem, _React$Component3);
+
+  function ProductGroupItem() {
+    _classCallCheck(this, ProductGroupItem);
+
+    return _possibleConstructorReturn(this, (ProductGroupItem.__proto__ || Object.getPrototypeOf(ProductGroupItem)).apply(this, arguments));
+  }
+
+  _createClass(ProductGroupItem, [{
+    key: "render",
+    value: function render() {
+      var imageBaseUrl = void 0;
+      if (store.getState().env === 'live') {
+        imageBaseUrl = 'cn.opendesktop.org';
+      } else {
+        imageBaseUrl = 'cn.pling.it';
+      }
+      return React.createElement(
+        "div",
+        { className: "product square" },
+        React.createElement(
+          "div",
+          { className: "content" },
+          React.createElement(
+            "div",
+            { className: "product-wrapper mdl-shadow--2dp" },
+            React.createElement(
+              "a",
+              { href: "/p/" + this.props.product.project_id },
+              React.createElement(
+                "div",
+                { className: "product-image-container" },
+                React.createElement(
+                  "figure",
+                  null,
+                  React.createElement("img", { className: "very-rounded-corners", src: 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small }),
+                  React.createElement(
+                    "span",
+                    { className: "product-info-title" },
+                    this.props.product.title
+                  )
+                )
+              ),
+              React.createElement(
+                "div",
+                { className: "product-info" },
+                React.createElement(
+                  "span",
+                  { className: "product-info-description" },
+                  this.props.product.description
+                )
+              )
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return ProductGroupItem;
+}(React.Component);
+'use strict';
+
 var reducer = Redux.combineReducers({
   products: productsReducer,
   product: productReducer,
@@ -507,187 +1023,6 @@ function setFilters(filters) {
 }
 
 /* /dispatch */
-"use strict";
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _ReactRedux = ReactRedux,
-    Provider = _ReactRedux.Provider,
-    connect = _ReactRedux.connect;
-
-var store = Redux.createStore(reducer);
-
-var App = function (_React$Component) {
-  _inherits(App, _React$Component);
-
-  function App(props) {
-    _classCallCheck(this, App);
-
-    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
-
-    _this.state = {
-      loading: true,
-      version: 1
-    };
-    _this.updateDimensions = _this.updateDimensions.bind(_this);
-    return _this;
-  }
-
-  _createClass(App, [{
-    key: "componentWillMount",
-    value: function componentWillMount() {
-      console.log('component will mount');
-      // device
-      this.updateDimensions();
-    }
-  }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {
-
-      // domain
-      store.dispatch(setDomain(window.location.hostname));
-
-      // env
-      var env = appHelpers.getEnv(window.location.hostname);
-      store.dispatch(setEnv(env));
-
-      // device
-      window.addEventListener("resize", this.updateDimensions);
-
-      // view
-      if (window.view) store.dispatch(setView(view));
-
-      // products
-      if (window.products) {
-        store.dispatch(setProducts(products));
-      }
-
-      // product (single)
-      if (window.product) {
-        store.dispatch(setProduct(product));
-        store.dispatch(setProductFiles(filesJson));
-        store.dispatch(setProductUpdates(updatesJson));
-        store.dispatch(setProductRatings(ratingsJson));
-        store.dispatch(setProductLikes(likeJson));
-        store.dispatch(setProductPlings(projectplingsJson));
-        store.dispatch(setProductUserRatings(ratingOfUserJson));
-        store.dispatch(setProductGallery(galleryPicturesJson));
-        store.dispatch(setProductComments(commentsJson));
-        store.dispatch(setProductOrigins(originsJson));
-        store.dispatch(setProductRelated(relatedJson));
-        store.dispatch(setProductMoreProducts(moreProductsJson));
-        store.dispatch(setProductMoreProductsOtherUsers(moreProductsOfOtherUsrJson));
-        store.dispatch(setProductTags(tagsuserJson, tagssystemJson));
-      }
-
-      // pagination
-      if (window.pagination) {
-        store.dispatch(setPagination(pagination));
-      }
-
-      // filters
-      if (window.filters) {
-        store.dispatch(setFilters(filters));
-      }
-
-      // top products
-      if (window.topProducts) {
-        store.dispatch(setTopProducts(topProducts));
-      }
-
-      // categories
-      if (window.categories) {
-        // set categories
-        store.dispatch(setCategories(categories));
-        if (window.catId) {
-          // current categories
-          var currentCategories = categoryHelpers.findCurrentCategories(categories, catId);
-          store.dispatch(setCurrentCategory(currentCategories.category));
-          store.dispatch(setCurrentSubCategory(currentCategories.subcategory));
-          store.dispatch(setCurrentSecondSubCategory(currentCategories.secondSubCategory));
-        }
-      }
-
-      // supporters
-      if (window.supporters) {
-        store.dispatch(setSupporters(supporters));
-      }
-
-      // comments
-      if (window.comments) {
-        store.dispatch(setComments(comments));
-      }
-
-      // user
-      if (window.user) {
-        store.dispatch(setUser(user));
-      }
-
-      // finish loading
-      this.setState({ loading: false });
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      // device
-      window.removeEventListener("resize", this.updateDimensions);
-    }
-  }, {
-    key: "updateDimensions",
-    value: function updateDimensions() {
-      var device = appHelpers.getDeviceWidth(window.innerWidth);
-      store.dispatch(setDevice(device));
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var displayView = React.createElement(HomePageWrapper, null);
-      if (store.getState().view === 'explore') {
-        displayView = React.createElement(ExplorePageWrapper, null);
-      } else if (store.getState().view === 'product') {
-        displayView = React.createElement(ProductViewWrapper, null);
-      }
-      return React.createElement(
-        "div",
-        { id: "app-root" },
-        displayView
-      );
-    }
-  }]);
-
-  return App;
-}(React.Component);
-
-var AppWrapper = function (_React$Component2) {
-  _inherits(AppWrapper, _React$Component2);
-
-  function AppWrapper() {
-    _classCallCheck(this, AppWrapper);
-
-    return _possibleConstructorReturn(this, (AppWrapper.__proto__ || Object.getPrototypeOf(AppWrapper)).apply(this, arguments));
-  }
-
-  _createClass(AppWrapper, [{
-    key: "render",
-    value: function render() {
-      return React.createElement(
-        Provider,
-        { store: store },
-        React.createElement(App, null)
-      );
-    }
-  }]);
-
-  return AppWrapper;
-}(React.Component);
-
-ReactDOM.render(React.createElement(AppWrapper, null), document.getElementById('explore-content'));
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -4537,304 +4872,6 @@ var UserCardItem = function (_React$Component21) {
 
   return UserCardItem;
 }(React.Component);
-'use strict';
-
-window.appHelpers = function () {
-
-  function getEnv(domain) {
-    var env = void 0;
-    if (this.splitByLastDot(domain) === 'com' || this.splitByLastDot(domain) === 'org') {
-      env = 'live';
-    } else {
-      env = 'test';
-    }
-    return env;
-  }
-
-  function getDeviceWidth(width) {
-    var device = void 0;
-    if (width > 1720) {
-      device = "very-huge";
-    } else if (width < 1720 && width > 1500) {
-      device = "huge";
-    } else if (width < 1500 && width > 1250) {
-      device = "full";
-    } else if (width < 1250 && width >= 1000) {
-      device = "large";
-    } else if (width < 1000 && width >= 661) {
-      device = "mid";
-    } else if (width < 661 && width >= 400) {
-      device = "tablet";
-    } else if (width < 400) {
-      device = "phone";
-    }
-    return device;
-  }
-
-  function splitByLastDot(text) {
-    var index = text.lastIndexOf('.');
-    return text.slice(index + 1);
-  }
-
-  function getTimeAgo(datetime) {
-    var a = timeago().format(datetime);
-    return a;
-  }
-
-  function getFileSize(size) {
-    if (isNaN(size)) size = 0;
-
-    if (size < 1024) return size + ' Bytes';
-
-    size /= 1024;
-
-    if (size < 1024) return size.toFixed(2) + ' Kb';
-
-    size /= 1024;
-
-    if (size < 1024) return size.toFixed(2) + ' Mb';
-
-    size /= 1024;
-
-    if (size < 1024) return size.toFixed(2) + ' Gb';
-
-    size /= 1024;
-
-    return size.toFixed(2) + ' Tb';
-  }
-
-  function generateFilterUrl(location, currentCat) {
-    var link = {};
-    if (currentCat && currentCat !== 0) {
-      link.base = "/browse/cat/" + currentCat + "/ord/";
-    } else {
-      link.base = "/browse/ord/";
-    }
-    if (location.search) link.search = location.search;
-    return link;
-  }
-
-  function generateFileDownloadHash(file, env) {
-    var salt = void 0;
-    if (env === "test") {
-      salt = "vBHnf7bbdhz120bhNsd530LsA2mkMvh6sDsCm4jKlm23D186Fj";
-    } else {
-      salt = "Kcn6cv7&dmvkS40Hna§4ffcvl=021nfMs2sdlPs123MChf4s0K";
-    }
-    var timestamp = Math.floor(new Date().getTime() / 1000 + 3600);
-    var hash = md5(salt + file.collection_id + timestamp);
-    return hash;
-  }
-
-  return {
-    getEnv: getEnv,
-    getDeviceWidth: getDeviceWidth,
-    splitByLastDot: splitByLastDot,
-    getTimeAgo: getTimeAgo,
-    getFileSize: getFileSize,
-    generateFilterUrl: generateFilterUrl,
-    generateFileDownloadHash: generateFileDownloadHash
-  };
-}();
-"use strict";
-
-window.categoryHelpers = function () {
-
-  function findCurrentCategories(categories, catId) {
-    var currentCategories = {};
-    categories.forEach(function (mc, index) {
-      if (parseInt(mc.id) === catId) {
-        currentCategories.category = mc;
-      } else {
-        var cArray = categoryHelpers.convertCatChildrenObjectToArray(mc.children);
-        cArray.forEach(function (sc, index) {
-          if (parseInt(sc.id) === catId) {
-            currentCategories.category = mc;
-            currentCategories.subcategory = sc;
-          } else {
-            var scArray = categoryHelpers.convertCatChildrenObjectToArray(sc.children);
-            scArray.forEach(function (ssc, index) {
-              if (parseInt(ssc.id) === catId) {
-                currentCategories.category = mc;
-                currentCategories.subcategory = sc;
-                currentCategories.secondSubCategory = ssc;
-              }
-            });
-          }
-        });
-      }
-    });
-    return currentCategories;
-  }
-
-  function convertCatChildrenObjectToArray(children) {
-    var cArray = [];
-    for (var i in children) {
-      cArray.push(children[i]);
-    }
-    return cArray;
-  }
-
-  return {
-    findCurrentCategories: findCurrentCategories,
-    convertCatChildrenObjectToArray: convertCatChildrenObjectToArray
-  };
-}();
-"use strict";
-
-window.productHelpers = function () {
-
-  function getNumberOfProducts(device, numRows) {
-    var num = void 0;
-    if (device === "very-huge") {
-      num = 7;
-    } else if (device === "huge") {
-      num = 6;
-    } else if (device === "full") {
-      num = 5;
-    } else if (device === "large") {
-      num = 4;
-    } else if (device === "mid") {
-      num = 3;
-    } else if (device === "tablet") {
-      num = 2;
-    } else if (device === "phone") {
-      num = 1;
-    }
-    if (numRows) num = num * numRows;
-    return num;
-  }
-
-  function generatePaginationObject(numPages, pathname, currentCategoy, order, page) {
-    var pagination = [];
-
-    var baseHref = "/browse";
-    if (pathname.indexOf('cat') > -1) {
-      baseHref += "/cat/" + currentCategoy;
-    }
-
-    if (page > 1) {
-      var prev = {
-        number: 'previous',
-        link: baseHref + "/page/" + parseInt(page - 1) + "/ord/" + order
-      };
-      pagination.push(prev);
-    }
-
-    for (var i = 0; i < numPages; i++) {
-      var p = {
-        number: parseInt(i + 1),
-        link: baseHref + "/page/" + parseInt(i + 1) + "/ord/" + order
-      };
-      pagination.push(p);
-    }
-
-    if (page < numPages) {
-      var next = {
-        number: 'next',
-        link: baseHref + "/page/" + parseInt(page + 1) + "/ord/" + order
-      };
-      pagination.push(next);
-    }
-
-    return pagination;
-  }
-
-  function calculateProductRatings(ratings) {
-    var pRating = void 0;
-    var totalUp = 0,
-        totalDown = 0;
-    ratings.forEach(function (r, index) {
-      if (r.rating_active === "1") {
-        if (r.user_like === "1") {
-          totalUp += 1;
-        } else if (r.user_dislike === "1") {
-          totalDown += 1;
-        }
-      }
-    });
-    pRating = 100 / ratings.length * (totalUp - totalDown);
-    return pRating;
-  }
-
-  function getActiveRatingsNumber(ratings) {
-    var activeRatingsNumber = 0;
-    ratings.forEach(function (r, index) {
-      if (r.rating_active === "1") {
-        activeRatingsNumber += 1;
-      }
-    });
-    return activeRatingsNumber;
-  }
-
-  function getFilesSummary(files) {
-    var summery = {
-      downloads: 0,
-      archived: 0,
-      fileSize: 0,
-      total: 0
-    };
-    files.forEach(function (file, index) {
-      summery.total += 1;
-      summery.fileSize += parseInt(file.size);
-      summery.downloads += parseInt(file.downloaded_count);
-    });
-
-    return summery;
-  }
-
-  function checkIfLikedByUser(user, likes) {
-    var likedByUser = false;
-    likes.forEach(function (like, index) {
-      if (user.member_id === like.member_id) {
-        likedByUser = true;
-      }
-    });
-    return likedByUser;
-  }
-
-  function getLoggedUserRatingOnProduct(user, ratings) {
-    var userRating = -1;
-    ratings.forEach(function (r, index) {
-      if (r.member_id === user.member_id) {
-        if (r.user_like === "1") {
-          userRating = 1;
-        } else {
-          userRating = 0;
-        }
-      }
-    });
-    return userRating;
-  }
-
-  function calculateProductLaplaceScore(ratings) {
-    var laplace_score = 0;
-    var upvotes = 0;
-    var downvotes = 0;
-    ratings.forEach(function (rating, index) {
-      if (rating.rating_active === "1") {
-        if (rating.user_like === "1") {
-          upvotes += 1;
-        } else if (rating.user_like === "0") {
-          downvotes += 1;
-        }
-      }
-    });
-    laplace_score = Math.round((upvotes + 6) / (upvotes + downvotes + 12), 2) * 100;
-    return laplace_score;
-  }
-
-  return {
-    getNumberOfProducts: getNumberOfProducts,
-    generatePaginationObject: generatePaginationObject,
-    calculateProductRatings: calculateProductRatings,
-    getActiveRatingsNumber: getActiveRatingsNumber,
-    getFilesSummary: getFilesSummary,
-    checkIfLikedByUser: checkIfLikedByUser,
-    getLoggedUserRatingOnProduct: getLoggedUserRatingOnProduct,
-    calculateProductLaplaceScore: calculateProductLaplaceScore
-  };
-}();
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -4845,211 +4882,174 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var ProductGroupScrollWrapper = function (_React$Component) {
-  _inherits(ProductGroupScrollWrapper, _React$Component);
+var _ReactRedux = ReactRedux,
+    Provider = _ReactRedux.Provider,
+    connect = _ReactRedux.connect;
 
-  function ProductGroupScrollWrapper(props) {
-    _classCallCheck(this, ProductGroupScrollWrapper);
+var store = Redux.createStore(reducer);
 
-    var _this = _possibleConstructorReturn(this, (ProductGroupScrollWrapper.__proto__ || Object.getPrototypeOf(ProductGroupScrollWrapper)).call(this, props));
+var App = function (_React$Component) {
+  _inherits(App, _React$Component);
+
+  function App(props) {
+    _classCallCheck(this, App);
+
+    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
     _this.state = {
-      products: [],
-      offset: 0
+      loading: true,
+      version: 1
     };
-    _this.onProductGroupScroll = _this.onProductGroupScroll.bind(_this);
-    _this.loadMoreProducts = _this.loadMoreProducts.bind(_this);
+    _this.updateDimensions = _this.updateDimensions.bind(_this);
     return _this;
   }
 
-  _createClass(ProductGroupScrollWrapper, [{
+  _createClass(App, [{
     key: "componentWillMount",
     value: function componentWillMount() {
-      window.addEventListener("scroll", this.onProductGroupScroll);
+      console.log('component will mount');
+      // device
+      this.updateDimensions();
     }
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.loadMoreProducts();
-    }
-  }, {
-    key: "onProductGroupScroll",
-    value: function onProductGroupScroll() {
-      var end = $("footer").offset().top;
-      var viewEnd = $(window).scrollTop() + $(window).height();
-      var distance = end - viewEnd;
-      if (distance < 0 && this.state.loadingMoreProducts !== true) {
-        this.setState({ loadingMoreProducts: true }, function () {
-          this.loadMoreProducts();
-        });
+
+      // domain
+      store.dispatch(setDomain(window.location.hostname));
+
+      // env
+      var env = appHelpers.getEnv(window.location.hostname);
+      store.dispatch(setEnv(env));
+
+      // device
+      window.addEventListener("resize", this.updateDimensions);
+
+      // view
+      if (window.view) store.dispatch(setView(view));
+
+      // products
+      if (window.products) {
+        store.dispatch(setProducts(products));
       }
-    }
-  }, {
-    key: "loadMoreProducts",
-    value: function loadMoreProducts() {
-      var itemsPerScroll = 50;
-      var moreProducts = store.getState().products.slice(this.state.offset, this.state.offset + itemsPerScroll);
-      var products = this.state.products.concat(moreProducts);
-      var offset = this.state.offset + itemsPerScroll;
-      this.setState({
-        products: products,
-        offset: offset,
-        loadingMoreProducts: false
-      });
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var loadingMoreProductsDisplay = void 0;
-      if (this.state.loadingMoreProducts) {
-        loadingMoreProductsDisplay = React.createElement(
-          "div",
-          { className: "product-group-scroll-loading-container" },
-          React.createElement(
-            "div",
-            { className: "icon-wrapper" },
-            React.createElement("span", { className: "glyphicon glyphicon-refresh spinning" })
-          )
-        );
+
+      // product (single)
+      if (window.product) {
+        store.dispatch(setProduct(product));
+        store.dispatch(setProductFiles(filesJson));
+        store.dispatch(setProductUpdates(updatesJson));
+        store.dispatch(setProductRatings(ratingsJson));
+        store.dispatch(setProductLikes(likeJson));
+        store.dispatch(setProductPlings(projectplingsJson));
+        store.dispatch(setProductUserRatings(ratingOfUserJson));
+        store.dispatch(setProductGallery(galleryPicturesJson));
+        store.dispatch(setProductComments(commentsJson));
+        store.dispatch(setProductOrigins(originsJson));
+        store.dispatch(setProductRelated(relatedJson));
+        store.dispatch(setProductMoreProducts(moreProductsJson));
+        store.dispatch(setProductMoreProductsOtherUsers(moreProductsOfOtherUsrJson));
+        store.dispatch(setProductTags(tagsuserJson, tagssystemJson));
       }
-      return React.createElement(
-        "div",
-        { className: "product-group-scroll-wrapper" },
-        React.createElement(ProductGroup, {
-          products: this.state.products,
-          device: this.props.device
-        }),
-        loadingMoreProductsDisplay
-      );
-    }
-  }]);
 
-  return ProductGroupScrollWrapper;
-}(React.Component);
+      // pagination
+      if (window.pagination) {
+        store.dispatch(setPagination(pagination));
+      }
 
-var ProductGroup = function (_React$Component2) {
-  _inherits(ProductGroup, _React$Component2);
+      // filters
+      if (window.filters) {
+        store.dispatch(setFilters(filters));
+      }
 
-  function ProductGroup() {
-    _classCallCheck(this, ProductGroup);
+      // top products
+      if (window.topProducts) {
+        store.dispatch(setTopProducts(topProducts));
+      }
 
-    return _possibleConstructorReturn(this, (ProductGroup.__proto__ || Object.getPrototypeOf(ProductGroup)).apply(this, arguments));
-  }
-
-  _createClass(ProductGroup, [{
-    key: "render",
-    value: function render() {
-      var products = void 0;
-      if (this.props.products) {
-        var productsArray = this.props.products;
-        if (this.props.numRows) {
-          var limit = productHelpers.getNumberOfProducts(this.props.device, this.props.numRows);
-          productsArray = productsArray.slice(0, limit);
+      // categories
+      if (window.categories) {
+        // set categories
+        store.dispatch(setCategories(categories));
+        if (window.catId) {
+          // current categories
+          var currentCategories = categoryHelpers.findCurrentCategories(categories, catId);
+          store.dispatch(setCurrentCategory(currentCategories.category));
+          store.dispatch(setCurrentSubCategory(currentCategories.subcategory));
+          store.dispatch(setCurrentSecondSubCategory(currentCategories.secondSubCategory));
         }
-        products = productsArray.map(function (product, index) {
-          return React.createElement(ProductGroupItem, {
-            key: index,
-            product: product
-          });
-        });
       }
 
-      var sectionHeader = void 0;
-      if (this.props.title) {
-        sectionHeader = React.createElement(
-          "div",
-          { className: "section-header" },
-          React.createElement(
-            "h3",
-            { className: "mdl-color-text--primary" },
-            this.props.title
-          ),
-          React.createElement(
-            "div",
-            { className: "actions" },
-            React.createElement(
-              "a",
-              { href: this.props.link, className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
-              "see more"
-            )
-          )
-        );
+      // supporters
+      if (window.supporters) {
+        store.dispatch(setSupporters(supporters));
       }
-      return React.createElement(
-        "div",
-        { className: "products-showcase" },
-        sectionHeader,
-        React.createElement(
-          "div",
-          { className: "products-container row" },
-          products
-        )
-      );
+
+      // comments
+      if (window.comments) {
+        store.dispatch(setComments(comments));
+      }
+
+      // user
+      if (window.user) {
+        store.dispatch(setUser(user));
+      }
+
+      // finish loading
+      this.setState({ loading: false });
     }
-  }]);
-
-  return ProductGroup;
-}(React.Component);
-
-var ProductGroupItem = function (_React$Component3) {
-  _inherits(ProductGroupItem, _React$Component3);
-
-  function ProductGroupItem() {
-    _classCallCheck(this, ProductGroupItem);
-
-    return _possibleConstructorReturn(this, (ProductGroupItem.__proto__ || Object.getPrototypeOf(ProductGroupItem)).apply(this, arguments));
-  }
-
-  _createClass(ProductGroupItem, [{
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      // device
+      window.removeEventListener("resize", this.updateDimensions);
+    }
+  }, {
+    key: "updateDimensions",
+    value: function updateDimensions() {
+      var device = appHelpers.getDeviceWidth(window.innerWidth);
+      store.dispatch(setDevice(device));
+    }
+  }, {
     key: "render",
     value: function render() {
-      var imageBaseUrl = void 0;
-      if (store.getState().env === 'live') {
-        imageBaseUrl = 'cn.opendesktop.org';
-      } else {
-        imageBaseUrl = 'cn.pling.it';
+      var displayView = React.createElement(HomePageWrapper, null);
+      if (store.getState().view === 'explore') {
+        displayView = React.createElement(ExplorePageWrapper, null);
+      } else if (store.getState().view === 'product') {
+        displayView = React.createElement(ProductViewWrapper, null);
       }
       return React.createElement(
         "div",
-        { className: "product square" },
-        React.createElement(
-          "div",
-          { className: "content" },
-          React.createElement(
-            "div",
-            { className: "product-wrapper mdl-shadow--2dp" },
-            React.createElement(
-              "a",
-              { href: "/p/" + this.props.product.project_id },
-              React.createElement(
-                "div",
-                { className: "product-image-container" },
-                React.createElement(
-                  "figure",
-                  null,
-                  React.createElement("img", { className: "very-rounded-corners", src: 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small }),
-                  React.createElement(
-                    "span",
-                    { className: "product-info-title" },
-                    this.props.product.title
-                  )
-                )
-              ),
-              React.createElement(
-                "div",
-                { className: "product-info" },
-                React.createElement(
-                  "span",
-                  { className: "product-info-description" },
-                  this.props.product.description
-                )
-              )
-            )
-          )
-        )
+        { id: "app-root" },
+        displayView
       );
     }
   }]);
 
-  return ProductGroupItem;
+  return App;
 }(React.Component);
+
+var AppWrapper = function (_React$Component2) {
+  _inherits(AppWrapper, _React$Component2);
+
+  function AppWrapper() {
+    _classCallCheck(this, AppWrapper);
+
+    return _possibleConstructorReturn(this, (AppWrapper.__proto__ || Object.getPrototypeOf(AppWrapper)).apply(this, arguments));
+  }
+
+  _createClass(AppWrapper, [{
+    key: "render",
+    value: function render() {
+      return React.createElement(
+        Provider,
+        { store: store },
+        React.createElement(App, null)
+      );
+    }
+  }]);
+
+  return AppWrapper;
+}(React.Component);
+
+ReactDOM.render(React.createElement(AppWrapper, null), document.getElementById('explore-content'));
