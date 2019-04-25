@@ -83,7 +83,6 @@ var SiteHeader = function (_React$Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       console.log(this.state);
-      console.log('**********');
       window.addEventListener("resize", this.updateDimensions);
       window.addEventListener("orientationchange", this.updateDimensions);
     }
@@ -204,7 +203,7 @@ var SiteHeader = function (_React$Component) {
 
       return React.createElement(
         "section",
-        { id: "site-header", style: templateHeaderStyle },
+        { id: "site-header", style: templateHeaderStyle, className: this.state.store.name.toLowerCase() },
         HeaderDisplay
       );
     }
