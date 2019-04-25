@@ -203,7 +203,7 @@ var SiteHeader = function (_React$Component) {
 
       return React.createElement(
         "section",
-        { id: "site-header", style: templateHeaderStyle, className: window.page },
+        { id: "site-header", style: templateHeaderStyle, className: this.state.store.name.toLowerCase() },
         HeaderDisplay
       );
     }

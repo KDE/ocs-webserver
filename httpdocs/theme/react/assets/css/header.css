@@ -250,21 +250,21 @@
 #site-header.appimagehubcc #site-header-wrapper #site-header-right #site-header-user-menu-container,
 #site-header.appimagehub #site-header-wrapper #site-header-right #site-header-user-menu-container,
 #site-header.appimageshub #site-header-wrapper #site-header-right #site-header-user-menu-container,
-#site-header.appimages #site-header-wrapper #site-header-right #site-header-user-menu-container,
+#site-header.appimageshub.com #site-header-wrapper #site-header-right #site-header-user-menu-container,
 #site-header.appimagehubcc #site-header-wrapper #site-header-right #site-header-right-bottom,
 #site-header.appimagehub #site-header-wrapper #site-header-right #site-header-right-bottom,
 #site-header.appimageshub #site-header-wrapper #site-header-right #site-header-right-bottom,
-#site-header.appimages #site-header-wrapper #site-header-right #site-header-right-bottom,
+#site-header.appimageshub.com #site-header-wrapper #site-header-right #site-header-right-bottom,
 #site-header.appimagehubcc #site-header-wrapper #site-header-right #site-header-login-menu,
 #site-header.appimagehub #site-header-wrapper #site-header-right #site-header-login-menu,
 #site-header.appimageshub #site-header-wrapper #site-header-right #site-header-login-menu,
-#site-header.appimages #site-header-wrapper #site-header-right #site-header-login-menu {
+#site-header.appimageshub.com #site-header-wrapper #site-header-right #site-header-login-menu {
   display: none;
 }
 #site-header.appimagehubcc #site-header-wrapper #site-header-right #site-header-right-top,
 #site-header.appimagehub #site-header-wrapper #site-header-right #site-header-right-top,
 #site-header.appimageshub #site-header-wrapper #site-header-right #site-header-right-top,
-#site-header.appimages #site-header-wrapper #site-header-right #site-header-right-top {
+#site-header.appimageshub.com #site-header-wrapper #site-header-right #site-header-right-top {
   height: 100%;
 }
 /*
