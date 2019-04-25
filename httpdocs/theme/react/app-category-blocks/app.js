@@ -1,8 +1,24 @@
 function CategoryBlocks(){
     const [ categories, setCategories ] = React.useState(window.catTree)
     React.useEffect(() => {
-
+        generateAllCatListItem()
     },[])
+    function generateAllCatListItem(){
+        let obj = {
+            title:'All',
+            id:'',
+            product_count:0
+        }
+        window.catTree.foeEach(function(cat){
+            obj.product_count = parseInt(obj.product_count) + parseInt(cat.product_count)
+        })
+        const newCategories = [
+            ...window.catTree,
+            obj
+        ]
+        console.log(newCategories)
+        setCategories(newCategories)
+    }
     let categoriesDisplay;
     if (categories) categoriesDisplay = categories.map((c,index) => (<CategoryBlockItem category={c}/> ))
     return (
