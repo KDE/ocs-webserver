@@ -21,7 +21,7 @@ function CategoryBlocks(){
     return (
         <div id="category-blocks">
             <div className="container aih-container aih-section">
-                <div classNAme="aih-row">
+                <div className="aih-row">
                     {categoriesDisplay}
                 </div>
             </div>

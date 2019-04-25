@@ -23,7 +23,7 @@ function CategoryBlocks() {
             { className: 'container aih-container aih-section' },
             React.createElement(
                 'div',
-                { classNAme: 'aih-row' },
+                { className: 'aih-row' },
                 categoriesDisplay
             )
         )
