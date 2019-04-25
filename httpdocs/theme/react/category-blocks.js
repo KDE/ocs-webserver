@@ -31,8 +31,10 @@ function CategoryBlocks() {
 
 function CategoryBlockItem(props) {
     var c = props.category;
-    var imgUrl = "/theme/react/assets/img/aih-" + c.title.toLowerCase() + ".png";
-    var ribbonCssClass = "aih-ribbon aih-" + c.title.toLowerCase();
+    var sysTitle = c.title;
+    if (c.title === "System & Tools") sysTitle = "systools";
+    var imgUrl = "/theme/react/assets/img/aih-" + sysTitle + ".png";
+    var ribbonCssClass = "aih-ribbon aih-" + sysTitle.trim().toLowerCase();
     return React.createElement(
         "a",
         { href: "/browse/cat/" + c.id },

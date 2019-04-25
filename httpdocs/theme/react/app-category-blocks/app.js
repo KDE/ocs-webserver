@@ -16,8 +16,10 @@ function CategoryBlocks(){
 
 function CategoryBlockItem(props){
     const c = props.category;
-    const imgUrl = "/theme/react/assets/img/aih-"+c.title.toLowerCase()+".png";
-    const ribbonCssClass = "aih-ribbon aih-"+c.title.toLowerCase();
+    let sysTitle = c.title;
+    if (c.title === "System & Tools") sysTitle = "systools";
+    const imgUrl = "/theme/react/assets/img/aih-"+sysTitle+".png";
+    const ribbonCssClass = "aih-ribbon aih-"+sysTitle.trim().toLowerCase();
     return (
         <a href={"/browse/cat/" + c.id}>
             <div className="aih-card">
