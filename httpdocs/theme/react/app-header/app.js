@@ -139,8 +139,11 @@ class SiteHeader extends React.Component {
       }
     }
 
+    let headerStoreClassName = this.state.store.name.toLowerCase();
+    if (headerStoreClassName.indexOf('.') > -1) headerStoreClassName = headerStoreClassName.split('.')[0]
+
     return (
-      <section id="site-header" style={templateHeaderStyle} className={this.state.store.name.split('.')[0].toLowerCase()}>
+      <section id="site-header" style={templateHeaderStyle} className={headerStoreClassName}>
         {HeaderDisplay}
       </section>
     )
