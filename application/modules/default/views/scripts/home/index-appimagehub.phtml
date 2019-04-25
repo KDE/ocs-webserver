@@ -48,9 +48,8 @@ if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
     $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"105,104,98,57,53,52,48,295,158");    
 
     $response = array(
-        'products1' => array('title' =>'Latest','catIds' =>'104,105,98','products' => $products1)
+        'products1' => array('title' =>'Latest','catIds' =>'104,105,98','products' => $products2)
     );
-    //'products2' => array('title' =>'Apps & Games','catIds' =>'104,105,98','products' => $products2),       
 
   } else {
     //$products1 = $modelInfo->getJsonLastProductsForHostStores(15,"391,392,544,526,492,542,450,388,481");    
@@ -63,9 +62,8 @@ if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
     //'products2' => array('title' =>'Games','catIds' =>'6','products' => $products2),    
 
     $response = array(
-        'products1' => array('title' =>'Latest','catIds' =>'391,392,6''products' => $products1)
+        'products1' => array('title' =>'Latest','catIds' =>'391,392,6','products' => $products2)
     );
-    //'products2' => array('title' =>'APP & Games','catIds' =>'391,392,6','products' => $products2),       
   }
   
   $helperBuildBaseUrl = new Default_View_Helper_BuildBaseUrl();
