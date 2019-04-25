@@ -8,6 +8,22 @@ function CategoryBlocks() {
         categories = _React$useState2[0],
         setCategories = _React$useState2[1];
 
+    var _React$useState3 = React.useState(''),
+        _React$useState4 = _slicedToArray(_React$useState3, 2),
+        allCatListItem = _React$useState4[0],
+        setAllCatListItem = _React$useState4[1];
+
+    React.useEffect(function () {
+        if (categories) generateAllCatListItem();
+    }, []);
+
+    function generateAllCatListItem() {
+        var allProductCounter = 0;
+        categories.forEach(function (cat, index) {
+            allProductCounter += cat.product_count;
+        });
+    }
+
     var categoriesDisplay = void 0;
     if (categories) categoriesDisplay = categories.map(function (c, index) {
         return React.createElement(CategoryBlockItem, { category: c });

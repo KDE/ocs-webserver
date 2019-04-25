@@ -140,7 +140,7 @@ class SiteHeader extends React.Component {
     }
 
     return (
-      <section id="site-header" style={templateHeaderStyle} className={this.state.store.name.toLowerCase()}>
+      <section id="site-header" style={templateHeaderStyle} className={window.page}>
         {HeaderDisplay}
       </section>
     )
