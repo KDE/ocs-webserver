@@ -31,7 +31,7 @@ function CategoryBlocks() {
 }
 
 function CategoryBlockItem(props) {
-
+    var imgUrl = "/theme/react/assets/img/aih-" + props.category.title.toLowerCase() + ".png";
     return React.createElement(
         'a',
         { href: '#' },
@@ -39,14 +39,14 @@ function CategoryBlockItem(props) {
             'div',
             { className: 'aih-card' },
             React.createElement('div', { className: 'aih-ribbon aih-all' }),
-            React.createElement('img', { className: 'aih-thumb', src: '/theme/react/assets/img/aih-all.png' }),
+            React.createElement('img', { className: 'aih-thumb', src: imgUrl }),
             React.createElement(
                 'div',
                 { className: 'aih-content' },
                 React.createElement(
                     'h3',
                     { className: 'aih-title' },
-                    'All'
+                    props.category.title
                 ),
                 React.createElement(
                     'p',

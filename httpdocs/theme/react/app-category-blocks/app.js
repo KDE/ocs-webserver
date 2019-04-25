@@ -30,14 +30,14 @@ function CategoryBlocks(){
 }
 
 function CategoryBlockItem(props){
-
+    const imgUrl = "/theme/react/assets/img/aih-"+props.category.title.toLowerCase()+".png";
     return (
         <a href="#">
             <div className="aih-card">
                 <div className="aih-ribbon aih-all"></div>
-                <img className="aih-thumb" src="/theme/react/assets/img/aih-all.png"/>
+                <img className="aih-thumb" src={imgUrl}/>
                 <div className="aih-content">
-                    <h3 className="aih-title">All</h3>
+                    <h3 className="aih-title">{props.category.title}</h3>
                     <p className="aih-counter">427 <span>products</span></p>
                 </div>
             </div>
