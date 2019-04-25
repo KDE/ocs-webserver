@@ -5,7 +5,7 @@ function CategoryBlocks(){
         console.log('component did mount')
         convertCatObjectToArray();
     },[])
-    convertCatObjectToArray(){
+    function convertCatObjectToArray(){
         const catObj = window.catTree.children;
         let catArray = [];
         for ( var i in catObj){ catArray.push(catObj[i]); }
