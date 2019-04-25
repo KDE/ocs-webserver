@@ -12,10 +12,7 @@ function CategoryBlocks(){
         {title:'Systools',product_count:'427'},
         {title:'Video',product_count:'427'}
     ]
-
     const [ categories, setCategories ] = React.useState(catList)
-
-
     let categoriesDisplay;
     if (categories) categoriesDisplay = categories.map((c,index) => (<CategoryBlockItem category={c}/> ))
     return (
@@ -32,10 +29,10 @@ function CategoryBlocks(){
 function CategoryBlockItem(props){
     const c = props.category;
     const imgUrl = "/theme/react/assets/img/aih-"+c.title.toLowerCase()+".png";
-    const ribbonCssClass = "aih-ribbon aig-"+c.title.toLowerCase();
+    const ribbonCssClass = "aih-ribbon aih-"+c.title.toLowerCase();
 
     return (
-        <a href={"/browse/cat" + props.category.cat_id}>
+        <a href={"/browse/cat/" + props.category.cat_id}>
             <div className="aih-card">
                 <div className={ribbonCssClass}></div>
                 <img className="aih-thumb" src={imgUrl}/>

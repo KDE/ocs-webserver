@@ -33,11 +33,11 @@ function CategoryBlocks() {
 function CategoryBlockItem(props) {
     var c = props.category;
     var imgUrl = "/theme/react/assets/img/aih-" + c.title.toLowerCase() + ".png";
-    var ribbonCssClass = "aih-ribbon aig-" + c.title.toLowerCase();
+    var ribbonCssClass = "aih-ribbon aih-" + c.title.toLowerCase();
 
     return React.createElement(
         'a',
-        { href: "/browse/cat" + props.category.cat_id },
+        { href: "/browse/cat/" + props.category.cat_id },
         React.createElement(
             'div',
             { className: 'aih-card' },
