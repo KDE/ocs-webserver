@@ -17,18 +17,36 @@ function CategoryBlocks(){
     ]
 
     const [ categories, setCategories ] = useState(catList)
-    React.useEffect(()=> {
-        console.log('hello')
-    },[categories])
+
+
+    let categoriesDisplay;
+    if (categories) categoriesDisplay = categories.map((c,index) => (<CategoryBlockItem category={c}/> ))
     return (
         <div id="category-blocks">
             <div className="container aih-container aih-section">
-            
+                <div classNAme="aih-row">
+                    {categoriesDisplay}
+                </div>
             </div>
         </div>
     )
 }
 
+function CategoryBlockItem(props){
+
+    return (
+        <a href="#">
+            <div className="aih-card">
+                <div className="aih-ribbon aih-all"></div>
+                <img className="aih-thumb" src="/theme/react/assets/img/aih-all.png"/>
+                <div className="aih-content">
+                    <h3 className="aih-title">All</h3>
+                    <p className="aih-counter">427 <span>products</span></p>
+                </div>
+            </div>
+        </a>        
+    )
+}
 
 const rootElement = document.getElementById("category-blocks-container");
 ReactDOM.render(<CategoryBlocks />, rootElement);

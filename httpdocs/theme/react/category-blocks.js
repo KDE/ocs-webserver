@@ -21,13 +21,55 @@ function CategoryBlocks() {
         categories = _useState2[0],
         setCategories = _useState2[1];
 
-    _react2.default.useEffect(function () {
-        console.log('hello');
-    }, [categories]);
+    var categoriesDisplay = void 0;
+    if (categories) categoriesDisplay = categories.map(function (c, index) {
+        return _react2.default.createElement(CategoryBlockItem, { category: c });
+    });
     return _react2.default.createElement(
         'div',
         { id: 'category-blocks' },
-        _react2.default.createElement('div', { className: 'container aih-container aih-section' })
+        _react2.default.createElement(
+            'div',
+            { className: 'container aih-container aih-section' },
+            _react2.default.createElement(
+                'div',
+                { classNAme: 'aih-row' },
+                categoriesDisplay
+            )
+        )
+    );
+}
+
+function CategoryBlockItem(props) {
+
+    return _react2.default.createElement(
+        'a',
+        { href: '#' },
+        _react2.default.createElement(
+            'div',
+            { className: 'aih-card' },
+            _react2.default.createElement('div', { className: 'aih-ribbon aih-all' }),
+            _react2.default.createElement('img', { className: 'aih-thumb', src: '/theme/react/assets/img/aih-all.png' }),
+            _react2.default.createElement(
+                'div',
+                { className: 'aih-content' },
+                _react2.default.createElement(
+                    'h3',
+                    { className: 'aih-title' },
+                    'All'
+                ),
+                _react2.default.createElement(
+                    'p',
+                    { className: 'aih-counter' },
+                    '427 ',
+                    _react2.default.createElement(
+                        'span',
+                        null,
+                        'products'
+                    )
+                )
+            )
+        )
     );
 }
 
