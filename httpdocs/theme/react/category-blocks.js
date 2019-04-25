@@ -5,7 +5,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function CategoryBlocks() {
-    var _React$useState = React.useState(window.catTree),
+    var _React$useState = React.useState(),
         _React$useState2 = _slicedToArray(_React$useState, 2),
         categories = _React$useState2[0],
         setCategories = _React$useState2[1];
@@ -22,14 +22,14 @@ function CategoryBlocks() {
     function generateAllCatListItem() {
         var allProductCounter = 0;
         categories.forEach(function (cat, index) {
-            allProductCounter += cat.product_count;
+            allProductCounter = parseInt(allProductCounter) + parseInt(cat.product_count);
         });
         var obj = {
             title: 'All',
             id: '',
             product_count: allProductCounter
         };
-        var newCategories = [].concat(_toConsumableArray(categories), [obj]);
+        var newCategories = [obj].concat(_toConsumableArray(categories));
         setCategories(newCategories);
         setLoading(false);
     }
