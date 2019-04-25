@@ -1,11 +1,12 @@
 function CategoryBlocks(){
-    console.log(window.catTree.children)
+    console.log(window.catTree)
     const [ categories, setCategories ] = React.useState('')
     React.useState(() => {
         console.log('component did mount')
         convertCatObjectToArray();
     },[])
     function convertCatObjectToArray(){
+        console.log(window.catTree)
         const catObj = window.catTree.children;
         let catArray = [];
         for ( var i in catObj){ catArray.push(catObj[i]); }
