@@ -1,6 +1,5 @@
 function CategoryBlocks(){
     const [ categories, setCategories ] = React.useState()
-    const [ loading, setLoading ] = React.useState(true);
 
     React.useEffect(() => {
         if (categories) generateAllCatListItem();
@@ -8,7 +7,7 @@ function CategoryBlocks(){
 
     function generateAllCatListItem(){
         let allProductCounter = 0;
-        categories.forEach(function(cat,index){
+        categories.forEach(function(cat){
             allProductCounter = parseInt(allProductCounter) + parseInt(cat.product_count);
         });
         const obj = {
@@ -18,14 +17,13 @@ function CategoryBlocks(){
         }
         const newCategories = [
             obj,
-            ...categories
+            ...window.catTree
         ]
         setCategories(newCategories);
-        setLoading(false);
     }
 
     let categoriesDisplay;
-    if (loading === false) categoriesDisplay = categories.map((c,index) => (<CategoryBlockItem category={c}/> ))
+    if (categories) categoriesDisplay = categories.map((c,index) => (<CategoryBlockItem category={c}/> ))
     return (
         <div id="category-blocks">
             <div className="container aih-container aih-section">

@@ -10,18 +10,13 @@ function CategoryBlocks() {
         categories = _React$useState2[0],
         setCategories = _React$useState2[1];
 
-    var _React$useState3 = React.useState(true),
-        _React$useState4 = _slicedToArray(_React$useState3, 2),
-        loading = _React$useState4[0],
-        setLoading = _React$useState4[1];
-
     React.useEffect(function () {
         if (categories) generateAllCatListItem();
     }, []);
 
     function generateAllCatListItem() {
         var allProductCounter = 0;
-        categories.forEach(function (cat, index) {
+        categories.forEach(function (cat) {
             allProductCounter = parseInt(allProductCounter) + parseInt(cat.product_count);
         });
         var obj = {
@@ -29,13 +24,12 @@ function CategoryBlocks() {
             id: '',
             product_count: allProductCounter
         };
-        var newCategories = [obj].concat(_toConsumableArray(categories));
+        var newCategories = [obj].concat(_toConsumableArray(window.catTree));
         setCategories(newCategories);
-        setLoading(false);
     }
 
     var categoriesDisplay = void 0;
-    if (loading === false) categoriesDisplay = categories.map(function (c, index) {
+    if (categories) categoriesDisplay = categories.map(function (c, index) {
         return React.createElement(CategoryBlockItem, { category: c });
     });
     return React.createElement(
