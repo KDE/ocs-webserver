@@ -16,7 +16,10 @@ function CategoryBlocks(){
             id:'',
             product_count:allProductCounter
         }
-        const newCategories = categories.push(obj);
+        const newCategories = [
+            ...categories,
+            obj
+        ]
         setCategories(newCategories);
         setLoading(false);
     }
