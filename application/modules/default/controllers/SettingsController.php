@@ -255,24 +255,6 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $twitter->addValidator(new Local_Validate_PartialUrl);
         $form->addElement($twitter);
 
-        $google =
-            $form->createElement('text', 'link_google')->setLabel("Google+ Profile:")->setRequired(false)->removeDecorator('HtmlTag')
-                 ->setDecorators(array(
-                     'ViewHelper',
-                     'Label',
-                     'Errors',
-                     array(
-                         'ViewScript',
-                         array(
-                             'viewScript' => 'settings/viewscripts/flatui_input.phtml',
-                             'placement'  => false
-                         )
-                     )
-                 ))
-        ;
-        $google->addValidator(new Local_Validate_PartialUrl);
-        $form->addElement($google);
-
         $github =
             $form->createElement('text', 'link_github')->setLabel("GitHub Profile:")->setRequired(false)->removeDecorator('HtmlTag')
                  ->setDecorators(array(
@@ -288,7 +270,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                      )
                  ))
         ;
-        $google->addValidator(new Local_Validate_PartialUrl);
+        $github->addValidator(new Local_Validate_PartialUrl);
         $form->addElement($github);
 
         return $form;

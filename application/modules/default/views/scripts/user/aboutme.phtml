@@ -590,23 +590,6 @@ div#preloaded-images {
                                             </div>
                                         </div>
                                     <?php endif; ?>
-                                    <?php if (isset($this->member->link_google) && $this->member->link_google != ''):
-                                    $helpTwitterLink = new Default_View_Helper_GoogleplusLink();
-                                    $googleplusLink = $helpTwitterLink->googleplusLink($this->member->link_google);
-                                    ?>
-                                        <div class="google">
-                                            <div class="label">
-
-                                                <img src="/theme/flatui/img/email4.png" class="accounts_icon">
-                                            </div>
-                                            <div class="text">
-                                                <a href="<?php echo $googleplusLink ?>"><?php echo $helperTruncate->truncate($this->member->link_google,
-                                                        50); ?></a>
-                                            </diV>
-                                        </div>
-                                    <?php endif; ?>
-
-
 
                                         <div class="email">
                                             <div class="label">
