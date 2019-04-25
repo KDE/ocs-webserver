@@ -4,7 +4,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 function CategoryBlocks() {
 
-    var catList = [{ title: 'All', product_count: '427' }, { title: 'Audio', product_count: '47' }, { title: 'Education', product_count: '27' }, { title: 'Games', product_count: '17' }, { title: 'Graphics', product_count: '42' }, { title: 'Internet', product_count: '427' }, { title: 'Office', product_count: '427' }, { title: 'Programming', product_count: '427' }, { title: 'System & Tools', product_count: '427' }, { title: 'Video', product_count: '427' }];
+    var catList = [{ title: 'All', product_count: '427' }, { title: 'Audio', product_count: '47' }, { title: 'Education', product_count: '27' }, { title: 'Games', product_count: '17' }, { title: 'Graphics', product_count: '42' }, { title: 'Internet', product_count: '427' }, { title: 'Office', product_count: '427' }, { title: 'Programming', product_count: '427' }, { title: 'Systools', product_count: '427' }, { title: 'Video', product_count: '427' }];
 
     var _React$useState = React.useState(catList),
         _React$useState2 = _slicedToArray(_React$useState, 2),
@@ -34,7 +34,7 @@ function CategoryBlockItem(props) {
     var imgUrl = "/theme/react/assets/img/aih-" + props.category.title.toLowerCase() + ".png";
     return React.createElement(
         'a',
-        { href: '#' },
+        { href: "/browse/cat" + props.category.cat_id },
         React.createElement(
             'div',
             { className: 'aih-card' },

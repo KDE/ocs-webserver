@@ -9,7 +9,7 @@ function CategoryBlocks(){
         {title:'Internet',product_count:'427'},
         {title:'Office',product_count:'427'},
         {title:'Programming',product_count:'427'},
-        {title:'System & Tools',product_count:'427'},
+        {title:'Systools',product_count:'427'},
         {title:'Video',product_count:'427'}
     ]
 
@@ -32,7 +32,7 @@ function CategoryBlocks(){
 function CategoryBlockItem(props){
     const imgUrl = "/theme/react/assets/img/aih-"+props.category.title.toLowerCase()+".png";
     return (
-        <a href="#">
+        <a href={"/browse/cat" + props.category.cat_id}>
             <div className="aih-card">
                 <div className="aih-ribbon aih-all"></div>
                 <img className="aih-thumb" src={imgUrl}/>
