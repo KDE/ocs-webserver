@@ -32,7 +32,6 @@ class SiteHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.state);
     window.addEventListener("resize", this.updateDimensions);
     window.addEventListener("orientationchange",this.updateDimensions);
   }
@@ -105,6 +104,8 @@ class SiteHeader extends React.Component {
               <SiteHeaderSearchForm
                 baseUrl={this.state.baseUrl}
                 searchBaseUrl={this.state.searchBaseUrl}
+                store={this.state.store}
+                height={this.state.template.header['height']}
               />
               {userMenuDisplay}
             </div>
@@ -115,9 +116,6 @@ class SiteHeader extends React.Component {
         </section>
       );
     } else {
-
-
-
       HeaderDisplay = (
         <MobileSiteHeader
           logoLink={logoLink}
@@ -169,8 +167,16 @@ class SiteHeaderSearchForm extends React.Component {
   }
 
   render(){
+
+    let siteHeaderSearchFormStyle;
+    if (props.store.name.indexOf("appimagehub") > -1) {
+      siteHeaderSearchFormStyle = {
+        "marginTop": (this.props.height / 2) - 19 + "px"
+      }
+    }
+
     return (
-      <div id="site-header-search-form">
+      <div id="site-header-search-form" style={siteHeaderSearchFormStyle}>
         <form id="search-form" onSubmit={this.onSearchFormSubmit}>
           <input onChange={this.onSearchTextChange} value={this.state.searchText} type="text" name="projectSearchText" />
           <a onClick={this.onSearchFormSubmit}></a>

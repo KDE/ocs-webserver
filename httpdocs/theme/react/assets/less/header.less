@@ -1,4 +1,3 @@
-out: ../css/header.css, sourcemap: true, compress: true
 @import "elements.less";
 
 #site-header-container {
@@ -269,6 +268,23 @@ out: ../css/header.css, sourcemap: true, compress: true
               }
             }
           }
+        }
+      }
+    }
+  }
+
+  &.appimagehubcc,
+  &.appimagehub,
+  &.appimageshub {
+    #site-header-wrapper {
+      #site-header-right {
+        #site-header-user-menu-container,
+        #site-header-right-bottom {
+          display: none;
+        }
+
+        #site-header-right-top {
+          height:100%;
         }
       }
     }

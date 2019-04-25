@@ -82,7 +82,6 @@ var SiteHeader = function (_React$Component) {
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      console.log(this.state);
       window.addEventListener("resize", this.updateDimensions);
       window.addEventListener("orientationchange", this.updateDimensions);
     }
@@ -167,7 +166,9 @@ var SiteHeader = function (_React$Component) {
               { id: "site-header-right-top", className: siteHeaderTopRightCssClass },
               React.createElement(SiteHeaderSearchForm, {
                 baseUrl: this.state.baseUrl,
-                searchBaseUrl: this.state.searchBaseUrl
+                searchBaseUrl: this.state.searchBaseUrl,
+                store: this.state.store,
+                height: this.state.template.header['height']
               }),
               userMenuDisplay
             ),
@@ -179,7 +180,6 @@ var SiteHeader = function (_React$Component) {
           )
         );
       } else {
-
         HeaderDisplay = React.createElement(MobileSiteHeader, {
           logoLink: logoLink,
           template: this.state.template,
@@ -242,9 +242,17 @@ var SiteHeaderSearchForm = function (_React$Component2) {
   }, {
     key: "render",
     value: function render() {
+
+      var siteHeaderSearchFormStyle = void 0;
+      if (props.store.name.indexOf("appimagehub") > -1) {
+        siteHeaderSearchFormStyle = {
+          "marginTop": this.props.height / 2 - 19 + "px"
+        };
+      }
+
       return React.createElement(
         "div",
-        { id: "site-header-search-form" },
+        { id: "site-header-search-form", style: siteHeaderSearchFormStyle },
         React.createElement(
           "form",
           { id: "search-form", onSubmit: this.onSearchFormSubmit },
