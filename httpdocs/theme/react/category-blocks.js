@@ -31,14 +31,17 @@ function CategoryBlocks() {
 }
 
 function CategoryBlockItem(props) {
-    var imgUrl = "/theme/react/assets/img/aih-" + props.category.title.toLowerCase() + ".png";
+    var c = props.category;
+    var imgUrl = "/theme/react/assets/img/aih-" + c.title.toLowerCase() + ".png";
+    var ribbonCssClass = "aih-ribbon aig-" + c.title.toLowerCase();
+
     return React.createElement(
         'a',
         { href: "/browse/cat" + props.category.cat_id },
         React.createElement(
             'div',
             { className: 'aih-card' },
-            React.createElement('div', { className: 'aih-ribbon aih-all' }),
+            React.createElement('div', { className: ribbonCssClass }),
             React.createElement('img', { className: 'aih-thumb', src: imgUrl }),
             React.createElement(
                 'div',
@@ -46,7 +49,7 @@ function CategoryBlockItem(props) {
                 React.createElement(
                     'h3',
                     { className: 'aih-title' },
-                    props.category.title
+                    c.title
                 ),
                 React.createElement(
                     'p',
