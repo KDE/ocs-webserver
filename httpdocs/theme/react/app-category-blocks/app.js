@@ -13,8 +13,8 @@ function CategoryBlocks(){
             obj.product_count = parseInt(obj.product_count) + parseInt(cat.product_count)
         })
         const newCategories = [
-            ...window.catTree,
-            obj
+            obj,
+            ...window.catTree
         ]
         console.log(newCategories)
         setCategories(newCategories)

@@ -22,7 +22,7 @@ function CategoryBlocks() {
         window.catTree.forEach(function (cat) {
             obj.product_count = parseInt(obj.product_count) + parseInt(cat.product_count);
         });
-        var newCategories = [].concat(_toConsumableArray(window.catTree), [obj]);
+        var newCategories = [obj].concat(_toConsumableArray(window.catTree));
         console.log(newCategories);
         setCategories(newCategories);
     }
