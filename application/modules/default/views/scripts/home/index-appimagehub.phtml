@@ -68,6 +68,10 @@ if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
   
   $helperBuildBaseUrl = new Default_View_Helper_BuildBaseUrl();
   $basrUrl = $helperBuildBaseUrl->buildBaserUrl();
+
+  $modelCategories = new Default_Model_ProjectCategory();
+  $cat_tree = $modelCategories->fetchTreeForView();
+
 ?>
 
 <main id="explore-content"></main>
@@ -79,6 +83,7 @@ if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
   var data = <?php echo Zend_Json::encode($response)?>;
   var totalProjects = <?php echo $totalProjects ?>;
   var baseUrl = <?php echo Zend_Json::encode($basrUrl)?>;
+  var catTree = <?php echo Zend_Json::encode($cat_tree)?>;
 </script>
 <link type="text/css" rel="stylesheet" href="/theme/react/assets/css/carousel.css"/>
 <div id="carousel-module-container" class="app-images-hub"></div>

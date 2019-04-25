@@ -1,5 +1,5 @@
 function CategoryBlocks(){
-
+    console.log(catTree)
     const catList = [
         {title:'All',product_count:'427'},
         {title:'Audio',product_count:'47'},
