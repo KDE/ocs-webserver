@@ -18,8 +18,10 @@ function CategoryBlockItem(props){
     const c = props.category;
     let sysTitle = c.title;
     if (c.title === "System & Tools") sysTitle = "systools";
+    sysTitle = sysTitle.trim()
+    sysTitle = sysTitle.toLowerCase()
     const imgUrl = "/theme/react/assets/img/aih-"+sysTitle+".png";
-    const ribbonCssClass = "aih-ribbon aih-"+sysTitle.trim().toLowerCase();
+    const ribbonCssClass = "aih-ribbon aih-"+sysTitle
     return (
         <a href={"/browse/cat/" + c.id}>
             <div className="aih-card">

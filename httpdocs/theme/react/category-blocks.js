@@ -33,8 +33,10 @@ function CategoryBlockItem(props) {
     var c = props.category;
     var sysTitle = c.title;
     if (c.title === "System & Tools") sysTitle = "systools";
+    sysTitle = sysTitle.trim();
+    sysTitle = sysTitle.toLowerCase();
     var imgUrl = "/theme/react/assets/img/aih-" + sysTitle + ".png";
-    var ribbonCssClass = "aih-ribbon aih-" + sysTitle.trim().toLowerCase();
+    var ribbonCssClass = "aih-ribbon aih-" + sysTitle;
     return React.createElement(
         "a",
         { href: "/browse/cat/" + c.id },
