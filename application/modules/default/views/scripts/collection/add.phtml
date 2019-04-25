@@ -440,7 +440,7 @@ $this->inlineScript()->appendScript('
                                 
                                 <div id="div-projects" style="width: 550px;float: left;">
                                     Search (includes new products every 5 minutes)
-                                    <input class="form-control" width="10" type="text" id="search_products" alt="" placeholder="Search (min 3 Chars)">
+                                    <input class="form-control" width="10" type="text" id="search_products" alt="" placeholder="Search (min 3 Chars)" autocomplete="off">
                                     
                                     <caption style="width: 100%;"><h4>Drag the Products from here (actively published)</h4></caption>
                                     
@@ -533,7 +533,15 @@ $this->inlineScript()->appendScript('
             });
             */
            
-           function scrolify(tblAsJQueryObject, height) {
+            function wait(ms){
+                var start = new Date().getTime();
+                var end = start;
+                while(end < start + ms) {
+                  end = new Date().getTime();
+                }
+            }
+           
+            function scrolify(tblAsJQueryObject, height) {
                 var oTbl = tblAsJQueryObject;
 
                 // for very large tables you can remove the four lines below
@@ -686,25 +694,29 @@ $this->inlineScript()->appendScript('
 
             });
             
-            $(window).keydown(function(event){
-                if(event.keyCode == 13) {
-                  event.preventDefault();
-                  return false;
-                }
-            });
+            function throttle(f, delay){
+                var timer = null;
+                return function(){
+                    var context = this, args = arguments;
+                    clearTimeout(timer);
+                    timer = window.setTimeout(function(){
+                        f.apply(context, args);
+                    },
+                    delay || 700);
+                };
+            }
             
-            $('#search_products').bind('input', function(e) {
+            $('#search_products').bind('input', throttle(function(e) {
                 e.preventDefault();
-                wait(700);
-                //$(this).next().stop(true, true).fadeIn(0).html('[input event fired!]: ' + $(this).val()).fadeOut(2000);
                 $(this).next();
                 $val = $(this).val(); 
                 if($val.length>=3) {
                     getOwnProjects($val);
                     getAllProjects($val);
+                } else {
+                    clearLists();
                 }
-                //alert($val); 
-            });
+            }));
             
             $('#search_products').bind("enterKey",function(e){
                 //do stuff here
@@ -719,6 +731,13 @@ $this->inlineScript()->appendScript('
                 }
             });
 
+            $(window).keydown(function(event){
+                if(event.keyCode == 13) {
+                  event.preventDefault();
+                  return false;
+                }
+            });
+            
 
             $('body').on("click", "#github_picker", function (event) {
 
@@ -812,6 +831,11 @@ $this->inlineScript()->appendScript('
                         }
                     })
                     
+                }
+                
+                function clearLists() {
+                    $divProjects.find('table[data-all-projects] tbody').html('');
+                    $divProjects.find('table[data-own-projects] tbody').html('');
                 }
                 
                 function getOwnProjects(search) {

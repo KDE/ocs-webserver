@@ -113,12 +113,6 @@ class Backend_Form_Project extends Zend_Form
             ->setFilters(array('StringTrim'));
 
 
-        $google_code = $this->createElement('text', 'google_code', array())
-            ->setLabel('Your Product on Google+')
-            ->setRequired(false)
-            ->setFilters(array('StringTrim'));
-
-
         $hiddenProductPicture = $this->createElement('hidden', 'image_small')
             ->setAttrib('data-target', '#product-picture-preview');
 
@@ -183,7 +177,6 @@ class Backend_Form_Project extends Zend_Form
             ->addElement($video)
             ->addElement($facebook)
             ->addElement($twitter_code)
-            ->addElement($google_code)
             ->addElement($link_1)
             ->addElement('submit', 'send', array('label' => 'Speichern'))
             ->addElement('submit', 'sendclose', array('label' => 'Speichern & Schließen'));
