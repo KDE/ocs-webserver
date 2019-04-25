@@ -8,6 +8,7 @@ function CategoryBlocks() {
         categories = _React$useState2[0],
         setCategories = _React$useState2[1];
 
+    React.useEffect(function () {}, []);
     var categoriesDisplay = void 0;
     if (categories) categoriesDisplay = categories.map(function (c, index) {
         return React.createElement(CategoryBlockItem, { category: c });

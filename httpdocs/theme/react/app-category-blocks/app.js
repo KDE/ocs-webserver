@@ -1,5 +1,8 @@
 function CategoryBlocks(){
     const [ categories, setCategories ] = React.useState(window.catTree)
+    React.useEffect(() => {
+
+    },[])
     let categoriesDisplay;
     if (categories) categoriesDisplay = categories.map((c,index) => (<CategoryBlockItem category={c}/> ))
     return (

@@ -267,6 +267,9 @@
 #site-header.appimagehub.com #site-header-wrapper #site-header-right #site-header-right-top {
   height: 100%;
 }
+#site-header.pling {
+  margin: 0 !important;
+}
 /*
 @media (max-width:767px) {
   #site-header {
