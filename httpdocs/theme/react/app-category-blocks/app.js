@@ -13,7 +13,7 @@ function CategoryBlocks(){
         {title:'Video',product_count:'427'}
     ]
 
-    const [ categories, setCategories ] = React.useState(catList)
+    const [ categories, setCategories ] = useState(catList)
 
 
     let categoriesDisplay;

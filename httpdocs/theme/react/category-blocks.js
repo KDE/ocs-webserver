@@ -6,10 +6,10 @@ function CategoryBlocks() {
 
     var catList = [{ title: 'All', product_count: '427' }, { title: 'Audio', product_count: '47' }, { title: 'Education', product_count: '27' }, { title: 'Games', product_count: '17' }, { title: 'Graphics', product_count: '42' }, { title: 'Internet', product_count: '427' }, { title: 'Office', product_count: '427' }, { title: 'Programming', product_count: '427' }, { title: 'System & Tools', product_count: '427' }, { title: 'Video', product_count: '427' }];
 
-    var _React$useState = React.useState(catList),
-        _React$useState2 = _slicedToArray(_React$useState, 2),
-        categories = _React$useState2[0],
-        setCategories = _React$useState2[1];
+    var _useState = useState(catList),
+        _useState2 = _slicedToArray(_useState, 2),
+        categories = _useState2[0],
+        setCategories = _useState2[1];
 
     var categoriesDisplay = void 0;
     if (categories) categoriesDisplay = categories.map(function (c, index) {
