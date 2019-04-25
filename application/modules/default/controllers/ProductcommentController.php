@@ -134,6 +134,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $productData = new stdClass();
         $productData->mail = $product->mail;
         $productData->username = $product->username;
+        $productData->username_sender = $this->_authMember->username;
         $productData->title = $product->title;
         $productData->project_id = $product->project_id;
 
@@ -166,6 +167,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $productData = new stdClass();
         $productData->mail = $parentComment['mail'];
         $productData->username = $parentComment['username'];
+        $productData->username_sender = $this->_authMember->username;
         $productData->title = $product->title;
         $productData->project_id = $product->project_id;
 

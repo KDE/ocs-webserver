@@ -186,7 +186,7 @@ class ReportController extends Zend_Controller_Action
                     }
                     if(!is_numeric($project_clone))
                     {
-                        $project_clone = null;
+                        $project_clone = 0;
                     }
                     if (Zend_Auth::getInstance()->hasIdentity()) {
                         $reported_by = (int)Zend_Auth::getInstance()->getStorage()->read()->member_id;

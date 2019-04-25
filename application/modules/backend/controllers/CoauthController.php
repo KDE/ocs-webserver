@@ -44,7 +44,7 @@ class Backend_CoauthController extends Local_Controller_Action_CliAbstract
     ) {
         parent::__construct($request, $response, $invokeArgs);
         $this->config = Zend_Registry::get('config')->settings->server->oauth;
-        $this->log = new Local_Log_File('oauth', self::filename);
+        $this->log = Zend_Registry::get('logger');
         $this->_helper->viewRenderer->setNoRender(false);
     }
 

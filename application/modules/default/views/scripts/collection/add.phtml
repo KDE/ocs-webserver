@@ -45,7 +45,9 @@ if (count($categoryAncestors) > 0) {
 $categoryPath[] = $valueCatId;
 
 
+$this->headLink()->appendStylesheet('//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css');
 $this->headLink()->appendStylesheet('/theme/flatui/css/chosen.css');
+
 $this->inlineScript()->appendFile('/theme/flatui/js/lib/chosen.jquery.min.js');
 $this->inlineScript()->appendScript('
     $(document).ready(function(){
@@ -213,7 +215,37 @@ $this->inlineScript()->appendScript('
         .ui-sortable-placeholder {
           background: yellow;
         }
+        
+        .cat_title {
+            font-size: x-small;
+            font-weight: bold;
+        }
+        
+        .proj_remove {
+            color: red;
+            cursor: pointer;
+        }
+        
+        .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active {
+            border: 1px solid #c5c5c5;
+            border-bottom-width: 1px;
+            background: #f6f6f6;
+            font-weight: normal;
+            color: #454545;
+        }
 
+        .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
+            border: 1px solid #c5c5c5;
+            border-bottom-width: 1px;
+            background: #ffffff;
+            font-weight: normal;
+            color: #454545;
+        }
+        
+        .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
+            color: #454545;
+            text-decoration: none;
+        }
         
     </style>
     
@@ -274,13 +306,13 @@ $this->inlineScript()->appendScript('
                     <section class="add-product-page">
 
                         <form enctype="multipart/form-data" role="application" class="wizard clearfix" action="" method="post" id="add-product-form">
-                            <input type="hidden" name="project_category_id" value="<?= $this->collection_cat_id ?>">
                             <input type="hidden" name="type_id" value="3">
+                            <input type="hidden" name="project_category_id" value="<?= $this->collection_cat_id ?>">
                             <?= $this->form->project_id ?>
                             <h3>Basics</h3>
                             <section id="required">
                                 <div class="form-group"><p class="col-sm-10">(*) Mandatory fields.</p></div>
-                                <div id="preview_img_msg">
+                                <div id="preview_img_msg" style="float: left;width: 100%;">
 
                                 </div>
                                 <?php // $this->form->title ?>
@@ -318,17 +350,16 @@ $this->inlineScript()->appendScript('
                                 </div>
                                 
                                 <?= $this->form->description ?>
-
+                                
                                 <?php /*
                                 <?= $this->form->project_category_id ?>
                                 <?= $this->form->project_subcategory_id ?>
                                 <?= $this->form->project_sub_subcategory_id ?>
+                                 * <?= $this->form->user_category ?>
+                                 * <?= $this->form->version ?>
                                  */?>
-                                <?= $this->form->user_category ?>
                                 
                                 
-                                
-                                <?= $this->form->version ?>
 
                                 <?php /*
                                 <?= $this->form->source_url ?>
@@ -342,7 +373,7 @@ $this->inlineScript()->appendScript('
                                 </div>
                                 </div>  
                                  * 
-                                 */?>                             
+                                                             
                                 
                                 <?= $this->form->license_tag_id ?>
                                  <?php
@@ -365,14 +396,15 @@ $this->inlineScript()->appendScript('
                                         }
                                     }
                                 ?>
-
+ 
+                                
+                                */?>
                                 <?= $this->form->tagsuser ?>
-
-
                                 <?= $this->form->image_small ?>
                                 <?= $this->form->image_small_upload ?>
                                 <?php //$this->form->image_big ?>
                                 <?php //$this->form->image_big_upload ?>
+                                <?php /*
                                 <?= $this->form->gallery ?>
                                 <?= $this->form->embed_code ?>                               
 
@@ -380,6 +412,7 @@ $this->inlineScript()->appendScript('
                                 <?= $this->form->facebook_code ?>
                                 <?= $this->form->twitter_code ?>
                                 <?= $this->form->google_code ?>
+                                */?>
 
                             </section>
                             
@@ -390,25 +423,51 @@ $this->inlineScript()->appendScript('
                                 
                                 <h3>Products</h3>
                                 
-                                <div id="div-collection-projects" style="width: 500px;float: left;">
-                                    <caption style="width: 100%;"><h4>Drop the Products here</h4></caption>
+                                <div id="div-collection-projects" style="width: 550px;float: left;margin-top: 35px;">
+                                    
+                                    <caption style="width: 100%;padding-top: 34px;"> <h4>Drop the Products here</h4> </caption>
+                                    
                                     <table class="tables_ui" id="t_draggable1" data-collection-projects="" style="width: 500px;height: 600px; padding: 10px; overflow-x: auto;">
                                         <tbody class="t_sortable">
                                             <tr>
-                                                <th colspan="2"></th>
+                                                <th colspan="2" style="min-height: 50px;">Drop the Products here</th>
                                             </tr>
                                         </tbody>
                                     </table>
+                                    
+                                    
                                 </div> 
-                                <div id="div-projects" style="width: 500px;float: left;">
-                                    <caption style="width: 100%;"><h4>Drag the Products from here</h4></caption>
-                                    <table class="tables_ui" id="t_draggable2" data-projects="" style="width: 500px;height: 600px; padding: 10px; overflow-x: auto;">
-                                        <tbody class="t_sortable">
-                                            <tr>
-                                                <th colspan="2"></th>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                
+                                <div id="div-projects" style="width: 550px;float: left;">
+                                    Search (includes new products every 5 minutes)
+                                    <input class="form-control" width="10" type="text" id="search_products" alt="" placeholder="Search (min 3 Chars)" autocomplete="off">
+                                    
+                                    <caption style="width: 100%;"><h4>Drag the Products from here (actively published)</h4></caption>
+                                    
+                                    
+                                    <div id="tabs">
+                                        <ul>
+                                            <li>
+                                                <a href="#tabs-1" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-1">Own Products</a>
+                                            </li>
+                                            <li>
+                                                <a href="#tabs-2" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-2">All Products</a></li>
+                                        </ul>
+                                        <div id="tabs-1" style="padding: 0 !important;">
+                                            <table class="tables_ui" id="t_draggableOwn" data-own-projects="" style="height: 600px; padding: 10px; overflow-x: auto;">
+                                                <tbody class="t_sortable">
+                                                    <tr><td style='text-align: left; width: 440px; min-height: 50px;'>No Products found</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div id="tabs-2" style="padding: 0 !important;">
+                                            <table class="tables_ui" id="t_draggableAll" data-all-projects="" style="height: 600px; padding: 10px; overflow-x: auto;">
+                                                <tbody class="t_sortable">
+                                                    <tr><td style='text-align: left; width: 440px; min-height: 50px;'>No Products found</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                      </div>
                                 </div> 
                                 <!-- products -->
                             </section>
@@ -467,13 +526,22 @@ $this->inlineScript()->appendScript('
     <script>
         $(document).ready(function () {
             
+            
             /*
             $('.multiple').multiselect({
                 includeSelectAllOption: true
             });
             */
            
-           function scrolify(tblAsJQueryObject, height) {
+            function wait(ms){
+                var start = new Date().getTime();
+                var end = start;
+                while(end < start + ms) {
+                  end = new Date().getTime();
+                }
+            }
+           
+            function scrolify(tblAsJQueryObject, height) {
                 var oTbl = tblAsJQueryObject;
 
                 // for very large tables you can remove the four lines below
@@ -526,7 +594,7 @@ $this->inlineScript()->appendScript('
             formElement.steps({
                 headerTag: "h3",
                 bodyTag: "section",
-                enableAllSteps: <?php echo ($this->mode == 'edit') ? "true" : "false"; ?>,
+                enableAllSteps: <?php echo ($this->mode == 'editcollection') ? "true" : "false"; ?>,
                 enableCancelButton: true,
                 showFinishButtonAlways: true,
                 transitionEffect: "slideLeft",
@@ -555,11 +623,13 @@ $this->inlineScript()->appendScript('
                         var logoSrc = $('#product-picture-preview').attr('src');
                         var gallery = $('.product-gallery div:first-child');
                         var galleryPic = gallery.find('.image');
+                        
+                        getCollectionProjects();
 
-                        if (!logoSrc && !galleryPic.attr('style')) {
+                        if (!logoSrc) {
                             var msg = $('#preview_img_msg');
                             msg.text('');
-                            msg.append('<label id="description-error" class="error" for="product-gallery">Please add a product logo or at least one product gallery picture!</label>');
+                            msg.append('<label id="description-error" class="error" for="product-gallery">Please add a product logo!</label>');
 
                             return false;
                         }
@@ -571,11 +641,11 @@ $this->inlineScript()->appendScript('
                                     validator.showErrors(ProductForm.errors);
                                     return result;
                                 }
-                                formElement.find("#modal-ppload").attr('data-product-id', ProductForm.project_id);
                                 formElement.find("#modal-changlog").attr('data-product-id', ProductForm.project_id);
                             }
                             getCollectionProjects();
-                            getProjects();
+                            getOwnProjects();
+                            
                             initDragDrop();
                             
                             return true;
@@ -591,10 +661,10 @@ $this->inlineScript()->appendScript('
                     var gallery = $('.product-gallery div:first-child');
                     var galleryPic = gallery.find('.image');
 
-                    if (!logoSrc && !galleryPic.attr('style')) {
+                    if (!logoSrc) {
                         var msg = $('#preview_img_msg');
                         msg.text('');
-                        msg.append('<label id="description-error" class="error" for="product-gallery">Please add a product logo or at least one product gallery picture!</label>');
+                        msg.append('<label id="description-error" class="error" for="product-gallery">Please add a product logo!</label>');
 
                         return false;
                     }
@@ -609,8 +679,7 @@ $this->inlineScript()->appendScript('
                                 validator.showErrors(ProductForm.errors);
                                 return result;
                             }
-                            formElement.find("#modal-ppload").attr('data-product-id', ProductForm.project_id);
-                             formElement.find("#modal-changlog").attr('data-product-id', ProductForm.project_id);
+                            formElement.find("#modal-changlog").attr('data-product-id', ProductForm.project_id);
                         }
                     }
 
@@ -620,11 +689,55 @@ $this->inlineScript()->appendScript('
                 },
 
                 onCanceled: function (event, currentIndex) {
-                    window.location.href = "/member/<?php echo $this->member->member_id; ?>/products/";
+                    window.location.href = "/member/<?php echo $this->member->member_id; ?>/collections/";
                 }
 
             });
+            
+            function throttle(f, delay){
+                var timer = null;
+                return function(){
+                    var context = this, args = arguments;
+                    clearTimeout(timer);
+                    timer = window.setTimeout(function(){
+                        f.apply(context, args);
+                    },
+                    delay || 700);
+                };
+            }
+            
+            $('#search_products').bind('input', throttle(function(e) {
+                e.preventDefault();
+                $(this).next();
+                $val = $(this).val(); 
+                if($val.length>=3) {
+                    getOwnProjects($val);
+                    getAllProjects($val);
+                } else {
+                    clearLists();
+                }
+            }));
+            
+            $('#search_products').bind("enterKey",function(e){
+                //do stuff here
+                e.preventDefault();
+                return false;
+            });
+            $('#search_products').keyup(function(e){
+                e.preventDefault();
+                if(e.keyCode == 13)
+                {
+                    return false;
+                }
+            });
 
+            $(window).keydown(function(event){
+                if(event.keyCode == 13) {
+                  event.preventDefault();
+                  return false;
+                }
+            });
+            
 
             $('body').on("click", "#github_picker", function (event) {
 
@@ -675,8 +788,6 @@ $this->inlineScript()->appendScript('
                     function(n){
                         return (this.length > n) ? this.substr(0, n-1) + '&hellip;' : this;
                     };
-                    
-                    
                 
                 function getCollectionProjects() {
                     
@@ -699,14 +810,15 @@ $this->inlineScript()->appendScript('
                                 
                                 $divCollectionProjects.find('table[data-collection-projects] tbody').html('');
                                 
-                                tableString = "<tr><td style='align-content: center;text-align: center; width: 60px;'></td><td style='text-align: left; width: 440px;'></td></tr>";
+                                tableString = "<tr><td style='align-content: center;text-align: center; width: 60px;'></td><td style='text-align: left; width: 440px; min-height: 50px;'></td></tr>";
                                 
                                 $i = 1;
                                 $.each(projects, function() {
                                     tableString += "<tr style='background-color: white;' data-project-id=" + this.project_id + ">";
                                     tableString += "<td style='align-content: left;text-align: left;'><span class='counter'>" + $i + ".</span></td>";
                                     tableString += "<td style='align-content: center;text-align: center; width: 10%;'><img style='height: 50px;width: 50px;' src='" + this.image_url + "'></td>";
-                                    tableString += "<td style='text-align: left; width: 90%;'>" + this.title.trim().trunc(25) + "</td>";
+                                    tableString += "<td style='text-align: left; width: 90%;'>" + this.title.trim().trunc(25) + "<p class='cat_title'>" + this.cat_title +"</p></td>";
+                                    tableString += "<td style='align-content: center;text-align: center;'><span class='proj_action glyphicon glyphicon-remove proj_remove'></span></td>";
                                     tableString += "</tr>";
                                     
                                     $divCollectionProjects.append("<input type='hidden' class='collection_project_id_item' id='collection_project_id" + this.project_id + "' name='collection_project_id["+$i+"]' value='" + this.project_id + "'>");
@@ -721,11 +833,18 @@ $this->inlineScript()->appendScript('
                     
                 }
                 
-                function getProjects(search) {
+                function clearLists() {
+                    $divProjects.find('table[data-all-projects] tbody').html('');
+                    $divProjects.find('table[data-own-projects] tbody').html('');
+                }
+                
+                function getOwnProjects(search) {
                     var prodId = ProductForm.project_id;
                     if(!prodId) {
                         prodId = 0;
                     }
+                    
+                    $divProjects.find('table[data-own-projects] tbody').html('<img src="/images/system/ajax-loader.gif">');
                     
                     $.ajax({
                         url: '/c/'+prodId+'/getprojectsajax',
@@ -733,37 +852,119 @@ $this->inlineScript()->appendScript('
                         async: false,
                         cache: false,
                         timeout: 30000,
-                        data: {},
+                        data: {search: search, search_all: false},
                         dataType: 'json',
                         success: function (data, textStatus, jqXHR) {
                             if (data.status == 'success') {
                                 projects = data.projects;
+                                count = data.ResultSize;
                                 
-                                $divProjects.find('table[data-projects] tbody').html('');
-                                
-                                tableString = "<tr><td style='align-content: center;text-align: center; width: 60px;'></td><td style='text-align: left; width: 440px;'></td></tr>";
+                                $divProjects.find('table[data-own-projects] tbody').html('');
                                 
                                 
-                                $.each(projects, function() {
-                                    tableString += "<tr style='background-color: white;' data-project-id=" + this.project_id + ">";
-                                    tableString += "<td style='align-content: left;text-align: left;'><span class='counter'></span></td>";
-                                    tableString += "<td style='align-content: center;text-align: center; width: 10%;'><img style='height: 50px;width: 50px;' src='" + this.image_url + "'></td>";
-                                    tableString += "<td style='text-align: left; width: 90%;'>" + this.title.trim().trunc(25) + "</td>";
-                                    tableString += "</tr>";
-                                });
-                                
-                                $divProjects.find('table[data-projects] tbody').append(tableString);
+                                if(count == 0) {
+                                    tableString = "<tr><td style='text-align: left; width: 440px; min-height: 50px;'>No Products found</td></tr>";
+                                } else {
+                                    tableString = "<tr><td style='align-content: center;text-align: center; width: 60px;'></td><td style='text-align: left; width: 440px; min-height: 50px;'></td></tr>";
+                                    $.each(projects, function() {
+                                        tableString += "<tr style='background-color: white;' data-project-id=" + this.project_id + ">";
+                                        tableString += "<td style='align-content: left;text-align: left;'><span class='counter'></span></td>";
+                                        tableString += "<td style='align-content: center;text-align: center; width: 10%;'><img style='height: 50px;width: 50px;' src='" + this.image_url + "'></td>";
+                                        tableString += "<td style='text-align: left; width: 90%;'>" + this.title.trim().trunc(25) + "<p class='cat_title'>" + this.cat_title +"</p></td>";
+                                        tableString += "<td style='align-content: center;text-align: center;'><span class='proj_action'></span></td>";
+                                        tableString += "</tr>";
+                                    });
+                                }
+                                $divProjects.find('table[data-own-projects] tbody').append(tableString);
                             }
                         }
                     })
                 }
                 
+                function getAllProjects(search) {
+                    var prodId = ProductForm.project_id;
+                    if(!prodId) {
+                        prodId = 0;
+                    }
+                    
+                    $divProjects.find('table[data-all-projects] tbody').html('<img src="/images/system/ajax-loader.gif">');
+                    
+                    $.ajax({
+                        url: '/c/'+prodId+'/getprojectsajax',
+                        type: 'GET',
+                        async: false,
+                        cache: false,
+                        timeout: 30000,
+                        data: {search: search, search_all: true},
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status == 'success') {
+                                projects = data.projects;
+                                count = data.ResultSize;
+                                
+                                $divProjects.find('table[data-all-projects] tbody').html('');
+                                
+                                
+                                if(count == 0) {
+                                    tableString = "<tr><td style='text-align: left; width: 440px; min-height: 50px;'>No Products found</td></tr>";
+                                } else {
+                                    tableString = "<tr><td style='align-content: center;text-align: center; width: 60px;'></td><td style='text-align: left; width: 440px; min-height: 50px;'></td></tr>";
+                                    $.each(projects, function() {
+                                        tableString += "<tr style='background-color: white;' data-project-id=" + this.project_id + ">";
+                                        tableString += "<td style='align-content: left;text-align: left;'><span class='counter'></span></td>";
+                                        tableString += "<td style='align-content: center;text-align: center; width: 10%;'><img style='height: 50px;width: 50px;' src='" + this.image_url + "'></td>";
+                                        tableString += "<td style='text-align: left; width: 90%;'>";
+                                        tableString += "<div style='float: left;'>"+this.title.trim().trunc(25)+"<p class='cat_title'>" + this.cat_title +"</p></div>";
+                                        tableString += "<div style='float: right;'> by "+this.username+"</div>";
+                                        
+                                        tableString += "</td>";
+                                        tableString += "<td style='align-content: center;text-align: center;'><span class='proj_action'></span></td>";
+                                        tableString += "</tr>";
+                                    });
+                                }
+                                
+                                $divProjects.find('table[data-all-projects] tbody').append(tableString);
+                            }
+                        }
+                    })
+                }
+                
+                function updateCollectionProjects() {
+                    $collection_project_ids = "";
+                    $divCollectionProjects.find('table').find('tr').each(function() {
+                        if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
+                            $collection_project_ids += $(this).attr('data-project-id') + ',';
+                        }
+                    });
+                    
+                    $collId = ProductForm.project_id;
+                    
+                    $.ajax({
+                        url: '/c/'+ $collId + '/updatecollectionprojectsajax',
+                        type: 'POST',
+                        data: {collection_project_ids: $collection_project_ids},
+                        dataType: 'json',
+                        async: false,
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'success') {
+                                return;
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            return;
+                        }
+                    });
+                }
+
+                
                 function initDragDrop() {
-                    var $tabs = $('#t_draggable2');
+                    $( "#tabs" ).tabs();
+                    
+                    var $tabsOwn = $('#t_draggableOwn');
                     $("tbody.t_sortable").sortable({
                       connectWith: ".t_sortable",
                       items: "> tr:not(:first)",
-                      appendTo: $tabs,
+                      //appendTo: $tabsOwn,
                       helper:"clone",
                       zIndex: 999990,
                       update: function (event, ui) {
@@ -776,15 +977,46 @@ $this->inlineScript()->appendScript('
                                 $(this).find('.counter').html($index+'.');
                             }
                         });
+                        updateCollectionProjects();
                       }   
                     }).disableSelection();
+                    
+                    
+                    var $tabsAll = $('#t_draggableAll');
+                    $("tbody.t_sortable").sortable({
+                      connectWith: ".t_sortable",
+                      items: "> tr:not(:first)",
+                      //appendTo: $tabsAll,
+                      helper:"clone",
+                      zIndex: 999999,
+                      update: function (event, ui) {
+                        $('.collection_project_id_item').remove();
+                        $index = -1;
+                        $divCollectionProjects.find('table').find('tr').each(function() {
+                            $index = $(this).index();
+                            if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
+                                $divCollectionProjects.append("<input class='collection_project_id_item' type='hidden' id='collection_project_id" + $(this).attr('data-project-id') + "' name='collection_project_id["+$index+"]' value='" + $(this).attr('data-project-id') + "'>");
+                                $(this).find('.counter').html($index+'.');
+                            }
+                        });
+                        updateCollectionProjects();
+                      }   
+                    }).disableSelection();
+                    
 
-                    var $tab_items = $divCollectionProjects.find('table[data-collection-projects] tbody').droppable({
+
+
+
+
+                    //var $tab_items = $divCollectionProjects.find('table[data-collection-projects] tbody').droppable({
+                    var $tab_items = $divCollectionProjects.find('table[data-collection-projects]').droppable({
                       accept: ".t_sortable tr",
                       hoverClass: "ui-state-hover",
                       drop: function( event, ui ) { 
                             $('.collection_project_id_item').remove();
                             $index = -1;
+                            ui.draggable.find('.proj_action').removeClass('glyphicon glyphicon-remove proj_remove');
+                            ui.draggable.find('.proj_action').addClass('glyphicon glyphicon-remove proj_remove');
                             $divCollectionProjects.find('table').find('tr').each(function() {
                                 $index = $(this).index();
                                 if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
@@ -792,16 +1024,51 @@ $this->inlineScript()->appendScript('
                                     $(this).find('.counter').html($index+'.');
                                 }
                             });
+                            
+                            $('.proj_remove').on('click', function (event) {
+                                event.preventDefault();
+
+                                $(this).parent().parent().remove();
+                                $('.collection_project_id_item').remove();
+                                $index = -1;
+                                $divCollectionProjects.find('table').find('tr').each(function() {
+                                    $index = $(this).index();
+                                    if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
+                                        $divCollectionProjects.append("<input class='collection_project_id_item' type='hidden' id='collection_project_id" + $(this).attr('data-project-id') + "' name='collection_project_id["+$index+"]' value='" + $(this).attr('data-project-id') + "'>");
+                                        $(this).find('.counter').html($index+'.');
+                                    }
+                                });
+                            });
+                            
+                            updateCollectionProjects();
+                            
                             return false; 
                       },
                       out: function( event, ui ) { 
                           $divCollectionProjects.find('#collection_project_id' + ui.draggable.attr('data-project-id')).remove();
+                          updateCollectionProjects();
                           return false; 
                       }
                     });
                     
                     //scrolify($('#t_draggable1'), 500); // 160 is height
                     //scrolify($('#t_draggable2'), 500); // 160 is height
+                    
+                    $('.proj_remove').on('click', function (event) {
+                        event.preventDefault();
+                        
+                        $(this).parent().parent().remove();
+                        $('.collection_project_id_item').remove();
+                        $index = -1;
+                        $divCollectionProjects.find('table').find('tr').each(function() {
+                            $index = $(this).index();
+                            if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
+                                $divCollectionProjects.append("<input class='collection_project_id_item' type='hidden' id='collection_project_id" + $(this).attr('data-project-id') + "' name='collection_project_id["+$index+"]' value='" + $(this).attr('data-project-id') + "'>");
+                                $(this).find('.counter').html($index+'.');
+                            }
+                        });
+                        updateCollectionProjects();
+                    });
                     
                     
                 }
@@ -811,7 +1078,7 @@ $this->inlineScript()->appendScript('
                     $modalChanglog.find('#update-list').html('');
                     var productId = <?= isset($this->project_id)?$this->project_id:0 ?>;
                     $.ajax({
-                        url: '<?=$helpCollectionUrl->buildCollectionUrl($this->project_id, 'getupdatesajax')?>',
+                        url: '<?=$helpCollectionUrl->buildProductUrl($this->project_id, 'getupdatesajax')?>',
                         type: 'GET',
                         data: {
                             format: 'json',
@@ -864,8 +1131,7 @@ $this->inlineScript()->appendScript('
                                 divEl.append(btnDelete);
                                 divEl.append('<br/><br/><br/><br/>');
 
-                                // $modalPpload.find('#update-list').append(divEl);
-                                 $modalChanglog.find('#update-list').append(divEl);
+                                $modalChanglog.find('#update-list').append(divEl);
                             });
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
@@ -894,9 +1160,7 @@ $this->inlineScript()->appendScript('
                      }*/
                     return size;
                 }
-
                 
-
                 $modalChanglog.on('click', 'button[data-add-update-btn]', function (event) {
                     var update_id = $modalChanglog.find('#update-id').val();
                     var title = $modalChanglog.find('#update-title').val();
@@ -905,7 +1169,7 @@ $this->inlineScript()->appendScript('
                     event.preventDefault();
 
                     $.ajax({
-                        url: '<?=$helpCollectionUrl->buildCollectionUrl($this->project_id, 'saveupdateajax')?>',
+                        url: '<?=$helpCollectionUrl->buildProductUrl($this->project_id, 'saveupdateajax')?>',
                         type: 'POST',
                         data: {title: title, text: text, update_id: update_id},
                         dataType: 'json',
@@ -931,7 +1195,7 @@ $this->inlineScript()->appendScript('
                     event.preventDefault();
 
                     $.ajax({
-                        url: '<?=$helpCollectionUrl->buildCollectionUrl($this->project_id, 'deleteupdateajax')?>',
+                        url: '<?=$helpCollectionUrl->buildProductUrl($this->project_id, 'deleteupdateajax')?>',
                         type: 'POST',
                         data: {update_id: updateId},
                         dataType: 'json',

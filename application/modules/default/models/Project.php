@@ -404,12 +404,13 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   LEFT JOIN `view_reported_projects` ON ((`view_reported_projects`.`project_id` = `p`.`project_id`))
                 WHERE
                   `p`.`project_id` = :projectId
-                  AND `p`.`status` >= :projectStatus AND `p`.`type_id` = :typeId
+                  AND `p`.`status` >= :projectStatus AND (`p`.`type_id` = :typeIdStd OR `p`.`type_id` = :typeIdColl)
         ';
         $result = $this->_db->fetchRow($sql, array(
             'projectId'       => $project_id,
             'projectStatus'   => self::PROJECT_INACTIVE,
-            'typeId'          => self::PROJECT_TYPE_STANDARD,
+            'typeIdStd'          => self::PROJECT_TYPE_STANDARD,
+            'typeIdColl'          => self::PROJECT_TYPE_COLLECTION,
             'tag_licence_gid' => self::TAG_LICENCE_GID,
             'tag_type_id'     => self::TAG_TYPE_ID
 
@@ -1236,7 +1237,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $statement->from(array('project' => 'stat_projects'), array(
             '*'
         ));
-        $statement->where('project.status = ?', self::PROJECT_ACTIVE)->where('project.type_id=?', self::PROJECT_TYPE_STANDARD);
+        $statement->where('project.status = ?', self::PROJECT_ACTIVE)->where('project.type_id IN (?)', array(self::PROJECT_TYPE_STANDARD, self::PROJECT_TYPE_COLLECTION));
 
         return $statement;
     }
@@ -1618,7 +1619,55 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                           (SELECT count(1) FROM `project_plings` `l` WHERE `p`.`project_id` = `l`.`project_id` AND `l`.`is_deleted` = 0 AND `l`.`is_active` = 1 ) `countplings`
                           FROM `stat_projects` `p`
                           WHERE `p`.`status` =100
+                          AND `p`.`type_id` = 1
                           AND `featured` = 1
+                          AND `p`.`member_id` = :member_id
+                          ORDER BY `p`.`changed_at` DESC
+          ";
+
+        if (isset($limit)) {
+            $sql = $sql . ' limit ' . $limit;
+        }
+
+        if (isset($offset)) {
+            $sql = $sql . ' offset ' . $offset;
+        }
+
+        $result = $this->_db->fetchAll($sql, array('member_id' => $member_id));
+        if ($result) {
+            return $this->generateRowClass($result);
+        } else {
+            return null;
+        }
+    }
+    
+    
+    /**
+     * @param int      $member_id
+     * @param int|null $limit
+     * @param int|null $offset
+     *
+     * @return null|Zend_Db_Table_Row_Abstract
+     */
+    public function fetchAllCollectionsForMember($member_id, $limit = null, $offset = null)
+    {
+        // for member me page
+        $sql = "
+                          SELECT
+                          `p`.`project_id`,
+                          `p`.`title`,
+                          `p`.`created_at`  AS `project_created_at`,
+                          `p`.`changed_at` AS `project_changed_at`,
+                          `p`.`count_likes`,
+                          `p`.`count_dislikes`,
+                          `p`.`laplace_score`,
+                          `p`.`member_id`,
+                          `p`.`cat_title` AS `catTitle`,
+                          `p`.`image_small`,
+                          (SELECT count(1) FROM `project_plings` `l` WHERE `p`.`project_id` = `l`.`project_id` AND `l`.`is_deleted` = 0 AND `l`.`is_active` = 1 ) `countplings`
+                          FROM `stat_projects` `p`
+                          WHERE `p`.`status` =100
+                          AND `p`.`type_id` = 3
                           AND `p`.`member_id` = :member_id
                           ORDER BY `p`.`changed_at` DESC
           ";

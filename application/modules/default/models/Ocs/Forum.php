@@ -625,23 +625,27 @@ class Default_Model_Ocs_Forum
         }
 
         $memberLog = new Default_Model_MemberDeactivationLog();
-        foreach ($posts['posts'] as $id=>$item) {
-            $result = $this->deletePostFromUser($id);
-            if (false === $result) {
-                continue;
+        if(array_key_exists('posts', $posts) && is_array($posts['posts'])) {
+            foreach ($posts['posts'] as $id=>$item) {
+                $result = $this->deletePostFromUser($id);
+                if (false === $result) {
+                    continue;
+                }
+                $this->messages[] = 'Forum user post deleted: ' . json_encode($id);
+                $memberLog->addLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_POST, $id);
             }
-            $this->messages[] = 'Forum user post deleted: ' . json_encode($id);
-            $memberLog->addLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_POST, $id);
         }
 
         //handle topics
-        foreach ($posts['topics'] as $id=>$topic) {
-            $result = $this->deleteTopicFromUser($id);
-            if (false === $result) {
-                continue;
+        if(array_key_exists('topics', $posts) && is_array($posts['topics'])) {
+            foreach ($posts['topics'] as $id=>$topic) {
+                $result = $this->deleteTopicFromUser($id);
+                if (false === $result) {
+                    continue;
+                }
+                $this->messages[] = 'Forum user topic deleted: ' . json_encode($id);
+                $memberLog->addLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_TOPIC, $id);
             }
-            $this->messages[] = 'Forum user topic deleted: ' . json_encode($id);
-            $memberLog->addLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_TOPIC, $id);
         }
 
         return true;

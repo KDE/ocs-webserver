@@ -25,6 +25,7 @@ $helperImage = new Default_View_Helper_Image();
 $helpTruncate = new Default_View_Helper_Truncate();
 
 $this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
+
 $desc=  isset($this->mainProject->description) ? nl2br(strip_tags($this->mainProject->description)): $this->member->username;
 $this->headMeta()->setName('description',
     $helpTruncate->truncate($desc, 200, '...', false, true));
@@ -52,6 +53,7 @@ $textCountryCity = $this->member->city;
 $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
 $helperMemberScore = new Default_View_Helper_FetchMemberScore();
 $isSupporter = $this->stat['donationIssupporter'];
+$isSubscriber = $this->stat['subscriptionIssupporter'];
 
 $url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
 $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
@@ -93,7 +95,7 @@ div#preloaded-images {
                         <article class="well" style="width: 100%;">
                             <div class="about-title">
                                 <figure class="relative inline profile-image-container">
-                                    <?php if( $isSupporter) { ?><span class="supporter-badge">S</span>
+                                    <?php if( $isSupporter || $isSubscriber ) { ?><span class="supporter-badge">S</span>
                                     <?php }?>
                                     <img src="<?php echo $memberProfile ; ?>"
                                          alt="profile-image"
@@ -177,6 +179,18 @@ div#preloaded-images {
                                        <span>Supporter until: <?=$helperPrintDate->printDate(date('Y-m-d H:i:s', strtotime($this->stat['donationMax'] . ' +1 year')))?> </span>
                                     </div>
                                     <?php } ?>
+                                    
+                                    <?php
+                                        if($isSubscriber && 1 == 2){
+                                    ?>
+                                     <div class="row">
+                                       <span>Supporter since: <?=$helperPrintDate->printDate($this->stat['subscriptionStart'])?> </span>
+                                    </div>
+                                      <div class="row">
+                                       <span>Supporter with: $<?= $this->stat['subscriptionAmount'] ?> <?= $this->stat['subscriptionPeriodText'] ?> </span>
+                                    </div>
+                                    <?php } ?>
+                                    
                                      <div class="row">
                                        <span class="">Last time active : <?=$helperPrintDate->printDate($this->stat['userLastActiveTime'])?> </span>
                                     </div>
@@ -302,6 +316,14 @@ div#preloaded-images {
                                 </a>
                             </li>
                             <?php }?>
+                            
+                            <?php if($this->stat['cntCollections']>0){ ?>
+                            <li role="presentation">
+                                <a href="#user-collections" data-toggle="tab" role="tab"  aria-controls="user-collections" >
+                                    Collections<?=' ('.$this->stat['cntCollections'].') '?>
+                                </a>
+                            </li>
+                            <?php }?>
 
                             <li>
                                 <a href="#user-comments" data-toggle="tab" role="tab"  aria-controls="user-comments">
@@ -315,6 +337,13 @@ div#preloaded-images {
                                 </a>
                             </li>
                             <?php } ?>
+                              <?php if( $this->plings->getTotalItemCount()>0){ ?>
+                            <li>
+                                <a href="#user-plings" data-toggle="tab" role="tab"  aria-controls="user-plings">
+                                    Plinged (<?=$this->plings->getTotalItemCount()?>)
+                                </a>
+                            </li>
+                          <?php } ?>
                              <?php if($this->likes->getTotalItemCount()>0){ ?>
                             <li>
                                 <a href="#user-favs" data-toggle="tab" role="tab"  aria-controls="user-favs">
@@ -323,13 +352,7 @@ div#preloaded-images {
                             </li>
                           <?php } ?>
 
-                          <?php if( $this->plings->getTotalItemCount()>0){ ?>
-                            <li>
-                                <a href="#user-plings" data-toggle="tab" role="tab"  aria-controls="user-plings">
-                                    Plinged (<?=$this->plings->getTotalItemCount()?>)
-                                </a>
-                            </li>
-                          <?php } ?>
+                        
 
                           <?php if( $this->supportersplings->getTotalItemCount()>0){ ?>
                             <li>
@@ -372,6 +395,20 @@ div#preloaded-images {
                                         if ($this->userProducts) { ?>
                                          <div class="my-products-list" id="my-products-list">
                                             <?php echo $this->render('user/partials/aboutme-featured.phtml'); ?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                             <?php } ?>
+                            
+                            <?php if($this->stat['cntCollections']>0){ ?>
+                                <div role="tabpanel" class="tab-pane " id="user-collections">
+                                    <?php
+                                           $this->userProducts = $this->userCollections;
+                                           $this->projectpage = 1;
+                                           $this->total_records=0;
+                                        if ($this->userCollections) { ?>
+                                         <div class="my-products-list" id="my-products-list">
+                                            <?php echo $this->render('user/partials/aboutme-collections.phtml'); ?>
                                         </div>
                                     <?php } ?>
                                 </div>
@@ -459,8 +496,8 @@ div#preloaded-images {
                             <div class="well details about">
                                 <h3>About me</h3>
 
-                                <div>
-                                    <?php echo isset($this->mainProject->description) ? nl2br(strip_tags($this->mainProject->description)): ''; ?>
+                                <div>                                    
+                                 <?php  echo isset($this->mainProject->description) ? $this->Bbcode2html($this->mainProject->description): ''; ?>
                                 </div>
                             </div>
                         </div>
@@ -486,7 +523,7 @@ div#preloaded-images {
                                                 $gitProjects = $gitlab->getUserProjects($this->member->gitlab_user_id);
                                                 $cntGitp = count($gitProjects);
                                                 }
-                                                $gittext = $this->member->username . ' on git-opendesktop';
+                                                $gittext = 'https://www.opencode.net/'.$this->member->username;
                                                 if($cntGitp>0){
                                                     $gittext = $gittext.' ('.$cntGitp.')';
                                                 }
@@ -553,23 +590,6 @@ div#preloaded-images {
                                             </div>
                                         </div>
                                     <?php endif; ?>
-                                    <?php if (isset($this->member->link_google) && $this->member->link_google != ''):
-                                    $helpTwitterLink = new Default_View_Helper_GoogleplusLink();
-                                    $googleplusLink = $helpTwitterLink->googleplusLink($this->member->link_google);
-                                    ?>
-                                        <div class="google">
-                                            <div class="label">
-
-                                                <img src="/theme/flatui/img/email4.png" class="accounts_icon">
-                                            </div>
-                                            <div class="text">
-                                                <a href="<?php echo $googleplusLink ?>"><?php echo $helperTruncate->truncate($this->member->link_google,
-                                                        50); ?></a>
-                                            </diV>
-                                        </div>
-                                    <?php endif; ?>
-
-
 
                                         <div class="email">
                                             <div class="label">

@@ -64,7 +64,8 @@ $this->headMeta()->appendProperty('og:description',
     $helpTruncate->truncate($this->product->description, 200, '...', false, true));
 $this->headMeta()->appendProperty('og:image',
     $helpImage->Image($this->product->image_small, array('width' => 400, 'height' => 400)));
-$tableCollection = new Default_Model_Project();
+$tableProject = new Default_Model_Project();
+$tableCollection = new Default_Model_Collection();
 
 $tableProjectUpdates = new Default_Model_ProjectUpdates();
 $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->project_id);
@@ -170,15 +171,15 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                                <span class="modal-title">If you know another product that uses some or all parts of <?=$this->product->title?>, please fill in the ID so we can give "ORIGINALAUTHOR" credits:</span>
+                                <span class="modal-title">If you know another product that is based on <b><?=$this->product->title?></b>, please fill in the ID:</span>
                 </div>
-                <form id="product-report-clone" class="full-width partialjson" action="/report/productclone/"
-                      data-target="#report-product-clone-<?= $this->product->project_id ?>-message">
+                <form id="product-report-clone" class="full-width partialjsonclone" action="/report/productclone/"
+                      data-projectid="<?= $this->product->project_id ?>" data-target="#report-product-clone-<?= $this->product->project_id ?>-message">
                     <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
                     <div id="report-product-clone-<?= $this->product->project_id ?>-message" class="message" style="padding: 20px">
                         <div>
                             <label class="form-label">ID of the Clone on opendesktop:  </label><br/>
-                            <input name="pc" /><br/><br/>                            
+                            <input name="pc" id="clonePId"/><br/><br/>                            
                            
                             <label class="form-label">Additional message: </label>
                             <br/>
@@ -388,7 +389,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                             . ' <span class="fa fa-external-link"></span></a>';
                                     } else if (false === empty($this->product->source_url)) {
                                         $target='_blank';
-                                        if (strpos($this->product->source_url, 'git.opendesktop.org') !== false) {
+                                        if (strpos($this->product->source_url, 'opencode.net') !== false) {
                                             $target='_self';
                                         }
                                         echo '<a target="'.$target.'" href="' . $this->product->source_url . '" rel="nofollow">' . $this->product->source_url
@@ -397,7 +398,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                         
                                         if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName)
                                         {
-                                            $cntSameSource = $tableCollection->getCountSourceurl($this->product->source_url);
+                                            $cntSameSource = $tableProject->getCountSourceurl($this->product->source_url);
                                             if($cntSameSource>1){
                                                 $link = '/p/'.$this->product->project_id.'/listsamesourceurl';
                                                 echo '<span><a style="color:red" class="popuppanel" href="'.$link.'">
@@ -407,7 +408,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                         
 
                                     } else {
-                                            echo '<span class="source" > Add the source-code for this project on </span><a href="https://git.opendesktop.org/'.$this->product->username.'">git.opendesktop.org</a>';                                                                                                                    
+                                            echo '<span class="source" > Add the source-code for this project on </span><a href="https://opencode.net/'.$this->product->username.'">opencode.net</a>';                                                                                                                    
                                     }
                                     ?>
                                     
@@ -456,7 +457,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                     endif; ?>
 
                                     <?php
-                                    $this->galleryPictures = $tableCollection->getGalleryPictureSources($this->product->project_id);
+                                    $this->galleryPictures = $tableProject->getGalleryPictureSources($this->product->project_id);
                                     if (count($this->galleryPictures) > 0) {
                                         foreach ($this->galleryPictures as $picture): ?>
                                             <li data-target="#myCarousel" data-slide-to="<?php echo $cnt ?>"
@@ -466,6 +467,14 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                             <?php
                                             $cnt++;
                                         endforeach;
+                                    } else {
+                                    ?>    
+                                        <li data-target="#myCarousel" data-slide-to="<?php echo $cnt ?>"
+                                                class="<?php if (!$this->product->ppload_collection_id && $cnt == 1) {
+                                                    echo 'active';
+                                                } ?>">
+                                        </li>
+                                    <?php    
                                     }
                                     ?>
                                 </ol>
@@ -484,16 +493,25 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                     endif; ?>
 
                                     <?php
-
-                                    foreach ($this->galleryPictures as $picture): ?>
+                                    if (count($this->galleryPictures) > 0) {
+                                        foreach ($this->galleryPictures as $picture): ?>
+                                            <div class="item <?php if (!$this->product->ppload_collection_id && $cnt == 1) {
+                                                echo 'active';
+                                            } ?>">
+                                                <img src="<?php echo $helpImage->Image($picture, array('height' => '600')); ?>"/>
+                                            </div>
+                                            <?php
+                                            $cnt++;
+                                        endforeach;
+                                    } else {?>
                                         <div class="item <?php if (!$this->product->ppload_collection_id && $cnt == 1) {
                                             echo 'active';
                                         } ?>">
-                                            <img src="<?php echo $helpImage->Image($picture, array('height' => '600')); ?>"/>
+                                            <img src="<?php echo $helpImage->Image($this->product->image_small, array('height' => '600')); ?>"/>
                                         </div>
-                                        <?php
-                                        $cnt++;
-                                    endforeach; ?>
+                                    <?php
+                                    }
+                                    ?>
                                 </div><!-- End Carousel Inner -->
 
                                 <!-- Controls -->
@@ -547,12 +565,13 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                         <?php if(count($this->ratings)>0){ ?>
                             <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
                         <?php } ?>
-                         <?php if(count($this->likes)>0){ ?>
-                            <li><a href="#likes-panel" data-toggle="tab">Fans <?php echo '('.count($this->likes).')';  ?></a></li>
-                        <?php } ?>
                         <?php if(count($this->projectplings)>0){ ?>
                             <li><a href="#plings-panel" data-toggle="tab">Plings <?php echo '('.count($this->projectplings).')';  ?></a></li>
                         <?php } ?>
+                         <?php if(count($this->likes)>0){ ?>
+                            <li><a href="#likes-panel" data-toggle="tab">Fans <?php echo '('.count($this->likes).')';  ?></a></li>
+                        <?php } ?>
+                        
                         </ul>
                     </div>
                     <!-- /TABS -->
@@ -928,6 +947,25 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                         </div>
                             */
                         ?>
+                        
+                        <?php 
+                            $cntCollections = $tableCollection->countAllCollectionsForProject($this->product->project_id);
+                            if($cntCollections>0) {
+                       ?>
+                       <!-- is part of collection -->
+                        <div>
+                            <?php
+                            $this->moreProducts = $tableCollection->fetchAllCollectionsForProject($this->product->project_id, 6);
+                            $this->moreProductsTitle = 'Is part of these Collections';
+
+                            if (count($this->moreProducts) > 0) {
+                            echo $this->render('product/partials/productMoreProductsWidgetV1.phtml');
+                            } ?>
+                        </div>
+                        <!-- /is part of colelction -->
+                        <?php   
+                            } 
+                        ?>
 
                         <div>
                             <div class="prod-widget-box right">
@@ -1017,13 +1055,14 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                        </div>
 
 
-
+                       
+                       
 
                         <!-- MORE PRODUCTS -->
 
                         <div>
                             <?php
-                            $this->moreProducts = $tableCollection->fetchMoreProjects($this->product, 6);
+                            $this->moreProducts = $tableProject->fetchMoreProjects($this->product, 6);
                             $this->moreProductsTitle = 'More ' . $this->product->cat_title . ' from ' . $this->product->username;
 
                             if (count($this->moreProducts) > 0) {
@@ -1033,7 +1072,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
 
                         <div>
                             <?php
-                            $this->moreProducts = $tableCollection->fetchMoreProjectsOfOtherUsr($this->product, 6);
+                            $this->moreProducts = $tableProject->fetchMoreProjectsOfOtherUsr($this->product, 6);
                             $this->moreProductsTitle = 'Other ' . $this->product->cat_title;
 
                             if (count($this->moreProducts) > 0) {
@@ -1097,6 +1136,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
             InitActiveHashTab.setup();
             PartialJson.setup();
             PartialJsonFraud.setup();
+            PartialJsonClone.setup();
             ProductDetailCarousel.setup();
             PartialCommentReviewForm.setup();
             PartialsButtonHeartDetail.setup();

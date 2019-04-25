@@ -61,8 +61,8 @@ class UserMenu extends React.Component {
     } else {
       userDropdownDisplay = (
         <React.Fragment>
+        <li id="user-register-container"><a href={this.props.baseUrl + "/register"}>Register</a> or</li>
         <li id="user-login-container"><a href={this.props.loginUrl} className="btn btn-metaheader">Login</a></li>
-        <li id="user-register-container">or <a href={this.props.baseUrl + "/register"}>Register</a></li>
         </React.Fragment>
     )
     }
@@ -89,10 +89,17 @@ class UserMenu extends React.Component {
            <img src={this.props.baseUrl+"/theme/react/assets/img/logo-riot.svg"} className="riotIcon"></img>Chat
          </a></li>);
        }
+
+       let subscriptionItem;
+        if (this.props.user && this.props.isAdmin ){
+         subscriptionItem=(<li><a href={this.props.baseUrl + "/subscription"}>Subscription</a></li>);
+       }
+
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
-          <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
+          <li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>
+          {subscriptionItem}
           {aboutMenu}
           {searchMenuDisplay}
           {chatItem}

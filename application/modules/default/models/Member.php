@@ -996,7 +996,18 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $sql = 'SELECT max(active_time) AS active_time_max 
                             ,min(active_time)  AS active_time_min 
                             ,(DATE_ADD(max(active_time), INTERVAL 1 YEAR) > now()) AS issupporter
-                            ,count(1)  AS cnt from support  where status_id = 2  AND member_id = :member_id ';
+                            ,count(1)  AS cnt from support  where status_id = 2 AND type_id = 0 AND member_id = :member_id ';
+        $result = $this->getAdapter()->fetchRow($sql, array('member_id' => $member_id));
+
+        return $result;
+    }
+    
+    public function fetchSupporterSubscriptionInfo($member_id)
+    {
+        $sql = 'SELECT create_time,amount,period,period_frequency from support  where status_id = 2 AND type_id = 1 
+                AND member_id = :member_id
+                ORDER BY create_time desc
+                LIMIT 1';
         $result = $this->getAdapter()->fetchRow($sql, array('member_id' => $member_id));
 
         return $result;

@@ -365,13 +365,20 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         
         $modelProduct = new Default_Model_Project();
         $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
+        if (empty($productInfo)) {
+            throw new Zend_Controller_Action_Exception('This page does not exist', 404);
+        }
+        
+        //Check if this is a collection
+        if($productInfo->type_id == $modelProduct::PROJECT_TYPE_COLLECTION) {
+            $this->redirect('/c/'.$this->_projectId);
+        }
+        
         $this->view->product = $productInfo;
         $this->view->headTitle($productInfo->title . ' - ' . $this->getHeadTitle(), 'SET');
         $this->view->cat_id = $this->view->product->project_category_id;
 
-        if (empty($this->view->product)) {
-            throw new Zend_Controller_Action_Exception('This page does not exist', 404);
-        }
+        
         
         //create ppload download hash: secret + collection_id + expire-timestamp
         $salt = PPLOAD_DOWNLOAD_SECRET;

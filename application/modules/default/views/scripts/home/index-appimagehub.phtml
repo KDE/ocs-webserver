@@ -41,26 +41,37 @@ $modelProject = new Default_Model_Project();
 $totalProjects = $modelProject->fetchTotalProjectsCount(true);
 
 if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
-    $products1 = $modelInfo->getJsonLastProductsForHostStores(15,"105,98,57,53,52,48,295,158");    
-    $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"104");
+    //$products1 = $modelInfo->getJsonLastProductsForHostStores(15,"105,98,57,53,52,48,295,158");    
+    //$products2 = $modelInfo->getJsonLastProductsForHostStores(15,"104");
     
+    $products1 = $modelInfo->getJsonLastProductsForHostStores(15);
+    $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"105,104,98,57,53,52,48,295,158");    
+
     $response = array(
-        'products1' => array('title' =>'Apps','catIds' =>'105,98','products' => $products1),
-        'products2' => array('title' =>'Games','catIds' =>'104','products' => $products2),       
+        'products1' => array('title' =>'Latest','catIds' =>'104,105,98','products' => $products2)
     );
 
   } else {
-    $products1 = $modelInfo->getJsonLastProductsForHostStores(15,"391,392,544,526,492,542,450,388,481");    
-    $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"6");
+    //$products1 = $modelInfo->getJsonLastProductsForHostStores(15,"391,392,544,526,492,542,450,388,481");    
+    //$products2 = $modelInfo->getJsonLastProductsForHostStores(15,"6");
+
+    $products1 = $modelInfo->getJsonLastProductsForHostStores(15);
+    $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"391,392,544,526,492,542,450,388,481,6");    
+
+    //'products1' => array('title' =>'Apps','catIds' =>'391,392','products' => $products1),
+    //'products2' => array('title' =>'Games','catIds' =>'6','products' => $products2),    
 
     $response = array(
-        'products1' => array('title' =>'Apps','catIds' =>'391,392','products' => $products1),
-        'products2' => array('title' =>'Games','catIds' =>'6','products' => $products2),       
+        'products1' => array('title' =>'Latest','catIds' =>'391,392,6','products' => $products2)
     );
   }
   
   $helperBuildBaseUrl = new Default_View_Helper_BuildBaseUrl();
   $basrUrl = $helperBuildBaseUrl->buildBaserUrl();
+
+  $modelCategories = new Default_Model_ProjectCategory();
+  $cat_tree = $modelCategories->fetchTreeForView();
+
 ?>
 
 <main id="explore-content"></main>
@@ -72,7 +83,12 @@ if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
   var data = <?php echo Zend_Json::encode($response)?>;
   var totalProjects = <?php echo $totalProjects ?>;
   var baseUrl = <?php echo Zend_Json::encode($basrUrl)?>;
+  var catTree = <?php echo Zend_Json::encode($cat_tree)?>;
 </script>
+
 <link type="text/css" rel="stylesheet" href="/theme/react/assets/css/carousel.css"/>
-<div id="carousel-module-container" class="app-images-hub">
-</div>
+<div id="carousel-module-container" class="app-images-hub"></div>
+
+<link type="text/css" rel="stylesheet" href="/theme/react/assets/css/category-blocks.css"/>
+<div id="category-blocks-container" class="app-images-hub"></div>
+<script type="text/javascript" src="/theme/react/category-blocks.js"/>

@@ -47,6 +47,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
         $this->view->file_size = $file_size;
         $this->view->file_size_human = $this->humanFileSize($file_size);
         $this->view->project_title = $productInfo->title;
+        $this->view->project_owner = $productInfo->username;
         $this->view->is_external = $isExternal;
         
         $memberId = $this->_authMember->member_id;

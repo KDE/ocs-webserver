@@ -30,19 +30,19 @@ class Default_Model_DbTable_ProjectClone extends Local_Model_Table
     protected $_key = 'project_clone_id';
 
     protected $_defaultValues = array(
-        'project_clone_id'   => null,
-        'project_id'  => null,
-        'project_id_parent'  => null,
-        'external_link'  => null,
-        'member_id'  => null,       
-        'text' => null,
-        'is_deleted'  => null,
-        'is_valid'   => null,
-        'created_at'  => null,
-        'changed_at'  => null,
-        'deleted_at'  => null
+        'project_clone_id'  => null,
+        'project_id'        => null,
+        'project_id_parent' => null,
+        'external_link'     => null,
+        'member_id'         => null,
+        'text'              => null,
+        'is_deleted'        => null,
+        'is_valid'          => null,
+        'created_at'        => null,
+        'changed_at'        => null,
+        'deleted_at'        => null
     );
- 
+
     public function setDelete($project_clone_id)
     {
         $updateValues = array(
@@ -60,7 +60,6 @@ class Default_Model_DbTable_ProjectClone extends Local_Model_Table
 
         $this->update($updateValues, 'project_clone_id=' . $project_clone_id);
     }
-   
 
     /**
      * @param array $data
@@ -78,4 +77,37 @@ class Default_Model_DbTable_ProjectClone extends Local_Model_Table
             'data'     => $data
         ));
     }
+
+    public function delete($where)
+    {
+        $where = parent::_whereExpr($where);
+
+        /**
+         * Build the DELETE statement
+         */
+        $sql = "UPDATE " . parent::getAdapter()->quoteIdentifier($this->_name, true) . " SET `is_deleted` = 1 " . (($where) ? " WHERE $where" : '');
+
+        /**
+         * Execute the statement and return the number of affected rows
+         */
+        $stmt = parent::getAdapter()->query($sql);
+        $result = $stmt->rowCount();
+
+        return $result;
+    }
+
+    public function listAll($startIndex, $pageSize, $sorting)
+    {
+        $select = $this->select()->order($sorting)->limit($pageSize, $startIndex);
+        $rows = $this->fetchAll($select)->toArray();
+        $select = $this->select()->where('is_deleted = 0');
+        $count = $this->fetchAll($select)->count();
+
+        if (empty($rows)) {
+            return array('rows' => array(), 'totalCount' => 0);
+        }
+
+        return array('rows' => $rows, 'totalCount' => $count);
+    }
+
 }

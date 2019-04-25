@@ -64,7 +64,7 @@ $this->headMeta()->appendProperty('og:description',
     $helpTruncate->truncate($this->product->description, 200, '...', false, true));
 $this->headMeta()->appendProperty('og:image',
     $helpImage->Image($this->product->image_small, array('width' => 400, 'height' => 400)));
-$tableCollection = new Default_Model_Collection();
+$tableProject = new Default_Model_Collection();
 
 $tableProjectUpdates = new Default_Model_ProjectUpdates();
 $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->project_id);
@@ -92,8 +92,7 @@ $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
 
 
- $productJson = Zend_Json::encode($this->product);
- $filesJson = $this->filesJson;
+$productJson = Zend_Json::encode($this->product);
 $helperCatXdgType = new Default_View_Helper_CatXdgType();
 $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->project_category_id));
 
@@ -103,6 +102,51 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 }
 
 ?>
+<style type="text/css">
+    .collection-panels{
+        background: none repeat scroll 0 0 #fff;
+        height: auto;     
+        border-radius: 0;
+        padding: 15px;
+        float: left;
+        width: 100%;
+        margin: 0;
+      
+    }
+    span.downloadlink
+    {
+        white-space: normal; color: #23527c;
+    }
+    span.filesize
+    {
+        float: right;
+    }
+
+    div.row-collection
+    {
+        padding-top: 10px;
+        border-top: 1px solid lightgray; 
+        margin-top: 10px;
+    }
+    div.row-collection:first-child
+    {
+        padding-top: 0px;
+        border-top: 0px; 
+        margin-top:0px;
+       
+    }
+    div.row-detail
+    {
+        padding-top: 10px;
+        font-size: small;
+    }
+    
+    #product-discussion h3 {
+        color: #2673b0;
+        margin-bottom: 20px;
+        margin-top: 0;
+    }
+</style>
 
 
     <link href="/theme/react/assets/css/get-it.css" type="text/css" rel="stylesheet"/>
@@ -404,6 +448,26 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                 </div>
                             </div>
                         </div>
+
+                        <div style="padding-left: 25px;">   
+                            <?php
+                                    if($this->product->is_gitlab_project && $this->product->use_gitlab_project_readme && null != $this->gitlab_project['readme_url']) {
+                                    ?>
+                                    <article>
+                                        <b>Description:</b> <br/><br/>
+                                        <?=$this->readme ?><br/><br/>
+                                    </article>
+                                    <?php
+                                        } else {
+                                    ?>
+                                    <article>
+                                        <b>Description:</b> <br/><br/>
+                                        <?=$this->product->description ?>
+                                     </article>
+                                  <?php  }?>
+                        </div>
+
+                        <?php /* replace carousel part with info description
                         <div id="carouselContainer" class="carouselContainer">
                             <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
 
@@ -467,21 +531,25 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                     <a class="right carousel-control" href="#myCarousel" data-slide="next">
                                         <span class="glyphicon glyphicon-chevron-right"></span>
                                     </a>
-                                <?php } ?>
+                                <?php } ?> 
                             </div><!-- End Carousel -->
                         </div>
-
+                    */?>
 
                     </div>
                 </div>
+
+                
 
                 <div class="flex-item-24" id="product-tabs-container">
                     <!-- TABS -->
                     <div id="product-tabs" class="pling-nav-tabs">
                         <ul class="nav nav-tabs ">
+                            <?php /*
                             <li class="active"><a href="#about-panel" data-toggle="tab">Info</a></li>
+                            */?>
                         <?php if(count($this->collection_projects)>0){ ?>
-                            <li><a href="#products-panel" data-toggle="tab">Products <?php echo '('.count($this->collection_projects).')';  ?></a></li>
+                            <li class="active"><a href="#products-panel" data-toggle="tab">Products <?php echo '('.count($this->collection_projects).')';  ?></a></li>
                         <?php } ?>
                         <?php if(count($this->updates)>0){ ?>
                             <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php echo '('.count($this->updates).')';  ?></a></li>
@@ -502,12 +570,11 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 
                     <!-- PANELS -->
 
-                    <div class="tab-content row" id="product-panels">
+                    <div class="tab-content row collection-panels">
 
                         <!-- ABOUT -->
-                        <div class="tab-pane active" id="about-panel">
-
-
+                        <?php /*
+                        <div class="tab-pane active" id="about-panel">                            
                             <div id="product-about" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 
                                 <div>
@@ -690,22 +757,53 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 
 
                         </div>
-                        <!-- /ABOUT -->
-                        
+                        <!-- /ABOUT -->                        
+                        */?>
+
                         <!-- collectionProducts -->
                         <?php
                         if (count($this->collection_projects) > 0) { ?>
-                        <div class="tab-pane" id="products-panel">
+                        <div class="tab-pane active" id="products-panel">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 
-                            <article>
-                                <div id="collectionProductsContainer">
-                                <?php
-                                       echo $this->render('collection/partials/collectionProjects.phtml');
-                                  ?>
-                                  </div>
-                            </article>
+                                <article>
+                                    <div id="collectionProductsContainer">
+                                    <?php
+                                           echo $this->render('collection/partials/collectionProjects.phtml');
+                                      ?>
+                                      </div>
+                                </article>
+                                
+                                <?php /*
+                                    if (count($this->updates) > 0) {
+                                        $this->productUpdate = $this->updates[0];
+                                        ?>
+                                        <article class="lastchangelog">
+                                        <b>Last changelog:</b>
+
+                                        <?= $this->render('collection/partials/productUpdatesV1.phtml'); ?>
+                                        </article>
+                                    <?php } */?>
+
+
+                                    <!-- comments -->
+                                    <div id="product-discussion">
+                                        <?php
+                                        $modelComments = new Default_Model_ProjectComments();
+                                        $offset = $this->paramPageId;
+                                        $testComments = $modelComments->getCommentTreeForProject($this->product->project_id);
+                                        $testComments->setItemCountPerPage(25);
+                                        $testComments->setCurrentPageNumber($offset);
+                                        $this->comments = $testComments;
+                                        echo $this->render('collection/partials/productCommentsUX1.phtml');
+                                        ?>
+                                    </div>
+                                    <!-- /comments -->
+                                
                             </div>
+                            
+                            
+                                
                         </div>
                         <?php } ?>
 
@@ -816,7 +914,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 
                         <div>
                             <?php
-                            $this->moreProducts = $tableCollection->fetchMoreCollections($this->product, 6);
+                            $this->moreProducts = $tableProject->fetchMoreCollections($this->product, 6);
                             $this->moreProductsTitle = 'More ' . $this->product->cat_title . ' from ' . $this->product->username;
 
                             if (count($this->moreProducts) > 0) {
@@ -826,7 +924,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                         
                         <div>
                             <?php
-                            $this->moreProducts = $tableCollection->fetchMoreCollectionsOfOtherUsr($this->product, 6);
+                            $this->moreProducts = $tableProject->fetchMoreCollectionsOfOtherUsr($this->product, 6);
                             $this->moreProductsTitle = 'Other ' . $this->product->cat_title;
 
                             if (count($this->moreProducts) > 0) {
@@ -881,7 +979,6 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 
 <script type="text/javascript">
   var product = <?php echo $productJson ?>;
-  var filesJson  = <?php echo $filesJson ?>;
   var xdgTypeJson = <?php echo $xdgTypeJson ?>;
 </script>
 
@@ -896,5 +993,6 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
             PartialsButtonPlingProject.setup();
             TooltipUser.setup("tooltipuserleft","left");
             AppimagequestionOnClick.setup();
+            Opendownloadfile.setup();
         });
     ');

@@ -256,7 +256,7 @@ class Default_Model_Tags
 
     
 
-      /**
+    /**
      * @param int $object_id
      * @param int $tag_type
      *
@@ -419,34 +419,45 @@ class Default_Model_Tags
     }
 
     /**
-        * @param int    $object_id
-        * @param string $value        
-        */
-       public function processTagProductOriginal($object_id, $is_original)
-       {
-            $sql_object= "select tag_item_id  from tag_object WHERE tag_id = :tag_id and tag_object_id=:tag_object_id and tag_group_id=:tag_group_id  
-                                    and tag_type_id = :tag_type_id and is_deleted = 0";
-            $r = $this->getAdapter()->fetchRow($sql_object, array('tag_id' => self::TAG_PRODUCT_ORIGINAL_ID, 
-                                                                                                    'tag_object_id' =>$object_id, 
-                                                                                                    'tag_group_id' => self::TAG_PRODUCT_ORIGINAL_GROUPID, 
-                                                                                                    'tag_type_id' => self::TAG_TYPE_PROJECT 
-                                                                                                    ));
-           
-           if($is_original=='1')
-           {            
-                if(!$r){
-                    $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_group_id)";
-                    $this->getAdapter()->query($sql, array('tag_id' =>  self::TAG_PRODUCT_ORIGINAL_ID, 'tag_type_id' => self::TAG_TYPE_PROJECT , 'tag_object_id' => $object_id, 'tag_group_id' => self::TAG_PRODUCT_ORIGINAL_GROUPID));                    
-                }
-           }else{
+    * @param int    $object_id
+    * @param string $value        
+    */
+    public function processTagProductOriginal($object_id, $is_original)
+    {
+        $sql_object= "select tag_item_id  from tag_object WHERE tag_id = :tag_id and tag_object_id=:tag_object_id and tag_group_id=:tag_group_id  
+                                and tag_type_id = :tag_type_id and is_deleted = 0";
+        $r = $this->getAdapter()->fetchRow($sql_object, array('tag_id' => self::TAG_PRODUCT_ORIGINAL_ID, 
+                                                                                                'tag_object_id' =>$object_id, 
+                                                                                                'tag_group_id' => self::TAG_PRODUCT_ORIGINAL_GROUPID, 
+                                                                                                'tag_type_id' => self::TAG_TYPE_PROJECT 
+                                                                                                ));
 
-                if($r){
-                        $sql = "UPDATE tag_object set tag_changed = NOW() , is_deleted = 1  WHERE tag_item_id = :tagItemId";
-                        $this->getAdapter()->query($sql, array('tagItemId' => $r['tag_item_id']));
-                }
-           }
-           
+       if($is_original=='1')
+       {            
+            if(!$r){
+                $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_group_id)";
+                $this->getAdapter()->query($sql, array('tag_id' =>  self::TAG_PRODUCT_ORIGINAL_ID, 'tag_type_id' => self::TAG_TYPE_PROJECT , 'tag_object_id' => $object_id, 'tag_group_id' => self::TAG_PRODUCT_ORIGINAL_GROUPID));                    
+            }
+       }else{
+
+            if($r){
+                    $sql = "UPDATE tag_object set tag_changed = NOW() , is_deleted = 1  WHERE tag_item_id = :tagItemId";
+                    $this->getAdapter()->query($sql, array('tagItemId' => $r['tag_item_id']));
+            }
        }
+
+    }
+    
+    
+    /**
+    * @param int    $object_id
+    * @param string $value        
+    */
+    public function processTagCollection($object_id)
+    {
+        $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_group_id)";
+        $this->getAdapter()->query($sql, array('tag_id' =>  self::TAG_COLLECTION_ID_ID, 'tag_type_id' => self::TAG_TYPE_PROJECT , 'tag_object_id' => $object_id, 'tag_group_id' => self::TAG_COLLECTION_GROUPID));                    
+    }
 
     /**
      * @param int    $object_id
@@ -1077,5 +1088,43 @@ class Default_Model_Tags
             $tag_names[]=$tag['tag_fullname'];
         }
         return $tag_names;
+    }
+    
+    
+    
+    public function saveCollectionTypeTagForProject($object_id, $tag_id) {
+        
+        $tableTags = new Default_Model_DbTable_Tags();
+        
+        $collectionTagGroup = Zend_Registry::get('config')->settings->client->default->tag_group_collection_type_id;
+        
+        
+        $tags = $tableTags->fetchTagsForProject($object_id, $collectionTagGroup);        
+        if(count($tags) ==0){
+            //insert new tag
+            if($tag_id) {
+                $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_group_id)";
+                $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_PROJECT, 'tag_object_id' => $object_id, 'tag_group_id' => $collectionTagGroup));
+            }
+        }else
+        {
+            $tag = $tags[0];
+            
+            //remove tag license
+            if(!$tag_id) {
+                //$sql = "DELETE FROM tag_object WHERE tag_item_id = :tagItemId";
+                $sql = "UPDATE tag_object set tag_changed = NOW() , is_deleted = 1  WHERE tag_item_id = :tagItemId";
+                $this->getAdapter()->query($sql, array('tagItemId' => $tag['tag_item_id']));
+            } else {
+                //Update old tag
+                if($tag_id <> $tag['tag_id']) {
+                    $sql = "UPDATE tag_object SET tag_changed = NOW(),tag_id = :tag_id WHERE tag_item_id = :tagItemId";
+                    $this->getAdapter()->query($sql, array('tagItemId' => $tag['tag_item_id'], 'tag_id' => $tag_id));
+                }
+            }
+
+        }
+        
+        
     }
 }

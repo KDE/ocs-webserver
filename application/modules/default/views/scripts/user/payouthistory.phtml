@@ -132,6 +132,18 @@ $this->countDownloadsOverall = 0;
     .chart-wrapper .legend {font-size: 14px;}
 }
 
+
+/* Style the dots by assigning a fill and stroke */
+.dot {
+    fill: #2185D0;
+    stroke: #fff;
+}
+/* Style the dots by assigning a fill and stroke */
+.dotRed {
+    fill: #ffab00;
+    stroke: #fff;
+}
+.dotRed
 </style>
 
 
@@ -161,7 +173,7 @@ $this->countDownloadsOverall = 0;
     </section>
 </main>
 <script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="/theme/flatui/js/lib/multiline.js"></script>
+<script src="/theme/flatui/js/lib/multiline_payout.js"></script>
 <script type="text/javascript">
     var dataset = <?php echo Zend_Json::encode($this->payouthistory);?>;
     $(document).ready(function () {
@@ -174,6 +186,7 @@ $this->countDownloadsOverall = 0;
 
                 dataset.forEach(function (d) {                   
                    d.year = parseTime(d.yearmonth);
+                   // d.year = d.yearmonth;
                    d.amount = +d.amount;                       
                 });                    
                 var chartColumns ={

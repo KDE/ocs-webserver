@@ -42,6 +42,7 @@ class Default_Plugin_SendMail extends Zend_Controller_Plugin_Abstract
 
         $this->setTemplate($tplName);
         $this->setTemplateVar('username', '');
+        $this->setTemplateVar('username_sender', 'the user');
         $this->setTemplateVar('verificationlink', '');
         $this->setTemplateVar('sender', '');
         $this->setTemplateVar('product_title', '');
@@ -570,7 +571,7 @@ class Default_Plugin_SendMail extends Zend_Controller_Plugin_Abstract
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateFooter">
                                         <tr>
                                             <td valign="top" class="footerContent">
-                                                <a href="https://twitter.com/opendesktop">Follow on Twitter</a>&nbsp;&nbsp;&nbsp;<a href="https://www.facebook.com/opendesktop.org">Follow on Facebook</a>&nbsp;&nbsp;&nbsp;<a href="https://plus.google.com/115086171173715906631">Follow on Google+</a>&nbsp;
+                                                <a href="https://twitter.com/opendesktop">Follow on Twitter</a>&nbsp;&nbsp;&nbsp;<a href="https://www.facebook.com/opendesktop.org">Follow on Facebook</a>&nbsp;
                                             </td>
                                         </tr>
                                         <tr>

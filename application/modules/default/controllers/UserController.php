@@ -128,6 +128,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 $tableProject->getUserActiveProjects($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit);
        
             $this->view->userFeaturedProducts = $tableProject->fetchAllFeaturedProjectsForMember($this->_memberId);
+            $this->view->userCollections = $tableProject->fetchAllCollectionsForMember($this->_memberId);
 
             $paginationComments = $tableMember->fetchComments($this->_memberId);
             if ($paginationComments) {
@@ -177,6 +178,16 @@ class UserController extends Local_Controller_Action_DomainSwitch
             } else {
                 $stat['cntFProducts'] = 0;
             }
+            
+            if ($this->view->userCollections) {
+                $cnt = 0;
+                foreach ($this->view->userCollections as $tmp) {
+                    $cnt++;
+                }
+                $stat['cntCollections'] = $cnt;
+            } else {
+                $stat['cntCollections'] = 0;
+            }
 
             $stat['cntComments'] = $paginationComments->getTotalItemCount();
             $tblFollower = new Default_Model_DbTable_ProjectFollower();
@@ -193,6 +204,26 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 $stat['donationMax'] = $donationinfo['active_time_max'];
                 $stat['donationMin'] = $donationinfo['active_time_min'];
                 $stat['donationCnt'] = $donationinfo['cnt'];
+            }
+            
+            $subscriptioninfo = $tableMember->fetchSupporterSubscriptionInfo($this->_memberId);
+            if ($subscriptioninfo) {
+                $stat['subscriptionIssupporter'] = true;
+                $stat['subscriptionStart'] = $subscriptioninfo['create_time'];
+                $stat['subscriptionAmount'] = $subscriptioninfo['amount'];
+                $stat['subscriptionPeriod'] = $subscriptioninfo['period'];
+                if($subscriptioninfo['period'] == 'M') {
+                    $stat['subscriptionPeriodText'] = 'monthly';
+                } else if($subscriptioninfo['period'] == 'Y') {
+                    $stat['subscriptionPeriodText'] = 'yearly';
+                } else {
+                    $stat['subscriptionPeriodText'] = '';
+                }
+                    
+                
+                $stat['subscriptionPeriodFreq'] = $subscriptioninfo['period_frequency'];
+            } else {
+                $stat['subscriptionIssupporter'] = false;
             }
             //  $cntmb = $tableMember->fetchCntSupporters($this->_memberId);
             // $stat['cntSupporters'] = $cntmb;
@@ -765,6 +796,28 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->view->likes = array();
         }
     }
+    public function supporterAction()
+    {
+        
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+             $tableMember = new Default_Model_Member();
+            $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+        }
+
+        $model = new Default_Model_DbTable_Support();
+        $this->view->supporterlist = $model->getSupporterDonationList($this->view->member->member_id);
+        
+
+        // $tableMembers = new Default_Model_Member();
+        // $row = $tableMembers->fetchSupporterDonationInfo($this->view->member->member_id);
+        // $this->view->issupporter = $row['issupporter'];
+        // $this->view->supporter = $row;
+    }
 
     public function payoutAction()
     {
@@ -799,6 +852,38 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->view->member = $this->view->view_member;
         } else {
             $this->view->member = $this->_authMember;
+            if($this->_memberId!=$this->_authMember->member_id)
+            {
+                throw new Zend_Controller_Action_Exception('no authorization found');
+            }
+        }
+
+        $model = new Default_Model_StatDownload();
+        $resultSet = $model->getPayoutHistory($this->view->member->member_id);        
+
+        $this->view->payouthistory=$resultSet;
+
+
+    }
+    
+
+    public function _payouthistoryAction()
+    {
+
+        $tableMember = new Default_Model_Member();
+        $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+
+        //backdoor for admins
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+            if($this->_memberId!=$this->_authMember->member_id)
+            {
+                throw new Zend_Controller_Action_Exception('no authorization found');
+            }
         }
 
         // these are already payed
@@ -824,6 +909,10 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $result = $model->getUserDownloadsForMonth($this->view->member->member_id, $ym);
             $amount = 0;
             foreach ($result as $value) {
+                 if($value['is_license_missing_now'] == 1 
+                        || $value['is_source_missing_now'] == 1
+                        || $value['is_pling_excluded_now'] == 1                                            
+                    ) continue;
                 $amount = $amount + $value['probably_payout_amount'];
             }
             $currentMonth = array('yearmonth' => $ym, 'amount' => $amount);
@@ -844,7 +933,11 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 $model = new Default_Model_StatDownload();
                 $result = $model->getUserDownloadsForMonth($this->view->member->member_id, $ym);
                 $amount = 0;
-                foreach ($result as $value) {
+                foreach ($result as $value) {                    
+                    if($value['is_license_missing'] == 1 
+                        || $value['is_source_missing'] == 1
+                        || $value['is_pling_excluded'] == 1                                            
+                    ) continue;
                     $amount = $amount + $value['probably_payout_amount'];
                 }
                 $lastMonth = array('yearmonth' => $ym, 'amount' => $amount);

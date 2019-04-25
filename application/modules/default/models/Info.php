@@ -213,7 +213,7 @@ class Default_Model_Info
         
         $sql .= ' WHERE comments.comment_active = 1            
             AND stat_projects.status = 100
-            AND stat_projects.type_id = 1
+            AND stat_projects.type_id in (1,3)
             AND comments.comment_type = 0
             AND stat_projects.project_category_id IN (' . implode(',', $activeCategories) . ')                          
         ';
@@ -1677,7 +1677,7 @@ class Default_Model_Info
             return $instruction;
         }
         $config = Zend_Registry::get('config')->settings->server->opencode;
-        $readme = 'https://git.opendesktop.org/OCS/ocs-url/raw/master/docs/How-to-install.md?inline=false';
+        $readme = 'https://opencode.net/OCS/ocs-url/raw/master/docs/How-to-install.md?inline=false';
 
         $httpClient = new Zend_Http_Client($readme, array('keepalive' => true, 'strictredirects' => true));
         $httpClient->resetParameters();

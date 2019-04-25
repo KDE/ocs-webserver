@@ -115,8 +115,26 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             $this->_helper->json(array('status' => 'success', 'ResultSize' => 0, 'projects' => array()));
             
         } else {
+            $search = null;
+            if($this->hasParam('search')) {
+                $search = $this->getParam('search');
+            }
+            $searchAll = false;
+            if($this->hasParam('search_all')) {
+                $searchAll = $this->getParam('search_all') == 'true';
+            }
+            if(empty($search)) {
+                $this->_helper->json(array('status' => 'success', 'ResultSize' => 0, 'projects' => array()));
+                return;
+            }
+            
+            
             $collectionProjectsTable = new Default_Model_DbTable_CollectionProjects();
-            $projectsArray = $collectionProjectsTable->getProjectsForMember($this->_projectId, $member_id);
+            if(!$searchAll) {
+                $projectsArray = $collectionProjectsTable->getProjectsForMember($this->_projectId, $member_id, $search);
+            } else {
+                $projectsArray = $collectionProjectsTable->getProjectsForAllMembers($this->_projectId, $member_id, $search);
+            }
 
             $result = array();
             $helperImage = new Default_View_Helper_Image();
@@ -127,7 +145,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
                 
                 $result[] = $project;
             }
-            $this->_helper->json(array('status' => 'success', 'ResultSize' => count($result), 'projects' => $result));
+            $this->_helper->json(array('status' => 'success', 'ResultSize' => count($result), 'projects' => $result, 'Search' => $search, 'SearchAll' => $searchAll));
             //$this->_helper->json($result);
         }
         
@@ -269,14 +287,33 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         //        $this->fetchDataForIndexView();
         $modelProduct = new Default_Model_Collection();
         $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
+        if (empty($productInfo)) {
+            //Coukd be a Project
+            $modelProduct = new Default_Model_Project();
+            $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
+            //Check if this is a collection
+            if(!empty($productInfo) && $productInfo->type_id != $modelProduct::PROJECT_TYPE_COLLECTION) {
+                $this->redirect('/p/'.$this->_projectId);
+            }
+            throw new Zend_Controller_Action_Exception('This page does not exist', 404);
+        }
+        
         $this->view->product = $productInfo;
         
         $this->view->collection_projects = $this->getCollectionProjects(); 
-        
-        $this->view->headTitle($productInfo->title . ' - ' . $this->getHeadTitle(), 'SET');
-        if (empty($this->view->product)) {
-            throw new Zend_Controller_Action_Exception('This page does not exist', 404);
+
+        $collection_ids = array();
+        foreach ($this->view->collection_projects as $value) {
+            if($value['ppload_collection_id']) $collection_ids[] = $value['ppload_collection_id'];
         }
+
+        $filesmodel = new Default_Model_DbTable_PploadFiles();
+        $this->view->collection_projects_dls = $filesmodel->fetchAllActiveFilesForCollection($collection_ids); 
+
+        //$this->view->collection_ids = $collection_ids;
+
+        $this->view->headTitle($productInfo->title . ' - ' . $this->getHeadTitle(), 'SET');
+        
         $this->view->cat_id = $this->view->product->project_category_id;
 
         $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
@@ -375,8 +412,8 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         }
 
         //update the gallery pics
-        $mediaServerUrls = $this->saveGalleryPics($form->gallery->upload->upload_picture);
-        $modelProject->updateGalleryPictures($newProject->project_id, $mediaServerUrls);
+        //$mediaServerUrls = $this->saveGalleryPics($form->gallery->upload->upload_picture);
+        //$modelProject->updateGalleryPictures($newProject->project_id, $mediaServerUrls);
 
         //If there is no Logo, we take the 1. gallery pic
         if (!isset($values['image_small']) || $values['image_small'] == '') {
@@ -387,17 +424,18 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         //New Project in Session, for AuthValidation (owner)
         $this->_auth->getIdentity()->projects[$newProject->project_id] = array('project_id' => $newProject->project_id);
 
+        
         $modelTags = new Default_Model_Tags();
         if ($values['tagsuser']) {
             $modelTags->processTagsUser($newProject->project_id, implode(',', $values['tagsuser']),Default_Model_Tags::TAG_TYPE_PROJECT);
         } else {
             $modelTags->processTagsUser($newProject->project_id, null, Default_Model_Tags::TAG_TYPE_PROJECT);
         }
-
+        /*
         if ($values['is_original']) {
             $modelTags->processTagProductOriginal($newProject->project_id, $values['is_original']);
         }
-
+        
         //set license, if needed
         $licenseTag = $form->getElement('license_tag_id')->getValue();
         //only set/update license tags if something was changed
@@ -412,16 +450,13 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         if ($isGitlabProject && $gitlabProjectId == 0) {
             $values['gitlab_project_id'] = null;
         }
+         * 
+         */
 
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($newProject->project_id, $newProject->member_id, Default_Model_ActivityLog::PROJECT_CREATED, $newProject->toArray());
 
-        
-        //save collection products
-        $projectIds = $_POST['collection_project_id'];
-        
-        $modeCollection = new  Default_Model_DbTable_CollectionProjects();
-        $modeCollection->setCollectionProjects($this->_projectId, $projectIds);
+        //$modelTags->processTagProductOriginal($newProject->project_id);
         
         
         try {
@@ -528,11 +563,12 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         if ($this->_request->isGet()) {
             $form->populate($projectData->toArray());
            // $form->populate(array('tags' => $modelTags->getTags($projectData->project_id, Default_Model_Tags::TAG_TYPE_PROJECT)));
-            $form->populate(array('tagsuser' => $modelTags->getTagsUser($projectData->project_id, Default_Model_Tags::TAG_TYPE_PROJECT)));
+            //$form->populate(array('tagsuser' => $modelTags->getTagsUser($projectData->project_id, Default_Model_Tags::TAG_TYPE_PROJECT)));
             $form->getElement('image_small')->setValue($projectData->image_small);
             //Bilder voreinstellen
             $form->getElement(self::IMAGE_SMALL_UPLOAD)->setValue($projectData->image_small);
-
+            
+            /*
             $licenseTags = $tagTable->fetchLicenseTagsForProject($this->_projectId);
             $licenseTag = null;
             if($licenseTags) {
@@ -544,6 +580,8 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             if($is_original){
                 $form->getElement('is_original')->checked= true;                
             }
+             * 
+             */
  
             $this->view->form = $form;
 
@@ -563,7 +601,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
 
         $values = $form->getValues();
 
-
+        /**
         //set license, if needed
         $tagList = $modelTags->getTagsArray($this->_projectId, $modelTags::TAG_TYPE_PROJECT, $modelTags::TAG_LICENSE_GROUPID);
         $oldLicenseTagId = null;
@@ -586,7 +624,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             $values['gitlab_project_id'] = null;
         }
 
-
+        */
 
         $imageModel = new Default_Model_DbTable_Image();
         try {
@@ -599,11 +637,13 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         // save changes
         $projectData->setFromArray($values);
 
+        /**
         //update the gallery pics
         $pictureSources = array_merge($values['gallery']['online_picture'],
             $this->saveGalleryPics($form->gallery->upload->upload_picture));
         $projectModel->updateGalleryPictures($this->_projectId, $pictureSources);
-
+        */
+        
         //If there is no Logo, we take the 1. gallery pic
         if (!isset($projectData->image_small) || $projectData->image_small == '') {
             $projectData->image_small = $pictureSources[0];
@@ -612,24 +652,19 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         //$projectData->changed_at = new Zend_Db_Expr('NOW()');
         $projectData->save();
         
-        $modelTags->processTagProductOriginal($this->_projectId,$values['is_original']);
+        //$modelTags->processTagProductOriginal($this->_projectId,$values['is_original']);
 
+        
         if($values['tagsuser']) {
             $modelTags->processTagsUser($this->_projectId,implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);
         }else
         {
             $modelTags->processTagsUser($this->_projectId,null, Default_Model_Tags::TAG_TYPE_PROJECT);
         }
-
+        
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
 
-        //save collection products
-        $projectIds = $_POST['collection_project_id'];
-        
-        $modeCollection = new  Default_Model_DbTable_CollectionProjects();
-        $modeCollection->setCollectionProjects($this->_projectId, $projectIds);
-        
         try {
             if (100 < $this->_authMember->roleId) {
                 if (Default_Model_Spam::hasSpamMarkers($projectData->toArray())) {
@@ -777,6 +812,31 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $tablePageViews = new Default_Model_DbTable_StatPageViews();
         $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
             $this->_authMember->member_id);
+    }
+    
+    public function updatecollectionprojectsajaxAction() {
+        $this->_helper->layout()->disableLayout();
+
+        $this->view->project_id = $this->_projectId;
+        $this->view->authMember = $this->_authMember;
+        
+        
+        //save collection products
+        $projectIdsString = $this->getParam('collection_project_ids');
+        $projectIds = array();
+        
+        if(!empty($projectIdsString)) {
+            $projectIdsString = rtrim($projectIdsString,',');
+            $projectIds = explode(',', $projectIdsString);
+        }
+        
+        $modeCollection = new  Default_Model_DbTable_CollectionProjects();
+        $modeCollection->setCollectionProjects($this->_projectId, $projectIds);
+        
+        $this->_helper->json(array(
+            'status' => 'ok',
+            'msg'   => 'Success.'
+        ));
     }
 
     public function updateAction()

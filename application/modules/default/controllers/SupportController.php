@@ -42,19 +42,21 @@ class SupportController extends Local_Controller_Action_DomainSwitch
     public function indexAction()
     {
         $this->view->authMember = $this->_authMember;
+        $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
     }
 
     public function showAction()
     {
         $this->view->authMember = $this->_authMember;
         $this->_helper->viewRenderer('index');
+        $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
         $this->indexAction();
     }
 
 
     public function supportAction()
     {
-
+        $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
         $this->view->authMember = $this->_authMember;
 
         $request = Zend_Controller_Front::getInstance()->getRequest();
@@ -72,6 +74,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
     public function payAction()
     {
         $this->_helper->layout()->disableLayout();
+        $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
         
         //get parameter
         $amount_predefined = (float)$this->getParam('amount_predefined', 1);
@@ -105,6 +108,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
         $this->view->member_id = $this->_authMember->member_id;
         $this->view->transaction_id = $this->_authMember->member_id . '_' . time();
         $this->view->amount = $amount;
+        $this->view->amount_predefined = $amount_predefined;
         
         //Add pling
         $modelSupport = new Default_Model_DbTable_Support();
@@ -223,6 +227,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
         //$this->_helper->layout()->disableLayout();
         $this->view->paymentStatus = 'success';
         $this->view->paymentMessage = 'Payment successful.';
+        $this->view->headTitle('Thank you for your support - ' . $this->getHeadTitle(), 'SET');
     }
 
     public function paymentcancelAction()
@@ -230,6 +235,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
         //$this->_helper->layout()->disableLayout();
         $this->view->paymentStatus = 'danger';
         $this->view->paymentMessage = 'Payment cancelled.';
+        $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
     }
 
 

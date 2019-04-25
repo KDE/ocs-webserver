@@ -1317,23 +1317,32 @@ class Default_Model_Ocs_Gitlab
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
         $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
         $this->httpClient->setMethod(Zend_Http_Client::GET);
-
-        $response = $this->httpClient->request();
-
-        $body = Zend_Json::decode($response->getRawBody());
-
-        if (count($body) == 0) {
-            return array();
+        $response = null;
+        try {
+            $response = $this->httpClient->request();
+            
+        } catch (Exception $ex) {
+            $response = null;
         }
+        
+        if($response && !empty($response)) {
 
-        if (array_key_exists("message", $body)) {
-            $result_code = substr(trim($body["message"]), 0, 3);
-            if ((int)$result_code >= 300) {
-                throw new Default_Model_Ocs_Exception($body["message"]);
+            $body = Zend_Json::decode($response->getRawBody());
+
+            if (count($body) == 0) {
+                return array();
             }
+
+            if (array_key_exists("message", $body)) {
+                $result_code = substr(trim($body["message"]), 0, 3);
+                if ((int)$result_code >= 300) {
+                    throw new Default_Model_Ocs_Exception($body["message"]);
+                }
+            }
+            return $body;
         }
 
-        return $body;
+        return null;
     }
 
 }
