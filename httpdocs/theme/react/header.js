@@ -201,9 +201,12 @@ var SiteHeader = function (_React$Component) {
         };
       }
 
+      var headerStoreClassName = this.state.store.name.toLowerCase();
+      if (headerStoreClassName.indexOf('.') > -1) headerStoreClassName = headerStoreClassName.split('.')[0];
+
       return React.createElement(
         "section",
-        { id: "site-header", style: templateHeaderStyle, className: this.state.store.name.toLowerCase() },
+        { id: "site-header", style: templateHeaderStyle, className: headerStoreClassName },
         HeaderDisplay
       );
     }
