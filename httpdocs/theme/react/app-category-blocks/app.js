@@ -9,7 +9,7 @@ function CategoryBlocks(){
             id:'',
             product_count:0
         }
-        window.catTree.foeEach(function(cat){
+        window.catTree.forEach(function(cat){
             obj.product_count = parseInt(obj.product_count) + parseInt(cat.product_count)
         })
         const newCategories = [
