@@ -39,11 +39,10 @@
   width: 100%;
 }
 #site-header #site-header-wrapper #site-header-store-name-container {
-  float: left;
-  height: 100%;
-  padding: 50px 0 0 55px;
   font-size: 24px;
   position: absolute;
+  bottom: 0;
+  padding-left: 15px;
 }
 #site-header #site-header-wrapper #site-header-store-name-container > a {
   color: white;
@@ -266,6 +265,9 @@
 #site-header.appimageshub #site-header-wrapper #site-header-right #site-header-right-top,
 #site-header.appimagehub.com #site-header-wrapper #site-header-right #site-header-right-top {
   height: 100%;
+}
+#site-header.pling {
+  margin: 0 !important;
 }
 /*
 @media (max-width:767px) {
