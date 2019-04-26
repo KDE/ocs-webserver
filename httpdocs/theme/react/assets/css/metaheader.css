@@ -239,7 +239,7 @@ body.drawer-open {
   display: block;
 }
 #metaheader #metaheader-nav ul.metaheader-menu#domains-menu > li#domains-dropdown-menu .dropdown-menu {
-  width: 600px;
+  width: 400px;
   top: 45px;
   right: -309px;
   min-height: 296px;
@@ -249,7 +249,7 @@ body.drawer-open {
   right: 356px;
 }
 #metaheader #metaheader-nav ul.metaheader-menu#domains-menu > li#domains-dropdown-menu .dropdown-menu .submenu-container {
-  width: 33%;
+  width: 50%;
   float: left;
   height: auto;
 }
