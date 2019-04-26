@@ -54,6 +54,9 @@ function CategoryBlockItem(props) {
     sysTitle = sysTitle.trim();
     sysTitle = sysTitle.toLowerCase();
 
+    var url = "/browse/cat/" + c.id;
+    if (!c.id) url = "/browse/";
+
     var imgUrl = "/theme/react/assets/img/aih-" + sysTitle + ".png";
     var ribbonCssClass = "aih-ribbon aih-" + sysTitle;
 
