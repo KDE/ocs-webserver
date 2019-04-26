@@ -132,12 +132,12 @@ $url_logout = "/logout?redirect=".$filter->filter($thisurl);
         
         
         #category-tree-container ul li.active > a {
-            background-color: <?=$this->template['header-nav-tabs']['background-color-active']?> !important;
+            background-color: <?=$this->template['header-nav-tabs']['background-color-hover']?> !important;
             color: #ffffff !important;
         }
         
         #category-tree-container ul li a:hover {
-            background-color: <?=$this->template['header-nav-tabs']['background-color-active']?> !important;
+            background-color: <?=$this->template['header-nav-tabs']['background-color-hover']?> !important;
             color: #ffffff !important;
         }
         
@@ -146,7 +146,7 @@ $url_logout = "/logout?redirect=".$filter->filter($thisurl);
             width: 100%;
             float: left;
             background-color: transparent !important;
-            color: <?=$this->template['header-nav-tabs']['background-color']?> !important;
+            color: <?=$this->template['header-nav-tabs']['background-color-active']?> !important;
             padding-left: 3px;
             padding-right: 40px;
             position: relative;
