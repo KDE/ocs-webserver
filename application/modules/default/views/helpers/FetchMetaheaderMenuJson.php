@@ -41,7 +41,7 @@ class Default_View_Helper_FetchMetaheaderMenuJson extends Zend_View_Helper_Abstr
             foreach ($result as $obj) {
                 $o =  $obj['order'];   
                 $curOrder = floor($obj['order']/1000);      
-                if($curOrder<10 or $curOrder>60) continue;
+                if($curOrder<10 or $curOrder>50) continue;
                 $obj['calcOrder'] = $curOrder;              
 
                 $tmp = array();
@@ -51,12 +51,7 @@ class Default_View_Helper_FetchMetaheaderMenuJson extends Zend_View_Helper_Abstr
                 $tmp['name'] = $obj['name'];                
 
                 if($curOrder==30) {
-                    // Desktop set calcOrder = 8 manuelly put desktop in front                    
-                    $tmp['calcOrder'] = 8;
-                    $arrayDesktop[] = $tmp;    
-                
-                } if($curOrder==60) {
-                    // All set calcOrder = 9 manuelly put All in front                    
+                    // Desktop set calcOrder = 9 manuelly put desktop in front                    
                     $tmp['calcOrder'] = 9;
                     $arrayDesktop[] = $tmp;    
                 }else{
@@ -87,11 +82,8 @@ class Default_View_Helper_FetchMetaheaderMenuJson extends Zend_View_Helper_Abstr
                     }
 
                     switch ($obj['calcOrder']) {
-                        case 8:
-                            $obj['menugroup']='Desktops';
-                            break;
                         case 9:
-                            $obj['menugroup']='All';
+                            $obj['menugroup']='Desktops';
                             break;
                         case 10:
                             $obj['menugroup']='Applications';
