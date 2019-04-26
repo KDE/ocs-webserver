@@ -46,7 +46,7 @@ class DomainsDropDownMenu extends React.Component {
 
   render(){
 
-    let menuGroupsDisplayLeft, menuGroupsDisplayMiddle, menuGroupsDisplayRight;
+    let menuGroupsDisplayLeft, menuGroupsDisplayRight;
     if (this.state.menuGroups){
       menuGroupsDisplayLeft = this.state.menuGroups.slice(0,2).map((mg,i) => (
         <DomainsMenuGroup
@@ -56,15 +56,7 @@ class DomainsDropDownMenu extends React.Component {
           sName={this.props.sName}
         />
       ));
-      menuGroupsDisplayMiddle = this.state.menuGroups.slice(2,4).map((mg,i) => (
-        <DomainsMenuGroup
-          key={i}
-          domains={this.props.domains}
-          menuGroup={mg}
-          sName={this.props.sName}
-        />
-      ));
-      menuGroupsDisplayRight = this.state.menuGroups.slice(4).map((mg,i) => (
+      menuGroupsDisplayRight = this.state.menuGroups.slice(2).map((mg,i) => (
         <DomainsMenuGroup
           key={i}
           domains={this.props.domains}
@@ -81,11 +73,6 @@ class DomainsDropDownMenu extends React.Component {
           <li className="submenu-container">
             <ul>
               {menuGroupsDisplayLeft}
-            </ul>
-          </li>
-          <li className="submenu-container">
-            <ul>
-              {menuGroupsDisplayMiddle}
             </ul>
           </li>
           <li className="submenu-container">
