@@ -68,6 +68,11 @@ $domains = $info->getActiveStoresForCrossDomainLogin();
 <img src="<?= $http_scheme?>://<?= $config->openid->host ?>/login/setsession?ltat=<?= $ltat ?>" height="0" width="0" onload="loadSubSys();"/>
 <img data-src="<?=$http_scheme?>://<?= $config->forum->host ?>/session/sso?return_path=%2F" height="0" width="0" id="f-login" />
 <img data-src="<?= $url_gitlab ?>/users/auth/oauth_opendesktop" height="0" width="0" id="g-login"/>
+<?php
+    if(!empty($url_nextcloud)) {?>
 <img data-src="<?= $url_nextcloud ?>/index.php/apps/sociallogin/custom_oidc/OpendesktopID" height="0" width="0" id="h-login"/>
+<?php
+    }
+?>
 </body>
 </html>
