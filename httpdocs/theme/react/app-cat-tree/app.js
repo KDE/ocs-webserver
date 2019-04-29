@@ -256,13 +256,15 @@ class SelectedCategory extends React.Component {
 
 function CategorySidePanel(){
   
-  const [ categories, setCategoies ] = useState(window.catTree);
-  const [ categoryId, setCategoryId ] = useState(window.categoryId);
-  const [ catTreeSccClass, setCatTreeCssClass ] = useState('');
-  const [ showCatTree, setShowCatTree ] = useState(false);
-  const [ backendView, setBackendView ] = useState(window.backendView);
-  const [ loading, setLoading ] = useState(true);
+  const [ categories, setCategoies ] = React.useState(window.catTree);
+  const [ categoryId, setCategoryId ] = React.useState(window.categoryId);
+  const [ catTreeSccClass, setCatTreeCssClass ] = React.useState('');
+  const [ showCatTree, setShowCatTree ] = React.useState(false);
+  const [ backendView, setBackendView ] = React.useState(window.backendView);
+  const [ loading, setLoading ] = React.useState(true);
   
+  console.log(categories);
+
   return(
     <div id="sidebar-container">
       <CategoryTree/>

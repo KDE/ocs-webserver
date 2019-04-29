@@ -343,35 +343,37 @@ var SelectedCategory = function (_React$Component3) {
 }(React.Component);
 
 function CategorySidePanel() {
-  var _useState = useState(window.catTree),
-      _useState2 = _slicedToArray(_useState, 2),
-      categories = _useState2[0],
-      setCategoies = _useState2[1];
+  var _React$useState = React.useState(window.catTree),
+      _React$useState2 = _slicedToArray(_React$useState, 2),
+      categories = _React$useState2[0],
+      setCategoies = _React$useState2[1];
 
-  var _useState3 = useState(window.categoryId),
-      _useState4 = _slicedToArray(_useState3, 2),
-      categoryId = _useState4[0],
-      setCategoryId = _useState4[1];
+  var _React$useState3 = React.useState(window.categoryId),
+      _React$useState4 = _slicedToArray(_React$useState3, 2),
+      categoryId = _React$useState4[0],
+      setCategoryId = _React$useState4[1];
 
-  var _useState5 = useState(''),
-      _useState6 = _slicedToArray(_useState5, 2),
-      catTreeSccClass = _useState6[0],
-      setCatTreeCssClass = _useState6[1];
+  var _React$useState5 = React.useState(''),
+      _React$useState6 = _slicedToArray(_React$useState5, 2),
+      catTreeSccClass = _React$useState6[0],
+      setCatTreeCssClass = _React$useState6[1];
 
-  var _useState7 = useState(false),
-      _useState8 = _slicedToArray(_useState7, 2),
-      showCatTree = _useState8[0],
-      setShowCatTree = _useState8[1];
+  var _React$useState7 = React.useState(false),
+      _React$useState8 = _slicedToArray(_React$useState7, 2),
+      showCatTree = _React$useState8[0],
+      setShowCatTree = _React$useState8[1];
 
-  var _useState9 = useState(window.backendView),
-      _useState10 = _slicedToArray(_useState9, 2),
-      backendView = _useState10[0],
-      setBackendView = _useState10[1];
+  var _React$useState9 = React.useState(window.backendView),
+      _React$useState10 = _slicedToArray(_React$useState9, 2),
+      backendView = _React$useState10[0],
+      setBackendView = _React$useState10[1];
 
-  var _useState11 = useState(true),
-      _useState12 = _slicedToArray(_useState11, 2),
-      loading = _useState12[0],
-      setLoading = _useState12[1];
+  var _React$useState11 = React.useState(true),
+      _React$useState12 = _slicedToArray(_React$useState11, 2),
+      loading = _React$useState12[0],
+      setLoading = _React$useState12[1];
+
+  console.log(categories);
 
   return React.createElement(
     "div",
