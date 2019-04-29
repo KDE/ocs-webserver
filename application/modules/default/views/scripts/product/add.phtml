@@ -32,10 +32,10 @@ $valueCatId = $this->form->project_category_id->getValue();
 //$valueCatId = 55;
 $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
 
-//$categories = $modelCategory->fetchCategoriesForForm($valueCatId);
 $categoryAncestors = $modelCategory->fetchAncestorsAsId($valueCatId);
 
 $categories = $modelCategory->fetchCategoriesForFormNew($valueCatId);
+$categoriesFallback = $modelCategory->fetchCategoriesForForm($valueCatId);
 //$categories2 = array();
 
 
@@ -1890,35 +1890,36 @@ $this->inlineScript()->appendScript('
               project_id: <?php echo ($this->mode == 'edit') ? $this->project_id : '$(\'#project_id\').val()'?>,
               errors: "",
               cat_id_data: <?=json_encode($categories)?>,
+              cat_id_data_fallback: <?=json_encode($categoriesFallback)?>,
               cat_id_path: <?=json_encode($categoryPath)?>,
               store_cat_ids: <?=json_encode($storeCatIds)?>,
               value_cat_id: <?=json_encode($valueCatId)?>,
 
               setup: function () {
-                  this.setupCategorySelect();
+                  this.setupCategorySelect(this.cat_id_data);
                   this.setupCategoryAjax();
                   this.setGitlabProjectNameSelect();
               },
 
-              setupCategorySelect: function() {
+              setupCategorySelect: function(catList) {
                   var level = 0;
                   var hasNoRoot = true;
                   
-                  for (var form_elem_name in this.cat_id_data) {
+                  for (var form_elem_name in catList) {
                       var nextElementName = form_elem_name.substring(0, form_elem_name.length - 1) + (level + 1);
                       var new_html_element = '<select name="' + form_elem_name + '" id="' + form_elem_name + '" class="required form-control product_select_cat" data-target="'+nextElementName+'" data-level="'+level+'">';
                       new_html_element += '<option value=""> </option>';
                       
                       hasNoRoot = true;
                       
-                      for (var form_select_option in this.cat_id_data[form_elem_name]) {
+                      for (var form_select_option in catList[form_elem_name]) {
                           var attr_selected = '';
                           
                           if (form_select_option == this.cat_id_path[level] || form_select_option == this.value_cat_id) {
                               attr_selected = ' selected="selected"';
                               hasNoRoot = false;
                           }
-                          new_html_element += '<option value="' + form_select_option + '" ' + attr_selected + '>' + this.cat_id_data[form_elem_name][form_select_option] + '</option>';
+                          new_html_element += '<option value="' + form_select_option + '" ' + attr_selected + '>' + catList[form_elem_name][form_select_option] + '</option>';
                       }
                       
                       /*
@@ -1927,7 +1928,10 @@ $this->inlineScript()->appendScript('
                           //alert("Redir: "+url);
                           document.location.href = url;
                       }*/
-                      
+                      if(hasNoRoot == true && this.cat_id_path != '0') {
+                          this.setupCategorySelect(this.cat_id_data_fallback);
+                          return;
+                      }
                       
                       new_html_element += '</select>';
                       $('#wrapper_cat_id').append(new_html_element);
