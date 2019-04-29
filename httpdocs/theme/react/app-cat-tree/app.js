@@ -254,7 +254,26 @@ class SelectedCategory extends React.Component {
   }
 }
 
+function CategorySidePanel(){
+  
+  const [ categories, setCategoies ] = useState(window.catTree);
+  const [ categoryId, setCategoryId ] = useState(window.categoryId);
+  const [ catTreeSccClass, setCatTreeCssClass ] = useState('');
+  const [ showCatTree, setShowCatTree ] = useState(false);
+  const [ backendView, setBackendView ] = useState(window.backendView);
+  const [ loading, setLoading ] = useState(true);
+  
+  return(
+    <div id="sidebar-container">
+      <CategoryTree/>
+      <div id="category-menu-panels-container">
+
+      </div>
+    </div>
+  )
+}
+
 ReactDOM.render(
-    <CategoryTree />,
+    <CategorySidePanel />,
     document.getElementById('category-tree-container')
 );

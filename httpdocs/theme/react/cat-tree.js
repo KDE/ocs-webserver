@@ -1,3 +1,389 @@
+"use strict";
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CategoryTree = function (_React$Component) {
+  _inherits(CategoryTree, _React$Component);
+
+  function CategoryTree(props) {
+    _classCallCheck(this, CategoryTree);
+
+    var _this = _possibleConstructorReturn(this, (CategoryTree.__proto__ || Object.getPrototypeOf(CategoryTree)).call(this, props));
+
+    _this.state = {
+      categories: window.catTree,
+      categoryId: window.categoryId,
+      catTreeCssClass: "",
+      selectedCategories: [],
+      showCatTree: false,
+      backendView: window.backendView,
+      loading: true
+    };
+    _this.getSelectedCategories = _this.getSelectedCategories.bind(_this);
+    _this.updateDimensions = _this.updateDimensions.bind(_this);
+    _this.toggleCatTree = _this.toggleCatTree.bind(_this);
+    return _this;
+  }
+
+  _createClass(CategoryTree, [{
+    key: "componentWillMount",
+    value: function componentWillMount() {
+      this.updateDimensions();
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      window.removeEventListener("resize", this.updateDimensions);
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      window.addEventListener("resize", this.updateDimensions);
+      var urlContext = appHelpers.getUrlContext(window.location.href);
+      this.setState({ urlContext: urlContext }, function () {
+        if (this.state.categoryId && this.state.categoryId !== 0) {
+          this.getSelectedCategories(this.state.categories, this.state.categoryId);
+        } else {
+          this.setState({ loading: false });
+        }
+      });
+    }
+  }, {
+    key: "getSelectedCategories",
+    value: function getSelectedCategories(categories, catId) {
+      var selectedCategory = appHelpers.getSelectedCategory(this.state.categories, catId);
+      var selectedCategories = this.state.selectedCategories;
+      if (typeof selectedCategory !== 'undefined') {
+        selectedCategory.selectedIndex = selectedCategories.length;
+        selectedCategories.push(selectedCategory);
+      }
+      this.setState({ selectedCategories: selectedCategories }, function () {
+        if (selectedCategory && selectedCategory.parent_id) {
+          this.getSelectedCategories(categories, parseInt(selectedCategory.parent_id));
+        } else {
+          this.setState({ loading: false });
+        }
+      });
+    }
+  }, {
+    key: "updateDimensions",
+    value: function updateDimensions() {
+      var device = appHelpers.getDeviceFromWidth(window.innerWidth);
+      this.setState({ device: device });
+    }
+  }, {
+    key: "toggleCatTree",
+    value: function toggleCatTree() {
+      var showCatTree = this.state.showCatTree === true ? false : true;
+      var catTreeCssClass = this.state.catTreeCssClass === "open" ? "" : "open";
+      this.setState({ showCatTree: showCatTree, catTreeCssClass: catTreeCssClass });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var categoryTreeDisplay = void 0,
+          selectedCategoryDisplay = void 0;
+      if (!this.state.loading) {
+
+        if (this.state.device === "tablet" && this.state.selectedCategories && this.state.selectedCategories.length > 0) {
+          selectedCategoryDisplay = React.createElement(SelectedCategory, {
+            categoryId: this.state.categoryId,
+            selectedCategory: this.state.selectedCategories[0],
+            selectedCategories: this.state.selectedCategories,
+            onCatTreeToggle: this.toggleCatTree
+          });
+        }
+        if (this.state.device === "tablet" && this.state.showCatTree || this.state.device !== "tablet" || this.state.selectedCategories && this.state.selectedCategories.length === 0) {
+          if (this.state.categories) {
+            var self = this;
+            var categoryTree = this.state.categories.sort(appHelpers.sortArrayAlphabeticallyByTitle).map(function (cat, index) {
+              return React.createElement(CategoryItem, {
+                key: index,
+                category: cat,
+                categoryId: self.state.categoryId,
+                urlContext: self.state.urlContext,
+                selectedCategories: self.state.selectedCategories,
+                backendView: self.state.backendView
+              });
+            });
+
+            var allCatItemCssClass = appHelpers.getAllCatItemCssClass(window.location.href, window.baseUrl, this.state.urlContext, this.state.categoryId);
+            var baseUrl = void 0;
+            if (window.baseUrl !== window.location.origin) {
+              baseUrl = window.location.origin;
+            }
+
+            var categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl, this.state.urlContext, "all", window.location.href);
+
+            categoryTreeDisplay = React.createElement(
+              "ul",
+              { className: "main-list" },
+              React.createElement(
+                "li",
+                { className: "cat-item" + " " + allCatItemCssClass },
+                React.createElement(
+                  "a",
+                  { href: categoryItemLink },
+                  React.createElement(
+                    "span",
+                    { className: "title" },
+                    "All"
+                  )
+                )
+              ),
+              categoryTree
+            );
+          }
+        }
+      }
+
+      return React.createElement(
+        "div",
+        { id: "category-tree", className: this.state.device + " " + this.state.catTreeCssClass },
+        selectedCategoryDisplay,
+        categoryTreeDisplay
+      );
+    }
+  }]);
+
+  return CategoryTree;
+}(React.Component);
+
+var CategoryItem = function (_React$Component2) {
+  _inherits(CategoryItem, _React$Component2);
+
+  function CategoryItem(props) {
+    _classCallCheck(this, CategoryItem);
+
+    var _this2 = _possibleConstructorReturn(this, (CategoryItem.__proto__ || Object.getPrototypeOf(CategoryItem)).call(this, props));
+
+    _this2.state = {
+      showSubmenu: false
+    };
+    _this2.toggleSubmenu = _this2.toggleSubmenu.bind(_this2);
+    return _this2;
+  }
+
+  _createClass(CategoryItem, [{
+    key: "toggleSubmenu",
+    value: function toggleSubmenu() {
+      console.log('toggle sub menu');
+      var showSubmenu = this.state.showSubmenu === true ? false : true;
+      console.log(showSubmenu);
+      this.setState({ showSubmenu: showSubmenu });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var categoryChildrenDisplay = void 0;
+
+      var categoryType = appHelpers.getCategoryType(this.props.selectedCategories, this.props.categoryId, this.props.category.id);
+      if (this.props.category.has_children === true && categoryType && this.props.lastChild !== true || this.props.category.has_children === true && this.props.backendView === true && this.state.showSubmenu === true) {
+
+        var self = this;
+
+        var lastChild = void 0;
+        if (categoryType === "selected") {
+          lastChild = true;
+        }
+
+        var children = appHelpers.convertObjectToArray(this.props.category.children);
+        var categoryChildren = children.sort(appHelpers.sortArrayAlphabeticallyByTitle).map(function (cat, index) {
+          return React.createElement(CategoryItem, {
+            key: index,
+            category: cat,
+            categoryId: self.props.categoryId,
+            urlContext: self.props.urlContext,
+            selectedCategories: self.props.selectedCategories,
+            lastChild: lastChild,
+            parent: self.props.category,
+            backendView: self.props.backendView
+          });
+        });
+
+        categoryChildrenDisplay = React.createElement(
+          "ul",
+          null,
+          categoryChildren
+        );
+      }
+
+      var categoryItemClass = "cat-item";
+      if (this.props.categoryId === parseInt(this.props.category.id)) {
+        categoryItemClass += " active";
+      }
+
+      var productCountDisplay = void 0;
+      if (this.props.category.product_count !== "0") {
+        productCountDisplay = this.props.category.product_count;
+      }
+
+      var categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl, this.props.urlContext, this.props.category.id, window.location.href);
+
+      var catItemContentDisplay = void 0;
+      if (this.props.backendView === true) {
+
+        var submenuToggleDisplay = void 0;
+        if (this.props.category.has_children === true) {
+          console.log(this.props.category.title);
+          console.log(this.props.category.has_children);
+          if (this.state.showSubmenu === true) {
+            submenuToggleDisplay = "[-]";
+          } else {
+            submenuToggleDisplay = "[+]";
+          }
+        }
+
+        catItemContentDisplay = React.createElement(
+          "span",
+          null,
+          React.createElement(
+            "span",
+            { className: "title" },
+            React.createElement(
+              "a",
+              { href: categoryItemLink },
+              this.props.category.title
+            )
+          ),
+          React.createElement(
+            "span",
+            { className: "product-counter" },
+            productCountDisplay
+          ),
+          React.createElement(
+            "span",
+            { className: "submenu-toggle", onClick: this.toggleSubmenu },
+            submenuToggleDisplay
+          )
+        );
+      } else {
+        catItemContentDisplay = React.createElement(
+          "a",
+          { href: categoryItemLink },
+          React.createElement(
+            "span",
+            { className: "title" },
+            this.props.category.title
+          ),
+          React.createElement(
+            "span",
+            { className: "product-counter" },
+            productCountDisplay
+          )
+        );
+      }
+
+      return React.createElement(
+        "li",
+        { id: "cat-" + this.props.category.id, className: categoryItemClass },
+        catItemContentDisplay,
+        categoryChildrenDisplay
+      );
+    }
+  }]);
+
+  return CategoryItem;
+}(React.Component);
+
+var SelectedCategory = function (_React$Component3) {
+  _inherits(SelectedCategory, _React$Component3);
+
+  function SelectedCategory(props) {
+    _classCallCheck(this, SelectedCategory);
+
+    var _this3 = _possibleConstructorReturn(this, (SelectedCategory.__proto__ || Object.getPrototypeOf(SelectedCategory)).call(this, props));
+
+    _this3.state = {};
+    return _this3;
+  }
+
+  _createClass(SelectedCategory, [{
+    key: "render",
+    value: function render() {
+      var selectedCategoryDisplay = void 0;
+      if (this.props.selectedCategory) {
+        selectedCategoryDisplay = React.createElement(
+          "a",
+          { onClick: this.props.onCatTreeToggle },
+          this.props.selectedCategory.title
+        );
+      }
+
+      var selectedCategoriesDisplay = void 0;
+      if (this.props.selectedCategories) {
+        var selectedCategoriesReverse = this.props.selectedCategories.slice(0);
+        selectedCategoriesDisplay = selectedCategoriesReverse.reverse().map(function (sc, index) {
+          return React.createElement(
+            "a",
+            { key: index },
+            sc.title
+          );
+        });
+      }
+
+      return React.createElement(
+        "div",
+        { onClick: this.props.onCatTreeToggle, id: "selected-category-tree-item" },
+        selectedCategoriesDisplay,
+        React.createElement("span", { className: "selected-category-arrow-down" })
+      );
+    }
+  }]);
+
+  return SelectedCategory;
+}(React.Component);
+
+function CategorySidePanel() {
+  var _useState = useState(window.catTree),
+      _useState2 = _slicedToArray(_useState, 2),
+      categories = _useState2[0],
+      setCategoies = _useState2[1];
+
+  var _useState3 = useState(window.categoryId),
+      _useState4 = _slicedToArray(_useState3, 2),
+      categoryId = _useState4[0],
+      setCategoryId = _useState4[1];
+
+  var _useState5 = useState(''),
+      _useState6 = _slicedToArray(_useState5, 2),
+      catTreeSccClass = _useState6[0],
+      setCatTreeCssClass = _useState6[1];
+
+  var _useState7 = useState(false),
+      _useState8 = _slicedToArray(_useState7, 2),
+      showCatTree = _useState8[0],
+      setShowCatTree = _useState8[1];
+
+  var _useState9 = useState(window.backendView),
+      _useState10 = _slicedToArray(_useState9, 2),
+      backendView = _useState10[0],
+      setBackendView = _useState10[1];
+
+  var _useState11 = useState(true),
+      _useState12 = _slicedToArray(_useState11, 2),
+      loading = _useState12[0],
+      setLoading = _useState12[1];
+
+  return React.createElement(
+    "div",
+    { id: "sidebar-container" },
+    React.createElement(CategoryTree, null),
+    React.createElement("div", { id: "category-menu-panels-container" })
+  );
+}
+
+ReactDOM.render(React.createElement(CategorySidePanel, null), document.getElementById('category-tree-container'));
+"use strict";
+
 window.appHelpers = function () {
 
   function convertObjectToArray(object) {
@@ -9,14 +395,14 @@ window.appHelpers = function () {
   }
 
   function getSelectedCategory(categories, categoryId) {
-    let selectedCategory;
+    var selectedCategory = void 0;
     categories.forEach(function (cat, catIndex) {
       if (!selectedCategory) {
         if (parseInt(cat.id) === categoryId) {
           selectedCategory = cat;
         } else {
           if (cat.has_children === true) {
-            const catChildren = appHelpers.convertObjectToArray(cat.children);
+            var catChildren = appHelpers.convertObjectToArray(cat.children);
             selectedCategory = appHelpers.getSelectedCategory(catChildren, categoryId);
           }
         }
@@ -26,7 +412,7 @@ window.appHelpers = function () {
   }
 
   function getCategoryType(selectedCategories, selectedCategoryId, categoryId) {
-    let categoryType;
+    var categoryType = void 0;
     if (parseInt(categoryId) === selectedCategoryId) {
       categoryType = "selected";
     } else {
@@ -43,7 +429,7 @@ window.appHelpers = function () {
     if (window.baseUrl !== window.location.origin) {
       baseUrl = window.location.origin;
     }
-    let link = baseUrl + urlContext + "/browse/";
+    var link = baseUrl + urlContext + "/browse/";
     if (catId !== "all") {
       link += "cat/" + catId + "/";
     }
@@ -54,8 +440,8 @@ window.appHelpers = function () {
   }
 
   function sortArrayAlphabeticallyByTitle(a, b) {
-    const titleA = a.title.toLowerCase();
-    const titleB = b.title.toLowerCase();
+    var titleA = a.title.toLowerCase();
+    var titleB = b.title.toLowerCase();
     if (titleA < titleB) {
       return -1;
     }
@@ -66,7 +452,7 @@ window.appHelpers = function () {
   }
 
   function getDeviceFromWidth(width) {
-    let device;
+    var device = void 0;
     if (width >= 910) {
       device = "large";
     } else if (width < 910 && width >= 610) {
@@ -78,7 +464,7 @@ window.appHelpers = function () {
   }
 
   function getUrlContext(href) {
-    let urlContext = "";
+    var urlContext = "";
     if (href.indexOf('/s/') > -1) {
       urlContext = "/s/" + href.split('/s/')[1].split('/')[0];
     }
@@ -89,7 +475,7 @@ window.appHelpers = function () {
     if (baseUrl !== window.location.origin) {
       baseUrl = window.location.origin;
     }
-    let allCatItemCssClass;
+    var allCatItemCssClass = void 0;
     if (categoryId && categoryId !== 0) {
       allCatItemCssClass = "";
     } else {
@@ -101,299 +487,13 @@ window.appHelpers = function () {
   }
 
   return {
-    convertObjectToArray,
-    getSelectedCategory,
-    getCategoryType,
-    generateCategoryLink,
-    sortArrayAlphabeticallyByTitle,
-    getDeviceFromWidth,
-    getUrlContext,
-    getAllCatItemCssClass
+    convertObjectToArray: convertObjectToArray,
+    getSelectedCategory: getSelectedCategory,
+    getCategoryType: getCategoryType,
+    generateCategoryLink: generateCategoryLink,
+    sortArrayAlphabeticallyByTitle: sortArrayAlphabeticallyByTitle,
+    getDeviceFromWidth: getDeviceFromWidth,
+    getUrlContext: getUrlContext,
+    getAllCatItemCssClass: getAllCatItemCssClass
   };
 }();
-class CategoryTree extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      categories: window.catTree,
-      categoryId: window.categoryId,
-      catTreeCssClass: "",
-      selectedCategories: [],
-      showCatTree: false,
-      backendView: window.backendView,
-      loading: true
-    };
-    this.getSelectedCategories = this.getSelectedCategories.bind(this);
-    this.updateDimensions = this.updateDimensions.bind(this);
-    this.toggleCatTree = this.toggleCatTree.bind(this);
-  }
-
-  componentWillMount() {
-    this.updateDimensions();
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.updateDimensions);
-  }
-
-  componentDidMount() {
-    window.addEventListener("resize", this.updateDimensions);
-    const urlContext = appHelpers.getUrlContext(window.location.href);
-    this.setState({ urlContext: urlContext }, function () {
-      if (this.state.categoryId && this.state.categoryId !== 0) {
-        this.getSelectedCategories(this.state.categories, this.state.categoryId);
-      } else {
-        this.setState({ loading: false });
-      }
-    });
-  }
-
-  getSelectedCategories(categories, catId) {
-    const selectedCategory = appHelpers.getSelectedCategory(this.state.categories, catId);
-    const selectedCategories = this.state.selectedCategories;
-    if (typeof selectedCategory !== 'undefined') {
-      selectedCategory.selectedIndex = selectedCategories.length;
-      selectedCategories.push(selectedCategory);
-    }
-    this.setState({ selectedCategories: selectedCategories }, function () {
-      if (selectedCategory && selectedCategory.parent_id) {
-        this.getSelectedCategories(categories, parseInt(selectedCategory.parent_id));
-      } else {
-        this.setState({ loading: false });
-      }
-    });
-  }
-
-  updateDimensions() {
-    const device = appHelpers.getDeviceFromWidth(window.innerWidth);
-    this.setState({ device: device });
-  }
-
-  toggleCatTree() {
-    const showCatTree = this.state.showCatTree === true ? false : true;
-    const catTreeCssClass = this.state.catTreeCssClass === "open" ? "" : "open";
-    this.setState({ showCatTree: showCatTree, catTreeCssClass: catTreeCssClass });
-  }
-
-  render() {
-    let categoryTreeDisplay, selectedCategoryDisplay;
-    if (!this.state.loading) {
-
-      if (this.state.device === "tablet" && this.state.selectedCategories && this.state.selectedCategories.length > 0) {
-        selectedCategoryDisplay = React.createElement(SelectedCategory, {
-          categoryId: this.state.categoryId,
-          selectedCategory: this.state.selectedCategories[0],
-          selectedCategories: this.state.selectedCategories,
-          onCatTreeToggle: this.toggleCatTree
-        });
-      }
-      if (this.state.device === "tablet" && this.state.showCatTree || this.state.device !== "tablet" || this.state.selectedCategories && this.state.selectedCategories.length === 0) {
-        if (this.state.categories) {
-          const self = this;
-          const categoryTree = this.state.categories.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat, index) => React.createElement(CategoryItem, {
-            key: index,
-            category: cat,
-            categoryId: self.state.categoryId,
-            urlContext: self.state.urlContext,
-            selectedCategories: self.state.selectedCategories,
-            backendView: self.state.backendView
-          }));
-
-          const allCatItemCssClass = appHelpers.getAllCatItemCssClass(window.location.href, window.baseUrl, this.state.urlContext, this.state.categoryId);
-          let baseUrl;
-          if (window.baseUrl !== window.location.origin) {
-            baseUrl = window.location.origin;
-          }
-
-          const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl, this.state.urlContext, "all", window.location.href);
-
-          categoryTreeDisplay = React.createElement(
-            "ul",
-            { className: "main-list" },
-            React.createElement(
-              "li",
-              { className: "cat-item" + " " + allCatItemCssClass },
-              React.createElement(
-                "a",
-                { href: categoryItemLink },
-                React.createElement(
-                  "span",
-                  { className: "title" },
-                  "All"
-                )
-              )
-            ),
-            categoryTree
-          );
-        }
-      }
-    }
-
-    return React.createElement(
-      "div",
-      { id: "category-tree", className: this.state.device + " " + this.state.catTreeCssClass },
-      selectedCategoryDisplay,
-      categoryTreeDisplay
-    );
-  }
-}
-
-class CategoryItem extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showSubmenu: false
-    };
-    this.toggleSubmenu = this.toggleSubmenu.bind(this);
-  }
-
-  toggleSubmenu() {
-    console.log('toggle sub menu');
-    const showSubmenu = this.state.showSubmenu === true ? false : true;
-    console.log(showSubmenu);
-    this.setState({ showSubmenu: showSubmenu });
-  }
-
-  render() {
-    let categoryChildrenDisplay;
-
-    const categoryType = appHelpers.getCategoryType(this.props.selectedCategories, this.props.categoryId, this.props.category.id);
-    if (this.props.category.has_children === true && categoryType && this.props.lastChild !== true || this.props.category.has_children === true && this.props.backendView === true && this.state.showSubmenu === true) {
-
-      const self = this;
-
-      let lastChild;
-      if (categoryType === "selected") {
-        lastChild = true;
-      }
-
-      const children = appHelpers.convertObjectToArray(this.props.category.children);
-      const categoryChildren = children.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat, index) => React.createElement(CategoryItem, {
-        key: index,
-        category: cat,
-        categoryId: self.props.categoryId,
-        urlContext: self.props.urlContext,
-        selectedCategories: self.props.selectedCategories,
-        lastChild: lastChild,
-        parent: self.props.category,
-        backendView: self.props.backendView
-      }));
-
-      categoryChildrenDisplay = React.createElement(
-        "ul",
-        null,
-        categoryChildren
-      );
-    }
-
-    let categoryItemClass = "cat-item";
-    if (this.props.categoryId === parseInt(this.props.category.id)) {
-      categoryItemClass += " active";
-    }
-
-    let productCountDisplay;
-    if (this.props.category.product_count !== "0") {
-      productCountDisplay = this.props.category.product_count;
-    }
-
-    const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl, this.props.urlContext, this.props.category.id, window.location.href);
-
-    let catItemContentDisplay;
-    if (this.props.backendView === true) {
-
-      let submenuToggleDisplay;
-      if (this.props.category.has_children === true) {
-        console.log(this.props.category.title);
-        console.log(this.props.category.has_children);
-        if (this.state.showSubmenu === true) {
-          submenuToggleDisplay = "[-]";
-        } else {
-          submenuToggleDisplay = "[+]";
-        }
-      }
-
-      catItemContentDisplay = React.createElement(
-        "span",
-        null,
-        React.createElement(
-          "span",
-          { className: "title" },
-          React.createElement(
-            "a",
-            { href: categoryItemLink },
-            this.props.category.title
-          )
-        ),
-        React.createElement(
-          "span",
-          { className: "product-counter" },
-          productCountDisplay
-        ),
-        React.createElement(
-          "span",
-          { className: "submenu-toggle", onClick: this.toggleSubmenu },
-          submenuToggleDisplay
-        )
-      );
-    } else {
-      catItemContentDisplay = React.createElement(
-        "a",
-        { href: categoryItemLink },
-        React.createElement(
-          "span",
-          { className: "title" },
-          this.props.category.title
-        ),
-        React.createElement(
-          "span",
-          { className: "product-counter" },
-          productCountDisplay
-        )
-      );
-    }
-
-    return React.createElement(
-      "li",
-      { id: "cat-" + this.props.category.id, className: categoryItemClass },
-      catItemContentDisplay,
-      categoryChildrenDisplay
-    );
-  }
-}
-
-class SelectedCategory extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    let selectedCategoryDisplay;
-    if (this.props.selectedCategory) {
-      selectedCategoryDisplay = React.createElement(
-        "a",
-        { onClick: this.props.onCatTreeToggle },
-        this.props.selectedCategory.title
-      );
-    }
-
-    let selectedCategoriesDisplay;
-    if (this.props.selectedCategories) {
-      const selectedCategoriesReverse = this.props.selectedCategories.slice(0);
-      selectedCategoriesDisplay = selectedCategoriesReverse.reverse().map((sc, index) => React.createElement(
-        "a",
-        { key: index },
-        sc.title
-      ));
-    }
-
-    return React.createElement(
-      "div",
-      { onClick: this.props.onCatTreeToggle, id: "selected-category-tree-item" },
-      selectedCategoriesDisplay,
-      React.createElement("span", { className: "selected-category-arrow-down" })
-    );
-  }
-}
-
-ReactDOM.render(React.createElement(CategoryTree, null), document.getElementById('category-tree-container'));
