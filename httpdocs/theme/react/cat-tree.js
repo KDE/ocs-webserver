@@ -1,5 +1,120 @@
 "use strict";
 
+window.appHelpers = function () {
+
+  function convertObjectToArray(object) {
+    newArray = [];
+    for (i in object) {
+      newArray.push(object[i]);
+    }
+    return newArray;
+  }
+
+  function getSelectedCategory(categories, categoryId) {
+    var selectedCategory = void 0;
+    categories.forEach(function (cat, catIndex) {
+      if (!selectedCategory) {
+        if (parseInt(cat.id) === categoryId) {
+          selectedCategory = cat;
+        } else {
+          if (cat.has_children === true) {
+            var catChildren = appHelpers.convertObjectToArray(cat.children);
+            selectedCategory = appHelpers.getSelectedCategory(catChildren, categoryId);
+          }
+        }
+      }
+    });
+    return selectedCategory;
+  }
+
+  function getCategoryType(selectedCategories, selectedCategoryId, categoryId) {
+    var categoryType = void 0;
+    if (parseInt(categoryId) === selectedCategoryId) {
+      categoryType = "selected";
+    } else {
+      selectedCategories.forEach(function (selectedCat, index) {
+        if (selectedCat.id === categoryId) {
+          categoryType = "parent";
+        }
+      });
+    }
+    return categoryType;
+  }
+
+  function generateCategoryLink(baseUrl, urlContext, catId, locationHref) {
+    if (window.baseUrl !== window.location.origin) {
+      baseUrl = window.location.origin;
+    }
+    var link = baseUrl + urlContext + "/browse/";
+    if (catId !== "all") {
+      link += "cat/" + catId + "/";
+    }
+    if (locationHref.indexOf('ord') > -1) {
+      link += "ord/" + locationHref.split('/ord/')[1];
+    }
+    return link;
+  }
+
+  function sortArrayAlphabeticallyByTitle(a, b) {
+    var titleA = a.title.toLowerCase();
+    var titleB = b.title.toLowerCase();
+    if (titleA < titleB) {
+      return -1;
+    }
+    if (titleA > titleB) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getDeviceFromWidth(width) {
+    var device = void 0;
+    if (width >= 910) {
+      device = "large";
+    } else if (width < 910 && width >= 610) {
+      device = "mid";
+    } else if (width < 610) {
+      device = "tablet";
+    }
+    return device;
+  }
+
+  function getUrlContext(href) {
+    var urlContext = "";
+    if (href.indexOf('/s/') > -1) {
+      urlContext = "/s/" + href.split('/s/')[1].split('/')[0];
+    }
+    return urlContext;
+  }
+
+  function getAllCatItemCssClass(href, baseUrl, urlContext, categoryId) {
+    if (baseUrl !== window.location.origin) {
+      baseUrl = window.location.origin;
+    }
+    var allCatItemCssClass = void 0;
+    if (categoryId && categoryId !== 0) {
+      allCatItemCssClass = "";
+    } else {
+      if (href === baseUrl + urlContext || href === baseUrl + urlContext + "/browse/" || href === baseUrl + urlContext + "/browse/ord/latest/" || href === baseUrl + urlContext + "/browse/ord/top/" || href === "https://store.kde.org" || href === "https://store.kde.org/browse/ord/latest/" || href === "https://store.kde.org/browse/ord/top/" || href === "https://addons.videolan.org" || href === "https://addons.videolan.org/browse/ord/latest/" || href === "https://addons.videolan.org/browse/ord/top/" || href === "https://share.krita.org/" || href === "https://share.krita.org/browse/ord/latest/" || href === "https://share.krita.org/browse/ord/top/") {
+        allCatItemCssClass = "active";
+      }
+    }
+    return allCatItemCssClass;
+  }
+
+  return {
+    convertObjectToArray: convertObjectToArray,
+    getSelectedCategory: getSelectedCategory,
+    getCategoryType: getCategoryType,
+    generateCategoryLink: generateCategoryLink,
+    sortArrayAlphabeticallyByTitle: sortArrayAlphabeticallyByTitle,
+    getDeviceFromWidth: getDeviceFromWidth,
+    getUrlContext: getUrlContext,
+    getAllCatItemCssClass: getAllCatItemCssClass
+  };
+}();
+"use strict";
+
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -384,118 +499,3 @@ function CategorySidePanel() {
 }
 
 ReactDOM.render(React.createElement(CategorySidePanel, null), document.getElementById('category-tree-container'));
-"use strict";
-
-window.appHelpers = function () {
-
-  function convertObjectToArray(object) {
-    newArray = [];
-    for (i in object) {
-      newArray.push(object[i]);
-    }
-    return newArray;
-  }
-
-  function getSelectedCategory(categories, categoryId) {
-    var selectedCategory = void 0;
-    categories.forEach(function (cat, catIndex) {
-      if (!selectedCategory) {
-        if (parseInt(cat.id) === categoryId) {
-          selectedCategory = cat;
-        } else {
-          if (cat.has_children === true) {
-            var catChildren = appHelpers.convertObjectToArray(cat.children);
-            selectedCategory = appHelpers.getSelectedCategory(catChildren, categoryId);
-          }
-        }
-      }
-    });
-    return selectedCategory;
-  }
-
-  function getCategoryType(selectedCategories, selectedCategoryId, categoryId) {
-    var categoryType = void 0;
-    if (parseInt(categoryId) === selectedCategoryId) {
-      categoryType = "selected";
-    } else {
-      selectedCategories.forEach(function (selectedCat, index) {
-        if (selectedCat.id === categoryId) {
-          categoryType = "parent";
-        }
-      });
-    }
-    return categoryType;
-  }
-
-  function generateCategoryLink(baseUrl, urlContext, catId, locationHref) {
-    if (window.baseUrl !== window.location.origin) {
-      baseUrl = window.location.origin;
-    }
-    var link = baseUrl + urlContext + "/browse/";
-    if (catId !== "all") {
-      link += "cat/" + catId + "/";
-    }
-    if (locationHref.indexOf('ord') > -1) {
-      link += "ord/" + locationHref.split('/ord/')[1];
-    }
-    return link;
-  }
-
-  function sortArrayAlphabeticallyByTitle(a, b) {
-    var titleA = a.title.toLowerCase();
-    var titleB = b.title.toLowerCase();
-    if (titleA < titleB) {
-      return -1;
-    }
-    if (titleA > titleB) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function getDeviceFromWidth(width) {
-    var device = void 0;
-    if (width >= 910) {
-      device = "large";
-    } else if (width < 910 && width >= 610) {
-      device = "mid";
-    } else if (width < 610) {
-      device = "tablet";
-    }
-    return device;
-  }
-
-  function getUrlContext(href) {
-    var urlContext = "";
-    if (href.indexOf('/s/') > -1) {
-      urlContext = "/s/" + href.split('/s/')[1].split('/')[0];
-    }
-    return urlContext;
-  }
-
-  function getAllCatItemCssClass(href, baseUrl, urlContext, categoryId) {
-    if (baseUrl !== window.location.origin) {
-      baseUrl = window.location.origin;
-    }
-    var allCatItemCssClass = void 0;
-    if (categoryId && categoryId !== 0) {
-      allCatItemCssClass = "";
-    } else {
-      if (href === baseUrl + urlContext || href === baseUrl + urlContext + "/browse/" || href === baseUrl + urlContext + "/browse/ord/latest/" || href === baseUrl + urlContext + "/browse/ord/top/" || href === "https://store.kde.org" || href === "https://store.kde.org/browse/ord/latest/" || href === "https://store.kde.org/browse/ord/top/" || href === "https://addons.videolan.org" || href === "https://addons.videolan.org/browse/ord/latest/" || href === "https://addons.videolan.org/browse/ord/top/" || href === "https://share.krita.org/" || href === "https://share.krita.org/browse/ord/latest/" || href === "https://share.krita.org/browse/ord/top/") {
-        allCatItemCssClass = "active";
-      }
-    }
-    return allCatItemCssClass;
-  }
-
-  return {
-    convertObjectToArray: convertObjectToArray,
-    getSelectedCategory: getSelectedCategory,
-    getCategoryType: getCategoryType,
-    generateCategoryLink: generateCategoryLink,
-    sortArrayAlphabeticallyByTitle: sortArrayAlphabeticallyByTitle,
-    getDeviceFromWidth: getDeviceFromWidth,
-    getUrlContext: getUrlContext,
-    getAllCatItemCssClass: getAllCatItemCssClass
-  };
-}();
