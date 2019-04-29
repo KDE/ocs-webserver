@@ -375,19 +375,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'controller' => 'product',
                     'action'     => 'add'
                 )));
-        
+
         $router->addRoute('store_settings', new Zend_Controller_Router_Route('/s/:domain_store_id/settings', array(
                     'module'     => 'default',
                     'controller' => 'settings',
                     'action'     => 'index'
                 )));
-        
+
         $router->addRoute('store_pling_box_show', new Zend_Controller_Router_Route('/s/:domain_store_id/supporterbox/:memberid', array(
                     'module'     => 'default',
                     'controller' => 'plingbox',
                     'action'     => 'index'
                 )));
-        
+
         $router->addRoute('store_pling_box_show', new Zend_Controller_Router_Route('/s/:domain_store_id/productcomment/addreply/*', array(
                     'module'     => 'default',
                     'controller' => 'productcomment',
@@ -399,7 +399,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'controller' => 'product',
                     'action'     => 'show'
                 )));
-        
+
         /*
         $router->addRoute('store_product', new Zend_Controller_Router_Route('/s/:domain_store_id/c/:project_id/:action/*', array(
                     'module'     => 'default',
@@ -418,20 +418,20 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'controller' => 'user',
                     'action'     => 'index'
                 )));
-        
+
         $router->addRoute('store_login', new Zend_Controller_Router_Route('/s/:domain_store_id/login/*', array(
                     'module'     => 'default',
                     'controller' => 'authorization',
                     'action'     => 'login'
                 )));
-        
+
         $router->addRoute('store_register', new Zend_Controller_Router_Route('/s/:domain_store_id/register', array(
                     'module'     => 'default',
                     'controller' => 'authorization',
                     'action'     => 'register'
                 )));
-        
-        
+
+
 
         /** general routing rules */
         $router->addRoute('home', new Zend_Controller_Router_Route('/', array(
@@ -552,9 +552,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'controller' => 'product',
                     'action'     => 'saveproduct'
                 )));
-        
-        
-        
+
+
+
         /**
          * Collection
          */
@@ -563,7 +563,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'controller' => 'collection',
                     'action'     => 'index'
                 )));
-        
+
         $router->addRoute('collection_short_url', new Zend_Controller_Router_Route('/c/:project_id/:action/*', array(
                     'module'     => 'default',
                     'controller' => 'collection',
@@ -601,9 +601,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'controller' => 'collection',
                     'action'     => 'saveproduct'
                 )));
-        
-        
-        
+
+
+
 
         /**
          * Member
@@ -717,12 +717,25 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'action'     => 'index',
                     'page'       => 'faqold'
                 )));
-        
-        $router->addRoute('static_faq', new Zend_Controller_Router_Route_Static('/faq', array(
+
+        $router->addRoute('static_faq', new Zend_Controller_Router_Route_Static('/about-pling', array(
                     'module'     => 'default',
                     'controller' => 'content',
                     'action'     => 'index',
                     'page'       => 'faq'
+                )));
+
+        $router->addRoute('static_gitfaq', new Zend_Controller_Router_Route_Static('/about-opencode', array(
+                    'module'     => 'default',
+                    'controller' => 'content',
+                    'action'     => 'index',
+                    'page'       => 'gitfaq'
+                )));
+        $router->addRoute('static_plings', new Zend_Controller_Router_Route_Static('/about', array(
+                    'module'     => 'default',
+                    'controller' => 'content',
+                    'action'     => 'index',
+                    'page'       => 'about'
                 )));
 
         $router->addRoute('static_terms', new Zend_Controller_Router_Route_Static('/terms', array(
@@ -844,7 +857,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'action'       => 'vote'
             )));
 
-        // embed 
+        // embed
         $router->addRoute('embed_v1_member_projects', new Zend_Controller_Router_Route('/embed/v1/member/:memberid', array(
                     'module'     => 'default',
                     'controller' => 'embedv1',
