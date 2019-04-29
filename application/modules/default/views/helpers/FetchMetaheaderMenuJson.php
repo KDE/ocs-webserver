@@ -41,7 +41,7 @@ class Default_View_Helper_FetchMetaheaderMenuJson extends Zend_View_Helper_Abstr
             foreach ($result as $obj) {
                 $o =  $obj['order'];   
                 $curOrder = floor($obj['order']/1000);      
-                if($curOrder<10 or $curOrder>50) continue;
+                if($curOrder<10 or $curOrder>60) continue;
                 $obj['calcOrder'] = $curOrder;              
 
                 $tmp = array();
@@ -52,8 +52,12 @@ class Default_View_Helper_FetchMetaheaderMenuJson extends Zend_View_Helper_Abstr
 
                 if($curOrder==30) {
                     // Desktop set calcOrder = 9 manuelly put desktop in front                    
+                    $tmp['calcOrder'] = 8;
+                    $arrayDesktop[] = $tmp;  
+                } else if($curOrder==60) {
+                    // Desktop set calcOrder = 9 manuelly put desktop in front                    
                     $tmp['calcOrder'] = 9;
-                    $arrayDesktop[] = $tmp;    
+                    $arrayDesktop[] = $tmp;  
                 }else{
                     $arrayRest[] = $tmp;    
                 }                        
@@ -82,8 +86,11 @@ class Default_View_Helper_FetchMetaheaderMenuJson extends Zend_View_Helper_Abstr
                     }
 
                     switch ($obj['calcOrder']) {
-                        case 9:
+                        case 8:
                             $obj['menugroup']='Desktops';
+                            break;
+                        case 9:
+                            $obj['menugroup']='All';
                             break;
                         case 10:
                             $obj['menugroup']='Applications';
@@ -101,7 +108,7 @@ class Default_View_Helper_FetchMetaheaderMenuJson extends Zend_View_Helper_Abstr
                          
             }
 
-            $cache->save($domainobjects, $cacheName, array(), 28800);
+            $cache->save($domainobjects, $cacheName, array(), 3600);
         }
         return  Zend_Json::encode($domainobjects);
     }
