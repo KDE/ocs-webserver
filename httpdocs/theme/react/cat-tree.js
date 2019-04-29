@@ -494,7 +494,11 @@ function CategorySidePanel() {
     "div",
     { id: "sidebar-container" },
     React.createElement(CategoryTree, null),
-    React.createElement("div", { id: "category-menu-panels-container" })
+    React.createElement(
+      "div",
+      { id: "category-menu-panels-container" },
+      React.createElement("div", { id: "category-menu-panels-slider" })
+    )
   );
 }
 
