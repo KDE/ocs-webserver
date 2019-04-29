@@ -731,11 +731,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'action'     => 'index',
                     'page'       => 'gitfaq'
                 )));
-        $router->addRoute('static_plings', new Zend_Controller_Router_Route_Static('/plings', array(
+        $router->addRoute('static_plings', new Zend_Controller_Router_Route_Static('/about', array(
                     'module'     => 'default',
                     'controller' => 'content',
                     'action'     => 'index',
-                    'page'       => 'plings'
+                    'page'       => 'about'
                 )));
 
         $router->addRoute('static_terms', new Zend_Controller_Router_Route_Static('/terms', array(

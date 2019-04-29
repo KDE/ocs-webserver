@@ -39,17 +39,17 @@ class AboutMenu extends React.Component {
   render(){
 
     let faqLinkItem, apiLinkItem, aboutLinkItem,aboutPlingItem, aboutopencodeItem;
-    faqLinkItem = (<li><a  id="faq" href={this.props.baseUrl +"/plings"}>FAQ</a></li>);
     aboutPlingItem = (<li><a id="faq" href={this.props.baseUrl +"/about-pling"}>About Pling</a></li>);
     aboutopencodeItem = (<li><a id="faq" href={this.props.baseUrl +"/about-opencode"}>About Opencode</a></li>);
+    aboutLinkItem = (<li><a id="about" href={this.props.baseUrl +"/about"}>About</a></li>);
     if (this.props.isExternal === false){
-      //faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>About Pling</a></li>);
+      faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>FAQ</a></li>);
       apiLinkItem = (<li><a className="popuppanel" id="api" href={"/partials/ocsapicontent.phtml"}>API</a></li>);
-      aboutLinkItem = (<li><a className="popuppanel" id="about" href={"/partials/about.phtml"}>About</a></li>);
+      //aboutLinkItem = (<li><a className="popuppanel" id="about" href={"/partials/about.phtml"}>About</a></li>);
     } else {
-      //faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={this.props.baseUrl + "/#faq"}>FAQ</a></li>);
+      faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={this.props.baseUrl + "/#faq"}>FAQ</a></li>);
       apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={this.props.baseUrl + "/#api"}>API</a></li>);
-      aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={this.props.baseUrl + "/#about"}>About</a></li>);
+      //aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={this.props.baseUrl + "/#about"}>About</a></li>);
     }
 
     return (
@@ -58,9 +58,9 @@ class AboutMenu extends React.Component {
         <ul className="dropdown-menu dropdown-menu-right">
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
           {faqLinkItem}
+          {apiLinkItem}
           {aboutPlingItem}
           {aboutopencodeItem}
-          {apiLinkItem}
           {aboutLinkItem}
         </ul>
       </li>
