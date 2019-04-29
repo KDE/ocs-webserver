@@ -3,7 +3,7 @@
 window.appHelpers = function () {
 
   function convertObjectToArray(object) {
-    newArray = [];
+    var newArray = [];
     for (i in object) {
       newArray.push(object[i]);
     }
