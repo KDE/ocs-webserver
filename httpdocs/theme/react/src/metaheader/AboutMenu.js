@@ -39,8 +39,11 @@ class AboutMenu extends React.Component {
   render(){
 
     let faqLinkItem, apiLinkItem, aboutLinkItem,aboutPlingItem, aboutopencodeItem;
-    aboutPlingItem = (<li><a id="faq" href={this.props.baseUrl +"/about-pling"}>About Pling</a></li>);
-    aboutopencodeItem = (<li><a id="faq" href={this.props.baseUrl +"/about-opencode"}>About Opencode</a></li>);
+    if (this.props.isAdmin ){
+      aboutPlingItem = (<li><a id="faq" href={this.props.baseUrl +"/about-pling"}>About Pling</a></li>);
+      aboutopencodeItem = (<li><a id="faq" href={this.props.baseUrl +"/about-opencode"}>About Opencode</a></li>);
+    }
+
     aboutLinkItem = (<li><a id="about" href={this.props.baseUrl +"/about"}>About</a></li>);
     if (this.props.isExternal === false){
       faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>FAQ</a></li>);
