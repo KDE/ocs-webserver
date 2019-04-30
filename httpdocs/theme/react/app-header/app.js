@@ -51,27 +51,27 @@ class SiteHeader extends React.Component {
 
   render(){
 
-    let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
-    if (this.state.user){
-      // userMenuDisplay = (
-      //   <SiteHeaderUserMenu
-      //     serverUrl={this.state.serverUrl}
-      //     baseUrl={this.state.baseUrl}
-      //     user={this.state.user}
-      //   />
-      // );
-      // siteHeaderTopRightCssClass = "w-user";
-    } else {
-      loginMenuDisplay = (
-        <div id="site-header-right-bottom">
-        <SiteHeaderLoginMenu
-          baseUrl={this.state.baseUrl}
-          redirectString={this.state.redirectString}
-          template={this.state.template}
-        />
-        </div>
-      );
-    }
+    let  siteHeaderTopRightCssClass;
+    // if (this.state.user){
+    //   userMenuDisplay = (
+    //     <SiteHeaderUserMenu
+    //       serverUrl={this.state.serverUrl}
+    //       baseUrl={this.state.baseUrl}
+    //       user={this.state.user}
+    //     />
+    //   );
+    //   siteHeaderTopRightCssClass = "w-user";
+    // } else {
+    //   loginMenuDisplay = (
+    //     <div id="site-header-right-bottom">
+    //     <SiteHeaderLoginMenu
+    //       baseUrl={this.state.baseUrl}
+    //       redirectString={this.state.redirectString}
+    //       template={this.state.template}
+    //     />
+    //     </div>
+    //   );
+    // }
 
     let logoLink = this.state.serverUrl;
     if (this.state.serverUri.indexOf('/s/') > -1){
@@ -112,8 +112,6 @@ class SiteHeader extends React.Component {
 
             </div>
 
-              {loginMenuDisplay}
-          
           </div>
         </section>
       );
