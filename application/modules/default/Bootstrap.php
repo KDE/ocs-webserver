@@ -506,60 +506,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'controller' => 'widget',
                     'action'     => 'savedefault'
                 )));
-        
-        $router->addRoute('support_old', new Zend_Controller_Router_Route('/support-old', array(
-                    'module'     => 'default',
-                    'controller' => 'support',
-                    'action'     => 'index'
-                )));
-        
-        $router->addRoute('support_old_pay', new Zend_Controller_Router_Route('/support-old/pay', array(
-                    'module'     => 'default',
-                    'controller' => 'support',
-                    'action'     => 'pay'
-                )));
-        
-        $router->addRoute('support_old_paymentok', new Zend_Controller_Router_Route('/support-old/paymentok', array(
-                    'module'     => 'default',
-                    'controller' => 'support',
-                    'action'     => 'paymentok'
-                )));
-        
-        
-        $router->addRoute('support_old_paymentcancel', new Zend_Controller_Router_Route('/support-old/paymentcancel', array(
-                    'module'     => 'default',
-                    'controller' => 'support',
-                    'action'     => 'paymentcancel'
-                )));
-        
-        
-        
-        
-        $router->addRoute('support_new', new Zend_Controller_Router_Route('/support', array(
-                    'module'     => 'default',
-                    'controller' => 'subscription',
-                    'action'     => 'index'
-                )));
 
-        $router->addRoute('support_new_pay', new Zend_Controller_Router_Route('/support/pay', array(
-                    'module'     => 'default',
-                    'controller' => 'subscription',
-                    'action'     => 'pay'
-                )));
-        
-        $router->addRoute('support_new_paymentok', new Zend_Controller_Router_Route('/support/paymentok', array(
-                    'module'     => 'default',
-                    'controller' => 'subscription',
-                    'action'     => 'paymentok'
-                )));
-        
-        
-        $router->addRoute('support_new_paymentcancel', new Zend_Controller_Router_Route('/support/paymentcancel', array(
-                    'module'     => 'default',
-                    'controller' => 'subscription',
-                    'action'     => 'paymentcancel'
-                )));
-        
         /**
          * Project/Product
          */
