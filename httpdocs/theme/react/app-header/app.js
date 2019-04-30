@@ -63,11 +63,13 @@ class SiteHeader extends React.Component {
       // siteHeaderTopRightCssClass = "w-user";
     } else {
       loginMenuDisplay = (
+        <div id="site-header-right-bottom">
         <SiteHeaderLoginMenu
           baseUrl={this.state.baseUrl}
           redirectString={this.state.redirectString}
           template={this.state.template}
         />
+        </div>
       );
     }
 
@@ -109,9 +111,9 @@ class SiteHeader extends React.Component {
               />
 
             </div>
-            <div id="site-header-right-bottom">
+
               {loginMenuDisplay}
-            </div>
+          
           </div>
         </section>
       );

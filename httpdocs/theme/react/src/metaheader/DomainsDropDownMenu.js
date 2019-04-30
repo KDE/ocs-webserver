@@ -10,13 +10,15 @@ class DomainsDropDownMenu extends React.Component {
 
   componentDidMount() {
 
-    let menuGroups = [];
-    if(!this.props.domains) return;
-    this.props.domains.forEach(function(domain,index){
-      if (menuGroups.indexOf(domain.menugroup) === -1){
-        menuGroups.push(domain.menugroup);
-      }
-    });
+    // let menuGroups = [];
+    // if(!this.props.domains) return;
+    // this.props.domains.forEach(function(domain,index){
+    //   if (menuGroups.indexOf(domain.menugroup) === -1){
+    //     menuGroups.push(domain.menugroup);
+    //   }
+    // });
+    // this.setState({menuGroups:menuGroups});
+    let menuGroups=[  "Other","Artwork","Desktops", "Applications", "Addons" ];
     this.setState({menuGroups:menuGroups});
   }
 
@@ -47,8 +49,9 @@ class DomainsDropDownMenu extends React.Component {
   render(){
 
     let menuGroupsDisplayLeft, menuGroupsDisplayRight,menuGroupsDisplayMiddle;
+  
     if (this.state.menuGroups){
-      menuGroupsDisplayLeft = this.state.menuGroups.slice(0,1).map((mg,i) => (
+      menuGroupsDisplayLeft = this.state.menuGroups.slice(0,2).map((mg,i) => (
         <DomainsMenuGroup
           key={i}
           domains={this.props.domains}
@@ -56,7 +59,7 @@ class DomainsDropDownMenu extends React.Component {
           sName={this.props.sName}
         />
       ));
-      menuGroupsDisplayMiddle = this.state.menuGroups.slice(1,3).map((mg,i) => (
+      menuGroupsDisplayMiddle = this.state.menuGroups.slice(2,3).map((mg,i) => (
         <DomainsMenuGroup
           key={i}
           domains={this.props.domains}
@@ -73,6 +76,7 @@ class DomainsDropDownMenu extends React.Component {
           sName={this.props.sName}
         />
       ));
+
     }
 
     return (
