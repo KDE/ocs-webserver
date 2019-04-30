@@ -36,7 +36,7 @@
                         <h4 class="panel-title"><a data-parent="#accordion_1" data-toggle="collapse" href="#collapse_11">What is Pling?</a></h4>
                     </div>
                     <div class="panel-collapse collapse" id="collapse_11">
-                        <div class="panel-body">Pling.com is a site where creators can publish their libre products and get a small compensation (plings) each time a product is downloaded.</div>
+                        <div class="panel-body">Pling.com is a site where creators can publish their libre products and get a small compensation each time a product is downloaded.</div>
                     </div>
                 </div>
                 <div class="panel panel-default">
@@ -49,10 +49,18 @@
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4 class="panel-title"><a data-parent="#accordion_1" data-toggle="collapse" href="#collapse_13">How does supporting a creator works?</a></h4>
+                        <h4 class="panel-title"><a data-parent="#accordion_1" data-toggle="collapse" href="#collapse_13">How does supporting works?</a></h4>
                     </div>
                     <div class="panel-collapse collapse" id="collapse_13">
                         <div class="panel-body">A user can become a supporter of the platform via a monthly or yearly donation. The smallest amount starts at 99 Cents a month.</div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><a data-parent="#accordion_1" data-toggle="collapse" href="#collapse_14">Is there a fee? </a></h4>
+                    </div>
+                    <div class="panel-collapse collapse" id="collapse_14">
+                        <div class="panel-body">There is no additional fee for the plattform. There is only the paypal fee and taxes.</div>
                     </div>
                 </div>
                 <div class="panel panel-default">
@@ -67,10 +75,10 @@
             
             <hr>
             <div class="panel-group" id="accordion_2">
-                <h3>How it works</h3>
+                <h3>I'm a creator. How does it work?</h3>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4 class="panel-title"><a data-parent="#accordion_2" data-toggle="collapse" href="#collapse_24">I'm a creator. How do I get started? </a></h4>
+                        <h4 class="panel-title"><a data-parent="#accordion_2" data-toggle="collapse" href="#collapse_24">How do I get started? </a></h4>
                     </div>
                     <div class="panel-collapse collapse" id="collapse_24">
                         <div class="panel-body">It's simple: Register an account and start publishing your products!</div>
@@ -89,7 +97,15 @@
                         <h4 class="panel-title"><a data-parent="#accordion_2" data-toggle="collapse" href="#collapse_25">How does compensation work? </a></h4>
                     </div>
                     <div class="panel-collapse collapse" id="collapse_25">
-                        <div class="panel-body">Each time a product is download you get plings. A Pling is 1/10 USD Cent. How many Plings you get for download shows the following table.
+                        <div class="panel-body">Contributors to any part of the Opendesktop platform get a compensation each time their contribution/product is downloaded. Download-clicks are converted into monetary value based on the following terms:
+                            <br>
+                            Payout = Number of Downloads * Pling-Factor * 1 $-cent,
+                            <br>
+                            where each product category is valued by a so-called “Pling-Factor”.
+                            <br>
+                            You can see the value of each category in the list below.
+                            <br>
+                            Based on the actual amount of content and downloads, we may adjust these values at any time, even during a month, see our <a href="/terms/payout">payout terms and condition</a>.
                             <br><br>
                             <section class="body-wrap" id="cat-list">
                                 <section class="wrapper">
@@ -101,7 +117,7 @@
                                         </div>
                                         <div class="col-md-3">    
                                             <span class="label lable-default right" style="padding-top: 10px;padding-left: 0;">
-                                                    Plings
+                                                    Pling Factor
                                             </span>
                                         </div>
                                         <div class="col-md-3">
@@ -120,7 +136,7 @@
                                         $plingFactor='';
                                         $sourceRequired='';
                                         if($countSubCat==0){
-                                                $plingFactor = '<span class="right factor">'. ($element['dl_pling_factor']*10).'</span>';  
+                                                $plingFactor = '<span class="right factor">'. ($element['dl_pling_factor']).'</span>';  
                                                 $sourceRequired = ($element['source_required']?'Yes':'No');
                                         }
                                         /*
