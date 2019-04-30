@@ -18,6 +18,9 @@ class DomainsDropDownMenu extends React.Component {
     //   }
     // });
     // this.setState({menuGroups:menuGroups});
+
+    // here is dirty coded because CT want to place other at firt section without modify db sort.
+    // and if other then show groupname => Pling. so DomainsMenuGroup also hardcode display groupname
     let menuGroups=[  "Other","Artwork","Desktops", "Applications", "Addons" ];
     this.setState({menuGroups:menuGroups});
   }
@@ -49,7 +52,7 @@ class DomainsDropDownMenu extends React.Component {
   render(){
 
     let menuGroupsDisplayLeft, menuGroupsDisplayRight,menuGroupsDisplayMiddle;
-  
+
     if (this.state.menuGroups){
       menuGroupsDisplayLeft = this.state.menuGroups.slice(0,2).map((mg,i) => (
         <DomainsMenuGroup
