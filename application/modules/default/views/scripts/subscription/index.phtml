@@ -40,15 +40,12 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
    
                 <div class="content col-md-8">
                     <h2>Become a Supporter</h2>
-                    <p>Your donation supports potentially all <b> <?=$countActiveMembers?></b> creators on opendesktop.org.
+                    <p>Your donation supports potentially all <b> <?=$countActiveMembers?></b> creators on opendesktop.org (see <a href="/faq-pling">pling FAQ</a>).
                     </p>
-                    <p>For every download you make, a small amount is directed to that creator (see <a href="/faq-pling">pling FAQ</a>).</p>
-                    
-                                                                          
                     <div class="x-donation-widget">
                          <div class="row disply-flex">
                             <div class="col-lg-2 col-md-2" style="padding-left: 15px;">        
-                                <div class="x-tabs-header ">
+                                <div class="x-tabs-header " style="padding-left: 40px;">
                                   <div class="header-content">                                                
                                     Base Amount                                      
                                   </div>
@@ -56,16 +53,18 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                             </div>                        
 
                             <div class="col-lg-5 col-md-12">        
-                                <div class="x-tabs-header ">
+                                <div class="x-tabs-header " style="padding-left: 30px;">
                                   <div class="header-content">                                                
-                                    Monthly Payment                                           
+                                    Monthly Payment  
+                                    <br><span style="font-size: small;" class="extrasmall">(can be cancelled at any time)</span>
                                   </div>
                                 </div>                                                  
                             </div>
                             <div class="col-lg-5 col-md-12" style="padding-right: 15px;">
                             <div class="x-tabs-header ">
                               <div class="header-content">                                                
-                                 Yearly Payment                                               
+                                 Yearly Payment   
+                                 <br><span style="font-size: small;" class="extrasmall">(can be cancelled at any time before the next year)</span>
                               </div>
                             </div>                                                                                     
                             </div>
@@ -166,7 +165,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                         <span class="unit-wrapper">
                                           <span class="unit">$</span>
                                         </span>
-                                        <span class="amount"><input id="custom_amount" min="16" step="any" inputmode="numeric" type="number" name="amount_handish"> </span>
+                                        <span class="amount"><input id="custom_amount" min="15.01" step="any" inputmode="numeric" type="number" name="amount_handish"> </span>
                                         <span class="desc">Enter a free amount > $15</span>
                                       </div>
                                     
