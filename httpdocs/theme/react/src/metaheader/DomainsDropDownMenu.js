@@ -10,13 +10,18 @@ class DomainsDropDownMenu extends React.Component {
 
   componentDidMount() {
 
-    let menuGroups = [];
-    if(!this.props.domains) return;
-    this.props.domains.forEach(function(domain,index){
-      if (menuGroups.indexOf(domain.menugroup) === -1){
-        menuGroups.push(domain.menugroup);
-      }
-    });
+    // let menuGroups = [];
+    // if(!this.props.domains) return;
+    // this.props.domains.forEach(function(domain,index){
+    //   if (menuGroups.indexOf(domain.menugroup) === -1){
+    //     menuGroups.push(domain.menugroup);
+    //   }
+    // });
+    // this.setState({menuGroups:menuGroups});
+
+    // here is dirty coded because CT want to place other at firt section without modify db sort.
+    // and if other then show groupname => Pling. so DomainsMenuGroup also hardcode display groupname
+    let menuGroups=[  "Other","Artwork","Desktops", "Applications", "Addons" ];
     this.setState({menuGroups:menuGroups});
   }
 
@@ -46,7 +51,8 @@ class DomainsDropDownMenu extends React.Component {
 
   render(){
 
-    let menuGroupsDisplayLeft, menuGroupsDisplayRight;
+    let menuGroupsDisplayLeft, menuGroupsDisplayRight,menuGroupsDisplayMiddle;
+
     if (this.state.menuGroups){
       menuGroupsDisplayLeft = this.state.menuGroups.slice(0,2).map((mg,i) => (
         <DomainsMenuGroup
@@ -56,7 +62,7 @@ class DomainsDropDownMenu extends React.Component {
           sName={this.props.sName}
         />
       ));
-      menuGroupsDisplayRight = this.state.menuGroups.slice(2).map((mg,i) => (
+      menuGroupsDisplayMiddle = this.state.menuGroups.slice(2,3).map((mg,i) => (
         <DomainsMenuGroup
           key={i}
           domains={this.props.domains}
@@ -64,6 +70,16 @@ class DomainsDropDownMenu extends React.Component {
           sName={this.props.sName}
         />
       ));
+
+      menuGroupsDisplayRight = this.state.menuGroups.slice(3).map((mg,i) => (
+        <DomainsMenuGroup
+          key={i}
+          domains={this.props.domains}
+          menuGroup={mg}
+          sName={this.props.sName}
+        />
+      ));
+
     }
 
     return (
@@ -75,6 +91,12 @@ class DomainsDropDownMenu extends React.Component {
               {menuGroupsDisplayLeft}
             </ul>
           </li>
+          <li className="submenu-container">
+            <ul>
+              {menuGroupsDisplayMiddle}
+            </ul>
+          </li>
+
           <li className="submenu-container">
             <ul>
               {menuGroupsDisplayRight}

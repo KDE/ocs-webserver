@@ -70,16 +70,11 @@ class UserMenu extends React.Component {
     let userMenuContainerDisplay;
     if (this.props.device === "large"){
 
-      // let switchItem;
-      //
-      // if (this.props.user && this.props.user.member_id ){
-      // switchItem =(<li><SwitchItem onSwitchStyle={this.props.onSwitchStyle}
-      //             onSwitchStyleChecked={this.props.onSwitchStyleChecked}/></li>);
-      // }
 
       const aboutMenu = <AboutMenu blogUrl={this.props.blogUrl}
                                   isExternal={this.props.isExternal}
                                   baseUrl={this.props.baseUrl}
+                                  isAdmin={this.props.isAdmin}
                                   />
 
        let chatItem;

@@ -1,5 +1,5 @@
 @import "elements.less";
-
+ 
 #site-header-container {
   font-family: Arial,sans-serif;
 }
@@ -33,11 +33,10 @@
       }
     }
     #site-header-store-name-container {
-      float: left;
-      height: 100%;
-      padding: 50px 0 0 55px;
       font-size: 24px;
       position: absolute;
+      bottom: 0;
+      padding-left: 15px;
       > a {
         color: white;
         &:hover {
@@ -50,16 +49,20 @@
       height: 100%;
 
       #site-header-right-top {
-        height: 40px;
+        /*height: 40px;*/
+        height: 100%;
         width: 100%;
         padding-right: 5px;
+        display: table;
+
       }
 
       #site-header-search-form {
-        float: left;
+      /*  float: left;*/
         width: 100%;
         max-width: 16em;
-
+        display: table-cell;
+        vertical-align: middle;
         #search-form {
           margin: 6.5px 0;
         }
@@ -275,11 +278,13 @@
 
   &.appimagehubcc,
   &.appimagehub,
-  &.appimageshub {
+  &.appimageshub,
+  &.appimagehub.com {
     #site-header-wrapper {
       #site-header-right {
         #site-header-user-menu-container,
-        #site-header-right-bottom {
+        #site-header-right-bottom,
+        #site-header-login-menu {
           display: none;
         }
 
@@ -288,6 +293,10 @@
         }
       }
     }
+  }
+
+  &.pling {
+    margin:0 !important;
   }
 }
 

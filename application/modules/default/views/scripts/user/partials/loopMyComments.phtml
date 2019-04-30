@@ -100,7 +100,7 @@ $helperPrintDate = new Default_View_Helper_PrintDate();
 
 
                 <div class="row">
-                                <div class="col-lg-9 commenttext">                                 
+                                <div class="col-lg-12 commenttext">                                 
                                     <?php 
                                         $comment_text = Default_Model_HtmlPurify::purify($file->comment_text);
                                     ?>
@@ -115,7 +115,7 @@ $helperPrintDate = new Default_View_Helper_PrintDate();
                         }else{
             ?>
                     <div class="row">
-                                <div class="col-lg-9 commenttext">                                 
+                                <div class="col-lg-12 commenttext">                                 
                                     <?php 
                                         $comment_text = Default_Model_HtmlPurify::purify($file->comment_text);
                                     ?>
@@ -135,6 +135,15 @@ $helperPrintDate = new Default_View_Helper_PrintDate();
 
         ?>
 
+        <div style="text-align:right">
+        <small >        
+            <?php
+            if ($pageCount > 1) {
+                echo $this->paginationControl($this->comments, 'Sliding', '/partials/paginationControlBootstrap.phtml', array('params' => array(), 'dom_target' => 'div#my-comments-tabs-content'));
+            }
+            ?>
+        </small>        
+        </div>
 
     </div>
 </div>
