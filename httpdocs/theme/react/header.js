@@ -159,11 +159,13 @@ function (_React$Component) {
         // );
         // siteHeaderTopRightCssClass = "w-user";
       } else {
-        loginMenuDisplay = React.createElement(SiteHeaderLoginMenu, {
+        loginMenuDisplay = React.createElement("div", {
+          id: "site-header-right-bottom"
+        }, React.createElement(SiteHeaderLoginMenu, {
           baseUrl: this.state.baseUrl,
           redirectString: this.state.redirectString,
           template: this.state.template
-        });
+        }));
       }
 
       var logoLink = this.state.serverUrl;
@@ -209,9 +211,7 @@ function (_React$Component) {
           searchBaseUrl: this.state.searchBaseUrl,
           store: this.state.store,
           height: this.state.template.header['height']
-        })), React.createElement("div", {
-          id: "site-header-right-bottom"
-        }, loginMenuDisplay)));
+        })), loginMenuDisplay));
       } else {
         HeaderDisplay = React.createElement(MobileSiteHeader, {
           logoLink: logoLink,
