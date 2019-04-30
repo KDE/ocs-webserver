@@ -22,7 +22,8 @@
 
 $helperBuildBaseUrl = new Default_View_Helper_BuildBaseUrl();
 //$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
-$baseurl = $helperBuildBaseUrl->buildBaserUrl();
+//$baseurl = $helperBuildBaseUrl->buildBaserUrl();
+$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl_meta;
 $sname = Zend_Registry::get('store_host');
 $store_config = Zend_Registry::get('store_config');
 
