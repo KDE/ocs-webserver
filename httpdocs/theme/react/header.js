@@ -148,25 +148,26 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
-
-      if (this.state.user) {// userMenuDisplay = (
-        //   <SiteHeaderUserMenu
-        //     serverUrl={this.state.serverUrl}
-        //     baseUrl={this.state.baseUrl}
-        //     user={this.state.user}
-        //   />
-        // );
-        // siteHeaderTopRightCssClass = "w-user";
-      } else {
-        loginMenuDisplay = React.createElement("div", {
-          id: "site-header-right-bottom"
-        }, React.createElement(SiteHeaderLoginMenu, {
-          baseUrl: this.state.baseUrl,
-          redirectString: this.state.redirectString,
-          template: this.state.template
-        }));
-      }
+      var siteHeaderTopRightCssClass; // if (this.state.user){
+      //   userMenuDisplay = (
+      //     <SiteHeaderUserMenu
+      //       serverUrl={this.state.serverUrl}
+      //       baseUrl={this.state.baseUrl}
+      //       user={this.state.user}
+      //     />
+      //   );
+      //   siteHeaderTopRightCssClass = "w-user";
+      // } else {
+      //   loginMenuDisplay = (
+      //     <div id="site-header-right-bottom">
+      //     <SiteHeaderLoginMenu
+      //       baseUrl={this.state.baseUrl}
+      //       redirectString={this.state.redirectString}
+      //       template={this.state.template}
+      //     />
+      //     </div>
+      //   );
+      // }
 
       var logoLink = this.state.serverUrl;
 
@@ -211,7 +212,7 @@ function (_React$Component) {
           searchBaseUrl: this.state.searchBaseUrl,
           store: this.state.store,
           height: this.state.template.header['height']
-        })), loginMenuDisplay));
+        }))));
       } else {
         HeaderDisplay = React.createElement(MobileSiteHeader, {
           logoLink: logoLink,
