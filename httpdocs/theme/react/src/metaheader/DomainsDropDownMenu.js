@@ -49,8 +49,7 @@ class DomainsDropDownMenu extends React.Component {
   render(){
 
     let menuGroupsDisplayLeft, menuGroupsDisplayRight,menuGroupsDisplayMiddle;
-    console.log(this.state.menuGroups);
-
+  
     if (this.state.menuGroups){
       menuGroupsDisplayLeft = this.state.menuGroups.slice(0,2).map((mg,i) => (
         <DomainsMenuGroup
