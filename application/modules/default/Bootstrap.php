@@ -718,14 +718,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'page'       => 'faqold'
                 )));
 
-        $router->addRoute('static_faq', new Zend_Controller_Router_Route_Static('/about-pling', array(
+        $router->addRoute('static_faq', new Zend_Controller_Router_Route_Static('/faq-pling', array(
                     'module'     => 'default',
                     'controller' => 'content',
                     'action'     => 'index',
                     'page'       => 'faq'
                 )));
 
-        $router->addRoute('static_gitfaq', new Zend_Controller_Router_Route_Static('/about-opencode', array(
+        $router->addRoute('static_gitfaq', new Zend_Controller_Router_Route_Static('/faq-opencode', array(
                     'module'     => 'default',
                     'controller' => 'content',
                     'action'     => 'index',
