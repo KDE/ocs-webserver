@@ -819,6 +819,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'page'       => 'terms-dmca'
                 )));
 
+        $router->addRoute('static_terms_payout', new Zend_Controller_Router_Route_Static('/terms/payout', array(
+                    'module'     => 'default',
+                    'controller' => 'content',
+                    'action'     => 'index',
+                    'page'       => 'terms-payout'
+                )));
+
         $router->addRoute('static_privacy', new Zend_Controller_Router_Route_Static('/privacy', array(
                     'module'     => 'default',
                     'controller' => 'content',
