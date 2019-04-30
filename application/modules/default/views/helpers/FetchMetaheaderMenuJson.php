@@ -101,7 +101,7 @@ class Default_View_Helper_FetchMetaheaderMenuJson extends Zend_View_Helper_Abstr
                          
             }
 
-            $cache->save($domainobjects, $cacheName, array(), 28800);
+            $cache->save($domainobjects, $cacheName, array(), 3600);
         }
         return  Zend_Json::encode($domainobjects);
     }

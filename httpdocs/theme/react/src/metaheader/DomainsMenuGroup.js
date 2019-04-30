@@ -27,7 +27,7 @@ class DomainsMenuGroup extends React.Component {
 
     return (
       <li>
-        <a className="groupname"><b>{this.props.menuGroup}</b></a>
+        <a className="groupname"><b>{this.props.menuGroup=='Other'?'Pling':this.props.menuGroup}</b></a>
         <ul className="domains-sub-menu">
           {domainsDisplay}
         </ul>

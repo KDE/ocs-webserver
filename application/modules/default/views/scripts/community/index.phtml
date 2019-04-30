@@ -43,13 +43,14 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
             <div class="row">
 
                 <div class="banner col-lg-5 col-md-5 col-sm-6 col-xs-8">
-
+                  <?php /*
                     <div class="top">
                         <div class="large"><?= $countActiveMembers ?></div>
                         <div class="small margin-bottom-10">contributors added </div>
                          <div class="large"><?= $countProjects?></div>
                         <div class="small margin-bottom-10">products</div>
                     </div>
+                    */?>
 
                     <div class="bottom">
                         <a class="btn btn-native" href="/register">Register</a> to join the community
@@ -107,9 +108,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                     <a class="communitytab" data-href="/community/topmembers" href="#topMemberPanel" data-toggle="tab"><?= $this->translate('Top Members') ?></a>
                   </li>
 
-                  <li>
-                    <a class="communitytab" data-href="/community/toplistmembers" href="#toplistMemberPanel" data-toggle="tab"><?= $this->translate('Top List Members') ?></a>
-                  </li>
+                  
                   <?php 
                   }?>                                                                                   
                  
@@ -131,9 +130,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                     <div class="list "> </div>
                 </div> <!-- end row -->
 
-                <div class="row tab-pane" id="toplistMemberPanel">
-                    <div class="list container explore-products"> </div>
-                </div> <!-- end row -->
+               
                 <?php } ?>
 
                 <div class="row tab-pane active" id="supportersPanel">

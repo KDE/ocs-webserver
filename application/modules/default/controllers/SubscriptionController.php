@@ -131,7 +131,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $this->view->authMember = $this->_authMember;
         $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
         $httpHost = $this->getRequest()->getHttpHost();
-        $this->view->urlPay =  '/subscription/pay';
+        $this->view->urlPay =  '/support/pay';
     }
 
     public function showAction()
@@ -152,7 +152,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $request = Zend_Controller_Front::getInstance()->getRequest();
 
         $httpHost = $this->getRequest()->getHttpHost();
-        $this->view->urlPay =  'https://' . $httpHost . '/subscription/pay';
+        $this->view->urlPay =  'https://' . $httpHost . '/support/pay';
         $this->view->amount = (float)$this->getParam('amount', 1);
         $this->view->comment = html_entity_decode(strip_tags($this->getParam('comment'), null), ENT_QUOTES, 'utf-8');
         $this->view->provider =
@@ -192,8 +192,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         
         $form_url = $config->third_party->paypal->form->endpoint . '/cgi-bin/webscr';
         $ipn_endpoint =  'http://'.$httpHost.'/gateway/paypal';
-        $return_url_success =  'http://'.$httpHost.'/subscription/paymentok';
-        $return_url_cancel =   'http://'.$httpHost.'/subscription/paymentcancel';
+        $return_url_success =  'http://'.$httpHost.'/support/paymentok';
+        $return_url_cancel =   'http://'.$httpHost.'/support/paymentcancel';
         $merchantid = $config->third_party->paypal->merchantid;
         
         $this->view->form_endpoint = $form_url;
