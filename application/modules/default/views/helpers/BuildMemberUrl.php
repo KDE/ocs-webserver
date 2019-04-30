@@ -57,7 +57,7 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         
         if(null != $storeConfig && $storeConfig->stay_in_context == false) {
-            $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+            $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl_member;
         } else {
             
             $baseurl = "{$host}{$storeId}";
