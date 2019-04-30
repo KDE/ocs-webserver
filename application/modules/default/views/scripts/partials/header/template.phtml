@@ -50,7 +50,9 @@ if($member && !empty($member->username)){
 $serverUrl = $this->serverUrl();
 
 //$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
-$baseurl = $helperBuildBaseUrl->buildBaserUrl();
+//$baseurl = $helperBuildBaseUrl->buildBaserUrl();
+$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl_meta;
+
 $searchbaseurl = $this->buildSearchBaseUrl();
 $sname = Zend_Registry::get('store_host');
 $store_config = Zend_Registry::get('store_config');
