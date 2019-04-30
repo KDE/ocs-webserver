@@ -6,6 +6,8 @@
 
 #ignore store specific images
 */images_sys/store_*/
+#ignore category about images
+*/images_sys/about-categories/
 #ignore eclipse files
 .buildpath
 .project
