@@ -648,9 +648,10 @@ var Opendownloadfile= (function () {
                 var link_type = $(this).attr('data-link_type');
                 var is_external = $(this).attr('data-is-external-link');
                 var external_link = null;
-                
+                var popupHeight = '350';
                 if(is_external == 'true') {
                     external_link = $(this).attr('data-external_link');
+                    popupHeight = '450';
                 }
                 
                 $.fancybox({
@@ -662,7 +663,7 @@ var Opendownloadfile= (function () {
                     'transitionOut': 'elastic',
                     'type': 'iframe',
                     'width':'600',
-                    'height':'350',
+                    'height':popupHeight,
                     'iframe': {'scrolling': 'no'},
                     'autoSize':false,
                     'id': 'opendownloadfilepopup',

@@ -64,7 +64,23 @@
         
     </style>
     
+    <script type="text/javascript">
+        function viewport()
+        {
+            var e = window
+            , a = 'inner';
+            if ( !( 'innerWidth' in window ) )
+            {
+            a = 'client';
+            e = document.documentElement || document.body;
+            }
+            return { width : e[ a+'Width' ] , height : e[ a+'Height' ] }
+        }
+    </script>   
+    
+    
 </head>
+
 <body style="height: 350px; background-color: #f8f9fa;">
     
     <?php
@@ -90,6 +106,7 @@
     }
     
     ?>
+    
     <main id="ads-page">
         
         <div class="columns" style="background-color: #f8f9fa;">
@@ -191,6 +208,12 @@
     </main>
 
 </body>
+<script>
+        if(viewport()['width']<600) {
+            document.body.style = 'height: 450px; background-color: #f8f9fa;';
+        }
+    
+    </script>
 </html>
 
 
