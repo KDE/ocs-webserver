@@ -672,7 +672,7 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
                 FROM `stat_projects`
                 WHERE `status` = :current_status
                   AND `member_id` <> :current_member_id
-                  AND `amount_reports is null ` 
+                  and amount_reports is null
                   AND `project_category_id` = :category_id
                   AND `type_id` = :project_type
         ";
