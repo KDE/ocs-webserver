@@ -1545,6 +1545,42 @@ class Default_Model_Info
         return $totalcnt;
     }
 
+    public function getCountTierSupporters($tier)
+    {
+        $m = new Default_View_Helper_CalcDonation();
+        $calTier = $m->calcDonation($tier);
+        $old_donation=0;
+        switch ($tier) {
+            case 0.99:
+                $old_donation = 63;
+                break;
+            case 2:
+                $old_donation = 4;
+                break;
+            case 5:
+                $old_donation = 2;
+                break;
+            case 10:
+                $old_donation = 1;
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+
+        $sql = "
+            select count(1) as cnt
+            from support s 
+            where s.status_id = 2 
+            and type_id = 1
+            and amount=:tier
+        ";
+
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('tier' =>$calTier))->fetchAll();
+        return $result[0]['cnt']+$old_donation;
+    }
+
     public function getModeratorsList()
     {
         /** @var Zend_Cache_Core $cache */
