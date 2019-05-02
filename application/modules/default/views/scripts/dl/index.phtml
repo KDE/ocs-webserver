@@ -209,7 +209,7 @@
 
 </body>
 <script>
-        if(viewport()['width']<600) {
+        if(viewport()['width']<600 && "<?= $this->is_external ?>" === "true") {
             document.body.style = 'height: 450px; background-color: #f8f9fa;';
         }
     
