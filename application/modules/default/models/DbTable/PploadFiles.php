@@ -112,6 +112,22 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
         $result = $this->_db->query($sql)->fetchAll();      
         return $result[0]['cnt'];
     }     
+    
+    
+    public function fetchCountDownloadsForFile($collectionId, $file_id)
+    {
+        if(empty($file_id) || empty($collectionId)) {
+            return 0;
+        }
+        
+        $sql = "    SELECT COUNT(1) AS cnt
+                    FROM ppload.ppload_files_downloaded f
+                    WHERE f.collection_id = " . $collectionId . " 
+                    AND f.file_id = " . $file_id . "
+                   ";        
+        $result = $this->_db->query($sql)->fetchAll();      
+        return $result[0]['cnt'];
+    }     
 
     
     private function fetchAllFiles($collection_id, $ignore_status = true, $activeFiles = false)

@@ -154,6 +154,19 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         return null;
     }
     
+    
+    private function getFileCount($collection_id, $fileId) {
+        $modelFiles = new Default_Model_DbTable_PploadFiles();
+        
+        $count = $modelFiles->fetchCountDownloadsForFile($collection_id, $fileId);
+        
+        if(null != $count) {
+            return $count;
+        }
+        
+        return null;
+    }
+    
     public function listsamesourceurlAction()
     {        
         $this->_helper->layout()->disableLayout();
@@ -223,6 +236,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 if(!empty($tagGroups)) {
                     $groups = $this->getTagGroupsForCat($file['id']);
                     $file['tag_groups'] = $groups;
+                    
+                    $file['downloaded_count_live'] = $this->getFileCount($collection_id, $file['id']);
                 }
                 $result[] = $file;
             }
