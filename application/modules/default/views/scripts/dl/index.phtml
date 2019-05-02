@@ -83,6 +83,12 @@
     
     $isExternal = ($this->is_external == "true");
     
+    $link = "";
+    
+    if($isExternal) {
+        $link = $this->external_link;
+    }
+    
     ?>
     <main id="ads-page">
         
@@ -138,6 +144,9 @@
                          <?php
                          if($isAppimage) {
                              echo("<p style='margin: 0;'>For Appimages we recommend <a href='https://www.opendesktop.org/p/1228228' target='_NEW' style='color: #0088d7;text-decoration: underline;'>AppImageLauncher</a> for system integration</p>");
+                         }
+                         if($isExternal) {
+                             echo("<p style='margin: 0;'>".$link."</p>");
                          }
                          ?>
                          
