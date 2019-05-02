@@ -399,6 +399,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'controller' => 'product',
                     'action'     => 'show'
                 )));
+        
+        $router->addRoute('store_collection', new Zend_Controller_Router_Route('/s/:domain_store_id/c/:project_id/:action/*', array(
+                    'module'     => 'default',
+                    'controller' => 'collection',
+                    'action'     => 'show'
+                )));
 
         /*
         $router->addRoute('store_product', new Zend_Controller_Router_Route('/s/:domain_store_id/c/:project_id/:action/*', array(
@@ -430,7 +436,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'controller' => 'authorization',
                     'action'     => 'register'
                 )));
-
+        
 
 
         /** general routing rules */
