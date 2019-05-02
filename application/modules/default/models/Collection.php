@@ -662,6 +662,59 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
         return $statement;
     }
 
+
+
+
+    public function fetchMoreCollectionsOfOtherUsr($project, $count = 8)
+    {
+        $sql = "
+                SELECT count(1) AS `count`
+                FROM `stat_projects`
+                WHERE `status` = :current_status
+                  AND `member_id` <> :current_member_id
+                  AND `amount_reports is null ` 
+                  AND `project_category_id` = :category_id
+                  AND `type_id` = :project_type
+        ";
+
+        $result = $this->_db->query($sql, array(
+            'current_status'    => self::PROJECT_ACTIVE,
+            'current_member_id' => $project->member_id,
+            'category_id'       => $project->project_category_id,
+            'project_type'      => self::PROJECT_TYPE_COLLECTION
+        ))->fetch()
+        ;
+
+        if ($result['count'] > $count) {
+            $offset = rand(0, $result['count'] - $count);
+        } else {
+            $offset = 0;
+        }
+
+        $q = $this->select()->from(array('project' => 'stat_projects'), array(
+            'project_id',
+            'image_small',
+            'title',
+            'catTitle' => 'cat_title'
+        ))->setIntegrityCheck(false)->where('status = ?', self::PROJECT_ACTIVE)
+                  ->where('member_id != ?', $project->member_id, 'INTEGER')->where('type_id = ?', 1)
+                  ->where('amount_reports is null')
+                  ->where('type_id = ?', self::PROJECT_TYPE_COLLECTION, 'INTEGER')
+                  ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')->limit($count, $offset)
+                  ->order('project_created_at DESC')
+        ;
+
+        $tagFilter  = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
+
+        if ($tagFilter) {
+            $q = $this->generateTagFilter($q, array(self::FILTER_NAME_TAG => $tagFilter));
+        }
+
+        $result = $this->fetchAll($q);
+
+        return $result;
+    }
+
     /**
      * @param     $project
      * @param int $count
@@ -671,15 +724,18 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
      * @throws Zend_Exception
      * @todo improve processing speed
      */
-    public function fetchMoreCollectionsOfOtherUsr($project, $count = 8)
+    /*public function fetchMoreCollectionsOfOtherUsr($project, $count = 8)
     {
         $sql = "
                 SELECT count(1) AS `count`
-                FROM `project`
+                ,(select count(1) from reports_project r where r.project_id = p.project_id) as spamcnt
+                FROM `project` as p                 
                 WHERE `status` = :current_status
                   AND `member_id` <> :current_member_id
-                  AND `project_category_id` = :category_id
+                  AND `project_category_id` = :category_id                  
+                  AND `amount_reports is null `
                   AND `type_id` = :project_type
+                  AND spamcnt == 0
         ";
 
         $result = $this->_db->query($sql, array(
@@ -700,8 +756,12 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
             'project_id',
             'image_small',
             'title'
-        ))->setIntegrityCheck(false)->where('status = ?', self::PROJECT_ACTIVE)
+        ))->setIntegrityCheck(false)
+        ->joinLeft('reports_project', 'reports_project.project_id = project.project_id',
+                     array('cat_title' => 'title'))->order('pling_amount.sumAmount DESC')
+        ->where('status = ?', self::PROJECT_ACTIVE)
                   ->where('member_id != ?', $project->member_id, 'INTEGER')
+                  ->where('amount_reports is null')
                   ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')
                   ->where('type_id = ?', self::PROJECT_TYPE_COLLECTION, 'INTEGER')
                   ->limit($count, $offset)
@@ -717,7 +777,7 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
         $result = $this->fetchAll($q);
 
         return $result;
-    }
+    }*/
 
     /**
      * @param int $project_id
