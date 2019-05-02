@@ -64,7 +64,23 @@
         
     </style>
     
+    <script type="text/javascript">
+        function viewport()
+        {
+            var e = window
+            , a = 'inner';
+            if ( !( 'innerWidth' in window ) )
+            {
+            a = 'client';
+            e = document.documentElement || document.body;
+            }
+            return { width : e[ a+'Width' ] , height : e[ a+'Height' ] }
+        }
+    </script>   
+    
+    
 </head>
+
 <body style="height: 350px; background-color: #f8f9fa;">
     
     <?php
@@ -83,7 +99,14 @@
     
     $isExternal = ($this->is_external == "true");
     
+    $link = "";
+    
+    if($isExternal) {
+        $link = $this->external_link;
+    }
+    
     ?>
+    
     <main id="ads-page">
         
         <div class="columns" style="background-color: #f8f9fa;">
@@ -136,6 +159,9 @@
                          <?php } ?>
                          
                          <?php
+                         if($isExternal) {
+                             echo("<p style='margin: 0;'>".$link."</p>");
+                         }
                          if($isAppimage) {
                              echo("<p style='margin: 0;'>For Appimages we recommend <a href='https://www.opendesktop.org/p/1228228' target='_NEW' style='color: #0088d7;text-decoration: underline;'>AppImageLauncher</a> for system integration</p>");
                          }
@@ -182,6 +208,12 @@
     </main>
 
 </body>
+<script>
+        if(viewport()['width']<600 && "<?= $this->is_external ?>" === "true") {
+            document.body.style = 'height: 500px; background-color: #f8f9fa;';
+        }
+    
+    </script>
 </html>
 
 
