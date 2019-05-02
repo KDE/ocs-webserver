@@ -651,7 +651,7 @@ var Opendownloadfile= (function () {
                 var popupHeight = '350';
                 if(is_external == 'true') {
                     external_link = $(this).attr('data-external_link');
-                    popupHeight = '450';
+                    popupHeight = '500';
                 }
                 
                 $.fancybox({
