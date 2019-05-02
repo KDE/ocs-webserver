@@ -155,16 +155,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     }
     
     
-    private function getFileCount($collection_id, $fileId) {
+    private function getFileDownloadCount($collection_id, $fileId) {
         $modelFiles = new Default_Model_DbTable_PploadFiles();
         
         $count = $modelFiles->fetchCountDownloadsForFile($collection_id, $fileId);
-        
-        if(null != $count) {
-            return $count;
-        }
-        
-        return null;
+        return $count;
     }
     
     public function listsamesourceurlAction()
@@ -237,8 +232,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $groups = $this->getTagGroupsForCat($file['id']);
                     $file['tag_groups'] = $groups;
                     
-                    $file['downloaded_count_live'] = $this->getFileCount($collection_id, $file['id']);
+                    
                 }
+                $file['downloaded_count_live'] = $this->getFileDownloadCount($collection_id, $file['id']);
                 $result[] = $file;
             }
             
