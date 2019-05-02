@@ -311,6 +311,17 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                         <?= $this->product->title; ?>
                                     <?php endif; ?>
 
+                                    <?php 
+                                    if($isowner){
+                                    ?>     
+                                    <span  style="font-size: 13px;padding: .2em .6em .3em;">
+                                    <a href="/p/<?=$this->product->project_id?>/edit">
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                        <?= $this->translate('Edit Product') ?>
+                                    </a>
+                                    </span>
+                                    <?php }?>                         
+
                                     <?php
                                                 if($this->product->featured=='1'){
                                         ?>
