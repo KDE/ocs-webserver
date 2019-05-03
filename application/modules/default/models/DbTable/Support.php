@@ -148,12 +148,13 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
      * @return mixed The primary key value(s), as an associative array if the
      *     key is compound, or a scalar if the key is single-column.
      */
-    public function createNewSupportSubscriptionSignup($transaction_id, $member_id, $amount, $period, $period_frequency, $comment = null)
+    public function createNewSupportSubscriptionSignup($transaction_id, $member_id, $amount,$tier, $period, $period_frequency, $comment = null)
     {
         $new_row = $this->createRow();
         $new_row->member_id = $member_id;
         $new_row->type_id = $this::SUPPORT_TYPE_SIGNUP;
         $new_row->amount = $amount;
+        $new_row->tier = $tier;
         $new_row->period = $period;
         $new_row->period_frequency = $period_frequency;
         $new_row->comment = $comment;

@@ -1545,6 +1545,25 @@ class Default_Model_Info
         return $totalcnt;
     }
 
+    public function getCountTierSupporters($tier)
+    {        
+        $sql = "
+                select count(1) as cnt from
+                    (
+                    select 
+                    member_id,
+                    max(amount),
+                    tier
+                    from support
+                    where status_id = 2
+                    group by member_id
+                    ) t where tier = :tier
+
+        ";
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('tier' =>$tier))->fetchAll();
+        return $result[0]['cnt'];
+    }
+
     public function getModeratorsList()
     {
         /** @var Zend_Cache_Core $cache */
