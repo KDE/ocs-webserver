@@ -237,7 +237,17 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     
                     
                 }
-                $file['downloaded_count_live'] = $this->getFileDownloadCount($collection_id, $file['id']);
+                //$file['downloaded_count_live'] = $this->getFileDownloadCount($collection_id, $file['id']);
+                $counterToday = $file['count_dl_today'];
+                $counterAll = $file['count_dl_all'];
+                $counter = 0;
+                if(!empty($counterToday)) {
+                    $counter = $counterToday;
+                }
+                if(!empty($counterAll)) {
+                    $counter = $counter + $counterAll;
+                }
+                $file['downloaded_count_live'] = $counter;
                 $result[] = $file;
             }
             
