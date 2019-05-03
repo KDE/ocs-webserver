@@ -158,8 +158,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     private function getFileDownloadCount($collection_id, $fileId) {
         $modelFiles = new Default_Model_DbTable_PploadFiles();
         
-        //$count = $modelFiles->fetchCountDownloadsForFile($collection_id, $fileId);
-        $count = 0;
+        $countAll = $modelFiles->fetchCountDownloadsForFileAllTime($collection_id, $fileId);
+        $countToday = $modelFiles->fetchCountDownloadsForFileToday($collection_id, $fileId);
+        
+        $count = (int)$countAll+ (int)$countToday;
         return $count;
     }
     
