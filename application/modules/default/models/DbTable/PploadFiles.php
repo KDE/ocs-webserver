@@ -120,7 +120,7 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
             return 0;
         }
         
-        $sql = "    SELECT COUNT(1) AS cnt
+        $sql = "    SELECT count_dl AS cnt
                     FROM ppload.stat_ppload_files_downloaded f
                     WHERE f.collection_id = " . $collectionId . " 
                     AND f.file_id = " . $file_id . "
