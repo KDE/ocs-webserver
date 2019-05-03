@@ -114,7 +114,22 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
     }     
     
     
-    public function fetchCountDownloadsForFile($collectionId, $file_id)
+    public function fetchCountDownloadsForFileAllTime($collectionId, $file_id)
+    {
+        if(empty($file_id) || empty($collectionId)) {
+            return 0;
+        }
+        
+        $sql = "    SELECT COUNT(1) AS cnt
+                    FROM ppload.stat_ppload_files_downloaded f
+                    WHERE f.collection_id = " . $collectionId . " 
+                    AND f.file_id = " . $file_id . "
+                   ";        
+        $result = $this->_db->query($sql)->fetchAll();      
+        return $result[0]['cnt'];
+    }     
+
+        public function fetchCountDownloadsForFileToday($collectionId, $file_id)
     {
         if(empty($file_id) || empty($collectionId)) {
             return 0;
@@ -124,6 +139,7 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
                     FROM ppload.ppload_files_downloaded f
                     WHERE f.collection_id = " . $collectionId . " 
                     AND f.file_id = " . $file_id . "
+                    AND f.downloaded_timestamp >= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:01')  
                    ";        
         $result = $this->_db->query($sql)->fetchAll();      
         return $result[0]['cnt'];
