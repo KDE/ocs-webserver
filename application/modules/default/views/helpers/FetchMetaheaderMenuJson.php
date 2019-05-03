@@ -29,7 +29,7 @@ class Default_View_Helper_FetchMetaheaderMenuJson extends Zend_View_Helper_Abstr
        $sname = Zend_Registry::get('store_host');
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');        
-        $cacheName = __FUNCTION__ . md5($sname);       
+        $cacheName = __FUNCTION__ . md5($sname).'_new';       
 
         if (false == ($domainobjects = $cache->load($cacheName))) {
             $tbl = new Default_Model_DbTable_ConfigStore();
