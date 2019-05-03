@@ -697,12 +697,14 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
             'title',
             'catTitle' => 'cat_title'
         ))->setIntegrityCheck(false)->where('status = ?', self::PROJECT_ACTIVE)
-                  ->where('member_id != ?', $project->member_id, 'INTEGER')->where('type_id = ?', 1)
+                  ->where('member_id != ?', $project->member_id, 'INTEGER')
                   ->where('amount_reports is null')
                   ->where('type_id = ?', self::PROJECT_TYPE_COLLECTION, 'INTEGER')
                   ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')->limit($count, $offset)
                   ->order('project_created_at DESC')
         ;
+
+        
 
         $tagFilter  = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
 
@@ -724,11 +726,10 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
      * @throws Zend_Exception
      * @todo improve processing speed
      */
-    /*public function fetchMoreCollectionsOfOtherUsr($project, $count = 8)
+   /* public function fetchMoreCollectionsOfOtherUsr($project, $count = 8)
     {
         $sql = "
-                SELECT count(1) AS `count`
-                ,(select count(1) from reports_project r where r.project_id = p.project_id) as spamcnt
+                SELECT count(1) AS `count`                
                 FROM `project` as p                 
                 WHERE `status` = :current_status
                   AND `member_id` <> :current_member_id
@@ -756,9 +757,7 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
             'project_id',
             'image_small',
             'title'
-        ))->setIntegrityCheck(false)
-        ->joinLeft('reports_project', 'reports_project.project_id = project.project_id',
-                     array('cat_title' => 'title'))->order('pling_amount.sumAmount DESC')
+        ))->setIntegrityCheck(false)       
         ->where('status = ?', self::PROJECT_ACTIVE)
                   ->where('member_id != ?', $project->member_id, 'INTEGER')
                   ->where('amount_reports is null')
@@ -777,8 +776,8 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
         $result = $this->fetchAll($q);
 
         return $result;
-    }*/
-
+    }
+*/
     /**
      * @param int $project_id
      *
