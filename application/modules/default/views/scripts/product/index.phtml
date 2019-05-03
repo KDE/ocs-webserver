@@ -186,6 +186,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                            <textarea class="" id="report-text" name="t"  rows="3" style="width: 440px;"></textarea>
                         </div>
                         <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>
                             <button type="submit" class="small">
                                 <span class="glyphicon glyphicon-share-alt"></span> add credits
                             </button>
@@ -1011,12 +1012,12 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
 
                                 <?php if (Zend_Auth::getInstance()->hasIdentity()) {      ?>
                                        <a data-toggle="modal" data-target="#report-product-clone-<?= $this->product->project_id ?>" role="button"
-                                          href="#report-product-clone-<?= $this->product->project_id ?>">
-                                            add clone / derivative
+                                          href="#report-product-clone-<?= $this->product->project_id ?>">                                            
+                                            report a clone of this product
                                        </a>
                                    <?php }else{ ?>
                                             <a data-toggle="modal" data-target="#like-product-modal" role="button">
-                                                add clone / derivative
+                                               report a clone of this product
                                             </a>
                                    <?php } ?>
 
