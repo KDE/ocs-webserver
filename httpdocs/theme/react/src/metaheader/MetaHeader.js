@@ -133,6 +133,7 @@ class MetaHeader extends React.Component {
             device={this.state.device}
             user={this.state.user}
             baseUrl={this.state.baseUrl}
+            baseUrlStore={this.state.baseUrlStore}
             blogUrl={this.state.blogUrl}
             forumUrl={this.state.forumUrl}
             loginUrl={this.state.loginUrl}

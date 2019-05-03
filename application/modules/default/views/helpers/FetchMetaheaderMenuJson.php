@@ -61,7 +61,7 @@ class Default_View_Helper_FetchMetaheaderMenuJson extends Zend_View_Helper_Abstr
             $domainobjects = array_merge($arrayDesktop, $arrayRest);
 
             
-            $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+            $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl_store;
             // set group name manully
             foreach ($domainobjects as &$obj) {
 
