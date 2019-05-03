@@ -152,11 +152,30 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
         if(empty($collection_id)) {
             return null;
         }
-
+        /*
         $sql = "    select  *
                      from ppload.ppload_files f 
                      where f.collection_id = :collection_id 
                    ";        
+         * 
+         */
+        $sql = "    SELECT  f.*
+                    , count_dl_totday.cnt AS count_dl_today
+                    , count_dl_all.cnt AS count_dl_all
+
+                    from ppload.ppload_files f 
+                    LEFT JOIN (
+                            SELECT COUNT(1) AS cnt, collection_id, file_id
+                              FROM ppload.ppload_files_downloaded f2
+                              WHERE f2.downloaded_timestamp >= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:01') 
+                              GROUP BY collection_id, file_id
+                    ) count_dl_totday ON count_dl_totday.collection_id = f.collection_id AND count_dl_totday.file_id = f.id
+                    LEFT JOIN (
+                            SELECT count_dl AS cnt, collection_id, file_id
+                       FROM ppload.stat_ppload_files_downloaded f2
+                    ) count_dl_all ON count_dl_all.collection_id = f.collection_id AND count_dl_all.file_id = f.id
+                    where f.collection_id = :collection_id  
+                    ";
         if($ignore_status == FALSE && $activeFiles == TRUE) {
            $sql .= " and f.active = 1";
         }
