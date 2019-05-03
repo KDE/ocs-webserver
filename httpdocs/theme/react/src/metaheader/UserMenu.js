@@ -47,6 +47,7 @@ class UserMenu extends React.Component {
           gitlabUrl={this.props.gitlabUrl}
           isAdmin={this.props.isAdmin}
           baseUrl={this.props.baseUrl}
+
         />
       );
       developmentAppMenuDisplay = (
@@ -56,6 +57,7 @@ class UserMenu extends React.Component {
           gitlabUrl={this.props.gitlabUrl}
           isAdmin={this.props.isAdmin}
           baseUrl={this.props.baseUrl}
+          baseUrlStore={this.props.baseUrlStore}
         />
       );
     } else {
