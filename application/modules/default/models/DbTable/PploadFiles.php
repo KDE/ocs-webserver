@@ -161,7 +161,7 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
          */
         $sql = "    SELECT  f.*
                     , count_dl_totday.cnt AS count_dl_today
-                    (SELECT count_dl AS cnt
+                    ,(SELECT count_dl AS cnt
                         FROM ppload.stat_ppload_files_downloaded f3
                         WHERE f3.collection_id = f.collection_id AND f3.file_id = f.id) AS count_dl_all
 
