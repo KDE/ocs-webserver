@@ -223,8 +223,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
             // TODO: Don't use $paymentOption]['value']. it could be changing. use helper Default_View_Helper_CalcDonation
             $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id
                 ,$this->_authMember->member_id
-                ,$this::$SUPPORT_OPTIONS[$paymentOption]['amount']
                 ,$this::$SUPPORT_OPTIONS[$paymentOption]['value']
+                ,$this::$SUPPORT_OPTIONS[$paymentOption]['amount']                
                 ,$this::$SUPPORT_OPTIONS[$paymentOption]['period_short']
                 ,$this::$SUPPORT_OPTIONS[$paymentOption]['period_frequency']);
         }
