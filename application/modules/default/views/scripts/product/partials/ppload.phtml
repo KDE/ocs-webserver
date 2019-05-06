@@ -632,6 +632,10 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                  var fileCount = $('#download_counter_'+ oldestFileId).html();
                                  var oldNewCounter = parseInt(fileCount) + parseInt(<?= $this->product->count_downloads_hive?>);
                                  $('#download_counter_'+ oldestFileId).html(oldNewCounter);
+                                 
+                                 var fileCountLive = $('#download_counter_live_'+ oldestFileId).html();
+                                 var oldNewCounterLive = parseInt(fileCountLive) + parseInt(<?= $this->product->count_downloads_hive?>);
+                                 $('#download_counter_live_'+ oldestFileId).html(oldNewCounterLive);
 
 
 
