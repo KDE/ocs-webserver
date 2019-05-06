@@ -29,13 +29,7 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         
         if ($storeConfig) {
             $this->view->tag_filter  = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
-
-            if($storeConfig->config_id_name=='plingcom')
-            {
-                $this->view->domainReferText='<div>Welcome to pling.com.<span class="refertextsmall"> go to <a href="www.opendesktop.org">opendesktop.org</a> for Desktop related stuff like themes and Apps. </span> </div>';
-            }else if($storeConfig->config_id_name=='opendesktop'){
-                $this->view->domainReferText='<div>Welcome to opendesktop.org.<span class="refertextsmall"> For more stuff go to <a href="www.pling.com">pling.com</a>  </span> </div>';
-            }
+            
         
             if($storeConfig->isShowHomepage())
             {
