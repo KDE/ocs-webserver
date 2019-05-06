@@ -197,16 +197,13 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 
     <div class="GridFlex-cell content" id="main-content">
       <div class="contentcontainer">         
+                        
+       <div class="row">
+        <div class="refertext" style="width: 800px;display: block;margin: 0 auto;padding-bottom: 20px">
+          Welcome to opendesktop.org. For more stuff go to <a href="www.pling.com">pling.com</a>  
+        </div>
+       </div>
         
-        
-        <?php if($this->domainReferText){ ?>
-           <div class="row">
-            <div class="refertext" style="width: 800px;display: block;margin: 0 auto;padding-bottom: 20px">
-              <?php echo $this->domainReferText; ?>
-            </div>
-           </div>
-        <?php }?>
-
 
         <div class="row"  id="featureProductsContainer">
           <?php
