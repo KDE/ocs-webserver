@@ -75,14 +75,14 @@ class DlController extends Local_Controller_Action_DomainSwitch
                 $data['link_type'] = $linkType;
 
                 $filesDl->createRow($data)->save();
-                
+
             } catch (Exception $exc) {
                 //echo $exc->getTraceAsString();
                 $errorLog = Zend_Registry::get('logger');
                 $errorLog->err(__METHOD__ . ' - ' . $exc->getTraceAsString() . ' ---------- ' . PHP_EOL);
             }
 
-            
+
             
             //create ppload download hash: secret + collection_id + expire-timestamp
             $salt = PPLOAD_DOWNLOAD_SECRET;
