@@ -32,13 +32,13 @@ class Default_Model_DbTable_PploadFilesDownloaded extends Local_Model_Table
     protected $_key = 'id';
 
     
-    public function generateId()
+    public function generateId($file_id)
     {
         $id = time() + mt_rand(1, 1000);
         while (isset($this->$id)) {
             $id = time() + mt_rand(1, 1000);
         }
-        return $id;
+        return $id+$file_id;
     }
 
     /**
