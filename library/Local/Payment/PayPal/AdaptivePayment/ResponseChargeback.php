@@ -95,4 +95,9 @@ class Local_Payment_PayPal_AdaptivePayment_ResponseChargeback implements Local_P
     {
         return $this->_rawResponse['receiver_email'];
     }
+
+    public function getCustom() {
+        return null;
+    }
+
 }

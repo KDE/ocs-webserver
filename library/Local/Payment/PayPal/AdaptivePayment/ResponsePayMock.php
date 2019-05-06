@@ -100,4 +100,8 @@ class Local_Payment_PayPal_AdaptivePayment_ResponsePayMock implements Local_Paym
         return $this->transactionReceiver;
     }
 
+    public function getCustom() {
+        return null;
+    }
+
 }

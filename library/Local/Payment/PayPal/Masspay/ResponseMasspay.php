@@ -108,4 +108,8 @@ class Local_Payment_PayPal_Masspay_ResponseMasspay implements Local_Payment_PayP
         return null;
     }
 
+    public function getCustom() {
+        return null;
+    }
+
 }

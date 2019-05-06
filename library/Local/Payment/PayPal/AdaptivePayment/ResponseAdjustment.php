@@ -108,4 +108,8 @@ class Local_Payment_PayPal_AdaptivePayment_ResponseAdjustment implements Local_P
         return $this->_rawResponse['transaction'][0]['receiver'];
     }
 
+    public function getCustom() {
+        return null;
+    }
+
 }
