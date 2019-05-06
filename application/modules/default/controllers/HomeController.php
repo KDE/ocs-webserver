@@ -32,9 +32,9 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 
             if($storeConfig->config_id_name=='plingcom')
             {
-                $this->view->domainReferText='<div><h3>Welcome to opendesktop.org.<span class="refertextsmall">go to <a href="www.opendesktop.org">opendesktop.org</a> for Desktop related stuff like themes and Apps. </span><h3> </div>';
+                $this->view->domainReferText='<div>Welcome to opendesktop.org.<span class="refertextsmall"> go to <a href="www.opendesktop.org">opendesktop.org</a> for Desktop related stuff like themes and Apps. </span> </div>';
             }else if($storeConfig->config_id_name=='opendesktop'){
-                $this->view->domainReferText='<div><h3>Welcome to opendesktop.org.<span class="refertextsmall">go to <a href="www.pling.com">pling.com</a> for more stuff. </span></h3> </div>';
+                $this->view->domainReferText='<div>Welcome to opendesktop.org.<span class="refertextsmall"> go to <a href="www.pling.com">pling.com</a> for more stuff. </span> </div>';
             }
         
             if($storeConfig->isShowHomepage())
