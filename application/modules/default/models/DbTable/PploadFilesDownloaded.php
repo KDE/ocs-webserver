@@ -34,9 +34,9 @@ class Default_Model_DbTable_PploadFilesDownloaded extends Local_Model_Table
     
     public function generateId()
     {
-        $id = time() + mt_rand(1, 100);
+        $id = time() + mt_rand(1, 1000);
         while (isset($this->$id)) {
-            $id = time() + mt_rand(1, 100);
+            $id = time() + mt_rand(1, 1000);
         }
         return $id;
     }
