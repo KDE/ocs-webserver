@@ -92,7 +92,11 @@ class DlController extends Local_Controller_Action_DomainSwitch
             //20181009 ronald: change hash from MD5 to SHA512
             //$hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
             $hash = hash('sha512',$salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
-            $url = PPLOAD_API_URI . 'files/download/id/' . $file_id . '/s/' . $hash . '/t/' . $timestamp . '/u/' . $memberId . '/lt/' . $linkType . '/' . $file_name;
+            $url = PPLOAD_API_URI . 'files/download/id/' . $file_id . '/s/' . $hash . '/t/' . $timestamp;
+            if(isset($memberId)) {
+                $url .= '/u/' . $memberId;
+            }
+            $url .= '/lt/' . $linkType . '/' . $file_name;
             
             if($linkType == 'install') {
                 $helperCatXdgType = new Default_View_Helper_CatXdgType();
