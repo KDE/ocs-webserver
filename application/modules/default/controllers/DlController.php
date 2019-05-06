@@ -66,7 +66,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
             //Log download
             try {
                 $filesDl = new Default_Model_DbTable_PploadFilesDownloaded();
-                $id = $filesDl->generateId($file_id);
+                $id = $filesDl->generateId();
                 $data = array('id' => $id, 'client_id' => PPLOAD_CLIENT_ID, 'owner_id' => $productInfo->member_id, 'collection_id' => $collectionID, 'file_id' => $file_id, 'downloaded_timestamp' => new Zend_Db_Expr ('Now()'), 'downloaded_ip' => $this->getRealIpAddr(), 'referer' => $this->getReferer());
                 if(!empty($memberId)) {
                    $data['user_id'] = $memberId;
@@ -79,7 +79,9 @@ class DlController extends Local_Controller_Action_DomainSwitch
             } catch (Exception $exc) {
                 //echo $exc->getTraceAsString();
                 $errorLog = Zend_Registry::get('logger');
+                $errorLog->err(__METHOD__ . ' - ' . $exc->getMessage() . ' ---------- ' . PHP_EOL);
                 $errorLog->err(__METHOD__ . ' - ' . $exc->getTraceAsString() . ' ---------- ' . PHP_EOL);
+                $errorLog->err(__METHOD__ . ' - Fail to save DL-Data. ID: ' . $id . ', File-Id: ' . $file_id . ', Timestamp: ' . time());
             }
 
             
