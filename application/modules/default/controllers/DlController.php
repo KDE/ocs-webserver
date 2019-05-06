@@ -79,7 +79,9 @@ class DlController extends Local_Controller_Action_DomainSwitch
             } catch (Exception $exc) {
                 //echo $exc->getTraceAsString();
                 $errorLog = Zend_Registry::get('logger');
+                $errorLog->err(__METHOD__ . ' - ' . $exc->getMessage() . ' ---------- ' . PHP_EOL);
                 $errorLog->err(__METHOD__ . ' - ' . $exc->getTraceAsString() . ' ---------- ' . PHP_EOL);
+                $errorLog->err(__METHOD__ . ' - Fail to save DL-Data. ID: ' . $id . ', File-Id: ' . $file_id . ', Timestamp: ' . time());
             }
 
             
