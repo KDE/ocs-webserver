@@ -29,10 +29,17 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         
         if ($storeConfig) {
             $this->view->tag_filter  = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
+
+            if($storeConfig->config_id_name=='plingcom')
+            {
+                $this->view->domainReferText='<div><h3>Welcome to opendesktop.org.<span class="refertextsmall">go to <a href="www.opendesktop.org">opendesktop.org</a> for Desktop related stuff like themes and Apps. </span><h3> </div>';
+            }else if($storeConfig->config_id_name=='opendesktop'){
+                $this->view->domainReferText='<div><h3>Welcome to opendesktop.org.<span class="refertextsmall">go to <a href="www.pling.com">pling.com</a> for more stuff. </span></h3> </div>';
+            }
+        
             if($storeConfig->isShowHomepage())
             {
                  $index = $this->getParam('index');
-
                  if($index)
                  {
                     if((int)$index==1){
@@ -46,6 +53,8 @@ class HomeController extends Local_Controller_Action_DomainSwitch
                  }                 
                  return;
             }
+
+
         }
         $params = array('ord' => 'latest');
         if ($this->hasParam('domain_store_id')) {
@@ -81,46 +90,7 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         $this->_helper->viewRenderer('/partials/featuredProducts');        
     }
 
-   /* public function showfeatureajaxAction()
-    {
-        $this->_helper->layout->disableLayout();
-        $modelInfo = new Default_Model_Info();
-         $page = (int)$this->getParam('page');
-         $type='';
-         if($page==0){
-                $featureProducts = $modelInfo->getRandProduct();
-                $featureProducts->setItemCountPerPage(1);
-                $featureProducts->setCurrentPageNumber(1);
-                $type='';
-                
-            }elseif($page==1){
-                $featureProducts = $modelInfo->getFeaturedProductsForHostStores(100);
-                if($featureProducts->getTotalItemCount() > 0){
-                    $offset = (int)$this->getParam('page');
-                    $irandom = rand(1,$featureProducts->getTotalItemCount());
-                    $featureProducts->setItemCountPerPage(1);
-                    $featureProducts->setCurrentPageNumber($irandom);
-                    $featureProducts->isFeatured = true;
-                }
-                $type='Featured';
-               
-            }
-            elseif($page==2){
-                $featureProducts = $modelInfo->getRandPlingedProduct();
-                $featureProducts->setItemCountPerPage(1);
-                $featureProducts->setCurrentPageNumber(1);
-                $type='Plinged';
-
-            }
-
-       
-        if ($featureProducts->getTotalItemCount() > 0) {
-            $this->view->featureProducts = $featureProducts;
-            $this->view->type=$type;            
-            $this->_helper->viewRenderer('/partials/featuredProducts');            
-        }
-    }*/
-    
+   
     public function showlastproductsjsonAction()
     {
 
