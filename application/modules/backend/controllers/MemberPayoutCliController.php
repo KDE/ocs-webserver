@@ -99,7 +99,7 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
         echo "payoutMembers()\n";
 
         //Select all members for payout and write them in the payout table, ignore allways inserted members
-        $this->prepareMasspaymentTable();
+        //$this->prepareMasspaymentTable();
 
         //get payouts
         $allPayouts = $this->getPayouts();
