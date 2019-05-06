@@ -63,6 +63,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
                 $memberDlHistory->createRow($data)->save();
             }
             
+            /*
             //Log download
             try {
                 $filesDl = new Default_Model_DbTable_PploadFilesDownloaded();
@@ -81,7 +82,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
                 $errorLog = Zend_Registry::get('logger');
                 $errorLog->err(__METHOD__ . ' - ' . $exc->getMessage() . ' ---------- ' . PHP_EOL);
             }
-
+            */
 
             
             //create ppload download hash: secret + collection_id + expire-timestamp
@@ -91,7 +92,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
             //20181009 ronald: change hash from MD5 to SHA512
             //$hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
             $hash = hash('sha512',$salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
-            $url = PPLOAD_API_URI . 'files/download/id/' . $file_id . '/s/' . $hash . '/t/' . $timestamp . '/u/' . $memberId . '/' . $file_name;
+            $url = PPLOAD_API_URI . 'files/download/id/' . $file_id . '/s/' . $hash . '/t/' . $timestamp . '/u/' . $memberId . '/lt/' . $linkType . '/' . $file_name;
             
             if($linkType == 'install') {
                 $helperCatXdgType = new Default_View_Helper_CatXdgType();
