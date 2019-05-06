@@ -40,6 +40,13 @@ class Default_Model_DbTable_PploadFilesDownloaded extends Local_Model_Table
         }
         return $id;
     }
+    
+    public function getNewId()
+    {
+        $result = $this->getAdapter()->query('SELECT UUID_SHORT()')->fetch();
+
+        return $result['UUID_SHORT()'];
+    }
 
     /**
      * @inheritDoc
