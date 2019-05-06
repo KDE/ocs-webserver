@@ -67,7 +67,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
             try {
                 $filesDl = new Default_Model_DbTable_PploadFilesDownloaded();
                 $id = $filesDl->generateId();
-                $data = array('id' => $id, 'client_id' => PPLOAD_CLIENT_ID, 'owner_id' => $productInfo->member_id, 'collection_id' => $collectionID, 'file_id' => $file_id, 'downloaded_timestamp' => new Zend_Db_Expr ('Now()'), 'downloaded_ip' => $this->getRealIpAddr(), 'referer' => $this->getReferer());
+                $data = array('id' => new Zend_Db_Expr ('UUID_SHORT()'), 'client_id' => PPLOAD_CLIENT_ID, 'owner_id' => $productInfo->member_id, 'collection_id' => $collectionID, 'file_id' => $file_id, 'downloaded_timestamp' => new Zend_Db_Expr ('Now()'), 'downloaded_ip' => $this->getRealIpAddr(), 'referer' => $this->getReferer());
                 if(!empty($memberId)) {
                    $data['user_id'] = $memberId;
                 }
