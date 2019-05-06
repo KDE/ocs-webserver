@@ -71,4 +71,8 @@ class Local_Payment_PayPal_AdaptivePayment_ResponsePayRequest implements Local_P
         return 'paypal';
     }
 
+    public function getCustom() {
+        return strtoupper($this->_rawResponse['custom']);
+    }
+
 }
