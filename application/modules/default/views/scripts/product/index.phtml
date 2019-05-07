@@ -579,7 +579,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                         <?php } ?>
 
                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && count($this->ratings)>0){  ?>
-                            <li><a href="#ratings-panel2" data-toggle="tab">Ratings & Reviews 2 <?php echo '('.$cntRatingsActive.')';  ?></a></li>
+                            <li><a href="#ratings-panel2" data-toggle="tab">Ratings<?php echo '('.$cntRatingsActive.')';  ?></a></li>
                         <?php } ?>
 
 
