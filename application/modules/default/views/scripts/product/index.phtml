@@ -577,6 +577,12 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                         <?php if(count($this->ratings)>0){ ?>
                             <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
                         <?php } ?>
+
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && count($this->ratings)>0){  ?>
+                            <li><a href="#ratings-panel2" data-toggle="tab">Ratings & Reviews 2 <?php echo '('.$cntRatingsActive.')';  ?></a></li>
+                        <?php } ?>
+
+
                         <?php if(count($this->projectplings)>0){ ?>
                             <li><a href="#plings-panel" data-toggle="tab">Plings <?php echo '('.count($this->projectplings).')';  ?></a></li>
                         <?php } ?>
@@ -834,6 +840,22 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                 <div id="productRatingContainer">
                                 <?php
                                        echo $this->render('product/partials/productRating.phtml');
+                                  ?>
+                                  </div>
+                            </article>
+                            </div>
+                        </div>
+                        <?php } ?>
+
+
+                        <!-- ratings panel2 -->
+                        <?php  if (count($this->ratings) > 0 && Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) { ?>
+                        <div class="tab-pane" id="ratings-panel2">
+                            <div id="ratings-panel-wrapper2" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                            <article>
+                                <div id="productRatingContainer2">
+                                <?php
+                                       echo $this->render('product/partials/productRating2.phtml');
                                   ?>
                                   </div>
                             </article>
