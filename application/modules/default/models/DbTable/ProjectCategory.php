@@ -1642,14 +1642,14 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
         return $children;
     }
-    
+
     /**
      * @param int|array $nodeId
      * @param string    $orderBy
      *
      * @return array
      * @throws Zend_Cache_Exception
-     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
      */
     public function fetchImmediateChildrenNew($nodeId, $orderBy = 'lft')
     {
