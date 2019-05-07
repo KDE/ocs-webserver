@@ -246,13 +246,14 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                aria-hidden="true">&times;</span></button>
                </div>
                <div class="modal-body">
-                 <form class="full-width product-add-comment-review" action="/productcomment/addreplyreview/" method="post" >
+                 <form class="full-width product-add-comment-review" action="/productcomment/addreplyreview/" method="post" id="reviewform">
                             <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
                             <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>
                             <input type="hidden" name="v" value="1" id="voteup"/>
                             <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
                             <input type="hidden" name="otxt" value="<?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?>" id="otxt"/>
                             <input type="hidden" name="userrate" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['user_like']?>" id="userrate"/>
+                            <input type="hidden" name="userscore" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['score']?>" id="userscore"/>
                             <textarea name="msg" class="full-width" id="commenttext"><?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?></textarea>
                             <button type="submit" class="small pull-right">Rate Now</button>
                 </form>
@@ -447,11 +448,15 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                         </div>
                                 </div>
 
-
-
                                 <div class="projectdetailRating" style="clear: right">
                                         <?php echo $this->render('partials/sidebarRating.phtml'); ?>
                                 </div>
+
+                                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
+                                <div class="projectdetailRating" style="clear: right">
+                                        <?php echo $this->render('partials/sidebarScore.phtml'); ?>
+                                </div>
+                                <?php } ?>
                             </div>
                         </div>
                         <div id="carouselContainer" class="carouselContainer">
@@ -574,11 +579,11 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                             <li><a href="#gitlabissues-panel" data-toggle="tab">Issues <?php echo '('.$cntGitIssues.')';  ?></a></li>
                         <?php } ?>
 
-                        <?php if(count($this->ratings)>0){ ?>
-                            <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
-                        <?php } ?>
+                       
+                        <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
+                      
 
-                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && count($this->ratings)>0){  ?>
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
                             <li><a href="#ratings-panel2" data-toggle="tab">Ratings<?php echo '('.$cntRatingsActive.')';  ?></a></li>
                         <?php } ?>
 
@@ -833,7 +838,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                          <?php } ?>
 
                         <!-- ratings panel -->
-                        <?php  if (count($this->ratings) > 0) { ?>
+                        
                         <div class="tab-pane" id="ratings-panel">
                             <div id="ratings-panel-wrapper" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                             <article>
@@ -845,11 +850,11 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                             </article>
                             </div>
                         </div>
-                        <?php } ?>
+                      
 
 
                         <!-- ratings panel2 -->
-                        <?php  if (count($this->ratings) > 0 && Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) { ?>
+                        <?php  if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) { ?>
                         <div class="tab-pane" id="ratings-panel2">
                             <div id="ratings-panel-wrapper2" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                             <article>

@@ -108,7 +108,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
 
     public function getScore($project_id)
     {
-        $sql = "select ROUND(AVG(score) ,1) as score
+        $sql = "select round((sum(score)+2*5)/(count(1)+2),1) as score
                 from project_rating 
                 where project_id = :project_id and rating_active = 1
                 ";
@@ -119,9 +119,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
          }else
          {
             return '5.0';
-         }
-        
-        
+         }                
     }
 
     /**
