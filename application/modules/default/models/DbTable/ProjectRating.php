@@ -105,7 +105,25 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
         return $result;
     }
     
-      /**
+
+    public function getScore($project_id)
+    {
+        $sql = "select ROUND(AVG(score) ,1) as score
+                from project_rating 
+                where project_id = :project_id and rating_active = 1
+                ";
+        $result = $this->_db->query($sql, array('project_id' => $project_id))->fetchAll();     
+        if($result && $result[0])
+        {
+            return $result[0]['score'];    
+        }else
+        {
+            return 5.0;
+        }
+        
+    }
+
+    /**
      * @param int      $projectId
      * @param int      $member_id
      * @param int      $userRating
@@ -184,6 +202,87 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
 
        
     }
+
+      /**
+     * @param int      $projectId
+     * @param int      $member_id
+     * @param int      $userRating
+     * @param int|null $msg comment    
+     */
+      /*
+    public function rateForProject($projectId, $member_id, $userRating, $msg )
+    {        
+        $msg = trim($msg);
+        if(strlen($msg)<1) return;
+        $userLikeIt = $userRating == 1 ? 1 : 0;
+        $userDislikeIt = $userRating == 2 ? 1 : 0;        
+        $sql = 'select rating_id,comment_id from project_rating where project_id='.$projectId.'  and rating_active=1 and user_like='.$userLikeIt.' and user_dislike='.$userDislikeIt.' and member_id='.$member_id;      
+        $result = $this->getAdapter()->fetchRow($sql);              
+        $is_upvote=$userRating == 1 ? true : false;
+        $is_exist = (($result!=null) && ($result['rating_id']!=null))?true:false;
+        $modelComments = new Default_Model_ProjectComments();
+    
+        // Zend_Registry::get('logger')->info($msg);
+        if($is_exist){
+            // this do cancel old rating .  remove rating & deactive 
+            $rating_id = $result['rating_id'];
+            $comment_id = $result['comment_id'];                                              
+            $this->update(array('rating_active' => 0), 'rating_id=' . $rating_id);                   
+            $modelComments->deactiveComment($comment_id);   
+            if($is_upvote){
+               $this->rateUpdateProject($projectId,1);
+            }else{
+                $this->rateUpdateProject($projectId,2);
+            }
+        }else{            
+            // this do first rating or change from - to + or + to -
+            // first comment
+            $data = array();
+            $data['comment_target_id'] =$projectId;               
+            $data['comment_member_id'] =$member_id;
+            $data['comment_parent_id'] = 0;
+            $data['comment_text'] = $msg;
+            $tableReplies = new Default_Model_ProjectComments();
+            $result = $tableReplies->save($data);
+            $comment_id =  $result->comment_id;
+
+            // get old rating
+            $sql = 'select rating_id,comment_id,user_like from project_rating where project_id='.$projectId.'  and rating_active=1 and member_id='.$member_id;
+            $result = $this->getAdapter()->fetchRow($sql);            
+            if($result!=null && $result['rating_id']!=null){
+                 $this->update(array('rating_active' => 0), 'rating_id=' . $result['rating_id']);
+                $modelComments->deactiveComment($result['comment_id']);   
+            }
+
+            $this->save(array(
+                'project_id'    => $projectId,
+                'member_id'     => $member_id,
+                'user_like'     => $userLikeIt,
+                'user_dislike'  => $userDislikeIt,
+                'rating_active' => 1,
+                'comment_id'    => $comment_id
+            ));    
+
+            // deal with project table ratings
+            if(($result!=null) && ($result['rating_id']!=null)){                
+                if($is_upvote){
+                      $this->rateUpdateProject($projectId,5);
+                }else{
+                     $this->rateUpdateProject($projectId,6);
+                }                 
+            }else{
+                // first time rating
+                if($is_upvote){
+                   $this->rateUpdateProject($projectId,3);
+                }else{
+                    $this->rateUpdateProject($projectId,4);
+                }
+            }
+            
+        }
+
+       
+    }*/
 
     private function rateUpdateProject($projectId,$action)
     {

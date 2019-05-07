@@ -35,6 +35,7 @@ $cssNoVotes = (($this->product->count_likes+$this->product->count_dislikes) == 0
 // calculate colour
 $blue = $red = $green = $default=200;
 $score = $this->product->laplace_score;
+
 if($score==0)
 	$score = 50;
 
@@ -71,8 +72,27 @@ if(strlen($red)==1) $red='0'.$red;
             <td style="padding-left:0.2em;padding-right: 0.2em;">
                 <div class="rating">
                     <div class="rating-text">
-                        <small class="center-block text-center">Score <?= floor($score) ?>%
+                        <small class="center-block text-center">Score <?= floor($score)?>% 
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $this->userRoleName)
+                            {                                
+                                $model = new Default_Model_DbTable_ProjectRating();
+                                $score2 = $model->getScore($this->product->project_id);                                
+                                $blue2 = $red2 = $green2 = $default2=200;
+                                if($score2>5) {
+                                    $red2=dechex($default2-(($score2-5)*40));
+                                    $green2=dechex($default2);
+                                    $blue2=dechex($default2-(($score2-5)*40));
+                                }elseif($score2<5) {
+                                    $red2=dechex($default2);
+                                    $green2=dechex($default2-((5-$score2)*40));
+                                    $blue2=dechex($default2-((5-$score2)*40));
+                                }
+                                if(strlen($green2)==1) $green2='0'.$green2;
+                                if(strlen($red2)==1) $red2='0'.$red2;
 
+                                ?>
+                            <br/> <span style="color:#<?=$red2.$green2.$blue2?>">Score: <?=$score2?></span>
+                        <?php } ?>
                         </small>
                     </div>
                     <div class="progress" style="margin-bottom: 0;height:12px;background-color: transparent; box-shadow: none; padding:2px;">

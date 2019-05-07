@@ -92,7 +92,7 @@ $tagmodel = new Default_Model_Tags();
 $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
 
-
+$this->userRoleName = $userRoleName;
  $productJson = Zend_Json::encode($this->product);
  $filesJson = $this->filesJson;
 $helperCatXdgType = new Default_View_Helper_CatXdgType();
