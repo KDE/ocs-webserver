@@ -542,7 +542,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                             <div class="item <?php if (!$this->product->ppload_collection_id && $cnt == 1) {
                                                 echo 'active';
                                             } ?>">
-                                                <img src="<?php echo $helpImage->Image($picture, array('height' => '600')); ?>"/>
+                                                <img src="<?php echo $picture;?>"/>
                                             </div>
                                             <?php
                                             $cnt++;
@@ -551,7 +551,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                         <div class="item <?php if (!$this->product->ppload_collection_id && $cnt == 1) {
                                             echo 'active';
                                         } ?>">
-                                            <img src="<?php echo $helpImage->Image($this->product->image_small, array('height' => '600')); ?>"/>
+                                            <img src="<?php echo $picture; ?>"/>
                                         </div>
                                     <?php
                                     }
