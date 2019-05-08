@@ -1,15 +1,15 @@
 import React from 'react';
-import AppReducer,{AppReducerInitialState} from './reducers/app-reducer.js';
+import ProductMediaSlider,{ProductMediaSliderReducerInitialState} from './reducers/product-media-slider-reducer.js';
 
 export const Context = React.createContext();
 const Provider = Context.Provider;
 
 const StoreContextProvider = (props) => {
-  const [appState, appDispatch] = React.useReducer(AppReducer,AppReducerInitialState);
+  const [productMediaSliderState, productMediaSliderDispatch] = React.useReducer(ProductMediaSlider,ProductMediaSliderReducerInitialState);
 
   return(
     <Provider {...props} value={{
-      appState,appDispatch
+      productMediaSliderState,productMediaSliderDispatch
     }}/>
   )
 }

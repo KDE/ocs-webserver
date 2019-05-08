@@ -2,25 +2,24 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import StoreContextProvider,{Context} from './context-provider';
 
-function App(){
+function ProductMediaSlider(){
 
-  const [ appState, appDispatch ] = React.useContext(Context);
-  const { loading, setLoading } = useState(true)
-
-  console.log(window.galleryPicturesJson)
+  const { productMediaSliderState, productMediaSliderDispatch } = React.useContext(Context);
+  const [ loading, setLoading ] = useState(true)
 
   React.useEffect(() => { initProductMediaSlider() },[])
 
   // init product media slider
   function initProductMediaSlider(){
-    appDispatch({type:'SET_PRODUCT',product:window.product});
+    productMediaSliderDispatch({type:'SET_PRODUCT',product:window.product});
+    productMediaSliderDispatch({type:'SET_PRODUCT_GALLERY',gallery:window.galleryPicturesJson});
     setLoading(false);
   }
 
   let appDisplay;
   if (loading === false) appDisplay = <div>media player</div>
 
-  console.log(appState);
+  console.log(productMediaSliderState);
 
   return (
     <main id="media-player">
@@ -29,13 +28,13 @@ function App(){
   )
 }
 
-function AppContainer(){
+function ProductMediaSliderContainer(){
   return (
     <StoreContextProvider>
-      <App/>
+      <ProductMediaSlider/>
     </StoreContextProvider>
   );
 }
 
-const rootElement = document.getElementById("product-media-carousel-container");
-ReactDOM.render(<AppContainer />, rootElement);
+const rootElement = document.getElementById("product-media-slider-container");
+ReactDOM.render(<ProductMediaSliderContainer />, rootElement);
