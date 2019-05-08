@@ -13,8 +13,8 @@ function ProductMediaSlider(){
   const [ gallery, setGallery ] = useState(galleryArray);
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
-  const [ sliderWidth, setSliderWidth ] = useState('');
   const [ currentSlide, setCurrentSlide ] = useState(0)
+  const [ sliderWidth, setSliderWidth ] = useState(containerWidth * (currentSlide + 1));
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide)
   const [ loading, setLoading ] = useState(true);
 
@@ -69,7 +69,7 @@ function SlideItem(props){
   const [ mediaType, setMediaType ] = useState(props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image");
   let slideContentDisplay;
   if (mediaType === "embed"){
-    slideContentDisplay = <div dangerouslySetInnerHTML __html={{props.slideUrl}}></div>
+    slideContentDisplay = <div dangerouslySetInnerHTML={__html={props.slideUrl}}></div>
   } else if (mediaType === "image"){
     slideContentDisplay = <img src={props.slideUrl}/>
   } else { 
