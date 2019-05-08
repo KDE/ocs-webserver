@@ -1,7 +1,7 @@
 {
-  "name": "zeroblog",
+  "name": "pling-media-player",
   "version": "1.0.0",
-  "description": "Front-end for various web services.",
+  "description": "Pling / Opendesktop Media Player",
   "author": "DFN",
   "license": "UNLICENSED",
   "homepage": "https://my.opendesktop.org/",
