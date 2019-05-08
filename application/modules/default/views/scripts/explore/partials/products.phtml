@@ -100,6 +100,11 @@ foreach ($this->products as $this->product) {
     </div>
     <div class="explore-product-plings col-lg-2 col-md-2 col-sm-2 col-xs-2">
         <!-- RATING -->
+
+         <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                      echo 'Score:'.$this->product->laplace_score_new;
+                  }?>
+
         <?php
         $this->widgetRating = new stdClass();
         $this->widgetRating->project_id = $this->product->project_id;
