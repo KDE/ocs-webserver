@@ -2,38 +2,73 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import StoreContextProvider,{Context} from './context-provider';
 
-function App(){
+function ProductMediaSlider(){
 
-  const [ appState, appDispatch ] = React.useContext(Context);
-  const { loading, setLoading } = useState()
+  /* Component */
 
-  React.useEffect(() => { initProductMediaSlider() },[])
+  const { productMediaSliderState, productMediaSliderDispatch } = React.useContext(Context);
+  const [ product, setProduct ] = useState(window.product);
+  const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
+  const galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
+  const [ gallery, setGallery ] = useState(galleryArray);
+  const [ parentContainerElement, setParentContainerElement ] = document.getElementById('product-title-div');
+  console.log(parentContainerElement);
+  const [ containerWidth, setContainerWidth ] = useState();
+  const [ sliderWidth, setSliderWidth ] = useState('');
+  const [ currentSlide, setCurrentSlide ] = useState(0)
+  const [ loading, setLoading ] = useState(true);
 
-  // init product media slider
-  function initProductMediaSlider(){
-    appDispatch({type:'SET_PRODUCT',product:window.product});
+  React.useEffect(() => { 
+    window.addEventListener("resize", updateDimensions);
+    window.addEventListener("orientationchange", updateDimensions);
     setLoading(false);
+  },[])
+
+  // update dimensions
+  function updateDimensions(){
+    const newContainerWidth = parentContainerElement.width();
+    setContainerWidth(newContainerWidth)
+    setSliderWidth(containerWidth * gallery.length);
   }
 
-  let appDisplay;
-  if (loading === false) appDisplay = <div>media player</div>
+  /* Render */
+  
+  console.log(containerWidth);
+  console.log(sliderWidth);
 
-  console.log(appState);
+  let slidesDisplay;
+  if (loading === false){
+    slidesDisplay = gallery.map((s,index) => (
+      <SlideItem 
+        key={index}
+        slideIndex={index}
+        slideUrl={s}
+      />
+    ));
+  }
 
   return (
-    <main id="media-player">
-      {appDisplay}
+    <main id="media-slider">
+      {slidesDisplay}
     </main>
   )
 }
 
-function AppContainer(){
+function SlideItem(props){
+  console.log(props)
+  return(
+    <div className="slide-item">
+    </div>
+  )
+}
+
+function ProductMediaSliderContainer(){
   return (
     <StoreContextProvider>
-      <App/>
+      <ProductMediaSlider/>
     </StoreContextProvider>
   );
 }
 
-const rootElement = document.getElementById("product-media-carousel-container");
-ReactDOM.render(<AppContainer />, rootElement);
+const rootElement = document.getElementById("product-media-slider-container");
+ReactDOM.render(<ProductMediaSliderContainer />, rootElement);
