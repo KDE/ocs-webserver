@@ -12,7 +12,7 @@ function ProductMediaSlider(){
   // init product media slider
   function initProductMediaSlider(){
     productMediaSliderDispatch({type:'SET_PRODUCT',product:window.product});
-    productMediaSliderDispatch({type:'SET_PRODUCT_GALLERY',gallery:window.galleryPicturesJson});
+    productMediaSliderDispatch({type:'SET_PRODUCT_GALLERY',gallery:JSON.parse(window.galleryPicturesJson)});
     setLoading(false);
   }
 
