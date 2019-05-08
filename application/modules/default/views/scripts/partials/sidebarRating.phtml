@@ -35,6 +35,7 @@ $cssNoVotes = (($this->product->count_likes+$this->product->count_dislikes) == 0
 // calculate colour
 $blue = $red = $green = $default=200;
 $score = $this->product->laplace_score;
+
 if($score==0)
 	$score = 50;
 
@@ -71,8 +72,8 @@ if(strlen($red)==1) $red='0'.$red;
             <td style="padding-left:0.2em;padding-right: 0.2em;">
                 <div class="rating">
                     <div class="rating-text">
-                        <small class="center-block text-center">Score <?= floor($score) ?>%
-
+                        <small class="center-block text-center">Score <?= floor($score)?>% 
+                      
                         </small>
                     </div>
                     <div class="progress" style="margin-bottom: 0;height:12px;background-color: transparent; box-shadow: none; padding:2px;">

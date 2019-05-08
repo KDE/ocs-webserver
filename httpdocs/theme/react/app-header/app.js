@@ -172,8 +172,7 @@ class SiteHeaderSearchForm extends React.Component {
   render(){
 
     let siteHeaderSearchFormStyle;
-    console.log(this.props);
-    console.log(this.props.store.name.toLowerCase().indexOf("appimagehub") > -1)
+  
     if (this.props.store.name.toLowerCase().indexOf("appimagehub") > -1) {
       let tHeight = parseInt(this.props.height.split('px')[0]);
       siteHeaderSearchFormStyle = {

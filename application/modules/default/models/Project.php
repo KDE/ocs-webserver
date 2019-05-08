@@ -1303,13 +1303,16 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                 ));
 
                 break;
-
+            case 'rating':
+                $statement->order('project.laplace_score_new DESC');
+                break;
             case 'download':
                 $statement->order('project.count_downloads_hive DESC');
                 break;
             case 'downloadQuarter':
                 $statement->order('project.count_downloads_quarter DESC');
                 break;
+
 
             case 'hot':
                 //$statement->order(array('amount_received DESC', 'count_plings DESC', 'latest_pling DESC', 'project.created_at DESC'));
