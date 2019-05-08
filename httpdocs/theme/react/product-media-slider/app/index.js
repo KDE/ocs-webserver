@@ -12,11 +12,12 @@ function ProductMediaSlider(){
   const galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
   const [ gallery, setGallery ] = useState(galleryArray);
   const parentContainerElement = document.getElementById('product-title-div');
-  console.log(parentContainerElement);
   const [ containerWidth, setContainerWidth ] = useState();
   const [ sliderWidth, setSliderWidth ] = useState('');
   const [ currentSlide, setCurrentSlide ] = useState(0)
   const [ loading, setLoading ] = useState(true);
+
+  console.log(parentContainerElement);
 
   React.useEffect(() => { 
     window.addEventListener("resize", updateDimensions);
