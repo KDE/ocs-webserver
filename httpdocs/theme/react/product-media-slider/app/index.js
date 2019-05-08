@@ -17,7 +17,8 @@ function ProductMediaSlider(){
   const [ currentSlide, setCurrentSlide ] = useState(0)
   const [ loading, setLoading ] = useState(true);
 
-  console.log(parentContainerElement);
+  console.log(parentContainerElement.width);
+  console.log(parentContainerElement.clientWidth);
 
   React.useEffect(() => { 
     window.addEventListener("resize", updateDimensions);
