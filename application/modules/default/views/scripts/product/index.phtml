@@ -108,11 +108,11 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
 
 
 $this->galleryPictures = $tableProject->getGalleryPictureSources($this->product->project_id);
-
+/*
 foreach ($this->galleryPictures as &$value) {
      $value = $this->Image($value, array('height' => '600'));
 }
-
+*/
 $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 ?>
 
