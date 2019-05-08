@@ -54,7 +54,7 @@ function ProductMediaSlider(){
   )
 }
 
-function SlideItem(props){
+function SlideItem(props){0
   const [ mediaType, setMediaType ] = useState(props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image");
   let slideContentDisplay;
   if (mediaType === "embed"){
