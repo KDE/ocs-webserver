@@ -113,126 +113,126 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
 
     <!-- facebook -->
     <div id="fb-root"></div>
-    <?php if (Zend_Auth::getInstance()->hasIdentity()) {
-        ?>
-    <div id="report-product-<?= $this->product->project_id ?>" class="modal report-product" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                </div>
-                <form id="product-report" class="full-width partialjson" action="/report/product/"
-                      data-target="#report-product-<?= $this->product->project_id ?>-message">
-                    <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
-                    <div id="report-product-<?= $this->product->project_id ?>-message">
-                        <p>Do you really want to report this product?</p>
-                        <div class="modal-footer">
-                            <button type="submit" class="small">
-                                <span class="glyphicon glyphicon-share-alt"></span> Yes
-                            </button>
-                        </div>
+
+    <!-- REPORT MODALS -->
+    <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
+
+        <div id="report-product-<?= $this->product->project_id ?>" class="modal report-product" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
                     </div>
-                </form>
+                    <form id="product-report" class="full-width partialjson" action="/report/product/"
+                        data-target="#report-product-<?= $this->product->project_id ?>-message">
+                        <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
+                        <div id="report-product-<?= $this->product->project_id ?>-message">
+                            <p>Do you really want to report this product?</p>
+                            <div class="modal-footer">
+                                <button type="submit" class="small">
+                                    <span class="glyphicon glyphicon-share-alt"></span> Yes
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 
-
-    <div id="report-product-fraud-<?= $this->product->project_id ?>" class="modal report-product-fraud" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                </div>
-                <form id="product-report-fraud" class="full-width partialjsonfraud" action="/report/productfraud/"
-                      data-target="#report-product-fraud-<?= $this->product->project_id ?>-message" >
-                    <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
-                    <div id="report-product-fraud-<?= $this->product->project_id ?>-message" class="message" style="padding: 20px">
-                        <div>Please specify why this product is misused (min 5 chars):
-                           <textarea class="" id="report-text" name="t" cols="50" rows="3"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="small">
-                                <span class="glyphicon glyphicon-share-alt"></span> Report
-                            </button>
-                        </div>
+        <div id="report-product-fraud-<?= $this->product->project_id ?>" class="modal report-product-fraud" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
                     </div>
-                </form>
+                    <form id="product-report-fraud" class="full-width partialjsonfraud" action="/report/productfraud/"
+                        data-target="#report-product-fraud-<?= $this->product->project_id ?>-message" >
+                        <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
+                        <div id="report-product-fraud-<?= $this->product->project_id ?>-message" class="message" style="padding: 20px">
+                            <div>Please specify why this product is misused (min 5 chars):
+                            <textarea class="" id="report-text" name="t" cols="50" rows="3"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="small">
+                                    <span class="glyphicon glyphicon-share-alt"></span> Report
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 
-
-     <div id="report-product-clone-<?= $this->product->project_id ?>" class="modal report-product-clone" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                                <span class="modal-title">If you know another product that is based on <b><?=$this->product->title?></b>, please fill in the ID:</span>
-                </div>
-                <form id="product-report-clone" class="full-width partialjsonclone" action="/report/productclone/"
-                      data-projectid="<?= $this->product->project_id ?>" data-target="#report-product-clone-<?= $this->product->project_id ?>-message">
-                    <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
-                    <div id="report-product-clone-<?= $this->product->project_id ?>-message" class="message" style="padding: 20px">
-                        <div>
-                            <label class="form-label">ID of the Clone on opendesktop:  </label><br/>
-                            <input name="pc" id="clonePId"/><br/><br/>                            
-                           
-                            <label class="form-label">Additional message: </label>
-                            <br/>
-                           <textarea class="" id="report-text" name="t"  rows="3" style="width: 440px;"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="small" data-dismiss="modal">cancel</button>
-                            <button type="submit" class="small">
-                                <span class="glyphicon glyphicon-share-alt"></span> add credits
-                            </button>
-                        </div>
+        <div id="report-product-clone-<?= $this->product->project_id ?>" class="modal report-product-clone" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                                    <span class="modal-title">If you know another product that is based on <b><?=$this->product->title?></b>, please fill in the ID:</span>
                     </div>
-                </form>
+                    <form id="product-report-clone" class="full-width partialjsonclone" action="/report/productclone/"
+                        data-projectid="<?= $this->product->project_id ?>" data-target="#report-product-clone-<?= $this->product->project_id ?>-message">
+                        <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
+                        <div id="report-product-clone-<?= $this->product->project_id ?>-message" class="message" style="padding: 20px">
+                            <div>
+                                <label class="form-label">ID of the Clone on opendesktop:  </label><br/>
+                                <input name="pc" id="clonePId"/><br/><br/>                            
+                            
+                                <label class="form-label">Additional message: </label>
+                                <br/>
+                            <textarea class="" id="report-text" name="t"  rows="3" style="width: 440px;"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="small" data-dismiss="modal">cancel</button>
+                                <button type="submit" class="small">
+                                    <span class="glyphicon glyphicon-share-alt"></span> add credits
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 
     <?php } ?>
+    <!-- / REPORT MODALS -->
 
 
 
 
-    <?php if (Zend_Auth::getInstance()->hasIdentity()) {
-        ?>
-    <div id="like-product-modal" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content" style="padding-bottom: 20px">
-               <div class="modal-header">
-                    <label id="votelabel"> </label>
-                   <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
-                               aria-hidden="true">&times;</span></button>
-               </div>
-               <div class="modal-body">
-                 <form class="full-width " action="/" method="post">
-                            <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
-                            <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>
-                            <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
-                </form>
+    <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
+        
+        <div id="like-product-modal" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content" style="padding-bottom: 20px">
+                <div class="modal-header">
+                        <label id="votelabel"> </label>
+                    <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form class="full-width " action="/" method="post">
+                                <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
+                                <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>
+                                <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
+                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <?php
-    } else { ?>
+    <?php } else { ?>
 
-    <div id="like-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-sm" role="document">
-           <div class="modal-content" style="min-height: 100px; ">
-               <span style="text-align: center; display: block; padding-top: 30px">Please login. <br/><a href="<?=$loginUrl?>">Login</a></span>
-           </div>
-         </div>
-    </div>
+        <div id="like-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="min-height: 100px; ">
+                <span style="text-align: center; display: block; padding-top: 30px">Please login. <br/><a href="<?=$loginUrl?>">Login</a></span>
+            </div>
+            </div>
+        </div>
 
     <?php } ?>
 
@@ -541,6 +541,11 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                     </a>
                                 <?php } ?>
                             </div><!-- End Carousel -->
+
+                            <!-- REACT SLIDER WRAPPER -->
+                            <div id="product-media-carousel-container"></div>
+                            <!-- /REACT SLIDER WRAPPER -->
+
                         </div>
 
 
@@ -1151,24 +1156,23 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
         }(document, 'script', 'facebook-jssdk'));
     </script>
 
+    <script type="application/javascript">
+        // tool tips
+        $('body').on('mouseenter', '.product-thumbnail, .supporter-thumbnail', function () {
+            $(this).popover('show');
+        });
 
-<script type="application/javascript">
-    // tool tips
-    $('body').on('mouseenter', '.product-thumbnail, .supporter-thumbnail', function () {
-        $(this).popover('show');
-    });
+        $('body').on('mouseleave', '.product-thumbnail, .supporter-thumbnail', function () {
+            $(this).popover('hide');
+        });
+    </script>
 
-    $('body').on('mouseleave', '.product-thumbnail, .supporter-thumbnail', function () {
-        $(this).popover('hide');
-    });
-</script>
-
-
-<script type="text/javascript">
-  var product = <?php echo $productJson ?>;
-  var filesJson  = <?php echo $filesJson ?>;
-  var xdgTypeJson = <?php echo $xdgTypeJson ?>;
-</script>
+    <script type="text/javascript">
+        var product = <?php echo $productJson ?>;
+        var filesJson  = <?php echo $filesJson ?>;
+        var xdgTypeJson = <?php echo $xdgTypeJson ?>;
+    </script>
+    <script type="text/javascript" src="/theme/react/product-media-slider/product-media-slider.js"></script>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){

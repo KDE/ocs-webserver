@@ -2,7 +2,7 @@ module.exports = {
   entry: './app/index.js',
   output: {
     path: `${__dirname}/`,
-    filename: 'media-player.js'
+    filename: 'product-media-slider.js'
   },
   module: {
     rules: [
