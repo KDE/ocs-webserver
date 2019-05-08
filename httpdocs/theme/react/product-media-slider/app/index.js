@@ -11,7 +11,7 @@ function ProductMediaSlider(){
   const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
   const galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
   const [ gallery, setGallery ] = useState(galleryArray);
-  const [ parentContainerElement, setParentContainerElement ] = document.getElementById('product-title-div');
+  const parentContainerElement = document.getElementById('product-title-div');
   console.log(parentContainerElement);
   const [ containerWidth, setContainerWidth ] = useState();
   const [ sliderWidth, setSliderWidth ] = useState('');
@@ -55,9 +55,18 @@ function ProductMediaSlider(){
 }
 
 function SlideItem(props){
-  console.log(props)
+  const [ mediaType, setMediaType ] = useState(props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image");
+  let slideContentDisplay;
+  if (mediaType === "embed"){
+    slideContentDisplay = props.slideUrl;
+  } else if (mediaType === "image"){
+    slideContentDisplay = <img src={props.slideUrl}/>
+  } else { 
+    console.log('whot');
+  }
   return(
     <div className="slide-item">
+      {slideContentDisplay}
     </div>
   )
 }
