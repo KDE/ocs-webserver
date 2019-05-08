@@ -7,25 +7,35 @@ function ProductMediaSlider(){
   /* Component */
 
   const { productMediaSliderState, productMediaSliderDispatch } = React.useContext(Context);
-  const [ loading, setLoading ] = useState(true)
+  const [ product, setProduct ] = useState(window.product);
+  const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
+  const galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
+  const [ gallery, setGallery ] = useState(galleryArray);
+  const [ containerWidth, setContainerWidth ] = useState(document.getElementById('product-title-div').clientWidth());
+  const [ sliderWidth, setSliderWidth ] = useState('');
+  const [ currentSlide, setCurrentSlide ] = useState(0)
+  const [ loading, setLoading ] = useState(true);
 
-  React.useEffect(() => { initProductMediaSlider() },[])
-
-  // init product media slider
-  function initProductMediaSlider(){
-    productMediaSliderDispatch({type:'SET_PRODUCT',product:window.product});
-    productMediaSliderDispatch({type:'SET_PRODUCT_GALLERY',gallery:window.galleryPicturesJson});
+  React.useEffect(() => { 
+    window.addEventListener("resize", updateDimensions);
+    window.addEventListener("orientationchange", updateDimensions);
     setLoading(false);
+  },[])
+
+  // update dimensions
+  function updateDimensions(){
+    setContainerWidth(document.getElementById("product-main").clientWidth())
+    setSliderWidth(containerWidth * gallery.length);
   }
 
   /* Render */
-
-  console.log(productMediaSliderState);
+  
+  console.log(containerWidth);
+  console.log(sliderWidth);
 
   let mediaSlidesDisplay;
   if (loading === false){
-    let productMainSlide = productMediaSliderState.product.embed_code !== null ? productMediaSliderState.product.embed_code : productMediaSliderState.product.image_small;
-    const slidesArray = [ productMainSlide, ... productMediaSliderState.gallery ];
+    
     const slidesDisplay = slidesArray.map((s,index) => (
       <MediaSlide 
         key={index}
