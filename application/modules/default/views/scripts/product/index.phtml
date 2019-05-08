@@ -106,6 +106,14 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 $filesTable = new Default_Model_DbTable_PploadFiles();
 $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collection_id);
 
+
+$this->galleryPictures = $tableProject->getGalleryPictureSources($this->product->project_id);
+
+foreach ($this->galleryPictures as &$value) {
+     $value = $this->Image($value, array('height' => '600'));
+}
+
+$galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 ?>
 
 
@@ -493,7 +501,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                     endif; ?>
 
                                     <?php
-                                    $this->galleryPictures = $tableProject->getGalleryPictureSources($this->product->project_id);
+                                   
                                     if (count($this->galleryPictures) > 0) {
                                         foreach ($this->galleryPictures as $picture): ?>
                                             <li data-target="#myCarousel" data-slide-to="<?php echo $cnt ?>"
@@ -1188,6 +1196,8 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
   var product = <?php echo $productJson ?>;
   var filesJson  = <?php echo $filesJson ?>;
   var xdgTypeJson = <?php echo $xdgTypeJson ?>;
+  var galleryPicturesJson = <?php echo $galleryPicturesJson?>;
+
 </script>
 <script type="text/javascript" src="/theme/react/product-media-slider/product-media-slider.js"></script>
 
