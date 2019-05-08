@@ -55,18 +55,18 @@ function ProductMediaSlider(){
 }
 
 function SlideItem(props){
-  
-  console.log(props)
-  const [ mediaType, setMediaType ] = useState('');
-  const [ url, setMediaUrl ] = useState()
-  React.useEffect(() => { initSlideItem() },[])
-  
-  function initSlideItem(){
-
+  const [ mediaType, setMediaType ] = useState(props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image");
+  let slideContentDisplay;
+  if (mediaType === "embed"){
+    slideContentDisplay = props.slideUrl;
+  } else if (mediaType === "image"){
+    slideContentDisplay = <img src={props.slideUrl}/>
+  } else { 
+    console.log('whot');
   }
-  
   return(
     <div className="slide-item">
+      {slideContentDisplay}
     </div>
   )
 }
