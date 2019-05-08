@@ -11,7 +11,7 @@ function ProductMediaSlider(){
   const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
   const galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
   const [ gallery, setGallery ] = useState(galleryArray);
-  const [ containerWidth, setContainerWidth ] = useState(document.getElementById('product-title-div').clientWidth());
+  const [ containerWidth, setContainerWidth ] = useState(document.getElementById('product-title-div').width());
   const [ sliderWidth, setSliderWidth ] = useState('');
   const [ currentSlide, setCurrentSlide ] = useState(0)
   const [ loading, setLoading ] = useState(true);
@@ -24,7 +24,8 @@ function ProductMediaSlider(){
 
   // update dimensions
   function updateDimensions(){
-    setContainerWidth(document.getElementById("product-main").clientWidth())
+    const newContainerWidth = document.getElementById("product-main").width();
+    setContainerWidth(newContainerWidth)
     setSliderWidth(containerWidth * gallery.length);
   }
 
