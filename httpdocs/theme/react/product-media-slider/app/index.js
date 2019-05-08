@@ -20,8 +20,15 @@ function ProductMediaSlider(){
 
   /* Render */
 
+  console.log(productMediaSliderState);
+
   let appDisplay;
-  if (loading === false) appDisplay = <div>media player</div>
+  if (loading === false){
+    const slidesArray = [
+      ... productMediaSliderState.gallery
+    ]
+    appDisplay = <div>media player</div>
+  }
 
   return (
     <main id="media-player">
