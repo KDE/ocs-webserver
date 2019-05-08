@@ -1,16 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import StoreContextProvider,{Context} from './context-provider.js';
 
 function App(){
 
-  console.log(window.product);
-  console.log(window.filesJson)
-  console.log(window.xdgTypeJson)
+  const [ appState, appDispatch ] = React.useContext(Content);
+  const { loading, setLoading } = useState()
+
+  React.useEffect(() => { initProductMediaSlider() },[])
+
+  // init product media slider
+  function initProductMediaSlider(){
+    appDispatch({type:'SET_PRODUCT',product:window.product});
+    setLoading(false);
+  }
+
+  let appDisplay;
+  if (loading === false) appDisplay = <div>media player</div>
+
+  console.log(appState);
 
   return (
     <main id="media-player">
-        <div>media player</div>
+      {appDisplay}
     </main>
   )
 }
