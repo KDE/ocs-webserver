@@ -22,18 +22,32 @@ function ProductMediaSlider(){
 
   console.log(productMediaSliderState);
 
-  let appDisplay;
+  let mediaSlidesDisplay;
   if (loading === false){
-    const slidesArray = [
-      ... productMediaSliderState.gallery
-    ]
-    appDisplay = <div>media player</div>
+    let productMainSlide = productMediaSliderState.product.embed_code !== null ? productMediaSliderState.product.embed_code : productMediaSliderState.product.image_small;
+    const slidesArray = [ productMainSlide, ... productMediaSliderState.gallery ];
+    const slidesDisplay = slidesArray.map((s,index) => (
+      <MediaSlide 
+        key={index}
+        slideIndex={index}
+        slideUrl={s}
+      />
+    ));
+    mediaSlidesDisplay = <div id="media-slides">{slidesDisplay}</div>
   }
 
   return (
-    <main id="media-player">
-      {appDisplay}
+    <main id="media-slider">
+      {mediaSlidesDisplay}
     </main>
+  )
+}
+
+function MediaSlide(props){
+  console.log(props)
+  return(
+    <div className="slide">
+    </div>
   )
 }
 
