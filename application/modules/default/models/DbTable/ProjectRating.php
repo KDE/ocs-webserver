@@ -109,7 +109,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
     public function getScore($project_id)
     {
         $sql = "
-                select round((count_likes*8+count_dislikes*3+2*5)/(count_likes+count_dislikes+2),0) as score
+                select round((count_likes*8+count_dislikes*3+2*5)/(count_likes+count_dislikes+2),1) as score
                     from project 
                     where project_id = :project_id
 
