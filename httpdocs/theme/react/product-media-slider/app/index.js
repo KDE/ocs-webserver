@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import StoreContextProvider,{Context} from './context-provider.js';
+import StoreContextProvider,{Context} from './context-provider';
 
 function App(){
 
