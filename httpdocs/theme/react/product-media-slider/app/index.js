@@ -33,30 +33,28 @@ function ProductMediaSlider(){
   console.log(containerWidth);
   console.log(sliderWidth);
 
-  let mediaSlidesDisplay;
+  let slidesDisplay;
   if (loading === false){
-    
-    const slidesDisplay = slidesArray.map((s,index) => (
-      <MediaSlide 
+    slidesDisplay = gallery.map((s,index) => (
+      <SlideItem 
         key={index}
         slideIndex={index}
         slideUrl={s}
       />
     ));
-    mediaSlidesDisplay = <div id="media-slides">{slidesDisplay}</div>
   }
 
   return (
     <main id="media-slider">
-      {mediaSlidesDisplay}
+      {slidesDisplay}
     </main>
   )
 }
 
-function MediaSlide(props){
+function SlideItem(props){
   console.log(props)
   return(
-    <div className="slide">
+    <div className="slide-item">
     </div>
   )
 }
