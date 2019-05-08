@@ -11,7 +11,7 @@ function ProductMediaSlider(){
   const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
   const galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
   const [ gallery, setGallery ] = useState(galleryArray);
-  const [ parentContainerElement, setParentContainerElement ] = document.getElementById('product-title-div');
+  const parentContainerElement = document.getElementById('product-title-div');
   console.log(parentContainerElement);
   const [ containerWidth, setContainerWidth ] = useState();
   const [ sliderWidth, setSliderWidth ] = useState('');
@@ -55,7 +55,16 @@ function ProductMediaSlider(){
 }
 
 function SlideItem(props){
+  
   console.log(props)
+  const [ mediaType, setMediaType ] = useState('');
+  const [ url, setMediaUrl ] = useState()
+  React.useEffect(() => { initSlideItem() },[])
+  
+  function initSlideItem(){
+
+  }
+  
   return(
     <div className="slide-item">
     </div>
