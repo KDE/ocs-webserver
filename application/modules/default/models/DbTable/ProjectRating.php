@@ -108,10 +108,13 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
 
     public function getScore($project_id)
     {
-        $sql = "select round((sum(score)+2*5)/(count(1)+2),1) as score
-                from project_rating 
-                where project_id = :project_id and rating_active = 1
-                ";
+        $sql = "
+                select round((count_likes*8+count_dislikes*3+2*5)/(count_likes+count_dislikes+2),0) as score
+                    from project 
+                    where project_id = :project_id
+
+        ";
+        
         $result = $this->_db->query($sql, array('project_id' => $project_id))->fetchAll();     
         if($result[0]['score'])
         {
@@ -121,6 +124,25 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
             return '5.0';
          }                
     }
+
+
+   /* public function getScore($project_id)
+    {
+        $sql = "
+                select round((sum(score*(user_like+user_dislike))+2*5)/(sum(user_like+user_dislike)+2),1) as score
+                from project_rating 
+                where project_id = :project_id and rating_active = 1
+        ";
+        
+        $result = $this->_db->query($sql, array('project_id' => $project_id))->fetchAll();     
+        if($result[0]['score'])
+        {
+            return $result[0]['score'];       
+         }else
+         {
+            return '5.0';
+         }                
+    }*/
 
     /**
      * @param int      $projectId
