@@ -1896,7 +1896,10 @@ $this->inlineScript()->appendScript('
               value_cat_id: <?=json_encode($valueCatId)?>,
 
               setup: function () {
-                  this.setupCategorySelect(this.cat_id_data);
+                  //20190508 ronald: laut CT sollen wieder alle Kategorien angezigt werden, nicht mehr nur die Store-Kats
+                  //this.setupCategorySelect(this.cat_id_data);
+                  this.setupCategorySelect(this.cat_id_data_fallback);
+                  
                   this.setupCategoryAjax();
                   this.setGitlabProjectNameSelect();
               },
