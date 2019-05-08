@@ -73,13 +73,13 @@ class DevelopmentAppMenu extends React.Component {
           </button>
           <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
             <li id="addproduct-link-item">
-              <a href={this.props.baseUrl+"/product/add"}>
+              <a href={this.props.baseUrlStore+"/product/add"}>
                 <div className="icon"></div>
                 <span>Add Product</span>
               </a>
             </li>
             <li id="addproduct-link-item">
-              <a href={this.props.baseUrl+"/collection/add"}>
+              <a href={this.props.baseUrlStore+"/collection/add"}>
                 <div className="icon"></div>
                 <span>Add Collection</span>
               </a>
@@ -93,13 +93,13 @@ class DevelopmentAppMenu extends React.Component {
             </li>
             
             <li id="listproduct-link-item">
-              <a href={this.props.baseUrl + "/u/" + this.props.user.username + "/products"}>
+              <a href={this.props.baseUrlStore + "/u/" + this.props.user.username + "/products"}>
                 <div className="icon"></div>
                 <span>Products</span>
               </a>
             </li>
             <li id="listproduct-link-item">
-              <a href={this.props.baseUrl + "/u/" + this.props.user.username + "/collections"}>
+              <a href={this.props.baseUrlStore + "/u/" + this.props.user.username + "/collections"}>
                 <div className="icon"></div>
                 <span>Collections</span>
               </a>
@@ -113,7 +113,7 @@ class DevelopmentAppMenu extends React.Component {
             
             
             <li id="plings-link-item">
-              <a href={this.props.baseUrl + "/u/" + this.props.user.username + "/payout"}>
+              <a href={this.props.baseUrlStore + "/u/" + this.props.user.username + "/payout"}>
                 <div className="icon"></div>
                 <span>Payout</span>
               </a>

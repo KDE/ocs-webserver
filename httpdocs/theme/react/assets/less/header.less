@@ -1,5 +1,5 @@
 @import "elements.less";
-
+ 
 #site-header-container {
   font-family: Arial,sans-serif;
 }
@@ -49,16 +49,20 @@
       height: 100%;
 
       #site-header-right-top {
-        height: 40px;
+        /*height: 40px;*/
+        height: 100%;
         width: 100%;
         padding-right: 5px;
+        display: table;
+
       }
 
       #site-header-search-form {
-        float: left;
+      /*  float: left;*/
         width: 100%;
         max-width: 16em;
-
+        display: table-cell;
+        vertical-align: middle;
         #search-form {
           margin: 6.5px 0;
         }

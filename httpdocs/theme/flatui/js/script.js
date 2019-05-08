@@ -647,6 +647,12 @@ var Opendownloadfile= (function () {
                 var project_id = $(this).attr('data-project_id');
                 var link_type = $(this).attr('data-link_type');
                 var is_external = $(this).attr('data-is-external-link');
+                var external_link = null;
+                var popupHeight = '350';
+                if(is_external == 'true') {
+                    external_link = $(this).attr('data-external_link');
+                    popupHeight = '500';
+                }
                 
                 $.fancybox({
                     'hideOnContentClick': true,
@@ -657,7 +663,7 @@ var Opendownloadfile= (function () {
                     'transitionOut': 'elastic',
                     'type': 'iframe',
                     'width':'600',
-                    'height':'350',
+                    'height':popupHeight,
                     'iframe': {'scrolling': 'no'},
                     'autoSize':false,
                     'id': 'opendownloadfilepopup',
@@ -666,7 +672,7 @@ var Opendownloadfile= (function () {
                             locked: false
                         }
                     },
-                    href:'/dl?file_id='+file_id+'&file_type='+file_type+'&file_name='+file_name+'&file_size='+file_size+'&project_id='+project_id+'&link_type='+link_type+'&is_external='+is_external
+                    href:'/dl?file_id='+file_id+'&file_type='+file_type+'&file_name='+file_name+'&file_size='+file_size+'&project_id='+project_id+'&link_type='+link_type+'&is_external='+is_external+'&external_link='+external_link
 
                 });
                 return false;

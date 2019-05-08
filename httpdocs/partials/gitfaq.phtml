@@ -20,24 +20,16 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-class Default_View_Helper_CalcDonationYearlyText extends Zend_View_Helper_Abstract
-{
 
-    const paypal_fix = 0.3;
-    const paypal_var = 0.029;
-    const tax = 0.19;
+?>
 
-    public function calcDonationYearlyText($tier)
-    {
-//($0.99 + 35 cents paypal + 26 cents taxes = $1.60 monthly)        
-		$v = ($tier*12 + self::paypal_fix)/( 1- ( ( self::paypal_var/(1+self::paypal_var)) + (self::tax/(1+self::tax)) ));		
-		$paypal = self::paypal_fix+$v*self::paypal_var;
-		$total = $tier*12 + $paypal;
-		$t=$total*self::tax;
-		$g = $total+$t;
-        $r = '(12*$'.$tier.' = $'.number_format($tier*12,2).' + $'.number_format($paypal, 2).' paypal + $'.number_format($t, 2).' tax = $'
-        		.number_format($g,2).' yearly)';
-        return $r;
-    }
 
-} 
+   <div style="padding-top: 20px">
+      <h3>Opencode FAQ</h3>
+        <p>Opencode uses 100% libre solutions, like e.g. Gitlab.</p>
+
+        <br/>
+        <p>For usable GIT clients, look here:
+        	<p> <a href="https://forum.opendesktop.org/t/git-client-list/7104">https://forum.opendesktop.org/t/git-client-list/7104</a></p>
+    </div>
+

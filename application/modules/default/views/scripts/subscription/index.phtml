@@ -23,7 +23,7 @@
  */
 $modelInfo = new Default_Model_Info();
 $countActiveMembers = $modelInfo->countTotalActiveMembers();
-
+$modelInfo= new Default_Model_Info();
 
 ?>
 <link href="/theme/flatui/css/support.css" rel="stylesheet">
@@ -40,31 +40,38 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
    
                 <div class="content col-md-8">
                     <h2>Become a Supporter</h2>
-                    <p>For every download you make, a small amount is directed to that creator according to our pling table.</p>
-                    <p>Your donation supports potentially all <b> <?=$countActiveMembers?></b> creators on opendesktop.org.
+                    <p>Your donation supports potentially all <b> <?=$countActiveMembers?></b> creators on opendesktop.org (see <a href="/faq-pling">pling FAQ</a>).
                     </p>
-                                                                          
                     <div class="x-donation-widget">
                          <div class="row disply-flex">
                             <div class="col-lg-2 col-md-2" style="padding-left: 15px;">        
-                                <div class="x-tabs-header ">
+                                <div class="x-tabs-header " style="padding-left: 40px;text-align:right">
                                   <div class="header-content">                                                
                                     Base Amount                                      
                                   </div>
                                 </div>                                                  
                             </div>                        
 
-                            <div class="col-lg-5 col-md-12">        
-                                <div class="x-tabs-header ">
+                            <div class="col-lg-4 col-md-12">        
+                                <div class="x-tabs-header " style="padding-left: 30px;">
                                   <div class="header-content">                                                
-                                    Monthly Payment                                           
+                                    Monthly Payment  
+                                    <br><span style="font-size: small;" class="extrasmall">(can be cancelled at any time)</span>
                                   </div>
                                 </div>                                                  
                             </div>
-                            <div class="col-lg-5 col-md-12" style="padding-right: 15px;">
+                            <div class="col-lg-4 col-md-12" style="">
                             <div class="x-tabs-header ">
                               <div class="header-content">                                                
-                                 Yearly Payment                                               
+                                 Yearly Payment   
+                                 <br><span style="font-size: small;" class="extrasmall">(can be cancelled at any time before the next year)</span>
+                              </div>
+                            </div>                                                                                     
+                            </div>
+                            <div class="col-lg-2 col-md-12 " style="padding-right: 15px;">
+                            <div class="x-tabs-header ">
+                              <div class="header-content" style="text-align:right;padding-right:15px;">                                                
+                                 Supporters
                               </div>
                             </div>                                                                                     
                             </div>
@@ -76,19 +83,30 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                         array('tier' => '0.99'));
                             ?>
                             </div>
-                            <div class="col-lg-5 col-md-12">  
+                            <div class="col-lg-4 col-md-12">  
                            <?php
                                 echo $this->partial('/subscription/partials/option_monthly.phtml',
                                         $this->payment_options['Option1']
                                 );
                             ?>
                             </div>
-                            <div class="col-lg-5 col-md-12">  
+                            <div class="col-lg-4 col-md-12">  
                                 <?php
                                 echo $this->partial('/subscription/partials/option.phtml',
                                         $this->payment_options['Option5']
                                 );
                             ?>                                    
+                            </div>
+                            <div class="col-lg-2 text-right" >
+                                <ul class="x-suggested-amounts">
+                                <li class="amount-item">       
+                                      <div class="item-text">          
+                                        <span class="amount" > 
+                                            <?php echo $modelInfo->getCountTierSupporters(0.99);?></span>       
+                                      </div>    
+                                </li>
+                                </ul>
+                               
                             </div>
                         </div> <!--end of row-->
 
@@ -99,19 +117,30 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                         array('tier' => '2'));
                                 ?>
                             </div>
-                            <div class="col-lg-5 col-md-12">  
+                            <div class="col-lg-4 col-md-12">  
                            <?php
                                 echo $this->partial('/subscription/partials/option_monthly.phtml',
                                         $this->payment_options['Option2']
                                 );
                             ?>
                             </div>
-                            <div class="col-lg-5 col-md-12">  
+                            <div class="col-lg-4 col-md-12">  
                                 <?php
                                 echo $this->partial('/subscription/partials/option.phtml',
                                         $this->payment_options['Option6']
                                 );
                             ?>                                    
+                            </div>
+                            <div class="col-lg-2 text-right">
+                                <ul class="x-suggested-amounts">
+                                <li class="amount-item">       
+                                      <div class="item-text">          
+                                        <span class="amount"> 
+                                            <?php echo $modelInfo->getCountTierSupporters(2);?></span>       
+                                      </div>    
+                                </li>
+                                </ul>
+                               
                             </div>
                         </div> <!--end of row-->
                             
@@ -122,14 +151,14 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                         array('tier' => '5'));
                             ?>
                             </div>
-                            <div class="col-lg-5 col-md-12">  
+                            <div class="col-lg-4 col-md-12">  
                            <?php
                                 echo $this->partial('/subscription/partials/option_monthly.phtml',
                                         $this->payment_options['Option3']
                                 );
                             ?>
                             </div>
-                            <div class="col-lg-5 col-md-12">  
+                            <div class="col-lg-4 col-md-12">  
                                
                                  <?php
                                 echo $this->partial('/subscription/partials/option.phtml',
@@ -137,6 +166,17 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                 );
                                  ?>                                                                    
                                                                
+                            </div>
+                            <div class="col-lg-2 text-right">
+                                <ul class="x-suggested-amounts">
+                                <li class="amount-item">       
+                                      <div class="item-text">          
+                                        <span class="amount"> 
+                                            <?php echo $modelInfo->getCountTierSupporters(5);?></span>       
+                                      </div>    
+                                </li>
+                                </ul>
+                               
                             </div>
                         </div> <!--end of row-->
 
@@ -147,14 +187,48 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                         array('tier' => '10'));
                             ?>
                             </div>
-                            <div class="col-lg-5 col-md-12">  
+                            <div class="col-lg-4 col-md-12">  
                            <?php
                                 echo $this->partial('/subscription/partials/option_monthly.phtml',
                                         $this->payment_options['Option4']
                                 );
                             ?>
                             </div>
-                            <div class="col-lg-5 col-md-12">  
+
+                            <div class="col-lg-4 col-md-12">  
+                               
+                                 <?php
+                                echo $this->partial('/subscription/partials/option.phtml',
+                                        $this->payment_options['Option9']
+                                );
+                                 ?>                                                                    
+                                                               
+                            </div>
+
+                           
+                             <div class="col-lg-2 text-right">
+                                <ul class="x-suggested-amounts">
+                                <li class="amount-item">       
+                                      <div class="item-text">          
+                                        <span class="amount"> 
+                                            <?php echo $modelInfo->getCountTierSupporters(10);?></span>       
+                                      </div>    
+                                </li>
+                                </ul>
+                               
+                            </div>
+                        </div> <!--end of row-->
+
+                        
+
+                        <div class="row disply-flex">
+                            <div class="col-lg-2 col-md-12">  
+                                
+                            </div>
+                            <div class="col-lg-4 col-md-12">                             
+                            </div>                            
+
+                            <div class="col-lg-4 col-md-12">  
 
                                  <ul class="x-suggested-amounts">
                                 <li class="amount-item <?=(isset($this->islast) ? 'last':'')?>">  
@@ -165,7 +239,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                         <span class="unit-wrapper">
                                           <span class="unit">$</span>
                                         </span>
-                                        <span class="amount"><input id="custom_amount" min="16" step="any" inputmode="numeric" type="number" name="amount_handish"> </span>
+                                        <span class="amount"><input id="custom_amount" min="15.01" step="any" inputmode="numeric" type="number" name="amount_handish"> </span>
                                         <span class="desc">Enter a free amount > $15</span>
                                       </div>
                                     
@@ -173,9 +247,8 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                                 </ul>
                                                                
                             </div>
+                            
                         </div> <!--end of row-->
-
-                       
             
                         <div class="row disply-flex">
                               <div class="col-lg-12 col-md-12">  

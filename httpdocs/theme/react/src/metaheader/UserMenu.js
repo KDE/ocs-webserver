@@ -47,6 +47,7 @@ class UserMenu extends React.Component {
           gitlabUrl={this.props.gitlabUrl}
           isAdmin={this.props.isAdmin}
           baseUrl={this.props.baseUrl}
+
         />
       );
       developmentAppMenuDisplay = (
@@ -56,6 +57,7 @@ class UserMenu extends React.Component {
           gitlabUrl={this.props.gitlabUrl}
           isAdmin={this.props.isAdmin}
           baseUrl={this.props.baseUrl}
+          baseUrlStore={this.props.baseUrlStore}
         />
       );
     } else {
@@ -70,16 +72,11 @@ class UserMenu extends React.Component {
     let userMenuContainerDisplay;
     if (this.props.device === "large"){
 
-      // let switchItem;
-      //
-      // if (this.props.user && this.props.user.member_id ){
-      // switchItem =(<li><SwitchItem onSwitchStyle={this.props.onSwitchStyle}
-      //             onSwitchStyleChecked={this.props.onSwitchStyleChecked}/></li>);
-      // }
 
       const aboutMenu = <AboutMenu blogUrl={this.props.blogUrl}
                                   isExternal={this.props.isExternal}
                                   baseUrl={this.props.baseUrl}
+                                  isAdmin={this.props.isAdmin}
                                   />
 
        let chatItem;
@@ -90,16 +87,12 @@ class UserMenu extends React.Component {
          </a></li>);
        }
 
-       let subscriptionItem;
-        if (this.props.user && this.props.isAdmin ){
-         subscriptionItem=(<li><a href={this.props.baseUrl + "/subscription"}>Subscription</a></li>);
-       }
+
 
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
-          <li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>
-          {subscriptionItem}
+          <li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>          
           {aboutMenu}
           {searchMenuDisplay}
           {chatItem}

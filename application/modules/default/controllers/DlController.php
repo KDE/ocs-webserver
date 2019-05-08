@@ -38,9 +38,12 @@ class DlController extends Local_Controller_Action_DomainSwitch
             $linkType = "download";
         }
         $isExternal = $this->getParam('is_external');
+        $externalLink = $this->getParam('external_link');
         
         $modelProduct = new Default_Model_Project();
         $productInfo = $modelProduct->fetchProductInfo($projectId);
+        
+        $collectionID = $productInfo->ppload_collection_id;
         
         $this->view->link_type = $linkType;
         $this->view->file_name = $file_name;
@@ -49,6 +52,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
         $this->view->project_title = $productInfo->title;
         $this->view->project_owner = $productInfo->username;
         $this->view->is_external = $isExternal;
+        $this->view->external_link = $externalLink;
         
         $memberId = $this->_authMember->member_id;
 
@@ -59,14 +63,40 @@ class DlController extends Local_Controller_Action_DomainSwitch
                 $memberDlHistory->createRow($data)->save();
             }
             
+            /*
+            //Log download
+            try {
+                $filesDl = new Default_Model_DbTable_PploadFilesDownloaded();
+                $id = $filesDl->getNewId();
+                $data = array('id' => $id, 'client_id' => PPLOAD_CLIENT_ID, 'owner_id' => $productInfo->member_id, 'collection_id' => $collectionID, 'file_id' => $file_id, 'downloaded_timestamp' => new Zend_Db_Expr ('Now()'), 'downloaded_ip' => $this->getRealIpAddr(), 'referer' => $this->getReferer());
+                if(!empty($memberId)) {
+                   $data['user_id'] = $memberId;
+                }
+                $data['source'] = 'OCS-Webserver';
+                $data['link_type'] = $linkType;
+
+                $filesDl->createRow($data)->save();
+
+            } catch (Exception $exc) {
+                //echo $exc->getTraceAsString();
+                $errorLog = Zend_Registry::get('logger');
+                $errorLog->err(__METHOD__ . ' - ' . $exc->getMessage() . ' ---------- ' . PHP_EOL);
+            }
+            */
+
+            
             //create ppload download hash: secret + collection_id + expire-timestamp
             $salt = PPLOAD_DOWNLOAD_SECRET;
-            $collectionID = $productInfo->ppload_collection_id;
+            
             $timestamp = time() + 3600; // one hour valid
             //20181009 ronald: change hash from MD5 to SHA512
             //$hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
             $hash = hash('sha512',$salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
-            $url = PPLOAD_API_URI . 'files/download/id/' . $file_id . '/s/' . $hash . '/t/' . $timestamp . '/u/' . $memberId . '/' . $file_name;
+            $url = PPLOAD_API_URI . 'files/download/id/' . $file_id . '/s/' . $hash . '/t/' . $timestamp;
+            if(isset($memberId)) {
+                $url .= '/u/' . $memberId;
+            }
+            $url .= '/lt/' . $linkType . '/' . $file_name;
             
             if($linkType == 'install') {
                 $helperCatXdgType = new Default_View_Helper_CatXdgType();
@@ -81,6 +111,32 @@ class DlController extends Local_Controller_Action_DomainSwitch
         }
         
 
+    }
+    
+    function getRealIpAddr()
+    {
+        if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
+        {
+          $ip=$_SERVER['HTTP_CLIENT_IP'];
+        }
+        elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
+        {
+          $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+        else
+        {
+          $ip=$_SERVER['REMOTE_ADDR'];
+        }
+        return $ip;
+    }
+    
+    function getReferer()
+    {
+        $referer = null;
+        if (!empty($_SERVER['HTTP_REFERER'])) {
+            $referer = $_SERVER['HTTP_REFERER'];
+        }
+        return $referer;
     }
     
     function formatBytes($bytes, $precision = 2) { 

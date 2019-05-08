@@ -95,4 +95,9 @@ class Local_Payment_PayPal_AdaptivePayment_ResponseWebAccept implements Local_Pa
     {
         return $this->_rawResponse['receiver_email'];
     }
+
+    public function getCustom() {
+        return null;
+    }
+
 }

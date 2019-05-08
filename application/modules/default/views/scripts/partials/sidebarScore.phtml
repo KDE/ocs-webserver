@@ -1,0 +1,138 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$cssNoVotes = (($this->product->count_likes+$this->product->count_dislikes) == 0) ? ';opacity:0.5;' : '';
+
+$model = new Default_Model_DbTable_ProjectRating();
+$score2 = $model->getScore($this->product->project_id);                                
+$blue2 = $red2 = $green2 = $default2=200;
+if($score2>5) {
+    $red2=dechex($default2-(($score2-5)*40));
+    $green2=dechex($default2);
+    $blue2=dechex($default2-(($score2-5)*40));
+}elseif($score2<5) {
+    $red2=dechex($default2);
+    $green2=dechex($default2-((5-$score2)*40));
+    $blue2=dechex($default2-((5-$score2)*40));
+}
+if(strlen($green2)==1) $green2='0'.$green2;
+if(strlen($red2)==1) $red2='0'.$red2;
+
+$userScore=0;
+if($this->ratingOfUser)
+{
+    $userScore = $this->ratingOfUser['score'];
+}
+
+$options = array(1 => '1 ugh', 2=>'2 really bad',3=>'3 bad',4=>'4 soso',5=>'5 average', 6=>'6 okay',7=>'7 good', 8=>'8 great', 9=>'9 excellent',10=>'10 the best');
+
+?>
+<div id="widget-rating" class="prod-widget-box right" style="border:0px !important">    
+    <table cellpadding="0" cellspacing="0" width="100%">
+        <tbody>
+        <tr>
+            
+            <td style="padding-left:0.2em;padding-right: 0.2em; width: 80%">
+                <div class="rating">
+                    <div class="rating-text">
+                        <small class="center-block text-center">
+                        <span >Score: <?=$score2?></span>                      
+                        </small>
+                    </div>
+                    <div class="progress" style="margin-bottom: 0;height:12px;background-color: transparent; box-shadow: none; padding:2px;">
+                        <div class="progress-bar" style="background-color: #<?=$red2.$green2.$blue2?>;width: <?= floor($score2)*10 ?>%;">
+                            
+                        </div>
+                        <div class="progress-bar" style="background-color:#eeeeee;width: <?= floor(100 - $score2*10) ?>%;<?=$cssNoVotes?>">
+                          
+                        </div>
+                    </div>
+                </div>
+            </td>
+           
+        </tr>
+        </tbody>
+    </table>
+
+    <div style="text-align: center;">        
+         <select id="ratingoptions">
+            <?php
+             if($userScore){
+                echo '<option value="-1">Remove Rating</option>';
+             }else{
+                echo '<option value="0">Give a Rating</option>';
+             }
+             foreach ($options as $key => $value) {
+                $selected = '';
+                if($userScore==$key) $selected=' selected';
+                echo '<option value='.$key.$selected.'>'.$value.'</option>';                
+            } ?>         
+        </select> 
+    </div>
+</div>
+<script type="text/javascript">    
+     $(document).ready(function(){                        
+             $('#ratingoptions').find('option').click(function () {
+             var optionSelected = $(this);
+             var valueSelected  = optionSelected.val();
+             var textSelected   = optionSelected.text();
+
+             var loginuser = $('#review-product-modal').find('#loginuser').val();
+             var productcreator = $('#review-product-modal').find('#productcreator').val();
+             if (loginuser == productcreator) {
+                // ignore
+                $('#review-product-modal').find('#votelabel').text('Project owner not allowed');
+                $('#review-product-modal').find('.modal-body').empty();
+                $('#review-product-modal').modal('show');
+                return;
+             }
+             
+             var userscore = $('#review-product-modal').find('#userscore').val();
+                // -1 = no rate yet. 
+             if(userscore>0)
+             {
+                $('#review-product-modal').find('#votelabel').empty()
+                    .append('Score '+userscore+' is given already with comment:');
+                $('#review-product-modal').find('#commenttext').val($('#review-product-modal').find('#otxt').val());
+                $('#review-product-modal').find(':submit').text("Remove Rating");
+
+             }else
+             {
+                
+                $('#review-product-modal').find('#votelabel').empty()
+                    .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (min. 1 char):');
+                $('#review-product-modal').find('#commenttext').val(textSelected);
+                $('#review-product-modal').find('#userscore').val(valueSelected);
+                $('#review-product-modal').find(':submit').text("Rate Now");
+                $('#review-product-modal').find('#commenttext').removeAttr("disabled");
+                $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
+                $('#review-product-modal').find('#reviewform').attr('action','/productcomment/addreplyreviewnew/');
+             }
+             
+             $('#review-product-modal').modal('show');
+           });
+
+
+        });
+</script>
+
+

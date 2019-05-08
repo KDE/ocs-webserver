@@ -154,6 +154,17 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         return null;
     }
     
+    
+    private function getFileDownloadCount($collection_id, $fileId) {
+        $modelFiles = new Default_Model_DbTable_PploadFiles();
+        
+        $countAll = $modelFiles->fetchCountDownloadsForFileAllTime($collection_id, $fileId);
+        $countToday = $modelFiles->fetchCountDownloadsForFileToday($collection_id, $fileId);
+        
+        $count = (int)$countAll+ (int)$countToday;
+        return $count;
+    }
+    
     public function listsamesourceurlAction()
     {        
         $this->_helper->layout()->disableLayout();
@@ -223,7 +234,20 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 if(!empty($tagGroups)) {
                     $groups = $this->getTagGroupsForCat($file['id']);
                     $file['tag_groups'] = $groups;
+                    
+                    
                 }
+                //$file['downloaded_count_live'] = $this->getFileDownloadCount($collection_id, $file['id']);
+                $counterToday = $file['count_dl_today'];
+                $counterAll = $file['count_dl_all'];
+                $counter = 0;
+                if(!empty($counterToday)) {
+                    $counter = $counterToday;
+                }
+                if(!empty($counterAll)) {
+                    $counter = $counter + $counterAll;
+                }
+                $file['downloaded_count_live'] = $counter;
                 $result[] = $file;
             }
             
