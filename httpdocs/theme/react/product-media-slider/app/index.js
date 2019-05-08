@@ -15,11 +15,20 @@ function ProductMediaSlider(){
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
   const [ sliderWidth, setSliderWidth ] = useState('');
   const [ currentSlide, setCurrentSlide ] = useState(0)
+  const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide)
   const [ loading, setLoading ] = useState(true);
 
-  console.log(parentContainerElement.width);
-  console.log(parentContainerElement.clientWidth);
-
+  console.log('*********')
+  console.log(product);
+  console.log(gallery);
+  console.log(parentContainerElement);
+  console.log(containerWidth);
+  console.log(sliderWidth);
+  console.log(currentSlide);
+  console.log(sliderPosition);
+  console.log(loading);
+  console.log('*********')
+  
   React.useEffect(() => { 
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
