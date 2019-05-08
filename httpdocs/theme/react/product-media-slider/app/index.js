@@ -21,7 +21,7 @@ function ProductMediaSlider(){
   React.useEffect(() => { 
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
-    setLoading(false);
+    // setLoading(false);
   },[])
 
   // update dimensions
