@@ -7,6 +7,9 @@ function ProductMediaSlider(){
   const { productMediaSliderState, productMediaSliderDispatch } = React.useContext(Context);
   const [ loading, setLoading ] = useState(true)
 
+  console.log(window.galleryPicturesJson);
+  console.log(JSON.parse(window.galleryPicturesJson));
+
   React.useEffect(() => { initProductMediaSlider() },[])
 
   // init product media slider
