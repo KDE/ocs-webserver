@@ -5,7 +5,9 @@ import StoreContextProvider,{Context} from './context-provider';
 function App(){
 
   const [ appState, appDispatch ] = React.useContext(Context);
-  const { loading, setLoading } = useState()
+  const { loading, setLoading } = useState(true)
+
+  console.log(window.galleryPicturesJson)
 
   React.useEffect(() => { initProductMediaSlider() },[])
 
