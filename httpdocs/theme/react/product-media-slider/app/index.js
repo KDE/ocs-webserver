@@ -23,5 +23,5 @@ function AppContainer(){
   );
 }
 
-const rootElement = document.getElementById("media-player-container");
+const rootElement = document.getElementById("product-media-carousel-container");
 ReactDOM.render(<AppContainer />, rootElement);
