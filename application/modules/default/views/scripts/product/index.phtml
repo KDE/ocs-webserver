@@ -246,14 +246,39 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                                aria-hidden="true">&times;</span></button>
                </div>
                <div class="modal-body">
-                 <form class="full-width product-add-comment-review" action="/productcomment/addreplyreview/" method="post" id="reviewform">
+                 <form class="full-width product-add-comment-review" action="/productcomment/addreplyreview/" method="post" >
                             <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
                             <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>
                             <input type="hidden" name="v" value="1" id="voteup"/>
                             <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
                             <input type="hidden" name="otxt" value="<?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?>" id="otxt"/>
-                            <input type="hidden" name="userrate" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['user_like']?>" id="userrate"/>
+                            <input type="hidden" name="userrate" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['user_like']?>" id="userrate"/>                            
+                            <textarea name="msg" class="full-width" id="commenttext"><?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?></textarea>
+                            <button type="submit" class="small pull-right">Rate Now</button>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="score-product-modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="padding-bottom: 20px">
+               <div class="modal-header">
+                    <label id="votelabel"> </label>
+                   <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
+                               aria-hidden="true">&times;</span></button>
+               </div>
+               <div class="modal-body">
+                 <form class="full-width product-add-comment-review" action="/productcomment/addreplyreviewnew/" method="post" id="reviewform">
+                            <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
+                            <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>                            
+                            <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
+                            <input type="hidden" name="otxt" value="<?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?>" id="otxt"/>
+                            
                             <input type="hidden" name="userscore" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['score']?>" id="userscore"/>
+                            <input type="hidden" name="s" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['score']?>" id="userscorevalue"/>
                             <textarea name="msg" class="full-width" id="commenttext"><?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?></textarea>
                             <button type="submit" class="small pull-right">Rate Now</button>
                 </form>
@@ -269,13 +294,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
                    <span style="text-align: center; display: block; padding-top: 30px">
                     Please login.
                     <br/>
-                    <a href="<?=$loginUrl?>" rel="nofollow"> Login </a>
-                   <?php /*
-                    Only registered members with an active supporting can vote<br/>to limit spam and fraud voting.<br/>
-                    <a href="/support">Become a supporter</a>
-                    <br/><br/>You can still 'Like' a product, but that doesn't affect its score.
-                        */
-                    ?>
+                    <a href="<?=$loginUrl?>" rel="nofollow"> Login </a>                   
                     </span>
                </div>
              </div>

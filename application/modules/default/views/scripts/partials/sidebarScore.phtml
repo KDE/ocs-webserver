@@ -23,16 +23,17 @@
 $cssNoVotes = (($this->product->count_likes+$this->product->count_dislikes) == 0) ? ';opacity:0.5;' : '';
 
 $model = new Default_Model_DbTable_ProjectRating();
-$score2 = $model->getScore($this->product->project_id);                                
+$score2 = $model->getScore($this->product->project_id);    
+
 $blue2 = $red2 = $green2 = $default2=200;
-if($score2>5) {
-    $red2=dechex($default2-(($score2-5)*40));
+if($score2>=5) {
+    $red2=dechex($default2-(($score2*10-50)*4));
     $green2=dechex($default2);
-    $blue2=dechex($default2-(($score2-5)*40));
+    $blue2=dechex($default2-(($score2*10-50)*4));
 }elseif($score2<5) {
     $red2=dechex($default2);
-    $green2=dechex($default2-((5-$score2)*40));
-    $blue2=dechex($default2-((5-$score2)*40));
+    $green2=dechex($default2-((50-$score2*10)*4));
+    $blue2=dechex($default2-((50-$score2*10)*4));
 }
 if(strlen($green2)==1) $green2='0'.$green2;
 if(strlen($red2)==1) $red2='0'.$red2;
@@ -96,39 +97,42 @@ $options = array(1 => '1 ugh', 2=>'2 really bad',3=>'3 bad',4=>'4 soso',5=>'5 av
              var valueSelected  = optionSelected.val();
              var textSelected   = optionSelected.text();
 
-             var loginuser = $('#review-product-modal').find('#loginuser').val();
-             var productcreator = $('#review-product-modal').find('#productcreator').val();
+             var loginuser = $('#score-product-modal').find('#loginuser').val();
+             var productcreator = $('#score-product-modal').find('#productcreator').val();
              if (loginuser == productcreator) {
                 // ignore
-                $('#review-product-modal').find('#votelabel').text('Project owner not allowed');
-                $('#review-product-modal').find('.modal-body').empty();
-                $('#review-product-modal').modal('show');
+                $('#score-product-modal').find('#votelabel').text('Project owner not allowed');
+                $('#score-product-modal').find('.modal-body').empty();
+                $('#score-product-modal').modal('show');
                 return;
              }
              
-             var userscore = $('#review-product-modal').find('#userscore').val();
+             var userscore = $('#score-product-modal').find('#userscore').val();
                 // -1 = no rate yet. 
              if(userscore>0)
              {
-                $('#review-product-modal').find('#votelabel').empty()
-                    .append('Score '+userscore+' is given already with comment:');
-                $('#review-product-modal').find('#commenttext').val($('#review-product-modal').find('#otxt').val());
-                $('#review-product-modal').find(':submit').text("Remove Rating");
+                $('#score-product-modal').find('#votelabel').empty()
+                    .append('Score '+userscore+' is given already with comment:'+$('#score-product-modal').find('#otxt').val());                
 
              }else
+             {                
+                $('#score-product-modal').find('#votelabel').empty()
+                    .append('Add Comment (min. 1 char):');               
+             }
+             $('#score-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
+             $('#score-product-modal').find('#commenttext').removeAttr("disabled");
+             $('#score-product-modal').find('#commenttext').val(textSelected);
+             $('#score-product-modal').find('#userscorevalue').val(valueSelected);
+             
+             if(valueSelected=='-1')
              {
-                
-                $('#review-product-modal').find('#votelabel').empty()
-                    .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (min. 1 char):');
-                $('#review-product-modal').find('#commenttext').val(textSelected);
-                $('#review-product-modal').find('#userscore').val(valueSelected);
-                $('#review-product-modal').find(':submit').text("Rate Now");
-                $('#review-product-modal').find('#commenttext').removeAttr("disabled");
-                $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
-                $('#review-product-modal').find('#reviewform').attr('action','/productcomment/addreplyreviewnew/');
+                $('#score-product-modal').find(':submit').text("Remove Rating");                             
+             }else
+             {
+                $('#score-product-modal').find(':submit').text("Rate Now");                          
              }
              
-             $('#review-product-modal').modal('show');
+             $('#score-product-modal').modal('show');
            });
 
 

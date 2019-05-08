@@ -285,8 +285,6 @@ function (_React$Component2) {
     key: "render",
     value: function render() {
       var siteHeaderSearchFormStyle;
-      console.log(this.props);
-      console.log(this.props.store.name.toLowerCase().indexOf("appimagehub") > -1);
 
       if (this.props.store.name.toLowerCase().indexOf("appimagehub") > -1) {
         var tHeight = parseInt(this.props.height.split('px')[0]);
