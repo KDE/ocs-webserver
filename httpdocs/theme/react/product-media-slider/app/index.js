@@ -96,12 +96,12 @@ function ProductMediaSlider(){
 
 function SlideItem(props){
   
-  // const mediaType = props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image";
+  const [mediaType, setMediaType] = useState(props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image");
   
   let slideContentDisplay;
-  // if (mediaType === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
-  // else if (mediaType === "image") slideContentDisplay = <img src={props.slideUrl}/>
-  // else console.log('whot');
+  if (mediaType === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
+  else if (mediaType === "image") slideContentDisplay = <img src={props.slideUrl}/>
+  else console.log('whot');
 
   const slideItemStyle = { width:props.containerWidth }
 
