@@ -9,8 +9,11 @@ function ProductMediaSlider(){
   const { productMediaSliderState, productMediaSliderDispatch } = React.useContext(Context);
   const [ product, setProduct ] = useState(window.product);
   const [ files, setFiles ] = useState(window.filesJson)
-  const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
-  const galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
+  let productMainSlide, galleryArray = window.galleryPicturesJson;
+  if (product.embed_code || product.image_small){
+    const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
+    const galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
+  }
   const [ gallery, setGallery ] = useState(galleryArray);
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
