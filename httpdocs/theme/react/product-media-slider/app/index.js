@@ -26,7 +26,7 @@ function ProductMediaSlider(){
   React.useEffect(() => { updateDimensions() },[currentSlide])
 
   // init product media slider
-  initProductMediaSlider(){
+  function initProductMediaSlider(){
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
     if (window.filesJson){
@@ -36,7 +36,7 @@ function ProductMediaSlider(){
     }
   }
 
-  checkForMediaFiles(){
+  function checkForMediaFiles(){
     window.filesJson.forEach(function(f,index){
       console.log(f);
     })
