@@ -140,7 +140,7 @@ function SlideItem(props){
 
   let slideContentDisplay;
   if (mediaType === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
-  else if (mediaType === "image") slideContentDisplay = <img id={"slide-img-"+props.currentSlide} src={props.slideUrl}/>
+  else if (mediaType === "image") slideContentDisplay = <img id={"slide-img-"+props.slideIndex} src={props.slideUrl}/>
   else console.log('whot');
 
   const slideItemStyle = { width:props.containerWidth }
