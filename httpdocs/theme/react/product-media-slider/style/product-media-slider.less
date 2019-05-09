@@ -10,4 +10,33 @@
         top: 0;
         .transition()
     }
+
+    .carousel-control {
+        z-index: 100;
+        cursor: pointer;
+    }
+
+    #slide-navigation {
+        width:100%;
+        text-align: center;
+        ul {
+            list-style-type: none;
+            margin:0 auto;
+            display:table;
+            padding: 10px 0;
+
+            li {
+                width: 12px;
+                height: 12px;
+                margin: 0;
+                background-color: #fff;
+                border: 1px solid #C4D7EF;
+                .transition();
+
+                &.active {
+                    background-color: #E2E2E2;
+                }
+            }
+        }
+    }
 }

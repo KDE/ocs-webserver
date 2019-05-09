@@ -21,3 +21,31 @@
   -o-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
 }
+#media-slider .carousel-control {
+  z-index: 100;
+  cursor: pointer;
+}
+#media-slider #slide-navigation {
+  width: 100%;
+  text-align: center;
+}
+#media-slider #slide-navigation ul {
+  list-style-type: none;
+  margin: 0 auto;
+  display: table;
+  padding: 10px 0;
+}
+#media-slider #slide-navigation ul li {
+  width: 12px;
+  height: 12px;
+  margin: 0;
+  background-color: #fff;
+  border: 1px solid #C4D7EF;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+#media-slider #slide-navigation ul li.active {
+  background-color: #E2E2E2;
+}
