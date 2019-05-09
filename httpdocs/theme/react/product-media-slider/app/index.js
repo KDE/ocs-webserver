@@ -45,7 +45,7 @@ function ProductMediaSlider(){
 
   // slider wrapper style
   const sliderWrapperStyle = {
-    width:containerWidth+'px',
+    width:sliderWidth+'px',
     left:'-'+sliderPosition+'px'
   }
 
