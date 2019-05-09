@@ -56,6 +56,12 @@ function ProductMediaSlider(){
     height:sliderHeight+'px'
   }
 
+  // slider container style
+  const sliderContainerStyle = {
+    width:sliderWidth+'px',
+    height:sliderHeight+'px'
+  }
+
   // prev / next slide arrow values
   const prevCurrentSlide = currentSlide > 1 ? (currentSlide - 1) : gallery.length;
   const nextCurrentSlide = currentSlide < (gallery.length - 1) ? ( currentSlide + 1 ) : 0;
@@ -70,21 +76,24 @@ function ProductMediaSlider(){
         slideUrl={s}
         currentSlide={currentSlide}
         containerWidth={containerWidth}
+        onSetSlideHeight={(height) => setSliderHeight(height)}
       />
     ));
   }
 
   return (
     <main id="media-slider">
-      <a className="left carousel-control" id="arrow-left" onClick={() => setCurrentSlide(prevCurrentSlide)}>
-        <span className="glyphicon glyphicon-chevron-left"></span>
-      </a>
-      <div id="slider-wrapper" style={sliderWrapperStyle}>
-        {slidesDisplay}    
+      <div id="slider-container" style={sliderContainerStyle}>
+        <a className="left carousel-control" id="arrow-left" onClick={() => setCurrentSlide(prevCurrentSlide)}>
+          <span className="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <div id="slider-wrapper" style={sliderWrapperStyle}>
+          {slidesDisplay}    
+        </div>
+        <a className="right carousel-control" id="arrow-right" onClick={() => setCurrentSlide(nextCurrentSlide)}>
+          <span className="glyphicon glyphicon-chevron-right"></span>
+        </a>      
       </div>
-      <a className="right carousel-control" id="arrow-right" onClick={() => setCurrentSlide(nextCurrentSlide)}>
-        <span className="glyphicon glyphicon-chevron-right"></span>
-      </a>
       <SlidesNavigation
         gallery={gallery}
         currentSlide={currentSlide}
@@ -97,16 +106,14 @@ function ProductMediaSlider(){
 function SlideItem(props){
   
   const [mediaType, setMediaType ] = useState(props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image");
-  const [ slideHeight, setSlideHeight ] = useState('');
-
-
 
   let slideContentDisplay;
   if (mediaType === "embed"){
     slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
-    const iFrameHeight = props.slideUrl.split('height="')[1].split('"')[0];
-    console.log(iFrameHeight);
-    //setSlideHeight(iFrameHeight);
+    if (props.currentSlide === props.slideIndex){
+      const iFrameHeight = props.slideUrl.split('height="')[1].split('"')[0];
+      props.onSetSlideHeight(iFrameHeight);
+    }
   }
   else if (mediaType === "image") slideContentDisplay = <img src={props.slideUrl}/>
   else console.log('whot');
