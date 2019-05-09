@@ -12,7 +12,6 @@ function ProductMediaSlider(){
   console.log(window.galleryPicturesJson);
   if (product.embed_code !== null || product.embed_code.length > 0) galleryArray = [  product.embed_code, ... window.galleryPicturesJson ];
   else if (!window.galleryPicturesJson) galleryArray = [ product.image_small ]
-  console.log(galleryArray);
   const [ gallery, setGallery ] = useState(galleryArray);
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);

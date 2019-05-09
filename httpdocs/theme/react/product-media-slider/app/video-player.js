@@ -2,12 +2,22 @@ import React, { useState } from 'react';
 import ReactPlayer from 'react-player'
 
 function VideoPlayerWrapper(props){
+
+    const [ source, setSource ] = useState();
+
+    React.useEffect(() => { convertStringToUrl(); }, [props.source])
+
     function convertStringToUrl(string){
         let newSource = string.replace('%2F','/').replace('%3A',':');
-        return newSource;
+        setSource(newSource);
     }
+
+    let videoPlayerDisplay;
+    if (source) videoPlayerDisplay = <ReactPlayer url={() => convertStringToUrl(source)} playing /> 
     return (
-        <ReactPlayer url={() => convertStringToUrl(props.source)} playing />
+        <div className="react-player-container">
+            {videoPlayerDisplay}
+        </div>
     )
 }
 
