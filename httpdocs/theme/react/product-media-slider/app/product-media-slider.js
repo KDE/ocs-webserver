@@ -7,12 +7,12 @@ function ProductMediaSlider(){
   /* Component */
 
   const [ product, setProduct ] = useState(window.product);
+
   let galleryArray = window.galleryPicturesJson;
   if (product.embed_code !== null) galleryArray = [  product.embed_code, ... window.galleryPicturesJson ];
   else if (!window.galleryPicturesJson) galleryArray = [ product.image_small ]
   const [ gallery, setGallery ] = useState(galleryArray);
-  const parentContainerElement = document.getElementById('product-title-div');
-  const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
+  const [ containerWidth, setContainerWidth ] = useState(document.getElementById('product-title-div').offsetWidth);
   const [ currentSlide, setCurrentSlide ] = useState(0)
   const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
   const [ sliderHeight, setSliderHeight ] = useState(315);
@@ -36,9 +36,7 @@ function ProductMediaSlider(){
   // check for media files
   function checkForMediaFiles(){
     let newGallery = gallery;
-    window.filesJson.forEach(function(f,index){
-      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) newGallery.push(f.url)
-    })
+    window.filesJson.forEach(function(f,index){ if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) newGallery.push(f.url) })
     setGallery(newGallery);
     setLoading(false);
   }
