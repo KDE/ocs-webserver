@@ -7,13 +7,9 @@ function ProductMediaSlider(){
   /* Component */
 
   const [ product, setProduct ] = useState(window.product);
-  let galleryArray;
-  if (product.embed_code !== null){
-    galleryArray = [  product.embed_code, ... window.galleryPicturesJson ];
-  } 
-  else {
-    if (!window.galleryPicturesJson) galleryArray = [ product.image_small ]
-  }
+  let galleryArray = window.galleryPicturesJson;
+  if (product.embed_code !== null) galleryArray = [  product.embed_code, ... window.galleryPicturesJson ];
+  else if (!window.galleryPicturesJson) galleryArray = [ product.image_small ]
   const [ gallery, setGallery ] = useState(galleryArray);
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
@@ -39,15 +35,11 @@ function ProductMediaSlider(){
 
   // check for media files
   function checkForMediaFiles(){
-    let mediaGalleryItems = []
+    let newGallery = gallery;
     window.filesJson.forEach(function(f,index){
-      console.log(f);
-      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) mediaGalleryItems.push(f.url)
+      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) newGallery.push(f.url)
     })
-    if (mediaGalleryItems.length > 0) {
-      const newGallery = gallery.concat(mediaGalleryItems);
-      setGallery(newGallery);
-    }
+    setGallery(newGallery);
     setLoading(false);
   }
 
