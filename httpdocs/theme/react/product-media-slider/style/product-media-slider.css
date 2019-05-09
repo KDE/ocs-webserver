@@ -21,6 +21,9 @@
   -o-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
 }
+#media-slider #slider-wrapper .slide-item {
+  float: left;
+}
 #media-slider .carousel-control {
   z-index: 100;
   cursor: pointer;
