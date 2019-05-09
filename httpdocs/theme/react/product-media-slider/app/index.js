@@ -15,6 +15,7 @@ function ProductMediaSlider(){
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
   const [ currentSlide, setCurrentSlide ] = useState(0)
   const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
+  const [ sliderHeight, setSliderHeight ] = useState()
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide)
   const [ loading, setLoading ] = useState(true);
 
@@ -38,7 +39,9 @@ function ProductMediaSlider(){
     const newContainerWidth = parentContainerElement.offsetWidth;
     setContainerWidth(newContainerWidth)
     setSliderWidth(containerWidth * gallery.length);
-    setSliderPosition(containerWidth * currentSlide)
+    setSliderPosition(containerWidth * currentSlide);
+    const newGalleryHeight =  document.getElementById('slide-'+currentSlide).offsetHeight;
+    setSliderHeight(newGalleryHeight)
   }
 
   /* Render */
@@ -46,9 +49,11 @@ function ProductMediaSlider(){
   // slider wrapper style
   const sliderWrapperStyle = {
     width:sliderWidth+'px',
-    left:'-'+sliderPosition+'px'
+    left:'-'+sliderPosition+'px',
+    height:sliderHeight+'px'
   }
 
+  // prev / next slide arrow values
   const prevCurrentSlide = currentSlide > 1 ? (currentSlide - 1) : gallery.length;
   const nextCurrentSlide = currentSlide < gallery.length ? ( currentSlide + 1 ) : 0;
 
@@ -61,6 +66,7 @@ function ProductMediaSlider(){
         slideIndex={index}
         slideUrl={s}
         currentSlide={currentSlide}
+        containerWidth={containerWidth}
       />
     ));
   }
@@ -95,8 +101,9 @@ function SlideItem(props){
   } else { 
     console.log('whot');
   }
+  const slideItemStyle = { width:props.containerWidth }
   return(
-    <div className="slide-item">
+    <div className="slide-item" id={"slide-"+props.slideIndex} style={slideItemStyle}>
       {slideContentDisplay}
     </div>
   )
