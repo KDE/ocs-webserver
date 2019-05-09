@@ -9,11 +9,9 @@ function ProductMediaSlider(){
   const { productMediaSliderState, productMediaSliderDispatch } = React.useContext(Context);
   const [ product, setProduct ] = useState(window.product);
   const [ files, setFiles ] = useState(window.filesJson)
-  let productMainSlide, galleryArray = window.galleryPicturesJson;
-  if (product.embed_code || product.image_small){
-    const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
-    const galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
-  }
+  console.log(product);
+  const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
+  const galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
   const [ gallery, setGallery ] = useState(galleryArray);
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
@@ -48,16 +46,16 @@ function ProductMediaSlider(){
 
   /* Render */
 
+  // slider container style
+  const sliderContainerStyle = {
+    width:sliderWidth+'px',
+    height:sliderHeight+'px'
+  }
+
   // slider wrapper style
   const sliderWrapperStyle = {
     width:sliderWidth+'px',
     left:'-'+sliderPosition+'px',
-    height:sliderHeight+'px'
-  }
-
-  // slider container style
-  const sliderContainerStyle = {
-    width:sliderWidth+'px',
     height:sliderHeight+'px'
   }
 
@@ -107,8 +105,10 @@ function SlideItem(props){
   const [mediaType, setMediaType ] = useState(props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image");
 
   function onImageLoad(event){
+    console.log(props.currentSlide === props.slideIndex);
     if (props.currentSlide === props.slideIndex){
       const imgHeight = document.getElementById('slide-img-'+props.currentSlide).offsetHeight;
+      console.log(imgHeight);
       props.onSetSlideHeight(imgHeight);
     }
   }
