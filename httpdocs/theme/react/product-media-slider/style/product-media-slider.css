@@ -28,6 +28,9 @@
 #media-slider #slider-wrapper .slide-item > div {
   text-align: center;
 }
+#media-slider #slider-wrapper .slide-item > div > div {
+  margin: 0 auto;
+}
 #media-slider #slider-wrapper .slide-item img {
   display: block;
   margin-left: auto;
