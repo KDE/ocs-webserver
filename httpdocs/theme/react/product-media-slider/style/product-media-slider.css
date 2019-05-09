@@ -68,3 +68,9 @@
 #media-slider #slide-navigation ul li.active {
   background-color: #E2E2E2;
 }
+#media-slider #slide-navigation ul li a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
