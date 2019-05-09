@@ -452,16 +452,18 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             
         if(isset($this->view->product->ppload_collection_id)) {
             $files = $fmodel->fetchFilesForProject($this->view->product->ppload_collection_id);
-            foreach ($files as $file) {
-                $timestamp = time() + 3600; // one hour valid
-                $hash = hash('sha512',$salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
-                $url = PPLOAD_API_URI . 'files/download/id/' . $file['id'] . '/s/' . $hash . '/t/' . $timestamp;
-                if(null != $this->_authMember) {
-                    $url .= '/u/' . $this->_authMember->member_id;
+            if(!empty($files)) {
+                foreach ($files as $file) {
+                    $timestamp = time() + 3600; // one hour valid
+                    $hash = hash('sha512',$salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
+                    $url = PPLOAD_API_URI . 'files/download/id/' . $file['id'] . '/s/' . $hash . '/t/' . $timestamp;
+                    if(null != $this->_authMember) {
+                        $url .= '/u/' . $this->_authMember->member_id;
+                    }
+                    $url .= '/lt/video/' . $file['name'];
+                    $file['url'] = urlencode($url);
+                    $filesList[] = $file;
                 }
-                $url .= '/lt/video/' . $file['name'];
-                $file['url'] = urlencode($url);
-                $filesList[] = $file;
             }
         }
 
