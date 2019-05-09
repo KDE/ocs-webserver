@@ -31,6 +31,8 @@ function ProductMediaSlider(){
     setLoading(false);
   },[])
 
+  React.useEffect(() => { updateDimensions() },[currentSlide])
+
   // update dimensions
   function updateDimensions(){
     const newContainerWidth = parentContainerElement.offsetWidth;
@@ -40,7 +42,17 @@ function ProductMediaSlider(){
   }
 
   /* Render */
-  
+
+  // slider wrapper style
+  const sliderWrapperStyle = {
+    width:containerWidth+'px',
+    left:'-'+sliderPosition+'px'
+  }
+
+  const prevCurrentSlide = currentSlide > 1 ? (currentSlide - 1) : gallery.length;
+  const nextCurrentSlide = currentSlide < gallery.length ? ( currentSlide + 1 ) : 0;
+
+  // slides display
   let slidesDisplay;
   if (loading === false){
     slidesDisplay = gallery.map((s,index) => (
@@ -53,16 +65,13 @@ function ProductMediaSlider(){
     ));
   }
 
-  const sliderWrapperStyle = {
-    width:containerWidth+'px',
-    left:'-'+sliderPosition+'px'
-  }
-
   return (
     <main id="media-slider">
+      <a className="slider-arrow" id="arrow-left" onClick={() => setCurrentSlide(prevCurrentSlide)}></a>
       <div id="slider-wrapper" style={sliderWrapperStyle}>
         {slidesDisplay}    
       </div>
+      <a className="slider-arrow" id="arrow-right" onClick={() => setCurrentSlide(nextCurrentSlide)}></a>
       <SlidesNavigation
         gallery={gallery}
         currentSlide={currentSlide}
