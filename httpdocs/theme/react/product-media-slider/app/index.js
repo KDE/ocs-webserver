@@ -114,8 +114,6 @@ function SlideItem(props){
   else console.log('whot');
 
   const slideItemStyle = { width:props.containerWidth }
-  console.log(slideItemStyle);
-  console.log(props);
 
   return(
     <div className="slide-item" id={"slide-"+props.slideIndex} style={slideItemStyle}>
