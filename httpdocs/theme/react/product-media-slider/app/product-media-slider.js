@@ -131,6 +131,7 @@ function SlideItem(props){
     let slideHeight;
     if (mediaType === "embed") slideHeight = 315;
     else if (mediaType === "image") slideHeight = document.getElementById('slide-img-'+props.slideIndex).offsetHeight;
+    console.log(slideHeight);
     props.onSetSlideHeight(slideHeight);
   }
 
