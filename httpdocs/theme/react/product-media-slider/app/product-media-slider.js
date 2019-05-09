@@ -51,18 +51,6 @@ function ProductMediaSlider(){
     setContainerWidth(newContainerWidth)
     setSliderWidth(containerWidth * gallery.length);
     setSliderPosition(containerWidth * currentSlide);
-    const currentSlideDom = document.getElementById('slide-'+currentSlide);
-    if (currentSlideDom){
-      const newGalleryHeight = currentSlide.offsetHeight;
-      console.log(newGalleryHeight);
-      setSliderHeight(newGalleryHeight)
-    }
-  }
-
-  function handleSetSliderHeight(height){
-    console.log(height)
-    setSliderHeight(parseInt(height));
-    console.log(sliderHeight);
   }
 
   /* Render */
@@ -94,7 +82,7 @@ function ProductMediaSlider(){
         slideUrl={s}
         currentSlide={currentSlide}
         containerWidth={containerWidth}
-        onSetSlideHeight={height => handleSetSliderHeight(height)}
+        onSetSlideHeight={height => setSliderHeight(height)}
       />
     ));
   }
