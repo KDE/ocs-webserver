@@ -124,7 +124,7 @@ function SlideItem(props){
     else if (props.slideUrl.indexOf('.png') > -1 || props.slideUrl.indexOf('.jpg') > -1 || props.slideUrl.indexOf('.jpeg') > -1) initialMediaType = "image";
     else if (props.slideUrl.indexOf('.mp4') > -1) initialMediaType = "video";
     console.log(initialMediaType);
-    setMediaType(initialMediaType);    
+    setMediaType(initialMediaType);
   }
 
   function onSetParentSliderHeight(){
