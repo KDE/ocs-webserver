@@ -115,11 +115,17 @@ function ProductMediaSlider(){
 
 function SlideItem(props){
   
-  const [mediaType, setMediaType ] = useState(props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image");
+  const [mediaType, setMediaType ] = useState('');
 
-  React.useEffect(() => {
-    if (props.slideIndex === props.currentSlide) onSetParentSliderHeight()
-  },[props.currentSlide])
+  React.useEffect(() => { determineMediaType() },[])
+  React.useEffect(() => { if (props.slideIndex === props.currentSlide) onSetParentSliderHeight() },[props.currentSlide])
+
+  function determineMediaType(){
+    let initialMediaType;
+    if (props.slideUrl.indexOf('<iframe') > -1) initialMediaType = "embed";
+    else if (props.slideUrl.indexOf('.png') > -1 ||props.slideUrl.indexOf('.jpg') > -1 ||props.slideUrl.indexOf('.jpeg') > -1) initialMediaType = "image";
+    setMediaType(initialMediaType);    
+  }
 
   function onSetParentSliderHeight(){
     let slideHeight;
