@@ -8,6 +8,7 @@ function ProductMediaSlider(){
 
   const { productMediaSliderState, productMediaSliderDispatch } = React.useContext(Context);
   const [ product, setProduct ] = useState(window.product);
+  const [ files, setFiles ] = useState(window.filesJson)
   const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
   const galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
   const [ gallery, setGallery ] = useState(galleryArray);
@@ -24,6 +25,7 @@ function ProductMediaSlider(){
   console.log(sliderWidth);
   console.log(currentSlide);
   console.log(sliderPosition);
+  console.log(window.filesJson)
   console.log('*********')
   
   React.useEffect(() => { 
@@ -107,6 +109,10 @@ function SlideItem(props){
   
   const [mediaType, setMediaType ] = useState(props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image");
 
+  function onImageLoad(e){
+    console.log(e);
+  }
+
   let slideContentDisplay;
   if (mediaType === "embed"){
     slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
@@ -115,7 +121,7 @@ function SlideItem(props){
       props.onSetSlideHeight(iFrameHeight);
     }
   }
-  else if (mediaType === "image") slideContentDisplay = <img src={props.slideUrl}/>
+  else if (mediaType === "image") slideContentDisplay = <img onLoad={onImageLoad} src={props.slideUrl}/>
   else console.log('whot');
 
   const slideItemStyle = { width:props.containerWidth }
