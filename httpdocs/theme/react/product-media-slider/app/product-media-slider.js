@@ -135,7 +135,7 @@ function SlideItem(props){
   const slideItemStyle = { width:props.containerWidth }
 
   return(
-    <div className="slide-item" id={"slide-"+props.slideIndex} style={slideItemStyle}>
+    <div className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={slideItemStyle}>
       {slideContentDisplay}
     </div>
   )
