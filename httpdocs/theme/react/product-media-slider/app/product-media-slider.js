@@ -17,11 +17,9 @@ function ProductMediaSlider(){
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
   const [ currentSlide, setCurrentSlide ] = useState(0)
   const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
-  const [ sliderHeight, setSliderHeight ] = useState()
+  const [ sliderHeight, setSliderHeight ] = useState('')
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide)
   const [ loading, setLoading ] = useState(true);
-
-  console.log(sliderHeight);
 
   React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { updateDimensions() },[currentSlide])
@@ -63,6 +61,7 @@ function ProductMediaSlider(){
   function handleSetSliderHeight(height){
     console.log(height)
     setSliderHeight(height);
+    console.log(sliderHeight);
   }
 
   /* Render */
