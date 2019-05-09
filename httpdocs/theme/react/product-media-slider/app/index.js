@@ -67,11 +67,15 @@ function ProductMediaSlider(){
 
   return (
     <main id="media-slider">
-      <a className="slider-arrow" id="arrow-left" onClick={() => setCurrentSlide(prevCurrentSlide)}></a>
+      <a className="left carousel-control" id="arrow-left" onClick={() => setCurrentSlide(prevCurrentSlide)}>
+        <span class="glyphicon glyphicon-chevron-left"></span>
+      </a>
       <div id="slider-wrapper" style={sliderWrapperStyle}>
         {slidesDisplay}    
       </div>
-      <a className="slider-arrow" id="arrow-right" onClick={() => setCurrentSlide(nextCurrentSlide)}></a>
+      <a className="right carousel-control" id="arrow-right" onClick={() => setCurrentSlide(nextCurrentSlide)}>
+        <span class="glyphicon glyphicon-chevron-right"></span>
+      </a>
       <SlidesNavigation
         gallery={gallery}
         currentSlide={currentSlide}
