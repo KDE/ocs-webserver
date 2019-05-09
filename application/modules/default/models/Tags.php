@@ -403,19 +403,22 @@ class Default_Model_Tags
     
     public function isProuductEbook($project_id)
     {
-            $sql_object= "select tag_item_id  from tag_object WHERE tag_id = :tag_id and tag_object_id=:tag_object_id and tag_group_id=:tag_group_id  
-                                    and tag_type_id = :tag_type_id and is_deleted = 0";
-            $r = $this->getAdapter()->fetchRow($sql_object, array('tag_id' => self::TAG_PRODUCT_EBOOK_ID, 
-                                                                                                    'tag_object_id' =>$project_id, 
-                                                                                                    'tag_group_id' => self::TAG_PRODUCT_EBOOK_GROUPID, 
-                                                                                                    'tag_type_id' => self::TAG_TYPE_PROJECT 
-                                                                                                    ));
-            if($r){
-                return true;
-            }else
-            {
-                return false;
-            }
+        $ebookTagGroupId = Zend_Registry::get('config')->settings->client->default->tag_group_ebook;
+        $ebookTagId = Zend_Registry::get('config')->settings->client->default->tag_is_ebook;
+        
+        $sql_object= "select tag_item_id  from tag_object WHERE tag_id = :tag_id and tag_object_id=:tag_object_id and tag_group_id=:tag_group_id  
+                                and tag_type_id = :tag_type_id and is_deleted = 0";
+        $r = $this->getAdapter()->fetchRow($sql_object, array('tag_id' => $ebookTagId, 
+                                                                                                'tag_object_id' =>$project_id, 
+                                                                                                'tag_group_id' => $ebookTagGroupId, 
+                                                                                                'tag_type_id' => self::TAG_TYPE_PROJECT 
+                                                                                                ));
+        if($r){
+            return true;
+        }else
+        {
+            return false;
+        }
     }
 
     /**

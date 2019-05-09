@@ -1148,6 +1148,13 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 
 
                         <?php echo $this->render('partials/sidebarCcLicense.phtml'); ?>
+                        
+                        <?php
+                            $isEbookHelper = new Default_View_Helper_IsProjectEbook();
+                            if($isEbookHelper->isProjectEbook($this->product->project_id)) {
+                                echo $this->render('product/partials/ebook_details.phtml');
+                            }
+                        ?>
 
                         <?php echo $this->render('product/partials/details.phtml'); ?>                                                
 

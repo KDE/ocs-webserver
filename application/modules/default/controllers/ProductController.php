@@ -306,7 +306,24 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
             $fmodel =new  Default_Model_DbTable_PploadFiles();
             $files = $fmodel->fetchFilesForProject($this->view->product->ppload_collection_id);
-            $this->view->filesJson = Zend_Json::encode($files);
+
+            $salt = PPLOAD_DOWNLOAD_SECRET;
+            
+            $filesList = array();
+            
+            foreach ($files as $file) {
+                $timestamp = time() + 3600; // one hour valid
+                $hash = hash('sha512',$salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
+                $url = PPLOAD_API_URI . 'files/download/id/' . $file['id'] . '/s/' . $hash . '/t/' . $timestamp;
+                if(null != $this->_authMember) {
+                    $url .= '/u/' . $this->_authMember->member_id;
+                }
+                $url .= '/lt/video/' . $file['name'];
+                $file['url'] = urlencode($url);
+                $filesList[] = $file;
+            }
+            
+            $this->view->filesJson = Zend_Json::encode($filesList);
             $this->view->filesCntJson = Zend_Json::encode($fmodel->fetchFilesCntForProject($this->view->product->ppload_collection_id));
 
             $tableProjectUpdates = new Default_Model_ProjectUpdates();
@@ -431,8 +448,22 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         
         $fmodel =new  Default_Model_DbTable_PploadFiles();
         $files = $fmodel->fetchFilesForProject($this->view->product->ppload_collection_id);
-        $this->view->filesJson = Zend_Json::encode($files);
-        
+        $filesList = array();
+            
+        foreach ($files as $file) {
+            $timestamp = time() + 3600; // one hour valid
+            $hash = hash('sha512',$salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
+            $url = PPLOAD_API_URI . 'files/download/id/' . $file['id'] . '/s/' . $hash . '/t/' . $timestamp;
+            if(null != $this->_authMember) {
+                $url .= '/u/' . $this->_authMember->member_id;
+            }
+            $url .= '/lt/video/' . $file['name'];
+            $file['url'] = urlencode($url);
+            $filesList[] = $file;
+        }
+
+        $this->view->filesJson = Zend_Json::encode($filesList);
+
        
         //gitlab
         if($this->view->product->is_gitlab_project) {
