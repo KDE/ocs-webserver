@@ -59,6 +59,11 @@ function ProductMediaSlider(){
     }
   }
 
+  function handleSetSliderHeight(height){
+    console.log(height)
+    setSliderHeight(height);
+  }
+
   /* Render */
 
   // slider container style
@@ -88,7 +93,7 @@ function ProductMediaSlider(){
         slideUrl={s}
         currentSlide={currentSlide}
         containerWidth={containerWidth}
-        onSetSlideHeight={(height) => setSliderHeight(height)}
+        onSetSlideHeight={handleSetSliderHeight}
       />
     ));
   }
@@ -130,12 +135,10 @@ function SlideItem(props){
   }
 
   function onSetParentSliderHeight(){
-    console.log('onSetParentSliderHeight');
     let slideHeight;
-    console.log(props.slideUrl.split('height="'));
+    console.log(props.slideUrl.split('height="')[1].split('"'));
     if (mediaType === "embed") slideHeight = 315;
     else if (mediaType === "image") slideHeight = document.getElementById('slide-img-'+props.slideIndex).offsetHeight;
-    console.log(slideHeight);
     props.onSetSlideHeight(slideHeight);
   }
 
