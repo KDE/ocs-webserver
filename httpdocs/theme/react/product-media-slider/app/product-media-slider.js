@@ -51,10 +51,6 @@ function ProductMediaSlider(){
     setContainerWidth(newContainerWidth)
     setSliderWidth(containerWidth * gallery.length);
     setSliderPosition(containerWidth * currentSlide);
-    if (!sliderHeight){
-      const newSliderHeight = document.getElementById('slide-'+currentSlide).offsetHeight;
-      setSliderHeight(newSliderHeight);
-    }
   }
 
   /* Render */
@@ -131,6 +127,7 @@ function SlideItem(props){
   }
 
   function onSetParentSliderHeight(){
+    console.log(props.currentSlide + ' - ' + props.slideIndex)
     let slideHeight;
     if (mediaType === "embed") slideHeight = 315;
     else if (mediaType === "image") slideHeight = document.getElementById('slide-img-'+props.slideIndex).offsetHeight;
