@@ -99,14 +99,14 @@ function SlideItem(props){
   const [mediaType, setMediaType ] = useState(props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image");
   const [ slideHeight, setSlideHeight ] = useState('');
 
-  
+
 
   let slideContentDisplay;
   if (mediaType === "embed"){
     slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
     const iFrameHeight = props.slideUrl.split('height="')[1].split('"')[0];
     console.log(iFrameHeight);
-    setSlideHeight(iFrameHeight);
+    //setSlideHeight(iFrameHeight);
   }
   else if (mediaType === "image") slideContentDisplay = <img src={props.slideUrl}/>
   else console.log('whot');
