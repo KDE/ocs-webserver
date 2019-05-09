@@ -25,6 +25,9 @@
 #media-slider #slider-wrapper .slide-item {
   float: left;
 }
+#media-slider #slider-wrapper .slide-item > div {
+  text-align: center;
+}
 #media-slider #slider-wrapper .slide-item img {
   display: block;
   margin-left: auto;
