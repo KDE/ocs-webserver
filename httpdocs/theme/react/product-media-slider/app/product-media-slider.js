@@ -35,13 +35,14 @@ function ProductMediaSlider(){
   }
 
   function checkForMediaFiles(){
-    let mediaGalleryItems;
+    let mediaGalleryItems = []
     window.filesJson.forEach(function(f,index){
-      if (f.type.indexOf('video') > -1){
-
-      }
-      console.log(f);
+      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) mediaGalleryItems.push(f.name)
     })
+    if (mediaGalleryItems.length > 0) {
+      const newGallery = [...gallery, mediaGalleryItems]
+      setGallery(newGallery);
+    }
     setLoading(false);
   }
 
