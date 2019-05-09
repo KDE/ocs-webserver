@@ -1155,16 +1155,15 @@ class Default_Model_Info
             return $newSupporters;
         }
         $sql = '
-                        SELECT 
-                        s.member_id as supporter_id
-                        ,s.member_id
-                        ,(select username from member m where m.member_id = s.member_id) as username
-                        ,(select profile_image_url from member m where m.member_id = s.member_id) as profile_image_url
-                        ,max(s.active_time) as created_at
-                        from support s 
-                        where s.status_id = 2                         
-                        group by member_id
-                        order by created_at desc                                       
+                select  
+                s.member_id as supporter_id
+                ,s.member_id
+                ,(select username from member m where m.member_id = s.member_id) as username
+                ,(select profile_image_url from member m where m.member_id = s.member_id) as profile_image_url
+                ,max(s.active_time_max) as created_at
+                from v_support s
+                group by member_id
+                order by active_time_max desc                                       
         ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
@@ -1184,7 +1183,7 @@ class Default_Model_Info
         if (false !== ($newSupporters = $cache->load($cacheName))) {
             return $newSupporters;
         }
-        $sql = '
+        /*$sql = '
                         SELECT 
                         s.member_id as supporter_id
                         ,s.member_id
@@ -1196,6 +1195,17 @@ class Default_Model_Info
                         and (DATE_ADD((s.active_time), INTERVAL 1 YEAR) > now())
                         group by member_id
                         order by s.active_time desc                                       
+        ';*/
+        $sql = '
+                select  
+                s.member_id as supporter_id
+                ,s.member_id
+                ,(select username from member m where m.member_id = s.member_id) as username
+                ,(select profile_image_url from member m where m.member_id = s.member_id) as profile_image_url
+                ,max(s.active_time_max) as created_at
+                from v_support s
+                group by member_id
+                order by active_time_max desc                                       
         ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
@@ -1507,14 +1517,20 @@ class Default_Model_Info
         if (false !== ($totalcnt = $cache->load($cacheName))) {
             return $totalcnt;
         }
-        $sql = '
+        /*$sql = '
                         SELECT 
                         count( distinct s.member_id) as total_count
                         from support s                         
                         where s.status_id = 2  
                         and (DATE_ADD((s.active_time), INTERVAL 1 YEAR) > now())
-        ';
+        ';*/
 
+        $sql = '
+                    SELECT 
+                    count( distinct s.member_id) as total_count
+                    from v_support s                         
+                    where is_valid = 1
+        ';
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
         $totalcnt = $result[0]['total_count'];
         $cache->save($totalcnt, $cacheName, array(), 300);
@@ -1534,8 +1550,8 @@ class Default_Model_Info
         $sql = '
                         SELECT 
                         count( distinct s.member_id) as total_count
-                        from support s                         
-                        where s.status_id = 2                         
+                        from v_support s                         
+                                          
         ';
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
