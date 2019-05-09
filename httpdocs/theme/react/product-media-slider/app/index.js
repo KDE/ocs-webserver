@@ -8,7 +8,6 @@ function ProductMediaSlider(){
 
   const { productMediaSliderState, productMediaSliderDispatch } = React.useContext(Context);
   const [ product, setProduct ] = useState(window.product);
-  const [ files, setFiles ] = useState(window.filesJson)
   console.log(product);
   const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
   const galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
@@ -24,12 +23,28 @@ function ProductMediaSlider(){
   console.log(sliderHeight);
 
   React.useEffect(() => { 
-    window.addEventListener("resize", updateDimensions);
-    window.addEventListener("orientationchange", updateDimensions);
-    setLoading(false);
+    initProductMediaSlider()
   },[])
 
   React.useEffect(() => { updateDimensions() },[currentSlide])
+
+  // init product media slider
+  initProductMediaSlider(){
+    window.addEventListener("resize", updateDimensions);
+    window.addEventListener("orientationchange", updateDimensions);
+    if (window.filesJson){
+      checkForMediaFiles();
+    } else {
+      setLoading(false);
+    }
+  }
+
+  checkForMediaFiles(){
+    window.filesJson.forEach(function(f,index){
+      console.log(f);
+    })
+    setLoading(false);
+  }
 
   // update dimensions
   function updateDimensions(){
@@ -104,23 +119,18 @@ function SlideItem(props){
   
   const [mediaType, setMediaType ] = useState(props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image");
 
-  function onImageLoad(event){
-    console.log(props.currentSlide === props.slideIndex);
-    if (props.currentSlide === props.slideIndex){
-      const imgHeight = document.getElementById('slide-img-'+props.currentSlide).offsetHeight;
-      console.log(imgHeight);
-      props.onSetSlideHeight(imgHeight);
-    }
-  }
+  React.useEffect(() => {
+    console.log(props.currentSlide);
+    console.log(props.slideIndex);
+  },[props.currentSlide])
 
   let slideContentDisplay;
   if (mediaType === "embed"){
     slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
-    if (props.currentSlide === props.slideIndex) props.onSetSlideHeight(props.slideUrl.split('height="')[1].split('"')[0]);
   }
   else if (mediaType === "image"){
     slideContentDisplay = (
-      <img id={"slide-img-"+props.currentSlide} onLoad={(event) => onImageLoad(event)} src={props.slideUrl}/>
+      <img id={"slide-img-"+props.currentSlide} src={props.slideUrl}/>
     )
   }
   else console.log('whot');
