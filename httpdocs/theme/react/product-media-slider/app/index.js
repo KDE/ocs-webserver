@@ -58,7 +58,7 @@ function ProductMediaSlider(){
 
   // prev / next slide arrow values
   const prevCurrentSlide = currentSlide > 1 ? (currentSlide - 1) : gallery.length;
-  const nextCurrentSlide = currentSlide <= gallery.length ? ( currentSlide + 1 ) : 0;
+  const nextCurrentSlide = currentSlide < (gallery.length - 1) ? ( currentSlide + 1 ) : 0;
 
   // slides display
   let slidesDisplay;
@@ -96,10 +96,18 @@ function ProductMediaSlider(){
 
 function SlideItem(props){
   
-  const [mediaType, setMediaType] = useState(props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image");
+  const [mediaType, setMediaType ] = useState(props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image");
+  const [ slideHeight, setSlideHeight ] = useState('');
+
   
+
   let slideContentDisplay;
-  if (mediaType === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
+  if (mediaType === "embed"){
+    slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
+    const iFrameHeight = props.slideUrl.split('height="')[1].split('"')[0];
+    console.log(iFrameHeight);
+    setSlideHeight(iFrameHeight);
+  }
   else if (mediaType === "image") slideContentDisplay = <img src={props.slideUrl}/>
   else console.log('whot');
 
