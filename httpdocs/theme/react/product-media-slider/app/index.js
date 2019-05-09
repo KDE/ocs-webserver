@@ -40,8 +40,11 @@ function ProductMediaSlider(){
     setContainerWidth(newContainerWidth)
     setSliderWidth(containerWidth * gallery.length);
     setSliderPosition(containerWidth * currentSlide);
-    const newGalleryHeight =  document.getElementById('slide-'+currentSlide).offsetHeight;
-    setSliderHeight(newGalleryHeight)
+    const currentSlideDom = document.getElementById('slide-'+currentSlide);
+    if (currentSlideDom){
+      const newGalleryHeight = currentSlide.offsetHeight;
+      setSliderHeight(newGalleryHeight)
+    }
   }
 
   /* Render */
@@ -103,7 +106,7 @@ function SlideItem(props){
   const slideItemStyle = { width:props.containerWidth }
   console.log(slideItemStyle);
   console.log(props);
-  
+
   return(
     <div className="slide-item" id={"slide-"+props.slideIndex} style={slideItemStyle}>
       {slideContentDisplay}
