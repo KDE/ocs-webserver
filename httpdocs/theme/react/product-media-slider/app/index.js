@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import StoreContextProvider,{Context} from './context-provider';
 
 function ProductMediaSlider(){
 
   /* Component */
 
-  const { productMediaSliderState, productMediaSliderDispatch } = React.useContext(Context);
   const [ product, setProduct ] = useState(window.product);
   const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
   const galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
@@ -135,13 +133,5 @@ function SlidesNavigation(props){
   )
 }
 
-function ProductMediaSliderContainer(){
-  return (
-    <StoreContextProvider>
-      <ProductMediaSlider/>
-    </StoreContextProvider>
-  );
-}
-
 const rootElement = document.getElementById("product-media-slider-container");
-ReactDOM.render(<ProductMediaSliderContainer />, rootElement);
+ReactDOM.render(<ProductMediaSlider />, rootElement);
