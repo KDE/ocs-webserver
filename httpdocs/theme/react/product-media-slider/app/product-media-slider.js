@@ -30,15 +30,16 @@ function ProductMediaSlider(){
   function initProductMediaSlider(){
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
-    if (window.filesJson){
-      checkForMediaFiles();
-    } else {
-      setLoading(false);
-    }
+    if (window.filesJson) checkForMediaFiles();
+    else setLoading(false);
   }
 
   function checkForMediaFiles(){
+    let mediaGalleryItems;
     window.filesJson.forEach(function(f,index){
+      if (f.type.indexOf('video') > -1){
+
+      }
       console.log(f);
     })
     setLoading(false);
@@ -132,6 +133,7 @@ function SlideItem(props){
     let slideHeight;
     if (mediaType === "embed") slideHeight = props.slideUrl.split('height="')[1].split('"')[0];
     else if (mediaType === "image") slideHeight = document.getElementById('slide-img-'+props.slideIndex).offsetHeight;
+    console.log(slideHeight);
     props.onSetSlideHeight(slideHeight);
   }
 
