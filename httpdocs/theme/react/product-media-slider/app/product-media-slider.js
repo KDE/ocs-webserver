@@ -7,9 +7,11 @@ function ProductMediaSlider(){
   /* Component */
 
   const [ product, setProduct ] = useState(window.product);
-  console.log(product.embed_code || product.image_small);
-  const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
-  const galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
+  let galleryArray;
+  if (product.embed_code !== null || product.image_small !== null){
+    const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
+    galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
+  }
   const [ gallery, setGallery ] = useState(galleryArray);
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
