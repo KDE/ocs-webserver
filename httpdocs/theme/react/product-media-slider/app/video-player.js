@@ -4,7 +4,8 @@ import ReactPlayer from 'react-player'
 function VideoPlayerWrapper(props){
 
     const [ source, setSource ] = useState();
-
+    console.log(source);
+    
     React.useEffect(() => { convertStringToUrl(); }, [props.source])
 
     function convertStringToUrl(){
