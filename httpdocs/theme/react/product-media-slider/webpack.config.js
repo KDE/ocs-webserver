@@ -1,5 +1,5 @@
 module.exports = {
-  entry: './app/index.js',
+  entry: './app/product-media-slider.js',
   output: {
     path: `${__dirname}/`,
     filename: 'product-media-slider.js'
