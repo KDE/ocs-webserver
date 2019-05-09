@@ -69,7 +69,7 @@ function ProductMediaSlider(){
   }
 
   // prev / next slide arrow values
-  const prevCurrentSlide = currentSlide > 0 ? currentSlide - 1 : gallery.length + 1;
+  const prevCurrentSlide = currentSlide > 1 ? currentSlide - 1 : gallery.length + 1;
   const nextCurrentSlide = currentSlide < (gallery.length - 1) ? ( currentSlide + 1 ) : 0;
 
   // slides display
