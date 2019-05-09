@@ -74,13 +74,13 @@ function ProductMediaSlider(){
   return (
     <main id="media-slider">
       <a className="left carousel-control" id="arrow-left" onClick={() => setCurrentSlide(prevCurrentSlide)}>
-        <span class="glyphicon glyphicon-chevron-left"></span>
+        <span className="glyphicon glyphicon-chevron-left"></span>
       </a>
       <div id="slider-wrapper" style={sliderWrapperStyle}>
         {slidesDisplay}    
       </div>
       <a className="right carousel-control" id="arrow-right" onClick={() => setCurrentSlide(nextCurrentSlide)}>
-        <span class="glyphicon glyphicon-chevron-right"></span>
+        <span className="glyphicon glyphicon-chevron-right"></span>
       </a>
       <SlidesNavigation
         gallery={gallery}
@@ -102,6 +102,8 @@ function SlideItem(props){
     console.log('whot');
   }
   const slideItemStyle = { width:props.containerWidth }
+  console.log(slideItemStyle);
+  console.log(props);
   return(
     <div className="slide-item" id={"slide-"+props.slideIndex} style={slideItemStyle}>
       {slideContentDisplay}
