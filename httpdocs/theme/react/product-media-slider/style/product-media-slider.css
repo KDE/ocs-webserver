@@ -25,6 +25,13 @@
 #media-slider #slider-wrapper .slide-item {
   float: left;
 }
+#media-slider #slider-wrapper .slide-item img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 800px;
+  max-height: 550px;
+}
 #media-slider .carousel-control {
   z-index: 100;
   cursor: pointer;
