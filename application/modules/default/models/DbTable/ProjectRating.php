@@ -28,7 +28,8 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
     protected $_keyColumnsForRow = array('rating_id');
 
     protected $_key = 'rating_id';
-  
+    
+    const OPTIONS = array(1 => 'ugh', 2=>'really bad',3=>'bad',4=>'soso',5=>'average', 6=>'okay',7=>'good', 8=>'great', 9=>'excellent',10=>'the best');
 
     /**
      * @param int $project_id
@@ -106,13 +107,40 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
     }
     
 
-    public function getScore($project_id)
+    /*public function getScore($project_id)
     {
         $sql = "
                 select round((count_likes*8+count_dislikes*3+2*5)/(count_likes+count_dislikes+2),2) as score
                     from project 
                     where project_id = :project_id
 
+                ";
+        
+        $result = $this->_db->query($sql, array('project_id' => $project_id))->fetchAll();     
+        if($result[0]['score'])
+        {
+            return $result[0]['score'];       
+         }else
+         {
+            return '5.0';
+         }                
+    }*/
+
+
+    public function getScore($project_id)
+    {
+        /*$sql = "
+                select round((sum(score*(user_like+user_dislike))+2*5)/(sum(user_like+user_dislike)+2),1) as score
+                from project_rating 
+                where project_id = :project_id and rating_active = 1
+        ";*/
+
+        $sql = "
+            SELECT laplace_score_with_plings(sum(pr.user_like), sum(pr.user_dislike)
+                ,(select count(1) from project_plings p where p.project_id = pr.project_id and is_deleted = 0)
+                ) AS score
+                FROM project_rating AS pr
+              WHERE pr.project_id = :project_id and (pr.rating_active = 1 or (rating_active=0 and user_like>1))
         ";
         
         $result = $this->_db->query($sql, array('project_id' => $project_id))->fetchAll();     
@@ -124,25 +152,6 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
             return '5.0';
          }                
     }
-
-
-   /* public function getScore($project_id)
-    {
-        $sql = "
-                select round((sum(score*(user_like+user_dislike))+2*5)/(sum(user_like+user_dislike)+2),1) as score
-                from project_rating 
-                where project_id = :project_id and rating_active = 1
-        ";
-        
-        $result = $this->_db->query($sql, array('project_id' => $project_id))->fetchAll();     
-        if($result[0]['score'])
-        {
-            return $result[0]['score'];       
-         }else
-         {
-            return '5.0';
-         }                
-    }*/
 
     /**
      * @param int      $projectId

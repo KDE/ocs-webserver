@@ -23,7 +23,8 @@
 $cssNoVotes = (($this->product->count_likes+$this->product->count_dislikes) == 0) ? ';opacity:0.5;' : '';
 
 $model = new Default_Model_DbTable_ProjectRating();
-$score2 = $model->getScore($this->product->project_id);    
+$score2 = $model->getScore($this->product->project_id);   
+$score2 = round($score2/100,2);
 
 $blue2 = $red2 = $green2 = $default2=200;
 if($score2>=5) {
@@ -44,7 +45,8 @@ if($this->ratingOfUser)
     $userScore = $this->ratingOfUser['score'];
 }
 
-$options = array(1 => '1 ugh', 2=>'2 really bad',3=>'3 bad',4=>'4 soso',5=>'5 average', 6=>'6 okay',7=>'7 good', 8=>'8 great', 9=>'9 excellent',10=>'10 the best');
+
+$options = Default_Model_DbTable_ProjectRating::OPTIONS;
 
 ?>
 <div id="widget-rating" class="prod-widget-box right" style="border:0px !important">    
@@ -85,7 +87,7 @@ $options = array(1 => '1 ugh', 2=>'2 really bad',3=>'3 bad',4=>'4 soso',5=>'5 av
              foreach ($options as $key => $value) {
                 $selected = '';
                 if($userScore==$key) $selected=' selected';
-                echo '<option value='.$key.$selected.'>'.$value.'</option>';                
+                echo '<option value='.$key.$selected.'>'.$key.' '.$value.'</option>';                
             } ?>         
         </select> 
     </div>

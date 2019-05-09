@@ -17,7 +17,7 @@ function ProductMediaSlider(){
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
   const [ currentSlide, setCurrentSlide ] = useState(0)
   const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
-  const [ sliderHeight, setSliderHeight ] = useState();
+  const [ sliderHeight, setSliderHeight ] = useState(315);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
   const [ loading, setLoading ] = useState(true);
 
@@ -36,7 +36,8 @@ function ProductMediaSlider(){
   function checkForMediaFiles(){
     let mediaGalleryItems = []
     window.filesJson.forEach(function(f,index){
-      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) mediaGalleryItems.push(f.name)
+      console.log(f);
+      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) mediaGalleryItems.push(f.url_encoded)
     })
     if (mediaGalleryItems.length > 0) {
       const newGallery = [...gallery, mediaGalleryItems]
@@ -69,7 +70,7 @@ function ProductMediaSlider(){
   }
 
   // prev / next slide arrow values
-  const prevCurrentSlide = currentSlide > 0 ? currentSlide - 1 : gallery.length;
+  const prevCurrentSlide = currentSlide > 0 ? currentSlide - 1 : gallery.length - 1;
   const nextCurrentSlide = currentSlide < (gallery.length - 1) ? ( currentSlide + 1 ) : 0;
 
   // slides display
@@ -120,18 +121,16 @@ function SlideItem(props){
   function determineMediaType(){
     let initialMediaType;
     if (props.slideUrl.indexOf('<iframe') > -1) initialMediaType = "embed";
-    else if (props.slideUrl.indexOf('.png') > -1 ||props.slideUrl.indexOf('.jpg') > -1 ||props.slideUrl.indexOf('.jpeg') > -1) initialMediaType = "image";
+    else if (props.slideUrl.indexOf('.png') > -1 || props.slideUrl.indexOf('.jpg') > -1 || props.slideUrl.indexOf('.jpeg') > -1) initialMediaType = "image";
     else if (props.slideUrl.indexOf('.mp4') > -1) initialMediaType = "video";
     console.log(initialMediaType);
-    setMediaType(initialMediaType);    
+    setMediaType(initialMediaType);
   }
 
   function onSetParentSliderHeight(){
-    console.log(props.currentSlide + ' - ' + props.slideIndex)
     let slideHeight;
     if (mediaType === "embed") slideHeight = 315;
     else if (mediaType === "image") slideHeight = document.getElementById('slide-img-'+props.slideIndex).offsetHeight;
-    console.log(slideHeight);
     props.onSetSlideHeight(slideHeight);
   }
 
