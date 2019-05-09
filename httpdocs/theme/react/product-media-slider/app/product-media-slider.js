@@ -114,12 +114,14 @@ function SlideItem(props){
   const [mediaType, setMediaType ] = useState('');
 
   React.useEffect(() => { determineMediaType() },[])
+  React.useEffect(() => { if (props.slideIndex === props.currentSlide) onSetParentSliderHeight() },[])
   React.useEffect(() => { if (props.slideIndex === props.currentSlide) onSetParentSliderHeight() },[props.currentSlide])
 
   function determineMediaType(){
     let initialMediaType;
     if (props.slideUrl.indexOf('<iframe') > -1) initialMediaType = "embed";
     else if (props.slideUrl.indexOf('.png') > -1 ||props.slideUrl.indexOf('.jpg') > -1 ||props.slideUrl.indexOf('.jpeg') > -1) initialMediaType = "image";
+    else if (props.slideUrl.indexOf('.mp4') > -1) initialMediaType = "video";
     setMediaType(initialMediaType);    
   }
 
@@ -133,8 +135,7 @@ function SlideItem(props){
   let slideContentDisplay;
   if (mediaType === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
   else if (mediaType === "image") slideContentDisplay = <img id={"slide-img-"+props.slideIndex} src={props.slideUrl}/>
-  else console.log('whot');
-
+  else if (mediaType === "video") slideContentDisplay = <VideoPlayerWrapper source={props.slideUrl}/>
   const slideItemStyle = { width:props.containerWidth }
 
   return(
