@@ -39,14 +39,12 @@ function ProductMediaSlider(){
   function updateDimensions(){
     const newContainerWidth = parentContainerElement.offsetWidth;
     setContainerWidth(newContainerWidth)
-    setSliderWidth(containerWidth * gallery.length);
+    setSliderWidth(containerWidth * (currentSlide + 1));
+    setSliderPosition(containerWidth * currentSlide)
   }
 
   /* Render */
   
-  console.log(containerWidth);
-  console.log(sliderWidth);
-
   let slidesDisplay;
   if (loading === false){
     slidesDisplay = gallery.map((s,index) => (
@@ -54,13 +52,21 @@ function ProductMediaSlider(){
         key={index}
         slideIndex={index}
         slideUrl={s}
+        currentSlide={currentSlide}
       />
     ));
   }
 
+  const sliderWrapperStyle = {
+    width:containerWidth+'px',
+    left:'-'+sliderPosition+'px'
+  }
+
   return (
     <main id="media-slider">
-      {slidesDisplay}
+      <div id="slider-wrapper" style={sliderWrapperStyle}>
+        {slidesDisplay}    
+      </div>
     </main>
   )
 }
@@ -69,7 +75,7 @@ function SlideItem(props){
   const [ mediaType, setMediaType ] = useState(props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image");
   let slideContentDisplay;
   if (mediaType === "embed"){
-    slideContentDisplay = <div dangerouslySetInnerHTML={__html={props.slideUrl}}></div>
+    slideContentDisplay = props.slideUrl
   } else if (mediaType === "image"){
     slideContentDisplay = <img src={props.slideUrl}/>
   } else { 
