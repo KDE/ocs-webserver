@@ -87,7 +87,7 @@ function ProductMediaSlider(){
         slideUrl={s}
         currentSlide={currentSlide}
         containerWidth={containerWidth}
-        onSetSlideHeight={(height) => setSliderHeight(height)}
+        onSetSlideHeight={(e) => setSliderHeight(height)}
       />
     ));
   }
