@@ -97,11 +97,7 @@ function ProductMediaSlider(){
 function SlideItem(props){
 
   const [ slideHeight, setSlideHeight ] = useState('');
-  React.useEffect(() => { console.log(slideHeight) },[slideHeight]);
-
-  function onImageLoad(){
-    console.log('image loaded');
-  }
+  // React.useEffect(() => { console.log(slideHeight) },[slideHeight]);
 
   const mediaType = props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image";
 
@@ -110,7 +106,7 @@ function SlideItem(props){
     slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
     setSlideHeight(props.slideUrl.split('height="')[1].split('"')[0]);
   }
-  else if (mediaType === "image") slideContentDisplay = <img onLoad={onImageLoad} src={props.slideUrl}/>
+  else if (mediaType === "image") slideContentDisplay = <img src={props.slideUrl}/>
   else console.log('whot');
 
   const slideItemStyle = { width:props.containerWidth }
