@@ -44,6 +44,7 @@
   margin: 0;
   background-color: #fff;
   border: 1px solid #C4D7EF;
+  border-radius: 100%;
   -webkit-transition: all 0.2s ease-out;
   -moz-transition: all 0.2s ease-out;
   -o-transition: all 0.2s ease-out;
