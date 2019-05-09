@@ -14,7 +14,7 @@ function VideoPlayerWrapper(props){
     }
 
     let videoPlayerDisplay;
-    if (source) videoPlayerDisplay = <ReactPlayer url={source} playing /> 
+    if (source) videoPlayerDisplay = <ReactPlayer url={source} playing={true} controls={true} /> 
     return (
         <div className="react-player-container">
             {videoPlayerDisplay}

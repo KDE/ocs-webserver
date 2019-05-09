@@ -11,7 +11,6 @@ function ProductMediaSlider(){
   if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [  product.embed_code, ... window.galleryPicturesJson ];
   else if (!window.galleryPicturesJson) galleryArray = [ product.image_small ]
   const [ gallery, setGallery ] = useState(galleryArray);
-  console.log(gallery);
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
   const [ currentSlide, setCurrentSlide ] = useState(0)
@@ -118,7 +117,6 @@ function SlideItem(props){
     if (props.slideUrl.indexOf('<iframe') > -1) initialMediaType = "embed";
     else if (props.slideUrl.indexOf('.png') > -1 || props.slideUrl.indexOf('.jpg') > -1 || props.slideUrl.indexOf('.jpeg') > -1) initialMediaType = "image";
     else if (props.slideUrl.indexOf('.mp4') > -1) initialMediaType = "video";
-    console.log(initialMediaType);
     setMediaType(initialMediaType);
   }
 
@@ -126,6 +124,7 @@ function SlideItem(props){
     let slideHeight;
     if (mediaType === "embed") slideHeight = 315;
     else if (mediaType === "image") slideHeight = document.getElementById('slide-img-'+props.slideIndex).offsetHeight;
+    else if (mediaType === "video") slideHeight = 360;
     props.onSetSlideHeight(slideHeight);
   }
 
