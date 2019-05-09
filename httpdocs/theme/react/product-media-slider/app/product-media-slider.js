@@ -17,7 +17,7 @@ function ProductMediaSlider(){
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
   const [ currentSlide, setCurrentSlide ] = useState(0)
   const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
-  const [ sliderHeight, setSliderHeight ] = useState();
+  const [ sliderHeight, setSliderHeight ] = useState(315);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
   const [ loading, setLoading ] = useState(true);
 
@@ -120,7 +120,7 @@ function SlideItem(props){
   function determineMediaType(){
     let initialMediaType;
     if (props.slideUrl.indexOf('<iframe') > -1) initialMediaType = "embed";
-    else if (props.slideUrl.indexOf('.png') > -1 ||props.slideUrl.indexOf('.jpg') > -1 ||props.slideUrl.indexOf('.jpeg') > -1) initialMediaType = "image";
+    else if (props.slideUrl.indexOf('.png') > -1 || props.slideUrl.indexOf('.jpg') > -1 || props.slideUrl.indexOf('.jpeg') > -1) initialMediaType = "image";
     else if (props.slideUrl.indexOf('.mp4') > -1) initialMediaType = "video";
     console.log(initialMediaType);
     setMediaType(initialMediaType);    
