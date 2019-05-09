@@ -20,6 +20,8 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+$options = Default_Model_DbTable_ProjectRating::OPTIONS;
+
 ?>
 
 <style type="text/css">
@@ -28,13 +30,29 @@
     border: 1px solid #ccc;
     width: 40px;
     height: 40px;}
-
 </style>
-<?php  foreach ($this->ratings as $this->productRating) {
-	   if($this->productRating['rating_active']==0) continue;
+<?php  
+
+foreach ($this->ratings as $this->productRating) {
+	    if($this->productRating['rating_active']==0) continue;
+	   	$score2 = $this->productRating['score'];   
+		$blue2 = $red2 = $green2 = $default2=200;
+		if($score2>=5) {
+		    $red2=dechex($default2-(($score2*10-50)*4));
+		    $green2=dechex($default2);
+		    $blue2=dechex($default2-(($score2*10-50)*4));
+		}elseif($score2<5) {
+		    $red2=dechex($default2);
+		    $green2=dechex($default2-((50-$score2*10)*4));
+		    $blue2=dechex($default2-((50-$score2*10)*4));
+		}
+		if(strlen($green2)==1) $green2='0'.$green2;
+		if(strlen($red2)==1) $red2='0'.$red2;
+
+
 	?>
 <div class="productRating-rows <?=$this->productRating['rating_active']==0?'productRating-rows-inactive':'productRating-rows-active'?>  <?=$this->productRating['user_like']==1?'clsUpvotes':'clsDownvotes' ?> "  >
-	<h3 class="product-heading product-update-heading" >
+	<div class="product-heading product-update-heading">
 	<a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>">	
 	<img class="userimg"  
 					src="<?= $this->Image(($this->productRating['profile_image_url']==null)?'hive/user-pics/nopic.png':$this->productRating['profile_image_url'],
@@ -47,11 +65,19 @@
 		<?=$this->productRating['username'] ?> 
 		</a>
 	</span>
-	  <span class="small light lightgrey product-update-date"> <?=$this->printDate($this->productRating['created_at']) ?> </span>
-	</h3>
+	  <span class="small light lightgrey product-update-date"> 
+	  	<?=$this->printDate($this->productRating['created_at']) ?> 
+	  </span>
+	  <span>
+		<span class="score label" style="background-color:#<?=$red2.$green2.$blue2?>; ">
+			<?=$this->productRating['score'] ?>
+		</span>
+		<span style="font-size: small;padding-left: 5px;"><?php echo ' '.$options[$this->productRating['score']]?></span>
+	  </span>
+	</div>
 	<div style="padding-left: 45px">	
-		Score:<?=$this->productRating['score'] ?>  <br/>
-
+		
+		<br/>
 		<?=$this->productRating['comment_text'] ?> 
 	</div>
 </div>
