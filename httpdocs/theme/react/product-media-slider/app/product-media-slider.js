@@ -7,12 +7,14 @@ function ProductMediaSlider(){
   /* Component */
 
   const [ product, setProduct ] = useState(window.product);
-
+  console.log(product)
   let galleryArray = window.galleryPicturesJson;
   if (product.embed_code !== null) galleryArray = [  product.embed_code, ... window.galleryPicturesJson ];
   else if (!window.galleryPicturesJson) galleryArray = [ product.image_small ]
+  console.log(galleryArray);
   const [ gallery, setGallery ] = useState(galleryArray);
-  const [ containerWidth, setContainerWidth ] = useState(document.getElementById('product-title-div').offsetWidth);
+  const parentContainerElement = document.getElementById('product-title-div');
+  const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
   const [ currentSlide, setCurrentSlide ] = useState(0)
   const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
   const [ sliderHeight, setSliderHeight ] = useState(315);
@@ -21,9 +23,6 @@ function ProductMediaSlider(){
 
   React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { updateDimensions() },[currentSlide])
-
-  console.log(product)
-  console.log(gallery);
 
   // init product media slider
   function initProductMediaSlider(){
@@ -36,7 +35,9 @@ function ProductMediaSlider(){
   // check for media files
   function checkForMediaFiles(){
     let newGallery = gallery;
-    window.filesJson.forEach(function(f,index){ if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) newGallery.push(f.url) })
+    window.filesJson.forEach(function(f,index){
+      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) newGallery.push(f.url)
+    })
     setGallery(newGallery);
     setLoading(false);
   }
