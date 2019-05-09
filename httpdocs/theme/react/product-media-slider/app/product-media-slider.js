@@ -34,6 +34,7 @@ function ProductMediaSlider(){
     else setLoading(false);
   }
 
+  // check for media files
   function checkForMediaFiles(){
     let mediaGalleryItems = []
     window.filesJson.forEach(function(f,index){
@@ -93,7 +94,7 @@ function ProductMediaSlider(){
         slideUrl={s}
         currentSlide={currentSlide}
         containerWidth={containerWidth}
-        onSetSlideHeight={handleSetSliderHeight}
+        onSetSlideHeight={height => handleSetSliderHeight(height)}
       />
     ));
   }
