@@ -19,20 +19,16 @@ function ProductMediaSlider(){
   const [ loading, setLoading ] = useState(true);
 
   console.log('*********')
-  console.log(product);
-  console.log(gallery);
-  console.log(parentContainerElement);
   console.log(containerWidth);
   console.log(sliderWidth);
   console.log(currentSlide);
   console.log(sliderPosition);
-  console.log(loading);
   console.log('*********')
   
   React.useEffect(() => { 
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
-    // setLoading(false);
+    setLoading(false);
   },[])
 
   // update dimensions
@@ -67,6 +63,11 @@ function ProductMediaSlider(){
       <div id="slider-wrapper" style={sliderWrapperStyle}>
         {slidesDisplay}    
       </div>
+      <SlidesNavigation
+        gallery={gallery}
+        currentSlide={currentSlide}
+        onChangeCurrentSlide={e => setCurrentSlide(e)}
+      />
     </main>
   )
 }
@@ -84,6 +85,23 @@ function SlideItem(props){
   return(
     <div className="slide-item">
       {slideContentDisplay}
+    </div>
+  )
+}
+
+function SlidesNavigation(props){
+
+  const slidesNavigationDisplay = props.gallery.map((g,index) => (
+    <li key={index} className={ props.currentSlide === index ? "active" : ""}>
+      <a onClick={e => props.onChangeCurrentSlide(index)}></a>
+    </li>
+  ))
+
+  return (
+    <div id="slide-navigation">
+      <ul>
+        {slidesNavigationDisplay}
+      </ul>
     </div>
   )
 }
