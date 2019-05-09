@@ -22,7 +22,9 @@ function ProductMediaSlider(){
   const [ sliderHeight, setSliderHeight ] = useState()
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide)
   const [ loading, setLoading ] = useState(true);
-  
+
+  console.log(sliderHeight);
+
   React.useEffect(() => { 
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
@@ -105,11 +107,10 @@ function SlideItem(props){
   const [mediaType, setMediaType ] = useState(props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image");
 
   function onImageLoad(event){
-    console.log(event);
-    console.log('on image load');
-    const imgHeight = document.getElementById('slide-img-'+props.currentSlide).offsetHeight;
-    console.log(imgHeight);
-    props.onSetSlideHeight(imgHeight);
+    if (props.currentSlide === props.slideIndex){
+      const imgHeight = document.getElementById('slide-img-'+props.currentSlide).offsetHeight;
+      props.onSetSlideHeight(imgHeight);
+    }
   }
 
   let slideContentDisplay;
