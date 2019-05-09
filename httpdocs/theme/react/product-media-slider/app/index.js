@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import StoreContextProvider,{Context} from './context-provider';
 
 function ProductMediaSlider(){
 
   /* Component */
 
+  const { productMediaSliderState, productMediaSliderDispatch } = React.useContext(Context);
   const [ product, setProduct ] = useState(window.product);
   const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
   const galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
@@ -93,21 +95,17 @@ function ProductMediaSlider(){
 }
 
 function SlideItem(props){
-
-  const [ slideHeight, setSlideHeight ] = useState('');
-  // React.useEffect(() => { console.log(slideHeight) },[slideHeight]);
-
+  
   const mediaType = props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image";
-
+  
   let slideContentDisplay;
-  if (mediaType === "embed"){
-    slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
-    setSlideHeight(props.slideUrl.split('height="')[1].split('"')[0]);
-  }
+  if (mediaType === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
   else if (mediaType === "image") slideContentDisplay = <img src={props.slideUrl}/>
   else console.log('whot');
 
   const slideItemStyle = { width:props.containerWidth }
+  console.log(slideItemStyle);
+  console.log(props);
 
   return(
     <div className="slide-item" id={"slide-"+props.slideIndex} style={slideItemStyle}>
@@ -133,5 +131,13 @@ function SlidesNavigation(props){
   )
 }
 
+function ProductMediaSliderContainer(){
+  return (
+    <StoreContextProvider>
+      <ProductMediaSlider/>
+    </StoreContextProvider>
+  );
+}
+
 const rootElement = document.getElementById("product-media-slider-container");
-ReactDOM.render(<ProductMediaSlider />, rootElement);
+ReactDOM.render(<ProductMediaSliderContainer />, rootElement);
