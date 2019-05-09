@@ -8,7 +8,7 @@ function ProductMediaSlider(){
 
   const { productMediaSliderState, productMediaSliderDispatch } = React.useContext(Context);
   const [ product, setProduct ] = useState(window.product);
-  console.log(product);
+  console.log(product.embed_code || product.image_small);
   const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
   const galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
   const [ gallery, setGallery ] = useState(galleryArray);
@@ -22,10 +22,7 @@ function ProductMediaSlider(){
 
   console.log(sliderHeight);
 
-  React.useEffect(() => { 
-    initProductMediaSlider()
-  },[])
-
+  React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { updateDimensions() },[currentSlide])
 
   // init product media slider
