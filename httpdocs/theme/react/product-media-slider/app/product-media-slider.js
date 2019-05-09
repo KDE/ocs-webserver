@@ -24,6 +24,8 @@ function ProductMediaSlider(){
   React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { updateDimensions() },[currentSlide])
 
+  console.log(gallery);
+
   // init product media slider
   function initProductMediaSlider(){
     window.addEventListener("resize", updateDimensions);
