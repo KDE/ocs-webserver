@@ -58,7 +58,7 @@ function ProductMediaSlider(){
 
   // prev / next slide arrow values
   const prevCurrentSlide = currentSlide > 1 ? (currentSlide - 1) : gallery.length;
-  const nextCurrentSlide = currentSlide < gallery.length ? ( currentSlide + 1 ) : 0;
+  const nextCurrentSlide = currentSlide <= gallery.length ? ( currentSlide + 1 ) : 0;
 
   // slides display
   let slidesDisplay;
