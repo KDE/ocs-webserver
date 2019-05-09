@@ -9,9 +9,9 @@ function ProductMediaSlider(){
   const [ product, setProduct ] = useState(window.product);
   let galleryArray = window.galleryPicturesJson;
   if (product.embed_code !== null || product.embed_code.length > 0) galleryArray = [  product.embed_code, ... window.galleryPicturesJson ];
-  else if (!window.galleryPicturesJson) galleryArray = [ product.image_small ]
-  console.log(gallery);
+  // else if (!window.galleryPicturesJson) galleryArray = [ product.image_small ]
   const [ gallery, setGallery ] = useState(galleryArray);
+  console.log(gallery);
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
   const [ currentSlide, setCurrentSlide ] = useState(0)
