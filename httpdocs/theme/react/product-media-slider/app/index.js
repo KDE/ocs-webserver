@@ -110,18 +110,16 @@ function SlideItem(props){
   const [mediaType, setMediaType ] = useState(props.slideUrl.indexOf('<iframe') > -1 ? "embed" : "image");
 
   function onImageLoad(e){
-    console.log(e);
+    const imgHeight = document.getElementById('slide-img-'+props.currentSlide).offsetHeight;
+    props.onSetSlideHeight(imgHeight);
   }
 
   let slideContentDisplay;
   if (mediaType === "embed"){
     slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
-    if (props.currentSlide === props.slideIndex){
-      const iFrameHeight = props.slideUrl.split('height="')[1].split('"')[0];
-      props.onSetSlideHeight(iFrameHeight);
-    }
+    if (props.currentSlide === props.slideIndex) props.onSetSlideHeight(props.slideUrl.split('height="')[1].split('"')[0]);
   }
-  else if (mediaType === "image") slideContentDisplay = <img onLoad={onImageLoad} src={props.slideUrl}/>
+  else if (mediaType === "image") slideContentDisplay = <img id={"slide-img-"+props.currentSlide} onLoad={onImageLoad} src={props.slideUrl}/>
   else console.log('whot');
 
   const slideItemStyle = { width:props.containerWidth }
