@@ -19,11 +19,6 @@ function ProductMediaSlider(){
   const [ sliderHeight, setSliderHeight ] = useState()
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide)
   const [ loading, setLoading ] = useState(true);
-
-  console.log('*********')
-  console.log(sliderHeight);
-  console.log(window.filesJson)
-  console.log('*********')
   
   React.useEffect(() => { 
     window.addEventListener("resize", updateDimensions);
@@ -117,7 +112,7 @@ function SlideItem(props){
     slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
     if (props.currentSlide === props.slideIndex) props.onSetSlideHeight(props.slideUrl.split('height="')[1].split('"')[0]);
   }
-  else if (mediaType === "image") slideContentDisplay = <img id={"slide-img-"+props.currentSlide} onLoad={e => onImageLoad()} src={props.slideUrl}/>
+  else if (mediaType === "image") slideContentDisplay = <img id={"slide-img-"+props.currentSlide} onLoad={onImageLoad} src={props.slideUrl}/>
   else console.log('whot');
 
   const slideItemStyle = { width:props.containerWidth }
