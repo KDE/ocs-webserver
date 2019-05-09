@@ -36,7 +36,8 @@ function ProductMediaSlider(){
   function checkForMediaFiles(){
     let mediaGalleryItems = []
     window.filesJson.forEach(function(f,index){
-      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) mediaGalleryItems.push(f.name)
+      console.log(f);
+      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) mediaGalleryItems.push(f.url_encoded)
     })
     if (mediaGalleryItems.length > 0) {
       const newGallery = [...gallery, mediaGalleryItems]
