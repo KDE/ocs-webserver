@@ -8,7 +8,7 @@ function ProductMediaSlider(){
 
   const [ product, setProduct ] = useState(window.product);
   let galleryArray;
-  if (product.embed_code !== null || product.image_small !== null){
+  if (product.embed_code !== null && product.embed_code !== "" || product.image_small !== null && product.image_small !== "" ){
     const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
     galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
   }
@@ -24,6 +24,7 @@ function ProductMediaSlider(){
   React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { updateDimensions() },[currentSlide])
 
+  console.log(product)
   console.log(gallery);
 
   // init product media slider
@@ -39,7 +40,7 @@ function ProductMediaSlider(){
     let mediaGalleryItems = []
     window.filesJson.forEach(function(f,index){
       console.log(f);
-      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) mediaGalleryItems.push(f.url_encoded)
+      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) mediaGalleryItems.push(f.url)
     })
     if (mediaGalleryItems.length > 0) {
       const newGallery = [...gallery, mediaGalleryItems]
