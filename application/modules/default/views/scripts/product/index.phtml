@@ -108,7 +108,10 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
 
 
 $this->galleryPictures = $tableProject->getGalleryPictureSources($this->product->project_id);
-
+if(sizeof($this->galleryPictures)==0)
+{
+    $this->galleryPictures = array($this->product->image_small);
+}
 foreach ($this->galleryPictures as &$value) {
      $value = $this->Image($value, array('height' => '600'));
 }
