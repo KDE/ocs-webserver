@@ -104,10 +104,10 @@ foreach ($this->products as $this->product) {
          <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
                       if($this->product->laplace_score_new)
                       {
-                        echo 'Score: '.round($this->product->laplace_score_new/100, 2); 
+                        echo 'Rating : '.round($this->product->laplace_score_new/100, 2); 
                         }
                       else{
-                        echo 'Score: 5.0';
+                        echo 'Rating : 5.0';
                       }
                       
                   }?>
