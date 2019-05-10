@@ -64,7 +64,9 @@ function ProductMediaSlider(){
     $(targetChildPrependedElement).prependTo('#product-main-img-container');
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
-    setCinemaMode(newCinemaMode);
+    setTimeout(() => {
+      setCinemaMode(newCinemaMode);      
+    }, 1000);
   }
 
   /* Render */
