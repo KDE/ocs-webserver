@@ -138,7 +138,7 @@ function SlideItem(props){
 
 function SlidesNavigation(props){
 
-  const [ thumbSliderWidth, setThumbSliderWidth ] = useState(130 * props.gallery.length);
+  const [ thumbSliderWidth, setThumbSliderWidth ] = useState(140 * props.gallery.length);
 
   const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
     let image;
