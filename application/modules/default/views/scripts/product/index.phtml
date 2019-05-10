@@ -107,13 +107,15 @@ $filesTable = new Default_Model_DbTable_PploadFiles();
 $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collection_id);
 
 
-$this->galleryPictures = $tableProject->getGalleryPictureSources($this->product->project_id);
-if(sizeof($this->galleryPictures)==0)
+$pics= $tableProject->getGalleryPictureSources($this->product->project_id);
+
+if(sizeof($pics)==0)
 {
-    array_push($this->galleryPictures,$this->product->image_small);   
+    array_push($pics,$this->product->image_small);   
 }
-foreach ($this->galleryPictures as &$value) {
-     $value = $this->Image($value, array('height' => '600'));
+$this->galleryPictures=array();
+foreach ($pics as $p) {
+     $this->galleryPictures[] = $this->Image($p, array('height' => '600'));
 }
 
 $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
@@ -613,7 +615,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                       
 
                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
-                            <li><a href="#ratings-panel2" data-toggle="tab">Ratings<?php echo '('.$cntRatingsActive.')';  ?></a></li>
+                            <li><a href="#ratings-panel2" data-toggle="tab">Ratings & Reviews<?php echo '('.$cntRatingsActive.')';  ?></a></li>
                         <?php } ?>
 
 
@@ -642,10 +644,12 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                     <?php
                                         if($this->product->is_gitlab_project && $this->product->use_gitlab_project_readme && null != $this->gitlab_project['readme_url']) {
                                     ?>
-                                    <article>
+                                    <div class="gitlab-readme">
+                                        <article>
                                         <b>Description:</b> <br/><br/>
                                         <?=$this->readme ?><br/><br/>
-                                    </article>
+                                        </article>
+                                    </div>
                                     <?php
                                         } else {
                                     ?>
