@@ -5,7 +5,6 @@ import VideoPlayerWrapper from './video-player';
 function ProductMediaSlider(){ 
 
   /* Component */
-  console.log('bla bla')
 
   const [ product, setProduct ] = useState(window.product);
   let galleryArray = window.galleryPicturesJson;
