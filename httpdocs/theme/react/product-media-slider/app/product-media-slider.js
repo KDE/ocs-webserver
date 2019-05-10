@@ -17,8 +17,6 @@ function ProductMediaSlider(){
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ loading, setLoading ] = useState(true);
 
-  console.log(gallery);
-
   React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode])
 
@@ -48,9 +46,9 @@ function ProductMediaSlider(){
   // update dimensions
   function updateDimensions(){
     const newContainerWidth = parentContainerElement.offsetWidth;
+    setCurrentSlide(currentSlide);
     setContainerWidth(newContainerWidth)
     if (gallery) setSliderWidth(containerWidth * gallery.length);
-    console.log(sliderWidth);
     setSliderPosition(containerWidth * currentSlide);
   }
 
