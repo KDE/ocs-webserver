@@ -23,7 +23,7 @@ function ProductMediaSlider(){
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
   const [ currentSlide, setCurrentSlide ] = useState(0)
   const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
-  const [ sliderHeight, setSliderHeight ] = useState(315);
+  const [ sliderHeight, setSliderHeight ] = useState(containerWidth / 1.77);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ loading, setLoading ] = useState(true);
@@ -88,7 +88,6 @@ function ProductMediaSlider(){
         currentSlide={currentSlide}
         containerWidth={containerWidth}
         cinemaMode={cinemaMode}
-        onSetSlideHeight={height => setSliderHeight(height)}
         onSlideItemClick={toggleCinemaMode}
       />
     ));
@@ -121,18 +120,6 @@ function ProductMediaSlider(){
 }
 
 function SlideItem(props){
-  
-  React.useEffect(() => { if (props.slideIndex === props.currentSlide) onSetParentSliderHeight() },[])
-  React.useEffect(() => { if (props.slideIndex === props.currentSlide) onSetParentSliderHeight() },[props.currentSlide,props.cinemaMode])
-
-  function onSetParentSliderHeight(){
-    let slideHeight;
-    if (props.slide.type === "embed") slideHeight = 315;
-    else if (props.slide.type === "image") slideHeight = document.getElementById('slide-img-'+props.slideIndex).offsetHeight;
-    else if (props.slide.type === "video") slideHeight = 360;
-    props.onSetSlideHeight(slideHeight);
-  }
-
   let slideContentDisplay, fullScreenModeButtonDisplay;
   if (props.slide.type === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
   else if (props.slide.type === "image") {
