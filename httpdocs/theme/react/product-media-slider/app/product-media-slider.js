@@ -31,7 +31,7 @@ function ProductMediaSlider(){
 
   // generate product gallery
   function generateProductGallery(){
-    let galleryArray = window.galleryPicturesJson;
+    let galleryArray = []
     if (window.galleryPicturesJson) window.galleryPicturesJson.forEach(function(gp,index){ galleryArray.push({url:gp,type:'image'}); });
     if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... window.galleryPicturesJson ];
     else if (!window.galleryPicturesJson) galleryArray = [{url:product.image_small,type:'image'} ];
@@ -50,7 +50,7 @@ function ProductMediaSlider(){
   function updateDimensions(){
     const newContainerWidth = parentContainerElement.offsetWidth;
     setContainerWidth(newContainerWidth)
-    setSliderWidth(containerWidth * gallery.length);
+    if (gallery) setSliderWidth(containerWidth * gallery.length);
     setSliderPosition(containerWidth * currentSlide);
   }
 
