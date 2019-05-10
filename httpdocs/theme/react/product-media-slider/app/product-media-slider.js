@@ -17,6 +17,10 @@ function ProductMediaSlider(){
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ loading, setLoading ] = useState(true);
 
+  console.log('cinema mode:' + cinemaMode);
+  console.log('gallery width:' + sliderWidth);
+  console.log('gallery height:' + sliderHeight);
+
   React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { if (gallery) updateDimensions() },[currentSlide, cinemaMode])
 
