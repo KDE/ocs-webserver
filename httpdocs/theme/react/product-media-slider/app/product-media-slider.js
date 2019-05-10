@@ -19,7 +19,8 @@ function ProductMediaSlider(){
   }
 
   const [ gallery, setGallery ] = useState(galleryArray);
-  const [ containerWidth, setContainerWidth ] = useState(document.getElementById('product-title-div').offsetWidth);
+  const parentContainerElement = document.getElementById('product-title-div');
+  const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
   const [ currentSlide, setCurrentSlide ] = useState(0)
   const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
   const [ sliderHeight, setSliderHeight ] = useState(containerWidth / 1.77);
@@ -39,8 +40,8 @@ function ProductMediaSlider(){
 
   // update dimensions
   function updateDimensions(){
-    const parentContainerElement = cinemaMode === true ? document.getElementById('product-title-div') : document.getElementById('site-header-wrapper');
     const newContainerWidth = parentContainerElement.offsetWidth;
+    console.log(newContainerWidth);
     setContainerWidth(newContainerWidth)
     setSliderWidth(containerWidth * gallery.length);
     setSliderPosition(containerWidth * currentSlide);
