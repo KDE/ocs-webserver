@@ -18,7 +18,7 @@ function ProductMediaSlider(){
   const [ loading, setLoading ] = useState(true);
 
   React.useEffect(() => { initProductMediaSlider() },[])
-  React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode])
+  React.useEffect(() => { if (gallery) updateDimensions() },[currentSlide, cinemaMode])
 
   // init product media slider
   function initProductMediaSlider(){
@@ -47,13 +47,11 @@ function ProductMediaSlider(){
   function updateDimensions(){
     const newContainerWidth = parentContainerElement.offsetWidth;
     setContainerWidth(newContainerWidth)
-    if (gallery) setSliderWidth(containerWidth * gallery.length);
+    setSliderWidth(containerWidth * gallery.length);
     setSliderPosition(containerWidth * currentSlide);
-    const newCurrentSlide = currentSlide;
-    setCurrentSlide(0);
-    setCurrentSlide(newCurrentSlide);
   }
 
+  // toggle cinema mode
   function toggleCinemaMode(){
     const newCinemaMode = cinemaMode === true ? false : true;
     const targetParentElement = cinemaMode === true ? $('#product-main') : $('#product-page-content');
@@ -94,6 +92,7 @@ function ProductMediaSlider(){
         slide={s}
         currentSlide={currentSlide}
         containerWidth={containerWidth}
+        cinemaMode={cinemaMode}
         onSetSlideHeight={height => setSliderHeight(height)}
         onSlideItemClick={toggleCinemaMode}
       />
@@ -128,10 +127,8 @@ function ProductMediaSlider(){
 
 function SlideItem(props){
   
-  const [mediaType, setMediaType ] = useState('');
-
   React.useEffect(() => { if (props.slideIndex === props.currentSlide) onSetParentSliderHeight() },[])
-  React.useEffect(() => { if (props.slideIndex === props.currentSlide) onSetParentSliderHeight() },[props.currentSlide])
+  React.useEffect(() => { if (props.slideIndex === props.currentSlide) onSetParentSliderHeight() },[props.currentSlide,props.cinemaMode])
 
   function onSetParentSliderHeight(){
     let slideHeight;
