@@ -7,18 +7,17 @@ function ProductMediaSlider(){
   /* Component */
 
   const [ product, setProduct ] = useState(window.product);
-  let galleryArray = window.galleryPicturesJson;
-  if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [  product.embed_code, ... window.galleryPicturesJson ];
-  else if (!window.galleryPicturesJson) galleryArray = [ product.image_small ]
-  const [ gallery, setGallery ] = useState(galleryArray);
+  const [ gallery, setGallery ] = useState();
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
   const [ currentSlide, setCurrentSlide ] = useState(0)
-  const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
+  const [ sliderWidth, setSliderWidth ] = useState();
   const [ sliderHeight, setSliderHeight ] = useState(315);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ loading, setLoading ] = useState(true);
+
+  console.log(gallery);
 
   React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { updateDimensions() },[currentSlide])
@@ -27,15 +26,22 @@ function ProductMediaSlider(){
   function initProductMediaSlider(){
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
-    if (window.filesJson) checkForMediaFiles();
-    else setLoading(false);
+    generateProductGallery();
   }
 
-  // check for media files
-  function checkForMediaFiles(){
-    let newGallery = gallery;
-    window.filesJson.forEach(function(f,index){ if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) newGallery = [ f.url, ... newGallery] })
-    setGallery(newGallery);
+  // generate product gallery
+  function generateProductGallery(){
+    let galleryArray = window.galleryPicturesJson;
+    if (window.galleryPicturesJson) window.galleryPicturesJson.forEach(function(gp,index){ galleryArray.push({url:gp,type:'image'}); });
+    if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... window.galleryPicturesJson ];
+    else if (!window.galleryPicturesJson) galleryArray = [{url:product.image_small,type:'image'} ];
+    if (window.filesJson) {
+      window.filesJson.forEach(function(f,index){  
+        if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) galleryArray = [ {url:f.url,type:f.type.split('/')[0]}, ... galleryArray] 
+      })
+    }
+    setGallery(galleryArray);
+    setSliderWidth(containerWidth * galleryArray.length);
     setLoading(false);
   }
 
@@ -47,58 +53,77 @@ function ProductMediaSlider(){
     setSliderPosition(containerWidth * currentSlide);
   }
 
+  function toggleCinemaMode(){
+    const newCinemaMode = cinemaMode === true ? false : true;
+    const targetParentElement = cinemaMode === true ? $('#product-main') : $('#product-page-content');
+    const targetChildPrependedElement = cinemaMode === true ? $('#product-title-div') : $('#product-media-slider-container');
+    $('#product-main-img-container').prependTo(targetParentElement);
+    $(targetChildPrependedElement).prependTo('#product-main-img-container');
+    $("#product-media-slider-container").toggleClass("imgsmall");
+    $("#product-media-slider-container").toggleClass("imgfull");
+    $('html, body').animate({ scrollTop: ($('#product-main-img').offset().top) },500,function(){ 
+      setCinemaMode(newCinemaMode);
+      updateDimensions(); 
+    });
+  }
+
   /* Render */
 
-  // slider container style
-  const sliderContainerStyle = {
-    width:sliderWidth+'px',
-    height:sliderHeight+'px'
-  }
+  let productMediaSliderDisplay;
+  if (!loading){
+    // slider container style
+    const sliderContainerStyle = {
+      width:sliderWidth+'px',
+      height:sliderHeight+'px'
+    }
 
-  // slider wrapper style
-  const sliderWrapperStyle = {
-    width:sliderWidth+'px',
-    left:'-'+sliderPosition+'px',
-    height:sliderHeight+'px'
-  }
+    // slider wrapper style
+    const sliderWrapperStyle = {
+      width:sliderWidth+'px',
+      left:'-'+sliderPosition+'px',
+      height:sliderHeight+'px'
+    }
 
-  // prev / next slide arrow values
-  const prevCurrentSlide = currentSlide > 0 ? currentSlide - 1 : gallery.length - 1;
-  const nextCurrentSlide = currentSlide < (gallery.length - 1) ? ( currentSlide + 1 ) : 0;
+    // prev / next slide arrow values
+    const prevCurrentSlide = currentSlide > 0 ? currentSlide - 1 : gallery.length - 1;
+    const nextCurrentSlide = currentSlide < (gallery.length - 1) ? ( currentSlide + 1 ) : 0;
 
-  // slides display
-  let slidesDisplay;
-  if (loading === false){
-    slidesDisplay = gallery.map((s,index) => (
+    // slides display
+    const slidesDisplay = gallery.map((s,index) => (
       <SlideItem 
         key={index}
         slideIndex={index}
-        slideUrl={s}
+        slide={s}
         currentSlide={currentSlide}
         containerWidth={containerWidth}
         onSetSlideHeight={height => setSliderHeight(height)}
+        onSlideItemClick={toggleCinemaMode}
       />
     ));
+    productMediaSliderDisplay = (
+      <div>
+        <div id="slider-container" style={sliderContainerStyle}>
+          <a className="left carousel-control" id="arrow-left" onClick={() => setCurrentSlide(prevCurrentSlide)}>
+            <span className="glyphicon glyphicon-chevron-left"></span>
+          </a>
+          <div id="slider-wrapper" style={sliderWrapperStyle}>
+            {slidesDisplay}    
+          </div>
+          <a className="right carousel-control" id="arrow-right" onClick={() => setCurrentSlide(nextCurrentSlide)}>
+            <span className="glyphicon glyphicon-chevron-right"></span>
+          </a>      
+        </div>
+        <SlidesNavigation
+          gallery={gallery}
+          currentSlide={currentSlide}
+          onChangeCurrentSlide={e => setCurrentSlide(e)}
+        />
+      </div>
+    )
   }
-
   return (
     <main id="media-slider">
-      <div id="slider-container" style={sliderContainerStyle}>
-        <a className="left carousel-control" id="arrow-left" onClick={() => setCurrentSlide(prevCurrentSlide)}>
-          <span className="glyphicon glyphicon-chevron-left"></span>
-        </a>
-        <div id="slider-wrapper" style={sliderWrapperStyle}>
-          {slidesDisplay}    
-        </div>
-        <a className="right carousel-control" id="arrow-right" onClick={() => setCurrentSlide(nextCurrentSlide)}>
-          <span className="glyphicon glyphicon-chevron-right"></span>
-        </a>      
-      </div>
-      <SlidesNavigation
-        gallery={gallery}
-        currentSlide={currentSlide}
-        onChangeCurrentSlide={e => setCurrentSlide(e)}
-      />
+      {productMediaSliderDisplay}
     </main>
   )
 }
@@ -107,57 +132,43 @@ function SlideItem(props){
   
   const [mediaType, setMediaType ] = useState('');
 
-  React.useEffect(() => { determineMediaType() },[])
   React.useEffect(() => { if (props.slideIndex === props.currentSlide) onSetParentSliderHeight() },[])
   React.useEffect(() => { if (props.slideIndex === props.currentSlide) onSetParentSliderHeight() },[props.currentSlide])
 
-  function determineMediaType(){
-    let initialMediaType;
-    if (props.slideUrl.indexOf('<iframe') > -1) initialMediaType = "embed";
-    else if (props.slideUrl.indexOf('.png') > -1 || props.slideUrl.indexOf('.jpg') > -1 || props.slideUrl.indexOf('.jpeg') > -1) initialMediaType = "image";
-    else if (props.slideUrl.indexOf('.mp4') > -1) initialMediaType = "video";
-    setMediaType(initialMediaType);
-  }
-
   function onSetParentSliderHeight(){
     let slideHeight;
-    if (mediaType === "embed") slideHeight = 315;
-    else if (mediaType === "image") slideHeight = document.getElementById('slide-img-'+props.slideIndex).offsetHeight;
-    else if (mediaType === "video") slideHeight = 360;
+    if (props.slide.type === "embed") slideHeight = 315;
+    else if (props.slide.type === "image") slideHeight = document.getElementById('slide-img-'+props.slideIndex).offsetHeight;
+    else if (props.slide.type === "video") slideHeight = 360;
     props.onSetSlideHeight(slideHeight);
   }
 
-  function appendToBody(){
-    const productMediaSliderContainerDom = document.getElementById('product-media-slider-container');
-    document.getElementById('product-page-content').prepend(productMediaSliderContainerDom);
-  }
-
   let slideContentDisplay;
-  if (mediaType === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
-  else if (mediaType === "image") slideContentDisplay = <img id={"slide-img-"+props.slideIndex} src={props.slideUrl}/>
-  else if (mediaType === "video") slideContentDisplay = <VideoPlayerWrapper width={(props.containerWidth * 0.7)} source={props.slideUrl}/>
+  if (props.slide.type === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
+  else if (props.slide.type === "image") slideContentDisplay = <img id={"slide-img-"+props.slideIndex} src={props.slide.url}/>
+  else if (props.slide.type === "video") slideContentDisplay = <VideoPlayerWrapper width={(props.containerWidth * 0.7)} source={props.slide.url}/>
   const slideItemStyle = { width:props.containerWidth }
 
 
   return(
-    <div onClick={appendToBody} className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={slideItemStyle}>
+    <div onClick={props.onSlideItemClick} className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={slideItemStyle}>
       {slideContentDisplay}
     </div>
   )
 }
 
 function SlidesNavigation(props){
-
-  const slidesNavigationDisplay = props.gallery.map((g,index) => (
-    <li key={index} className={ props.currentSlide === index ? "active" : ""}>
-      <a onClick={e => props.onChangeCurrentSlide(index)}></a>
+  const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => (
+    <li key={index}  className={ props.currentSlide === index ? "active" : ""}>
+      <a onClick={e => props.onChangeCurrentSlide(index)}>
+        <img src={g.split('/img')[0] + "/cache/80x80-1/img" + g.split('/img')[1]}/>
+      </a>
     </li>
   ))
-
   return (
     <div id="slide-navigation">
-      <ul>
-        {slidesNavigationDisplay}
+      <ul className="thumbnail-navigation">
+        {slidesThumbnailNavigationDisplay}
       </ul>
     </div>
   )

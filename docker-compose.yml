@@ -1,32 +1,44 @@
-nginx:
-  image: prooph/nginx:www
-  ports:
-      - "8080:80"
-      - "443:443"
-  links:
-    - php:php
-  volumes_from:
-    - dataphp
-
-php:
-  image: prooph/php:7.0-fpm
-  links:
-    - mariadb:mariadb
-  volumes_from:
-    - dataphp
-
-dataphp:
-  image: debian:jessie
-  volumes:
-    - .:/var/www
-    - ./httpdocs:/var/www/public
-
-mariadb:
-  image: mariadb
-  ports:
-    - "3306:3306"
-  environment:
-    - MYSQL_ROOT_PASSWORD=dev
-    - MYSQL_USER=dev
-    - MYSQL_PASSWORD=dev
-    - MYSQL_DATABASE=prooph
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      args:
+        BUILD_ENV: development
+    ports:
+      - '80:80'
+    volumes:
+      - .:/usr/src/ocs-webserver
+      - ./.docker_init/conf/application.local.ini:/usr/src/ocs-webserver/application/configs/application.local.ini
+      - ./.docker_init/conf/client_opendesktop.ini.php:/usr/src/ocs-webserver/application/configs/client_opendesktop.ini.php
+      - ./.docker_init/conf/client_appimagehub.ini.php:/usr/src/ocs-webserver/application/configs/client_appimagehub.ini.php
+      - ./.docker_init/conf/client_kde-store.ini.php:/usr/src/ocs-webserver/application/configs/client_kde-store.ini.php
+      - ./.docker_init/conf/client_kde.ini.php:/usr/src/ocs-webserver/application/configs/client_kde.ini.php
+      - ./.docker_init/httpdocs/.htaccess:/usr/src/ocs-webserver/httpdocs/.htaccess
+      - ./.docker_init/httpdocs/images_sys/store_kde:/usr/src/ocs-webserver/httpdocs/images_sys/store_kde
+      - ./.docker_init/httpdocs/images_sys/store_opendesktop:/usr/src/ocs-webserver/httpdocs/images_sys/store_opendesktop
+      - ./.docker_init/httpdocs/images_sys/superstore:/usr/src/ocs-webserver/httpdocs/images_sys/superstore
+    expose:
+      - '80'
+    depends_on:
+      - sessions
+      - cache
+      - sqldb
+  sessions:
+    image: 'memcached:1.5'
+    expose:
+      - '11211'
+  cache:
+    image: 'memcached:1.5'
+    expose:
+      - '11211'
+  sqldb:
+    image: mariadb
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=${OCS_WS_MYSQL_ROOT_PWD:-root}
+    volumes:
+      - ./.docker_init/seed/:/docker-entrypoint-initdb.d
