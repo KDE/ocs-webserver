@@ -56,7 +56,7 @@ function ProductMediaSlider(){
       $("#product-media-slider-container").toggleClass("imgsmall");
     } else {
       newCinemaMode = true;
-      $('product-media-slider-container').prependTo($('#product-main'));      
+      $('#product-media-slider-container').prependTo($('#product-main'));      
       $("#product-media-slider-container").toggleClass("imgfull");
     }
     setCinemaMode(newCinemaMode);
