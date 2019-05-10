@@ -54,6 +54,9 @@ function ProductMediaSlider(){
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
     setCinemaMode(newCinemaMode);
+    $('html, body').animate({
+      scrollTop: ($('#product-main-img').offset().top)
+  },500);
   }
 
   /* Render */
