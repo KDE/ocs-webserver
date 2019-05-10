@@ -147,7 +147,14 @@ function SlidesNavigation(props){
   const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
     let image;
     if (g.type === "image") image = <img src={g.url.split('/img')[0] + "/cache/120x80-1/img" + g.url.split('/img')[1]}/>
-    else if (g.type === "video") image = <span className="glyphicon glyphicon-play"></span>
+    else if (g.type === "video") {
+      image = (
+        <div>
+          <span className="glyphicon glyphicon-play"></span>
+          {g.url}
+        </div>
+      )
+    }
     return (
       <li key={index}  className={ props.currentSlide === index ? "active" : ""}>
         <a onClick={e => props.onChangeCurrentSlide(index)}>{image}</a>
