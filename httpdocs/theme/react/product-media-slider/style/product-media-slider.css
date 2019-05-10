@@ -85,7 +85,7 @@
   transition: all 0.2s ease-out;
 }
 #media-slider #slide-navigation ul li.active {
-  border-color: #E2E2E2;
+  border-color: #2673b0;
 }
 #media-slider #slide-navigation ul li a {
   display: block;
