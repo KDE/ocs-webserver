@@ -23,7 +23,7 @@ function ProductMediaSlider(){
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
   const [ currentSlide, setCurrentSlide ] = useState(0)
   const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
-  const [ sliderHeight, setSliderHeight ] = useState(containerWidth / 1.77);
+  const [ sliderHeight, setSliderHeight ] = useState(containerWidth / 0.5625);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ loading, setLoading ] = useState(true);
@@ -41,10 +41,9 @@ function ProductMediaSlider(){
   // update dimensions
   function updateDimensions(){
     const newContainerWidth = parentContainerElement.offsetWidth;
-    console.log(newContainerWidth);
     setContainerWidth(newContainerWidth)
+    setSliderHeight(containerWidth / 0.5625);
     setSliderWidth(containerWidth * gallery.length);
-    console.log(sliderWidth);
     setSliderPosition(containerWidth * currentSlide);
   }
 
@@ -59,7 +58,7 @@ function ProductMediaSlider(){
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
     setCinemaMode(newCinemaMode);
-    setLoading(false)
+    setLoading(false )
   }
 
   /* Render */
