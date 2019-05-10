@@ -41,7 +41,11 @@ function ProductMediaSlider(){
   // update dimensions
   function updateDimensions(){
     const newContainerWidth = parentContainerElement.offsetWidth;
+    console.log(newContainerWidth);
     setContainerWidth(newContainerWidth)
+    setSliderWidth(containerWidth * gallery.length);
+    console.log(sliderWidth);
+    setSliderPosition(containerWidth * currentSlide);
   }
 
   // toggle cinema mode
@@ -55,7 +59,7 @@ function ProductMediaSlider(){
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
     setCinemaMode(newCinemaMode);
-    setLoading(false);
+    setLoading(false)
   }
 
   /* Render */
@@ -87,12 +91,10 @@ function ProductMediaSlider(){
         slide={s}
         currentSlide={currentSlide}
         containerWidth={containerWidth}
-        sliderHeight={sliderHeight}
         cinemaMode={cinemaMode}
         onSlideItemClick={toggleCinemaMode}
       />
     ));
-
     productMediaSliderDisplay = (
       <div>
         <div id="slider-container" style={sliderContainerStyle}>
@@ -129,7 +131,7 @@ function SlideItem(props){
     fullScreenModeButtonDisplay = <a className="full-screen">toggle full screen</a>
   }
   else if (props.slide.type === "video") slideContentDisplay = <VideoPlayerWrapper width={(props.containerWidth * 0.7)} source={props.slide.url} onCinemaModeClick={props.onSlideItemClick}/>
-  const slideItemStyle = { width:props.containerWidth,height:props.sliderHeight }
+  const slideItemStyle = { width:props.containerWidth }
   return(
     <div className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={slideItemStyle}>
       {slideContentDisplay}
@@ -145,14 +147,7 @@ function SlidesNavigation(props){
   const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
     let image;
     if (g.type === "image") image = <img src={g.url.split('/img')[0] + "/cache/120x80-1/img" + g.url.split('/img')[1]}/>
-    else if (g.type === "video") {
-      image = (
-        <div>
-          <span className="glyphicon glyphicon-play"></span>
-          {g.url}
-        </div>
-      )
-    }
+    else if (g.type === "video") image = <span className="glyphicon glyphicon-play"></span>
     return (
       <li key={index}  className={ props.currentSlide === index ? "active" : ""}>
         <a onClick={e => props.onChangeCurrentSlide(index)}>{image}</a>
