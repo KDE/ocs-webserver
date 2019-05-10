@@ -21,7 +21,7 @@ function ProductMediaSlider(){
   const [ loading, setLoading ] = useState(true);
 
   React.useEffect(() => { initProductMediaSlider() },[])
-  React.useEffect(() => { updateDimensions() },[currentSlide])
+  React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode])
 
   // init product media slider
   function initProductMediaSlider(){
@@ -48,7 +48,6 @@ function ProductMediaSlider(){
   }
 
   function toggleCinemaMode(){
-    console.log(cinemaMode);
     const newCinemaMode = cinemaMode === true ? false : true;
     const targetParentElement = cinemaMode === true ? $('#product-main') : $('#product-page-content');
     $('#product-main-img-container').prependTo(targetParentElement);
