@@ -127,14 +127,20 @@ function SlideItem(props){
     props.onSetSlideHeight(slideHeight);
   }
 
+  function appendToBody(){
+    const productMediaSliderContainerDom = document.getElementById('product-media-slider-container');
+    document.getElementById('product-page-content').prepend(productMediaSliderContainerDom);
+  }
+
   let slideContentDisplay;
   if (mediaType === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
   else if (mediaType === "image") slideContentDisplay = <img id={"slide-img-"+props.slideIndex} src={props.slideUrl}/>
   else if (mediaType === "video") slideContentDisplay = <VideoPlayerWrapper width={(props.containerWidth * 0.7)} source={props.slideUrl}/>
   const slideItemStyle = { width:props.containerWidth }
 
+
   return(
-    <div className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={slideItemStyle}>
+    <div onClick={appendToBody} className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={slideItemStyle}>
       {slideContentDisplay}
     </div>
   )
