@@ -17,6 +17,9 @@
   position: relative;
   padding-bottom: 100px;
 }
+#media-slider .carousel-control {
+  margin-bottom: 100px;
+}
 #media-slider #slider-wrapper {
   position: absolute;
   left: 0;
