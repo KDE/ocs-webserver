@@ -63,6 +63,7 @@ function ProductMediaSlider(){
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
     setCinemaMode(newCinemaMode);
+    setCurrentSlide(0);
   }
 
   /* Render */
@@ -81,6 +82,8 @@ function ProductMediaSlider(){
       left:'-'+sliderPosition+'px',
       height:sliderHeight+'px'
     }
+
+    console.log(sliderWrapperStyle);
 
     // prev / next slide arrow values
     const prevCurrentSlide = currentSlide > 0 ? currentSlide - 1 : gallery.length - 1;
