@@ -50,8 +50,8 @@ function ProductMediaSlider(){
   function toggleCinemaMode(){
     console.log(cinemaMode);
     const newCinemaMode = cinemaMode === true ? false : true;
-    const targetParentElement = cinemaMode === true ? $('#product-page-content') : $('#product-main');
-    $('#product-media-slider-container').prependTo(targetParentElement);
+    const targetParentElement = cinemaMode === true ? $('#product-main') : $('#product-page-content');
+    $('#product-main-img-container').prependTo(targetParentElement);
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
     setCinemaMode(newCinemaMode);
