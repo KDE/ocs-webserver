@@ -40,9 +40,8 @@ function ProductMediaSlider(){
         if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) galleryArray = [ {url:f.url,type:f.type.split('/')[0]}, ... galleryArray] 
       })
     }
-    console.log(galleryArray);
     setGallery(galleryArray);
-    setSliderWidth(containerWidth * galleryArray.length);
+    setSliderWidth(containerWidth * gallery.length);
     setLoading(false);
   }
 
@@ -159,13 +158,17 @@ function SlideItem(props){
 }
 
 function SlidesNavigation(props){
-  const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => (
-    <li key={index}  className={ props.currentSlide === index ? "active" : ""}>
+  const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
+    let imageSource;
+    if (g.type === "image") imageSource = g.url.split('/img')[0] + "/cache/80x80-1/img" + g.url.split('/img')[1];
+    return (
+      <li key={index}  className={ props.currentSlide === index ? "active" : ""}>
       <a onClick={e => props.onChangeCurrentSlide(index)}>
-        <img src={g.split('/img')[0] + "/cache/80x80-1/img" + g.split('/img')[1]}/>
+        <img src={imageSource}/>
       </a>
     </li>
-  ))
+    )
+  })
   return (
     <div id="slide-navigation">
       <ul className="thumbnail-navigation">
