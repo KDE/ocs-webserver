@@ -20,7 +20,7 @@ function ProductMediaSlider(){
   console.log(gallery);
 
   React.useEffect(() => { initProductMediaSlider() },[])
-  React.useEffect(() => { updateDimensions() },[currentSlide])
+  React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode])
 
   // init product media slider
   function initProductMediaSlider(){
@@ -50,6 +50,7 @@ function ProductMediaSlider(){
     const newContainerWidth = parentContainerElement.offsetWidth;
     setContainerWidth(newContainerWidth)
     if (gallery) setSliderWidth(containerWidth * gallery.length);
+    console.log(sliderWidth);
     setSliderPosition(containerWidth * currentSlide);
   }
 
@@ -61,7 +62,6 @@ function ProductMediaSlider(){
     $(targetChildPrependedElement).prependTo('#product-main-img-container');
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
-    updateDimensions();
     setCinemaMode(newCinemaMode);
   }
 
