@@ -107,13 +107,14 @@ $filesTable = new Default_Model_DbTable_PploadFiles();
 $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collection_id);
 
 
-$this->galleryPictures = $tableProject->getGalleryPictureSources($this->product->project_id);
-if(sizeof($this->galleryPictures)==0)
+$pics= $tableProject->getGalleryPictureSources($this->product->project_id);
+if(sizeof($pics)==0)
 {
-    array_push($this->galleryPictures,$this->product->image_small);   
+    array_push($pics,$this->product->image_small);   
 }
-foreach ($this->galleryPictures as &$value) {
-     $value = $this->Image($value, array('height' => '600'));
+$this->galleryPictures=array();
+foreach ($pics as $p) {
+     $this->galleryPictures[] = $this->Image($p, array('height' => '600'));
 }
 
 $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
