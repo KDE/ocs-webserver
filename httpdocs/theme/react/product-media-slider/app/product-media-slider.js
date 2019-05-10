@@ -40,7 +40,7 @@ function ProductMediaSlider(){
         if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) galleryArray = [ {url:f.url,type:f.type.split('/')[0]}, ... galleryArray] 
       })
     }
-    setGallery(newGallery);
+    setGallery(galleryArray);
     setSliderWidth(containerWidth * gallery.length);
     setLoading(false);
   }
