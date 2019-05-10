@@ -17,6 +17,7 @@ function ProductMediaSlider(){
   const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
   const [ sliderHeight, setSliderHeight ] = useState(315);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
+  const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ loading, setLoading ] = useState(true);
 
   React.useEffect(() => { initProductMediaSlider() },[])
@@ -34,7 +35,7 @@ function ProductMediaSlider(){
   function checkForMediaFiles(){
     let newGallery = gallery;
     window.filesJson.forEach(function(f,index){
-      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) newGallery.push(f.url)
+      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) newGallery.prepend(f.url)
     })
     setGallery(newGallery);
     setLoading(false);
