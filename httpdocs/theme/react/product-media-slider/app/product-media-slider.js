@@ -47,6 +47,21 @@ function ProductMediaSlider(){
     setSliderPosition(containerWidth * currentSlide);
   }
 
+  function toggleCinemaMode(){
+    console.log(cinemaMode);
+    let newCinemaMode;
+    if (cinemaMode === true){
+      newCinemaMode = false;
+      $('#product-main-img-container').prependTo($('#product-page-content'));
+    } else {
+      newCinemaMode = true;
+      $('#product-main-img-container').prependTo($('#product-main'));      
+    }
+    $("#product-media-slider-container").toggleClass("imgfull");
+    $("#product-media-slider-container").toggleClass("imgsmall");
+    setCinemaMode(newCinemaMode);
+  }
+
   /* Render */
 
   // slider container style
@@ -77,6 +92,7 @@ function ProductMediaSlider(){
         currentSlide={currentSlide}
         containerWidth={containerWidth}
         onSetSlideHeight={height => setSliderHeight(height)}
+        onSlideItemClick={toggleCinemaMode}
       />
     ));
   }
@@ -140,7 +156,7 @@ function SlideItem(props){
 
 
   return(
-    <div onClick={appendToBody} className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={slideItemStyle}>
+    <div onClick={props.onSlideItemClick} className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={slideItemStyle}>
       {slideContentDisplay}
     </div>
   )
