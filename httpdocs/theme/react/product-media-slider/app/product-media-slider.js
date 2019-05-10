@@ -143,16 +143,18 @@ function SlideItem(props){
     props.onSetSlideHeight(slideHeight);
   }
 
-  let slideContentDisplay;
+  let slideContentDisplay, fullScreenModeButtonDisplay;
   if (props.slide.type === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
-  else if (props.slide.type === "image") slideContentDisplay = <img id={"slide-img-"+props.slideIndex} src={props.slide.url}/>
-  else if (props.slide.type === "video") slideContentDisplay = <VideoPlayerWrapper width={(props.containerWidth * 0.7)} source={props.slide.url}/>
+  else if (props.slide.type === "image") {
+    slideContentDisplay = <img onClick={props.onSlideItemClick} id={"slide-img-"+props.slideIndex} src={props.slide.url}/>
+    fullScreenModeButtonDisplay = <a className="full-screen">toggle full screen</a>
+  }
+  else if (props.slide.type === "video") slideContentDisplay = <VideoPlayerWrapper width={(props.containerWidth * 0.7)} source={props.slide.url} onCinemaModeClick={props.onSlideItemClick}/>
   const slideItemStyle = { width:props.containerWidth }
-
-
   return(
-    <div onClick={props.onSlideItemClick} className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={slideItemStyle}>
+    <div className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={slideItemStyle}>
       {slideContentDisplay}
+      {fullScreenModeButtonDisplay}
     </div>
   )
 }
