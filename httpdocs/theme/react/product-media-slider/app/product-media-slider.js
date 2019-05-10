@@ -7,9 +7,7 @@ function ProductMediaSlider(){
   /* Component */
 
   const [ product, setProduct ] = useState(window.product);
-  let galleryArray = window.galleryPicturesJson;
-  if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [  product.embed_code, ... window.galleryPicturesJson ];
-  else if (!window.galleryPicturesJson) galleryArray = [ product.image_small ]
+
   const [ gallery, setGallery ] = useState(galleryArray);
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
@@ -20,6 +18,8 @@ function ProductMediaSlider(){
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ loading, setLoading ] = useState(true);
 
+  console.log(gallery);
+
   React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { updateDimensions() },[currentSlide])
 
@@ -27,14 +27,16 @@ function ProductMediaSlider(){
   function initProductMediaSlider(){
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
-    if (window.filesJson) checkForMediaFiles();
-    else setLoading(false);
+    generateProductGallery();
   }
 
-  // check for media files
-  function checkForMediaFiles(){
-    let newGallery = gallery;
-    window.filesJson.forEach(function(f,index){ if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) newGallery = [ f.url, ... newGallery] })
+  // generate product gallery
+  function generateProductGallery(){
+    let galleryArray = window.galleryPicturesJson;
+    if (window.galleryPicturesJson) window.galleryPicturesJson.forEach(function(gp,index){ galleryArray.push({url:gp,type:'image'}); });
+    if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... window.galleryPicturesJson ];
+    else if (!window.galleryPicturesJson) galleryArray = [{url:product.image_small,type:'image'} ];
+    if (window.filesJson) window.filesJson.forEach(function(f,index){  if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) galleryArray = [ {url:f.url,type:f.type.split('/')[0]}, ... galleryArray] })
     setGallery(newGallery);
     setLoading(false);
   }
@@ -87,7 +89,7 @@ function ProductMediaSlider(){
       <SlideItem 
         key={index}
         slideIndex={index}
-        slideUrl={s}
+        slide={s}
         currentSlide={currentSlide}
         containerWidth={containerWidth}
         onSetSlideHeight={height => setSliderHeight(height)}
@@ -122,35 +124,21 @@ function SlideItem(props){
   
   const [mediaType, setMediaType ] = useState('');
 
-  React.useEffect(() => { determineMediaType() },[])
   React.useEffect(() => { if (props.slideIndex === props.currentSlide) onSetParentSliderHeight() },[])
   React.useEffect(() => { if (props.slideIndex === props.currentSlide) onSetParentSliderHeight() },[props.currentSlide])
 
-  function determineMediaType(){
-    let initialMediaType;
-    if (props.slideUrl.indexOf('<iframe') > -1) initialMediaType = "embed";
-    else if (props.slideUrl.indexOf('.png') > -1 || props.slideUrl.indexOf('.jpg') > -1 || props.slideUrl.indexOf('.jpeg') > -1) initialMediaType = "image";
-    else if (props.slideUrl.indexOf('.mp4') > -1) initialMediaType = "video";
-    setMediaType(initialMediaType);
-  }
-
   function onSetParentSliderHeight(){
     let slideHeight;
-    if (mediaType === "embed") slideHeight = 315;
-    else if (mediaType === "image") slideHeight = document.getElementById('slide-img-'+props.slideIndex).offsetHeight;
-    else if (mediaType === "video") slideHeight = 360;
+    if (props.slide.type === "embed") slideHeight = 315;
+    else if (props.slide.type === "image") slideHeight = document.getElementById('slide-img-'+props.slideIndex).offsetHeight;
+    else if (props.slide.type === "video") slideHeight = 360;
     props.onSetSlideHeight(slideHeight);
   }
 
-  function appendToBody(){
-    const productMediaSliderContainerDom = document.getElementById('product-media-slider-container');
-    document.getElementById('product-page-content').prepend(productMediaSliderContainerDom);
-  }
-
   let slideContentDisplay;
-  if (mediaType === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
-  else if (mediaType === "image") slideContentDisplay = <img id={"slide-img-"+props.slideIndex} src={props.slideUrl}/>
-  else if (mediaType === "video") slideContentDisplay = <VideoPlayerWrapper width={(props.containerWidth * 0.7)} source={props.slideUrl}/>
+  if (props.slide.type === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
+  else if (props.slide.type === "image") slideContentDisplay = <img id={"slide-img-"+props.slideIndex} src={props.slide.url}/>
+  else if (props.slide.type === "video") slideContentDisplay = <VideoPlayerWrapper width={(props.containerWidth * 0.7)} source={props.slide.url}/>
   const slideItemStyle = { width:props.containerWidth }
 
 
@@ -162,13 +150,6 @@ function SlideItem(props){
 }
 
 function SlidesNavigation(props){
-
-  const slidesNavigationDisplay = props.gallery.map((g,index) => (
-    <li key={index} className={ props.currentSlide === index ? "active" : ""}>
-      <a onClick={e => props.onChangeCurrentSlide(index)}></a>
-    </li>
-  ))
-
   const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => (
     <li key={index}  className={ props.currentSlide === index ? "active" : ""}>
       <a onClick={e => props.onChangeCurrentSlide(index)}>
@@ -176,12 +157,8 @@ function SlidesNavigation(props){
       </a>
     </li>
   ))
-
   return (
     <div id="slide-navigation">
-      <ul>
-        {slidesNavigationDisplay}
-      </ul>
       <ul className="thumbnail-navigation">
         {slidesThumbnailNavigationDisplay}
       </ul>
