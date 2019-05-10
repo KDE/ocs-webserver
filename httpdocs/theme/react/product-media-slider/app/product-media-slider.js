@@ -41,7 +41,6 @@ function ProductMediaSlider(){
   // update dimensions
   function updateDimensions(){
     const newContainerWidth = parentContainerElement.offsetWidth;
-    console.log(newContainerWidth);
     setContainerWidth(newContainerWidth)
     setSliderWidth(containerWidth * gallery.length);
     setSliderPosition(containerWidth * currentSlide);
@@ -49,6 +48,7 @@ function ProductMediaSlider(){
 
   // toggle cinema mode
   function toggleCinemaMode(){
+    setLoading(true);
     const newCinemaMode = cinemaMode === true ? false : true;
     const targetParentElement = cinemaMode === true ? $('#product-main') : $('#product-page-content');
     const targetChildPrependedElement = cinemaMode === true ? $('#product-title-div') : $('#product-media-slider-container');
@@ -56,7 +56,8 @@ function ProductMediaSlider(){
     $(targetChildPrependedElement).prependTo('#product-main-img-container');
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
-    setCinemaMode(newCinemaMode);      
+    setCinemaMode(newCinemaMode);
+    setLoading(false);
   }
 
   /* Render */
