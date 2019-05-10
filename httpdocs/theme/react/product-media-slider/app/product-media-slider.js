@@ -35,7 +35,11 @@ function ProductMediaSlider(){
     if (window.galleryPicturesJson) window.galleryPicturesJson.forEach(function(gp,index){ galleryArray.push({url:gp,type:'image'}); });
     if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... window.galleryPicturesJson ];
     else if (!window.galleryPicturesJson) galleryArray = [{url:product.image_small,type:'image'} ];
-    if (window.filesJson) window.filesJson.forEach(function(f,index){  if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) galleryArray = [ {url:f.url,type:f.type.split('/')[0]}, ... galleryArray] })
+    if (window.filesJson) {
+      window.filesJson.forEach(function(f,index){  
+        if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) galleryArray = [ {url:f.url,type:f.type.split('/')[0]}, ... galleryArray] 
+      })
+    }
     setGallery(newGallery);
     setSliderWidth(containerWidth * gallery.length);
     setLoading(false);
@@ -65,27 +69,27 @@ function ProductMediaSlider(){
 
   /* Render */
 
-  // slider container style
-  const sliderContainerStyle = {
-    width:sliderWidth+'px',
-    height:sliderHeight+'px'
-  }
+  let productMediaSliderDisplay;
+  if (!loading){
+    // slider container style
+    const sliderContainerStyle = {
+      width:sliderWidth+'px',
+      height:sliderHeight+'px'
+    }
 
-  // slider wrapper style
-  const sliderWrapperStyle = {
-    width:sliderWidth+'px',
-    left:'-'+sliderPosition+'px',
-    height:sliderHeight+'px'
-  }
+    // slider wrapper style
+    const sliderWrapperStyle = {
+      width:sliderWidth+'px',
+      left:'-'+sliderPosition+'px',
+      height:sliderHeight+'px'
+    }
 
-  // prev / next slide arrow values
-  const prevCurrentSlide = currentSlide > 0 ? currentSlide - 1 : gallery.length - 1;
-  const nextCurrentSlide = currentSlide < (gallery.length - 1) ? ( currentSlide + 1 ) : 0;
+    // prev / next slide arrow values
+    const prevCurrentSlide = currentSlide > 0 ? currentSlide - 1 : gallery.length - 1;
+    const nextCurrentSlide = currentSlide < (gallery.length - 1) ? ( currentSlide + 1 ) : 0;
 
-  // slides display
-  let slidesDisplay;
-  if (loading === false){
-    slidesDisplay = gallery.map((s,index) => (
+    // slides display
+    const slidesDisplay = gallery.map((s,index) => (
       <SlideItem 
         key={index}
         slideIndex={index}
@@ -96,26 +100,30 @@ function ProductMediaSlider(){
         onSlideItemClick={toggleCinemaMode}
       />
     ));
+    productMediaSliderDisplay = (
+      <div>
+        <div id="slider-container" style={sliderContainerStyle}>
+          <a className="left carousel-control" id="arrow-left" onClick={() => setCurrentSlide(prevCurrentSlide)}>
+            <span className="glyphicon glyphicon-chevron-left"></span>
+          </a>
+          <div id="slider-wrapper" style={sliderWrapperStyle}>
+            {slidesDisplay}    
+          </div>
+          <a className="right carousel-control" id="arrow-right" onClick={() => setCurrentSlide(nextCurrentSlide)}>
+            <span className="glyphicon glyphicon-chevron-right"></span>
+          </a>      
+        </div>
+        <SlidesNavigation
+          gallery={gallery}
+          currentSlide={currentSlide}
+          onChangeCurrentSlide={e => setCurrentSlide(e)}
+        />
+      </div>
+    )
   }
-
   return (
     <main id="media-slider">
-      <div id="slider-container" style={sliderContainerStyle}>
-        <a className="left carousel-control" id="arrow-left" onClick={() => setCurrentSlide(prevCurrentSlide)}>
-          <span className="glyphicon glyphicon-chevron-left"></span>
-        </a>
-        <div id="slider-wrapper" style={sliderWrapperStyle}>
-          {slidesDisplay}    
-        </div>
-        <a className="right carousel-control" id="arrow-right" onClick={() => setCurrentSlide(nextCurrentSlide)}>
-          <span className="glyphicon glyphicon-chevron-right"></span>
-        </a>      
-      </div>
-      <SlidesNavigation
-        gallery={gallery}
-        currentSlide={currentSlide}
-        onChangeCurrentSlide={e => setCurrentSlide(e)}
-      />
+      {productMediaSliderDisplay}
     </main>
   )
 }
