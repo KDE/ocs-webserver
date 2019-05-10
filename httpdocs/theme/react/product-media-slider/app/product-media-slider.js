@@ -46,10 +46,12 @@ function ProductMediaSlider(){
   // update dimensions
   function updateDimensions(){
     const newContainerWidth = parentContainerElement.offsetWidth;
-    setCurrentSlide(currentSlide);
     setContainerWidth(newContainerWidth)
     if (gallery) setSliderWidth(containerWidth * gallery.length);
     setSliderPosition(containerWidth * currentSlide);
+    const newCurrentSlide = currentSlide;
+    setCurrentSlide(0);
+    setCurrentSlide(newCurrentSlide);
   }
 
   function toggleCinemaMode(){
