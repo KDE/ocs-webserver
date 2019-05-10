@@ -160,7 +160,7 @@ function SlideItem(props){
 function SlidesNavigation(props){
   const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
     let imageSource;
-    if (g.type === "image") imageSource = g.url.split('/img')[0] + "/cache/80x80-1/img" + g.url.split('/img')[1];
+    if (g.type === "image") imageSource = g.url.split('/img')[0] + "/cache/120x80-1/img" + g.url.split('/img')[1];
     return (
       <li key={index}  className={ props.currentSlide === index ? "active" : ""}>
       <a onClick={e => props.onChangeCurrentSlide(index)}>
