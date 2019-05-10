@@ -7,8 +7,7 @@ function ProductMediaSlider(){
   /* Component */
 
   const [ product, setProduct ] = useState(window.product);
-
-  const [ gallery, setGallery ] = useState(galleryArray);
+  const [ gallery, setGallery ] = useState();
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
   const [ currentSlide, setCurrentSlide ] = useState(0)
