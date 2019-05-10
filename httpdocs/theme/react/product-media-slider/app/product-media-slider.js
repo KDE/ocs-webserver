@@ -52,10 +52,10 @@ function ProductMediaSlider(){
     let newCinemaMode;
     if (cinemaMode === true){
       newCinemaMode = false;
-      $('#product-main-img-container').prependTo($('#product-page-content'));
+      $('#product-media-slider-container').prependTo($('#product-page-content'));
     } else {
       newCinemaMode = true;
-      $('#product-main-img-container').prependTo($('#product-main'));      
+      $('product-media-slider-container').prependTo($('#product-main'));      
     }
     $("#product-media-slider-container").toggleClass("imgfull");
     $("#product-media-slider-container").toggleClass("imgsmall");
