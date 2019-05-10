@@ -73,17 +73,18 @@
   width: 120px;
   height: 80px;
   margin: 0;
-  background-color: #fff;
-  border: 5px solid #C4D7EF;
+  background-color: black;
+  border: 5px solid #fff;
   float: left;
-  margin: 0 2px;
+  margin: 0 5px;
+  box-sizing: content-box;
   -webkit-transition: all 0.2s ease-out;
   -moz-transition: all 0.2s ease-out;
   -o-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
 }
 #media-slider #slide-navigation ul li.active {
-  background-color: #E2E2E2;
+  border-color: #E2E2E2;
 }
 #media-slider #slide-navigation ul li a {
   display: block;
