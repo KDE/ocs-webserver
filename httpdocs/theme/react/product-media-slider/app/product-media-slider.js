@@ -53,12 +53,12 @@ function ProductMediaSlider(){
     if (cinemaMode === true){
       newCinemaMode = false;
       $('#product-media-slider-container').prependTo($('#product-page-content'));
+      $("#product-media-slider-container").toggleClass("imgsmall");
     } else {
       newCinemaMode = true;
       $('product-media-slider-container').prependTo($('#product-main'));      
+      $("#product-media-slider-container").toggleClass("imgfull");
     }
-    $("#product-media-slider-container").toggleClass("imgfull");
-    $("#product-media-slider-container").toggleClass("imgsmall");
     setCinemaMode(newCinemaMode);
   }
 
