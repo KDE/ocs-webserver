@@ -41,7 +41,7 @@ function ProductMediaSlider(){
       })
     }
     setGallery(galleryArray);
-    setSliderWidth(containerWidth * gallery.length);
+    setSliderWidth(containerWidth * galleryArray.length);
     setLoading(false);
   }
 
