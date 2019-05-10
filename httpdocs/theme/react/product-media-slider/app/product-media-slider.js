@@ -11,7 +11,7 @@ function ProductMediaSlider(){
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
   const [ currentSlide, setCurrentSlide ] = useState(0)
-  const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
+  const [ sliderWidth, setSliderWidth ] = useState();
   const [ sliderHeight, setSliderHeight ] = useState(315);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
   const [ cinemaMode, setCinemaMode ] = useState(false);
@@ -37,6 +37,7 @@ function ProductMediaSlider(){
     else if (!window.galleryPicturesJson) galleryArray = [{url:product.image_small,type:'image'} ];
     if (window.filesJson) window.filesJson.forEach(function(f,index){  if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) galleryArray = [ {url:f.url,type:f.type.split('/')[0]}, ... galleryArray] })
     setGallery(newGallery);
+    setSliderWidth(containerWidth * gallery.length);
     setLoading(false);
   }
 
