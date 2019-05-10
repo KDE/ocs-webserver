@@ -49,6 +49,7 @@ function ProductMediaSlider(){
     setContainerWidth(newContainerWidth)
     setSliderWidth(containerWidth * gallery.length);
     setSliderPosition(containerWidth * currentSlide);
+    setLoading(false);
   }
 
   // toggle cinema mode
@@ -62,7 +63,6 @@ function ProductMediaSlider(){
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
     setCinemaMode(newCinemaMode);
-    setLoading(false )
   }
 
   /* Render */
