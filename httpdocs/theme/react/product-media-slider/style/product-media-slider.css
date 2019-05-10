@@ -8,6 +8,9 @@
 /* /MIXINS */
 /* COLORS */
 /* /COLORS */
+#product-media-slider-container {
+  width: 100%;
+}
 #media-slider {
   overflow: hidden;
   position: relative;
