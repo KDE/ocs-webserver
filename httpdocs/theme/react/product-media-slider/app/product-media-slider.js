@@ -33,8 +33,8 @@ function ProductMediaSlider(){
   function generateProductGallery(){
     let galleryArray = []
     if (window.galleryPicturesJson) window.galleryPicturesJson.forEach(function(gp,index){ galleryArray.push({url:gp,type:'image'}); });
-    if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... window.galleryPicturesJson ];
-    else if (!window.galleryPicturesJson) galleryArray = [{url:product.image_small,type:'image'} ];
+    else galleryArray = [{url:product.image_small,type:'image'} ];
+    if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... galleryArray ];
     if (window.filesJson) {
       window.filesJson.forEach(function(f,index){  
         if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) galleryArray = [ {url:f.url,type:f.type.split('/')[0]}, ... galleryArray] 
