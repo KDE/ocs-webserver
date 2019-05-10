@@ -110,7 +110,7 @@ $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collec
 $this->galleryPictures = $tableProject->getGalleryPictureSources($this->product->project_id);
 if(sizeof($this->galleryPictures)==0)
 {
-    $this->galleryPictures = array($this->product->image_small);
+    array_push($this->galleryPictures,$this->product->image_small);   
 }
 foreach ($this->galleryPictures as &$value) {
      $value = $this->Image($value, array('height' => '600'));
@@ -1089,8 +1089,6 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
   var xdgTypeJson = <?php echo $xdgTypeJson ?>;
   var galleryPicturesJson = <?php echo $galleryPicturesJson?>;
 </script>
-
-<script type="text/javascript" src="/theme/react/product-media-slider/product-media-slider.js"></script>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
