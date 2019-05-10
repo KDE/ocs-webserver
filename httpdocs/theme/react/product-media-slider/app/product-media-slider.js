@@ -61,9 +61,9 @@ function ProductMediaSlider(){
     $(targetChildPrependedElement).prependTo('#product-main-img-container');
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
+    updateDimensions();
     $('html, body').animate({ scrollTop: ($('#product-main-img').offset().top) },500,function(){ 
       setCinemaMode(newCinemaMode);
-      updateDimensions(); 
     });
   }
 
