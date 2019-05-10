@@ -33,6 +33,9 @@
 #media-slider #slider-wrapper .slide-item.active {
   opacity: 1;
 }
+#media-slider #slider-wrapper .slide-item .react-player-container {
+  background-color: black;
+}
 #media-slider #slider-wrapper .slide-item > div {
   text-align: center;
 }

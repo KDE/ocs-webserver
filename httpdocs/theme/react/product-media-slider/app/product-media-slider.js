@@ -170,7 +170,7 @@ function SlidesNavigation(props){
   const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => (
     <li key={index}  className={ props.currentSlide === index ? "active" : ""}>
       <a onClick={e => props.onChangeCurrentSlide(index)}>
-        <img src={g.split('/img')[0] + "/80x80-1/img" + g.split('/img')[1]}/>
+        <img src={g.split('/img')[0] + "/cache/80x80-1/img" + g.split('/img')[1]}/>
       </a>
     </li>
   ))
