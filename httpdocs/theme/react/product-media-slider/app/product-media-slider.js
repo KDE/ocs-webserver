@@ -49,16 +49,11 @@ function ProductMediaSlider(){
 
   function toggleCinemaMode(){
     console.log(cinemaMode);
-    let newCinemaMode;
-    if (cinemaMode === true){
-      newCinemaMode = false;
-      $('#product-media-slider-container').prependTo($('#product-page-content'));
-      $("#product-media-slider-container").toggleClass("imgsmall");
-    } else {
-      newCinemaMode = true;
-      $('#product-media-slider-container').prependTo($('#product-main'));      
-      $("#product-media-slider-container").toggleClass("imgfull");
-    }
+    const newCinemaMode = cinemaMode === true ? false : true;
+    const targetParentElement = cinemaMode === true ? $('#product-page-content') : $('#product-main');
+    $('#product-media-slider-container').prependTo(targetParentElement);
+    $("#product-media-slider-container").toggleClass("imgsmall");
+    $("#product-media-slider-container").toggleClass("imgfull");
     setCinemaMode(newCinemaMode);
   }
 
