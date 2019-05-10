@@ -1301,6 +1301,69 @@ var PartialCommentReviewForm = (function () {
     }
 })();
 
+
+
+var PartialCommentReviewFormNew = (function () {
+    return {
+        setup: function () {
+            this.initForm();
+        },
+        initForm: function () {
+            $('body').on("submit", 'form.product-add-comment-review-new', function (event) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                var c = $.trim($('#score-product-modal').find('#commenttext').val());
+                var v = $('#score-product-modal').find('#voteup').val();
+                if(v==2) {
+                    // votedown
+                    if(c.length<5)
+                    {
+                            if($('#score-product-modal').find('#votelabel').find('.warning').length==0)
+                            {
+                                $('#score-product-modal').find('#votelabel').append("</br><span class='warning' style='color:red'> Please give a comment, thanks!</span>");
+                            }
+                            return;
+                    }
+                }
+                if(c.length<1)
+                {
+                        if($('#score-product-modal').find('#votelabel').find('.warning').length==0)
+                        {
+                            $('#score-product-modal').find('#votelabel').append("</br><span class='warning' style='color:red'> Please give a comment, thanks!</span>");
+                        }
+                        return;
+                }
+
+                $(this).find(':submit').attr("disabled", "disabled");
+                $(this).find(':submit').css("white-space", "normal");
+                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
+                $(this).find(':submit').append(spin);
+
+                jQuery.ajax({
+                    data: $(this).serialize(),
+                    url: this.action,
+                    type: this.method,
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $('#score-product-modal').modal('hide');
+                        var msgBox = $('#generic-dialog');
+                        msgBox.modal('hide');
+                        msgBox.find('.modal-header-text').empty().append('Please try later.');
+                        msgBox.find('.modal-body').empty().append("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                        setTimeout(function () {
+                            msgBox.modal('show');
+                        }, 900);
+                    },
+                    success: function (results) {
+                        $('#score-product-modal').modal('hide');
+                        location.reload();
+                    }
+                });
+                return false;
+            });
+        }
+    }
+})();
+
 var PartialFormsAjax = (function () {
     return {
         setup: function () {

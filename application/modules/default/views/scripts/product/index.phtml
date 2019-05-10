@@ -284,7 +284,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                aria-hidden="true">&times;</span></button>
                </div>
                <div class="modal-body">
-                 <form class="full-width product-add-comment-review" action="/productcomment/addreplyreviewnew/" method="post" id="reviewform">
+                 <form class="full-width product-add-comment-review-new" action="/productcomment/addreplyreviewnew/" method="post" id="reviewform">
                             <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
                             <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>                            
                             <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
@@ -1104,6 +1104,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
             PartialJsonClone.setup();
             ProductDetailCarousel.setup();
             PartialCommentReviewForm.setup();
+            PartialCommentReviewFormNew.setup();
             PartialsButtonHeartDetail.setup();
             PartialsButtonPlingProject.setup();
             TooltipUser.setup("tooltipuserleft","left");
