@@ -51,14 +51,14 @@ function ProductMediaSlider(){
   function toggleCinemaMode(){
     const newCinemaMode = cinemaMode === true ? false : true;
     const targetParentElement = cinemaMode === true ? $('#product-main') : $('#product-page-content');
+    const targetChildPrependedElement = cinemaMode === true ? $('#product-title-div') : $('#product-media-slider-container');
     $('#product-main-img-container').prependTo(targetParentElement);
+    $(targetChildPrependedElement).prependTo('#product-main-img-container');
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
-    setCinemaMode(newCinemaMode);
-    $('html, body').animate({
-      scrollTop: ($('#product-main-img').offset().top)
-    },500,function(){
-      updateDimensions();
+    $('html, body').animate({ scrollTop: ($('#product-main-img').offset().top) },500,function(){ 
+      setCinemaMode(newCinemaMode);
+      updateDimensions(); 
     });
   }
 
