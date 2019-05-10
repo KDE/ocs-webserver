@@ -40,6 +40,7 @@ function ProductMediaSlider(){
         if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) galleryArray = [ {url:f.url,type:f.type.split('/')[0]}, ... galleryArray] 
       })
     }
+    console.log(galleryArray);
     setGallery(galleryArray);
     setSliderWidth(containerWidth * galleryArray.length);
     setLoading(false);
