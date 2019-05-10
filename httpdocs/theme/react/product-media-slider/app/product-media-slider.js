@@ -21,7 +21,7 @@ function ProductMediaSlider(){
   const [ loading, setLoading ] = useState(true);
 
   React.useEffect(() => { initProductMediaSlider() },[])
-  React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode])
+  React.useEffect(() => { updateDimensions() },[currentSlide])
 
   // init product media slider
   function initProductMediaSlider(){
@@ -56,7 +56,9 @@ function ProductMediaSlider(){
     setCinemaMode(newCinemaMode);
     $('html, body').animate({
       scrollTop: ($('#product-main-img').offset().top)
-  },500);
+    },500,function(){
+      updateDimensions();
+    });
   }
 
   /* Render */
