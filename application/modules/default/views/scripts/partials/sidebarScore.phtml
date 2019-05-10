@@ -75,7 +75,8 @@ $options = array(1 => 'ugh', 2=>'really bad',3=>'bad',4=>'soso',5=>'average', 6=
     </table>
 
     <div style="text-align: center;">        
-         <select id="ratingoptions">
+       
+         <select id="ratingoptions" name="ratingoptions">
             <?php
              if($userScore){
                 echo '<option value="-1">Remove Rating</option>';
@@ -84,18 +85,32 @@ $options = array(1 => 'ugh', 2=>'really bad',3=>'bad',4=>'soso',5=>'average', 6=
              }
              foreach ($options as $key => $value) {
                 $selected = '';
-                if($userScore==$key) $selected=' selected';
-                echo '<option value='.$key.$selected.'>'.$key.' '.$value.'</option>';                
+                $style = '';
+                if($userScore==$key){
+                  $selected=' selected';
+                  $style=' style="background-color:#'.$red2.$green2.$blue2.'"';
+                } 
+                echo '<option value="'.$key.'"'.$selected.$style.'>'.$key.' '.$value.'</option>';                
             } ?>         
         </select> 
     </div>
 </div>
 <script type="text/javascript">    
-     $(document).ready(function(){                        
+     $(document).ready(function(){          
+
+            $( "#ratingoptions" ).change(function() {
+             /*   alert( "Handler for .change() called." );
+            });
+
              $('#ratingoptions').find('option').click(function () {
-             var optionSelected = $(this);
+            console.log($(this));*/
+          
+             var optionSelected = $( "#ratingoptions option:selected" );             
              var valueSelected  = optionSelected.val();
              var textSelected   = optionSelected.text();
+             if(valueSelected==0){
+                return false;
+             }
 
              var loginuser = $('#score-product-modal').find('#loginuser').val();
              var productcreator = $('#score-product-modal').find('#productcreator').val();
