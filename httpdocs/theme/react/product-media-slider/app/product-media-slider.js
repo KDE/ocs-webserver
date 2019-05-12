@@ -14,7 +14,7 @@ function ProductMediaSlider(){
   if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... galleryArray ];
   if (window.filesJson) {
     window.filesJson.forEach(function(f,index){  
-      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) galleryArray = [ {url:f.url,type:f.type.split('/')[0]}, ... galleryArray] 
+      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) galleryArray = [{url:f.url,type:f.type.split('/')[0]}, ... galleryArray] 
     })
   }
 
@@ -28,11 +28,6 @@ function ProductMediaSlider(){
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ loading, setLoading ] = useState(true);
 
-  console.log(containerWidth);
-  console.log(sliderWidth);
-  console.log('-'+sliderPosition);
-  console.log(sliderHeight);
-
   React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode])
 
@@ -40,6 +35,8 @@ function ProductMediaSlider(){
   function initProductMediaSlider(){
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
+    $('#product-main').addEventListener("DOMNodeInserted", updateDimensions);
+    $('#product-page-content').addEventListener("DOMNodeInserted", updateDimensions);
     setLoading(false);
   }
 
@@ -49,14 +46,10 @@ function ProductMediaSlider(){
     setContainerWidth(newContainerWidth)
     setSliderWidth(containerWidth * gallery.length);
     setSliderPosition(containerWidth * currentSlide);
-    setLoading(false);
   }
 
   // toggle cinema mode
   function toggleCinemaMode(){
-    setLoading(true);
-    const oldCurrentSlide = currentSlide;
-    setCurrentSlide(0);
     const newCinemaMode = cinemaMode === true ? false : true;
     const targetParentElement = cinemaMode === true ? $('#product-main') : $('#product-page-content');
     const targetChildPrependedElement = cinemaMode === true ? $('#product-title-div') : $('#product-media-slider-container');
@@ -64,7 +57,6 @@ function ProductMediaSlider(){
     $(targetChildPrependedElement).prependTo('#product-main-img-container');
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
-    setCurrentSlide(oldCurrentSlide);
     setCinemaMode(newCinemaMode);
   }
 
