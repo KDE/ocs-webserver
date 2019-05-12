@@ -35,8 +35,8 @@ function ProductMediaSlider(){
   function initProductMediaSlider(){
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
-    $('#product-main').addEventListener("DOMNodeInserted", updateDimensions);
-    $('#product-page-content').addEventListener("DOMNodeInserted", updateDimensions);
+    document.getElementById('product-main').addEventListener("DOMNodeInserted", updateDimensions);
+    document.getElementById('product-page-content').addEventListener("DOMNodeInserted", updateDimensions);
     setLoading(false);
   }
 
