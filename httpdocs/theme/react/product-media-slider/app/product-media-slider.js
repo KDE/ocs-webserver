@@ -117,7 +117,7 @@ function ProductMediaSlider(){
     )
   }
   return (
-    <main id="media-slider">
+    <main id="media-slider" style={{height:sliderHeight}}>
       {productMediaSliderDisplay}
     </main>
   )
