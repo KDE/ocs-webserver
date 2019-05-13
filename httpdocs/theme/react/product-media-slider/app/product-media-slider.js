@@ -32,8 +32,6 @@ function ProductMediaSlider(){
   React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode, detectChangeMode])
 
-  console.log('detect change mode - ' + detectChangeMode);
-
   // init product media slider
   function initProductMediaSlider(){
     window.addEventListener("resize", updateDimensions);

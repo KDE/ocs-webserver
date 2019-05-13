@@ -8,7 +8,7 @@ function VideoPlayerWrapper(props){
     const [ videoClicked, setVideoClicked ] = useState(false);
     
     React.useEffect(() => { convertStringToUrl(); }, [props.source])
-    React.useEffect(() => { console.log(playerEl)},[playerEl])
+    // React.useEffect(() => { console.log(playerEl)},[playerEl])
     
     function convertStringToUrl(){
         let newSource = props.source.replace(/%2F/g,'/').replace(/%3A/g,':');
