@@ -65,7 +65,10 @@ function ProductMediaSlider(){
 
   // update cinema mode dimensions
   function updateCinemaModeDimensions(){
+    console.log('detect changes');
+    console.log(detectChangeMode);
     if (detectChangeMode === true){
+      console.log('update dimensions')
       updateDimensions();
     }
   }
@@ -133,7 +136,7 @@ function ProductMediaSlider(){
     )
   }
   return (
-    <main id="media-slider" style={{height:sliderHeight}}>
+    <main id="media-slider" style={{height:sliderHeight}} className={cinemaMode === true ? "cinema-mode" : ""}>
       {productMediaSliderDisplay}
     </main>
   )
@@ -160,7 +163,7 @@ function SlideItem(props){
     }
   }
   const slideItemStyle = { width:props.containerWidth }
-  
+
   return(
     <div className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={slideItemStyle}>
       {slideContentDisplay}

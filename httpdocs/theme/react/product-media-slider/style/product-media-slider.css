@@ -17,6 +17,10 @@
   overflow: hidden;
   position: relative;
   padding-bottom: 110px;
+  background-color: white;
+}
+#media-slider.cinema-mode {
+  background-color: black;
 }
 #media-slider .carousel-control {
   height: 50px;
@@ -44,9 +48,6 @@
 }
 #media-slider #slider-wrapper .slide-item.active {
   opacity: 1;
-}
-#media-slider #slider-wrapper .slide-item .react-player-container {
-  background-color: black;
 }
 #media-slider #slider-wrapper .slide-item .react-player-container .cinema-mode-button {
   line-height: 30px;
@@ -80,10 +81,8 @@
   position: absolute;
   height: 110px;
   bottom: 0;
-  background-color: black;
 }
 #media-slider #slide-navigation ul {
-  background: #333;
   list-style-type: none;
   margin: 0 auto;
   display: table;

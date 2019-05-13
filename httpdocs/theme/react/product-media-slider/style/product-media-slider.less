@@ -10,6 +10,11 @@
     overflow: hidden;
     position: relative;
     padding-bottom: 110px;
+    background-color: white;
+
+    &.cinema-mode {
+        background-color: black;
+    }
 
     .carousel-control { 
         height: 50px;
@@ -36,7 +41,6 @@
             }
 
             .react-player-container {
-                background-color: black;
 
                 .cinema-mode-button {
                     line-height: 30px;
@@ -78,10 +82,8 @@
         position: absolute;
         height: 110px;
         bottom: 0;
-        background-color:black;
 
         ul {
-            background: #333;
             list-style-type: none;
             margin:0 auto;
             display:table;
