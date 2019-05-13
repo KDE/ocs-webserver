@@ -77,6 +77,11 @@ function ProductMediaSlider(){
       height:sliderHeight+'px'
     }
 
+    // slider arrows css
+    const sliderArrowCss = {
+      top:(sliderHeight - 100)+'%'
+    }
+
     console.log(sliderWrapperStyle);
 
     // prev / next slide arrow values
@@ -99,13 +104,13 @@ function ProductMediaSlider(){
     productMediaSliderDisplay = (
       <div>
         <div id="slider-container" style={sliderContainerStyle}>
-          <a className="left carousel-control" id="arrow-left" onClick={() => setCurrentSlide(prevCurrentSlide)}>
+          <a className="left carousel-control" id="arrow-left" style={sliderArrowCss} onClick={() => setCurrentSlide(prevCurrentSlide)}>
             <span className="glyphicon glyphicon-chevron-left"></span>
           </a>
           <div id="slider-wrapper" style={sliderWrapperStyle}>
             {slidesDisplay}    
           </div>
-          <a className="right carousel-control" id="arrow-right" onClick={() => setCurrentSlide(nextCurrentSlide)}>
+          <a className="right carousel-control" id="arrow-right" style={sliderArrowCss} onClick={() => setCurrentSlide(nextCurrentSlide)}>
             <span className="glyphicon glyphicon-chevron-right"></span>
           </a>      
         </div>
