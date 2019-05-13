@@ -25,12 +25,11 @@ function ProductMediaSlider(){
   const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
   const [ sliderHeight, setSliderHeight ] = useState(360);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
-  const [ detectChangeMode, setDetectChangeMode ] = useState(false);
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ loading, setLoading ] = useState(true);
 
   React.useEffect(() => { initProductMediaSlider() },[])
-  React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode, detectChangeMode])
+  React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode])
 
   // init product media slider
   function initProductMediaSlider(){
@@ -45,14 +44,12 @@ function ProductMediaSlider(){
   function updateDimensions(){
     const newContainerWidth = parentContainerElement.offsetWidth;
     setContainerWidth(newContainerWidth)
-    setSliderWidth(containerWidth * gallery.length);
-    setSliderPosition(containerWidth * currentSlide);
-    setDetectChangeMode(false);
+    setSliderWidth(newContainerWidth * gallery.length);
+    setSliderPosition(newContainerWidth * currentSlide);
   }
 
   // toggle cinema mode
   function toggleCinemaMode(){
-    setDetectChangeMode(true);
     const newCinemaMode = cinemaMode === true ? false : true;
     const targetParentElement = cinemaMode === true ? $('#product-main') : $('#product-page-content');
     const targetChildPrependedElement = cinemaMode === true ? $('#product-title-div') : $('#product-media-slider-container');
