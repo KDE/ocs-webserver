@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Player, ControlBar, BigPlayButton, ReplayControl, ForwardControl, VolumeMenuButton } from 'video-react';
+import { Player, ControlBar, BigPlayButton, ReplayControl, ForwardControl, VolumeMenuButton, LoadingSpinner } from 'video-react';
 
 function VideoPlayerWrapper(props){
 
