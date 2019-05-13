@@ -25,7 +25,9 @@ function VideoPlayerWrapper(props){
                 width={props.width}
                 playsInline
                 src={source}>
-                    <ControlBar autoHide={false} className="custom-video-player" />
+                    <ControlBar autoHide={false} className="custom-video-player">
+                        <a className="cinema-mode-button" onClick={props.onCinemaModeClick} order={8}>cinema</a>
+                    </ControlBar>
             </Player>            
         )
     }
