@@ -164,7 +164,7 @@ function SlidesNavigation(props){
     if (g.type === "image") image = <img src={g.url.split('/img')[0] + "/cache/120x80-1/img" + g.url.split('/img')[1]}/>
     else if (g.type === "video") image = <span className="glyphicon glyphicon-play"></span>
     return (
-      <li key={index}  className={ props.currentSlide === index ? "active" : ""}>
+      <li key={index}  className={ props.currentSlide === index ? "active " + g.type : g.type}>
         <a onClick={e => props.onChangeCurrentSlide(index)}>{image}</a>
       </li>
     )
