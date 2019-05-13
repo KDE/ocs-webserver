@@ -115,6 +115,7 @@ function ProductMediaSlider(){
         <SlidesNavigation
           gallery={gallery}
           currentSlide={currentSlide}
+          containerWidth={containerWidth}
           onChangeCurrentSlide={e => setCurrentSlide(e)}
         />
       </div>
