@@ -102,15 +102,6 @@
                 box-sizing: content-box;
                 .transition();
 
-                &.active {
-                    border-color: #2673b0;
-                    a {
-                        .glyphicon {
-                            color: #2673b0;
-                        }
-                    }
-                }
-
                 a {
                     display: block;
                     width:100%;
@@ -123,6 +114,19 @@
                         margin-top: -20px;
                         color:white;
                     }
+                }
+
+                &.active {
+                    border-color: #2673b0;
+                    a {
+                        .glyphicon {
+                            color: #2673b0;
+                        }
+                    }
+                }
+
+                &.image {
+                    background-color: white;
                 }
             }
         }

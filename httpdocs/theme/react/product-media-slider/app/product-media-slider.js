@@ -35,8 +35,8 @@ function ProductMediaSlider(){
   function initProductMediaSlider(){
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
-    document.getElementById('product-main').addEventListener("DOMNodeRemoved", updateDimensions);
-    document.getElementById('product-page-content').addEventListener("DOMNodeRemoved", updateDimensions);
+    // document.getElementById('product-main').addEventListener("DOMNodeRemoved", updateDimensions);
+    // document.getElementById('product-page-content').addEventListener("DOMNodeRemoved", updateDimensions);
     setLoading(false);
   }
 
@@ -175,7 +175,7 @@ function SlidesNavigation(props){
   if (currentThumbPosition > props.containerWidth) thumbSliderPosition = currentThumbPosition - props.containerWidth;
   const thumbSliderStyle = {
     width:thumbSliderWidth+"px",
-    left:'-'+thumbSliderPosition+'px'
+    left:'-'+(thumbSliderPosition + 5)+'px'
   }
 
   return (
