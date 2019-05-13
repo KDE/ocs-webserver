@@ -158,9 +158,9 @@ function SlideItem(props){
         />
       )
     }
-    const slideItemStyle = { width:props.containerWidth }
   }
-
+  const slideItemStyle = { width:props.containerWidth }
+  
   return(
     <div className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={slideItemStyle}>
       {slideContentDisplay}
