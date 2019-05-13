@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import VideoPlayerWrapper from './video-player';
+import Draggable, {DraggableCore} from 'react-draggable'; // Both at the same time
+
 
 function ProductMediaSlider(){ 
 
@@ -194,17 +196,21 @@ function SlidesNavigation(props){
   const nextCurrentSlide = props.currentSlide < (props.gallery.length - 1) ? ( props.currentSlide + 1 ) : 0;
 
   return (
-    <div id="slide-navigation">
-      <a className="left carousel-control" id="arrow-left" onClick={() => props.onChangeCurrentSlide(prevCurrentSlide)}>
-        <span className="glyphicon glyphicon-chevron-left"></span>
-      </a>    
-      <ul className="thumbnail-navigation" style={thumbSliderStyle}>
-        {slidesThumbnailNavigationDisplay}
-      </ul>
-      <a className="right carousel-control" id="arrow-right" onClick={() => props.onChangeCurrentSlide(nextCurrentSlide)}>
-            <span className="glyphicon glyphicon-chevron-right"></span>
-          </a>
-    </div>
+    <Draggable
+      axis="x"
+      defaultPosition={{x: 0, y: 0}}>
+        <div id="slide-navigation">
+          <a className="left carousel-control" id="arrow-left" onClick={() => props.onChangeCurrentSlide(prevCurrentSlide)}>
+            <span className="glyphicon glyphicon-chevron-left"></span>
+          </a>    
+          <ul className="thumbnail-navigation" style={thumbSliderStyle}>
+            {slidesThumbnailNavigationDisplay}
+          </ul>
+          <a className="right carousel-control" id="arrow-right" onClick={() => props.onChangeCurrentSlide(nextCurrentSlide)}>
+                <span className="glyphicon glyphicon-chevron-right"></span>
+              </a>
+        </div>
+    </Draggable>
   )
 }
 
