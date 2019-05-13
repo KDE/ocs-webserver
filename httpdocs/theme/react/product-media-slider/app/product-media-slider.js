@@ -150,6 +150,7 @@ function SlideItem(props){
         width={(props.containerWidth * 0.7)} 
         source={props.slide.url} 
         onCinemaModeClick={props.onCinemaModeClick}
+        playVideo={props.currentSlide === props.slideIndex}
       />
     )
   }
