@@ -25,19 +25,21 @@ function ProductMediaSlider(){
   const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
   const [ sliderHeight, setSliderHeight ] = useState(360);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
-  const [ detectChangeMode, setDetectChangeMode ] = useState();
+  const [ detectChangeMode, setDetectChangeMode ] = useState(false);
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ loading, setLoading ] = useState(true);
 
   React.useEffect(() => { initProductMediaSlider() },[])
-  React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode])
+  React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode, detectChangeMode])
+
+  console.log('detect change mode - ' + detectChangeMode);
 
   // init product media slider
   function initProductMediaSlider(){
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
-    document.getElementById('product-main').addEventListener("DOMNodeRemoved", updateCinemaModeDimensions);
-    document.getElementById('product-page-content').addEventListener("DOMNodeRemoved", updateCinemaModeDimensions);
+    document.getElementById('product-main').addEventListener("DOMNodeRemoved", updateDimensions);
+    document.getElementById('product-page-content').addEventListener("DOMNodeRemoved", updateDimensions);
     setLoading(false);
   }
 
@@ -47,12 +49,12 @@ function ProductMediaSlider(){
     setContainerWidth(newContainerWidth)
     setSliderWidth(containerWidth * gallery.length);
     setSliderPosition(containerWidth * currentSlide);
+    setDetectChangeMode(false);
   }
 
   // toggle cinema mode
   function toggleCinemaMode(){
     setDetectChangeMode(true);
-    console.log(detectChangeMode);
     const newCinemaMode = cinemaMode === true ? false : true;
     const targetParentElement = cinemaMode === true ? $('#product-main') : $('#product-page-content');
     const targetChildPrependedElement = cinemaMode === true ? $('#product-title-div') : $('#product-media-slider-container');
@@ -62,17 +64,6 @@ function ProductMediaSlider(){
     $("#product-media-slider-container").toggleClass("imgfull");
     setCinemaMode(newCinemaMode);
   }
-
-  // update cinema mode dimensions
-  function updateCinemaModeDimensions(){
-    console.log('detect changes : ' + detectChangeMode);
-    if (detectChangeMode === true){
-      console.log('update dimensions')
-      updateDimensions();
-      setDetectChangeMode(false);
-    }
-  }
-
 
   /* Render */
 
