@@ -388,11 +388,6 @@ body.video-react-full-window .video-react-fullscreen {
   -moz-transition: all 0.4s;
   -o-transition: all 0.4s;
   transition: all 0.4s;
-  /** custom **/
-  top: 50%;
-  left: 50%;
-  margin-top: -1.5em;
-  margin-left: -1.5em;
 }
 .video-react .video-react-big-play-button.video-react-big-play-button-center {
   top: 50%;
