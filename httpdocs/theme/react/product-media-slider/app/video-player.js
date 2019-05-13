@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Player } from 'video-react';
+import { Player, ControlBar } from 'video-react';
 
 function VideoPlayerWrapper(props){
 
@@ -24,8 +24,9 @@ function VideoPlayerWrapper(props){
                 height={props.height}
                 width={props.width}
                 playsInline
-                src={source}
-            />            
+                src={source}>
+                    <ControlBar autoHide={false} className="custom-video-player" />
+            </Player>            
         )
     }
 
