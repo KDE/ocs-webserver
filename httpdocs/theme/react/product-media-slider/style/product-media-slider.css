@@ -19,7 +19,10 @@
   padding-bottom: 110px;
 }
 #media-slider .carousel-control {
-  margin-bottom: 100px;
+  height: 50px;
+}
+#media-slider .carousel-control .glyphicon {
+  margin-top: -10px;
 }
 #media-slider #slider-wrapper {
   position: absolute;

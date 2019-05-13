@@ -83,7 +83,7 @@ function ProductMediaSlider(){
 
     // slider arrows css
     const sliderArrowCss = {
-      top:(sliderHeight - 100)+'%'
+      top:((sliderHeight / 2 ) - 50)+'px'
     }
 
     // slides display

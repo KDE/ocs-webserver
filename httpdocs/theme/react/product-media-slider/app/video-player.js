@@ -5,8 +5,7 @@ function VideoPlayerWrapper(props){
 
     const playerEl = useRef(null)
     const [ source, setSource ] = useState();
-
-    console.log(playerEl)
+    const [ videoClicked, setVideoClicked ] = useState(false);
     
     React.useEffect(() => { convertStringToUrl(); }, [props.source])
     React.useEffect(() => { console.log(playerEl)},[playerEl])
