@@ -77,16 +77,14 @@ function ProductMediaSlider(){
       height:sliderHeight+'px'
     }
 
+    // prev / next slide arrow values
+    const prevCurrentSlide = currentSlide > 0 ? currentSlide - 1 : gallery.length - 1;
+    const nextCurrentSlide = currentSlide < (gallery.length - 1) ? ( currentSlide + 1 ) : 0;
+
     // slider arrows css
     const sliderArrowCss = {
       top:(sliderHeight - 100)+'%'
     }
-
-    console.log(sliderWrapperStyle);
-
-    // prev / next slide arrow values
-    const prevCurrentSlide = currentSlide > 0 ? currentSlide - 1 : gallery.length - 1;
-    const nextCurrentSlide = currentSlide < (gallery.length - 1) ? ( currentSlide + 1 ) : 0;
 
     // slides display
     const slidesDisplay = gallery.map((s,index) => (
