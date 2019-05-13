@@ -505,7 +505,10 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                 
                             </div>
                         </div>
-                        <?php /* <div id="carouselContainer" class="carouselContainer">
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
+                        <div id="product-media-slider-container" class="imgsmall"></div>
+                        <?php } else { ?>
+                        <div id="carouselContainer" class="carouselContainer">
                             <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
 
                                 <!-- Indicators -->
@@ -587,8 +590,8 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                     </a>
                                 <?php } ?>
                             </div><!-- End Carousel -->
-                        </div> <?php */ ?>
-                        <div id="product-media-slider-container" class="imgsmall"></div>
+                        </div>
+                        <?php } ?>
                     </div>
                 </div>
 
