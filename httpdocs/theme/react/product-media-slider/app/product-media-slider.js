@@ -178,25 +178,32 @@ function SlidesNavigation(props){
     )
   })
 
-    let thumbSliderPosition = 0;
-    const currentThumbPosition = (props.currentSlide * thumbElementWidth) + thumbElementWidth;
-    if (currentThumbPosition > props.containerWidth) thumbSliderPosition = (currentThumbPosition - props.containerWidth) + 10;
-    else if (props.containerWidth > thumbSliderWidth) thumbSliderPosition = (props.containerWidth - thumbSliderWidth) / 2;
-    console.log(props.containerWidth);
-    console.log(thumbSliderWidth);
-    console.log(props.containerWidth > thumbSliderWidth)    
-    const thumbSliderStyle = {
-      position:'absolute',
-      top:'0',
-      width:thumbSliderWidth+'px',
-      left:'-' + thumbSliderPosition +'px'
-    }
+  let thumbSliderPosition = 0;
+  const currentThumbPosition = (props.currentSlide * thumbElementWidth) + thumbElementWidth;
+  if (currentThumbPosition > props.containerWidth) thumbSliderPosition = (currentThumbPosition - props.containerWidth) + 10;
+  else if (props.containerWidth > thumbSliderWidth) thumbSliderPosition = (props.containerWidth - thumbSliderWidth) / 2;
+  const thumbSliderStyle = {
+    position:'absolute',
+    top:'0',
+    width:thumbSliderWidth+'px',
+    left:'-' + thumbSliderPosition +'px'
+  }
+
+  // prev / next slide arrow values
+  const prevCurrentSlide = props.currentSlide > 0 ? props.currentSlide - 1 : props.gallery.length - 1;
+  const nextCurrentSlide = props.currentSlide < (props.gallery.length - 1) ? ( props.currentSlide + 1 ) : 0;
 
   return (
     <div id="slide-navigation">
+      <a className="left carousel-control" id="arrow-left" onClick={() => props.onChangeCurrentSlide(prevCurrentSlide)}>
+        <span className="glyphicon glyphicon-chevron-left"></span>
+      </a>    
       <ul className="thumbnail-navigation" style={thumbSliderStyle}>
         {slidesThumbnailNavigationDisplay}
       </ul>
+      <a className="right carousel-control" id="arrow-right" onClick={() => props.onChangeCurrentSlide(nextCurrentSlide)}>
+            <span className="glyphicon glyphicon-chevron-right"></span>
+          </a>
     </div>
   )
 }
