@@ -46,6 +46,7 @@ function ProductMediaSlider(){
     setContainerWidth(newContainerWidth)
     setSliderWidth(containerWidth * gallery.length);
     setSliderPosition(containerWidth * currentSlide);
+    console.log('cinema mode - ' + cinemaMode)
   }
 
   // toggle cinema mode
