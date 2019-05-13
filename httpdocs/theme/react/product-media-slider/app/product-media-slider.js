@@ -153,7 +153,7 @@ function SlideItem(props){
   }
 
   return(
-    <div className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={ { width:props.containerWidth }}>
+    <div className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={ { width:props.containerWidth, height:props.sliderHeight }}>
       {slideContentDisplay}
       {slideMediaItemMenu}
     </div>
