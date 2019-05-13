@@ -158,19 +158,6 @@ function SlidesNavigation(props){
 
   const thumbElementWidth = 150;
   const [ thumbSliderWidth, setThumbSliderWidth ] = useState(thumbElementWidth * props.gallery.length);
-  const [ currentThumbPosition, setCurrentThumbPosition ] = useState(props.currentSlide * thumbElementWidth)
-  console.log(props.currentSlide);
-  console.log(thumbElementWidth);
-  console.log(props.currentSlide * thumbElementWidth);
-  console.log(currentThumbPosition);
-  console.log(props.containerWidth);
-  console.log(currentThumbPosition > props.containerWidth )
-  const [ thumbSliderPosition, setThumbSliderPosition ] = useState( currentThumbPosition > props.containerWidth ? currentThumbPosition - props.containerWidth : 0)
-  console.log(thumbSliderPosition);
-
-  React.useEffect(() => {
-    setCurrentThumbPosition(props.currentSlide * thumbElementWidth)
-  },[])
 
   const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
     let image;
@@ -183,6 +170,10 @@ function SlidesNavigation(props){
     )
   })
 
+  let thumbSliderPosition;
+  const currentThumbPosition = (props.currentSlide * thumbElementWidth);
+  console.log(currentThumbPosition);
+  if (currentThumbPosition > props.containerWidth) thumbSliderPosition = currentThumbPosition - props.containerWidth;
   const thumbSliderStyle = {
     width:thumbSliderWidth+"px",
     left:'-'+thumbSliderPosition+'px'
