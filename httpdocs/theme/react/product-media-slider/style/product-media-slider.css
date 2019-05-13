@@ -112,6 +112,9 @@
 #media-slider #slide-navigation ul li.active {
   border-color: #2673b0;
 }
+#media-slider #slide-navigation ul li.active a .glyphicon {
+  color: #2673b0;
+}
 #media-slider #slide-navigation ul li a {
   display: block;
   width: 100%;
@@ -122,4 +125,5 @@
   font-size: 30px;
   top: 50%;
   margin-top: -20px;
+  color: white;
 }
