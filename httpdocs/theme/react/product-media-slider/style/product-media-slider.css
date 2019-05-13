@@ -114,3 +114,8 @@
   height: 100%;
   cursor: pointer;
 }
+#media-slider #slide-navigation ul li a .glyphicon {
+  font-size: 30px;
+  top: 50%;
+  margin-top: -20px;
+}

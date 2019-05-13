@@ -159,15 +159,13 @@ function SlidesNavigation(props){
   const thumbElementWidth = 140;
   const [ thumbSliderWidth, setThumbSliderWidth ] = useState(thumbElementWidth * props.gallery.length);
   const [ currentThumbPosition, setCurrentThumbPosition ] = useState(props.currentSlide * thumbElementWidth)
-  console.log('********************')
-  console.log(props);
-  console.log(props.currentSlide);
-  console.log(thumbElementWidth)
-  console.log(props.currentSlide * thumbElementWidth);
-  console.log(currentThumbPosition);
-  console.log(props.containerWidth);
-  console.log('********************')
   const [ thumbSliderPosition, setThumbSliderPosition ] = useState( currentThumbPosition > props.containerWidth ? currentThumbPosition - props.containerWidth : 0)
+
+  React.useEffect(() => {
+    const newCurrentThumbPosition = props.currentSlide * thumbElementWidth;
+    console.log(newCurrentThumbPosition)
+    setCurrentThumbPosition(newCurrentThumbPosition)
+  },[props.currentSlide])
 
   const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
     let image;
