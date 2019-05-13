@@ -47,7 +47,7 @@ function ProductMediaSlider(){
     setContainerWidth(newContainerWidth)
     setSliderWidth(containerWidth * gallery.length);
     setSliderPosition(containerWidth * currentSlide);
-    console.log('cinema mode - ' + cinemaMode)
+    setDetectChangeMode(false);
   }
 
   // toggle cinema mode
@@ -67,7 +67,6 @@ function ProductMediaSlider(){
   function updateCinemaModeDimensions(){
     if (detectChangeMode === true){
       updateDimensions();
-      setDetectChangeMode(false);
     }
   }
 
@@ -141,23 +140,27 @@ function ProductMediaSlider(){
 }
 
 function SlideItem(props){
+  
   let slideContentDisplay, fullScreenModeButtonDisplay;
-  if (props.slide.type === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
-  else if (props.slide.type === "image") {
-    slideContentDisplay = <img onClick={props.onCinemaModeClick} id={"slide-img-"+props.slideIndex} src={props.slide.url}/>
-    fullScreenModeButtonDisplay = <a className="full-screen">toggle full screen</a>
+  if (props.currentSlide === props.slideIndex){
+    if (props.slide.type === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
+    else if (props.slide.type === "image") {
+      slideContentDisplay = <img onClick={props.onCinemaModeClick} id={"slide-img-"+props.slideIndex} src={props.slide.url}/>
+      fullScreenModeButtonDisplay = <a className="full-screen">toggle full screen</a>
+    }
+    else if (props.slide.type === "video") {
+      slideContentDisplay = (
+        <VideoPlayerWrapper 
+          height={props.sliderHeight}
+          width={(props.containerWidth * 0.7)} 
+          source={props.slide.url} 
+          onCinemaModeClick={props.onCinemaModeClick}
+        />
+      )
+    }
+    const slideItemStyle = { width:props.containerWidth }
   }
-  else if (props.slide.type === "video") {
-    slideContentDisplay = (
-      <VideoPlayerWrapper 
-        height={props.sliderHeight}
-        width={(props.containerWidth * 0.7)} 
-        source={props.slide.url} 
-        onCinemaModeClick={props.onCinemaModeClick}
-      />
-    )
-  }
-  const slideItemStyle = { width:props.containerWidth }
+
   return(
     <div className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={slideItemStyle}>
       {slideContentDisplay}
