@@ -133,12 +133,17 @@ function ProductMediaSlider(){
 
 function SlideItem(props){
   
-  let slideContentDisplay, fullScreenModeButtonDisplay;
+  let slideContentDisplay, slideMediaItemMenu;
   if (props.currentSlide === props.slideIndex){
     if (props.slide.type === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
     else if (props.slide.type === "image") {
-      slideContentDisplay = <img onClick={props.onCinemaModeClick} id={"slide-img-"+props.slideIndex} src={props.slide.url}/>
-      // fullScreenModeButtonDisplay = <a className="full-screen">toggle full screen</a>
+      slideContentDisplay = <img id={"slide-img-"+props.slideIndex} src={props.slide.url}/>
+      slideMediaItemMenu = (
+        <ul className="slide-media-item-menu">
+          <li><a onClick={props.onCinemaModeClick} className="cinema-mode">cinema</a></li>
+          <li><a className="full-screen">full screen</a></li>
+        </ul>
+      )
     }
     else if (props.slide.type === "video") {
       slideContentDisplay = (
@@ -157,7 +162,7 @@ function SlideItem(props){
   return(
     <div className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={slideItemStyle}>
       {slideContentDisplay}
-      {fullScreenModeButtonDisplay}
+      {slideMediaItemMenu}
     </div>
   )
 }
