@@ -80,6 +80,18 @@
   padding: 0;
   margin: 0;
 }
+#media-slider #slider-wrapper .slide-item ul.slide-media-item-menu li {
+  display: block;
+  float: left;
+  border-radius: 5px;
+  margin-right: 5px;
+}
+#media-slider #slider-wrapper .slide-item ul.slide-media-item-menu li a {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  display: block;
+  padding: 5px 10px;
+}
 #media-slider .carousel-control {
   z-index: 100;
   cursor: pointer;

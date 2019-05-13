@@ -35,8 +35,6 @@ function ProductMediaSlider(){
   function initProductMediaSlider(){
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
-    document.getElementById('product-page-content').addEventListener("DOMNodeRemoved", updateDimensions);
-    document.getElementById('product-page-content').addEventListener("DOMNodeInserted", updateDimensions);
     setLoading(false);
   }
 
@@ -46,10 +44,14 @@ function ProductMediaSlider(){
     setContainerWidth(newContainerWidth)
     setSliderWidth(newContainerWidth * gallery.length);
     setSliderPosition(newContainerWidth * currentSlide);
+    document.getElementById('product-page-content').removeEventListener("DOMNodeRemoved", updateDimensions);
+    document.getElementById('product-page-content').removeEventListener("DOMNodeInserted", updateDimensions);    
   }
 
   // toggle cinema mode
   function toggleCinemaMode(){
+    document.getElementById('product-page-content').addEventListener("DOMNodeRemoved", updateDimensions);
+    document.getElementById('product-page-content').addEventListener("DOMNodeInserted", updateDimensions);    
     const newCinemaMode = cinemaMode === true ? false : true;
     const targetParentElement = cinemaMode === true ? $('#product-main') : $('#product-page-content');
     const targetChildPrependedElement = cinemaMode === true ? $('#product-title-div') : $('#product-media-slider-container');
