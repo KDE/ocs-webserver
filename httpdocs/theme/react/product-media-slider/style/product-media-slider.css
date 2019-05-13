@@ -45,6 +45,13 @@
 #media-slider #slider-wrapper .slide-item .react-player-container {
   background-color: black;
 }
+#media-slider #slider-wrapper .slide-item .react-player-container .cinema-mode-button {
+  line-height: 30px;
+  display: inline-block;
+  color: white;
+  font-size: 10px;
+  text-transform: uppercase;
+}
 #media-slider #slider-wrapper .slide-item > div {
   text-align: center;
 }
