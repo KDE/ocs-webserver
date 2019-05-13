@@ -22,7 +22,7 @@
   height: 50px;
 }
 #media-slider .carousel-control .glyphicon {
-  margin-top: -10px;
+  margin-top: 10px;
 }
 #media-slider #slider-wrapper {
   position: absolute;
