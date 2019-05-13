@@ -155,7 +155,10 @@ function SlideItem(props){
 
 function SlidesNavigation(props){
 
-  const [ thumbSliderWidth, setThumbSliderWidth ] = useState(140 * props.gallery.length);
+  const thumbElementWidth = 140;
+  const [ thumbSliderWidth, setThumbSliderWidth ] = useState(thumbElementWidth * props.gallery.length);
+  const [ currentThumbPosition, setCurrentThumbPosition ] = useState(props.currentSlide * thumbElementWidth)
+  const [ thumbSliderPosition, setThumbSliderPosition ] = useState( currentThumbPosition > props.containerWidth ? currentThumbPosition - props.containerWidth : 0)
 
   const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
     let image;
@@ -168,9 +171,14 @@ function SlidesNavigation(props){
     )
   })
 
+  const thumbSliderStyle = {
+    width:thumbSliderWidth+"px",
+    left:'-'+thumbSliderPosition+'px'
+  }
+
   return (
     <div id="slide-navigation">
-      <ul className="thumbnail-navigation" style={{width:thumbSliderWidth+"px"}}>
+      <ul className="thumbnail-navigation" style={thumbSliderStyle}>
         {slidesThumbnailNavigationDisplay}
       </ul>
     </div>

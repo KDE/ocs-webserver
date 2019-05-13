@@ -78,6 +78,7 @@
   width: 100%;
   text-align: center;
   position: absolute;
+  height: 110px;
   bottom: 0;
   background-color: black;
 }
@@ -86,6 +87,9 @@
   margin: 0 auto;
   display: table;
   padding: 10px 0;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 #media-slider #slide-navigation ul li {
   width: 120px;
