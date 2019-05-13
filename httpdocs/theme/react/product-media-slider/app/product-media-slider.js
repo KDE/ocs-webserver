@@ -181,9 +181,9 @@ function SlidesNavigation(props){
   })
 
   let thumbSliderStyle;
-  if (props.containerWidth > thumbSliderWidth){
+  if (props.containerWidth > ((thumbElementWidth * props.gallery.length) + 10)){
     let thumbSliderPosition = 0;
-    const currentThumbPosition = (props.currentSlide * thumbElementWidth) + 140;
+    const currentThumbPosition = (props.currentSlide * thumbElementWidth) + thumbElementWidth;
     if (currentThumbPosition > props.containerWidth) thumbSliderPosition = (currentThumbPosition - props.containerWidth) + 10;
     thumbSliderStyle = {
       position:'absolute',
