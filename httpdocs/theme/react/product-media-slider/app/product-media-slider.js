@@ -149,7 +149,7 @@ function SlideItem(props){
     if (props.slide.type === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
     else if (props.slide.type === "image") {
       slideContentDisplay = <img onClick={props.onCinemaModeClick} id={"slide-img-"+props.slideIndex} src={props.slide.url}/>
-      fullScreenModeButtonDisplay = <a className="full-screen">toggle full screen</a>
+      // fullScreenModeButtonDisplay = <a className="full-screen">toggle full screen</a>
     }
     else if (props.slide.type === "video") {
       slideContentDisplay = (
