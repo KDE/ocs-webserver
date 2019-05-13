@@ -139,7 +139,7 @@ function SlideItem(props){
   else if (props.slide.type === "video") {
     slideContentDisplay = (
       <VideoPlayerWrapper 
-        height={props.sliderHeight * 0.5}
+        height={props.sliderHeight}
         width={(props.containerWidth * 0.7)} 
         source={props.slide.url} 
         onCinemaModeClick={props.onCinemaModeClick}
