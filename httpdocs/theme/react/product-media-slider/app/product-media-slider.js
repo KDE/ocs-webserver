@@ -171,8 +171,7 @@ function SlidesNavigation(props){
   })
 
   let thumbSliderPosition;
-  const currentThumbPosition = (props.currentSlide * thumbElementWidth);
-  console.log(currentThumbPosition);
+  const currentThumbPosition = (props.currentSlide * thumbElementWidth) - 140;
   if (currentThumbPosition > props.containerWidth) thumbSliderPosition = currentThumbPosition - props.containerWidth;
   const thumbSliderStyle = {
     width:thumbSliderWidth+"px",
