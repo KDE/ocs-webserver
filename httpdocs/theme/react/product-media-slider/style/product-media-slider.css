@@ -76,7 +76,7 @@
 }
 #media-slider #slider-wrapper .slide-item ul.slide-media-item-menu {
   position: absolute;
-  bottom: 0;
+  bottom: 10px;
   right: 10%;
   list-style-type: none;
   padding: 0;
