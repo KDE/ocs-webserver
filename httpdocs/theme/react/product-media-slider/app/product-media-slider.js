@@ -25,6 +25,7 @@ function ProductMediaSlider(){
   const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
   const [ sliderHeight, setSliderHeight ] = useState(360);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
+  const [ detectChangeMode, setDetectChangeMode ] = useState(false);
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ loading, setLoading ] = useState(true);
 
@@ -35,8 +36,8 @@ function ProductMediaSlider(){
   function initProductMediaSlider(){
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
-    // document.getElementById('product-main').addEventListener("DOMNodeRemoved", updateDimensions);
-    // document.getElementById('product-page-content').addEventListener("DOMNodeRemoved", updateDimensions);
+    document.getElementById('product-main').addEventListener("DOMNodeRemoved", updateCinemaModeDimensions);
+    document.getElementById('product-page-content').addEventListener("DOMNodeRemoved", updateCinemaModeDimensions);
     setLoading(false);
   }
 
@@ -51,6 +52,7 @@ function ProductMediaSlider(){
 
   // toggle cinema mode
   function toggleCinemaMode(){
+    setDetectChangeMode(true);
     const newCinemaMode = cinemaMode === true ? false : true;
     const targetParentElement = cinemaMode === true ? $('#product-main') : $('#product-page-content');
     const targetChildPrependedElement = cinemaMode === true ? $('#product-title-div') : $('#product-media-slider-container');
@@ -60,6 +62,15 @@ function ProductMediaSlider(){
     $("#product-media-slider-container").toggleClass("imgfull");
     setCinemaMode(newCinemaMode);
   }
+
+  // update cinema mode dimensions
+  function updateCinemaModeDimensions(){
+    if (detectChangeMode === true){
+      updateDimensions();
+      setDetectChangeMode(false);
+    }
+  }
+
 
   /* Render */
 
@@ -173,10 +184,10 @@ function SlidesNavigation(props){
 
   let thumbSliderPosition = 0;
   const currentThumbPosition = (props.currentSlide * thumbElementWidth) + 140;
-  if (currentThumbPosition > props.containerWidth) thumbSliderPosition = currentThumbPosition - props.containerWidth;
+  if (currentThumbPosition > props.containerWidth) thumbSliderPosition = (currentThumbPosition - props.containerWidth) + 10;
   const thumbSliderStyle = {
     width:thumbSliderWidth+"px",
-    left:'-'+(thumbSliderPosition + 10)+'px'
+    left:'-' + thumbSliderPosition +'px'
   }
 
   return (
