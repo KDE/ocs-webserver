@@ -99,12 +99,7 @@ krsort($options);
 <script type="text/javascript">    
      $(document).ready(function(){          
 
-            $( "#ratingoptions" ).change(function() {
-             /*   alert( "Handler for .change() called." );
-            });
-
-             $('#ratingoptions').find('option').click(function () {
-            console.log($(this));*/
+            $( "#ratingoptions" ).change(function() {        
           
              var optionSelected = $( "#ratingoptions option:selected" );             
              var valueSelected  = optionSelected.val();
@@ -115,6 +110,12 @@ krsort($options);
 
              var loginuser = $('#score-product-modal').find('#loginuser').val();
              var productcreator = $('#score-product-modal').find('#productcreator').val();
+             if(!loginuser)
+             {                
+                $('#score-product-modal').modal('show');
+                return;
+             }
+
              if (loginuser == productcreator) {
                 // ignore
                 $('#score-product-modal').find('#votelabel').text('Project owner not allowed');
