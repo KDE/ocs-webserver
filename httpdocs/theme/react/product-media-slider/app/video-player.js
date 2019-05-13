@@ -21,6 +21,7 @@ function VideoPlayerWrapper(props){
         videoPlayerDisplay = (
             <Player
                 ref={playerEl}
+                fluid={false}
                 height={props.height}
                 width={props.width}
                 playsInline
