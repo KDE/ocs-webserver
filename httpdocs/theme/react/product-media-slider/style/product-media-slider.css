@@ -87,9 +87,6 @@
   margin: 0 auto;
   display: table;
   padding: 10px 5px;
-  position: absolute;
-  top: 0;
-  left: 0;
   -webkit-transition: all 0.2s ease-out;
   -moz-transition: all 0.2s ease-out;
   -o-transition: all 0.2s ease-out;

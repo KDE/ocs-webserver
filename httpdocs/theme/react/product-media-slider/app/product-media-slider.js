@@ -162,6 +162,7 @@ function SlideItem(props){
       )
     }
   }
+
   const slideItemStyle = { width:props.containerWidth }
 
   return(
@@ -188,12 +189,17 @@ function SlidesNavigation(props){
     )
   })
 
-  let thumbSliderPosition = 0;
-  const currentThumbPosition = (props.currentSlide * thumbElementWidth) + 140;
-  if (currentThumbPosition > props.containerWidth) thumbSliderPosition = (currentThumbPosition - props.containerWidth) + 10;
-  const thumbSliderStyle = {
-    width:thumbSliderWidth+"px",
-    left:'-' + thumbSliderPosition +'px'
+  let thumbSliderStyle;
+  if (props.containerWidth > thumbSliderWidth){
+    let thumbSliderPosition = 0;
+    const currentThumbPosition = (props.currentSlide * thumbElementWidth) + 140;
+    if (currentThumbPosition > props.containerWidth) thumbSliderPosition = (currentThumbPosition - props.containerWidth) + 10;
+    thumbSliderStyle = {
+      position:'absolute',
+      top:'0';
+      width:thumbSliderWidth+'px',
+      left:'-' + thumbSliderPosition +'px'
+    }
   }
 
   return (
