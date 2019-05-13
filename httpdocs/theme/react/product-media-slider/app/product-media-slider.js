@@ -196,21 +196,21 @@ function SlidesNavigation(props){
   const nextCurrentSlide = props.currentSlide < (props.gallery.length - 1) ? ( props.currentSlide + 1 ) : 0;
 
   return (
-    <Draggable
-      axis="x"
-      defaultPosition={{x: 0, y: 0}}>
         <div id="slide-navigation">
           <a className="left carousel-control" id="arrow-left" onClick={() => props.onChangeCurrentSlide(prevCurrentSlide)}>
             <span className="glyphicon glyphicon-chevron-left"></span>
-          </a>    
-          <ul className="thumbnail-navigation" style={thumbSliderStyle}>
-            {slidesThumbnailNavigationDisplay}
-          </ul>
+          </a>
+          <Draggable
+            axis="x"
+            defaultPosition={{x: '-'+thumbSliderPosition, y: 0}}>
+            <ul className="thumbnail-navigation" style={thumbSliderStyle}>
+              {slidesThumbnailNavigationDisplay}
+            </ul>
+          </Draggable>
           <a className="right carousel-control" id="arrow-right" onClick={() => props.onChangeCurrentSlide(nextCurrentSlide)}>
                 <span className="glyphicon glyphicon-chevron-right"></span>
               </a>
         </div>
-    </Draggable>
   )
 }
 
