@@ -86,7 +86,7 @@
   list-style-type: none;
   margin: 0 auto;
   display: table;
-  padding: 10px 0;
+  padding: 10px 5px;
   position: absolute;
   top: 0;
   left: 0;
@@ -102,7 +102,7 @@
   background-color: black;
   border: 5px solid #fff;
   float: left;
-  margin: 0 10px;
+  margin: 0 5px;
   box-sizing: content-box;
   -webkit-transition: all 0.2s ease-out;
   -moz-transition: all 0.2s ease-out;
