@@ -52,6 +52,7 @@ function ProductMediaSlider(){
   // toggle cinema mode
   function toggleCinemaMode(){
     setDetectChangeMode(true);
+    console.log(detectChangeMode);
     const newCinemaMode = cinemaMode === true ? false : true;
     const targetParentElement = cinemaMode === true ? $('#product-main') : $('#product-page-content');
     const targetChildPrependedElement = cinemaMode === true ? $('#product-title-div') : $('#product-media-slider-container');
@@ -64,8 +65,7 @@ function ProductMediaSlider(){
 
   // update cinema mode dimensions
   function updateCinemaModeDimensions(){
-    console.log('detect changes');
-    console.log(detectChangeMode);
+    console.log('detect changes : ' + detectChangeMode);
     if (detectChangeMode === true){
       console.log('update dimensions')
       updateDimensions();
