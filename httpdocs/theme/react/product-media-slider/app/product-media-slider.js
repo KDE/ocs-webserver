@@ -47,7 +47,6 @@ function ProductMediaSlider(){
     setContainerWidth(newContainerWidth)
     setSliderWidth(containerWidth * gallery.length);
     setSliderPosition(containerWidth * currentSlide);
-    setDetectChangeMode(false);
   }
 
   // toggle cinema mode
@@ -70,6 +69,7 @@ function ProductMediaSlider(){
     if (detectChangeMode === true){
       console.log('update dimensions')
       updateDimensions();
+      setDetectChangeMode(false);
     }
   }
 
