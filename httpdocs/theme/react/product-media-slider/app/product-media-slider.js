@@ -91,6 +91,7 @@ function ProductMediaSlider(){
         slide={s}
         currentSlide={currentSlide}
         containerWidth={containerWidth}
+        sliderHeight={sliderHeight}
         cinemaMode={cinemaMode}
         onSlideItemClick={toggleCinemaMode}
       />
@@ -130,7 +131,16 @@ function SlideItem(props){
     slideContentDisplay = <img onClick={props.onSlideItemClick} id={"slide-img-"+props.slideIndex} src={props.slide.url}/>
     fullScreenModeButtonDisplay = <a className="full-screen">toggle full screen</a>
   }
-  else if (props.slide.type === "video") slideContentDisplay = <VideoPlayerWrapper width={(props.containerWidth * 0.7)} source={props.slide.url} onCinemaModeClick={props.onSlideItemClick}/>
+  else if (props.slide.type === "video") {
+    slideContentDisplay = (
+      <VideoPlayerWrapper 
+        height={props.sliderHeight}
+        width={(props.containerWidth * 0.7)} 
+        source={props.slide.url} 
+        onCinemaModeClick={props.onSlideItemClick}
+      />
+    )
+  }
   const slideItemStyle = { width:props.containerWidth }
   return(
     <div className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={slideItemStyle}>
