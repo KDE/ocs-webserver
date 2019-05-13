@@ -20,13 +20,15 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$likesAndDislikes = ($this->widgetRating->count_likes == 0 and $this->widgetRating->count_dislikes == 0) ? '' : '(' . $this->widgetRating->count_likes . '/' . $this->widgetRating->count_dislikes . ')';
 $cssNoVotes = (($this->widgetRating->count_likes + $this->widgetRating->count_dislikes) == 0) ? ';opacity:0.5;' : '';
 
 
 // calculate colour
 $blue = $red = $green = $default=200;
 $score = $this->widgetRating->laplace_score;
+
+$score = round($score/10,0);
+
 if($score==0) 
 	$score = 50;
 
@@ -41,22 +43,21 @@ if($score>50) {
 }
 if(strlen($green)==1) $green='0'.$green;
 if(strlen($red)==1) $red='0'.$red;
+if(strlen($blue)==1) $blue='0'.$blue;
 
 ?>
 <div class="rating">
 
     <div class="rating-text">
-        <small class="center-block text-center">Score <?= floor($score) ?>%</small>
+        <small class="center-block text-center">
+            Score <?=number_format($this->widgetRating->laplace_score/100,2)?>            
+        </small>
     </div>
     <div class="progress">
-
-        <div class="progress-bar" style="background-color: #<?= $red . $green . $blue ?>;width: <?= floor($score) ?>%;">
-            <span class="sr-only"><?= $score ?> Likes</span>
+        <div class="progress-bar" style="background-color: #<?= $red . $green . $blue ?>;width: <?= floor($score) ?>%;">            
         </div>
-        <div class="progress-bar" style="background-color:#eeeeee;width: <?= (100 - floor($score)) ?>%;<?= $cssNoVotes ?>">
-            <span class="sr-only"><?= (100 - floor($score)) ?> Dislikes</span>
+        <div class="progress-bar" style="background-color:#eeeeee;width: <?= (100 - floor($score)) ?>%;<?= $cssNoVotes ?>">           
         </div>
-
     </div>
 
 </div>

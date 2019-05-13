@@ -47,9 +47,11 @@ foreach ($this->ratings as $this->productRating) {
 		}
 		if(strlen($green2)==1) $green2='0'.$green2;
 		if(strlen($red2)==1) $red2='0'.$red2;
+		if(strlen($blue2)==1) $blue2='0'.$blue2;
 
-
+		
 	?>
+
 <div class="productRating-rows <?=$this->productRating['rating_active']==0?'productRating-rows-inactive':'productRating-rows-active'?>  <?=$this->productRating['user_like']==1?'clsUpvotes':'clsDownvotes' ?> "  >
 	<div class="product-heading product-update-heading">
 	<a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>" >	
