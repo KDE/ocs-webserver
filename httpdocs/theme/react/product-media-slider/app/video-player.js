@@ -1,13 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { Player } from 'video-react';
-import { play } from 'video-react/lib/actions/player';
 
 function VideoPlayerWrapper(props){
 
     const playerEl = useRef(null)
     const [ source, setSource ] = useState();
 
-    console.log(playerEl.getState())
+    console.log(playerEl)
     
     React.useEffect(() => { convertStringToUrl(); }, [props.source])
     React.useEffect(() => { console.log(playerEl)},[playerEl])
