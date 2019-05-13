@@ -25,7 +25,7 @@ function ProductMediaSlider(){
   const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
   const [ sliderHeight, setSliderHeight ] = useState(360);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
-  const [ detectChangeMode, setDetectChangeMode ] = useState(false);
+  const [ detectChangeMode, setDetectChangeMode ] = useState();
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ loading, setLoading ] = useState(true);
 
