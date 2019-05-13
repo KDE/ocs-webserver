@@ -28,7 +28,8 @@ if($this->counter==0){
 	</div>			    	
 	<div class="col-lg-2 col-md-2">	
 		
-		<div class="rating text-center" >				
+		<div class="rating text-center" >	
+				
 		    <?php                
 		            $this->widgetRating = new stdClass();
 		            $this->widgetRating->project_id =$this->file->project_id;
@@ -42,6 +43,12 @@ if($this->counter==0){
 	</div>
 	
 	<div class="col-lg-2" >
+
+		<?php
+				if($userRateData){
+					echo $userRateData['score'];
+				}
+				?>
 		<?php if($this->file->project_member_id<> $this->authMember->member_id)
 			{
 				$votedownactive = "";

@@ -802,12 +802,12 @@ function (_React$Component3) {
           className: "score-info"
         }, React.createElement("div", {
           className: "score-number"
-        }, "score ", this.props.product.laplace_score + "%"), React.createElement("div", {
+        }, "score ", (this.props.product.laplace_score / 100).toFixed(2)), React.createElement("div", {
           className: "score-bar-container"
         }, React.createElement("div", {
           className: "score-bar",
           style: {
-            "width": this.props.product.laplace_score + "%"
+            "width": this.props.product.laplace_score / 10 + "%"
           }
         })));
         infoDisplay = scoreDisplay;

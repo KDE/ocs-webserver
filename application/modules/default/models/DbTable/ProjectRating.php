@@ -513,7 +513,8 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
                        ,r.rating_active
                        ,r.created_at rating_created_at           
                        ,(select `comment_text` from comments c where c.comment_id = r.comment_id)  as comment_text
-                       ,r.project_id                        
+                       ,r.project_id      
+                       ,r.score                 
                         ,p.member_id as project_member_id
                         ,p.username as project_username
                         ,p.project_category_id

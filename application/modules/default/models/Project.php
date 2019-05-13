@@ -394,13 +394,14 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   `m`.`mail`,
                   `m`.`paypal_mail`,
                   `m`.`dwolla_id`,
-                  laplace_score(`p`.`count_likes`,`p`.`count_dislikes`) AS `laplace_score`,
+                  IFNULL(pr.score_with_pling, 500) AS laplace_score,
                  `view_reported_projects`.`amount_reports` AS `amount_reports`,
                 (SELECT `tag`.`tag_fullname` FROM `tag_object`, `tag` WHERE `tag_object`.`tag_id`=`tag`.`tag_id` AND `tag_object_id` = `p`.`project_id` AND `tag_object`.`is_deleted`=0 AND `tag_group_id` = :tag_licence_gid AND `tag_type_id` = :tag_type_id  ORDER BY `tag_object`.`tag_created` DESC LIMIT 1)
                                 AS `project_license_title`
                 FROM `project` AS `p`
                   JOIN `member` AS `m` ON `p`.`member_id` = `m`.`member_id` AND `m`.`is_active` = 1 AND `m`.`is_deleted` = 0
                   JOIN `project_category` AS `pc` ON `p`.`project_category_id` = `pc`.`project_category_id`
+                  LEFT join  stat_rating_project AS pr  ON p.project_id = pr.project_id
                   LEFT JOIN `view_reported_projects` ON ((`view_reported_projects`.`project_id` = `p`.`project_id`))
                 WHERE
                   `p`.`project_id` = :projectId
@@ -449,12 +450,13 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   `m`.`mail`,
                   `m`.`paypal_mail`,
                   `m`.`dwolla_id`,
-                  laplace_score(`p`.`count_likes`,`p`.`count_dislikes`) AS `laplace_score`,
+                  IFNULL(pr.score_with_pling, 500) AS laplace_score,
                  `view_reported_projects`.`amount_reports` AS `amount_reports`,
                 `project_license`.`title` AS `project_license_title`
                 FROM `project` AS `p`
                   JOIN `member` AS `m` ON `p`.`member_id` = `m`.`member_id` AND `m`.`is_active` = 1 AND `m`.`is_deleted` = 0
                   JOIN `project_category` AS `pc` ON `p`.`project_category_id` = `pc`.`project_category_id`
+                  LEFT join  stat_rating_project AS pr  ON p.project_id = pr.project_id
                   LEFT JOIN `view_reported_projects` ON ((`view_reported_projects`.`project_id` = `p`.`project_id`))
                   LEFT JOIN `project_license` ON ((`project_license`.`project_license_id` = `p`.`project_license_id`))
                 WHERE
@@ -1297,14 +1299,14 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             case 'top':
                 //$statement->order(array('amount_received DESC', 'count_plings DESC', 'latest_pling DESC', 'project.created_at DESC'));
                 //$statement->order(array(new Zend_Db_Expr('(round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC'),'amount_received DESC', 'count_plings DESC', 'latest_pling DESC', 'project.created_at DESC'));
-                $statement->order(array(
+                /*$statement->order(array(
                     new Zend_Db_Expr('(round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC'),
                     'project.created_at DESC'
-                ));
-
+                ));*/
+                $statement->order('project.laplace_score DESC');
                 break;
-            case 'rating':
-                $statement->order('project.laplace_score_new DESC');
+            case 'topold':
+                $statement->order('project.laplace_score_old DESC');
                 break;
             case 'download':
                 $statement->order('project.count_downloads_hive DESC');
@@ -1511,9 +1513,9 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                         `p`.`title`,
                         `p`.`created_at`  AS `project_created_at`,
                         `p`.`changed_at` AS `project_changed_at`,
-                        `p`.`count_likes`,
-                        `p`.`count_dislikes`,
-                        laplace_score(`p`.`count_likes`, `p`.`count_dislikes`) AS `laplace_score`,
+                        `pr`.`likes` AS count_likes,
+                        `pr`.`dislikes`AS count_dislikes,
+                        IFNULL(pr.score_with_pling, 500) AS laplace_score,
                         `p`.`member_id`,
                         `cat`.`title` AS `catTitle`,
                         `p`.`project_category_id`,
@@ -1522,6 +1524,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                         c.cnt cntCategory
                         FROM `project` `p`
                         join project_category cat on p.project_category_id = cat.project_category_id
+                        LEFT join  stat_rating_project AS pr  ON p.project_id = pr.project_id
                         left join stat_cnt_projects_catid_memberid c on p.project_category_id = c.project_category_id and p.member_id = c.member_id
                         WHERE `p`.`status` =100
                         and `p`.`type_id` = 1
@@ -1560,9 +1563,9 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                             `p`.`title`,
                             `p`.`created_at`  AS `project_created_at`,
                             `p`.`changed_at` AS `project_changed_at`,
-                            `p`.`count_likes`,
-                            `p`.`count_dislikes`,
-                            laplace_score(`p`.`count_likes`, `p`.`count_dislikes`) AS `laplace_score`,
+                            `pr`.`likes` AS count_likes,
+                            `pr`.`dislikes`AS count_dislikes,
+                             IFNULL(pr.score_with_pling, 500) AS laplace_score,
                             `p`.`member_id`,
                             `cat`.`title` AS `catTitle`,
                             `p`.`project_category_id`,
@@ -1573,6 +1576,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                             FROM `project` `p`
                             join project_category cat on p.project_category_id = cat.project_category_id
                             left join stat_cnt_projects_catid_memberid c on p.project_category_id = c.project_category_id and p.member_id = c.member_id
+                            LEFT join  stat_rating_project AS pr  ON p.project_id = pr.project_id
                             WHERE `p`.`status` =100
                             and `p`.`type_id` = 1
                             AND `p`.`member_id` = :member_id
