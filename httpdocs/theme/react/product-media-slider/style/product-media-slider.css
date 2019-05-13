@@ -45,6 +45,7 @@
   -o-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
   height: inherit;
+  position: relative;
 }
 #media-slider #slider-wrapper .slide-item.active {
   opacity: 1;
@@ -70,6 +71,14 @@
   margin-bottom: auto;
   max-width: 100%;
   max-height: 100%;
+}
+#media-slider #slider-wrapper .slide-item ul.slide-media-item-menu {
+  position: absolute;
+  bottom: 0;
+  right: 15%;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 #media-slider .carousel-control {
   z-index: 100;
