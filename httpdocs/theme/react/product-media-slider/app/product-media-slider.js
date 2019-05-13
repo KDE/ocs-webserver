@@ -202,7 +202,7 @@ function SlidesNavigation(props){
           </a>
           <Draggable
             axis="x"
-            defaultPosition={{x: '-'+thumbSliderPosition, y: 0}}>
+            defaultPosition={{x: 0, y: 0}}>
             <ul className="thumbnail-navigation" style={thumbSliderStyle}>
               {slidesThumbnailNavigationDisplay}
             </ul>
