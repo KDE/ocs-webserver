@@ -34,7 +34,7 @@ $scoreColor = new Default_View_Helper_FetchScoreColor();
 <?php  
 $tmp=null;
 foreach ($this->ratings as $this->productRating) {
-		if($this->productRating['user_like']>1)
+		if($this->productRating['user_like']>=6)
 		{
 			$tmp = $this->productRating;
 		}
@@ -92,7 +92,7 @@ foreach ($this->ratings as $this->productRating) {
 		  </span>
 		  <span>
 			<span class="score label" style="background-color:<?=$this->fetchScoreColor(5)?>; ">
-				Count:<?php echo $tmp['user_like']+$tmp['user_dislike']+2; ?> Rating: <?=number_format($this->fetchScore($tmp['user_like'],$tmp['user_dislike']),2)?>
+				Count:<?php echo $tmp['user_like']+$tmp['user_dislike']+2-12; ?> Rating: <?=number_format($this->fetchScore($tmp['user_like']-6,$tmp['user_dislike']-6),2)?>
 			</span>		
 		  </span>
 		</div>	

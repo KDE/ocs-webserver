@@ -142,11 +142,21 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
               WHERE pr.project_id = :project_id and (pr.rating_active = 1 or (rating_active=0 and user_like>1))
         ";*/
 
-        $sql = "
+        /*$sql = "
             SELECT laplace_score_new(sum(pr.user_like), sum(pr.user_dislike)) AS score
                 FROM project_rating AS pr
               WHERE pr.project_id = :project_id and (pr.rating_active = 1 or (rating_active=0 and user_like>1))
-              ";
+                  ";*/
+
+        $sql = "SELECT  laplace_score_new(sum(pr.user_like), sum(pr.user_dislike)) AS score
+                from
+                (
+                  select project_id,user_like,user_dislike from project_rating pr where pr.rating_active = 1 
+                  union
+                  select project_id,user_like-6,user_dislike-6 from project_rating pr where pr.rating_active = 0 and user_dislike >=6 and user_like>=6     
+                ) as pr
+                where pr.project_id = :project_id";
+    
         
         $result = $this->_db->query($sql, array('project_id' => $project_id))->fetchAll();     
         if($result[0]['score'])
