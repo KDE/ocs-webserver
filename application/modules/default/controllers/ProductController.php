@@ -318,7 +318,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 if(null != $this->_authMember) {
                     $url .= '/u/' . $this->_authMember->member_id;
                 }
-                $url .= '/lt/video/' . $file['name'];
+                $url .= '/lt/filepreview/' . $file['name'];
                 $file['url'] = urlencode($url);
                 $filesList[] = $file;
             }
@@ -460,7 +460,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     if(null != $this->_authMember) {
                         $url .= '/u/' . $this->_authMember->member_id;
                     }
-                    $url .= '/lt/video/' . $file['name'];
+                    $url .= '/lt/filepreview/' . $file['name'];
                     $file['url'] = urlencode($url);
                     $filesList[] = $file;
                 }
