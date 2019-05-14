@@ -110,6 +110,8 @@ krsort($options);
                 // ignore
                 $('#score-product-modal').find('#votelabel').text('Project owner not allowed');
                 $('#score-product-modal').find('.modal-body').empty();
+                $('#score-product-modal').find('#modal-btn-onsubmit').remove();
+                
                 $('#score-product-modal').modal('show');
                 return;
              }
