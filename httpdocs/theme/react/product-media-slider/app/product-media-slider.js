@@ -187,14 +187,13 @@ function SlidesNavigation(props){
   const currentThumbPosition = (props.currentSlide * thumbElementWidth) + thumbElementWidth;
   if (currentThumbPosition > props.containerWidth) thumbSliderPosition = (currentThumbPosition - props.containerWidth) + 10;
 
-  React.useEffect(() => { scrollSlider() },[])
-  React.useEffect(() => { scrollSlider() },[props.currentSlide])
+  React.useEffect(() => { if (props.showPlaylist) scrollSlider() },[])
+  React.useEffect(() => { if (props.showPlaylist) scrollSlider() },[props.currentSlide])
 
   function scrollSlider(){
     $('#slide-navigation').children().attr('id','slider-scroll-wrapper');
     $('#slider-scroll-wrapper').children().attr('id','slider-scroll');
     $('#slider-scroll').scrollLeft(thumbSliderPosition)
-    scrollBarEl.current.scrollLeft(thumbSliderPosition);
   }
 
   let navigationSliderDisplay;
