@@ -143,7 +143,7 @@ function ProductMediaSlider(){
           <span className="glyphicon glyphicon-chevron-right"></span>
         </a>      
       </div>
-      <a className="slider-navigation-toggle" onClick={toggleShowPlaylist}></a>
+      <a className="slider-navigation-toggle" onClick={toggleShowPlaylist} style={{top:(sliderHeight) - 35}}></a>
       {playlistDisplay}
     </main>
   )
