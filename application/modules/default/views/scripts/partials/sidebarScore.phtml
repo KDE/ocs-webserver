@@ -26,19 +26,6 @@ $model = new Default_Model_DbTable_ProjectRating();
 $score2 = $model->getScore($this->product->project_id);   
 $score2 = round($score2/100,2);
 
-$blue2 = $red2 = $green2 = $default2=200;
-if($score2>=5) {
-    $red2=dechex($default2-(($score2*10-50)*4));
-    $green2=dechex($default2);
-    $blue2=dechex($default2-(($score2*10-50)*4));
-}elseif($score2<5) {
-    $red2=dechex($default2);
-    $green2=dechex($default2-((50-$score2*10)*4));
-    $blue2=dechex($default2-((50-$score2*10)*4));
-}
-if(strlen($green2)==1) $green2='0'.$green2;
-if(strlen($red2)==1) $red2='0'.$red2;
-
 $userScore=0;
 if($this->ratingOfUser)
 {
@@ -61,7 +48,7 @@ krsort($options);
                         </small>
                     </div>
                     <div class="progress" style="margin-bottom: 0;height:12px;background-color: transparent; box-shadow: none; padding:2px;">
-                        <div class="progress-bar" style="background-color: #<?=$red2.$green2.$blue2?>;width: <?= floor($score2)*10 ?>%;">
+                        <div class="progress-bar" style="background-color: <?=$this->fetchScoreColor($score2)?>;width: <?= floor($score2)*10 ?>%;">
                             
                         </div>
                         <div class="progress-bar" style="background-color:#eeeeee;width: <?= floor(100 - $score2*10) ?>%;<?=$cssNoVotes?>">
@@ -75,23 +62,20 @@ krsort($options);
         </tbody>
     </table>
 
-    <div style="text-align: center;">        
-       
-         <select id="ratingoptions" name="ratingoptions">
+    <div style="text-align: center;">               
+         <select name="ratingoptions" id="ratingoptions">
             <?php
              if($userScore){
-                echo '<option value="-1">Remove Rating</option>';
+                echo '<option value="-1" >Remove Rating</option>';
              }else{
                 echo '<option value="0">Give a Rating</option>';
              }
              foreach ($options as $key => $value) {
-                $selected = '';
-                $style = '';
+                $selected = '';                
                 if($userScore==$key){
-                  $selected=' selected';
-                  $style=' style="background-color:#'.$red2.$green2.$blue2.'"';
+                  $selected='selected="selected"';                  
                 } 
-                echo '<option value="'.$key.'"'.$selected.$style.'>'.$key.' '.$value.'</option>';                
+                echo '<option value="'.$key.'" '.$selected.'>'.$key.' '.$value.'</option>';                
             } ?>         
         </select> 
     </div>
@@ -158,12 +142,22 @@ krsort($options);
              $('#score-product-modal').modal('show');
            });
 
-           $("#modal-btn-cancel").on("click", function(){                                                                               
+            $("#modal-btn-cancel").on("click", function(){                                                                               
                 $("#score-product-modal").modal('hide');                
-              });     
-             $('#score-product-modal').on('hidden.bs.modal', function () {
-                 $(currentSelect).find("option[value="+preRatingSelected+"]").prop('selected', true);
-                });     
+              });
+            
+            var bOnsubmit = false;     
+            $('#modal-btn-onsubmit').on("click",function(){
+                bOnsubmit = true;
+            });
+            $('#score-product-modal').on('hidden.bs.modal', function () {
+                 if(!bOnsubmit)
+                 {
+                    $(currentSelect).find("option[value="+preRatingSelected+"]").prop('selected', true);   
+                 }                 
+            });     
+
+            
 
         });
 </script>
