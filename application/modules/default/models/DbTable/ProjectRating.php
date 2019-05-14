@@ -165,7 +165,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
                         ,user_dislike as dislikes
                         ,1 as count
                         ,score as totalscore
-                        from project_rating pr where pr.rating_active = 1 
+                        from project_rating pr where pr.project_id=:project_id and pr.rating_active = 1 
 
                         union
                                         
@@ -176,9 +176,9 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
                         ,user_like+user_dislike-12 as count 
                         ,(user_like-6)*8+(user_dislike-6)*3 as totalscore
                         from project_rating pr 
-                        where pr.rating_active = 0 and user_dislike >=6 and user_like>=6  
+                        where pr.project_id=:project_id and pr.rating_active = 0 and user_dislike >=6 and user_like>=6  
                     ) t
-                    where t.project_id = :project_id";
+                ";
         
         $result = $this->_db->query($sql, array('project_id' => $project_id))->fetchAll();     
         if($result[0]['score'])
