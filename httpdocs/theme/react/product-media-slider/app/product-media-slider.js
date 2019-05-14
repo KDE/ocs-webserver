@@ -29,7 +29,7 @@ function ProductMediaSlider(){
   const [ sliderHeight, setSliderHeight ] = useState(360);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
   const [ cinemaMode, setCinemaMode ] = useState(false);
-  const [ showPlaylist, setShowPlaylist ] = useState(true);
+  const [ showPlaylist, setShowPlaylist ] = useState(false);
   const [ showSliderArrows, setShowSliderArrows ] = useState(true);
   
   React.useEffect(() => { initProductMediaSlider() },[])
