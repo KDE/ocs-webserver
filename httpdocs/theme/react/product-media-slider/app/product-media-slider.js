@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import VideoPlayerWrapper from './video-player';
-import { Toggle } from "react-toggle-component";
 // import Draggable, {DraggableCore} from 'react-draggable'; // Both at the same time
 import { Scrollbars } from 'react-custom-scrollbars';
 
