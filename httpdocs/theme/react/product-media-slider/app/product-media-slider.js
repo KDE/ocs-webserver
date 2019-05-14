@@ -156,13 +156,7 @@ function ProductMediaSlider(){
           <span className="glyphicon glyphicon-chevron-right"></span>
         </a>      
       </div>
-      
-      <span className="slider-navigation-toggle" onClick={toggleShowPlaylist}>
-        <Toggle
-          name="toggle-1"
-          onToggle={e => console.log("onToggle", e.target)}
-        />
-      </span>
+      <a className="slider-navigation-toggle" onClick={toggleShowPlaylist}></a>
       {playlistDisplay}
     </main>
   )
