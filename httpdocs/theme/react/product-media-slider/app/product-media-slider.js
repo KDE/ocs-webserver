@@ -193,7 +193,7 @@ function SlidesNavigation(props){
     left:'-' + thumbSliderPosition +'px'
   }
 
-  console.log(scrollBarEl);
+  console.log(scrollBarEl.current);
 
   // scrollBarEl.scrollLeft('-'+thumbSliderPosition);
 
