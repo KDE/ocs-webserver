@@ -29,8 +29,9 @@ function ProductMediaSlider(){
   const [ sliderHeight, setSliderHeight ] = useState(360);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
   const [ cinemaMode, setCinemaMode ] = useState(false);
-  const [ loading, setLoading ] = useState(true);
-
+  const [ showSliderArrows, setShowSliderArrows ] = useState(true);
+  const [ timeoutInterval, setTimeoutInterval ] = useState()
+  
   React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode])
 
@@ -38,7 +39,6 @@ function ProductMediaSlider(){
   function initProductMediaSlider(){
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
-    setLoading(false);
   }
 
   // update dimensions
@@ -66,13 +66,16 @@ function ProductMediaSlider(){
   }
 
   function onMouseEnterHandler(){
-    console.log('cancel fade out timer');
+    clearInterval(timeoutInterval);
   }
 
   function onMouseLeaveHandler(){
-    console.log('init fade out timer');
+    const intervalId = setInterval(setShowSliderArrows(false), 5000)
+    setTimeoutInterval(intervalId);    
   }
   
+  console.log('show slider arrows - ' + showSliderArrows);
+
   /* Render */
 
   // slider container style
