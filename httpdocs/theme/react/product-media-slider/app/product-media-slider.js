@@ -110,6 +110,7 @@ function ProductMediaSlider(){
       sliderHeight={sliderHeight}
       cinemaMode={cinemaMode}
       onCinemaModeClick={toggleCinemaMode}
+      onSetSliderHeight={height => setSliderHeight(height)}
     />
   ));
 
@@ -144,12 +145,16 @@ function ProductMediaSlider(){
 }
 
 function SlideItem(props){
+
+  function imageOnLoad(e){
+    const imageHeight = document.getElementById('slide-img-'+props.slideIndex).naturalHeight;
+    if (props.currentSlide === props.slideIndex) props.onSetSliderHeight(imageHeight);
+  }
   
   let slideContentDisplay, slideMediaItemMenu;
-  if (props.currentSlide === props.slideIndex){
     if (props.slide.type === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
     else if (props.slide.type === "image") {
-      slideContentDisplay = <img onClick={props.onCinemaModeClick} id={"slide-img-"+props.slideIndex} src={props.slide.url}/>
+      slideContentDisplay = <img onClick={props.onCinemaModeClick} onLoad={e => imageOnLoad(e)} id={"slide-img-"+props.slideIndex} src={props.slide.url}/>
       /*slideMediaItemMenu = (
         <ul className="slide-media-item-menu">
           <li><a onClick={props.onCinemaModeClick} className="cinema-mode">cinema</a></li>
@@ -158,6 +163,7 @@ function SlideItem(props){
       )*/
     }
     else if (props.slide.type === "video") {
+      if (props.currentSlide === props.slideIndex){
       slideContentDisplay = (
         <VideoPlayerWrapper 
           height={props.sliderHeight}
