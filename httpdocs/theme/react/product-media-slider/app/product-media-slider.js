@@ -189,8 +189,7 @@ function SlidesNavigation(props){
   const thumbSliderStyle = {
     position:'absolute',
     top:'0',
-    width:thumbSliderWidth+'px',
-    left:'-' + thumbSliderPosition +'px'
+    width:thumbSliderWidth+'px'
   }
 
   console.log(scrollBarEl.current);
