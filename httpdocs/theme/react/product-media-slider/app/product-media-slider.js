@@ -168,6 +168,7 @@ function SlideItem(props){
 
 function SlidesNavigation(props){
 
+  const scrollBarEl = useRef(null)
   const thumbElementWidth = 140;
   const [ thumbSliderWidth, setThumbSliderWidth ] = useState((thumbElementWidth * props.gallery.length) +10);
 
@@ -191,25 +192,15 @@ function SlidesNavigation(props){
     width:thumbSliderWidth+'px',
     left:'-' + thumbSliderPosition +'px'
   }
+  scrollBarEl.scrollLeft('-'+thumbSliderPosition);
 
-  // prev / next slide arrow values
-  const prevCurrentSlide = props.currentSlide > 0 ? props.currentSlide - 1 : props.gallery.length - 1;
-  const nextCurrentSlide = props.currentSlide < (props.gallery.length - 1) ? ( props.currentSlide + 1 ) : 0;
 
   return (
-        <div id="slide-navigation">
-          <a className="left carousel-control" id="arrow-left" onClick={() => props.onChangeCurrentSlide(prevCurrentSlide)}>
-            <span className="glyphicon glyphicon-chevron-left"></span>
-          </a>
-          <Scrollbars style={{ width: props.containerWidth, height: 110 }}>
-              <ul className="thumbnail-navigation" style={thumbSliderStyle}>
-                {slidesThumbnailNavigationDisplay}
-              </ul>
-          </Scrollbars>
-          <a className="right carousel-control" id="arrow-right" onClick={() => props.onChangeCurrentSlide(nextCurrentSlide)}>
-                <span className="glyphicon glyphicon-chevron-right"></span>
-              </a>
-        </div>
+    <div id="slide-navigation">
+      <Scrollbars ref='scrollBarEl' style={{ width: props.containerWidth, height: 110 }}>
+          <ul className="thumbnail-navigation" style={thumbSliderStyle}>{slidesThumbnailNavigationDisplay}</ul>
+      </Scrollbars>
+    </div>
   )
 }
 
