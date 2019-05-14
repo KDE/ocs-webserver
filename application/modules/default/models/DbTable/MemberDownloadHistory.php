@@ -57,6 +57,7 @@ class Default_Model_DbTable_MemberDownloadHistory extends Zend_Db_Table_Abstract
                       join stat_projects p on p.project_id = m.project_id
                       where m.member_id = :member_id
                       order by m.downloaded_timestamp desc
+                      limit 1000
             ";
            $result = $this->_db->fetchAll($sql, array("member_id"=>$member_id));
           return new Zend_Paginator(new Zend_Paginator_Adapter_Array($result ));

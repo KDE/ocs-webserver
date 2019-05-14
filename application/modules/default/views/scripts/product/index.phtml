@@ -631,7 +631,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                         <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
                        <?php } ?>
                         
-                        <li><a href="#ratings-panel2" data-toggle="tab">Ratings & Reviews<?php echo '('.$cntRatingsActive.')';  ?></a></li>                       
+                        <li><a href="#ratings-panel2" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>                       
 
 
                         <?php if(count($this->projectplings)>0){ ?>
@@ -770,7 +770,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                          <?php } ?>
 
                         <!-- ratings panel -->
-                        
+                        <?php  if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) { ?>
                         <div class="tab-pane" id="ratings-panel">
                             <div id="ratings-panel-wrapper" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                             <article>
@@ -782,11 +782,11 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                             </article>
                             </div>
                         </div>
-                      
+                       <?php } ?>
 
 
                         <!-- ratings panel2 -->
-                        <?php  if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) { ?>
+                        
                         <div class="tab-pane" id="ratings-panel2">
                             <div id="ratings-panel-wrapper2" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                             <article>
@@ -798,7 +798,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                             </article>
                             </div>
                         </div>
-                        <?php } ?>
+                       
 
                         <!-- likes panel -->
                         <?php  if (count($this->likes) > 0) { ?>

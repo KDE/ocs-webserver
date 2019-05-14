@@ -999,6 +999,107 @@ var PartialsReviewDownloadHistory = (function () {
     }
 })();
 
+var PartialsReviewDownloadHistoryNew = (function () {
+    return {
+        setup: function () {
+
+            $( "select.rating-select" ).change(function() {                       
+                 var optionSelected = $(this).find("option:selected");             
+                 var valueSelected  = optionSelected.val();
+                 var textSelected   = optionSelected.text();
+                 var userscore = $('#score-product-modal').find('#userscore').val();
+                 var userscore = $(this).attr("data-userrate");
+                 var oldcomment = $(this).attr("data-comment");
+                 
+                 if(userscore>0)
+                 {
+                    $('#score-product-modal').find('#votelabel').empty()
+                        .append('Score '+userscore+' is given already with comment:'+oldcomment);                
+                 }
+
+                 if(valueSelected<5)
+                 {
+                     $('#score-product-modal').find('#votelabel')
+                            .append('Add Comment (min. 5 char) <span style="font-size:10px; display:block"> Please explain the reason for downvote to help the creator to make it better </span> ');
+                      $('#score-product-modal').find('#voteup').val(2);
+                 }                     
+                 else
+                 {                
+                    $('#score-product-modal').find('#votelabel')
+                        .append('Add Comment (min. 1 char):');               
+                 }
+
+
+                $('#score-product-modal').find('#form_p').val($(this).attr("data-project"));
+                 $('#score-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
+                 $('#score-product-modal').find('#commenttext').removeAttr("disabled");
+                 $('#score-product-modal').find('#commenttext').val(textSelected);
+                 $('#score-product-modal').find('#userscorevalue').val(valueSelected);
+                 
+                 if(valueSelected=='-1')
+                 {
+                    $('#score-product-modal').find(':submit').text("Remove Rating");                             
+                 }else
+                 {
+                    $('#score-product-modal').find(':submit').text("Rate Now");                          
+                 }
+                 
+                 $('#score-product-modal').modal('show');
+            });
+
+            /*$('body').on('click', 'button.partialReviewDownloadHistory', function (event) {
+                event.preventDefault();
+
+                var userrate = $(this).attr("data-userrate");
+                // -1 = no rate yet. 0= dislike  1=like
+                $('#review-product-modal').find('#commenttext').val($(this).attr("data-comment"));
+                $('#review-product-modal').find('#form_p').val($(this).attr("data-project"));
+
+                if ($(this).hasClass("voteup")) {
+                    if (userrate == 1) {
+                        $('#review-product-modal').find('#votelabel').empty()
+                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> is given already with comment:');
+                        $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");
+                        $('#review-product-modal').find('#commenttext').attr("disabled", "disabled");
+                    } else {
+                        $('#review-product-modal').find('input#voteup').val(1);
+                        $('#review-product-modal').find('#votelabel').empty()
+                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (min. 1 char):');
+                        $('#review-product-modal').find('#commenttext').val('+');
+                        $('#review-product-modal').find('#commenttext').removeAttr("disabled");
+                        $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
+
+                    }
+                } else { // vote down
+                    if (userrate == 0) {
+                        $('#review-product-modal').find('#votelabel').empty()
+                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> is given already with comment: ');
+                        $('#review-product-modal').find('#commenttext').attr("disabled", "disabled");
+                        $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");
+
+                    } else {
+                        $('#review-product-modal').find('input#voteup').val(2);
+                        $('#review-product-modal').find('#votelabel').empty()
+                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 5 chars): ');
+                        $('#review-product-modal').find('#commenttext').val('-');
+                        $('#review-product-modal').find('#commenttext').removeAttr("disabled");
+                        $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");
+
+                    }
+                }
+
+                $('#review-product-modal').modal('show');
+                if ($('#review-product-modal').hasClass('noid')) {
+                    setTimeout(function () {
+                        $('#review-product-modal').modal('hide');
+                    }, 2000);
+                }
+                return false;
+            });*/
+        }
+    }
+})();
+
 var PartialForms = (function () {
     return {
         setup: function () {
