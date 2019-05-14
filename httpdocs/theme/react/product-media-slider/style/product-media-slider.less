@@ -16,16 +16,18 @@
         background-color: black;
     }
 
-    .carousel-control { 
+    .carousel-control {
+        width: 50px;
         height: 50px;
         z-index: 100;
         cursor: pointer;
-
+        background: rgba(0,0,0,0.35);
+        opacity: 1;
         .glyphicon {
-            margin-top: 10px;
+            margin-top: -15px;
         }
     }
-
+    
     #slider-wrapper {
         position: absolute;
         left: 0;
@@ -149,16 +151,6 @@
                 &.image {
                     background-color: white;
                 }
-            }
-        }
-
-        .carousel-control {
-            width: 50px;
-            height: 100%;
-            background: rgba(0,0,0,0.35);
-            opacity: 1;
-            .glyphicon {
-                margin-top: -15px;
             }
         }
     }

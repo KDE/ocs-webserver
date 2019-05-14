@@ -23,12 +23,15 @@
   background-color: black;
 }
 #media-slider .carousel-control {
+  width: 50px;
   height: 50px;
   z-index: 100;
   cursor: pointer;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 1;
 }
 #media-slider .carousel-control .glyphicon {
-  margin-top: 10px;
+  margin-top: -15px;
 }
 #media-slider #slider-wrapper {
   position: absolute;
@@ -146,13 +149,4 @@
 }
 #media-slider #slide-navigation ul li.image {
   background-color: white;
-}
-#media-slider #slide-navigation .carousel-control {
-  width: 50px;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.35);
-  opacity: 1;
-}
-#media-slider #slide-navigation .carousel-control .glyphicon {
-  margin-top: -15px;
 }
