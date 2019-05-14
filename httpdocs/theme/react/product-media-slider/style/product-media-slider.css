@@ -172,8 +172,24 @@
   background-color: black;
 }
 #media-slider.hide-playlist {
-  padding-bottom: 5px;
+  padding-bottom: 20px;
 }
-#media-slider.hide-playlist .slider-navigation-toggle {
-  bottom: 5px;
+#media-slider.hide-playlist #slide-navigation {
+  height: 20px;
+}
+#media-slider.hide-playlist #slide-navigation ul {
+  display: table;
+  margin: 0 auto;
+  list-style-type: none;
+  padding: 0 8px;
+}
+#media-slider.hide-playlist #slide-navigation ul li {
+  float: left;
+  width: 12px;
+  height: 12px;
+  border: 1px solid white;
+  background-color: white;
+}
+#media-slider.hide-playlist #slide-navigation ul li.active {
+  background-color: #666;
 }

@@ -179,10 +179,29 @@
     }
 
     &.hide-playlist {
-        padding-bottom: 5px;
+        padding-bottom: 20px;
 
-        .slider-navigation-toggle {
-            bottom: 5px;
+        #slide-navigation {
+            height: 20px;
+
+            ul {
+                display: table;
+                margin:0 auto;
+                list-style-type: none;
+                padding:0 8px;
+
+                li {
+                    float:left;
+                    width:12px;
+                    height:12px;
+                    border: 1px solid white;
+                    background-color: white;
+
+                    &.active {
+                        background-color: #666;
+                    }
+                }
+            }
         }
     }
 

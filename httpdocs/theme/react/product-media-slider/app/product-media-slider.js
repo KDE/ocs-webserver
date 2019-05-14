@@ -113,18 +113,6 @@ function ProductMediaSlider(){
     />
   ));
 
-  let playlistDisplay;
-  if (showPlaylist){
-    playlistDisplay = (
-      <SlidesNavigation
-        gallery={gallery}
-        currentSlide={currentSlide}
-        containerWidth={containerWidth}
-        onChangeCurrentSlide={e => setCurrentSlide(e)}
-      />
-    )
-  }
-
   return (
     <main id="media-slider" 
       style={{height:sliderHeight}} 
@@ -144,7 +132,13 @@ function ProductMediaSlider(){
         </a>      
       </div>
       <a className="slider-navigation-toggle" onClick={toggleShowPlaylist} style={{top:(sliderHeight) - 35}}></a>
-      {playlistDisplay}
+      <SlidesNavigation
+        gallery={gallery}
+        currentSlide={currentSlide}
+        containerWidth={containerWidth}
+        showPlaylist={showPlaylist}
+        onChangeCurrentSlide={e => setCurrentSlide(e)}
+      />
     </main>
   )
 }
@@ -203,28 +197,42 @@ function SlidesNavigation(props){
     scrollBarEl.current.scrollLeft(thumbSliderPosition);
   }
 
-  const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
-    let image;
-    if (g.type === "image") image = <img src={g.url.split('/img')[0] + "/cache/120x80-1/img" + g.url.split('/img')[1]}/>
-    else if (g.type === "video") image = <span className="glyphicon glyphicon-play"></span>
-    return (
-      <li key={index}  className={ props.currentSlide === index ? "active " + g.type : g.type}>
-        <a onClick={e => props.onChangeCurrentSlide(index)}>{image}</a>
-      </li>
+  let navigationSliderDisplay;
+  if (props.showPlaylist){
+    const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
+      let image;
+      if (g.type === "image") image = <img src={g.url.split('/img')[0] + "/cache/120x80-1/img" + g.url.split('/img')[1]}/>
+      else if (g.type === "video") image = <span className="glyphicon glyphicon-play"></span>
+      return (
+        <li key={index}  className={ props.currentSlide === index ? "active " + g.type : g.type}>
+          <a onClick={e => props.onChangeCurrentSlide(index)}>{image}</a>
+        </li>
+      )
+    })
+    const thumbSliderStyle = {
+      position:'absolute',
+      top:'0',
+      width:thumbSliderWidth+'px',
+    }
+    navigationSliderDisplay = (
+      <Scrollbars ref={scrollBarEl} style={{ width: props.containerWidth, height: 110 }}>
+        <ul className="thumbnail-navigation" style={thumbSliderStyle}>{slidesThumbnailNavigationDisplay}</ul>
+    </Scrollbars>
     )
-  })
-
-  const thumbSliderStyle = {
-    position:'absolute',
-    top:'0',
-    width:thumbSliderWidth+'px',
+  } else {
+    const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => (
+        <li key={index}  className={ props.currentSlide === index ? "active " + g.type : g.type}>
+          <a onClick={e => props.onChangeCurrentSlide(index)}>{image}</a>
+        </li>
+    ))
+    navigationSliderDisplay = (
+      <ul>{slidesThumbnailNavigationDisplay}</ul>
+    )
   }
 
   return (
     <div id="slide-navigation">
-      <Scrollbars ref={scrollBarEl} style={{ width: props.containerWidth, height: 110 }}>
-          <ul className="thumbnail-navigation" style={thumbSliderStyle}>{slidesThumbnailNavigationDisplay}</ul>
-      </Scrollbars>
+      {navigationSliderDisplay}
     </div>
   )
 }
