@@ -71,8 +71,6 @@ function ProductMediaSlider(){
     setShowPlaylist(newShowPlaylistValue)
   }
   
-  console.log('show slider arrows - ' + showSliderArrows);  
-
   /* Render */
 
   // media slider css class
