@@ -31,7 +31,6 @@ function ProductMediaSlider(){
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ showPlaylist, setShowPlaylist ] = useState(true);
   const [ showSliderArrows, setShowSliderArrows ] = useState(true);
-  const [ timeoutInterval, setTimeoutInterval ] = useState();
   
   React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode])
@@ -70,16 +69,6 @@ function ProductMediaSlider(){
   function toggleShowPlaylist(){
     const newShowPlaylistValue = showPlaylist === true ? false : true;
     setShowPlaylist(newShowPlaylistValue)
-  }
-
-  function onMouseEnterHandler(){
-    clearInterval(timeoutInterval);
-    setShowSliderArrows(true);
-  }
-
-  function onMouseLeaveHandler(){  
-    const intervalId = setInterval(setShowSliderArrows(false), 5000)
-    setTimeoutInterval(intervalId);
   }
   
   console.log('show slider arrows - ' + showSliderArrows);  
@@ -141,8 +130,8 @@ function ProductMediaSlider(){
     <main id="media-slider" 
       style={{height:sliderHeight}} 
       className={mediaSliderCssClass}
-      onMouseEnter={onMouseEnterHandler}
-      onMouseLeave={onMouseLeaveHandler}>
+      onMouseEnter={() => showSliderArrows(true)}
+      onMouseLeave={() => showSliderArrows(false)}>
 
       <div id="slider-container" style={sliderContainerStyle}>
         <a className="left carousel-control" id="arrow-left" style={sliderArrowCss} onClick={() => setCurrentSlide(prevCurrentSlide)}>
