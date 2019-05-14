@@ -74,9 +74,14 @@ function ProductMediaSlider(){
     setTimeoutInterval(intervalId);    
   }
   
-  console.log('show slider arrows - ' + showSliderArrows);
+  console.log('show slider arrows - ' + showSliderArrows);  
 
   /* Render */
+
+  // media slider css class
+  let mediaSliderCssClass;
+  if (cinemaMode === true) mediaSliderCssClass += "cinema-mode ";
+  if (showSliderArrows === false) mediaSliderCssClass += "hide-arrows";
 
   // slider container style
   const sliderContainerStyle = {
