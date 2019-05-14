@@ -28,7 +28,7 @@ function VideoPlayerWrapper(props){
                 src={source}>
                     <BigPlayButton position="center" />
                     <LoadingSpinner />
-                    <ControlBar autoHide={false} className="custom-video-player">
+                    <ControlBar autohide={false} className="custom-video-player">
                         <VolumeMenuButton vertical />
                         <a className="cinema-mode-button" onClick={props.onCinemaModeClick} order={8}>cinema</a>
                     </ControlBar>
