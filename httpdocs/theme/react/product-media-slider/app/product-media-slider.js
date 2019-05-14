@@ -200,13 +200,11 @@ function SlidesNavigation(props){
           <a className="left carousel-control" id="arrow-left" onClick={() => props.onChangeCurrentSlide(prevCurrentSlide)}>
             <span className="glyphicon glyphicon-chevron-left"></span>
           </a>
-          <Draggable
-            axis="x"
-            defaultPosition={{x: 0, y: 0}}>
+          <Scrollbar style={ {width: props.containerWidth, height: 100} }>
             <ul className="thumbnail-navigation" style={thumbSliderStyle}>
               {slidesThumbnailNavigationDisplay}
             </ul>
-          </Draggable>
+          </Scrollbar>
           <a className="right carousel-control" id="arrow-right" onClick={() => props.onChangeCurrentSlide(nextCurrentSlide)}>
                 <span className="glyphicon glyphicon-chevron-right"></span>
               </a>
