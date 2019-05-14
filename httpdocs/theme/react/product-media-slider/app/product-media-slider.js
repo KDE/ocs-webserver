@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import VideoPlayerWrapper from './video-player';
-import Draggable, {DraggableCore} from 'react-draggable'; // Both at the same time
+// import Draggable, {DraggableCore} from 'react-draggable'; // Both at the same time
+import ScrollArea from 'react-scrollbar';
 
 
 function ProductMediaSlider(){ 
@@ -200,11 +201,15 @@ function SlidesNavigation(props){
           <a className="left carousel-control" id="arrow-left" onClick={() => props.onChangeCurrentSlide(prevCurrentSlide)}>
             <span className="glyphicon glyphicon-chevron-left"></span>
           </a>
-          <Scrollbar style={ {width: props.containerWidth, height: 100} }>
-            <ul className="thumbnail-navigation" style={thumbSliderStyle}>
-              {slidesThumbnailNavigationDisplay}
-            </ul>
-          </Scrollbar>
+          <ScrollArea
+            speed={0.8}
+            className="slide-scroll-wrapper"
+            contentClassName="slide-scroll-content"
+            horizontal={true}>
+              <ul className="thumbnail-navigation" style={thumbSliderStyle}>
+                {slidesThumbnailNavigationDisplay}
+              </ul>
+            </ScrollArea>
           <a className="right carousel-control" id="arrow-right" onClick={() => props.onChangeCurrentSlide(nextCurrentSlide)}>
                 <span className="glyphicon glyphicon-chevron-right"></span>
               </a>
