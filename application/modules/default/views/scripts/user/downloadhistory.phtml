@@ -138,16 +138,21 @@ $pageCount = $this->downloadhistory->getTotalItemCount()/$this->downloadhistory-
                    <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
                                aria-hidden="true">&times;</span></button>
                </div>
+               <form class="full-width product-add-comment-review-new" action="/productcomment/addreplyreviewnew/" method="post" id="reviewform">
                <div class="modal-body">
-                 <form class="full-width product-add-comment-review-new" action="/productcomment/addreplyreviewnew/" method="post" id="reviewform">
+                 
                             <input type="hidden" name="p" id="form_p"/>
                             <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/> 
                              <input type="hidden" name="s" id="userscorevalue"/>
                              <input type="hidden" name="v" value="1" id="voteup"/>
                             <textarea name="msg" class="full-width" id="commenttext"></textarea>
-                            <button type="submit" class="small pull-right">Rate Now</button>
-                </form>
+                
                 </div>
+                 <div class="modal-footer">
+                            <button type="button" class="small" id="modal-btn-cancel" style="margin-right:20px ">Cancel</button>                             
+                            <button type="submit" class="small pull-right">Rate Now</button>
+                </div>
+                </form>
             </div>
         </div>
     </div>

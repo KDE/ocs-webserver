@@ -99,7 +99,13 @@ krsort($options);
 <script type="text/javascript">    
      $(document).ready(function(){          
 
-            $( "#ratingoptions" ).change(function() {        
+            var preRatingSelected=0;
+            var currentSelect;
+            
+            $( "#ratingoptions" ).focus(function() {
+                currentSelect = $(this);
+                preRatingSelected = $(this).val();               
+            }).change(function() {        
           
              var optionSelected = $( "#ratingoptions option:selected" );             
              var valueSelected  = optionSelected.val();
@@ -152,6 +158,12 @@ krsort($options);
              $('#score-product-modal').modal('show');
            });
 
+           $("#modal-btn-cancel").on("click", function(){                                                                               
+                $("#score-product-modal").modal('hide');                
+              });     
+             $('#score-product-modal').on('hidden.bs.modal', function () {
+                 $(currentSelect).find("option[value="+preRatingSelected+"]").prop('selected', true);
+                });     
 
         });
 </script>

@@ -260,8 +260,9 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                    <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
                                aria-hidden="true">&times;</span></button>
                </div>
+               <form class="full-width product-add-comment-review" action="/productcomment/addreplyreview/" method="post" >
                <div class="modal-body">
-                 <form class="full-width product-add-comment-review" action="/productcomment/addreplyreview/" method="post" >
+                 
                             <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
                             <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>
                             <input type="hidden" name="v" value="1" id="voteup"/>
@@ -269,9 +270,14 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                             <input type="hidden" name="otxt" value="<?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?>" id="otxt"/>
                             <input type="hidden" name="userrate" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['user_like']?>" id="userrate"/>                            
                             <textarea name="msg" class="full-width" id="commenttext"><?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?></textarea>
-                            <button type="submit" class="small pull-right">Rate Now</button>
-                </form>
+                            
+                
                 </div>
+                <div class="modal-footer">
+                            <button type="button" class="small" data-dismiss="modal">cancel</button>
+                            <button type="submit" class="small pull-right">Rate Now</button>
+                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -285,8 +291,9 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                    <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
                                aria-hidden="true">&times;</span></button>
                </div>
+               <form class="full-width product-add-comment-review-new" action="/productcomment/addreplyreviewnew/" method="post" id="reviewform">
                <div class="modal-body">
-                 <form class="full-width product-add-comment-review-new" action="/productcomment/addreplyreviewnew/" method="post" id="reviewform">
+                 
                             <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
                             <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>                            
                             <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
@@ -295,9 +302,13 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                             <input type="hidden" name="userscore" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['score']?>" id="userscore"/>
                             <input type="hidden" name="s" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['score']?>" id="userscorevalue"/>
                             <textarea name="msg" class="full-width" id="commenttext"><?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?></textarea>
-                            <button type="submit" class="small pull-right">Rate Now</button>
-                </form>
+                                   
                 </div>
+                <div class="modal-footer">
+                            <button type="button" class="small" id="modal-btn-cancel" style="margin-right:20px ">Cancel</button>                             
+                            <button type="submit" class="small pull-right">Rate Now</button>
+                </div>
+                </form>
             </div>
         </div>
     </div>
