@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import VideoPlayerWrapper from './video-player';
+import { Toggle } from "react-toggle-component";
 // import Draggable, {DraggableCore} from 'react-draggable'; // Both at the same time
 import { Scrollbars } from 'react-custom-scrollbars';
 
@@ -74,7 +75,7 @@ function ProductMediaSlider(){
 
   function onMouseEnterHandler(){
     const intervalId = setInterval(setShowSliderArrows(false), 5000)
-    setTimeoutInterval(intervalId);
+    setTimeoutInterval(intervalId);m
   }
 
   function onMouseLeaveHandler(){  
@@ -155,7 +156,13 @@ function ProductMediaSlider(){
           <span className="glyphicon glyphicon-chevron-right"></span>
         </a>      
       </div>
-      <a className="slider-navigation-toggle" onClick={toggleShowPlaylist}>toggle playlist</a>
+      
+      <span className="slider-navigation-toggle" onClick={toggleShowPlaylist}>
+        <Toggle
+          name="toggle-1"
+          onToggle={e => console.log("onToggle", e.target)}
+        />
+      </span>
       {playlistDisplay}
     </main>
   )
