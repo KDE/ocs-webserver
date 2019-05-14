@@ -110,6 +110,7 @@ function ProductMediaSlider(){
       sliderHeight={sliderHeight}
       cinemaMode={cinemaMode}
       onCinemaModeClick={toggleCinemaMode}
+      onSetSliderHeight={height => setSliderHeight(height)}
     />
   ));
 
@@ -146,8 +147,8 @@ function ProductMediaSlider(){
 function SlideItem(props){
 
   function imageOnLoad(e){
-    console.log(e)
-    console.log('image one load');
+    const imageHeight = document.getElementById('slide-img-'+props.slideIndex).naturalHeight;
+    if (props.currentSlide === props.slideIndex) props.onSetSliderHeight(imageHeight);
   }
   
   let slideContentDisplay, slideMediaItemMenu;
