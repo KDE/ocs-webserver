@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import VideoPlayerWrapper from './video-player';
 // import Draggable, {DraggableCore} from 'react-draggable'; // Both at the same time
