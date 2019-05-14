@@ -29,8 +29,9 @@ function ProductMediaSlider(){
   const [ sliderHeight, setSliderHeight ] = useState(360);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
   const [ cinemaMode, setCinemaMode ] = useState(false);
+  const [ showPlaylist, setShowPlaylist ] = useState(true);
   const [ showSliderArrows, setShowSliderArrows ] = useState(true);
-  const [ timeoutInterval, setTimeoutInterval ] = useState()
+  const [ timeoutInterval, setTimeoutInterval ] = useState();
   
   React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode])
@@ -63,6 +64,12 @@ function ProductMediaSlider(){
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
     setCinemaMode(newCinemaMode);
+  }
+
+  // toggle show playlist
+  function toggleShowPlaylist(){
+    const newShowPlaylistValue = showPlaylist === true ? false : true;
+    setShowPlaylist(newShowPlaylistValue)
   }
 
   function onMouseEnterHandler(){
@@ -118,6 +125,18 @@ function ProductMediaSlider(){
     />
   ));
 
+  let playlistDisplay;
+  if (showPlaylist){
+    playlistDisplay = (
+      <SlidesNavigation
+        gallery={gallery}
+        currentSlide={currentSlide}
+        containerWidth={containerWidth}
+        onChangeCurrentSlide={e => setCurrentSlide(e)}
+      />
+    )
+  }
+
   return (
     <main id="media-slider" 
       style={{height:sliderHeight}} 
@@ -136,13 +155,8 @@ function ProductMediaSlider(){
           <span className="glyphicon glyphicon-chevron-right"></span>
         </a>      
       </div>
-      <SlidesNavigation
-        gallery={gallery}
-        currentSlide={currentSlide}
-        containerWidth={containerWidth}
-        onChangeCurrentSlide={e => setCurrentSlide(e)}
-      />
-
+      <a className="slider-navigation-toggle" onClick={toggleShowPlaylist}>toggle playlist</a>
+      {playlistDisplay}
     </main>
   )
 }
