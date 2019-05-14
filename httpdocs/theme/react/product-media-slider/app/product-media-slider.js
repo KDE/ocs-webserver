@@ -179,7 +179,8 @@ function SlidesNavigation(props){
   React.useEffect(() => { scrollSlider() },[props.currentSlide])
 
   function scrollSlider(){
-    scrollBarEl.current.scrollLeft(0);
+    const newLeftPosition = 0 - thumbSliderPosition;
+    scrollBarEl.current.scrollLeft(newLeftPosition);
   }
 
   const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
@@ -196,7 +197,8 @@ function SlidesNavigation(props){
   const thumbSliderStyle = {
     position:'absolute',
     top:'0',
-    width:thumbSliderWidth+'px'
+    width:thumbSliderWidth+'px',
+    left:'-'+thumbSliderPosition+'px'
   }
 
   return (
