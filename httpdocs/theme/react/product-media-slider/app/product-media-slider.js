@@ -159,7 +159,6 @@ function SlideItem(props){
 
 function SlidesNavigation(props){
 
-  const scrollBarEl = useRef(null)
   const thumbElementWidth = 140;
   const [ thumbSliderWidth, setThumbSliderWidth ] = useState((thumbElementWidth * props.gallery.length) +10);
   let thumbSliderPosition = 0;
@@ -170,8 +169,9 @@ function SlidesNavigation(props){
   React.useEffect(() => { scrollSlider() },[props.currentSlide])
 
   function scrollSlider(){
-    const newLeftPosition = 0 - thumbSliderPosition;
-    scrollBarEl.current.scrollLeft(newLeftPosition);
+    $('#slide-navigation').children().attr('id','slider-scroll-wrapper');
+    $('#slider-scroll-wrapper').children().attr('id','slider-scroll');
+    $('#slider-scroll').scrollLeft(thumbSliderPosition)
   }
 
   const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
@@ -193,7 +193,7 @@ function SlidesNavigation(props){
 
   return (
     <div id="slide-navigation">
-      <Scrollbars ref={scrollBarEl} style={{ width: props.containerWidth, height: 110 }}>
+      <Scrollbars style={{ width: props.containerWidth, height: 110 }}>
           <ul className="thumbnail-navigation" style={thumbSliderStyle}>{slidesThumbnailNavigationDisplay}</ul>
       </Scrollbars>
     </div>
