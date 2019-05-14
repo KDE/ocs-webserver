@@ -142,7 +142,7 @@ class Default_Model_Tags
     public function getTagsArray($object_id, $tag_type,$tag_group_ids)
     {           
             $sql = "
-                        SELECT tag.tag_id,tag.tag_name,tag_group_item.tag_group_id,tag.tag_fullname
+                        SELECT tag.tag_id,tag.tag_name,tag_group_item.tag_group_id,tag.tag_fullname, tag.tag_description
                         FROM tag_object
                         JOIN tag ON tag.tag_id = tag_object.tag_id
                         join tag_group_item on tag_object.tag_id = tag_group_item.tag_id and tag_object.tag_group_id = tag_group_item.tag_group_id
@@ -958,14 +958,9 @@ class Default_Model_Tags
      */
     public function getTagsEbookSubject($object_id)
     {
-        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_SUBJECT_GROUPID;
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_ebook_subject;
         $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
-
-        $tag_names = array();
-        foreach ($tags as $tag) {
-            $tag_names[]=$tag['tag_fullname'];
-        }
-        return $tag_names;
+        return $tags;
     }
 
      /**
@@ -975,14 +970,9 @@ class Default_Model_Tags
      */
     public function getTagsEbookAuthor($object_id)
     {
-        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_AUTHOR_GROUPID;
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_ebook_author;
         $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
-
-        $tag_names = array();
-        foreach ($tags as $tag) {
-            $tag_names[]=$tag['tag_fullname'];
-        }
-        return $tag_names;
+        return $tags;
     }
     
     
@@ -993,14 +983,9 @@ class Default_Model_Tags
      */
     public function getTagsEbookEditor($object_id)
     {
-        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_EDITOR_GROUPID;
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_ebook_editor;
         $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
-
-        $tag_names = array();
-        foreach ($tags as $tag) {
-            $tag_names[]=$tag['tag_fullname'];
-        }
-        return $tag_names;
+        return $tags;
     }
     
     
@@ -1011,14 +996,9 @@ class Default_Model_Tags
      */
     public function getTagsEbookIllustrator($object_id)
     {
-        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_ILLUSTRATOR_GROUPID;
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_ebook_illustrator;
         $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
-
-        $tag_names = array();
-        foreach ($tags as $tag) {
-            $tag_names[]=$tag['tag_fullname'];
-        }
-        return $tag_names;
+        return $tags;
     }
     
     
@@ -1029,14 +1009,9 @@ class Default_Model_Tags
      */
     public function getTagsEbookTranslator($object_id)
     {
-        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_TRANSLATOR_GROUPID;
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_ebook_translator;
         $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
-
-        $tag_names = array();
-        foreach ($tags as $tag) {
-            $tag_names[]=$tag['tag_fullname'];
-        }
-        return $tag_names;
+        return $tags;
     }
     
     
@@ -1047,14 +1022,9 @@ class Default_Model_Tags
      */
     public function getTagsEbookShelf($object_id)
     {
-        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_SHELF_GROUPID;
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_ebook_shelf;
         $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
-
-        $tag_names = array();
-        foreach ($tags as $tag) {
-            $tag_names[]=$tag['tag_fullname'];
-        }
-        return $tag_names;
+        return $tags;
     }
     
     
@@ -1065,14 +1035,9 @@ class Default_Model_Tags
      */
     public function getTagsEbookLanguage($object_id)
     {
-        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_LANGUAGE_GROUPID;
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_ebook_language;
         $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
-
-        $tag_names = array();
-        foreach ($tags as $tag) {
-            $tag_names[]=$tag['tag_fullname'];
-        }
-        return $tag_names;
+        return $tags;
     }
     
     
@@ -1083,14 +1048,9 @@ class Default_Model_Tags
      */
     public function getTagsEbookType($object_id)
     {
-        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_TYPE_GROUPID;
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_ebook_type;
         $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
-
-        $tag_names = array();
-        foreach ($tags as $tag) {
-            $tag_names[]=$tag['tag_fullname'];
-        }
-        return $tag_names;
+        return $tags;
     }
     
     

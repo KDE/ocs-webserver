@@ -30,13 +30,14 @@
             <div>
                 <a href="<?= $this->buildProductUrl($file->project_id) ?>"><?=$file->title?></a>
                 <p><?=$file->cat_title?> 
+                <br/>
+                by <a  href="<?php echo $this->buildMemberUrl($file->project_username); ?>" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$file->project_member_id?>">
+             <?=$file->project_username?></a>
+
             </div>
         </div>      
                     
-        <div class="col-lg-2 col-md-2" style="white-space: nowrap; padding-top: 15px">         
-             by <a  href="<?php echo $this->buildMemberUrl($file->project_username); ?>" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$file->project_member_id?>">
-             <?=$file->project_username?></a>
-        </div>
+        
 
         <div class="col-lg-2 col-md-2">             
             <div class="rating text-center" >               

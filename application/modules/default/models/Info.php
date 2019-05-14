@@ -757,7 +757,25 @@ class Default_Model_Info
         $pid = $this->getRandomStoreProjectIds();
         $project_id = $pid['project_id'];
 
-        $sql = '
+        $sql="SELECT 
+                p.project_id
+                ,p.title
+                ,p.description  
+                ,p.image_small
+                ,p.count_comments   
+                ,p.changed_at
+                ,pr.likes as count_likes
+                ,pr.dislikes as count_dislikes
+                ,IFNULL(pr.score_with_pling, 500) AS laplace_score
+                ,m.profile_image_url
+                ,m.username                               
+                FROM
+                project as p            
+                JOIN member AS m ON m.member_id = p.member_id
+                LEFT join  stat_rating_project AS pr  ON p.project_id = pr.project_id
+                WHERE
+                p.project_id = :project_id";
+        /*$sql = '
             SELECT 
                 `p`.*
                 ,laplace_score(`p`.`count_likes`, `p`.`count_dislikes`) AS `laplace_score`
@@ -769,15 +787,10 @@ class Default_Model_Info
                 `member` AS `m` ON `m`.`member_id` = `p`.`member_id`
             WHERE
                `p`.`project_id` = :project_id
-            ';
+            ';*/
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql, array('project_id' => $project_id));
         return $resultSet;
-        /*$resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('project_id' => $project_id));
-        if (count($resultSet) > 0) {
-            return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
-        }
-
-        return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));*/
+      
     }
 
     public function getRandPlingedProduct()
@@ -785,7 +798,26 @@ class Default_Model_Info
         $pid = $this->getRandomPlingedProjectIds();
         $project_id = $pid['project_id'];
 
-        $sql = '
+        $sql = "SELECT 
+                p.project_id
+                ,p.title
+                ,p.description  
+                ,p.image_small
+                ,p.count_comments   
+                ,p.changed_at
+                ,pr.likes as count_likes
+                ,pr.dislikes as count_dislikes
+                ,IFNULL(pr.score_with_pling, 500) AS laplace_score
+                ,m.profile_image_url
+                ,m.username                               
+                ,(select count(1) from project_plings pp where pp.project_id = p.project_id and pp.is_deleted = 0) as sum_plings
+                FROM
+                project as p            
+                JOIN member AS m ON m.member_id = p.member_id
+                LEFT join  stat_rating_project AS pr  ON p.project_id = pr.project_id
+                WHERE
+                p.project_id = :project_id";
+        /*$sql = '
             SELECT 
                 `p`.*
                 ,laplace_score(`p`.`count_likes`, `p`.`count_dislikes`) AS `laplace_score`
@@ -798,7 +830,7 @@ class Default_Model_Info
                 `member` AS `m` ON `m`.`member_id` = `p`.`member_id`
             WHERE
                `p`.`project_id` = :project_id
-            ';
+            ';*/
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql, array('project_id' => $project_id));
         return $resultSet;
         /*$resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('project_id' => $project_id));
@@ -814,19 +846,38 @@ class Default_Model_Info
         $pid = $this->getRandomFeaturedProjectIds();
         $project_id = $pid['project_id'];
 
-        $sql = '
+        $sql="SELECT 
+                p.project_id
+                ,p.title
+                ,p.description  
+                ,p.image_small
+                ,p.count_comments   
+                ,p.changed_at
+                ,pr.likes as count_likes
+                ,pr.dislikes as count_dislikes
+                ,IFNULL(pr.score_with_pling, 500) AS laplace_score
+                ,m.profile_image_url
+                ,m.username                               
+                FROM
+                project as p            
+                JOIN member AS m ON m.member_id = p.member_id
+                LEFT join  stat_rating_project AS pr  ON p.project_id = pr.project_id
+                WHERE
+                p.project_id = :project_id";
+        /*$sql = '
             SELECT 
-                `p`.*
-                ,laplace_score(`p`.`count_likes`, `p`.`count_dislikes`) AS `laplace_score`
+                `p`.project_id                
+                ,IFNULL(`pr`.`score_with_pling`, 500) AS `laplace_score`
                 ,`m`.`profile_image_url`
                 ,`m`.`username`               
             FROM
-                `project` AS `p`
+                `project` AS `p`            
             JOIN 
                 `member` AS `m` ON `m`.`member_id` = `p`.`member_id`
+            LEFT join  `stat_rating_project` AS `pr`  ON `p`.`project_id` = `pr`.`project_id`     
             WHERE
                `p`.`project_id` = :project_id
-            ';
+            ';*/
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql, array('project_id' => $project_id));
         return $resultSet;
     }

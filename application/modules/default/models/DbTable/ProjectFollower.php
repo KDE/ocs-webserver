@@ -71,13 +71,14 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
                         ,p.description
                         ,p.image_small
                         ,p.created_at as project_created_at
-                        ,p.changed_at as project_changed_at
-                        ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
-                        ,c.title as cat_title                        
-                        ,p.count_likes
-                        ,p.count_dislikes
+                        ,p.changed_at as project_changed_at                       
+                        ,c.title as cat_title                                               
+                        ,pr.likes AS count_likes
+                        ,pr.dislikes AS count_dislikes
+                        ,IFNULL(pr.score_with_pling, 500) AS laplace_score
                         FROM project_follower f                        
                         INNER JOIN project p ON p.project_id = f.project_id 
+                        LEFT join  stat_rating_project AS pr  ON p.project_id = pr.project_id
                         inner join member m on p.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
                         inner join project_category c on p.project_category_id = c.project_category_id
                         WHERE (p.status = 100) AND (f.member_id = :member_id) 
