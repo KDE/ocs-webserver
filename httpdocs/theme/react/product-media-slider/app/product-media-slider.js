@@ -198,7 +198,7 @@ function SlidesNavigation(props){
 
   return (
     <div id="slide-navigation">
-      <Scrollbars ref='scrollBarEl' style={{ width: props.containerWidth, height: 110 }}>
+      <Scrollbars ref={scrollBarEl} style={{ width: props.containerWidth, height: 110 }}>
           <ul className="thumbnail-navigation" style={thumbSliderStyle}>{slidesThumbnailNavigationDisplay}</ul>
       </Scrollbars>
     </div>
