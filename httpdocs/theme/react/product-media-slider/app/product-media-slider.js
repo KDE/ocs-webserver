@@ -128,8 +128,8 @@ function ProductMediaSlider(){
     <main id="media-slider" 
       style={{height:sliderHeight}} 
       className={mediaSliderCssClass}
-      onMouseEnter={() => showSliderArrows(true)}
-      onMouseLeave={() => showSliderArrows(false)}>
+      onMouseEnter={() => setShowSliderArrows(true)}
+      onMouseLeave={() => setShowSliderArrows(false)}>
 
       <div id="slider-container" style={sliderContainerStyle}>
         <a className="left carousel-control" id="arrow-left" style={sliderArrowCss} onClick={() => setCurrentSlide(prevCurrentSlide)}>

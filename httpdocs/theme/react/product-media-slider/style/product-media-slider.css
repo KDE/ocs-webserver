@@ -42,6 +42,7 @@
   width: 31px;
   background-size: 25px 25px;
   z-index: 100;
+  cursor: pointer;
   background-image: url(../../assets/img/playlist-toggle.png);
   background-repeat: no-repeat;
   background-position: center center;
