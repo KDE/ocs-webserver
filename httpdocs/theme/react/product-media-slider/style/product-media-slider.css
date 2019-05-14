@@ -37,7 +37,7 @@
 #media-slider .slider-navigation-toggle {
   bottom: 110px;
   position: absolute;
-  left: 5px;
+  right: 5px;
   height: 31px;
   width: 31px;
   background-size: 25px 25px;
