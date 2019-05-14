@@ -1296,7 +1296,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                 //$statement->order('project.changed_at DESC');
                 break;
 
-            case 'top':
+            case 'rating':
                 //$statement->order(array('amount_received DESC', 'count_plings DESC', 'latest_pling DESC', 'project.created_at DESC'));
                 //$statement->order(array(new Zend_Db_Expr('(round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC'),'amount_received DESC', 'count_plings DESC', 'latest_pling DESC', 'project.created_at DESC'));
                 /*$statement->order(array(
@@ -1305,7 +1305,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                 ));*/
                 $statement->order('project.laplace_score DESC');
                 break;
-            case 'topold':
+            case 'top':
                 $statement->order('project.laplace_score_old DESC');
                 break;
             case 'download':
