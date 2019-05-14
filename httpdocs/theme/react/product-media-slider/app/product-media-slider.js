@@ -152,26 +152,28 @@ function ProductMediaSlider(){
 function SlideItem(props){
   
   let slideContentDisplay, slideMediaItemMenu;
-  if (props.slide.type === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
-  else if (props.slide.type === "image") {
-    slideContentDisplay = <img onClick={props.onCinemaModeClick} id={"slide-img-"+props.slideIndex} src={props.slide.url}/>
-    /*slideMediaItemMenu = (
-      <ul className="slide-media-item-menu">
-        <li><a onClick={props.onCinemaModeClick} className="cinema-mode">cinema</a></li>
-        <li><a className="full-screen">full screen</a></li>
-      </ul>
-    )*/
-  }
-  else if (props.slide.type === "video") {
-    slideContentDisplay = (
-      <VideoPlayerWrapper 
-        height={props.sliderHeight}
-        width={(props.containerWidth * 0.7)} 
-        source={props.slide.url} 
-        onCinemaModeClick={props.onCinemaModeClick}
-        playVideo={props.currentSlide === props.slideIndex}
-      />
-    )
+  if (props.currentSlide === props.slideIndex){
+    if (props.slide.type === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
+    else if (props.slide.type === "image") {
+      slideContentDisplay = <img onClick={props.onCinemaModeClick} id={"slide-img-"+props.slideIndex} src={props.slide.url}/>
+      /*slideMediaItemMenu = (
+        <ul className="slide-media-item-menu">
+          <li><a onClick={props.onCinemaModeClick} className="cinema-mode">cinema</a></li>
+          <li><a className="full-screen">full screen</a></li>
+        </ul>
+      )*/
+    }
+    else if (props.slide.type === "video") {
+      slideContentDisplay = (
+        <VideoPlayerWrapper 
+          height={props.sliderHeight}
+          width={(props.containerWidth * 0.7)} 
+          source={props.slide.url} 
+          onCinemaModeClick={props.onCinemaModeClick}
+          playVideo={props.currentSlide === props.slideIndex}
+        />
+      )
+    }
   }
 
   return(
