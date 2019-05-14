@@ -65,6 +65,14 @@ function ProductMediaSlider(){
     setCinemaMode(newCinemaMode);
   }
 
+  function onMouseEnterHandler(){
+    console.log('cancel fade out timer');
+  }
+
+  function onMouseLeaveHandler(){
+    console.log('init fade out timer');
+  }
+  
   /* Render */
 
   // slider container style
@@ -102,7 +110,12 @@ function ProductMediaSlider(){
   ));
 
   return (
-    <main id="media-slider" style={{height:sliderHeight}} className={cinemaMode === true ? "cinema-mode" : ""}>
+    <main id="media-slider" 
+      style={{height:sliderHeight}} 
+      className={cinemaMode === true ? "cinema-mode" : ""}
+      onMouseEnter={onMouseEnterHandler}
+      onMouseLeave={onMouseLeaveHandler}>
+
       <div id="slider-container" style={sliderContainerStyle}>
         <a className="left carousel-control" id="arrow-left" style={sliderArrowCss} onClick={() => setCurrentSlide(prevCurrentSlide)}>
           <span className="glyphicon glyphicon-chevron-left"></span>
@@ -120,6 +133,7 @@ function ProductMediaSlider(){
         containerWidth={containerWidth}
         onChangeCurrentSlide={e => setCurrentSlide(e)}
       />
+
     </main>
   )
 }
@@ -129,19 +143,19 @@ function SlideItem(props){
   let slideContentDisplay, slideMediaItemMenu;
   if (props.slide.type === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
   else if (props.slide.type === "image") {
-    slideContentDisplay = <img id={"slide-img-"+props.slideIndex} src={props.slide.url}/>
-    slideMediaItemMenu = (
+    slideContentDisplay = <img onClick={props.onCinemaModeClick} id={"slide-img-"+props.slideIndex} src={props.slide.url}/>
+    /*slideMediaItemMenu = (
       <ul className="slide-media-item-menu">
         <li><a onClick={props.onCinemaModeClick} className="cinema-mode">cinema</a></li>
         <li><a className="full-screen">full screen</a></li>
       </ul>
-    )
+    )*/
   }
   else if (props.slide.type === "video") {
     slideContentDisplay = (
       <VideoPlayerWrapper 
         height={props.sliderHeight}
-        width={(props.containerWidth * 0.7)} 
+        width={(props.containerWidth * 0.85)} 
         source={props.slide.url} 
         onCinemaModeClick={props.onCinemaModeClick}
         playVideo={props.currentSlide === props.slideIndex}
