@@ -24,14 +24,14 @@ function VideoPlayerWrapper(props){
         videoPlayerDisplay = (
             <Player
                 ref={playerEl}
-                fluid="false"
+                fluid={false}
                 height={props.height}
                 width={props.width}
                 playsInline
                 src={source}>
                     <BigPlayButton position="center" />
                     <LoadingSpinner />
-                    <ControlBar autoHide="false" className="custom-video-player">
+                    <ControlBar autohide={false} className="custom-video-player">
                         <VolumeMenuButton vertical />
                         <a className="cinema-mode-button" onClick={props.onCinemaModeClick} order={8}>cinema</a>
                     </ControlBar>
