@@ -8,8 +8,11 @@ function VideoPlayerWrapper(props){
     const [ videoClicked, setVideoClicked ] = useState(false);
     
     React.useEffect(() => { convertStringToUrl(); }, [props.source])
-    // React.useEffect(() => { }, [props.playVideo])
-    // React.useEffect(() => { console.log(playerEl)},[playerEl])
+    React.useEffect(() => { 
+        if (props.playVideo === false) {
+            playerEl.current.stop()
+        }
+    }, [props.playVideo])
     
     function convertStringToUrl(){
         let newSource = props.source.replace(/%2F/g,'/').replace(/%3A/g,':');
@@ -28,7 +31,7 @@ function VideoPlayerWrapper(props){
                 src={source}>
                     <BigPlayButton position="center" />
                     <LoadingSpinner />
-                    <ControlBar autohide="false" className="custom-video-player">
+                    <ControlBar autoHide="false" className="custom-video-player">
                         <VolumeMenuButton vertical />
                         <a className="cinema-mode-button" onClick={props.onCinemaModeClick} order={8}>cinema</a>
                     </ControlBar>
