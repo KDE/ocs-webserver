@@ -189,7 +189,6 @@ function SlidesNavigation(props){
     position:'absolute',
     top:'0',
     width:thumbSliderWidth+'px',
-    left:'-'+thumbSliderPosition+'px'
   }
 
   return (
