@@ -67,68 +67,59 @@ function ProductMediaSlider(){
 
   /* Render */
 
-  let productMediaSliderDisplay;
-  if (!loading){
-    // slider container style
-    const sliderContainerStyle = {
-      width:sliderWidth+'px',
-      height:sliderHeight+'px'
-    }
-
-    // slider wrapper style
-    const sliderWrapperStyle = {
-      width:sliderWidth+'px',
-      left:'-'+sliderPosition+'px',
-      height:sliderHeight+'px'
-    }
-
-    // prev / next slide arrow values
-    const prevCurrentSlide = currentSlide > 0 ? currentSlide - 1 : gallery.length - 1;
-    const nextCurrentSlide = currentSlide < (gallery.length - 1) ? ( currentSlide + 1 ) : 0;
-
-    // slider arrows css
-    const sliderArrowCss = {
-      top:((sliderHeight / 2 ) - 50)+'px'
-    }
-
-    // slides display
-    const slidesDisplay = gallery.map((s,index) => (
-      <SlideItem 
-        key={index}
-        slideIndex={index}
-        slide={s}
-        currentSlide={currentSlide}
-        containerWidth={containerWidth}
-        sliderHeight={sliderHeight}
-        cinemaMode={cinemaMode}
-        onCinemaModeClick={toggleCinemaMode}
-      />
-    ));
-    productMediaSliderDisplay = (
-      <div>
-        <div id="slider-container" style={sliderContainerStyle}>
-          <a className="left carousel-control" id="arrow-left" style={sliderArrowCss} onClick={() => setCurrentSlide(prevCurrentSlide)}>
-            <span className="glyphicon glyphicon-chevron-left"></span>
-          </a>
-          <div id="slider-wrapper" style={sliderWrapperStyle}>
-            {slidesDisplay}    
-          </div>
-          <a className="right carousel-control" id="arrow-right" style={sliderArrowCss} onClick={() => setCurrentSlide(nextCurrentSlide)}>
-            <span className="glyphicon glyphicon-chevron-right"></span>
-          </a>      
-        </div>
-        <SlidesNavigation
-          gallery={gallery}
-          currentSlide={currentSlide}
-          containerWidth={containerWidth}
-          onChangeCurrentSlide={e => setCurrentSlide(e)}
-        />
-      </div>
-    )
+  // slider container style
+  const sliderContainerStyle = {
+    width:sliderWidth+'px',
+    height:sliderHeight+'px'
   }
+
+  // slider wrapper style
+  const sliderWrapperStyle = {
+    width:sliderWidth+'px',
+    left:'-'+sliderPosition+'px',
+    height:sliderHeight+'px'
+  }
+
+  // prev / next slide arrow values
+  const prevCurrentSlide = currentSlide > 0 ? currentSlide - 1 : gallery.length - 1;
+  const nextCurrentSlide = currentSlide < (gallery.length - 1) ? ( currentSlide + 1 ) : 0;
+
+  // slider arrows css
+  const sliderArrowCss = { top:((sliderHeight / 2 ) - 40)+'px' }
+
+  // slides display
+  const slidesDisplay = gallery.map((s,index) => (
+    <SlideItem 
+      key={index}
+      slideIndex={index}
+      slide={s}
+      currentSlide={currentSlide}
+      containerWidth={containerWidth}
+      sliderHeight={sliderHeight}
+      cinemaMode={cinemaMode}
+      onCinemaModeClick={toggleCinemaMode}
+    />
+  ));
+
   return (
     <main id="media-slider" style={{height:sliderHeight}} className={cinemaMode === true ? "cinema-mode" : ""}>
-      {productMediaSliderDisplay}
+      <div id="slider-container" style={sliderContainerStyle}>
+        <a className="left carousel-control" id="arrow-left" style={sliderArrowCss} onClick={() => setCurrentSlide(prevCurrentSlide)}>
+          <span className="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <div id="slider-wrapper" style={sliderWrapperStyle}>
+          {slidesDisplay}    
+        </div>
+        <a className="right carousel-control" id="arrow-right" style={sliderArrowCss} onClick={() => setCurrentSlide(nextCurrentSlide)}>
+          <span className="glyphicon glyphicon-chevron-right"></span>
+        </a>      
+      </div>
+      <SlidesNavigation
+        gallery={gallery}
+        currentSlide={currentSlide}
+        containerWidth={containerWidth}
+        onChangeCurrentSlide={e => setCurrentSlide(e)}
+      />
     </main>
   )
 }
