@@ -76,7 +76,8 @@ function ProductMediaSlider(){
   // media slider css class
   let mediaSliderCssClass = "";
   if (cinemaMode === true) mediaSliderCssClass += "cinema-mode ";
-  if (showSliderArrows === false) mediaSliderCssClass += "hide-arrows";
+  if (showSliderArrows === false) mediaSliderCssClass += "hide-arrows ";
+  if (showPlaylist === false) mediaSliderCssClass += "hide-playlist"
 
   // slider container style
   const sliderContainerStyle = {

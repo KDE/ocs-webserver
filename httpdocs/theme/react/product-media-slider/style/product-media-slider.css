@@ -37,7 +37,7 @@
 #media-slider .slider-navigation-toggle {
   bottom: 110px;
   position: absolute;
-  left: 10px;
+  left: 5px;
   height: 31px;
   width: 31px;
   background-size: 25px 25px;
@@ -171,4 +171,10 @@
 }
 #media-slider.cinema-mode {
   background-color: black;
+}
+#media-slider.hide-playlist {
+  padding-bottom: 5px;
+}
+#media-slider.hide-playlist .slider-navigation-toggle {
+  bottom: 5px;
 }
