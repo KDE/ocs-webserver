@@ -201,7 +201,7 @@ function SlidesNavigation(props){
           <a className="left carousel-control" id="arrow-left" onClick={() => props.onChangeCurrentSlide(prevCurrentSlide)}>
             <span className="glyphicon glyphicon-chevron-left"></span>
           </a>
-          <Scrollbars style={{ width: props.containerWidth, height: 100 }}>
+          <Scrollbars style={{ width: props.containerWidth, height: 110 }}>
               <ul className="thumbnail-navigation" style={thumbSliderStyle}>
                 {slidesThumbnailNavigationDisplay}
               </ul>
