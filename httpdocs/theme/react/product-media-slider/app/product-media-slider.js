@@ -67,6 +67,7 @@ function ProductMediaSlider(){
 
   function onMouseEnterHandler(){
     clearInterval(timeoutInterval);
+    setShowSliderArrows(true);
   }
 
   function onMouseLeaveHandler(){
