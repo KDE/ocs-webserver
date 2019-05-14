@@ -148,15 +148,37 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
               WHERE pr.project_id = :project_id and (pr.rating_active = 1 or (rating_active=0 and user_like>1))
                   ";*/
 
-        $sql = "SELECT  laplace_score_new(sum(pr.user_like), sum(pr.user_dislike)) AS score
+        /*$sql = "SELECT  (sum(score*(user_like+user_dislike))+2*5)/(sum(user_like+user_dislike)+2)*100 AS score
                 from
                 (
-                  select project_id,user_like,user_dislike from project_rating pr where pr.rating_active = 1 
+                  select project_id,user_like,user_dislike,score from project_rating pr where pr.rating_active = 1 
                   union
-                  select project_id,user_like-6,user_dislike-6 from project_rating pr where pr.rating_active = 0 and user_dislike >=6 and user_like>=6     
+                  select project_id,user_like-6,user_dislike-6, score from project_rating pr where pr.rating_active = 0 and user_dislike >=6 and user_like>=6     
                 ) as pr
-                where pr.project_id = :project_id";
+                where pr.project_id = :project_id";*/
     
+        $sql = "select (sum(t.totalscore)+2*5)/(sum(t.count)+2)*100 as score
+                    from
+                    (
+                        select project_id
+                        ,user_like as likes
+                        ,user_dislike as dislikes
+                        ,1 as count
+                        ,score as totalscore
+                        from project_rating pr where pr.rating_active = 1 
+
+                        union
+                                        
+                        select 
+                        project_id
+                        ,user_like-6 as likes
+                        ,user_dislike-6 as dislikes
+                        ,user_like+user_dislike-12 as count 
+                        ,(user_like-6)*8+(user_dislike-6)*3 as totalscore
+                        from project_rating pr 
+                        where pr.rating_active = 0 and user_dislike >=6 and user_like>=6  
+                    ) t
+                    where t.project_id = :project_id";
         
         $result = $this->_db->query($sql, array('project_id' => $project_id))->fetchAll();     
         if($result[0]['score'])
