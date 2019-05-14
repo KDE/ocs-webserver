@@ -74,13 +74,13 @@ function ProductMediaSlider(){
   }
 
   function onMouseEnterHandler(){
-    const intervalId = setInterval(setShowSliderArrows(false), 5000)
-    setTimeoutInterval(intervalId);m
+    clearInterval(timeoutInterval);
+    setShowSliderArrows(true);
   }
 
   function onMouseLeaveHandler(){  
-    clearInterval(timeoutInterval);
-    setShowSliderArrows(true);
+    const intervalId = setInterval(setShowSliderArrows(false), 5000)
+    setTimeoutInterval(intervalId);
   }
   
   console.log('show slider arrows - ' + showSliderArrows);  
@@ -141,7 +141,7 @@ function ProductMediaSlider(){
   return (
     <main id="media-slider" 
       style={{height:sliderHeight}} 
-      className={cinemaMode === true ? "cinema-mode" : ""}
+      className={mediaSliderCssClass}
       onMouseEnter={onMouseEnterHandler}
       onMouseLeave={onMouseLeaveHandler}>
 
