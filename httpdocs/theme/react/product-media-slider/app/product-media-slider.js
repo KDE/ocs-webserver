@@ -73,13 +73,13 @@ function ProductMediaSlider(){
   }
 
   function onMouseEnterHandler(){
-    clearInterval(timeoutInterval);
-    setShowSliderArrows(true);
+    const intervalId = setInterval(setShowSliderArrows(false), 5000)
+    setTimeoutInterval(intervalId);
   }
 
-  function onMouseLeaveHandler(){
-    const intervalId = setInterval(setShowSliderArrows(false), 5000)
-    setTimeoutInterval(intervalId);    
+  function onMouseLeaveHandler(){  
+    clearInterval(timeoutInterval);
+    setShowSliderArrows(true);
   }
   
   console.log('show slider arrows - ' + showSliderArrows);  
