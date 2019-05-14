@@ -8,13 +8,7 @@ function VideoPlayerWrapper(props){
     const [ videoClicked, setVideoClicked ] = useState(false);
     
     React.useEffect(() => { convertStringToUrl(); }, [props.source])
-    React.useEffect(() => { 
-        if (props.playVideo === false) {
-            console.log('stop video now');
-        } else {
-            console.log('continue playing');
-        }
-    }, [props.playVideo])
+    // React.useEffect(() => { }, [props.playVideo])
     // React.useEffect(() => { console.log(playerEl)},[playerEl])
     
     function convertStringToUrl(){
