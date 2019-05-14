@@ -92,7 +92,7 @@ foreach ($this->ratings as $this->productRating) {
 		  </span>
 		  <span>
 			<span class="score label" style="background-color:<?=$this->fetchScoreColor(5)?>; ">
-				Count:<?php echo $tmp['user_like']+$tmp['user_dislike']; ?> Rating: <?=number_format($this->fetchScore($tmp['user_like'],$tmp['user_dislike']),2)?>
+				Count:<?php echo $tmp['user_like']+$tmp['user_dislike']+2; ?> Rating: <?=number_format($this->fetchScore($tmp['user_like'],$tmp['user_dislike']),2)?>
 			</span>		
 		  </span>
 		</div>	
