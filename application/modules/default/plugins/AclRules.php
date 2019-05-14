@@ -243,7 +243,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'loadinstallinstruction',
             'gettaggroupsforcatajax',
             'getfilesajax',
-            'startvideoajax'
+            'startvideoajax',
+            'stopvideoajax'
         ));
         
         // resource default_product

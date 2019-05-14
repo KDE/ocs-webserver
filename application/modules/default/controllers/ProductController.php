@@ -2916,6 +2916,32 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json(array('status' => 'error'));
     }
     
+    public function stopvideoajaxAction() {
+        $this->_helper->layout()->disableLayout();
+        
+        $view_id = null;
+        
+        if($this->hasParam('media_view_id')) {
+            $view_id = $this->getParam('media_view_id');
+            
+            //Log media view stop
+            try {
+                $mediaviewsTable = new Default_Model_DbTable_MediaViews();
+                $data = array('stop_timestamp' => new Zend_Db_Expr ('Now()'));
+                $mediaviewsTable->update($data, 'media_view_id = '. $view_id);
+            } catch (Exception $exc) {
+                //echo $exc->getTraceAsString();
+                $errorLog = Zend_Registry::get('logger');
+                $errorLog->err(__METHOD__ . ' - ' . $exc->getMessage() . ' ---------- ' . PHP_EOL);
+            }
+            $this->_helper->json(array('status' => 'success', 'MediaViewId' => $view_id));
+
+            return;
+        }
+
+        $this->_helper->json(array('status' => 'error'));
+    }
+    
     function getRealIpAddr()
     {
         if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
