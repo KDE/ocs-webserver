@@ -87,7 +87,7 @@ function ProductMediaSlider(){
   /* Render */
 
   // media slider css class
-  let mediaSliderCssClass;
+  let mediaSliderCssClass = "";
   if (cinemaMode === true) mediaSliderCssClass += "cinema-mode ";
   if (showSliderArrows === false) mediaSliderCssClass += "hide-arrows";
 

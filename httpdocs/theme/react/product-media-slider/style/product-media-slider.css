@@ -19,9 +19,6 @@
   padding-bottom: 110px;
   background-color: white;
 }
-#media-slider.cinema-mode {
-  background-color: black;
-}
 #media-slider .carousel-control {
   width: 50px;
   height: 50px;
@@ -29,9 +26,21 @@
   cursor: pointer;
   background: rgba(0, 0, 0, 0.35);
   opacity: 1;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
 }
 #media-slider .carousel-control .glyphicon {
   margin-top: -15px;
+}
+#media-slider .slider-navigation-toggle {
+  bottom: 120px;
+  position: absolute;
+  left: 10px;
+  height: 30px;
+  width: 30px;
+  background-size: cover;
 }
 #media-slider #slider-wrapper {
   position: absolute;
@@ -149,4 +158,10 @@
 }
 #media-slider #slide-navigation ul li.image {
   background-color: white;
+}
+#media-slider.hide-arrows .carousel-control {
+  opacity: 0;
+}
+#media-slider.cinema-mode {
+  background-color: black;
 }
