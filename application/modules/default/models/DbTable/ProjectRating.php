@@ -167,7 +167,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
                         ,score as totalscore
                         from project_rating pr where pr.project_id=:project_id and pr.rating_active = 1 
 
-                        union
+                        union all
                                         
                         select 
                         project_id
