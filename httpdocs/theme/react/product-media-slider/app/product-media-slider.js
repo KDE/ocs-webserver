@@ -168,8 +168,7 @@ function SlideItem(props){
 
 function SlidesNavigation(props){
 
-  const { scrollBarEl } = useRef(null)
-  console.log(scrollBarEl);
+  const scrollBarEl = useRef(null)
   const thumbElementWidth = 140;
   const [ thumbSliderWidth, setThumbSliderWidth ] = useState((thumbElementWidth * props.gallery.length) +10);
 
@@ -196,7 +195,7 @@ function SlidesNavigation(props){
 
   console.log(scrollBarEl);
 
-  scrollBarEl.scrollLeft('-'+thumbSliderPosition);
+  // scrollBarEl.scrollLeft('-'+thumbSliderPosition);
 
   return (
     <div id="slide-navigation">
