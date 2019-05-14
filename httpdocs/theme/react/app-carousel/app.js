@@ -449,7 +449,7 @@ class CarouselItem extends React.Component {
       let scoreDisplay=(
           <div className="score-info">
             <div className="score-number">
-              score {(this.props.product.laplace_score/100).toFixed(2)}
+              Rating : {(this.props.product.laplace_score/100).toFixed(2)}
             </div>
             <div className="score-bar-container">
               <div className={"score-bar"} style={{"width":this.props.product.laplace_score/10 + "%"}}></div>
