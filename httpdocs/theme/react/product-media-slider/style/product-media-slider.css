@@ -41,6 +41,8 @@
   height: 30px;
   width: 30px;
   background-size: cover;
+  z-index: 100;
+  background-image: url('../../assets/img/playlist-toggle.png');
 }
 #media-slider #slider-wrapper {
   position: absolute;

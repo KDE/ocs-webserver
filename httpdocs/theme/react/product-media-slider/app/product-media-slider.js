@@ -178,7 +178,7 @@ function SlideItem(props){
     slideContentDisplay = (
       <VideoPlayerWrapper 
         height={props.sliderHeight}
-        width={(props.containerWidth * 0.85)} 
+        width={(props.containerWidth * 0.7)} 
         source={props.slide.url} 
         onCinemaModeClick={props.onCinemaModeClick}
         playVideo={props.currentSlide === props.slideIndex}
