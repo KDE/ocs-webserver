@@ -2276,6 +2276,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $projectData->ghns_excluded = 0;
                     $projectData->save();                    
                 }
+                
+                //If this file is a video, we have to convert it for preview
+                if(!empty($fileResponse->file->type) && in_array($fileResponse->file->type, Backend_Commands_ConvertVideo::$VIDE_FILE_TYPES)) {
+                    $queue = Local_Queue_Factory::getQueue();
+                    $command = new Backend_Commands_ConvertVideo($projectData->ppload_collection_id, $fileResponse->file->id);
+                    $queue->send(serialize($command));
+                }
 
                 $this->_helper->json(array(
                     'status' => 'ok',
