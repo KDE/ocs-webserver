@@ -32,9 +32,7 @@ function ProductMediaSlider(){
   const [ showPlaylist, setShowPlaylist ] = useState(false);
   const [ showSliderArrows, setShowSliderArrows ] = useState(true);
   const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(false);
-  
-  let mouseRestTimer;
-  
+    
   React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode])
 
@@ -76,23 +74,11 @@ function ProductMediaSlider(){
   }
   
   function onMouseMovementEvent(type){
-    console.log('bla bla bla');
-    clearTimeout(mouseRestTimer);
-    setSliderFadeControlsMode(false)
     if (type === 'enter'){
       setShowSliderArrows(true)
-      initMouseRestTimer()
     } else if (type === 'leave'){
       setShowSliderArrows(false)
-      setSliderFadeControlsMode(false)
     }
-  }
-
-  function initMouseRestTimer(){
-    mouseRestTimer = setTimeout(function(){ 
-      setSliderFadeControlsMode(true)
-      setShowSliderArrows(false)
-    }, 5000)
   }
 
   /* Render */
