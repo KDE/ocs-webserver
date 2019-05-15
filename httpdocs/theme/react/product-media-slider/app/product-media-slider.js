@@ -74,9 +74,8 @@ function ProductMediaSlider(){
   }
   
   function onMouseMovementEvent(type){
-    console.log('on mouse moverment event')
-    if (type === 'enter') setShowSliderArrows(true)
-    else if (type === 'leave') setShowSliderArrows(false)
+    setShowSliderArrows(true)
+    if (type === 'leave') setShowSliderArrows(false)
     stopMouseRestTimer()
     initMouseRestTimer()
   }
