@@ -146,7 +146,10 @@ function ProductMediaSlider(){
 
 function SlideItem(props){
 
-  React.useEffect(() => { if (props.currentSlide === props.slideIndex && props.cinemaMode === true) getSlideContentHeight() },[props.currentSlide]);
+  React.useEffect(() => { 
+    console.log('hi');
+    if (props.currentSlide === props.slideIndex && props.cinemaMode === true) getSlideContentHeight() 
+  },[props.currentSlide]);
 
   function getSlideContentHeight(){
     if (props.slide.type === "image"){
