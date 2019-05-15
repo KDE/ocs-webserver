@@ -146,26 +146,28 @@ function ProductMediaSlider(){
 
 function SlideItem(props){
 
-  function imageOnLoad(e){
-    const imageHeight = document.getElementById('slide-img-'+props.slideIndex).naturalHeight;
-    console.log(imageHeight);
-    console.log(props);
-    if (props.currentSlide === props.slideIndex) props.onSetSliderHeight(imageHeight);
+  React.useEffect(() => { if (props.currentSlide === props.slideIndex && props.cinemaMode === true) getSlideContentHeight() },[props.currentSlide]);
+
+  function getSlideContentHeight(){
+    if (props.slide.type === "image"){
+      const imageHeight = document.getElementById('slide-img-'+props.slideIndex).naturalHeight;
+      props.onSetSliderHeight(imageHeight);
+    } 
+    else if (props.slide.type === "video" || props.slide.type === "audio") props.onSetSliderHeight(360);
   }
   
   let slideContentDisplay, slideMediaItemMenu;
     if (props.slide.type === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
     else if (props.slide.type === "image") {
-      slideContentDisplay = <img onClick={props.onCinemaModeClick} onLoad={e => imageOnLoad(e)} id={"slide-img-"+props.slideIndex} src={props.slide.url}/>
-      /*slideMediaItemMenu = (
-        <ul className="slide-media-item-menu">
-          <li><a onClick={props.onCinemaModeClick} className="cinema-mode">cinema</a></li>
-          <li><a className="full-screen">full screen</a></li>
-        </ul>
-      )*/
+      slideContentDisplay = (
+        <img 
+          onClick={props.onCinemaModeClick} 
+          id={"slide-img-"+props.slideIndex} 
+          src={props.slide.url}
+        />
+      )
     }
     else if (props.slide.type === "video") {
-      if (props.currentSlide === props.slideIndex){
       slideContentDisplay = (
         <VideoPlayerWrapper 
           height={props.sliderHeight}
@@ -176,7 +178,6 @@ function SlideItem(props){
         />
       )
     }
-  }
 
   return(
     <div className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={ { width:props.containerWidth, height:props.sliderHeight }}>

@@ -26,10 +26,6 @@
   cursor: pointer;
   background: rgba(0, 0, 0, 0.35);
   opacity: 1;
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  -o-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
 }
 #media-slider .carousel-control .glyphicon {
   margin-top: -15px;
@@ -52,18 +48,10 @@
   position: absolute;
   left: 0;
   top: 0;
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  -o-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
 }
 #media-slider #slider-wrapper .slide-item {
   float: left;
   opacity: 0;
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  -o-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
   height: inherit;
   position: relative;
 }
@@ -128,10 +116,6 @@
   margin: 0 auto;
   display: table;
   padding: 10px 5px;
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  -o-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
 }
 #media-slider #slide-navigation ul li {
   width: 120px;
@@ -142,10 +126,6 @@
   float: left;
   margin: 0 5px;
   box-sizing: content-box;
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  -o-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
 }
 #media-slider #slide-navigation ul li a {
   display: block;
