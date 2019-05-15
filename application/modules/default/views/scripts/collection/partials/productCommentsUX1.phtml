@@ -137,7 +137,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         <?php
                             if(!is_null($comment['rating']) && $comment['rating']!='-1')
                             { ?>   
-                                <span class="score label" style="margin-right:5px;background-color:<?=$this->fetchScoreColor($comment['rating'])?>; ">
+                                <span class="rating-label" style="background-color:<?=$this->fetchScoreColor($comment['rating'])?>; ">
                                     <?=$comment['rating'] ?>
                                 </span>                              
                                
