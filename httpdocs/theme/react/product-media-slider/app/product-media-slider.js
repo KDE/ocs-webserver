@@ -75,15 +75,17 @@ function ProductMediaSlider(){
   }
   
   function onMouseMovementEvent(type){
-    console.log(type);
-    /*setShowSliderArrows(true)
-    if (type === 'leave') setShowSliderArrows(false)
     stopMouseRestTimer()
-    initMouseRestTimer()*/
+    if (type === 'enter'){
+      setShowSliderArrows(true)
+      initMouseRestTimer()
+    } else if (type === 'leave'){
+      setShowSliderArrows(false)
+      setShowPlaylist(true)
+    }
   }
 
   function initMouseRestTimer(){
-    console.log('init mouse rest timer')
     mouseRestTimer = setTimeout(function(){ 
       setShowPlaylist(false) ;
       setShowSliderArrows(false);
