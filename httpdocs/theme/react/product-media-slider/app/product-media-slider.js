@@ -182,7 +182,8 @@ function SlideItem(props){
 
   function getSlideContentHeight(){
     if (props.slide.type === "image"){
-      const imageEl = document.getElementById('slide-img-'+props.slideIndex)
+      const imageEl = document.getElementById('slide-img-'+props.slideIndex);
+      console.log(imageEl.offsetHeight);
       if (props.currentSlide === props.slideIndex){
         if ( props.cinemaMode === true ){
           setMediaStyle()
