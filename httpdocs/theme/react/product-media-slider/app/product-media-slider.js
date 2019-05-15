@@ -186,7 +186,10 @@ function SlideItem(props){
     if (props.slide.type === "image"){
       const imageHeight = document.getElementById('slide-img-'+props.slideIndex).naturalHeight;
       if (props.currentSlide === props.slideIndex){
-        if ( props.cinemaMode === true ) props.onSetSliderHeight(imageHeight);
+        if ( props.cinemaMode === true ){
+          setMediaStyle()
+          props.onSetSliderHeight(imageHeight);
+        }
         else setMediaStyle({marginTop:(sliderHeight - imageHeight) / 2})
       }
     } else if (props.slide.type === "embed"){ 
