@@ -802,7 +802,7 @@ function (_React$Component3) {
           className: "score-info"
         }, React.createElement("div", {
           className: "score-number"
-        }, "Rating: ", (this.props.product.laplace_score / 100).toFixed(2)), React.createElement("div", {
+        }, "Rating: ", (this.props.product.laplace_score / 100).toFixed(1)), React.createElement("div", {
           className: "score-bar-container"
         }, React.createElement("div", {
           className: "score-bar",
