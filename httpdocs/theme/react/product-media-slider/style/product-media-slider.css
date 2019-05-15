@@ -189,12 +189,9 @@
 #media-slider.hide-playlist #slide-navigation ul li.active {
   background-color: #999;
 }
-#media-slider.fade-controls {
-  padding-bottom: 0;
-}
 #media-slider.fade-controls .carousel-control {
   opacity: 0;
 }
 #media-slider.fade-controls #slide-navigation {
-  bottom: -110px;
+  opacity: 0;
 }

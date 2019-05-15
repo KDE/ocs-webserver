@@ -88,7 +88,6 @@ function ProductMediaSlider(){
   }
   
   function onMouseMovementEvent(e,type){
-    console.log(e);
     stopSliderFadeControlsTimer()
     setFadeControlsMode(false)
     if (type === 'enter'){
@@ -102,7 +101,6 @@ function ProductMediaSlider(){
 
   function setSliderFadeControlsTimer(){
     sliderControlsFadeModeTimer = setTimeout(function(){ 
-      console.log('fade controls countdown ' + fadeControlsCountDown)
       if (fadeControlsCountDown === true) setFadeControlsMode(true) 
     }, 5000);
   }
@@ -165,6 +163,7 @@ function ProductMediaSlider(){
       onMouseMove={(e) => onMouseMovementEvent(e,'enter')}
       onMouseOver={(e) => onMouseMovementEvent(e,'enter')}
       onMouseUp={(e) => onMouseMovementEvent(e,'enter')}
+      onClick={(e) => onMouseMovementEvent(e,'enter')}
       onMouseLeave={(e) => onMouseMovementEvent(e,'leave')}
       onMouseOut={(e) => onMouseMovementEvent(e,'leave')}
       >
@@ -174,7 +173,7 @@ function ProductMediaSlider(){
           <span className="glyphicon glyphicon-chevron-left"></span>
         </a>
         <div id="slider-wrapper" style={sliderWrapperStyle}>
-          {slidesDisplay}    
+          {slidesDisplay}
         </div>
         <a className="right carousel-control" id="arrow-right" style={sliderArrowCss} onClick={() => setCurrentSlide(nextCurrentSlide)}>
           <span className="glyphicon glyphicon-chevron-right"></span>
@@ -201,11 +200,16 @@ function SlideItem(props){
   function getSlideContentHeight(){
     if (props.slide.type === "image"){
       const imageEl = document.getElementById('slide-img-'+props.slideIndex);
-      console.log(imageEl.offsetHeight);
+      console.log(imageEl.naturalHeight);
       if (props.currentSlide === props.slideIndex){
         if ( props.cinemaMode === true ){
-          setMediaStyle()
-          props.onSetSliderHeight(imageEl.naturalHeight);
+          let imageHeight = imageEl.naturalHeight;
+          if (imageEl.naturalWidth > window.innerWidth){
+            let dimensionsPercentage = window.innerWidth / imageEl.naturalWidth;
+            imageHeight = imageEl.naturalHeight * dimensionsPercentage;
+          }
+          setMediaStyle({height:imageHeight})
+          props.onSetSliderHeight(imageHeight);
         }
         else if (imageEl.offsetHeight > 0) setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
       }
