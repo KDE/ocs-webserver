@@ -184,13 +184,13 @@ function SlideItem(props){
 
   function getSlideContentHeight(){
     if (props.slide.type === "image"){
-      const imageHeight = document.getElementById('slide-img-'+props.slideIndex).naturalHeight;
+      const imageEl = document.getElementById('slide-img-'+props.slideIndex)
       if (props.currentSlide === props.slideIndex){
         if ( props.cinemaMode === true ){
           setMediaStyle()
-          props.onSetSliderHeight(imageHeight);
+          props.onSetSliderHeight(imageEl.naturalHeight);
         }
-        else setMediaStyle({marginTop:(sliderHeight - imageHeight) / 2})
+        else setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
       }
     } else if (props.slide.type === "embed"){ 
       if (props.currentSlide === props.slideIndex && props.cinemaMode === true) props.onSetSliderHeight(315)
