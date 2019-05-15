@@ -148,6 +148,8 @@ function SlideItem(props){
 
   function imageOnLoad(e){
     const imageHeight = document.getElementById('slide-img-'+props.slideIndex).naturalHeight;
+    console.log(imageHeight);
+    console.log(props);
     if (props.currentSlide === props.slideIndex) props.onSetSliderHeight(imageHeight);
   }
   
