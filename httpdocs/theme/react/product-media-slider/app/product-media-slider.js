@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import VideoPlayerWrapper from './video-player';
 // import Draggable, {DraggableCore} from 'react-draggable'; // Both at the same time
@@ -223,7 +223,8 @@ function SlideItem(props){
 
 function SlidesNavigation(props){
 
-  const scrollBarEl = useRef(null)
+  /* COMPONENT */
+
   const thumbElementWidth = 140;
   const [ thumbSliderWidth, setThumbSliderWidth ] = useState((thumbElementWidth * props.gallery.length) +10);
   let thumbSliderPosition = 0;
@@ -238,6 +239,8 @@ function SlidesNavigation(props){
     $('#slider-scroll-wrapper').children().attr('id','slider-scroll');
     $('#slider-scroll').scrollLeft(thumbSliderPosition)
   }
+
+  /* RENDER */
 
   let navigationSliderDisplay;
   if (props.showPlaylist){
@@ -257,7 +260,7 @@ function SlidesNavigation(props){
       width:thumbSliderWidth+'px',
     }
     navigationSliderDisplay = (
-      <Scrollbars ref={scrollBarEl} style={{ width: props.containerWidth, height: 110 }}>
+      <Scrollbars style={{ width: props.containerWidth, height: 110 }}>
         <ul className="thumbnail-navigation" style={thumbSliderStyle}>{slidesThumbnailNavigationDisplay}</ul>
     </Scrollbars>
     )

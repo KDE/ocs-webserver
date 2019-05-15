@@ -151,6 +151,10 @@
 #media-slider #slide-navigation ul li.image {
   background-color: white;
 }
+#media-slider #slide-navigation ul li.embed {
+  background-color: black;
+  background-image: url('../../assets/img/youtube-icon.png');
+}
 #media-slider.hide-arrows .carousel-control {
   opacity: 0;
 }
