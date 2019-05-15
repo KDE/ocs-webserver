@@ -149,13 +149,14 @@ function SlideItem(props){
   React.useEffect(() => { 
     console.log('hi');
     if (props.currentSlide === props.slideIndex && props.cinemaMode === true) getSlideContentHeight() 
-  },[props.currentSlide]);
+  },[props.currentSlide, props.cinemaMode]);
 
   function getSlideContentHeight(){
     if (props.slide.type === "image"){
       const imageHeight = document.getElementById('slide-img-'+props.slideIndex).naturalHeight;
       props.onSetSliderHeight(imageHeight);
-    } 
+    }
+    else if (props.slide.type === "embed") props.onChangeCurrentSlide(315)
     else if (props.slide.type === "video" || props.slide.type === "audio") props.onSetSliderHeight(360);
   }
   
