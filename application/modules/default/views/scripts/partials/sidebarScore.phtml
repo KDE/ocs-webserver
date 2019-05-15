@@ -44,7 +44,11 @@ krsort($options);
                 <div class="rating">
                     <div class="rating-text">
                         <small class="center-block text-center">
-                        <span >Rating: <?=number_format($score2,2)?></span>                      
+                        
+                        <?php                            
+                            $t = explode(".", number_format($score2,1));
+                        ?>
+                        <span style="font-size: large;"><?=$t[0]?></span><span >.<?=$t[1]?></span>                      
                         </small>
                     </div>
                     <div class="progress" style="margin-bottom: 0;height:12px;background-color: transparent; box-shadow: none; padding:2px;">
@@ -68,7 +72,7 @@ krsort($options);
              if($userScore){
                 echo '<option value="-1" >Remove Rating</option>';
              }else{
-                echo '<option value="0">Give a Rating</option>';
+                echo '<option value="0">Add Rating</option>';
              }
              foreach ($options as $key => $value) {
                 $selected = '';                

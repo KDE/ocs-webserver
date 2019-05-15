@@ -32,9 +32,13 @@ $scoreColor = new Default_View_Helper_FetchScoreColor();
     height: 40px;}
 </style>
 <?php  
-
+$tmp=null;
 foreach ($this->ratings as $this->productRating) {
-	    if($this->productRating['user_like']<=1 && $this->productRating['rating_active']==0) continue;	   			
+		if($this->productRating['user_like']>=6)
+		{
+			$tmp = $this->productRating;
+		}
+	    if($this->productRating['rating_active']==0 || $this->productRating['user_like']>1) continue;	   			
 	?>
 
 <div class="productRating-rows <?=$this->productRating['rating_active']==0?'productRating-rows-inactive':'productRating-rows-active'?>  <?=$this->productRating['user_like']==1?'clsUpvotes':'clsDownvotes' ?> "  >
@@ -66,3 +70,53 @@ foreach ($this->ratings as $this->productRating) {
 	</div>
 </div>
 <?php } ?>
+
+<?php if($tmp){?>
+
+	<div class="productRating-rows">
+		<div class="product-heading product-update-heading">
+		<a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>" >	
+		<img class="userimg"  
+						src="<?= $this->Image('hive/user-pics/nopic.png',
+		                                                array('width' => 40, 'height' => 40)) ?>"
+		                                                 alt="product-maker" 
+		                                                />
+	    </a>
+		<span>	
+		<a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>" style="font-weight: bold;">
+		<?=$this->productRating['username'] ?> 
+		</a>
+		</span>
+		  <span class="small light lightgrey product-update-date"> 
+		  	<?=$this->printDate($this->productRating['created_at']) ?> 
+		  </span>
+		  <span>
+			<span class="score label" style="background-color:<?=$this->fetchScoreColor(5)?>; ">
+				Count:<?php echo $tmp['user_like']+$tmp['user_dislike']+2-12; ?> Rating: <?=number_format($this->fetchScore($tmp['user_like']-6,$tmp['user_dislike']-6),2)?>
+			</span>		
+		  </span>
+		</div>	
+	</div>
+
+<?php }else{?>
+
+<div class="productRating-rows">
+	<div class="product-heading product-update-heading">
+	<a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>" >	
+	<img class="userimg"  
+					src="<?= $this->Image('hive/user-pics/nopic.png',
+	                                                array('width' => 40, 'height' => 40)) ?>"
+	                                                 alt="product-maker" 
+	                                                />
+    </a>
+	
+	  <span>
+		<span class="score label" style="background-color:<?=$this->fetchScoreColor(5)?>; ">
+			Count: 2 Rating: 5.00
+		</span>		
+	  </span>
+	</div>	
+</div>
+<?php } ?>
+
+
