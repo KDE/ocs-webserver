@@ -178,18 +178,22 @@ function ProductMediaSlider(){
 
 function SlideItem(props){
 
-  React.useEffect(() => { 
-    console.log('hi');
-    if (props.currentSlide === props.slideIndex && props.cinemaMode === true) getSlideContentHeight() 
-  },[props.currentSlide, props.cinemaMode]);
+  const [ mediaStyle, setMediaStyle ] = useState();
+
+  React.useEffect(() => { getSlideContentHeight() },[props.currentSlide, props.cinemaMode]);
 
   function getSlideContentHeight(){
     if (props.slide.type === "image"){
       const imageHeight = document.getElementById('slide-img-'+props.slideIndex).naturalHeight;
-      props.onSetSliderHeight(imageHeight);
+      if (props.currentSlide === props.slideIndex){
+        if ( props.cinemaMode === true ) props.onSetSliderHeight(imageHeight);
+        else setMediaStyle({marginTop:(sliderHeight - imageHeight) / 2})
+      }
+    } else if (props.slide.type === "embed"){ 
+      if (props.currentSlide === props.slideIndex && props.cinemaMode === true) props.onSetSliderHeight(315)
+    } else if (props.slide.type === "video" || props.slide.type === "audio"){ 
+      if (props.currentSlide === props.slideIndex && props.cinemaMode === true) props.onSetSliderHeight(360); 
     }
-    else if (props.slide.type === "embed") props.onSetSliderHeight(315)
-    else if (props.slide.type === "video" || props.slide.type === "audio") props.onSetSliderHeight(360);
   }
   
   let slideContentDisplay, slideMediaItemMenu;
@@ -200,6 +204,7 @@ function SlideItem(props){
           onClick={props.onCinemaModeClick} 
           id={"slide-img-"+props.slideIndex} 
           src={props.slide.url}
+          style={mediaStyle}
         />
       )
     }
