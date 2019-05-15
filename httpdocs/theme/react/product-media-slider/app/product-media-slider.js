@@ -29,6 +29,8 @@ function ProductMediaSlider(){
   const [ sliderHeight, setSliderHeight ] = useState(360);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
   const [ cinemaMode, setCinemaMode ] = useState(false);
+  const [ fadeControlsCountDown, setFadeControlsCountDown ] = useState(false);
+  const [ fadeControlsMode, setFadeControlsMode ] = useState(false);
   const [ showPlaylist, setShowPlaylist ] = useState(false);
   const [ showSliderArrows, setShowSliderArrows ] = useState(true);
   const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(false);
@@ -46,27 +48,37 @@ function ProductMediaSlider(){
 
   // update dimensions
   function updateDimensions(){
+    
     const newContainerWidth = parentContainerElement.offsetWidth;
+    
     setContainerWidth(newContainerWidth)
     setSliderWidth(newContainerWidth * gallery.length);
     setSliderPosition(newContainerWidth * currentSlide);
+    
     document.getElementById('product-page-content').removeEventListener("DOMNodeRemoved", updateDimensions);
     document.getElementById('product-page-content').removeEventListener("DOMNodeInserted", updateDimensions);
+    
     if (cinemaMode === false) setSliderHeight(360) 
+  
   }
 
   // toggle cinema mode
   function toggleCinemaMode(){
+    
     document.getElementById('product-page-content').addEventListener("DOMNodeRemoved", updateDimensions);
     document.getElementById('product-page-content').addEventListener("DOMNodeInserted", updateDimensions);    
+    
     const newCinemaMode = cinemaMode === true ? false : true;
     const targetParentElement = cinemaMode === true ? $('#product-main') : $('#product-page-content');
     const targetChildPrependedElement = cinemaMode === true ? $('#product-title-div') : $('#product-media-slider-container');
+    
     $('#product-main-img-container').prependTo(targetParentElement);
     $(targetChildPrependedElement).prependTo('#product-main-img-container');
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
-    setCinemaMode(newCinemaMode);    
+    
+    setCinemaMode(newCinemaMode);
+
   }
 
   // toggle show playlist
@@ -75,24 +87,30 @@ function ProductMediaSlider(){
     setShowPlaylist(newShowPlaylistValue)
   }
   
-  function onMouseMovementEvent(type){
+  function onMouseMovementEvent(e,type){
+    console.log(e);
     stopSliderFadeControlsTimer()
+    setFadeControlsMode(false)
     if (type === 'enter'){
-      setShowSliderArrows(true)
+      setFadeControlsCountDown(true)
       setSliderFadeControlsTimer()
     } else if (type === 'leave'){
-      setShowSliderArrows(false)
+      setFadeControlsMode(false) 
+      clearInterval(sliderControlsFadeModeTimer);
     }
-    console.log('on mouse movement event')
   }
 
   function setSliderFadeControlsTimer(){
-    sliderFadeControlsMode = setTimeout(function(){ console.log('5 sec, hide controls') }, 5000);
+    sliderControlsFadeModeTimer = setTimeout(function(){ 
+      console.log('fade controls countdown ' + fadeControlsCountDown)
+      if (fadeControlsCountDown === true) setFadeControlsMode(true) 
+    }, 5000);
   }
 
   function stopSliderFadeControlsTimer(){
-    clearInterval(sliderFadeControlsMode);
-    console.log('stop slider face controls timer');
+    setFadeControlsCountDown(false)
+    clearInterval(sliderControlsFadeModeTimer);
+    sliderControlsFadeModeTimer = null;
   }
 
   /* Render */
@@ -102,7 +120,7 @@ function ProductMediaSlider(){
   if (cinemaMode === true) mediaSliderCssClass += "cinema-mode ";
   if (showSliderArrows === false) mediaSliderCssClass += "hide-arrows ";
   if (showPlaylist === false) mediaSliderCssClass += "hide-playlist ";
-  if (sliderFadeControlsMode === true) mediaSliderCssClass += " fade-controls";
+  if (fadeControlsMode === true) mediaSliderCssClass += "fade-controls "
 
   // slider container style
   const sliderContainerStyle = {
@@ -143,12 +161,12 @@ function ProductMediaSlider(){
     <main id="media-slider" 
       style={{height:sliderHeight}} 
       className={mediaSliderCssClass}
-      onMouseEnter={(e) => onMouseMovementEvent('enter')}
-      onMouseMove={(e) => onMouseMovementEvent('enter')}
-      onMouseOver={(e) => onMouseMovementEvent('enter')}
-      onMouseUp={(e) => onMouseMovementEvent('enter')}
-      onMouseLeave={(e) => onMouseMovementEvent('leave')}
-      onMouseOut={(e) => onMouseMovementEvent('leave')}
+      onMouseEnter={(e) => onMouseMovementEvent(e,'enter')}
+      onMouseMove={(e) => onMouseMovementEvent(e,'enter')}
+      onMouseOver={(e) => onMouseMovementEvent(e,'enter')}
+      onMouseUp={(e) => onMouseMovementEvent(e,'enter')}
+      onMouseLeave={(e) => onMouseMovementEvent(e,'leave')}
+      onMouseOut={(e) => onMouseMovementEvent(e,'leave')}
       >
 
       <div id="slider-container" style={sliderContainerStyle}>

@@ -192,6 +192,9 @@
 #media-slider.fade-controls {
   padding-bottom: 0;
 }
+#media-slider.fade-controls .carousel-control {
+  opacity: 0;
+}
 #media-slider.fade-controls #slide-navigation {
   bottom: -110px;
 }
