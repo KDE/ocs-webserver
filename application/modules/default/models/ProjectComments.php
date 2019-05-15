@@ -97,7 +97,7 @@ class Default_Model_ProjectComments
 
         $sql = "
                 SELECT comment_id, comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url 
-                    ,(SELECT is_subscription  from v_support  where v_support.member_id = comments.comment_member_id)  AS issupporter
+                    ,(SELECT max(is_subscription)  from v_support  where v_support.member_id = comments.comment_member_id)  AS issupporter
                     ,(select score from project_rating where project_rating.comment_id = comments.comment_id ) as rating               
                     ,member.roleid
                     FROM comments 
@@ -113,7 +113,7 @@ class Default_Model_ProjectComments
         ;
         $sql = "
                SELECT comment_id, comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url 
-                ,(SELECT is_subscription  from v_support  where v_support.member_id = comments.comment_member_id)  AS issupporter
+                ,(SELECT max(is_subscription)  from v_support  where v_support.member_id = comments.comment_member_id)  AS issupporter
                ,(select score from project_rating where project_rating.comment_id = comments.comment_id ) as rating    
                ,member.roleid     
                 FROM comments 
