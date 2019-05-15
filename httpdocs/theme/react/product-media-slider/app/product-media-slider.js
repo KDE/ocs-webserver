@@ -74,10 +74,11 @@ function ProductMediaSlider(){
   }
   
   function onMouseMovementEvent(type){
-    setShowSliderArrows(true)
+    console.log(type);
+    /*setShowSliderArrows(true)
     if (type === 'leave') setShowSliderArrows(false)
     stopMouseRestTimer()
-    initMouseRestTimer()
+    initMouseRestTimer()*/
   }
 
   function initMouseRestTimer(){
