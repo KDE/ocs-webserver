@@ -32,6 +32,8 @@ function ProductMediaSlider(){
   const [ showPlaylist, setShowPlaylist ] = useState(false);
   const [ showSliderArrows, setShowSliderArrows ] = useState(true);
   
+  let mouseRestTimer;
+  
   React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode])
 
@@ -71,6 +73,26 @@ function ProductMediaSlider(){
     setShowPlaylist(newShowPlaylistValue)
   }
   
+  function onMouseMovementEvent(type){
+    console.log('on mouse moverment event')
+    if (type === 'enter') setShowSliderArrows(true)
+    else if (type === 'leave') setShowSliderArrows(false)
+    stopMouseRestTimer()
+    initMouseRestTimer()
+  }
+
+  function initMouseRestTimer(){
+    console.log('init mouse rest timer')
+    mouseRestTimer = setTimeout(function(){ 
+      setShowPlaylist(false) ;
+      setShowSliderArrows(false);
+    }, 5000)
+  }
+
+  function stopMouseRestTimer(){
+    clearTimeout(mouseRestTimer);
+  }
+
   /* Render */
 
   // media slider css class
@@ -118,8 +140,13 @@ function ProductMediaSlider(){
     <main id="media-slider" 
       style={{height:sliderHeight}} 
       className={mediaSliderCssClass}
-      onMouseEnter={() => setShowSliderArrows(true)}
-      onMouseLeave={() => setShowSliderArrows(false)}>
+      onMouseEnter={(e) => onMouseMovementEvent('enter')}
+      onMouseMove={(e) => onMouseMovementEvent('enter')}
+      onMouseOver={(e) => onMouseMovementEvent('enter')}
+      onMouseUp={(e) => onMouseMovementEvent('enter')}
+      onMouseLeave={(e) => onMouseMovementEvent('leave')}
+      onMouseOut={(e) => onMouseMovementEvent('leave')}
+      >
 
       <div id="slider-container" style={sliderContainerStyle}>
         <a className="left carousel-control" id="arrow-left" style={sliderArrowCss} onClick={() => setCurrentSlide(prevCurrentSlide)}>
