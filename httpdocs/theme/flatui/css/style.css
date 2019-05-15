@@ -981,7 +981,7 @@ span.packagetypeos
     border-bottom: 1px solid #000;
 }
 .comments-list .media-body .text{
-    padding-left: 10px
+    padding: 10px
 }    
  .comments-list img{
     border-radius: 50%;
