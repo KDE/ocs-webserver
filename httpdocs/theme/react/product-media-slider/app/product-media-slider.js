@@ -82,14 +82,14 @@ function ProductMediaSlider(){
       initMouseRestTimer()
     } else if (type === 'leave'){
       setShowSliderArrows(false)
-      setSliderFadeControlsMode(true)
+      setSliderFadeControlsMode(false)
     }
   }
 
   function initMouseRestTimer(){
     mouseRestTimer = setTimeout(function(){ 
-      setSliderFadeControlsMode(false) ;
-      setShowSliderArrows(false);
+      setSliderFadeControlsMode(true)
+      setShowSliderArrows(false)
     }, 5000)
   }
 
