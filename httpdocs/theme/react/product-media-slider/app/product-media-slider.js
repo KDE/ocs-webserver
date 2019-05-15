@@ -156,7 +156,7 @@ function SlideItem(props){
       const imageHeight = document.getElementById('slide-img-'+props.slideIndex).naturalHeight;
       props.onSetSliderHeight(imageHeight);
     }
-    else if (props.slide.type === "embed") props.onChangeCurrentSlide(315)
+    else if (props.slide.type === "embed") props.onSetSliderHeight(315)
     else if (props.slide.type === "video" || props.slide.type === "audio") props.onSetSliderHeight(360);
   }
   
