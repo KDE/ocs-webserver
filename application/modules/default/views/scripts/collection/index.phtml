@@ -603,9 +603,13 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                             <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php echo '('.count($this->updates).')';  ?></a></li>
                         <?php } ?>
 
-                        <?php if(count($this->ratings)>0){ ?>
-                            <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
-                        <?php } ?>
+
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
+                        <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
+                       <?php } ?>
+                        
+                        <li><a href="#ratings-panel2" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>   
+
                          <?php if(count($this->likes)>0){ ?>
                             <li><a href="#likes-panel" data-toggle="tab">Favs <?php echo '('.count($this->likes).')';  ?></a></li>
                         <?php } ?>
@@ -878,8 +882,8 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                         </div>
                         <?php } ?>
 
-                        <!-- ratings panel -->
-                        <?php  if (count($this->ratings) > 0) { ?>
+                       <!-- ratings panel -->
+                        <?php  if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) { ?>
                         <div class="tab-pane" id="ratings-panel">
                             <div id="ratings-panel-wrapper" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                             <article>
@@ -891,7 +895,22 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                             </article>
                             </div>
                         </div>
-                        <?php } ?>
+                       <?php } ?>
+
+
+                        <!-- ratings panel2 -->
+                        
+                        <div class="tab-pane" id="ratings-panel2">
+                            <div id="ratings-panel-wrapper2" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                            <article>
+                                <div id="productRatingContainer2">
+                                <?php
+                                       echo $this->render('product/partials/productRating2.phtml');
+                                  ?>
+                                  </div>
+                            </article>
+                            </div>
+                        </div>
 
                         <!-- likes panel -->
                         <?php  if (count($this->likes) > 0) { ?>
