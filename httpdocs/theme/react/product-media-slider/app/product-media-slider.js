@@ -76,7 +76,9 @@ function ProductMediaSlider(){
   }
   
   function onMouseMovementEvent(type){
-    stopMouseRestTimer()
+    console.log('bla bla bla');
+    clearTimeout(mouseRestTimer);
+    setSliderFadeControlsMode(false)
     if (type === 'enter'){
       setShowSliderArrows(true)
       initMouseRestTimer()
@@ -93,10 +95,6 @@ function ProductMediaSlider(){
     }, 5000)
   }
 
-  function stopMouseRestTimer(){
-    clearTimeout(mouseRestTimer);
-  }
-
   /* Render */
 
   // media slider css class
@@ -104,7 +102,7 @@ function ProductMediaSlider(){
   if (cinemaMode === true) mediaSliderCssClass += "cinema-mode ";
   if (showSliderArrows === false) mediaSliderCssClass += "hide-arrows ";
   if (showPlaylist === false) mediaSliderCssClass += "hide-playlist ";
-  if (sliderFadeControlsMode === true) mediaSliderCssClass += " fade-controls"
+  if (sliderFadeControlsMode === true) mediaSliderCssClass += " fade-controls";
 
   // slider container style
   const sliderContainerStyle = {
