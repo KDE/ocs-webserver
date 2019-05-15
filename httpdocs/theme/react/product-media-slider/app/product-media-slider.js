@@ -65,6 +65,7 @@ function ProductMediaSlider(){
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
     setCinemaMode(newCinemaMode);
+    if (cinemaMode === false) setSliderHeight(360)
   }
 
   // toggle show playlist
