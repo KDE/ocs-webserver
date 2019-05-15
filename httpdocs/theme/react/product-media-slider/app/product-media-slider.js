@@ -31,6 +31,7 @@ function ProductMediaSlider(){
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ showPlaylist, setShowPlaylist ] = useState(false);
   const [ showSliderArrows, setShowSliderArrows ] = useState(true);
+  const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(false);
   
   let mouseRestTimer;
   
@@ -81,13 +82,13 @@ function ProductMediaSlider(){
       initMouseRestTimer()
     } else if (type === 'leave'){
       setShowSliderArrows(false)
-      setShowPlaylist(true)
+      setSliderFadeControlsMode(true)
     }
   }
 
   function initMouseRestTimer(){
     mouseRestTimer = setTimeout(function(){ 
-      setShowPlaylist(false) ;
+      setSliderFadeControlsMode(false) ;
       setShowSliderArrows(false);
     }, 5000)
   }
@@ -102,7 +103,8 @@ function ProductMediaSlider(){
   let mediaSliderCssClass = "";
   if (cinemaMode === true) mediaSliderCssClass += "cinema-mode ";
   if (showSliderArrows === false) mediaSliderCssClass += "hide-arrows ";
-  if (showPlaylist === false) mediaSliderCssClass += "hide-playlist"
+  if (showPlaylist === false) mediaSliderCssClass += "hide-playlist ";
+  if (sliderFadeControlsMode === true) mediaSliderCssClass += " fade-controls"
 
   // slider container style
   const sliderContainerStyle = {
