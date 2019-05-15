@@ -44,7 +44,12 @@ krsort($options);
                 <div class="rating">
                     <div class="rating-text">
                         <small class="center-block text-center">
-                        <span ><?=number_format($score2,1)?></span>                      
+                        
+                        <?php                            
+                            $t = explode(".", number_format($score2,1));
+                        ?>
+                        <span style="font-size: large; font-weight: bold"><?=$t[0]?> </span>                      
+                        <span ><?='.'.$t[1]?> </span>                      
                         </small>
                     </div>
                     <div class="progress" style="margin-bottom: 0;height:12px;background-color: transparent; box-shadow: none; padding:2px;">
