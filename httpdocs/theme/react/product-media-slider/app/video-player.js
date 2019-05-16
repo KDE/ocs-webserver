@@ -26,13 +26,14 @@ class VideoPlayerWrapper extends React.Component {
                 if (this.state.player.hasStarted && this.state.videoStarted === false){
                     console.log('report start video')
                     this.setState({videoStarted:true},function(){
+                        const self = this;
                         $.ajax({url: this.state.videoStartUrl}).done(function(res) {
-                            console.log(res)
+                            self.setState({videoStopUrl:self.state.videoStopUrl + res.MediaViewId})
                         });
                     });
                 } 
                 if (this.state.player.paused && this.state.videoStarted === true && this.state.videoStopped === false){
-                    console.log('report stop video')
+                    console.log('report stop video' - this.state.videoStopUrl)
                     this.setState({videoStopped:true},function(){
                         $.ajax({url: this.state.videoStopUrl}).done(function(res) {
                             console.log(res)
