@@ -62,6 +62,10 @@
                 .video-react {
                     font-family: inherit;
                     
+                    .video-react-video {
+                        height: calc(100% - 30px);
+                    }
+
                     .video-react-control-bar {
                         display: -webkit-box;
                         display: -webkit-flex;
@@ -231,5 +235,14 @@
         #slide-navigation { 
             opacity: 0;
         }
+    }
+
+    &.disable-gallery {
+        padding-bottom:0;
+        .carousel-control,
+        .slider-navigation-toggle,
+        #slide-navigation { 
+            display: none;
+        }        
     }
 }

@@ -36,6 +36,7 @@ function ProductMediaSlider(){
   }
 
   const [ gallery, setGallery ] = useState(galleryArray);
+  const [ disableGallery, setDisableGallery ] = useState(gallery.length > 1 ? false : true)
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
   const [ currentSlide, setCurrentSlide ] = useState(0)
@@ -133,6 +134,7 @@ function ProductMediaSlider(){
 
   // media slider css class
   let mediaSliderCssClass = "";
+  if (disableGallery === true) mediaSliderCssClass += "disable-gallery ";
   if (cinemaMode === true) mediaSliderCssClass += "cinema-mode ";
   if (showSliderArrows === false) mediaSliderCssClass += "hide-arrows ";
   if (showPlaylist === false) mediaSliderCssClass += "hide-playlist ";
