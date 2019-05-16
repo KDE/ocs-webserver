@@ -38,6 +38,7 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
                         , project.description
                         , project.count_likes
                         , project.count_dislikes
+                        , project.laplace_score
                         , project.cat_title
                  FROM collection_projects
                  JOIN stat_projects project ON project.project_id = collection_projects.project_id
@@ -82,7 +83,7 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
             $withoutProjectIds = "0";
         }
         
-        $sql = " SELECT project.title, project.project_id, project.image_small, project.username, project.member_id, project.cat_title
+        $sql = " SELECT project.title, project.project_id, project.image_small, project.username, project.member_id, project.cat_title,project.laplace_score
                  FROM stat_projects project
                  WHERE project.member_id = :member_id
                  AND project.type_id = 1
@@ -106,7 +107,7 @@ class Default_Model_DbTable_CollectionProjects extends Local_Model_Table
             $withoutProjectIds = "0";
         }
         
-        $sql = " SELECT project.title, project.project_id, project.image_small, project.username, project.member_id, project.cat_title
+        $sql = " SELECT project.title, project.project_id, project.image_small, project.username, project.member_id, project.cat_title,project.laplace_score
                  FROM stat_projects project
                  WHERE project.member_id <> :member_id
                  AND project.type_id = 1

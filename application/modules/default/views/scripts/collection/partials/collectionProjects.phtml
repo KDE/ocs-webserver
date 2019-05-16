@@ -118,7 +118,7 @@
                 <?php                
                         $this->widgetRating = new stdClass();
                         $this->widgetRating->project_id =$project->project_id;
-                        $this->widgetRating->laplace_score = null;
+                        $this->widgetRating->laplace_score = $project->laplace_score;
                         $this->widgetRating->count_likes =$project->count_likes; 
                         $this->widgetRating->count_dislikes =$project->count_dislikes;
                         echo $this->render('partials/widgetRating.phtml'); 
