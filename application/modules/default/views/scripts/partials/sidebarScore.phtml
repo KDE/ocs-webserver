@@ -163,7 +163,8 @@ krsort($options);
              $('#score-product-modal').modal('show');
            });
 
-            $("#modal-btn-cancel").on("click", function(){                                                                               
+            $("#modal-btn-cancel").on("click", function(){                                        
+                 $(currentSelect).find("option[value="+preRatingSelected+"]").prop('selected', true);       
                 $("#score-product-modal").modal('hide');                
               });
             
@@ -172,8 +173,9 @@ krsort($options);
                 bOnsubmit = true;
             });
             $('#score-product-modal').on('hidden.bs.modal', function () {
+                
                  if(!bOnsubmit)
-                 {
+                 {                  
                     $(currentSelect).find("option[value="+preRatingSelected+"]").prop('selected', true);   
                  }                 
             });     

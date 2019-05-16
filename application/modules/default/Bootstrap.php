@@ -292,6 +292,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $imageConfig = $appConfig->images;
         defined('IMAGES_UPLOAD_PATH') || define('IMAGES_UPLOAD_PATH', $imageConfig->upload->path);
         defined('IMAGES_MEDIA_SERVER') || define('IMAGES_MEDIA_SERVER', $imageConfig->media->server);
+        $videoConfig = $appConfig->videos;
+        defined('VIDEOS_UPLOAD_PATH') || define('VIDEOS_UPLOAD_PATH', $videoConfig->upload->path);
+        defined('VIDEOS_MEDIA_SERVER') || define('VIDEOS_MEDIA_SERVER', $videoConfig->media->server);
 
         // ppload
         $pploadConfig = $appConfig->third_party->ppload;

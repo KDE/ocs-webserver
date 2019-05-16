@@ -136,13 +136,14 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         
                         <?php
                             if(!is_null($comment['rating']) && $comment['rating']!='-1')
-                            { ?>   
-                                <span class="score label" style="margin-right:5px;background-color:<?=$this->fetchScoreColor($comment['rating'])?>; ">
+                            { ?>                                                           
+                               <span class="rating-label" style="background-color:<?=$this->fetchScoreColor($comment['rating'])?>; "> <?=$comment['rating'] ?></span>  
+                            <?php                             
+                                /*
+                                    <span class="score label" style="margin-right:5px;background-color:<?=$this->fetchScoreColor($comment['rating'])?>; ">
                                     <?=$comment['rating'] ?>
-                                </span>                              
-                               
-                            <?php 
-                                /*if($comment['rating']==1){
+                                </span> 
+                                if($comment['rating']==1){
                                     echo '<span class="btn btn-success active" style="cursor:default;line-height: 10px;padding: 3px 6px;"><span class="fa fa-plus" ></span></span>';
                                 }else
                                 {
@@ -152,7 +153,8 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                             }
                         ?>
                         
-                        <?= nl2br(Default_Model_HtmlPurify::purify($comment['comment_text']),true) ?>                            
+                        <?= nl2br(Default_Model_HtmlPurify::purify($comment['comment_text']),true) ?>
+
                         </div>
                         <p>
                             <small class="small pull-right">

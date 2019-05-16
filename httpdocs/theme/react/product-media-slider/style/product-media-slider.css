@@ -18,6 +18,10 @@
   position: relative;
   padding-bottom: 110px;
   background-color: white;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
 }
 #media-slider .carousel-control {
   width: 50px;
@@ -26,10 +30,6 @@
   cursor: pointer;
   background: rgba(0, 0, 0, 0.35);
   opacity: 1;
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  -o-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
 }
 #media-slider .carousel-control .glyphicon {
   margin-top: -15px;
@@ -59,16 +59,15 @@
 }
 #media-slider #slider-wrapper .slide-item {
   float: left;
-  opacity: 0;
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  -o-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
   height: inherit;
   position: relative;
+  margin: 0;
 }
-#media-slider #slider-wrapper .slide-item.active {
-  opacity: 1;
+#media-slider #slider-wrapper .slide-item.image {
+  background-color: white !important;
+}
+#media-slider #slider-wrapper .slide-item .react-player-container .video-react {
+  font-family: inherit;
 }
 #media-slider #slider-wrapper .slide-item .react-player-container .cinema-mode-button {
   line-height: 30px;
@@ -76,6 +75,14 @@
   color: white;
   font-size: 10px;
   text-transform: uppercase;
+  cursor: pointer;
+}
+#media-slider #slider-wrapper .slide-item .react-player-container .cinema-mode-button span {
+  display: block;
+  width: 15px;
+  height: 10px;
+  border: 2px solid white;
+  margin: 10px;
 }
 #media-slider #slider-wrapper .slide-item > div {
   text-align: center;
@@ -95,27 +102,6 @@
   cursor: -webkit-zoom-in;
   cursor: zoom-in;
 }
-#media-slider #slider-wrapper .slide-item ul.slide-media-item-menu {
-  position: absolute;
-  bottom: 10px;
-  right: 10%;
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-#media-slider #slider-wrapper .slide-item ul.slide-media-item-menu li {
-  display: block;
-  float: left;
-  border-radius: 5px;
-  margin-right: 5px;
-}
-#media-slider #slider-wrapper .slide-item ul.slide-media-item-menu li a {
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  display: block;
-  padding: 5px 10px;
-  border: 1px solid white;
-}
 #media-slider #slide-navigation {
   width: 100%;
   text-align: center;
@@ -128,10 +114,6 @@
   margin: 0 auto;
   display: table;
   padding: 10px 5px;
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  -o-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
 }
 #media-slider #slide-navigation ul li {
   width: 120px;
@@ -142,10 +124,6 @@
   float: left;
   margin: 0 5px;
   box-sizing: content-box;
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  -o-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
 }
 #media-slider #slide-navigation ul li a {
   display: block;
@@ -170,6 +148,10 @@
 }
 #media-slider #slide-navigation ul li.image {
   background-color: white;
+}
+#media-slider #slide-navigation ul li.embed {
+  background-color: black;
+  background-image: url('../../assets/img/youtube-icon.png');
 }
 #media-slider.hide-arrows .carousel-control {
   opacity: 0;
@@ -204,4 +186,9 @@
 }
 #media-slider.hide-playlist #slide-navigation ul li.active {
   background-color: #999;
+}
+#media-slider.fade-controls .carousel-control,
+#media-slider.fade-controls .slider-navigation-toggle,
+#media-slider.fade-controls #slide-navigation {
+  opacity: 0;
 }

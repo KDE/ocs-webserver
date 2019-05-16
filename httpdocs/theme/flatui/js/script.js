@@ -1062,7 +1062,7 @@ var PartialsReviewDownloadHistoryNew = (function () {
             
 
             $("#modal-btn-cancel").on("click", function(){                                                
-                //$(currentSelect).find("option[value="+preRatingSelected+"]").prop('selected', true);               
+                $(currentSelect).find("option[value="+preRatingSelected+"]").prop('selected', true);                
                 $("#score-product-modal").modal('hide');                
               });     
              var bOnsubmit = false;     

@@ -11,6 +11,7 @@
     position: relative;
     padding-bottom: 110px;
     background-color: white;
+    .transition();
 
     .carousel-control {
         width: 50px;
@@ -19,7 +20,6 @@
         cursor: pointer;
         background: rgba(0,0,0,0.35);
         opacity: 1;
-        .transition();
 
         .glyphicon {
             margin-top: -15px;
@@ -49,16 +49,19 @@
 
         .slide-item {
             float:left;
-            opacity: 0;
-            .transition();
             height: inherit;
             position: relative;
+            margin:0;
 
-            &.active {
-                opacity: 1;
+            &.image {
+                background-color:white !important;
             }
 
             .react-player-container {
+
+                .video-react {
+                    font-family: inherit;
+                }
 
                 .cinema-mode-button {
                     line-height: 30px;
@@ -66,6 +69,15 @@
                     color: white;
                     font-size: 10px;
                     text-transform: uppercase;
+                    cursor: pointer;
+
+                    span {
+                        display: block;
+                        width: 15px;
+                        height: 10px;
+                        border: 2px solid white;
+                        margin: 10px;
+                    }
                 }
             }
 
@@ -89,30 +101,6 @@
                 cursor: -webkit-zoom-in; 
                 cursor: zoom-in;
             }
-
-            ul.slide-media-item-menu {
-                position: absolute;
-                bottom: 10px;
-                right: 10%;
-                list-style-type: none;
-                padding: 0;
-                margin: 0;
-
-                li {
-                    display: block;
-                    float: left;
-                    border-radius: 5px;
-                    margin-right: 5px;
-
-                    a {
-                        background-color:rgba(0,0,0,0.5);
-                        color: white;
-                        display: block;
-                        padding:5px 10px;
-                        border: 1px solid white;
-                    }
-                }
-            }
         }
     }
 
@@ -128,7 +116,6 @@
             margin:0 auto;
             display:table;
             padding: 10px 5px;
-            .transition();
 
             li {
                 width: 120px;
@@ -139,7 +126,6 @@
                 float: left;
                 margin: 0 5px;
                 box-sizing: content-box;
-                .transition();
 
                 a {
                     display: block;
@@ -170,6 +156,11 @@
 
                 &.image {
                     background-color: white;
+                }
+
+                &.embed {
+                    background-color: black;
+                    background-image: url('../../assets/img/youtube-icon.png');
                 }
             }
         }
@@ -225,4 +216,11 @@
         }
     }
 
+    &.fade-controls {
+        .carousel-control,
+        .slider-navigation-toggle,
+        #slide-navigation { 
+            opacity: 0;
+        }
+    }
 }
