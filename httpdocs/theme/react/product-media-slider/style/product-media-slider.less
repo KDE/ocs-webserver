@@ -49,12 +49,12 @@
 
         .slide-item {
             float:left;
-            opacity: 0;
             height: inherit;
             position: relative;
-
-            &.active {
-                opacity: 1;
+            margin:0;
+            
+            &.image {
+                background-color:white !important;
             }
 
             .react-player-container {
@@ -87,30 +87,6 @@
                 cursor: -moz-zoom-in; 
                 cursor: -webkit-zoom-in; 
                 cursor: zoom-in;
-            }
-
-            ul.slide-media-item-menu {
-                position: absolute;
-                bottom: 10px;
-                right: 10%;
-                list-style-type: none;
-                padding: 0;
-                margin: 0;
-
-                li {
-                    display: block;
-                    float: left;
-                    border-radius: 5px;
-                    margin-right: 5px;
-
-                    a {
-                        background-color:rgba(0,0,0,0.5);
-                        color: white;
-                        display: block;
-                        padding:5px 10px;
-                        border: 1px solid white;
-                    }
-                }
             }
         }
     }
