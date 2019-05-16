@@ -84,6 +84,7 @@ class VideoPlayerWrapper extends React.Component {
         return (
             <div className="react-player-container">
                 {videoPlayerDisplay}
+                
             </div>
         )
     }
