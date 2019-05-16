@@ -31,7 +31,7 @@ $scoreColor = new Default_View_Helper_FetchScoreColor();
 	<table>
 	<tr>
 <?php
-krsort($options);
+
 foreach ($options as $key => $value) {	
 	echo '<td><span class="rating-label rating-label-btn" style="margin-left:10px; background-color:'.$this->fetchScoreColor($key).'">'
 		  .$key.'</span></td>';
