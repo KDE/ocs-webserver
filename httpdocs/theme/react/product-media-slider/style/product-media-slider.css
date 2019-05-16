@@ -18,6 +18,10 @@
   position: relative;
   padding-bottom: 110px;
   background-color: white;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
 }
 #media-slider .carousel-control {
   width: 50px;
@@ -48,6 +52,10 @@
   position: absolute;
   left: 0;
   top: 0;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
 }
 #media-slider #slider-wrapper .slide-item {
   float: left;
@@ -189,9 +197,8 @@
 #media-slider.hide-playlist #slide-navigation ul li.active {
   background-color: #999;
 }
-#media-slider.fade-controls .carousel-control {
-  opacity: 0;
-}
+#media-slider.fade-controls .carousel-control,
+#media-slider.fade-controls .slider-navigation-toggle,
 #media-slider.fade-controls #slide-navigation {
   opacity: 0;
 }

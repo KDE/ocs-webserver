@@ -29,13 +29,11 @@ function ProductMediaSlider(){
   const [ sliderHeight, setSliderHeight ] = useState(360);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
   const [ cinemaMode, setCinemaMode ] = useState(false);
-  const [ fadeControlsCountDown, setFadeControlsCountDown ] = useState(false);
-  const [ fadeControlsMode, setFadeControlsMode ] = useState(false);
   const [ showPlaylist, setShowPlaylist ] = useState(false);
-  const [ showSliderArrows, setShowSliderArrows ] = useState(true);
+  const [ showSliderArrows, setShowSliderArrows ] = useState(true);  
   const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(false);
 
-  let sliderControlsFadeModeTimer;
+  let sliderFadeControlTimeOut;
 
   React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode])
@@ -44,21 +42,33 @@ function ProductMediaSlider(){
   function initProductMediaSlider(){
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
+    window.addEventListener("mousemove",function(event){ onMouseMovement(event) });
   }
 
   // update dimensions
   function updateDimensions(){
-    
     const newContainerWidth = parentContainerElement.offsetWidth;
-    
     setContainerWidth(newContainerWidth)
     setSliderWidth(newContainerWidth * gallery.length);
     setSliderPosition(newContainerWidth * currentSlide);
-    
     document.getElementById('product-page-content').removeEventListener("DOMNodeRemoved", updateDimensions);
     document.getElementById('product-page-content').removeEventListener("DOMNodeInserted", updateDimensions);
+    if (cinemaMode === false) setSliderHeight(360)
+  }
+
+  // on mouse movement
+  function onMouseMovement(event){
     
-    if (cinemaMode === false) setSliderHeight(360) 
+    const mediaSliderOffest = $('#media-slider').offset()
+    const mediaSliderLeft = mediaSliderOffest.left;
+    const mediaSliderRight = mediaSliderLeft + $('#media-slider').width();
+    const mediaSliderTop = mediaSliderOffest.top - window.pageYOffset;
+    const mediaSliderBottom = mediaSliderTop + $('#media-slider').height();
+    
+    let mouseIn = false;
+    if (event.clientX > mediaSliderLeft && event.clientX < mediaSliderRight && event.clientY > mediaSliderTop && event.clientY < mediaSliderBottom ){ mouseIn = true; }
+    if (mouseIn) onMouseMovementIn()
+    else onMouseMovementOut()
   
   }
 
@@ -87,28 +97,19 @@ function ProductMediaSlider(){
     setShowPlaylist(newShowPlaylistValue)
   }
   
-  function onMouseMovementEvent(e,type){
-    stopSliderFadeControlsTimer()
-    setFadeControlsMode(false)
-    if (type === 'enter'){
-      setFadeControlsCountDown(true)
-      setSliderFadeControlsTimer()
-    } else if (type === 'leave'){
-      setFadeControlsMode(false) 
-      clearInterval(sliderControlsFadeModeTimer);
-    }
-  }
-
-  function setSliderFadeControlsTimer(){
-    sliderControlsFadeModeTimer = setTimeout(function(){ 
-      if (fadeControlsCountDown === true) setFadeControlsMode(true) 
+  function onMouseMovementIn(){
+    setSliderFadeControlsMode(false)
+    clearTimeout(sliderFadeControlTimeOut);
+    sliderFadeControlTimeOut = setTimeout(function(){
+      console.log('no set fade controls mode')
+      setSliderFadeControlsMode(true)
     }, 5000);
   }
 
-  function stopSliderFadeControlsTimer(){
-    setFadeControlsCountDown(false)
-    clearInterval(sliderControlsFadeModeTimer);
-    sliderControlsFadeModeTimer = null;
+  function onMouseMovementOut(){
+    setSliderFadeControlsMode(false) 
+    clearTimeout(sliderFadeControlTimeOut);
+    console.log('cancel set fade out ')
   }
 
   /* Render */
@@ -118,7 +119,7 @@ function ProductMediaSlider(){
   if (cinemaMode === true) mediaSliderCssClass += "cinema-mode ";
   if (showSliderArrows === false) mediaSliderCssClass += "hide-arrows ";
   if (showPlaylist === false) mediaSliderCssClass += "hide-playlist ";
-  if (fadeControlsMode === true) mediaSliderCssClass += "fade-controls "
+  if (sliderFadeControlsMode === true) mediaSliderCssClass += "fade-controls "
 
   // slider container style
   const sliderContainerStyle = {
@@ -159,13 +160,6 @@ function ProductMediaSlider(){
     <main id="media-slider" 
       style={{height:sliderHeight}} 
       className={mediaSliderCssClass}
-      onMouseEnter={(e) => onMouseMovementEvent(e,'enter')}
-      onMouseMove={(e) => onMouseMovementEvent(e,'enter')}
-      onMouseOver={(e) => onMouseMovementEvent(e,'enter')}
-      onMouseUp={(e) => onMouseMovementEvent(e,'enter')}
-      onClick={(e) => onMouseMovementEvent(e,'enter')}
-      onMouseLeave={(e) => onMouseMovementEvent(e,'leave')}
-      onMouseOut={(e) => onMouseMovementEvent(e,'leave')}
       >
 
       <div id="slider-container" style={sliderContainerStyle}>
