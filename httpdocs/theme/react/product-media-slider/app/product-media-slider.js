@@ -83,7 +83,7 @@ function ProductMediaSlider(){
     const targetChildPrependedElement = cinemaMode === true ? $('#product-title-div') : $('#product-media-slider-container');
     
     $('#product-main-img-container').prependTo(targetParentElement);
-    $(targetChildPrependedElement).prependTo('#product-main-img-container');
+    $(targetChildPrependedElement).prependTo('#product-main-img');
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
     
@@ -101,7 +101,6 @@ function ProductMediaSlider(){
     setSliderFadeControlsMode(false)
     clearTimeout(sliderFadeControlTimeOut);
     sliderFadeControlTimeOut = setTimeout(function(){
-      console.log('no set fade controls mode')
       setSliderFadeControlsMode(true)
     }, 5000);
   }
@@ -109,7 +108,6 @@ function ProductMediaSlider(){
   function onMouseMovementOut(){
     setSliderFadeControlsMode(false) 
     clearTimeout(sliderFadeControlTimeOut);
-    console.log('cancel set fade out ')
   }
 
   /* Render */
@@ -194,7 +192,6 @@ function SlideItem(props){
   function getSlideContentHeight(){
     if (props.slide.type === "image"){
       const imageEl = document.getElementById('slide-img-'+props.slideIndex);
-      console.log(imageEl.naturalHeight);
       if (props.currentSlide === props.slideIndex){
         if ( props.cinemaMode === true ){
           let imageHeight = imageEl.naturalHeight;
