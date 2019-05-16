@@ -24,7 +24,6 @@ class VideoPlayerWrapper extends React.Component {
         this.setState({ player: state },function(){
             if (this.state.player){
                 if (this.state.player.hasStarted && this.state.videoStarted === false){
-                    console.log('report start video')
                     this.setState({videoStarted:true},function(){
                         const self = this;
                         $.ajax({url: this.state.videoStartUrl}).done(function(res) {
@@ -33,7 +32,7 @@ class VideoPlayerWrapper extends React.Component {
                     });
                 } 
                 if (this.state.player.paused && this.state.videoStarted === true && this.state.videoStopped === false){
-                    console.log('report stop video' - this.state.videoStopUrl)
+                    console.log('report stop video' + this.state.videoStopUrl)
                     this.setState({videoStopped:true},function(){
                         $.ajax({url: this.state.videoStopUrl}).done(function(res) {
                             console.log(res)
