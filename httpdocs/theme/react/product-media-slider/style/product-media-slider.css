@@ -59,12 +59,12 @@
 }
 #media-slider #slider-wrapper .slide-item {
   float: left;
-  opacity: 0;
   height: inherit;
   position: relative;
+  margin: 0;
 }
-#media-slider #slider-wrapper .slide-item.active {
-  opacity: 1;
+#media-slider #slider-wrapper .slide-item.image {
+  background-color: white !important;
 }
 #media-slider #slider-wrapper .slide-item .react-player-container .cinema-mode-button {
   line-height: 30px;
@@ -90,27 +90,6 @@
   cursor: -moz-zoom-in;
   cursor: -webkit-zoom-in;
   cursor: zoom-in;
-}
-#media-slider #slider-wrapper .slide-item ul.slide-media-item-menu {
-  position: absolute;
-  bottom: 10px;
-  right: 10%;
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-#media-slider #slider-wrapper .slide-item ul.slide-media-item-menu li {
-  display: block;
-  float: left;
-  border-radius: 5px;
-  margin-right: 5px;
-}
-#media-slider #slider-wrapper .slide-item ul.slide-media-item-menu li a {
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  display: block;
-  padding: 5px 10px;
-  border: 1px solid white;
 }
 #media-slider #slide-navigation {
   width: 100%;

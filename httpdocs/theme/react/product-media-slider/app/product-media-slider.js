@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import VideoPlayerWrapper from './video-player';
-// import Draggable, {DraggableCore} from 'react-draggable'; // Both at the same time
 import { Scrollbars } from 'react-custom-scrollbars';
 
 
@@ -16,8 +15,23 @@ function ProductMediaSlider(){
   else galleryArray = [{url:product.image_small,type:'image'} ];
   if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... galleryArray ];
   if (window.filesJson) {
-    window.filesJson.forEach(function(f,index){  
-      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) galleryArray = [{url:f.url,type:f.type.split('/')[0]}, ... galleryArray] 
+    window.filesJson.forEach(function(f,index){
+      function splitByLastDot(string){
+        const array = string.split(/\.(?=[^\.]+$)/);
+        return array[array.length - 1]
+      }
+      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1){
+        if ( splitByLastDot(f.name) !== '3gp' && splitByLastDot(f.name) !== '3g2' && splitByLastDot(f.name) !== 'm2v' 
+          && splitByLastDot(f.name) !== 'mov' && splitByLastDot(f.name) !== 'flv' && splitByLastDot(f.name) !== 'wmv' ){
+          const gItem = {
+            url:f.url,
+            type:f.type.split('/')[0],
+            collection_id:f.collection_id,
+            file_id:f.id
+          }
+          galleryArray = [gItem, ... galleryArray] 
+        }
+      }
     })
   }
 
@@ -98,15 +112,16 @@ function ProductMediaSlider(){
   }
   
   function onMouseMovementIn(){
+    setShowSliderArrows(true);
     setSliderFadeControlsMode(false)
     clearTimeout(sliderFadeControlTimeOut);
     sliderFadeControlTimeOut = setTimeout(function(){
       setSliderFadeControlsMode(true)
-    }, 5000);
+    }, 1700);
   }
 
   function onMouseMovementOut(){
-    setSliderFadeControlsMode(false) 
+    setSliderFadeControlsMode(true)
     clearTimeout(sliderFadeControlTimeOut);
   }
 
@@ -190,6 +205,7 @@ function SlideItem(props){
   React.useEffect(() => { getSlideContentHeight() },[props.currentSlide, props.cinemaMode]);
 
   function getSlideContentHeight(){
+    
     if (props.slide.type === "image"){
       const imageEl = document.getElementById('slide-img-'+props.slideIndex);
       if (props.currentSlide === props.slideIndex){
@@ -204,41 +220,50 @@ function SlideItem(props){
         }
         else if (imageEl.offsetHeight > 0) setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
       }
-    } else if (props.slide.type === "embed"){ 
+    } 
+    
+    else if (props.slide.type === "embed"){ 
       if (props.currentSlide === props.slideIndex && props.cinemaMode === true) props.onSetSliderHeight(315)
-    } else if (props.slide.type === "video" || props.slide.type === "audio"){ 
+    } 
+    
+    else if (props.slide.type === "video" || props.slide.type === "audio"){ 
       if (props.currentSlide === props.slideIndex && props.cinemaMode === true) props.onSetSliderHeight(360); 
     }
+
   }
   
-  let slideContentDisplay, slideMediaItemMenu;
-    if (props.slide.type === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
-    else if (props.slide.type === "image") {
-      slideContentDisplay = (
-        <img 
-          onClick={props.onCinemaModeClick} 
-          id={"slide-img-"+props.slideIndex} 
-          src={props.slide.url}
-          style={mediaStyle}
-        />
-      )
-    }
-    else if (props.slide.type === "video") {
-      slideContentDisplay = (
-        <VideoPlayerWrapper 
-          height={props.sliderHeight}
-          width={(props.containerWidth * 0.7)} 
-          source={props.slide.url} 
-          onCinemaModeClick={props.onCinemaModeClick}
-          playVideo={props.currentSlide === props.slideIndex}
-        />
-      )
-    }
+  let slideContentDisplay;
+  if (props.slide.type === "embed"){
+    slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
+  }
+  else if (props.slide.type === "image") {
+    slideContentDisplay = (
+      <img 
+        onClick={props.onCinemaModeClick} 
+        id={"slide-img-"+props.slideIndex} 
+        src={props.slide.url}
+        style={mediaStyle}
+      />
+    )
+  }
+  else if (props.slide.type === "video") {
+    slideContentDisplay = (
+      <VideoPlayerWrapper 
+        height={props.sliderHeight}
+        width={(props.containerWidth * 0.7)} 
+        onCinemaModeClick={props.onCinemaModeClick}
+        slide={props.slide}
+        playVideo={props.currentSlide === props.slideIndex}
+      />
+    )
+  }
 
   return(
-    <div className={props.currentSlide === props.slideIndex ? "active slide-item" : "slide-item" } id={"slide-"+props.slideIndex} style={ { width:props.containerWidth, height:props.sliderHeight }}>
-      {slideContentDisplay}
-      {slideMediaItemMenu}
+    <div 
+      id={"slide-"+props.slideIndex}     
+      className={props.currentSlide === props.slideIndex ? "active slide-item " + props.slide.type : "slide-item " + props.slide.type } 
+      style={ { width:props.containerWidth, height:props.sliderHeight }}>
+        {slideContentDisplay}
     </div>
   )
 }
@@ -276,11 +301,13 @@ function SlidesNavigation(props){
         </li>
       )
     })
-    const thumbSliderStyle = {
-      position:'absolute',
-      top:'0',
-      width:thumbSliderWidth+'px',
+
+    let thumbSliderStyle = {  width:thumbSliderWidth+'px' }
+    if (thumbSliderWidth > props.containerWidth){
+      thumbSliderStyle.position = 'absolute';
+      thumbSliderStyle.top = '0';
     }
+
     navigationSliderDisplay = (
       <Scrollbars style={{ width: props.containerWidth, height: 110 }}>
         <ul className="thumbnail-navigation" style={thumbSliderStyle}>{slidesThumbnailNavigationDisplay}</ul>

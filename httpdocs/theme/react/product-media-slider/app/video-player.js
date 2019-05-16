@@ -5,9 +5,11 @@ class VideoPlayerWrapper extends React.Component {
     constructor(props, context){
         super(props, context);
         this.state = {
-            source:this.props.source.replace(/%2F/g,'/').replace(/%3A/g,':'),
+            source:this.props.slide.url.replace(/%2F/g,'/').replace(/%3A/g,':'),
             videoStarted:false,
-            videoStopped:false
+            videoStopped:false,
+            videoStartUrl:window.location.href + "startvideoajax?collection_id="+this.props.slide.collection_id+"&file_id="+this.props.slide.file_id,
+            videoStopUrl:window.location.href + "stopvideoajax?media_view_id="
         }
         this.onCinemaModeClick = this.onCinemaModeClick.bind(this);
         this.play = this.play.bind(this);
@@ -15,16 +17,35 @@ class VideoPlayerWrapper extends React.Component {
     }
 
     componentDidMount() {
-        // subscribe state change
         this.refs.player.subscribeToStateChange(this.handleStateChange.bind(this));
+    }
+
+    handleStateChange(state, prevState) {
+        this.setState({ player: state },function(){
+            if (this.state.player){
+                if (this.state.player.hasStarted && this.state.videoStarted === false){
+                    this.setState({videoStarted:true},function(){
+                        const self = this;
+                        $.ajax({url: this.state.videoStartUrl}).done(function(res) {
+                            console.log(res);
+                            self.setState({videoStopUrl:self.state.videoStopUrl + res.MediaViewId})
+                        });
+                    });
+                } 
+                if (this.state.player.paused && this.state.videoStarted === true && this.state.videoStopped === false){
+                    this.setState({videoStopped:true},function(){
+                        $.ajax({url: this.state.videoStopUrl}).done(function(res) {
+                            console.log(res)
+                        });
+                    });
+                }
+            }
+        });
     }
 
     shouldComponentUpdate(nextProps, nextState){
         if (nextProps.playVideo === false) this.pause()
-    }
-
-    handleStateChange(state, prevState) {
-        this.setState({ player: state });
+        return true;
     }
 
     onCinemaModeClick(){
@@ -38,10 +59,8 @@ class VideoPlayerWrapper extends React.Component {
     pause() {
         this.refs.player.pause();
     }
-
     
-    render(){
-
+    render(){   
         let videoPlayerDisplay;
         if (this.state.source){
             videoPlayerDisplay = (
