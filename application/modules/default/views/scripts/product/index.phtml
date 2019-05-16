@@ -295,7 +295,9 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                <div class="modal-body">
                  
                             <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
-                            <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>                            
+                            <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>       
+                             <input type="hidden" name="v" value="1" id="voteup"/>
+
                             <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
                             <input type="hidden" name="otxt" value="<?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?>" id="otxt"/>
                             
