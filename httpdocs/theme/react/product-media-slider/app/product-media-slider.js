@@ -30,10 +30,10 @@ function ProductMediaSlider(){
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ showPlaylist, setShowPlaylist ] = useState(false);
-  const [ showSliderArrows, setShowSliderArrows ] = useState(true);
+  const [ showSliderArrows, setShowSliderArrows ] = useState(true);  
   const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(false);
 
-  let sliderControlsFadeModeTimer;
+  let sliderFadeControlTimeOut;
 
   React.useEffect(() => { initProductMediaSlider() },[])
   React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode])
@@ -42,6 +42,7 @@ function ProductMediaSlider(){
   function initProductMediaSlider(){
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
+    window.addEventListener("mousemove",function(event){ onMouseMovement(event) });
   }
 
   // update dimensions
@@ -52,21 +53,42 @@ function ProductMediaSlider(){
     setSliderPosition(newContainerWidth * currentSlide);
     document.getElementById('product-page-content').removeEventListener("DOMNodeRemoved", updateDimensions);
     document.getElementById('product-page-content').removeEventListener("DOMNodeInserted", updateDimensions);
-    if (cinemaMode === false) setSliderHeight(360) 
+    if (cinemaMode === false) setSliderHeight(360)
+  }
+
+  // on mouse movement
+  function onMouseMovement(event){
+    
+    const mediaSliderOffest = $('#media-slider').offset()
+    const mediaSliderLeft = mediaSliderOffest.left;
+    const mediaSliderRight = mediaSliderLeft + $('#media-slider').width();
+    const mediaSliderTop = mediaSliderOffest.top - window.pageYOffset;
+    const mediaSliderBottom = mediaSliderTop + $('#media-slider').height();
+    
+    let mouseIn = false;
+    if (event.clientX > mediaSliderLeft && event.clientX < mediaSliderRight && event.clientY > mediaSliderTop && event.clientY < mediaSliderBottom ){ mouseIn = true; }
+    if (mouseIn) onMouseMovementIn()
+    else onMouseMovementOut()
+  
   }
 
   // toggle cinema mode
   function toggleCinemaMode(){
+    
     document.getElementById('product-page-content').addEventListener("DOMNodeRemoved", updateDimensions);
     document.getElementById('product-page-content').addEventListener("DOMNodeInserted", updateDimensions);    
+    
     const newCinemaMode = cinemaMode === true ? false : true;
     const targetParentElement = cinemaMode === true ? $('#product-main') : $('#product-page-content');
     const targetChildPrependedElement = cinemaMode === true ? $('#product-title-div') : $('#product-media-slider-container');
+    
     $('#product-main-img-container').prependTo(targetParentElement);
-    $(targetChildPrependedElement).prependTo('#product-main-img-container');
+    $(targetChildPrependedElement).prependTo('#product-main-img');
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
-    setCinemaMode(newCinemaMode);    
+    
+    setCinemaMode(newCinemaMode);
+
   }
 
   // toggle show playlist
@@ -75,24 +97,17 @@ function ProductMediaSlider(){
     setShowPlaylist(newShowPlaylistValue)
   }
   
-  function onMouseMovementEvent(type){
-    stopSliderFadeControlsTimer()
-    if (type === 'enter'){
-      setShowSliderArrows(true)
-      setSliderFadeControlsTimer()
-    } else if (type === 'leave'){
-      setShowSliderArrows(false)
-    }
-    console.log('on mouse movement event')
+  function onMouseMovementIn(){
+    setSliderFadeControlsMode(false)
+    clearTimeout(sliderFadeControlTimeOut);
+    sliderFadeControlTimeOut = setTimeout(function(){
+      setSliderFadeControlsMode(true)
+    }, 5000);
   }
 
-  function setSliderFadeControlsTimer(){
-    sliderFadeControlsMode = setTimeout(function(){ console.log('5 sec, hide controls') }, 5000);
-  }
-
-  function stopSliderFadeControlsTimer(){
-    clearInterval(sliderFadeControlsMode);
-    console.log('stop slider face controls timer');
+  function onMouseMovementOut(){
+    setSliderFadeControlsMode(false) 
+    clearTimeout(sliderFadeControlTimeOut);
   }
 
   /* Render */
@@ -102,7 +117,7 @@ function ProductMediaSlider(){
   if (cinemaMode === true) mediaSliderCssClass += "cinema-mode ";
   if (showSliderArrows === false) mediaSliderCssClass += "hide-arrows ";
   if (showPlaylist === false) mediaSliderCssClass += "hide-playlist ";
-  if (sliderFadeControlsMode === true) mediaSliderCssClass += " fade-controls";
+  if (sliderFadeControlsMode === true) mediaSliderCssClass += "fade-controls "
 
   // slider container style
   const sliderContainerStyle = {
@@ -143,12 +158,6 @@ function ProductMediaSlider(){
     <main id="media-slider" 
       style={{height:sliderHeight}} 
       className={mediaSliderCssClass}
-      onMouseEnter={(e) => onMouseMovementEvent('enter')}
-      onMouseMove={(e) => onMouseMovementEvent('enter')}
-      onMouseOver={(e) => onMouseMovementEvent('enter')}
-      onMouseUp={(e) => onMouseMovementEvent('enter')}
-      onMouseLeave={(e) => onMouseMovementEvent('leave')}
-      onMouseOut={(e) => onMouseMovementEvent('leave')}
       >
 
       <div id="slider-container" style={sliderContainerStyle}>
@@ -156,7 +165,7 @@ function ProductMediaSlider(){
           <span className="glyphicon glyphicon-chevron-left"></span>
         </a>
         <div id="slider-wrapper" style={sliderWrapperStyle}>
-          {slidesDisplay}    
+          {slidesDisplay}
         </div>
         <a className="right carousel-control" id="arrow-right" style={sliderArrowCss} onClick={() => setCurrentSlide(nextCurrentSlide)}>
           <span className="glyphicon glyphicon-chevron-right"></span>
@@ -183,11 +192,15 @@ function SlideItem(props){
   function getSlideContentHeight(){
     if (props.slide.type === "image"){
       const imageEl = document.getElementById('slide-img-'+props.slideIndex);
-      console.log(imageEl.offsetHeight);
       if (props.currentSlide === props.slideIndex){
         if ( props.cinemaMode === true ){
-          setMediaStyle()
-          props.onSetSliderHeight(imageEl.naturalHeight);
+          let imageHeight = imageEl.naturalHeight;
+          if (imageEl.naturalWidth > window.innerWidth){
+            let dimensionsPercentage = window.innerWidth / imageEl.naturalWidth;
+            imageHeight = imageEl.naturalHeight * dimensionsPercentage;
+          }
+          setMediaStyle({height:imageHeight})
+          props.onSetSliderHeight(imageHeight);
         }
         else if (imageEl.offsetHeight > 0) setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
       }
