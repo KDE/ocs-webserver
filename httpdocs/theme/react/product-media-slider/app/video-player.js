@@ -27,7 +27,6 @@ class VideoPlayerWrapper extends React.Component {
                     this.setState({videoStarted:true},function(){
                         const self = this;
                         $.ajax({url: this.state.videoStartUrl}).done(function(res) {
-                            console.log(res);
                             self.setState({videoStopUrl:self.state.videoStopUrl + res.MediaViewId})
                         });
                     });
@@ -35,7 +34,7 @@ class VideoPlayerWrapper extends React.Component {
                 if (this.state.player.paused && this.state.videoStarted === true && this.state.videoStopped === false){
                     this.setState({videoStopped:true},function(){
                         $.ajax({url: this.state.videoStopUrl}).done(function(res) {
-                            console.log(res)
+                            // console.log(res)
                         });
                     });
                 }
@@ -70,7 +69,7 @@ class VideoPlayerWrapper extends React.Component {
                     fluid={false}
                     height={this.props.height}
                     width={this.props.width}
-                    playsInline
+                    preload
                     src={this.state.source}>
                         <BigPlayButton position="center" />
                         <LoadingSpinner />
