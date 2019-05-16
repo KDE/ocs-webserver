@@ -69,9 +69,6 @@
 #media-slider #slider-wrapper .slide-item .react-player-container .video-react {
   font-family: inherit;
 }
-#media-slider #slider-wrapper .slide-item .react-player-container .video-react .video-react-video {
-  height: calc(70%);
-}
 #media-slider #slider-wrapper .slide-item .react-player-container .video-react .video-react-control-bar {
   display: -webkit-box;
   display: -webkit-flex;

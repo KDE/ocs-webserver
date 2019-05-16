@@ -125,7 +125,18 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 
     <link href="/theme/react/product-media-slider/style/video-react.css" type="text/css" rel="stylesheet" />
     <link href="/theme/react/product-media-slider/style/product-media-slider.css" type="text/css" rel="stylesheet" />
-
+    <style>
+        .video-react-video {
+            /* Firefox */
+            height: -moz-calc(100% - 30px) !important ;
+            /* WebKit */
+            height: -webkit-calc(100% - 30px) !important ;
+            /* Opera */
+            height: -o-calc(100% - 30px) !important ;
+            /* Standard */
+            height: calc(100% - 30px) !important ;
+        }
+    </style>
     <!-- facebook -->
     <div id="fb-root"></div>
     <?php if (Zend_Auth::getInstance()->hasIdentity()) {
