@@ -120,6 +120,8 @@ class Default_Model_DbTable_Video extends Zend_Db_Table_Abstract
 
     public function saveVideoOnMediaServer($filePathName)
     {
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
+        
         if (empty($filePathName)) {
             return null;
         }
@@ -160,6 +162,8 @@ class Default_Model_DbTable_Video extends Zend_Db_Table_Abstract
      */
     protected function sendVideoToMediaServer($fullFilePath, $mimeType)
     {
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
+        
         $config = Zend_Registry::get('config');
         $url = $config->videos->media->upload;
 
@@ -170,7 +174,7 @@ class Default_Model_DbTable_Video extends Zend_Db_Table_Abstract
 
         if ($response->getStatus() > 200) {
             $this->_errorMsg = $response->getBody();
-
+            Zend_Registry::get('logger')->error(__METHOD__ . ' - ' . print_r($response->getBody(), true));
             return null;
         }
 
