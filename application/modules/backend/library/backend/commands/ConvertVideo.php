@@ -46,6 +46,7 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
     {
         $this->collectionId = $collectionId;
         $this->fileId = $fileId;
+        
     }
 
     public function doCommand()
@@ -59,6 +60,18 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
         $log = Zend_Registry::get('logger');
         $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . '**********' . "\n");
         //call video convert server
+        
+        $timestamp = time() + 3600; // one hour valid
+        $hash = hash('sha512',$salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
+        $url = PPLOAD_API_URI . 'files/download/id/' . $file['id'] . '/s/' . $hash . '/t/' . $timestamp;
+        if(null != $this->_authMember) {
+            $url .= '/u/' . $this->_authMember->member_id;
+        }
+        $url .= '/lt/filepreview/' . $file['name'];
+        
+        $videoServer = new Default_Model_DbTable_Video();
+        $videoServer->storeExternalVideo($url);
+        
         return true;
     }
 
