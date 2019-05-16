@@ -121,8 +121,7 @@ function ProductMediaSlider(){
   }
 
   function onMouseMovementOut(){
-    setShowSliderArrows(false);
-    setSliderFadeControlsMode(false) 
+    setSliderFadeControlsMode(true)
     clearTimeout(sliderFadeControlTimeOut);
   }
 
@@ -302,11 +301,13 @@ function SlidesNavigation(props){
         </li>
       )
     })
-    const thumbSliderStyle = {
-      position:'absolute',
-      top:'0',
-      width:thumbSliderWidth+'px',
+
+    let thumbSliderStyle = {  width:thumbSliderWidth+'px' }
+    if (thumbSliderWidth > props.containerWidth){
+      thumbSliderStyle.position = 'absolute';
+      thumbSliderStyle.top = '0';
     }
+
     navigationSliderDisplay = (
       <Scrollbars style={{ width: props.containerWidth, height: 110 }}>
         <ul className="thumbnail-navigation" style={thumbSliderStyle}>{slidesThumbnailNavigationDisplay}</ul>
