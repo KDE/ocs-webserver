@@ -164,6 +164,7 @@ function ProductMediaSlider(){
       cinemaMode={cinemaMode}
       onCinemaModeClick={toggleCinemaMode}
       onSetSliderHeight={height => setSliderHeight(height)}
+      onUpdateDimensions={updateDimensions}
     />
   ));
 
@@ -252,6 +253,7 @@ function SlideItem(props){
         onCinemaModeClick={props.onCinemaModeClick}
         slide={props.slide}
         playVideo={props.currentSlide === props.slideIndex}
+        onUpdateDimensions={props.onUpdateDimensions}
       />
     )
   }
