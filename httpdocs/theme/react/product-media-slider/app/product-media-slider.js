@@ -16,14 +16,21 @@ function ProductMediaSlider(){
   if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... galleryArray ];
   if (window.filesJson) {
     window.filesJson.forEach(function(f,index){
+      function splitByLastDot(string){
+        const array = string.split(/\.(?=[^\.]+$)/);
+        return array[array.length - 1]
+      }
       if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1){
-        const gItem = {
-          url:f.url,
-          type:f.type.split('/')[0],
-          collection_id:f.collection_id,
-          file_id:f.id
+        if ( splitByLastDot(f.name) !== '3gp' && splitByLastDot(f.name) !== '3g2' && splitByLastDot(f.name) !== 'm2v' 
+          && splitByLastDot(f.name) !== 'mov' && splitByLastDot(f.name) !== 'flv' && splitByLastDot(f.name) !== 'wmv' ){
+          const gItem = {
+            url:f.url,
+            type:f.type.split('/')[0],
+            collection_id:f.collection_id,
+            file_id:f.id
+          }
+          galleryArray = [gItem, ... galleryArray] 
         }
-        galleryArray = [gItem, ... galleryArray] 
       }
     })
   }
@@ -105,14 +112,16 @@ function ProductMediaSlider(){
   }
   
   function onMouseMovementIn(){
+    setShowSliderArrows(true);
     setSliderFadeControlsMode(false)
     clearTimeout(sliderFadeControlTimeOut);
     sliderFadeControlTimeOut = setTimeout(function(){
       setSliderFadeControlsMode(true)
-    }, 2500);
+    }, 1700);
   }
 
   function onMouseMovementOut(){
+    setShowSliderArrows(false);
     setSliderFadeControlsMode(false) 
     clearTimeout(sliderFadeControlTimeOut);
   }
