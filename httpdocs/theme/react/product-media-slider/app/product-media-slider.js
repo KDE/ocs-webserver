@@ -57,6 +57,7 @@ function ProductMediaSlider(){
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
     window.addEventListener("mousemove",function(event){ onMouseMovement(event) });
+    window.addEventListener("mousedown",function(event){ onMouseMovement(event) });
   }
 
   // update dimensions
@@ -72,18 +73,15 @@ function ProductMediaSlider(){
 
   // on mouse movement
   function onMouseMovement(event){
-    
     const mediaSliderOffest = $('#media-slider').offset()
     const mediaSliderLeft = mediaSliderOffest.left;
     const mediaSliderRight = mediaSliderLeft + $('#media-slider').width();
     const mediaSliderTop = mediaSliderOffest.top - window.pageYOffset;
-    const mediaSliderBottom = mediaSliderTop + $('#media-slider').height();
-    
+    let mediaSliderBottom = mediaSliderTop + $('#media-slider').height() + 110;    
     let mouseIn = false;
     if (event.clientX > mediaSliderLeft && event.clientX < mediaSliderRight && event.clientY > mediaSliderTop && event.clientY < mediaSliderBottom ){ mouseIn = true; }
     if (mouseIn) onMouseMovementIn()
-    else onMouseMovementOut()
-  
+    else onMouseMovementOut()  
   }
 
   // toggle cinema mode
@@ -250,7 +248,7 @@ function SlideItem(props){
     slideContentDisplay = (
       <VideoPlayerWrapper 
         height={props.sliderHeight}
-        width={(props.containerWidth * 0.7)} 
+        width={(props.containerWidth - 100)} 
         onCinemaModeClick={props.onCinemaModeClick}
         slide={props.slide}
         playVideo={props.currentSlide === props.slideIndex}

@@ -52,12 +52,16 @@
             height: inherit;
             position: relative;
             margin:0;
-            
+
             &.image {
                 background-color:white !important;
             }
 
             .react-player-container {
+
+                .video-react {
+                    font-family: inherit;
+                }
 
                 .cinema-mode-button {
                     line-height: 30px;
@@ -65,6 +69,15 @@
                     color: white;
                     font-size: 10px;
                     text-transform: uppercase;
+                    cursor: pointer;
+
+                    span {
+                        display: block;
+                        width: 15px;
+                        height: 10px;
+                        border: 2px solid white;
+                        margin: 10px;
+                    }
                 }
             }
 

@@ -66,12 +66,23 @@
 #media-slider #slider-wrapper .slide-item.image {
   background-color: white !important;
 }
+#media-slider #slider-wrapper .slide-item .react-player-container .video-react {
+  font-family: inherit;
+}
 #media-slider #slider-wrapper .slide-item .react-player-container .cinema-mode-button {
   line-height: 30px;
   display: inline-block;
   color: white;
   font-size: 10px;
   text-transform: uppercase;
+  cursor: pointer;
+}
+#media-slider #slider-wrapper .slide-item .react-player-container .cinema-mode-button span {
+  display: block;
+  width: 15px;
+  height: 10px;
+  border: 2px solid white;
+  margin: 10px;
 }
 #media-slider #slider-wrapper .slide-item > div {
   text-align: center;

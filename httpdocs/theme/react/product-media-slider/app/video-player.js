@@ -75,7 +75,7 @@ class VideoPlayerWrapper extends React.Component {
                         <LoadingSpinner />
                         <ControlBar autohide={false} className="custom-video-player">
                             <VolumeMenuButton vertical />
-                            <a className="cinema-mode-button" onClick={this.onCinemaModeClick} order={8}>cinema</a>
+                            <a className="cinema-mode-button" onClick={this.onCinemaModeClick} order={8}><span></span></a>
                         </ControlBar>
                 </Player>            
             )
