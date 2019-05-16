@@ -30,6 +30,8 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
     protected $_key = 'rating_id';
     
 
+    public static $options = array(1 => 'ugh', 2=>'really bad',3=>'bad',4=>'soso',5=>'average', 6=>'okay',7=>'good', 8=>'great', 9=>'excellent',10=>'the best');
+
     /**
      * @param int $project_id
      *

@@ -39,6 +39,7 @@ class VideoPlayerWrapper extends React.Component {
                         });
                     });
                 }
+                if (state.isFullscreen === false && prevState.isFullscreen === true) this.props.onUpdateDimensions()
             }
         });
     }
@@ -75,7 +76,7 @@ class VideoPlayerWrapper extends React.Component {
                         <LoadingSpinner />
                         <ControlBar autohide={false} className="custom-video-player">
                             <VolumeMenuButton vertical />
-                            <a className="cinema-mode-button" onClick={this.onCinemaModeClick} order={8}>cinema</a>
+                            <a className="cinema-mode-button" onClick={this.onCinemaModeClick} order={8}><span></span></a>
                         </ControlBar>
                 </Player>            
             )
