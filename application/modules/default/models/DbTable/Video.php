@@ -52,173 +52,34 @@ class Default_Model_DbTable_Video extends Zend_Db_Table_Abstract
     public function storeExternalVideo($url, $fileExtension = null)
     {
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
-        $tmpFileName = $this->storeRemoteVideo($url, $fileExtension);
-
-        if (file_exists(VIDEOS_UPLOAD_PATH . 'tmp/' . $tmpFileName)) {
-            $filePath = $this->saveVideoOnMediaServer($tmpFileName);
-            $filename = $filePath;
-        }
-
-        return $filename;
-    }
-
-    public function storeRemoteVideo($url, $fileExtention = null, &$file_info = null)
-    {
-        //$host = parse_url( $url, PHP_URL_HOST );
-        //$path = parse_url($url, PHP_URL_PATH);
-        //$query = parse_url($url, PHP_URL_QUERY);
-
-        //$url = 'http://'.$host.$path.'?'.urlencode($query);
-        //$limit = 4194304; #4Mb
-        $filename = md5($url);
-        if ($fileExtention) {
-            $filename .= '.' . $fileExtention;
-        }
-        $file_info = array();
-        if (file_exists(VIDEOS_UPLOAD_PATH . 'tmp/' . $filename)) {
-            // Delete old file. Maybe an updated version is available.
-            if (false == unlink(VIDEOS_UPLOAD_PATH . 'tmp/' . $filename)) {
-                throw new Exception('Cannot delete file: ' . VIDEOS_UPLOAD_PATH . 'tmp/' . $filename);
-            }
-        }
+        $data = null;
         try {
-            #$file = file_get_contents($url, NULL, NULL, -1, $limit);
-            $file = $this->file_get_contents_curl($url);
-        } catch (Exception $e) {
-            $file = null;
+            set_time_limit(0);
+
+            // File to save the contents to
+            $fp = fopen ('files2.tar', 'w+');
+            $config = Zend_Registry::get('config');
+            $videourl = $config->videos->media->upload . "?url=".$url;
+
+            // Here is the file we are downloading, replace spaces with %20
+            $ch = curl_init(str_replace(" ","%20",$videourl));
+
+            curl_setopt($ch, CURLOPT_TIMEOUT, 50);
+
+            // give curl the file pointer so that it can write to it
+            curl_setopt($ch, CURLOPT_FILE, $fp);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
+            $data = curl_exec($ch);//get curl response
+
+            //done
+            curl_close($ch);
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
         }
-        if (file_put_contents(VIDEOS_UPLOAD_PATH . 'tmp/' . $filename, $file)) {
-            $content_type = $this->_get_mime_content_type(VIDEOS_UPLOAD_PATH . 'tmp/' . $filename);
-            if (!in_array($content_type, array_keys($this->_allowed))) {
-                throw new Exception('Format not allowed ' . $content_type . ' for url ' . $url);
-            }
-            touch(VIDEOS_UPLOAD_PATH . 'tmp/' . $filename);
-        } else {
-            throw new Exception('Error storing remote image');
-        }
-
-        $file_info['size'] = filesize(VIDEOS_UPLOAD_PATH . 'tmp/' . $filename);
-
-        return $filename;
-    }
-
-    public function file_get_contents_curl($url)
-    {
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-
-        $data = curl_exec($ch);
-        curl_close($ch);
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' Result: ' . print_r($data, true));
 
         return $data;
     }
-
-    public function saveVideoOnMediaServer($filePathName)
-    {
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
-        
-        if (empty($filePathName)) {
-            return null;
-        }
-
-        $content_type = mime_content_type($filePathName);
-
-        //if (!in_array($content_type, array_keys($this->_allowed))) {
-        //    throw new Exception('Format not allowed: ' . $content_type . ' for img: ' . $filePathName);
-        //}
-
-        // Generate filename
-        $srcPathOnMediaServer = $this->sendVideoToMediaServer($filePathName, $content_type);
-        if (!$srcPathOnMediaServer) {
-            throw new Exception("Error in upload to Video-Server. \n Server message:\n" . $this->_errorMsg);
-        }
-        
-        if (false === unlink($filePathName)) {
-            Zend_Registry::get('logger')->warn(__METHOD__ . ' - can not delete file: ' . $filePathName);
-        }
-
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - End upload video - ' . print_r(VIDEOS_UPLOAD_PATH
-                . $srcPathOnMediaServer, true))
-        ;
-
-        return $srcPathOnMediaServer;
-    }
-
-    private function _generateFilename($filePathName)
-    {
-        return sha1_file($filePathName);
-    }
-
-    /**
-     * @param $fullFilePath
-     * @param $mimeType
-     *
-     * @return string
-     */
-    protected function sendVideoToMediaServer($fullFilePath, $mimeType)
-    {
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
-        
-        $config = Zend_Registry::get('config');
-        $url = $config->videos->media->upload;
-
-        $client = new Zend_Http_Client($url);
-        $client->setFileUpload($fullFilePath, basename($fullFilePath), null, $mimeType);
-
-        $response = $client->request('POST');
-
-        if ($response->getStatus() > 200) {
-            $this->_errorMsg = $response->getBody();
-            Zend_Registry::get('logger')->error(__METHOD__ . ' - ' . print_r($response->getBody(), true));
-            return null;
-        }
-
-        return $response->getBody();
-    }
-
-    
-    /*
-    public function save($image)
-    {
-        foreach ($image as $key => $value) {
-            if (!in_array($key, array_keys($this->_fields))) {
-                unset($image[$key]);
-            }
-        }
-
-        if (isset($image['filename']) && !isset($image['code'])) {
-            $image['code'] = $this->_trimExtension($image['filename']);
-        }
-
-        if (isset($image['id'])) {
-            return $this->_update($image);
-        } else {
-            return $this->_add($image);
-        }
-    }
-
-    private function _update($image)
-    {
-        if (!isset($image['id'])) {
-            throw new Exception('Invalid update without an id');
-        } else {
-            $id = (int)$image['id'];
-        }
-
-        return $this->update($image, array('id = ?' => $id));
-    }
-
-    private function _add($image)
-    {
-        return $this->insert($image);
-    }
-     * 
-     * 
-     */
 
 }

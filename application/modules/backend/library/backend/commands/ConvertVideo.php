@@ -57,21 +57,19 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
 
     protected function callConvertVideo($collectionId, $fileId)
     {
+        /*
         $log = Zend_Registry::get('logger');
         $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . '**********' . "\n");
         //call video convert server
-        
+        $salt = PPLOAD_DOWNLOAD_SECRET;
         $timestamp = time() + 3600; // one hour valid
         $hash = hash('sha512',$salt . $collectionId . $timestamp); // order isn't important at all... just do the same when verifying
         $url = PPLOAD_API_URI . 'files/download/id/' . $fileId . '/s/' . $hash . '/t/' . $timestamp;
-        if(null != $this->_authMember) {
-            $url .= '/u/' . $this->_authMember->member_id;
-        }
         $url .= '/lt/filepreview/' . $fileId;
         
         $videoServer = new Default_Model_DbTable_Video();
         $videoServer->storeExternalVideo($url);
-        
+        */
         return true;
     }
 
