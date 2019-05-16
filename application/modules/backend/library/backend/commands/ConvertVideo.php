@@ -62,12 +62,12 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
         //call video convert server
         
         $timestamp = time() + 3600; // one hour valid
-        $hash = hash('sha512',$salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
-        $url = PPLOAD_API_URI . 'files/download/id/' . $file['id'] . '/s/' . $hash . '/t/' . $timestamp;
+        $hash = hash('sha512',$salt . $collectionId . $timestamp); // order isn't important at all... just do the same when verifying
+        $url = PPLOAD_API_URI . 'files/download/id/' . $fileId . '/s/' . $hash . '/t/' . $timestamp;
         if(null != $this->_authMember) {
             $url .= '/u/' . $this->_authMember->member_id;
         }
-        $url .= '/lt/filepreview/' . $file['name'];
+        $url .= '/lt/filepreview/' . $fileId;
         
         $videoServer = new Default_Model_DbTable_Video();
         $videoServer->storeExternalVideo($url);

@@ -1024,16 +1024,22 @@ var PartialsReviewDownloadHistoryNew = (function () {
                         .append('Score '+userscore+' is given already with comment:'+oldcomment);                
                  }*/
 
-                 if(valueSelected<5)
+                if(valueSelected==-1)
+                 {
+                    $('#score-product-modal').find('#votelabel').empty()
+                            .append('Remove Rating ');
+                 }
+                 else if(valueSelected<5)
                  {
                      $('#score-product-modal').find('#votelabel').empty()
-                            .append('Add Comment (min. 5 char) <span style="font-size:10px; display:block"> Please explain the reason for downvote to help the creator to make it better </span> ');
+                            .append('Add a review or comment to your rating "'+textSelected +'" (min. 5 char) <span style="font-size:10px; display:block"> Please explain the reason for downvote to help the creator to make it better </span> ');
                       $('#score-product-modal').find('#voteup').val(2);
                  }                     
                  else
                  {                
-                    $('#score-product-modal').find('#votelabel').empty()
-                        .append('Add Comment (min. 1 char):');               
+                     $('#score-product-modal').find('#votelabel').empty()
+                        .append('Add a review or comment to your rating "'+textSelected+'" (min. 1 char):');       
+                        $('#score-product-modal').find('#voteup').val(1);       
                  }
 
 
@@ -1056,7 +1062,7 @@ var PartialsReviewDownloadHistoryNew = (function () {
             
 
             $("#modal-btn-cancel").on("click", function(){                                                
-                //$(currentSelect).find("option[value="+preRatingSelected+"]").prop('selected', true);               
+                $(currentSelect).find("option[value="+preRatingSelected+"]").prop('selected', true);                
                 $("#score-product-modal").modal('hide');                
               });     
              var bOnsubmit = false;     

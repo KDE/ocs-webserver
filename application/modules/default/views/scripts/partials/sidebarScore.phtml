@@ -120,18 +120,33 @@ krsort($options);
                 return;
              }
              
-             var userscore = $('#score-product-modal').find('#userscore').val();
+             if(valueSelected==-1)
+             {
+                $('#score-product-modal').find('#votelabel').empty()
+                        .append('Remove Rating ');
+             }
+             else if(valueSelected<5)
+             {
+                 $('#score-product-modal').find('#votelabel').empty()
+                        .append('Add a review or comment to your rating "'+textSelected +'" (min. 5 char) <span style="font-size:10px; display:block"> Please explain the reason for downvote to help the creator to make it better </span> ');
+                  $('#score-product-modal').find('#voteup').val(2);
+             }                     
+             else
+             {                
+                 $('#score-product-modal').find('#votelabel').empty()
+                    .append('Add a review or comment to your rating "'+textSelected+'" (min. 1 char):');       
+                    $('#score-product-modal').find('#voteup').val(1);       
+             }
+
+             /*var userscore = $('#score-product-modal').find('#userscore').val();
                 // -1 = no rate yet. 
              if(userscore>0)
              {
-                $('#score-product-modal').find('#votelabel').empty()
+                $('#score-product-modal').find('#votelabel')
                     .append('Score '+userscore+' is given already with comment:'+$('#score-product-modal').find('#otxt').val());                
 
-             }else
-             {                
-                $('#score-product-modal').find('#votelabel').empty()
-                    .append('Add Comment (min. 1 char):');               
-             }
+             }*/
+
              $('#score-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
              $('#score-product-modal').find('#commenttext').removeAttr("disabled");
              $('#score-product-modal').find('#commenttext').val(textSelected);
@@ -148,7 +163,8 @@ krsort($options);
              $('#score-product-modal').modal('show');
            });
 
-            $("#modal-btn-cancel").on("click", function(){                                                                               
+            $("#modal-btn-cancel").on("click", function(){                                        
+                 $(currentSelect).find("option[value="+preRatingSelected+"]").prop('selected', true);       
                 $("#score-product-modal").modal('hide');                
               });
             
@@ -157,8 +173,9 @@ krsort($options);
                 bOnsubmit = true;
             });
             $('#score-product-modal').on('hidden.bs.modal', function () {
+                
                  if(!bOnsubmit)
-                 {
+                 {                  
                     $(currentSelect).find("option[value="+preRatingSelected+"]").prop('selected', true);   
                  }                 
             });     
