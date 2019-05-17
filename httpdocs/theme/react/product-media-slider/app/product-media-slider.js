@@ -51,7 +51,7 @@ function ProductMediaSlider(){
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ showPlaylist, setShowPlaylist ] = useState(false);
   const [ showSliderArrows, setShowSliderArrows ] = useState(true);  
-  const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(false);
+  const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(true);
 
   let sliderFadeControlTimeOut;
 
@@ -309,15 +309,14 @@ function SlidesNavigation(props){
   /* RENDER */
 
   // dots navigation display
-  const slidesDotsNavigationDisplay = props.gallery.map((g, index) => (
-    <li key={index}  className={ props.currentSlide === index ? "active " : ""}>
-      <a onClick={e => props.onChangeCurrentSlide(index)}></a>
-    </li>
-  ))
-
-  // dots navigation css 
-  const slidesDotsNavigationStyle ={
-    display:props.showPlaylist === true ? "none" : "table"
+  let slidesDotsNavigationDisplay;
+  if (props.showPlaylist === false){
+    const dots = props.gallery.map((g, index) => (
+      <li key={index}  className={ props.currentSlide === index ? "active " : ""}>
+        <a onClick={e => props.onChangeCurrentSlide(index)}></a>
+      </li>
+    ))
+    slidesDotsNavigationDisplay = <ul>{dots}</ul>
   }
 
   // thumbnail navigation
@@ -361,7 +360,7 @@ function SlidesNavigation(props){
 
   return (
     <div id="slide-navigation">
-      <ul style={slidesDotsNavigationStyle}>{slidesDotsNavigationDisplay}</ul>
+      {slidesDotsNavigationDisplay}
       <Scrollbars style={scrollbarsContainerStyle}>
         <ul className="thumbnail-navigation" style={thumbSliderStyle}>{slidesThumbnailNavigationDisplay}</ul>
       </Scrollbars>
