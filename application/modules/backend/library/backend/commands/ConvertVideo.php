@@ -69,7 +69,7 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
         $url .= '/lt/filepreview/' . $fileId;
         
         $videoServer = new Default_Model_DbTable_Video();
-        $result = $videoServer->storeExternalVideo($this->collectionId, $fileType, $url);
+        $result = $videoServer->storeExternalVideo($collectionId, $fileType, $url);
         
         if(!empty($result) && $result != 'Error') {
             //Save Preview URL in DB
@@ -77,12 +77,12 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
             $cdnurl = $config->videos->media->cdnserver;
             $url_preview = $cdnurl.$collectionId."/".$result.".mp4";
             $url_thumb = $cdnurl.$collectionId."/".$result."_thumb.png";
-            $data = array('id' => $videoServer->getNewId(),'collection_id' => $this->collectionId,'file_id' => $this->fileId, 'url_preview' => $url_preview, 'url_thumb' => $url_thumb, 'create_timestamp' => new Zend_Db_Expr('NOW()'));
+            $data = array('id' => $videoServer->getNewId(),'collection_id' => $collectionId,'file_id' => $fileId, 'url_preview' => $url_preview, 'url_thumb' => $url_thumb, 'create_timestamp' => new Zend_Db_Expr('NOW()'));
             $videoServer->insert($data);
             
             
         } else {
-            $log->error("Error on Converting Video! Result: ".$result);
+            $log->debug("Error on Converting Video! Result: ".$result);
             return false;
         }
         
