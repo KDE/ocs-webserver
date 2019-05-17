@@ -76,7 +76,7 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
             $cdnurl = $config->videos->media->cdnserver;
             $url_preview = $cdnurl.$collectionId."/".$result.".mp4";
             $url_thumb = $cdnurl.$collectionId."/".$result."_thumb.png";
-            $data = array('id' => $videoServer->getNewId(),'collection_id' => $this->collectionId,'file_id' => $this->fileId, 'url_preview' => $url_preview, 'url_thumb' => $url_thumb);
+            $data = array('id' => $videoServer->getNewId(),'collection_id' => $this->collectionId,'file_id' => $this->fileId, 'url_preview' => $url_preview, 'url_thumb' => $url_thumb, 'create_timestamp' => new Zend_Db_Expr('NOW()'));
             $videoServer->insert($data);
             
             
