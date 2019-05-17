@@ -3,6 +3,14 @@ import ReactDOM from 'react-dom';
 import VideoPlayerWrapper from './video-player';
 import { Scrollbars } from 'react-custom-scrollbars';
 
+/* HELPERS */
+
+      function splitByLastDot(string){
+        const array = string.split(/\.(?=[^\.]+$)/);
+        return array[array.length - 1]
+      }
+
+/* /HELPERS */
 
 function ProductMediaSlider(){ 
 
@@ -16,10 +24,6 @@ function ProductMediaSlider(){
   if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... galleryArray ];
   if (window.filesJson) {
     window.filesJson.forEach(function(f,index){
-      function splitByLastDot(string){
-        const array = string.split(/\.(?=[^\.]+$)/);
-        return array[array.length - 1]
-      }
       if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1){
         if ( splitByLastDot(f.name) !== '3gp' && splitByLastDot(f.name) !== '3g2' && splitByLastDot(f.name) !== 'm2v' 
           && splitByLastDot(f.name) !== 'mov' && splitByLastDot(f.name) !== 'flv' && splitByLastDot(f.name) !== 'wmv' ){

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { 
     Player, 
     ControlBar, 
@@ -6,8 +6,7 @@ import {
     VolumeMenuButton, 
     LoadingSpinner,
     CurrentTimeDisplay,
-    DurationDisplay,
-    TimeDivider } from 'video-react';
+    DurationDisplay } from 'video-react';
 
 class VideoPlayerWrapper extends React.Component {
     constructor(props, context){

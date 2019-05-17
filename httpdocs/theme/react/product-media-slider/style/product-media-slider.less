@@ -223,6 +223,12 @@
                     &.active {
                         background-color: #999;
                     }
+
+                    .video-thumbnail-wrapper {
+                        width: 100%;
+                        height: 100%;
+                        position: relative;
+                    }
                 }
             }
         }
@@ -230,9 +236,14 @@
 
     &.fade-controls {
         .carousel-control,
-        .slider-navigation-toggle,
-        .video-react-control-bar { 
+        .slider-navigation-toggle { 
             opacity: 0 !important;
+        }
+
+        .video-react-playing {
+            .video-react-control-bar {
+                opacity: 0 !important;
+            }
         }
     }
 
