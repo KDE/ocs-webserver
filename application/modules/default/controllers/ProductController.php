@@ -469,6 +469,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         $command = new Backend_Commands_ConvertVideo($file['collection_id'], $file['id'], $file['type']);
                         $queue->send(serialize($command));
                     }
+                    if(!empty($file['url_preview'])) {
+                        $file['url_preview'] = urlencode($file['url_preview']);
+                    }
+                    if(!empty($file['url_thumb'])) {
+                        $file['url_thumb'] = urlencode($file['url_thumb']);
+                    }
                     
                     $filesList[] = $file;
                 }
