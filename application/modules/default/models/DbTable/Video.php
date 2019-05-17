@@ -25,6 +25,16 @@ class Default_Model_DbTable_Video extends Zend_Db_Table_Abstract
     protected $_name = "ppload.ppload_files";
     public static $VIDE_FILE_TYPES = array('video/3gpp','video/3gpp2','video/mpeg','video/quicktime','video/x-flv','video/webm','application/ogg','video/x-ms-asf','video/x-matroska');
 
+    /**
+     * Configuration for HTTP-Client
+     *
+     * @var array
+     */
+    protected $_config = array(
+        'maxredirects' => 0,
+        'timeout'      => 30
+    );
+    
     protected $_allowed = array(
         'video/3gpp'        => '.3gp',
         'video/3gpp2'       => '.3g2',
