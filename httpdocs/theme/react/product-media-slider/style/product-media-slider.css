@@ -77,6 +77,9 @@
   visibility: visible;
   opacity: 1;
 }
+#media-slider #slider-wrapper .slide-item .react-player-container .video-react .video-react-time-divider {
+  display: none !important;
+}
 #media-slider #slider-wrapper .slide-item .react-player-container .cinema-mode-button {
   line-height: 30px;
   display: inline-block;

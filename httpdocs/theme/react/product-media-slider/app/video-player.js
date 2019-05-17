@@ -1,5 +1,13 @@
 import React, { useState, useRef } from 'react';
-import { Player, ControlBar, BigPlayButton, ReplayControl, ForwardControl, VolumeMenuButton, LoadingSpinner } from 'video-react';
+import { 
+    Player, 
+    ControlBar, 
+    BigPlayButton,
+    VolumeMenuButton, 
+    LoadingSpinner,
+    CurrentTimeDisplay,
+    DurationDisplay,
+    TimeDivider } from 'video-react';
 
 class VideoPlayerWrapper extends React.Component {
     constructor(props, context){
@@ -74,7 +82,9 @@ class VideoPlayerWrapper extends React.Component {
                         <BigPlayButton position="center" />
                         <LoadingSpinner />
                         <ControlBar autoHide className="custom-video-player">
-                            <VolumeMenuButton vertical />
+                            <CurrentTimeDisplay order={4.1} />
+                            <DurationDisplay order={7.1} />
+                            <VolumeMenuButton vertical order={7.2} />
                             <a className="cinema-mode-button" onClick={this.onCinemaModeClick} order={8}><span></span></a>
                         </ControlBar>
                 </Player>            
