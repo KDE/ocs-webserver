@@ -185,6 +185,9 @@
   cursor: -webkit-zoom-out;
   cursor: zoom-out;
 }
+#media-slider.cinema-mode #slide-navigation.dots {
+  background-color: white;
+}
 #media-slider.hide-playlist {
   padding-bottom: 30px;
 }

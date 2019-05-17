@@ -359,7 +359,7 @@ function SlidesNavigation(props){
   }
 
   return (
-    <div id="slide-navigation">
+    <div id="slide-navigation" className={props.showPlaylist === true ? "thumbs" : "dots"}>
       {slidesDotsNavigationDisplay}
       <Scrollbars style={scrollbarsContainerStyle}>
         <ul className="thumbnail-navigation" style={thumbSliderStyle}>{slidesThumbnailNavigationDisplay}</ul>
