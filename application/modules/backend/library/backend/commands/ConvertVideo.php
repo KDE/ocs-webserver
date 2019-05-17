@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 <?php
 
 /**
@@ -93,4 +91,3 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
     }
 
 }
->>>>>>> f8bac59eb5ba84975030bd38ea45cf97f7757a08

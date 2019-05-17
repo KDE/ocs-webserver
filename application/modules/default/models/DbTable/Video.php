@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 <?php
 
 /**
@@ -158,4 +156,3 @@ class Default_Model_DbTable_Video extends Zend_Db_Table_Abstract
     }
 
 }
->>>>>>> f8bac59eb5ba84975030bd38ea45cf97f7757a08
