@@ -1,9 +1,9 @@
+"use strict";
+
 window.appHelpers = function () {
-
   function getEnv(domain) {
-
-    let env;
-    let lastDotSplit = this.splitByLastDot(domain);
+    var env;
+    var lastDotSplit = this.splitByLastDot(domain);
 
     if (lastDotSplit.indexOf('/') > -1) {
       lastDotSplit = lastDotSplit.split('/')[0];
@@ -14,6 +14,7 @@ window.appHelpers = function () {
     } else {
       env = 'test';
     }
+
     return env;
   }
 
@@ -23,11 +24,40 @@ window.appHelpers = function () {
   }
 
   return {
-    getEnv,
-    splitByLastDot
+    getEnv: getEnv,
+    splitByLastDot: splitByLastDot
   };
 }();
+"use strict";
 
+window.appHelpers = function () {
+  function getEnv(domain) {
+    var env;
+    var lastDotSplit = this.splitByLastDot(domain);
+
+    if (lastDotSplit.indexOf('/') > -1) {
+      lastDotSplit = lastDotSplit.split('/')[0];
+    }
+
+    if (lastDotSplit === 'com' || lastDotSplit === 'org') {
+      env = 'live';
+    } else {
+      env = 'test';
+    }
+
+    return env;
+  }
+
+  function splitByLastDot(text) {
+    var index = text.lastIndexOf('.');
+    return text.slice(index + 1);
+  }
+
+  return {
+    getEnv: getEnv,
+    splitByLastDot: splitByLastDot
+  };
+}();
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -551,4 +581,3 @@ function (_React$Component5) {
 }(React.Component);
 
 ReactDOM.render(React.createElement(SiteHeader, null), document.getElementById('site-header-container'));
->>>>>>> f8bac59eb5ba84975030bd38ea45cf97f7757a08
