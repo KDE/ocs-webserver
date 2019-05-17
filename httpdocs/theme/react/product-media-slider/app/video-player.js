@@ -1,5 +1,13 @@
 import React, { useState, useRef } from 'react';
-import { Player, ControlBar, BigPlayButton, ReplayControl, ForwardControl, VolumeMenuButton, LoadingSpinner } from 'video-react';
+import { 
+    Player, 
+    ControlBar, 
+    BigPlayButton,
+    VolumeMenuButton, 
+    LoadingSpinner,
+    CurrentTimeDisplay,
+    DurationDisplay,
+    TimeDivider } from 'video-react';
 
 class VideoPlayerWrapper extends React.Component {
     constructor(props, context){
@@ -27,7 +35,6 @@ class VideoPlayerWrapper extends React.Component {
                     this.setState({videoStarted:true},function(){
                         const self = this;
                         $.ajax({url: this.state.videoStartUrl}).done(function(res) {
-                            console.log(res);
                             self.setState({videoStopUrl:self.state.videoStopUrl + res.MediaViewId})
                         });
                     });
@@ -35,7 +42,7 @@ class VideoPlayerWrapper extends React.Component {
                 if (this.state.player.paused && this.state.videoStarted === true && this.state.videoStopped === false){
                     this.setState({videoStopped:true},function(){
                         $.ajax({url: this.state.videoStopUrl}).done(function(res) {
-                            console.log(res)
+                            // console.log(res)
                         });
                     });
                 }
@@ -70,12 +77,14 @@ class VideoPlayerWrapper extends React.Component {
                     fluid={false}
                     height={this.props.height}
                     width={this.props.width}
-                    playsInline
+                    preload={"auto"}
                     src={this.state.source}>
                         <BigPlayButton position="center" />
                         <LoadingSpinner />
-                        <ControlBar autohide={false} className="custom-video-player">
-                            <VolumeMenuButton vertical />
+                        <ControlBar autoHide className="custom-video-player">
+                            <CurrentTimeDisplay order={4.1} />
+                            <DurationDisplay order={7.1} />
+                            <VolumeMenuButton vertical order={7.2} />
                             <a className="cinema-mode-button" onClick={this.onCinemaModeClick} order={8}><span></span></a>
                         </ControlBar>
                 </Player>            

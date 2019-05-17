@@ -36,6 +36,7 @@ function ProductMediaSlider(){
   }
 
   const [ gallery, setGallery ] = useState(galleryArray);
+  const [ disableGallery, setDisableGallery ] = useState(gallery.length > 1 ? false : true)
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
   const [ currentSlide, setCurrentSlide ] = useState(0)
@@ -49,19 +50,26 @@ function ProductMediaSlider(){
 
   let sliderFadeControlTimeOut;
 
-  React.useEffect(() => { initProductMediaSlider() },[])
-  React.useEffect(() => { updateDimensions() },[currentSlide, cinemaMode])
+  React.useEffect(() => { initProductMediaSlider(currentSlide) },[currentSlide])
+  React.useEffect((event) => { updateDimensions(event,currentSlide) },[currentSlide, cinemaMode])
+  React.useEffect(() => { handleMouseMovementEventListener(showPlaylist) },[showPlaylist])
 
   // init product media slider
-  function initProductMediaSlider(){
-    window.addEventListener("resize", updateDimensions);
-    window.addEventListener("orientationchange", updateDimensions);
-    window.addEventListener("mousemove",function(event){ onMouseMovement(event) });
-    window.addEventListener("mousedown",function(event){ onMouseMovement(event) });
+  function initProductMediaSlider(currentSlide){
+    window.addEventListener("resize", function(event){updateDimensions(event,currentSlide)});
+    window.addEventListener("orientationchange",  function(event){updateDimensions(event,currentSlide)});
+  }
+
+  // handle mouse movement event listener
+  function handleMouseMovementEventListener(showPlaylist){
+    window.removeEventListener("mousemove",function(event){ onMouseMovement(event,showPlaylist)})
+    window.removeEventListener("mousedown",function(event){ onMouseMovement(event,showPlaylist)})
+    window.addEventListener("mousemove",function(event){ onMouseMovement(event,showPlaylist) });
+    window.addEventListener("mousedown",function(event){ onMouseMovement(event,showPlaylist) });   
   }
 
   // update dimensions
-  function updateDimensions(){
+  function updateDimensions(event,currentSlide){
     const newContainerWidth = parentContainerElement.offsetWidth;
     setContainerWidth(newContainerWidth)
     setSliderWidth(newContainerWidth * gallery.length);
@@ -72,16 +80,29 @@ function ProductMediaSlider(){
   }
 
   // on mouse movement
-  function onMouseMovement(event){
+  function onMouseMovement(event,showPlaylist){
+    
     const mediaSliderOffest = $('#media-slider').offset()
     const mediaSliderLeft = mediaSliderOffest.left;
     const mediaSliderRight = mediaSliderLeft + $('#media-slider').width();
     const mediaSliderTop = mediaSliderOffest.top - window.pageYOffset;
-    let mediaSliderBottom = mediaSliderTop + $('#media-slider').height() + 110;    
+    let mediaSliderBottom = mediaSliderTop + $('#media-slider').height();   
+    if (showPlaylist) mediaSliderBottom += 110;
+    else mediaSliderBottom += 30;
+    
     let mouseIn = false;
     if (event.clientX > mediaSliderLeft && event.clientX < mediaSliderRight && event.clientY > mediaSliderTop && event.clientY < mediaSliderBottom ){ mouseIn = true; }
-    if (mouseIn) onMouseMovementIn()
-    else onMouseMovementOut()  
+    
+    if (mouseIn) {
+      setSliderFadeControlsMode(false)
+      clearTimeout(sliderFadeControlTimeOut);
+      sliderFadeControlTimeOut = setTimeout(function(){
+        setSliderFadeControlsMode(true)
+      }, 1700);      
+    } else {
+      setSliderFadeControlsMode(true)
+      clearTimeout(sliderFadeControlTimeOut);
+    }
   }
 
   // toggle cinema mode
@@ -108,25 +129,12 @@ function ProductMediaSlider(){
     const newShowPlaylistValue = showPlaylist === true ? false : true;
     setShowPlaylist(newShowPlaylistValue)
   }
-  
-  function onMouseMovementIn(){
-    setShowSliderArrows(true);
-    setSliderFadeControlsMode(false)
-    clearTimeout(sliderFadeControlTimeOut);
-    sliderFadeControlTimeOut = setTimeout(function(){
-      setSliderFadeControlsMode(true)
-    }, 1700);
-  }
-
-  function onMouseMovementOut(){
-    setSliderFadeControlsMode(true)
-    clearTimeout(sliderFadeControlTimeOut);
-  }
 
   /* Render */
 
   // media slider css class
   let mediaSliderCssClass = "";
+  if (disableGallery === true) mediaSliderCssClass += "disable-gallery ";
   if (cinemaMode === true) mediaSliderCssClass += "cinema-mode ";
   if (showSliderArrows === false) mediaSliderCssClass += "hide-arrows ";
   if (showPlaylist === false) mediaSliderCssClass += "hide-playlist ";

@@ -61,6 +61,18 @@
 
                 .video-react {
                     font-family: inherit;
+
+                    .video-react-control-bar {
+                        display: -webkit-box;
+                        display: -webkit-flex;
+                        display: -ms-flexbox;
+                        display: flex !important;
+                        visibility: visible;
+                        opacity: 1;
+                    }
+                    .video-react-time-divider {
+                        display: none !important;
+                    }
                 }
 
                 .cinema-mode-button {
@@ -219,8 +231,17 @@
     &.fade-controls {
         .carousel-control,
         .slider-navigation-toggle,
+        .video-react-control-bar { 
+            opacity: 0 !important;
+        }
+    }
+
+    &.disable-gallery {
+        padding-bottom:0;
+        .carousel-control,
+        .slider-navigation-toggle,
         #slide-navigation { 
-            opacity: 0;
+            display: none;
         }
     }
 }
