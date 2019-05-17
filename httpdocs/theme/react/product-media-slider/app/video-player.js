@@ -69,11 +69,11 @@ class VideoPlayerWrapper extends React.Component {
                     fluid={false}
                     height={this.props.height}
                     width={this.props.width}
-                    preload
+                    preload={"auto"}
                     src={this.state.source}>
                         <BigPlayButton position="center" />
                         <LoadingSpinner />
-                        <ControlBar className="custom-video-player">
+                        <ControlBar autoHide className="custom-video-player">
                             <VolumeMenuButton vertical />
                             <a className="cinema-mode-button" onClick={this.onCinemaModeClick} order={8}><span></span></a>
                         </ControlBar>
@@ -84,7 +84,6 @@ class VideoPlayerWrapper extends React.Component {
         return (
             <div className="react-player-container">
                 {videoPlayerDisplay}
-                
             </div>
         )
     }

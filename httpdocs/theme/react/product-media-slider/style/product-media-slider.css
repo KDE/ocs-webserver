@@ -197,8 +197,8 @@
 }
 #media-slider.fade-controls .carousel-control,
 #media-slider.fade-controls .slider-navigation-toggle,
-#media-slider.fade-controls #slide-navigation {
-  opacity: 0;
+#media-slider.fade-controls .video-react-control-bar {
+  opacity: 0 !important;
 }
 #media-slider.disable-gallery {
   padding-bottom: 0;
