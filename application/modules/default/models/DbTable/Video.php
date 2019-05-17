@@ -49,37 +49,90 @@ class Default_Model_DbTable_Video extends Zend_Db_Table_Abstract
     );
     protected $_errorMsg = null;
     
-    public function storeExternalVideo($collectionId, $url, $fileExtension = null)
+    /**
+     * @param string $url
+     * @param string $authCode
+     *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Uri_Exception
+     */
+    public function storeExternalVideo($collectionId, $url)
     {
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
-        $data = null;
-        try {
-            set_time_limit(0);
-
-            // File to save the contents to
-            $fp = fopen ('files2.tar', 'w+');
-            $config = Zend_Registry::get('config');
-            $videourl = $config->videos->media->upload . "?url=".urlencode($url)."&collection_id=".$collectionId;
-
-            // Here is the file we are downloading, replace spaces with %20
-            $ch = curl_init(str_replace(" ","%20",$videourl));
-
-            curl_setopt($ch, CURLOPT_TIMEOUT, 50);
-
-            // give curl the file pointer so that it can write to it
-            curl_setopt($ch, CURLOPT_FILE, $fp);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-
-            $data = curl_exec($ch);//get curl response
-
-            //done
-            curl_close($ch);
-        } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
+        if (true == empty($url)) {
+            return false;
         }
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' Result: ' . print_r($data, true));
 
-        return $data;
+        $httpClient = $this->getHttpClient();
+        
+        $config = Zend_Registry::get('config');
+        $videourl = $config->videos->media->upload . "?url=".urlencode($url)."&collection_id=".$collectionId;
+        
+        $uri = $this->generateUri($videourl);
+
+        $httpClient->setUri($uri);
+        $response = $this->retrieveBody($httpClient);
+
+        if (false === $response) {
+            $httpClient->setUri($url);
+            $response = $this->retrieveBody($httpClient);
+            if (false === $response) {
+                Zend_Registry::get('logger')->err(__METHOD__ . " - Error while converting Video: " . $url
+                    . ".\n Server replay was: " . $httpClient->getLastResponse()->getStatus() . ". " . $httpClient->getLastResponse()
+                                                                                                                  ->getMessage()
+                    . PHP_EOL)
+                ;
+
+                return false;
+            }
+        }
+        
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' Result: ' . print_r($response, true));
+
+        return $response;
+    }
+    
+    /**
+     * @return Zend_Http_Client
+     * @throws Zend_Http_Client_Exception
+     */
+    public function getHttpClient()
+    {
+        $httpClient = new Zend_Http_Client();
+        $httpClient->setConfig($this->_config);
+
+        return $httpClient;
+    }
+
+    /**
+     * @param $url
+     *
+     * @return Zend_Uri
+     * @throws Zend_Uri_Exception
+     */
+    protected function generateUri($url)
+    {
+        $uri = Zend_Uri::factory($url);
+
+        return $uri;
+    }
+
+    /**
+     * @param Zend_Http_Client $httpClient
+     *
+     * @return bool
+     * @throws Zend_Http_Client_Exception
+     */
+    public function retrieveBody($httpClient)
+    {
+        $response = $httpClient->request();
+
+        if ($response->isError()) {
+            return false;
+        } else {
+            return $response->getBody();
+        }
     }
 
 }
