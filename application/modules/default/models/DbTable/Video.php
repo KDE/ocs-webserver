@@ -22,7 +22,11 @@
  **/
 class Default_Model_DbTable_Video extends Zend_Db_Table_Abstract
 {
-    protected $_name = "ppload.ppload_files";
+    protected $_name = "ppload.ppload_file_preview";
+    protected $_key = 'id';
+    
+    
+    
     public static $VIDE_FILE_TYPES = array('video/3gpp','video/3gpp2','video/mpeg','video/quicktime','video/x-flv','video/webm','application/ogg','video/x-ms-asf','video/x-matroska');
 
     /**
@@ -138,6 +142,13 @@ class Default_Model_DbTable_Video extends Zend_Db_Table_Abstract
         } else {
             return $response->getBody();
         }
+    }
+    
+    public function getNewId()
+    {
+        $result = $this->getAdapter()->query('SELECT UUID_SHORT()')->fetch();
+
+        return $result['UUID_SHORT()'];
     }
 
 }

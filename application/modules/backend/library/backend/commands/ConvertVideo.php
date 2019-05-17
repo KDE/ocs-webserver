@@ -37,8 +37,8 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
      *
      * param [ mixed $args [, $... ]]
      *
-     * @param int    $storeId
-     * @param string $indexId
+     * @param int    $collectionId
+     * @param int $fileId
      *
      * @link http://php.net/manual/en/language.oop5.decon.php
      */
@@ -72,9 +72,17 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
         
         if(!empty($result) && $result != 'Error') {
             //Save Preview URL in DB
-            $log->debug("New Preview URL: https://do-pling-cc-video.fra1.cdn.digitaloceanspaces.com/".$collectionId."/".$result.".mp4");
+            $config = Zend_Registry::get('config');
+            $cdnurl = $config->videos->media->cdnserver;
+            $url_preview = $cdnurl.$collectionId."/".$result.".mp4";
+            $url_thumb = $cdnurl.$collectionId."/".$result."_thumb.png";
+            $data = array('id' => $videoServer->getNewId(),'collection_id' => $this->collectionId,'file_id' => $this->fileId, 'url_preview' => $url_preview, 'url_thumb' => $url_thumb);
+            $videoServer->insert($data);
+            
+            
         } else {
-            $log->debug("Error on Converting Video!\n");
+            $log->error("Error on Converting Video! Result: ".$result);
+            return false;
         }
         
         
