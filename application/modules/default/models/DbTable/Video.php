@@ -72,7 +72,7 @@ class Default_Model_DbTable_Video extends Zend_Db_Table_Abstract
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Uri_Exception
      */
-    public function storeExternalVideo($collectionId, $url)
+    public function storeExternalVideo($collectionId, $fileType, $url)
     {
         if (true == empty($url)) {
             return false;
@@ -81,7 +81,11 @@ class Default_Model_DbTable_Video extends Zend_Db_Table_Abstract
         $httpClient = $this->getHttpClient();
         
         $config = Zend_Registry::get('config');
-        $videourl = $config->videos->media->upload . "?url=".urlencode($url)."&collection_id=".$collectionId;
+        $skipConvert = false;
+        if($fileType == 'video/mp4') {
+            $skipConvert = true;
+        }
+        $videourl = $config->videos->media->upload . "?url=".urlencode($url)."&collection_id=".$collectionId."&=skip_convert".$skipConvert;
         
         $uri = $this->generateUri($videourl);
 

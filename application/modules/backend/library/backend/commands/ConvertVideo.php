@@ -25,7 +25,7 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
 
     protected $collectionId;
     protected $fileId;
-    public static $VIDE_FILE_TYPES = array('video/3gpp','video/3gpp2','video/mpeg','video/quicktime','video/x-flv','video/webm','application/ogg','video/x-ms-asf','video/x-matroska');
+    public static $VIDE_FILE_TYPES = array('video/3gpp','video/3gpp2','video/mpeg','video/quicktime','video/x-flv','video/webm','application/ogg','video/x-ms-asf','video/x-matroska', 'video/mp4');
 
     /**
      * PHP 5 allows developers to declare constructor methods for classes.
@@ -46,16 +46,17 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
     {
         $this->collectionId = $collectionId;
         $this->fileId = $fileId;
+        $this->fileType = $fileType;
         
     }
 
     public function doCommand()
     {
 
-        return $this->callConvertVideo($this->collectionId, $this->fileId);
+        return $this->callConvertVideo($this->collectionId, $this->fileId, $this->fileType);
     }
 
-    protected function callConvertVideo($collectionId, $fileId)
+    protected function callConvertVideo($collectionId, $fileId, $fileType)
     {
         
         $log = Zend_Registry::get('logger');
@@ -68,7 +69,7 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
         $url .= '/lt/filepreview/' . $fileId;
         
         $videoServer = new Default_Model_DbTable_Video();
-        $result = $videoServer->storeExternalVideo($this->collectionId, $url);
+        $result = $videoServer->storeExternalVideo($this->collectionId, $fileType, $url);
         
         if(!empty($result) && $result != 'Error') {
             //Save Preview URL in DB
