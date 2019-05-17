@@ -32,7 +32,7 @@ class Default_Model_DbTable_Video extends Zend_Db_Table_Abstract
      */
     protected $_config = array(
         'maxredirects' => 0,
-        'timeout'      => 30
+        'timeout'      => 21600
     );
     
     protected $_allowed = array(

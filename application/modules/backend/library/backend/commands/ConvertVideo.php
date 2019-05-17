@@ -70,8 +70,9 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
         $videoServer = new Default_Model_DbTable_Video();
         $result = $videoServer->storeExternalVideo($this->collectionId, $url);
         
-        if(!empty($result) && $result == 'Success') {
+        if(!empty($result) && $result != 'Error') {
             //Save Preview URL in DB
+            $log->debug("New Preview URL: https://do-pling-cc-video.fra1.cdn.digitaloceanspaces.com/".$collectionId."/".$result.".mp4");
         } else {
             $log->debug("Error on Converting Video!\n");
         }
