@@ -83,19 +83,14 @@ class Default_Model_DbTable_Video extends Zend_Db_Table_Abstract
 
         $httpClient->setUri($uri);
         $response = $this->retrieveBody($httpClient);
-
         if (false === $response) {
-            $httpClient->setUri($url);
-            $response = $this->retrieveBody($httpClient);
-            if (false === $response) {
-                Zend_Registry::get('logger')->err(__METHOD__ . " - Error while converting Video: " . $url
-                    . ".\n Server replay was: " . $httpClient->getLastResponse()->getStatus() . ". " . $httpClient->getLastResponse()
-                                                                                                                  ->getMessage()
-                    . PHP_EOL)
-                ;
+            Zend_Registry::get('logger')->err(__METHOD__ . " - Error while converting Video: " . $uri
+                . ".\n Server replay was: " . $httpClient->getLastResponse()->getStatus() . ". " . $httpClient->getLastResponse()
+                                                                                                              ->getMessage()
+                . PHP_EOL)
+            ;
 
-                return false;
-            }
+            return false;
         }
         
         Zend_Registry::get('logger')->debug(__METHOD__ . ' Result: ' . print_r($response, true));
