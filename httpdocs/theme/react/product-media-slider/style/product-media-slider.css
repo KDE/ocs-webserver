@@ -198,9 +198,16 @@
 #media-slider.hide-playlist #slide-navigation ul li.active {
   background-color: #999;
 }
+#media-slider.hide-playlist #slide-navigation ul li .video-thumbnail-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
 #media-slider.fade-controls .carousel-control,
-#media-slider.fade-controls .slider-navigation-toggle,
-#media-slider.fade-controls .video-react-control-bar {
+#media-slider.fade-controls .slider-navigation-toggle {
+  opacity: 0 !important;
+}
+#media-slider.fade-controls .video-react-playing .video-react-control-bar {
   opacity: 0 !important;
 }
 #media-slider.disable-gallery {
