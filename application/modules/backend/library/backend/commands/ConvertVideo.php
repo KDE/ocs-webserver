@@ -57,7 +57,7 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
 
     protected function callConvertVideo($collectionId, $fileId)
     {
-        /*
+        
         $log = Zend_Registry::get('logger');
         $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . '**********' . "\n");
         //call video convert server
@@ -68,8 +68,15 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
         $url .= '/lt/filepreview/' . $fileId;
         
         $videoServer = new Default_Model_DbTable_Video();
-        $videoServer->storeExternalVideo($url);
-        */
+        $result = $videoServer->storeExternalVideo($this->collectionId, $url);
+        
+        if(!empty($result) && $result == 'Success') {
+            //Save Preview URL in DB
+        } else {
+            $log->debug("Error on Converting Video!\n");
+        }
+        
+        
         return true;
     }
 

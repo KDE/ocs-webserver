@@ -49,7 +49,7 @@ class Default_Model_DbTable_Video extends Zend_Db_Table_Abstract
     );
     protected $_errorMsg = null;
     
-    public function storeExternalVideo($url, $fileExtension = null)
+    public function storeExternalVideo($collectionId, $url, $fileExtension = null)
     {
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
         $data = null;
@@ -59,7 +59,7 @@ class Default_Model_DbTable_Video extends Zend_Db_Table_Abstract
             // File to save the contents to
             $fp = fopen ('files2.tar', 'w+');
             $config = Zend_Registry::get('config');
-            $videourl = $config->videos->media->upload . "?url=".$url;
+            $videourl = $config->videos->media->upload . "?url=".urlencode($url)."&colelction_id=".$collectionId;
 
             // Here is the file we are downloading, replace spaces with %20
             $ch = curl_init(str_replace(" ","%20",$videourl));
