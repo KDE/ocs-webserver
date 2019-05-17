@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import VideoPlayerWrapper from './video-player';
 import { Scrollbars } from 'react-custom-scrollbars';
+import VideoThumbnail from 'react-video-thumbnail';
 
 /* HELPERS */
 
-      function splitByLastDot(string){
-        const array = string.split(/\.(?=[^\.]+$)/);
-        return array[array.length - 1]
-      }
+function splitByLastDot(string){
+  const array = string.split(/\.(?=[^\.]+$)/);
+  return array[array.length - 1]
+}
 
 /* /HELPERS */
 
@@ -306,7 +307,18 @@ function SlidesNavigation(props){
     const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
       let image;
       if (g.type === "image") image = <img src={g.url.split('/img')[0] + "/cache/120x80-1/img" + g.url.split('/img')[1]}/>
-      else if (g.type === "video") image = <span className="glyphicon glyphicon-play"></span>
+      else if (g.type === "video"){
+        image = (
+          <div className="video-thumbnail-wrapper">
+            <VideoThumbnail
+              videoUrl={g.url.replace(/%2F/g,'/').replace(/%3A/g,':')}
+              width={120}
+              height={80}
+            />
+            <span className="glyphicon glyphicon-play"></span>
+          </div>
+        )
+      }
       return (
         <li key={index}  className={ props.currentSlide === index ? "active " + g.type : g.type}>
           <a onClick={e => props.onChangeCurrentSlide(index)}>{image}</a>
