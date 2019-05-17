@@ -37,8 +37,8 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
      *
      * param [ mixed $args [, $... ]]
      *
-     * @param int    $storeId
-     * @param string $indexId
+     * @param int    $collectionId
+     * @param int $fileId
      *
      * @link http://php.net/manual/en/language.oop5.decon.php
      */
@@ -57,7 +57,7 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
 
     protected function callConvertVideo($collectionId, $fileId)
     {
-        /*
+        
         $log = Zend_Registry::get('logger');
         $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . '**********' . "\n");
         //call video convert server
@@ -68,8 +68,24 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
         $url .= '/lt/filepreview/' . $fileId;
         
         $videoServer = new Default_Model_DbTable_Video();
-        $videoServer->storeExternalVideo($url);
-        */
+        $result = $videoServer->storeExternalVideo($this->collectionId, $url);
+        
+        if(!empty($result) && $result != 'Error') {
+            //Save Preview URL in DB
+            $config = Zend_Registry::get('config');
+            $cdnurl = $config->videos->media->cdnserver;
+            $url_preview = $cdnurl.$collectionId."/".$result.".mp4";
+            $url_thumb = $cdnurl.$collectionId."/".$result."_thumb.png";
+            $data = array('id' => $videoServer->getNewId(),'collection_id' => $this->collectionId,'file_id' => $this->fileId, 'url_preview' => $url_preview, 'url_thumb' => $url_thumb, 'create_timestamp' => new Zend_Db_Expr('NOW()'));
+            $videoServer->insert($data);
+            
+            
+        } else {
+            $log->error("Error on Converting Video! Result: ".$result);
+            return false;
+        }
+        
+        
         return true;
     }
 
