@@ -300,57 +300,71 @@ function SlidesNavigation(props){
     $('#slider-scroll').scrollLeft(thumbSliderPosition)
   }
 
+  function onThumbNailLoad(thumbnail,index){
+    if (thumbnail.length < 7){
+      $('#slide-preview-' + index).remove();
+    }
+  }
+
   /* RENDER */
 
-  let navigationSliderDisplay;
-  if (props.showPlaylist){
-    const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
-      let image;
-      if (g.type === "image") image = <img src={g.url.split('/img')[0] + "/cache/120x80-1/img" + g.url.split('/img')[1]}/>
-      else if (g.type === "video"){
-        image = (
-          <div className="video-thumbnail-wrapper">
+  // dots navigation display
+  const slidesDotsNavigationDisplay = props.gallery.map((g, index) => (
+    <li key={index}  className={ props.currentSlide === index ? "active " : ""}>
+      <a onClick={e => props.onChangeCurrentSlide(index)}></a>
+    </li>
+  ))
+
+  // dots navigation css 
+  const slidesDotsNavigationStyle ={
+    display:props.showPlaylist === true ? "none" : "table"
+  }
+
+  // thumbnail navigation
+  const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
+    let image;
+    if (g.type === "image") image = <img src={g.url.split('/img')[0] + "/cache/120x80-1/img" + g.url.split('/img')[1]}/>
+    else if (g.type === "video"){
+      image = (
+        <div className="video-thumbnail-wrapper">
+          <div id={"slide-preview-"+index}>
             <VideoThumbnail
               videoUrl={g.url.replace(/%2F/g,'/').replace(/%3A/g,':')}
+              thumbnailHandler={(thumbnail) => onThumbNailLoad(thumbnail,index)}
               width={120}
               height={80}
             />
-            <span className="glyphicon glyphicon-play"></span>
           </div>
-        )
-      }
-      return (
-        <li key={index}  className={ props.currentSlide === index ? "active " + g.type : g.type}>
-          <a onClick={e => props.onChangeCurrentSlide(index)}>{image}</a>
-        </li>
+          <span className="glyphicon glyphicon-play"></span>
+        </div>
       )
-    })
-
-    let thumbSliderStyle = {  width:thumbSliderWidth+'px' }
-    if (thumbSliderWidth > props.containerWidth){
-      thumbSliderStyle.position = 'absolute';
-      thumbSliderStyle.top = '0';
     }
+    return (
+      <li key={index}  className={ props.currentSlide === index ? "active " + g.type : g.type}>
+        <a onClick={e => props.onChangeCurrentSlide(index)}>{image}</a>
+      </li>
+    )
+  })
 
-    navigationSliderDisplay = (
-      <Scrollbars style={{ width: props.containerWidth, height: 110 }}>
-        <ul className="thumbnail-navigation" style={thumbSliderStyle}>{slidesThumbnailNavigationDisplay}</ul>
-    </Scrollbars>
-    )
-  } else {
-    const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => (
-        <li key={index}  className={ props.currentSlide === index ? "active " : ""}>
-          <a onClick={e => props.onChangeCurrentSlide(index)}></a>
-        </li>
-    ))
-    navigationSliderDisplay = (
-      <ul>{slidesThumbnailNavigationDisplay}</ul>
-    )
+  // scroll container style
+  const scrollbarsContainerStyle = { 
+    width: props.containerWidth, 
+    height: props.showPlaylist === true ? 110 : 0
+  }
+
+  // thumb slider style 
+  let thumbSliderStyle = {  width:thumbSliderWidth+'px' }
+  if (thumbSliderWidth > props.containerWidth){
+    thumbSliderStyle.position = 'absolute';
+    thumbSliderStyle.top = '0';
   }
 
   return (
     <div id="slide-navigation">
-      {navigationSliderDisplay}
+      <ul style={slidesDotsNavigationStyle}>{slidesDotsNavigationDisplay}</ul>
+      <Scrollbars style={scrollbarsContainerStyle}>
+        <ul className="thumbnail-navigation" style={thumbSliderStyle}>{slidesThumbnailNavigationDisplay}</ul>
+      </Scrollbars>
     </div>
   )
 }
