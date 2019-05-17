@@ -2280,7 +2280,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 //If this file is a video, we have to convert it for preview
                 if(!empty($fileResponse->file->type) && in_array($fileResponse->file->type, Backend_Commands_ConvertVideo::$VIDE_FILE_TYPES)) {
                     $queue = Local_Queue_Factory::getQueue();
-                    $command = new Backend_Commands_ConvertVideo($projectData->ppload_collection_id, $fileResponse->file->id);
+                    $command = new Backend_Commands_ConvertVideo($projectData->ppload_collection_id, $fileResponse->file->id, $fileResponse->file->type);
                     $queue->send(serialize($command));
                 }
 

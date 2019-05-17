@@ -42,7 +42,7 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
      *
      * @link http://php.net/manual/en/language.oop5.decon.php
      */
-    public function __construct($collectionId, $fileId)
+    public function __construct($collectionId, $fileId, $fileType)
     {
         $this->collectionId = $collectionId;
         $this->fileId = $fileId;
