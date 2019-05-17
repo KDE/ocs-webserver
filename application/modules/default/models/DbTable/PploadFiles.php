@@ -57,6 +57,7 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
         
         $sql = " select * 
                      from ppload.ppload_files f 
+                     LEFT JOIN ppload.ppload_file_preview pf ON pf.collection_id = f.collection_id AND pf.file_id = f.id
                      where f.collection_id = :collection_id     
                      order by f.created_timestamp desc               
                    ";        

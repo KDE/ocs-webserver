@@ -25,7 +25,7 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
 
     protected $collectionId;
     protected $fileId;
-    public static $VIDE_FILE_TYPES = array('video/3gpp','video/3gpp2','video/mpeg','video/quicktime','video/x-flv','video/webm','application/ogg','video/x-ms-asf','video/x-matroska', 'video/mp4');
+    public static $VIDEO_FILE_TYPES = array('video/3gpp','video/3gpp2','video/mpeg','video/quicktime','video/x-flv','video/webm','application/ogg','video/x-ms-asf','video/x-matroska', 'video/mp4');
 
     /**
      * PHP 5 allows developers to declare constructor methods for classes.
