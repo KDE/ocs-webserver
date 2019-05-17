@@ -85,7 +85,7 @@ class Default_Model_DbTable_Video extends Zend_Db_Table_Abstract
         if($fileType == 'video/mp4') {
             $skipConvert = true;
         }
-        $videourl = $config->videos->media->upload . "?url=".urlencode($url)."&collection_id=".$collectionId."&=skip_convert".$skipConvert;
+        $videourl = $config->videos->media->upload . "?url=".urlencode($url)."&collection_id=".$collectionId."&skip_convert=".$skipConvert;
         
         $uri = $this->generateUri($videourl);
 
