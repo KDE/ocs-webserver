@@ -14,7 +14,7 @@ class SiteHeader extends React.Component {
         sName:window.json_sname,
         name:window.json_store_name,
         order:window.json_store_order,
-        last_char_store_order:window.last_char_store_order,
+        last_char_store_order:window.json_last_char_store_order,
       },
       user:window.json_member,
       logo:window.json_logoWidth,
@@ -172,7 +172,7 @@ class SiteHeaderSearchForm extends React.Component {
   render(){
 
     let siteHeaderSearchFormStyle;
-  
+
     if (this.props.store.name.toLowerCase().indexOf("appimagehub") > -1) {
       let tHeight = parseInt(this.props.height.split('px')[0]);
       siteHeaderSearchFormStyle = {
@@ -350,6 +350,7 @@ class MobileSiteHeader extends React.Component {
             <SiteHeaderSearchForm
               baseUrl={this.props.baseUrl}
               searchBaseUrl={this.props.searchBaseUrl}
+              store={this.props.store}
             />
           </div>
           {closeMenuElementDisplay}
