@@ -94,6 +94,22 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function transferClaimToMember($id)
     {
+        $project = $this->fetchProductInfo($id);
+
+        //Update ppload
+        $pploadFiles = new Default_Model_DbTable_PploadFiles();
+        $updateValues = array(
+            'owner_id'         => $project->claimed_by_member
+        );
+        $pploadFiles->update($updateValues, "collection_id = ".$project->ppload_collection_id);
+        
+        $pploadCollection = new Default_Model_DbTable_PploadCollections();
+        $updateValues = array(
+            'owner_id'         => $project->claimed_by_member
+        );
+        $pploadCollection->update($updateValues, "id = ".$project->ppload_collection_id);
+
+        //And prohect
         $updateValues = array(
             'member_id'         => new Zend_Db_Expr('claimed_by_member'),
             'claimable'         => new Zend_Db_Expr('NULL'),
@@ -101,6 +117,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         );
 
         $this->update($updateValues, $this->_db->quoteInto('project_id=? and claimable = 1', $id, 'INTEGER'));
+        
     }
 
     /**
