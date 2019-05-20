@@ -18,10 +18,6 @@
   position: relative;
   padding-bottom: 110px;
   background-color: white;
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  -o-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
 }
 #media-slider .carousel-control {
   width: 50px;
@@ -196,9 +192,6 @@
 #media-slider.hide-arrows .swiper-button-next {
   opacity: 0;
 }
-#media-slider.cinema-mode {
-  background-color: black;
-}
 #media-slider.cinema-mode .swiper-wrapper .slide-item img {
   cursor: -moz-zoom-out;
   cursor: -webkit-zoom-out;
@@ -206,6 +199,9 @@
 }
 #media-slider.cinema-mode .swiper-wrapper .swiper-pagination-bullet {
   background: white !important;
+}
+#media-slider.cinema-mode #slide-navigation {
+  background: black;
 }
 #media-slider.cinema-mode #slide-navigation.dots {
   background-color: white;
