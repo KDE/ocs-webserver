@@ -26,8 +26,6 @@ function ProductMediaSlider(){
   if (window.filesJson) {
     window.filesJson.forEach(function(f,index){
       if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1){
-        if ( splitByLastDot(f.name) !== '3gp' && splitByLastDot(f.name) !== '3g2' && splitByLastDot(f.name) !== 'm2v' 
-          && splitByLastDot(f.name) !== 'mov' && splitByLastDot(f.name) !== 'flv' && splitByLastDot(f.name) !== 'wmv' ){
           const gItem = {
             url:f.url.replace(/%2F/g,'/').replace(/%3A/g,':'),
             type:f.type.split('/')[0],
@@ -38,7 +36,6 @@ function ProductMediaSlider(){
           }
           galleryArray = [gItem, ... galleryArray] 
         }
-      }
     })
   }
 
