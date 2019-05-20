@@ -14,3 +14,5 @@ ENGINE=InnoDB
 ALTER TABLE ppload.ppload_file_preview
 	ADD INDEX `idx_file` (`collection_id`, `file_id`);
 
+ALTER TABLE `ppload_file_preview`
+	ADD UNIQUE INDEX `UK` (`collection_id`, `file_id`);
