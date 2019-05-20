@@ -65,7 +65,7 @@ class Default_Model_DbTable_MediaViews extends Local_Model_Table
                     FROM media_views f
                     WHERE f.collection_id = " . $collection_id . "
                     AND f.file_id = " . $file_id . "
-                    AND f.downloaded_timestamp >= '" . $filterDownloadToday . "'               
+                    AND f.start_timestamp >= '" . $filterDownloadToday . "'               
                    ";        
         $result = $this->_db->query($sql)->fetchAll();      
         return $result[0]['cnt'];
@@ -99,7 +99,7 @@ class Default_Model_DbTable_MediaViews extends Local_Model_Table
         $sql = "    SELECT COUNT(1) AS cnt
                     FROM media_views f
                     WHERE f.project_id = " . $project_id . "
-                    AND f.downloaded_timestamp >= '" . $filterDownloadToday . "'               
+                    AND f.start_timestamp >= '" . $filterDownloadToday . "'               
                    ";        
         $result = $this->_db->query($sql)->fetchAll();      
         return $result[0]['cnt'];
