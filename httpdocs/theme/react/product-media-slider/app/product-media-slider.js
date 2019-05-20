@@ -130,15 +130,16 @@ function ProductMediaSlider(){
     $( function() {
       window.mySwiper = new Swiper('.swiper-container', {
         speed: 400,
+        initialSlide: 0,
         observer: true, 
         observeParents: true,
         preloadImages: true,
         updateOnImagesReady: true,
-        loop:true,
         pagination: '.swiper-pagination',
         paginationClickable: '.swiper-pagination',
         nextButton: '.swiper-button-next',
         prevButton: '.swiper-button-prev',
+        threshold:50,
         onSlideChangeStart: function(swiper){
           setCurrentSlide(swiper.activeIndex);
         }
@@ -329,7 +330,7 @@ function ThumbNavigationItem(props){
   }
 
   return (
-    <div className={props.currentSlide === (props.slideIndex + 1) ? " swiper-slide active " : " swiper-slide " }
+    <div className={props.currentSlide === (props.slideIndex) ? " swiper-slide active " : " swiper-slide " }
       onClick={() => props.onThumbItemClick(props.slideIndex + 1)}>
         <div className="preview-image" style={{"backgroundImage":"url("+bgImage+")"}}></div>
     </div>
