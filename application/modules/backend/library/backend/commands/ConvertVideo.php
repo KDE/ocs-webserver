@@ -25,7 +25,9 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
 
     protected $collectionId;
     protected $fileId;
-    public static $VIDE_FILE_TYPES = array('video/3gpp','video/3gpp2','video/mpeg','video/quicktime','video/x-flv','video/webm','application/ogg','video/x-ms-asf','video/x-matroska');
+    protected $fileType;
+    
+    public static $VIDEO_FILE_TYPES = array('video/3gpp','video/3gpp2','video/mpeg','video/quicktime','video/x-flv','video/webm','application/ogg','video/x-ms-asf','video/x-matroska', 'video/mp4');
 
     /**
      * PHP 5 allows developers to declare constructor methods for classes.
@@ -37,29 +39,35 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
      *
      * param [ mixed $args [, $... ]]
      *
-     * @param int    $storeId
-     * @param string $indexId
+     * @param int    $collectionId
+     * @param int $fileId
      *
      * @link http://php.net/manual/en/language.oop5.decon.php
      */
-    public function __construct($collectionId, $fileId)
+    public function __construct($collectionId, $fileId, $fileType)
     {
         $this->collectionId = $collectionId;
         $this->fileId = $fileId;
+        $this->fileType = $fileType;
         
     }
 
     public function doCommand()
     {
 
-        return $this->callConvertVideo($this->collectionId, $this->fileId);
+        return $this->callConvertVideo($this->collectionId, $this->fileId, $this->fileType);
     }
 
-    protected function callConvertVideo($collectionId, $fileId)
+    protected function callConvertVideo($collectionId, $fileId, $fileType)
     {
-        /*
+        
         $log = Zend_Registry::get('logger');
         $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . '**********' . "\n");
+        
+        $videoServer = new Default_Model_DbTable_Video();
+        $data = array('id' => $videoServer->getNewId(),'collection_id' => $collectionId,'file_id' => $fileId, 'create_timestamp' => new Zend_Db_Expr('NOW()'));
+        $videoServer->insert($data);
+        
         //call video convert server
         $salt = PPLOAD_DOWNLOAD_SECRET;
         $timestamp = time() + 3600; // one hour valid
@@ -67,9 +75,24 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
         $url = PPLOAD_API_URI . 'files/download/id/' . $fileId . '/s/' . $hash . '/t/' . $timestamp;
         $url .= '/lt/filepreview/' . $fileId;
         
-        $videoServer = new Default_Model_DbTable_Video();
-        $videoServer->storeExternalVideo($url);
-        */
+        $result = $videoServer->storeExternalVideo($collectionId, $fileType, $url);
+        
+        if(!empty($result) && $result != 'Error') {
+            //Save Preview URL in DB
+            $config = Zend_Registry::get('config');
+            $cdnurl = $config->videos->media->cdnserver;
+            $url_preview = $cdnurl.$collectionId."/".$result.".mp4";
+            $url_thumb = $cdnurl.$collectionId."/".$result."_thumb.png";
+            $data = array('url_preview' => $url_preview, 'url_thumb' => $url_thumb);
+            $videoServer->update($data, "collection_id = $collectionId AND file_id = $fileId");
+            
+            
+        } else {
+            $log->debug("Error on Converting Video! Result: ".$result);
+            return false;
+        }
+        
+        
         return true;
     }
 

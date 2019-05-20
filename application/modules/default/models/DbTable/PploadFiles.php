@@ -25,7 +25,7 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
     /** @var  Zend_Cache_Core */
     protected $cache;
     
-    protected $_name = "ppload_files";
+    protected $_name = "ppload.ppload_files";
 
     protected $_keyColumnsForRow = array('id');
 
@@ -55,8 +55,9 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
             return null;
         }
         
-        $sql = " select * 
+        $sql = " select f.*, pf.id as ppload_file_preview_id, pf.url_preview, pf.url_thumb 
                      from ppload.ppload_files f 
+                     LEFT JOIN ppload.ppload_file_preview pf ON pf.collection_id = f.collection_id AND pf.file_id = f.id
                      where f.collection_id = :collection_id     
                      order by f.created_timestamp desc               
                    ";        

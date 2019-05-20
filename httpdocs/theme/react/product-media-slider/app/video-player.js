@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { 
     Player, 
     ControlBar, 
@@ -6,14 +6,13 @@ import {
     VolumeMenuButton, 
     LoadingSpinner,
     CurrentTimeDisplay,
-    DurationDisplay,
-    TimeDivider } from 'video-react';
+    DurationDisplay } from 'video-react';
 
 class VideoPlayerWrapper extends React.Component {
     constructor(props, context){
         super(props, context);
         this.state = {
-            source:this.props.slide.url.replace(/%2F/g,'/').replace(/%3A/g,':'),
+            source:this.props.slide.url_preview,
             videoStarted:false,
             videoStopped:false,
             videoStartUrl:window.location.href + "startvideoajax?collection_id="+this.props.slide.collection_id+"&file_id="+this.props.slide.file_id,

@@ -462,6 +462,20 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     }
                     $url .= '/lt/filepreview/' . $file['name'];
                     $file['url'] = urlencode($url);
+                    
+                    //If this file is a video, we have to convert it for preview
+                    if(!empty($file['type']) && in_array($file['type'], Backend_Commands_ConvertVideo::$VIDEO_FILE_TYPES) && empty($file['ppload_file_preview_id'])) {
+                        $queue = Local_Queue_Factory::getQueue();
+                        $command = new Backend_Commands_ConvertVideo($file['collection_id'], $file['id'], $file['type']);
+                        $queue->send(serialize($command));
+                    }
+                    if(!empty($file['url_preview'])) {
+                        $file['url_preview'] = urlencode($file['url_preview']);
+                    }
+                    if(!empty($file['url_thumb'])) {
+                        $file['url_thumb'] = urlencode($file['url_thumb']);
+                    }
+                    
                     $filesList[] = $file;
                 }
             }
@@ -2278,9 +2292,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 }
                 
                 //If this file is a video, we have to convert it for preview
-                if(!empty($fileResponse->file->type) && in_array($fileResponse->file->type, Backend_Commands_ConvertVideo::$VIDE_FILE_TYPES)) {
+                if(!empty($fileResponse->file->type) && in_array($fileResponse->file->type, Backend_Commands_ConvertVideo::$VIDEO_FILE_TYPES)) {
                     $queue = Local_Queue_Factory::getQueue();
-                    $command = new Backend_Commands_ConvertVideo($projectData->ppload_collection_id, $fileResponse->file->id);
+                    $command = new Backend_Commands_ConvertVideo($projectData->ppload_collection_id, $fileResponse->file->id, $fileResponse->file->type);
                     $queue->send(serialize($command));
                 }
 

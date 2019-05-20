@@ -2,7 +2,16 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import VideoPlayerWrapper from './video-player';
 import { Scrollbars } from 'react-custom-scrollbars';
+import VideoThumbnail from 'react-video-thumbnail';
 
+/* HELPERS */
+
+function splitByLastDot(string){
+  const array = string.split(/\.(?=[^\.]+$)/);
+  return array[array.length - 1]
+}
+
+/* /HELPERS */
 
 function ProductMediaSlider(){ 
 
@@ -16,22 +25,17 @@ function ProductMediaSlider(){
   if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... galleryArray ];
   if (window.filesJson) {
     window.filesJson.forEach(function(f,index){
-      function splitByLastDot(string){
-        const array = string.split(/\.(?=[^\.]+$)/);
-        return array[array.length - 1]
-      }
       if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1){
-        if ( splitByLastDot(f.name) !== '3gp' && splitByLastDot(f.name) !== '3g2' && splitByLastDot(f.name) !== 'm2v' 
-          && splitByLastDot(f.name) !== 'mov' && splitByLastDot(f.name) !== 'flv' && splitByLastDot(f.name) !== 'wmv' ){
           const gItem = {
-            url:f.url,
+            url:f.url.replace(/%2F/g,'/').replace(/%3A/g,':'),
             type:f.type.split('/')[0],
             collection_id:f.collection_id,
-            file_id:f.id
+            file_id:f.id,
+            url_thumb:f.url_thumb.replace(/%2F/g,'/').replace(/%3A/g,':'),
+            url_preview:f.url_preview.replace(/%2F/g,'/').replace(/%3A/g,':')
           }
           galleryArray = [gItem, ... galleryArray] 
         }
-      }
     })
   }
 
@@ -46,7 +50,7 @@ function ProductMediaSlider(){
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ showPlaylist, setShowPlaylist ] = useState(false);
   const [ showSliderArrows, setShowSliderArrows ] = useState(true);  
-  const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(false);
+  const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(true);
 
   let sliderFadeControlTimeOut;
 
@@ -295,46 +299,70 @@ function SlidesNavigation(props){
     $('#slider-scroll').scrollLeft(thumbSliderPosition)
   }
 
+  function onThumbNailLoad(thumbnail,index){
+    if (thumbnail.length < 7){
+      $('#slide-preview-' + index).remove();
+    }
+  }
+
   /* RENDER */
 
-  let navigationSliderDisplay;
-  if (props.showPlaylist){
-    const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
-      let image;
-      if (g.type === "image") image = <img src={g.url.split('/img')[0] + "/cache/120x80-1/img" + g.url.split('/img')[1]}/>
-      else if (g.type === "video") image = <span className="glyphicon glyphicon-play"></span>
-      return (
-        <li key={index}  className={ props.currentSlide === index ? "active " + g.type : g.type}>
-          <a onClick={e => props.onChangeCurrentSlide(index)}>{image}</a>
-        </li>
-      )
-    })
-
-    let thumbSliderStyle = {  width:thumbSliderWidth+'px' }
-    if (thumbSliderWidth > props.containerWidth){
-      thumbSliderStyle.position = 'absolute';
-      thumbSliderStyle.top = '0';
-    }
-
-    navigationSliderDisplay = (
-      <Scrollbars style={{ width: props.containerWidth, height: 110 }}>
-        <ul className="thumbnail-navigation" style={thumbSliderStyle}>{slidesThumbnailNavigationDisplay}</ul>
-    </Scrollbars>
-    )
-  } else {
-    const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => (
-        <li key={index}  className={ props.currentSlide === index ? "active " : ""}>
-          <a onClick={e => props.onChangeCurrentSlide(index)}></a>
-        </li>
+  // dots navigation display
+  let slidesDotsNavigationDisplay;
+  if (props.showPlaylist === false){
+    const dots = props.gallery.map((g, index) => (
+      <li key={index}  className={ props.currentSlide === index ? "active " : ""}>
+        <a onClick={e => props.onChangeCurrentSlide(index)}></a>
+      </li>
     ))
-    navigationSliderDisplay = (
-      <ul>{slidesThumbnailNavigationDisplay}</ul>
+    slidesDotsNavigationDisplay = <ul>{dots}</ul>
+  }
+
+  // thumbnail navigation
+  const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
+    let image;
+    if (g.type === "image") image = <img src={g.url.split('/img')[0] + "/cache/120x80-1/img" + g.url.split('/img')[1]}/>
+    else if (g.type === "video"){
+      image = (
+        <div className="video-thumbnail-wrapper">
+          <div id={"slide-preview-"+index}>
+            <img
+              src={g.url_thumb}
+              width={120}
+              height={80}
+            />
+            
+          </div>
+          <span className="glyphicon glyphicon-play"></span>
+        </div>
+      )
+    }
+    return (
+      <li key={index}  className={ props.currentSlide === index ? "active " + g.type : g.type}>
+        <a onClick={e => props.onChangeCurrentSlide(index)}>{image}</a>
+      </li>
     )
+  })
+
+  // scroll container style
+  const scrollbarsContainerStyle = { 
+    width: props.containerWidth, 
+    height: props.showPlaylist === true ? 110 : 0
+  }
+
+  // thumb slider style 
+  let thumbSliderStyle = {  width:thumbSliderWidth+'px' }
+  if (thumbSliderWidth > props.containerWidth){
+    thumbSliderStyle.position = 'absolute';
+    thumbSliderStyle.top = '0';
   }
 
   return (
-    <div id="slide-navigation">
-      {navigationSliderDisplay}
+    <div id="slide-navigation" className={props.showPlaylist === true ? "thumbs" : "dots"}>
+      {slidesDotsNavigationDisplay}
+      <Scrollbars style={scrollbarsContainerStyle}>
+        <ul className="thumbnail-navigation" style={thumbSliderStyle}>{slidesThumbnailNavigationDisplay}</ul>
+      </Scrollbars>
     </div>
   )
 }
