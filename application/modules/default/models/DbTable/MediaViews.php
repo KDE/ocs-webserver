@@ -108,7 +108,7 @@ class Default_Model_DbTable_MediaViews extends Local_Model_Table
     
     public function fetchCountViewsForProjectAllTime($project_id)
     {
-        if(empty($$project_id)) {
+        if(empty($project_id)) {
             return 0;
         }
         
