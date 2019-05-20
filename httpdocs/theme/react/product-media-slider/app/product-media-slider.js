@@ -63,12 +63,12 @@ function ProductMediaSlider(){
   }
 
   // update dimensions
-  function updateDimensions(event,currentSlide){
+  function updateDimensions(){
     const newContainerWidth = parentContainerElement.offsetWidth;
     setContainerWidth(newContainerWidth)
     document.getElementById('product-page-content').removeEventListener("DOMNodeRemoved", updateDimensions);
     document.getElementById('product-page-content').removeEventListener("DOMNodeInserted", updateDimensions);
-    if (cinemaMode === false) setSliderHeight(360)
+    setSliderHeight(cinemaMode === true ? 410 : 360)
   }
 
   // on mouse movement
@@ -271,7 +271,7 @@ function SlideItem(props){
     } 
     
     else if (props.slide.type === "video" || props.slide.type === "audio"){ 
-      if (props.currentSlide === props.slideIndex && props.cinemaMode === true) props.onSetSliderHeight(360); 
+      if (props.currentSlide === props.slideIndex && props.cinemaMode === true) props.onSetSliderHeight(410); 
     }
 
   }
@@ -331,7 +331,7 @@ function ThumbNavigationItem(props){
 
   return (
     <div className={props.currentSlide === (props.slideIndex) ? " swiper-slide active " : " swiper-slide " }
-      onClick={() => props.onThumbItemClick(props.slideIndex + 1)}>
+      onClick={() => props.onThumbItemClick(props.slideIndex)}>
         <div className="preview-image" style={{"backgroundImage":"url("+bgImage+")"}}></div>
     </div>
   )
