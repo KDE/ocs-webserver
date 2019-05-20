@@ -63,6 +63,11 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
         
         $log = Zend_Registry::get('logger');
         $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . '**********' . "\n");
+        
+        $videoServer = new Default_Model_DbTable_Video();
+        $data = array('id' => $videoServer->getNewId(),'collection_id' => $collectionId,'file_id' => $fileId, 'create_timestamp' => new Zend_Db_Expr('NOW()'));
+        $videoServer->insert($data);
+        
         //call video convert server
         $salt = PPLOAD_DOWNLOAD_SECRET;
         $timestamp = time() + 3600; // one hour valid
@@ -70,7 +75,6 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
         $url = PPLOAD_API_URI . 'files/download/id/' . $fileId . '/s/' . $hash . '/t/' . $timestamp;
         $url .= '/lt/filepreview/' . $fileId;
         
-        $videoServer = new Default_Model_DbTable_Video();
         $result = $videoServer->storeExternalVideo($collectionId, $fileType, $url);
         
         if(!empty($result) && $result != 'Error') {
@@ -79,8 +83,8 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
             $cdnurl = $config->videos->media->cdnserver;
             $url_preview = $cdnurl.$collectionId."/".$result.".mp4";
             $url_thumb = $cdnurl.$collectionId."/".$result."_thumb.png";
-            $data = array('id' => $videoServer->getNewId(),'collection_id' => $collectionId,'file_id' => $fileId, 'url_preview' => $url_preview, 'url_thumb' => $url_thumb, 'create_timestamp' => new Zend_Db_Expr('NOW()'));
-            $videoServer->insert($data);
+            $data = array('url_preview' => $url_preview, 'url_thumb' => $url_thumb);
+            $videoServer->update($data, "collection_id = $collectionId AND file_id = $fileId");
             
             
         } else {
