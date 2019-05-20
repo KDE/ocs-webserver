@@ -69,7 +69,7 @@ function ProductMediaSlider(){
     setContainerWidth(newContainerWidth)
     document.getElementById('product-page-content').removeEventListener("DOMNodeRemoved", updateDimensions);
     document.getElementById('product-page-content').removeEventListener("DOMNodeInserted", updateDimensions);
-    setSliderHeight(cinemaMode === true ? 410 : 360)
+    if (cinemaMode === false) setSliderHeight(360)
   }
 
   // on mouse movement
