@@ -7,6 +7,7 @@ import {
     LoadingSpinner,
     CurrentTimeDisplay,
     DurationDisplay } from 'video-react';
+import {isMobile} from 'react-device-detect';
 
 class VideoPlayerWrapper extends React.Component {
     constructor(props, context){
@@ -70,6 +71,21 @@ class VideoPlayerWrapper extends React.Component {
     render(){   
         let videoPlayerDisplay;
         if (this.state.source){
+            let controlBarDisplay;
+            if (isMobile){
+                controlBarDisplay = (
+                    <ControlBar disabled/>
+                )  
+            } else {
+                controlBarDisplay = (
+                    <ControlBar className="custom-video-player">
+                        <CurrentTimeDisplay order={4.1} />
+                        <DurationDisplay order={7.1} />
+                        <VolumeMenuButton vertical order={7.2} />
+                        <a className="cinema-mode-button" onClick={this.onCinemaModeClick} order={7.3}><span></span></a>
+                    </ControlBar>
+                )
+            }
             videoPlayerDisplay = (
                 <Player
                     ref="player"
@@ -80,12 +96,7 @@ class VideoPlayerWrapper extends React.Component {
                     src={this.state.source}>
                         <BigPlayButton position="center" />
                         <LoadingSpinner />
-                        <ControlBar className="custom-video-player">
-                            <CurrentTimeDisplay order={4.1} />
-                            <DurationDisplay order={7.1} />
-                            <VolumeMenuButton vertical order={7.2} />
-                            <a className="cinema-mode-button" onClick={this.onCinemaModeClick} order={7.3}><span></span></a>
-                        </ControlBar>
+                        {controlBarDisplay}
                 </Player>            
             )
         }

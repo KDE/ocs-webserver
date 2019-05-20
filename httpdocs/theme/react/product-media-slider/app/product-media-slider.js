@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import {isMobile} from 'react-device-detect';
 import VideoPlayerWrapper from './video-player';
 
 function ProductMediaSlider(){ 
@@ -38,8 +39,8 @@ function ProductMediaSlider(){
   const [ sliderHeight, setSliderHeight ] = useState(360);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
   const [ cinemaMode, setCinemaMode ] = useState(false);
-  const [ showPlaylist, setShowPlaylist ] = useState(false);
-  const [ showSliderArrows, setShowSliderArrows ] = useState(true);  
+  const [ showPlaylist, setShowPlaylist ] = useState(isMobile ? true : false);
+  const [ showSliderArrows, setShowSliderArrows ] = useState(isMobile ? false : true);  
   const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(true);
 
   let sliderFadeControlTimeOut;
@@ -122,10 +123,7 @@ function ProductMediaSlider(){
     setShowPlaylist(newShowPlaylistValue)
   }
 
-  function onThumbItemClick(slideIndex){
-    window.mySwiper.slideTo(slideIndex)
-  }
-
+  // on finish slides render
   function onFinishedSlidesRender(){
     $( function() {
       window.mySwiper = new Swiper('.swiper-container', {
@@ -148,7 +146,7 @@ function ProductMediaSlider(){
     });
   }
 
-  
+  // on finished thumbs render
   function onfinishedThumbsRender(){
     window.galleryThumbs = new Swiper('.gallery-thumbs', {
       slidesPerView: Math.ceil(containerWidth / 200),
@@ -162,6 +160,11 @@ function ProductMediaSlider(){
     window.galleryThumbs.update()    
   }
 
+  // on thumb item click
+  function onThumbItemClick(slideIndex){
+    window.mySwiper.slideTo(slideIndex)
+  }
+
   /* Render */
 
   // media slider css class
@@ -170,7 +173,7 @@ function ProductMediaSlider(){
   if (cinemaMode === true) mediaSliderCssClass += "cinema-mode ";
   if (showSliderArrows === false) mediaSliderCssClass += "hide-arrows ";
   if (showPlaylist === false) mediaSliderCssClass += "hide-playlist ";
-  if (sliderFadeControlsMode === true) mediaSliderCssClass += "fade-controls "
+  if (sliderFadeControlsMode === true) mediaSliderCssClass += "fade-controls ";
 
 
   // slider arrows css
