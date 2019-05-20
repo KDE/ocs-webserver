@@ -12,13 +12,18 @@ import {isMobile} from 'react-device-detect';
 class VideoPlayerWrapper extends React.Component {
     constructor(props, context){
         super(props, context);
+
+        let hostLocation = window.location.href;
+        if (!hostLocation.endsWith('/')) hostLocation += "/";
+
         this.state = {
             source:this.props.slide.url_preview,
             videoStarted:false,
             videoStopped:false,
-            videoStartUrl:window.location.href + "startvideoajax?collection_id="+this.props.slide.collection_id+"&file_id="+this.props.slide.file_id,
-            videoStopUrl:window.location.href + "stopvideoajax?media_view_id="
+            videoStartUrl:hostLocation + "startvideoajax?collection_id="+this.props.slide.collection_id+"&file_id="+this.props.slide.file_id,
+            videoStopUrl:hostLocation + "stopvideoajax?media_view_id="
         }
+        console.log(this.state);
         this.onCinemaModeClick = this.onCinemaModeClick.bind(this);
         this.play = this.play.bind(this);
         this.pause = this.pause.bind(this);

@@ -8,6 +8,10 @@
 /* /MIXINS */
 /* COLORS */
 /* /COLORS */
+video:focus {
+  outline: none;
+  outline-style: none;
+}
 #product-media-slider-container {
   width: 100%;
   margin-bottom: 15px;
