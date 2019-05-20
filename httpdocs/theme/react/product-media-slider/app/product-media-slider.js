@@ -25,6 +25,7 @@ function ProductMediaSlider(){
   if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... galleryArray ];
   if (window.filesJson) {
     window.filesJson.forEach(function(f,index){
+      console.log(f);
       if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1){
         if ( splitByLastDot(f.name) !== '3gp' && splitByLastDot(f.name) !== '3g2' && splitByLastDot(f.name) !== 'm2v' 
           && splitByLastDot(f.name) !== 'mov' && splitByLastDot(f.name) !== 'flv' && splitByLastDot(f.name) !== 'wmv' ){
@@ -32,7 +33,8 @@ function ProductMediaSlider(){
             url:f.url,
             type:f.type.split('/')[0],
             collection_id:f.collection_id,
-            file_id:f.id
+            file_id:f.id,
+            url_thumb:f.url_thumb
           }
           galleryArray = [gItem, ... galleryArray] 
         }
@@ -327,12 +329,12 @@ function SlidesNavigation(props){
       image = (
         <div className="video-thumbnail-wrapper">
           <div id={"slide-preview-"+index}>
-            <VideoThumbnail
-              videoUrl={g.url.replace(/%2F/g,'/').replace(/%3A/g,':')}
-              thumbnailHandler={(thumbnail) => onThumbNailLoad(thumbnail,index)}
+            <img
+              src={g.url_thumb}
               width={120}
               height={80}
             />
+            
           </div>
           <span className="glyphicon glyphicon-play"></span>
         </div>
