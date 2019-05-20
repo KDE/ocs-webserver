@@ -12,7 +12,8 @@ if($userRateData){
 	$comment="data-comment='".$userRateData['comment_text']."'";		
 }		
 $formproject="data-project='".$this->file->project_id."'";
-$attrhistory = $userrate.' '.$comment.' '.$formproject;
+$creator="data-creator='".$this->file->project_member_id."'";
+$attrhistory = $userrate.' '.$comment.' '.$formproject.' '.$creator;
 
 if($this->counter==0){
 ?>

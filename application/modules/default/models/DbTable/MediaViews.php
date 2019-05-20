@@ -65,7 +65,7 @@ class Default_Model_DbTable_MediaViews extends Local_Model_Table
                     FROM media_views f
                     WHERE f.collection_id = " . $collection_id . "
                     AND f.file_id = " . $file_id . "
-                    AND f.downloaded_timestamp >= '" . $filterDownloadToday . "'               
+                    AND f.start_timestamp >= '" . $filterDownloadToday . "'               
                    ";        
         $result = $this->_db->query($sql)->fetchAll();      
         return $result[0]['cnt'];
@@ -85,6 +85,39 @@ class Default_Model_DbTable_MediaViews extends Local_Model_Table
                    ";        
         $result = $this->_db->query($sql)->fetchAll();      
         return $result[0]['cnt'];
+    }   
+    
+    public function fetchCountViewsTodayForProject($project_id)
+    {
+        if(empty($project_id)) {
+            return 0;
+        }
+        
+        $today = (new DateTime())->modify('-1 day');
+        $filterDownloadToday = $today->format("Y-m-d H:i:s");
+
+        $sql = "    SELECT COUNT(1) AS cnt
+                    FROM media_views f
+                    WHERE f.project_id = " . $project_id . "
+                    AND f.start_timestamp >= '" . $filterDownloadToday . "'               
+                   ";        
+        $result = $this->_db->query($sql)->fetchAll();      
+        return $result[0]['cnt'];
     }     
+    
+    
+    public function fetchCountViewsForProjectAllTime($project_id)
+    {
+        if(empty($project_id)) {
+            return 0;
+        }
+        
+        $sql = "    SELECT COUNT(1)  AS cnt
+                    FROM media_views f
+                    WHERE f.project_id = " . $project_id . "
+                   ";        
+        $result = $this->_db->query($sql)->fetchAll();      
+        return $result[0]['cnt'];
+    }
 
 }
