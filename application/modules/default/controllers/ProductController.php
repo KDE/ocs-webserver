@@ -454,7 +454,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $files = $fmodel->fetchFilesForProject($this->view->product->ppload_collection_id);
             if(!empty($files)) {
                 foreach ($files as $file) {
-                    /*
                     $timestamp = time() + 3600; // one hour valid
                     $hash = hash('sha512',$salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
                     $url = PPLOAD_API_URI . 'files/download/id/' . $file['id'] . '/s/' . $hash . '/t/' . $timestamp;
@@ -463,8 +462,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     }
                     $url .= '/lt/filepreview/' . $file['name'];
                     $file['url'] = urlencode($url);
-                     * 
-                     */
                     
                     //If this file is a video, we have to convert it for preview
                     if(!empty($file['type']) && in_array($file['type'], Backend_Commands_ConvertVideo::$VIDEO_FILE_TYPES) && empty($file['ppload_file_preview_id'])) {
@@ -474,7 +471,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     }
                     if(!empty($file['url_preview'])) {
                         $file['url_preview'] = urlencode($file['url_preview']);
-                        $file['url'] = urlencode($file['url_preview']);
                     }
                     if(!empty($file['url_thumb'])) {
                         $file['url_thumb'] = urlencode($file['url_thumb']);
