@@ -1,17 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import VideoPlayerWrapper from './video-player';
-import { Scrollbars } from 'react-custom-scrollbars';
-import VideoThumbnail from 'react-video-thumbnail';
-
-/* HELPERS */
-
-function splitByLastDot(string){
-  const array = string.split(/\.(?=[^\.]+$)/);
-  return array[array.length - 1]
-}
-
-/* /HELPERS */
 
 function ProductMediaSlider(){ 
 
@@ -43,6 +32,7 @@ function ProductMediaSlider(){
   const [ disableGallery, setDisableGallery ] = useState(gallery.length > 1 ? false : true)
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
+
   const [ currentSlide, setCurrentSlide ] = useState(0)
   const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
   const [ sliderHeight, setSliderHeight ] = useState(360);
@@ -76,8 +66,6 @@ function ProductMediaSlider(){
   function updateDimensions(event,currentSlide){
     const newContainerWidth = parentContainerElement.offsetWidth;
     setContainerWidth(newContainerWidth)
-    setSliderWidth(newContainerWidth * gallery.length);
-    setSliderPosition(newContainerWidth * currentSlide);
     document.getElementById('product-page-content').removeEventListener("DOMNodeRemoved", updateDimensions);
     document.getElementById('product-page-content').removeEventListener("DOMNodeInserted", updateDimensions);
     if (cinemaMode === false) setSliderHeight(360)
@@ -134,6 +122,45 @@ function ProductMediaSlider(){
     setShowPlaylist(newShowPlaylistValue)
   }
 
+  function onThumbItemClick(slideIndex){
+    window.mySwiper.slideTo(slideIndex)
+  }
+
+  function onFinishedSlidesRender(){
+    $( function() {
+      window.mySwiper = new Swiper('.swiper-container', {
+        speed: 400,
+        observer: true, 
+        observeParents: true,
+        preloadImages: true,
+        updateOnImagesReady: true,
+        loop:true,
+        pagination: '.swiper-pagination',
+        paginationClickable: '.swiper-pagination',
+        nextButton: '.swiper-button-next',
+        prevButton: '.swiper-button-prev',
+        onSlideChangeStart: function(swiper){
+          setCurrentSlide(swiper.activeIndex);
+        }
+      });
+      window.mySwiper.update()
+    });
+  }
+
+  
+  function onfinishedThumbsRender(){
+    window.galleryThumbs = new Swiper('.gallery-thumbs', {
+      slidesPerView: Math.ceil(containerWidth / 200),
+      spaceBetween:10,
+      freeMode: true,
+      watchSlidesVisibility: true,
+      watchSlidesProgress: true,
+      activeIndex:currentSlide,
+      scrollbar:'.swiper-scrollbar'
+    });
+    window.galleryThumbs.update()    
+  }
+
   /* Render */
 
   // media slider css class
@@ -144,22 +171,6 @@ function ProductMediaSlider(){
   if (showPlaylist === false) mediaSliderCssClass += "hide-playlist ";
   if (sliderFadeControlsMode === true) mediaSliderCssClass += "fade-controls "
 
-  // slider container style
-  const sliderContainerStyle = {
-    width:sliderWidth+'px',
-    height:sliderHeight+'px'
-  }
-
-  // slider wrapper style
-  const sliderWrapperStyle = {
-    width:sliderWidth+'px',
-    left:'-'+sliderPosition+'px',
-    height:sliderHeight+'px'
-  }
-
-  // prev / next slide arrow values
-  const prevCurrentSlide = currentSlide > 0 ? currentSlide - 1 : gallery.length - 1;
-  const nextCurrentSlide = currentSlide < (gallery.length - 1) ? ( currentSlide + 1 ) : 0;
 
   // slider arrows css
   const sliderArrowCss = { top:((sliderHeight / 2 ) - 40)+'px' }
@@ -174,37 +185,53 @@ function ProductMediaSlider(){
       containerWidth={containerWidth}
       sliderHeight={sliderHeight}
       cinemaMode={cinemaMode}
+      gallery={gallery}
+      onFinishedSlidesRender={onFinishedSlidesRender}
       onCinemaModeClick={toggleCinemaMode}
       onSetSliderHeight={height => setSliderHeight(height)}
       onUpdateDimensions={updateDimensions}
     />
   ));
 
+  let thumbnailNavigationDisplay;
+  if (showPlaylist){
+  // thumbnail navigation
+    const slidesThumbnailNavigationDisplay = gallery.map((g, index) => (
+      <ThumbNavigationItem 
+        key={index} 
+        slideIndex={index}
+        currentSlide={currentSlide}
+        gallery={gallery}
+        item={g}
+        onFinishedSlidesRender={onFinishedSlidesRender}
+        containerWidth={containerWidth}
+        onfinishedThumbsRender={onfinishedThumbsRender}
+        onThumbItemClick={(slideIndex) => onThumbItemClick(slideIndex)}
+      />
+    ))
+    thumbnailNavigationDisplay = (
+      <div id="slide-navigation" className="swiper-container gallery-thumbs">
+        <div className="thumbnail-navigation swiper-wrapper">{slidesThumbnailNavigationDisplay}</div>
+        <div className="swiper-scrollbar"></div>
+      </div>
+    )
+  }
+
   return (
     <main id="media-slider" 
       style={{height:sliderHeight}} 
       className={mediaSliderCssClass}
       >
-
-      <div id="slider-container" style={sliderContainerStyle}>
-        <a className="left carousel-control" id="arrow-left" style={sliderArrowCss} onClick={() => setCurrentSlide(prevCurrentSlide)}>
-          <span className="glyphicon glyphicon-chevron-left"></span>
-        </a>
-        <div id="slider-wrapper" style={sliderWrapperStyle}>
+      <div id="slider-container" className="swiper-container">
+        <div className="swiper-wrapper">
           {slidesDisplay}
         </div>
-        <a className="right carousel-control" id="arrow-right" style={sliderArrowCss} onClick={() => setCurrentSlide(nextCurrentSlide)}>
-          <span className="glyphicon glyphicon-chevron-right"></span>
-        </a>      
+        <div className="swiper-pagination"></div>
+        <div className="swiper-button-prev"></div>
+        <div className="swiper-button-next"></div>
       </div>
-      <a className="slider-navigation-toggle" onClick={toggleShowPlaylist} style={{top:(sliderHeight) - 35}}></a>
-      <SlidesNavigation
-        gallery={gallery}
-        currentSlide={currentSlide}
-        containerWidth={containerWidth}
-        showPlaylist={showPlaylist}
-        onChangeCurrentSlide={e => setCurrentSlide(e)}
-      />
+      {thumbnailNavigationDisplay}
+      <a className="slider-navigation-toggle" onClick={toggleShowPlaylist} style={{top:(sliderHeight) - 65}}></a>
     </main>
   )
 }
@@ -213,6 +240,11 @@ function SlideItem(props){
 
   const [ mediaStyle, setMediaStyle ] = useState();
 
+  React.useEffect(() => {
+    if (props.gallery && props.gallery.length === props.slideIndex + 1){
+      props.onFinishedSlidesRender();
+    }
+  }, [props.gallery])
   React.useEffect(() => { getSlideContentHeight() },[props.currentSlide, props.cinemaMode]);
 
   function getSlideContentHeight(){
@@ -261,7 +293,7 @@ function SlideItem(props){
     slideContentDisplay = (
       <VideoPlayerWrapper 
         height={props.sliderHeight}
-        width={(props.containerWidth - 100)} 
+        width={props.containerWidth} 
         onCinemaModeClick={props.onCinemaModeClick}
         slide={props.slide}
         playVideo={props.currentSlide === props.slideIndex}
@@ -273,96 +305,33 @@ function SlideItem(props){
   return(
     <div 
       id={"slide-"+props.slideIndex}     
-      className={props.currentSlide === props.slideIndex ? "active slide-item " + props.slide.type : "slide-item " + props.slide.type } 
+      className={props.currentSlide === props.slideIndex ? "active slide-item swiper-slide " + props.slide.type : "slide-item swiper-slide " + props.slide.type } 
       style={ { width:props.containerWidth, height:props.sliderHeight }}>
         {slideContentDisplay}
     </div>
   )
 }
 
-function SlidesNavigation(props){
+function ThumbNavigationItem(props){
 
-  /* COMPONENT */
-
-  const thumbElementWidth = 140;
-  const [ thumbSliderWidth, setThumbSliderWidth ] = useState((thumbElementWidth * props.gallery.length) +10);
-  let thumbSliderPosition = 0;
-  const currentThumbPosition = (props.currentSlide * thumbElementWidth) + thumbElementWidth;
-  if (currentThumbPosition > props.containerWidth) thumbSliderPosition = (currentThumbPosition - props.containerWidth) + 10;
-
-  React.useEffect(() => { if (props.showPlaylist) scrollSlider() },[])
-  React.useEffect(() => { if (props.showPlaylist) scrollSlider() },[props.currentSlide])
-
-  function scrollSlider(){
-    $('#slide-navigation').children().attr('id','slider-scroll-wrapper');
-    $('#slider-scroll-wrapper').children().attr('id','slider-scroll');
-    $('#slider-scroll').scrollLeft(thumbSliderPosition)
-  }
-
-  function onThumbNailLoad(thumbnail,index){
-    if (thumbnail.length < 7){
-      $('#slide-preview-' + index).remove();
+  React.useEffect(() => { if (props.gallery && props.gallery.length === props.slideIndex + 1){ props.onfinishedThumbsRender() } }, [props.gallery])
+  React.useEffect(() => {
+    if (window.galleryThumbs){
+      window.galleryThumbs.slideTo(props.currentSlide);
     }
-  }
+  },[props.currentSlide])
 
-  /* RENDER */
-
-  // dots navigation display
-  let slidesDotsNavigationDisplay;
-  if (props.showPlaylist === false){
-    const dots = props.gallery.map((g, index) => (
-      <li key={index}  className={ props.currentSlide === index ? "active " : ""}>
-        <a onClick={e => props.onChangeCurrentSlide(index)}></a>
-      </li>
-    ))
-    slidesDotsNavigationDisplay = <ul>{dots}</ul>
-  }
-
-  // thumbnail navigation
-  const slidesThumbnailNavigationDisplay = props.gallery.map((g, index) => {
-    let image;
-    if (g.type === "image") image = <img src={g.url.split('/img')[0] + "/cache/120x80-1/img" + g.url.split('/img')[1]}/>
-    else if (g.type === "video"){
-      image = (
-        <div className="video-thumbnail-wrapper">
-          <div id={"slide-preview-"+index}>
-            <img
-              src={g.url_thumb}
-              width={120}
-              height={80}
-            />
-            
-          </div>
-          <span className="glyphicon glyphicon-play"></span>
-        </div>
-      )
-    }
-    return (
-      <li key={index}  className={ props.currentSlide === index ? "active " + g.type : g.type}>
-        <a onClick={e => props.onChangeCurrentSlide(index)}>{image}</a>
-      </li>
-    )
-  })
-
-  // scroll container style
-  const scrollbarsContainerStyle = { 
-    width: props.containerWidth, 
-    height: props.showPlaylist === true ? 110 : 0
-  }
-
-  // thumb slider style 
-  let thumbSliderStyle = {  width:thumbSliderWidth+'px' }
-  if (thumbSliderWidth > props.containerWidth){
-    thumbSliderStyle.position = 'absolute';
-    thumbSliderStyle.top = '0';
+  let bgImage;
+  if (props.item.type === "image"){
+    bgImage = props.item.url.split('/img')[0] + "/cache/120x80-1/img" + props.item.url.split('/img')[1];
+  } else if (props.item.type === "video"){
+    bgImage = props.item.url_thumb;
   }
 
   return (
-    <div id="slide-navigation" className={props.showPlaylist === true ? "thumbs" : "dots"}>
-      {slidesDotsNavigationDisplay}
-      <Scrollbars style={scrollbarsContainerStyle}>
-        <ul className="thumbnail-navigation" style={thumbSliderStyle}>{slidesThumbnailNavigationDisplay}</ul>
-      </Scrollbars>
+    <div className={props.currentSlide === (props.slideIndex + 1) ? " swiper-slide active " : " swiper-slide " }
+      onClick={() => props.onThumbItemClick(props.slideIndex + 1)}>
+        <div className="preview-image" style={{"backgroundImage":"url("+bgImage+")"}}></div>
     </div>
   )
 }

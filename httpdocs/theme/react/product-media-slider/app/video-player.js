@@ -80,11 +80,11 @@ class VideoPlayerWrapper extends React.Component {
                     src={this.state.source}>
                         <BigPlayButton position="center" />
                         <LoadingSpinner />
-                        <ControlBar autoHide className="custom-video-player">
+                        <ControlBar className="custom-video-player">
                             <CurrentTimeDisplay order={4.1} />
                             <DurationDisplay order={7.1} />
                             <VolumeMenuButton vertical order={7.2} />
-                            <a className="cinema-mode-button" onClick={this.onCinemaModeClick} order={8}><span></span></a>
+                            <a className="cinema-mode-button" onClick={this.onCinemaModeClick} order={7.3}><span></span></a>
                         </ControlBar>
                 </Player>            
             )
