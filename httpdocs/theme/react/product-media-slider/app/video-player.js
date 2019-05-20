@@ -88,6 +88,7 @@ class VideoPlayerWrapper extends React.Component {
             }
             videoPlayerDisplay = (
                 <Player
+                    poster={this.props.slide.url_thumb}
                     ref="player"
                     fluid={false}
                     height={this.props.height}
