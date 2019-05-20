@@ -999,8 +999,8 @@ var PartialsReviewDownloadHistory = (function () {
     }
 })();
 
-
-var PartialsReviewDownloadHistoryNew = (function () {
+//PartialsReviewDownloadHistoryNew
+var CreateScoreRatingPopup = (function () {
     return {
         setup: function () {
               
@@ -1013,32 +1013,49 @@ var PartialsReviewDownloadHistoryNew = (function () {
             }).change(function() {                       
                  var optionSelected = $(this).find("option:selected");             
                  var valueSelected  = optionSelected.val();
-                 var textSelected   = optionSelected.text();
-                 var userscore = $('#score-product-modal').find('#userscore').val();
+                 var textSelected   = optionSelected.text();                 
                  var userscore = $(this).attr("data-userrate");
-                 var oldcomment = $(this).attr("data-comment");
-                 
+                 var oldcomment =$(this).attr("data-comment");                 
+                 var productcreator = $(this).attr("data-creator");    
+                 var loginuser = $('#score-product-modal').find('#loginuser').val();           
+
                  /*if(userscore>0)
                  {
                     $('#score-product-modal').find('#votelabel').empty()
                         .append('Score '+userscore+' is given already with comment:'+oldcomment);                
                  }*/
 
+                 if(!loginuser)
+                 {                
+                    $('#score-product-modal').modal('show');
+                    return;
+                 }
+
+                 if (loginuser == productcreator) {                     
+                    // ignore
+                    $('#score-product-modal').find('#votelabel').text('Project owner not allowed');
+                    $('#score-product-modal').find('.modal-body').empty();
+                    $('#score-product-modal').find('#modal-btn-onsubmit').remove();                    
+                    $('#score-product-modal').modal('show');
+                    return;
+                 }
+                 
+
                 if(valueSelected==-1)
                  {
                     $('#score-product-modal').find('#votelabel').empty()
                             .append('Remove Rating ');
                  }
-                 else if(valueSelected<5)
+                 else if(valueSelected<=5)
                  {
                      $('#score-product-modal').find('#votelabel').empty()
-                            .append('Add a review or comment to your rating "'+textSelected +'" (min. 5 char) <span style="font-size:10px; display:block"> Please explain the reason for downvote to help the creator to make it better </span> ');
+                            .append('Add a review to your rating "'+textSelected +'" (min. 5 chars) <span style="font-size:10px; display:block"> Please explain the reason for downvote to help the creator to make it better </span> ');
                       $('#score-product-modal').find('#voteup').val(2);
                  }                     
                  else
                  {                
                      $('#score-product-modal').find('#votelabel').empty()
-                        .append('Add a review or comment to your rating "'+textSelected+'" (min. 1 char):');       
+                        .append('Add a review to your rating "'+textSelected+'" (min. 1 char):');       
                         $('#score-product-modal').find('#voteup').val(1);       
                  }
 
@@ -1046,7 +1063,13 @@ var PartialsReviewDownloadHistoryNew = (function () {
                 $('#score-product-modal').find('#form_p').val($(this).attr("data-project"));
                  $('#score-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
                  $('#score-product-modal').find('#commenttext').removeAttr("disabled");
-                 $('#score-product-modal').find('#commenttext').val(textSelected);
+                 if(valueSelected>=1 && valueSelected<=3)
+                 {
+                    $('#score-product-modal').find('#commenttext').val('');   
+                 }else
+                 {
+                    $('#score-product-modal').find('#commenttext').val(textSelected);   
+                 }  
                  $('#score-product-modal').find('#userscorevalue').val(valueSelected);
                  
                  if(valueSelected=='-1')

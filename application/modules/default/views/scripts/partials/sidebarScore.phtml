@@ -32,6 +32,17 @@ if($this->ratingOfUser)
     $userScore = $this->ratingOfUser['score'];
 }
 
+$userrate ="data-userrate='-1'";
+$comment="data-comment=''";
+if($this->ratingOfUser){
+    $userrate ="data-userrate='".$this->ratingOfUser['score']."'";        
+    $comment="data-comment='".$this->ratingOfUser['comment_text']."'";        
+}       
+$formproject="data-project='".$this->product->project_id."'";
+$creator="data-creator='".$this->product->member_id."'";
+$attrhistory = $userrate.' '.$comment.' '.$formproject.' '.$creator;
+
+
 $options = array(1 => 'ugh', 2=>'really bad',3=>'bad',4=>'soso',5=>'average', 6=>'okay',7=>'good', 8=>'great', 9=>'excellent',10=>'the best');
 krsort($options);
 ?>
@@ -67,7 +78,7 @@ krsort($options);
     </table>
 
     <div style="text-align: center;">               
-         <select name="ratingoptions" id="ratingoptions">
+         <select <?=$attrhistory ?> name="ratingoptions" id="ratingoptions" class="rating-select">
             <?php
              if($userScore){
                 echo '<option value="-1" >Remove Rating</option>';
@@ -85,7 +96,7 @@ krsort($options);
     </div>
 </div>
 <script type="text/javascript">    
-     $(document).ready(function(){          
+     /*$(document).ready(function(){          
 
             var preRatingSelected=0;
             var currentSelect;
@@ -125,31 +136,37 @@ krsort($options);
                 $('#score-product-modal').find('#votelabel').empty()
                         .append('Remove Rating ');
              }
-             else if(valueSelected<5)
+             else if(valueSelected<=5)
              {
                  $('#score-product-modal').find('#votelabel').empty()
-                        .append('Add a review or comment to your rating "'+textSelected +'" (min. 5 char) <span style="font-size:10px; display:block"> Please explain the reason for downvote to help the creator to make it better </span> ');
+                        .append('Add a review to your rating "'+textSelected +'" (min. 5 chars) <span style="font-size:10px; display:block"> Please explain the reason for downvote to help the creator to make it better </span> ');
                   $('#score-product-modal').find('#voteup').val(2);
              }                     
              else
              {                
                  $('#score-product-modal').find('#votelabel').empty()
-                    .append('Add a review or comment to your rating "'+textSelected+'" (min. 1 char):');       
+                    .append('Add a review to your rating "'+textSelected+'" (min. 1 char):');       
                     $('#score-product-modal').find('#voteup').val(1);       
              }
 
-             /*var userscore = $('#score-product-modal').find('#userscore').val();
+             var userscore = $('#score-product-modal').find('#userscore').val();
                 // -1 = no rate yet. 
              if(userscore>0)
              {
                 $('#score-product-modal').find('#votelabel')
                     .append('Score '+userscore+' is given already with comment:'+$('#score-product-modal').find('#otxt').val());                
 
-             }*/
+             }
 
              $('#score-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
              $('#score-product-modal').find('#commenttext').removeAttr("disabled");
-             $('#score-product-modal').find('#commenttext').val(textSelected);
+             if(valueSelected>=1 && valueSelected<=3)
+             {
+                $('#score-product-modal').find('#commenttext').val('');   
+             }else
+             {
+                $('#score-product-modal').find('#commenttext').val(textSelected);   
+             }             
              $('#score-product-modal').find('#userscorevalue').val(valueSelected);
              
              if(valueSelected=='-1')
@@ -182,7 +199,7 @@ krsort($options);
 
             
 
-        });
+        });*/
 </script>
 
 
