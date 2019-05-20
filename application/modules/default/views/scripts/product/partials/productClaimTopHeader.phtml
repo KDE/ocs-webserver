@@ -27,6 +27,10 @@ $helperTruncate = new Default_View_Helper_Truncate();
 $helperImage = new Default_View_Helper_Image();
 $helperGetAuthUser = new Default_View_Helper_GetAuthUser();
 $auth = Zend_Auth::getInstance();
+$memberId = null;
+if ($auth->hasIdentity()) {
+    $memberId = $auth->getStorage()->read()->member_id;
+} 
 ?>
 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
     <div class="prod-widget-box left">
@@ -70,7 +74,7 @@ $auth = Zend_Auth::getInstance();
                         <!-- dialog buttons -->
                         <div class="modal-footer">
                             <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product->project_id, 'claim',
-                                array('m' => $this->member->member_id)) ?>"
+                                array('m' => $memberId)) ?>"
                                role="button" class="btn btn-primary">
                                 <?= $this->translate('YES') ?>
                             </a>
