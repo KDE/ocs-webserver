@@ -12,7 +12,7 @@ class VideoPlayerWrapper extends React.Component {
     constructor(props, context){
         super(props, context);
         this.state = {
-            source:this.props.slide.url.replace(/%2F/g,'/').replace(/%3A/g,':'),
+            source:this.props.slide.url_preview,
             videoStarted:false,
             videoStopped:false,
             videoStartUrl:window.location.href + "startvideoajax?collection_id="+this.props.slide.collection_id+"&file_id="+this.props.slide.file_id,
