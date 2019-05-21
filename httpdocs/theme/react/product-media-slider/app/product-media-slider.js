@@ -198,7 +198,7 @@ function ProductMediaSlider(){
   let mediaSliderCssClass = "";
   if (disableGallery === true) mediaSliderCssClass += "disable-gallery ";
   if (cinemaMode === true) mediaSliderCssClass += "cinema-mode ";
-  if (showSliderArrows === false) mediaSliderCssClass += "hide-arrows ";
+  // if (showSliderArrows === false) mediaSliderCssClass += "hide-arrows ";
   if (showPlaylist === false) mediaSliderCssClass += "hide-playlist ";
   if (sliderFadeControlsMode === true) mediaSliderCssClass += "fade-controls ";
   if (isMobile === true) mediaSliderCssClass += "is-mobile ";

@@ -73,7 +73,7 @@ video:focus {
 
                 .video-react-volume-bar.video-react-slider-vertical {
                     width: 100%;
-                    height: 5em;
+                    height: 12.5em;
                     padding: 1.35em;
                     margin-right: 0 !important;
                     margin-left: 0 !important;
@@ -83,6 +83,11 @@ video:focus {
                         left: 50%;
                         margin-left: -0.15em;
                     }    
+                }
+
+                .video-react-volume-menu-button-vertical:hover .video-react-menu-content {
+                  height: 18em;
+                  width: 2.9em;
                 }
 
                 .video-react-control-bar {
@@ -269,8 +274,7 @@ video:focus {
     }
 
     &.hide-arrows {
-        .swiper-button-prev,
-        .swiper-button-next {
+        .carousel-control {
             opacity: 0;
         }
     }
@@ -314,8 +318,7 @@ video:focus {
     }
 
     &.fade-controls {
-        .swiper-button-prev,
-        .swiper-button-next,
+        .carousel-control,
         .slider-navigation-toggle { 
             opacity: 0 !important;
         }
@@ -329,8 +332,7 @@ video:focus {
 
     &.disable-gallery {
         padding-bottom:0;
-        .swiper-button-prev,
-        .swiper-button-next,
+        .carousel-control,
         .slider-navigation-toggle,
         #slide-navigation { 
             display: none;

@@ -72,7 +72,7 @@ video:focus {
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-bar.video-react-slider-vertical {
   width: 100%;
-  height: 5em;
+  height: 12.5em;
   padding: 1.35em;
   margin-right: 0 !important;
   margin-left: 0 !important;
@@ -82,6 +82,10 @@ video:focus {
   width: 0.3em;
   left: 50%;
   margin-left: -0.15em;
+}
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-menu-button-vertical:hover .video-react-menu-content {
+  height: 18em;
+  width: 2.9em;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-control-bar {
   display: -webkit-box;
@@ -232,8 +236,7 @@ video:focus {
   background-repeat: no-repeat;
   cursor: pointer;
 }
-#media-slider.hide-arrows .swiper-button-prev,
-#media-slider.hide-arrows .swiper-button-next {
+#media-slider.hide-arrows .carousel-control {
   opacity: 0;
 }
 #media-slider.cinema-mode .swiper-wrapper .slide-item img {
@@ -259,8 +262,7 @@ video:focus {
 #media-slider.hide-playlist .swiper-pagination {
   display: blocK;
 }
-#media-slider.fade-controls .swiper-button-prev,
-#media-slider.fade-controls .swiper-button-next,
+#media-slider.fade-controls .carousel-control,
 #media-slider.fade-controls .slider-navigation-toggle {
   opacity: 0 !important;
 }
@@ -270,8 +272,7 @@ video:focus {
 #media-slider.disable-gallery {
   padding-bottom: 0;
 }
-#media-slider.disable-gallery .swiper-button-prev,
-#media-slider.disable-gallery .swiper-button-next,
+#media-slider.disable-gallery .carousel-control,
 #media-slider.disable-gallery .slider-navigation-toggle,
 #media-slider.disable-gallery #slide-navigation {
   display: none;
