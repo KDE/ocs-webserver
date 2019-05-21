@@ -33,19 +33,19 @@ function ProductMediaSlider(){
   const [ disableGallery, setDisableGallery ] = useState(gallery.length > 1 ? false : true)
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
-
   const [ currentSlide, setCurrentSlide ] = useState(0)
-  const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
+
   const [ sliderHeight, setSliderHeight ] = useState(360);
-  const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ isFullScreen, setIsFullScreen] = useState(false)
+
   const [ showPlaylist, setShowPlaylist ] = useState(isMobile ? true : false);
   const [ showSliderArrows, setShowSliderArrows ] = useState(isMobile ? false : true);  
   const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(true);
 
   let sliderFadeControlTimeOut;
 
+  // use effects
   React.useEffect(() => { initProductMediaSlider(currentSlide) },[currentSlide])
   React.useEffect((event) => { updateDimensions(event,currentSlide) },[currentSlide, cinemaMode])
   React.useEffect(() => { handleMouseMovementEventListener(showPlaylist,isFullScreen) },[showPlaylist,isFullScreen])
@@ -84,7 +84,7 @@ function ProductMediaSlider(){
     if (showPlaylist) mediaSliderBottom += 110;
     else mediaSliderBottom += 30;
     
-    let mouseIn;
+    let mouseIn = false;
     if (event.clientX > mediaSliderLeft && event.clientX < mediaSliderRight && event.clientY > mediaSliderTop && event.clientY < mediaSliderBottom ){ mouseIn = true; }
     if (isFullScreen) mouseIn = true;
     if (mouseIn) {
@@ -155,8 +155,10 @@ function ProductMediaSlider(){
 
   // on finished thumbs render
   function onfinishedThumbsRender(){
+    let slidesPerView =  Math.ceil(containerWidth / 200);
+    if (isMobile) slidesPerView = 2;
     window.galleryThumbs = new Swiper('.gallery-thumbs', {
-      slidesPerView: Math.ceil(containerWidth / 200),
+      slidesPerView:slidesPerView,
       spaceBetween:10,
       freeMode: true,
       watchSlidesVisibility: true,
@@ -243,7 +245,7 @@ function ProductMediaSlider(){
         <div className="swiper-button-next"></div>
       </div>
       {thumbnailNavigationDisplay}
-      <a className="slider-navigation-toggle" onClick={toggleShowPlaylist} style={{top:(sliderHeight) - 65}}></a>
+      <a className="slider-navigation-toggle" onClick={toggleShowPlaylist} onPressIn={toggleShowPlaylist} style={{top:(sliderHeight) - 65}}></a>
     </main>
   )
 }
@@ -343,7 +345,8 @@ function ThumbNavigationItem(props){
 
   return (
     <div className={props.currentSlide === (props.slideIndex) ? " swiper-slide active " : " swiper-slide " }
-      onClick={() => props.onThumbItemClick(props.slideIndex)}>
+      onClick={() => props.onThumbItemClick(props.slideIndex)}
+      onPressIn={() => props.onThumbItemClick(props.slideIndex)}>
         <div className="preview-image" style={{"backgroundImage":"url("+bgImage+")"}}></div>
     </div>
   )
