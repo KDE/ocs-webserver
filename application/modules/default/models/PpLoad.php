@@ -90,12 +90,16 @@ class Default_Model_PpLoad
 
             return false;
         }
-
+        $log = Zend_Registry::get('logger');
         if ($projectData->ppload_collection_id <> $fileResponse->file->collection_id) {
             $projectData->ppload_collection_id = $fileResponse->file->collection_id;
             if($this->isAuthmemberProjectCreator($projectData->member_id))
             {
                 $projectData->changed_at = new Zend_Db_Expr('NOW()');
+            } else {
+                $auth = Zend_Auth::getInstance();
+                $authMember = $auth->getStorage()->read();
+                $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member ('.$authMember->member_id.') != Project-Owner ('.$projectData->member_id.'): **********' . "\n");
             }
             $projectData->save();
         }else
@@ -104,6 +108,10 @@ class Default_Model_PpLoad
             {
                 $projectData->changed_at = new Zend_Db_Expr('NOW()');
                 $projectData->save();
+            } else {
+                $auth = Zend_Auth::getInstance();
+                $authMember = $auth->getStorage()->read();
+                $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member ('.$authMember->member_id.') != Project-Owner ('.$projectData->member_id.'): **********' . "\n");
             }
         }
 

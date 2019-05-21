@@ -2234,10 +2234,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     // Save collection ID
                     $projectData->ppload_collection_id = $fileResponse->file->collection_id;
                     //20180219 ronald: we set the changed_at only by new files or new updates
-                    if($this->_authMember->member_id==$projectData->member_id)
+                    if((int)$this->_authMember->member_id==(int)$projectData->member_id)
                     {
                         $projectData->changed_at = new Zend_Db_Expr('NOW()');
-                    }
+                    } else {
+                        $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member ('.$this->_authMember->member_id.') != Project-Owner ('.$projectData->member_id.'): **********' . "\n");
+                    }    
                     $projectData->ghns_excluded = 0;
                     $projectData->save();
 
@@ -2283,10 +2285,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $this->_updatePploadMediaCollectionthumbnail($projectData);
                 } else {
                     //20180219 ronald: we set the changed_at only by new files or new updates
-                    if($this->_authMember->member_id==$projectData->member_id)
+                    if((int)$this->_authMember->member_id==(int)$projectData->member_id)
                     {
                         $projectData->changed_at = new Zend_Db_Expr('NOW()');
-                    }                       
+                    } else {
+                        $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member ('.$this->_authMember->member_id.') != Project-Owner ('.$projectData->member_id.'): **********' . "\n");
+                    }                      
                     $projectData->ghns_excluded = 0;
                     $projectData->save();                    
                 }
