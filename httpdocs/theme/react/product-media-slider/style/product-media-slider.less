@@ -55,6 +55,7 @@ video:focus {
             width:inherit;
             .video-react {
                 font-family: inherit;
+                overflow: hidden;
 
                 .video-react-control-bar {
                     display: -webkit-box;
@@ -66,6 +67,16 @@ video:focus {
                 }
                 .video-react-time-divider {
                     display: none !important;
+                }
+                .video-react-progress-holder {
+                    height: 100%;
+                    padding: 13px 0;
+                    background: none;
+                }
+                .video-react-slider-bar,
+                .video-react-load-progress {
+                    top: 50%;
+                    margin-top: -0.3em;  
                 }
             }
 
@@ -292,7 +303,8 @@ video:focus {
 
     &.is-mobile {
         .slider-navigation-toggle {
-            display: none;
+            display: block !important;
+            opacity: 1 !important;
         }
-    } 
+    }
 }

@@ -56,6 +56,7 @@ video:focus {
 }
 #media-slider .swiper-wrapper .react-player-container .video-react {
   font-family: inherit;
+  overflow: hidden;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-control-bar {
   display: -webkit-box;
@@ -67,6 +68,16 @@ video:focus {
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-time-divider {
   display: none !important;
+}
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-progress-holder {
+  height: 100%;
+  padding: 13px 0;
+  background: none;
+}
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-slider-bar,
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-load-progress {
+  top: 50%;
+  margin-top: -0.3em;
 }
 #media-slider .swiper-wrapper .react-player-container .cinema-mode-button {
   line-height: 30px;
@@ -237,5 +248,6 @@ video:focus {
   display: none;
 }
 #media-slider.is-mobile .slider-navigation-toggle {
-  display: none;
+  display: block !important;
+  opacity: 1 !important;
 }

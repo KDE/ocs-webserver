@@ -16,17 +16,16 @@ function ProductMediaSlider(){
   if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... galleryArray ];
   if (window.filesJson) {
     window.filesJson.forEach(function(f,index){
-      console.log(f)
-      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 || f.type.indexOf('book') > -1){
+      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 || f.type.indexOf('epub') > -1){
           const gItem = {
             url:f.url.replace(/%2F/g,'/').replace(/%3A/g,':'),
             type:f.type.split('/')[0],
             collection_id:f.collection_id,
             file_id:f.id,
-            title:f.title,
-            url_thumb:f.url_thumb.replace(/%2F/g,'/').replace(/%3A/g,':'),
-            url_preview:f.url_preview.replace(/%2F/g,'/').replace(/%3A/g,':')
+            title:f.title
           }
+          if (f.url_thumb) gItem.url_thumb = f.url_thumb.replace(/%2F/g,'/').replace(/%3A/g,':');
+          if (f.url_preview) gItem.url_preview = f.url_preview.replace(/%2F/g,'/').replace(/%3A/g,':')
           galleryArray = [gItem, ... galleryArray] 
         }
     })
@@ -43,7 +42,7 @@ function ProductMediaSlider(){
   const [ isFullScreen, setIsFullScreen] = useState(false)
 
   const [ showPlaylist, setShowPlaylist ] = useState(false);
-  const [ showSliderArrows, setShowSliderArrows ] = useState(isMobile ? false : true);  
+  const [ showSliderArrows, setShowSliderArrows ] = useState(true);  
   const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(true);
 
   let sliderFadeControlTimeOut;
@@ -145,7 +144,7 @@ function ProductMediaSlider(){
         }
       });
       window.mySwiper.update()
-      if (isMobile) setShowPlaylist(true)
+      // if (isMobile) setShowPlaylist(true)
     });
   }
 
@@ -240,7 +239,7 @@ function ProductMediaSlider(){
         <div className="swiper-button-next"></div>
       </div>
       {thumbnailNavigationDisplay}
-      <a className="slider-navigation-toggle" onClick={toggleShowPlaylist} onTouchStart={toggleShowPlaylist} style={{top:(sliderHeight) - 65}}></a>
+      <a className="slider-navigation-toggle" onClick={toggleShowPlaylist} style={{top:(sliderHeight) - 65}}></a>
     </main>
   )
 }
@@ -354,8 +353,8 @@ function ThumbNavigationItem(props){
   return (
     <div className={props.currentSlide === (props.slideIndex) ? " swiper-slide active " : " swiper-slide " }
       onClick={() => props.onThumbItemClick(props.slideIndex)}
-      onTouchStart={() => props.onThumbItemClick(props.slideIndex)}>
-        <div className="preview-image" style={{"backgroundImage":"url("+bgImage+")"}}></div>
+      onTouchEnd={() => props.onThumbItemClick(props.slideIndex)}>
+        <div cladsName="preview-image" style={{"backgroundImage":"url("+bgImage+")"}}></div>
     </div>
   )
 }
