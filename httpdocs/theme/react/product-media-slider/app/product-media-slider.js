@@ -126,7 +126,6 @@ function ProductMediaSlider(){
 
   //handle full screen toggle
   function hanleFullScreenToggle(val){
-    console.log(val);
     setIsFullScreen(val);
   }
 
@@ -245,7 +244,7 @@ function ProductMediaSlider(){
         <div className="swiper-button-next"></div>
       </div>
       {thumbnailNavigationDisplay}
-      <a className="slider-navigation-toggle" onClick={toggleShowPlaylist} onPressIn={toggleShowPlaylist} style={{top:(sliderHeight) - 65}}></a>
+      <a className="slider-navigation-toggle" onClick={toggleShowPlaylist} onTouchStart={toggleShowPlaylist} style={{top:(sliderHeight) - 65}}></a>
     </main>
   )
 }
@@ -346,7 +345,7 @@ function ThumbNavigationItem(props){
   return (
     <div className={props.currentSlide === (props.slideIndex) ? " swiper-slide active " : " swiper-slide " }
       onClick={() => props.onThumbItemClick(props.slideIndex)}
-      onPressIn={() => props.onThumbItemClick(props.slideIndex)}>
+      onTouchStart={() => props.onThumbItemClick(props.slideIndex)}>
         <div className="preview-image" style={{"backgroundImage":"url("+bgImage+")"}}></div>
     </div>
   )

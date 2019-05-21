@@ -23,7 +23,7 @@ class VideoPlayerWrapper extends React.Component {
             videoStartUrl:hostLocation + "startvideoajax?collection_id="+this.props.slide.collection_id+"&file_id="+this.props.slide.file_id,
             videoStopUrl:hostLocation + "stopvideoajax?media_view_id="
         }
-        console.log(this.state);
+
         this.onCinemaModeClick = this.onCinemaModeClick.bind(this);
         this.play = this.play.bind(this);
         this.pause = this.pause.bind(this);
