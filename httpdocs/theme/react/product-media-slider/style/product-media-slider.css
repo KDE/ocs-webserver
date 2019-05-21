@@ -247,7 +247,9 @@ video:focus {
 #media-slider.disable-gallery #slide-navigation {
   display: none;
 }
+#media-slider.is-mobile .swiper-button-prev,
+#media-slider.is-mobile .swiper-button-next,
 #media-slider.is-mobile .slider-navigation-toggle {
-  display: block !important;
-  opacity: 1 !important;
+  display: none !important;
+  opacity: 0 !important;
 }
