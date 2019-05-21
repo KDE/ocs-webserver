@@ -6,7 +6,7 @@ import {
   ReactReaderStyle // Styles for the epub-reader it you need to customize it
 } from "react-reader";
 
-class BookReaderWrapper extends Component {
+class BookReaderWrapper extends React.Component {
   render() {
     return (
       <div style={{ position: "relative", height: "100%" }}>
