@@ -34,13 +34,8 @@ video:focus {
     }
 
     .swiper-pagination-bullet {
-        width:10px;
-        height:10px;
-
-        &.swiper-pagination-bullet-active {
-            width:12px;
-            height:12px;
-        }
+        width:12px;
+        height:12px;
     }
 
     .slider-navigation-toggle {
@@ -72,6 +67,20 @@ video:focus {
 
                 .video-react-slider:focus {
                     box-shadow: none;
+                }
+
+                .video-react-volume-bar.video-react-slider-vertical {
+                    width: 100%;
+                    height: 5em;
+                    padding: 1.35em;
+                    margin-right: 0 !important;
+                    margin-left: 0 !important;
+                    background-color: transparent;
+                    .video-react-volume-level {
+                        width: 0.3em;
+                        left: 50%;
+                        margin-left: -0.15em;
+                    }    
                 }
 
                 .video-react-control-bar {
@@ -327,14 +336,6 @@ video:focus {
         .slider-navigation-toggle,
         #slide-navigation { 
             display: none;
-        }
-    }
-
-    &.is-mobile {
-        .swiper-button-prev,
-        .swiper-button-next {
-            display: block !important;
-            opacity: 1 !important;
         }
     }
 }

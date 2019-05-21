@@ -77,24 +77,8 @@ class VideoPlayerWrapper extends React.Component {
     render(){   
         let videoPlayerDisplay;
         if (this.state.source){
-            let controlBarDisplay;
-            if (isMobile){
-                controlBarDisplay = (
-                    <ControlBar disabled/>
-                )  
-            } else {
-                controlBarDisplay = (
-                    <ControlBar className="custom-video-player">
-                        <CurrentTimeDisplay order={4.1} />
-                        <DurationDisplay order={7.1} />
-                        <VolumeMenuButton vertical order={7.2} />
-                        <a className="cinema-mode-button" onClick={this.onCinemaModeClick} order={7.3}><span></span></a>
-                    </ControlBar>
-                )
-            }
             videoPlayerDisplay = (
                 <Player
-                    poster={this.props.slide.url_thumb}
                     ref="player"
                     fluid={false}
                     height={this.props.height}
@@ -103,7 +87,12 @@ class VideoPlayerWrapper extends React.Component {
                     src={this.state.source}>
                         <BigPlayButton position="center" />
                         <LoadingSpinner />
-                        {controlBarDisplay}
+                        <ControlBar className="custom-video-player">
+                            <CurrentTimeDisplay order={4.1} />
+                            <DurationDisplay order={7.1} />
+                            <VolumeMenuButton vertical order={7.2} />
+                            <a className="cinema-mode-button" onClick={this.onCinemaModeClick} order={7.3}><span></span></a>
+                        </ControlBar>
                 </Player>            
             )
         }
