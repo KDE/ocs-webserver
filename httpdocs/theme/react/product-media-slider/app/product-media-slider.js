@@ -39,7 +39,7 @@ function ProductMediaSlider(){
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ isFullScreen, setIsFullScreen] = useState(false)
 
-  const [ showPlaylist, setShowPlaylist ] = useState(isMobile ? true : false);
+  const [ showPlaylist, setShowPlaylist ] = useState(false);
   const [ showSliderArrows, setShowSliderArrows ] = useState(isMobile ? false : true);  
   const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(true);
 
@@ -131,7 +131,7 @@ function ProductMediaSlider(){
 
   // on finish slides render
   function onFinishedSlidesRender(){
-    $( function() {
+    $(document).ready(function() {
       window.mySwiper = new Swiper('.swiper-container', {
         speed: 400,
         initialSlide: 0,
@@ -149,23 +149,26 @@ function ProductMediaSlider(){
         }
       });
       window.mySwiper.update()
+      if (isMobile) setShowPlaylist(true)
     });
   }
 
   // on finished thumbs render
   function onfinishedThumbsRender(){
-    let slidesPerView =  Math.ceil(containerWidth / 200);
-    if (isMobile) slidesPerView = 2;
-    window.galleryThumbs = new Swiper('.gallery-thumbs', {
-      slidesPerView:slidesPerView,
-      spaceBetween:10,
-      freeMode: true,
-      watchSlidesVisibility: true,
-      watchSlidesProgress: true,
-      activeIndex:currentSlide,
-      scrollbar:'.swiper-scrollbar'
+    $(document).ready(function() {
+      let slidesPerView =  Math.ceil(containerWidth / 200);
+      if (isMobile) slidesPerView = 2;
+      window.galleryThumbs = new Swiper('.gallery-thumbs', {
+        slidesPerView:slidesPerView,
+        spaceBetween:10,
+        freeMode: true,
+        watchSlidesVisibility: true,
+        watchSlidesProgress: true,
+        activeIndex:currentSlide,
+        scrollbar:'.swiper-scrollbar'
+      });
+      window.galleryThumbs.update()
     });
-    window.galleryThumbs.update()    
   }
 
   // on thumb item click
