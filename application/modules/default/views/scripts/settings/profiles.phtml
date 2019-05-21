@@ -1,0 +1,143 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperImage = new Default_View_Helper_Image();
+$helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$this->tab = 'profiles';
+
+?>
+<main class="user-admin-page">
+    <?php echo $this->render('user/partials/userHeader_top.phtml'); ?>
+    <section class="body-wrap">
+        <section class="wrapper product-page">
+            <!-- PAGE BODY -->
+            <section class="my-products-page">
+                <!-- NAVIGATION -->
+                <?php echo $this->render('user/partials/userHeader.phtml'); ?>
+                <!-- /NAVIGATION -->
+
+                <!-- PAGE BODY -->
+                <section class="settings-page">
+                    <h1 class="page-title"><?= $this->translate('Profiles') ?></h1>
+                    <br/>
+
+                    <div class="pling-nav-tabs">
+                        <ul class="nav nav-tabs ">
+                            <li class="active">
+                                <a href="#form-profile-panel" data-toggle="tab">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    <?= $this->translate('Profile') ?>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="#form-picture-panel" data-toggle="tab">
+                                    <span class="glyphicon glyphicon-camera"></span>
+                                    <?= $this->translate('Profile Picture') ?>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="#form-picture-background-panel" data-toggle="tab">
+                                    <span class="glyphicon  glyphicon-picture"></span>
+                                    <?= $this->translate('Background') ?>
+                                </a>
+                            </li>
+
+                           
+                            <li>
+                                <a href="#form-connected-accounts-panel" data-toggle="tab">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    <?= $this->translate('Social Accounts') ?>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="#form-website-panel" data-toggle="tab">
+                                    <span class="glyphicon glyphicon-globe"></span>
+                                    <?= $this->translate('Your Website') ?>
+                                </a>
+                            </li>
+
+                          
+                        </ul>
+                    </div>
+                    <div class="tab-content row settings-main ">
+                        <div class="tab-pane active " id="form-profile-panel">
+                            <section class="panel container" id="form-profile">
+                                <?php echo $this->render('settings/partials/profile.phtml'); ?>
+                            </section>
+                        </div>
+
+                       
+
+                        <div class="tab-pane " id="form-connected-accounts-panel">
+                            <section class="panel container" id="form-accounts">
+                                <?php echo $this->render('settings/partials/accounts.phtml'); ?>
+                            </section>
+                        </div>
+
+                        <div class="tab-pane " id="form-picture-panel">
+                            <section class="panel container" id="form-picture">
+                                <?php echo $this->render('settings/partials/picture.phtml'); ?>
+                            </section>
+                        </div>
+
+
+                        <div class="tab-pane " id="form-picture-background-panel">
+                            <section class="panel container" id="form-picture-background">
+                                <?php echo $this->render('settings/partials/picture-bg.phtml'); ?>
+                            </section>
+                        </div>
+
+
+                        
+                        <div class="tab-pane " id="form-website-panel">
+                            <section class="panel container" id="form-website">
+                                <?php echo $this->render('settings/partials/website.phtml'); ?>
+                            </section>
+                        </div>
+
+                        
+                    </div>
+                </section>
+                <!-- /PAGE BODY -->
+            </section>
+            <!-- /PAGE BODY -->
+        </section>
+    </section>
+</main>
+<script>
+    $(document).ready(function () {
+        if (document.location.hash) {
+            var hash = $(document.location.hash);
+            $('a[href="' + document.location.hash + '"]').trigger("click");
+        }
+    });
+</script>
+
+<?php $this->inlineScript()->appendScript('
+    $(document).ready(function(){
+        ImagePreview.setup();
+        PartialForms.setup();
+        });
+');

@@ -21,51 +21,22 @@
  **/
 $helperMember = new Default_View_Helper_BuildMemberUrl();
 $helperBase = new Default_View_Helper_BuildBaseUrl();
+
+$isProdncoll = false;
+if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' || $this->tab=='collections')
+{
+    $isProdncoll = true;
+}
 ?>
 <div  class="pling-nav-tabs">
 <ul class="nav nav-tabs">
-    
-    <li class="header-menu-left-item <?php echo $this->tab == 'add' ? 'active' : ''; ?>">
-        <?php if ($this->mode == 'edit') : ?>
-            <a href="<?= Zend_Controller_Front::getInstance()->getRequest()->getRequestUri() ?>">
-                <span class="glyphicon glyphicon-pencil"></span>
-                <?= $this->translate('Edit Product') ?>
-            </a>
-        <?php else : ?>
-        <a href="<?php echo $helperBase->buildBaserUrl('product/add'); ?>">
-                <span class="glyphicon glyphicon-plus"></span>
-                <?= $this->translate('Add Product') ?>
-            </a>
-        <?php endif ?>
-    </li>
-    
-    
-    <li class="<?php echo $this->tab == 'products' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'products'); ?>">
-            <span class="glyphicon glyphicon-th-list"></span>
-            <?= $this->translate('Products') ?>
-        </a>
-    </li>
-    
-    <li class="header-menu-left-item <?php echo $this->tab == 'addcollection' ? 'active' : ''; ?>">
-        <?php if ($this->mode == 'editcollection') : ?>
-            <a href="<?= Zend_Controller_Front::getInstance()->getRequest()->getRequestUri() ?>">
-                <span class="glyphicon glyphicon-pencil"></span>
-                <?= $this->translate('Edit Collection') ?>
-            </a>
-        <?php else : ?>
-        <a href="<?php echo $helperBase->buildBaserUrl('collection/add'); ?>">
-                <span class="glyphicon glyphicon-plus"></span>
-                <?= $this->translate('Add Collection') ?>
-            </a>
-        <?php endif ?>
-    </li>
-    <li class="<?php echo $this->tab == 'collections' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'collections'); ?>">
-            <span class="glyphicon glyphicon-th-list"></span>
-            <?= $this->translate('Collections') ?>
-        </a>
-    </li>
+
+    <li class="header-menu-left-item <?php echo $isProdncoll? 'active' : ''; ?>">                      
+            <a href="<?php echo $helperBase->buildBaserUrl('product/add'); ?>">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <?= $this->translate('Products/Collections') ?>
+            </a>           
+    </li>       
 
     <li class="header-menu-left-item <?php echo $this->tab == 'payout' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payout'); ?>">
@@ -80,10 +51,11 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
             <?= $this->translate('Payout-History') ?>
         </a>
     </li>
+    
     <li class="<?php echo $this->tab == 'downloadhistory' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'downloadhistory'); ?>">
             <span class="glyphicon glyphicon-star"></span>
-            <?= $this->translate('Download-History') ?>
+            <?= $this->translate('Download') ?>
         </a>
     </li>
 
@@ -107,16 +79,23 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
             <?= $this->translate('Settings') ?>
         </a>
     </li>
+
+    <li class="header-menu-left-item <?php echo $this->tab == 'profiles' ? 'active' : ''; ?>">
+        <a href="<?php echo $helperBase->buildBaserUrl('settings/profiles'); ?>">
+            <span class="glyphicon glyphicon-user"></span>
+            <?= $this->translate('Profiles') ?>
+        </a>
+    </li>
     
     <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin'){
-    $identity = Zend_Auth::getInstance()->getStorage()->read();
+        $identity = Zend_Auth::getInstance()->getStorage()->read();
     ?>
     
         <?php  if($this->isSupporter($this->member->member_id)){?>
         <li class="header-menu-left-item <?php echo $this->tab == 'supporter' ? 'active' : ''; ?>">           
              <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'supporter'); ?>">        
                 <i class="fa fa-user"></i>
-                <?= $this->translate('Supporter') ?>
+                <?= $this->translate('Support') ?>
             </a>
         </li>
         <?php }?>

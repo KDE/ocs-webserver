@@ -97,6 +97,37 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $this->view->paymentform->populate($memberSettings);
     }
 
+
+    public function profilesAction()
+    {
+        $this->view->member = $this->_memberSettings;
+        $memberSettings = $this->_memberSettings->toArray();
+        
+
+        $this->view->profileform = $this->formProfile();
+        $this->view->profileform->populate($memberSettings);
+        $this->view->profileform->aboutme->setValue($this->_mainproject->description);
+
+        $this->view->accounts = $this->formConnectedAccounts();
+        $this->view->accounts->populate($memberSettings);
+
+
+        $this->view->pictureform = $this->formProfilePicture();
+        $this->view->pictureform->populate($memberSettings);
+
+        $this->view->pictureformbg = $this->formProfilePictureBackground();
+        $this->view->pictureformbg->populate($memberSettings);
+
+
+        $websiteOwner = new Local_Verification_WebsiteOwner();
+        $linkWebsite = stripslashes($this->_memberSettings->link_website);
+        $this->view->homepageform =
+            $this->formHomepage($linkWebsite, $websiteOwner->generateAuthCode($linkWebsite), $this->_memberSettings->validated);
+    }
+
+    
+
+
     /**
      * Forms
      */
