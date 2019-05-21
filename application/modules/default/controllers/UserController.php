@@ -813,10 +813,6 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $this->view->supporterlist = $model->getSupporterDonationList($this->view->member->member_id);
         
 
-        // $tableMembers = new Default_Model_Member();
-        // $row = $tableMembers->fetchSupporterDonationInfo($this->view->member->member_id);
-        // $this->view->issupporter = $row['issupporter'];
-        // $this->view->supporter = $row;
     }
 
     public function payoutAction()
