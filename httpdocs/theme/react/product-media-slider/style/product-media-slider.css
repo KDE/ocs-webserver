@@ -248,8 +248,7 @@ video:focus {
   display: none;
 }
 #media-slider.is-mobile .swiper-button-prev,
-#media-slider.is-mobile .swiper-button-next,
-#media-slider.is-mobile .slider-navigation-toggle {
+#media-slider.is-mobile .swiper-button-next {
   display: none !important;
   opacity: 0 !important;
 }
