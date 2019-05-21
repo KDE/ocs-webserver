@@ -144,8 +144,6 @@ function ProductMediaSlider(){
         updateOnImagesReady: true,
         pagination: '.swiper-pagination',
         paginationClickable: '.swiper-pagination',
-        nextButton: '.swiper-button-next',
-        prevButton: '.swiper-button-prev',
         threshold:50,
         onSlideChangeStart: function(swiper){
           setCurrentSlide(swiper.activeIndex);
@@ -179,6 +177,20 @@ function ProductMediaSlider(){
   function onThumbItemClick(slideIndex){
     window.mySwiper.slideTo(slideIndex)
   }
+
+  // go next 
+  function goNext(){
+    let nextSlide = window.mySwiper.activeIndex + 1;
+    if (nextSlide > gallery.length - 1) nextSlide = 0;
+    window.mySwiper.slideTo(nextSlide)
+  }
+
+  function goPrev(){
+    let prevSlide =  window.mySwiper.activeIndex  - 1;
+    if (prevSlide < 0 ) prevSlide = gallery.length - 1;
+    window.mySwiper.slideTo(prevSlide)
+  }
+
 
   /* Render */
 
@@ -244,8 +256,12 @@ function ProductMediaSlider(){
           {slidesDisplay}
         </div>
         <div className="swiper-pagination"></div>
-        <div className="swiper-button-prev"></div>
-        <div className="swiper-button-next"></div>
+        <a className="carousel-control carousel-control-left left" onClick={goPrev}>
+          <span className="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <a className="carousel-control carousel-control-right right" onClick={goNext}>
+          <span className="glyphicon glyphicon-chevron-right"></span>
+        </a>
       </div>
       {thumbnailNavigationDisplay}
       <a className="slider-navigation-toggle" onClick={toggleShowPlaylist} style={{top:(sliderHeight) - 65}}></a>
