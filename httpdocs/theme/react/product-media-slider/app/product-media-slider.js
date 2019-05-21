@@ -354,7 +354,7 @@ function ThumbNavigationItem(props){
     <div className={props.currentSlide === (props.slideIndex) ? " swiper-slide active " : " swiper-slide " }
       onClick={() => props.onThumbItemClick(props.slideIndex)}
       onTouchEnd={() => props.onThumbItemClick(props.slideIndex)}>
-        <div cladsName="preview-image" style={{"backgroundImage":"url("+bgImage+")"}}></div>
+        <div className="preview-image" style={{"backgroundImage":"url("+bgImage+")"}}></div>
     </div>
   )
 }
