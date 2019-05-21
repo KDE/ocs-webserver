@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import {isMobile} from 'react-device-detect';
 import VideoPlayerWrapper from './video-player';
+import BookReaderWrapper from './book-reader';
 
 function ProductMediaSlider(){ 
 
@@ -15,12 +16,14 @@ function ProductMediaSlider(){
   if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... galleryArray ];
   if (window.filesJson) {
     window.filesJson.forEach(function(f,index){
-      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1){
+      console.log(f)
+      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 || f.type.indexOf('book') > -1){
           const gItem = {
             url:f.url.replace(/%2F/g,'/').replace(/%3A/g,':'),
             type:f.type.split('/')[0],
             collection_id:f.collection_id,
             file_id:f.id,
+            title:f.title,
             url_thumb:f.url_thumb.replace(/%2F/g,'/').replace(/%3A/g,':'),
             url_preview:f.url_preview.replace(/%2F/g,'/').replace(/%3A/g,':')
           }
@@ -75,15 +78,13 @@ function ProductMediaSlider(){
 
   // on mouse movement
   function onMouseMovement(event,showPlaylist,isFullScreen){
-    
     const mediaSliderOffest = $('#media-slider').offset()
     const mediaSliderLeft = mediaSliderOffest.left;
     const mediaSliderRight = mediaSliderLeft + $('#media-slider').width();
     const mediaSliderTop = mediaSliderOffest.top - window.pageYOffset;
     let mediaSliderBottom = mediaSliderTop + $('#media-slider').height();   
     if (showPlaylist) mediaSliderBottom += 110;
-    else mediaSliderBottom += 30;
-    
+    else mediaSliderBottom += 30;    
     let mouseIn = false;
     if (event.clientX > mediaSliderLeft && event.clientX < mediaSliderRight && event.clientY > mediaSliderTop && event.clientY < mediaSliderBottom ){ mouseIn = true; }
     if (isFullScreen) mouseIn = true;
@@ -101,21 +102,16 @@ function ProductMediaSlider(){
 
   // toggle cinema mode
   function toggleCinemaMode(){
-    
     document.getElementById('product-page-content').addEventListener("DOMNodeRemoved", updateDimensions);
     document.getElementById('product-page-content').addEventListener("DOMNodeInserted", updateDimensions);    
-    
     const newCinemaMode = cinemaMode === true ? false : true;
     const targetParentElement = cinemaMode === true ? $('#product-main') : $('#product-page-content');
     const targetChildPrependedElement = cinemaMode === true ? $('#product-title-div') : $('#product-media-slider-container');
-    
     $('#product-main-img-container').prependTo(targetParentElement);
     $(targetChildPrependedElement).prependTo('#product-main-img');
     $("#product-media-slider-container").toggleClass("imgsmall");
     $("#product-media-slider-container").toggleClass("imgfull");
-    
-    setCinemaMode(newCinemaMode);
-
+    setCinemaMode(newCinemaMode)
   }
 
   // toggle show playlist
@@ -185,11 +181,7 @@ function ProductMediaSlider(){
   if (showSliderArrows === false) mediaSliderCssClass += "hide-arrows ";
   if (showPlaylist === false) mediaSliderCssClass += "hide-playlist ";
   if (sliderFadeControlsMode === true) mediaSliderCssClass += "fade-controls ";
-  if (isMobile === true) mediaSliderCssClass += "is-mobile "
-
-
-  // slider arrows css
-  const sliderArrowCss = { top:((sliderHeight / 2 ) - 40)+'px' }
+  if (isMobile === true) mediaSliderCssClass += "is-mobile ";
 
   // slides display
   const slidesDisplay = gallery.map((s,index) => (
@@ -318,6 +310,19 @@ function SlideItem(props){
         onFullScreenToggle={props.onFullScreenToggle}
       />
     )
+  }
+  else if (props.slide.type === "book"){
+    slideContentDisplay = (
+      <BookReaderWrapper 
+        height={props.sliderHeight}
+        width={props.containerWidth}
+        onCinemaModeClick={props.onCinemaModeClick}
+        slide={props.slide}
+        playVideo={props.currentSlide === props.slideIndex}
+        onUpdateDimensions={props.onUpdateDimensions}
+        onFullScreenToggle={props.onFullScreenToggle}
+      />
+    )    
   }
 
   return(
