@@ -84,7 +84,7 @@ function ProductMediaSlider(){
     if (showPlaylist) mediaSliderBottom += 110;
     else mediaSliderBottom += 30;
     
-    let mouseIn = false;
+    let mouseIn;
     if (event.clientX > mediaSliderLeft && event.clientX < mediaSliderRight && event.clientY > mediaSliderTop && event.clientY < mediaSliderBottom ){ mouseIn = true; }
     if (isFullScreen) mouseIn = true;
     if (mouseIn) {
