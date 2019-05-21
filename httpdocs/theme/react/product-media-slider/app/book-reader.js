@@ -1,24 +1,18 @@
-import React, { useState } from 'react';
-import {
-  EpubView, // Underlaying epub-canvas (wrapper for epub.js iframe)
-  EpubViewStyle, // Styles for EpubView, you can pass it to the instance as a style prop for customize it
-  ReactReader, // A simple epub-reader with left/right button and chapter navigation
-  ReactReaderStyle // Styles for the epub-reader it you need to customize it
-} from "react-reader";
+import React from 'react';
 
-class BookReaderWrapper extends React.Component {
-  render() {
-    return (
-      <div style={{ position: "relative", height: "100%" }}>
-        <ReactReader
-          url={props.slide.url}
-          title={props.slide.title}
-          location={"epubcfi(/6/2[cover]!/6)"}
-          locationChanged={epubcifi => console.log(epubcifi)}
-        />
-      </div>
-    );
-  }
+function BookReaderWrapper(props){
+  
+  var book = ePub(props.slide.url);
+  var rendition = book.renderTo("book-container", { flow: "scrolled-doc", width: props.width, height: props.height});
+  var displayed = rendition.display();
+
+  return (
+    <div id="book-reader-wrapper">
+      <div id="prev" onClick={goPrev}></div>
+      <div id="book-container"></div>
+      <div id="next" onClick={goNext}></div>
+    </div>
+  )
 }
 
 export default BookReaderWrapper;

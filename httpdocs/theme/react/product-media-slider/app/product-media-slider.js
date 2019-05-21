@@ -17,15 +17,24 @@ function ProductMediaSlider(){
   if (window.filesJson) {
     window.filesJson.forEach(function(f,index){
       if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 || f.type.indexOf('epub') > -1){
+        
+        let type;
+        if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 ) type = f.type.split('/')[0]
+        else if (f.type.indexOf('epub') > -1 ) type = "book";
+        
+        let url_preview, url_thumb;
+        if (f.url_thumb) url_thumb = f.url_thumb.replace(/%2F/g,'/').replace(/%3A/g,':');
+        if (f.url_preview) url_preview = f.url_preview.replace(/%2F/g,'/').replace(/%3A/g,':');
+
           const gItem = {
             url:f.url.replace(/%2F/g,'/').replace(/%3A/g,':'),
-            type:f.type.split('/')[0],
             collection_id:f.collection_id,
+            type:type,
             file_id:f.id,
-            title:f.title
+            title:f.title,
+            url_thumb:url_thumb,
+            url_preview:url_preview
           }
-          if (f.url_thumb) gItem.url_thumb = f.url_thumb.replace(/%2F/g,'/').replace(/%3A/g,':');
-          if (f.url_preview) gItem.url_preview = f.url_preview.replace(/%2F/g,'/').replace(/%3A/g,':')
           galleryArray = [gItem, ... galleryArray] 
         }
     })
@@ -155,6 +164,7 @@ function ProductMediaSlider(){
       if (isMobile) slidesPerView = 2;
       window.galleryThumbs = new Swiper('.gallery-thumbs', {
         slidesPerView:slidesPerView,
+        initialSlide: currentSlide,
         spaceBetween:10,
         freeMode: true,
         watchSlidesVisibility: true,
@@ -278,7 +288,7 @@ function SlideItem(props){
     } 
     
     else if (props.slide.type === "video" || props.slide.type === "audio"){ 
-      if (props.currentSlide === props.slideIndex && props.cinemaMode === true) props.onSetSliderHeight(410); 
+      if (props.currentSlide === props.slideIndex && props.cinemaMode === true) props.onSetSliderHeight(440); 
     }
 
   }
