@@ -39,6 +39,7 @@ function ProductMediaSlider(){
   const [ sliderHeight, setSliderHeight ] = useState(360);
   const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
   const [ cinemaMode, setCinemaMode ] = useState(false);
+  const [ isFullScreen, setIsFullScreen] = useState(false)
   const [ showPlaylist, setShowPlaylist ] = useState(isMobile ? true : false);
   const [ showSliderArrows, setShowSliderArrows ] = useState(isMobile ? false : true);  
   const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(true);
@@ -47,7 +48,7 @@ function ProductMediaSlider(){
 
   React.useEffect(() => { initProductMediaSlider(currentSlide) },[currentSlide])
   React.useEffect((event) => { updateDimensions(event,currentSlide) },[currentSlide, cinemaMode])
-  React.useEffect(() => { handleMouseMovementEventListener(showPlaylist) },[showPlaylist])
+  React.useEffect(() => { handleMouseMovementEventListener(showPlaylist,isFullScreen) },[showPlaylist,isFullScreen])
 
   // init product media slider
   function initProductMediaSlider(currentSlide){
@@ -56,11 +57,11 @@ function ProductMediaSlider(){
   }
 
   // handle mouse movement event listener
-  function handleMouseMovementEventListener(showPlaylist){
-    window.removeEventListener("mousemove",function(event){ onMouseMovement(event,showPlaylist)})
-    window.removeEventListener("mousedown",function(event){ onMouseMovement(event,showPlaylist)})
-    window.addEventListener("mousemove",function(event){ onMouseMovement(event,showPlaylist) });
-    window.addEventListener("mousedown",function(event){ onMouseMovement(event,showPlaylist) });   
+  function handleMouseMovementEventListener(showPlaylist,isFullScreen){
+    window.removeEventListener("mousemove",function(event){ onMouseMovement(event,showPlaylist,isFullScreen)})
+    window.removeEventListener("mousedown",function(event){ onMouseMovement(event,showPlaylist,isFullScreen)})
+    window.addEventListener("mousemove",function(event){ onMouseMovement(event,showPlaylist,isFullScreen) });
+    window.addEventListener("mousedown",function(event){ onMouseMovement(event,showPlaylist,isFullScreen) });   
   }
 
   // update dimensions
@@ -73,7 +74,7 @@ function ProductMediaSlider(){
   }
 
   // on mouse movement
-  function onMouseMovement(event,showPlaylist){
+  function onMouseMovement(event,showPlaylist,isFullScreen){
     
     const mediaSliderOffest = $('#media-slider').offset()
     const mediaSliderLeft = mediaSliderOffest.left;
@@ -85,7 +86,7 @@ function ProductMediaSlider(){
     
     let mouseIn = false;
     if (event.clientX > mediaSliderLeft && event.clientX < mediaSliderRight && event.clientY > mediaSliderTop && event.clientY < mediaSliderBottom ){ mouseIn = true; }
-    
+    if (isFullScreen) mouseIn = true;
     if (mouseIn) {
       setSliderFadeControlsMode(false)
       clearTimeout(sliderFadeControlTimeOut);
@@ -121,6 +122,12 @@ function ProductMediaSlider(){
   function toggleShowPlaylist(){
     const newShowPlaylistValue = showPlaylist === true ? false : true;
     setShowPlaylist(newShowPlaylistValue)
+  }
+
+  //handle full screen toggle
+  function hanleFullScreenToggle(val){
+    console.log(val);
+    setIsFullScreen(val);
   }
 
   // on finish slides render
@@ -194,6 +201,7 @@ function ProductMediaSlider(){
       onCinemaModeClick={toggleCinemaMode}
       onSetSliderHeight={height => setSliderHeight(height)}
       onUpdateDimensions={updateDimensions}
+      onFullScreenToggle={hanleFullScreenToggle}
     />
   ));
 
@@ -302,6 +310,7 @@ function SlideItem(props){
         slide={props.slide}
         playVideo={props.currentSlide === props.slideIndex}
         onUpdateDimensions={props.onUpdateDimensions}
+        onFullScreenToggle={props.onFullScreenToggle}
       />
     )
   }

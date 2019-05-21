@@ -52,6 +52,7 @@ class VideoPlayerWrapper extends React.Component {
                     });
                 }
                 if (state.isFullscreen === false && prevState.isFullscreen === true) this.props.onUpdateDimensions()
+                if (state.isFullscreen !== prevState.isFullscreen) this.props.onFullScreenToggle(state.isFullscreen)
             }
         });
     }
