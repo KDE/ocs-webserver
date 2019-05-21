@@ -236,3 +236,6 @@ video:focus {
 #media-slider.disable-gallery #slide-navigation {
   display: none;
 }
+#media-slider.is-mobile .slider-navigation-toggle {
+  display: none;
+}
