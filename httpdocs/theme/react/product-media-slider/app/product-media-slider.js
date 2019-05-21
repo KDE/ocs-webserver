@@ -257,10 +257,14 @@ function ProductMediaSlider(){
         </div>
         <div className="swiper-pagination"></div>
         <a className="carousel-control carousel-control-left left" onClick={goPrev}>
-          <span className="glyphicon glyphicon-chevron-left"></span>
+          <span className="visible-container">
+            <span className="glyphicon glyphicon-chevron-left"></span>
+          </span>
         </a>
         <a className="carousel-control carousel-control-right right" onClick={goNext}>
-          <span className="glyphicon glyphicon-chevron-right"></span>
+          <span className="visible-container">
+            <span className="glyphicon glyphicon-chevron-right"></span>
+          </span>
         </a>
       </div>
       {thumbnailNavigationDisplay}
@@ -278,9 +282,9 @@ function SlideItem(props){
       props.onFinishedSlidesRender();
     }
   }, [props.gallery])
-  React.useEffect(() => { getSlideContentHeight() },[props.currentSlide, props.cinemaMode]);
+  React.useEffect(() => { getSlideContentHeight(props.cinemaMode) },[props.currentSlide, props.cinemaMode]);
 
-  function getSlideContentHeight(){
+  function getSlideContentHeight(cinemaMode){
     
     if (props.slide.type === "image"){
       const imageEl = document.getElementById('slide-img-'+props.slideIndex);
@@ -307,6 +311,12 @@ function SlideItem(props){
     }
 
   }
+
+  function onCinemaModeClick(){
+    let cinemaMode = props.cinemaMode === true ? false : true;
+    getSlideContentHeight(cinemaMode);
+    props.onCinemaModeClick()
+  }
   
   let slideContentDisplay;
   if (props.slide.type === "embed"){
@@ -327,7 +337,7 @@ function SlideItem(props){
       <VideoPlayerWrapper 
         height={props.sliderHeight}
         width={props.containerWidth} 
-        onCinemaModeClick={props.onCinemaModeClick}
+        onCinemaModeClick={onCinemaModeClick}
         slide={props.slide}
         playVideo={props.currentSlide === props.slideIndex}
         onUpdateDimensions={props.onUpdateDimensions}

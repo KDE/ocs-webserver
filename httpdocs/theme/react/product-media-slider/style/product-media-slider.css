@@ -25,15 +25,22 @@ video:focus {
 }
 #media-slider .carousel-control {
   width: 50px;
-  height: 50px;
+  height: 100%;
   z-index: 100;
   cursor: pointer;
-  background: rgba(0, 0, 0, 0.35);
   opacity: 1;
-  top: 50%;
-  margin-top: -40px;
 }
-#media-slider .carousel-control .glyphicon {
+#media-slider .carousel-control .visible-container {
+  background: rgba(0, 0, 0, 0.35);
+  top: 50%;
+  width: 50px;
+  height: 50px;
+  margin-top: -40px;
+  display: block;
+  position: absolute;
+  left: 0;
+}
+#media-slider .carousel-control .visible-container .glyphicon {
   margin-top: -15px;
 }
 #media-slider .swiper-pagination-bullet {
@@ -486,6 +493,7 @@ video:focus {
   -webkit-transform: translate(-400px, 0);
   -moz-transform: translate(-400px, 0);
   -ms-transform: translate(-400px, 0);
+  transform: translate(-400px, 0);
 }
 #book-container svg {
   display: block;
