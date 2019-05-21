@@ -58,6 +58,9 @@ video:focus {
   font-family: inherit;
   overflow: hidden;
 }
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-slider:focus {
+  box-shadow: none;
+}
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-control-bar {
   display: -webkit-box;
   display: -webkit-flex;
