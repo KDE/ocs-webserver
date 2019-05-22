@@ -307,7 +307,7 @@ function SlideItem(props){
       if (props.currentSlide === props.slideIndex && props.cinemaMode === true) props.onSetSliderHeight(315)
     } 
     
-    else if (props.slide.type === "video" || props.slide.type === "audio"){ 
+    else if (props.slide.type === "video" || props.slide.type === "audio" || props.slide.type === "book"){ 
       if (props.currentSlide === props.slideIndex && props.cinemaMode === true) props.onSetSliderHeight(440); 
     }
 
@@ -353,6 +353,7 @@ function SlideItem(props){
         width={props.containerWidth}
         onCinemaModeClick={props.onCinemaModeClick}
         slide={props.slide}
+        cinemaMode={props.cinemaMode}
         playVideo={props.currentSlide === props.slideIndex}
         onUpdateDimensions={props.onUpdateDimensions}
         onFullScreenToggle={props.onFullScreenToggle}
@@ -379,18 +380,33 @@ function ThumbNavigationItem(props){
     }
   },[props.currentSlide])
 
-  let bgImage;
-  if (props.item.type === "image"){
-    bgImage = props.item.url.split('/img')[0] + "/cache/120x80-1/img" + props.item.url.split('/img')[1];
-  } else if (props.item.type === "video"){
-    bgImage = props.item.url_thumb;
+  let previewImageContainer;
+  if (props.item.type === "book"){
+    previewImageContainer = (
+      <div className="pages preview-image">
+        <div className="page">
+          {props.item.title}
+        </div>
+        <div className="page">
+
+        </div>
+      </div>
+    )
+  } else {
+    let bgImage;
+    if (props.item.type === "image"){
+      bgImage = props.item.url.split('/img')[0] + "/cache/120x80-1/img" + props.item.url.split('/img')[1];
+    } else if (props.item.type === "video"){
+      bgImage = props.item.url_thumb;
+    }
+    previewImageContainer = <div className="preview-image" style={{"backgroundImage":"url("+bgImage+")"}}></div>
   }
 
   return (
-    <div className={props.currentSlide === (props.slideIndex) ? " swiper-slide active " : " swiper-slide " }
+    <div className={props.currentSlide === (props.slideIndex) ? " swiper-slide active " + props.item.type : " swiper-slide " + props.item.type }
       onClick={() => props.onThumbItemClick(props.slideIndex)}
       onTouchEnd={() => props.onThumbItemClick(props.slideIndex)}>
-        <div className="preview-image" style={{"backgroundImage":"url("+bgImage+")"}}></div>
+        {previewImageContainer}
     </div>
   )
 }

@@ -195,54 +195,6 @@ video:focus {
   bottom: 0;
   padding: 10px 0;
 }
-#media-slider #slide-navigation ul {
-  list-style-type: none;
-  margin: 0 auto;
-  display: table;
-  padding: 10px 5px;
-}
-#media-slider #slide-navigation ul li {
-  width: 120px;
-  height: 80px;
-  margin: 0;
-  background-color: black;
-  border: 5px solid #fff;
-  float: left;
-  margin: 0 5px;
-  box-sizing: content-box;
-}
-#media-slider #slide-navigation ul li a {
-  display: block;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-  position: relative;
-}
-#media-slider #slide-navigation ul li a img {
-  cursor: pointer !important;
-}
-#media-slider #slide-navigation ul li a .glyphicon {
-  font-size: 30px;
-  top: 50%;
-  margin-top: -15px;
-  color: white;
-  position: absolute;
-  left: 50%;
-  margin-left: -10px;
-}
-#media-slider #slide-navigation ul li.image {
-  background-color: white;
-}
-#media-slider #slide-navigation ul li.embed {
-  background-color: black;
-  background-image: url('../../assets/img/youtube-icon.png');
-}
-#media-slider #slide-navigation ul li .video-thumbnail-wrapper {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-}
 #media-slider #slide-navigation .swiper-slide {
   width: 25%;
   height: 100%;
@@ -251,6 +203,13 @@ video:focus {
 }
 #media-slider #slide-navigation .swiper-slide.active {
   border-color: #2673b0;
+}
+#media-slider #slide-navigation .swiper-slide.book {
+  background-color: #524631;
+  padding: 10px;
+}
+#media-slider #slide-navigation .swiper-slide.book .preview-image {
+  background-color: white;
 }
 #media-slider #slide-navigation .swiper-slide-thumb-active {
   opacity: 1;
@@ -326,7 +285,7 @@ video:focus {
 #book-reader-wrapper .arrow {
   position: fixed;
   top: 50%;
-  margin-top: -16px !important;
+  margin-top: -13px !important;
   font-size: 32px;
   color: #E2E2E2;
   font-family: arial, sans-serif;

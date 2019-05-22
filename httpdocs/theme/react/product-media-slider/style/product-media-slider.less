@@ -226,70 +226,24 @@ video:focus {
         height: 110px;
         bottom: 0;
         padding: 10px 0;
-
-        ul {
-            list-style-type: none;
-            margin:0 auto;
-            display:table;
-            padding: 10px 5px;
-
-            li {
-                width: 120px;
-                height: 80px;
-                margin: 0;
-                background-color: black;
-                border: 5px solid #fff;
-                float: left;
-                margin: 0 5px;
-                box-sizing: content-box;
-
-                a {
-                    display: block;
-                    width:100%;
-                    height: 100%;
-                    cursor: pointer;
-                    position: relative;
-
-                    img {
-                        cursor: pointer !important;
-                    }
-
-                    .glyphicon {
-                        font-size: 30px;
-                        top: 50%;
-                        margin-top: -15px;
-                        color: white;
-                        position: absolute;
-                        left: 50%;
-                        margin-left: -10px;
-                    }
-                }
-
-                &.image {
-                    background-color: white;
-                }
-
-                &.embed {
-                    background-color: black;
-                    background-image: url('../../assets/img/youtube-icon.png');
-                }
-
-                .video-thumbnail-wrapper {
-                    width: 100%;
-                    height: 100%;
-                    position: relative;
-                    overflow: hidden;
-                }
-            }
-        }
         
         .swiper-slide {
             width: 25%;
             height: 100%;
             opacity: 0.7;
             border: 5px solid white;
+
             &.active {
                 border-color: #2673b0;
+            }
+
+            &.book {
+              background-color: #524631;
+              padding:10px;
+
+              .preview-image {
+                background-color:white;
+              }
             }
         }
         
@@ -400,7 +354,7 @@ video:focus {
       box-sizing: border-box;
       height: 100%;
       background-color: #524631;
-      
+
       .epub-container {
         border: 1px solid #eee;
         background: white;
@@ -410,7 +364,7 @@ video:focus {
     .arrow {
       position: fixed;
       top: 50%;
-      margin-top: -16px !important;
+      margin-top: -13px !important;
       font-size: 32px;
       color: #E2E2E2;
       font-family: arial, sans-serif;
