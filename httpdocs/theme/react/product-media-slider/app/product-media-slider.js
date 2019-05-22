@@ -185,6 +185,7 @@ function ProductMediaSlider(){
     window.mySwiper.slideTo(nextSlide)
   }
 
+  // go prev
   function goPrev(){
     let prevSlide =  window.mySwiper.activeIndex  - 1;
     if (prevSlide < 0 ) prevSlide = gallery.length - 1;
@@ -268,7 +269,7 @@ function ProductMediaSlider(){
         </a>
       </div>
       {thumbnailNavigationDisplay}
-      <a className="slider-navigation-toggle" onClick={toggleShowPlaylist} style={{top:(sliderHeight) - 65}}></a>
+      <a className="slider-navigation-toggle" onClick={toggleShowPlaylist} style={{top:(sliderHeight) - 75}}></a>
     </main>
   )
 }

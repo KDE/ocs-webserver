@@ -129,15 +129,26 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
     <link href="/theme/react/product-media-slider/style/video-react.css" type="text/css" rel="stylesheet" />
     <link href="/theme/react/product-media-slider/style/product-media-slider.css" type="text/css" rel="stylesheet" />
     <style>
-        .video-react-video {
+        #media-slider .video-react-video {
             /* Firefox */
-            height: -moz-calc(100% - 30px) !important ;
+            height: -moz-calc(100% - 40px) !important ;
             /* WebKit */
-            height: -webkit-calc(100% - 30px) !important ;
+            height: -webkit-calc(100% - 40px) !important ;
             /* Opera */
-            height: -o-calc(100% - 30px) !important ;
+            height: -o-calc(100% - 40px) !important ;
             /* Standard */
-            height: calc(100% - 30px) !important ;
+            height: calc(100% - 40px) !important ;
+        }
+
+        #media-slider .carousel-control {
+            /* Firefox */
+            height: -moz-calc(100% - 75px) !important ;
+            /* WebKit */
+            height: -webkit-calc(100% - 75px) !important ;
+            /* Opera */
+            height: -o-calc(100% - 75px) !important ;
+            /* Standard */
+            height: calc(100% - 75px) !important ;
         }
 
         .is-mobile .video-react-video  {

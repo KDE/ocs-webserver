@@ -35,7 +35,6 @@ video:focus {
   top: 50%;
   width: 50px;
   height: 50px;
-  margin-top: -40px;
   display: block;
   position: absolute;
   left: 0;
@@ -43,9 +42,12 @@ video:focus {
 #media-slider .carousel-control .visible-container .glyphicon {
   margin-top: -15px;
 }
+#media-slider .swiper-pagination {
+  bottom: 0;
+}
 #media-slider .swiper-pagination-bullet {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   background: white;
   border: 1px solid #ccc;
   background: #ccc;
@@ -77,9 +79,26 @@ video:focus {
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-slider:focus {
   box-shadow: none;
 }
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-control-bar {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex !important;
+  visibility: visible;
+  opacity: 1;
+  height: 4em;
+}
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-control::before {
+  font-size: 2.3em;
+  line-height: 1.67;
+}
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-current-time,
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-duration {
+  line-height: 4em;
+}
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-bar.video-react-slider-vertical {
   width: 100%;
-  height: 12.5em;
+  height: 8.5em;
   padding: 1.35em;
   margin-right: 0 !important;
   margin-left: 0 !important;
@@ -90,17 +109,17 @@ video:focus {
   left: 50%;
   margin-left: -0.15em;
 }
-#media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-menu-button-vertical:hover .video-react-menu-content {
-  height: 18em;
-  width: 2.9em;
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-bar.video-react-slider-vertical .video-react-volume-level::before {
+  position: absolute;
+  font-size: 1.35em;
 }
-#media-slider .swiper-wrapper .react-player-container .video-react .video-react-control-bar {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex !important;
-  visibility: visible;
-  opacity: 1;
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-bar.video-react-slider-vertical .video-react-volume-level::before {
+  top: -0.2em;
+  left: -0.45em;
+}
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-menu-button-vertical:hover .video-react-menu-content {
+  height: 12em;
+  width: 2.9em;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-time-divider {
   display: none !important;
@@ -125,10 +144,10 @@ video:focus {
 }
 #media-slider .swiper-wrapper .react-player-container .cinema-mode-button span {
   display: block;
-  width: 15px;
-  height: 10px;
+  width: 20px;
+  height: 12px;
   border: 2px solid white;
-  margin: 10px;
+  margin: 13px 8px;
 }
 #media-slider .swiper-wrapper .slide-item {
   float: left;
@@ -283,6 +302,9 @@ video:focus {
 #media-slider.disable-gallery .slider-navigation-toggle,
 #media-slider.disable-gallery #slide-navigation {
   display: none;
+}
+#media-slider.is-mobile .video-react-playing .video-react-video {
+  pointer-events: none;
 }
 #book-container #title {
   width: 900px;
