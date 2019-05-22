@@ -744,37 +744,17 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
     {
         $this->_helper->layout->disableLayout();
         $error_text = '';
-
-        // Update a file information in ppload collection
-        $tag_id = $_POST['tag_id'];
-        $tag_group_id = $_POST['tag_group_id'];
-        $tag_type_id = $_POST['tag_type_id'];
-
-
-        // if (!empty($_POST['file_id'])) {
-        //     $tagId = null;
-        //     if (isset($_POST['tag_id'])) {
-        //         $tagId = $_POST['tag_id'];
-        //     }
-        //     $tagGroupId = null;
-        //     if (isset($_POST['tag_group_id'])) {
-        //         $tagGroupId = $_POST['tag_group_id'];
-        //     }
-
-        //     //set architecture
-        //     $modelTags = new Default_Model_Tags();
-        //     $modelTags->saveFileTagForProjectAndTagGroup($this->_projectId, $_POST['file_id'], $tagId, $tagGroupId);
-
-        //     $this->_helper->json(array('status' => 'ok'));
-
-        //     return;
-        // } else {
-        //     $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
-        // }
-
-        $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
-
         
+        $tag_id = null;
+        if(!empty($_POST['tag_id'])) {
+          $tag_id = $_POST['tag_id'];
+        }
+        $tag_group_id = $_POST['tag_group_id'];
+        $tag_type_id = Zend_Registry::get('config')->settings->client->default->tag_type_osuser;
+        $tag_object_id = $this->_memberId;
+        $model = new Default_Model_Tags();
+        $model->saveOSTagForUser($tag_id,$tag_type_id,$tag_group_id,$tag_object_id);
+        $this->_helper->json(array('status' => 'ok'));                
     }
 
 

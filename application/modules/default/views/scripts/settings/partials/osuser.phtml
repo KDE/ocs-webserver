@@ -20,11 +20,15 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
     
-    $gidsstring = Zend_Registry::get('config')->settings->client->default->tag_group_osuser;
-    $tag_type_id = Zend_Registry::get('config')->settings->client->default->tag_type_osuser;
+    $gidsstring = Zend_Registry::get('config')->settings->client->default->tag_group_osuser;   
     $gids = explode(",", $gidsstring);    
     $model = new Default_Model_Tags();
     $data = $model->getTagGroupsOSUser();
+    $data2 = $model->getTagsOSUser($this->member->member_id);
+    $usertags = array();
+    foreach ($data2 as $t) {
+        $usertags[$t['tag_id']][] = $t;
+    }
     $groups = array();
     foreach ($data as $g) {
         $groups[$g['group_id']][] = $g;
@@ -41,8 +45,7 @@
             foreach ($gids as $g) {                
                 $options = $groups[$g];                
                 usort($options,"custom_sort");
-                $attr = 'data-tag-gid="'.$g.'"';   
-                $attr .=' data-tag-type-id="'.$tag_type_id.'"';             
+                $attr = 'data-tag-gid="'.$g.'"';                       
                 if($options[0]['is_multi_select'])
                 {
                     $attr.= ' multiple="multiple"';
@@ -63,8 +66,14 @@
                      
                     <?php 
                     foreach ($options as $o) {
+                        $tag_id = $o['tag_id'];
+                        $selected = '';
+                        if($usertags[$tag_id]){
+                            // if user selected
+                            $selected=' selected';
+                        }
                     ?>
-                        <option value="<?=$o['tag_id']?>">
+                        <option value="<?=$tag_id?>" <?=$selected?> >
                             <?=$o['tag_fullname']?$o['tag_fullname']:$o['tag_name']?>                            
                         </option>
                     <?php
@@ -85,17 +94,15 @@
     $(document).ready(function() {        
         $(".osuser-tag[multiple*='multiple']").multiselect();
         $( "select.osuser-tag" ).change(function() {               
-            var gid = $(this).attr("data-tag-gid");     
-            var typeid = $(this).attr("data-tag-type-id");     
+            var gid = $(this).attr("data-tag-gid");                    
             var tagid = $(this).val();    
             console.log(tagid+'-'+gid);
             $.ajax({
-                        url: 'settings/savetags',
+                        url: '/settings/savetags',
                         type: 'POST',
                         data: {                           
                             tag_id: tagid,
-                            tag_group_id: gid,
-                            tag_type_id:typeid
+                            tag_group_id: gid,                            
                         },
                         dataType: 'json',
                         success: function (data, textStatus, jqXHR) {

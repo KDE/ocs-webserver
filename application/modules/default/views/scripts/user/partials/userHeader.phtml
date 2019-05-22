@@ -32,7 +32,7 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
 <ul class="nav nav-tabs">
 
     <li class="header-menu-left-item <?php echo $isProdncoll? 'active' : ''; ?>">                      
-             <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'products'); ?>">               
+             <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'products'); ?>">               <span class="glyphicon glyphicon-th-list"></span>
                     <?= $this->translate('Products/Collections') ?>
             </a>           
     </li>       
@@ -50,6 +50,21 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
             <?= $this->translate('Payout-History') ?>
         </a>
     </li>
+    <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin'){
+        $identity = Zend_Auth::getInstance()->getStorage()->read();
+    ?>
+    
+        <?php  if($this->isSupporter($this->member->member_id)){?>
+        <li class="header-menu-left-item <?php echo $this->tab == 'support' ? 'active' : ''; ?>">           
+             <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'support'); ?>">        
+                <span class="glyphicon glyphicon-usd"></span>
+                <?= $this->translate('Support') ?>
+            </a>
+        </li>
+        <?php }?>
+    
+    <?php }?>
+
     
     <li class="<?php echo $this->tab == 'downloadhistory' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'downloadhistory'); ?>">
@@ -81,21 +96,7 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
         </a>
     </li>
     
-    <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin'){
-        $identity = Zend_Auth::getInstance()->getStorage()->read();
-    ?>
     
-        <?php  if($this->isSupporter($this->member->member_id)){?>
-        <li class="header-menu-left-item <?php echo $this->tab == 'support' ? 'active' : ''; ?>">           
-             <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'support'); ?>">        
-                <i class="fa fa-user"></i>
-                <?= $this->translate('Support') ?>
-            </a>
-        </li>
-        <?php }?>
-    
-    <?php }?>
-
     <li class="header-menu-left-item <?php echo $this->tab == 'settings' ? 'active' : ''; ?>">
         <a href="<?php echo $helperBase->buildBaserUrl('settings'); ?>">
             <span class="glyphicon glyphicon-cog"></span>
