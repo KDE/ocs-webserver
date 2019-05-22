@@ -6,7 +6,7 @@ function BookReaderWrapper(props){
 
   React.useEffect(() => {
     var book = ePub(props.slide.url);
-    var rendition = book.renderTo("book-container", { flow: "paginated", width: props.width, height: (props.height - 30 )});
+    var rendition = book.renderTo("book-container", { flow: "paginated", width: props.width - 40, height: props.height - 40});
     var displayed = rendition.display();
     setRenditionState(rendition)
   },[])

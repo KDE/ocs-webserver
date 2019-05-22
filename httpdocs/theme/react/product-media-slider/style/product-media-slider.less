@@ -392,6 +392,53 @@ video:focus {
 #book-reader-wrapper {
     position: relative;
 
+    #book-container {
+      border: 1px solid #ccc;
+      width: 100% !important;
+      display: block !important;
+      padding: 20px;
+      box-sizing: border-box;
+      height: 100%;
+      background-color: #524631;
+      
+      .epub-container {
+        border: 1px solid #eee;
+        background: white;
+      }
+    }
+
+    .arrow {
+      position: fixed;
+      top: 50%;
+      margin-top: -16px !important;
+      font-size: 32px;
+      color: #E2E2E2;
+      font-family: arial, sans-serif;
+      font-weight: bold;
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+      text-decoration: none;
+      z-index: 1000;
+    }
+    
+    .arrow:hover, .navlink:hover {
+      color: #777;
+    }
+    
+    .arrow:active, .navlink:hover {
+      color: #000;
+    }
+
+    #prev {
+      left: 50px;
+    }
+    
+    #next {
+      right: 50px;
+    }
+
     #title {
       width: 900px;
       min-height: 18px;
@@ -442,14 +489,6 @@ video:focus {
         background: white;
     }
     
-    #prev {
-      left: 0;
-    }
-    
-    #next {
-      right: 0;
-    }
-    
     #toc {
       display: block;
       margin: 10px auto;
@@ -482,36 +521,13 @@ video:focus {
         right: 40px;
       }
     }
-    
-    .arrow {
-      position: fixed;
-      top: 50%;
-      margin-top: -32px;
-      font-size: 64px;
-      color: #E2E2E2;
-      font-family: arial, sans-serif;
-      font-weight: bold;
-      cursor: pointer;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      user-select: none;
-      text-decoration: none;
-    }
-    
+
     .navlink {
       margin: 14px;
       display: block;
       text-align: center;
       text-decoration: none;
       color: #ccc;
-    }
-    
-    .arrow:hover, .navlink:hover {
-      color: #777;
-    }
-    
-    .arrow:active, .navlink:hover {
-      color: #000;
     }
     
     #book-wrapper {
