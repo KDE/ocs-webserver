@@ -100,7 +100,7 @@ function ProductMediaSlider(){
       clearTimeout(sliderFadeControlTimeOut);
       sliderFadeControlTimeOut = setTimeout(function(){
         setSliderFadeControlsMode(true)
-      }, 1700);      
+      }, 2000);      
     } else {
       setSliderFadeControlsMode(true)
       clearTimeout(sliderFadeControlTimeOut);

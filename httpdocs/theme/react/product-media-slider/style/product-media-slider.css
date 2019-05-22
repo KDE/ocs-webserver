@@ -89,12 +89,13 @@ video:focus {
   height: 4em;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-control::before {
-  font-size: 2.3em;
-  line-height: 1.67;
+  font-size: 2.8em;
+  line-height: 1.4;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-current-time,
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-duration {
-  line-height: 4em;
+  line-height: 2.7em;
+  font-size: 1.5em;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-bar.video-react-slider-vertical {
   width: 100%;
@@ -306,7 +307,10 @@ video:focus {
 #media-slider.is-mobile .video-react-playing .video-react-video {
   pointer-events: none;
 }
-#book-container #title {
+#book-reader-wrapper {
+  position: relative;
+}
+#book-reader-wrapper #title {
   width: 900px;
   min-height: 18px;
   margin: 10px auto;
@@ -315,10 +319,10 @@ video:focus {
   color: #E2E2E2;
   font-weight: 400;
 }
-#book-container #title:hover {
+#book-reader-wrapper #title:hover {
   color: #777;
 }
-#book-container #viewer.spreads {
+#book-reader-wrapper #viewer.spreads {
   width: 900px;
   height: 600px;
   box-shadow: 0 0 4px #ccc;
@@ -329,37 +333,37 @@ video:focus {
   background: white url('ajax-loader.gif') center center no-repeat;
   top: calc(-350vh);
 }
-#book-container #viewer.spreads .epub-view > iframe {
+#book-reader-wrapper #viewer.spreads .epub-view > iframe {
   background: white;
 }
-#book-container #viewer.scrolled {
+#book-reader-wrapper #viewer.scrolled {
   overflow: hidden;
   width: 800px;
   margin: 0 auto;
   position: relative;
   background: url('ajax-loader.gif') center center no-repeat;
 }
-#book-container #viewer.scrolled .epub-container {
+#book-reader-wrapper #viewer.scrolled .epub-container {
   background: white;
   box-shadow: 0 0 4px #ccc;
   margin: 10px;
   padding: 20px;
 }
-#book-container #viewer.scrolled .epub-view > iframe {
+#book-reader-wrapper #viewer.scrolled .epub-view > iframe {
   background: white;
 }
-#book-container #prev {
+#book-reader-wrapper #prev {
   left: 0;
 }
-#book-container #next {
+#book-reader-wrapper #next {
   right: 0;
 }
-#book-container #toc {
+#book-reader-wrapper #toc {
   display: block;
   margin: 10px auto;
 }
 @media (min-width: 1000px) {
-  #book-container #viewer.spreads:after {
+  #book-reader-wrapper #viewer.spreads:after {
     position: absolute;
     width: 1px;
     border-right: 1px #000 solid;
@@ -372,17 +376,17 @@ video:focus {
     box-shadow: -2px 0 15px #000000;
     content: "";
   }
-  #book-container #viewer.spreads.single:after {
+  #book-reader-wrapper #viewer.spreads.single:after {
     display: none;
   }
-  #book-container #prev {
+  #book-reader-wrapper #prev {
     left: 40px;
   }
-  #book-container #next {
+  #book-reader-wrapper #next {
     right: 40px;
   }
 }
-#book-container .arrow {
+#book-reader-wrapper .arrow {
   position: fixed;
   top: 50%;
   margin-top: -32px;
@@ -396,22 +400,22 @@ video:focus {
   user-select: none;
   text-decoration: none;
 }
-#book-container .navlink {
+#book-reader-wrapper .navlink {
   margin: 14px;
   display: block;
   text-align: center;
   text-decoration: none;
   color: #ccc;
 }
-#book-container .arrow:hover,
-#book-container .navlink:hover {
+#book-reader-wrapper .arrow:hover,
+#book-reader-wrapper .navlink:hover {
   color: #777;
 }
-#book-container .arrow:active,
-#book-container .navlink:hover {
+#book-reader-wrapper .arrow:active,
+#book-reader-wrapper .navlink:hover {
   color: #000;
 }
-#book-container #book-wrapper {
+#book-reader-wrapper #book-wrapper {
   width: 480px;
   height: 640px;
   overflow: hidden;
@@ -421,7 +425,7 @@ video:focus {
   border-radius: 0 5px 5px 0;
   position: absolute;
 }
-#book-container #book-viewer {
+#book-reader-wrapper #book-viewer {
   width: 480px;
   height: 660px;
   margin: -30px auto;
@@ -429,10 +433,10 @@ video:focus {
   -webkit-box-shadow: inset 10px 0 20px rgba(0, 0, 0, 0.1);
   box-shadow: inset 10px 0 20px rgba(0, 0, 0, 0.1);
 }
-#book-container #book-viewer iframe {
+#book-reader-wrapper #book-viewer iframe {
   padding: 40px 40px;
 }
-#book-container #controls {
+#book-reader-wrapper #controls {
   position: absolute;
   bottom: 16px;
   left: 50%;
@@ -441,10 +445,10 @@ video:focus {
   text-align: center;
   display: none;
 }
-#book-container #controls > input[type=range] {
+#book-reader-wrapper #controls > input[type=range] {
   width: 400px;
 }
-#book-container #navigation {
+#book-reader-wrapper #navigation {
   width: 400px;
   height: 100vh;
   position: absolute;
@@ -457,30 +461,30 @@ video:focus {
   -ms-transition: -moz-transform 0.25s ease-out;
   transition: transform 0.25s ease-out;
 }
-#book-container #navigation.fixed {
+#book-reader-wrapper #navigation.fixed {
   position: fixed;
 }
-#book-container #navigation h1 {
+#book-reader-wrapper #navigation h1 {
   width: 200px;
   font-size: 16px;
   font-weight: normal;
   color: #fff;
   margin-bottom: 10px;
 }
-#book-container #navigation h2 {
+#book-reader-wrapper #navigation h2 {
   font-size: 14px;
   font-weight: normal;
   color: #B0B0B0;
   margin-bottom: 20px;
 }
-#book-container #navigation ul {
+#book-reader-wrapper #navigation ul {
   padding-left: 36px;
   margin-left: 0;
   margin-top: 12px;
   margin-bottom: 12px;
   width: 340px;
 }
-#book-container #navigation ul li {
+#book-reader-wrapper #navigation ul li {
   list-style: decimal;
   margin-bottom: 10px;
   color: #cccddd;
@@ -488,22 +492,22 @@ video:focus {
   padding-left: 0;
   margin-left: 0;
 }
-#book-container #navigation ul li a {
+#book-reader-wrapper #navigation ul li a {
   color: #ccc;
   text-decoration: none;
 }
-#book-container #navigation ul li a:hover {
+#book-reader-wrapper #navigation ul li a:hover {
   color: #fff;
   text-decoration: underline;
 }
-#book-container #navigation ul li a.active {
+#book-reader-wrapper #navigation ul li a.active {
   color: #fff;
 }
-#book-container #navigation #cover {
+#book-reader-wrapper #navigation #cover {
   display: block;
   margin: 24px auto;
 }
-#book-container #navigation #closer {
+#book-reader-wrapper #navigation #closer {
   position: absolute;
   top: 0;
   right: 0;
@@ -511,25 +515,25 @@ video:focus {
   color: #cccddd;
   width: 24px;
 }
-#book-container #navigation.closed {
+#book-reader-wrapper #navigation.closed {
   -webkit-transform: translate(-400px, 0);
   -moz-transform: translate(-400px, 0);
   -ms-transform: translate(-400px, 0);
   transform: translate(-400px, 0);
 }
-#book-container svg {
+#book-reader-wrapper svg {
   display: block;
 }
-#book-container .close-x {
+#book-reader-wrapper .close-x {
   stroke: #cccddd;
   fill: transparent;
   stroke-linecap: round;
   stroke-width: 5;
 }
-#book-container .close-x:hover {
+#book-reader-wrapper .close-x:hover {
   stroke: #fff;
 }
-#book-container #opener {
+#book-reader-wrapper #opener {
   position: absolute;
   top: 0;
   left: 0;
@@ -537,7 +541,7 @@ video:focus {
   stroke: #E2E2E2;
   fill: #E2E2E2;
 }
-#book-container #opener:hover {
+#book-reader-wrapper #opener:hover {
   stroke: #777;
   fill: #777;
 }
