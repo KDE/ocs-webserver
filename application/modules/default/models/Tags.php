@@ -1127,6 +1127,10 @@ class Default_Model_Tags
     */
     public function insertTagObject($tag_ids, $tag_type_id, $tag_group_id, $tag_object_id,$tag_parent_object_id)
     {
+        if($tag_ids==null || sizeof($tag_ids)==0)
+        {
+            return;
+        }
         if(!is_array($tag_ids))
         {
             $tag_ids=array($tag_ids);
@@ -1186,8 +1190,9 @@ class Default_Model_Tags
     }
 
     public function saveOSTagForUser($tag_id,$tag_type_id,$tag_group_id,$member_id)
-    {                        
-        $this->deleteTagForTabObject($member_id,$tag_group_id,$tag_type_id);
+    {       
+        $this->deleteTagForTabObject($member_id,$tag_group_id,$tag_type_id);            
+        
         $this->insertTagObject($tag_id,$tag_type_id,$tag_group_id,$member_id,null);
     }    
 

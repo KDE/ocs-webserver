@@ -745,7 +745,10 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout->disableLayout();
         $error_text = '';
         
-        $tag_id = $_POST['tag_id'];
+        $tag_id = null;
+        if(!empty($_POST['tag_id'])) {
+          $tag_id = $_POST['tag_id'];
+        }
         $tag_group_id = $_POST['tag_group_id'];
         $tag_type_id = Zend_Registry::get('config')->settings->client->default->tag_type_osuser;
         $tag_object_id = $this->_memberId;
