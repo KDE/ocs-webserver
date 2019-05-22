@@ -27,6 +27,8 @@ class Default_Model_Tags
     const TAG_TYPE_PROJECT = 1;
     const TAG_TYPE_MEMBER = 2;
     const TAG_TYPE_FILE = 3;
+    const TAG_TYPE_OSUSER = 9;
+    
     
     const TAG_USER_GROUPID = 5;
     const TAG_CATEGORY_GROUPID = 6;
@@ -645,6 +647,8 @@ class Default_Model_Tags
                          select 
                          tag.tag_id 
                          ,tag.tag_name
+                         ,tag_fullname
+                         ,tag_description
                          from tag
                          join tag_group_item on tag.tag_id = tag_group_item.tag_id and tag_group_item.tag_group_id = :groupid                         
                          order by tag_name
@@ -951,6 +955,8 @@ class Default_Model_Tags
     }
     
     
+    
+
      /**
      * @param int $object_id
      *
@@ -1090,4 +1096,36 @@ class Default_Model_Tags
         
         
     }
+
+    /* tag os user begin*/
+    /**     
+     * @return array
+     */
+    public function getTagGroupsOSUser()
+    {
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_osuser;       
+        $sql = 'select g.group_id
+                ,g.group_name
+                ,g.group_display_name
+                ,g.is_multi_select
+                ,i.tag_group_item_id
+                ,i.tag_id
+                ,t.tag_name
+                ,t.tag_fullname
+                ,t.tag_description    
+             from 
+             tag_group g,
+             tag_group_item i,
+             tag t
+             where g.group_id=i.tag_group_id
+             and i.tag_id = t.tag_id 
+             and g.group_id in ('.$tag_group_ids.')';
+             
+        $resultSet = $this->getAdapter()->fetchAll($sql);
+        return $resultSet;
+    }
+
+    
+
+    /* tag os user end*/
 }

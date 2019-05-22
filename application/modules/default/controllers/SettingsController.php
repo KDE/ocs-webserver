@@ -98,7 +98,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
     }
 
 
-    public function profilesAction()
+    public function profileAction()
     {
         $this->view->member = $this->_memberSettings;
         $memberSettings = $this->_memberSettings->toArray();
@@ -139,7 +139,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
     private function formProfile()
     {
         $form = new Default_Form_Settings();
-        $form->setMethod("POST")->setAttrib("id", "settingsProfileForm")->setAction('/settings/profile');
+        $form->setMethod("POST")->setAttrib("id", "settingsProfileForm")->setAction('/settings/saveprofile');
 
         $userNameLength = new Zend_Validate_StringLength(array('min' => 4, 'max' => 35));
         $username =
@@ -740,7 +740,45 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
     }
 
 
-    public function profileAction()
+    public function savetagsAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $error_text = '';
+
+        // Update a file information in ppload collection
+        $tag_id = $_POST['tag_id'];
+        $tag_group_id = $_POST['tag_group_id'];
+        $tag_type_id = $_POST['tag_type_id'];
+
+
+        // if (!empty($_POST['file_id'])) {
+        //     $tagId = null;
+        //     if (isset($_POST['tag_id'])) {
+        //         $tagId = $_POST['tag_id'];
+        //     }
+        //     $tagGroupId = null;
+        //     if (isset($_POST['tag_group_id'])) {
+        //         $tagGroupId = $_POST['tag_group_id'];
+        //     }
+
+        //     //set architecture
+        //     $modelTags = new Default_Model_Tags();
+        //     $modelTags->saveFileTagForProjectAndTagGroup($this->_projectId, $_POST['file_id'], $tagId, $tagGroupId);
+
+        //     $this->_helper->json(array('status' => 'ok'));
+
+        //     return;
+        // } else {
+        //     $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
+        // }
+
+        $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
+
+        
+    }
+
+
+    public function saveprofileAction()
     {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer('partials/profile');

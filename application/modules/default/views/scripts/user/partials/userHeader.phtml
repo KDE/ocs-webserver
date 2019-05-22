@@ -32,8 +32,7 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
 <ul class="nav nav-tabs">
 
     <li class="header-menu-left-item <?php echo $isProdncoll? 'active' : ''; ?>">                      
-            <a href="<?php echo $helperBase->buildBaserUrl('product/add'); ?>">
-                    <span class="glyphicon glyphicon-plus"></span>
+             <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'products'); ?>">               
                     <?= $this->translate('Products/Collections') ?>
             </a>           
     </li>       
@@ -55,7 +54,7 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
     <li class="<?php echo $this->tab == 'downloadhistory' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'downloadhistory'); ?>">
             <span class="glyphicon glyphicon-star"></span>
-            <?= $this->translate('Download') ?>
+            <?= $this->translate('Downloads') ?>
         </a>
     </li>
 
@@ -73,17 +72,12 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
         </a>
     </li>
     
-    <li class="header-menu-left-item <?php echo $this->tab == 'settings' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperBase->buildBaserUrl('settings'); ?>">
-            <span class="glyphicon glyphicon-cog"></span>
-            <?= $this->translate('Settings') ?>
-        </a>
-    </li>
+    
 
     <li class="header-menu-left-item <?php echo $this->tab == 'profiles' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperBase->buildBaserUrl('settings/profiles'); ?>">
+        <a href="<?php echo $helperBase->buildBaserUrl('settings/profile'); ?>">
             <span class="glyphicon glyphicon-user"></span>
-            <?= $this->translate('Profiles') ?>
+            <?= $this->translate('Profile') ?>
         </a>
     </li>
     
@@ -92,8 +86,8 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
     ?>
     
         <?php  if($this->isSupporter($this->member->member_id)){?>
-        <li class="header-menu-left-item <?php echo $this->tab == 'supporter' ? 'active' : ''; ?>">           
-             <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'supporter'); ?>">        
+        <li class="header-menu-left-item <?php echo $this->tab == 'support' ? 'active' : ''; ?>">           
+             <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'support'); ?>">        
                 <i class="fa fa-user"></i>
                 <?= $this->translate('Support') ?>
             </a>
@@ -101,6 +95,13 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
         <?php }?>
     
     <?php }?>
+
+    <li class="header-menu-left-item <?php echo $this->tab == 'settings' ? 'active' : ''; ?>">
+        <a href="<?php echo $helperBase->buildBaserUrl('settings'); ?>">
+            <span class="glyphicon glyphicon-cog"></span>
+            <?= $this->translate('Settings') ?>
+        </a>
+    </li>
     
 
    <?php /*

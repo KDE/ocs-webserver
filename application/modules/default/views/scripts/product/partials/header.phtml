@@ -31,6 +31,20 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
                     
 <div class="pling-nav-tabs">
 <ul class="nav nav-tabs">                           
+
+    <li class="<?php echo $this->tab == 'products' ? 'active' : ''; ?>">
+            <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'products'); ?>">
+                <span class="glyphicon glyphicon-th-list"></span>
+                <?= $this->translate('Products') ?>
+            </a>
+        </li>
+
+     <li class="<?php echo $this->tab == 'collections' ? 'active' : ''; ?>">
+            <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'collections'); ?>">
+                <span class="glyphicon glyphicon-th-list"></span>
+                <?= $this->translate('Collections') ?>
+            </a>
+        </li>
     <li class="header-menu-left-item <?php echo $this->tab == 'add' ? 'active' : ''; ?>">
             <?php if ($this->mode == 'edit') : ?>
                 <a href="<?= Zend_Controller_Front::getInstance()->getRequest()->getRequestUri() ?>">
@@ -45,12 +59,7 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
             <?php endif ?>
         </li>    
         
-        <li class="<?php echo $this->tab == 'products' ? 'active' : ''; ?>">
-            <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'products'); ?>">
-                <span class="glyphicon glyphicon-th-list"></span>
-                <?= $this->translate('Products') ?>
-            </a>
-        </li>
+        
         
         <li class="header-menu-left-item <?php echo $this->tab == 'addcollection' ? 'active' : ''; ?>">
             <?php if ($this->mode == 'editcollection') : ?>
@@ -66,11 +75,6 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
             <?php endif ?>
         </li>
 
-        <li class="<?php echo $this->tab == 'collections' ? 'active' : ''; ?>">
-            <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'collections'); ?>">
-                <span class="glyphicon glyphicon-th-list"></span>
-                <?= $this->translate('Collections') ?>
-            </a>
-        </li>
+       
 </ul>
 </div>
