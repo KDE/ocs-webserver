@@ -796,7 +796,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->view->likes = array();
         }
     }
-    public function supporterAction()
+    public function supportAction()
     {
         
         $helperUserRole = new Backend_View_Helper_UserRole();
