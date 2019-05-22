@@ -102,6 +102,7 @@ $isowner = false;
 if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->product->member_id){
     $isowner = true;
 }
+$this->isowner = $isowner;
 
 $filesTable = new Default_Model_DbTable_PploadFiles();
 $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collection_id);
@@ -123,21 +124,35 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 
     <link href="/theme/react/assets/css/get-it.css" type="text/css" rel="stylesheet"/>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/css/swiper.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/css/swiper.min.css">
     
     <link href="/theme/react/product-media-slider/style/video-react.css" type="text/css" rel="stylesheet" />
     <link href="/theme/react/product-media-slider/style/product-media-slider.css" type="text/css" rel="stylesheet" />
     <style>
-        .video-react-video {
+        #media-slider .video-react-video {
             /* Firefox */
-            height: -moz-calc(100% - 30px) !important ;
+            height: -moz-calc(100% - 40px) !important ;
             /* WebKit */
-            height: -webkit-calc(100% - 30px) !important ;
+            height: -webkit-calc(100% - 40px) !important ;
             /* Opera */
-            height: -o-calc(100% - 30px) !important ;
+            height: -o-calc(100% - 40px) !important ;
             /* Standard */
-            height: calc(100% - 30px) !important ;
+            height: calc(100% - 40px) !important ;
+        }
+
+        #media-slider .carousel-control {
+            /* Firefox */
+            height: -moz-calc(100% - 75px) !important ;
+            /* WebKit */
+            height: -webkit-calc(100% - 75px) !important ;
+            /* Opera */
+            height: -o-calc(100% - 75px) !important ;
+            /* Standard */
+            height: calc(100% - 75px) !important ;
+        }
+
+        .is-mobile .video-react-video  {
+            height:100% !important;
         }
     </style>
     <!-- facebook -->
@@ -237,7 +252,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="padding-bottom: 20px">
                <div class="modal-header">
-                    <label id="votelabel"> </label>
+                 <label id="votelabel" class="modal-title"> </label>
                    <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
                                aria-hidden="true">&times;</span></button>
                </div>
@@ -301,34 +316,30 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="padding-bottom: 20px">
                <div class="modal-header">
-                    <label id="votelabel"> </label>
-                   <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
+                <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
                                aria-hidden="true">&times;</span></button>
+                    <label id="votelabel" class="modal-title"> </label>                                    
                </div>
                <form class="full-width product-add-comment-review-new" action="/productcomment/addreplyreviewnew/" method="post" id="reviewform">
-               <div class="modal-body">
-                 
-                            <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
-                            <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>       
-                             <input type="hidden" name="v" value="1" id="voteup"/>
+               <div class="modal-body">                 
+                    <input type="hidden" name="p" value="<?= $this->product->project_id ?>" id="form_p"/>
+                    <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>       
+                    <input type="hidden" name="v" value="1" id="voteup"/>
+                    <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
+                    <input type="hidden" name="otxt" value="<?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?>" id="otxt"/>                    
+                    <input type="hidden" name="userscore" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['score']?>" id="userscore"/>
+                    <input type="hidden" name="s" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['score']?>" id="userscorevalue"/>
+                    <textarea name="msg" class="full-width" id="commenttext"><?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?></textarea>     
 
-                            <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
-                            <input type="hidden" name="otxt" value="<?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?>" id="otxt"/>
-                            
-                            <input type="hidden" name="userscore" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['score']?>" id="userscore"/>
-                            <input type="hidden" name="s" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['score']?>" id="userscorevalue"/>
-                            <textarea name="msg" class="full-width" id="commenttext"><?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?></textarea>
-                                   
                 </div>
                 <div class="modal-footer">
-                            <button type="button" class="small" id="modal-btn-cancel" style="margin-right:20px ">Cancel</button>                             
-                            <button type="submit" class="small pull-right" id="modal-btn-onsubmit">Rate Now</button>
+                    <button type="button" class="small" id="modal-btn-cancel" style="float: left;">Cancel</button>                             
+                    <button type="submit" class="small pull-right" id="modal-btn-onsubmit">Rate Now</button>
                 </div>
                 </form>
             </div>
         </div>
     </div>
-
     <?php } else {?>
         <div id="review-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-sm" role="document">
@@ -1136,6 +1147,8 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
   var galleryPicturesJson = <?php echo $galleryPicturesJson?>;
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/js/swiper.min.js"></script>
 <script type="text/javascript" src="/theme/react/product-media-slider/product-media-slider.js"></script>
 
@@ -1153,6 +1166,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
             TooltipUser.setup("tooltipuserleft","left");
             AppimagequestionOnClick.setup();
             Opendownloadfile.setup();
+            CreateScoreRatingPopup.setup();
             $(\'.tooltipheart\').tooltipster({theme: [\'tooltipster-light\', \'tooltipster-light-customized\'],
                     contentCloning: true,
                     contentAsHTML: true,

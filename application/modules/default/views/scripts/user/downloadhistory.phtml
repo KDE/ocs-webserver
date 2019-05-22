@@ -133,23 +133,23 @@ $pageCount = $this->downloadhistory->getTotalItemCount()/$this->downloadhistory-
     <div id="score-product-modal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="padding-bottom: 20px">
-               <div class="modal-header">
-                    <label id="votelabel"> </label>
+               <div class="modal-header">                    
                    <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
                                aria-hidden="true">&times;</span></button>
+                               <label id="votelabel"> </label>
                </div>
                <form class="full-width product-add-comment-review-new" action="/productcomment/addreplyreviewnew/" method="post" id="reviewform">
                <div class="modal-body">
                  
-                            <input type="hidden" name="p" id="form_p"/>
-                            <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/> 
-                             <input type="hidden" name="s" id="userscorevalue"/>
-                             <input type="hidden" name="v" value="1" id="voteup"/>
-                            <textarea name="msg" class="full-width" id="commenttext"></textarea>
+                    <input type="hidden" name="p" id="form_p"/>
+                    <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/> 
+                    <input type="hidden" name="s" id="userscorevalue"/>
+                    <input type="hidden" name="v" value="1" id="voteup"/>
+                    <textarea name="msg" class="full-width" id="commenttext"></textarea>
                 
                 </div>
                  <div class="modal-footer">
-                            <button type="button" class="small" id="modal-btn-cancel" style="margin-right:20px ">Cancel</button>                             
+                            <button type="button" class="small" id="modal-btn-cancel" style="float: left;">Cancel</button>                             
                             <button type="submit" class="small pull-right"  id="modal-btn-onsubmit">Rate Now</button>
                 </div>
                 </form>
@@ -163,7 +163,7 @@ $pageCount = $this->downloadhistory->getTotalItemCount()/$this->downloadhistory-
 <?php
 $this->inlineScript()->appendScript(
     '    $(document).ready(function(){                        
-            PartialsReviewDownloadHistoryNew.setup();             
+             CreateScoreRatingPopup.setup();             
              PartialCommentReviewFormNew.setup();
              PartialsButton.setup();
         });

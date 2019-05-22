@@ -27,6 +27,8 @@ class Default_Model_Tags
     const TAG_TYPE_PROJECT = 1;
     const TAG_TYPE_MEMBER = 2;
     const TAG_TYPE_FILE = 3;
+    const TAG_TYPE_OSUSER = 9;
+    
     
     const TAG_USER_GROUPID = 5;
     const TAG_CATEGORY_GROUPID = 6;
@@ -102,6 +104,8 @@ class Default_Model_Tags
 
         $this->getAdapter()->query($sql);
     }
+
+
 
     /**
      * @param int $object_id
@@ -645,6 +649,8 @@ class Default_Model_Tags
                          select 
                          tag.tag_id 
                          ,tag.tag_name
+                         ,tag_fullname
+                         ,tag_description
                          from tag
                          join tag_group_item on tag.tag_id = tag_group_item.tag_id and tag_group_item.tag_group_id = :groupid                         
                          order by tag_name
@@ -951,6 +957,8 @@ class Default_Model_Tags
     }
     
     
+    
+
      /**
      * @param int $object_id
      *
@@ -1090,4 +1098,109 @@ class Default_Model_Tags
         
         
     }
+
+   //========================== generic methods =============================
+    public function getTagGroups($tag_group_ids)
+    {
+        $sql = 'select g.group_id
+                ,g.group_name
+                ,g.group_display_name
+                ,g.is_multi_select
+                ,i.tag_group_item_id
+                ,i.tag_id
+                ,t.tag_name
+                ,t.tag_fullname
+                ,t.tag_description    
+             from 
+             tag_group g,
+             tag_group_item i,
+             tag t
+             where g.group_id=i.tag_group_id
+             and i.tag_id = t.tag_id 
+             and g.group_id in ('.$tag_group_ids.')';
+        $resultSet = $this->getAdapter()->fetchAll($sql);
+        return $resultSet;
+    }
+           
+    /*
+    * $tag_ids array tag ids 
+    */
+    public function insertTagObject($tag_ids, $tag_type_id, $tag_group_id, $tag_object_id,$tag_parent_object_id)
+    {
+        if($tag_ids==null || sizeof($tag_ids)==0)
+        {
+            return;
+        }
+        if(!is_array($tag_ids))
+        {
+            $tag_ids=array($tag_ids);
+        }
+        
+       if($tag_parent_object_id)
+       {
+            $prepared_insert =
+                array_map(function ($id) use ($tag_type_id,$tag_group_id,$tag_object_id,$tag_parent_object_id) 
+                    { return "({$id}, {$tag_type_id},{$tag_group_id},{$tag_object_id},{$tag_parent_object_id})"; },
+                    $tag_ids);
+            $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_group_id,tag_object_id,tag_parent_object_id) VALUES " . implode(',',$prepared_insert);        
+
+            $this->getAdapter()->query($sql);        
+        }else
+        {
+            $prepared_insert =
+                array_map(function ($id) use ($tag_type_id,$tag_group_id,$tag_object_id) 
+                    { return "({$id}, {$tag_type_id},{$tag_group_id},{$tag_object_id})"; },
+                    $tag_ids);
+            $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_group_id,tag_object_id) VALUES " . implode(',',$prepared_insert);        
+            $this->getAdapter()->query($sql);       
+        }
+    }
+
+    public function fetchTagObject($tag_id,$tag_object_id,$tag_group_id,$tag_type_id)
+    {
+        $sql = $sql_object= "select tag_item_id  from tag_object WHERE tag_id = :tag_id and tag_object_id=:tag_object_id and tag_group_id=:tag_group_id  
+                                and tag_type_id = :tag_type_id and is_deleted = 0";
+        $r = $this->getAdapter()->fetchRow($sql_object, array('tag_id' => $tag_id, 
+                                                            'tag_object_id' =>$tag_object_id, 
+                                                            'tag_group_id' => $tag_group_id, 
+                                                            'tag_type_id' => $tag_type_id 
+                                                            ));
+        return $r;
+    }
+
+    public function deleteTagForTabObject($tag_object_id,$tag_group_id,$tag_type_id)
+    {
+    
+        $sql = "UPDATE tag_object SET tag_changed = NOW() , is_deleted = 1  WHERE tag_group_id = :tag_group_id AND tag_type_id = :tag_type_id AND tag_object_id = :tag_object_id";
+        $this->getAdapter()->query($sql, array('tag_group_id' => $tag_group_id, 'tag_type_id' =>$tag_type_id, 'tag_object_id' => $tag_object_id));
+        
+    }
+
+    //========================== generic methods end =============================
+
+
+    // ======================== settings profile user os ==========================================
+    /**     
+     * @return array
+     */
+    public function getTagGroupsOSUser()
+    {
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_osuser;               
+        return $this->getTagGroups($tag_group_ids);
+    }
+
+    public function saveOSTagForUser($tag_id,$tag_type_id,$tag_group_id,$member_id)
+    {       
+        $this->deleteTagForTabObject($member_id,$tag_group_id,$tag_type_id);            
+        
+        $this->insertTagObject($tag_id,$tag_type_id,$tag_group_id,$member_id,null);
+    }    
+
+    public function getTagsOSUser($member_id)
+    {
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_osuser;  
+        $tag_type_id = Zend_Registry::get('config')->settings->client->default->tag_type_osuser;        
+        return $this->getTagsArray($member_id,$tag_type_id,$tag_group_ids);
+    }
+
 }

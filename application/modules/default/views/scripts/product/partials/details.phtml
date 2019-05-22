@@ -35,6 +35,10 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
 $filesTable = new Default_Model_DbTable_PploadFiles();
 $countDownloadsToday = $filesTable->fetchCountDownloadsTodayForProject($this->product->ppload_collection_id);
 
+$mediaViewsTable = new Default_Model_DbTable_MediaViews();
+$countMediaViewsToday = $mediaViewsTable->fetchCountViewsTodayForProject($this->product->project_id);
+$countMediaViewsAlltime = $mediaViewsTable->fetchCountViewsForProjectAllTime($this->product->project_id);
+
 $countPageviews = $this->projectDetailCounts($this->product->project_id);
 $countPageviewsTotal = 0;
 $countPageviewsToday = $countPageviews[0]['count_views'];
@@ -103,6 +107,16 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countPageviewsTotal ?></span>
     </div>
 
+    <div class="row">
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">video views today </span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countMediaViewsToday ?></span>
+    </div>
+    
+    <div class="row">
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">video views total </span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countMediaViewsAlltime ?></span>
+    </div>
+    
     <div class="row">
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">spam reports</span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->fetchReportsSpamCnt($this->product->project_id) ?></span>

@@ -97,6 +97,37 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $this->view->paymentform->populate($memberSettings);
     }
 
+
+    public function profileAction()
+    {
+        $this->view->member = $this->_memberSettings;
+        $memberSettings = $this->_memberSettings->toArray();
+        
+
+        $this->view->profileform = $this->formProfile();
+        $this->view->profileform->populate($memberSettings);
+        $this->view->profileform->aboutme->setValue($this->_mainproject->description);
+
+        $this->view->accounts = $this->formConnectedAccounts();
+        $this->view->accounts->populate($memberSettings);
+
+
+        $this->view->pictureform = $this->formProfilePicture();
+        $this->view->pictureform->populate($memberSettings);
+
+        $this->view->pictureformbg = $this->formProfilePictureBackground();
+        $this->view->pictureformbg->populate($memberSettings);
+
+
+        $websiteOwner = new Local_Verification_WebsiteOwner();
+        $linkWebsite = stripslashes($this->_memberSettings->link_website);
+        $this->view->homepageform =
+            $this->formHomepage($linkWebsite, $websiteOwner->generateAuthCode($linkWebsite), $this->_memberSettings->validated);
+    }
+
+    
+
+
     /**
      * Forms
      */
@@ -108,7 +139,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
     private function formProfile()
     {
         $form = new Default_Form_Settings();
-        $form->setMethod("POST")->setAttrib("id", "settingsProfileForm")->setAction('/settings/profile');
+        $form->setMethod("POST")->setAttrib("id", "settingsProfileForm")->setAction('/settings/saveprofile');
 
         $userNameLength = new Zend_Validate_StringLength(array('min' => 4, 'max' => 35));
         $username =
@@ -709,7 +740,25 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
     }
 
 
-    public function profileAction()
+    public function savetagsAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $error_text = '';
+        
+        $tag_id = null;
+        if(!empty($_POST['tag_id'])) {
+          $tag_id = $_POST['tag_id'];
+        }
+        $tag_group_id = $_POST['tag_group_id'];
+        $tag_type_id = Zend_Registry::get('config')->settings->client->default->tag_type_osuser;
+        $tag_object_id = $this->_memberId;
+        $model = new Default_Model_Tags();
+        $model->saveOSTagForUser($tag_id,$tag_type_id,$tag_group_id,$tag_object_id);
+        $this->_helper->json(array('status' => 'ok'));                
+    }
+
+
+    public function saveprofileAction()
     {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer('partials/profile');

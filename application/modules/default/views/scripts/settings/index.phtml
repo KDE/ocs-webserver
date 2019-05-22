@@ -42,28 +42,9 @@ $this->tab = 'settings';
 
                     <div class="pling-nav-tabs">
                         <ul class="nav nav-tabs ">
+                           
+
                             <li class="active">
-                                <a href="#form-profile-panel" data-toggle="tab">
-                                    <span class="glyphicon glyphicon-user"></span>
-                                    <?= $this->translate('Profile') ?>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="#form-picture-panel" data-toggle="tab">
-                                    <span class="glyphicon glyphicon-camera"></span>
-                                    <?= $this->translate('Profile Picture') ?>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="#form-picture-background-panel" data-toggle="tab">
-                                    <span class="glyphicon  glyphicon-picture"></span>
-                                    <?= $this->translate('Background') ?>
-                                </a>
-                            </li>
-
-                            <li>
                                 <a href="#form-email-panel" data-toggle="tab">
                                     <span class="glyphicon glyphicon-envelope"></span>
                                     <?= $this->translate('Emails') ?>
@@ -87,19 +68,7 @@ $this->tab = 'settings';
                                 </a>
                             </li>
 
-                            <li>
-                                <a href="#form-connected-accounts-panel" data-toggle="tab">
-                                    <span class="glyphicon glyphicon-link"></span>
-                                    <?= $this->translate('Social Accounts') ?>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="#form-website-panel" data-toggle="tab">
-                                    <span class="glyphicon glyphicon-globe"></span>
-                                    <?= $this->translate('Your Website') ?>
-                                </a>
-                            </li>
+                           
 
                             <li>
                                 <a href="#form-password-panel" data-toggle="tab">
@@ -117,13 +86,9 @@ $this->tab = 'settings';
                         </ul>
                     </div>
                     <div class="tab-content row settings-main ">
-                        <div class="tab-pane active " id="form-profile-panel">
-                            <section class="panel container" id="form-profile">
-                                <?php echo $this->render('settings/partials/profile.phtml'); ?>
-                            </section>
-                        </div>
+                        
 
-                        <div class="tab-pane " id="form-email-panel">
+                        <div class="tab-pane active" id="form-email-panel">
                             <section class="panel container" id="form-email">
                                 <?php echo $this->render('settings/partials/email.phtml'); ?>
                             </section>
@@ -141,24 +106,7 @@ $this->tab = 'settings';
                             </section>
                         </div>
 
-                        <div class="tab-pane " id="form-connected-accounts-panel">
-                            <section class="panel container" id="form-accounts">
-                                <?php echo $this->render('settings/partials/accounts.phtml'); ?>
-                            </section>
-                        </div>
-
-                        <div class="tab-pane " id="form-picture-panel">
-                            <section class="panel container" id="form-picture">
-                                <?php echo $this->render('settings/partials/picture.phtml'); ?>
-                            </section>
-                        </div>
-
-
-                        <div class="tab-pane " id="form-picture-background-panel">
-                            <section class="panel container" id="form-picture-background">
-                                <?php echo $this->render('settings/partials/picture-bg.phtml'); ?>
-                            </section>
-                        </div>
+                       
 
 
                         <div class="tab-pane " id="form-password-panel">
@@ -167,11 +115,7 @@ $this->tab = 'settings';
                             </section>
                         </div>
 
-                        <div class="tab-pane " id="form-website-panel">
-                            <section class="panel container" id="form-website">
-                                <?php echo $this->render('settings/partials/website.phtml'); ?>
-                            </section>
-                        </div>
+                       
 
                         <div class="tab-pane " id="form-newsletter-panel">
                             <section class="panel container" id="form-newsletter">

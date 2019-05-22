@@ -7,17 +7,23 @@ import {
     LoadingSpinner,
     CurrentTimeDisplay,
     DurationDisplay } from 'video-react';
+import {isMobile} from 'react-device-detect';
 
 class VideoPlayerWrapper extends React.Component {
     constructor(props, context){
         super(props, context);
+
+        let hostLocation = window.location.href;
+        if (!hostLocation.endsWith('/')) hostLocation += "/";
+
         this.state = {
             source:this.props.slide.url_preview,
             videoStarted:false,
             videoStopped:false,
-            videoStartUrl:window.location.href + "startvideoajax?collection_id="+this.props.slide.collection_id+"&file_id="+this.props.slide.file_id,
-            videoStopUrl:window.location.href + "stopvideoajax?media_view_id="
+            videoStartUrl:hostLocation + "startvideoajax?collection_id="+this.props.slide.collection_id+"&file_id="+this.props.slide.file_id,
+            videoStopUrl:hostLocation + "stopvideoajax?media_view_id="
         }
+
         this.onCinemaModeClick = this.onCinemaModeClick.bind(this);
         this.play = this.play.bind(this);
         this.pause = this.pause.bind(this);
@@ -46,6 +52,7 @@ class VideoPlayerWrapper extends React.Component {
                     });
                 }
                 if (state.isFullscreen === false && prevState.isFullscreen === true) this.props.onUpdateDimensions()
+                if (state.isFullscreen !== prevState.isFullscreen) this.props.onFullScreenToggle(state.isFullscreen)
             }
         });
     }
@@ -80,11 +87,11 @@ class VideoPlayerWrapper extends React.Component {
                     src={this.state.source}>
                         <BigPlayButton position="center" />
                         <LoadingSpinner />
-                        <ControlBar autoHide className="custom-video-player">
+                        <ControlBar className="custom-video-player">
                             <CurrentTimeDisplay order={4.1} />
                             <DurationDisplay order={7.1} />
                             <VolumeMenuButton vertical order={7.2} />
-                            <a className="cinema-mode-button" onClick={this.onCinemaModeClick} order={8}><span></span></a>
+                            <a className="cinema-mode-button" onClick={this.onCinemaModeClick} order={7.3}><span></span></a>
                         </ControlBar>
                 </Player>            
             )
