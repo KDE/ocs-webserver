@@ -2350,6 +2350,17 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $log->debug(__CLASS__ . '::' . __FUNCTION__ . '::' . print_r($tmpFilename, true) . "\n");
                     move_uploaded_file($_FILES['file_upload']['tmp_name'], $tmpFilename);
                     $fileRequest['file'] = $tmpFilename;
+                    
+                    //20180219 ronald: we set the changed_at only by new files or new updates
+                    if((int)$this->_authMember->member_id==(int)$projectData->member_id)
+                    {
+                        $projectData->changed_at = new Zend_Db_Expr('NOW()');
+                    } else {
+                        $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member ('.$this->_authMember->member_id.') != Project-Owner ('.$projectData->member_id.'): **********' . "\n");
+                    }                      
+                    $projectData->ghns_excluded = 0;
+                    $projectData->save();  
+                    
                 }
                 if (isset($_POST['file_description'])) {
                     $fileRequest['description'] = mb_substr($_POST['file_description'], 0, 140);
