@@ -14,9 +14,11 @@ video:focus {
     box-sizing: content-box;
     overflow: hidden;
     position: relative;
+    padding-bottom: 30px;
     padding-bottom: 110px;
     background-color: white;
 
+    #slider-wrapper {
     .carousel-control {
         width: 50px;
         height: 100%;
@@ -53,6 +55,9 @@ video:focus {
 
     .slider-navigation-toggle {
         position: absolute;
+        left: 0;
+        top: 0;
+        .transition();
         right: 5px;
         height: 31px;
         width: 31px;
@@ -65,6 +70,14 @@ video:focus {
         background-color: white;
         border: 2px solid black;
     }
+
+
+
+
+
+
+
+
 
     #slider-container {
         padding-bottom: 30px;
@@ -232,6 +245,7 @@ video:focus {
                 margin-top: auto;
                 margin-bottom:auto;
                 max-width: 100%;
+                max-height: 550px;
                 max-height: 100%;
                 cursor: -moz-zoom-in; 
                 cursor: -webkit-zoom-in; 
@@ -245,6 +259,9 @@ video:focus {
         }
     }
 
+    .carousel-control {
+        z-index: 100;
+        cursor: pointer;
     .swiper-pagination {
         display: none;
     }
@@ -255,6 +272,7 @@ video:focus {
         position: absolute;
         height: 110px;
         bottom: 0;
+
         padding: 10px 0;
         
         .swiper-slide {
@@ -263,13 +281,40 @@ video:focus {
             opacity: 0.7;
             border: 5px solid white;
 
+        ul {
+            list-style-type: none;
+            margin:0 auto;
+            display:table;
+            padding: 10px 0;
             &.active {
                 border-color: #2673b0;
             }
 
+
+
+            li {
+                width: 12px;
+                height: 12px;
+                margin: 0;
+                background-color: #fff;
+                border: 1px solid #C4D7EF;
+                border-radius: 100%;
+                float: left;
+                margin: 0 2px;
+                .transition();
             &.book {
               background-color: #524631;
               padding:10px;
+
+
+
+
+
+
+
+                &.active {
+                    background-color: #E2E2E2;
+                }
 
               .preview-image {
                 background-color:white;
@@ -283,6 +328,8 @@ video:focus {
         
         .swiper-wrapper {
 
+                a {
+                    display: block;
             .swiper-slide {
 
                 .preview-image {
@@ -371,6 +418,19 @@ video:focus {
       }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #book-reader-wrapper {

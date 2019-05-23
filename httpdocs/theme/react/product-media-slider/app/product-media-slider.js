@@ -4,11 +4,16 @@ import {isMobile} from 'react-device-detect';
 import VideoPlayerWrapper from './video-player';
 import BookReaderWrapper from './book-reader';
 
+function ProductMediaSlider(){
 function ProductMediaSlider(){ 
 
   /* Component */
 
   const [ product, setProduct ] = useState(window.product);
+  let galleryArray;
+  if (product.embed_code !== null || product.image_small !== null){
+    const productMainSlide = product.embed_code !== null ? product.embed_code : product.image_small;
+    galleryArray = [ productMainSlide, ... window.galleryPicturesJson ];
 
   let galleryArray = []
   if (window.galleryPicturesJson) window.galleryPicturesJson.forEach(function(gp,index){ galleryArray.push({url:gp,type:'image'}); });
@@ -44,11 +49,18 @@ function ProductMediaSlider(){
   const [ disableGallery, setDisableGallery ] = useState(gallery.length > 1 ? false : true)
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
+  const [ currentSlide, setCurrentSlide ] = useState(0)
+  const [ sliderWidth, setSliderWidth ] = useState(containerWidth * gallery.length);
+  const [ sliderHeight, setSliderHeight ] = useState(315);
+  const [ sliderPosition, setSliderPosition ] = useState(containerWidth * currentSlide);
+  const [ loading, setLoading ] = useState(true);
   const [ currentSlide, setCurrentSlide ] = useState(0);
   const [ sliderHeight, setSliderHeight ] = useState(360);
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ isFullScreen, setIsFullScreen] = useState(false)
 
+  React.useEffect(() => { initProductMediaSlider() },[])
+  React.useEffect(() => { updateDimensions() },[currentSlide])
   const [ showPlaylist, setShowPlaylist ] = useState(false);
   const [ showSliderArrows, setShowSliderArrows ] = useState(isMobile === true ? true : false);  
   const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(true);
@@ -61,11 +73,28 @@ function ProductMediaSlider(){
   React.useEffect(() => { handleMouseMovementEventListener(showPlaylist,isFullScreen) },[showPlaylist,isFullScreen])
 
   // init product media slider
+  function initProductMediaSlider(){
+    window.addEventListener("resize", updateDimensions);
+    window.addEventListener("orientationchange", updateDimensions);
+    if (window.filesJson) checkForMediaFiles();
+    else setLoading(false);
   function initProductMediaSlider(currentSlide){
     window.addEventListener("resize", function(event){updateDimensions(event,currentSlide)});
     window.addEventListener("orientationchange",  function(event){updateDimensions(event,currentSlide)});
   }
 
+  // check for media files
+  function checkForMediaFiles(){
+    let mediaGalleryItems = []
+    window.filesJson.forEach(function(f,index){
+      console.log(f);
+      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1) mediaGalleryItems.push(f.url_encoded)
+    })
+    if (mediaGalleryItems.length > 0) {
+      const newGallery = [...gallery, mediaGalleryItems]
+      setGallery(newGallery);
+    }
+    setLoading(false);
   // handle mouse movement event listener
   function handleMouseMovementEventListener(showPlaylist,isFullScreen){
     window.removeEventListener("mousemove",function(event){ onMouseMovement(event,showPlaylist,isFullScreen)})
@@ -78,11 +107,14 @@ function ProductMediaSlider(){
   function updateDimensions(){
     const newContainerWidth = parentContainerElement.offsetWidth;
     setContainerWidth(newContainerWidth)
+    setSliderWidth(containerWidth * gallery.length);
+    setSliderPosition(containerWidth * currentSlide);
     document.getElementById('product-page-content').removeEventListener("DOMNodeRemoved", updateDimensions);
     document.getElementById('product-page-content').removeEventListener("DOMNodeInserted", updateDimensions);
     // if (cinemaMode === false) setSliderHeight(360)
   }
 
+  /* Render */
   // on mouse movement
   function onMouseMovement(event,showPlaylist,isFullScreen){
     const mediaSliderOffest = $('#media-slider').offset()
@@ -107,6 +139,10 @@ function ProductMediaSlider(){
     }
   }
 
+  // slider container style
+  const sliderContainerStyle = {
+    width:sliderWidth+'px',
+    height:sliderHeight+'px'
   // toggle cinema mode
   function toggleCinemaMode(){
     document.getElementById('product-page-content').addEventListener("DOMNodeRemoved", updateDimensions);
@@ -121,12 +157,20 @@ function ProductMediaSlider(){
     setCinemaMode(newCinemaMode)
   }
 
+  // slider wrapper style
+  const sliderWrapperStyle = {
+    width:sliderWidth+'px',
+    left:'-'+sliderPosition+'px',
+    height:sliderHeight+'px'
   // toggle show playlist
   function toggleShowPlaylist(){
     const newShowPlaylistValue = showPlaylist === true ? false : true;
     setShowPlaylist(newShowPlaylistValue)
   }
 
+  // prev / next slide arrow values
+  const prevCurrentSlide = currentSlide > 0 ? currentSlide - 1 : gallery.length - 1;
+  const nextCurrentSlide = currentSlide < (gallery.length - 1) ? ( currentSlide + 1 ) : 0;
   //handle full screen toggle
   function hanleFullScreenToggle(val){
     setIsFullScreen(val);
@@ -205,6 +249,16 @@ function ProductMediaSlider(){
   if (isMobile === true) mediaSliderCssClass += "is-mobile ";
 
   // slides display
+  let slidesDisplay;
+  if (loading === false){
+    slidesDisplay = gallery.map((s,index) => (
+      <SlideItem 
+        key={index}
+
+
+
+
+
   const slidesDisplay = gallery.map((s,index) => (
     <SlideItem 
       key={index}
@@ -231,14 +285,17 @@ function ProductMediaSlider(){
       <ThumbNavigationItem 
         key={index} 
         slideIndex={index}
+        slideUrl={s}
         currentSlide={currentSlide}
         gallery={gallery}
         item={g}
         onFinishedSlidesRender={onFinishedSlidesRender}
         containerWidth={containerWidth}
+        onSetSlideHeight={height => setSliderHeight(height)}
         onfinishedThumbsRender={onfinishedThumbsRender}
         onThumbItemClick={(slideIndex) => onThumbItemClick(slideIndex)}
       />
+    ));
     ))
     thumbnailNavigationDisplay = (
       <div id="slide-navigation" className="swiper-container gallery-thumbs">
@@ -249,6 +306,10 @@ function ProductMediaSlider(){
   }
 
   return (
+    <main id="media-slider">
+      <div id="slider-container" style={sliderContainerStyle}>
+        <a className="left carousel-control" id="arrow-left" onClick={() => setCurrentSlide(prevCurrentSlide)}>
+          <span className="glyphicon glyphicon-chevron-left"></span>
     <main id="media-slider" 
       style={{height:sliderHeight}} 
       className={mediaSliderCssClass}
@@ -263,12 +324,23 @@ function ProductMediaSlider(){
             <span className="glyphicon glyphicon-chevron-left"></span>
           </span>
         </a>
+        <div id="slider-wrapper" style={sliderWrapperStyle}>
+          {slidesDisplay}    
+        </div>
+        <a className="right carousel-control" id="arrow-right" onClick={() => setCurrentSlide(nextCurrentSlide)}>
+          <span className="glyphicon glyphicon-chevron-right"></span>
+        </a>      
         <a className="carousel-control carousel-control-right right" onClick={goNext}>
           <span className="visible-container">
             <span className="glyphicon glyphicon-chevron-right"></span>
           </span>
         </a>
       </div>
+      <SlidesNavigation
+        gallery={gallery}
+        currentSlide={currentSlide}
+        onChangeCurrentSlide={e => setCurrentSlide(e)}
+      />
       {thumbnailNavigationDisplay}
       <a className="slider-navigation-toggle" onClick={toggleShowPlaylist} style={{top:(sliderHeight) - 75}}></a>
     </main>
@@ -276,8 +348,21 @@ function ProductMediaSlider(){
 }
 
 function SlideItem(props){
+  
+  const [mediaType, setMediaType ] = useState('');
 
+  React.useEffect(() => { determineMediaType() },[])
+  React.useEffect(() => { if (props.slideIndex === props.currentSlide) onSetParentSliderHeight() },[])
+  React.useEffect(() => { if (props.slideIndex === props.currentSlide) onSetParentSliderHeight() },[props.currentSlide])
   const [ mediaStyle, setMediaStyle ] = useState();
+
+  function determineMediaType(){
+    let initialMediaType;
+    if (props.slideUrl.indexOf('<iframe') > -1) initialMediaType = "embed";
+    else if (props.slideUrl.indexOf('.png') > -1 || props.slideUrl.indexOf('.jpg') > -1 || props.slideUrl.indexOf('.jpeg') > -1) initialMediaType = "image";
+    else if (props.slideUrl.indexOf('.mp4') > -1) initialMediaType = "video";
+    console.log(initialMediaType);
+    setMediaType(initialMediaType);
 
   React.useEffect(() => {
     if (props.gallery && props.gallery.length === props.slideIndex + 1){
@@ -324,13 +409,36 @@ function SlideItem(props){
 
   }
 
+  function onSetParentSliderHeight(){
+    let slideHeight;
+    if (mediaType === "embed") slideHeight = 315;
+    else if (mediaType === "image") slideHeight = document.getElementById('slide-img-'+props.slideIndex).offsetHeight;
+    props.onSetSlideHeight(slideHeight);
   function onCinemaModeClick(){
     let cinemaMode = props.cinemaMode === true ? false : true;
     getSlideContentHeight(cinemaMode);
     props.onCinemaModeClick()
   }
+
   
   let slideContentDisplay;
+  if (mediaType === "embed") slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slideUrl}} />;
+  else if (mediaType === "image") slideContentDisplay = <img id={"slide-img-"+props.slideIndex} src={props.slideUrl}/>
+  else if (mediaType === "video") slideContentDisplay = <VideoPlayerWrapper source={props.slideUrl}/>
+  const slideItemStyle = { width:props.containerWidth }
+
+
+
+
+
+
+
+
+
+
+
+
+
   if (props.slide.type === "embed"){
     slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
   }
@@ -374,6 +482,8 @@ function SlideItem(props){
   }
 
   return(
+    <div className="slide-item" id={"slide-"+props.slideIndex} style={slideItemStyle}>
+      {slideContentDisplay}
     <div 
       id={"slide-"+props.slideIndex}     
       className={props.currentSlide === props.slideIndex ? "active slide-item swiper-slide " + props.slide.type : "slide-item swiper-slide " + props.slide.type } 
@@ -383,14 +493,25 @@ function SlideItem(props){
   )
 }
 
+function SlidesNavigation(props){
 function ThumbNavigationItem(props){
 
+  const slidesNavigationDisplay = props.gallery.map((g,index) => (
+    <li key={index} className={ props.currentSlide === index ? "active" : ""}>
+      <a onClick={e => props.onChangeCurrentSlide(index)}></a>
+    </li>
+  ))
   React.useEffect(() => { if (props.gallery && props.gallery.length === props.slideIndex + 1){ props.onfinishedThumbsRender() } }, [props.gallery])
   React.useEffect(() => {
     if (window.galleryThumbs){
       window.galleryThumbs.slideTo(props.currentSlide);
     }
   },[props.currentSlide])
+
+
+
+
+
 
   let previewImageContainer;
   if (props.item.type === "book"){
@@ -415,6 +536,10 @@ function ThumbNavigationItem(props){
   }
 
   return (
+    <div id="slide-navigation">
+      <ul>
+        {slidesNavigationDisplay}
+      </ul>
     <div className={props.currentSlide === (props.slideIndex) ? " swiper-slide active " + props.item.type : " swiper-slide " + props.item.type }
       onClick={() => props.onThumbItemClick(props.slideIndex)}
       onTouchEnd={() => props.onThumbItemClick(props.slideIndex)}>
