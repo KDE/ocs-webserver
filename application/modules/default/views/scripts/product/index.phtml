@@ -121,11 +121,11 @@ foreach ($pics as $p) {
 
 $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 ?>
-
     <link href="/theme/react/assets/css/get-it.css" type="text/css" rel="stylesheet"/>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/css/swiper.min.css">
     
+    <!-- PRODUCT MEDIA SLIDER CSS -->
+
+    <link href="/theme/react/lib/swiper/swiper.min.css" type="text/css" rel="stylesheet" >
     <link href="/theme/react/product-media-slider/style/video-react.css" type="text/css" rel="stylesheet" />
     <link href="/theme/react/product-media-slider/style/product-media-slider.css" type="text/css" rel="stylesheet" />
     <style>
@@ -139,11 +139,13 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
             /* Standard */
             height: calc(100% - 75px) !important ;
         }
-
         .is-mobile .video-react-video  {
             height:100% !important;
         }
     </style>
+
+    <!-- PRODUCT /MEDIA SLIDER CSS -->
+
     <!-- facebook -->
     <div id="fb-root"></div>
     <?php if (Zend_Auth::getInstance()->hasIdentity()) {
@@ -532,93 +534,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                 
                             </div>
                         </div>
-                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
                         <div id="product-media-slider-container" class="imgsmall"></div>
-                        <?php } else { ?>
-                        <div id="carouselContainer" class="carouselContainer">
-                            <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
-
-                                <!-- Indicators -->
-                                <ol class="carousel-indicators">
-                                    <?php // media embed code
-                                      $cnt = 1;
-                                    if ((null != $this->product->embed_code) && trim($this->product->embed_code)!=''): ?>
-                                         <li data-target="#myCarousel" data-slide-to="<?php echo $cnt ?>"
-                                                class="active"></li>
-                                    <?php
-                                      $cnt = 2;
-                                    endif; ?>
-
-                                    <?php
-                                   
-                                    if (count($this->galleryPictures) > 0) {
-                                        foreach ($this->galleryPictures as $picture): ?>
-                                            <li data-target="#myCarousel" data-slide-to="<?php echo $cnt ?>"
-                                                class="<?php if (!$this->product->ppload_collection_id && $cnt == 1) {
-                                                    echo 'active';
-                                                } ?>"></li>
-                                            <?php
-                                            $cnt++;
-                                        endforeach;
-                                    } else {
-                                    ?>    
-                                        <li data-target="#myCarousel" data-slide-to="<?php echo $cnt ?>"
-                                                class="<?php if (!$this->product->ppload_collection_id && $cnt == 1) {
-                                                    echo 'active';
-                                                } ?>">
-                                        </li>
-                                    <?php    
-                                    }
-                                    ?>
-                                </ol>
-
-                                <!-- Wrapper for slides -->
-                                <div class="carousel-inner">
-
-                                    <?php // media embed code
-                                      $cnt = 1;
-                                    if ((null != $this->product->embed_code) && (trim($this->product->embed_code)!='')): ?>
-                                        <div class="item active" style="text-align:center">
-                                                <?= $this->product->embed_code ?>
-                                        </div>
-                                    <?php
-                                      $cnt = 2;
-                                    endif; ?>
-
-                                    <?php
-                                    if (count($this->galleryPictures) > 0) {
-                                        foreach ($this->galleryPictures as $picture): ?>
-                                            <div class="item <?php if (!$this->product->ppload_collection_id && $cnt == 1) {
-                                                echo 'active';
-                                            } ?>">
-                                                <img src="<?php echo $picture;?>"/>
-                                            </div>
-                                            <?php
-                                            $cnt++;
-                                        endforeach;
-                                    } else {?>
-                                        <div class="item <?php if (!$this->product->ppload_collection_id && $cnt == 1) {
-                                            echo 'active';
-                                        } ?>">
-                                            <img src="<?php echo $picture; ?>"/>
-                                        </div>
-                                    <?php
-                                    }
-                                    ?>
-                                </div><!-- End Carousel Inner -->
-
-                                <!-- Controls -->
-                                <?php if (count($this->galleryPictures) > 1 || (count($this->galleryPictures) ==1&&(null != $this->product->embed_code) && (trim($this->product->embed_code)!=''))) { ?>
-                                    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-                                        <span class="glyphicon glyphicon-chevron-left"></span>
-                                    </a>
-                                    <a class="right carousel-control" href="#myCarousel" data-slide="next">
-                                        <span class="glyphicon glyphicon-chevron-right"></span>
-                                    </a>
-                                <?php } ?>
-                            </div><!-- End Carousel -->
-                        </div>
-                        <?php } ?>
                     </div>
                 </div>
 
@@ -1129,6 +1045,8 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
     });
 </script>
 
+<!-- PRODUCT MEDIA SLIDER JS -->
+
 <script type="text/javascript">
   var product = <?php echo $productJson ?>;
   var filesJson  = <?php echo $filesJson ?>;
@@ -1136,10 +1054,12 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
   var galleryPicturesJson = <?php echo $galleryPicturesJson?>;
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>+
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/js/swiper.min.js"></script>
+<script type="text/javascript" src="/theme/react/lib/epub/epub.min.js"></script>+
+<script type="text/javascript" src="/theme/react/lib/jszip/jszip.min.js"></script>
+<script type="text/javascript" src="/theme/react/lib/swiper/swiper.min.js"></script>
 <script type="text/javascript" src="/theme/react/product-media-slider/product-media-slider.js"></script>
+
+<!-- /PRODUCT MEDIA SLIDER JS -->
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
