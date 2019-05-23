@@ -17,7 +17,6 @@ class VideoPlayerWrapper extends React.Component {
 
         this.state = {
             source:this.props.slide.url_preview,
-            height:this.props.height,
             width:this.props.width,
             videoWidthSet:false,
             videoRenderMask:true,
@@ -39,17 +38,6 @@ class VideoPlayerWrapper extends React.Component {
     handleStateChange(state, prevState) {
         this.setState({ player: state },function(){
             if (this.state.player){
-                    if (this.props.cinemaMode === false && typeof this.state.player.videoWidth !== undefined ){
-                            const dimensionsRatio = this.props.height / this.state.player.videoHeight;
-                            let width = this.state.player.videoWidth * dimensionsRatio;
-                            if (width === 0) width = this.state.width;
-                            this.setState({width:width},function(){
-                                setTimeout(() => {
-                                    this.setState({videoRenderMask:false})                                    
-                                }, 1000);
-                            })
-                    }
-
                 if (this.state.player.hasStarted && this.state.videoStarted === false){
                     this.setState({videoStarted:true},function(){
                         const self = this;
@@ -95,12 +83,16 @@ class VideoPlayerWrapper extends React.Component {
     render(){   
         let videoPlayerDisplay;
         if (this.state.source){
+
+            let width = this.props.width;
+            // if (this.props.cinemaMode === true) width = 300;
+
             videoPlayerDisplay = (
                 <Player
                     ref="player"
                     fluid={false}
-                    height={this.state.height}
-                    width={this.state.width}
+                    height={this.props.height}
+                    width={width}
                     preload={"auto"}
                     src={this.state.source}>
                         <BigPlayButton position="center" />
@@ -115,13 +107,9 @@ class VideoPlayerWrapper extends React.Component {
             )
 
         }
-
-        let videoRenderMaskDisplay;
-        if (this.state.videoRenderMask === true) videoRenderMaskDisplay = <div className="video-render-mask"></div>
     
         return (
             <div className={"react-player-container"}>
-                {videoRenderMaskDisplay}
                 {videoPlayerDisplay}
             </div>
         )

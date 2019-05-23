@@ -286,10 +286,9 @@ function SlideItem(props){
   React.useEffect(() => { getSlideContentHeight(props.cinemaMode) },[props.currentSlide, props.cinemaMode]);
 
   function getSlideContentHeight(cinemaMode){
-    
+    if (props.currentSlide === props.slideIndex){    
     if (props.slide.type === "image"){
       const imageEl = document.getElementById('slide-img-'+props.slideIndex);
-      if (props.currentSlide === props.slideIndex){
         if ( cinemaMode === true ){
           let imageHeight = imageEl.naturalHeight;
           if (imageEl.naturalWidth > window.innerWidth){
@@ -301,17 +300,19 @@ function SlideItem(props){
         }
         else if (imageEl.offsetHeight > 0) setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
       }
-    } 
     
     else if (props.slide.type === "embed"){ 
-      if (props.currentSlide === props.slideIndex && cinemaMode === true) props.onSetSliderHeight(315)
+      if (cinemaMode === true) props.onSetSliderHeight(315)
     } 
     
     else if (props.slide.type === "video" || props.slide.type === "audio" || props.slide.type === "book"){
-      if (props.currentSlide === props.slideIndex && cinemaMode === true){
+      if (cinemaMode === true){
         props.onSetSliderHeight(screen.height * 0.7); 
+      } else {
+        props.onSetSliderHeight(360)
       }
     }
+  } 
 
   }
 
