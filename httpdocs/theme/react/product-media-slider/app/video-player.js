@@ -44,9 +44,9 @@ class VideoPlayerWrapper extends React.Component {
                             let width = this.state.player.videoWidth * dimensionsRatio;
                             if (width === 0) width = this.state.width;
                             this.setState({width:width},function(){
-                                // setTimeout(() => {
+                                setTimeout(() => {
                                     this.setState({videoRenderMask:false})                                    
-                                //}, 3000);
+                                }, 1000);
                             })
                     }
 
