@@ -97,7 +97,7 @@ video:focus {
   visibility: visible;
   opacity: 1;
   height: 4em;
-  background-color: rgba(43, 51, 63, 0.9);
+  background-color: rgba(0, 0, 0, 0.7);
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-control::before {
   font-size: 2.8em;
