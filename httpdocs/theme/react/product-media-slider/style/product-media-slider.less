@@ -102,6 +102,7 @@ video:focus {
                   visibility: visible;
                   opacity: 1;
                   height: 4em;
+                  background-color: rgba(43, 51, 63, 0.9);
                 }
 
                 .video-react-control {
@@ -129,6 +130,7 @@ video:focus {
                         width: 0.3em;
                         left: 50%;
                         margin-left: -0.15em;
+                        z-index: 10;
 
                         &::before {
                           position: absolute;
@@ -141,6 +143,18 @@ video:focus {
                         top: -0.2em;
                         left: -0.4em;
                       }
+                    }
+
+                    &::after {
+                      width: 0.3em;
+                      left: 50%;
+                      margin-left: -0.15em;
+                      height: 100%;
+                      content: "";
+                      display: block;
+                      background-color:rgba(115, 133, 159, 0.5);
+                      position: absolute;
+                      top: 0;
                     }
                 }
 

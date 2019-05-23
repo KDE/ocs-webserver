@@ -215,6 +215,7 @@ function ProductMediaSlider(){
       sliderHeight={sliderHeight}
       cinemaMode={cinemaMode}
       gallery={gallery}
+      disableGallery={disableGallery}
       onFinishedSlidesRender={onFinishedSlidesRender}
       onCinemaModeClick={toggleCinemaMode}
       onSetSliderHeight={height => setSliderHeight(height)}
@@ -297,10 +298,14 @@ function SlideItem(props){
           }
           setMediaStyle({height:imageHeight})
           props.onSetSliderHeight(imageHeight);
-        }
-        else if (imageEl.offsetHeight > 0) {
-          setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
-          props.onSetSliderHeight(360)
+        } else {
+            if (imageEl.offsetHeight > 0) {
+              if (props.disableGallery) props.onSetSliderHeight(imageEl.offsetHeight)
+              else {
+                setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
+                props.onSetSliderHeight(360)
+              }          
+            }
         }
       }
     

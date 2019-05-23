@@ -97,6 +97,7 @@ video:focus {
   visibility: visible;
   opacity: 1;
   height: 4em;
+  background-color: rgba(43, 51, 63, 0.9);
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-control::before {
   font-size: 2.8em;
@@ -119,6 +120,7 @@ video:focus {
   width: 0.3em;
   left: 50%;
   margin-left: -0.15em;
+  z-index: 10;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-bar.video-react-slider-vertical .video-react-volume-level::before {
   position: absolute;
@@ -127,6 +129,17 @@ video:focus {
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-bar.video-react-slider-vertical .video-react-volume-level::before {
   top: -0.2em;
   left: -0.4em;
+}
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-bar.video-react-slider-vertical::after {
+  width: 0.3em;
+  left: 50%;
+  margin-left: -0.15em;
+  height: 100%;
+  content: "";
+  display: block;
+  background-color: rgba(115, 133, 159, 0.5);
+  position: absolute;
+  top: 0;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-menu-button-vertical:hover .video-react-menu-content {
   height: 12em;
