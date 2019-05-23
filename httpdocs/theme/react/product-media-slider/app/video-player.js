@@ -90,7 +90,7 @@ class VideoPlayerWrapper extends React.Component {
             if (this.props.cinemaMode === false){
                 if (this.state.player){
                     const dimensionsRatio =  this.props.height / this.state.player.videoHeight;
-                    width = this.state.player.videoWidth * dimensionsRatio;
+                    if ((this.state.player.videoWidth * dimensionsRatio) < this.props.width) width = this.state.player.videoWidth * dimensionsRatio;
                 }
             }
             videoPlayerDisplay = (
