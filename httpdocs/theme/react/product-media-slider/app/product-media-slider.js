@@ -80,7 +80,7 @@ function ProductMediaSlider(){
     setContainerWidth(newContainerWidth)
     document.getElementById('product-page-content').removeEventListener("DOMNodeRemoved", updateDimensions);
     document.getElementById('product-page-content').removeEventListener("DOMNodeInserted", updateDimensions);
-    if (cinemaMode === false) setSliderHeight(360)
+    // if (cinemaMode === false) setSliderHeight(360)
   }
 
   // on mouse movement
@@ -290,7 +290,7 @@ function SlideItem(props){
     if (props.slide.type === "image"){
       const imageEl = document.getElementById('slide-img-'+props.slideIndex);
       if (props.currentSlide === props.slideIndex){
-        if ( props.cinemaMode === true ){
+        if ( cinemaMode === true ){
           let imageHeight = imageEl.naturalHeight;
           if (imageEl.naturalWidth > window.innerWidth){
             let dimensionsPercentage = window.innerWidth / imageEl.naturalWidth;
@@ -304,11 +304,13 @@ function SlideItem(props){
     } 
     
     else if (props.slide.type === "embed"){ 
-      if (props.currentSlide === props.slideIndex && props.cinemaMode === true) props.onSetSliderHeight(315)
+      if (props.currentSlide === props.slideIndex && cinemaMode === true) props.onSetSliderHeight(315)
     } 
     
-    else if (props.slide.type === "video" || props.slide.type === "audio" || props.slide.type === "book"){ 
-      if (props.currentSlide === props.slideIndex && props.cinemaMode === true) props.onSetSliderHeight(440); 
+    else if (props.slide.type === "video" || props.slide.type === "audio" || props.slide.type === "book"){
+      if (props.currentSlide === props.slideIndex && cinemaMode === true){
+        props.onSetSliderHeight(screen.height * 0.7); 
+      }
     }
 
   }
@@ -337,7 +339,8 @@ function SlideItem(props){
     slideContentDisplay = (
       <VideoPlayerWrapper 
         height={props.sliderHeight}
-        width={props.containerWidth} 
+        width={props.containerWidth}
+        cinemaMode={props.cinemaMode} 
         onCinemaModeClick={onCinemaModeClick}
         slide={props.slide}
         playVideo={props.currentSlide === props.slideIndex}

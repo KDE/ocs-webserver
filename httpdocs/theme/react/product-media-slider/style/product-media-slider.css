@@ -71,6 +71,16 @@ video:focus {
 }
 #media-slider .swiper-wrapper .react-player-container {
   width: inherit;
+  position: relative;
+}
+#media-slider .swiper-wrapper .react-player-container .video-render-mask {
+  background-color: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react {
   font-family: inherit;
@@ -112,11 +122,11 @@ video:focus {
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-bar.video-react-slider-vertical .video-react-volume-level::before {
   position: absolute;
-  font-size: 1.35em;
+  font-size: 1.4em;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-bar.video-react-slider-vertical .video-react-volume-level::before {
   top: -0.2em;
-  left: -0.45em;
+  left: -0.4em;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-menu-button-vertical:hover .video-react-menu-content {
   height: 12em;
@@ -149,6 +159,9 @@ video:focus {
   height: 12px;
   border: 2px solid white;
   margin: 13px 8px;
+}
+#media-slider .swiper-wrapper .react-player-container.hide {
+  opacity: 0;
 }
 #media-slider .swiper-wrapper .slide-item {
   float: left;

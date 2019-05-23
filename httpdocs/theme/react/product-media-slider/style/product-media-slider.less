@@ -74,6 +74,17 @@ video:focus {
         
         .react-player-container {
             width:inherit;
+            position: relative;
+
+            .video-render-mask {
+              background-color:white;
+              position: absolute;
+              top: 0;
+              left: 0;
+              width:100%;
+              height:100%;
+              z-index: 1;
+            }
 
             .video-react {
                 font-family: inherit;
@@ -121,14 +132,14 @@ video:focus {
 
                         &::before {
                           position: absolute;
-                          font-size: 1.35em;
+                          font-size: 1.4em;
                         }
                     }
 
                     .video-react-volume-level {
                       &::before {
                         top: -0.2em;
-                        left: -0.45em;
+                        left: -0.4em;
                       }
                     }
                 }
@@ -171,6 +182,10 @@ video:focus {
                   border: 2px solid white;
                   margin: 13px 8px;
                 }
+            }
+
+            &.hide {
+              opacity: 0;
             }
         }
 
