@@ -102,7 +102,7 @@ function (_React$Component) {
         sName: window.json_sname,
         name: window.json_store_name,
         order: window.json_store_order,
-        last_char_store_order: window.last_char_store_order
+        last_char_store_order: window.json_last_char_store_order
       },
       user: window.json_member,
       logo: window.json_logoWidth,
@@ -506,7 +506,8 @@ function (_React$Component4) {
           className: "menu-content-wrapper"
         }, React.createElement(SiteHeaderSearchForm, {
           baseUrl: this.props.baseUrl,
-          searchBaseUrl: this.props.searchBaseUrl
+          searchBaseUrl: this.props.searchBaseUrl,
+          store: this.props.store
         })), closeMenuElementDisplay);
       }
 

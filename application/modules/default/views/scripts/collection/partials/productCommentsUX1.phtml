@@ -135,15 +135,20 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         <div class="text">
                         
                         <?php
-
                             if(!is_null($comment['rating']) && $comment['rating']!='-1')
-                            {                                   
-                                if($comment['rating']==1){
+                            { ?>   
+                                <span class="rating-label" style="background-color:<?=$this->fetchScoreColor($comment['rating'])?>; ">
+                                    <?=$comment['rating'] ?>
+                                </span>                              
+                               
+                            <?php 
+                                /*if($comment['rating']==1){
                                     echo '<span class="btn btn-success active" style="cursor:default;line-height: 10px;padding: 3px 6px;"><span class="fa fa-plus" ></span></span>';
                                 }else
                                 {
                                     echo '<span class="btn btn-danger active" style="cursor:default;line-height: 10px;padding: 3px 6px;"><span class="fa fa-minus" ></span></span>';
-                                }
+                                }*/
+                                
                             }
                         ?>
                         

@@ -999,6 +999,109 @@ var PartialsReviewDownloadHistory = (function () {
     }
 })();
 
+//PartialsReviewDownloadHistoryNew
+var CreateScoreRatingPopup = (function () {
+    return {
+        setup: function () {
+              
+            var preRatingSelected=0;
+            var currentSelect;
+            
+            $( "select.rating-select" ).focus(function() {
+                currentSelect = $(this);
+                preRatingSelected = $(this).val();               
+            }).change(function() {                       
+                 var optionSelected = $(this).find("option:selected");             
+                 var valueSelected  = optionSelected.val();
+                 var textSelected   = optionSelected.text();                 
+                 var userscore = $(this).attr("data-userrate");
+                 var oldcomment =$(this).attr("data-comment");                 
+                 var productcreator = $(this).attr("data-creator");    
+                 var loginuser = $('#score-product-modal').find('#loginuser').val();           
+
+                 /*if(userscore>0)
+                 {
+                    $('#score-product-modal').find('#votelabel').empty()
+                        .append('Score '+userscore+' is given already with comment:'+oldcomment);                
+                 }*/
+
+                 if(!loginuser)
+                 {                
+                    $('#score-product-modal').modal('show');
+                    return;
+                 }
+
+                 if (loginuser == productcreator) {                     
+                    // ignore
+                    $('#score-product-modal').find('#votelabel').text('Project owner not allowed');
+                    $('#score-product-modal').find('.modal-body').empty();
+                    $('#score-product-modal').find('#modal-btn-onsubmit').remove();                    
+                    $('#score-product-modal').modal('show');
+                    return;
+                 }
+                 
+
+                if(valueSelected==-1)
+                 {
+                    $('#score-product-modal').find('#votelabel').empty()
+                            .append('Remove Rating ');
+                 }
+                 else if(valueSelected<=5)
+                 {
+                     $('#score-product-modal').find('#votelabel').empty()
+                            .append('Add a review to your rating "'+textSelected +'" (min. 5 chars) <span style="font-size:10px; display:block"> Please explain the reason for downvote to help the creator to make it better </span> ');
+                      $('#score-product-modal').find('#voteup').val(2);
+                 }                     
+                 else
+                 {                
+                     $('#score-product-modal').find('#votelabel').empty()
+                        .append('Add a review to your rating "'+textSelected+'" (min. 1 char):');       
+                        $('#score-product-modal').find('#voteup').val(1);       
+                 }
+
+
+                $('#score-product-modal').find('#form_p').val($(this).attr("data-project"));
+                 $('#score-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
+                 $('#score-product-modal').find('#commenttext').removeAttr("disabled");
+                 if(valueSelected>=1 && valueSelected<=3)
+                 {
+                    $('#score-product-modal').find('#commenttext').val('');   
+                 }else
+                 {
+                    $('#score-product-modal').find('#commenttext').val(textSelected);   
+                 }  
+                 $('#score-product-modal').find('#userscorevalue').val(valueSelected);
+                 
+                 if(valueSelected=='-1')
+                 {
+                    $('#score-product-modal').find(':submit').text("Remove Rating");                             
+                 }else
+                 {
+                    $('#score-product-modal').find(':submit').text("Rate Now");                          
+                 }                 
+                 $('#score-product-modal').modal('show');
+            });
+
+            
+
+            $("#modal-btn-cancel").on("click", function(){                                                
+                $(currentSelect).find("option[value="+preRatingSelected+"]").prop('selected', true);                
+                $("#score-product-modal").modal('hide');                
+              });     
+             var bOnsubmit = false;     
+            $('#modal-btn-onsubmit').on("click",function(){
+                bOnsubmit = true;
+            });
+            $('#score-product-modal').on('hidden.bs.modal', function () {
+                 if(!bOnsubmit)
+                 {
+                    $(currentSelect).find("option[value="+preRatingSelected+"]").prop('selected', true);   
+                 }                 
+            });         
+        }
+    }
+})();
+
 var PartialForms = (function () {
     return {
         setup: function () {
@@ -1292,6 +1395,69 @@ var PartialCommentReviewForm = (function () {
                     },
                     success: function (results) {
                         $('#review-product-modal').modal('hide');
+                        location.reload();
+                    }
+                });
+                return false;
+            });
+        }
+    }
+})();
+
+
+
+var PartialCommentReviewFormNew = (function () {
+    return {
+        setup: function () {
+            this.initForm();
+        },
+        initForm: function () {
+            $('body').on("submit", 'form.product-add-comment-review-new', function (event) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                var c = $.trim($('#score-product-modal').find('#commenttext').val());
+                var v = $('#score-product-modal').find('#voteup').val();
+                if(v==2) {
+                    // votedown
+                    if(c.length<5)
+                    {
+                            if($('#score-product-modal').find('#votelabel').find('.warning').length==0)
+                            {
+                                $('#score-product-modal').find('#votelabel').append("</br><span class='warning' style='color:red'> Please give a comment, thanks!</span>");
+                            }
+                            return;
+                    }
+                }
+                if(c.length<1)
+                {
+                        if($('#score-product-modal').find('#votelabel').find('.warning').length==0)
+                        {
+                            $('#score-product-modal').find('#votelabel').append("</br><span class='warning' style='color:red'> Please give a comment, thanks!</span>");
+                        }
+                        return;
+                }
+
+                $(this).find(':submit').attr("disabled", "disabled");
+                $(this).find(':submit').css("white-space", "normal");
+                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
+                $(this).find(':submit').append(spin);
+
+                jQuery.ajax({
+                    data: $(this).serialize(),
+                    url: this.action,
+                    type: this.method,
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $('#score-product-modal').modal('hide');
+                        var msgBox = $('#generic-dialog');
+                        msgBox.modal('hide');
+                        msgBox.find('.modal-header-text').empty().append('Please try later.');
+                        msgBox.find('.modal-body').empty().append("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                        setTimeout(function () {
+                            msgBox.modal('show');
+                        }, 900);
+                    },
+                    success: function (results) {
+                        $('#score-product-modal').modal('hide');
                         location.reload();
                     }
                 });

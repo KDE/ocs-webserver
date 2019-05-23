@@ -318,7 +318,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 if(null != $this->_authMember) {
                     $url .= '/u/' . $this->_authMember->member_id;
                 }
-                $url .= '/lt/video/' . $file['name'];
+                $url .= '/lt/filepreview/' . $file['name'];
                 $file['url'] = urlencode($url);
                 $filesList[] = $file;
             }
@@ -460,8 +460,22 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     if(null != $this->_authMember) {
                         $url .= '/u/' . $this->_authMember->member_id;
                     }
-                    $url .= '/lt/video/' . $file['name'];
+                    $url .= '/lt/filepreview/' . $file['name'];
                     $file['url'] = urlencode($url);
+                    
+                    //If this file is a video, we have to convert it for preview
+                    if(!empty($file['type']) && in_array($file['type'], Backend_Commands_ConvertVideo::$VIDEO_FILE_TYPES) && empty($file['ppload_file_preview_id'])) {
+                        $queue = Local_Queue_Factory::getQueue();
+                        $command = new Backend_Commands_ConvertVideo($file['collection_id'], $file['id'], $file['type']);
+                        $queue->send(serialize($command));
+                    }
+                    if(!empty($file['url_preview'])) {
+                        $file['url_preview'] = urlencode($file['url_preview']);
+                    }
+                    if(!empty($file['url_thumb'])) {
+                        $file['url_thumb'] = urlencode($file['url_thumb']);
+                    }
+                    
                     $filesList[] = $file;
                 }
             }
@@ -2220,10 +2234,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     // Save collection ID
                     $projectData->ppload_collection_id = $fileResponse->file->collection_id;
                     //20180219 ronald: we set the changed_at only by new files or new updates
-                    if($this->_authMember->member_id==$projectData->member_id)
+                    if((int)$this->_authMember->member_id==(int)$projectData->member_id)
                     {
                         $projectData->changed_at = new Zend_Db_Expr('NOW()');
-                    }
+                    } else {
+                        $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member ('.$this->_authMember->member_id.') != Project-Owner ('.$projectData->member_id.'): **********' . "\n");
+                    }    
                     $projectData->ghns_excluded = 0;
                     $projectData->save();
 
@@ -2269,12 +2285,21 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $this->_updatePploadMediaCollectionthumbnail($projectData);
                 } else {
                     //20180219 ronald: we set the changed_at only by new files or new updates
-                    if($this->_authMember->member_id==$projectData->member_id)
+                    if((int)$this->_authMember->member_id==(int)$projectData->member_id)
                     {
                         $projectData->changed_at = new Zend_Db_Expr('NOW()');
-                    }                       
+                    } else {
+                        $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member ('.$this->_authMember->member_id.') != Project-Owner ('.$projectData->member_id.'): **********' . "\n");
+                    }                      
                     $projectData->ghns_excluded = 0;
                     $projectData->save();                    
+                }
+                
+                //If this file is a video, we have to convert it for preview
+                if(!empty($fileResponse->file->type) && in_array($fileResponse->file->type, Backend_Commands_ConvertVideo::$VIDEO_FILE_TYPES)) {
+                    $queue = Local_Queue_Factory::getQueue();
+                    $command = new Backend_Commands_ConvertVideo($projectData->ppload_collection_id, $fileResponse->file->id, $fileResponse->file->type);
+                    $queue->send(serialize($command));
                 }
 
                 $this->_helper->json(array(
@@ -2325,6 +2350,17 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $log->debug(__CLASS__ . '::' . __FUNCTION__ . '::' . print_r($tmpFilename, true) . "\n");
                     move_uploaded_file($_FILES['file_upload']['tmp_name'], $tmpFilename);
                     $fileRequest['file'] = $tmpFilename;
+                    
+                    //20180219 ronald: we set the changed_at only by new files or new updates
+                    if((int)$this->_authMember->member_id==(int)$projectData->member_id)
+                    {
+                        $projectData->changed_at = new Zend_Db_Expr('NOW()');
+                    } else {
+                        $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member ('.$this->_authMember->member_id.') != Project-Owner ('.$projectData->member_id.'): **********' . "\n");
+                    }                      
+                    $projectData->ghns_excluded = 0;
+                    $projectData->save();  
+                    
                 }
                 if (isset($_POST['file_description'])) {
                     $fileRequest['description'] = mb_substr($_POST['file_description'], 0, 140);
@@ -2873,6 +2909,99 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         
         
         return $gitProjectIssues;
+    }
+    
+    
+    public function startvideoajaxAction() {
+        $this->_helper->layout()->disableLayout();
+        
+        $collection_id = null;
+        $file_id = null;
+        $memberId = $this->_authMember->member_id;
+        
+        
+        if($this->hasParam('collection_id') && $this->hasParam('file_id')) {
+            $collection_id = $this->getParam('collection_id');
+            $file_id = $this->getParam('file_id');
+            $id = null;
+            
+            //Log media view
+            try {
+                $mediaviewsTable = new Default_Model_DbTable_MediaViews();
+                $id = $mediaviewsTable->getNewId();
+                $data = array('media_view_id' => $id, 'media_view_type_id' => $mediaviewsTable::MEDIA_TYPE_VIDEO, 'project_id' => $this->_projectId, 'collection_id' => $collection_id, 'file_id' => $file_id, 'start_timestamp' => new Zend_Db_Expr ('Now()'), 'ip' => $this->getRealIpAddr(), 'referer' => $this->getReferer());
+                if(!empty($memberId)) {
+                   $data['member_id'] = $memberId;
+                }
+                $data['source'] = 'OCS-Webserver';
+
+                $mediaviewsTable->createRow($data)->save();
+
+            } catch (Exception $exc) {
+                //echo $exc->getTraceAsString();
+                $errorLog = Zend_Registry::get('logger');
+                $errorLog->err(__METHOD__ . ' - ' . $exc->getMessage() . ' ---------- ' . PHP_EOL);
+            }
+            
+            
+            $this->_helper->json(array('status' => 'success', 'MediaViewId' => $id));
+
+            return;
+        }
+
+        $this->_helper->json(array('status' => 'error'));
+    }
+    
+    public function stopvideoajaxAction() {
+        $this->_helper->layout()->disableLayout();
+        
+        $view_id = null;
+        
+        if($this->hasParam('media_view_id')) {
+            $view_id = $this->getParam('media_view_id');
+            
+            //Log media view stop
+            try {
+                $mediaviewsTable = new Default_Model_DbTable_MediaViews();
+                $data = array('stop_timestamp' => new Zend_Db_Expr ('Now()'));
+                $mediaviewsTable->update($data, 'media_view_id = '. $view_id);
+            } catch (Exception $exc) {
+                //echo $exc->getTraceAsString();
+                $errorLog = Zend_Registry::get('logger');
+                $errorLog->err(__METHOD__ . ' - ' . $exc->getMessage() . ' ---------- ' . PHP_EOL);
+            }
+            $this->_helper->json(array('status' => 'success', 'MediaViewId' => $view_id));
+
+            return;
+        }
+
+        $this->_helper->json(array('status' => 'error'));
+    }
+    
+    function getRealIpAddr()
+    {
+        if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
+        {
+          $ip=$_SERVER['HTTP_CLIENT_IP'];
+        }
+        elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
+        {
+          $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+        else
+        {
+          $ip=$_SERVER['REMOTE_ADDR'];
+        }
+        return $ip;
+    }
+    
+    function getReferer()
+    {
+        $referer = null;
+        if (!empty($_SERVER['HTTP_REFERER'])) {
+            $referer = $_SERVER['HTTP_REFERER'];
+        }
+        return $referer;
     }
 
 }

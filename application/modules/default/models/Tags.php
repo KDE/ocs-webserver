@@ -27,6 +27,8 @@ class Default_Model_Tags
     const TAG_TYPE_PROJECT = 1;
     const TAG_TYPE_MEMBER = 2;
     const TAG_TYPE_FILE = 3;
+    const TAG_TYPE_OSUSER = 9;
+    
     
     const TAG_USER_GROUPID = 5;
     const TAG_CATEGORY_GROUPID = 6;
@@ -103,6 +105,8 @@ class Default_Model_Tags
         $this->getAdapter()->query($sql);
     }
 
+
+
     /**
      * @param int $object_id
      * @param int $tag_type
@@ -142,7 +146,7 @@ class Default_Model_Tags
     public function getTagsArray($object_id, $tag_type,$tag_group_ids)
     {           
             $sql = "
-                        SELECT tag.tag_id,tag.tag_name,tag_group_item.tag_group_id,tag.tag_fullname
+                        SELECT tag.tag_id,tag.tag_name,tag_group_item.tag_group_id,tag.tag_fullname, tag.tag_description
                         FROM tag_object
                         JOIN tag ON tag.tag_id = tag_object.tag_id
                         join tag_group_item on tag_object.tag_id = tag_group_item.tag_id and tag_object.tag_group_id = tag_group_item.tag_group_id
@@ -645,6 +649,8 @@ class Default_Model_Tags
                          select 
                          tag.tag_id 
                          ,tag.tag_name
+                         ,tag_fullname
+                         ,tag_description
                          from tag
                          join tag_group_item on tag.tag_id = tag_group_item.tag_id and tag_group_item.tag_group_id = :groupid                         
                          order by tag_name
@@ -951,6 +957,8 @@ class Default_Model_Tags
     }
     
     
+    
+
      /**
      * @param int $object_id
      *
@@ -958,14 +966,9 @@ class Default_Model_Tags
      */
     public function getTagsEbookSubject($object_id)
     {
-        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_SUBJECT_GROUPID;
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_ebook_subject;
         $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
-
-        $tag_names = array();
-        foreach ($tags as $tag) {
-            $tag_names[]=$tag['tag_fullname'];
-        }
-        return $tag_names;
+        return $tags;
     }
 
      /**
@@ -975,14 +978,9 @@ class Default_Model_Tags
      */
     public function getTagsEbookAuthor($object_id)
     {
-        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_AUTHOR_GROUPID;
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_ebook_author;
         $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
-
-        $tag_names = array();
-        foreach ($tags as $tag) {
-            $tag_names[]=$tag['tag_fullname'];
-        }
-        return $tag_names;
+        return $tags;
     }
     
     
@@ -993,14 +991,9 @@ class Default_Model_Tags
      */
     public function getTagsEbookEditor($object_id)
     {
-        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_EDITOR_GROUPID;
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_ebook_editor;
         $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
-
-        $tag_names = array();
-        foreach ($tags as $tag) {
-            $tag_names[]=$tag['tag_fullname'];
-        }
-        return $tag_names;
+        return $tags;
     }
     
     
@@ -1011,14 +1004,9 @@ class Default_Model_Tags
      */
     public function getTagsEbookIllustrator($object_id)
     {
-        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_ILLUSTRATOR_GROUPID;
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_ebook_illustrator;
         $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
-
-        $tag_names = array();
-        foreach ($tags as $tag) {
-            $tag_names[]=$tag['tag_fullname'];
-        }
-        return $tag_names;
+        return $tags;
     }
     
     
@@ -1029,14 +1017,9 @@ class Default_Model_Tags
      */
     public function getTagsEbookTranslator($object_id)
     {
-        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_TRANSLATOR_GROUPID;
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_ebook_translator;
         $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
-
-        $tag_names = array();
-        foreach ($tags as $tag) {
-            $tag_names[]=$tag['tag_fullname'];
-        }
-        return $tag_names;
+        return $tags;
     }
     
     
@@ -1047,14 +1030,9 @@ class Default_Model_Tags
      */
     public function getTagsEbookShelf($object_id)
     {
-        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_SHELF_GROUPID;
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_ebook_shelf;
         $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
-
-        $tag_names = array();
-        foreach ($tags as $tag) {
-            $tag_names[]=$tag['tag_fullname'];
-        }
-        return $tag_names;
+        return $tags;
     }
     
     
@@ -1065,14 +1043,9 @@ class Default_Model_Tags
      */
     public function getTagsEbookLanguage($object_id)
     {
-        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_LANGUAGE_GROUPID;
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_ebook_language;
         $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
-
-        $tag_names = array();
-        foreach ($tags as $tag) {
-            $tag_names[]=$tag['tag_fullname'];
-        }
-        return $tag_names;
+        return $tags;
     }
     
     
@@ -1083,14 +1056,9 @@ class Default_Model_Tags
      */
     public function getTagsEbookType($object_id)
     {
-        $tag_group_ids =$this::TAG_PRODUCT_EBOOK_TYPE_GROUPID;
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_ebook_type;
         $tags = $this->getTagsArray($object_id, $this::TAG_TYPE_PROJECT,$tag_group_ids);
-
-        $tag_names = array();
-        foreach ($tags as $tag) {
-            $tag_names[]=$tag['tag_fullname'];
-        }
-        return $tag_names;
+        return $tags;
     }
     
     
@@ -1130,4 +1098,109 @@ class Default_Model_Tags
         
         
     }
+
+   //========================== generic methods =============================
+    public function getTagGroups($tag_group_ids)
+    {
+        $sql = 'select g.group_id
+                ,g.group_name
+                ,g.group_display_name
+                ,g.is_multi_select
+                ,i.tag_group_item_id
+                ,i.tag_id
+                ,t.tag_name
+                ,t.tag_fullname
+                ,t.tag_description    
+             from 
+             tag_group g,
+             tag_group_item i,
+             tag t
+             where g.group_id=i.tag_group_id
+             and i.tag_id = t.tag_id 
+             and g.group_id in ('.$tag_group_ids.')';
+        $resultSet = $this->getAdapter()->fetchAll($sql);
+        return $resultSet;
+    }
+           
+    /*
+    * $tag_ids array tag ids 
+    */
+    public function insertTagObject($tag_ids, $tag_type_id, $tag_group_id, $tag_object_id,$tag_parent_object_id)
+    {
+        if($tag_ids==null || sizeof($tag_ids)==0)
+        {
+            return;
+        }
+        if(!is_array($tag_ids))
+        {
+            $tag_ids=array($tag_ids);
+        }
+        
+       if($tag_parent_object_id)
+       {
+            $prepared_insert =
+                array_map(function ($id) use ($tag_type_id,$tag_group_id,$tag_object_id,$tag_parent_object_id) 
+                    { return "({$id}, {$tag_type_id},{$tag_group_id},{$tag_object_id},{$tag_parent_object_id})"; },
+                    $tag_ids);
+            $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_group_id,tag_object_id,tag_parent_object_id) VALUES " . implode(',',$prepared_insert);        
+
+            $this->getAdapter()->query($sql);        
+        }else
+        {
+            $prepared_insert =
+                array_map(function ($id) use ($tag_type_id,$tag_group_id,$tag_object_id) 
+                    { return "({$id}, {$tag_type_id},{$tag_group_id},{$tag_object_id})"; },
+                    $tag_ids);
+            $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_group_id,tag_object_id) VALUES " . implode(',',$prepared_insert);        
+            $this->getAdapter()->query($sql);       
+        }
+    }
+
+    public function fetchTagObject($tag_id,$tag_object_id,$tag_group_id,$tag_type_id)
+    {
+        $sql = $sql_object= "select tag_item_id  from tag_object WHERE tag_id = :tag_id and tag_object_id=:tag_object_id and tag_group_id=:tag_group_id  
+                                and tag_type_id = :tag_type_id and is_deleted = 0";
+        $r = $this->getAdapter()->fetchRow($sql_object, array('tag_id' => $tag_id, 
+                                                            'tag_object_id' =>$tag_object_id, 
+                                                            'tag_group_id' => $tag_group_id, 
+                                                            'tag_type_id' => $tag_type_id 
+                                                            ));
+        return $r;
+    }
+
+    public function deleteTagForTabObject($tag_object_id,$tag_group_id,$tag_type_id)
+    {
+    
+        $sql = "UPDATE tag_object SET tag_changed = NOW() , is_deleted = 1  WHERE tag_group_id = :tag_group_id AND tag_type_id = :tag_type_id AND tag_object_id = :tag_object_id";
+        $this->getAdapter()->query($sql, array('tag_group_id' => $tag_group_id, 'tag_type_id' =>$tag_type_id, 'tag_object_id' => $tag_object_id));
+        
+    }
+
+    //========================== generic methods end =============================
+
+
+    // ======================== settings profile user os ==========================================
+    /**     
+     * @return array
+     */
+    public function getTagGroupsOSUser()
+    {
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_osuser;               
+        return $this->getTagGroups($tag_group_ids);
+    }
+
+    public function saveOSTagForUser($tag_id,$tag_type_id,$tag_group_id,$member_id)
+    {       
+        $this->deleteTagForTabObject($member_id,$tag_group_id,$tag_type_id);            
+        
+        $this->insertTagObject($tag_id,$tag_type_id,$tag_group_id,$member_id,null);
+    }    
+
+    public function getTagsOSUser($member_id)
+    {
+        $tag_group_ids = Zend_Registry::get('config')->settings->client->default->tag_group_osuser;  
+        $tag_type_id = Zend_Registry::get('config')->settings->client->default->tag_type_osuser;        
+        return $this->getTagsArray($member_id,$tag_type_id,$tag_group_ids);
+    }
+
 }

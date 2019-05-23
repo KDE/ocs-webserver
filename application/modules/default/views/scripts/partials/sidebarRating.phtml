@@ -25,19 +25,21 @@
 $modelRating = new Default_Model_DbTable_ProjectRating();
 $rating = $modelRating->fetchRating($this->product->project_id);
 **/
-$helper = new Default_View_Helper_BuildProductUrl();
-$urlDislike = $helper->buildProductUrl($this->product->project_id, 'rating', array('rate' => 2));
-$urlLike = $helper->buildProductUrl($this->product->project_id, 'rating', array('rate' => 1));
+//$helper = new Default_View_Helper_BuildProductUrl();
+//$urlDislike = $helper->buildProductUrl($this->product->project_id, 'rating', array('rate' => 2));
+//$urlLike = $helper->buildProductUrl($this->product->project_id, 'rating', array('rate' => 1));
 
 //$likesAndDislikes = ($this->product->count_likes == 0 and $this->product->count_dislikes == 0) ? '' : '(' . $this->product->count_likes . '/' . $this->product->count_dislikes . ')';
-$cssNoVotes = (($this->product->count_likes+$this->product->count_dislikes) == 0) ? ';opacity:0.5;' : '';
+//$cssNoVotes = (($this->product->count_likes+$this->product->count_dislikes) == 0) ? ';opacity:0.5;' : '';
 
 // calculate colour
 $blue = $red = $green = $default=200;
-$score = $this->product->laplace_score;
-
+//$score = $this->product->laplace_score;
+$model = new Default_Model_DbTable_ProjectRating();
+$score = $model->getScoreOld($this->product->project_id);  
+/*
 if($score==0)
-	$score = 50;
+	$score = 50;*/
 
 if($score>50) {
     $red=dechex($default-(($score-50)*4));
@@ -80,7 +82,7 @@ if(strlen($red)==1) $red='0'.$red;
                         <div class="progress-bar" style="background-color: #<?=$red.$green.$blue?>;width: <?= floor($score) ?>%;">
                             
                         </div>
-                        <div class="progress-bar" style="background-color:#eeeeee;width: <?= floor(100 - $score) ?>%;<?=$cssNoVotes?>">
+                        <div class="progress-bar" style="background-color:#eeeeee;width: <?= floor(100 - $score) ?>%;">
                           
                         </div>
                     </div>

@@ -56,6 +56,7 @@ class Default_Form_Login extends Zend_Form
         //$loginPass->setAttrib('class', 'inputbox password');
 
         $rememberMe = $this->createElement('checkbox', 'remember_me')
+            ->setOptions(array("checked" => "checked"))
             ->setLabel('index.login.remember_me')
             ->setDecorators(
                 array(

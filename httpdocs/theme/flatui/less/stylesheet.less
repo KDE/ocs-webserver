@@ -819,6 +819,7 @@ ul.meta-nav-top
   border-bottom-style: solid;
   border-bottom-color: transparent;
   background-color:transparent;
+  cursor: pointer;
 }
 
 
@@ -1952,7 +1953,7 @@ ul.meta-nav-top
         }
         div.projectdetailRating{
           float: right;
-          width:150px;
+          width:140px;
           z-index: 100;
 
 
@@ -2158,6 +2159,12 @@ ul.meta-nav-top
 
               #product-about {
                 padding: 20px 10px 10px 10px;
+                .gitlab-readme{
+                  img{
+                    max-width: 100%;
+                  }
+
+                }
                 article {
                     padding-top: 15px;
                 }
@@ -2187,6 +2194,15 @@ ul.meta-nav-top
                   padding: 15px;
               }
 
+            }
+
+            &#ratings-panel2{
+              .userimg {
+                border-radius: 50%;
+                border: 1px solid #ccc;
+                width: 40px;
+                height: 40px;
+              }
             }
 
             &#ratings-panel{
@@ -3119,7 +3135,7 @@ span.page-views {
     }
 
     .my-fav-list{
-      width: 1100px;
+      width: 100%;
       .totaldownloads{
         margin:0;
         padding: 20px;
@@ -3135,7 +3151,7 @@ span.page-views {
       }
 
       .rating{
-        width: 60px !important;
+        width: 80px !important;
         font-size: 10pt;
       }
       .downloadhistory-image{
@@ -6086,7 +6102,7 @@ img.imgpopover
       }
       .rating
       {
-            width: 60px;
+            width: 80px;
       }
       .time
       {
@@ -6206,7 +6222,7 @@ img.imgpopover
       }
 
       .rating{
-        width: 60px !important;
+        width: 80px !important;
         font-size: 10pt;
       }
       .downloadhistory-image{
@@ -6667,5 +6683,22 @@ main#plings-page{
   .row{
     border-bottom:1px solid #ddd;
 
+  }
+}
+
+/*
+* Rating Begin
+*/
+.rating-label
+{
+  padding: .0em 1em 0em;
+  color: #fff;  
+  border-radius: .25em;
+  font-weight: 700;
+  font-size: 90%;
+  cursor: pointer;
+
+  &-highlight{
+    border: 1px solid #2185D0;
   }
 }

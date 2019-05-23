@@ -102,26 +102,48 @@ $isowner = false;
 if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->product->member_id){
     $isowner = true;
 }
+$this->isowner = $isowner;
 
 $filesTable = new Default_Model_DbTable_PploadFiles();
 $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collection_id);
 
 
-$this->galleryPictures = $tableProject->getGalleryPictureSources($this->product->project_id);
-if(sizeof($this->galleryPictures)==0)
+$pics= $tableProject->getGalleryPictureSources($this->product->project_id);
+
+if(sizeof($pics)==0)
 {
-    $this->galleryPictures = array($this->product->image_small);
+    array_push($pics,$this->product->image_small);   
 }
-foreach ($this->galleryPictures as &$value) {
-     $value = $this->Image($value, array('height' => '600'));
+$this->galleryPictures=array();
+foreach ($pics as $p) {
+     $this->galleryPictures[] = $this->Image($p, array('height' => '600'));
 }
 
 $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 ?>
 
     <link href="/theme/react/assets/css/get-it.css" type="text/css" rel="stylesheet"/>
-    <link href="/theme/react/product-media-slider/style/product-media-slider.css" type="text/css" rel="stylesheet"/>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/css/swiper.min.css">
+    
+    <link href="/theme/react/product-media-slider/style/video-react.css" type="text/css" rel="stylesheet" />
+    <link href="/theme/react/product-media-slider/style/product-media-slider.css" type="text/css" rel="stylesheet" />
+    <style>
+        #media-slider .carousel-control {
+            /* Firefox */
+            height: -moz-calc(100% - 75px) !important ;
+            /* WebKit */
+            height: -webkit-calc(100% - 75px) !important ;
+            /* Opera */
+            height: -o-calc(100% - 75px) !important ;
+            /* Standard */
+            height: calc(100% - 75px) !important ;
+        }
+
+        .is-mobile .video-react-video  {
+            height:100% !important;
+        }
+    </style>
     <!-- facebook -->
     <div id="fb-root"></div>
     <?php if (Zend_Auth::getInstance()->hasIdentity()) {
@@ -219,7 +241,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="padding-bottom: 20px">
                <div class="modal-header">
-                    <label id="votelabel"> </label>
+                 <label id="votelabel" class="modal-title"> </label>
                    <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
                                aria-hidden="true">&times;</span></button>
                </div>
@@ -256,8 +278,9 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                    <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
                                aria-hidden="true">&times;</span></button>
                </div>
+               <form class="full-width product-add-comment-review" action="/productcomment/addreplyreview/" method="post" >
                <div class="modal-body">
-                 <form class="full-width product-add-comment-review" action="/productcomment/addreplyreview/" method="post" >
+                 
                             <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
                             <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>
                             <input type="hidden" name="v" value="1" id="voteup"/>
@@ -265,9 +288,14 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                             <input type="hidden" name="otxt" value="<?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?>" id="otxt"/>
                             <input type="hidden" name="userrate" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['user_like']?>" id="userrate"/>                            
                             <textarea name="msg" class="full-width" id="commenttext"><?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?></textarea>
-                            <button type="submit" class="small pull-right">Rate Now</button>
-                </form>
+                            
+                
                 </div>
+                <div class="modal-footer">
+                            <button type="button" class="small" data-dismiss="modal">cancel</button>
+                            <button type="submit" class="small pull-right">Rate Now</button>
+                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -277,29 +305,44 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="padding-bottom: 20px">
                <div class="modal-header">
-                    <label id="votelabel"> </label>
-                   <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
+                <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
                                aria-hidden="true">&times;</span></button>
+                    <label id="votelabel" class="modal-title"> </label>                                    
                </div>
-               <div class="modal-body">
-                 <form class="full-width product-add-comment-review" action="/productcomment/addreplyreviewnew/" method="post" id="reviewform">
-                            <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
-                            <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>                            
-                            <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
-                            <input type="hidden" name="otxt" value="<?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?>" id="otxt"/>
-                            
-                            <input type="hidden" name="userscore" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['score']?>" id="userscore"/>
-                            <input type="hidden" name="s" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['score']?>" id="userscorevalue"/>
-                            <textarea name="msg" class="full-width" id="commenttext"><?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?></textarea>
-                            <button type="submit" class="small pull-right">Rate Now</button>
-                </form>
+               <form class="full-width product-add-comment-review-new" action="/productcomment/addreplyreviewnew/" method="post" id="reviewform">
+               <div class="modal-body">                 
+                    <input type="hidden" name="p" value="<?= $this->product->project_id ?>" id="form_p"/>
+                    <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>       
+                    <input type="hidden" name="v" value="1" id="voteup"/>
+                    <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
+                    <input type="hidden" name="otxt" value="<?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?>" id="otxt"/>                    
+                    <input type="hidden" name="userscore" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['score']?>" id="userscore"/>
+                    <input type="hidden" name="s" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['score']?>" id="userscorevalue"/>
+                    <textarea name="msg" class="full-width" id="commenttext"><?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?></textarea>     
+
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="small" id="modal-btn-cancel" style="float: left;">Cancel</button>                             
+                    <button type="submit" class="small pull-right" id="modal-btn-onsubmit">Rate Now</button>
+                </div>
+                </form>
             </div>
         </div>
     </div>
-
     <?php } else {?>
         <div id="review-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm" role="document">
+               <div class="modal-content" style="min-height: 150px; ">
+                   <span style="text-align: center; display: block; padding-top: 30px">
+                    Please login.
+                    <br/>
+                    <a href="<?=$loginUrl?>" rel="nofollow"> Login </a>                   
+                    </span>
+               </div>
+             </div>
+        </div>
+
+        <div id="score-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-sm" role="document">
                <div class="modal-content" style="min-height: 150px; ">
                    <span style="text-align: center; display: block; padding-top: 30px">
@@ -477,18 +520,21 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                         ?>
                                         </div>
                                 </div>
-
-                                <div class="projectdetailRating" style="clear: right">
+                                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
+                                <div class="projectdetailRating" style="clear: right; width: 135px;">
                                         <?php echo $this->render('partials/sidebarRating.phtml'); ?>
                                 </div>
-
-                                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
+                                <?php } ?>
+                               
                                 <div class="projectdetailRating" style="clear: right">
                                         <?php echo $this->render('partials/sidebarScore.phtml'); ?>
                                 </div>
-                                <?php } ?>
+                                
                             </div>
                         </div>
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
+                        <div id="product-media-slider-container" class="imgsmall"></div>
+                        <?php } else { ?>
                         <div id="carouselContainer" class="carouselContainer">
                             <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
 
@@ -572,7 +618,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                 <?php } ?>
                             </div><!-- End Carousel -->
                         </div>
-                        <div id="product-media-slider-container"></div>
+                        <?php } ?>
                     </div>
                 </div>
 
@@ -608,13 +654,11 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                             <li><a href="#gitlabissues-panel" data-toggle="tab">Issues <?php echo '('.$cntGitIssues.')';  ?></a></li>
                         <?php } ?>
 
-                       
+                       <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
                         <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
-                      
-
-                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
-                            <li><a href="#ratings-panel2" data-toggle="tab">Ratings<?php echo '('.$cntRatingsActive.')';  ?></a></li>
-                        <?php } ?>
+                       <?php } ?>
+                        
+                        <li><a href="#ratings-panel2" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>                       
 
 
                         <?php if(count($this->projectplings)>0){ ?>
@@ -642,18 +686,18 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                     <?php
                                         if($this->product->is_gitlab_project && $this->product->use_gitlab_project_readme && null != $this->gitlab_project['readme_url']) {
                                     ?>
-                                    <article>
+                                    <div class="gitlab-readme">
+                                        <article>
                                         <b>Description:</b> <br/><br/>
                                         <?=$this->readme ?><br/><br/>
-                                    </article>
+                                        </article>
+                                    </div>
                                     <?php
                                         } else {
                                     ?>
                                     <article>
                                         <b>Description:</b> <br/><br/>
                                         <?=$this->product->description ?>
-                                        
-                                        
                                     </article>
                                     
                                     <?php
@@ -753,7 +797,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                          <?php } ?>
 
                         <!-- ratings panel -->
-                        
+                        <?php  if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) { ?>
                         <div class="tab-pane" id="ratings-panel">
                             <div id="ratings-panel-wrapper" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                             <article>
@@ -765,11 +809,11 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                             </article>
                             </div>
                         </div>
-                      
+                       <?php } ?>
 
 
                         <!-- ratings panel2 -->
-                        <?php  if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) { ?>
+                        
                         <div class="tab-pane" id="ratings-panel2">
                             <div id="ratings-panel-wrapper2" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                             <article>
@@ -781,7 +825,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                             </article>
                             </div>
                         </div>
-                        <?php } ?>
+                       
 
                         <!-- likes panel -->
                         <?php  if (count($this->likes) > 0) { ?>
@@ -1038,13 +1082,11 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 
                         <?php echo $this->render('partials/sidebarCcLicense.phtml'); ?>
                         
-                        <?php /*
+                        <?php
                             $isEbookHelper = new Default_View_Helper_IsProjectEbook();
                             if($isEbookHelper->isProjectEbook($this->product->project_id)) {
                                 echo $this->render('product/partials/ebook_details.phtml');
                             }
-                         * 
-                         */
                         ?>
 
                         <?php echo $this->render('product/partials/details.phtml'); ?>                                                
@@ -1094,6 +1136,11 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
   var galleryPicturesJson = <?php echo $galleryPicturesJson?>;
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/js/swiper.min.js"></script>
+<script type="text/javascript" src="/theme/react/product-media-slider/product-media-slider.js"></script>
+
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
             InitActiveHashTab.setup();
@@ -1102,11 +1149,13 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
             PartialJsonClone.setup();
             ProductDetailCarousel.setup();
             PartialCommentReviewForm.setup();
+            PartialCommentReviewFormNew.setup();
             PartialsButtonHeartDetail.setup();
             PartialsButtonPlingProject.setup();
             TooltipUser.setup("tooltipuserleft","left");
             AppimagequestionOnClick.setup();
             Opendownloadfile.setup();
+            CreateScoreRatingPopup.setup();
             $(\'.tooltipheart\').tooltipster({theme: [\'tooltipster-light\', \'tooltipster-light-customized\'],
                     contentCloning: true,
                     contentAsHTML: true,

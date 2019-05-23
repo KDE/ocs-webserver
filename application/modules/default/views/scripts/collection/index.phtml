@@ -302,6 +302,36 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
         </div>
     </div>
 
+    <div id="score-product-modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="padding-bottom: 20px">
+               <div class="modal-header">
+                    <label id="votelabel"> </label>
+                   <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
+                               aria-hidden="true">&times;</span></button>
+               </div>
+               <form class="full-width product-add-comment-review-new" action="/productcomment/addreplyreviewnew/" method="post" id="reviewform">
+               <div class="modal-body">
+                 
+                            <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
+                            <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>                            
+                            <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
+                            <input type="hidden" name="otxt" value="<?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?>" id="otxt"/>
+                            
+                            <input type="hidden" name="userscore" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['score']?>" id="userscore"/>
+                            <input type="hidden" name="s" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['score']?>" id="userscorevalue"/>
+                            <textarea name="msg" class="full-width" id="commenttext"><?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?></textarea>
+                                   
+                </div>
+                <div class="modal-footer">
+                            <button type="button" class="small" id="modal-btn-cancel" style="margin-right:20px ">Cancel</button>                             
+                            <button type="submit" class="small pull-right" id="modal-btn-onsubmit">Rate Now</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <?php } else {?>
         <div id="review-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-sm" role="document">
@@ -316,6 +346,18 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                     <br/><br/>You can still 'Like' a product, but that doesn't affect its score.
                         */
                     ?>
+                    </span>
+               </div>
+             </div>
+        </div>
+
+        <div id="score-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm" role="document">
+               <div class="modal-content" style="min-height: 150px; ">
+                   <span style="text-align: center; display: block; padding-top: 30px">
+                    Please login.
+                    <br/>
+                    <a href="<?=$loginUrl?>" rel="nofollow"> Login </a>                   
                     </span>
                </div>
              </div>
@@ -441,11 +483,17 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                         </div>
                                 </div>
 
-
-
+                                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
                                 <div class="projectdetailRating" style="clear: right">
                                         <?php echo $this->render('partials/sidebarRating.phtml'); ?>
                                 </div>
+                                <?php } ?>
+                                
+                                <div class="projectdetailRating" style="clear: right">
+                                        <?php echo $this->render('partials/sidebarScore.phtml'); ?>
+                                </div>
+
+
                             </div>
                         </div>
 
@@ -555,9 +603,13 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                             <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php echo '('.count($this->updates).')';  ?></a></li>
                         <?php } ?>
 
-                        <?php if(count($this->ratings)>0){ ?>
-                            <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
-                        <?php } ?>
+
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
+                        <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
+                       <?php } ?>
+                        
+                        <li><a href="#ratings-panel2" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>   
+
                          <?php if(count($this->likes)>0){ ?>
                             <li><a href="#likes-panel" data-toggle="tab">Favs <?php echo '('.count($this->likes).')';  ?></a></li>
                         <?php } ?>
@@ -830,8 +882,8 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                         </div>
                         <?php } ?>
 
-                        <!-- ratings panel -->
-                        <?php  if (count($this->ratings) > 0) { ?>
+                       <!-- ratings panel -->
+                        <?php  if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) { ?>
                         <div class="tab-pane" id="ratings-panel">
                             <div id="ratings-panel-wrapper" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                             <article>
@@ -843,7 +895,22 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                             </article>
                             </div>
                         </div>
-                        <?php } ?>
+                       <?php } ?>
+
+
+                        <!-- ratings panel2 -->
+                        
+                        <div class="tab-pane" id="ratings-panel2">
+                            <div id="ratings-panel-wrapper2" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                            <article>
+                                <div id="productRatingContainer2">
+                                <?php
+                                       echo $this->render('product/partials/productRating2.phtml');
+                                  ?>
+                                  </div>
+                            </article>
+                            </div>
+                        </div>
 
                         <!-- likes panel -->
                         <?php  if (count($this->likes) > 0) { ?>
@@ -989,6 +1056,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
             PartialJsonFraud.setup();
             ProductDetailCarousel.setup();
             PartialCommentReviewForm.setup();
+            PartialCommentReviewFormNew.setup();
             PartialsButtonHeartDetail.setup();
             PartialsButtonPlingProject.setup();
             TooltipUser.setup("tooltipuserleft","left");

@@ -237,33 +237,34 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $comment_id = null;
         $status = 'ok';
         $message = '';
-        
-        
-        
-        //Only Supporter can make a review
+                
+                
         if(Zend_Auth::getInstance()->hasIdentity() ) {
-            if ($msg != '' && strlen($msg)>0) {
-                               
-             
+            if ($msg != '' && strlen($msg)>0) {                                            
                 $score = (int)$this->getParam('s');
-
                 // negative voting msg length > 5 
                 if($score < 6 && strlen($msg) < 5)
                 {
                     $this->_helper->json(array('status' => 'error', 'message' => ' At least 5 chars. ', 'data' => ''));
                     return;
                 }
-                $modelRating = new Default_Model_DbTable_ProjectRating();                
-                $modelRating->scoreForProject($project_id, $this->_authMember->member_id, $score, $msg);
 
-               
                 $this->view->product = $this->loadProductInfo((int)$this->getParam('p'));
                 $this->view->member_id = (int)$this->_authMember->member_id;
 
+                if($this->view->product->member_id==$this->view->member_id)
+                {
+                    $this->_helper->json(array('status' => 'error', 'message' => ' Not allowed. ', 'data' => ''));
+                    return;   
+                }
+                $modelRating = new Default_Model_DbTable_ProjectRating();                
+                $modelRating->scoreForProject($project_id, $this->_authMember->member_id, $score, $msg);
+               
+                
+
                 if($this->view->product){                    
                     //Send a notification to the owner
-                    $this->sendNotificationToOwner($this->view->product, Default_Model_HtmlPurify::purify($this->getParam('msg')));
-                   
+                    $this->sendNotificationToOwner($this->view->product, Default_Model_HtmlPurify::purify($this->getParam('msg')));                   
                 }
             } 
            
