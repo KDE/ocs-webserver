@@ -131,6 +131,7 @@ video:focus {
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-menu-button-vertical:hover .video-react-menu-content {
   height: 12em;
   width: 2.9em;
+  bottom: 2.5em;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-time-divider {
   display: none !important;

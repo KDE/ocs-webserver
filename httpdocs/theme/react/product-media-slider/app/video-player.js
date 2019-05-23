@@ -18,8 +18,6 @@ class VideoPlayerWrapper extends React.Component {
         this.state = {
             source:this.props.slide.url_preview,
             width:this.props.width,
-            videoWidthSet:false,
-            videoRenderMask:true,
             videoStarted:false,
             videoStopped:false,
             videoStartUrl:hostLocation + "startvideoajax?collection_id="+this.props.slide.collection_id+"&file_id="+this.props.slide.file_id,
@@ -38,6 +36,11 @@ class VideoPlayerWrapper extends React.Component {
     handleStateChange(state, prevState) {
         this.setState({ player: state },function(){
             if (this.state.player){
+                if (typeof this.state.player.videoWidth !== undefined) {
+                    setTimeout(() => {
+                        this.setState({videoRenderMask:false}) 
+                    }, 1000);
+                }
                 if (this.state.player.hasStarted && this.state.videoStarted === false){
                     this.setState({videoStarted:true},function(){
                         const self = this;
@@ -83,10 +86,13 @@ class VideoPlayerWrapper extends React.Component {
     render(){   
         let videoPlayerDisplay;
         if (this.state.source){
-
             let width = this.props.width;
-            // if (this.props.cinemaMode === true) width = 300;
-
+            if (this.props.cinemaMode === false){
+                if (this.state.player){
+                    const dimensionsRatio =  this.props.height / this.state.player.videoHeight;
+                    width = this.state.player.videoWidth * dimensionsRatio;
+                }
+            }
             videoPlayerDisplay = (
                 <Player
                     ref="player"
@@ -105,11 +111,12 @@ class VideoPlayerWrapper extends React.Component {
                         </ControlBar>
                 </Player>            
             )
-
         }
-    
+        let videoRenderMask = <div className="video-render-mask"></div>
+        if (this.state.videoRenderMask === false){ videoRenderMask = ''; }
         return (
             <div className={"react-player-container"}>
+                {videoRenderMask}
                 {videoPlayerDisplay}
             </div>
         )

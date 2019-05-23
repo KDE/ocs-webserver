@@ -298,7 +298,10 @@ function SlideItem(props){
           setMediaStyle({height:imageHeight})
           props.onSetSliderHeight(imageHeight);
         }
-        else if (imageEl.offsetHeight > 0) setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
+        else if (imageEl.offsetHeight > 0) {
+          setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
+          props.onSetSliderHeight(360)
+        }
       }
     
     else if (props.slide.type === "embed"){ 
