@@ -1,12 +1,3 @@
-import React, { useState } from 'react';
-import ReactPlayer from 'react-player'
-
-
-
-
-
-
-
 import React from 'react';
 import { 
     Player, 
@@ -16,16 +7,6 @@ import {
     LoadingSpinner,
     CurrentTimeDisplay,
     DurationDisplay } from 'video-react';
-
-
-function VideoPlayerWrapper(props){
-    console.log(props);
-    return (
-        <ReactPlayer url={props.source} playing />
-    )
-
-
-
 
 class VideoPlayerWrapper extends React.Component {
     constructor(props, context){

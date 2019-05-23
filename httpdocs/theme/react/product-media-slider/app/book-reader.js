@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 import React, { useState } from 'react';
 
 function BookReaderWrapper(props){
