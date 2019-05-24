@@ -17,15 +17,12 @@ function ProductMediaSlider(){
   if (window.filesJson) {
     window.filesJson.forEach(function(f,index){
       if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 || f.type.indexOf('epub') > -1){
-        
         let type;
         if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 ) type = f.type.split('/')[0]
         else if (f.type.indexOf('epub') > -1 ) type = "book";
-        
         let url_preview, url_thumb;
         if (f.url_thumb) url_thumb = f.url_thumb.replace(/%2F/g,'/').replace(/%3A/g,':');
         if (f.url_preview) url_preview = f.url_preview.replace(/%2F/g,'/').replace(/%3A/g,':');
-
           const gItem = {
             url:f.url.replace(/%2F/g,'/').replace(/%3A/g,':'),
             collection_id:f.collection_id,
@@ -240,9 +237,17 @@ function ProductMediaSlider(){
         onThumbItemClick={(slideIndex) => onThumbItemClick(slideIndex)}
       />
     ))
+
+    let thumbnailNavigationCss;
+    if (containerWidth > (gallery.length * 200)){
+      thumbnailNavigationCss = {
+        paddingLeft: (containerWidth - (gallery.length * 200)) / 2
+      }
+    }
+
     thumbnailNavigationDisplay = (
-      <div id="slide-navigation" className="swiper-container gallery-thumbs">
-        <div className="thumbnail-navigation swiper-wrapper">{slidesThumbnailNavigationDisplay}</div>
+      <div id="slide-navigation" className="swiper-container gallery-thumbs" >
+        <div className="thumbnail-navigation swiper-wrapper" style={thumbnailNavigationCss}>{slidesThumbnailNavigationDisplay}</div>
         <div className="swiper-scrollbar"></div>
       </div>
     )
@@ -278,6 +283,7 @@ function ProductMediaSlider(){
 function SlideItem(props){
 
   const [ mediaStyle, setMediaStyle ] = useState();
+  const [ itemSetHeight, setItemSetHeight ] = useState();
 
   React.useEffect(() => {
     if (props.gallery && props.gallery.length === props.slideIndex + 1){
@@ -290,24 +296,30 @@ function SlideItem(props){
     if (props.currentSlide === props.slideIndex){    
     if (props.slide.type === "image"){
       const imageEl = document.getElementById('slide-img-'+props.slideIndex);
-        if ( cinemaMode === true ){
-          let imageHeight = imageEl.naturalHeight;
-          if (imageEl.naturalWidth > window.innerWidth){
-            let dimensionsPercentage = window.innerWidth / imageEl.naturalWidth;
-            imageHeight = imageEl.naturalHeight * dimensionsPercentage;
-          }
-          setMediaStyle({height:imageHeight})
-          props.onSetSliderHeight(imageHeight);
+      if ( cinemaMode === true ){
+        let imageHeight = imageEl.naturalHeight;
+        if (imageEl.naturalWidth > window.innerWidth){
+          let dimensionsPercentage = window.innerWidth / imageEl.naturalWidth;
+          imageHeight = imageEl.naturalHeight * dimensionsPercentage;
+        }
+        setMediaStyle({height:imageHeight})
+        props.onSetSliderHeight(imageHeight);
+      } else {
+        if (imageEl.offsetHeight > 0) {
+          if (props.disableGallery){
+            let imageHeight = itemSetHeight;
+            if (!itemSetHeight) setItemSetHeight(imageEl.offsetHeight)
+            setMediaStyle({maxHeight:itemSetHeight})
+            props.onSetSliderHeight(itemSetHeight)
+          } else {
+            setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
+            props.onSetSliderHeight(360)
+          }          
         } else {
-            if (imageEl.offsetHeight > 0) {
-              if (props.disableGallery) props.onSetSliderHeight(imageEl.offsetHeight)
-              else {
-                setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
-                props.onSetSliderHeight(360)
-              }          
-            }
+          if (props.disableGallery) setMediaStyle({maxHeight:360})
         }
       }
+    }
     
     else if (props.slide.type === "embed"){ 
       if (cinemaMode === true) props.onSetSliderHeight(315)
