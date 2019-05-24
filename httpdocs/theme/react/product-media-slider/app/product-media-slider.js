@@ -298,12 +298,16 @@ function SlideItem(props){
         props.onSetSliderHeight(imageHeight);
       } else {
         if (imageEl.offsetHeight > 0) {
+          console.log(props.disableGallery);
           if (props.disableGallery){
             let imageHeight = itemSetHeight;
+            console.log('item set height - ' + itemSetHeight)
             if (!itemSetHeight) setItemSetHeight(imageEl.offsetHeight)
+            console.log(itemSetHeight)
             setMediaStyle({height:itemSetHeight})
             props.onSetSliderHeight(itemSetHeight)
           } else {
+            console.log('what the fuck')
             setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
             props.onSetSliderHeight(360)
           }          
