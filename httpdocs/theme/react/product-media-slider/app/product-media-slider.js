@@ -237,9 +237,17 @@ function ProductMediaSlider(){
         onThumbItemClick={(slideIndex) => onThumbItemClick(slideIndex)}
       />
     ))
+
+    let thumbnailNavigationCss;
+    if (containerWidth > (gallery.length * 200)){
+      thumbnailNavigationCss = {
+        paddingLeft: (containerWidth - (gallery.length * 200)) / 2
+      }
+    }
+
     thumbnailNavigationDisplay = (
-      <div id="slide-navigation" className="swiper-container gallery-thumbs">
-        <div className="thumbnail-navigation swiper-wrapper">{slidesThumbnailNavigationDisplay}</div>
+      <div id="slide-navigation" className="swiper-container gallery-thumbs" >
+        <div className="thumbnail-navigation swiper-wrapper" style={thumbnailNavigationCss}>{slidesThumbnailNavigationDisplay}</div>
         <div className="swiper-scrollbar"></div>
       </div>
     )
