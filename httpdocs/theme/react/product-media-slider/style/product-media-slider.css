@@ -285,6 +285,9 @@ video:focus {
 #media-slider.disable-gallery {
   padding-bottom: 0;
 }
+#media-slider.disable-gallery .swiper-wrapper .slide-item img {
+  max-height: 360px;
+}
 #media-slider.disable-gallery .carousel-control,
 #media-slider.disable-gallery .slider-navigation-toggle,
 #media-slider.disable-gallery #slide-navigation {
