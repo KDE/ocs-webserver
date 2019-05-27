@@ -6,14 +6,23 @@ function CategoryTree(){
     const [ categoryTree, SetCategoryTree ] = useState(window.catTree);
     const [ categoryId, SetCategoryId ] = useState(window.categoryId);
     const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(0);
-    const [ currentViewedCategories, setCurrentViewedCategories ] = useState([{id:0,title:'all',level:0}]);
+    const [ currentViewedCategories, setCurrentViewedCategories ] = useState([{id:0,title:'All',level:0}]);
 
     function onHeaderNavigationItemClick(cvc){
         setCurrentCategoryLevel(cvc.level)
         const trimedCurrentViewedCategoriesArray = currentViewedCategories;
         trimedCurrentViewedCategoriesArray.length = cvc.level + 1;
-        console.log(trimedCurrentViewedCategoriesArray);
         setCurrentViewedCategories(trimedCurrentViewedCategoriesArray)
+    }
+
+    function goBack(){
+        if (currentCategoryLevel > 0){
+            const newCurrentCategoryLevel = currentCategoryLevel - 1;
+            setCurrentCategoryLevel(newCurrentCategoryLevel);
+            const trimedCurrentViewedCategoriesArray = currentViewedCategories;
+            trimedCurrentViewedCategoriesArray.length = currentCategoryLevel;    
+            setCurrentViewedCategories(trimedCurrentViewedCategoriesArray)
+        }
     }
 
     return(
@@ -22,6 +31,7 @@ function CategoryTree(){
                 currentCategoryLevel={currentCategoryLevel}
                 currentViewedCategories={currentViewedCategories}  
                 onHeaderNavigationItemClick={(cvc) => onHeaderNavigationItemClick(cvc)}
+                goBack={goBack}
             />
             <CategoryPanelsContainer
                 categoryTree={categoryTree}
@@ -41,14 +51,15 @@ function CategoryTreeHeader(props){
 
     React.useEffect(() => {
         setCategories(props.currentViewedCategories);
-    },[props.currentViewedCategories])
+    },[props.currentViewedCategories,props.currentCategoryLevel])
 
     const categoryTreeHeaderNavigationDisplay = categories.map((cvc,index) => (
         <a key={index} onClick={() => props.onHeaderNavigationItemClick(cvc)}>{cvc.title}</a>
     ))
-    
+
     return (
         <div id="category-tree-header">
+            <a id="back-button" onClick={props.goBack}>{"<<"}</a>
             {categoryTreeHeaderNavigationDisplay}
         </div>
     )

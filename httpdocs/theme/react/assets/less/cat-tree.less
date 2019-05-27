@@ -157,6 +157,19 @@
 
 #category-tree {
 
+  #category-tree-header {
+    a {
+      display: block;
+      float: left;
+      padding: 4px 8px;
+      background-color: #ccc;
+      margin-right: 5px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
+
   #category-panles-container {
 
     width:100%;
@@ -167,6 +180,16 @@
       .transition();
       position: absolute;
       top:0;
+
+      .category-panel {
+        ul {
+          li {
+            a {
+              cursor: pointer;
+            }
+          }
+        }
+      }
     }
   }
 }
