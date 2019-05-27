@@ -8,13 +8,20 @@ function CategoryTree(){
     const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(0);
     const [ currentViewedCategories, setCurrentViewedCategories ] = useState([{id:0,title:'all',level:0}]);
 
+    function onHeaderNavigationItemClick(cvc){
+        setCurrentCategoryLevel(cvc.level)
+        const trimedCurrentViewedCategoriesArray = currentViewedCategories;
+        trimedCurrentViewedCategoriesArray.length = cvc.level;
+        console.log(trimedCurrentViewedCategoriesArray);
+        setCurrentViewedCategories(trimedCurrentViewedCategoriesArray)
+    }
 
     return(
         <div id="category-tree">
             <CategoryTreeHeader 
                 currentCategoryLevel={currentCategoryLevel}
-                currentViewedCategories={currentViewedCategories}            
-                setCurrentCategoryLevel={(ccl) => setCurrentCategoryLevel(ccl) }
+                currentViewedCategories={currentViewedCategories}  
+                onHeaderNavigationItemClick={(cvc) => onHeaderNavigationItemClick(cvc)}
             />
             <CategoryPanelsContainer
                 categoryTree={categoryTree}
@@ -37,7 +44,7 @@ function CategoryTreeHeader(props){
     },[props.currentViewedCategories])
 
     const categoryTreeHeaderNavigationDisplay = categories.map((cvc,index) => (
-        <a key={index} onClick={() => props.setCurrentCategoryLevel(cvc.level)}>{cvc.title}</a>
+        <a key={index} onClick={() => props.onHeaderNavigationItemClick(cvc)}>{cvc.title}</a>
     ))
     
     return (
@@ -53,11 +60,6 @@ function CategoryPanelsContainer(props){
     const [ containerWidth, setContainerWidth ] = useState(document.getElementById('category-tree-container').offsetWidth);
     const [ sliderWidth, setSliderWidth ] = useState(containerWidth * panels.length);
     const [ sliderPosition, setSliderPosition ] = useState(props.currentCategoryLevel * containerWidth);
-
-    console.log('++++++')
-    console.log(panels);
-    console.log(sliderWidth);
-    console.log(sliderPosition);
 
     React.useEffect(() => {
         const newSliderPosition = props.currentCategoryLevel * containerWidth;
@@ -114,12 +116,14 @@ function CategoryPanelsContainer(props){
     let categoryPanelsSliderCss = {
         position:"absolute",
         top:0,
-        left:"-"+sliderPosition,
-        width:sliderWidth
+        left:"-"+sliderPosition+"px",
+        width:sliderWidth+"px"
     }
 
+    console.log(categoryPanelsSliderCss);
+
     return (
-        <div id="category-panles-container" style={{position:"relative",width:containerWidth}}>
+        <div id="category-panles-container" style={{position:"relative"}}>
             <div id="category-panels-slider" style={categoryPanelsSliderCss}>
                 {categoryPanelsDislpay}
             </div>
