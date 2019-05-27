@@ -1,9 +1,5 @@
-out: ../css/cat-tree.css, sourcemap: true, compress: true
+// out: ../css/cat-tree.css, sourcemap: true, compress: true
 @import "elements.less";
-
-.old-cat-tree-container {
-  // display: none;
-}
 
 .mobile-menu-item {
   padding: 5px;
@@ -156,3 +152,22 @@ out: ../css/cat-tree.css, sourcemap: true, compress: true
     }
   }
 }
+
+/** NEW CATEGORY TREE **/
+
+#category-tree {
+
+  #category-panles-container {
+
+    width:100%;
+    height: 500px;
+    overflow: hidden;
+  
+    #category-panels-slider {
+      .transition();
+      position: absolute;
+      top:0;
+    }
+  }
+}
+

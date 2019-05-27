@@ -11,7 +11,7 @@ function CategoryTree(){
     function onHeaderNavigationItemClick(cvc){
         setCurrentCategoryLevel(cvc.level)
         const trimedCurrentViewedCategoriesArray = currentViewedCategories;
-        trimedCurrentViewedCategoriesArray.length = cvc.level;
+        trimedCurrentViewedCategoriesArray.length = cvc.level + 1;
         console.log(trimedCurrentViewedCategoriesArray);
         setCurrentViewedCategories(trimedCurrentViewedCategoriesArray)
     }
@@ -61,11 +61,15 @@ function CategoryPanelsContainer(props){
     const [ sliderWidth, setSliderWidth ] = useState(containerWidth * panels.length);
     const [ sliderPosition, setSliderPosition ] = useState(props.currentCategoryLevel * containerWidth);
 
-    React.useEffect(() => {
+    React.useEffect(() => {updateSlider()},[props.currentCategoryLevel,props.currentViewedCategories])
+
+    function updateSlider(){
         const newSliderPosition = props.currentCategoryLevel * containerWidth;
         setSliderPosition(newSliderPosition);
-    },[props.currentCategoryLevel,props.currentViewedCategories])
-
+        const trimedPanelsArray = panels;
+        trimedPanelsArray.length = props.currentCategoryLevel + 1;
+        setPanels(trimedPanelsArray);
+    }
 
     function convertObjectToArray(object){
         let newArray = [];
@@ -114,8 +118,6 @@ function CategoryPanelsContainer(props){
     ))
 
     let categoryPanelsSliderCss = {
-        position:"absolute",
-        top:0,
         left:"-"+sliderPosition+"px",
         width:sliderWidth+"px"
     }
