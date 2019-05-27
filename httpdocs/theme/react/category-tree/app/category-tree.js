@@ -12,7 +12,6 @@ function CategoryTree(){
     return(
         <div id="category-tree">
             <CategoryTreeHeader 
-                categoryT={categoryTree}
                 currentCategoryLevel={currentCategoryLevel}
                 currentViewedCategories={currentViewedCategories}            
                 setCurrentCategoryLevel={(ccl) => setCurrentCategoryLevel(ccl) }
