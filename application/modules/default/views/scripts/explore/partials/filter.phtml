@@ -23,6 +23,8 @@
 $modelCategory = new Default_Model_ProjectCategory();
 $this->categories = $modelCategory->fetchTreeForView();
 $jsonTree = json_encode($this->categories);
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
 ?>
 <style type="text/css">
 
@@ -101,4 +103,12 @@ $jsonTree = json_encode($this->categories);
     echo "var categoryId = {$catIdExists};";
     ?>
 </script>
+<?php  if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName)
+        {
+    ?>
+<script type="application/javascript" src="/theme/react/cat-tree-new.js?<?= APPLICATION_VERSION ?>"></script>
+<?php } else{ 
+    ?>
 <script type="application/javascript" src="/theme/react/cat-tree.js?<?= APPLICATION_VERSION ?>"></script>
+<?php }
+?>
