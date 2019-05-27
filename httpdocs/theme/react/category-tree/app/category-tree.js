@@ -8,6 +8,7 @@ function CategoryTree(){
     const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(0);
     const [ currentViewedCategories, setCurrentViewedCategories ] = useState([{id:0,title:'all',level:0}]);
 
+
     return(
         <div id="category-tree">
             <CategoryTreeHeader 
@@ -53,7 +54,11 @@ function CategoryPanelsContainer(props){
     const [ containerWidth, setContainerWidth ] = useState(document.getElementById('category-tree-container').offsetWidth);
     const [ sliderWidth, setSliderWidth ] = useState(containerWidth * panels.length);
     const [ sliderPosition, setSliderPosition ] = useState(props.currentCategoryLevel * containerWidth);
-    const [ sliderHeight, setSliderHeight ] = useState();
+
+    console.log('++++++')
+    console.log(panels);
+    console.log(sliderWidth);
+    console.log(sliderPosition);
 
     React.useEffect(() => {
         const newSliderPosition = props.currentCategoryLevel * containerWidth;
@@ -160,12 +165,8 @@ function CategoryMenuItem(props){
 
     const c = props.category;
     
-    function onCategoryMenuItemMouseOver(){
-        console.log('now show dat shiat')
-    }
-    
     return(
-        <li onMouseOver={onCategoryMenuItemMouseOver}>
+        <li>
             <a onClick={() => props.onCategoryClick(c)}>
                 <span className="cat-title">{c.title}</span>
                 <span className="cat-product-counter">{c.product_count}</span>
