@@ -60,6 +60,7 @@ $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 
 $memberProfile = $helperImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2));
 
+
 ?>
 <style type="text/css">
 /* ADD THIS TO CSS */
@@ -501,6 +502,59 @@ div#preloaded-images {
                                 </div>
                             </div>
                         </div>
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                        <div class="col-container">
+                            <div class="well details">
+                                <h3>Computer Info</h3>                                
+                            
+                             <div class="box-content">
+                                <?php 
+                                    $tagmodel = new Default_Model_Tags();
+                                    $gidsstring = Zend_Registry::get('config')->settings->client->default->tag_group_osuser;   
+                                    $gids = explode(",", $gidsstring);    
+                                    $data = $tagmodel->getTagGroupsOSUser();
+                                    $data2 = $tagmodel->getTagsOSUser($this->member->member_id);
+                                    $usertags = array();
+                                    foreach ($data2 as $t) {
+                                        $usertags[$t['tag_id']][] = $t;
+                                    }
+                                    $groups = array();
+                                    foreach ($data as $g) {
+                                        $groups[$g['group_id']][] = $g;
+                                    }
+                                    function custom_sort($a, $b) {
+                                            return $a['tag_name'] > $b['tag_name'] ;
+                                        }
+
+                                    foreach ($gids as $g) {  
+                                        $options = $groups[$g]; 
+                                        usort($options,"custom_sort");   
+                                ?>
+                                    <div class="row">
+                                        <div class="col-lg-6">                    
+                                            <?=$options[0]['group_display_name']?$options[0]['group_display_name']:$options[0]['group_name']?>:                    
+                                        </div>
+                                         <div class="col-lg-6">
+                                         <?php 
+                                        $selected = '';
+                                        foreach ($options as $o) {
+                                            $tag_id = $o['tag_id'];                                                
+                                            if(isset($usertags[$tag_id])){                                                    
+                                                $selected= $selected.', '.($o['tag_fullname']?$o['tag_fullname']:$o['tag_name']);
+                                            }
+                                        }
+                                        echo strlen($selected)>0 ? substr($selected,1):'';
+                                        ?>
+                                         </div>
+                                    </div>
+
+                                <?php 
+                                    }
+                                ?>
+                             </div>
+                             </div>
+                        </div>
+                    <?php endif; ?>
 
                         <div class="col-container">
                             <div class="well details">
