@@ -99,6 +99,10 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                  <?php endif; ?>
                                   
                                   <th style="text-align: right"><?= $this->translate('Downloads'); ?></th>
+                                  
+                                  <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                  <th style="text-align: right"><?= $this->translate('Downloads IP'); ?></th>
+                                 <?php endif; ?>
                                  
                                  <th><?= $this->translate('Date'); ?></th>
 
@@ -205,6 +209,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
 
                                  var downloaded_count_total = 0;
                                  var downloaded_count_total_live = 0;
+                                 var downloaded_count_total_uk = 0;
                                  var firstRow = true;
 
                                 var myArray = $.map(data.files, function(entry) {
@@ -242,8 +247,10 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
 
                                     count_downloads = this.downloaded_count || 0;
                                     count_downloads_live = this.downloaded_count_live || 0;
+                                    count_downloads_uk = this.downloaded_count_uk || 0;
                                     downloaded_count_total = downloaded_count_total+parseInt(count_downloads);
                                     downloaded_count_total_live = downloaded_count_total_live+parseInt(count_downloads_live);
+                                    downloaded_count_total_uk = downloaded_count_total_uk+parseInt(count_downloads_uk);
                                     
                                     var link = '';
                                     
@@ -368,6 +375,9 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                         tableString += '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + count_downloads + '</td>';
                                         <?php endif; ?>
                                         tableString += '<td style="text-align: right"><span id="download_counter_live_' + this.id + '">' + count_downloads_live + '</td>';
+                                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                        tableString += '<td style="text-align: right"><span id="download_counter_uk_' + this.id + '">' + count_downloads_uk + '</td>';
+                                        <?php endif; ?>
                                         tableString += '<td>' +mnt.format('YYYY-MM-DD') + '</td>';
                                         tableString += '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>';
                                         tableString += '<td style="text-align: right; ">' + downloadButton+ '</td>';
@@ -504,9 +514,11 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
 
                                     var count_downloads = this.downloaded_count || 0;
                                     var count_downloads_live = this.downloaded_count_live || 0;
+                                    var count_downloads_uk = this.downloaded_count_uk || 0;
 
                                     downloaded_count_total = downloaded_count_total+parseInt(count_downloads);
                                     downloaded_count_total_live = downloaded_count_total_live+parseInt(count_downloads_live);
+                                    downloaded_count_total_uk = downloaded_count_total_uk+parseInt(count_downloads_uk);
                                     
                                     var link = '';
                                     
@@ -589,7 +601,9 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                         tableString += '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + count_downloads + '</td>';
                                         <?php endif; ?>
                                         tableString += '<td style="text-align: right"><span id="download_counter_live_' + this.id + '">' + count_downloads_live + '</td>';
-                                        
+                                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                        tableString += '<td style="text-align: right"><span id="download_counter_uk_' + this.id + '">' + count_downloads_uk + '</td>';
+                                        <?php endif; ?>
                                         tableString += '<td>' +mnt.format('YYYY-MM-DD') + '</td>';
                                         tableString += '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>';
                                         tableString += '<td style="text-align: right; "></td>';
@@ -627,6 +641,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                  //add old download counter
                                  downloaded_count_total += parseInt(<?= $this->product->count_downloads_hive?>);
                                  downloaded_count_total_live += parseInt(<?= $this->product->count_downloads_hive?>);
+                                 downloaded_count_total_uk += parseInt(<?= $this->product->count_downloads_hive?>);
 
                                  //add old download counter to oldest file
                                  var fileCount = $('#download_counter_'+ oldestFileId).html();
@@ -636,6 +651,10 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                  var fileCountLive = $('#download_counter_live_'+ oldestFileId).html();
                                  var oldNewCounterLive = parseInt(fileCountLive) + parseInt(<?= $this->product->count_downloads_hive?>);
                                  $('#download_counter_live_'+ oldestFileId).html(oldNewCounterLive);
+                                 
+                                 var fileCountUk = $('#download_counter_uk_'+ oldestFileId).html();
+                                 var oldNewCounterUk = parseInt(fileCountUk) + parseInt(<?= $this->product->count_downloads_hive?>);
+                                 $('#download_counter_uk_'+ oldestFileId).html(oldNewCounterUk);
 
 
 
@@ -665,6 +684,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                         ?>
                                              + '<th style="text-align: right">' + downloaded_count_total + '</th>'
                                              + '<th style="text-align: right">' + downloaded_count_total_live + '</th>'
+                                             + '<th style="text-align: right">' + downloaded_count_total_uk + '</th>'
                                         <?php   } else { ?>
                                              + '<th style="text-align: right"></th>'
                                         <?php 
