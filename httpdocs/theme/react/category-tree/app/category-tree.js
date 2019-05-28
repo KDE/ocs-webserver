@@ -142,10 +142,16 @@ function CategoryTreeHeader(props){
     let categoryTreeHeaderNavigationDisplay;
     if (categories.length > 0){
         categoryTreeHeaderNavigationDisplay = categories.map((cvc,index) =>{
-            let title = "/"
-            if (categories.length === index + 1) title = cvc.title;
+            let title = "/", titleHoverElement = <span>{cvc.title}</span>;
+            if (categories.length === index + 1){
+                title = cvc.title;
+                titleHoverElement = '';
+            }
             return (
-                <a key={index} onClick={() => onHeaderNavigationItemClick(cvc,index)}>{title}</a>
+                <a key={index} onClick={() => onHeaderNavigationItemClick(cvc,index)}>
+                    {title}
+                    {titleHoverElement}
+                </a>
             )
         })
     }
@@ -317,7 +323,7 @@ function CategoryMenuItem(props){
     if (props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1) categoryMenuItemClassName = "active";
 
     return(
-        <li className={categoryMenuItemClassName}>
+        <li className={categoryMenuItemClassName} >
             {categoryMenuItemDisplay}
         </li>
     )

@@ -167,6 +167,30 @@
       font-size: 12px;
       font-weight: bold;
       cursor: pointer;
+      overflow: hidden;
+      position: relative;
+
+      span {
+        .transition();
+        opacity: 0;
+        position: absolute;
+        bottom: 100%;
+        background-color:#ccc;
+        border-radius: 5px;
+        border: 1px solid #222;
+        display: block;
+        left: 0;
+        padding: 3px;
+        margin-bottom: 5px;
+        margin-left: -5px;
+      }
+
+      &:hover {
+        overflow: visible;
+        span{
+          opacity: 1;
+        }
+      }
     }
   }
 
