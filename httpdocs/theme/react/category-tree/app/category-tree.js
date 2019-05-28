@@ -39,6 +39,7 @@ function CategoryTree(){
     const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(initialCurrentViewedCategories.length);
 
     const [ searchPhrase, setSearchPhrase ] = useState();
+    const [ searchMode, setSearchMode ] = useState();
 
     /* COMPONENT */
 
@@ -46,24 +47,30 @@ function CategoryTree(){
 
     // on search phrase update
     function onSearchPhraseUpdate(){
+        let newSearchMode = false;
         if (searchPhrase){
-            let newCurrentCategoryLevel, newCurrentViewedCategories;
-            if (searchPhrase.length > 0){
+            let newCurrentViewedCategories;
+            if  (searchPhrase.length > 0){
+                newSearchMode = true;
+                newCurrentViewedCategories = [...currentViewedCategories];
+                if (searchMode === true) newCurrentViewedCategories.length = selectedCategoriesId.length;
+                newCurrentViewedCategories = [
+                    ...newCurrentViewedCategories,
+                    {id:"-1",title:'Search',categories:GetCategoriesBySearchPhrase(categoryTree,searchPhrase)}
+                ]
+            } else {
                 newCurrentViewedCategories = [...currentViewedCategories];
                 newCurrentViewedCategories.length = selectedCategoriesId.length;
-                newCurrentViewedCategories.push({id:"-1",title:'Search',categories:GetCategoriesBySearchPhrase(categoryTree,searchPhrase)})
-                console.log(GetCategoriesBySearchPhrase(categoryTree,searchPhrase));
-                newCurrentCategoryLevel = newCurrentViewedCategories.length;
             }
-            else {
-                newCurrentViewedCategories = [...currentViewedCategories];
-                newCurrentViewedCategories.length = selectedCategoriesId.length;
-                newCurrentCategoryLevel = selectedCategoriesId.length;
-            }
-            console.log(newCurrentViewedCategories);
             setCurrentViewedCategories(newCurrentViewedCategories);
-            setCurrentCategoryLevel(newCurrentCategoryLevel)
+            setCurrentCategoryLevel(newCurrentViewedCategories.length)
+        } else if (searchMode === true){
+            let newCurrentViewedCategories = [...currentViewedCategories];
+            newCurrentViewedCategories.length = selectedCategoriesId.length;
+            setCurrentViewedCategories(newCurrentViewedCategories);
+            setCurrentCategoryLevel(newCurrentViewedCategories.length)       
         }
+        setSearchMode(newSearchMode);
     }
 
     // on header navigation item click
@@ -82,6 +89,10 @@ function CategoryTree(){
             const trimedCurrentViewedCategoriesArray = currentViewedCategories;
             trimedCurrentViewedCategoriesArray.length = newCurrentCategoryLevel;    
             setCurrentViewedCategories(trimedCurrentViewedCategoriesArray)
+            const newSearchPhrase = '';
+            const newSearchMode = false;
+            setSearchPhrase(newSearchPhrase);
+            setSearchMode(newSearchMode);
         }
     }
 
@@ -92,9 +103,10 @@ function CategoryTree(){
     }
 
     /* RENDER */
-    /* <input type="text" defaultValue={searchPhrase} onChange={e => setSearchPhrase(e.target.value)}/> */
+
     return(
         <div id="category-tree">
+            <input type="text" defaultValue={searchPhrase} onChange={e => setSearchPhrase(e.target.value)}/>       
             <CategoryTreeHeader 
                 currentCategoryLevel={currentCategoryLevel}
                 currentViewedCategories={currentViewedCategories}  
@@ -105,6 +117,7 @@ function CategoryTree(){
                 categoryTree={categoryTree}
                 categoryId={categoryId}
                 searchPhrase={searchPhrase}
+                searchMode={searchMode}
                 currentCategoryLevel={currentCategoryLevel}
                 currentViewedCategories={currentViewedCategories}
                 selectedCategoriesId={selectedCategoriesId}
@@ -166,8 +179,9 @@ function CategoryTreeHeader(props){
 
 function CategoryPanelsContainer(props){
 
-    let initialPanelsValue = [{categoryId:0,categories:props.categoryTree}];
-    if (props.currentViewedCategories.length > 0) initialPanelsValue = [{categoryId:0,categories:props.categoryTree},...props.currentViewedCategories];
+    const storeListingPanel = {categoryId:0,categories:props.categoryTree}
+    let initialPanelsValue = [storeListingPanel];
+    if (props.currentViewedCategories.length > 0) initialPanelsValue = [storeListingPanel,...props.currentViewedCategories];
     const [ panels, setPanels ] = useState(initialPanelsValue);
     const [ containerWidth, setContainerWidth ] = useState(document.getElementById('category-tree-container').offsetWidth);
     const [ sliderWidth, setSliderWidth ] = useState(containerWidth * panels.length);
@@ -175,7 +189,7 @@ function CategoryPanelsContainer(props){
     const [ sliderPosition, setSliderPosition ] = useState(props.currentCategoryLevel * containerWidth);
 
     React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories,props.searchPhrase])
-    React.useEffect(() => { },[])
+    React.useEffect(() => { updatePanlesOnSearch() },[props.searchMode,props.searchPhrase])
 
     function updateSlider(){
         const trimedPanelsArray = panels;
@@ -183,6 +197,13 @@ function CategoryPanelsContainer(props){
         setPanels(trimedPanelsArray);       
         const newSliderPosition = props.currentCategoryLevel * containerWidth;
         setSliderPosition(newSliderPosition);
+    }
+
+    function updatePanlesOnSearch(){
+        const newPanels = [storeListingPanel,...props.currentViewedCategories];
+        setPanels(newPanels);
+        const newSliderWidth = containerWidth * newPanels.length;
+        setSliderWidth(newSliderWidth);
     }
 
     function onCategorySelect(c){
@@ -225,6 +246,7 @@ function CategoryPanelsContainer(props){
             parentCategory={cp.categoryId}
             categoryId={props.categoryId}
             containerWidth={containerWidth}
+            searchPhrase={props.searchPhrase}
             onSetSliderHeight={(height) => setSliderHeight(height)}
             onCategorySelect={(c) => onCategorySelect(c)}
         />
@@ -261,22 +283,27 @@ function CategoryPanel(props){
     }
 
     function onCategoryClick(c){
-        if (!c.has_children) console.log('navigate to category?');
+        if (c.has_children) console.log('navigate to category?');
         else props.onCategorySelect(c);
     }
 
     let categoryPanelContent;
-    if (props.categories && props.categories.length > 0){
-        const categories = props.categories.sort(sortArrayAlphabeticallyByTitle).map((c,index) => (
-            <CategoryMenuItem 
-                key={index}
-                category={c}
-                categoryId={props.categoryId}
-                currentViewedCategories={props.currentViewedCategories}
-                selectedCategoriesId={props.selectedCategoriesId}
-                onCategoryClick={(c) => onCategoryClick(c)}
-            />
-        ))
+    if (props.categories){
+        let categories;
+        if (props.categories.length > 0){
+            categories = props.categories.sort(sortArrayAlphabeticallyByTitle).map((c,index) => (
+                <CategoryMenuItem 
+                    key={index}
+                    category={c}
+                    categoryId={props.categoryId}
+                    currentViewedCategories={props.currentViewedCategories}
+                    selectedCategoriesId={props.selectedCategoriesId}
+                    onCategoryClick={(c) => onCategoryClick(c)}
+                />
+            ))
+        } else {
+            categories = <li><p>no categories matching {props.searchPhrase}</p></li>
+        }
         categoryPanelContent = <ul>{categories}</ul>
     }
 
