@@ -21,9 +21,15 @@ function CategoryTree(){
             })
         }
     }
-    console.log(initialCurrentViewedCategories);
+    let initialSelectedCategoriesId = [];
+    initialCurrentViewedCategories.forEach(function(c,index){
+        initialSelectedCategoriesId.push(c.id);
+    });
+    const [ selectedCategoriesId, setSelectedCategoriesId ] = useState(initialSelectedCategoriesId)
+
     const [ currentViewedCategories, setCurrentViewedCategories ] = useState(initialCurrentViewedCategories);
     const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(initialCurrentViewedCategories.length);
+
 
     function onHeaderNavigationItemClick(cvc){
         console.log(cvc);
@@ -61,6 +67,7 @@ function CategoryTree(){
                 categoryId={categoryId}
                 currentCategoryLevel={currentCategoryLevel}
                 currentViewedCategories={currentViewedCategories}
+                selectedCategoriesId={selectedCategoriesId}
                 onCategoryPanleItemClick={(ccl,cvc) => onCategoryPanleItemClick(ccl,cvc)}
             />
         </div>
@@ -162,6 +169,7 @@ function CategoryPanelsContainer(props){
             level={index}
             currentCategoryLevel={props.currentCategoryLevel}
             currentViewedCategories={props.currentViewedCategories}
+            selectedCategoriesId={props.selectedCategoriesId}
             categories={cp.categories}
             parentCategory={cp.categoryId}
             categoryId={props.categoryId}
@@ -199,6 +207,7 @@ function CategoryPanel(props){
                 category={c}
                 categoryId={props.categoryId}
                 currentViewedCategories={props.currentViewedCategories}
+                selectedCategoriesId={props.selectedCategoriesId}
                 onCategoryClick={(c) => onCategoryClick(c)}
             />
         ))
@@ -242,7 +251,7 @@ function CategoryMenuItem(props){
     }
 
     let categoryMenuItemClassName;
-    if (props.categoryId === parseInt(c.id) || CheckIfCategoryIsSelected(props.currentViewedCategories,c.id)) categoryMenuItemClassName = "active";
+    if (props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1) categoryMenuItemClassName = "active";
 
     return(
         <li className={categoryMenuItemClassName}>
