@@ -99,6 +99,10 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                  <?php endif; ?>
                                   
                                   <th style="text-align: right"><?= $this->translate('Downloads'); ?></th>
+                                  
+                                  <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                  <th style="text-align: right"><?= $this->translate('Downloads IP'); ?></th>
+                                 <?php endif; ?>
                                  
                                  <th><?= $this->translate('Date'); ?></th>
 
