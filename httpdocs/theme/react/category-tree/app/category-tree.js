@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import {ConvertObjectToArray, GetSelectedCategory, GenerateCurrentViewedCategories, GetCategoriesBySearchPhrase} from './category-helpers';
+import {
+    ConvertObjectToArray, 
+    GetSelectedCategory, 
+    GenerateCurrentViewedCategories, 
+    GetCategoriesBySearchPhrase, 
+    sortArrayAlphabeticallyByTitle
+} from './category-helpers';
 
 function CategoryTree(){
 
@@ -255,7 +261,7 @@ function CategoryPanel(props){
 
     let categoryPanelContent;
     if (props.categories && props.categories.length > 0){
-        const categories = props.categories.map((c,index) => (
+        const categories = props.categories.sort(sortArrayAlphabeticallyByTitle).map((c,index) => (
             <CategoryMenuItem 
                 key={index}
                 category={c}
