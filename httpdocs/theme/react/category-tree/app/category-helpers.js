@@ -28,7 +28,6 @@ export function GetSelectedCategory(categories,categoryId){
 }
 
 export function GenerateCurrentViewedCategories(categories,selectedCategory){
-  console.log(selectedCategory);
   if (selectedCategory.parent_id && selectedCategory.parent_id !== "34"){
     const parentId = parseInt(selectedCategory.parent_id);
     let parentCategory = GetSelectedCategory(categories,parentId);
@@ -36,7 +35,6 @@ export function GenerateCurrentViewedCategories(categories,selectedCategory){
       parentCategory.categories = ConvertObjectToArray(parentCategory.children);
       parentCategory.categoryId = parentCategory.id;
       const selectedCategories = [parentCategory];
-      console.log(selectedCategories);
       return getCategoryParents(categories,selectedCategories);
     } else {
       return [];
@@ -57,6 +55,38 @@ function getCategoryParents(categories,selectedCategories){
   } else {
     return selectedCategories;
   }
+}
+
+export function GetCategoriesBySearchPhrase(categories,searchPhrase){
+  let searchResults = [];
+  categories.forEach(function(cat,index){
+    if (cat.title.indexOf(searchPhrase) > -1) searchResults.push(cat);
+    if (cat.has_children){
+      cat.categories = ConvertObjectToArray(cat.children);
+      cat.categories.forEach(function(cat,index){
+        if (cat.title.indexOf(searchPhrase) > -1) searchResults.push(cat);
+        if (cat.has_children){
+          cat.categories = ConvertObjectToArray(cat.children);
+          cat.categories.forEach(function(cat,index){
+            if (cat.title.indexOf(searchPhrase) > -1) searchResults.push(cat);
+            if (cat.has_children){
+              cat.categories = ConvertObjectToArray(cat.children);
+              cat.categories.forEach(function(cat,index){
+                if (cat.title.indexOf(searchPhrase) > -1) searchResults.push(cat);
+                if (cat.has_children){
+                  cat.categories = ConvertObjectToArray(cat.children);
+                  cat.categories.forEach(function(cat,index){
+                    if (cat.title.indexOf(searchPhrase) > -1) searchResults.push(cat);                   
+                  });
+                }                
+              });
+            }            
+          });
+        }        
+      });
+    }
+  })
+  return searchResults;
 }
 
 export function getCategoryType(selectedCategories,selectedCategoryId,categoryId){

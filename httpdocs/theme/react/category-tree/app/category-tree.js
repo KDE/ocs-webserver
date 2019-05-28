@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import {ConvertObjectToArray, GetSelectedCategory, GenerateCurrentViewedCategories, CheckIfCategoryIsSelected} from './category-helpers';
+import {ConvertObjectToArray, GetSelectedCategory, GenerateCurrentViewedCategories, GetCategoriesBySearchPhrase} from './category-helpers';
 
 function CategoryTree(){
+
+    /* STATE */
 
     let initialCatTree = [{title:"All",id:"0"},...window.catTree]
     
@@ -30,7 +32,35 @@ function CategoryTree(){
     const [ currentViewedCategories, setCurrentViewedCategories ] = useState(initialCurrentViewedCategories);
     const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(initialCurrentViewedCategories.length);
 
+    const [ searchPhrase, setSearchPhrase ] = useState();
 
+    /* COMPONENT */
+
+    React.useEffect(() => { onSearchPhraseUpdate() },[searchPhrase])
+
+    // on search phrase update
+    function onSearchPhraseUpdate(){
+        if (searchPhrase){
+            let newCurrentCategoryLevel, newCurrentViewedCategories;
+            if (searchPhrase.length > 0){
+                newCurrentViewedCategories = [...currentViewedCategories];
+                newCurrentViewedCategories.length = selectedCategoriesId.length;
+                newCurrentViewedCategories.push({id:"-1",title:'Search',categories:GetCategoriesBySearchPhrase(categoryTree,searchPhrase)})
+                console.log(GetCategoriesBySearchPhrase(categoryTree,searchPhrase));
+                newCurrentCategoryLevel = newCurrentViewedCategories.length;
+            }
+            else {
+                newCurrentViewedCategories = [...currentViewedCategories];
+                newCurrentViewedCategories.length = selectedCategoriesId.length;
+                newCurrentCategoryLevel = selectedCategoriesId.length;
+            }
+            console.log(newCurrentViewedCategories);
+            setCurrentViewedCategories(newCurrentViewedCategories);
+            setCurrentCategoryLevel(newCurrentCategoryLevel)
+        }
+    }
+
+    // on header navigation item click
     function onHeaderNavigationItemClick(cvc){
         setCurrentCategoryLevel(cvc.level)
         const trimedCurrentViewedCategoriesArray = currentViewedCategories;
@@ -38,6 +68,7 @@ function CategoryTree(){
         setCurrentViewedCategories(trimedCurrentViewedCategoriesArray)
     }
 
+    // go back
     function goBack(){
         if (currentCategoryLevel > 0){
             const newCurrentCategoryLevel = currentCategoryLevel - 1;
@@ -48,11 +79,14 @@ function CategoryTree(){
         }
     }
 
+    // on category panel item click
     function onCategoryPanleItemClick(ccl,cvc){
         setCurrentCategoryLevel(ccl) 
         setCurrentViewedCategories(cvc)
     }
 
+    /* RENDER */
+    /* <input type="text" defaultValue={searchPhrase} onChange={e => setSearchPhrase(e.target.value)}/> */
     return(
         <div id="category-tree">
             <CategoryTreeHeader 
@@ -64,6 +98,7 @@ function CategoryTree(){
             <CategoryPanelsContainer
                 categoryTree={categoryTree}
                 categoryId={categoryId}
+                searchPhrase={searchPhrase}
                 currentCategoryLevel={currentCategoryLevel}
                 currentViewedCategories={currentViewedCategories}
                 selectedCategoriesId={selectedCategoriesId}
@@ -100,9 +135,13 @@ function CategoryTreeHeader(props){
 
     let categoryTreeHeaderNavigationDisplay;
     if (categories.length > 0){
-        categoryTreeHeaderNavigationDisplay = categories.map((cvc,index) => (
-            <a key={index} onClick={() => onHeaderNavigationItemClick(cvc,index)}>{cvc.title}</a>
-        ))
+        categoryTreeHeaderNavigationDisplay = categories.map((cvc,index) =>{
+            let title = "/"
+            if (categories.length === index + 1) title = cvc.title;
+            return (
+                <a key={index} onClick={() => onHeaderNavigationItemClick(cvc,index)}>{title}</a>
+            )
+        })
     }
 
     return (
@@ -123,7 +162,8 @@ function CategoryPanelsContainer(props){
     const [ sliderHeight, setSliderHeight ] = useState();
     const [ sliderPosition, setSliderPosition ] = useState(props.currentCategoryLevel * containerWidth);
 
-    React.useEffect(() => {updateSlider()},[props.currentCategoryLevel,props.currentViewedCategories])
+    React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories,props.searchPhrase])
+    React.useEffect(() => { },[])
 
     function updateSlider(){
         const trimedPanelsArray = panels;
