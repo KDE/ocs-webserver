@@ -4,35 +4,34 @@ import {ConvertObjectToArray, GetSelectedCategory, GenerateCurrentViewedCategori
 
 function CategoryTree(){
 
-    let initialCatTree = [
-        {title:"All",id:"0"},
-        ...window.catTree
-    ]
+    let initialCatTree = [{title:"All",id:"0"},...window.catTree]
+    
     const [ categoryTree, setCategoryTree ] = useState(initialCatTree);
-
     const [ categoryId, SetCategoryId ] = useState(window.categoryId);
     const [ selectedCategory, setSelectedCategory ] = useState(GetSelectedCategory(categoryTree,categoryId));
+    
     let initialCurrentViewedCategories = []
     if (selectedCategory){
         initialCurrentViewedCategories = GenerateCurrentViewedCategories(categoryTree,selectedCategory,[])
+        if (selectedCategory.has_children === true) initialCurrentViewedCategories.push(selectedCategory);
         if (initialCurrentViewedCategories.length > 0){
             initialCurrentViewedCategories.forEach(function(icvc,index){
                 icvc.level = index + 1;
             })
         }
     }
+
     let initialSelectedCategoriesId = [];
     initialCurrentViewedCategories.forEach(function(c,index){
         initialSelectedCategoriesId.push(c.id);
     });
+    
     const [ selectedCategoriesId, setSelectedCategoriesId ] = useState(initialSelectedCategoriesId)
-
     const [ currentViewedCategories, setCurrentViewedCategories ] = useState(initialCurrentViewedCategories);
     const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(initialCurrentViewedCategories.length);
 
 
     function onHeaderNavigationItemClick(cvc){
-        console.log(cvc);
         setCurrentCategoryLevel(cvc.level)
         const trimedCurrentViewedCategoriesArray = currentViewedCategories;
         trimedCurrentViewedCategoriesArray.length = cvc.level + 1;
@@ -76,8 +75,6 @@ function CategoryTree(){
 
 function CategoryTreeHeader(props){
 
-    let initialCategories;
-    console.log(props.currentViewedCategories);
     const [ categories, setCategories ] = useState(props.currentViewedCategories)
     React.useEffect(() => {
         const newCurrentViewedCategories = props.currentViewedCategories;
@@ -89,6 +86,8 @@ function CategoryTreeHeader(props){
         const newCategories = categories;
         newCategories.length = index + 1;
         setCategories(newCategories)
+        const catLink = cvc.id === "0" ? "/browse/" : "/browse/cat/"+cvc.id+"/order/latest/"
+        window.location.href = catLink;
     }
 
     function onBackButtonClick(){
@@ -96,7 +95,6 @@ function CategoryTreeHeader(props){
         let newCategories = categories;
         if (categories.length <= 1) newCategories = []
         else newCategories.length = categories.length - 1;
-        console.log(newCategories);
         setCategories(newCategories);
     }
 
@@ -229,19 +227,22 @@ function CategoryPanel(props){
 function CategoryMenuItem(props){
 
     const c = props.category;
-    
+    const [ catLink, setCatLink ] = useState(c.id === "0" ? "/browse/" : "/browse/cat/"+c.id+"/order/latest/")
+
+    function onCategoryClick(c){
+        props.onCategoryClick(c);
+        window.top.location.href = catLink;
+    }
+
     let categoryMenuItemDisplay;
     if (c.has_children === true){
         categoryMenuItemDisplay = (
-            <a onClick={() => props.onCategoryClick(c)}>
+            <a onClick={() => onCategoryClick(c)}>
                 <span className="cat-title">{c.title}</span>
                 <span className="cat-product-counter">{c.product_count}</span>
             </a>
         )
     } else {
-        let catLink;
-        if (c.id !== "0") catLink = "/browse/cat/"+c.id+"/order/latest/";
-        else catLink = "/browse/";
         categoryMenuItemDisplay = (
             <a href={catLink}>
                 <span className="cat-title">{c.title}</span>
