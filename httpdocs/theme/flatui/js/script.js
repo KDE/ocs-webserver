@@ -1686,12 +1686,11 @@ var RssNews = (function () {
 })();
 
 
-
 var BlogJson = (function () {
     return {
         setup: function () {
             var urlforum = 'https://forum.opendesktop.org/';
-            var json_url =urlforum+'latest.json';
+            var json_url = '/json/forum';            
             $.ajax(json_url).then(function (result) {
               var topics = result.topic_list.topics;
               var crss = '';
@@ -1702,7 +1701,7 @@ var BlogJson = (function () {
 
              $.each(topics, function (i, item) {
                  if(!item.pinned){
-                     var m = moment(item.last_posted_at);
+                     var m = item.timeago;
                      var r = 'Reply';
                      var t = item.posts_count -1;
                      if(t==0){
@@ -1712,8 +1711,8 @@ var BlogJson = (function () {
                      }else{
                         r = 'Replies';
                      }
-                     crss += '<div class="commentstore"><a href="' + urlforum+'/t/'+item.id + '"><span class="title">' + item.title + '</span></a><div class="newsrow">'
-                         + '<span class="date">' + m.fromNow() + '</span><span class="newscomments">'+ t +' '+ r
+                     crss += '<div class="commentstore"><a href="' + urlforum+'t/'+item.id + '"><span class="title">' + item.title + '</span></a><div class="newsrow">'
+                         + '<span class="date">' + m + '</span><span class="newscomments">'+ t +' '+ r
                          +'</span></div></div>';
                     count--;
                  }
@@ -1726,7 +1725,6 @@ var BlogJson = (function () {
 
     }
 })();
-
 
 var GitlabNewProjectsJson = (function () {
     return {
