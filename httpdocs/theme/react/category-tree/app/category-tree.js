@@ -120,6 +120,7 @@ function CategoryPanelsContainer(props){
     const [ panels, setPanels ] = useState(initialPanelsValue);
     const [ containerWidth, setContainerWidth ] = useState(document.getElementById('category-tree-container').offsetWidth);
     const [ sliderWidth, setSliderWidth ] = useState(containerWidth * panels.length);
+    const [ sliderHeight, setSliderHeight ] = useState();
     const [ sliderPosition, setSliderPosition ] = useState(props.currentCategoryLevel * containerWidth);
 
     React.useEffect(() => {updateSlider()},[props.currentCategoryLevel,props.currentViewedCategories])
@@ -172,17 +173,22 @@ function CategoryPanelsContainer(props){
             parentCategory={cp.categoryId}
             categoryId={props.categoryId}
             containerWidth={containerWidth}
+            onSetSliderHeight={(height) => setSliderHeight(height)}
             onCategorySelect={(c) => onCategorySelect(c)}
         />
     ))
 
+    let categoryPanelsContainerCss = {
+        height:sliderHeight+"px"
+    }
+
     let categoryPanelsSliderCss = {
         left:"-"+sliderPosition+"px",
-        width:sliderWidth+"px"
+        width:sliderWidth+"px",
     }
 
     return (
-        <div id="category-panles-container" style={{position:"relative"}}>
+        <div id="category-panles-container" style={categoryPanelsContainerCss}>
             <div id="category-panels-slider" style={categoryPanelsSliderCss}>
                 {categoryPanelsDislpay}
             </div>
@@ -191,6 +197,16 @@ function CategoryPanelsContainer(props){
 }
 
 function CategoryPanel(props){
+
+    React.useEffect(() => {adjustSliderHeight()},[])
+    React.useEffect(() => {adjustSliderHeight()},[props.currentCategoryLevel])
+
+    function adjustSliderHeight(){
+        if (props.currentCategoryLevel === props.level){
+            const panelHeight = props.categories.length * 24;
+            props.onSetSliderHeight(panelHeight);
+        }
+    }
 
     function onCategoryClick(c){
         if (!c.has_children) console.log('navigate to category?');
