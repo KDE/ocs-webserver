@@ -1189,10 +1189,10 @@ class Default_Model_Tags
         return $this->getTagGroups($tag_group_ids);
     }
 
-    public function saveOSTagForUser($tag_id,$tag_type_id,$tag_group_id,$member_id)
-    {       
-        $this->deleteTagForTabObject($member_id,$tag_group_id,$tag_type_id);            
-        
+    public function saveOSTagForUser($tag_id,$tag_group_id,$member_id)
+    {              
+        $tag_type_id = Zend_Registry::get('config')->settings->client->default->tag_type_osuser;
+        $this->deleteTagForTabObject($member_id,$tag_group_id,$tag_type_id);                    
         $this->insertTagObject($tag_id,$tag_type_id,$tag_group_id,$member_id,null);
     }    
 

@@ -288,7 +288,7 @@ video:focus {
                 .preview-image {
                     width:100%;
                     height: 100%;
-                    background-size: contain;
+                    background-size: cover;
                     background-position: center center;
                     background-repeat: no-repeat;
                     cursor: pointer;
@@ -377,7 +377,8 @@ video:focus {
 
 
 #book-reader-wrapper {
-    position: relative;
+  position: relative;
+  height: inherit;
 
     #book-container {
       border: 1px solid #ccc;
@@ -387,10 +388,12 @@ video:focus {
       box-sizing: border-box;
       height: 100%;
       background-color: #524631;
+      text-align: center;
 
       .epub-container {
         border: 1px solid #eee;
         background: white;
+        margin: 0 auto;
       }
     }
 
