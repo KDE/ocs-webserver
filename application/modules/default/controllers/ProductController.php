@@ -248,6 +248,18 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $counter = $counter + $counterAll;
                 }
                 $file['downloaded_count_live'] = $counter;
+                
+                //new counter IP based
+                $counterUkAll = $file['count_dl_all_uk'];
+                $counterNoUkAll = $file['count_dl_all_nouk'];
+                $counterNew = 0;
+                if(!empty($counterUkAll)) {
+                    $counterNew = $counterNew + $counterUkAll;
+                }
+                if(!empty($counterNoUkAll)) {
+                    $counterNew = $counterNew + $counterNoUkAll;
+                }
+                $file['downloaded_count_uk'] = $counterNew;
                 $result[] = $file;
             }
             
