@@ -1,9 +1,5 @@
-out: ../css/cat-tree.css, sourcemap: true, compress: true
+// out: ../css/cat-tree.css, sourcemap: true, compress: true
 @import "elements.less";
-
-.old-cat-tree-container {
-  // display: none;
-}
 
 .mobile-menu-item {
   padding: 5px;
@@ -156,3 +152,84 @@ out: ../css/cat-tree.css, sourcemap: true, compress: true
     }
   }
 }
+
+/** NEW CATEGORY TREE **/
+
+#category-tree {
+
+  #category-tree-header {
+    a {
+      display: block;
+      float: left;
+      padding: 4px 8px;
+      background-color: #ccc;
+      margin-right: 5px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+
+      span {
+        .transition();
+        opacity: 0;
+        position: absolute;
+        bottom: 100%;
+        background-color:#ccc;
+        border-radius: 5px;
+        border: 1px solid #222;
+        display: block;
+        left: 0;
+        padding: 3px;
+        margin-bottom: 5px;
+        margin-left: -5px;
+      }
+
+      &:hover {
+        overflow: visible;
+        span{
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  #category-panles-container {
+
+    width:100%;
+    height: 700px;
+    overflow: hidden;
+    position: relative;
+  
+    #category-panels-slider {
+      .transition();
+      position: absolute;
+      top:0;
+
+      .category-panel {
+        ul {
+          li {
+            width: 100%;
+            float: left;
+            /* margin: 0 2px; */
+            border-radius: 0;
+            margin: 0;
+            padding: 0;
+            a {
+              cursor: pointer;
+              padding: 5px;
+              position: relative;
+            
+              .cat-product-counter {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

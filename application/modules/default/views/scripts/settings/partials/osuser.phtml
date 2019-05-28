@@ -39,8 +39,9 @@
 ?>
 <link rel="stylesheet" href="/tools/bootstrap-multiselect/css/bootstrap-multiselect.css" type="text/css">
 <script type="text/javascript" src="/tools/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
-<div class="panel-collapse " id="website-collapse">
-    <div class="panel-body" style="padding-top: 20px">              
+<div class="panel-collapse " id="osuser-collapse">    
+
+    <div class="panel-body" style="padding-top: 30px">              
         <?php
             foreach ($gids as $g) {                
                 $options = $groups[$g];                
@@ -68,7 +69,7 @@
                     foreach ($options as $o) {
                         $tag_id = $o['tag_id'];
                         $selected = '';
-                        if($usertags[$tag_id]){
+                        if(isset($usertags[$tag_id])){
                             // if user selected
                             $selected=' selected';
                         }
@@ -95,8 +96,12 @@
         $(".osuser-tag[multiple*='multiple']").multiselect();
         $( "select.osuser-tag" ).change(function() {               
             var gid = $(this).attr("data-tag-gid");                    
-            var tagid = $(this).val();    
-            console.log(tagid+'-'+gid);
+            var tagid = $(this).val();   
+            if(!$('#osuer-spinner').length)
+            {
+            var spin = $('<span id="osuer-spinner" class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 20px;top: 0px;"></span>');
+            $('#osuser-collapse').prepend(spin);
+            }
             $.ajax({
                         url: '/settings/savetags',
                         type: 'POST',
@@ -106,10 +111,12 @@
                         },
                         dataType: 'json',
                         success: function (data, textStatus, jqXHR) {
-                            if (data.status != 'ok') {
+                            if (data.status != 'ok') {  
                                 return;
                             }
-
+                            if (data.status == 'ok') {  
+                                $('#osuer-spinner').remove();  
+                            }                            
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             alert("Error: " + textStatus + ", " + errorThrown);
