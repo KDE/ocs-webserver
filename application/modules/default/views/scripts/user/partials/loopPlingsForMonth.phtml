@@ -61,6 +61,9 @@ if(isset($this->yearmonth)) {
 
 <div class="tab-content">
 <?php
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+
 $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 $helpImage = new Default_View_Helper_Image();
 $css_active = ' in active';
@@ -119,6 +122,11 @@ if ($countDownloadsOverall > 0) {
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
                         <span><?= $product['num_downloads'] ?></span>
                     </div>
+                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                        <span><?= $product['num_downloads_uk'] ?></span>
+                    </div>
+                    <?php endif; ?>                    
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
                         <span><?= $product['dl_pling_factor'] ?></span>
                     </div>
@@ -172,11 +180,71 @@ if ($countDownloadsOverall > 0) {
                         </span>
                         
                     </div>
+                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                        <span>
+                        <?php 
+                            $errorMsg = "<ul>";
+                            $showErrMsg = false;
+                            
+                            if($isCurrentMonth) {
+                                if($product['is_license_missing_now'] == 1) {
+                                    $errorMsg .= "<li>Please specify a License</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_source_missing_now'] == 1) {
+                                    $errorMsg .= "<li>Please specify a link to the online source repository</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_pling_excluded_now'] == 1) {
+                                    $errorMsg .= "<li>This Product has been excluded from plings</li>";
+                                    $showErrMsg = true;
+                                }
+                                $sum_plings = $product['num_plings_now'];
+                            } else {
+                                if($product['is_license_missing'] == 1) {
+                                    $errorMsg .= "<li>License was not specified</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_source_missing'] == 1) {
+                                    $errorMsg .= "<li>Link to the online source repository was not specified</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_pling_excluded'] == 1) {
+                                    $errorMsg .= "<li>This Product has been excluded from plings</li>";
+                                    $showErrMsg = true;
+                                }
+                                $sum_plings = $product['num_plings'];
+                                
+                            } 
+                            $errorMsg .= "</ul>";
+                            
+                            if($showErrMsg) {
+                                echo '<div class="inline msg-popover-danger" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout requirements are not fulfilled" data-trigger="hover" data-html="true" data-content="'.$errorMsg.'"><span style="color: #a94442;" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span></div>';
+                            } else {
+                                if($product['num_downloads_uk']>0) {
+                                    print($currency->toCurrency($product['num_downloads_uk'] * $product['dl_pling_factor'] / 100));
+                                } else {
+                                    print($currency->toCurrency($product['num_downloads'] * $product['dl_pling_factor'] / 100));
+                                }
+                            }
+                        ?>
+                        </span>
+                        
+                    </div>
+                    <?php endif; ?>
                     <?php if(!$showErrMsg) {
                             $payout_sum = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
+                            $payout_sum_uk = 0;
                             $payout_sum_new = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
                             $show_payout_sum = $payout_sum;
                             $show_payout_new_sum = $payout_sum_new;
+                            
+                            if($product['num_downloads_uk']>0) {
+                                $payout_sum_uk = $product['num_downloads_uk'] * $product['dl_pling_factor'] / 100;
+                            } else {
+                                $payout_sum_uk = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
+                            }
 
                             if($sum_plings && $sum_plings < $payout_sum) {
                                 $show_payout_new_sum = $sum_plings;
@@ -200,7 +268,9 @@ if ($countDownloadsOverall > 0) {
                 
                 if(!$showErrMsg) {       
                     $sum_total_month += $payout_sum;
+                    $sum_total_month_uk += $payout_sum_uk;
                     $sum_total_payout = $currency->toCurrency($sum_total_month);
+                    $sum_total_payout_uk = $currency->toCurrency($sum_total_month_uk);
                     $sum_total_month_new += $show_payout_new_sum;
                     $sum_total_payout_new = $currency->toCurrency($sum_total_month_new);
                 }
@@ -224,6 +294,9 @@ if ($countDownloadsOverall > 0) {
                 <div class='col-md-2 text-right' style="min-width: 380px;"><?=$sum_total_text?></div>
                 <div class='col-md-1 text-right' style="min-width: 190px;"><strong style="color: #BBB"><?=$sum_total_potential_payout?></strong></div>
                 <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?=$sum_total_payout?>**</strong></div>
+                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?=$sum_total_payout_uk?>**</strong></div>
+                <?php endif; ?>
             </div>
             
             
