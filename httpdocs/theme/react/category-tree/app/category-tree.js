@@ -283,7 +283,7 @@ function CategoryPanel(props){
     }
 
     function onCategoryClick(c){
-        if (c.has_children) console.log('navigate to category?');
+        if (!c.has_children) console.log('navigate to category?');
         else props.onCategorySelect(c);
     }
 
