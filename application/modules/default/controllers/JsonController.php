@@ -105,6 +105,28 @@ class JsonController extends Zend_Controller_Action
     	$this->_sendResponse($results, $this->_format);
 	}
 
+    public function gitlabnewprojectsAction()
+    {
+
+        $this->_initResponseHeader();                
+        $url_git = Zend_Registry::get('config')->settings->server->opencode->host;      
+        $url=$url_git.'/api/v4/projects?order_by=created_at&sort=desc&visibility=public&page=1&per_page=5';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        $data = curl_exec($ch);        
+        curl_close($ch);
+        $results = json_decode($data);        
+        $timeago = new Default_View_Helper_PrintDateSince();        
+        foreach ( $results as &$t) {                
+                $tmp = str_replace('T',' ',substr($t->created_at, 0, 19));
+                $t->timeago = $timeago->printDateSince($tmp);                
+        }        
+        $this->_sendResponse($results, $this->_format);
+    }
   
 	
 

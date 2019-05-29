@@ -1728,15 +1728,14 @@ var BlogJson = (function () {
 
 var GitlabNewProjectsJson = (function () {
     return {
-        setup: function (url_git) {
-            var json_url = url_git+'/api/v4/projects?order_by=created_at&sort=desc&visibility=public&page=1&per_page=5';
+        setup: function (url_git) {         
+            var json_url = '/json/gitlabnewprojects';
             $.ajax(json_url).then(function (result) {
               var topics = result;
               var crss = '';
 
-             $.each(topics, function (i, item) {
-                var m = moment(item.created_at);
-
+             $.each(topics, function (i, item) {                
+                var m = item.timeago;
                 crss += '<div class="commentstore"><div class="row"><div class="col-lg-2 col-md-3 col-sm-4 col-xs-4"><div class="text-center">';
                 crss += '<a href="' + item.web_url + '"><div class="avatar-container">';
                 if(item.avatar_url) {
@@ -1751,7 +1750,7 @@ var GitlabNewProjectsJson = (function () {
                 crss += '<span style="display: block">' + item.namespace.name + '</span></a></div></div>';
 
                 crss += '<div class="row " style="margin-left: 0;margin-right: 0;">';
-                crss += '   <span style="font-size: smaller;">' + m.fromNow() + '</span></div></div></div>';      
+                crss += '   <span style="font-size: smaller;">' + m + '</span></div></div></div>';      
 
              });
              $("#lastgitprojects").html(crss);
