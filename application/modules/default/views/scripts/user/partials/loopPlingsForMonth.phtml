@@ -108,13 +108,17 @@ if ($countDownloadsOverall > 0) {
 
             foreach ($allDownloads as $product) { ?>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
-
                     <div class="col-md-1 cell-default" style="min-width: 150px;">
                         <a href="<?= $this->buildProductUrl($product['project_id']) ?>">
                             <img src="<?php echo $helpImage->Image($product['image_small'], array('width' => 80, 'height' => 65)); ?> " height="81" width="101"/>
                         </a>
                     </div>
+                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                    <div class="col-md-3 text-left cell-default">
+                    <?php else: ?>
                     <div class="col-md-4 text-left cell-default">
+                    <?php endif; ?>
+                    
                         <a href="<?= $this->buildProductUrl($product['project_id']) ?>">
                             <span style="line-height: 3em;"><?= $product['title']; ?></span>
                         </a>
