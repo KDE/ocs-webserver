@@ -92,6 +92,7 @@ if ($countDownloadsOverall > 0) {
         }
         $sum_total_month_score = 0;
         $sum_total_month = 0;
+        $sum_total_month_uk = 0;
         $sum_total_month_new = 0;
         $sum_total_text = '';
         $sum_total_payout = 0;
@@ -124,7 +125,11 @@ if ($countDownloadsOverall > 0) {
                     </div>
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                        <?php if($product['num_downloads_uk']>0) { ?>
                         <span><?= $product['num_downloads_uk'] ?></span>
+                        <?php } else { ?>
+                        <span><?= $product['num_downloads'] ?></span>
+                        <?php } ?>
                     </div>
                     <?php endif; ?>                    
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
