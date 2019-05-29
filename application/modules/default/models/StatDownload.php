@@ -82,7 +82,9 @@ class Default_Model_StatDownload
                     `member_payout`.`payment_transaction_id`,
                     CASE WHEN `tag_object`.`tag_item_id` IS NULL THEN 1 ELSE 0 END AS `is_license_missing_now`,
                     CASE WHEN ((`project_category`.`source_required` = 1 AND `project`.`source_url` IS NOT NULL AND LENGTH(`project`.`source_url`) > 0) OR  (`project_category`.`source_required` = 0)) THEN 0 ELSE 1 END AS `is_source_missing_now`,
-                    `project`.`pling_excluded` AS `is_pling_excluded_now`
+                    `project`.`pling_excluded` AS `is_pling_excluded_now`,
+                    (SELECT COUNT(1) FROM ppload.stat_ppload_files_downloaded_unique u JOIN project p2 ON p2.ppload_collection_id = u.collection_id WHERE p2.project_id = `member_dl_plings`.`project_id` AND DATE_FORMAT(u.downloaded_timestamp,'%Y%m') = `member_dl_plings`.yearmonth) AS num_downloads_uk,
+                    (((SELECT COUNT(1) FROM ppload.stat_ppload_files_downloaded_unique u JOIN project p2 ON p2.ppload_collection_id = u.collection_id WHERE p2.project_id = `member_dl_plings`.`project_id` AND DATE_FORMAT(u.downloaded_timestamp,'%Y%m') = `member_dl_plings`.yearmonth)*`member_dl_plings`.dl_pling_factor)/100) AS probably_payout_sum_uk
                 FROM
                     `member_dl_plings`
                 STRAIGHT_JOIN
