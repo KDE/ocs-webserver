@@ -277,7 +277,7 @@ function CategoryPanel(props){
 
     function adjustSliderHeight(){
         if (props.currentCategoryLevel === props.level){
-            const panelHeight = props.categories.length * 24;
+            const panelHeight = (props.categories.length * 24) + props.categories.length;
             props.onSetSliderHeight(panelHeight);
         }
     }
