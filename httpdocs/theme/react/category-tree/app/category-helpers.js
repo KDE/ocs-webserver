@@ -60,23 +60,23 @@ function getCategoryParents(categories,selectedCategories){
 export function GetCategoriesBySearchPhrase(categories,searchPhrase){
   let searchResults = [];
   categories.forEach(function(cat,index){
-    if (cat.title.indexOf(searchPhrase) > -1) searchResults.push(cat);
+    if (cat.title.toLowerCase().indexOf(searchPhrase.toLowerCase()) > -1) searchResults.push(cat);
     if (cat.has_children){
       cat.categories = ConvertObjectToArray(cat.children);
       cat.categories.forEach(function(cat,index){
-        if (cat.title.indexOf(searchPhrase) > -1) searchResults.push(cat);
+        if (cat.title.toLowerCase().indexOf(searchPhrase.toLowerCase()) > -1) searchResults.push(cat);
         if (cat.has_children){
           cat.categories = ConvertObjectToArray(cat.children);
           cat.categories.forEach(function(cat,index){
-            if (cat.title.indexOf(searchPhrase) > -1) searchResults.push(cat);
+            if (cat.title.toLowerCase().indexOf(searchPhrase.toLowerCase()) > -1) searchResults.push(cat);
             if (cat.has_children){
               cat.categories = ConvertObjectToArray(cat.children);
               cat.categories.forEach(function(cat,index){
-                if (cat.title.indexOf(searchPhrase) > -1) searchResults.push(cat);
+                if (cat.title.toLowerCase().indexOf(searchPhrase.toLowerCase()) > -1) searchResults.push(cat);
                 if (cat.has_children){
                   cat.categories = ConvertObjectToArray(cat.children);
                   cat.categories.forEach(function(cat,index){
-                    if (cat.title.indexOf(searchPhrase) > -1) searchResults.push(cat);                   
+                    if (cat.title.toLowerCase().indexOf(searchPhrase.toLowerCase()) > -1) searchResults.push(cat);                   
                   });
                 }                
               });
@@ -162,14 +162,4 @@ export function getAllCatItemCssClass(href,baseUrl,urlContext,categoryId){
     }
   }
   return allCatItemCssClass;
-}
-
-export function CheckIfCategoryIsSelected(selectedCategories,catId){
-  let catIsSelected = false;
-  console.log(catId)
-  selectedCategories.forEach(function(cat,index){
-    console.log(cat.id);
-    if (cat.id === catId) catIsSelected = true;
-  })
-  return catIsSelected;
 }

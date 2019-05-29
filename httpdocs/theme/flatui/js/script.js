@@ -1686,12 +1686,11 @@ var RssNews = (function () {
 })();
 
 
-
 var BlogJson = (function () {
     return {
         setup: function () {
             var urlforum = 'https://forum.opendesktop.org/';
-            var json_url =urlforum+'latest.json';
+            var json_url = '/json/forum';            
             $.ajax(json_url).then(function (result) {
               var topics = result.topic_list.topics;
               var crss = '';
@@ -1702,7 +1701,7 @@ var BlogJson = (function () {
 
              $.each(topics, function (i, item) {
                  if(!item.pinned){
-                     var m = moment(item.last_posted_at);
+                     var m = item.timeago;
                      var r = 'Reply';
                      var t = item.posts_count -1;
                      if(t==0){
@@ -1712,8 +1711,8 @@ var BlogJson = (function () {
                      }else{
                         r = 'Replies';
                      }
-                     crss += '<div class="commentstore"><a href="' + urlforum+'/t/'+item.id + '"><span class="title">' + item.title + '</span></a><div class="newsrow">'
-                         + '<span class="date">' + m.fromNow() + '</span><span class="newscomments">'+ t +' '+ r
+                     crss += '<div class="commentstore"><a href="' + urlforum+'t/'+item.id + '"><span class="title">' + item.title + '</span></a><div class="newsrow">'
+                         + '<span class="date">' + m + '</span><span class="newscomments">'+ t +' '+ r
                          +'</span></div></div>';
                     count--;
                  }
@@ -1727,18 +1726,16 @@ var BlogJson = (function () {
     }
 })();
 
-
 var GitlabNewProjectsJson = (function () {
     return {
-        setup: function (url_git) {
-            var json_url = url_git+'/api/v4/projects?order_by=created_at&sort=desc&visibility=public&page=1&per_page=5';
+        setup: function (url_git) {         
+            var json_url = '/json/gitlabnewprojects';
             $.ajax(json_url).then(function (result) {
               var topics = result;
               var crss = '';
 
-             $.each(topics, function (i, item) {
-                var m = moment(item.created_at);
-
+             $.each(topics, function (i, item) {                
+                var m = item.timeago;
                 crss += '<div class="commentstore"><div class="row"><div class="col-lg-2 col-md-3 col-sm-4 col-xs-4"><div class="text-center">';
                 crss += '<a href="' + item.web_url + '"><div class="avatar-container">';
                 if(item.avatar_url) {
@@ -1753,7 +1750,7 @@ var GitlabNewProjectsJson = (function () {
                 crss += '<span style="display: block">' + item.namespace.name + '</span></a></div></div>';
 
                 crss += '<div class="row " style="margin-left: 0;margin-right: 0;">';
-                crss += '   <span style="font-size: smaller;">' + m.fromNow() + '</span></div></div></div>';      
+                crss += '   <span style="font-size: smaller;">' + m + '</span></div></div></div>';      
 
              });
              $("#lastgitprojects").html(crss);

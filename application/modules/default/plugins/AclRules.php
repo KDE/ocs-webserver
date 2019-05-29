@@ -60,6 +60,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_ocsv1')); // OCS API
         $this->addResource(new Zend_Acl_Resource ('default_embedv1')); // embed API
         $this->addResource(new Zend_Acl_Resource ('default_membersetting'));
+        $this->addResource(new Zend_Acl_Resource ('default_json'));
         $this->addResource(new Zend_Acl_Resource ('default_productcategory'));
         $this->addResource(new Zend_Acl_Resource ('default_productcomment'));
         $this->addResource(new Zend_Acl_Resource ('default_product'));
@@ -152,6 +153,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_hive',
             'default_home',
             'default_membersetting',
+            'default_json',
             'default_ocsv1', // OCS API
             'default_embedv1', // embed API
             'default_productcategory',
