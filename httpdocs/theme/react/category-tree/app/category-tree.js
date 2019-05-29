@@ -41,6 +41,8 @@ function CategoryTree(){
     const [ searchPhrase, setSearchPhrase ] = useState();
     const [ searchMode, setSearchMode ] = useState();
 
+    // console.log(searchPhrase);
+
     /* COMPONENT */
 
     React.useEffect(() => { onSearchPhraseUpdate() },[searchPhrase])
@@ -56,7 +58,7 @@ function CategoryTree(){
                 if (searchMode === true) newCurrentViewedCategories.length = selectedCategoriesId.length;
                 newCurrentViewedCategories = [
                     ...newCurrentViewedCategories,
-                    {id:"-1",title:'Search',categories:GetCategoriesBySearchPhrase(categoryTree,searchPhrase)}
+                    {id:"-1",title:'Search',searchPhrase:searchPhrase,categories:GetCategoriesBySearchPhrase(categoryTree,searchPhrase)}
                 ]
             } else {
                 newCurrentViewedCategories = [...currentViewedCategories];
@@ -102,11 +104,16 @@ function CategoryTree(){
         setCurrentViewedCategories(cvc)
     }
 
+    // search phrase
+    function onSetSearchPhrase(e){
+        setSearchPhrase(e.target.value);
+    }
+
     /* RENDER */
 
     return(
         <div id="category-tree">
-            <input type="text" defaultValue={searchPhrase} onChange={e => setSearchPhrase(e.target.value)}/>       
+            <input type="text" defaultValue={searchPhrase} onChange={e => onSetSearchPhrase(e)}/>       
             <CategoryTreeHeader 
                 currentCategoryLevel={currentCategoryLevel}
                 currentViewedCategories={currentViewedCategories}  
@@ -200,6 +207,7 @@ function CategoryPanelsContainer(props){
     }
 
     function updatePanlesOnSearch(){
+         // console.log(props.currentViewedCategories[props.currentViewedCategories.length - 1])
         const newPanels = [storeListingPanel,...props.currentViewedCategories];
         setPanels(newPanels);
         const newSliderWidth = containerWidth * newPanels.length;
