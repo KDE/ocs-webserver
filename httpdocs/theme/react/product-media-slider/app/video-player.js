@@ -21,7 +21,8 @@ class VideoPlayerWrapper extends React.Component {
             videoStarted:false,
             videoStopped:false,
             videoStartUrl:hostLocation + "startvideoajax?collection_id="+this.props.slide.collection_id+"&file_id="+this.props.slide.file_id,
-            videoStopUrl:hostLocation + "stopvideoajax?media_view_id="
+            videoStopUrl:hostLocation + "stopvideoajax?media_view_id=",
+            initialVolumeSet:false
         }
 
         this.onCinemaModeClick = this.onCinemaModeClick.bind(this);
@@ -36,6 +37,11 @@ class VideoPlayerWrapper extends React.Component {
     handleStateChange(state, prevState) {
         this.setState({ player: state },function(){
             if (this.state.player){
+                if (this.state.initialVolumeSet === false){
+                    const { player } = this.refs.player.getState();
+                    this.refs.player.volume = 0.33;
+                    this.setState({initialVolumeSet:true})
+                }
                 if (typeof this.state.player.videoWidth !== undefined) {
                     setTimeout(() => {
                         this.setState({videoRenderMask:false}) 

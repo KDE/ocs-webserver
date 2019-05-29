@@ -159,6 +159,9 @@ video:focus {
   top: 50%;
   margin-top: -0.15em;
 }
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-play-progress.video-react-slider-bar::after {
+  display: none !important;
+}
 #media-slider .swiper-wrapper .react-player-container .cinema-mode-button {
   line-height: 30px;
   display: inline-block;
