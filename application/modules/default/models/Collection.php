@@ -598,7 +598,8 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
         $q = $this->select()->from(array('project' => 'project'), array(
             'project_id',
             'image_small',
-            'title'
+            'title',
+            'changed_at'
         ))->setIntegrityCheck(false)
           ->where('project.status = ?', self::PROJECT_ACTIVE)
           ->where('project.member_id = ?', $project->member_id, 'INTEGER')
@@ -695,7 +696,8 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
             'project_id',
             'image_small',
             'title',
-            'catTitle' => 'cat_title'
+            'catTitle' => 'cat_title',
+            'changed_at'
         ))->setIntegrityCheck(false)->where('status = ?', self::PROJECT_ACTIVE)
                   ->where('member_id != ?', $project->member_id, 'INTEGER')
                   ->where('amount_reports is null')
