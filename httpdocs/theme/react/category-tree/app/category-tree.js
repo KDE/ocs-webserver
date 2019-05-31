@@ -41,8 +41,6 @@ function CategoryTree(){
     const [ searchPhrase, setSearchPhrase ] = useState();
     const [ searchMode, setSearchMode ] = useState();
 
-    // console.log(searchPhrase);
-
     /* COMPONENT */
 
     React.useEffect(() => { onSearchPhraseUpdate() },[searchPhrase])
@@ -195,23 +193,28 @@ function CategoryPanelsContainer(props){
     const [ sliderHeight, setSliderHeight ] = useState();
     const [ sliderPosition, setSliderPosition ] = useState(props.currentCategoryLevel * containerWidth);
 
-    React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories,props.searchPhrase])
+    React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories])
     React.useEffect(() => { updatePanlesOnSearch() },[props.searchMode,props.searchPhrase])
 
     function updateSlider(){
-        const trimedPanelsArray = panels;
-        trimedPanelsArray.length = props.currentCategoryLevel + 1;
-        setPanels(trimedPanelsArray);       
+
+        const trimedPanelsArray =  [storeListingPanel,...props.currentViewedCategories];
+        if (props.searchMode === false ) trimedPanelsArray.length = props.currentCategoryLevel + 1;
         const newSliderPosition = props.currentCategoryLevel * containerWidth;
+
+        setPanels(trimedPanelsArray);
         setSliderPosition(newSliderPosition);
+    
     }
 
     function updatePanlesOnSearch(){
-         // console.log(props.currentViewedCategories[props.currentViewedCategories.length - 1])
+        
         const newPanels = [storeListingPanel,...props.currentViewedCategories];
-        setPanels(newPanels);
         const newSliderWidth = containerWidth * newPanels.length;
+        
+        setPanels(newPanels);
         setSliderWidth(newSliderWidth);
+
     }
 
     function onCategorySelect(c){
