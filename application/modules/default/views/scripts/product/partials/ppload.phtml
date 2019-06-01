@@ -97,12 +97,10 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                  <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                                   <th style="text-align: right"><?= $this->translate('Downloads Old'); ?></th>
                                  <?php endif; ?>
-                                  
-                                  <th style="text-align: right"><?= $this->translate('Downloads'); ?></th>
-                                  
-                                  <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                                  <th style="text-align: right"><?= $this->translate('Downloads IP'); ?></th>
+                                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                  <th style="text-align: right"><?= $this->translate('Downloads NoUK'); ?></th>
                                  <?php endif; ?>
+                                  <th style="text-align: right"><?= $this->translate('Downloads'); ?></th>
                                  
                                  <th><?= $this->translate('Date'); ?></th>
 
@@ -374,10 +372,10 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                                         tableString += '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + count_downloads + '</td>';
                                         <?php endif; ?>
-                                        tableString += '<td style="text-align: right"><span id="download_counter_live_' + this.id + '">' + count_downloads_live + '</td>';
                                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                                        tableString += '<td style="text-align: right"><span id="download_counter_uk_' + this.id + '">' + count_downloads_uk + '</td>';
+                                        tableString += '<td style="text-align: right"><span id="download_counter_live_' + this.id + '">' + count_downloads_live + '</td>';
                                         <?php endif; ?>
+                                        tableString += '<td style="text-align: right"><span id="download_counter_uk_' + this.id + '">' + count_downloads_uk + '</td>';
                                         tableString += '<td>' +mnt.format('YYYY-MM-DD') + '</td>';
                                         tableString += '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>';
                                         tableString += '<td style="text-align: right; ">' + downloadButton+ '</td>';
@@ -600,10 +598,10 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                                         tableString += '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + count_downloads + '</td>';
                                         <?php endif; ?>
-                                        tableString += '<td style="text-align: right"><span id="download_counter_live_' + this.id + '">' + count_downloads_live + '</td>';
                                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                                        tableString += '<td style="text-align: right"><span id="download_counter_uk_' + this.id + '">' + count_downloads_uk + '</td>';
+                                        tableString += '<td style="text-align: right"><span id="download_counter_live_' + this.id + '">' + count_downloads_live + '</td>';
                                         <?php endif; ?>
+                                        tableString += '<td style="text-align: right"><span id="download_counter_uk_' + this.id + '">' + count_downloads_uk + '</td>';
                                         tableString += '<td>' +mnt.format('YYYY-MM-DD') + '</td>';
                                         tableString += '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>';
                                         tableString += '<td style="text-align: right; "></td>';
@@ -689,7 +687,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                                 } else if ($this->product->member_id==$idt->member_id
                                                 ) { 
                                         ?>
-                                             + '<th style="text-align: right">' + downloaded_count_total_live + '</th>'
+                                             + '<th style="text-align: right">' + downloaded_count_total_uk + '</th>'
                                         <?php   } else { ?>
                                              + '<th style="text-align: right"></th>'
                                         <?php 

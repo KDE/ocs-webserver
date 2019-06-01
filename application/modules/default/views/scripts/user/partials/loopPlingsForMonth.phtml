@@ -124,24 +124,31 @@ if ($countDownloadsOverall > 0) {
                         </a>
                         <b style="display: block; margin-bottom: 5px; font-size: 10pt; line-height: 0em;"><?=$product['cat_title']?></b>
                     </div>
+                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
                         <span><?= $product['num_downloads'] ?></span>
                     </div>
-                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                    <?php endif; ?>                    
+
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                        <?php /*
                         <?php if($product['num_downloads_uk']>0) { ?>
                         <span><?= $product['num_downloads_uk'] ?></span>
                         <?php } else { ?>
                         <span><?= $product['num_downloads'] ?></span>
                         <?php } ?>
+                         * 
+                         */?>
+                        <span><?= $product['num_downloads'] ?></span>
                     </div>
-                    <?php endif; ?>                    
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
                         <span><?= $product['dl_pling_factor'] ?></span>
                     </div>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
                         <span style="color: #BBB"><?php print($currency->toCurrency($product['num_downloads'] * $product['dl_pling_factor'] / 100)); ?></span>
                     </div>
+                        
+                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
                         <span>
                         <?php 
@@ -187,9 +194,8 @@ if ($countDownloadsOverall > 0) {
                             }
                         ?>
                         </span>
-                        
                     </div>
-                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                    <?php endif; ?>   
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
                         <span>
                         <?php 
@@ -231,17 +237,21 @@ if ($countDownloadsOverall > 0) {
                             if($showErrMsg) {
                                 echo '<div class="inline msg-popover-danger" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout requirements are not fulfilled" data-trigger="hover" data-html="true" data-content="'.$errorMsg.'"><span style="color: #a94442;" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span></div>';
                             } else {
+                                /*
                                 if($product['num_downloads_uk']>0) {
                                     print($currency->toCurrency($product['num_downloads_uk'] * $product['dl_pling_factor'] / 100));
                                 } else {
                                     print($currency->toCurrency($product['num_downloads'] * $product['dl_pling_factor'] / 100));
                                 }
+                                 * 
+                                 */
+                                 print($currency->toCurrency($product['num_downloads'] * $product['dl_pling_factor'] / 100));
                             }
                         ?>
                         </span>
                         
                     </div>
-                    <?php endif; ?>
+                    
                     <?php if(!$showErrMsg) {
                             $payout_sum = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
                             $payout_sum_uk = 0;
@@ -249,11 +259,13 @@ if ($countDownloadsOverall > 0) {
                             $show_payout_sum = $payout_sum;
                             $show_payout_new_sum = $payout_sum_new;
                             
+                            /*
                             if($product['num_downloads_uk']>0) {
                                 $payout_sum_uk = $product['num_downloads_uk'] * $product['dl_pling_factor'] / 100;
                             } else {
                                 $payout_sum_uk = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
-                            }
+                            }*/
+                            $payout_sum_uk = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
 
                             if($sum_plings && $sum_plings < $payout_sum) {
                                 $show_payout_new_sum = $sum_plings;
@@ -302,10 +314,10 @@ if ($countDownloadsOverall > 0) {
                 <div class='col-md-4 text-right'></div>
                 <div class='col-md-2 text-right' style="min-width: 380px;"><?=$sum_total_text?></div>
                 <div class='col-md-1 text-right' style="min-width: 190px;"><strong style="color: #BBB"><?=$sum_total_potential_payout?></strong></div>
-                <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?=$sum_total_payout?>**</strong></div>
                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?=$sum_total_payout_uk?>**</strong></div>
+                <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?=$sum_total_payout?>**</strong></div>
                 <?php endif; ?>
+                <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?=$sum_total_payout_uk?>**</strong></div>
             </div>
             
             
