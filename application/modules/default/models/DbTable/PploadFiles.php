@@ -206,7 +206,7 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
                     ,(SELECT COUNT(1) AS cnt
                         FROM ppload.stat_ppload_files_downloaded_unique f5
                         WHERE f5.collection_id = f.collection_id AND f5.file_id = f.id
-			AND f5.downloaded_timestamp >= '2019-05-01 00:00:00') AS count_dl_all_uk
+			AND f5.downloaded_timestamp >= '2019-06-01 00:00:00') AS count_dl_all_uk
 
                     from ppload.ppload_files f 
                     LEFT JOIN (
