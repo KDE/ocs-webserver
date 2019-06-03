@@ -57,6 +57,18 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $main_project_id = $showMember->main_project_id;
         $mainproject_rowset = $this->_projectTable->find($main_project_id);
         $this->_mainproject = $this->view->mainproject = $mainproject_rowset->current();
+
+        
+        $action = $this->getRequest()->getActionName();
+        $title='';
+        if($action =='index')
+        {
+          $title = 'settings';
+        }else
+        {
+          $title = $action;
+        }
+        $this->view->headTitle($title . ' - ' . $this->getHeadTitle(), 'SET');
     }
 
     public function indexAction()
