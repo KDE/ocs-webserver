@@ -379,9 +379,16 @@ function CategoryTagCloud(props){
     React.useEffect(() => { getCategoryTags() },[props.selectedCategory])
 
     function getCategoryTags(){
+
+        let baseAjaxUrl = "https://www.pling."
+        if (window.location.host.endsWith('com') || window.location.host.endsWith('org')){
+            baseAjaxUrl += "com";
+        } else {
+            baseAjaxUrl += "cc";
+        }
         console.log('get tags')
         console.log(window.location.host);
-        let url = window.location.host + "/json/cattags/id/" + props.selectedCategory.id;
+        let url = baseAjaxUrl + "/json/cattags/id/" + props.selectedCategory.id;
         $.ajax({
             dataType: "json",
             url: url,
