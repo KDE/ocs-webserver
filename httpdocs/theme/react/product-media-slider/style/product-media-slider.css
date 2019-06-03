@@ -217,10 +217,6 @@ video:focus {
 #media-slider .swiper-wrapper .slide-item #iframe-container {
   margin: 0 auto;
 }
-#media-slider .swiper-wrapper .slide-item #iframe-container iframe {
-  height: 100% !important;
-  width: 100% !important;
-}
 #media-slider .swiper-pagination {
   display: none;
 }
@@ -266,6 +262,10 @@ video:focus {
   cursor: -moz-zoom-out;
   cursor: -webkit-zoom-out;
   cursor: zoom-out;
+}
+#media-slider.cinema-mode .swiper-wrapper .slide-item iframe {
+  height: inherit !important;
+  width: inherit !important;
 }
 #media-slider.cinema-mode .swiper-wrapper .swiper-pagination-bullet {
   background: white !important;
