@@ -127,7 +127,21 @@ class JsonController extends Zend_Controller_Action
         }        
         $this->_sendResponse($results, $this->_format);
     }
-  
+
+    public function cattagsAction()
+    {
+
+        $this->_initResponseHeader();                
+        $catid = $this->getParam('id');
+        $results = array();
+        if($catid)
+        {
+            $m = new Default_Model_Tags(); 
+            $results = $m->getTagsPerCategory($catid);    
+        }        
+        $this->_sendResponse($results, $this->_format);
+    }
+      
 	
 
 }
