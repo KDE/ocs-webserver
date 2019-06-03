@@ -109,6 +109,9 @@ function CategoryTree(){
 
     /* RENDER */
 
+    let tagCloudDisplay;
+    if (selectedCategory) tagCloudDisplay = <CategoryTagCloud selectedCategory={selectedCategory} />
+
     return(
         <div id="category-tree">
             <input type="text" defaultValue={searchPhrase} onChange={e => onSetSearchPhrase(e)}/>       
@@ -128,6 +131,7 @@ function CategoryTree(){
                 selectedCategoriesId={selectedCategoriesId}
                 onCategoryPanleItemClick={(ccl,cvc) => onCategoryPanleItemClick(ccl,cvc)}
             />
+            {tagCloudDisplay}
         </div>
     )
 }
@@ -364,6 +368,41 @@ function CategoryMenuItem(props){
         <li className={categoryMenuItemClassName} >
             {categoryMenuItemDisplay}
         </li>
+    )
+}
+
+function CategoryTagCloud(props){
+
+    const [ tags, setTags ] = useState();
+
+    React.useEffect(() => { getCategoryTags() },[])
+    React.useEffect(() => { getCategoryTags() },[props.selectedCategory])
+
+    function getCategoryTags(){
+        console.log('get tags')
+        console.log(window.location.host);
+        let url = window.location.host + "/json/cattags/id/" + props.selectedCategory.id;
+        $.ajax({
+            dataType: "json",
+            url: url,
+            success: function(res){
+                console.log(res);
+                setTags(res);
+            }
+          });
+    }
+
+    let tagsDisplay;
+    if (tags){
+        tagsDisplay = tags.map((t,index) => (
+            <a key={index} href={window.location.host + "/search?projectSearchText="+t.tag_fullname+"&f=tags"}>{t.tag_name}</a>
+        ))
+    }
+
+    return (
+        <div id="category-tag-cloud">
+            {tagsDisplay}
+        </div>
     )
 }
 
