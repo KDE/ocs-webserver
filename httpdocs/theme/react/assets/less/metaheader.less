@@ -271,7 +271,7 @@
             cursor: pointer;
             z-index: 1000;
 
-            &.open { 
+            &.open {
               .dropdown-menu {
                 display: block;
               }
@@ -279,6 +279,7 @@
 
             .dropdown-menu {
               width: 600px;
+              max-width: 600px;
               top: 45px;
               right: -473px;
               min-height: 296px;
@@ -1395,7 +1396,8 @@
           height: 24px;
           width: 24px;
           display: block;
-          background-image: url(../img/development-app-menu-item.png);
+          /*background-image: url(../img/development-app-menu-item.png);*/
+          background-image: url(../img/glyphicons-th.svg);
           background-size: 32px;
           background-position: center -5px;
           cursor: pointer;
@@ -1423,6 +1425,221 @@
             width: 100%;
             border-bottom: 1px solid #ccc;
           }
+
+          .user-context-menu{
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+            background-color: #fff;
+            ul.user-context-menu-container{
+                list-style: none;
+                padding-left: 20px;
+                  li {
+                            height: auto;
+                            width: 86px;
+                            border: 1px solid white;
+                            margin: 5px 0 10px 0;
+
+                            a {
+                              display: block;
+                              width: 100%;
+                              padding: 0;
+                              height: auto;
+                              float: left;
+
+                              &:hover {
+                                background-color: white !important;
+                              }
+
+                              .icon {
+                                width: 55px;
+                                height: 55px;
+                                margin: 5px auto;
+                                background-size: 50px;
+                                background-position: center center;
+                                background-repeat: no-repeat;
+                                width: 100%;
+                              }
+
+                              span {
+                                float: left;
+                                width: 100%;
+                                text-align: center;
+                                display: block;
+                                color:rgba(0,0,0,0.87);
+                                font-size: 13px;
+                              }
+
+                              &:active {
+                                background-color: white;
+                              }
+                            }
+                            &.clear-left{
+                               clear: left;
+                            }
+
+
+                            &#opendesktop-link-item {
+                              a {
+                                .icon {
+                                  background-image: url('../img/logo-opendesktop.png');
+                                }
+                              }
+                            }
+
+                            &#discourse-link-item {
+                              a {
+                                .icon {
+                                  background-image: url('../img/logo-discourse.png');
+                                  background-size: 58px;
+                                }
+                              }
+                            }
+
+                            &#gitlab-link-item {
+                              a {
+                                .icon {
+                                  background-image: url(../img/logo-gitlab.png);
+                                }
+                              }
+                            }
+
+                            &#opencode-link-item {
+                              a {
+                                .icon {
+                                  background-image: url(../img/logo-opencode.png);
+                                  background-size: 40px;
+                                }
+                              }
+                            }
+
+                            &#addproduct-link-item {
+                              a {
+                                .icon {
+                                  background-image: url(../img/add.svg);
+                                  background-size: 40px;
+                                }
+                              }
+                            }
+                            &#listproduct-link-item {
+                              a {
+                                .icon {
+                                  background-image: url(../img/products.png);
+                                  background-size: 40px;
+                                }
+                              }
+                            }
+                             &#plings-link-item {
+                              a {
+                                .icon {
+                                  background-image: url(../img/pling.png);
+                                  background-size: 40px;
+                                }
+                              }
+                            }
+
+
+                            &#messages-link-item {
+                              a {
+                                .icon {
+                                  background-image: url(../img/messages.png);
+                                  background-size: 45px;
+                                }
+                              }
+                            }
+
+                            &#issues-link-item {
+                              a {
+                                .icon {
+                                  background-image: url(../img/issues.png);
+                                  background-size: 45px;
+                                }
+                              }
+                            }
+
+
+
+                            &#music-link-item {
+                              a {
+                                .icon {
+                                  background-image: url(../img/logo-music.png);
+                                  background-size: 45px;
+                                }
+                              }
+                            }
+
+                            &#docs-link-item {
+                              a {
+                                .icon {
+                                  background-image: url(../img/logo-docs.png);
+                                  background-size: 45px;
+                                }
+                              }
+                            }
+
+                            &#storage-link-item {
+                              a {
+                                .icon {
+                                  background-image: url(../img/logo-storage.png);
+                                  background-size: 45px;
+                                }
+                              }
+                            }
+
+                            &#contacts-link-item {
+                              a {
+                                .icon {
+                                  background-image: url(../img/logo-contacts.png);
+                                  background-size: 45px;
+                                }
+                              }
+                            }
+
+                            &#calendar-link-item {
+                              a {
+                                .icon {
+                                  background-image: url(../img/logo-calendar.png);
+                                  background-size: 45px;
+                                }
+                              }
+                            }
+
+                            &#talk-link-item {
+                              a {
+                                .icon {
+                                  background-image: url(../img/logo-talk.png);
+                                  background-size: 45px;
+                                }
+                              }
+                            }
+
+                            &#chat-link-item {
+                              display: block;
+                              clear: both;
+                              a {
+                                .icon {
+                                  background-image: url(../img/logo-riot.svg);
+                                  background-size: 45px;
+                                }
+                              }
+                            }
+
+                            &:hover {
+                              border:1px solid #e5e5e5;
+                              a {
+                                background-color: white;
+                              }
+                            }
+
+                            &:active {
+                              a {
+                                background-color: white;
+                              }
+                            }
+                          }
+
+            }
+          }
+
           .user-settings-item {
             width: 100%;
             border-bottom: 1px solid #ccc;
@@ -1857,7 +2074,8 @@
           background-image: url(../img/glyphicons-th-light.svg);
         }
   #development-app-menu-container .user-dropdown .th-icon {
-        background-image: url(../img/development-app-menu-item-white.png);
+        /*background-image: url(../img/development-app-menu-item-white.png);*/
+          background-image: url(../img/glyphicons-th-light.svg);
       }
       #user-search-menu-container .user-dropdown .th-icon {
             background-image: url(../img/search-light.svg);

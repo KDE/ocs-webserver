@@ -34,6 +34,77 @@ class UserLoginMenuContainer extends React.Component {
 
   render(){
     const theme = this.props.onSwitchStyleChecked?"Metaheader theme dark":"Metaheader theme light";
+    //const urlEnding = this.props.baseUrl.split('opendesktop.')[1];
+    let urlEnding;
+    if(this.props.baseUrl.endsWith("cc"))
+    {
+      urlEnding = "cc";
+    }else if(this.props.baseUrl.endsWith("com")){
+      urlEnding = "com";
+    }else{
+      urlEnding = "com";
+    }
+
+    let contextMenuDisplay;
+    if (this.props.isAdmin){
+      contextMenuDisplay = (
+        <ul className="user-context-menu-container">
+
+          <li id="messages-link-item">
+            <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
+              <div className="icon"></div>
+              <span>Messages</span>
+            </a>
+          </li>
+          <li id="contacts-link-item">
+            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
+              <div className="icon"></div>
+              <span>Contacts</span>
+            </a>
+          </li>
+
+          <li id="storage-link-item">
+            <a href={"https://cloud.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Storage</span>
+            </a>
+          </li>
+          <li id="docs-link-item">
+            <a href={"https://docs.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Docs</span>
+            </a>
+          </li>
+
+          <li id="calendar-link-item">
+            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
+              <div className="icon"></div>
+              <span>Calendar</span>
+            </a>
+          </li>
+          <li id="music-link-item">
+            <a href={"https://music.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Music</span>
+            </a>
+          </li>
+
+        </ul>
+      );
+    } else {
+      contextMenuDisplay = (
+        <ul  className="user-context-menu-container">
+          <li id="messages-link-item" >
+            <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
+              <div className="icon"></div>
+              <span>Messages</span>
+            </a>
+          </li>
+
+        </ul>
+      );
+    }
+
     return (
       <li id="user-login-menu-container" ref={node => this.node = node}>
         <div className={"user-dropdown " + this.state.dropdownClass}>
@@ -58,6 +129,9 @@ class UserLoginMenuContainer extends React.Component {
                   </ul>
                 </div>
               </div>
+            </li>
+            <li className="user-context-menu">
+              {contextMenuDisplay}
             </li>
             <li className="user-settings-item">
              <span className="user-settings-item-title">Metaheader theme light</span>

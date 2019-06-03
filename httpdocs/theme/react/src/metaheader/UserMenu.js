@@ -18,21 +18,13 @@ class UserMenu extends React.Component {
       searchMenuDisplay = <SearchMenuContainer baseUrl={this.props.baseUrl}/>
     }
 
-    let userDropdownDisplay, userAppsContextDisplay, developmentAppMenuDisplay;
+    let userDropdownDisplay, developmentAppMenuDisplay;
     if (this.props.user && this.props.user.member_id){
-      // userDropdownDisplay = (
-      //   <UserLoginMenuContainerVersionTwo
-      //     user={this.props.user}
-      //     logoutUrl={this.props.logoutUrl}
-      //     baseUrl={this.props.baseUrl}
-      //      onSwitchStyle={this.props.onSwitchStyle}
-      //      onSwitchStyleChecked={this.props.onSwitchStyleChecked}
-      //   />
-      // );
-
       userDropdownDisplay = (
         <UserLoginMenuContainer
           user={this.props.user}
+          forumUrl={this.props.forumUrl}
+          isAdmin={this.props.isAdmin}
           logoutUrl={this.props.logoutUrl}
           baseUrl={this.props.baseUrl}
           onSwitchStyle={this.props.onSwitchStyle}
@@ -40,16 +32,7 @@ class UserMenu extends React.Component {
         />
       );
 
-      userAppsContextDisplay = (
-        <UserContextMenuContainer
-          user={this.props.user}
-          forumUrl={this.props.forumUrl}
-          gitlabUrl={this.props.gitlabUrl}
-          isAdmin={this.props.isAdmin}
-          baseUrl={this.props.baseUrl}
-
-        />
-      );
+      
       developmentAppMenuDisplay = (
         <DevelopmentAppMenu
           user={this.props.user}
@@ -92,11 +75,11 @@ class UserMenu extends React.Component {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
-          <li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>          
+          <li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>
           {aboutMenu}
           {searchMenuDisplay}
           {chatItem}
-          {userAppsContextDisplay}
+
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
         </ul>
@@ -104,7 +87,7 @@ class UserMenu extends React.Component {
     } else {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
-          {userAppsContextDisplay}
+
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
         </ul>

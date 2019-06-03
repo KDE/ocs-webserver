@@ -109,21 +109,18 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
                 $headTitle=$this::METAHEADER_DEFAULT_TITLE;
         }
         return $headTitle;
-    }
+    }    
 
     public function initView()
     {
         if (!Zend_Registry::isRegistered('headMetaSet')) {
 
-            $headTitle = $this->templateConfigData['head']['browser_title'];
+            
+            $headTitle = $this->getHeadTitle();
             $headDesc = $this->templateConfigData['head']['meta_description'];
             $headKeywords = $this->templateConfigData['head']['meta_keywords'];
             //set default site-title
             $this->view->headTitle($headTitle, Zend_View_Helper_Placeholder_Container_Abstract::SET);
-
-            if ($headTitle == $this::METAHEADER_DEFAULT) {
-                $headTitle = $this::METAHEADER_DEFAULT_TITLE;
-            }
             if ($headDesc == $this::METAHEADER_DEFAULT) {
                 $headDesc = $this::METAHEADER_DEFAULT_DESCRIPTION;
             }
