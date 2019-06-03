@@ -344,9 +344,16 @@ function SlideItem(props){
   
   let slideContentDisplay;
   if (props.slide.type === "embed"){
+    let iframeContainerStyle = {width:"560px",height:"315px"}
+    if (props.cinemaMode === true){
+      iframeContainerStyle = {
+        width:"100%",
+        height:(props.containerWidth / 4) * 3
+      }
+    }
     slideContentDisplay = (
-      <div id="iframe-container" style={{width:"560px",height:"315px"}}>
-        <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
+      <div id="iframe-container" style={iframeContainerStyle}>
+        <div dangerouslySetInnerHTML={{__html: props.slide.url}} />
       </div>
     )
   }
