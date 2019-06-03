@@ -214,6 +214,11 @@ video:focus {
   width: auto;
   display: table;
 }
+#media-slider .swiper-wrapper .slide-item #iframe-container {
+  width: 560px;
+  height: 315px;
+  margin: 0 auto;
+}
 #media-slider .swiper-pagination {
   display: none;
 }

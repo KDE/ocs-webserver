@@ -344,7 +344,11 @@ function SlideItem(props){
   
   let slideContentDisplay;
   if (props.slide.type === "embed"){
-    slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
+    slideContentDisplay = (
+      <div id="iframe-container" style={{width:"560px",height:"315px"}}>
+        <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
+      </div>
+    )
   }
   else if (props.slide.type === "image") {
     slideContentDisplay = (
