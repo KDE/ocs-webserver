@@ -214,6 +214,13 @@ video:focus {
   width: auto;
   display: table;
 }
+#media-slider .swiper-wrapper .slide-item #iframe-container {
+  margin: 0 auto;
+}
+#media-slider .swiper-wrapper .slide-item #iframe-container iframe {
+  width: 560px !important;
+  height: 315px !important;
+}
 #media-slider .swiper-pagination {
   display: none;
 }

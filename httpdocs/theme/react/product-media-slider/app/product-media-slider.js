@@ -294,46 +294,43 @@ function SlideItem(props){
 
   function getSlideContentHeight(cinemaMode){
     if (props.currentSlide === props.slideIndex){    
-    if (props.slide.type === "image"){
-      const imageEl = document.getElementById('slide-img-'+props.slideIndex);
-      if ( cinemaMode === true ){
-        let imageHeight = imageEl.naturalHeight;
-        if (imageEl.naturalWidth > window.innerWidth){
-          let dimensionsPercentage = window.innerWidth / imageEl.naturalWidth;
-          imageHeight = imageEl.naturalHeight * dimensionsPercentage;
-        }
-        setMediaStyle({height:imageHeight})
-        props.onSetSliderHeight(imageHeight);
-      } else {
-        if (imageEl.offsetHeight > 0) {
-          if (props.disableGallery){
-            let imageHeight = itemSetHeight;
-            if (!itemSetHeight) setItemSetHeight(imageEl.offsetHeight)
-            setMediaStyle({maxHeight:itemSetHeight})
-            props.onSetSliderHeight(itemSetHeight)
-          } else {
-            setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
-            props.onSetSliderHeight(360)
-          }          
+      if (props.slide.type === "image"){
+        const imageEl = document.getElementById('slide-img-'+props.slideIndex);
+        if ( cinemaMode === true ){
+          let imageHeight = imageEl.naturalHeight;
+          if (imageEl.naturalWidth > window.innerWidth){
+            let dimensionsPercentage = window.innerWidth / imageEl.naturalWidth;
+            imageHeight = imageEl.naturalHeight * dimensionsPercentage;
+          }
+          setMediaStyle({height:imageHeight})
+          props.onSetSliderHeight(imageHeight);
         } else {
-          if (props.disableGallery) setMediaStyle({maxHeight:360})
+          if (imageEl.offsetHeight > 0) {
+            if (props.disableGallery){
+              let imageHeight = itemSetHeight;
+              if (!itemSetHeight) setItemSetHeight(imageEl.offsetHeight)
+              setMediaStyle({maxHeight:itemSetHeight})
+              props.onSetSliderHeight(itemSetHeight)
+            } else {
+              setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
+              props.onSetSliderHeight(360)
+            }          
+          } else {
+            if (props.disableGallery) setMediaStyle({maxHeight:360})
+          }
+        }
+      }
+      else if (props.slide.type === "embed"){ 
+        if (cinemaMode === true) props.onSetSliderHeight(315)
+      } 
+      else if (props.slide.type === "video" || props.slide.type === "audio" || props.slide.type === "book"){
+        if (cinemaMode === true){
+          props.onSetSliderHeight(screen.height * 0.7); 
+        } else {
+          props.onSetSliderHeight(360)
         }
       }
     }
-    
-    else if (props.slide.type === "embed"){ 
-      if (cinemaMode === true) props.onSetSliderHeight(315)
-    } 
-    
-    else if (props.slide.type === "video" || props.slide.type === "audio" || props.slide.type === "book"){
-      if (cinemaMode === true){
-        props.onSetSliderHeight(screen.height * 0.7); 
-      } else {
-        props.onSetSliderHeight(360)
-      }
-    }
-  } 
-
   }
 
   function onCinemaModeClick(){
@@ -344,7 +341,11 @@ function SlideItem(props){
   
   let slideContentDisplay;
   if (props.slide.type === "embed"){
-    slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
+    slideContentDisplay = (
+      <div id="iframe-container">
+        <div dangerouslySetInnerHTML={{__html: props.slide.url}} />
+      </div>
+    )
   }
   else if (props.slide.type === "image") {
     slideContentDisplay = (

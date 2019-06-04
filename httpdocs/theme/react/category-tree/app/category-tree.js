@@ -109,6 +109,9 @@ function CategoryTree(){
 
     /* RENDER */
 
+    let tagCloudDisplay;
+    if (selectedCategory) tagCloudDisplay = <CategoryTagCloud selectedCategory={selectedCategory} />
+
     return(
         <div id="category-tree">
             <input type="text" defaultValue={searchPhrase} onChange={e => onSetSearchPhrase(e)}/>       
@@ -128,6 +131,7 @@ function CategoryTree(){
                 selectedCategoriesId={selectedCategoriesId}
                 onCategoryPanleItemClick={(ccl,cvc) => onCategoryPanleItemClick(ccl,cvc)}
             />
+            {tagCloudDisplay}
         </div>
     )
 }
@@ -364,6 +368,51 @@ function CategoryMenuItem(props){
         <li className={categoryMenuItemClassName} >
             {categoryMenuItemDisplay}
         </li>
+    )
+}
+
+function CategoryTagCloud(props){
+
+    const [ tags, setTags ] = useState();
+
+    React.useEffect(() => { getCategoryTags() },[])
+    React.useEffect(() => { getCategoryTags() },[props.selectedCategory])
+
+    function getCategoryTags(){
+
+        let baseAjaxUrl = "https://www.pling."
+        if (window.location.host.endsWith('com') || window.location.host.endsWith('org')){
+            baseAjaxUrl += "com";
+        } else {
+            baseAjaxUrl += "cc";
+        }
+        console.log('get tags')
+        console.log(window.location.host);
+        let url = baseAjaxUrl + "/json/cattags/id/" + props.selectedCategory.id;
+        $.ajax({
+            dataType: "json",
+            url: url,
+            success: function(res){
+                console.log(res);
+                setTags(res);
+            }
+          });
+    }
+
+    let tagsDisplay;
+    if (tags){
+        tagsDisplay = tags.map((t,index) => (
+            <a key={index} href={"http://" + window.location.host + "/search?projectSearchText="+t.tag_fullname+"&f=tags"}>
+                <span className="glyphicon glyphicon-tag"></span>
+                {t.tag_name}
+            </a>
+        ))
+    }
+
+    return (
+        <div id="category-tag-cloud">
+            {tagsDisplay}
+        </div>
     )
 }
 

@@ -47,6 +47,16 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $this->_collectionId = (int)$this->getParam('collection_id');
         $this->_auth = Zend_Auth::getInstance();
         $this->_browserTitlePrepend = $this->templateConfigData['head']['browser_title_prepend'];
+
+        $action = $this->getRequest()->getActionName();
+        if($action =='add')
+        {
+          $title = 'add collection';
+        }else
+        {
+          $title = $action;
+        }
+        $this->view->headTitle($title . ' - ' . $this->getHeadTitle(), 'SET');
     }
 
     public function ratingAction()
