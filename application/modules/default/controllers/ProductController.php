@@ -245,21 +245,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 if(!empty($tagGroups)) {
                     $groups = $this->getTagGroupsForCat($file['id']);
                     $file['tag_groups'] = $groups;
-                    
-                    
                 }
-                //$file['downloaded_count_live'] = $this->getFileDownloadCount($collection_id, $file['id']);
-                $counterToday = $file['count_dl_today'];
-                $counterAll = $file['count_dl_all'];
-                $counter = 0;
-                if(!empty($counterToday)) {
-                    $counter = $counterToday;
-                }
-                if(!empty($counterAll)) {
-                    $counter = $counter + $counterAll;
-                }
-                $file['downloaded_count_live'] = $counter;
                 
+                //Download Counter
+                $helperUserRole = new Backend_View_Helper_UserRole();
+                $userRoleName = $helperUserRole->userRole();
+
                 //new counter IP based
                 $counterUkAll = $file['count_dl_all_uk'];
                 $counterNoUkAll = $file['count_dl_all_nouk'];
@@ -271,6 +262,27 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $counterNew = $counterNew + $counterNoUkAll;
                 }
                 $file['downloaded_count_uk'] = $counterNew;
+
+
+                if ($userRoleName == Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN) {
+                    //$file['downloaded_count_live'] = $this->getFileDownloadCount($collection_id, $file['id']);
+                    $counterToday = $file['count_dl_today'];
+                    $counterAll = $file['count_dl_all'];
+                    $counter = 0;
+                    if(!empty($counterToday)) {
+                        $counter = $counterToday;
+                    }
+                    if(!empty($counterAll)) {
+                        $counter = $counter + $counterAll;
+                    }
+                    $file['downloaded_count_live'] = $counter;
+                } else {
+                    unset($file['count_dl_all']);
+                    unset($file['count_dl_all_nouk']);
+                    unset($file['count_dl_all_uk']);
+                    unset($file['count_dl_today']);
+                    unset($file['downloaded_count']);
+                }
                 $result[] = $file;
             }
             
