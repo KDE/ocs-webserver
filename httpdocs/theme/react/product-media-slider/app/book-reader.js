@@ -8,7 +8,10 @@ function BookReaderWrapper(props){
   const [ totalPages, setTotalPages ] = useState();
 
   React.useEffect(() => {initBookReader()},[])
-  React.useEffect(() => {initBookReader()},[props.cinemaMode])
+  React.useEffect(() => {
+    if (book){ book.destroy() }
+    initBookReader()
+  },[props.cinemaMode])
 
   function initBookReader(){
     // Initialize the book
