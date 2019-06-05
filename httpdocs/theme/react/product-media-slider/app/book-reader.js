@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 function BookReaderWrapper(props){
   
+  const [ bookState, setBookState ] = useState(null)
   const [ renditionState , setRenditionState ] = useState()
   const [ progress, setProgress ] = useState()
   const [ currentPage, setCurrentPage ] = useState();
@@ -9,13 +10,14 @@ function BookReaderWrapper(props){
 
   React.useEffect(() => {initBookReader()},[])
   React.useEffect(() => {
-    if (book){ book.destroy() }
+    if (bookState){ bookState.destroy() }
     initBookReader()
   },[props.cinemaMode])
 
   function initBookReader(){
     // Initialize the book
     let book = ePub(props.slide.url, {});
+    setBookState(book)
     let rendition = book.renderTo('book-container', {
         flow: 'paginated',
         manager: 'continuous',
