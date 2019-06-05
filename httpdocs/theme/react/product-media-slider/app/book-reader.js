@@ -7,15 +7,8 @@ function BookReaderWrapper(props){
   const [ totalPages, setTotalPages ] = useState();
 
   React.useEffect(() => {initBookReader()},[])
-  React.useEffect(() => {
-    initBookReader()
-  },[props.cinemaMode])
 
   function initBookReader(){
-    // remove book dom element if exists
-    const element = $("#book-container").find(".epub-container");
-    if (element) element.remove()
-
     // Initialize the book
     let book = ePub(props.slide.url, {});
     let rendition = book.renderTo('book-container', {

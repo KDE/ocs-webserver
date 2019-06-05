@@ -323,12 +323,14 @@ function SlideItem(props){
       else if (props.slide.type === "embed"){ 
         if (cinemaMode === true) props.onSetSliderHeight(315)
       } 
-      else if (props.slide.type === "video" || props.slide.type === "audio" || props.slide.type === "book"){
+      else if (props.slide.type === "video" || props.slide.type === "audio"){
         if (cinemaMode === true){
           props.onSetSliderHeight(screen.height * 0.7); 
         } else {
           props.onSetSliderHeight(360)
         }
+      } else if (props.slide.type === "book"){
+        props.onSetSliderHeight(360)
       }
     }
   }
