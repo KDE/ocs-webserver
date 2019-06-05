@@ -325,6 +325,15 @@ video:focus {
   background: white;
   margin: 0 auto;
 }
+#book-reader-wrapper #book-pager {
+  position: absolute;
+  bottom: 0;
+  z-index: 100;
+  color: white;
+  font-weight: bold;
+  left: 0;
+  width: 100%;
+}
 #book-reader-wrapper .arrow {
   position: fixed;
   top: 50%;
