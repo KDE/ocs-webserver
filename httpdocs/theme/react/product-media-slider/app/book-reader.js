@@ -18,7 +18,6 @@ function BookReaderWrapper(props){
 
     // Initialize the book
     let book = ePub(props.slide.url, {});
-    setBookState(book)
     let rendition = book.renderTo('book-container', {
         flow: 'paginated',
         manager: 'continuous',
@@ -49,8 +48,6 @@ function BookReaderWrapper(props){
 
     // When navigating to the next/previous page
     rendition.on('relocated', function(locations) {
-        const newProgress = book.locations.percentageFromCfi(locations.start.cfi);
-        setProgress(newProgress);
         setCurrentPage(book.locations.locationFromCfi(locations.start.cfi));
         setTotalPages(book.locations.total)
     })
