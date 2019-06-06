@@ -45,6 +45,7 @@ class Default_Model_ConfigStore
     public $is_show_blog_news;
     public $is_show_forum_news;
     public $is_show_in_menu;
+    public $is_show_real_domain_as_url;
     public $layout_home;
     public $layout_explore;
     public $layout_pagedetail;
@@ -77,6 +78,7 @@ class Default_Model_ConfigStore
             $this->is_show_blog_news = $storeConfig['is_show_blog_news'];
             $this->is_show_forum_news = $storeConfig['is_show_forum_news'];
             $this->is_show_in_menu = $storeConfig['is_show_in_menu'];
+            $this->is_show_real_domain_as_url = $storeConfig['is_show_real_domain_as_url'];
             $this->layout_home = $storeConfig['layout_home'];
             $this->layout_explore = $storeConfig['layout_explore'];
             $this->layout_pagedetail = $storeConfig['layout_pagedetail'];
