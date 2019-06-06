@@ -13,8 +13,8 @@ function CategoryTree(){
     /* STATE */
 
     let initialCatTree = [{title:"All",id:"0"},...window.catTree]
-    
-    const [ categoryTree, setCategoryTree ] = useState(initialCatTree);
+
+    const [ categoryTree, setCategoryTree ] = useState(initialCatTree);    
     const [ categoryId, SetCategoryId ] = useState(window.categoryId);
     const [ selectedCategory, setSelectedCategory ] = useState(GetSelectedCategory(categoryTree,categoryId));
     
@@ -107,6 +107,16 @@ function CategoryTree(){
         setSearchPhrase(e.target.value);
     }
 
+
+    // on back button click
+    function onBackButtonClick(){
+        /*props.goBack();
+        let newCategories = categories;
+        if (categories.length <= 1) newCategories = []
+        else newCategories.length = categories.length - 1;
+        setCategories(newCategories);*/
+    }
+
     /* RENDER */
 
     let tagCloudDisplay;
@@ -114,7 +124,7 @@ function CategoryTree(){
 
     return(
         <div id="category-tree">
-            <input type="text" defaultValue={searchPhrase} onChange={e => onSetSearchPhrase(e)}/>       
+            <input type="text" defaultValue={searchPhrase} onChange={e => onSetSearchPhrase(e)}/>
             <CategoryTreeHeader 
                 currentCategoryLevel={currentCategoryLevel}
                 currentViewedCategories={currentViewedCategories}  
@@ -130,6 +140,7 @@ function CategoryTree(){
                 currentViewedCategories={currentViewedCategories}
                 selectedCategoriesId={selectedCategoriesId}
                 onCategoryPanleItemClick={(ccl,cvc) => onCategoryPanleItemClick(ccl,cvc)}
+                onGoBackClick={goBack}
             />
             {tagCloudDisplay}
         </div>
@@ -153,14 +164,6 @@ function CategoryTreeHeader(props){
         window.location.href = catLink;
     }
 
-    function onBackButtonClick(){
-        props.goBack();
-        let newCategories = categories;
-        if (categories.length <= 1) newCategories = []
-        else newCategories.length = categories.length - 1;
-        setCategories(newCategories);
-    }
-
     let categoryTreeHeaderNavigationDisplay;
     if (categories.length > 0){
         categoryTreeHeaderNavigationDisplay = categories.map((cvc,index) =>{
@@ -180,7 +183,6 @@ function CategoryTreeHeader(props){
 
     return (
         <div id="category-tree-header">
-            <a id="back-button" onClick={onBackButtonClick}>{"<<"}</a>
             {categoryTreeHeaderNavigationDisplay}
         </div>
     )
@@ -188,39 +190,55 @@ function CategoryTreeHeader(props){
 
 function CategoryPanelsContainer(props){
 
-    const storeListingPanel = {categoryId:0,categories:props.categoryTree}
-    let initialPanelsValue = [storeListingPanel];
-    if (props.currentViewedCategories.length > 0) initialPanelsValue = [storeListingPanel,...props.currentViewedCategories];
+    /* STATE */
+
+    const rootListingPanel = {categoryId:0,categories:props.categoryTree}
+    const storeListingPanel = {categoryId:-1,categories:window.config.domains}
+    let initialRootCategoryPanels = [storeListingPanel,rootListingPanel];
+    if (window.is_show_in_menu === 1) initialRootCategoryPanels = [storeListingPanel,rootListingPanel];
+    let initialPanelsValue = initialRootCategoryPanels;
+    if (props.currentViewedCategories.length > 0) initialPanelsValue = initialRootCategoryPanels.concat(props.currentViewedCategories);
     const [ panels, setPanels ] = useState(initialPanelsValue);
+    
     const [ containerWidth, setContainerWidth ] = useState(document.getElementById('category-tree-container').offsetWidth);
     const [ sliderWidth, setSliderWidth ] = useState(containerWidth * panels.length);
     const [ sliderHeight, setSliderHeight ] = useState();
-    const [ sliderPosition, setSliderPosition ] = useState(props.currentCategoryLevel * containerWidth);
+
+    let currentCategoryLevel = props.currentCategoryLevel;
+    if (window.is_show_in_menu === 1) currentCategoryLevel += 1;
+    const [ sliderPosition, setSliderPosition ] = useState(currentCategoryLevel * containerWidth);
+
+    let initialShowBackButtonValue = true;
+    if (window.is_show_in_menu === 0){ if (props.currentCategoryLevel === 0) initialShowBackButtonValue = false; }
+    else if (window.is_show_in_menu === 1){ if (props.currentCategoryLevel === -1) initialShowBackButtonValue = false; }
+    const [ showBackButton, setShowBackButton ] = useState(initialShowBackButtonValue);
+
+    /* COMPONENT */
 
     React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories])
     React.useEffect(() => { updatePanlesOnSearch() },[props.searchMode,props.searchPhrase])
 
+    // update slider
     function updateSlider(){
-
-        const trimedPanelsArray =  [storeListingPanel,...props.currentViewedCategories];
+        const trimedPanelsArray =  [...initialRootCategoryPanels,...props.currentViewedCategories];
         if (props.searchMode === false ) trimedPanelsArray.length = props.currentCategoryLevel + 1;
-        const newSliderPosition = props.currentCategoryLevel * containerWidth;
-
         setPanels(trimedPanelsArray);
+
+        let currentCategoryLevel = props.currentCategoryLevel;
+        if (window.is_show_in_menu === 1) currentCategoryLevel += 1;
+        const newSliderPosition = currentCategoryLevel * containerWidth;
         setSliderPosition(newSliderPosition);
-    
     }
 
+    // update panels on search
     function updatePanlesOnSearch(){
-        
-        const newPanels = [storeListingPanel,...props.currentViewedCategories];
+        const newPanels = [...initialRootCategoryPanels,...props.currentViewedCategories];
         const newSliderWidth = containerWidth * newPanels.length;
-        
         setPanels(newPanels);
         setSliderWidth(newSliderWidth);
-
     }
 
+    // on category select
     function onCategorySelect(c){
 
         const newCurrentCategoryLevel = props.currentCategoryLevel + 1;
@@ -250,6 +268,18 @@ function CategoryPanelsContainer(props){
         props.onCategoryPanleItemClick(newCurrentCategoryLevel,newCurrentViewedCategories)
     }
 
+    // on go back click
+    function onGoBackClick(){
+        if (props.currentCategoryLevel > 0) props.onGoBackClick()
+        else {
+            setSliderPosition(0);
+            setShowBackButton(false);
+        }
+        
+    }
+
+    /* RENDER */
+
     const categoryPanelsDislpay = panels.map((cp,index) => (
         <CategoryPanel 
             key={index}
@@ -276,8 +306,15 @@ function CategoryPanelsContainer(props){
         width:sliderWidth+"px",
     }
 
+    let categoryPanelsContainerClassName, backButtonDisplay;
+    if (showBackButton){
+        categoryPanelsContainerClassName = "show-back-button";
+        backButtonDisplay = <a id="back-button" onClick={onGoBackClick}>{"<<"}</a>
+    }
+
     return (
-        <div id="category-panles-container" style={categoryPanelsContainerCss}>
+        <div id="category-panles-container" className={categoryPanelsContainerClassName} style={categoryPanelsContainerCss}>
+            {backButtonDisplay}
             <div id="category-panels-slider" style={categoryPanelsSliderCss}>
                 {categoryPanelsDislpay}
             </div>
@@ -291,7 +328,10 @@ function CategoryPanel(props){
     React.useEffect(() => {adjustSliderHeight()},[props.currentCategoryLevel])
 
     function adjustSliderHeight(){
-        if (props.currentCategoryLevel === props.level){
+        let currentCategoryLevel = props.currentCategoryLevel
+        if (window.is_show_in_menu) currentCategoryLevel = props.currentCategoryLevel + 1;
+        console.log(currentCategoryLevel);
+        if (currentCategoryLevel === props.level){
             const panelHeight = (props.categories.length * 24) + props.categories.length;
             props.onSetSliderHeight(panelHeight);
         }
@@ -337,25 +377,32 @@ function CategoryPanel(props){
 function CategoryMenuItem(props){
 
     const c = props.category;
-    const [ catLink, setCatLink ] = useState(c.id === "0" ? "/browse/" : "/browse/cat/"+c.id+"/order/latest/")
+    let initialCatLink;
+    if (c.id) initialCatLink = c.id === "0" ? "/browse/" : "/browse/cat/"+c.id+"/order/latest/"
+    else  initialCatLink = "https://" + c.host;
+    const [ catLink, setCatLink ] = useState(initialCatLink)
 
     function onCategoryClick(c){
         props.onCategoryClick(c);
         window.top.location.href = catLink;
     }
 
+    let catTitle;
+    if (c.title) catTitle = c.title;
+    else catTitle = c.name;
+
     let categoryMenuItemDisplay;
     if (c.has_children === true){
         categoryMenuItemDisplay = (
             <a onClick={() => onCategoryClick(c)}>
-                <span className="cat-title">{c.title}</span>
+                <span className="cat-title">{catTitle}</span>
                 <span className="cat-product-counter">{c.product_count}</span>
             </a>
         )
     } else {
         categoryMenuItemDisplay = (
             <a href={catLink}>
-                <span className="cat-title">{c.title}</span>
+                <span className="cat-title">{catTitle}</span>
                 <span className="cat-product-counter">{c.product_count}</span>
             </a>
         )        
@@ -386,14 +433,12 @@ function CategoryTagCloud(props){
         } else {
             baseAjaxUrl += "cc";
         }
-        console.log('get tags')
-        console.log(window.location.host);
+        
         let url = baseAjaxUrl + "/json/cattags/id/" + props.selectedCategory.id;
         $.ajax({
             dataType: "json",
             url: url,
             success: function(res){
-                console.log(res);
                 setTags(res);
             }
           });
