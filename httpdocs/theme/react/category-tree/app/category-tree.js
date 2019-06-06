@@ -227,7 +227,11 @@ function CategoryPanelsContainer(props){
     // update slider
     function updateSlider(){
         const trimedPanelsArray =  [...initialRootCategoryPanels,...props.currentViewedCategories];
-        if (props.searchMode === false ) trimedPanelsArray.length = props.currentCategoryLevel + 1;
+        if (props.searchMode === false ){
+            let currentCategoryLevel = props.currentCategoryLevel;
+            if (window.is_show_in_menu) currentCategoryLevel = props.currentCategoryLevel + 1;
+            trimedPanelsArray.length = currentCategoryLevel + 1;
+        }
         setPanels(trimedPanelsArray);
 
         let currentCategoryLevel = props.currentCategoryLevel;
@@ -336,7 +340,6 @@ function CategoryPanel(props){
     function adjustSliderHeight(){
         let currentCategoryLevel = props.currentCategoryLevel
         if (window.is_show_in_menu) currentCategoryLevel = props.currentCategoryLevel + 1;
-        console.log(currentCategoryLevel);
         if (currentCategoryLevel === props.level){
             const panelHeight = (props.categories.length * 24) + props.categories.length;
             props.onSetSliderHeight(panelHeight);
