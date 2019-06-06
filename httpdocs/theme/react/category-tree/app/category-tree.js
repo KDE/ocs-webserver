@@ -122,15 +122,21 @@ function CategoryTree(){
     let tagCloudDisplay;
     if (selectedCategory) tagCloudDisplay = <CategoryTagCloud selectedCategory={selectedCategory} />
 
-    return(
-        <div id="category-tree">
-            <input type="text" defaultValue={searchPhrase} onChange={e => onSetSearchPhrase(e)}/>
+    let categoryTreeHeaderDisplay;
+    if (currentViewedCategories.length > 0){
+        categoryTreeHeaderDisplay = (
             <CategoryTreeHeader 
                 currentCategoryLevel={currentCategoryLevel}
                 currentViewedCategories={currentViewedCategories}  
                 onHeaderNavigationItemClick={(cvc) => onHeaderNavigationItemClick(cvc)}
-                goBack={goBack}
             />
+        )
+    }
+
+    return(
+        <div id="category-tree">
+            <input type="text" defaultValue={searchPhrase} onChange={e => onSetSearchPhrase(e)}/>
+            {categoryTreeHeaderDisplay}
             <CategoryPanelsContainer
                 categoryTree={categoryTree}
                 categoryId={categoryId}
@@ -309,7 +315,7 @@ function CategoryPanelsContainer(props){
     let categoryPanelsContainerClassName, backButtonDisplay;
     if (showBackButton){
         categoryPanelsContainerClassName = "show-back-button";
-        backButtonDisplay = <a id="back-button" onClick={onGoBackClick}>{"<<"}</a>
+        backButtonDisplay = <a id="back-button" onClick={onGoBackClick}><span className="glyphicon glyphicon-chevron-left"></span></a>
     }
 
     return (
