@@ -4,7 +4,7 @@ import MetaHeader from './metaheader/MetaHeader';
 import '@webcomponents/custom-elements';
 async function initConfig(target, redirect)
 {
-        let url = `https://www.opendesktop.org/home/metamenubundlejs?target=${target}&url=${redirect}`;
+         let url = `https://www.opendesktop.org/home/metamenubundlejs?target=${target}&url=${redirect}`;
          if (window.location.hostname.endsWith('cc')) {
             url = `https://www.opendesktop.cc/home/metamenubundlejs?target=${target}&url=${redirect}`;
           }
