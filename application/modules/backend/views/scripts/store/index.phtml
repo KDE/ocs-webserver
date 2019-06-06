@@ -240,7 +240,7 @@
                 },
                 mapping_id_name: {
                     title: 'Mapping Id',
-                    width: '10%',
+                    width: '5%',
                     list: true,
                     create: true,
                     inputTitle: 'mapping id <small style="font-weight:normal; font-size: 0.7em">(45 chars) when set, should be unique</small>'
@@ -432,11 +432,27 @@
                     defaultValue: 1
                 },
                  is_show_in_menu: {
+                    width: '10%',
                     title: 'Show Store-Listing',                   
                     //type: 'checkbox',
                     create: true,
                     edit: true,
                     list:true,
+                    //values: { 0: 'No', 1: 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
+                    defaultValue: 1
+                },
+                 is_show_real_domain_as_url: {
+                    width: '10%',
+                    title: 'Domain as URL',                   
+                    //type: 'checkbox',
+                    create: true,
+                    edit: true,
+                    list:false,
                     //values: { 0: 'No', 1: 'Yes' },
                     type:'radiobutton',
                     options:{  

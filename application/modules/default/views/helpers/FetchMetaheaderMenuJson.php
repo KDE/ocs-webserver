@@ -49,7 +49,8 @@ class Default_View_Helper_FetchMetaheaderMenuJson extends Zend_View_Helper_Abstr
                 $tmp['calcOrder'] = $obj['calcOrder'];
                 $tmp['host'] = $obj['host'];
                 $tmp['name'] = $obj['name'];
-                $tmp['is_show_in_menu'] = $obj['is_show_in_menu'];                 
+                $tmp['is_show_in_menu'] = $obj['is_show_in_menu'];
+                $tmp['is_show_real_domain_as_url'] = $obj['is_show_real_domain_as_url']; 
 
                 if($curOrder==30) {
                     // Desktop set calcOrder = 9 manuelly put desktop in front                    
