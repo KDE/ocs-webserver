@@ -445,7 +445,8 @@ class HomeController extends Local_Controller_Action_DomainSwitch
                 $tmp['order'] = $obj['order'];
                 $tmp['calcOrder'] = $obj['calcOrder'];
                 $tmp['host'] = $obj['host'];
-                $tmp['name'] = $obj['name'];                
+                $tmp['name'] = $obj['name']; 
+                $tmp['is_show_in_menu'] = $obj['is_show_in_menu']; 
 
                 if($curOrder==30) {
                     // Desktop set calcOrder = 9 manuelly put desktop in front                    
