@@ -101,6 +101,10 @@ $userRoleName = $helperUserRole->userRole();
     <?php
     $catIdExists = isset($this->cat_id) ? $this->cat_id : "null";
     echo "var categoryId = {$catIdExists};";
+    
+    $store_config = Zend_Registry::get('store_config');
+    $is_show_in_menu = $store_config->is_show_in_menu;
+    echo "var is_show_in_menu = $is_show_in_menu";
     ?>
 </script>
 <?php  if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName){ ?>
