@@ -44,6 +44,7 @@ class Default_Model_ConfigStore
     public $is_show_git_projects;
     public $is_show_blog_news;
     public $is_show_forum_news;
+    public $is_hide_in_menu;
     public $layout_home;
     public $layout_explore;
     public $layout_pagedetail;
@@ -75,6 +76,7 @@ class Default_Model_ConfigStore
             $this->is_show_git_projects = $storeConfig['is_show_git_projects'];
             $this->is_show_blog_news = $storeConfig['is_show_blog_news'];
             $this->is_show_forum_news = $storeConfig['is_show_forum_news'];
+            $this->is_hide_in_menu = $storeConfig['is_hide_in_menu'];
             $this->layout_home = $storeConfig['layout_home'];
             $this->layout_explore = $storeConfig['layout_explore'];
             $this->layout_pagedetail = $storeConfig['layout_pagedetail'];
