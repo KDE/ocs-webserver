@@ -4,7 +4,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
     super(props);
     this.state = {notification: false ,notification_count:0};
     this.handleClick = this.handleClick.bind(this);
-    //this.loadNotification = this.loadNotification.bind(this);
+    this.loadNotification = this.loadNotification.bind(this);
   }
 
   componentWillMount() {
@@ -36,18 +36,18 @@ class DiscussionBoardsDropDownMenu extends React.Component {
      }
   }
 
-  // componentDidMount(){
-  //
-  //   if(this.props.user)
-  //   {
-  //      this.timer = setInterval(
-  //           () => {
-  //               this.loadNotification();
-  //           },
-  //           1000*60*3
-  //       );
-  //      }
-  //  }
+  componentDidMount(){
+    this.loadNotification();
+    /*if(this.props.user)
+    {
+       this.timer = setInterval(
+            () => {
+                this.loadNotification();
+            },
+            1000*60*3
+        );
+       }*/
+   }
 
 
   handleClick(e){
@@ -67,15 +67,15 @@ class DiscussionBoardsDropDownMenu extends React.Component {
   }
 
   render(){
-    // let badgeNot;
-    // if(this.state.notification)
-    // {
-    //   badgeNot = (<span className="badge-notification">{this.state.notification_count}</span>);
-    // }
+    let badgeNot;
+    if(this.state.notification)
+    {
+      badgeNot = (<span className="badge-notification">{this.state.notification_count}</span>);
+    }
     return (
       <li ref={node => this.node = node}  id="discussion-boards" className={this.state.dropdownClass}>
 
-        <a className="discussion-menu-link-item">Discussion Boards </a>
+        <a className="discussion-menu-link-item">Discussion Boards {badgeNot}</a>
         <ul className="discussion-menu dropdown-menu dropdown-menu-right">
           <li><a href={this.props.forumUrl }>General</a></li>
           <li><a href={this.props.forumUrl + "/c/themes"}>Themes</a></li>

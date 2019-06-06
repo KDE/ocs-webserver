@@ -192,6 +192,36 @@ class Default_Model_Ocs_Forum
     }
 
     /**
+     * @param string $member_id
+     *
+     * @return bool|array
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Http_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function getUserNotifications($member_id)
+    {
+        $member_data = $this->getMemberData($member_id);
+        $forum_member = $this->getUser($member_data['external_id'], $member_data['username']);
+        if (empty($forum_member)) {
+            return false;
+        }
+        $username = $forum_member['user']['username'];
+
+        $uri = $this->config->host . "/notifications.json?username=".$username;
+        $method = Zend_Http_Client::GET;
+        $uid = 'external_id';
+
+        $user = $this->httpRequest($uri, $uid, $method);
+
+        if (false === $user) {
+            return false;
+        }
+
+        return $user;
+    }
+
+    /**
      * @param string     $uri
      * @param string     $uid
      * @param string     $method
