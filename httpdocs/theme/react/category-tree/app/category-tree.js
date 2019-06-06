@@ -388,7 +388,7 @@ function CategoryMenuItem(props){
     const c = props.category;
     let initialCatLink;
     if (c.id) initialCatLink = c.id === "0" ? "/browse/" : "/browse/cat/"+c.id+"/order/latest/"
-    else  initialCatLink = "https://" + c.menuhref;
+    else  initialCatLink = c.menuhref;
     const [ catLink, setCatLink ] = useState(initialCatLink)
 
     function onCategoryClick(c){
