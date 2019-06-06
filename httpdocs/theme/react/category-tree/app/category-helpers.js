@@ -118,8 +118,14 @@ export function generateCategoryLink(baseUrl,urlContext,catId,locationHref){
 }
 
 export function sortArrayAlphabeticallyByTitle(a, b){
-  const titleA = a.title.trim().toLowerCase();
-  const titleB = b.title.trim().toLowerCase();
+  let titleA, titleB;
+  if (a.title){
+    titleA = a.title.trim().toLowerCase();
+    titleB = b.title.trim().toLowerCase();
+  } else {
+    titleA = a.name.trim().toLowerCase();
+    titleB = b.name.trim().toLowerCase();
+  }
   if(titleA < titleB) { return -1; }
   if(titleA > titleB) { return 1; }
   return 0;
