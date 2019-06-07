@@ -39,7 +39,8 @@ function CategoryTree(){
 
 
     let initialCurrentCategoryLevel = initialCurrentViewedCategories.length;
-    if (window.config.baseUrlStore === "www.pling.com" || window.config.baseUrlStore === "https://www.pling.cc"){ 
+    if (window.config.sName === "www.pling.com" || window.config.sName === "www.pling.cc"){ 
+        console.log(window.location);
         if (!window.location.path) initialCurrentCategoryLevel = -1;
     }
     const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(initialCurrentCategoryLevel);
@@ -209,7 +210,7 @@ function CategoryPanelsContainer(props){
     const rootListingPanel = {categoryId:0,categories:props.categoryTree}
     const storeListingPanel = {categoryId:-1,categories:window.config.domains}
     let initialRootCategoryPanels = [storeListingPanel,rootListingPanel];
-    if (window.is_show_in_menu === 1) initialRootCategoryPanels = [storeListingPanel,rootListingPanel];
+    if (window.is_show_real_domain_as_url  === 1) initialRootCategoryPanels = [storeListingPanel,rootListingPanel];
     let initialPanelsValue = initialRootCategoryPanels;
     if (props.currentViewedCategories.length > 0) initialPanelsValue = initialRootCategoryPanels.concat(props.currentViewedCategories);
     const [ panels, setPanels ] = useState(initialPanelsValue);
@@ -219,12 +220,12 @@ function CategoryPanelsContainer(props){
     const [ sliderHeight, setSliderHeight ] = useState();
 
     let currentCategoryLevel = props.currentCategoryLevel + 1;
-    if (window.is_show_in_menu === 1) currentCategoryLevel += 1;
+    if (window.is_show_real_domain_as_url  === 1) currentCategoryLevel += 1;
     const [ sliderPosition, setSliderPosition ] = useState(currentCategoryLevel * containerWidth);
 
     let initialShowBackButtonValue = true;
-    if (window.is_show_in_menu === 0){ if (props.currentCategoryLevel === 0) initialShowBackButtonValue = false; }
-    else if (window.is_show_in_menu === 1){ if (props.currentCategoryLevel === -1) initialShowBackButtonValue = false; }
+    if (window.is_show_real_domain_as_url  === 0){ if (props.currentCategoryLevel === 0) initialShowBackButtonValue = false; }
+    else if (window.is_show_real_domain_as_url  === 1){ if (props.currentCategoryLevel === -1) initialShowBackButtonValue = false; }
     if (sliderPosition === 0) initialShowBackButtonValue = false;
     const [ showBackButton, setShowBackButton ] = useState(initialShowBackButtonValue);
 
@@ -238,13 +239,13 @@ function CategoryPanelsContainer(props){
         const trimedPanelsArray =  [...initialRootCategoryPanels,...props.currentViewedCategories];
         if (props.searchMode === false ){
             let currentCategoryLevel = props.currentCategoryLevel;
-            if (window.is_show_in_menu) currentCategoryLevel = props.currentCategoryLevel + 1;
+            if (window.is_show_real_domain_as_url ) currentCategoryLevel = props.currentCategoryLevel + 1;
             trimedPanelsArray.length = currentCategoryLevel + 1;
         }
         setPanels(trimedPanelsArray);
 
         let currentCategoryLevel = props.currentCategoryLevel + 1;
-        if (window.is_show_in_menu === 1) currentCategoryLevel += 1;
+        if (window.is_show_real_domain_as_url  === 1) currentCategoryLevel += 1;
         const newSliderPosition = currentCategoryLevel * containerWidth;
         setSliderPosition(newSliderPosition);
     }
@@ -348,7 +349,7 @@ function CategoryPanel(props){
 
     function adjustSliderHeight(){
         let currentCategoryLevel = props.currentCategoryLevel
-        if (window.is_show_in_menu) currentCategoryLevel = props.currentCategoryLevel + 1;
+        if (window.is_show_real_domain_as_url ) currentCategoryLevel = props.currentCategoryLevel + 1;
         if (currentCategoryLevel === props.level){
             const panelHeight = (props.categories.length * 24) + props.categories.length;
             props.onSetSliderHeight(panelHeight);
@@ -366,8 +367,8 @@ function CategoryPanel(props){
         if (props.categories.length > 0){
             categories = props.categories.sort(sortArrayAlphabeticallyByTitle).map((c,index) =>{
                 let showCategory = true;
-                if (c.is_show_real_domain_as_url){
-                    if (c.is_show_real_domain_as_url === "0") showCategory = false;
+                if (c.is_show_in_menu){
+                    if (c.is_show_in_menu === "0") showCategory = false;
                 }
                 if (showCategory === true){
                     return (
