@@ -39,8 +39,8 @@ function CategoryTree(){
 
 
     let initialCurrentCategoryLevel = initialCurrentViewedCategories.length;
-    if (window.config.sName === "www.pling.com" || window.config.sName === "www.pling.cc"){ 
-        console.log(window.location);
+    if (window.location.href === "https://www.pling.cc" || window.location.href === "https://www.pling.cc/" || 
+        window.location.href === "http://192.168.2.124" || window.location.href === "http://192.168.2.124/"){ 
         if (!window.location.path) initialCurrentCategoryLevel = -1;
     }
     const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(initialCurrentCategoryLevel);
@@ -223,6 +223,10 @@ function CategoryPanelsContainer(props){
     if (window.is_show_real_domain_as_url  === 1) currentCategoryLevel += 1;
     const [ sliderPosition, setSliderPosition ] = useState(currentCategoryLevel * containerWidth);
 
+
+    console.log(window.is_show_real_domain_as_url);
+    console.log(props.currentCategoryLevel);
+
     let initialShowBackButtonValue = true;
     if (window.is_show_real_domain_as_url  === 0){ if (props.currentCategoryLevel === 0) initialShowBackButtonValue = false; }
     else if (window.is_show_real_domain_as_url  === 1){ if (props.currentCategoryLevel === -1) initialShowBackButtonValue = false; }
@@ -239,7 +243,7 @@ function CategoryPanelsContainer(props){
         const trimedPanelsArray =  [...initialRootCategoryPanels,...props.currentViewedCategories];
         if (props.searchMode === false ){
             let currentCategoryLevel = props.currentCategoryLevel;
-            if (window.is_show_real_domain_as_url ) currentCategoryLevel = props.currentCategoryLevel + 1;
+            if (window.is_show_real_domain_as_url === 1 ) currentCategoryLevel = props.currentCategoryLevel + 1;
             trimedPanelsArray.length = currentCategoryLevel + 1;
         }
         setPanels(trimedPanelsArray);
