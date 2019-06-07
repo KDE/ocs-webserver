@@ -22,8 +22,8 @@ class UserLoginMenuContainer extends React.Component {
 
   loadNotification(){
     if(this.props.user){
-      //let url = this.props.baseUrl+'/membersetting/notification';
-      let url = "http://pling.local/membersetting/notification";
+      let url = this.props.baseUrl+'/membersetting/notification';
+      //let url = "http://pling.local/membersetting/notification";
       fetch(url,{
                  mode: 'cors',
                  credentials: 'include'
