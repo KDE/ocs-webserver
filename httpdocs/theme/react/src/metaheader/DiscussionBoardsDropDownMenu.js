@@ -4,7 +4,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
     super(props);
     this.state = {notification: false ,notification_count:0};
     this.handleClick = this.handleClick.bind(this);
-    this.loadNotification = this.loadNotification.bind(this);
+    // this.loadNotification = this.loadNotification.bind(this);
   }
 
   componentWillMount() {
@@ -17,27 +17,26 @@ class DiscussionBoardsDropDownMenu extends React.Component {
     document.removeEventListener('mousedown',this.handleClick, false);
   }
 
-  loadNotification(){
-    if(this.props.user){
-      let url = this.props.baseUrl+'/membersetting/notification';
-      //let url = "http://pling.local/membersetting/notification";
-      fetch(url,{
-                 mode: 'cors',
-                 credentials: 'include'
-                 })
-      .then(response => response.json())
-      .then(data => {
-          const nots = data.notifications.filter(note => note.read==false);
-          if(nots.length>0 && this.state.notification_count !== nots.length)
-          {
-              this.setState(prevState => ({ notification: true, notification_count:nots.length }))
-          }
-       });
-     }
-  }
+  // loadNotification(){
+  //   if(this.props.user){
+  //     let url = this.props.baseUrl+'/membersetting/notification';
+  //     //let url = "http://pling.local/membersetting/notification";
+  //     fetch(url,{
+  //                mode: 'cors',
+  //                credentials: 'include'
+  //                })
+  //     .then(response => response.json())
+  //     .then(data => {
+  //         const nots = data.notifications.filter(note => note.read==false);
+  //         if(nots.length>0 && this.state.notification_count !== nots.length)
+  //         {
+  //             this.setState(prevState => ({ notification: true, notification_count:nots.length }))
+  //         }
+  //      });
+  //    }
+  // }
 
-  componentDidMount(){
-    this.loadNotification();
+  componentDidMount(){  
     /*if(this.props.user)
     {
        this.timer = setInterval(

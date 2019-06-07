@@ -352,26 +352,7 @@
                 display: block;
               }
             }
-            span.badge-notification{
-              display: inline-block;
-              font-weight: normal;
-              white-space: nowrap;
-              border-radius: 10px;
-              padding: 3px 5px;
-              min-width: 8px;
-              vertical-align: middle;
-              color: #fff;
-              font-size: .7579em;
-              line-height: 1;
-              text-align: center;
-              background-color: #bdbdbd;
-              position: absolute;
-              z-index: 1;
-              min-width: 6px;
-              left: auto;
-              right: 3px;
-              background: #090;
-            }
+
 
             .dropdown-menu {
               width: 200px;
@@ -611,6 +592,27 @@
             top: 0;
             left: 0;
           }
+
+          span.badge-notification{
+              display: inline-block;
+              font-weight: normal;
+              white-space: nowrap;
+              border-radius: 10px;
+              padding: 2px 4px;
+              min-width: 8px;
+              vertical-align: middle;
+              color: #fff;
+              font-size: .7579em;
+              line-height: 1;
+              text-align: center;
+              background-color: #bdbdbd;
+              position: absolute;
+              z-index: 1;
+              min-width: 6px;
+              top: -3px;
+              left: -5px;
+              background: #090;
+            }
         }
       }
 
@@ -1226,7 +1228,7 @@
                clear: left;
             }
 
-
+            /*
             &#opendesktop-link-item {
               a {
                 .icon {
@@ -1294,7 +1296,29 @@
                   background-size: 45px;
                 }
               }
+
+              span.badge-notification{
+                display: inline-block;
+                font-weight: normal;
+                white-space: nowrap;
+                border-radius: 10px;
+                padding: 2px 4px;
+                min-width: 8px;
+                vertical-align: middle;
+                color: #fff;
+                font-size: .7579em;
+                line-height: 1;
+                text-align: center;
+                background-color: #bdbdbd;
+                position: absolute;
+                z-index: 1;
+                min-width: 6px;
+                top: -3px;
+                left: -5px;
+                background: #090;
+              }
             }
+            */
 
             &#issues-link-item {
               a {
@@ -1539,12 +1563,34 @@
 
 
                             &#messages-link-item {
-                              a {
-                                .icon {
-                                  background-image: url(../img/messages.png);
-                                  background-size: 45px;
-                                }
-                              }
+                                  position: relative;
+                                  a {
+                                    .icon {
+                                      background-image: url(../img/messages.png);
+                                      background-size: 45px;
+                                    }
+                                  }
+                                span.badge-notification{
+                                    display: inline-block;
+                                    font-weight: normal;
+                                    white-space: nowrap;
+                                    border-radius: 10px;
+                                    padding: 2px 4px;
+                                    min-width: 8px;
+                                    vertical-align: middle;
+                                    color: #fff; 
+                                    font-size: .7579em;
+                                    line-height: 1;
+                                    text-align: center;
+                                    background-color: #bdbdbd;
+                                    position: absolute;
+                                    z-index: 1;
+                                    min-width: 6px;
+                                    width:15px;
+                                    top: 10px;
+                                    left: 15px;
+                                    background: #090;
+                                  }
                             }
 
                             &#issues-link-item {

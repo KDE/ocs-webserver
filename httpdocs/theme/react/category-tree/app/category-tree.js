@@ -36,7 +36,15 @@ function CategoryTree(){
     
     const [ selectedCategoriesId, setSelectedCategoriesId ] = useState(initialSelectedCategoriesId)
     const [ currentViewedCategories, setCurrentViewedCategories ] = useState(initialCurrentViewedCategories);
-    const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(initialCurrentViewedCategories.length);
+
+
+    let initialCurrentCategoryLevel = initialCurrentViewedCategories.length;
+    if (window.config.baseUrlStore === "www.pling.com" || window.config.baseUrlStore === "https://www.pling.cc"){ 
+        if (!window.location.path) initialCurrentCategoryLevel = -1;
+    }
+    const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(initialCurrentCategoryLevel);
+
+    console.log(currentCategoryLevel);
 
     const [ searchPhrase, setSearchPhrase ] = useState();
     const [ searchMode, setSearchMode ] = useState();
@@ -197,7 +205,7 @@ function CategoryTreeHeader(props){
 function CategoryPanelsContainer(props){
 
     /* STATE */
-
+    console.log(window.config)
     const rootListingPanel = {categoryId:0,categories:props.categoryTree}
     const storeListingPanel = {categoryId:-1,categories:window.config.domains}
     let initialRootCategoryPanels = [storeListingPanel,rootListingPanel];
@@ -210,13 +218,14 @@ function CategoryPanelsContainer(props){
     const [ sliderWidth, setSliderWidth ] = useState(containerWidth * panels.length);
     const [ sliderHeight, setSliderHeight ] = useState();
 
-    let currentCategoryLevel = props.currentCategoryLevel;
+    let currentCategoryLevel = props.currentCategoryLevel + 1;
     if (window.is_show_in_menu === 1) currentCategoryLevel += 1;
     const [ sliderPosition, setSliderPosition ] = useState(currentCategoryLevel * containerWidth);
 
     let initialShowBackButtonValue = true;
     if (window.is_show_in_menu === 0){ if (props.currentCategoryLevel === 0) initialShowBackButtonValue = false; }
     else if (window.is_show_in_menu === 1){ if (props.currentCategoryLevel === -1) initialShowBackButtonValue = false; }
+    if (sliderPosition === 0) initialShowBackButtonValue = false;
     const [ showBackButton, setShowBackButton ] = useState(initialShowBackButtonValue);
 
     /* COMPONENT */
@@ -234,7 +243,7 @@ function CategoryPanelsContainer(props){
         }
         setPanels(trimedPanelsArray);
 
-        let currentCategoryLevel = props.currentCategoryLevel;
+        let currentCategoryLevel = props.currentCategoryLevel + 1;
         if (window.is_show_in_menu === 1) currentCategoryLevel += 1;
         const newSliderPosition = currentCategoryLevel * containerWidth;
         setSliderPosition(newSliderPosition);
@@ -355,16 +364,24 @@ function CategoryPanel(props){
     if (props.categories){
         let categories;
         if (props.categories.length > 0){
-            categories = props.categories.sort(sortArrayAlphabeticallyByTitle).map((c,index) => (
-                <CategoryMenuItem 
-                    key={index}
-                    category={c}
-                    categoryId={props.categoryId}
-                    currentViewedCategories={props.currentViewedCategories}
-                    selectedCategoriesId={props.selectedCategoriesId}
-                    onCategoryClick={(c) => onCategoryClick(c)}
-                />
-            ))
+            categories = props.categories.sort(sortArrayAlphabeticallyByTitle).map((c,index) =>{
+                let showCategory = true;
+                if (c.is_show_real_domain_as_url){
+                    if (c.is_show_real_domain_as_url === "0") showCategory = false;
+                }
+                if (showCategory === true){
+                    return (
+                        <CategoryMenuItem 
+                            key={index}
+                            category={c}
+                            categoryId={props.categoryId}
+                            currentViewedCategories={props.currentViewedCategories}
+                            selectedCategoriesId={props.selectedCategoriesId}
+                            onCategoryClick={(c) => onCategoryClick(c)}
+                        />
+                    )
+                }
+            })
         } else {
             categories = <li><p>no categories matching {props.searchPhrase}</p></li>
         }
