@@ -365,7 +365,8 @@ function CategoryPanel(props){
     }
 
     function onCategoryClick(c){
-        if (c.has_children) props.onCategorySelect(c);
+        if (!c.has_children) console.log('navigate to category?');
+        else props.onCategorySelect(c);
     }
 
     let categoryPanelContent;
@@ -422,6 +423,10 @@ function CategoryMenuItem(props){
     }
     const [ catLink, setCatLink ] = useState(initialCatLink)
 
+    function onCategoryClick(c){
+        props.onCategoryClick(c);
+    }
+
     let catTitle;
     if (c.title) catTitle = c.title;
     else catTitle = c.name;
@@ -429,7 +434,7 @@ function CategoryMenuItem(props){
     let categoryMenuItemDisplay;
     if (c.has_children === true){
         categoryMenuItemDisplay = (
-            <a onClick={() => props.onCategoryClick(c)}>
+            <a onClick={() => onCategoryClick(c)}>
                 <span className="cat-title">{catTitle}</span>
                 <span className="cat-product-counter">{c.product_count}</span>
             </a>
