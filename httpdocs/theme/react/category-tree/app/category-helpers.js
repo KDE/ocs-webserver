@@ -146,7 +146,7 @@ export function getDeviceFromWidth(width){
 export function getUrlContext(href){
   let urlContext = "";
   if (href.indexOf('/s/') > -1){
-    urlContext = "/s/" + href.split('/s/')[1].split('/')[0];
+    urlContext = "/s/" + href.split('/s/')[1].split('/')[0] + "/"
   }
   return urlContext;
 }

@@ -5,7 +5,8 @@ import {
     GetSelectedCategory, 
     GenerateCurrentViewedCategories, 
     GetCategoriesBySearchPhrase, 
-    sortArrayAlphabeticallyByTitle
+    sortArrayAlphabeticallyByTitle,
+    getUrlContext
 } from './category-helpers';
 
 console.log(window.location.href);
@@ -412,7 +413,10 @@ function CategoryMenuItem(props){
 
     const c = props.category;
     let initialCatLink;
-    if (c.id) initialCatLink = c.id === "0" ? "/browse/" : "/browse/cat/"+c.id+"/order/latest/"
+    if (c.id){
+        initialCatLink = getUrlContext(window.location.href);
+        initialCatLink = c.id === "0" ? "/browse/" : "/browse/cat/"+c.id+"/order/latest/"
+    }
     else {
         if (c.menuhref.indexOf('http') > -1) initialCatLink = c.menuhref; 
         else  initialCatLink = "https://" + c.menuhref; 
