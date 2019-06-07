@@ -113,10 +113,9 @@ function CategoryTree(){
     }
 
     // on category panel item click
-    function onCategoryPanleItemClick(ccl,cvc,catLink){
+    function onCategoryPanleItemClick(ccl,cvc){
         setCurrentCategoryLevel(ccl) 
         setCurrentViewedCategories(cvc)
-        if (catLink) window.location.href = catLink;
     }
 
     // search phrase
@@ -233,7 +232,7 @@ function CategoryPanelsContainer(props){
     let initialShowBackButtonValue = true;
     if (sliderPosition === 0) initialShowBackButtonValue = false;
     const [ showBackButton, setShowBackButton ] = useState(initialShowBackButtonValue);
-
+    console.log('slider position  - ' + sliderPosition );
     /* COMPONENT */
 
     React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories])
@@ -267,7 +266,7 @@ function CategoryPanelsContainer(props){
     }
 
     // on category select
-    function onCategorySelect(c,catLink){
+    function onCategorySelect(c){
 
         const newCurrentCategoryLevel = props.currentCategoryLevel + 1;
 
@@ -293,7 +292,7 @@ function CategoryPanelsContainer(props){
             {...c, level:newCurrentCategoryLevel}
         ]
 
-        props.onCategoryPanleItemClick(newCurrentCategoryLevel,newCurrentViewedCategories,catLink)
+        props.onCategoryPanleItemClick(newCurrentCategoryLevel,newCurrentViewedCategories)
     }
 
     /* RENDER */
@@ -312,7 +311,7 @@ function CategoryPanelsContainer(props){
             containerWidth={containerWidth}
             searchPhrase={props.searchPhrase}
             onSetSliderHeight={(height) => setSliderHeight(height)}
-            onCategorySelect={(c,catLink) => onCategorySelect(c,catLink)}
+            onCategorySelect={(c) => onCategorySelect(c)}
         />
     ))
 
@@ -365,8 +364,8 @@ function CategoryPanel(props){
         }
     }
 
-    function onCategoryClick(c,catLink){
-        if (c.has_children) props.onCategorySelect(c,catLink);
+    function onCategoryClick(c){
+        if (c.has_children) props.onCategorySelect(c);
     }
 
     let categoryPanelContent;
@@ -442,7 +441,7 @@ function CategoryMenuItem(props){
         )
     } else {
         categoryMenuItemDisplay = (
-            <a  onClick={() => onCategoryClick(c,catLink)}>
+            <a  onClick={() => onCategoryClick(c)} href={catLink}>
                 <span className="cat-title">{catTitle}</span>
                 <span className="cat-product-counter">{c.product_count}</span>
             </a>
