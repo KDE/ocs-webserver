@@ -113,9 +113,10 @@ function CategoryTree(){
     }
 
     // on category panel item click
-    function onCategoryPanleItemClick(ccl,cvc){
+    function onCategoryPanleItemClick(ccl,cvc,catLink){
         setCurrentCategoryLevel(ccl) 
         setCurrentViewedCategories(cvc)
+        if (catLink) window.location.href = catLink;
     }
 
     // search phrase
@@ -232,7 +233,7 @@ function CategoryPanelsContainer(props){
     let initialShowBackButtonValue = true;
     if (sliderPosition === 0) initialShowBackButtonValue = false;
     const [ showBackButton, setShowBackButton ] = useState(initialShowBackButtonValue);
-    console.log('slider position  - ' + sliderPosition );
+
     /* COMPONENT */
 
     React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories])
@@ -266,7 +267,7 @@ function CategoryPanelsContainer(props){
     }
 
     // on category select
-    function onCategorySelect(c){
+    function onCategorySelect(c,catLink){
 
         const newCurrentCategoryLevel = props.currentCategoryLevel + 1;
 
@@ -292,7 +293,7 @@ function CategoryPanelsContainer(props){
             {...c, level:newCurrentCategoryLevel}
         ]
 
-        props.onCategoryPanleItemClick(newCurrentCategoryLevel,newCurrentViewedCategories)
+        props.onCategoryPanleItemClick(newCurrentCategoryLevel,newCurrentViewedCategories,catLink)
     }
 
     /* RENDER */
@@ -311,7 +312,7 @@ function CategoryPanelsContainer(props){
             containerWidth={containerWidth}
             searchPhrase={props.searchPhrase}
             onSetSliderHeight={(height) => setSliderHeight(height)}
-            onCategorySelect={(c) => onCategorySelect(c)}
+            onCategorySelect={(c,catLink) => onCategorySelect(c,catLink)}
         />
     ))
 
@@ -351,21 +352,21 @@ function CategoryPanel(props){
         let currentCategoryLevel = props.currentCategoryLevel
         if (isShowRealDomainAsUrl ) currentCategoryLevel = props.currentCategoryLevel + 1;
         if (currentCategoryLevel === props.level){
-            console.log(props.parentCategory)
-            let panelHeight = (props.categories.length * 24) + props.categories.length;
-            if (props.parentCategory === -1){
-                function isShowInMenuCheck(obj){
-                    return obj.is_show_in_menu == "1"
+            if (props.categories){
+                let panelHeight = (props.categories.length * 24) + props.categories.length;
+                if (props.parentCategory === -1){
+                    function isShowInMenuCheck(obj){
+                        return obj.is_show_in_menu == "1"
+                    }
+                    panelHeight = (props.categories.filter(isShowInMenuCheck).length * 24) + props.categories.length;
                 }
-                panelHeight = (props.categories.filter(isShowInMenuCheck).length * 24) + props.categories.length;
+                props.onSetSliderHeight(panelHeight);
             }
-            props.onSetSliderHeight(panelHeight);
         }
     }
 
-    function onCategoryClick(c){
-        if (!c.has_children) console.log('navigate to category?');
-        else props.onCategorySelect(c);
+    function onCategoryClick(c,catLink){
+        if (c.has_children) props.onCategorySelect(c,catLink);
     }
 
     let categoryPanelContent;
@@ -441,7 +442,7 @@ function CategoryMenuItem(props){
         )
     } else {
         categoryMenuItemDisplay = (
-            <a href={catLink}>
+            <a  onClick={() => onCategoryClick(c,catLink)}>
                 <span className="cat-title">{catTitle}</span>
                 <span className="cat-product-counter">{c.product_count}</span>
             </a>
