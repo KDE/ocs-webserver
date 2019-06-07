@@ -200,6 +200,7 @@ function CategoryPanelsContainer(props){
 
     const rootListingPanel = {categoryId:0,categories:props.categoryTree}
     const storeListingPanel = {categoryId:-1,categories:window.config.domains}
+    console.log(window.config.domains);
     let initialRootCategoryPanels = [storeListingPanel,rootListingPanel];
     if (window.is_show_in_menu === 1) initialRootCategoryPanels = [storeListingPanel,rootListingPanel];
     let initialPanelsValue = initialRootCategoryPanels;
