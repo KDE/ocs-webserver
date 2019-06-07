@@ -11,17 +11,18 @@ import {
 
 console.log(window.location.href);
 console.log(window.config);
+console.log('window is show real domain - ' + window.is_show_real_domain_as_url);
 let isShowRealDomainAsUrl = 1, showStoreListingsFirst = false;
 if (window.is_show_real_domain_as_url === 1) isShowRealDomainAsUrl = 1;
 else {
-    if (window.location.host === "www.pling.cc" || window.location.host === "www.pling.com" || window.location.host === "192.168.2.124" ){ isShowRealDomainAsUrl = 1; }
+    if (window.config.sName === "www.pling.cc" || window.config.sName === "www.pling.com"){ isShowRealDomainAsUrl = 1; }
     if (window.location.href === "https://www.pling.cc" || window.location.href === "https://www.pling.com" || window.location.href === "http://192.168.2.124" ||
         window.location.href === "https://www.pling.cc/" || window.location.href === "https://www.pling.com/" || window.location.href === "http://192.168.2.124/"){
         showStoreListingsFirst = true;
     }
 }
-
-console.log(showStoreListingsFirst);
+console.log('inner is show real domain - ' + isShowRealDomainAsUrl);
+console.log('inner show store listings first - ' + showStoreListingsFirst);
 
 function CategoryTree(){
 
@@ -231,8 +232,6 @@ function CategoryPanelsContainer(props){
 
     let currentCategoryLevel = props.currentCategoryLevel + 1;
     const [ sliderPosition, setSliderPosition ] = useState(currentCategoryLevel * containerWidth);
-
-    console.log(sliderPosition);
 
     let initialShowBackButtonValue = true;
     if (sliderPosition === 0) initialShowBackButtonValue = false;
