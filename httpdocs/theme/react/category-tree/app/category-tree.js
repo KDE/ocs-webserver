@@ -415,7 +415,7 @@ function CategoryMenuItem(props){
     let initialCatLink;
     if (c.id){
         initialCatLink = getUrlContext(window.location.href);
-        initialCatLink = c.id === "0" ? "/browse/" : "/browse/cat/"+c.id+"/order/latest/"
+        initialCatLink += c.id === "0" ? "/browse/" : "/browse/cat/"+c.id+"/order/latest/"
     }
     else {
         if (c.menuhref.indexOf('http') > -1) initialCatLink = c.menuhref; 
