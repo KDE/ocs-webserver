@@ -422,11 +422,6 @@ function CategoryMenuItem(props){
     }
     const [ catLink, setCatLink ] = useState(initialCatLink)
 
-    function onCategoryClick(c){
-        props.onCategoryClick(c);
-        window.top.location.href = catLink;
-    }
-
     let catTitle;
     if (c.title) catTitle = c.title;
     else catTitle = c.name;
@@ -434,14 +429,14 @@ function CategoryMenuItem(props){
     let categoryMenuItemDisplay;
     if (c.has_children === true){
         categoryMenuItemDisplay = (
-            <a onClick={() => onCategoryClick(c)}>
+            <a onClick={() => props.onCategoryClick(c)}>
                 <span className="cat-title">{catTitle}</span>
                 <span className="cat-product-counter">{c.product_count}</span>
             </a>
         )
     } else {
         categoryMenuItemDisplay = (
-            <a  onClick={() => onCategoryClick(c)} href={catLink}>
+            <a href={catLink}>
                 <span className="cat-title">{catTitle}</span>
                 <span className="cat-product-counter">{c.product_count}</span>
             </a>
