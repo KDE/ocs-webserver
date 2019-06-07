@@ -39,7 +39,9 @@ function CategoryTree(){
 
 
     let initialCurrentCategoryLevel = initialCurrentViewedCategories.length;
-    if (window.config.baseUrlStore === "www.pling.com" && !window.location.path) initialCurrentCategoryLevel = -1;
+    if (window.config.baseUrlStore === "www.pling.com" || window.config.baseUrlStore === "https://www.pling.cc"){ 
+        if (!window.location.path) initialCurrentCategoryLevel = -1;
+    }
     const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(initialCurrentCategoryLevel);
 
     console.log(currentCategoryLevel);
