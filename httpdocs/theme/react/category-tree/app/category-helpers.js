@@ -48,7 +48,7 @@ function getCategoryParents(categories,selectedCategories){
   if (selectedCategories[0].parent_id !== "34"){
     const parentId = parseInt(selectedCategories[0].parent_id);
     const parentCategory = GetSelectedCategory(categories,parentId);
-    if (parentCategory.categories && parentCategory.categories.length > 0){
+    if (parentCategory){
       parentCategory.categories = ConvertObjectToArray(parentCategory.children);
       parentCategory.categoryId = parentCategory.id;
       selectedCategories = [parentCategory,...selectedCategories];

@@ -232,7 +232,7 @@ function CategoryPanelsContainer(props){
     let initialShowBackButtonValue = true;
     if (sliderPosition === 0) initialShowBackButtonValue = false;
     const [ showBackButton, setShowBackButton ] = useState(initialShowBackButtonValue);
-
+    console.log('slider position  - ' + sliderPosition );
     /* COMPONENT */
 
     React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories])
@@ -251,6 +251,10 @@ function CategoryPanelsContainer(props){
         let currentCategoryLevel = props.currentCategoryLevel + 1;
         const newSliderPosition = currentCategoryLevel * containerWidth;
         setSliderPosition(newSliderPosition);
+
+        let newShowBackButton = true;
+        if (newSliderPosition === 0) newShowBackButton = false;
+        setShowBackButton(newShowBackButton);
     }
 
     // update panels on search
