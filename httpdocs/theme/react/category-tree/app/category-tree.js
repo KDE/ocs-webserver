@@ -41,7 +41,7 @@ function CategoryTree(){
     let initialCurrentCategoryLevel = initialCurrentViewedCategories.length;
     if (window.location.href === "https://www.pling.cc" || window.location.href === "https://www.pling.cc/" || 
         window.location.href === "http://192.168.2.124" || window.location.href === "http://192.168.2.124/"){ 
-        if (!window.location.path) initialCurrentCategoryLevel = -1;
+        initialCurrentCategoryLevel = -1;
     }
     const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(initialCurrentCategoryLevel);
 
