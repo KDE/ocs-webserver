@@ -185,7 +185,7 @@ function CategoryTreeHeader(props){
         const newCategories = categories;
         newCategories.length = index + 1;
         setCategories(newCategories)
-        const catLink = cvc.id === "0" ? "/browse/" : "/browse/cat/"+cvc.id+"/order/latest/"
+        const catLink = getUrlContext(window.location.href) + ( cvc.id === "0" ? "/browse/" : "/browse/cat/"+cvc.id+"/order/latest/")
         window.location.href = catLink;
     }
 
