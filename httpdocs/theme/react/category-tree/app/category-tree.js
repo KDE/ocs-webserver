@@ -426,7 +426,7 @@ function CategoryMenuItem(props){
     let categoryMenuItemDisplay;
     if (c.has_children === true){
         categoryMenuItemDisplay = (
-            <a onClick={() => rrops.onCategoryClick(c,catLink)}>
+            <a onClick={() => props.onCategoryClick(c,catLink)}>
                 <span className="cat-title">{catTitle}</span>
                 <span className="cat-product-counter">{c.product_count}</span>
             </a>
