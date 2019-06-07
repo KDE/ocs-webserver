@@ -1630,6 +1630,28 @@ class Default_Model_Info
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('tier' =>$tier))->fetchAll();
         return $result[0]['cnt'];
     }
+    
+    public function getSumSupporting()
+    {        
+        $sql = "
+                SELECT SUM(s.tier) as sum_tier FROM v_support v
+                JOIN support s ON s.member_id = v.member_id AND s.active_time = v.active_time_max
+                WHERE v.is_valid = 1
+        ";
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql)->fetchAll();
+        return $result[0]['sum_tier'];
+    }
+    
+    public function getSumPayoutForMonth($yearmonth)
+    {        
+        $sql = "
+                SELECT SUM(p.probably_payout_amount) AS sum_payout FROM member_dl_plings p
+                WHERE p.yearmonth = :yearmonth
+                AND p.paypal_mail IS NOT null
+        ";
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('yearmonth' => $yearmonth))->fetchAll();
+        return $result[0]['sum_tier'];
+    }
 
     public function getModeratorsList()
     {
