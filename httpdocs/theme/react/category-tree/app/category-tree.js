@@ -9,6 +9,7 @@ import {
 } from './category-helpers';
 
 console.log(window.location.href);
+console.log(window.config);
 let isShowRealDomainAsUrl = 1, showStoreListingsFirst = false;
 if (window.is_show_real_domain_as_url === 1) isShowRealDomainAsUrl = 1;
 else {
