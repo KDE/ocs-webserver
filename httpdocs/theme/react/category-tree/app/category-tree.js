@@ -113,9 +113,10 @@ function CategoryTree(){
     }
 
     // on category panel item click
-    function onCategoryPanleItemClick(ccl,cvc){
+    function onCategoryPanleItemClick(ccl,cvc,catLink){
         setCurrentCategoryLevel(ccl) 
         setCurrentViewedCategories(cvc)
+        if (catLink) window.location.href = catLink;
     }
 
     // search phrase
@@ -161,7 +162,7 @@ function CategoryTree(){
                 currentCategoryLevel={currentCategoryLevel}
                 currentViewedCategories={currentViewedCategories}
                 selectedCategoriesId={selectedCategoriesId}
-                onCategoryPanleItemClick={(ccl,cvc) => onCategoryPanleItemClick(ccl,cvc)}
+                onCategoryPanleItemClick={(ccl,cvc,catLink) => onCategoryPanleItemClick(ccl,cvc,catLink)}
                 onGoBackClick={goBack}
             />
             {tagCloudDisplay}
@@ -266,7 +267,7 @@ function CategoryPanelsContainer(props){
     }
 
     // on category select
-    function onCategorySelect(c){
+    function onCategorySelect(c,catLink){
 
         const newCurrentCategoryLevel = props.currentCategoryLevel + 1;
 
@@ -292,7 +293,7 @@ function CategoryPanelsContainer(props){
             {...c, level:newCurrentCategoryLevel}
         ]
 
-        props.onCategoryPanleItemClick(newCurrentCategoryLevel,newCurrentViewedCategories)
+        props.onCategoryPanleItemClick(newCurrentCategoryLevel,newCurrentViewedCategories,catLink)
     }
 
     /* RENDER */
@@ -311,7 +312,7 @@ function CategoryPanelsContainer(props){
             containerWidth={containerWidth}
             searchPhrase={props.searchPhrase}
             onSetSliderHeight={(height) => setSliderHeight(height)}
-            onCategorySelect={(c) => onCategorySelect(c)}
+            onCategorySelect={(c,catLink) => onCategorySelect(c,catLink)}
         />
     ))
 
@@ -364,11 +365,6 @@ function CategoryPanel(props){
         }
     }
 
-    function onCategoryClick(c){
-        if (!c.has_children) console.log('navigate to category?');
-        else props.onCategorySelect(c);
-    }
-
     let categoryPanelContent;
     if (props.categories){
         let categories;
@@ -386,7 +382,7 @@ function CategoryPanel(props){
                             categoryId={props.categoryId}
                             currentViewedCategories={props.currentViewedCategories}
                             selectedCategoriesId={props.selectedCategoriesId}
-                            onCategoryClick={(c) => onCategoryClick(c)}
+                            onCategoryClick={(c,catLink) => props.onCategorySelect(c,catLink)}
                         />
                     )
                 }
@@ -423,10 +419,6 @@ function CategoryMenuItem(props){
     }
     const [ catLink, setCatLink ] = useState(initialCatLink)
 
-    function onCategoryClick(c){
-        props.onCategoryClick(c);
-    }
-
     let catTitle;
     if (c.title) catTitle = c.title;
     else catTitle = c.name;
@@ -434,7 +426,7 @@ function CategoryMenuItem(props){
     let categoryMenuItemDisplay;
     if (c.has_children === true){
         categoryMenuItemDisplay = (
-            <a onClick={() => onCategoryClick(c)}>
+            <a onClick={() => rrops.onCategoryClick(c,catLink)}>
                 <span className="cat-title">{catTitle}</span>
                 <span className="cat-product-counter">{c.product_count}</span>
             </a>
