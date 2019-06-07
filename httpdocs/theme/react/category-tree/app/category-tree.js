@@ -9,9 +9,6 @@ import {
     getUrlContext
 } from './category-helpers';
 
-console.log(window.location.href);
-console.log(window.config);
-console.log('window is show real domain - ' + window.is_show_real_domain_as_url);
 let isShowRealDomainAsUrl = 1, showStoreListingsFirst = false;
 if (window.is_show_real_domain_as_url === 1) isShowRealDomainAsUrl = 1;
 else {
@@ -21,8 +18,7 @@ else {
         showStoreListingsFirst = true;
     }
 }
-console.log('inner is show real domain - ' + isShowRealDomainAsUrl);
-console.log('inner show store listings first - ' + showStoreListingsFirst);
+
 
 function CategoryTree(){
 
@@ -103,17 +99,17 @@ function CategoryTree(){
 
     // go back
     function goBack(){
-        if (currentCategoryLevel > 0){
+        //if (currentCategoryLevel > 0){
             const newCurrentCategoryLevel = currentCategoryLevel - 1;
             setCurrentCategoryLevel(newCurrentCategoryLevel);
             const trimedCurrentViewedCategoriesArray = currentViewedCategories;
-            trimedCurrentViewedCategoriesArray.length = newCurrentCategoryLevel;    
+            trimedCurrentViewedCategoriesArray.length = newCurrentCategoryLevel > 0 ? newCurrentCategoryLevel : 0;    
             setCurrentViewedCategories(trimedCurrentViewedCategoriesArray)
             const newSearchPhrase = '';
             const newSearchMode = false;
             setSearchPhrase(newSearchPhrase);
             setSearchMode(newSearchMode);
-        }
+        //}
     }
 
     // on category panel item click
@@ -295,16 +291,6 @@ function CategoryPanelsContainer(props){
         props.onCategoryPanleItemClick(newCurrentCategoryLevel,newCurrentViewedCategories)
     }
 
-    // on go back click
-    function onGoBackClick(){
-        if (props.currentCategoryLevel > 0) props.onGoBackClick()
-        else {
-            setSliderPosition(0);
-            setShowBackButton(false);
-        }
-        
-    }
-
     /* RENDER */
 
     const categoryPanelsDislpay = panels.map((cp,index) => (
@@ -314,6 +300,7 @@ function CategoryPanelsContainer(props){
             currentCategoryLevel={props.currentCategoryLevel}
             currentViewedCategories={props.currentViewedCategories}
             selectedCategoriesId={props.selectedCategoriesId}
+            sliderPosition={sliderPosition}
             categories={cp.categories}
             parentCategory={cp.categoryId}
             categoryId={props.categoryId}
@@ -336,7 +323,7 @@ function CategoryPanelsContainer(props){
     let categoryPanelsContainerClassName, backButtonDisplay;
     if (showBackButton){
         categoryPanelsContainerClassName = "show-back-button";
-        backButtonDisplay = <a id="back-button" onClick={onGoBackClick}><span className="glyphicon glyphicon-chevron-left"></span></a>
+        backButtonDisplay = <a id="back-button" onClick={props.onGoBackClick}><span className="glyphicon glyphicon-chevron-left"></span></a>
     }
 
     return (
@@ -352,13 +339,22 @@ function CategoryPanelsContainer(props){
 function CategoryPanel(props){
 
     React.useEffect(() => {adjustSliderHeight()},[])
-    React.useEffect(() => {adjustSliderHeight()},[props.currentCategoryLevel])
-
+    React.useEffect(() => {
+        adjustSliderHeight()
+    },[props.currentCategoryLevel])
     function adjustSliderHeight(){
+
         let currentCategoryLevel = props.currentCategoryLevel
         if (isShowRealDomainAsUrl ) currentCategoryLevel = props.currentCategoryLevel + 1;
         if (currentCategoryLevel === props.level){
-            const panelHeight = (props.categories.length * 24) + props.categories.length;
+            console.log(props.parentCategory)
+            let panelHeight = (props.categories.length * 24) + props.categories.length;
+            if (props.parentCategory === -1){
+                function isShowInMenuCheck(obj){
+                    return obj.is_show_in_menu == "1"
+                }
+                panelHeight = (props.categories.filter(isShowInMenuCheck).length * 24) + props.categories.length;
+            }
             props.onSetSliderHeight(panelHeight);
         }
     }
