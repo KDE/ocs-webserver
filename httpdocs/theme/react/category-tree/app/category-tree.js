@@ -57,6 +57,8 @@ function CategoryTree(){
     const [ searchPhrase, setSearchPhrase ] = useState();
     const [ searchMode, setSearchMode ] = useState();
 
+    console.log(currentViewedCategories);
+
     /* COMPONENT */
 
     React.useEffect(() => { onSearchPhraseUpdate() },[searchPhrase])
@@ -114,8 +116,10 @@ function CategoryTree(){
 
     // on category panel item click
     function onCategoryPanleItemClick(ccl,cvc,catLink){
-        setCurrentCategoryLevel(ccl) 
-        setCurrentViewedCategories(cvc)
+        const newCurrentCategoryLevel = ccl;
+        const newCurrentViewedCategories = cvc;
+        setCurrentCategoryLevel(newCurrentCategoryLevel) 
+        setCurrentViewedCategories(newCurrentViewedCategories)
         if (catLink) window.location.href = catLink;
     }
 
@@ -233,8 +237,10 @@ function CategoryPanelsContainer(props){
     let initialShowBackButtonValue = true;
     if (sliderPosition === 0) initialShowBackButtonValue = false;
     const [ showBackButton, setShowBackButton ] = useState(initialShowBackButtonValue);
-    console.log('slider position  - ' + sliderPosition );
+
     /* COMPONENT */
+
+    console.log(panels);
 
     React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories])
     React.useEffect(() => { updatePanlesOnSearch() },[props.searchMode,props.searchPhrase])
@@ -248,6 +254,9 @@ function CategoryPanelsContainer(props){
             trimedPanelsArray.length = currentCategoryLevel + 1;
         }
         setPanels(trimedPanelsArray);
+
+        const newSliderWidth = containerWidth * trimedPanelsArray.length;
+        setSliderWidth(newSliderWidth);
 
         let currentCategoryLevel = props.currentCategoryLevel + 1;
         const newSliderPosition = currentCategoryLevel * containerWidth;
@@ -287,6 +296,8 @@ function CategoryPanelsContainer(props){
             trimedCurrentViewedCategoriesArray = props.currentViewedCategories;
             trimedCurrentViewedCategoriesArray.length = props.currentCategoryLevel;
         }
+
+        c.categories = ConvertObjectToArray(c.children)
 
         const newCurrentViewedCategories = [
             ...trimedCurrentViewedCategoriesArray,
@@ -421,7 +432,7 @@ function CategoryMenuItem(props){
 
     function onCategoryClick(c,catLink){
         props.onCategoryClick(c,catLink)
-        window.location.href = catLink;
+        // window.location.href = catLink;
     }
 
     let catTitle;
