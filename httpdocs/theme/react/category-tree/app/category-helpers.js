@@ -48,10 +48,14 @@ function getCategoryParents(categories,selectedCategories){
   if (selectedCategories[0].parent_id !== "34"){
     const parentId = parseInt(selectedCategories[0].parent_id);
     const parentCategory = GetSelectedCategory(categories,parentId);
-    parentCategory.categories = ConvertObjectToArray(parentCategory.children);
-    parentCategory.categoryId = parentCategory.id;
-    selectedCategories = [parentCategory,...selectedCategories];
-    return getCategoryParents(categories,selectedCategories);
+    if (parentCategory.categories && parentCategory.categories.length > 0){
+      parentCategory.categories = ConvertObjectToArray(parentCategory.children);
+      parentCategory.categoryId = parentCategory.id;
+      selectedCategories = [parentCategory,...selectedCategories];
+      return getCategoryParents(categories,selectedCategories);
+    } else {
+      return selectedCategories;
+    }
   } else {
     return selectedCategories;
   }
