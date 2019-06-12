@@ -57,8 +57,6 @@ function CategoryTree(){
     const [ searchPhrase, setSearchPhrase ] = useState();
     const [ searchMode, setSearchMode ] = useState();
 
-    console.log(currentViewedCategories);
-
     /* COMPONENT */
 
     React.useEffect(() => { onSearchPhraseUpdate() },[searchPhrase])
@@ -239,8 +237,6 @@ function CategoryPanelsContainer(props){
     const [ showBackButton, setShowBackButton ] = useState(initialShowBackButtonValue);
 
     /* COMPONENT */
-
-    console.log(panels);
 
     React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories])
     React.useEffect(() => { updatePanlesOnSearch() },[props.searchMode,props.searchPhrase])

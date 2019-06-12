@@ -7,11 +7,15 @@ function BookReaderWrapper(props){
   const [ totalPages, setTotalPages ] = useState();
 
   React.useEffect(() => {initBookReader()},[])
+  React.useEffect(() => { 
+    if (window.book) window.book.destroy()
+    initBookReader()
+  },[props.cinemaMode,props.width])
 
   function initBookReader(){
     // Initialize the book
-    let book = ePub(props.slide.url, {});
-    let rendition = book.renderTo('book-container', {
+    window.book = ePub(props.slide.url, {});
+    window.rendition = book.renderTo('book-container', {
         flow: 'paginated',
         manager: 'continuous',
         spread: 'always',
@@ -21,26 +25,26 @@ function BookReaderWrapper(props){
     setRenditionState(rendition)
 
     // Display the book
-    let displayed = rendition.display(window.location.hash.substr(1) || undefined);
+    window.displayed = window.rendition.display(window.location.hash.substr(1) || undefined);
     displayed.then(function() {
         // console.log('rendition.currentLocation():', rendition.currentLocation());
     });
 
     // Generate location and pagination
-    book.ready.then(function() {
+    window.book.ready.then(function() {
         const stored = localStorage.getItem(book.key() + '-locations');
         // console.log('metadata:', book.package.metadata);
         if (stored) {
-            return book.locations.load(stored);
+            return window.book.locations.load(stored);
         } else {
-            return book.locations.generate(1024); // Generates CFI for every X characters (Characters per/page)
+            return window.book.locations.generate(1024); // Generates CFI for every X characters (Characters per/page)
         }
     }).then(function(location) { // This promise will take a little while to return (About 20 seconds or so for Moby Dick)
         localStorage.setItem(book.key() + '-locations', book.locations.save());
     });
 
     // When navigating to the next/previous page
-    rendition.on('relocated', function(locations) {
+    window.rendition.on('relocated', function(locations) {
         setCurrentPage(book.locations.locationFromCfi(locations.start.cfi));
         setTotalPages(book.locations.total)
     })
