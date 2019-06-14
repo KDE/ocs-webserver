@@ -19,10 +19,10 @@
  *
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
- 
  **/
-use YoHang88\LetterAvatar\LetterAvatar; 
+
+use YoHang88\LetterAvatar\LetterAvatar;
+
 class Default_Model_Member extends Default_Model_DbTable_Member
 {
     const CASE_INSENSITIVE = 1;
@@ -97,8 +97,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                 'typeVal'       => Default_Model_Member::MEMBER_TYPE_PERSON,
                 'defaultImgUrl' => 'hive/user-pics/nopic.png',
                 'likeImgUrl'    => 'hive/user-bigpics/0/%'
-            ))->fetchAll()
-            ;
+            ))->fetchAll();
 
             $resultSet = $this->generateRowSet($resultMembers);
 
@@ -184,10 +183,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             'deleted_at' => new Zend_Db_Expr('Now()'),
         );
         $this->update($updateValues, $this->_db->quoteInto('member_id=?', $member_id, 'INTEGER'));
-        
+
         $memberLog = new Default_Model_MemberDeactivationLog();
         $memberLog->logMemberAsDeleted($member_id);
-        
+
 
         $this->setMemberProjectsDeleted($member_id);
         $this->setMemberCommentsDeleted($member_id);
@@ -201,27 +200,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     }
 
     //User ist mind. 1 jahr alt, user ist supporter, user hat minimum 20 kommentare
-    public function validDeleteMemberFromSpam($member_id)
-    {
-        $sql ='select 
-              m.created_at
-              , (m.created_at+ INTERVAL 12 MONTH < NOW()) is_old
-              ,(select count(1) from comments c where c.comment_member_id = m.member_id and comment_active = 1) comments
-              ,(select (DATE_ADD(max(active_time), INTERVAL 1 YEAR) > now()) from support s  where s.status_id = 2  AND s.member_id =m.member_id) is_supporter
-              from member m where member_id = :member_id';
-         $result = $this->_db->fetchRow($sql, array(
-                            'member_id'     => $member_id,          
-            ));
-         if($result['is_supporter'] && $result['is_supporter'] ==1)
-         {
-          return false;
-         }
-         if($result['is_old'] ==1 || $result['comments']>20)
-         {
-           return false;
-         }      
-         return true;
-    }
 
     private function setMemberProjectsDeleted($member_id)
     {
@@ -258,20 +236,73 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $modelEmail = new Default_Model_DbTable_MemberEmail();
         $modelEmail->setDeletedByMember($member_id);
     }
-    
-    private function setMemberEmailsActivated($member_id)
-    {
-        $modelEmail = new Default_Model_DbTable_MemberEmail();
-        $modelEmail->setActivatedByMember($member_id);
-    }
 
     private function setDeletedInMaterializedView($member_id)
     {
         $sql = "UPDATE `stat_projects` SET `status` = :new_status WHERE `member_id` = :member_id";
 
-        $this->_db->query($sql, array('new_status' => Default_Model_DbTable_Project::PROJECT_DELETED, 'member_id' => $member_id))
-                  ->execute()
-        ;
+        $this->_db->query($sql,
+            array('new_status' => Default_Model_DbTable_Project::PROJECT_DELETED, 'member_id' => $member_id))
+                  ->execute();
+    }
+
+    private function setDeletedInSubSystems($member_id)
+    {
+        try {
+            $id_server = new Default_Model_Ocs_OAuth();
+            $id_server->deleteUser($member_id);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - oauth : ' . implode(PHP_EOL . " - ",
+                    $id_server->getMessages()));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $ldap_server = new Default_Model_Ocs_Ldap();
+            $ldap_server->deleteUser($member_id);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL . " - ",
+                    $ldap_server->getMessages()));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $openCode = new Default_Model_Ocs_Gitlab();
+            $openCode->blockUser($member_id);
+            $openCode->blockUserProjects($member_id);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL . " - ",
+                    $openCode->getMessages()));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $forum = new Default_Model_Ocs_Forum();
+            $forum->blockUser($member_id);
+            $forum->blockUserPosts($member_id);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - forum : ' . implode(PHP_EOL . " - ",
+                    $forum->getMessages()));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+    }
+
+    public function validDeleteMemberFromSpam($member_id)
+    {
+        $sql = 'SELECT 
+              `m`.`created_at`
+              , (`m`.`created_at`+ INTERVAL 12 MONTH < NOW()) `is_old`
+              ,(SELECT count(1) FROM `comments` `c` WHERE `c`.`comment_member_id` = `m`.`member_id` AND `comment_active` = 1) `comments`
+              ,(SELECT (DATE_ADD(max(`active_time`), INTERVAL 1 YEAR) > now()) FROM `support` `s`  WHERE `s`.`status_id` = 2  AND `s`.`member_id` =`m`.`member_id`) `is_supporter`
+              FROM `member` `m` WHERE `member_id` = :member_id';
+        $result = $this->_db->fetchRow($sql, array(
+            'member_id' => $member_id,
+        ));
+        if ($result['is_supporter'] && $result['is_supporter'] == 1) {
+            return false;
+        }
+        if ($result['is_old'] == 1 || $result['comments'] > 20) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -289,16 +320,16 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         );
 
         $this->update($updateValues, $this->_db->quoteInto('member_id=?', $member_id, 'INTEGER'));
-        
+
         $memberLog = new Default_Model_MemberDeactivationLog();
         $memberLog->removeLogMemberAsDeleted($member_id);
-        
+
         $this->setMemberProjectsActivated($member_id);
         $this->setMemberCommentsActivated($member_id);
         $this->setMemberEmailsActivated($member_id);
 
         $this->setActivatedInSubsystems($member_id);
-        
+
         //$this->setMemberPlingsActivated($member_id);
     }
 
@@ -312,6 +343,48 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     {
         $modelComment = new Default_Model_ProjectComments();
         $modelComment->setAllCommentsForUserActivated($member_id);
+    }
+
+    private function setMemberEmailsActivated($member_id)
+    {
+        $modelEmail = new Default_Model_DbTable_MemberEmail();
+        $modelEmail->setActivatedByMember($member_id);
+    }
+
+    private function setActivatedInSubsystems($member_id)
+    {
+        try {
+            $id_server = new Default_Model_Ocs_OAuth();
+            $id_server->updateUser($member_id);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - oauth : ' . print_r($id_server->getMessages(), true));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $ldap_server = new Default_Model_Ocs_Ldap();
+            $ldap_server->createUser($member_id);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL . " - ",
+                    $ldap_server->getMessages()));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $openCode = new Default_Model_Ocs_Gitlab();
+            $openCode->unblockUser($member_id);
+            $openCode->unblockUserProjects($member_id);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL . " - ",
+                    $openCode->getMessages()));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $forum = new Default_Model_Ocs_Forum();
+            $forum->unblockUser($member_id);
+            $forum->unblockUserPosts($member_id);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - forum : ' . implode(PHP_EOL." - ", $forum->getMessages()));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
     }
 
     /**
@@ -329,12 +402,12 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         }
 
         $sql = '
-                SELECT m.*, `member_email`.`email_address` AS `mail`, IF(ISNULL(`member_email`.`email_checked`),0,1) AS `mail_checked`, `member_email`.`email_address`, `mei`.`external_id`, `mei`.`gitlab_user_id`
+                SELECT `m`.*, `member_email`.`email_address` AS `mail`, IF(ISNULL(`member_email`.`email_checked`),0,1) AS `mail_checked`, `member_email`.`email_address`, `mei`.`external_id`, `mei`.`gitlab_user_id`
                 FROM `member` AS `m`
                 JOIN `member_email` ON `m`.`member_id` = `member_email`.`email_member_id` AND `member_email`.`email_primary` = 1
                 LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
                 WHERE
-                    (m.member_id = :memberId)
+                    (`m`.`member_id` = :memberId)
         ';
 
         if ($onlyNotDeleted) {
@@ -395,9 +468,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                   AND `username` = :userName
                 ";
 
-        return $this->_db->fetchRow($sql, array('sourceId' => Default_Model_Member::SOURCE_HIVE, 'userName' => $user_name));
+        return $this->_db->fetchRow($sql,
+            array('sourceId' => Default_Model_Member::SOURCE_HIVE, 'userName' => $user_name));
     }
-    
+
     /**
      * @param string $user_name
      *
@@ -444,7 +518,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         return $this->generateRowSet($result);
     }
 
-
     /**
      * @param int  $member_id
      * @param null $limit
@@ -470,7 +543,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         }
 
         $result =
-            $this->_db->fetchAll($sql, array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
+            $this->_db->fetchAll($sql,
+                array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
 
         return $this->generateRowSet($result);
     }
@@ -498,7 +572,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         }
 
         $result =
-            $this->_db->fetchAll($sql, array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
+            $this->_db->fetchAll($sql,
+                array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
 
         return $this->generateRowSet($result);
     }
@@ -532,7 +607,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         }
 
         $result =
-            $this->_db->fetchAll($sql, array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
+            $this->_db->fetchAll($sql,
+                array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
 
         return $this->generateRowSet($result);
     }
@@ -551,7 +627,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             throw new Exception(__METHOD__ . ' - user password is not set.');
         }
         $userData['password'] =
-            Local_Auth_Adapter_Ocs::getEncryptedPassword($userData['password'], Default_Model_DbTable_Member::SOURCE_LOCAL);
+            Local_Auth_Adapter_Ocs::getEncryptedPassword($userData['password'],
+                Default_Model_DbTable_Member::SOURCE_LOCAL);
         if (false == isset($userData['roleId'])) {
             $userData['roleId'] = self::ROLE_ID_DEFAULT;
         }
@@ -566,9 +643,9 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (false == isset($userData['mail_checked'])) {
             $userData['mail_checked'] = 0;
         }
-        
+
         //email is allways lower case
-        $userData['mail'] = strtolower( trim( $userData['mail'] ) );
+        $userData['mail'] = strtolower(trim($userData['mail']));
 
         $newUser = $this->storeNewUser($userData)->toArray();
 
@@ -588,35 +665,17 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      * @return string
      * @throws Exception
      */
-    protected function generateIdentIcon_old($userData, $uuidMember)
-    {
-        $identIcon = new Local_Tools_Identicon();
-        $tmpImagePath = IMAGES_UPLOAD_PATH . 'tmp/' . $uuidMember . '.png';
-        imagepng($identIcon->renderIdentIcon(sha1($userData['mail']), 1100), $tmpImagePath);
-
-        $imageService = new Default_Model_DbTable_Image();
-        $imageFilename = $imageService->saveImageOnMediaServer($tmpImagePath);
-
-        return $imageFilename;
-    }
-
-    /**
-     * @param $userData
-     * @param $uuidMember
-     *
-     * @return string
-     * @throws Exception
-     */
     protected function generateIdentIcon($userData, $uuidMember)
     {
         require_once 'vendor/autoload.php';
-        // $name = substr($userData['username'],0,1).' '.substr($userData['username'],1);        
-        $name = $userData['username'].'  ';        
-        $avatar = new LetterAvatar($name,'square', 400);   
+        // $name = substr($userData['username'],0,1).' '.substr($userData['username'],1);
+        $name = $userData['username'] . '  ';
+        $avatar = new LetterAvatar($name, 'square', 400);
         $tmpImagePath = IMAGES_UPLOAD_PATH . 'tmp/' . $uuidMember . '.png';
-        $avatar->saveAs($tmpImagePath, LetterAvatar::MIME_TYPE_PNG);        
+        $avatar->saveAs($tmpImagePath, LetterAvatar::MIME_TYPE_PNG);
         $imageService = new Default_Model_DbTable_Image();
         $imageFilename = $imageService->saveImageOnMediaServer($tmpImagePath);
+
         return $imageFilename;
     }
 
@@ -726,11 +785,11 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      */
     public function fetchCheckedActiveLocalMemberByEmail($email)
     {
-        $sel = $this->select()->where('mail=?', $email)->where('is_deleted = ?', Default_Model_DbTable_Member::MEMBER_NOT_DELETED)
+        $sel = $this->select()->where('mail=?', $email)->where('is_deleted = ?',
+            Default_Model_DbTable_Member::MEMBER_NOT_DELETED)
                     ->where('is_active = ?', Default_Model_DbTable_Member::MEMBER_ACTIVE)
                     ->where('mail_checked = ?', Default_Model_DbTable_Member::MEMBER_MAIL_CHECKED)
-                    ->where('login_method = ?', Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL)
-        ;
+                    ->where('login_method = ?', Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL);
 
         return $this->fetchRow($sel);
     }
@@ -757,7 +816,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             $sql .= $this->_db->quoteInto(" limit ?", $limit, 'INTEGER');
         }
 
-        $result = $this->_db->fetchAll($sql, array('memberId' => $member_id, 'status' => Default_Model_Project::PROJECT_ACTIVE));
+        $result = $this->_db->fetchAll($sql,
+            array('memberId' => $member_id, 'status' => Default_Model_Project::PROJECT_ACTIVE));
 
         return $this->generateRowSet($result);
     }
@@ -782,38 +842,37 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
         // test identity as username
         $resultName = $this->getAdapter()->fetchRow($sqlName,
-            array('active' => self::MEMBER_ACTIVE, 'deleted' => self::MEMBER_NOT_DELETED, 'identity' => $identity))
-        ;
+            array('active' => self::MEMBER_ACTIVE, 'deleted' => self::MEMBER_NOT_DELETED, 'identity' => $identity));
         if ((false !== $resultName) AND (count($resultName) > 0)) {
             return $this->generateRowClass($resultName);
         }
 
         // test identity as mail
         $resultMail = $this->getAdapter()->fetchRow($sqlMail,
-            array('active' => self::MEMBER_ACTIVE, 'deleted' => self::MEMBER_NOT_DELETED, 'identity' => $identity))
-        ;
+            array('active' => self::MEMBER_ACTIVE, 'deleted' => self::MEMBER_NOT_DELETED, 'identity' => $identity));
         if ((false !== $resultMail) AND (count($resultMail) > 0)) {
             return $this->generateRowClass($resultMail);
         }
 
         return $this->createRow();
     }
-    
+
     /**
      * @param string $value
      *
      * @return mixed
      */
-    public function findActiveMemberByName($username){
-      $sql = '
+    public function findActiveMemberByName($username)
+    {
+        $sql = '
           select m.member_id,m.username,profile_image_url from member m where m.is_active=1 and m.is_deleted = 0 
-          and m.username like "'.$username.'%"
+          and m.username like "' . $username . '%"
           limit 20
       ';
-      $result = $this->getAdapter()->fetchAll($sql);
-      return $result;
-    }
+        $result = $this->getAdapter()->fetchAll($sql);
 
+        return $result;
+    }
 
     /**
      * @param string $value
@@ -838,7 +897,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             return $member;
         }
     }
-    
 
     /**
      * @param Zend_Db_Table_Row_Abstract $memberData
@@ -850,7 +908,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (empty($memberData)) {
             return false;
         }
-        //20180801 ronald: If a hive user change his password, he gets the ocs password type and we do 
+        //20180801 ronald: If a hive user change his password, he gets the ocs password type and we do
         //have to check against the old hive password style
         //if ($memberData->source_id == self::SOURCE_HIVE) {
         //    return true;
@@ -870,19 +928,20 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
         return $result;
     }
-    
+
     public function fetchActiveUserByUsername($username)
     {
-        $sql = 'SELECT DISTINCT member.member_id
-                FROM member
-                WHERE LOWER(username) = :username
-                AND is_active = 1 
-                AND member.is_deleted = 0';
+        $sql = 'SELECT DISTINCT `member`.`member_id`
+                FROM `member`
+                WHERE LOWER(`username`) = :username
+                AND `is_active` = 1 
+                AND `member`.`is_deleted` = 0';
 
         $result = $this->getAdapter()->query($sql, array('username' => strtolower($username)))->fetchAll();
-        
-        if($result && count($result)>0) {
+
+        if ($result && count($result) > 0) {
             $member_id = $result[0]['member_id'];
+
             return $member_id;
         }
 
@@ -934,32 +993,32 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     {
         $sql = '
             SELECT
-                comment_id
-                ,comment_text
-                ,member.member_id
-                ,member.profile_image_url
-                ,comment_created_at
-                ,stat_projects.username
-                ,stat_projects.project_member_id
-                ,comment_target_id
-                ,stat_projects.title
-                ,stat_projects.project_id      
-                ,stat_projects.laplace_score
-                ,stat_projects.count_likes
-                ,stat_projects.count_dislikes
-                ,stat_projects.image_small 
-                ,stat_projects.version
-                ,stat_projects.cat_title
-                ,stat_projects.count_comments
-                ,stat_projects.changed_at
-                ,stat_projects.created_at        
-            FROM comments
-            inner join  member ON comments.comment_member_id = member.member_id
-            inner JOIN stat_projects ON comments.comment_target_id = stat_projects.project_id AND comments.comment_type = 0
-            WHERE comments.comment_active = :comment_status
-            AND stat_projects.status = :project_status
-            AND comments.comment_member_id = :member_id
-            ORDER BY comments.comment_created_at DESC
+                `comment_id`
+                ,`comment_text`
+                ,`member`.`member_id`
+                ,`member`.`profile_image_url`
+                ,`comment_created_at`
+                ,`stat_projects`.`username`
+                ,`stat_projects`.`project_member_id`
+                ,`comment_target_id`
+                ,`stat_projects`.`title`
+                ,`stat_projects`.`project_id`      
+                ,`stat_projects`.`laplace_score`
+                ,`stat_projects`.`count_likes`
+                ,`stat_projects`.`count_dislikes`
+                ,`stat_projects`.`image_small` 
+                ,`stat_projects`.`version`
+                ,`stat_projects`.`cat_title`
+                ,`stat_projects`.`count_comments`
+                ,`stat_projects`.`changed_at`
+                ,`stat_projects`.`created_at`        
+            FROM `comments`
+            INNER JOIN  `member` ON `comments`.`comment_member_id` = `member`.`member_id`
+            INNER JOIN `stat_projects` ON `comments`.`comment_target_id` = `stat_projects`.`project_id` AND `comments`.`comment_type` = 0
+            WHERE `comments`.`comment_active` = :comment_status
+            AND `stat_projects`.`status` = :project_status
+            AND `comments`.`comment_member_id` = :member_id
+            ORDER BY `comments`.`comment_created_at` DESC
         ';
 
         if (isset($limit)) {
@@ -986,15 +1045,16 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                   AND `project`.`member_id` = :member_id
             ';
         $result =
-            $this->_db->fetchAll($sql, array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
+            $this->_db->fetchAll($sql,
+                array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
 
         return count($result);
     }
 
     public function fetchSupporterDonationInfo($member_id)
     {
-        /*$sql = 'SELECT max(active_time) AS active_time_max 
-                            ,min(active_time)  AS active_time_min 
+        /*$sql = 'SELECT max(active_time) AS active_time_max
+                            ,min(active_time)  AS active_time_min
                             ,(DATE_ADD(max(active_time), INTERVAL 1 YEAR) > now()) AS issupporter
                             ,count(1)  AS cnt from support  where status_id = 2 AND type_id = 0 AND member_id = :member_id ';*/
         $sql = "
@@ -1012,8 +1072,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         return $result;
     }
 
-  
-    
     public function fetchSupporterSubscriptionInfo($member_id)
     {
         $sql = 'SELECT create_time,amount,period,period_frequency from support  where status_id = 2 AND type_id = 1 
@@ -1109,7 +1167,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         }
 
         $result =
-            $this->_db->fetchAll($sql, array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
+            $this->_db->fetchAll($sql,
+                array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
 
         return $this->generateRowSet($result);
     }
@@ -1155,7 +1214,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     }
 
     /**
-     * @param int $member_id
+     * @param int    $member_id
      * @param string $email
      *
      * @return bool
@@ -1175,25 +1234,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     }
 
     /**
-     * @param int $member_id
-     *
-     * @throws Exception
-     * @deprecated since we're using solr server for searching
-     */
-    private function removeMemberProjectsFromSearch($member_id)
-    {
-        $modelProject = new Default_Model_Project();
-        $memberProjects = $modelProject->fetchAllProjectsForMember($member_id);
-        $modelSearch = new Default_Model_Search_Lucene();
-        foreach ($memberProjects as $memberProject) {
-            $product = array();
-            $product['project_id'] = $memberProject->project_id;
-            $product['project_category_id'] = $memberProject->project_category_id;
-            $modelSearch->deleteDocument($product);
-        }
-    }
-
-    /**
      * @param string $identity
      *
      * @return Zend_Db_Table_Row_Abstract
@@ -1209,8 +1249,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
         // test identity as mail
         $resultMail = $this->getAdapter()->fetchRow($sqlMail,
-            array('active' => self::MEMBER_ACTIVE, 'deleted' => self::MEMBER_NOT_DELETED, 'identity' => $identity))
-        ;
+            array('active' => self::MEMBER_ACTIVE, 'deleted' => self::MEMBER_NOT_DELETED, 'identity' => $identity));
         if ((false !== $resultMail) AND (count($resultMail) > 0)) {
             return $this->generateRowClass($resultMail);
         }
@@ -1218,72 +1257,39 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         return $this->createRow();
     }
 
-    private function setDeletedInSubSystems($member_id)
+    public function getMembersAvatarOldAutogenerated($orderby = 'member_id desc', $limit = null, $offset = null)
     {
-        try {
-            $id_server = new Default_Model_Ocs_OAuth();
-            $id_server->deleteUser($member_id);
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - oauth : ' . implode(PHP_EOL." - ", $id_server->getMessages()));
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        $sql = "
+                     SELECT * FROM `tmp_member_avatar_unknow` 
+             ";
+
+
+        if (isset($orderby)) {
+            $sql = $sql . '  order by ' . $orderby;
         }
-        try {
-            $ldap_server = new Default_Model_Ocs_Ldap();
-            $ldap_server->deleteUser($member_id);
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
         }
-        try {
-            $openCode = new Default_Model_Ocs_Gitlab();
-            $openCode->blockUser($member_id);
-            $openCode->blockUserProjects($member_id);
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $openCode->getMessages()));
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+
+        if (isset($offset)) {
+            $sql .= ' offset ' . (int)$offset;
         }
-        try {
-            $forum = new Default_Model_Ocs_Forum();
-            $forum->blockUser($member_id);
-            $forum->blockUserPosts($member_id);
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - forum : ' . implode(PHP_EOL." - ", $forum->getMessages()));
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
-        }
+
+        $resultSet = $this->_db->fetchAll($sql);
+
+        return $resultSet;
     }
 
-
-     public function getMembersAvatarOldAutogenerated($orderby='member_id desc',$limit = null, $offset  = null)
-    {            
-            $sql = "
-                     select * from tmp_member_avatar_unknow 
-             ";
-            
-
-             if(isset($orderby)){
-                $sql = $sql.'  order by '.$orderby;
-             }
-
-             if (isset($limit)) {
-                 $sql .= ' limit ' . (int)$limit;
-             }
-
-             if (isset($offset)) {
-                 $sql .= ' offset ' . (int)$offset;
-             }
-
-             $resultSet = $this->_db->fetchAll($sql);                                               
-            return   $resultSet;
-    } 
-
-     public function getMembersAvatarOldAutogeneratedTotalCount()
+    public function getMembersAvatarOldAutogeneratedTotalCount()
     {
         $sql = " 
                       select count(1) as cnt
                       from tmp_member_avatar_unknow 
         ";
-        $result = $this->getAdapter()->query($sql, array())->fetchAll();      
-        return  $result[0]['cnt'];
+        $result = $this->getAdapter()->query($sql, array())->fetchAll();
+
+        return $result[0]['cnt'];
     }
 
     public function updateAvatarTypeId($member_id, $type_id)
@@ -1291,40 +1297,44 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $sql = "
                       update member set avatar_type_id = :type_id where member_id = :member_id
                    ";
-        $this->getAdapter()->query($sql, array('type_id'=>$type_id,'member_id'=>$member_id));              
+        $this->getAdapter()->query($sql, array('type_id' => $type_id, 'member_id' => $member_id));
     }
 
-    private function setActivatedInSubsystems($member_id)
+    /**
+     * @param $userData
+     * @param $uuidMember
+     *
+     * @return string
+     * @throws Exception
+     */
+    protected function generateIdentIcon_old($userData, $uuidMember)
     {
-        try {
-            $id_server = new Default_Model_Ocs_OAuth();
-            $id_server->updateUser($member_id);
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - oauth : ' . print_r($id_server->getMessages(), true));
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
-        }
-        try {
-            $ldap_server = new Default_Model_Ocs_Ldap();
-            $ldap_server->createUser($member_id);
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
-        }
-        try {
-            $openCode = new Default_Model_Ocs_Gitlab();
-            $openCode->unblockUser($member_id);
-            $openCode->unblockUserProjects($member_id);
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $openCode->getMessages()));
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
-        }
-        try {
-            $forum = new Default_Model_Ocs_Forum();
-            $forum->unblockUser($member_id);
-            $forum->unblockUserPosts($member_id);
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - forum : ' . implode(PHP_EOL." - ", $forum->getMessages()));
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        $identIcon = new Local_Tools_Identicon();
+        $tmpImagePath = IMAGES_UPLOAD_PATH . 'tmp/' . $uuidMember . '.png';
+        imagepng($identIcon->renderIdentIcon(sha1($userData['mail']), 1100), $tmpImagePath);
+
+        $imageService = new Default_Model_DbTable_Image();
+        $imageFilename = $imageService->saveImageOnMediaServer($tmpImagePath);
+
+        return $imageFilename;
+    }
+
+    /**
+     * @param int $member_id
+     *
+     * @throws Exception
+     * @deprecated since we're using solr server for searching
+     */
+    private function removeMemberProjectsFromSearch($member_id)
+    {
+        $modelProject = new Default_Model_Project();
+        $memberProjects = $modelProject->fetchAllProjectsForMember($member_id);
+        $modelSearch = new Default_Model_Search_Lucene();
+        foreach ($memberProjects as $memberProject) {
+            $product = array();
+            $product['project_id'] = $memberProject->project_id;
+            $product['project_category_id'] = $memberProject->project_category_id;
+            $modelSearch->deleteDocument($product);
         }
     }
 

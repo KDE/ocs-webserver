@@ -59,11 +59,7 @@ class Default_Form_Product extends Zend_Form
              ->addElement($this->getVersionElement())
              ->addElement($this->getSmallImageElement())
              ->addElement($this->getImageUploadElement())
-            //            ->addElement($this->getBigImageElement())
-            //            ->addElement($this->getBigImageUploadElement())
              ->addSubForm($this->getGalleryElement(), 'gallery')
-            //            ->addElement($this->getAmountElement())
-            //            ->addElement($this->getAmountPeriodElement())
              ->addElement($this->getEmbedCodeElement())
              ->addElement($this->getProjectHomepageElement())
              ->addElement($this->getSourceElement())
@@ -81,12 +77,6 @@ class Default_Form_Product extends Zend_Form
              ->addElement($this->getGitlabProjectId())
              ->addElement($this->getShowGitlabProjectIssues())
              ->addElement($this->getUseGitlabProjectReadme())
-
-            //->addElement($this->getCCAttribution())
-            //->addElement($this->getCCComercial())
-            //->addElement($this->getCCDerivateWorks())
-            //->addElement($this->getCCShareAlike())
-            //->addElement($this->getCCLicense())
         ;
     }
 
