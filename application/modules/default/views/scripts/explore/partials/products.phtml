@@ -105,7 +105,7 @@ foreach ($this->products as $this->product) {
                       if($this->product->laplace_score)
                       {
                         echo 'Score_old : '.$this->product->laplace_score_old.'%';
-                        echo '/Score_test : '.$this->product->laplace_score_test.'%'; 
+                        echo '/Score_test : '.number_format($this->product->laplace_score/100,1); 
 
                       }
 
