@@ -151,7 +151,7 @@ if($this->inputFilterOriginal ==1)
       padding: 0;
     }
   }
-  
+
   .filter_browse_tag_group {
       margin-right: 5px;
   }
@@ -186,15 +186,19 @@ if($this->inputFilterOriginal ==1)
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
                           'top') ?>"><span><?= $this->translate('Top') ?></span></a>
                   </li>
+                  <li <?=$this->filters['order'] == 'test' ? 'class="active"' :'' ?>>
+                      <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
+                          'test') ?>"><span><?= $this->translate('test') ?></span></a>
+                  </li>
                 <?php }?>
                   <li style="float: right">
                       <input type="checkbox" name="filter_browse_original" value="1" id="filter_browse_original" <?=$checkedOriginal?> >  Original
-                 
-                  
+
+
                   <?php //Insert flexible tag-group-filter
                   $tagGroupFilter  = Zend_Registry::isRegistered('config_store_taggroups') ? Zend_Registry::get('config_store_taggroups') : null;
                   $tagGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
-                  
+
                   if(!empty($tagGroupFilter)) {
                       foreach ($tagGroupFilter as $tagGroup ) {
                           $tags = $tagGroupHelper->fetchList($tagGroup);
@@ -207,16 +211,16 @@ if($this->inputFilterOriginal ==1)
                               } else {
                                   echo "<option value='".$tag_id."'>".$tags[$tag_id]."</option>";
                               }
-                              
+
                           }
-                          
+
                           echo "</select>";
                       }
-                      
-                      
+
+
                   }
                   ?>
-                  </li> 
+                  </li>
               </ul>
             </div>
 

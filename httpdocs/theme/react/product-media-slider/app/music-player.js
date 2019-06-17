@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactJkMusicPlayer from "react-jinke-music-player";
+import {isMobile} from 'react-device-detect';
 
 function MusicPlayerWrapper(props){
-    console.log(props);
-    /*const options = {
+
+  const [ showPlaylist, setShowPlaylist ] = useState(true);
+
+  /*const options = {
         audioLists:props.slide.items,
         defaultPlayIndex:0,
         theme:"dark",
@@ -77,8 +80,8 @@ function MusicPlayerWrapper(props){
       
         // audio list panel show text of the playlist has no songs [ type `String` | ReactNode  default 'no music']
         notContentText: "No Music",
-      
-        panelTitle: "No Title",
+    
+        panelTitle: props.product.title,
       
         defaultPlayMode: "order",
       
@@ -227,7 +230,9 @@ function MusicPlayerWrapper(props){
         },
       
         onAudioListsPanelChange(panelVisible) {
-          console.log("audio lists panel visible:", panelVisible);
+          const newShowPlayListValue = showPlaylist === true ? false : true;
+          setShowPlaylist(newShowPlayListValue);
+          // console.log("audio lists panel visible:", panelVisible);
         },
       
         onAudioListsDragEnd(fromIndex, endIndex) {
@@ -240,8 +245,12 @@ function MusicPlayerWrapper(props){
     };
     console.log(options);
 
+    let musicPlayerWrapperCssClass = "desktop ";
+    if (isMobile) musicPlayerWrapperCssClass = "mobile ";
+    if (showPlaylist) musicPlayerWrapperCssClass += " show-playlist"
+
     return (
-        <div id="music-player-wrapper">
+        <div id="music-player-wrapper" className={musicPlayerWrapperCssClass}>
           <ReactJkMusicPlayer {...options} />
         </div>
     )
