@@ -218,6 +218,11 @@ video:focus {
             padding:0;
             text-align: center;
 
+            &.audio {
+              overflow: hidden;
+              width:100%;
+            }
+
             &.image {
                 background-color:white !important;
                 max-height: 100%;
@@ -717,6 +722,8 @@ video:focus {
           display: block;
           background-position: center;
           margin-bottom: 20px;
+          border-radius: 0;
+          box-shadow: none;
         }
   
         .progress-bar-content {
@@ -726,6 +733,10 @@ video:focus {
           display: block;
           float: left;
           width: 100%;
+
+          .audio-main {
+            margin-top:20px;
+          }
         }
   
         .player-content {

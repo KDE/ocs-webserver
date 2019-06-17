@@ -188,6 +188,10 @@ video:focus {
   padding: 0;
   text-align: center;
 }
+#media-slider .swiper-wrapper .slide-item.audio {
+  overflow: hidden;
+  width: 100%;
+}
 #media-slider .swiper-wrapper .slide-item.image {
   background-color: white !important;
   max-height: 100%;
@@ -585,6 +589,8 @@ video:focus {
   display: block;
   background-position: center;
   margin-bottom: 20px;
+  border-radius: 0;
+  box-shadow: none;
 }
 #music-player-wrapper.desktop .music-player-panel .panel-content .progress-bar-content {
   padding: 0;
@@ -593,6 +599,9 @@ video:focus {
   display: block;
   float: left;
   width: 100%;
+}
+#music-player-wrapper.desktop .music-player-panel .panel-content .progress-bar-content .audio-main {
+  margin-top: 20px;
 }
 #music-player-wrapper.desktop .music-player-panel .panel-content .player-content {
   padding: 0;
