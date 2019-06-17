@@ -570,15 +570,15 @@ video:focus {
   stroke: #777;
   fill: #777;
 }
-#music-player-wrapper .music-player-panel {
+#music-player-wrapper.desktop .music-player-panel {
   height: 100%;
-  width: 50%;
+  width: 100%;
 }
-#music-player-wrapper .music-player-panel .panel-content {
+#music-player-wrapper.desktop .music-player-panel .panel-content {
   display: block !important;
   padding: 20px !important;
 }
-#music-player-wrapper .music-player-panel .panel-content .img-content {
+#music-player-wrapper.desktop .music-player-panel .panel-content .img-content {
   width: 100%;
   height: 200px;
   background-size: contain;
@@ -586,7 +586,7 @@ video:focus {
   background-position: center;
   margin-bottom: 20px;
 }
-#music-player-wrapper .music-player-panel .panel-content .progress-bar-content {
+#music-player-wrapper.desktop .music-player-panel .panel-content .progress-bar-content {
   padding: 0;
   flex: none;
   margin-bottom: 20px;
@@ -594,24 +594,34 @@ video:focus {
   float: left;
   width: 100%;
 }
-#music-player-wrapper .music-player-panel .panel-content .player-content {
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content {
   padding: 0;
 }
-#music-player-wrapper .music-player-panel .panel-content .player-content > .group {
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content .play-btn {
+  padding: 0 5px;
+}
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group {
   margin: 0 5px;
 }
-#music-player-wrapper .audio-lists-panel {
+#music-player-wrapper.desktop .audio-lists-panel {
   position: absolute;
   top: 0;
   right: 0;
   width: 50%;
   height: 100%;
+  display: none !important;
 }
-#music-player-wrapper .audio-lists-panel .audio-lists-panel-header .close-btn,
-#music-player-wrapper .audio-lists-panel .audio-lists-panel-header .line,
-#music-player-wrapper .audio-lists-panel .audio-lists-panel-header .delete-btn {
+#music-player-wrapper.desktop .audio-lists-panel .audio-lists-panel-header .close-btn,
+#music-player-wrapper.desktop .audio-lists-panel .audio-lists-panel-header .line,
+#music-player-wrapper.desktop .audio-lists-panel .audio-lists-panel-header .delete-btn {
   display: none;
 }
-#music-player-wrapper .audio-lists-panel .audio-item .group.player-delete {
+#music-player-wrapper.desktop .audio-lists-panel .audio-item .group.player-delete {
   display: none;
+}
+#music-player-wrapper.desktop.show-playlist .music-player-panel {
+  width: 50%;
+}
+#music-player-wrapper.desktop.show-playlist .audio-lists-panel {
+  display: block !important;
 }

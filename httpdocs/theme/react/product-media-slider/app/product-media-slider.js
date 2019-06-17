@@ -13,7 +13,6 @@ function ProductMediaSlider(){
 
   const [ product, setProduct ] = useState(window.product);
   let galleryArray = GenerateGalleryArray(product);
-  console.log(window.filesJson);
   const galleryHasMultipleAudioFiles = CheckForMultipleAudioFiles(galleryArray);
   if (galleryHasMultipleAudioFiles) galleryArray = GroupAudioFilesInGallery(galleryArray);
   const [ gallery, setGallery ] = useState(galleryArray);
@@ -191,6 +190,7 @@ function ProductMediaSlider(){
       sliderHeight={sliderHeight}
       cinemaMode={cinemaMode}
       gallery={gallery}
+      product={product}
       disableGallery={disableGallery}
       onFinishedSlidesRender={onFinishedSlidesRender}
       onCinemaModeClick={toggleCinemaMode}
@@ -353,7 +353,6 @@ function SlideItem(props){
     )
   }
   else if (props.slide.type === "audio"){
-    console.log(props.slide);
     slideContentDisplay = (
       <MusicPlayerWrapper 
         height={props.sliderHeight}
@@ -362,6 +361,7 @@ function SlideItem(props){
         onCinemaModeClick={onCinemaModeClick}
         slide={props.slide}
         playAudio={props.currentSlide === props.slideIndex}
+        product={props.product}
         onUpdateDimensions={props.onUpdateDimensions}
         onFullScreenToggle={props.onFullScreenToggle}
       />
