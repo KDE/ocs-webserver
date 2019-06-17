@@ -138,6 +138,16 @@ var aItemData = [
         }
     },
     {
+        text: "Section",
+        submenu: {
+            id: "section",
+            itemdata: [
+                {text: "Section", url: "/backend/section"},
+                {text: "Categories", url: "/backend/sectioncategories"}
+            ]
+        }
+    },
+    {
         text: "Operating System",
         submenu: {
             id: "operatingsystem",
