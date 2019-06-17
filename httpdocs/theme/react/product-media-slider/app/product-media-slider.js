@@ -3,40 +3,19 @@ import ReactDOM from 'react-dom';
 import {isMobile} from 'react-device-detect';
 import VideoPlayerWrapper from './video-player';
 import BookReaderWrapper from './book-reader';
+import MusicPlayerWrapper from './music-player';
+
+import {GenerateGalleryArray, CheckForMultipleAudioFiles, GroupAudioFilesInGallery} from './product-media-slider-helpers';
 
 function ProductMediaSlider(){ 
 
   /* Component */
 
   const [ product, setProduct ] = useState(window.product);
-
-  let galleryArray = []
-  if (window.galleryPicturesJson) window.galleryPicturesJson.forEach(function(gp,index){ galleryArray.push({url:gp,type:'image'}); });
-  else galleryArray = [{url:product.image_small,type:'image'} ];
-  if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... galleryArray ];
-  if (window.filesJson) {
-    window.filesJson.forEach(function(f,index){
-      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 || f.type.indexOf('epub') > -1){
-        let type;
-        if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 ) type = f.type.split('/')[0]
-        else if (f.type.indexOf('epub') > -1 ) type = "book";
-        let url_preview, url_thumb;
-        if (f.url_thumb) url_thumb = f.url_thumb.replace(/%2F/g,'/').replace(/%3A/g,':');
-        if (f.url_preview) url_preview = f.url_preview.replace(/%2F/g,'/').replace(/%3A/g,':');
-          const gItem = {
-            url:f.url.replace(/%2F/g,'/').replace(/%3A/g,':'),
-            collection_id:f.collection_id,
-            type:type,
-            file_id:f.id,
-            title:f.title,
-            url_thumb:url_thumb,
-            url_preview:url_preview
-          }
-          galleryArray = [gItem, ... galleryArray] 
-        }
-    })
-  }
-
+  let galleryArray = GenerateGalleryArray(product);
+  console.log(window.filesJson);
+  const galleryHasMultipleAudioFiles = CheckForMultipleAudioFiles(galleryArray);
+  if (galleryHasMultipleAudioFiles) galleryArray = GroupAudioFilesInGallery(galleryArray);
   const [ gallery, setGallery ] = useState(galleryArray);
   const [ disableGallery, setDisableGallery ] = useState(gallery.length > 1 ? false : true)
   const parentContainerElement = document.getElementById('product-title-div');
@@ -373,6 +352,21 @@ function SlideItem(props){
       />
     )
   }
+  else if (props.slide.type === "audio"){
+    console.log(props.slide);
+    slideContentDisplay = (
+      <MusicPlayerWrapper 
+        height={props.sliderHeight}
+        width={props.containerWidth}
+        cinemaMode={props.cinemaMode} 
+        onCinemaModeClick={onCinemaModeClick}
+        slide={props.slide}
+        playAudio={props.currentSlide === props.slideIndex}
+        onUpdateDimensions={props.onUpdateDimensions}
+        onFullScreenToggle={props.onFullScreenToggle}
+      />
+    )    
+  }
   else if (props.slide.type === "book"){
     slideContentDisplay = (
       <BookReaderWrapper 
@@ -413,9 +407,6 @@ function ThumbNavigationItem(props){
       <div className="pages preview-image">
         <div className="page">
           {props.item.title}
-        </div>
-        <div className="page">
-
         </div>
       </div>
     )
