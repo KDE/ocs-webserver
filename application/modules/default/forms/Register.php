@@ -58,8 +58,7 @@ class Default_Form_Register extends Zend_Form
                       ->addValidator($userExistCheck, true)
                       ->addValidator($groupNameExists, true)
                       ->setAttrib('placeholder', 'Username (4 chars minimum)')
-                      ->setAttrib('class', 'form-control')
-        ;
+                      ->setAttrib('class', 'form-control');
 
         $mailValidCheck = new Zend_Validate_EmailAddress();
         $mailValidCheck->setMessage('RegisterFormEmailErrNotValid', Zend_Validate_EmailAddress::INVALID)
@@ -68,8 +67,7 @@ class Default_Form_Register extends Zend_Form
                        ->setMessage("RegisterFormEmailErrWrongHost", Zend_Validate_EmailAddress::INVALID_HOSTNAME)
                        ->setMessage("RegisterFormEmailErrWrongHost2", Zend_Validate_Hostname::INVALID_HOSTNAME)
                        ->setMessage("RegisterFormEmailErrHostLocal", Zend_Validate_Hostname::LOCAL_NAME_NOT_ALLOWED)
-                       ->setOptions(array('domain' => true))
-        ;
+                       ->setOptions(array('domain' => true));
 
         $mailExistCheck = new Local_Validate_EmailExists();
         $mailExistCheck->setMessage('RegisterFormEmailErrAlreadyRegistered', Local_Validate_EmailExists::EXISTS);
@@ -80,8 +78,7 @@ class Default_Form_Register extends Zend_Form
         $mailValidatorChain = new Zend_Validate();
         $mailValidatorChain->addValidator($mailEmpty, true)
                            ->addValidator($mailValidCheck, true)
-                           ->addValidator($mailExistCheck, true)
-        ;
+                           ->addValidator($mailExistCheck, true);
 
         $mail = $this->createElement('text', 'mail')
                      ->setLabel('RegisterFormEmailLabel')
@@ -91,8 +88,7 @@ class Default_Form_Register extends Zend_Form
                      ->setDecorators(array('ViewHelper', 'Errors'))
                      ->setRequired(true)
                      ->setAttrib('placeholder', 'Email')
-                     ->setAttrib('class', 'form-control')
-        ;
+                     ->setAttrib('class', 'form-control');
 
         $pass1 = $this->createElement('password', 'password1')
                       ->setLabel('RegisterFormPasswordLabel')
@@ -101,8 +97,7 @@ class Default_Form_Register extends Zend_Form
                       ->setAttrib('placeholder', 'Password')
                       ->addValidator('stringLength', true, array(6, 200))
                       ->setAttrib('placeholder', 'Password (6 chars minimum)')
-                      ->setAttrib('class', 'form-control')
-        ;
+                      ->setAttrib('class', 'form-control');
 
         $pass2 = $this->createElement('password', 'password2')
                       ->setLabel('RegisterFormPassword2Label')
@@ -110,8 +105,7 @@ class Default_Form_Register extends Zend_Form
                       ->addErrorMessage('RegisterFormPassword2Err')
                       ->setDecorators(array('ViewHelper', 'Errors'))
                       ->setAttrib('placeholder', 'Confirm Password')
-                      ->setAttrib('class', 'form-control')
-        ;
+                      ->setAttrib('class', 'form-control');
 
         $passValid = new Local_Validate_PasswordConfirm($pass2->getValue());
         $pass1->addValidator($passValid, true);
@@ -126,15 +120,15 @@ class Default_Form_Register extends Zend_Form
              ->addElement($mail)
              ->addElement($pass1)
              ->addElement($pass2)
-             ->addElement($submit)
-        ;
+             ->addElement($submit);
 
         if (APPLICATION_ENV == 'development') {
             return;
         }
 
         $this->addPrefixPath('Cgsmith\\Form\\Element', APPLICATION_LIB . '/Cgsmith/Form/Element', Zend_Form::ELEMENT);
-        $this->addElementPrefixPath('Cgsmith\\Validate\\', APPLICATION_LIB . '/Cgsmith/Validate/', Zend_Form_Element::VALIDATE);
+        $this->addElementPrefixPath('Cgsmith\\Validate\\', APPLICATION_LIB . '/Cgsmith/Validate/',
+            Zend_Form_Element::VALIDATE);
         $captcha = $this->createElement('recaptcha', 'g-recaptcha-response', array(
             'siteKey'   => Zend_Registry::get('config')->recaptcha->sitekey,
             'secretKey' => Zend_Registry::get('config')->recaptcha->secretkey,

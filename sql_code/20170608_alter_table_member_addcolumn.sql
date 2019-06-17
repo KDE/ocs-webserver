@@ -1,1 +1,2 @@
-alter table member add column profile_image_url_bg varchar(355) after profile_image_url;
+ALTER TABLE `member`
+    ADD COLUMN `profile_image_url_bg` varchar(355) AFTER `profile_image_url`;

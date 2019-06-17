@@ -282,7 +282,9 @@ class Zend_Http_Client
      * URL and optionally configuration array.
      *
      * @param Zend_Uri_Http|string $uri
-     * @param array $config Configuration key-value pairs.
+     * @param array                $config Configuration key-value pairs.
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Uri_Exception
      */
     public function __construct($uri = null, $config = null)
     {
@@ -299,9 +301,10 @@ class Zend_Http_Client
     /**
      * Set the URI for the next request
      *
-     * @param  Zend_Uri_Http|string $uri
+     * @param Zend_Uri_Http|string $uri
      * @return Zend_Http_Client
      * @throws Zend_Http_Client_Exception
+     * @throws Zend_Uri_Exception
      */
     public function setUri($uri)
     {

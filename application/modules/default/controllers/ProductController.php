@@ -625,7 +625,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         Zend_Registry::get('logger')->info(__METHOD__ . ' - $post: ' . print_r($_POST, true));
         Zend_Registry::get('logger')->info(__METHOD__ . ' - $files: ' . print_r($_FILES, true));
-        Zend_Registry::get('logger')->info(__METHOD__ . ' _ input values: ' . print_r($values, true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - input values: ' . print_r($values, true));
 
         $newProject = null;
         try {
@@ -947,7 +947,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         // save changes
-        $projectData->setFromArray($values);
+        $projectModel->updateProject($this->_projectId, $values);
 
         //update the gallery pics
         $pictureSources = array_merge($values['gallery']['online_picture'],

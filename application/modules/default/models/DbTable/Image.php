@@ -261,6 +261,9 @@ class Default_Model_DbTable_Image extends Zend_Db_Table_Abstract
      * @param $mimeType
      *
      * @return string
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Uri_Exception
      */
     protected function sendImageToMediaServer($fullFilePath, $mimeType)
     {
@@ -273,9 +276,7 @@ class Default_Model_DbTable_Image extends Zend_Db_Table_Abstract
         $response = $client->request('POST');
 
         if ($response->getStatus() > 200) {
-            $this->_errorMsg = $response->getBody();
-
-            return null;
+            throw new Default_Model_Exception_Image('Could not upload file to ' . $url . ' - server response: ' . $response->getBody());
         }
 
         return $response->getBody();
