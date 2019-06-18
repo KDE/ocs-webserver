@@ -588,6 +588,7 @@ video:focus {
   position: absolute;
   right: 50px;
   top: 15px;
+  height: 20px;
 }
 #music-player-wrapper .audio-lists-panel .audio-lists-panel-header .line,
 #music-player-wrapper .audio-lists-panel .audio-lists-panel-header .delete-btn {
