@@ -32,22 +32,22 @@ $scoreColor = new Default_View_Helper_FetchScoreColor();
 	<tr>
 <?php
 
-foreach ($options as $key => $value) {	
+foreach ($options as $key => $value) {
 	echo '<td><span class="rating-label rating-label-btn" style="margin-left:10px; background-color:'.$this->fetchScoreColor($key).'">'
 		  .$key.'</span></td>';
 }
 ?>	</tr>
 
 <tr>
-<?php 
+<?php
 
 $datagroup = array();
 foreach ($this->ratings as $this->productRating) {
-	if($this->productRating['rating_active']==0 || $this->productRating['user_like']>1) continue;	
+	if($this->productRating['rating_active']==0 || $this->productRating['user_like']>1) continue;
 	$datagroup[$this->productRating['score']][] = $this->productRating;
 }
 
-foreach ($options as $key => $value) {		
+foreach ($options as $key => $value) {
 	echo '<td><span class="rating-label"  style="margin-left:10px; color:'.$this->fetchScoreColor($key).'">'
 		  .(array_key_exists($key,$datagroup)?count($datagroup[$key]):"").'</span></td>';
 }
@@ -56,32 +56,32 @@ foreach ($options as $key => $value) {
 </table>
 </div>
 
-<?php  
+<?php
 $tmp=null;
 foreach ($this->ratings as $this->productRating) {
 		if($this->productRating['user_like']>=6)
 		{
 			$tmp = $this->productRating;
 		}
-	    if($this->productRating['rating_active']==0 || $this->productRating['user_like']>1) continue;	   			
+	    if($this->productRating['rating_active']==0 || $this->productRating['user_like']>1) continue;
 	?>
 
 <div class="productRating-rows <?='product-rating-'.$this->productRating['score']?> "  >
 	<div class="product-heading product-update-heading">
-	<a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>" >	
-	<img class="userimg"  
+	<a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>" >
+	<img class="userimg"
 					src="<?= $this->Image(($this->productRating['profile_image_url']==null)?'hive/user-pics/nopic.png':$this->productRating['profile_image_url'],
 	                                                array('width' => 40, 'height' => 40)) ?>"
-	                                                 alt="product-maker" 
+	                                                 alt="product-maker"
 	                                                />
     </a>
-	<span>	
+	<span>
 		<a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>" style="font-weight: bold;">
-		<?=$this->productRating['username'] ?> 
+		<?=$this->productRating['username'] ?>
 		</a>
 	</span>
-	  <span class="small light lightgrey product-update-date"> 
-	  	<?=$this->printDate($this->productRating['created_at']) ?> 
+	  <span class="small light lightgrey product-update-date">
+	  	<?=$this->printDate($this->productRating['created_at']) ?>
 	  </span>
 	  <span>
 		<span class="rating-label" style="background-color:<?=$this->fetchScoreColor($this->productRating['score'])?>; ">
@@ -90,8 +90,8 @@ foreach ($this->ratings as $this->productRating) {
 		<span style="font-size: small;padding-left: 5px;"><?php echo ' '.$options[$this->productRating['score']]?></span>
 	  </span>
 	</div>
-	<div style="padding-left: 45px; padding-bottom: 15px;">			
-		<?=$this->productRating['comment_text'] ?> 
+	<div style="padding-left: 45px; padding-bottom: 15px;">
+		<?=$this->productRating['comment_text'] ?>
 	</div>
 </div>
 <?php } ?>
@@ -100,61 +100,61 @@ foreach ($this->ratings as $this->productRating) {
 
 	<div class="productRating-rows">
 		<div class="product-heading product-update-heading">
-		<a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>" >	
-		<img class="userimg"  
+		<a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>" >
+		<img class="userimg"
 						src="<?= $this->Image('hive/user-pics/nopic.png',
 		                                                array('width' => 40, 'height' => 40)) ?>"
-		                                                 alt="product-maker" 
+		                                                 alt="product-maker"
 		                                                />
 	    </a>
-		<span>	
+		<span>
 		<a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>" style="font-weight: bold;">
-		<?=$this->productRating['username'] ?> 
+		<?=$this->productRating['username'] ?>
 		</a>
 		</span>
-		  <span class="small light lightgrey product-update-date"> 
-		  	<?=$this->printDate($this->productRating['created_at']) ?> 
+		  <span class="small light lightgrey product-update-date">
+		  	<?=$this->printDate($this->productRating['created_at']) ?>
 		  </span>
 		  <span>
 			<span class="score label" style="background-color:<?=$this->fetchScoreColor(5)?>; ">
 				Count:<?php echo $tmp['user_like']+$tmp['user_dislike']+2-12; ?> Rating: <?=number_format($this->fetchScore($tmp['user_like']-6,$tmp['user_dislike']-6),2)?>
-			</span>		
+			</span>
 		  </span>
-		</div>	
+		</div>
 	</div>
 
 <?php }else{?>
 <div class="productRating-rows">
 	<div class="product-heading product-update-heading">
-	<a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>" >	
-	<img class="userimg"  
+	<a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>" >
+	<img class="userimg"
 					src="<?= $this->Image('hive/user-pics/nopic.png',
 	                                                array('width' => 40, 'height' => 40)) ?>"
-	                                                 alt="product-maker" 
+	                                                 alt="product-maker"
 	                                                />
     </a>
-	
+
 	  <span>
 		<span class="score label" style="background-color:<?=$this->fetchScoreColor(5)?>; ">
-			Count: 2 Rating: 5.0
-		</span>		
+			Count: 4 Rating: 5.0
+		</span>
 	  </span>
-	</div>	
+	</div>
 </div>
 <?php } ?>
 
 
-<script type="text/javascript">	
+<script type="text/javascript">
 $(function() {
-	$('span.rating-label-btn').on('click',function(){	
+	$('span.rating-label-btn').on('click',function(){
 		if($(this).hasClass("rating-label-highlight"))
 		{
 			$(this).removeClass("rating-label-highlight");
-			$('div.productRating-rows').show();				
+			$('div.productRating-rows').show();
 		}else{
 			$('span.rating-label-btn').not(this).removeClass( "rating-label-highlight" );
 			$(this).addClass("rating-label-highlight");
-			$('div.productRating-rows').hide();				
+			$('div.productRating-rows').hide();
 			$('.product-rating-'+$(this).text()).show();
 		}
 
