@@ -23,6 +23,7 @@
 class Default_Model_ProjectCategory
 {
     const CACHE_TREE_STORE = 'store_cat_tree';
+    const CACHE_TREE_SECTION = 'section_cat_tree';
 
     /** @var string */
     protected $_dataTableName;
@@ -205,6 +206,45 @@ class Default_Model_ProjectCategory
 
         return $tree;
     } 
+    
+    /**
+     * @param int|null $store_id If not set, the tree for the current store will be returned
+     * @param bool     $clearCache
+     *
+     * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     * @deprecated use fetchTreeForView
+     */
+    public function fetchCategoryTreeForSection($section_id = null, $clearCache = false)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cache_id = self::CACHE_TREE_SECTION . "_{$section_id}";
+
+        if ($clearCache) {
+            $cache->remove($cache_id);
+        }
+
+        if (false === ($tree = $cache->load($cache_id))) {
+            $modelCategoryStore = new Default_Model_DbTable_SectionCategory();
+            $rows = $modelCategoryStore->fetchCatIdsForSection((int)$store_id);
+
+            if (count($rows) < 1) {
+                $modelCategories = new Default_Model_DbTable_ProjectCategory();
+                $root = $modelCategories->fetchRoot();
+                $rows = $modelCategories->fetchImmediateChildrenIds($root['project_category_id'], $modelCategories::ORDERED_TITLE);
+                $tree = $this->buildTree($rows, null, null);
+            } else {
+                $tree = $this->buildTree($rows, null, null);
+            }
+
+            $cache->save($tree, $cache_id, array(), 600);
+        }
+
+        return $tree;
+    } 
+    
 
     private function buildTree($list, $parent_id = null, $store_id = null)
     {

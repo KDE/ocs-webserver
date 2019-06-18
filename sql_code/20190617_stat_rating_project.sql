@@ -36,7 +36,7 @@ BEGIN
     sum(pr.likes) + sum(pr.dislikes)               AS votes_total,
     laplace_score(sum(pr.likes), sum(pr.dislikes)) AS score,
     (sum(pr.totalscore)+2*5)/(sum(pr.count)+2)*100 AS score_with_pling,
-    (sum(pr.totalscore_test)+10*5)/(sum(pr.count)+10)*100 AS score_test,
+    (sum(pr.totalscore_test)+10*5)/(sum(pr.count)+10)*100 AS score_test
     from
     (
       select project_id
