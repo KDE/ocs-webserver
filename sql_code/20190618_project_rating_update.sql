@@ -6,6 +6,12 @@ update project_rating set score = round(((user_like-6)*9+(user_dislike-6)*3+4*5)
     where user_like >=6 and user_dislike>=6 ;
 
 
+update project_rating set score_test = 8 where user_like = 1
+  and created_at < '2019-05-14 10:00:00';
+update project_rating set score_test = round(((user_like-6)*8+(user_dislike-6)*3+10*5)/(user_like+user_dislike+10-12),2)
+    where user_like >=6 and user_dislike>=6 ;
+
+
 DELIMITER $$
 drop PROCEDURE generate_stat_rating_project;
 CREATE  PROCEDURE `generate_stat_rating_project`()
