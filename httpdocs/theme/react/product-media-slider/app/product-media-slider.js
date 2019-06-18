@@ -265,9 +265,7 @@ function SlideItem(props){
   const [ itemSetHeight, setItemSetHeight ] = useState();
 
   React.useEffect(() => {
-    if (props.gallery && props.gallery.length === props.slideIndex + 1){
-      props.onFinishedSlidesRender();
-    }
+    if (props.gallery && props.gallery.length === props.slideIndex + 1) props.onFinishedSlidesRender();
   }, [props.gallery])
   React.useEffect(() => { getSlideContentHeight(props.cinemaMode) },[props.currentSlide, props.cinemaMode]);
 
@@ -301,14 +299,13 @@ function SlideItem(props){
       }
       else if (props.slide.type === "embed"){ 
         if (cinemaMode === true) props.onSetSliderHeight(315)
-      } 
-      else if (props.slide.type === "video" || props.slide.type === "audio"){
-        if (cinemaMode === true){
-          props.onSetSliderHeight(screen.height * 0.7); 
-        } else {
-          props.onSetSliderHeight(360)
-        }
+      }
+      else if (props.slide.type === "video"){
+        if (cinemaMode === true) props.onSetSliderHeight(screen.height * 0.7); 
+        else props.onSetSliderHeight(360)
       } else if (props.slide.type === "book"){
+        props.onSetSliderHeight(360)
+      } else if ( props.slide.type === "audio"){
         props.onSetSliderHeight(360)
       }
     }
@@ -396,9 +393,7 @@ function ThumbNavigationItem(props){
 
   React.useEffect(() => { if (props.gallery && props.gallery.length === props.slideIndex + 1){ props.onfinishedThumbsRender() } }, [props.gallery])
   React.useEffect(() => {
-    if (window.galleryThumbs){
-      window.galleryThumbs.slideTo(props.currentSlide);
-    }
+    if (window.galleryThumbs) window.galleryThumbs.slideTo(props.currentSlide);
   },[props.currentSlide])
 
   let previewImageContainer;

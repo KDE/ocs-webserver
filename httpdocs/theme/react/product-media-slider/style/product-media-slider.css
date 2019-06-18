@@ -574,6 +574,21 @@ video:focus {
   stroke: #777;
   fill: #777;
 }
+#music-player-wrapper .rc-slider {
+  position: relative;
+  flex: 1 1 auto;
+}
+#music-player-wrapper .rc-slider .rc-slider-track {
+  position: absolute;
+  top: 0;
+  height: 100%;
+}
+#music-player-wrapper .audio-lists-panel .audio-lists-panel-header .close-btn {
+  display: block;
+  position: absolute;
+  right: 50px;
+  top: 15px;
+}
 #music-player-wrapper.desktop .music-player-panel {
   height: 100%;
   width: 100%;
@@ -620,7 +635,6 @@ video:focus {
   height: 100%;
   display: none !important;
 }
-#music-player-wrapper.desktop .audio-lists-panel .audio-lists-panel-header .close-btn,
 #music-player-wrapper.desktop .audio-lists-panel .audio-lists-panel-header .line,
 #music-player-wrapper.desktop .audio-lists-panel .audio-lists-panel-header .delete-btn {
   display: none;
@@ -633,4 +647,17 @@ video:focus {
 }
 #music-player-wrapper.desktop.show-playlist .audio-lists-panel {
   display: block !important;
+}
+#music-player-wrapper .react-jinke-music-player-mobile {
+  height: inherit;
+}
+#music-player-wrapper .react-jinke-music-player-mobile .react-jinke-music-player-mobile-play-model-tip,
+#music-player-wrapper .react-jinke-music-player-mobile .react-jinke-music-player-mobile-singer,
+#music-player-wrapper .react-jinke-music-player-mobile .react-jinke-music-player-mobile-switch,
+#music-player-wrapper .react-jinke-music-player-mobile .react-jinke-music-player-mobile-header > .right.item {
+  display: none;
+}
+#music-player-wrapper .react-jinke-music-player-mobile .react-jinke-music-player-mobile-cover {
+  width: 145px;
+  height: 145px;
 }

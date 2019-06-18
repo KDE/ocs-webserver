@@ -4,7 +4,7 @@ import {isMobile} from 'react-device-detect';
 
 function MusicPlayerWrapper(props){
 
-  const [ showPlaylist, setShowPlaylist ] = useState(true);
+  const [ showPlaylist, setShowPlaylist ] = useState(false);
 
   /*const options = {
         audioLists:props.slide.items,
@@ -20,16 +20,12 @@ function MusicPlayerWrapper(props){
     const options = {
         //audio lists model
         audioLists: props.slide.items,
-      
         //default play index of the audio player  [type `number` default `0`]
         defaultPlayIndex: 0,
-      
         //if you want dynamic change current play audio you can change it [type `number` default `0`]
         // playIndex: 0,
-      
         //color of the music player theme    [ type `string: 'light' or 'dark'  ` default 'dark' ]
         theme: "dark",
-      
         // Specifies movement boundaries. Accepted values:
         // - `parent` restricts movement within the node's offsetParent
         //    (nearest node with position relative or absolute), or
@@ -38,26 +34,20 @@ function MusicPlayerWrapper(props){
         //   These indicate how far in each direction the draggable
         //   can be moved.
         bounds: "parent",
-      
         //Whether to load audio immediately after the page loads.  [type `Boolean | String`, default `false`]
         //"auto|metadata|none" "true| false"
         preload: false,
-      
         //Whether the player's background displays frosted glass effect  [type `Boolean`, default `false`]
         glassBg: false,
-      
         //The next time you access the player, do you keep the last state  [type `Boolean` default `false`]
         remember: false,
-      
         //The Audio Can be deleted  [type `Boolean`, default `true`]
         remove: true,
-      
         //audio controller initial position    [ type `Object` default '{top:0,left:0}' ]
         defaultPosition: {
           top: 300,
           left: 120
         },
-      
         // play mode text config of the audio player
         playModeText: {
           order: "order",
@@ -65,53 +55,35 @@ function MusicPlayerWrapper(props){
           singleLoop: "single loop",
           shufflePlay: "shuffle"
         },
-      
         //audio controller open text  [ type `String | ReactNode` default 'open']
         openText: "open",
-      
         //audio controller close text  [ type `String | ReactNode` default 'close']
         closeText: "close",
-      
         //audio theme switch checkedText  [ type `String | ReactNode` default '-']
-        checkedText: "dark",
-      
+        checkedText: "dark",      
         //audio theme switch unCheckedText [ type `String | ReactNode` default '-']
         unCheckedText: "light",
-      
         // audio list panel show text of the playlist has no songs [ type `String` | ReactNode  default 'no music']
         notContentText: "No Music",
-    
         panelTitle: props.product.title,
-      
         defaultPlayMode: "order",
-      
         //audio mode        mini | full          [type `String`  default `mini`]
         mode: "full",
-      
-        
          // [ type `Boolean` default 'false' ]
          // The default audioPlay handle function will be played again after each pause, If you only want to trigger it once, you can set 'true'
-         
         once: true,
-      
         //Whether the audio is played after loading is completed. [type `Boolean` default 'true']
         autoPlay: false,
-      
         //Whether you can switch between two modes, full => mini  or mini => full   [type 'Boolean' default 'true']
         toggleMode: true,
-      
         //audio cover is show of the "mini" mode [type `Boolean` default 'true']
-        showMiniModeCover: true,
-      
+        showMiniModeCover: true,   
         //audio playing progress is show of the "mini"  mode
         showMiniProcessBar: false,
-      
         //audio controller is can be drag of the "mini" mode     [type `Boolean` default `true`]
         drag: true,
-      
         //drag the audio progress bar [type `Boolean` default `true`]
         seeked: true,
-      
         //audio controller title [type `String | ReactNode`  default <FaHeadphones/>]
         // controllerTitle: <FaHeadphones />,
       
@@ -243,11 +215,12 @@ function MusicPlayerWrapper(props){
           console.log("audio lyric change:", lineNum, currentLyric);
         }
     };
-    console.log(options);
 
     let musicPlayerWrapperCssClass = "desktop ";
     if (isMobile) musicPlayerWrapperCssClass = "mobile ";
-    if (showPlaylist) musicPlayerWrapperCssClass += " show-playlist"
+    if (showPlaylist) musicPlayerWrapperCssClass += " show-playlist";
+
+    console.log(window.innerWidth);
 
     return (
         <div id="music-player-wrapper" className={musicPlayerWrapperCssClass}>
