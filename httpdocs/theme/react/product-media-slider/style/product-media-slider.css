@@ -589,6 +589,13 @@ video:focus {
   right: 50px;
   top: 15px;
 }
+#music-player-wrapper .audio-lists-panel .audio-lists-panel-header .line,
+#music-player-wrapper .audio-lists-panel .audio-lists-panel-header .delete-btn {
+  display: none;
+}
+#music-player-wrapper .audio-lists-panel .audio-item .group.player-delete {
+  display: none;
+}
 #music-player-wrapper.desktop .music-player-panel {
   height: 100%;
   width: 100%;
@@ -634,13 +641,6 @@ video:focus {
   width: 50%;
   height: 100%;
   display: none !important;
-}
-#music-player-wrapper.desktop .audio-lists-panel .audio-lists-panel-header .line,
-#music-player-wrapper.desktop .audio-lists-panel .audio-lists-panel-header .delete-btn {
-  display: none;
-}
-#music-player-wrapper.desktop .audio-lists-panel .audio-item .group.player-delete {
-  display: none;
 }
 #music-player-wrapper.desktop.show-playlist .music-player-panel {
   width: 50%;

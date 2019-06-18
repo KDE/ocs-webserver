@@ -725,7 +725,16 @@ video:focus {
         right: 50px;
         top: 15px;
       }
+      .line, .delete-btn {
+        display:none;
+      }
     }
+    .audio-item {
+      .group.player-delete {
+        display:none;
+      }
+    }
+
   }
 
   &.desktop {
@@ -782,18 +791,6 @@ video:focus {
       width: 50%;
       height: 100%;
       display:none !important;
-  
-      .audio-lists-panel-header {
-        .line, .delete-btn {
-          display:none;
-        }
-      }
-  
-      .audio-item {
-        .group.player-delete {
-          display:none;
-        }
-      }
     }
   
     &.show-playlist {
