@@ -102,7 +102,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             'owner_id'         => $project->claimed_by_member
         );
         $pploadFiles->update($updateValues, "collection_id = ".$project->ppload_collection_id);
-        
+
         $pploadCollection = new Default_Model_DbTable_PploadCollections();
         $updateValues = array(
             'owner_id'         => $project->claimed_by_member
@@ -117,7 +117,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         );
 
         $this->update($updateValues, $this->_db->quoteInto('project_id=? and claimable = 1', $id, 'INTEGER'));
-        
+
     }
 
     /**
@@ -1322,6 +1322,9 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                 ));*/
                 $statement->order('project.laplace_score DESC');
                 break;
+            case 'test':
+                $statement->order('project.laplace_score_test DESC');
+                break;
             case 'top':
                 $statement->order('project.laplace_score_old DESC');
                 break;
@@ -1589,7 +1592,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                             `p`.`image_small`,
                             (SELECT count(1) FROM `project_plings` `l` WHERE `p`.`project_id` = `l`.`project_id` AND `l`.`is_deleted` = 0 AND `l`.`is_active` = 1 ) `countplings`,
                             c.cnt cntCategory,
-                              (select count(1) from stat_projects_source_url s where TRIM(TRAILING '/' FROM p.source_url)  = s.source_url) as cntDuplicates        
+                              (select count(1) from stat_projects_source_url s where TRIM(TRAILING '/' FROM p.source_url)  = s.source_url) as cntDuplicates
                             FROM `project` `p`
                             join project_category cat on p.project_category_id = cat.project_category_id
                             left join stat_cnt_projects_catid_memberid c on p.project_category_id = c.project_category_id and p.member_id = c.member_id
@@ -1664,8 +1667,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             return null;
         }
     }
-    
-    
+
+
     /**
      * @param int      $member_id
      * @param int|null $limit
@@ -1798,7 +1801,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $source_url = substr($source_url, 0, -1);
         }
         $sql = "
-            SELECT 
+            SELECT
                 p.project_id,
                 pj.title,
                 pj.member_id,
