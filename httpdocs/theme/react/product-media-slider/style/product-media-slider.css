@@ -596,6 +596,9 @@ video:focus {
 #music-player-wrapper .audio-lists-panel .audio-item .group.player-delete {
   display: none;
 }
+#music-player-wrapper .audio-lists-panel .audio-lists-panel-content ul {
+  text-align: left;
+}
 #music-player-wrapper.desktop .music-player-panel {
   height: 100%;
   width: 100%;
