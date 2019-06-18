@@ -218,7 +218,7 @@ function CategoryPanelsContainer(props){
     /* STATE */
 
     const rootListingPanel = {categoryId:0,categories:props.categoryTree}
-    const storeListingPanel = {categoryId:-1,categories:window.config.domains}
+    const storeListingPanel = {categoryId:-1,categories:[{name:"All",id:"0"}, ...window.config.domains]}
     let initialRootCategoryPanels = [rootListingPanel];
     if (isShowRealDomainAsUrl  === 1) initialRootCategoryPanels = [storeListingPanel,rootListingPanel];
     let initialPanelsValue = initialRootCategoryPanels;
@@ -235,6 +235,8 @@ function CategoryPanelsContainer(props){
     let initialShowBackButtonValue = true;
     if (sliderPosition === 0) initialShowBackButtonValue = false;
     const [ showBackButton, setShowBackButton ] = useState(initialShowBackButtonValue);
+
+    const [ containerVisibility, setContainerVisibility ] = useState(false);
 
     /* COMPONENT */
 
@@ -303,6 +305,12 @@ function CategoryPanelsContainer(props){
         props.onCategoryPanleItemClick(newCurrentCategoryLevel,newCurrentViewedCategories,catLink)
     }
 
+    // on set slider height
+    function onSetSliderHeight(height){
+        setContainerVisibility(true);
+        setSliderHeight(height)
+    }
+
     /* RENDER */
 
     const categoryPanelsDislpay = panels.map((cp,index) => (
@@ -318,7 +326,7 @@ function CategoryPanelsContainer(props){
             categoryId={props.categoryId}
             containerWidth={containerWidth}
             searchPhrase={props.searchPhrase}
-            onSetSliderHeight={(height) => setSliderHeight(height)}
+            onSetSliderHeight={(height) => onSetSliderHeight(height)}
             onCategorySelect={(c,catLink) => onCategorySelect(c,catLink)}
         />
     ))
@@ -332,11 +340,13 @@ function CategoryPanelsContainer(props){
         width:sliderWidth+"px",
     }
 
-    let categoryPanelsContainerClassName, backButtonDisplay;
+    let categoryPanelsContainerClassName = "", backButtonDisplay;
     if (showBackButton){
-        categoryPanelsContainerClassName = "show-back-button";
+        categoryPanelsContainerClassName += "show-back-button ";
         backButtonDisplay = <a id="back-button" onClick={props.onGoBackClick}><span className="glyphicon glyphicon-chevron-left"></span></a>
     }
+
+    if (containerVisibility === true) categoryPanelsContainerClassName += "visible ";
 
     return (
         <div id="category-panles-container" className={categoryPanelsContainerClassName} style={categoryPanelsContainerCss}>
@@ -365,7 +375,7 @@ function CategoryPanel(props){
                     function isShowInMenuCheck(obj){
                         return obj.is_show_in_menu == "1"
                     }
-                    panelHeight = (props.categories.filter(isShowInMenuCheck).length * 24) + props.categories.length;
+                    panelHeight = ((props.categories.filter(isShowInMenuCheck).length + 1) * 24) + props.categories.length;
                 }
                 props.onSetSliderHeight(panelHeight);
             }
