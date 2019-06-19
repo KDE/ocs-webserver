@@ -21,3 +21,6 @@ COMMENT='every section has n categories'
 COLLATE='latin1_swedish_ci'
 ;
 
+ALTER TABLE `section`
+	ADD COLUMN `percent_support` INT UNSIGNED NULL DEFAULT NULL COMMENT 'How much of the supporter donations goes to this section' AFTER `description`;
+
