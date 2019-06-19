@@ -168,6 +168,81 @@ class Backend_SectionController extends Local_Controller_Action_Backend
         $this->_helper->json($jTableResult);
     }
 
-    
+    public function childlistAction()
+    {
+        $sectionId = (int)$this->getParam('SectionId');
+
+        $modelSponsor = new Default_Model_Sponsor();
+        $resultSet = $modelSponsor->fetchSectionItems($sectionId);
+        $numberResults = count($resultSet);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+        $jTableResult['Records'] = $resultSet;
+        $jTableResult['TotalRecordCount'] = $numberResults;
+
+        $this->_helper->json($jTableResult);
+    }
+
+    public function childcreateAction()
+    {
+        $jTableResult = array();
+        try {
+            $sectionId = (int)$this->getParam('section_id');
+            $sponsorId = (int)$this->getParam('sponsor_id');
+            $percent = $this->getParam('percent_of_sponsoring');
+            $modelSponsor = new Default_Model_Sponsor();
+            $newRow = $modelSponsor->assignSponsor($sectionId, $sponsorId, $percent);
+
+            $jTableResult['Result'] = self::RESULT_OK;
+            $jTableResult['Record'] = $newRow;
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
+            $translate = Zend_Registry::get('Zend_Translate');
+            $jTableResult['Result'] = self::RESULT_ERROR;
+            $jTableResult['Message'] = $translate->_('Error while processing data.');
+        }
+
+        $this->_helper->json($jTableResult);
+    }
+
+    public function childupdateAction()
+    {
+        $jTableResult = array();
+        try {
+            $sectionSponsorId = (int)$this->getParam('section_sponsor_id');
+            $sectionId = (int)$this->getParam('section_id');
+            $sponsorId = (int)$this->getParam('sponsor_id');
+            $percent = $this->getParam('percent_of_sponsoring');
+            
+            $modelSponsor = new Default_Model_Sponsor();
+            $modelSponsor->updateSectionSponsor($sectionSponsorId,$sectionId,$sponsorId,$percent);
+            $record = $modelSponsor->fetchOneSectionItem($sectionSponsorId);
+
+            $jTableResult = array();
+            $jTableResult['Result'] = self::RESULT_OK;
+            $jTableResult['Record'] = $record;
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
+            $translate = Zend_Registry::get('Zend_Translate');
+            $jTableResult['Result'] = self::RESULT_ERROR;
+            $jTableResult['Message'] = $translate->_('Error while processing data.');
+        }
+
+        $this->_helper->json($jTableResult);
+    }
+
+    public function childdeleteAction()
+    {
+        $sectionSponsorId = (int)$this->getParam('section_sponsor_id', null);
+
+        $modelSponsor = new Default_Model_Sponsor();
+        $modelSponsor->deleteSectionSponsor($sectionSponsorId);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+
+        $this->_helper->json($jTableResult);
+    }
 
 }

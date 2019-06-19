@@ -142,8 +142,9 @@ var aItemData = [
         submenu: {
             id: "section",
             itemdata: [
-                {text: "Section", url: "/backend/section"},
-                {text: "Categories", url: "/backend/sectioncategories"}
+                {text: "Sections", url: "/backend/section"},
+                {text: "Categories", url: "/backend/sectioncategories"},
+                {text: "Sponsors", url: "/backend/sponsor"}
             ]
         }
     },
