@@ -139,10 +139,29 @@
                                                 return '/backend/sponsor/allsponsors';
                                             }
                                         },
+                                        sponsor_fullname: {
+                                            title: 'Full Name',
+                                            create: false,
+                                            edit: false,
+                                            list: false
+                                        },
+                                        sponsor_description: {
+                                            title: 'Description',
+                                            create: false,
+                                            edit: false,
+                                            list: false
+                                        },
+                                        sponsor_amount: {
+                                            title: 'Amount',
+                                            create: false,
+                                            edit: false,
+                                            list: false
+                                        },
                                         percent_of_sponsoring: {
                                             title: '% of the Sponsoring Amount',
                                             width: '20%'
                                         }
+                                        
                                     }
                                 }, function (data) { //opened handler
                                     data.childTable.jtable('load');

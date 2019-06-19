@@ -56,6 +56,7 @@ class Default_Model_Sponsor
         $sql = "
             SELECT sponsor.name, sponsor.sponsor_id
             FROM sponsor
+            WHERE is_active = 1
         ";
         $resultSet = $this->getAdapter()->fetchAll($sql);
 
@@ -84,9 +85,10 @@ class Default_Model_Sponsor
 		    , sponsor.name AS sponsor_name
                     , sponsor.fullname AS sponsor_fullname
                     , sponsor.description AS sponsor_description
+                    , sponsor.amount AS sponsor_amount
                     , sponsor.is_active
              FROM section_sponsor 
-             JOIN sponsor ON sponsor.sponsor_id = section_sponsor.sponsor_id 
+             JOIN sponsor ON sponsor.sponsor_id = section_sponsor.sponsor_id AND sponsor.is_active = 1 
              WHERE section_id = :section_id";
         $resultSet = $this->getAdapter()->fetchAll($sql, array('section_id' => $section_id));
 
@@ -109,26 +111,6 @@ class Default_Model_Sponsor
     }
 
 
-
-    /**
-     * @param string $tag_name
-     *
-     * @return int
-     */
-    public function saveTag($tag_name,$tag_fullname, $tag_description,$is_active=1)
-    {
-        $tag_name = strtolower($tag_name);
-        $sql = "SELECT tag_id FROM tag WHERE tag_name = :tagName";
-        $resultSet = $this->getAdapter()->fetchRow($sql, array('tagName' => $tag_name));
-        if (empty($resultSet)) {
-            $this->getAdapter()->insert('tag', array('tag_name' => $tag_name, 'tag_fullname' => $tag_fullname, 'tag_description' => $tag_description,'is_active' => $is_active));
-            $resultId = $this->getAdapter()->lastInsertId();
-        } else {
-            $resultId = $resultSet['tag_id'];
-        }
-
-        return $resultId;
-    }
 
     /**
      * @param int $group_id
@@ -165,7 +147,7 @@ class Default_Model_Sponsor
                     , sponsor.description AS sponsor_description
                     , sponsor.is_active
              FROM section_sponsor 
-             JOIN sponsor ON sponsor.sponsor_id = section_sponsor.sponsor_id 
+             JOIN sponsor ON sponsor.sponsor_id = section_sponsor.sponsor_id  AND sponsor.is_active = 1
              WHERE section_sponsor_id = :section_sponsor_id";
         $resultSet = $this->getAdapter()->fetchRow($sql, array('section_sponsor_id' => $section_sponsor_id));
 

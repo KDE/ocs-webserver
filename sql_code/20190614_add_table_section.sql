@@ -25,6 +25,9 @@ ALTER TABLE `section`
 	ADD COLUMN `percent_of_support` INT UNSIGNED NULL DEFAULT NULL COMMENT 'How much of the supporter donations goes to this section' AFTER `description`;
 
 
+ALTER TABLE `section_category`
+	ADD UNIQUE INDEX `uk_cat_id` (`project_category_id`);
+
 CREATE TABLE `sponsor` (
 	`sponsor_id` INT(11) NOT NULL AUTO_INCREMENT,
 	`member_id` INT(11) NOT NULL,
@@ -51,6 +54,10 @@ CREATE TABLE `section_sponsor` (
 )
 COLLATE='latin1_swedish_ci'
 ;
+
+ALTER TABLE `section_sponsor`
+	ADD UNIQUE INDEX `uk_section_sponsor` (`section_id`, `sponsor_id`);
+
 
 
 
