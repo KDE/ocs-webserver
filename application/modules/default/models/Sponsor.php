@@ -141,7 +141,7 @@ class Default_Model_Sponsor
         $sql = "SELECT section_sponsor_id FROM section_sponsor WHERE section_id = :section_id AND sponsor_id = :sponsor_id";
         $resultSet = $this->getAdapter()->fetchRow($sql, array('section_id' => $section_id, 'sponsor_id' => $sponsor_id));
         if (empty($resultSet)) {
-            $this->getAdapter()->insert('section_sponsor', array('section_id' => $section_id, 'sponsor_id' => $sponsor_id));
+            $this->getAdapter()->insert('section_sponsor', array('section_id' => $section_id, 'sponsor_id' => $sponsor_id, 'percent_of_sponsoring' => $percent));
             $resultId = $this->getAdapter()->lastInsertId();
         } else {
             $resultId = $resultSet['section_sponsor_id'];
