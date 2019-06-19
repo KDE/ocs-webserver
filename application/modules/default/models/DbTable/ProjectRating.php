@@ -48,7 +48,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
                 FROM
                     project_rating p
                 WHERE
-                    project_id = :project_id
+                    project_id = :project_id and rating_active = 1
                     ORDER BY created_at DESC
                 ;
                ";
@@ -107,59 +107,9 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
         return $result;
     }
 
-
-    /*public function getScore($project_id)
-    {
-        $sql = "
-                select round((count_likes*8+count_dislikes*3+2*5)/(count_likes+count_dislikes+2),2) as score
-                    from project
-                    where project_id = :project_id
-
-                ";
-
-        $result = $this->_db->query($sql, array('project_id' => $project_id))->fetchAll();
-        if($result[0]['score'])
-        {
-            return $result[0]['score'];
-         }else
-         {
-            return '5.0';
-         }
-    }*/
-
-
     public function getScore($project_id)
     {
-        /*$sql = "
-                select round((sum(score*(user_like+user_dislike))+2*5)/(sum(user_like+user_dislike)+2),1) as score
-                from project_rating
-                where project_id = :project_id and rating_active = 1
-        ";*/
-
-        /*$sql = "
-            SELECT laplace_score_with_plings(sum(pr.user_like), sum(pr.user_dislike)
-                ,(select count(1) from project_plings p where p.project_id = pr.project_id and is_deleted = 0)
-                ) AS score
-                FROM project_rating AS pr
-              WHERE pr.project_id = :project_id and (pr.rating_active = 1 or (rating_active=0 and user_like>1))
-        ";*/
-
-        /*$sql = "
-            SELECT laplace_score_new(sum(pr.user_like), sum(pr.user_dislike)) AS score
-                FROM project_rating AS pr
-              WHERE pr.project_id = :project_id and (pr.rating_active = 1 or (rating_active=0 and user_like>1))
-                  ";*/
-
-        /*$sql = "SELECT  (sum(score*(user_like+user_dislike))+2*5)/(sum(user_like+user_dislike)+2)*100 AS score
-                from
-                (
-                  select project_id,user_like,user_dislike,score from project_rating pr where pr.rating_active = 1
-                  union
-                  select project_id,user_like-6,user_dislike-6, score from project_rating pr where pr.rating_active = 0 and user_dislike >=6 and user_like>=6
-                ) as pr
-                where pr.project_id = :project_id";*/
-
-        $sql = "select (sum(t.totalscore)+4*5)/(sum(t.count)+4)*100 as score
+          $sql = "select (sum(t.totalscore)+4*5)/(sum(t.count)+4)*100 as score
                     from
                     (
                         select project_id
@@ -168,17 +118,6 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
                         ,1 as count
                         ,score as totalscore
                         from project_rating pr where pr.project_id=:project_id and pr.rating_active = 1
-
-                        union all
-
-                        select
-                        project_id
-                        ,user_like-6 as likes
-                        ,user_dislike-6 as dislikes
-                        ,user_like+user_dislike-12 as count
-                        ,(user_like-6)*9+(user_dislike-6)*3 as totalscore
-                        from project_rating pr
-                        where pr.project_id=:project_id and pr.rating_active = 0 and user_dislike >=6 and user_like>=6
                     ) t
                 ";
 
@@ -191,6 +130,41 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
             return 500;
          }
     }
+
+    // public function getScore($project_id)
+    // {
+    //       $sql = "select (sum(t.totalscore)+4*5)/(sum(t.count)+4)*100 as score
+    //                 from
+    //                 (
+    //                     select project_id
+    //                     ,user_like as likes
+    //                     ,user_dislike as dislikes
+    //                     ,1 as count
+    //                     ,score as totalscore
+    //                     from project_rating pr where pr.project_id=:project_id and pr.rating_active = 1
+    //
+    //                     union all
+    //
+    //                     select
+    //                     project_id
+    //                     ,user_like-6 as likes
+    //                     ,user_dislike-6 as dislikes
+    //                     ,user_like+user_dislike-12 as count
+    //                     ,(user_like-6)*9+(user_dislike-6)*3 as totalscore
+    //                     from project_rating pr
+    //                     where pr.project_id=:project_id and pr.rating_active = 0 and user_dislike >=6 and user_like>=6
+    //                 ) t
+    //             ";
+    //
+    //     $result = $this->_db->query($sql, array('project_id' => $project_id))->fetchAll();
+    //     if($result[0]['score'])
+    //     {
+    //         return $result[0]['score'];
+    //      }else
+    //      {
+    //         return 500;
+    //      }
+    // }
 
     public function getScoreOld($project_id)
     {
