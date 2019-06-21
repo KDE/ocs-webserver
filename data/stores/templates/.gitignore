@@ -2,4 +2,4 @@
 *
 # Except this file
 !.gitignore
-!application.ini
+!client_default.ini.php
