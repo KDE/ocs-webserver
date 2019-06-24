@@ -18,102 +18,204 @@
  *
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Created: 31.05.2017
- */
-$modelInfo = new Default_Model_Section();
-$stats = $modelInfo->fetchAllSectionStats();
+ **/
+
+$this->tab = 'payout';
+$this->countDownloadsOverall = 0;
+
+$currentDate = date("Ym",time());
+$currentYear = date("Y",time());
+
+$modelDownload = new Default_Model_Section();
+$downloadYears = $modelDownload->getAllDownloadYears();
+#$this->countDownloadsOverall = count($this->downloads);
 ?>
-<main id="explore-content">
-    <section class="wrapper" id="products-wrapper">
-        
-        
-        <div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0;">
-            <div class="row">
-                <div class="col-md-3 text-left text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Section</strong></div>
-                <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Support Amount</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="" data-trigger="hover" data-html="true" data-content="Sum of all supporter donations for this month." data-original-title="Support Amount"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-                <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Sponsor Amount</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="" data-trigger="hover" data-html="true" data-content="Sum of all sponsor donations for this month." data-original-title="Sponsor Amount"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-                <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Downloads</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="" data-trigger="hover" data-html="true" data-content="Sum of all downloads of all files (active or archived) within this month." data-original-title="Downloads"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-                <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Amount</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="" data-trigger="hover" data-html="true" data-content="Potential Payout Amount for this month." data-original-title="Amount"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
 
-                <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Payout Downloads</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="" data-trigger="hover" data-html="true" data-content="Sum of all downloads of all files (active or archived) within this month." data-original-title="Downloads"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-                <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Payout Amount</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="" data-trigger="hover" data-html="true" data-content="Potential Payout Amount for this month." data-original-title="Amount"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-            </div>
-            <div class="tab-content" id="pling-tab-content">  
-                <div class="my-products-list" id="my-payout-list">
 
-                    <style>
-                        .cell-default {
-                            line-height: 4em;
-                            vertical-align: middle;
-                        }
-                        .row-total {
-                            border-top: #1595ee solid thin;
-                            padding-top: 1em;
-                            padding-bottom: 1em;
-                            line-height: 30px;
-                        }
+<main class="user-admin-page">
+    <section class="body-wrap">
+        <section class="wrapper product-page">
+            <!-- PAGE BODY -->
+            <section class="my-products-page">
+                <div class="my-products-heading" style="border-bottom: none; padding-bottom: 0px;">
+                    <h1 class="page-title left"><?= $this->translate('Funding') ?></h1>
+                </div>
+                
+                <!-- year tabs nav -->
+                <div class="pling-nav-tabs" style="padding-bottom: 20px;">
+                    <ul class="nav nav-tabs" id="yeartablist">
+                        <?php
+                            if(count($downloadYears) == 0 ||  $downloadYears[0]['year'] != $currentYear) {
+                                //Current year
+                                echo '<li role="presentation" class="yeartabs">';
+                                echo '    <a style="font-size: 18px;" data-year="'.$currentYear.'" data-toggle="yeartabajax" href="/funding/plingsajax?year='.$currentYear.'" data-target="#my-payout-list" id="tab_year_'.$currentYear.'">'.$currentYear.'</a>';
+                                echo '</li>';
+                            }
 
-                        .popover {
-                            min-width:350px;
-                        }
-
-                        .popover-title { 
-                            text-transform: none;
-                            font-size: 11pt;
-                        }
-
-                        .popover-content { 
-                            text-transform: none;
-                            font-size: 11pt;
-                        }
-                    </style>
-                    <ul class="nav nav-tabs margin-bottom-10">
-
-                        <div class="tab-content">
-                            
-                        </div>    
-
-                        <script>
-                            $('#payout_info').click(function (event ) {
-                                event.preventDefault();
-                                $('#le-alert').addClass('in'); // shows alert with Bootstrap CSS3 implem
-                            });
-
-                            $('.close').click(function () {
-                                $(this).parent().removeClass('in'); // hides alert with Bootstrap CSS3 implem
-                            });
-
-                            $(function(){
-                                // Enables popover
-                                $(".payout-popover-info").popover({
-                                    html : true,
-                                    template : '<div class="popover alert alert-info alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-                                });
-                                $(".payout-popover-warning").popover({
-                                    html : true,
-                                    template : '<div class="popover alert alert-warning alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-                                });
-                                $(".payout-popover-success").popover({
-                                    html : true,
-                                    template : '<div class="popover alert alert-success alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-                                });
-                                $(".payout-popover-danger").popover({
-                                    html : true,
-                                    template : '<div class="popover alert alert-danger alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-                                });
-                                $(".msg-popover-danger").popover({
-                                    html : true,
-                                    template : '<div class="popover alert alert-danger alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-                                });
-                            });
-
-                        </script> 
-
+                            foreach ($downloadYears as $yearobj) {
+                                echo '<li role="presentation" class="yeartabs">';
+                                echo '    <a style="font-size: 18px;" data-year="'.$yearobj['year'].'" data-toggle="yeartabajax" href="/funding/plingsajax?year='.$yearobj['year'].'" data-target="#my-payout-list" id="tab_year_'.$yearobj['year'].'">'.$yearobj['year'].'</a>';
+                                echo '</li>';
+                            }
+                        ?>
                     </ul>
                 </div>
-            </div>
-        </div>
-        
+                
+                <?php
+                    echo "<script>";
+                    echo "var yearList = new Array();";
+
+                    if(count($downloadYears) == 0 ||  $downloadYears[0]['year'] != $currentYear) {
+                        //Current year
+                        echo "var yearListObj = new Array();";
+                        echo "yearListObj['maxMonth'] = '".$currentDate."';";
+                        echo "yearListObj['sum'] = '0';";
+                        echo "yearList['".$currentYear."'] = yearListObj;";
+                    }
+
+                    foreach ($downloadYears as $yearobj) {
+                        echo "var yearListObj = new Array();";
+                        echo "yearListObj['maxMonth'] = '".$yearobj['max_yearmonth']."';";
+                        echo "yearListObj['sum'] = '".$yearobj['sum_amount']."';";
+                        echo "yearList['".$yearobj['year']."'] = yearListObj;";
+                    }
+                    echo "</script>";
+                ?>  
+                <div class="my-products-list" id="my-payout-list">
+                    <div id="plingsyear">
+                        <i class="fa fa-spinner"></i>
+                    </div>
+                </div>
+            </section>
+            <!-- /PAGE BODY -->
+        </section>
     </section>
 </main>
+
+<script>
+$(document).ready(function(){
+    
+    
+    //Load pling for year
+    $('[data-toggle="yeartabajax"]').click(function(e) {
+               
+        var $this = $(this);
+        var year = $this.attr('data-year');
+        var loadurl = $this.attr('href');
+        var targ = $('#plingsyear');
+        
+        $('.yeartabs').removeClass('active');
+        $this.parent().addClass('active');
+        
+        $(targ).html('<i class="fa fa-spinner"></i>');
+
+        $.get(loadurl, function(data) {
+            
+            $('#plingsyear').html(data);
+            $('[data-toggle="popover"]').popover();
+            
+            
+            //Init tabs
+            $('[data-toggle="tabajax"]').click(function(e) {
+                var $this = $(this),
+                    loadurl = $this.attr('href'),
+                    targ = $this.attr('data-target');
+                $(targ).html('<i class="fa fa-spinner"></i>');
+
+                $.get(loadurl, function(data) {
+                    $(targ).html(data);
+                });
+
+                $this.tab('show');
+                return false;
+            });
+            
+            //Load first Tab
+            var month = yearList[year]['maxMonth'];
+            var $this = $('#tab_'+month),
+            loadurl = $this.attr('href'),
+            targ = $this.attr('data-target');
+
+            $.get(loadurl, function(data) {
+                $(targ).html(data);
+            });
+
+            $this.tab('show');
+            
+        });
+
+        $(targ).show();
+        return false;
+    });
+         
+    //Init View on first load     
+    var year = <?= $currentYear ?>;
+    var currentyeartab = $('#tab_year_'+year);
+    $('.yeartabs').removeClass('active');
+    
+    currentyeartab.parent().addClass('active');
+    
+    var loadurl = currentyeartab.attr('href');
+    $.get(loadurl, function(data) {
+        $('#plingsyear').html(data);
+        $('[data-toggle="popover"]').popover();
+        
+        
+        //Init tabs
+        $('[data-toggle="tabajax"]').click(function(e) {
+            var $this = $(this),
+                loadurl = $this.attr('href'),
+                targ = $this.attr('data-target');
+            $(targ).html('<i class="fa fa-spinner"></i>');
+
+            $.get(loadurl, function(data) {
+                $(targ).html(data);
+            });
+
+            $this.tab('show');
+            return false;
+        });
+        
+        
+        var $this = $('#tab_' + yearList[year]['maxMonth']),
+            loadurl = $this.attr('href'),
+            targ = $this.attr('data-target');
+
+        $.get(loadurl, function(data) {
+            $(targ).html(data);
+        });
+
+        $this.tab('show');
+        
+
+        return false;
+    });
+    
+    
+    $('[data-toggle="tabajax"]').click(function(e) {
+               
+        var $this = $(this),
+            loadurl = $this.attr('href'),
+            targ = $this.attr('data-target');
+        $(targ).html('<i class="fa fa-spinner"></i>');
+
+        $.get(loadurl, function(data) {
+            $(targ).html(data);
+        });
+
+        $this.tab('show');
+        return false;
+    });
+            
+});
+
+    $('#payout_info').click(function (event ) {
+        event.preventDefault();
+        $('#le-alert').addClass('in'); // shows alert with Bootstrap CSS3 implem
+    });
+
+    $('.close').click(function () {
+        $(this).parent().removeClass('in'); // hides alert with Bootstrap CSS3 implem
+    });
+    
+</script> 
