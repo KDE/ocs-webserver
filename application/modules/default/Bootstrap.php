@@ -55,11 +55,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             Zend_Loader::loadClass($config['saveHandler']['class']);
             Zend_Session::setSaveHandler(new $config['saveHandler']['class']($_cache));
             Zend_Session::setOptions(array(
-                    'cookie_domain'   => $domain,
-                    'cookie_path'     => $config['auth']['cookie_path'],
-                    'cookie_lifetime' => $config['auth']['cookie_lifetime'],
-                    'cookie_httponly' => $config['auth']['cookie_httponly']
-                ));
+                'cookie_domain'   => $domain,
+                'cookie_path'     => $config['auth']['cookie_path'],
+                'cookie_lifetime' => $config['auth']['cookie_lifetime'],
+                'cookie_httponly' => $config['auth']['cookie_httponly']
+            ));
             Zend_Session::start();
         }
 
@@ -100,13 +100,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
             if (false === is_writeable(APPLICATION_CACHE)) {
                 error_log('directory for cache files does not exists or not writable: ' . APPLICATION_CACHE);
-                exit('directory for cache files does not exists or not writable: ' . APPLICATION_CACHE);
+                throw new Zend_Application_Bootstrap_Exception('directory for cache files does not exists or not writable: ' . APPLICATION_CACHE);
             }
 
             $frontendOptions = array(
                 'lifetime'                => 600,
                 'automatic_serialization' => true,
-                'cache_id_prefix'         => 'front_cache',
+                'cache_id_prefix'         => $options['cache']['frontend']['options']['cache_id_prefix'],
                 'cache'                   => true
             );
 
@@ -117,7 +117,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'read_control_type'      => 'crc32',
                 'hashed_directory_level' => 1,
                 'hashed_directory_perm'  => 0700,
-                'file_name_prefix'       => 'ocs',
+                'file_name_prefix'       => $options['cache']['frontend']['options']['cache_id_prefix'],
                 'cache_file_perm'        => 0700
             );
 
@@ -205,14 +205,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $db = $this->bootstrap('db')->getResource('db');
 
-        //(        if ((APPLICATION_ENV == 'development') OR (APPLICATION_ENV == 'testing')) {
-        //            $profiler = new Zend_Db_Profiler_Firebug('All DB Queries');
-        //            $profiler->setEnabled(true);
-        //
-        //            // Attach the profiler to your db adapter
-        //            $db->setProfiler($profiler);
-        //        }
-
         Zend_Registry::set('db', $db);
         Zend_Db_Table::setDefaultAdapter($db);
         Zend_Db_Table_Abstract::setDefaultAdapter($db);
@@ -281,8 +273,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                ->addPrefixPath('Default_Form_Helper', APPLICATION_PATH . '/modules/default/forms/helpers')
                ->addPrefixPath('Default_Form_Element', APPLICATION_PATH . '/modules/default/forms/elements')
                ->addPrefixPath('Default_Form_Decorator', APPLICATION_PATH . '/modules/default/forms/decorators')
-               ->addPrefixPath('Default_Form_Validator', APPLICATION_PATH . '/modules/default/forms/validators')
-        ;
+               ->addPrefixPath('Default_Form_Validator', APPLICATION_PATH . '/modules/default/forms/validators');
     }
 
     protected function _initThirdParty()
@@ -331,28 +322,28 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         /** RSS Feed */
         $router->addRoute('rdf_store', new Zend_Controller_Router_Route('/content.rdf', array(
-                    'module'     => 'default',
-                    'controller' => 'rss',
-                    'action'     => 'rdf'
-                )));
+            'module'     => 'default',
+            'controller' => 'rss',
+            'action'     => 'rdf'
+        )));
 
         $router->addRoute('rdf_events_hive', new Zend_Controller_Router_Route_Regex('.*-events.rss', array(
-                    'module'     => 'default',
-                    'controller' => 'rss',
-                    'action'     => 'rss'
-                )));
+            'module'     => 'default',
+            'controller' => 'rss',
+            'action'     => 'rss'
+        )));
 
         $router->addRoute('rdf_store_hive', new Zend_Controller_Router_Route_Regex('.*-content.rdf', array(
-                    'module'     => 'default',
-                    'controller' => 'rss',
-                    'action'     => 'rdf'
-                )));
+            'module'     => 'default',
+            'controller' => 'rss',
+            'action'     => 'rdf'
+        )));
 
         $router->addRoute('rdf_store_hive_rss', new Zend_Controller_Router_Route_Regex('rss/.*-content.rdf', array(
-                    'module'     => 'default',
-                    'controller' => 'rss',
-                    'action'     => 'rdf'
-                )));
+            'module'     => 'default',
+            'controller' => 'rss',
+            'action'     => 'rdf'
+        )));
 
         /** new store dependent routing rules */
         //$router->addRoute('store_general', new Zend_Controller_Router_Route('/s/:domain_store_id/:controller/:action/*', array(
@@ -362,52 +353,57 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         //)));
 
         $router->addRoute('store_home', new Zend_Controller_Router_Route('/s/:domain_store_id/', array(
-                    'module'     => 'default',
-                    'controller' => 'home',
-                    'action'     => 'index'
-                )));
+            'module'     => 'default',
+            'controller' => 'home',
+            'action'     => 'index'
+        )));
 
-        $router->addRoute('store_browse',      new Zend_Controller_Router_Route('/s/:domain_store_id/browse/*', array(
-                    'module'     => 'default',
-                    'controller' => 'explore',
-                    'action'     => 'index'
-                )));
+        $router->addRoute('store_browse', new Zend_Controller_Router_Route('/s/:domain_store_id/browse/*', array(
+            'module'     => 'default',
+            'controller' => 'explore',
+            'action'     => 'index'
+        )));
 
-        $router->addRoute('store_product_add', new Zend_Controller_Router_Route('/s/:domain_store_id/product/add', array(
-                    'module'     => 'default',
-                    'controller' => 'product',
-                    'action'     => 'add'
-                )));
+        $router->addRoute('store_product_add',
+            new Zend_Controller_Router_Route('/s/:domain_store_id/product/add', array(
+                'module'     => 'default',
+                'controller' => 'product',
+                'action'     => 'add'
+            )));
 
         $router->addRoute('store_settings', new Zend_Controller_Router_Route('/s/:domain_store_id/settings', array(
-                    'module'     => 'default',
-                    'controller' => 'settings',
-                    'action'     => 'index'
-                )));
+            'module'     => 'default',
+            'controller' => 'settings',
+            'action'     => 'index'
+        )));
 
-        $router->addRoute('store_pling_box_show', new Zend_Controller_Router_Route('/s/:domain_store_id/supporterbox/:memberid', array(
-                    'module'     => 'default',
-                    'controller' => 'plingbox',
-                    'action'     => 'index'
-                )));
+        $router->addRoute('store_pling_box_show',
+            new Zend_Controller_Router_Route('/s/:domain_store_id/supporterbox/:memberid', array(
+                'module'     => 'default',
+                'controller' => 'plingbox',
+                'action'     => 'index'
+            )));
 
-        $router->addRoute('store_pling_box_show', new Zend_Controller_Router_Route('/s/:domain_store_id/productcomment/addreply/*', array(
-                    'module'     => 'default',
-                    'controller' => 'productcomment',
-                    'action'     => 'addreply'
-                )));
+        $router->addRoute('store_pling_box_show',
+            new Zend_Controller_Router_Route('/s/:domain_store_id/productcomment/addreply/*', array(
+                'module'     => 'default',
+                'controller' => 'productcomment',
+                'action'     => 'addreply'
+            )));
 
-        $router->addRoute('store_product', new Zend_Controller_Router_Route('/s/:domain_store_id/p/:project_id/:action/*', array(
-                    'module'     => 'default',
-                    'controller' => 'product',
-                    'action'     => 'show'
-                )));
-        
-        $router->addRoute('store_collection', new Zend_Controller_Router_Route('/s/:domain_store_id/c/:project_id/:action/*', array(
-                    'module'     => 'default',
-                    'controller' => 'collection',
-                    'action'     => 'show'
-                )));
+        $router->addRoute('store_product',
+            new Zend_Controller_Router_Route('/s/:domain_store_id/p/:project_id/:action/*', array(
+                'module'     => 'default',
+                'controller' => 'product',
+                'action'     => 'show'
+            )));
+
+        $router->addRoute('store_collection',
+            new Zend_Controller_Router_Route('/s/:domain_store_id/c/:project_id/:action/*', array(
+                'module'     => 'default',
+                'controller' => 'collection',
+                'action'     => 'show'
+            )));
 
         /*
         $router->addRoute('store_product', new Zend_Controller_Router_Route('/s/:domain_store_id/c/:project_id/:action/*', array(
@@ -416,547 +412,552 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'action'     => 'show'
                 )));
         */
-        $router->addRoute('store_user', new Zend_Controller_Router_Route('/s/:domain_store_id/member/:member_id/:action/*', array(
-                    'module'     => 'default',
-                    'controller' => 'user',
-                    'action'     => 'index'
-                )));
+        $router->addRoute('store_user',
+            new Zend_Controller_Router_Route('/s/:domain_store_id/member/:member_id/:action/*', array(
+                'module'     => 'default',
+                'controller' => 'user',
+                'action'     => 'index'
+            )));
 
-        $router->addRoute('store_user_name', new Zend_Controller_Router_Route('/s/:domain_store_id/u/:user_name/:action/*', array(
-                    'module'     => 'default',
-                    'controller' => 'user',
-                    'action'     => 'index'
-                )));
+        $router->addRoute('store_user_name',
+            new Zend_Controller_Router_Route('/s/:domain_store_id/u/:user_name/:action/*', array(
+                'module'     => 'default',
+                'controller' => 'user',
+                'action'     => 'index'
+            )));
 
         $router->addRoute('store_login', new Zend_Controller_Router_Route('/s/:domain_store_id/login/*', array(
-                    'module'     => 'default',
-                    'controller' => 'authorization',
-                    'action'     => 'login'
-                )));
+            'module'     => 'default',
+            'controller' => 'authorization',
+            'action'     => 'login'
+        )));
 
         $router->addRoute('store_register', new Zend_Controller_Router_Route('/s/:domain_store_id/register', array(
-                    'module'     => 'default',
-                    'controller' => 'authorization',
-                    'action'     => 'register'
-                )));
-        
+            'module'     => 'default',
+            'controller' => 'authorization',
+            'action'     => 'register'
+        )));
 
 
         /** general routing rules */
         $router->addRoute('home', new Zend_Controller_Router_Route('/', array(
-                    'module'     => 'default',
-                    'controller' => 'home',
-                    'action'     => 'index'
-                )));
+            'module'     => 'default',
+            'controller' => 'home',
+            'action'     => 'index'
+        )));
 
         $router->addRoute('home_ajax', new Zend_Controller_Router_Route('/showfeatureajax/*', array(
-                    'module'     => 'default',
-                    'controller' => 'home',
-                    'action'     => 'showfeatureajax'
-                )));
+            'module'     => 'default',
+            'controller' => 'home',
+            'action'     => 'showfeatureajax'
+        )));
 
         $router->addRoute('backend', new Zend_Controller_Router_Route('/backend/:controller/:action/*', array(
-                    'module'     => 'backend',
-                    'controller' => 'index',
-                    'action'     => 'index'
-                )));
+            'module'     => 'backend',
+            'controller' => 'index',
+            'action'     => 'index'
+        )));
 
         $router->addRoute('browse', new Zend_Controller_Router_Route('/browse/*', array(
-                    'module'     => 'default',
-                    'controller' => 'explore',
-                    'action'     => 'index'
-                )));
+            'module'     => 'default',
+            'controller' => 'explore',
+            'action'     => 'index'
+        )));
 
         $router->addRoute('button_render', new Zend_Controller_Router_Route('/button/:project_id/:size/', array(
-                    'module'     => 'default',
-                    'controller' => 'button',
-                    'action'     => 'render',
-                    'size'       => 'large'
-                )));
+            'module'     => 'default',
+            'controller' => 'button',
+            'action'     => 'render',
+            'size'       => 'large'
+        )));
 
         $router->addRoute('button_action', new Zend_Controller_Router_Route('/button/a/:action/', array(
-                    'module'     => 'default',
-                    'controller' => 'button',
-                    'action'     => 'index'
-                )));
+            'module'     => 'default',
+            'controller' => 'button',
+            'action'     => 'index'
+        )));
 
         $router->addRoute('pling_box_show', new Zend_Controller_Router_Route('/supporterbox/:memberid/', array(
-                    'module'     => 'default',
-                    'controller' => 'plingbox',
-                    'action'     => 'index'
-                )));
+            'module'     => 'default',
+            'controller' => 'plingbox',
+            'action'     => 'index'
+        )));
 
-        $router->addRoute('external_donation_list', new Zend_Controller_Router_Route('/donationlist/:project_id/', array(
-                    'module'     => 'default',
-                    'controller' => 'donationlist',
-                    'action'     => 'render'
-                )));
+        $router->addRoute('external_donation_list',
+            new Zend_Controller_Router_Route('/donationlist/:project_id/', array(
+                'module'     => 'default',
+                'controller' => 'donationlist',
+                'action'     => 'render'
+            )));
 
         $router->addRoute('external_widget', new Zend_Controller_Router_Route('/widget/:project_id/', array(
-                    'module'     => 'default',
-                    'controller' => 'widget',
-                    'action'     => 'render'
-                )));
+            'module'     => 'default',
+            'controller' => 'widget',
+            'action'     => 'render'
+        )));
 
         $router->addRoute('external_widget_save', new Zend_Controller_Router_Route('/widget/save/*', array(
-                    'module'     => 'default',
-                    'controller' => 'widget',
-                    'action'     => 'save'
-                )));
+            'module'     => 'default',
+            'controller' => 'widget',
+            'action'     => 'save'
+        )));
 
         $router->addRoute('external_widget_save', new Zend_Controller_Router_Route('/widget/config/:project_id/', array(
-                    'module'     => 'default',
-                    'controller' => 'widget',
-                    'action'     => 'config'
-                )));
+            'module'     => 'default',
+            'controller' => 'widget',
+            'action'     => 'config'
+        )));
 
-        $router->addRoute('external_widget_save_default', new Zend_Controller_Router_Route('/widget/savedefault/*', array(
-                    'module'     => 'default',
-                    'controller' => 'widget',
-                    'action'     => 'savedefault'
-                )));
+        $router->addRoute('external_widget_save_default',
+            new Zend_Controller_Router_Route('/widget/savedefault/*', array(
+                'module'     => 'default',
+                'controller' => 'widget',
+                'action'     => 'savedefault'
+            )));
 
         $router->addRoute('support_old', new Zend_Controller_Router_Route('/support-old', array(
-                    'module'     => 'default',
-                    'controller' => 'support',
-                    'action'     => 'index'
-                )));
-        
+            'module'     => 'default',
+            'controller' => 'support',
+            'action'     => 'index'
+        )));
+
         $router->addRoute('support_old_pay', new Zend_Controller_Router_Route('/support-old/pay', array(
-                    'module'     => 'default',
-                    'controller' => 'support',
-                    'action'     => 'pay'
-                )));
-        
+            'module'     => 'default',
+            'controller' => 'support',
+            'action'     => 'pay'
+        )));
+
         $router->addRoute('support_old_paymentok', new Zend_Controller_Router_Route('/support-old/paymentok', array(
-                    'module'     => 'default',
-                    'controller' => 'support',
-                    'action'     => 'paymentok'
-                )));
-        
-        
-        $router->addRoute('support_old_paymentcancel', new Zend_Controller_Router_Route('/support-old/paymentcancel', array(
-                    'module'     => 'default',
-                    'controller' => 'support',
-                    'action'     => 'paymentcancel'
-                )));
-        
-        
-        
-        
+            'module'     => 'default',
+            'controller' => 'support',
+            'action'     => 'paymentok'
+        )));
+
+
+        $router->addRoute('support_old_paymentcancel',
+            new Zend_Controller_Router_Route('/support-old/paymentcancel', array(
+                'module'     => 'default',
+                'controller' => 'support',
+                'action'     => 'paymentcancel'
+            )));
+
+
         $router->addRoute('support_new', new Zend_Controller_Router_Route('/support', array(
-                    'module'     => 'default',
-                    'controller' => 'subscription',
-                    'action'     => 'index'
-                )));
+            'module'     => 'default',
+            'controller' => 'subscription',
+            'action'     => 'index'
+        )));
 
         $router->addRoute('support_new_pay', new Zend_Controller_Router_Route('/support/pay', array(
-                    'module'     => 'default',
-                    'controller' => 'subscription',
-                    'action'     => 'pay'
-                )));
-        
+            'module'     => 'default',
+            'controller' => 'subscription',
+            'action'     => 'pay'
+        )));
+
         $router->addRoute('support_new_paymentok', new Zend_Controller_Router_Route('/support/paymentok', array(
-                    'module'     => 'default',
-                    'controller' => 'subscription',
-                    'action'     => 'paymentok'
-                )));
-        
-        
+            'module'     => 'default',
+            'controller' => 'subscription',
+            'action'     => 'paymentok'
+        )));
+
+
         $router->addRoute('support_new_paymentcancel', new Zend_Controller_Router_Route('/support/paymentcancel', array(
-                    'module'     => 'default',
-                    'controller' => 'subscription',
-                    'action'     => 'paymentcancel'
-                )));
-        
+            'module'     => 'default',
+            'controller' => 'subscription',
+            'action'     => 'paymentcancel'
+        )));
+
         /**
          * Project/Product
          */
         $router->addRoute('product_short_url', new Zend_Controller_Router_Route('/p/:project_id/:action/*', array(
-                    'module'     => 'default',
-                    'controller' => 'product',
-                    'action'     => 'show'
-                )));
+            'module'     => 'default',
+            'controller' => 'product',
+            'action'     => 'show'
+        )));
 
         $router->addRoute('product_referrer_url', new Zend_Controller_Router_Route('/p/:project_id/er/:er/*', array(
-                    'module'     => 'default',
-                    'controller' => 'product',
-                    'action'     => 'show'
-                )));
+            'module'     => 'default',
+            'controller' => 'product',
+            'action'     => 'show'
+        )));
 
         $router->addRoute('product_collectionid_url', new Zend_Controller_Router_Route('/co/:collection_id', array(
-                    'module'     => 'default',
-                    'controller' => 'product',
-                    'action'     => 'show'
-                )));
+            'module'     => 'default',
+            'controller' => 'product',
+            'action'     => 'show'
+        )));
 
         $router->addRoute('product_add', new Zend_Controller_Router_Route('/product/add', array(
-                    'module'     => 'default',
-                    'controller' => 'product',
-                    'action'     => 'add'
-                )));
+            'module'     => 'default',
+            'controller' => 'product',
+            'action'     => 'add'
+        )));
 
         $router->addRoute('search', new Zend_Controller_Router_Route('/search/*', array(
-                    'module'     => 'default',
-                    'controller' => 'product',
-                    'action'     => 'search'
-                )));
+            'module'     => 'default',
+            'controller' => 'product',
+            'action'     => 'search'
+        )));
 
-        $router->addRoute('search_domain',new Zend_Controller_Router_Route('/s/:domain_store_id/search/*',
-                array(
-                    'module'     => 'default',
-                    'controller' => 'product',
-                    'action'     => 'search'
-                )));
+        $router->addRoute('search_domain', new Zend_Controller_Router_Route('/s/:domain_store_id/search/*',
+            array(
+                'module'     => 'default',
+                'controller' => 'product',
+                'action'     => 'search'
+            )));
 
         $router->addRoute('product_save', new Zend_Controller_Router_Route('/p/save/*', array(
-                    'module'     => 'default',
-                    'controller' => 'product',
-                    'action'     => 'saveproduct'
-                )));
-
+            'module'     => 'default',
+            'controller' => 'product',
+            'action'     => 'saveproduct'
+        )));
 
 
         /**
          * Collection
          */
         $router->addRoute('collection_short_url', new Zend_Controller_Router_Route('/c/:project_id/', array(
-                    'module'     => 'default',
-                    'controller' => 'collection',
-                    'action'     => 'index'
-                )));
+            'module'     => 'default',
+            'controller' => 'collection',
+            'action'     => 'index'
+        )));
 
         $router->addRoute('collection_short_url', new Zend_Controller_Router_Route('/c/:project_id/:action/*', array(
-                    'module'     => 'default',
-                    'controller' => 'collection',
-                    'action'     => 'index'
-                )));
+            'module'     => 'default',
+            'controller' => 'collection',
+            'action'     => 'index'
+        )));
 
         $router->addRoute('collection_referrer_url', new Zend_Controller_Router_Route('/c/:project_id/er/:er/*', array(
-                    'module'     => 'default',
-                    'controller' => 'collection',
-                    'action'     => 'index'
-                )));
+            'module'     => 'default',
+            'controller' => 'collection',
+            'action'     => 'index'
+        )));
 
         $router->addRoute('collection_add', new Zend_Controller_Router_Route('/collection/add', array(
-                    'module'     => 'default',
-                    'controller' => 'collection',
-                    'action'     => 'add'
-                )));
+            'module'     => 'default',
+            'controller' => 'collection',
+            'action'     => 'add'
+        )));
 
         /**
-        $router->addRoute('search', new Zend_Controller_Router_Route('/search/*', array(
-                    'module'     => 'default',
-                    'controller' => 'collection',
-                    'action'     => 'search'
-                )));
-
-        $router->addRoute('search_domain',new Zend_Controller_Router_Route('/s/:domain_store_id/search/*',
-                array(
-                    'module'     => 'default',
-                    'controller' => 'product',
-                    'action'     => 'search'
-                )));
-        */
+         * $router->addRoute('search', new Zend_Controller_Router_Route('/search/*', array(
+         * 'module'     => 'default',
+         * 'controller' => 'collection',
+         * 'action'     => 'search'
+         * )));
+         *
+         * $router->addRoute('search_domain',new Zend_Controller_Router_Route('/s/:domain_store_id/search/*',
+         * array(
+         * 'module'     => 'default',
+         * 'controller' => 'product',
+         * 'action'     => 'search'
+         * )));
+         */
         $router->addRoute('collection_save', new Zend_Controller_Router_Route('/c/save/*', array(
-                    'module'     => 'default',
-                    'controller' => 'collection',
-                    'action'     => 'saveproduct'
-                )));
-
-
+            'module'     => 'default',
+            'controller' => 'collection',
+            'action'     => 'saveproduct'
+        )));
 
 
         /**
          * Member
          */
         $router->addRoute('member_settings_old', new Zend_Controller_Router_Route('/settings/:action/*', array(
-                    'module'     => 'default',
-                    'controller' => 'settings',
-                    'action'     => 'index'
-                )));
+            'module'     => 'default',
+            'controller' => 'settings',
+            'action'     => 'index'
+        )));
 
         $router->addRoute('user_show', new Zend_Controller_Router_Route('/member/:member_id/:action/*', array(
-                    'module'     => 'default',
-                    'controller' => 'user',
-                    'action'     => 'index'
-                )));
+            'module'     => 'default',
+            'controller' => 'user',
+            'action'     => 'index'
+        )));
 
         $router->addRoute('user_avatar', new Zend_Controller_Router_Route('/member/avatar/:emailhash/:size', array(
-                    'module'     => 'default',
-                    'controller' => 'user',
-                    'action'     => 'avatar'
-                )));
+            'module'     => 'default',
+            'controller' => 'user',
+            'action'     => 'avatar'
+        )));
 
         $router->addRoute('user_show_with_name', new Zend_Controller_Router_Route('/u/:user_name/:action/*', array(
-                    'module'     => 'default',
-                    'controller' => 'user',
-                    'action'     => 'index'
-                )));
+            'module'     => 'default',
+            'controller' => 'user',
+            'action'     => 'index'
+        )));
 
         $router->addRoute('user_recification', new Zend_Controller_Router_Route('/r/:action/*', array(
-                    'module'     => 'default',
-                    'controller' => 'rectification',
-                    'action'     => 'index'
-                )));
+            'module'     => 'default',
+            'controller' => 'rectification',
+            'action'     => 'index'
+        )));
 
         $router->addRoute('user_show_short', new Zend_Controller_Router_Route('/me/:member_id/:action/*', array(
-                    'module'     => 'default',
-                    'controller' => 'user',
-                    'action'     => 'index'
-                )));
+            'module'     => 'default',
+            'controller' => 'user',
+            'action'     => 'index'
+        )));
 
         $router->addRoute('register', new Zend_Controller_Router_Route_Static('/register', array(
-                    'module'     => 'default',
-                    'controller' => 'authorization',
-                    'action'     => 'register'
-                )));
+            'module'     => 'default',
+            'controller' => 'authorization',
+            'action'     => 'register'
+        )));
 
         $router->addRoute('register_validate', new Zend_Controller_Router_Route_Static('/register/validate', array(
-                    'module'     => 'default',
-                    'controller' => 'authorization',
-                    'action'     => 'validate'
-                )));
+            'module'     => 'default',
+            'controller' => 'authorization',
+            'action'     => 'validate'
+        )));
 
         $router->addRoute('verification', new Zend_Controller_Router_Route('/verification/:vid', array(
-                    'module'     => 'default',
-                    'controller' => 'authorization',
-                    'action'     => 'verification'
-                )));
+            'module'     => 'default',
+            'controller' => 'authorization',
+            'action'     => 'verification'
+        )));
 
         $router->addRoute('logout', new Zend_Controller_Router_Route_Static('/logout', array(
-                    'module'     => 'default',
-                    'controller' => 'logout',
-                    'action'     => 'logout'
-                )));
+            'module'     => 'default',
+            'controller' => 'logout',
+            'action'     => 'logout'
+        )));
 
         $router->addRoute('propagatelogout', new Zend_Controller_Router_Route_Static('/logout/propagate', array(
-                    'module'     => 'default',
-                    'controller' => 'authorization',
-                    'action'     => 'propagatelogout'
-                )));
+            'module'     => 'default',
+            'controller' => 'authorization',
+            'action'     => 'propagatelogout'
+        )));
 
         $router->addRoute('checkuser', new Zend_Controller_Router_Route_Static('/checkuser', array(
-                    'module'     => 'default',
-                    'controller' => 'authorization',
-                    'action'     => 'checkuser'
-                )));
+            'module'     => 'default',
+            'controller' => 'authorization',
+            'action'     => 'checkuser'
+        )));
 
         $router->addRoute('login', new Zend_Controller_Router_Route('/login', array(
-                    'module'     => 'default',
-                    'controller' => 'authorization',
-                    'action'     => 'login'
-                )));
+            'module'     => 'default',
+            'controller' => 'authorization',
+            'action'     => 'login'
+        )));
 
         $router->addRoute('login', new Zend_Controller_Router_Route('/login/:action/*', array(
-                    'module'     => 'default',
-                    'controller' => 'authorization',
-                    'action'     => 'login'
-                )));
+            'module'     => 'default',
+            'controller' => 'authorization',
+            'action'     => 'login'
+        )));
 
         $router->addRoute('LoginController', new Zend_Controller_Router_Route('/l/:action/*', array(
-                    'module'     => 'default',
-                    'controller' => 'login',
-                    'action'     => 'login'
-                )));
+            'module'     => 'default',
+            'controller' => 'login',
+            'action'     => 'login'
+        )));
 
         $router->addRoute('content', new Zend_Controller_Router_Route('/content/:page', array(
-                    'module'     => 'default',
-                    'controller' => 'content',
-                    'action'     => 'index'
-                )));
+            'module'     => 'default',
+            'controller' => 'content',
+            'action'     => 'index'
+        )));
 
         $router->addRoute('categories_about', new Zend_Controller_Router_Route('/cat/:page/about', array(
-                    'module'     => 'default',
-                    'controller' => 'categories',
-                    'action'     => 'about'
-                )));
+            'module'     => 'default',
+            'controller' => 'categories',
+            'action'     => 'about'
+        )));
 
         // **** static routes
         $router->addRoute('static_faq_old', new Zend_Controller_Router_Route_Static('/faq-old', array(
-                    'module'     => 'default',
-                    'controller' => 'content',
-                    'action'     => 'index',
-                    'page'       => 'faqold'
-                )));
+            'module'     => 'default',
+            'controller' => 'content',
+            'action'     => 'index',
+            'page'       => 'faqold'
+        )));
 
         $router->addRoute('static_faq', new Zend_Controller_Router_Route_Static('/faq-pling', array(
-                    'module'     => 'default',
-                    'controller' => 'content',
-                    'action'     => 'index',
-                    'page'       => 'faq'
-                )));
+            'module'     => 'default',
+            'controller' => 'content',
+            'action'     => 'index',
+            'page'       => 'faq'
+        )));
 
         $router->addRoute('static_gitfaq', new Zend_Controller_Router_Route_Static('/faq-opencode', array(
-                    'module'     => 'default',
-                    'controller' => 'content',
-                    'action'     => 'index',
-                    'page'       => 'gitfaq'
-                )));
+            'module'     => 'default',
+            'controller' => 'content',
+            'action'     => 'index',
+            'page'       => 'gitfaq'
+        )));
         $router->addRoute('static_plings', new Zend_Controller_Router_Route_Static('/about', array(
-                    'module'     => 'default',
-                    'controller' => 'content',
-                    'action'     => 'index',
-                    'page'       => 'about'
-                )));
+            'module'     => 'default',
+            'controller' => 'content',
+            'action'     => 'index',
+            'page'       => 'about'
+        )));
 
         $router->addRoute('static_terms', new Zend_Controller_Router_Route_Static('/terms', array(
-                    'module'     => 'default',
-                    'controller' => 'content',
-                    'action'     => 'index',
-                    'page'       => 'terms'
-                )));
+            'module'     => 'default',
+            'controller' => 'content',
+            'action'     => 'index',
+            'page'       => 'terms'
+        )));
 
         $router->addRoute('static_terms_general', new Zend_Controller_Router_Route_Static('/terms/general', array(
-                    'module'     => 'default',
-                    'controller' => 'content',
-                    'action'     => 'index',
-                    'page'       => 'terms-general'
-                )));
+            'module'     => 'default',
+            'controller' => 'content',
+            'action'     => 'index',
+            'page'       => 'terms-general'
+        )));
 
         $router->addRoute('static_terms_publish', new Zend_Controller_Router_Route_Static('/terms/publishing', array(
-                    'module'     => 'default',
-                    'controller' => 'content',
-                    'action'     => 'index',
-                    'page'       => 'terms-publishing'
-                )));
+            'module'     => 'default',
+            'controller' => 'content',
+            'action'     => 'index',
+            'page'       => 'terms-publishing'
+        )));
 
         $router->addRoute('static_terms_dmca', new Zend_Controller_Router_Route_Static('/terms/dmca', array(
-                    'module'     => 'default',
-                    'controller' => 'content',
-                    'action'     => 'index',
-                    'page'       => 'terms-dmca'
-                )));
+            'module'     => 'default',
+            'controller' => 'content',
+            'action'     => 'index',
+            'page'       => 'terms-dmca'
+        )));
 
         $router->addRoute('static_terms_payout', new Zend_Controller_Router_Route_Static('/terms/payout', array(
-                    'module'     => 'default',
-                    'controller' => 'content',
-                    'action'     => 'index',
-                    'page'       => 'terms-payout'
-                )));
+            'module'     => 'default',
+            'controller' => 'content',
+            'action'     => 'index',
+            'page'       => 'terms-payout'
+        )));
 
         $router->addRoute('static_privacy', new Zend_Controller_Router_Route_Static('/privacy', array(
-                    'module'     => 'default',
-                    'controller' => 'content',
-                    'action'     => 'index',
-                    'page'       => 'privacy'
-                )));
+            'module'     => 'default',
+            'controller' => 'content',
+            'action'     => 'index',
+            'page'       => 'privacy'
+        )));
 
         $router->addRoute('static_contact', new Zend_Controller_Router_Route_Static('/contact', array(
-                    'module'     => 'default',
-                    'controller' => 'content',
-                    'action'     => 'index',
-                    'page'       => 'contact'
-                )));
+            'module'     => 'default',
+            'controller' => 'content',
+            'action'     => 'index',
+            'page'       => 'contact'
+        )));
 
         // **** ppload
         $router->addRoute('pploadlogin', new Zend_Controller_Router_Route('/pploadlogin/*', array(
-                    'module'     => 'default',
-                    'controller' => 'authorization',
-                    'action'     => 'pploadlogin'
-                )));
+            'module'     => 'default',
+            'controller' => 'authorization',
+            'action'     => 'pploadlogin'
+        )));
 
         // OCS API
         $router->addRoute('ocs_providers_xml', new Zend_Controller_Router_Route('/ocs/providers.xml', array(
-                    'module'     => 'default',
-                    'controller' => 'ocsv1',
-                    'action'     => 'providers'
-                )));
+            'module'     => 'default',
+            'controller' => 'ocsv1',
+            'action'     => 'providers'
+        )));
         $router->addRoute('ocs_v1_config', new Zend_Controller_Router_Route('/ocs/v1/config', array(
-                    'module'     => 'default',
-                    'controller' => 'ocsv1',
-                    'action'     => 'config'
-                )));
+            'module'     => 'default',
+            'controller' => 'ocsv1',
+            'action'     => 'config'
+        )));
         $router->addRoute('ocs_v1_person_check', new Zend_Controller_Router_Route('/ocs/v1/person/check', array(
-                    'module'     => 'default',
-                    'controller' => 'ocsv1',
-                    'action'     => 'personcheck'
-                )));
+            'module'     => 'default',
+            'controller' => 'ocsv1',
+            'action'     => 'personcheck'
+        )));
         $router->addRoute('ocs_v1_person_data', new Zend_Controller_Router_Route('/ocs/v1/person/data', array(
-                    'module'     => 'default',
-                    'controller' => 'ocsv1',
-                    'action'     => 'persondata'
-                )));
-        $router->addRoute('ocs_v1_person_data_personid', new Zend_Controller_Router_Route('/ocs/v1/person/data/:personid', array(
-                    'module'     => 'default',
-                    'controller' => 'ocsv1',
-                    'action'     => 'persondata'
-                )));
+            'module'     => 'default',
+            'controller' => 'ocsv1',
+            'action'     => 'persondata'
+        )));
+        $router->addRoute('ocs_v1_person_data_personid',
+            new Zend_Controller_Router_Route('/ocs/v1/person/data/:personid', array(
+                'module'     => 'default',
+                'controller' => 'ocsv1',
+                'action'     => 'persondata'
+            )));
         $router->addRoute('ocs_v1_person_self', new Zend_Controller_Router_Route('/ocs/v1/person/self', array(
-                    'module'     => 'default',
-                    'controller' => 'ocsv1',
-                    'action'     => 'personself'
-                )));
-        $router->addRoute('ocs_v1_content_categories', new Zend_Controller_Router_Route('/ocs/v1/content/categories', array(
-                    'module'     => 'default',
-                    'controller' => 'ocsv1',
-                    'action'     => 'contentcategories'
-                )));
-        $router->addRoute('ocs_v1_content_data_contentid', new Zend_Controller_Router_Route('/ocs/v1/content/data/:contentid', array(
-                    'module'     => 'default',
-                    'controller' => 'ocsv1',
-                    'action'     => 'contentdata',
-                    'contentid'  => null
-                )));
+            'module'     => 'default',
+            'controller' => 'ocsv1',
+            'action'     => 'personself'
+        )));
+        $router->addRoute('ocs_v1_content_categories',
+            new Zend_Controller_Router_Route('/ocs/v1/content/categories', array(
+                'module'     => 'default',
+                'controller' => 'ocsv1',
+                'action'     => 'contentcategories'
+            )));
+        $router->addRoute('ocs_v1_content_data_contentid',
+            new Zend_Controller_Router_Route('/ocs/v1/content/data/:contentid', array(
+                'module'     => 'default',
+                'controller' => 'ocsv1',
+                'action'     => 'contentdata',
+                'contentid'  => null
+            )));
         $router->addRoute('ocs_v1_content_download_contentid_itemid',
             new Zend_Controller_Router_Route('/ocs/v1/content/download/:contentid/:itemid', array(
-                    'module'     => 'default',
-                    'controller' => 'ocsv1',
-                    'action'     => 'contentdownload'
-                )));
+                'module'     => 'default',
+                'controller' => 'ocsv1',
+                'action'     => 'contentdownload'
+            )));
         $router->addRoute('ocs_v1_content_previewpic_contentid',
             new Zend_Controller_Router_Route('/ocs/v1/content/previewpic/:contentid', array(
-                    'module'     => 'default',
-                    'controller' => 'ocsv1',
-                    'action'     => 'contentpreviewpic'
-                )));
+                'module'     => 'default',
+                'controller' => 'ocsv1',
+                'action'     => 'contentpreviewpic'
+            )));
         $router->addRoute('ocs_v1_comments',
             new Zend_Controller_Router_Route('/ocs/v1/comments/data/:comment_type/:content_id/:second_id', array(
-                    'module'       => 'default',
-                    'controller'   => 'ocsv1',
-                    'action'       => 'comments',
-                    'comment_type' => -1,
-                    'content_id'   => null,
-                    'second_id'    => null
-                )));
-        $router->addRoute('ocs_v1_voting',
-            new Zend_Controller_Router_Route('/ocs/v1/content/vote/:contentid', array(
                 'module'       => 'default',
                 'controller'   => 'ocsv1',
-                'action'       => 'vote'
+                'action'       => 'comments',
+                'comment_type' => -1,
+                'content_id'   => null,
+                'second_id'    => null
+            )));
+        $router->addRoute('ocs_v1_voting',
+            new Zend_Controller_Router_Route('/ocs/v1/content/vote/:contentid', array(
+                'module'     => 'default',
+                'controller' => 'ocsv1',
+                'action'     => 'vote'
             )));
 
         // embed
-        $router->addRoute('embed_v1_member_projects', new Zend_Controller_Router_Route('/embed/v1/member/:memberid', array(
-                    'module'     => 'default',
-                    'controller' => 'embedv1',
-                    'action'     => 'memberprojects'
-                )));
+        $router->addRoute('embed_v1_member_projects',
+            new Zend_Controller_Router_Route('/embed/v1/member/:memberid', array(
+                'module'     => 'default',
+                'controller' => 'embedv1',
+                'action'     => 'memberprojects'
+            )));
 
         $router->addRoute('embed_v1_member_projects_files',
             new Zend_Controller_Router_Route('/embed/v1/ppload/:ppload_collection_id', array(
-                    'module'     => 'default',
-                    'controller' => 'embedv1',
-                    'action'     => 'ppload'
-                )));
+                'module'     => 'default',
+                'controller' => 'embedv1',
+                'action'     => 'ppload'
+            )));
 
-        $router->addRoute('embed_v1_member_projectscomments', new Zend_Controller_Router_Route('/embed/v1/comments/:id', array(
-                    'module'     => 'default',
-                    'controller' => 'embedv1',
-                    'action'     => 'comments'
-                )));
+        $router->addRoute('embed_v1_member_projectscomments',
+            new Zend_Controller_Router_Route('/embed/v1/comments/:id', array(
+                'module'     => 'default',
+                'controller' => 'embedv1',
+                'action'     => 'comments'
+            )));
 
-        $router->addRoute('embed_v1_member_projectdetail', new Zend_Controller_Router_Route('/embed/v1/project/:projectid', array(
-                    'module'     => 'default',
-                    'controller' => 'embedv1',
-                    'action'     => 'projectdetail'
-                )));
+        $router->addRoute('embed_v1_member_projectdetail',
+            new Zend_Controller_Router_Route('/embed/v1/project/:projectid', array(
+                'module'     => 'default',
+                'controller' => 'embedv1',
+                'action'     => 'projectdetail'
+            )));
 
         $router->addRoute('clones', new Zend_Controller_Router_Route('/clones', array(
-                    'module'     => 'default',
-                    'controller' => 'credits',
-                    'action'     => 'index'
-                )));
+            'module'     => 'default',
+            'controller' => 'credits',
+            'action'     => 'index'
+        )));
 
         $cache->save($router, 'ProjectRouter', array('router'), 14400);
 

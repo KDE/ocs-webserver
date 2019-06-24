@@ -64,7 +64,8 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
         $requestStoreConfigName = null;
         if ($request->getParam('domain_store_id')) {
             $requestStoreConfigName =
-                $request->getParam('domain_store_id') ? preg_replace('/[^-a-zA-Z0-9_\.]/', '', $request->getParam('domain_store_id'))
+                $request->getParam('domain_store_id') ? preg_replace('/[^-a-zA-Z0-9_\.]/', '',
+                    $request->getParam('domain_store_id'))
                     : null;
 
             $result = $this->searchForConfig($storeConfigArray, 'name', $requestStoreConfigName);
@@ -129,9 +130,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
         if (isset($store_config_list[$httpHost])) {
             return $store_config_list[$httpHost]['config_id_name'];
         } else {
-            Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - $httpHost = ' . $httpHost
-                . ' :: no config id name configured')
-            ;
+            Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - $httpHost = ' . $httpHost . ' :: no config id name configured');
         }
 
         // search for default
@@ -154,20 +153,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
      */
     private function getStoreTemplate($storeConfigName)
     {
-        $storeTemplate = array();
-
-        $fileNameConfig = APPLICATION_PATH . '/configs/client_' . $storeConfigName . '.ini.php';
-
-        if (file_exists($fileNameConfig)) {
-            $storeTemplate = require APPLICATION_PATH . '/configs/client_' . $storeConfigName . '.ini.php';
-        } else {
-            Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . $storeConfigName
-                . ' :: can not access config file for store context.')
-            ;
-            $this->raiseException(__METHOD__ . ' - ' . $storeConfigName . ' :: can not access config file for store context');
-        }
-
-        return $storeTemplate;
+        return Default_Model_StoreTemplate::getStoreTemplate($storeConfigName);
     }
 
     /**
@@ -217,8 +203,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
 
         return $result;
     }
-    
-    
+
     private function getConfigStoreTagGroups($store_id)
     {
         $modelConfigStoreTagGroups = new Default_Model_ConfigStoreTagGroups();
@@ -244,12 +229,11 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
             if (is_string($storeCategories)) {
                 return array($storeCategories);
             }
+
             return $storeCategories;
         }
 
-        Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - ' . $storeHostName
-            . ' :: no categories for domain context configured. Try to use categories from default store instead')
-        ;
+        Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - ' . $storeHostName . ' :: no categories for domain context configured. Try to use categories from default store instead');
 
         // next step: check store_category_list to see if some categories are defined for the default store
         $storeConfigArray = Zend_Registry::get('application_store_config_list');
@@ -259,17 +243,17 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
             if (is_string($storeCategories)) {
                 return array($storeCategories);
             }
+
             return $storeCategories;
         }
 
-        Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - ' . $storeHostName
-            . ' :: no categories for default store found. Try to use main categories instead')
-        ;
+        Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - ' . $storeHostName . ' :: no categories for default store found. Try to use main categories instead');
 
         // last chance: take the main categories from the tree
         $modelCategories = new Default_Model_DbTable_ProjectCategory();
         $root = $modelCategories->fetchRoot();
-        $storeCategories = $modelCategories->fetchImmediateChildrenIds($root['project_category_id'], $modelCategories::ORDERED_TITLE);
+        $storeCategories = $modelCategories->fetchImmediateChildrenIds($root['project_category_id'],
+            $modelCategories::ORDERED_TITLE);
 
         return $storeCategories;
     }
@@ -278,7 +262,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
      * needs PHP >= 5.5.0
      *
      * @param $haystack
-     * @param $key
+     * @param $column
      * @param $needle
      *
      * @return array
