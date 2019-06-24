@@ -140,7 +140,7 @@ class Default_Model_Section
     }
     
     
-    public function getAllDownloadMonths($member_id, $year)
+    public function getAllDownloadMonths($year)
     {
         $sql = "
                 SELECT 
