@@ -108,30 +108,30 @@ if ($countDownloadsOverall > 0) {
             foreach ($allSections as $section) { ?>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
                     
-                    <div class="col-md-2 cell-default" style=""><?=$section['section_name']?></div>
-                    <div class="col-md-2 cell-default" style=""></div>
-                    <div class="col-md-2 cell-default" style=""></div>
-                    <div class="col-md-2 cell-default" style=""><?=$section['sum_dls']?></div>
-                    <div class="col-md-2 cell-default" style=""><?=$section['sum_amount']?></div>
+                    <div class="col-md-1 cell-default" style=""><?=$section['section_name']?></div>
+                    <div class="col-md-1 cell-default" style=""></div>
+                    <div class="col-md-1 cell-default" style=""></div>
+                    <div class="col-md-1 cell-default" style=""><?=$section['sum_dls']?></div>
+                    <div class="col-md-1 cell-default" style=""><?=$section['sum_amount']?></div>
 
 
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                    <div class="col-md-2 cell-default" style=""></div>
-                    <div class="col-md-2 cell-default" style=""></div>
+                    <div class="col-md-1 cell-default" style=""></div>
+                    <div class="col-md-1 cell-default" style=""></div>
                     <?php endif; ?>
                 </div>
             <?php
             }
             ?>
             <div class='row row-total'>
-                <div class='col-md-2 text-right' style=""></div>
-                <div class='col-md-2 text-right' style=""></div>
-                <div class='col-md-2 text-right' style=""></div>
-                <div class='col-md-2 text-right' style=""></div>
-                <div class='col-md-2 text-right' style=""></div>
+                <div class='col-md-1 text-right' style=""></div>
+                <div class='col-md-1 text-right' style=""></div>
+                <div class='col-md-1 text-right' style=""></div>
+                <div class='col-md-1 text-right' style=""></div>
+                <div class='col-md-1 text-right' style=""></div>
                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                <div class='col-md-2 text-right' style=""></div>
-                <div class='col-md-2 text-right' style=""></div>
+                <div class='col-md-1 text-right' style=""></div>
+                <div class='col-md-1 text-right' style=""></div>
                 <?php endif; ?>
             </div>
             
