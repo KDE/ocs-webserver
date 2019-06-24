@@ -78,7 +78,7 @@ class Default_Model_Section
      */
     public function fetchAllSectionStats($yearmonth = null)
     {
-        $sql = "SELECT s.section_id, s.name AS section_name, SUM(p.num_downloads) AS sum_dls, SUM(p.probably_payout_amount) AS sum_amount, SUM(payout.amount) AS sum_payoutamount , SUM(payout.num_downloads) AS sum_payoutanum_downloads 
+        $sql = "SELECT p.yearmonth,s.section_id, s.name AS section_name, SUM(p.num_downloads) AS sum_dls, SUM(p.probably_payout_amount) AS sum_amount, SUM(payout.amount) AS sum_payoutamount , SUM(payout.num_downloads) AS sum_payoutanum_downloads 
                 FROM member_dl_plings p
                 LEFT JOIN section_category sc ON sc.project_category_id = p.project_category_id
                 LEFT JOIN section s ON s.section_id = sc.section_id
