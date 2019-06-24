@@ -44,5 +44,31 @@ class FundingController extends Local_Controller_Action_DomainSwitch
         $this->view->authMember = $this->_authMember;
         $this->view->headTitle('Funding - ' . $this->getHeadTitle(), 'SET');
     }
+    
+    public function plingsajaxAction()
+    {
+        $this->_helper->layout->disableLayout();
+        
+        $year = null;
+        if($this->hasParam('year')) {
+            $year = $this->getParam('year');
+        }
+        $this->view->year = $year;
+        
+        $this->_helper->viewRenderer('/plingsajax');
+    }
+    
+    public function plingsmonthajaxAction()
+    {
+        $this->_helper->layout->disableLayout();
+        
+        $yearmonth = null;
+        if($this->hasParam('yearmonth')) {
+            $yearmonth = $this->getParam('yearmonth');
+        }
+        $this->view->yearmonth = $yearmonth;
+        
+        $this->_helper->viewRenderer('/plingsmonthajax');
+    }
 
 }
