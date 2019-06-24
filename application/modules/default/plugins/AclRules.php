@@ -370,6 +370,12 @@ class Default_Plugin_AclRules extends Zend_Acl
             'downloadhistory',
             'likes'
         ));
+        
+        $this->allow(self::ROLENAME_GUEST, 'default_funding', array(
+            'index',
+            'plingsajax',
+            'plingsmonthajax'
+        ));
 
         $this->allow(self::ROLENAME_FEUSER, 'default_tag', array('filter', 'add', 'del', 'assign', 'remove'));
 
