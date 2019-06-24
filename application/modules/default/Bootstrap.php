@@ -725,12 +725,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'action'     => 'logout'
         )));
 
-        $router->addRoute('propagatelogout', new Zend_Controller_Router_Route_Static('/logout/propagate', array(
-            'module'     => 'default',
-            'controller' => 'authorization',
-            'action'     => 'propagatelogout'
-        )));
-
         $router->addRoute('checkuser', new Zend_Controller_Router_Route_Static('/checkuser', array(
             'module'     => 'default',
             'controller' => 'authorization',

@@ -295,7 +295,8 @@ class Default_Model_Authorization
     protected function getAuthUserData($identifier, $identity)
     {
         $dataTable = $this->_dataTable;
-        $where = $dataTable->select()->where($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?', $identity);
+        $where = $dataTable->select()->where($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?',
+            $identity);
         $resultRow = $dataTable->fetchRow($where)->toArray();
         unset($resultRow['password']);
 
@@ -345,6 +346,7 @@ class Default_Model_Authorization
         if ($authResult->isValid()) {
             Zend_Session::regenerateId();
             $this->_storeAuthSessionData();
+
             return $this->_authUserData;
         }
 
@@ -360,7 +362,8 @@ class Default_Model_Authorization
     public function removeAllCookieInformation($identifier, $identity)
     {
         $dataTable = new Default_Model_DbTable_Session();
-        $where = $dataTable->getAdapter()->quoteInto($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?', $identity);
+        $where = $dataTable->getAdapter()->quoteInto($dataTable->getAdapter()->quoteIdentifier($identifier,
+                true) . ' = ?', $identity);
 
         return $dataTable->delete($where);
     }

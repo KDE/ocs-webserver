@@ -61,12 +61,12 @@ class Default_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      */
     public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
-        $role       = $this->readUserRole();
+        $role = $this->readUserRole();
         $controller = $request->getControllerName();
-        $action     = $request->getActionName();
-        $module     = ($request->getModuleName()) ? $request->getModuleName() : "default";
+        $action = $request->getActionName();
+        $module = ($request->getModuleName()) ? $request->getModuleName() : "default";
 
-        $resource   = $module . '_' . $controller;
+        $resource = $module . '_' . $controller;
 
         // check controller/action exists
         $front = Zend_Controller_Front::getInstance();
@@ -104,17 +104,6 @@ class Default_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                 $this->_request->setControllerName($this->_authRequired['controller']);
                 $this->_request->setActionName($this->_authRequired['action']);
             }
-
-            return;
-        }
-
-        //user has only the remember_me cookie (deprecated since cookieuser has same rights like feuser)
-        if ($role == Default_Plugin_AclRules::ROLENAME_COOKIEUSER) {
-            $encryptUrl = $this->getRequestUrlEncrypted();
-            $this->_request->setModuleName($this->_authFromCookie['module']);
-            $this->_request->setControllerName($this->_authFromCookie['controller']);
-            $this->_request->setActionName($this->_authFromCookie['action']);
-            $this->_request->setParam('redirect', $encryptUrl);
 
             return;
         }

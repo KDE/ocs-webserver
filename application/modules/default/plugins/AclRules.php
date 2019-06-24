@@ -33,8 +33,7 @@ class Default_Plugin_AclRules extends Zend_Acl
     function __construct()
     {
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_GUEST));
-        $this->addRole(new Zend_Acl_Role (self::ROLENAME_COOKIEUSER), self::ROLENAME_GUEST);
-        $this->addRole(new Zend_Acl_Role (self::ROLENAME_FEUSER), self::ROLENAME_COOKIEUSER);
+        $this->addRole(new Zend_Acl_Role (self::ROLENAME_FEUSER), self::ROLENAME_GUEST);
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_MODERATOR), self::ROLENAME_FEUSER);
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_STAFF), self::ROLENAME_FEUSER);
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_ADMIN));
@@ -92,7 +91,6 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_stati'));
         $this->addResource(new Zend_Acl_Resource ('default_tag'));
 
-        
         $this->addResource(new Zend_Acl_Resource ('backend_categories'));
         $this->addResource(new Zend_Acl_Resource ('backend_vcategories'));
         $this->addResource(new Zend_Acl_Resource ('backend_categorytag'));
@@ -179,6 +177,32 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_collection'
         ));
 
+        $this->allow(self::ROLENAME_FEUSER, array(
+            'default_logout',
+            'default_productcomment',
+            'default_settings',            
+            'default_tag',
+            'default_rectification'
+        ));
+
+        $this->allow(self::ROLENAME_STAFF, array(
+            'backend_index',
+            'backend_categories',
+            'backend_categorytag',
+            'backend_claim',
+            'backend_comments',
+            'backend_content',
+            'backend_store',
+            'backend_storecategories',
+            'backend_operatingsystem',
+            'backend_reportcomments',
+            'backend_reportproducts',
+            'backend_search',
+            'backend_group'
+        ));
+
+        $this->allow(self::ROLENAME_ADMIN);
+
         $this->allow(self::ROLENAME_SYSUSER, array(
             'default_authorization',
             'default_button',
@@ -206,36 +230,9 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_password'
         ));
 
-        $this->allow(self::ROLENAME_COOKIEUSER, array(
-            'default_logout',
-            'default_productcomment',
-            'default_settings',            
-            'default_tag',
-            'default_rectification'
-        ));
-
-        $this->allow(self::ROLENAME_STAFF, array(
-            'backend_index',
-            'backend_categories',
-            'backend_categorytag',
-            'backend_claim',
-            'backend_comments',
-            'backend_content',
-            'backend_store',
-            'backend_storecategories',
-            'backend_operatingsystem',
-            'backend_reportcomments',
-            'backend_reportproducts',
-            'backend_search',
-            'backend_group'
-        ));
-
-        $this->allow(self::ROLENAME_ADMIN);
-
         // resource access rights in detail
         $this->allow(self::ROLENAME_GUEST, 'backend_group', array('newgroup'));
 
-        // resource default_product
         $this->allow(self::ROLENAME_GUEST, 'default_product', array(
             'index',
             'show',
@@ -254,7 +251,6 @@ class Default_Plugin_AclRules extends Zend_Acl
             'stopvideoajax'
         ));
         
-        // resource default_product
         $this->allow(self::ROLENAME_GUEST, 'default_collection', array(
             'index',
             'show',
@@ -271,21 +267,17 @@ class Default_Plugin_AclRules extends Zend_Acl
             'gettaggroupsforcatajax'
         ));
 
-        // resource default_product
-        $this->allow(self::ROLENAME_SYSUSER, 'default_product', array(
-            'index',
-            'show',
-            'getupdatesajax',
-            'updates',
-            'follows',
-            'fetch',
-            'search',
-            'startdownload',
-            'ppload',
-            'loadratings'
-        ));
+        $this->allow(self::ROLENAME_GUEST, 'default_home', array('baseurlajax','forumurlajax','blogurlajax','storenameajax','domainsajax', 'userdataajax', 'loginurlajax', 'metamenujs','metamenubundlejs','fetchforgit'));
 
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_product', array(
+        $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report', 'about', 'tooltip', 'avatar', 'userdataajax'));
+
+        $this->allow(self::ROLENAME_GUEST, 'default_support', array('index'));
+
+        $this->allow(self::ROLENAME_GUEST, 'default_subscription', array('index'));
+
+        $this->allow(self::ROLENAME_GUEST, 'default_widget', array('index', 'render'));
+
+        $this->allow(self::ROLENAME_FEUSER, 'default_product', array(
             'add',
             'rating',
             'follow',
@@ -303,7 +295,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'claim'
         ));
         
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_collection', array(
+        $this->allow(self::ROLENAME_FEUSER, 'default_collection', array(
             'add',
             'rating',
             'follow',
@@ -320,28 +312,11 @@ class Default_Plugin_AclRules extends Zend_Acl
             'claim'
         ));
 
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_membersetting', array(
+        $this->allow(self::ROLENAME_FEUSER, 'default_membersetting', array(
             'getsettings','setsettings','notification','searchmember'
         ));
 
-        $this->allow(self::ROLENAME_MODERATOR, 'backend_project', array(
-            'doghnsexclude'
-        ));
-
-        $this->allow(self::ROLENAME_MODERATOR, 'default_moderation', array(
-            'index','list'
-        ));
-        $this->allow(self::ROLENAME_MODERATOR, 'default_duplicates', array(
-            'index'
-        ));
-        $this->allow(self::ROLENAME_MODERATOR, 'default_newproducts', array(
-            'index'
-        ));
-
-
-
-
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_product', array(
+        $this->allow(self::ROLENAME_FEUSER, 'default_product', array(
             'edit',
             'saveupdateajax',
             'deleteupdateajax',
@@ -362,34 +337,21 @@ class Default_Plugin_AclRules extends Zend_Acl
 
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
 
-        // resource default_support
-        $this->allow(self::ROLENAME_GUEST, 'default_support', array('index'));
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_support', array('index', 'pay', 'paymentok', 'paymentcancel'));
+        $this->allow(self::ROLENAME_FEUSER, 'default_support', array('index', 'pay', 'paymentok', 'paymentcancel'));
         
-        // resource default_subscription
-        $this->allow(self::ROLENAME_GUEST, 'default_subscription', array('index'));
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_subscription', array('index', 'pay', 'paymentok', 'paymentcancel'));
+        $this->allow(self::ROLENAME_FEUSER, 'default_subscription', array('index', 'pay', 'paymentok', 'paymentcancel'));
 
-        // resource default_report
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_report', array('comment', 'product', 'productfraud', 'productclone'));
+        $this->allow(self::ROLENAME_FEUSER, 'default_report', array('comment', 'product', 'productfraud', 'productclone'));
 
-        // resource default_widget
-        $this->allow(self::ROLENAME_GUEST, 'default_widget', array('index', 'render'));
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_widget', array('save', 'savedefault', 'config'),
+        $this->allow(self::ROLENAME_FEUSER, 'default_widget', array('save', 'savedefault', 'config'),
             new Default_Plugin_Acl_IsProjectOwnerAssertion());
 
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_file', array(
+        $this->allow(self::ROLENAME_FEUSER, 'default_file', array(
             'gitlink',
             'link',
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
 
-        // resource default_user
-        $this->allow(self::ROLENAME_GUEST, 'default_home', array('baseurlajax','forumurlajax','blogurlajax','storenameajax','domainsajax', 'userdataajax', 'loginurlajax', 'metamenujs','metamenubundlejs','fetchforgit'));
-
-        // resource default_user
-        $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report', 'about', 'tooltip', 'avatar', 'userdataajax'));
-
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_user', array(
+        $this->allow(self::ROLENAME_FEUSER, 'default_user', array(
             'follow',
             'unfollow',
             'settings',
@@ -409,7 +371,37 @@ class Default_Plugin_AclRules extends Zend_Acl
             'likes'
         ));
 
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_tag', array('filter', 'add', 'del', 'assign', 'remove'));
+        $this->allow(self::ROLENAME_FEUSER, 'default_tag', array('filter', 'add', 'del', 'assign', 'remove'));
+
+        $this->allow(self::ROLENAME_MODERATOR, 'backend_project', array(
+            'doghnsexclude'
+        ));
+
+        $this->allow(self::ROLENAME_MODERATOR, 'default_moderation', array(
+            'index','list'
+        ));
+
+        $this->allow(self::ROLENAME_MODERATOR, 'default_duplicates', array(
+            'index'
+        ));
+
+        $this->allow(self::ROLENAME_MODERATOR, 'default_newproducts', array(
+            'index'
+        ));
+
+        $this->allow(self::ROLENAME_SYSUSER, 'default_product', array(
+            'index',
+            'show',
+            'getupdatesajax',
+            'updates',
+            'follows',
+            'fetch',
+            'search',
+            'startdownload',
+            'ppload',
+            'loadratings'
+        ));
+
     }
 
 }

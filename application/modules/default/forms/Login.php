@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -28,7 +29,6 @@ class Default_Form_Login extends Zend_Form
         $this->setAction('/login/');
         $this->addElementPrefixPath('Local', 'Local/');
         $this->setAttrib('id', 'loginForm');
-        //$this->setAttrib('class', 'standard-form row-fluid');
 
         $this->addElement($this->getHiddenRedirect());
 
@@ -37,50 +37,41 @@ class Default_Form_Login extends Zend_Form
         $dologin->setDecorators(array('ViewHelper'));
         $this->addElement($dologin);
 
-
         $loginName = $this->createElement('text', 'mail');
         $loginName->setLabel('index.login.username');
         $loginName->setFilters(array('StringTrim'));
-//        $loginName->setValidators(array('EmailAddress'));
         $loginName->setRequired(true);
         $loginName->setDecorators(array('ViewHelper'));
-        //$loginName->setAttrib('placeholder', 'Email or Username');
-        //$loginName->setAttrib('class', 'inputbox email');
 
         $loginPass = $this->createElement('password', 'password');
         $loginPass->setLabel('index.login.password');
         $loginPass->setFilters(array('StringTrim'));
         $loginPass->setRequired(true);
         $loginPass->setDecorators(array('ViewHelper'));
-        //$loginPass->setAttrib('placeholder', 'Password');
-        //$loginPass->setAttrib('class', 'inputbox password');
 
         $rememberMe = $this->createElement('checkbox', 'remember_me')
-            ->setOptions(array("checked" => "checked"))
-            ->setLabel('index.login.remember_me')
-            ->setDecorators(
-                array(
-                    'ViewHelper',
-                    array('Label',
-                        array(
-                            'placement' => 'append',
-                            'class' => 'optional'
-                        )
-                    ),
-                    array('HtmlTag', array('tag' => 'div', 'class' => 'container-checkbox-remember-me text-left'))
-                )
-            );
+                           ->setOptions(array("checked" => "checked"))
+                           ->setLabel('index.login.remember_me')
+                           ->setDecorators(
+                               array(
+                                   'ViewHelper',
+                                   array(
+                                       'Label',
+                                       array(
+                                           'placement' => 'append',
+                                           'class'     => 'optional'
+                                       )
+                                   ),
+                                   array(
+                                       'HtmlTag',
+                                       array('tag' => 'div', 'class' => 'container-checkbox-remember-me text-left')
+                                   )
+                               )
+                           );
 
         $submit = $this->createElement('button', 'login');
         $submit->setLabel('Login');
         $submit->setDecorators(array('ViewHelper'));
-        //$submit->setAttrib('class', 'btn btn-min-width btn-native');
-        //$submit->setAttrib('type', 'submit');
-
-//        $hash = $this->createElement('hash', 'csrfLogin', array('salt' => 'PlattenSpalter'));
-//        $hash->setDecorators(array('ViewHelper', 'Errors'));
-//        $hash->getValidator('Identical')->setMessage('Your session is outdated. Please reload the page an try again.');
-//        $this->addElement($hash);
 
 
         $this->addElement($loginName);
@@ -92,17 +83,17 @@ class Default_Form_Login extends Zend_Form
     private function getHiddenRedirect()
     {
         return $this->createElement('hidden', 'redirect')
-            ->setFilters(array('StringTrim'))
-            ->setDecorators(
-                array(
-                    array(
-                        'ViewScript',
+                    ->setFilters(array('StringTrim'))
+                    ->setDecorators(
                         array(
-                            'viewScript' => 'authorization/viewscripts/input_hidden.phtml',
-                            'placement' => false
-                        )
-                    )
-                ));
+                            array(
+                                'ViewScript',
+                                array(
+                                    'viewScript' => 'authorization/viewscripts/input_hidden.phtml',
+                                    'placement'  => false
+                                )
+                            )
+                        ));
     }
 
 }

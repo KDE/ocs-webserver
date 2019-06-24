@@ -26,19 +26,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
     const DEFAULT_ROLE_ID = 300;
     const PROFILE_IMG_SRC_LOCAL = 'local';
 
-    public function githubAction()
-    {
-        require_once APPLICATION_LIB . '/Local/CrawlerDetect.php';
-        if (crawlerDetect($_SERVER['HTTP_USER_AGENT'])) {
-            $this->getResponse()->setHttpResponseCode(404);
-            $this->forward('index', 'explore');
-
-            return;
-        }
-        $this->forward('login', 'oauth', 'default',
-            array('provider' => 'github', 'redirect' => $this->getParam('redirect')));
-    }
-
     public function ocsAction()
     {
         require_once APPLICATION_LIB . '/Local/CrawlerDetect.php';
@@ -61,166 +48,15 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $this->forward('login', null, null, $param);
     }
 
-    /**
-     * login from cookie
-     *
-     * @throws Zend_Auth_Storage_Exception
-     * @throws Zend_Form_Exception
-     * @throws Zend_Session_Exception
-     * @throws exception
-     */
-    public function lfcAction()
-    {
-        $this->view->success = 0;
-        $this->view->noPopup = true;
-
-        //TODO: check redirect for a local valid url.
-        $this->view->redirect = $this->getParam('redirect');
-
-        $formLogin = new Default_Form_Login();
-        $formLogin->setAction('/login/lfc/');
-        $formLogin->getElement('remember_me')->setValue(true);
-
-        if ($this->_request->isGet()) { // not a POST request
-            $this->view->form = $formLogin->populate(array('redirect' => $this->view->redirect));
-            $this->view->error = 0;
-
-            return;
-        }
-
-        Zend_Registry::get('logger')->info(__METHOD__
-                                           . PHP_EOL . ' - authentication attempt on host: ' . Zend_Registry::get('store_host')
-                                           . PHP_EOL . ' - param redirect: ' . $this->getParam('redirect')
-                                           . PHP_EOL . ' - from ip: ' . $this->_request->getClientIp()
-        );
-
-        if (false === $formLogin->isValid($_POST)) { // form not valid
-            Zend_Registry::get('logger')->info(__METHOD__
-                                               . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
-                                               . PHP_EOL . ' - form not valid:'
-                                               . PHP_EOL . print_r($formLogin->getMessages(), true));
-
-            $this->view->form = $formLogin;
-            $this->view->errorText = 'index.login.error.auth';
-            $this->view->error = 1;
-
-            return;
-        }
-
-        $values = $formLogin->getValues();
-        $authModel = new Default_Model_Authorization();
-        $authResult = $authModel->authenticateUser($values['mail'], $values['password'], $values['remember_me']);
-
-        if (false == $authResult->isValid()) { // authentication fail
-            Zend_Registry::get('logger')->info(__METHOD__
-                                               . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
-                                               . PHP_EOL . ' - authentication fail: '
-                                               . PHP_EOL . print_r($authResult->getMessages(), true)
-            );
-            $this->view->errorText = 'index.login.error.auth';
-            $this->view->form = $formLogin;
-            $this->view->error = 1;
-            $this->_helper->viewRenderer('login');
-
-            return;
-        }
-
-        $auth = Zend_Auth::getInstance();
-        $userId = $auth->getStorage()->read()->member_id;
-
-        // handle redirect
-        if (false === empty($this->view->redirect)) {
-            $redirect = $this->decodeString($this->view->redirect);
-            if (false !== strpos('/register', $redirect)) {
-                $redirect = '/member/' . $userId . '/activities/';
-            }
-            $this->redirect($redirect);
-        } else {
-            $this->redirect('/member/' . $userId . '/activities/');
-        }
-    }
-
-    /**
-     * @param string $string
-     *
-     * @return string
-     */
-    protected function decodeString($string)
-    {
-        $decodeFilter = new Local_Filter_Url_Decrypt();
-
-        return $decodeFilter->filter($string);
-    }
-
-    /**
-     * @throws Zend_Auth_Storage_Exception
-     * @throws Zend_Exception
-     * @throws Zend_Session_Exception
-     * @throws exception
-     */
-    public function propagateAction()
-    {
-        $this->_helper->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
-        if (Zend_Auth::getInstance()->hasIdentity()) {
-            $this->_helper->json(array('status' => 'ok', 'message' => 'Already logged in.'));
-        }
-
-        Zend_Registry::get('logger')->info(__METHOD__
-                                           . PHP_EOL . ' - token: ' . $this->getParam('token')
-                                           . PHP_EOL . ' - host: ' . Zend_Registry::get('store_host')
-                                           . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
-        );
-
-        $modelAuthToken = new Default_Model_SingleSignOnToken();
-        $token_data = $modelAuthToken->getData($this->getParam('token'));
-        if (false === $token_data) {
-            Zend_Registry::get('logger')->warn(__METHOD__
-                                               . PHP_EOL . ' - Login failed: no token exists'
-                                               . PHP_EOL . ' - host: ' . Zend_Registry::get('store_host')
-                                               . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
-            );
-            $this->_helper->json(array('status' => 'fail', 'message' => 'Login failed.'));
-        }
-        $remember_me = isset($token_data['remember_me']) ? (boolean)$token_data['remember_me'] : false;
-        $member_id = isset($token_data['member_id']) ? (int)$token_data['member_id'] : null;
-
-        $modelAuth = new Default_Model_Authorization();
-        $authResult = $modelAuth->authenticateUser($member_id, null, $remember_me,
-            Local_Auth_AdapterFactory::LOGIN_SSO);
-
-        if ($authResult->isValid()) {
-            Zend_Registry::get('logger')->info(__METHOD__
-                                               . PHP_EOL . ' - authentication successful: '
-                                               . PHP_EOL . ' - host: ' . Zend_Registry::get('store_host')
-                                               . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
-            );
-            $this->getResponse()->setHeader('Access-Control-Allow-Origin', $this->getParam('origin'))
-                 ->setHeader('Access-Control-Allow-Credentials', 'true')
-                 ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-                 ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
-
-            $this->_helper->json(array('status' => 'ok', 'message' => 'Login successful.'));
-        } else {
-            Zend_Registry::get('logger')->info(__METHOD__
-                                               . PHP_EOL . ' - authentication fail: '
-                                               . PHP_EOL . ' - host: ' . Zend_Registry::get('store_host')
-                                               . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
-                                               . PHP_EOL . print_r($authResult->getMessages(), true)
-            );
-            $this->_helper->json(array('status' => 'fail', 'message' => 'Login failed.'));
-        }
-    }
-
     public function checkuserAction()
     {
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $this->getResponse()->setHeader('Access-Control-Allow-Origin', 'https://gitlab.pling.cc')
-             ->setHeader('Access-Control-Allow-Credentials', 'true')->setHeader('Access-Control-Allow-Methods',
-                'POST, GET, OPTIONS')
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.pling.cc')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
              ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
 
         $formLogin = new Default_Form_Login();
@@ -322,7 +158,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         $formLogin = new Default_Form_Login();
 
-        if ($this->_request->isGet()) { // not a POST request
+        if ($this->_request->isGet()) {
             $this->view->formLogin = $formLogin->populate(array('redirect' => $this->view->redirect));
             $this->view->error = 0;
 
@@ -332,21 +168,21 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         Zend_Registry::get('logger')->info(__METHOD__
                                            . PHP_EOL . ' - authentication attempt on host: ' . Zend_Registry::get('store_host')
                                            . PHP_EOL . ' - param redirect: ' . $this->getParam('redirect')
-                                           . PHP_EOL . ' - from ip: ' . $this->_request->getClientIp()
+                                           . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
                                            . PHP_EOL . ' - http method: ' . $this->_request->getMethod()
-                                           . PHP_EOL . ' - csrf string: ' . (isset($_POST['login_csrf']) ? $_POST['login_csrf'] : '')
+                                           . PHP_EOL . ' - received csrf : ' . (isset($_POST['login_csrf']) ? $_POST['login_csrf'] : '')
+                                           . PHP_EOL . ' - stored csrf: ' . Default_Model_CsrfProtection::getCsrfToken()
         );
 
         if (false === Default_Model_CsrfProtection::validateCsrfToken($_POST['login_csrf'])) {
             Zend_Registry::get('logger')->info(__METHOD__
                                                . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
-                                               . PHP_EOL . ' - validate CSRF token failed:'
-                                               . PHP_EOL . ' - received token: ' . $_POST['login_csrf']
-                                               . PHP_EOL . ' - stored token: ' . Default_Model_CsrfProtection::getCsrfToken()
+                                               . PHP_EOL . ' - validate CSRF token failed.'
             );
 
             $this->view->error = 0;
             $this->view->formLogin = $formLogin;
+
             if ($this->_request->isXmlHttpRequest()) {
                 $viewLoginForm = $this->view->render('authorization/partials/loginForm.phtml');
                 $this->_helper->json(array('status' => 'ok', 'message' => $viewLoginForm));
@@ -379,10 +215,10 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         if (false == $authResult->isValid()) { // authentication fail
             Zend_Registry::get('logger')->info(__METHOD__
+                                               . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
                                                . PHP_EOL . ' - authentication fail.'
                                                . PHP_EOL . ' - user: ' . $values['mail']
                                                . PHP_EOL . ' - remember_me: ' . $values['remember_me']
-                                               . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
                                                . PHP_EOL . print_r($authResult->getMessages(), true)
             );
 
@@ -419,6 +255,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         $filter = new Local_Filter_Url_Encrypt();
         $p = $filter->filter($values['password']);
+
         $sess = new Zend_Session_Namespace('ocs_meta');
         $sess->phash = $p;
 
@@ -431,17 +268,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         //If the user is a hive user, we have to update his password
         $this->changePasswordIfNeeded($userId, $values['password']);
 
-        //$modelToken = new Default_Model_SingleSignOnToken();
-        //$data = array(
-        //    'remember_me' => $values['remember_me'],
-        //    //'redirect'    => $this->getParam('redirect'),
-        //    'redirect'    => $this->view->redirect,
-        //    'action'      => Default_Model_SingleSignOnToken::ACTION_LOGIN,
-        //    'member_id'   => $userId
-        //);
-        //$token_id = $modelToken->createToken($data);
-        //setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token_id, time() + 120, '/',
-        //    Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
 
         //user has to correct his data?
         $modelReviewProfile = new Default_Model_ReviewProfileData();
@@ -529,6 +355,18 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $encodeFilter = new Local_Filter_Url_Encrypt();
 
         return $encodeFilter->filter($string);
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    protected function decodeString($string)
+    {
+        $decodeFilter = new Local_Filter_Url_Decrypt();
+
+        return $decodeFilter->filter($string);
     }
 
     /**
@@ -640,28 +478,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
     }
 
     /**
-     * @throws Zend_Controller_Action_Exception
-     * @throws Zend_Exception
-     * @throws Zend_Session_Exception
-     */
-    public function propagatelogoutAction()
-    {
-        $this->_helper->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
-        if (false == Zend_Auth::getInstance()->hasIdentity()) {
-            $this->_helper->json(array('status' => 'ok', 'message' => 'Already logged out.'));
-        }
-
-        $modelAuth = new Default_Model_Authorization();
-        $modelAuth->logout();
-
-        $this->_helper->json(array('status' => 'ok', 'message' => 'Logout successful.'));
-    }
-
-    /**
      * @throws Zend_Cache_Exception
-     * @throws Zend_Controller_Action_Exception
      * @throws Zend_Exception
      * @throws Zend_Session_Exception
      */
@@ -673,16 +490,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         if (Zend_Auth::getInstance()->hasIdentity()) {
             $modelAuth = new Default_Model_Authorization();
             $modelAuth->logout();
-
-            $modelToken = new Default_Model_SingleSignOnToken();
-            $data = array(
-                'remember_me' => false,
-                'redirect'    => $this->getParam('redirect'),
-                'action'      => Default_Model_SingleSignOnToken::ACTION_LOGOUT
-            );
-            $token_id = $modelToken->createToken($data);
-            setcookie(Default_Model_SingleSignOnToken::ACTION_LOGOUT, $token_id, time() + 120, '/',
-                Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
         }
 
         if ($this->_request->isXmlHttpRequest()) {
