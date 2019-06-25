@@ -78,11 +78,24 @@ class Default_Model_Section
      */
     public function fetchAllSectionStats($yearmonth = null)
     {
-        $sql = "SELECT p.yearmonth,s.section_id, s.name AS section_name, SUM(p.num_downloads) AS sum_dls, SUM(p.probably_payout_amount) AS sum_amount, SUM(payout.amount) AS sum_payoutamount , SUM(payout.num_downloads) AS sum_payoutanum_downloads 
+        $sql = "SELECT p.yearmonth, s.section_id, s.name AS section_name
+                ,0 AS sum_support
+                ,(SELECT SUM(sp.amount * (ssp.percent_of_sponsoring/100)) AS sum_sponsor FROM sponsor sp
+                LEFT JOIN section_sponsor ssp ON ssp.sponsor_id = sp.sponsor_id
+                WHERE sp.is_active = 1
+                AND ssp.section_id = s.section_id) AS sum_sponsor
+                , SUM(p.num_downloads) AS sum_dls, ROUND(SUM(p.probably_payout_amount),2) AS sum_amount, p2.sum_dls AS sum_dls_payout, p2.sum_amount AS sum_amount_payout
                 FROM member_dl_plings p
                 LEFT JOIN section_category sc ON sc.project_category_id = p.project_category_id
                 LEFT JOIN section s ON s.section_id = sc.section_id
-                LEFT JOIN (SELECT * FROM (select `member_dl_plings`.`yearmonth` AS `yearmonth`,`member_dl_plings`.`member_id` AS `member_id`,`member_dl_plings`.`project_id`,`member_dl_plings`.`mail` AS `mail`,`member_dl_plings`.`paypal_mail` AS `paypal_mail`,sum(`member_dl_plings`.`num_downloads`) AS `num_downloads`,round(sum(`member_dl_plings`.`probably_payout_amount`),2) AS `amount` from `member_dl_plings` where ((length(`member_dl_plings`.`paypal_mail`) > 0) and (`member_dl_plings`.`paypal_mail` regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$')) group by `member_dl_plings`.`member_id`,`member_dl_plings`.`project_id`,`member_dl_plings`.`paypal_mail`) po WHERE po.amount >= 1) payout ON payout.member_id = p.member_id AND payout.project_id = p.project_id AND payout.yearmonth = p.yearmonth
+                LEFT JOIN (SELECT p.yearmonth, s.section_id, s.name AS section_name, SUM(p.num_downloads) AS sum_dls, ROUND(SUM(p.probably_payout_amount),2) AS sum_amount
+                FROM member_dl_plings p
+                LEFT JOIN section_category sc ON sc.project_category_id = p.project_category_id
+                LEFT JOIN section s ON s.section_id = sc.section_id
+                WHERE p.yearmonth = :yearmonth
+                AND (length(p.`paypal_mail`) > 0) and (p.`paypal_mail` regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') and (p.`is_license_missing` = 0) and (p.`is_source_missing` = 0) and (p.`is_pling_excluded` = 0) and (p.`is_member_pling_excluded` = 0)
+                AND p.probably_payout_amount >= 1
+                GROUP BY s.section_id) p2 ON p2.yearmonth = p.yearmonth AND p2.section_id = s.section_id
                 WHERE p.yearmonth = :yearmonth
                 GROUP BY s.section_id";
         if(empty($yearmonth)) {
