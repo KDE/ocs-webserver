@@ -111,14 +111,16 @@ if ($countDownloadsOverall > 0) {
                     <div class="col-md-1 cell-default" style=""><?=$section['section_name']?></div>
                     <div class="col-md-1 text-right cell-default" style=""><?=$section['sum_support']?></div>
                     <div class="col-md-1 text-right cell-default" style=""><?=$section['sum_sponsor']?></div>
-                    <div class="col-md-1 text-right cell-default" style=""><?=$section['sum_dls']?></div>
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?= ($section['sum_support'] + $section['sum_sponsor']) ?></strong></div>
+                    <!--<div class="col-md-1 text-right cell-default" style=""><?=$section['sum_dls']?></div>-->
                     <div class="col-md-1 text-right cell-default" style=""><?=$section['sum_amount']?></div>
 
 
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                    <div class="col-md-1 text-right cell-default" style=""><?=$section['sum_dls_payout']?></div>
+                    <!--<div class="col-md-1 text-right cell-default" style=""><?=$section['sum_dls_payout']?></div>-->
                     <div class="col-md-1 text-right cell-default" style=""><?=$section['sum_amount_payout']?></div>
                     <?php endif; ?>
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?= round(($section['sum_support'] + $section['sum_sponsor']) / $section['sum_amount'], 2)?></strong></div>
                 </div>
             <?php
             }
