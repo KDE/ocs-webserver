@@ -120,7 +120,13 @@ if ($countDownloadsOverall > 0) {
                     <!--<div class="col-md-1 text-right cell-default" style=""><?=$section['sum_dls_payout']?></div>-->
                     <div class="col-md-1 text-right cell-default" style=""><?=$section['sum_amount_payout']?></div>
                     <?php endif; ?>
-                    <div class="col-md-1 text-right cell-default" style=""><strong><?= round(($section['sum_support'] + $section['sum_sponsor']) / $section['sum_amount'], 2)?></strong></div>
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?php 
+                        if(($section['sum_support'] + $section['sum_sponsor']) < $section['sum_amount']) {
+                            echo round(($section['sum_support'] + $section['sum_sponsor']) / $section['sum_amount'], 2);
+                        } else {
+                            echo "1.00";
+                        }
+                    ?></strong></div>
                 </div>
             <?php
             }
