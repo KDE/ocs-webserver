@@ -76,7 +76,7 @@ $downloadYears = $modelDownload->getAllDownloadYears();
                     foreach ($downloadYears as $yearobj) {
                         echo "var yearListObj = new Array();";
                         echo "yearListObj['maxMonth'] = '".$yearobj['max_yearmonth']."';";
-                        echo "yearListObj['sum'] = '".$yearobj['sum_amount']."';";
+                        echo "yearListObj['sum'] = '0';";
                         echo "yearList['".$yearobj['year']."'] = yearListObj;";
                     }
                     echo "</script>";
