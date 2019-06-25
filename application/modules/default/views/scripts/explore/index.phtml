@@ -184,11 +184,11 @@ if($this->inputFilterOriginal ==1)
                    <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {?>
                   <li <?=$this->filters['order'] == 'top' ? 'class="active"' :'' ?>>
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
-                          'top') ?>"><span><?= $this->translate('Top') ?></span></a>
+                          'top') ?>"><span><?= $this->translate('Rating_old') ?></span></a>
                   </li>
                   <li <?=$this->filters['order'] == 'test' ? 'class="active"' :'' ?>>
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
-                          'test') ?>"><span><?= $this->translate('test') ?></span></a>
+                          'test') ?>"><span><?= $this->translate('Rating_test') ?></span></a>
                   </li>
                 <?php }?>
                   <li style="float: right">
