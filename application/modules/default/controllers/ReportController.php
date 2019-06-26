@@ -30,7 +30,7 @@ class ReportController extends Zend_Controller_Action
             $comment_id = (int)$this->getParam('i');
             $project_id = (int)$this->getParam('p');
             $reported_by =
-                Zend_Auth::getInstance()->hasIdentity() ? (int)Zend_Auth::getInstance()->getStorage()->read()->member_id
+                Default_Model_Auth_User::getInstance()->hasIdentity() ? (int)Default_Model_Auth_User::getInstance()->getIdentity()->member_id
                     : 0;
             
             $clientIp = null;
@@ -93,8 +93,8 @@ class ReportController extends Zend_Controller_Action
                 ));
             }
             $reported_by = 0;
-            if (Zend_Auth::getInstance()->hasIdentity()) {
-                $reported_by = (int)Zend_Auth::getInstance()->getStorage()->read()->member_id;
+            if (Default_Model_Auth_User::getInstance()->hasIdentity()) {
+                $reported_by = (int)Default_Model_Auth_User::getInstance()->getIdentity()->member_id;
             }
 
             $modelProduct = new Default_Model_Project();
@@ -149,8 +149,8 @@ class ReportController extends Zend_Controller_Action
                         ));
                     }
                     
-                    if (Zend_Auth::getInstance()->hasIdentity()) {
-                        $reported_by = (int)Zend_Auth::getInstance()->getStorage()->read()->member_id;
+                    if (Default_Model_Auth_User::getInstance()->hasIdentity()) {
+                        $reported_by = (int)Default_Model_Auth_User::getInstance()->getIdentity()->member_id;
                         $reportProducts = new Default_Model_DbTable_ReportProducts();
                         $reportProducts->save(array('project_id' => $project_id, 'reported_by' => $reported_by,'text' => $text, 'report_type' =>$report_type));
                     }
@@ -188,8 +188,8 @@ class ReportController extends Zend_Controller_Action
                     {
                         $project_clone = 0;
                     }
-                    if (Zend_Auth::getInstance()->hasIdentity()) {
-                        $reported_by = (int)Zend_Auth::getInstance()->getStorage()->read()->member_id;
+                    if (Default_Model_Auth_User::getInstance()->hasIdentity()) {
+                        $reported_by = (int)Default_Model_Auth_User::getInstance()->getIdentity()->member_id;
                         $reportProducts = new Default_Model_DbTable_ProjectClone();                 
                         $reportProducts->save(array('project_id' => $project_clone, 'member_id' => $reported_by,'text' => $text, 'project_id_parent' =>$project_id));                             
                     }                                                                                               

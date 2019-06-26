@@ -102,7 +102,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                     <a class="communitytab" data-href="/community/newmembers"  href="#newMemberPanel" data-toggle="tab"><?= $this->translate('New Members') ?></a>
                   </li>
 
-                  <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                  <?php if(Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {
                   ?>
                   <li>
                     <a class="communitytab" data-href="/community/topmembers" href="#topMemberPanel" data-toggle="tab"><?= $this->translate('Top Members') ?></a>
@@ -124,7 +124,7 @@ $countActiveMembers = $modelInfo->countTotalActiveMembers();
                 </div>
             </div> <!-- end row -->
 
-            <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+            <?php if(Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {
                         ?>
             <div class="row tab-pane" id="topMemberPanel">
                     <div class="list "> </div>

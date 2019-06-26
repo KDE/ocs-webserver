@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$auth = Zend_Auth::getInstance();
+$auth = Default_Model_Auth_User::getInstance();
 $loginUrl = '/login?redirect=' . $this->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(), true);
 $txtUserFollows = '';
 $urlUserFollows = $this->buildProductUrl($this->product->project_id, 'unfollow');

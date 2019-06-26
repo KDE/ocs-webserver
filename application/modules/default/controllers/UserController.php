@@ -422,10 +422,10 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $modelMember = new Default_Model_Member();
         $user = $modelMember->find($userid)->current();
 
-        if (Zend_Auth::getInstance()->hasIdentity()) {
+        if (Default_Model_Auth_User::getInstance()->hasIdentity()) {
 
-            $auth = Zend_Auth::getInstance();
-            $user = $auth->getStorage()->read();
+            $auth = Default_Model_Auth_User::getInstance();
+            $user = $auth->getIdentity();
 
             $resultArray['member_id'] = $user->member_id;
             $resultArray['username'] = $user->username;
@@ -1026,11 +1026,11 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     private function fetchMemberId()
     {
-        if (false === Zend_Auth::getInstance()->hasIdentity()) {
+        if (false === Default_Model_Auth_User::getInstance()->hasIdentity()) {
             return null;
         }
 
-        $auth = Zend_Auth::getInstance()->getIdentity();
+        $auth = Default_Model_Auth_User::getInstance()->getIdentity();
 
         if ($this->_userName == $auth->username) {
             return $auth->member_id;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -30,7 +31,7 @@ class Default_View_Helper_UserIsOwner extends Zend_View_Helper_Abstract
      */
     public function userIsOwner($userIdFromUserPage)
     {
-        $auth = Zend_Auth::getInstance();
+        $auth = Default_Model_Auth_User::getInstance();
 
         if (!$auth->hasIdentity()) {
             return self::NO_OWNER;

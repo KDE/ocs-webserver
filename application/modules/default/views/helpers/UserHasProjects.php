@@ -23,13 +23,13 @@ class Default_View_Helper_userHasProjects extends Zend_View_Helper_Abstract
 {
     public function userHasProjects()
     {
-        $auth = Zend_Auth::getInstance();
+        $auth = Default_Model_Auth_User::getInstance();
         #Zend_Debug::dump($auth->getStorage());
 
         $projectTable = new Default_Model_DbTable_Project();
 
         $projectSel = $projectTable->select()
-            ->where('member_id=' . $auth->getStorage()->read()->member_id)
+            ->where('member_id=' . $auth->getIdentity()->member_id)
             ->where('status=?', Default_Model_Project::PROJECT_ACTIVE);
 
         $countProj = count($projectTable->fetchAll($projectSel));

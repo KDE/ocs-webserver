@@ -33,8 +33,8 @@ class Default_Model_PpLoad
 
     public function isAuthmemberProjectCreator($creator_id)    
     {
-        $auth = Zend_Auth::getInstance();
-        $authMember = $auth->getStorage()->read();
+        $auth = Default_Model_Auth_User::getInstance();
+        $authMember = $auth->getIdentity();
         if($authMember->member_id == $creator_id)
         {
             return true;
@@ -97,8 +97,8 @@ class Default_Model_PpLoad
             {
                 $projectData->changed_at = new Zend_Db_Expr('NOW()');
             } else {
-                $auth = Zend_Auth::getInstance();
-                $authMember = $auth->getStorage()->read();
+                $auth = Default_Model_Auth_User::getInstance();
+                $authMember = $auth->getIdentity();
                 $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member ('.$authMember->member_id.') != Project-Owner ('.$projectData->member_id.'): **********' . "\n");
             }
             $projectData->save();
@@ -109,8 +109,8 @@ class Default_Model_PpLoad
                 $projectData->changed_at = new Zend_Db_Expr('NOW()');
                 $projectData->save();
             } else {
-                $auth = Zend_Auth::getInstance();
-                $authMember = $auth->getStorage()->read();
+                $auth = Default_Model_Auth_User::getInstance();
+                $authMember = $auth->getIdentity();
                 $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member ('.$authMember->member_id.') != Project-Owner ('.$projectData->member_id.'): **********' . "\n");
             }
         }
@@ -119,9 +119,10 @@ class Default_Model_PpLoad
     }
 
     /**
-     * @param $projectId
+     * @param int $projectId
      *
      * @return Zend_Db_Table_Row_Abstract
+     * @throws Zend_Db_Table_Exception
      */
     protected function getProjectData($projectId)
     {

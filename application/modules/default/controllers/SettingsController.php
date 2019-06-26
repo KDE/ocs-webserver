@@ -43,8 +43,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             true)
              ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true);
 
-        $this->_auth = Zend_Auth::getInstance();
-        $this->_memberId = $this->_auth->getStorage()->read()->member_id;
+        $this->_auth = Default_Model_Auth_User::getInstance();
+        $this->_memberId = $this->_auth->getIdentity()->member_id;
         $this->_memberTable = new Default_Model_DbTable_Member();
 
         $showMember = $this->_memberTable->find($this->_memberId)->current();
@@ -1275,7 +1275,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $tableProject = new Default_Model_Project();
         $tableProject->setAllProjectsForMemberDeleted($this->_memberId);
 
-        $auth = Zend_Auth::getInstance();
+        $auth = Default_Model_Auth_User::getInstance();
         $auth->clearIdentity();
 
         $session = new Zend_Session_Namespace();

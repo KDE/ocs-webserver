@@ -23,7 +23,7 @@
 class Default_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 {
 
-    /** @var Zend_Auth */
+    /** @var Local_Auth_User_Interface */
     private $_auth;
     /** @var Zend_Acl */
     private $_acl;

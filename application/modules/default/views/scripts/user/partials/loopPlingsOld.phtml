@@ -131,7 +131,7 @@ if ($this->countDownloadsOverall > 0) {
     <div class="row">
         <div class="col-md-1"></div>
 <?php
-        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
+        if(Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {
 ?>                    
         <div class="col-md-3 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Products</strong></div>
 <?php
@@ -146,7 +146,7 @@ if ($this->countDownloadsOverall > 0) {
         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong style="color: green;">Payout</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout" data-trigger="hover" data-html="true" data-content="This shows the amount that will be paid out to you until May 2019."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
 
 <?php
-        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
+        if(Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {
 ?>
         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Score-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Score" data-trigger="hover" data-html="true" data-content="The product score."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Payout</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout" data-trigger="hover" data-html="true" data-content="The payout amount."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
@@ -195,7 +195,7 @@ if ($this->countDownloadsOverall > 0) {
                         </a>
                     </div>
 <?php
-        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
+        if(Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {
 ?>                    
                     <div class="col-md-3 text-left cell-default">
 <?php
@@ -272,7 +272,7 @@ if ($this->countDownloadsOverall > 0) {
                     </div>
                         
 <?php
-        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
+        if(Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {
 ?>
                     <div class="col-md-1 text-right cell-default">
                         <span><?= round($product['laplace_score'],2) ?></span>
@@ -344,7 +344,7 @@ if ($this->countDownloadsOverall > 0) {
             ?>
             <div class='row row-total'>
 <?php
-        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
+        if(Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {
 ?>                
                 <div class='col-md-6 text-right'><?=$sum_total_text?></div>
 <?php
@@ -358,7 +358,7 @@ if ($this->countDownloadsOverall > 0) {
                 <div class='col-md-1 text-right'><strong style="color: green;"><?=$sum_total_payout?></strong></div>
                 
 <?php
-        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
+        if(Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {
 ?>                
                 <div class='col-md-1 text-right'></div>
                 <div class='col-md-1 text-right'><strong><?=$sum_total_payout_score?></strong></div>

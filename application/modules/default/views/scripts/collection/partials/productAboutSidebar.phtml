@@ -24,7 +24,7 @@ $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 $helperImage = new Default_View_Helper_Image();
 $plingUrl = $helperBuildProductUrl->buildProductUrl($this->product->project_id, 'pling');
-$auth = Zend_Auth::getInstance();
+$auth = Default_Model_Auth_User::getInstance();
 ?>
 <div class="">
 

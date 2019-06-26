@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -31,10 +32,10 @@ class Default_Plugin_Acl_IsProjectOwnerAssertion implements Zend_Acl_Assert_Inte
      * $role, $resource, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
      * privileges, respectively.
      *
-     * @param  Zend_Acl $acl
-     * @param  Zend_Acl_Role_Interface $role
-     * @param  Zend_Acl_Resource_Interface $resource
-     * @param  string $privilege
+     * @param Zend_Acl                    $acl
+     * @param Zend_Acl_Role_Interface     $role
+     * @param Zend_Acl_Resource_Interface $resource
+     * @param string                      $privilege
      * @return boolean
      */
     public function assert(
@@ -43,7 +44,7 @@ class Default_Plugin_Acl_IsProjectOwnerAssertion implements Zend_Acl_Assert_Inte
         Zend_Acl_Resource_Interface $resource = null,
         $privilege = null
     ) {
-        $auth = Zend_Auth::getInstance();
+        $auth = Default_Model_Auth_User::getInstance();
 
         if (!$auth->hasIdentity()) {
             return self::NO_OWNER;
@@ -54,6 +55,7 @@ class Default_Plugin_Acl_IsProjectOwnerAssertion implements Zend_Acl_Assert_Inte
         $project_id = Zend_Controller_Front::getInstance()->getRequest()->getParam('project_id');
 
         $result = array_key_exists($project_id, $identity->projects);
+
         return $result;
     }
 

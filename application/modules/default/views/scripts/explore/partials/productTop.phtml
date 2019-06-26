@@ -43,7 +43,7 @@ $helpImage = new Default_View_Helper_Image();
          <div style="line-height: 16px">
             <a href="<?= $helpProductUrl->buildProductUrl($this->product['project_id'], ''); ?>"><?php echo $this->product['title']; ?></a>
             <span style="font-size: smaller;display: block"><?php echo $this->product['category_title']; ?></span>
-            <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {?>
+            <?php if(Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {?>
             <span style="font-size: smaller;display: block"><?php echo $this->product['amount']; ?></span>
             <?php } ?>
             

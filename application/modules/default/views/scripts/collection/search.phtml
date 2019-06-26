@@ -36,7 +36,7 @@ $this->supporters = $modelInfo->getNewActiveSupporters(18);
         <div class="GridFlex">
             <div class="GridFlex-cell sidebar-left" >
                 <?php  $time_start = microtime(true);echo $this->render('product/partials/searchFilter.phtml'); $time_elapsed = microtime(true) - $time_start; ?>
-                <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                <?php if(Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {
                     echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
                 }?>
             </div>
@@ -72,7 +72,7 @@ $this->supporters = $modelInfo->getNewActiveSupporters(18);
                             $time_elapsed = microtime(true) - $time_start;
                         }
                         ?>
-                        <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                        <?php if(Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {
                             echo '<div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12">';
                             echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
                             echo '</div>';

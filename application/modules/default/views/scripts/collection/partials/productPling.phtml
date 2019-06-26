@@ -21,7 +21,7 @@
  **/
 
 $plingData = $this->userPlings($this->product->project_id);
-$auth = Zend_Auth::getInstance();
+$auth = Default_Model_Auth_User::getInstance();
 $btnName = $auth->hasIdentity() ? 'Confirm Donation' : 'Anonymous Pling';
 $this->headScript()
     ->appendFile('https://www.paypalobjects.com/js/external/dg.js');

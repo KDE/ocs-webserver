@@ -1338,4 +1338,89 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         }
     }
 
+    /**
+     * @param int member_id
+     *
+     * @return object
+     * @throws Zend_Db_Statement_Exception
+     */
+    public function getExtendedAuthUserData($member_id)
+    {
+        $extendedAuthUserData = new stdClass();
+        $modelMember = new Default_Model_Member();
+        $memberData = $modelMember->fetchMemberData($member_id);
+        $extendedAuthUserData = (object)$memberData->toArray();
+        $extendedAuthUserData->external_id = $memberData->external_id;
+        $extendedAuthUserData->username = $memberData->username;
+        $extendedAuthUserData->roleId = $memberData->roleId;
+        $extendedAuthUserData->avatar = $memberData->avatar;
+        $extendedAuthUserData->profile_image_url = $memberData->profile_image_url;
+        $extendedAuthUserData->is_active = $memberData->is_active;
+        $extendedAuthUserData->is_deleted = $memberData->is_deleted;
+        $extendedAuthUserData->roleName = $this->getRoleNameForUserRole($memberData->roleId);
+        $extendedAuthUserData->projects = $this->getProjectIdsForUser($member_id);
+
+        return $extendedAuthUserData;
+    }
+
+    /**
+     * @param int $roleId
+     *
+     * @return string
+     * @throws Zend_Db_Statement_Exception
+     */
+    protected function getRoleNameForUserRole($roleId)
+    {
+        $database = Zend_Db_Table::getDefaultAdapter();
+
+        $sql = "
+                SELECT `shortname`
+                FROM `member_role`
+                WHERE  `member_role_id` = ?;
+        ";
+        $sql = $database->quoteInto($sql, $roleId, 'INTEGER', 1);
+        $resultSet = $database->query($sql)->fetchAll();
+        if (count($resultSet) > 0) {
+            return $resultSet[0]['shortname'];
+        } else {
+            throw new Exception('undefined member role');
+        }
+    }
+
+    /**
+     * @param int $identifier
+     *
+     * @return array
+     * @throws Zend_Db_Statement_Exception
+     */
+    protected function getProjectIdsForUser($identifier)
+    {
+        $database = Zend_Db_Table::getDefaultAdapter();
+        $sql = "
+                SELECT `p`.`project_id`
+                FROM `project` AS `p`
+                WHERE `p`.`member_id` = ?;
+        ";
+        $sql = $database->quoteInto($sql, $identifier, 'INTEGER', 1);
+        $resultSet = $database->query($sql)->fetchAll();
+
+        return $this->generateArrayWithKeyProjectId($resultSet);
+    }
+
+    /**
+     * @param array $inputArray
+     *
+     * @return array
+     */
+    protected function generateArrayWithKeyProjectId($inputArray)
+    {
+        $arrayWithKeyProjectId = array();
+        foreach ($inputArray as $element) {
+            $arrayWithKeyProjectId[$element['project_id']] = $element;
+        }
+
+        return $arrayWithKeyProjectId;
+    }
+
+
 }

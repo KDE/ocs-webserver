@@ -50,8 +50,8 @@ $helperImage = new Default_View_Helper_Image();
         <div><?php echo $this->paginationControl($this->comments, 'Sliding', '/partials/paginationControlBootstrap.phtml',
                 array('params' => array(), 'dom_target' => 'div#product-discussion')); ?></div>
     <?php } ?>
-    <div><?php if (Zend_Auth::getInstance()->hasIdentity()) {
-            $identity = Zend_Auth::getInstance()->getStorage()->read();
+    <div><?php if (Default_Model_Auth_User::getInstance()->hasIdentity()) {
+            $identity = Default_Model_Auth_User::getInstance()->getIdentity();
             ?>
             <a class="btn btn-native small show-maker-reply" style="padding: 4px;">add comment</a>
             <div class="popover-content maker-comment-container maker-form well" style="display:none;">

@@ -28,7 +28,7 @@ class StatiController extends Local_Controller_Action_DomainSwitch
     public function init()
     {
         parent::init();
-        $this->_auth = Zend_Auth::getInstance();
+        $this->_auth = Default_Model_Auth_User::getInstance();
     }
 
      public function indexAction()

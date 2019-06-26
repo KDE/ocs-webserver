@@ -30,7 +30,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
     {
         parent::init();
 
-        $this->auth = Zend_Auth::getInstance();
+        $this->auth = Default_Model_Auth_User::getInstance();
     }
 
     public function indexAction()
@@ -188,7 +188,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         
         
         //Only Supporter can make a review
-        if(Zend_Auth::getInstance()->hasIdentity() ) {
+        if(Default_Model_Auth_User::getInstance()->hasIdentity() ) {
             if ($msg != '' && strlen($msg)>0) {
 
                 
@@ -239,7 +239,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $message = '';
                 
                 
-        if(Zend_Auth::getInstance()->hasIdentity() ) {
+        if(Default_Model_Auth_User::getInstance()->hasIdentity() ) {
             if ($msg != '' && strlen($msg)>0) {                                            
                 $score = (int)$this->getParam('s');
                 // negative voting msg length > 5 

@@ -83,7 +83,7 @@ class RectificationController extends Local_Controller_Action_DomainSwitch
             $modelEmail->sendConfirmationMail((array)$this->_authMember, $dataMail->email_verification_value);
         }
 
-        Zend_Auth::getInstance()->getStorage()->write($this->_authMember);
+        Default_Model_Auth_User::getInstance()->setIdentity($this->_authMember);
 
         $modelMember = new  Default_Model_Member();
         $record = $modelMember->fetchMemberData($this->_authMember->member_id, false);

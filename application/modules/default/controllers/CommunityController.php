@@ -43,7 +43,7 @@ class CommunityController extends Local_Controller_Action_DomainSwitch
         $countProjects = $tableMembers->fetchTotalProjectsCount(false);
         $countActiveMembers = $modelInfo->countTotalActiveMembers();   
         $isadmin = 0;
-        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+        if(Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {
             $isadmin = 1;
         }
 

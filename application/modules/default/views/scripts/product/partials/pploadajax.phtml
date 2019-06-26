@@ -610,8 +610,8 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                      + '<th colspan="4">' + myArrayActive.length + ' <?= $this->translate("files")?> (<span style="color: #ccc;" ><a style="cursor:pointer" onclick="fnToggleInactiveFiles();return false;">'+myArrayInactive.length+' archived</a></span>)</th>'
                                 <?php 
                              
-                                    if(Zend_Auth::getInstance()->hasIdentity()){
-                                        $idt = Zend_Auth::getInstance()->getStorage()->read();
+                                    if(Default_Model_Auth_User::getInstance()->hasIdentity()){
+                                        $idt = Default_Model_Auth_User::getInstance()->getIdentity();
                                         if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName
                                            || $this->product->member_id==$idt->member_id
                                         ) { 

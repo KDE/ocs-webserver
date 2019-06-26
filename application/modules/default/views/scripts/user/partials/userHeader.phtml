@@ -50,8 +50,8 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
             <?= $this->translate('Payout-History') ?>
         </a>
     </li>
-    <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin'){
-        $identity = Zend_Auth::getInstance()->getStorage()->read();
+    <?php if (Default_Model_Auth_User::getInstance()->hasIdentity() && Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin'){
+        $identity = Default_Model_Auth_User::getInstance()->getIdentity();
     ?>
     
         <?php  if($this->isSupporter($this->member->member_id)){?>

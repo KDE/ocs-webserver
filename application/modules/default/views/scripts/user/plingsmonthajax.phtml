@@ -30,7 +30,7 @@ $this->countDownloadsOverall = 0;
 $member = $this->view_member;
 ?>
 <?php
-    if($member->pling_excluded == 0 || (Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin')) {        
+    if($member->pling_excluded == 0 || (Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin')) {
 ?>  
 <div class="my-products-list" id="my-payout-list">
 

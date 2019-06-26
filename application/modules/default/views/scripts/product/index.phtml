@@ -28,7 +28,7 @@ $helpTruncate = new Default_View_Helper_Truncate();
 $helpProductUrl = new Default_View_Helper_BuildProductUrl();
 $helpBBCode = new Default_View_Helper_Bbcode2html();
 
-$identity = Zend_Auth::getInstance()->getStorage()->read();
+$identity = Default_Model_Auth_User::getInstance()->getIdentity();
 
 $loginUrl = '/login?redirect=' . $helpEncryptUrl->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()
         ->getRequestUri(), true);
@@ -77,7 +77,7 @@ $this->ratings = $tableProjectRatings->fetchRating($this->product->project_id);
  //    if($p['rating_active']==1) $cntRatingsActive =$cntRatingsActive+1;
  // }
 
-if (Zend_Auth::getInstance()->hasIdentity()){
+if (Default_Model_Auth_User::getInstance()->hasIdentity()){
     $this->ratingOfUser = $tableProjectRatings->getProjectRateForUser($this->product->project_id,$identity->member_id);
 }
 
@@ -99,7 +99,7 @@ $helperCatXdgType = new Default_View_Helper_CatXdgType();
 $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->project_category_id));
 
 $isowner = false;
-if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->product->member_id){
+if(Default_Model_Auth_User::getInstance()->hasIdentity() && $identity->member_id==$this->product->member_id){
     $isowner = true;
 }
 $this->isowner = $isowner;
@@ -149,7 +149,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 
     <!-- facebook -->
     <div id="fb-root"></div>
-    <?php if (Zend_Auth::getInstance()->hasIdentity()) {
+    <?php if (Default_Model_Auth_User::getInstance()->hasIdentity()) {
         ?>
     <div id="report-product-<?= $this->product->project_id ?>" class="modal report-product" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm">
@@ -238,7 +238,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 
 
 
-    <?php if (Zend_Auth::getInstance()->hasIdentity()) {
+    <?php if (Default_Model_Auth_User::getInstance()->hasIdentity()) {
         ?>
     <div id="like-product-modal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
@@ -272,7 +272,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 
     <?php } ?>
 
-    <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
+    <?php if (Default_Model_Auth_User::getInstance()->hasIdentity()) { ?>
     <div id="review-product-modal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="padding-bottom: 20px">
@@ -913,7 +913,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                            <div class="prod-widget-box right">
                                 <div style="float: right">
 
-                                <?php if (Zend_Auth::getInstance()->hasIdentity()) {      ?>
+                                <?php if (Default_Model_Auth_User::getInstance()->hasIdentity()) {      ?>
                                        <a data-toggle="modal" data-target="#report-product-clone-<?= $this->product->project_id ?>" role="button"
                                           href="#report-product-clone-<?= $this->product->project_id ?>">
                                             report a clone of this product

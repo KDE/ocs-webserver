@@ -24,7 +24,7 @@
 $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
 $getAuthUser = new Default_View_Helper_GetAuthUser();
-$auth = Zend_Auth::getInstance();
+$auth = Default_Model_Auth_User::getInstance();
 $member = $getAuthUser->getAuthUser();
 if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
     $this->member_id = $this->member_id;

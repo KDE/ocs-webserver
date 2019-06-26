@@ -21,7 +21,7 @@
  **/
 
 $plingData = $this->userPlings($this->product->project_id);
-$auth = Zend_Auth::getInstance();
+$auth = Default_Model_Auth_User::getInstance();
 $btnName = $auth->hasIdentity() ? 'pling' : 'anonymous pling';
 ?>
 

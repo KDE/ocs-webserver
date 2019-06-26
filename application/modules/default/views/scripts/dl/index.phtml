@@ -190,7 +190,7 @@
                         <br>
                         
                             <?php 
-                                    $identity = Zend_Auth::getInstance()->getIdentity();
+                                    $identity = Default_Model_Auth_User::getInstance()->getIdentity();
                                     if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
                             ?>
                         <p style="font-size: 18px; position: absolute; bottom: 0px; width: 100%; left: 0%;">

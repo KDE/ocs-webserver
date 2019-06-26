@@ -53,8 +53,6 @@ class Local_Auth_AdapterFactory
      */
     protected static function detectHashMethod($identity, $credential)
     {
-        //$modelMember = new Default_Model_Member();
-        //$memberData = $modelMember->findActiveMemberByIdentity($identity, $credential);
         $validator = new Zend_Validate_EmailAddress();
         if ($validator->isValid($identity)) {
             $sql = "SELECT * FROM member AS m WHERE mail = :identity AND (`password` = :passHive OR `password` = :passOcs)";
@@ -75,9 +73,6 @@ class Local_Auth_AdapterFactory
         if (Default_Model_Member::PASSWORD_TYPE_HIVE == $memberData['password_type']) {
             return self::LOGIN_HIVE;
         }
-        //if ($modelMember->isHiveUser($memberData)) {
-        //    return self::LOGIN_HIVE;
-        //}
 
         return self::LOGIN_DEFAULT;
     }
@@ -94,10 +89,6 @@ class Local_Auth_AdapterFactory
         switch ($provider) {
             case self::LOGIN_INFINITY:
                 $authAdapter = new Local_Auth_Adapter_RememberMe(Zend_Registry::get('db'));
-                break;
-
-            case self::LOGIN_SSO:
-                $authAdapter = new Local_Auth_Adapter_SsoToken(Zend_Registry::get('db'));
                 break;
 
             case self::LOGIN_HIVE:

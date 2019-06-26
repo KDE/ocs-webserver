@@ -545,7 +545,7 @@ ul.suggested-amounts li.amount-item .mdl-radio .mdl-radio__outer-circle {
                                   </div> 
                                   
                                 <div class="tabs-footer">
-                                    <?php if (Zend_Auth::getInstance()->hasIdentity()) {?>
+                                    <?php if (Default_Model_Auth_User::getInstance()->hasIdentity()) {?>
                                   <button type="submit" class="dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
                                     <span class="donate" id="linkButton">
                                       <span class="amount">

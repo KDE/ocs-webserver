@@ -59,8 +59,8 @@ $age = $helperHumanTiming->humanTiming($comment['comment_created_at']);
             <div class="popover-content">
                 <p><?= Default_Model_HtmlPurify::purify($comment['comment_text']) ?></p>
             </div>
-            <?php if (Zend_Auth::getInstance()->hasIdentity()) {
-                $identity = Zend_Auth::getInstance()->getStorage()->read();
+            <?php if (Default_Model_Auth_User::getInstance()->hasIdentity()) {
+                $identity = Default_Model_Auth_User::getInstance()->getIdentity();
                 ?>
                 <a class="btn btn-native small show-maker-reply" style="padding: 4px;">Reply to this</a>
                 <div class="popover-content maker-comment-container maker-form well" style="display:none;">

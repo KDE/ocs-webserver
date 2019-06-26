@@ -19,22 +19,28 @@
  *
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *    Created: 21.10.2016
  **/
-class Default_View_Helper_GetAuthUser extends Zend_View_Helper_Abstract
+class Default_Plugin_Auth extends Zend_Controller_Plugin_Abstract
 {
 
-    public function getAuthUser()
+    /**
+     * @inheritDoc
+     *
+     * @param Zend_Controller_Request_Abstract $request
+     *
+     * @throws Zend_Exception
+     */
+    public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
+        /** @var Default_Model_Auth_User $auth */
         $auth = Default_Model_Auth_User::getInstance();
-        // Design issue: getStorage()->read() should return an empty member object for unknown user. This is a workaround for the moment.
-        if ($auth->hasIdentity()) {
-            $member = $auth->getIdentity();
-        } else {
-            $tableMember = new Default_Model_Member();
-            $member = $tableMember->createRow();
+        $config_session = Zend_Registry::get('config')->settings->session->cookie->toArray();
+        if (APPLICATION_ENV == 'development') {
+            $config_session['secure'] = false;
         }
-
-        return $member;
+        $auth->initSession($config_session);
     }
 
-} 
+}

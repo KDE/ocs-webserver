@@ -45,7 +45,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         parent::init();
         $this->_projectId = (int)$this->getParam('project_id');
         $this->_collectionId = (int)$this->getParam('collection_id');
-        $this->_auth = Zend_Auth::getInstance();
+        $this->_auth = Default_Model_Auth_User::getInstance();
         $this->_browserTitlePrepend = $this->templateConfigData['head']['browser_title_prepend'];
 
         $action = $this->getRequest()->getActionName();
@@ -372,8 +372,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
              $this->view->ratingsJson = Zend_Json::encode($ratings);
              $this->view->cntRatingsActiveJson = Zend_Json::encode($cntRatingsActive);
 
-            $identity = Zend_Auth::getInstance()->getStorage()->read();
-            if (Zend_Auth::getInstance()->hasIdentity()){
+            $identity = Default_Model_Auth_User::getInstance()->getIdentity();
+            if (Default_Model_Auth_User::getInstance()->hasIdentity()){
                 $ratingOfUserJson = $tableProjectRatings->getProjectRateForUser($this->_projectId,$identity->member_id);
                 $this->view->ratingOfUserJson =  Zend_Json::encode($ratingOfUserJson);
             }else{

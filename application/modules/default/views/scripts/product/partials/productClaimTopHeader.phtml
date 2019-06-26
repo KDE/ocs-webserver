@@ -26,10 +26,10 @@ $helperServerUrl = new Zend_View_Helper_ServerUrl();
 $helperTruncate = new Default_View_Helper_Truncate();
 $helperImage = new Default_View_Helper_Image();
 $helperGetAuthUser = new Default_View_Helper_GetAuthUser();
-$auth = Zend_Auth::getInstance();
+$auth = Default_Model_Auth_User::getInstance();
 $memberId = null;
 if ($auth->hasIdentity()) {
-    $memberId = $auth->getStorage()->read()->member_id;
+    $memberId = $auth->getIdentity()->member_id;
 } 
 ?>
 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">

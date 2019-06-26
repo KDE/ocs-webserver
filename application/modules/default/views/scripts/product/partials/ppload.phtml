@@ -674,8 +674,8 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
 
                                         <?php 
                              
-                                            $idt = Zend_Auth::getInstance()->getStorage()->read();
-                                            if(Zend_Auth::getInstance()->hasIdentity()){
+                                            $idt = Default_Model_Auth_User::getInstance()->getIdentity();
+                                            if(Default_Model_Auth_User::getInstance()->hasIdentity()){
                                                 if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName
                                                 ) { 
                                         ?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -23,8 +24,9 @@ class Default_View_Helper_UserRole extends Zend_View_Helper_Abstract
 {
     public function userRole()
     {
-        $auth = Zend_Auth::getInstance();
+        $auth = Default_Model_Auth_User::getInstance();
+
         #Zend_Debug::dump($auth->getStorage());
-        return $auth->getStorage()->read()->roleId;
+        return $auth->getIdentity()->roleId;
     }
 }

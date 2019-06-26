@@ -33,7 +33,11 @@ class Default_Model_Authorization
     /** @var  string */
     protected $_loginMethod;
     /** @var  object */
-    protected $_authUserData;
+    protected $authUserData;
+    /**
+     * @var object
+     */
+    protected $authExtUserData;
 
     /**
      * @param string $_dataModelName
@@ -50,7 +54,7 @@ class Default_Model_Authorization
      */
     public function logout()
     {
-        $auth = Zend_Auth::getInstance();
+        $auth = Default_Model_Auth_User::getInstance();
         $auth->clearIdentity();
 
         $session = new Zend_Session_Namespace();
@@ -69,9 +73,8 @@ class Default_Model_Authorization
      * @param string $loginMethod
      *
      * @return Zend_Auth_Result
-     * @throws Zend_Auth_Storage_Exception
-     * @throws Zend_Session_Exception
-     * @throws exception
+     * @throws Zend_Auth_Adapter_Exception
+     * @throws Zend_Exception
      */
     public function authenticateUser($userId, $userSecret, $setRememberMe = false, $loginMethod = null)
     {
@@ -80,12 +83,12 @@ class Default_Model_Authorization
         }
 
         $authResult = $this->authenticateCredentials($userId, $userSecret, $loginMethod);
-        if ($authResult->isValid()) {
-            $this->updateRememberMe($setRememberMe);
-            Zend_Session::regenerateId();
-            $this->_storeAuthSessionData();
-            $this->updateUserLastOnline('member_id', $this->_authUserData->member_id);
-        }
+//        if ($authResult->isValid()) {
+//            $this->updateRememberMe($setRememberMe);
+//            Zend_Session::regenerateId();
+//            $this->_storeAuthSessionData();
+//            $this->updateUserLastOnline('member_id', $this->_authUserData->member_id);
+//        }
 
         return $authResult;
     }
@@ -97,9 +100,10 @@ class Default_Model_Authorization
      *
      * @return Zend_Auth_Result
      * @throws Zend_Auth_Adapter_Exception
+     * @throws Zend_Db_Statement_Exception
      * @throws Zend_Exception
      */
-    protected function authenticateCredentials($identity, $credential, $loginMethod = null)
+    public function authenticateCredentials($identity, $credential, $loginMethod = null)
     {
         /** @var Local_Auth_Adapter_Ocs $authAdapter */
         $authAdapter = Local_Auth_AdapterFactory::getAuthAdapter($identity, $credential, $loginMethod);
@@ -108,7 +112,8 @@ class Default_Model_Authorization
         $authResult = $authAdapter->authenticate();
 
         if ($authResult->isValid()) {
-            $this->_authUserData = $authAdapter->getResultRowObject(null, 'password');
+            $this->authUserData = $authAdapter->getResultRowObject(null);
+            $this->authExtUserData = $this->getExtendedAuthUserData($this->authUserData);
         }
 
         return $authResult;
@@ -129,9 +134,9 @@ class Default_Model_Authorization
             return;
         }
         if ($modelRememberMe->hasValidCookie()) {
-            $modelRememberMe->updateSession($this->_authUserData->member_id);
+            $modelRememberMe->updateSession($this->authUserData->member_id);
         } else {
-            $modelRememberMe->createSession($this->_authUserData->member_id);
+            $modelRememberMe->createSession($this->authUserData->member_id);
         }
     }
 
@@ -141,17 +146,17 @@ class Default_Model_Authorization
      */
     protected function _storeAuthSessionData()
     {
-        $extendedAuthData = $this->getExtendedAuthUserData($this->_authUserData);
+        $extendedAuthData = $this->getExtendedAuthUserData($this->authUserData);
 
-        $auth = Zend_Auth::getInstance();
-        $auth->getStorage()->write($extendedAuthData);
+        $auth = Default_Model_Auth_User::getInstance();
+        $auth->setIdentity($extendedAuthData);
     }
 
     /**
      * @param object $authUserData
      *
      * @return object
-     * @throws exception
+     * @throws Zend_Db_Statement_Exception
      */
     protected function getExtendedAuthUserData($authUserData)
     {
@@ -172,14 +177,14 @@ class Default_Model_Authorization
         }
         $extendedAuthUserData->projects = $this->getProjectIdsForUser($authUserData->member_id);
 
-        return (object)array_merge((array)$authUserData, (array)$extendedAuthUserData);
+        return $extendedAuthUserData;
     }
 
     /**
      * @param int $roleId
      *
      * @return string
-     * @throws exception
+     * @throws Zend_Db_Statement_Exception
      */
     protected function getRoleNameForUserRole($roleId)
     {
@@ -254,7 +259,7 @@ class Default_Model_Authorization
      */
     public function getAuthData()
     {
-        return $this->_authUserData;
+        return $this->authUserData;
     }
 
     /**
@@ -267,8 +272,8 @@ class Default_Model_Authorization
     {
         $authDataAll = $this->getAllAuthUserData('member_id', $identity);
 
-        $auth = Zend_Auth::getInstance();
-        $auth->getStorage()->write($authDataAll);
+        $auth = Default_Model_Auth_User::getInstance();
+        $auth->setIdentity($authDataAll);
     }
 
     /**
@@ -280,9 +285,11 @@ class Default_Model_Authorization
      */
     protected function getAllAuthUserData($identifier, $identity)
     {
-        $this->_authUserData = $this->getAuthUserData($identifier, $identity);
+        $this->authUserData = $this->getAuthUserData($identifier, $identity);
 
-        return $this->getExtendedAuthUserData($this->_authUserData);
+        $this->authExtUserData = $this->getExtendedAuthUserData($this->authUserData);
+        return (object)array_merge((array)$this->authUserData, (array)$this->authExtUserData);
+
     }
 
     /**
@@ -290,7 +297,6 @@ class Default_Model_Authorization
      * @param string|int $identity
      *
      * @return object
-     * @throws Zend_Exception
      */
     protected function getAuthUserData($identifier, $identity)
     {
@@ -307,7 +313,6 @@ class Default_Model_Authorization
      * @param string $identity
      *
      * @return null|object
-     * @throws Zend_Exception
      */
     public function getAuthUserDataFromUnverified($identity)
     {
@@ -347,7 +352,7 @@ class Default_Model_Authorization
             Zend_Session::regenerateId();
             $this->_storeAuthSessionData();
 
-            return $this->_authUserData;
+            return $this->authUserData;
         }
 
         return false;
@@ -366,6 +371,21 @@ class Default_Model_Authorization
                 true) . ' = ?', $identity);
 
         return $dataTable->delete($where);
+    }
+
+    /**
+     * @return Local_Auth_User_Interface
+     * @throws Zend_Exception
+     */
+    public function getAuthUser()
+    {
+        // init user auth object
+        /** @var Default_Model_Auth_User $auth */
+        $auth = Default_Model_Auth_User::getInstance();
+        $auth->setUserData(array_merge((array)$this->authUserData, (array)$this->authExtUserData));
+        $auth->initAuthToken(Zend_Registry::get('config')->settings->jwt->toArray());
+
+        return $auth;
     }
 
 }

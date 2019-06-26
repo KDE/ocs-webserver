@@ -58,7 +58,7 @@ class Default_Model_MemberDeactivationLog extends Default_Model_DbTable_MemberDe
      */
     public function addLog($member_id, $object_type, $identifier)
     {
-        $identity = Zend_Auth::getInstance()->getIdentity()->member_id;
+        $identity = Default_Model_Auth_User::getInstance()->getIdentity()->member_id;
 
         $sql =
             "INSERT INTO `member_deactivation_log` (`deactivation_id`,`object_type_id`,`object_id`,`member_id`) VALUES (:deactivation_id,:object_type_id,:object_id,:member_id)";
@@ -122,7 +122,7 @@ class Default_Model_MemberDeactivationLog extends Default_Model_DbTable_MemberDe
      */
     public function addLogData($member_id, $object_type, $identifier, $data)
     {
-        $identity = Zend_Auth::getInstance()->getIdentity()->member_id;
+        $identity = Default_Model_Auth_User::getInstance()->getIdentity()->member_id;
 
         $sql =
             "INSERT INTO `member_deactivation_log` (`deactivation_id`,`object_type_id`,`object_id`,`member_id`, `object_data`) VALUES (:deactivation_id,:object_type_id,:object_id,:member_id,:object_data)";
@@ -162,7 +162,7 @@ class Default_Model_MemberDeactivationLog extends Default_Model_DbTable_MemberDe
      */
     public function deleteLog($member_id, $object_type, $identifer)
     {
-        $identity = Zend_Auth::getInstance()->getIdentity()->member_id;
+        $identity = Default_Model_Auth_User::getInstance()->getIdentity()->member_id;
 
         $sql =
             "UPDATE `member_deactivation_log` SET is_deleted = 1, deleted_at = NOW() WHERE  deactivation_id = :deactivation_id AND object_type_id = :object_type_id AND object_id = :object_id";

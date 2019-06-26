@@ -2,7 +2,7 @@
 // get the default db adapter
 $adapter = Zend_Db_Table::getDefaultAdapter();
 $profiler = $adapter->getProfiler();
-if (Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+if (Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {
 
     if ($profiler->getEnabled() && $profiler->getTotalNumQueries() > 0) :
         ?>

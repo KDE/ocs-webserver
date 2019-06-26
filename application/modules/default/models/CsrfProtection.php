@@ -62,18 +62,18 @@ class Default_Model_CsrfProtection
         if (false === function_exists("hash_equals")) {
             $valid = self::hash_equals($session->crsf_token, $hash);
             Zend_Registry::get('logger')->debug(__METHOD__
-                . PHP_EOL . ' - session csrf token: ' . print_r($session->crsf_token, true)
-                . PHP_EOL . ' - form csrf token: ' . print_r($hash, true)
-                . PHP_EOL . ' - crsf validation result: ' . (($valid === true) ? 'true' : 'false'));
+                                                . PHP_EOL . ' - session csrf token: ' . print_r($session->crsf_token,true)
+                                                . PHP_EOL . ' - form csrf token: ' . print_r($hash, true)
+                                                . PHP_EOL . ' - crsf validation result: ' . (($valid === true) ? 'true' : 'false'));
 
             return $valid;
         }
 
         $valid = hash_equals($session->crsf_token, $hash);
         Zend_Registry::get('logger')->debug(__METHOD__
-                . PHP_EOL . ' - session csrf token: ' . print_r($session->crsf_token, true)
-                . PHP_EOL . ' - form csrf token: ' . print_r($hash, true)
-                . PHP_EOL . ' - crsf validation result: ' . (($valid === true) ? 'true' : 'false'));
+                                            . PHP_EOL . ' - session csrf token: ' . print_r($session->crsf_token, true)
+                                            . PHP_EOL . ' - form csrf token: ' . print_r($hash, true)
+                                            . PHP_EOL . ' - crsf validation result: ' . (($valid === true) ? 'true' : 'false'));
 
         return $valid;
     }

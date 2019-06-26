@@ -77,8 +77,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
-        $auth = Zend_Auth::getInstance();
-        $userId = $auth->getStorage()->read()->member_id;
+        $auth = Default_Model_Auth_User::getInstance();
+        $userId = $auth->getIdentity()->member_id;
 
 
         //Send user to LDAP
@@ -151,9 +151,9 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $this->view->redirect = $this->getParam('redirect');
 
         // if the user is still logged in, we do not show the login page. They should log out first.
-        if (Zend_Auth::getInstance()->hasIdentity()) {
+        if (Default_Model_Auth_User::getInstance()->hasIdentity()) {
             $this->_helper->flashMessenger->addMessage('<p class="text-danger center">You are still logged in. Please click <a href="/logout" class="bold">here</a> to log out first.</p>');
-            $this->handleRedirect(Zend_Auth::getInstance()->getIdentity()->member_id);
+            $this->handleRedirect(Default_Model_Auth_User::getInstance()->getIdentity()->member_id);
         }
 
         $formLogin = new Default_Form_Login();
@@ -246,32 +246,39 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         Zend_Registry::get('logger')->info(__METHOD__
                                            . PHP_EOL . ' - authentication successful.'
+                                           . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
                                            . PHP_EOL . ' - user: ' . $values['mail']
-                                           . PHP_EOL . ' - user_id: ' . isset(Zend_Auth::getInstance()->getStorage()->read()->member_id) ? Zend_Auth::getInstance()->getStorage()->read()->member_id : ''
-                                                                                                                                                                                                       . PHP_EOL . ' - remember_me: ' . $values['remember_me']
-                                                                                                                                                                                                       . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
+                                           . PHP_EOL . ' - user_id: ' . isset(Default_Model_Auth_User::getInstance()->getIdentity()->member_id) ? Default_Model_Auth_User::getInstance()->getIdentity()->member_id : ''
+                                                                                                                                                                                                                     . PHP_EOL . ' - remember_me: ' . $values['remember_me']
+                                                                                                                                                                                                                     . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
         );
 
+        /** @var Default_Model_Auth_User $auth */
+        $auth = $authModel->getAuthUser();
+        $config_session = Zend_Registry::get('config')->settings->session->cookie->toArray();
+        if (APPLICATION_ENV == 'development') {
+            $config_session['secure'] = false;
+        }
+        $auth->startSession($config_session);
 
-        $filter = new Local_Filter_Url_Encrypt();
-        $p = $filter->filter($values['password']);
-
-        $sess = new Zend_Session_Namespace('ocs_meta');
-        $sess->phash = $p;
-
-        $auth = Zend_Auth::getInstance();
-        $userId = $auth->getStorage()->read()->member_id;
-
-        $jwt = Default_Model_Jwt::encode($userId);
-        $sess->openid = $jwt;
+//        $filter = new Local_Filter_Url_Encrypt();
+//        $p = $filter->filter($values['password']);
+//
+//        $sess = new Zend_Session_Namespace('ocs_meta');
+//        $sess->phash = $p;
+//
+//        $userId = $auth->member_id;
+//
+//        $jwt = Default_Model_Jwt::encode($userId);
+//        $sess->openid = $jwt;
 
         //If the user is a hive user, we have to update his password
-        $this->changePasswordIfNeeded($userId, $values['password']);
+        $this->changePasswordIfNeeded($auth->member_id, $values['password']);
 
 
         //user has to correct his data?
         $modelReviewProfile = new Default_Model_ReviewProfileData();
-        if (false === $modelReviewProfile->hasValidProfile($auth->getStorage()->read())) {
+        if (false === $modelReviewProfile->hasValidProfile($auth)) {
             Zend_Registry::get('logger')->info(__METHOD__
                                                . PHP_EOL . ' - User has to change user data!'
                                                . PHP_EOL . ' - error code: ' . print_r($modelReviewProfile->getErrorCode(),
@@ -285,7 +292,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
                     'redirect' => '/r/change/e/' . $modelReviewProfile->getErrorCode() . $redirect
                 ));
             } else {
-                $this->getRequest()->setParam('member_id', $userId);
+                $this->getRequest()->setParam('member_id', $auth->member_id);
                 $this->redirect("/r/change/e/" . $modelReviewProfile->getErrorCode(), $this->getAllParams());
             }
 
@@ -294,7 +301,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         // handle redirect
         $this->view->loginok = true;
-        $this->handleRedirect($userId);
+        $this->handleRedirect($auth->member_id);
     }
 
     /**
@@ -487,7 +494,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
-        if (Zend_Auth::getInstance()->hasIdentity()) {
+        if (Default_Model_Auth_User::getInstance()->hasIdentity()) {
             $modelAuth = new Default_Model_Authorization();
             $modelAuth->logout();
         }

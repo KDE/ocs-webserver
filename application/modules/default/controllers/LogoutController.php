@@ -38,8 +38,8 @@ class LogoutController extends Local_Controller_Action_DomainSwitch
         }
         $this->view->redirect = $redir;
 
-        if (Zend_Auth::getInstance()->hasIdentity()) {
-            $user_id = Zend_Auth::getInstance()->getStorage()->read()->member_id;
+        if (Default_Model_Auth_User::getInstance()->hasIdentity()) {
+            $user_id = Default_Model_Auth_User::getInstance()->getIdentity()->member_id;
 
             $modelAuth = new Default_Model_Authorization();
             $modelAuth->logout();

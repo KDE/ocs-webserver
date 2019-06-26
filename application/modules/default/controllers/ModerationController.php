@@ -74,29 +74,26 @@ class ModerationController extends Local_Controller_Action_DomainSwitch
 
     public function updateAction()
     {
-    	$dataId = (int)$this->getParam(self::DATA_ID_NAME, null);
-    	$note = $this->getParam(self::DATA_NOTE, null);
-    	$value = $this->getParam(self::DATA_VALUE, null);
-    	if($value==null)
-    	{
-    		$value = 0;
-    	}
-    	if($value==0)
-    	{
-		$tableTags = new Default_Model_Tags();
-		$tableTags->saveGhnsExcludedTagForProject($dataId, 0);
-    	}
+        $dataId = (int)$this->getParam(self::DATA_ID_NAME, null);
+        $note = $this->getParam(self::DATA_NOTE, null);
+        $value = $this->getParam(self::DATA_VALUE, null);
+        if ($value == null) {
+            $value = 0;
+        }
+        if ($value == 0) {
+            $tableTags = new Default_Model_Tags();
+            $tableTags->saveGhnsExcludedTagForProject($dataId, 0);
+        }
 
-    	$auth = Zend_Auth::getInstance();
-        	$identity = $auth->getIdentity();
-    	$mod = new Default_Model_ProjectModeration();   
-    	//createModeration($project_id,$project_moderation_type_id, $is_set, $userid,$note)
-    	$mod->createModeration($dataId,Default_Model_ProjectModeration::M_TYPE_GET_HOT_NEW_STUFF_EXCLUDED, $value, $identity->member_id,$note);
-    	$jTableResult = array();
-        	$jTableResult['Result'] = self::RESULT_OK;                		
-        	$this->_helper->json($jTableResult);
+        $auth = Default_Model_Auth_User::getInstance();
+        $identity = $auth->getIdentity();
+        $mod = new Default_Model_ProjectModeration();
+        //createModeration($project_id,$project_moderation_type_id, $is_set, $userid,$note)
+        $mod->createModeration($dataId, Default_Model_ProjectModeration::M_TYPE_GET_HOT_NEW_STUFF_EXCLUDED, $value,
+            $identity->member_id, $note);
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+        $this->_helper->json($jTableResult);
     }
-
-      
 
 }

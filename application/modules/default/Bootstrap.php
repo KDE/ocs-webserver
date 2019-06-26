@@ -39,35 +39,35 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         return $autoloader;
     }
 
-    /**
-     * @throws Zend_Exception
-     * @throws Zend_Session_Exception
-     */
-    protected function _initSessionManagement()
-    {
-        $config = $this->getOption('settings')['session'];
-
-        $domain = ($_SERVER['HTTP_HOST'] != 'localhost') ? $_SERVER['HTTP_HOST'] : false;
-
-        if ($config['saveHandler']['replace']['enabled']) {
-            $cacheClass = 'Zend_Cache_Backend_' . $config['saveHandler']['cache']['type'];
-            $_cache = new $cacheClass($config['saveHandler']['options']);
-            Zend_Loader::loadClass($config['saveHandler']['class']);
-            Zend_Session::setSaveHandler(new $config['saveHandler']['class']($_cache));
-            Zend_Session::setOptions(array(
-                'cookie_domain'   => $domain,
-                'cookie_path'     => $config['auth']['cookie_path'],
-                'cookie_lifetime' => $config['auth']['cookie_lifetime'],
-                'cookie_httponly' => $config['auth']['cookie_httponly']
-            ));
-            Zend_Session::start();
-        }
-
-        $session_namespace = new Zend_Session_Namespace($config['auth']['name']);
-        $session_namespace->setExpirationSeconds($config['auth']['cookie_lifetime']);
-
-        Zend_Auth::getInstance()->setStorage(new Zend_Auth_Storage_Session($session_namespace->getNamespace()));
-    }
+//    /**
+//     * @throws Zend_Exception
+//     * @throws Zend_Session_Exception
+//     */
+//    protected function _initSessionManagement()
+//    {
+//        $config = $this->getOption('settings')['session'];
+//
+//        $domain = ($_SERVER['HTTP_HOST'] != 'localhost') ? $_SERVER['HTTP_HOST'] : false;
+//
+//        if ($config['saveHandler']['replace']['enabled']) {
+//            $cacheClass = 'Zend_Cache_Backend_' . $config['saveHandler']['cache']['type'];
+//            $_cache = new $cacheClass($config['saveHandler']['options']);
+//            Zend_Loader::loadClass($config['saveHandler']['class']);
+//            Zend_Session::setSaveHandler(new $config['saveHandler']['class']($_cache));
+//            Zend_Session::setOptions(array(
+//                'cookie_domain'   => $domain,
+//                'cookie_path'     => $config['auth']['cookie_path'],
+//                'cookie_lifetime' => $config['auth']['cookie_lifetime'],
+//                'cookie_httponly' => $config['auth']['cookie_httponly']
+//            ));
+//            Zend_Session::start();
+//        }
+//
+//        $session_namespace = new Zend_Session_Namespace($config['auth']['name']);
+//        $session_namespace->setExpirationSeconds($config['auth']['cookie_lifetime']);
+//
+//        Zend_Auth::getInstance()->setStorage(new Zend_Auth_Storage_Session($session_namespace->getNamespace()));
+//    }
 
     protected function _initConfig()
     {
@@ -262,9 +262,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $front->unregisterPlugin('Zend_Controller_Plugin_ErrorHandler');
         $front->registerPlugin(new Default_Plugin_ErrorHandler());
-        $front->registerPlugin(new Default_Plugin_RememberMe(Zend_Auth::getInstance()));
-        $front->registerPlugin(new Default_Plugin_SignOn(Zend_Auth::getInstance()));
-        $front->registerPlugin(new Default_Plugin_Acl(Zend_Auth::getInstance(), $aclRules));
+        $front->registerPlugin(new Default_Plugin_Auth());
+//        $front->registerPlugin(new Default_Plugin_RememberMe(Zend_Auth::getInstance()));
+//        $front->registerPlugin(new Default_Plugin_SignOn(Zend_Auth::getInstance()));
+        $front->registerPlugin(new Default_Plugin_Acl(Default_Model_Auth_User::getInstance(), $aclRules));
 
         $loader = new Zend_Loader_PluginLoader();
         $loader->addPrefixPath('Zend_View_Helper', APPLICATION_LIB . '/Zend/View/Helper/')

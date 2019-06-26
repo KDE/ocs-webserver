@@ -28,7 +28,7 @@ $helpTruncate = new Default_View_Helper_Truncate();
 $helpProductUrl = new Default_View_Helper_BuildProductUrl();
 $helpBBCode = new Default_View_Helper_Bbcode2html();
 
-$identity = Zend_Auth::getInstance()->getStorage()->read();
+$identity = Default_Model_Auth_User::getInstance()->getIdentity();
 
 $loginUrl = '/login?redirect=' . $helpEncryptUrl->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()
         ->getRequestUri(), true);

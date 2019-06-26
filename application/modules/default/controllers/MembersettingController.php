@@ -90,7 +90,7 @@ class MembersettingController extends Zend_Controller_Action
     public function getsettingsAction()
     {
 			$this->_initResponseHeader();
-    	$identity = Zend_Auth::getInstance()->getStorage()->read();
+    	$identity = Default_Model_Auth_User::getInstance()->getIdentity();
     	if($identity==null || $identity->member_id==null)
     	{
     			$response = array(
@@ -116,7 +116,7 @@ class MembersettingController extends Zend_Controller_Action
     public function setsettingsAction()
     {
 			$this->_initResponseHeader();
-    	$identity = Zend_Auth::getInstance()->getStorage()->read();
+    	$identity = Default_Model_Auth_User::getInstance()->getIdentity();
     	if($identity==null || $identity->member_id==null)
     	{
     			$response = array(
@@ -141,7 +141,7 @@ class MembersettingController extends Zend_Controller_Action
 		{
 
 			$this->_initResponseHeader();
-        	$identity = Zend_Auth::getInstance()->getStorage()->read();
+        	$identity = Default_Model_Auth_User::getInstance()->getIdentity();
         	if($identity==null || $identity->member_id==null)
         	{
         			$response = array(
@@ -176,7 +176,7 @@ class MembersettingController extends Zend_Controller_Action
 		public function memberjsonAction()
     {
 				$this->_initResponseHeader();
-  			$identity = Zend_Auth::getInstance()->getStorage()->read();
+  			$identity = Default_Model_Auth_User::getInstance()->getIdentity();
 	    	$member_id = $this->getParam('member_id');
         $results = null;
         if($member_id){

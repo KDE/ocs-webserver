@@ -101,7 +101,7 @@ foreach ($this->products as $this->product) {
     <div class="explore-product-plings col-lg-2 col-md-2 col-sm-2 col-xs-2">
         <!-- RATING -->
 
-         <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+         <?php if(Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {
                       if($this->product->laplace_score)
                       {
                         echo 'Score_old : '.$this->product->laplace_score_old.'%';

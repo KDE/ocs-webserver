@@ -14,7 +14,7 @@ $getAuthUser = new Default_View_Helper_GetAuthUser();
 $member = $getAuthUser->getAuthUser();
 $phash = null;
 $ltat = '';
-if (Zend_Auth::getInstance()->hasIdentity()) {
+if (Default_Model_Auth_User::getInstance()->hasIdentity()) {
     $sess = new Zend_Session_Namespace('ocs_meta');
     $phash = $sess->phash;
     $ltat = $sess->openid;

@@ -164,7 +164,7 @@ if($this->inputFilterOriginal ==1)
     <div class="GridFlex">
       <div class="GridFlex-cell sidebar-left" >
           <?php  $time_start = microtime(true);echo $this->render('explore/partials/filter.phtml'); $time_elapsed = microtime(true) - $time_start; ?>
-          <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+          <?php if(Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {
              echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
           }?>
       </div>
@@ -181,7 +181,7 @@ if($this->inputFilterOriginal ==1)
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
                           'rating') ?>"><span><?= $this->translate('Rating') ?></span></a>
                   </li>
-                   <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {?>
+                   <?php if(Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {?>
                   <li <?=$this->filters['order'] == 'top' ? 'class="active"' :'' ?>>
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
                           'top') ?>"><span><?= $this->translate('Top') ?></span></a>
@@ -234,7 +234,7 @@ if($this->inputFilterOriginal ==1)
                        $time_elapsed = microtime(true) - $time_start;
                   }
                   ?>
-                  <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                  <?php if(Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {
                       echo '<div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12">';
                       echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
                       echo '</div>';
@@ -289,7 +289,7 @@ $time_start = microtime(true);
         </aside>
           <?php
           $time_elapsed = microtime(true) - $time_start;
-          if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+          if(Default_Model_Auth_User::getInstance()->hasIdentity() AND Default_Model_Auth_User::getInstance()->getIdentity()->roleName == 'admin') {
               echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
           }?>
       </div>

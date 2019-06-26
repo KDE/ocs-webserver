@@ -29,7 +29,7 @@ class ProductcategoryController extends Local_Controller_Action_DomainSwitch
     {
         parent::init();
 
-        $this->auth = Zend_Auth::getInstance();
+        $this->auth = Default_Model_Auth_User::getInstance();
     }
 
     public function fetchchildrenAction()

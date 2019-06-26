@@ -21,7 +21,7 @@
  **/
 
 $this->tab = 'downloadhistory';
-$identity = Zend_Auth::getInstance()->getStorage()->read();
+$identity = Default_Model_Auth_User::getInstance()->getIdentity();
 $this->issupport = $this->isSupporter($this->member->member_id);
 //Rating for ACTIVE SUPPORTERS only
 
@@ -107,7 +107,7 @@ $pageCount = $this->downloadhistory->getTotalItemCount()/$this->downloadhistory-
 </main>
 
 
-  <?php if (Zend_Auth::getInstance()->hasIdentity() /*&& $this->issupport */ ) { ?>
+  <?php if (Default_Model_Auth_User::getInstance()->hasIdentity() /*&& $this->issupport */ ) { ?>
     <div id="review-product-modal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="padding-bottom: 20px">
