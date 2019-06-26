@@ -31,6 +31,7 @@ class Default_Model_DbTable_Section extends Local_Model_Table
     protected $_keyColumnsForRow = array('section_id');
     protected $_key = 'section_id';
     protected $_name = "section";
+    
 
     /**
      * @param null $id
