@@ -592,6 +592,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         $isActive = true,
         $depth = null
     ) {
+        
         $sqlActive = $isActive == true ? " parent_active = 1 AND pc.is_active = 1" : '';
         $sqlDepth = is_null($depth) == true ? '' : " AND depth <= " . (int)$depth;
         $sqlHaving = $sqlActive || $sqlDepth ? "HAVING {$sqlActive} {$sqlDepth}" : '';

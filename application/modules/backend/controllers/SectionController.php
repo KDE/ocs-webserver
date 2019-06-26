@@ -32,6 +32,7 @@ class Backend_SectionController extends Local_Controller_Action_Backend
     protected $_modelName = 'Default_Model_DbTable_Section';
     protected $_pageTitle = 'Manage Sections';
 
+    
     public function init()
     {
         $this->_model = new Default_Model_DbTable_Section();

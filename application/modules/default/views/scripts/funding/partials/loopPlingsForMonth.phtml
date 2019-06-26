@@ -23,7 +23,7 @@
 ?>
 <style>
     .cell-default {
-        line-height: 4em;
+        line-height: 2em;
         vertical-align: middle;
     }
     .row-total {
@@ -77,6 +77,10 @@ $printDate = $printMonth->format('M Y');
 $allSections = $modelDownload->fetchAllSectionStats($yearmonth);
 $countDownloadsOverall = count($allSections);
 
+$countIncome = 0;
+$countPayout = 0;
+$countPayout2 = 0;
+
 if ($countDownloadsOverall > 0) {
     $firstProduct = $allSections[0];
     if ($firstProduct) {
@@ -88,17 +92,7 @@ if ($countDownloadsOverall > 0) {
         } else {
             $isCurrentMonth = false;
         }
-        $sum_total_month_score = 0;
-        $sum_total_month = 0;
-        $sum_total_month_uk = 0;
-        $sum_total_month_new = 0;
-        $sum_total_text = '';
-        $sum_total_payout = 0;
-        $sum_total_payout_uk = 0;
-        $sum_total_payout_new = 0;
         
-        $sum_total_month_potential_payout = 0;
-        $sum_total_potential_payout = 0;
         
         ?>
         <div class="tab-pane fade <?=$css_active?>" id="<?=$firstProduct['yearmonth']?>">
@@ -109,30 +103,42 @@ if ($countDownloadsOverall > 0) {
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
                     
                     <div class="col-md-1 cell-default" style=""><?=$section['section_name']?></div>
-                    <div class="col-md-1 cell-default" style=""></div>
-                    <div class="col-md-1 cell-default" style=""></div>
-                    <div class="col-md-1 cell-default" style=""><?=$section['sum_dls']?></div>
-                    <div class="col-md-1 cell-default" style=""><?=$section['sum_amount']?></div>
+                    <div class="col-md-1 text-right cell-default" style=""><?= round($section['sum_support'],2)?></div>
+                    <div class="col-md-1 text-right cell-default" style=""><?=round($section['sum_sponsor'],2)?></div>
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?= round($section['sum_support'] + $section['sum_sponsor'], 2) ?></strong></div>
+                    <!--<div class="col-md-1 text-right cell-default" style=""><?=$section['sum_dls']?></div>-->
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?=$section['sum_amount']?></strong></div>
 
 
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                    <div class="col-md-1 cell-default" style=""></div>
-                    <div class="col-md-1 cell-default" style=""></div>
+                    <!--<div class="col-md-1 text-right cell-default" style=""><?=$section['sum_dls_payout']?></div>-->
+                    <div class="col-md-1 text-right cell-default" style=""><?=$section['sum_amount_payout']?></div>
                     <?php endif; ?>
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?php 
+                        if(($section['sum_support'] + $section['sum_sponsor']) < $section['sum_amount']) {
+                            echo round(($section['sum_support'] + $section['sum_sponsor']) / $section['sum_amount'], 2);
+                        } else {
+                            echo "1.00";
+                        }
+                    ?></strong></div>
                 </div>
             <?php
+                $countIncome += $section['sum_support'] + $section['sum_sponsor'];
+                $countPayout += $section['sum_amount'];
+                $countPayout2 += $section['sum_amount_payout'];
             }
             ?>
             <div class='row row-total'>
+                <div class='col-md-1' style=""></div>
                 <div class='col-md-1 text-right' style=""></div>
                 <div class='col-md-1 text-right' style=""></div>
-                <div class='col-md-1 text-right' style=""></div>
-                <div class='col-md-1 text-right' style=""></div>
-                <div class='col-md-1 text-right' style=""></div>
+                <div class='col-md-1 text-right' style=""><strong><?= round($countIncome,2) ?></strong></div>
+                <div class='col-md-1 text-right' style=""><strong><?= round($countPayout,2) ?></strong></div>
                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                <div class='col-md-1 text-right' style=""></div>
-                <div class='col-md-1 text-right' style=""></div>
+                <!--<div class='col-md-1 text-right' style=""></div>-->
+                <div class='col-md-1 text-right' style=""><?= round($countPayout2,2) ?></div>
                 <?php endif; ?>
+                <div class='col-md-1 text-right' style=""></div>
             </div>
             
         </div>

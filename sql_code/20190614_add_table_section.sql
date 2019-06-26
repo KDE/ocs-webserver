@@ -62,3 +62,18 @@ ALTER TABLE `section_sponsor`
 
 
 
+/*
+Insert Data, if needed
+INSERT INTO section (name, description) VALUES ('Themes', 'Themes Section');
+INSERT INTO section (name, description) VALUES ('Software', 'Software Section');
+INSERT INTO section (name, description) VALUES ('Videos', 'Videos Section');
+INSERT INTO section (name, description) VALUES ('Music', 'Music Section');
+
+SELECT * FROM section;
+
+INSERT INTO section_category (project_category_id,section_id)
+SELECT c.project_category_id, 2 AS section_id FROM project_category c
+WHERE c.is_active = 1
+;
+
+*/

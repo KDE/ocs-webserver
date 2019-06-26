@@ -137,7 +137,7 @@ var aItemData = [
             ]
         }
     },
-    {
+    { 
         text: "Section",
         submenu: {
             id: "section",

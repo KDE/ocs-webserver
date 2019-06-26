@@ -31,6 +31,7 @@ class Backend_SectioncategoriesController extends Local_Controller_Action_Backen
     protected $_authMember;
 
     protected $_modelName = 'Default_Model_DbTable_ProjectCategory';
+    
 
     public function init()
     {

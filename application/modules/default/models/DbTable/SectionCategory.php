@@ -25,6 +25,7 @@ class Default_Model_DbTable_SectionCategory extends Local_Model_Table
     protected $_keyColumnsForRow = array('section_category_id');
     protected $_key = 'section_category_id';
     protected $_name = "section_store_category";
+    
 
     /**
      * @param int $dataId
