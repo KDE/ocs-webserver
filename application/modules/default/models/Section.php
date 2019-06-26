@@ -79,7 +79,18 @@ class Default_Model_Section
     public function fetchAllSectionStats($yearmonth = null)
     {
         $sql = "SELECT p.yearmonth, s.section_id, s.name AS section_name
-                ,0 AS sum_support
+                ,(SELECT SUM(tier * (s.percent_of_support/100)) AS sum_support FROM (
+                        SELECT * FROM support su
+                        WHERE su.status_id = 2
+                        AND su.type_id = 0
+                        AND DATE_FORMAT(su.active_time, '%Y%m') <= :yearmonth
+                        AND DATE_FORMAT(su.active_time + INTERVAL 1 YEAR, '%Y%m') >= :yearmonth
+                        UNION ALL 
+                        SELECT * FROM support su2
+                        WHERE su2.status_id = 2
+                        AND su2.type_id = 1
+                        AND DATE_FORMAT(su2.active_time, '%Y%m') <= :yearmonth
+                ) A) AS sum_support
                 ,(SELECT SUM(sp.amount * (ssp.percent_of_sponsoring/100)) AS sum_sponsor FROM sponsor sp
                 LEFT JOIN section_sponsor ssp ON ssp.sponsor_id = sp.sponsor_id
                 WHERE sp.is_active = 1
@@ -121,7 +132,18 @@ class Default_Model_Section
     public function fetchSectionStats($section_id, $yearmonth = null)
     {
         $sql = "SELECT p.yearmonth, s.section_id, s.name AS section_name
-                ,0 AS sum_support
+                ,(SELECT SUM(tier * (s.percent_of_support/100)) AS sum_support FROM (
+                        SELECT * FROM support su
+                        WHERE su.status_id = 2
+                        AND su.type_id = 0
+                        AND DATE_FORMAT(su.active_time, '%Y%m') <= :yearmonth
+                        AND DATE_FORMAT(su.active_time + INTERVAL 1 YEAR, '%Y%m') >= :yearmonth
+                        UNION ALL 
+                        SELECT * FROM support su2
+                        WHERE su2.status_id = 2
+                        AND su2.type_id = 1
+                        AND DATE_FORMAT(su2.active_time, '%Y%m') <= :yearmonth
+                ) A) AS sum_support
                 ,(SELECT SUM(sp.amount * (ssp.percent_of_sponsoring/100)) AS sum_sponsor FROM sponsor sp
                 LEFT JOIN section_sponsor ssp ON ssp.sponsor_id = sp.sponsor_id
                 WHERE sp.is_active = 1
