@@ -62,7 +62,8 @@ class DlController extends Local_Controller_Action_DomainSwitch
                 $data = array('project_id' => $projectId, 'member_id' => $memberId, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size);
                 $memberDlHistory->createRow($data)->save();
             }
-            
+
+
             /*
             //Log download
             try {
@@ -108,6 +109,24 @@ class DlController extends Local_Controller_Action_DomainSwitch
                     . '&filename=' . urldecode($file_name);
             }
             $this->view->url = $url;
+
+
+            // anonymous dl save to member_download_fingerprint
+            if(isset($file_id) && isset($projectId) && !isset($memberId)) {
+                $config = Zend_Registry::get('config');                
+                $cookieName = $config->settings->session->auth->anonymous;
+                $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
+                if($storedInCookie==null)
+                {
+                   $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
+                   $cookieExpire = time() + $remember_me_seconds;
+                   setcookie($cookieName, $hash, $cookieExpire, '/'); 
+                }
+
+                $memberDlAnonymous = new Default_Model_DbTable_MemberDownloadAnonymous();
+                $data = array('project_id' => $projectId, 'user' => $_COOKIE[$cookieName], 'file_id' => $file_id);
+                $memberDlAnonymous->createRow($data)->save();
+            }
         }
         
 
