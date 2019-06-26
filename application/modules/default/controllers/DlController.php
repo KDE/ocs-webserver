@@ -116,7 +116,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
                 $config = Zend_Registry::get('config');                
                 $cookieName = $config->settings->session->auth->anonymous;
                 $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
-                if($storedInCookie==null)
+                if(!$storedInCookie)
                 {
                    $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
                    $cookieExpire = time() + $remember_me_seconds;
