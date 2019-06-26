@@ -146,13 +146,20 @@
                     create: false,
                     edit: false,
                     width: '30%'
-                },                
+                },
+                section_name: {
+                    title: 'Section-Name',
+                    type: 'textarea',
+                    create: false,
+                    edit: false,
+                    width: '30%'
+                }, 
                 section_id: {
                     title: 'Section',
                     type: 'multiselectddl',
                     create: true,
                     edit: true,
-                    list: true,
+                    list: false,
                     options: function (data) {
                         data.clearCache();                        
                         return '/backend/sectioncategories/allsections';
