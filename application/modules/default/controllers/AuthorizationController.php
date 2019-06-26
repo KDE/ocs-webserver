@@ -485,7 +485,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
     }
 
     /**
-     * @throws Zend_Cache_Exception
      * @throws Zend_Exception
      * @throws Zend_Session_Exception
      */

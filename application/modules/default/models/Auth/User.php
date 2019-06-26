@@ -80,6 +80,30 @@ class Default_Model_Auth_User extends Local_Auth_User_Abstract
         $this->userData = $this->fetchUserData($session_data->sub);
     }
 
+    public function removeSession(array $config)
+    {
+        $name = !empty($config['name']) ? $config['name'] : 'ocs_id';
+
+        $oldCookie = isset($_COOKIE['$name']) ? $_COOKIE['name'] : null;
+
+        $string_interval = isset($config['expire']) ? $config['expire'] : '30 days';
+        $date = new DateTime();
+        $interval = DateInterval::createFromDateString($string_interval);
+        $expire = $date->sub($interval)->getTimestamp();
+
+        $path = '/';
+
+        $domain = !empty($config['domain']) ? $config['domain'] : Zend_Controller_Front::getInstance()->getRequest()->getHttpHost();
+
+        $secure = isset($config['secure']) ? $config['secure'] : true;
+
+        $http_only = isset($config['http_only']) ? $config['http_only'] : true;
+
+        setcookie($name, $this->auth_token, $expire, $path, $domain, $secure, $http_only);
+
+        return $this;
+    }
+
     private function fetchUserData($member_id)
     {
         $modelMember = new Default_Model_Member();

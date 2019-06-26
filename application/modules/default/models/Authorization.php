@@ -56,6 +56,7 @@ class Default_Model_Authorization
     {
         $auth = Default_Model_Auth_User::getInstance();
         $auth->clearIdentity();
+        $auth->removeSession(Zend_Registry::get('config')->settings->session->cookie->toArray());
 
         $session = new Zend_Session_Namespace();
         $session->unsetAll();

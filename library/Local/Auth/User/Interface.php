@@ -12,7 +12,12 @@ interface Local_Auth_User_Interface
 
     public function getIdentity();
 
+    public function clearIdentity();
+
     public function startSession(array $config);
 
     public function initSession(array $config);
+
+    public function removeSession(array $config);
+
 }

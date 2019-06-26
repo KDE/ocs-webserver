@@ -91,6 +91,12 @@ abstract class Local_Auth_User_Abstract implements Local_Auth_User_Interface
         return $this->userData;
     }
 
+    public function clearIdentity()
+    {
+        $this->userData = null;
+        $this->auth_token = null;
+    }
+
     /**
      * @param Local_Auth_Token_Interface $token
      * @return Local_Auth_User_Abstract
@@ -117,6 +123,8 @@ abstract class Local_Auth_User_Abstract implements Local_Auth_User_Interface
     public function setAuthToken($auth_token)
     {
         $this->auth_token = $auth_token;
+
+        return $this;
     }
 
     public function getAuthToken()
@@ -127,6 +135,13 @@ abstract class Local_Auth_User_Abstract implements Local_Auth_User_Interface
     public function hasAuthToken()
     {
         return !empty($this->auth_token);
+    }
+
+    public function clearAuthToken()
+    {
+        $this->auth_token = null;
+
+        return $this;
     }
 
     /**
@@ -154,5 +169,11 @@ abstract class Local_Auth_User_Abstract implements Local_Auth_User_Interface
      * @return $this
      */
     public abstract function initSession(array $config);
+
+    /**
+     * @param array $config
+     * @return $this
+     */
+    public abstract function removeSession(array $config);
 
 }
