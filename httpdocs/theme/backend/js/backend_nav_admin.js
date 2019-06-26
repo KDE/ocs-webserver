@@ -138,6 +138,13 @@ var aItemData = [
         }
     },
     {
+                {text: "Sections", url: "/backend/section"},
+                {text: "Categories", url: "/backend/sectioncategories"},
+                {text: "Sponsors", url: "/backend/sponsor"}
+            ]
+        }
+    },
+    {
         text: "Operating System",
         submenu: {
             id: "operatingsystem",

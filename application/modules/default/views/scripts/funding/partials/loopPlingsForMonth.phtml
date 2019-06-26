@@ -1,0 +1,165 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+?>
+<style>
+    .cell-default {
+        line-height: 2em;
+        vertical-align: middle;
+    }
+    .row-total {
+        border-top: #1595ee solid thin;
+        padding-top: 1em;
+        padding-bottom: 1em;
+        line-height: 30px;
+    }
+    
+    .popover {
+        min-width:350px;
+    }
+    
+    .popover-title { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+    
+    .popover-content { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+</style>
+<ul class="nav nav-tabs margin-bottom-10">
+<?php
+    
+$isCurrentMonth = false;
+$modelDownload = new Default_Model_Section();
+$yearmonth = null;
+
+if(isset($this->yearmonth)) {
+    $yearmonth = $this->yearmonth;
+}
+?>
+
+<div class="tab-content">
+<?php
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+
+$css_active = ' in active';
+$has_paypal = false;
+$currency = new Zend_Currency('en_US');
+
+$currentDate = date("Ym",time());
+$printCurrentMonth = new DateTime($currentDate.'01');
+
+$printMonth = new DateTime($yearmonth.'01');
+$printDate = $printMonth->format('M Y');
+
+$allSections = $modelDownload->fetchAllSectionStats($yearmonth);
+$countDownloadsOverall = count($allSections);
+
+if ($countDownloadsOverall > 0) {
+    $firstProduct = $allSections[0];
+    if ($firstProduct) {
+        $printMonth = new DateTime($firstProduct['yearmonth'].'01');
+        $printCurrentMonth = new DateTime($currentDate.'01');
+        
+        if($printMonth == $printCurrentMonth) {
+            $isCurrentMonth = true;
+        } else {
+            $isCurrentMonth = false;
+        }
+        $sum_total_month_score = 0;
+        $sum_total_month = 0;
+        $sum_total_month_uk = 0;
+        $sum_total_month_new = 0;
+        $sum_total_text = '';
+        $sum_total_payout = 0;
+        $sum_total_payout_uk = 0;
+        $sum_total_payout_new = 0;
+        
+        $sum_total_month_potential_payout = 0;
+        $sum_total_potential_payout = 0;
+        
+        ?>
+        <div class="tab-pane fade <?=$css_active?>" id="<?=$firstProduct['yearmonth']?>">
+            <?php
+            $css_active = '';
+
+            foreach ($allSections as $section) { ?>
+                <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
+                    
+                    <div class="col-md-1 cell-default" style=""><?=$section['section_name']?></div>
+                    <div class="col-md-1 text-right cell-default" style=""><?= round($section['sum_support'],2)?></div>
+                    <div class="col-md-1 text-right cell-default" style=""><?=round($section['sum_sponsor'],2)?></div>
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?= ($section['sum_support'] + $section['sum_sponsor']) ?></strong></div>
+                    <!--<div class="col-md-1 text-right cell-default" style=""><?=$section['sum_dls']?></div>-->
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?=$section['sum_amount']?></strong></div>
+
+
+                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                    <!--<div class="col-md-1 text-right cell-default" style=""><?=$section['sum_dls_payout']?></div>-->
+                    <div class="col-md-1 text-right cell-default" style=""><?=$section['sum_amount_payout']?></div>
+                    <?php endif; ?>
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?php 
+                        if(($section['sum_support'] + $section['sum_sponsor']) < $section['sum_amount']) {
+                            echo round(($section['sum_support'] + $section['sum_sponsor']) / $section['sum_amount'], 2);
+                        } else {
+                            echo "1.00";
+                        }
+                    ?></strong></div>
+                </div>
+            <?php
+            }
+            ?>
+            <div class='row row-total'>
+                <div class='col-md-1' style=""></div>
+                <div class='col-md-1 text-right' style=""></div>
+                <div class='col-md-1 text-right' style=""></div>
+                <div class='col-md-1 text-right' style=""></div>
+                <div class='col-md-1 text-right' style=""></div>
+                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                <div class='col-md-1 text-right' style=""></div>
+                <div class='col-md-1 text-right' style=""></div>
+                <?php endif; ?>
+            </div>
+            
+        </div>
+<?php
+    }
+}
+?>
+
+</div>    
+    
+<script>
+    $('#payout_info').click(function (event ) {
+        event.preventDefault();
+        $('#le-alert').addClass('in'); // shows alert with Bootstrap CSS3 implem
+    });
+
+    $('.close').click(function () {
+        $(this).parent().removeClass('in'); // hides alert with Bootstrap CSS3 implem
+    });
+    
+</script> 
+
