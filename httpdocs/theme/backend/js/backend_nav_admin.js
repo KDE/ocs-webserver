@@ -137,7 +137,11 @@ var aItemData = [
             ]
         }
     },
-    {
+    { 
+        text: "Section",
+        submenu: {
+            id: "section",
+            itemdata: [
                 {text: "Sections", url: "/backend/section"},
                 {text: "Categories", url: "/backend/sectioncategories"},
                 {text: "Sponsors", url: "/backend/sponsor"}
