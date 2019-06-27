@@ -6,6 +6,8 @@ import DevelopmentAppMenu from './DevelopmentAppMenu';
 import SearchMenuContainer from './SearchMenuContainer';
 //import SwitchItem from './SwitchItem';
 import AboutMenu from './AboutMenu';
+import AnonymousMenu from './AnonymousMenu';
+
 class UserMenu extends React.Component {
   constructor(props){
     super(props);
@@ -32,7 +34,7 @@ class UserMenu extends React.Component {
         />
       );
 
-      
+
       developmentAppMenuDisplay = (
         <DevelopmentAppMenu
           user={this.props.user}
@@ -62,6 +64,7 @@ class UserMenu extends React.Component {
                                   isAdmin={this.props.isAdmin}
                                   />
 
+      const anonymousMenu = <AnonymousMenu baseUrl={this.props.baseUrl} user={this.props.user}/>
        let chatItem;
        const urlEnding = this.props.baseUrl.split('opendesktop.')[1];
        if (this.props.user && this.props.user.member_id ){
@@ -74,6 +77,7 @@ class UserMenu extends React.Component {
 
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
+          {anonymousMenu}
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>
           {aboutMenu}

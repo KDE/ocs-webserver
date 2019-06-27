@@ -173,6 +173,39 @@ class MembersettingController extends Zend_Controller_Action
 
 		}
 
+        public function anonymousdlAction()
+        {
+
+            $this->_initResponseHeader();
+            $identity = Zend_Auth::getInstance()->getStorage()->read();
+            if($identity==null)
+            {
+                $config = Zend_Registry::get('config');                
+                $cookieName = $config->settings->session->auth->anonymous;
+                $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
+                if($storedInCookie)
+                {
+                    $memberDlAnonymous = new Default_Model_DbTable_MemberDownloadAnonymous();
+                    $dls = $memberDlAnonymous->countDownloads($storedInCookie);
+
+                    $response = array(  
+                    'status'     => 'ok',
+                    'dls'    => $dls
+                    );
+                    $this->_sendResponse($response, $this->_format);
+                    return;
+                }
+                
+            }         
+
+            $response = array(  
+                'status'     => 'ok',
+                'dls'    => 0
+                );                     
+            $this->_sendResponse($response, $this->_format);
+
+        }
+
 		public function memberjsonAction()
     {
 				$this->_initResponseHeader();
