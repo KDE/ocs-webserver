@@ -203,6 +203,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $file_status = null;
         $ignore_status_code = null;
         
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        
         if($this->hasParam('status')) {
             $file_status = $this->getParam('status');
         }
@@ -215,12 +218,16 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if($this->hasParam('collection_id')) {
             $collection_id = $this->getParam('collection_id');
             $result = array();
+            $isForAdmin = false;
+            if ($userRoleName == Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN) {
+                $isForAdmin = true;
+            }
             
             //Load files from DB
             if($ignore_status_code == 0 && $file_status == 'active') {
-                $files = $filesTable->fetchAllActiveFilesForProject($collection_id);
+                $files = $filesTable->fetchAllActiveFilesForProject($collection_id, $isForAdmin);
             } else {
-                $files = $filesTable->fetchAllFilesForProject($collection_id);
+                $files = $filesTable->fetchAllFilesForProject($collection_id, $isForAdmin);
             }
             
             //Check, if the project category has tag-grous
@@ -237,8 +244,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 }
                 
                 //Download Counter
-                $helperUserRole = new Backend_View_Helper_UserRole();
-                $userRoleName = $helperUserRole->userRole();
+                
 
                 //new counter IP based
                 $counterUkAll = $file['count_dl_all_uk'];
