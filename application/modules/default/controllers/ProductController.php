@@ -214,6 +214,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $file_status = null;
         $ignore_status_code = null;
         
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        
         if($this->hasParam('status')) {
             $file_status = $this->getParam('status');
         }
@@ -252,8 +255,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 }
                 
                 //Download Counter
-                $helperUserRole = new Backend_View_Helper_UserRole();
-                $userRoleName = $helperUserRole->userRole();
+                
 
                 //new counter IP based
                 $counterUkAll = $file['count_dl_all_uk'];
