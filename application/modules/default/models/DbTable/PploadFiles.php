@@ -182,7 +182,7 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
     }         
 
     
-    private function fetchAllFiles($collection_id, $ignore_status = true, $activeFiles = false)
+    private function fetchAllFiles($collection_id, $ignore_status = true, $activeFiles = false, $forAdmin = false)
     {
         
         if(empty($collection_id)) {
@@ -195,7 +195,9 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
                    ";        
          * 
          */
-        $sql = "    SELECT  f.*
+        
+        //Admin Select with extended data
+        $sqlAdmin = "    SELECT  f.*
                     , count_dl_totday.cnt AS count_dl_today
                     ,(SELECT count_dl AS cnt
                         FROM ppload.stat_ppload_files_downloaded f3
@@ -217,6 +219,24 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
                     ) count_dl_totday ON count_dl_totday.collection_id = f.collection_id AND count_dl_totday.file_id = f.id
                     where f.collection_id = :collection_id  
                     ";
+        $sqlNormal = "    SELECT  f.*
+                    , 0 AS count_dl_today
+                    ,0 AS count_dl_all
+                    ,(SELECT count_dl AS cnt
+                        FROM ppload.stat_ppload_files_downloaded_nounique f4
+                        WHERE f4.collection_id = f.collection_id AND f4.file_id = f.id) AS count_dl_all_nouk
+                    ,(SELECT COUNT(1) AS cnt
+                        FROM ppload.ppload_files_downloaded_unique f5
+                        WHERE f5.collection_id = f.collection_id AND f5.file_id = f.id
+			AND f5.downloaded_timestamp >= '2019-06-01 00:00:00') AS count_dl_all_uk
+                    from ppload.ppload_files f 
+                    where f.collection_id = :collection_id  
+                    ";
+        
+        $sql = $sqlNormal;
+        if($forAdmin == true) {
+            $sql = $sqlAdmin;
+        }
         if($ignore_status == FALSE && $activeFiles == TRUE) {
            $sql .= " and f.active = 1";
         }
@@ -255,9 +275,9 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
     }
 
     
-    public function fetchAllFilesForProject($collection_id)
+    public function fetchAllFilesForProject($collection_id, $isForAdmin = false)
     {
-        return $this->fetchAllFiles($collection_id, true);
+        return $this->fetchAllFiles($collection_id, true, false, $isForAdmin);
     }   
 
     public function fetchAllFilesForCollection($collection_ids)
@@ -270,14 +290,14 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
         return $this->fetchAllFilesExtended($collection_ids, false, true);
     } 
     
-    public function fetchAllActiveFilesForProject($collection_id)
+    public function fetchAllActiveFilesForProject($collection_id, $isForAdmin = false)
     {
-        return $this->fetchAllFiles($collection_id, false, true);
+        return $this->fetchAllFiles($collection_id, false, true, $isForAdmin);
     }   
 
-    public function fetchAllInactiveFilesForProject($collection_id)
+    public function fetchAllInactiveFilesForProject($collection_id, $isForAdmin = false)
     {
-        return $this->fetchAllFiles($collection_id, false, false);
+        return $this->fetchAllFiles($collection_id, false, false, $isForAdmin);
     }   
     
 }
