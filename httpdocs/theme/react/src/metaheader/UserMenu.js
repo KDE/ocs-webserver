@@ -53,8 +53,11 @@ class UserMenu extends React.Component {
         </React.Fragment>
     )
     }
-
-    let userMenuContainerDisplay,anonymousMenu;
+    let anonymousMenu;
+    if (!this.props.user){
+      anonymousMenu= <AnonymousMenu baseUrl={this.props.baseUrl} user={this.props.user}/>
+    }
+    let userMenuContainerDisplay;
     if (this.props.device === "large"){
 
 
@@ -72,10 +75,6 @@ class UserMenu extends React.Component {
          </a></li>);
        }
 
-       let anonymousMenu;
-       if (!this.props.user){
-         anonymousMenu= <AnonymousMenu baseUrl={this.props.baseUrl} user={this.props.user}/>
-       }
 
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
