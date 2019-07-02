@@ -22,7 +22,7 @@ class AnonymousMenu extends React.Component {
    loadAnonymousDl(){
      if(!this.props.user){
        let url = this.props.baseUrl+'/membersetting/anonymousdl';
-      
+
        fetch(url,{
                   mode: 'cors',
                   credentials: 'include'
@@ -58,8 +58,13 @@ class AnonymousMenu extends React.Component {
   render(){
 
     return (
-      <li ref={node => this.node = node} id="anonymous-dropdown-menu" className={this.state.dropdownClass}>
-        <a className="anonymous-menu-link-item"> Anonymous dl:{this.state.anonymousdl}</a>
+      <li ref={node => this.node = node} id="anonymous-dropdown-menu-container" >
+        <div className={"user-dropdown " + this.state.dropdownClass}>
+        <button
+          className="btn btn-default dropdown-toggle" type="button" onClick={this.toggleDropDown}>
+          <span className="th-icon"></span>{this.state.anonymousdl}
+        </button>
+      </div>
       </li>
     )
   }
