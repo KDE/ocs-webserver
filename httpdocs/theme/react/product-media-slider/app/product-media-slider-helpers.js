@@ -1,5 +1,3 @@
-import React from 'react';
-
 export function GenerateGalleryArray(product){
     let galleryArray = []
     if (window.galleryPicturesJson) window.galleryPicturesJson.forEach(function(gp,index){ galleryArray.push({url:gp,type:'image'}); });
@@ -21,6 +19,7 @@ export function GenerateGalleryArray(product){
                 url:f.url.replace(/%2F/g,'/').replace(/%3A/g,':'),
                 collection_id:f.collection_id,
                 type:type,
+                file_type:SplitByLastDot(f.title),
                 file_id:f.id,
                 title:f.title,
                 url_thumb:url_thumb,
@@ -39,6 +38,12 @@ export function GenerateGalleryArray(product){
     })
     }
     return galleryArray;
+}
+
+function SplitByLastDot(string){
+    var period = string.lastIndexOf('.');
+    var fileExtension = string.substring(period + 1);
+    return fileExtension;
 }
 
 export function CheckForMultipleAudioFiles(galleryArray){
