@@ -481,54 +481,33 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
     }
 
     /**
-     * @param int $project_id
-     *
-     * @return null|Zend_Db_Table_Row_Abstract
+     * @param array $productInfo
+     * @return array
      */
-    public function fetchProductInfo_($project_id)
+    public static function cleanProductInfoForJson(array $productInfo)
     {
-        $sql = '
-                SELECT
-                  `p`.*,
-                  `p`.`validated` AS `project_validated`,
-                  `p`.`uuid` AS `project_uuid`,
-                  `p`.`status` AS `project_status`,
-                  `p`.`created_at` AS `project_created_at`,
-                  `p`.`changed_at` AS `project_changed_at`,
-                  `p`.`member_id` AS `project_member_id`,
-                  `p`.`source_pk` AS `project_source_pk`,
-                  `p`.`version` AS `project_version`,
-                  `pc`.`title` AS `cat_title`,
-                  `m`.`username`,
-                  `m`.`avatar`,
-                  `m`.`profile_image_url`,
-                  `m`.`roleId`,
-                  `m`.`mail`,
-                  `m`.`paypal_mail`,
-                  `m`.`dwolla_id`,
-                  laplace_score(`p`.`count_likes`,`p`.`count_dislikes`) AS `laplace_score`,
-                 `view_reported_projects`.`amount_reports` AS `amount_reports`,
-                `project_license`.`title` AS `project_license_title`
-                FROM `project` AS `p`
-                  JOIN `member` AS `m` ON `p`.`member_id` = `m`.`member_id` AND `m`.`is_active` = 1 AND `m`.`is_deleted` = 0
-                  JOIN `project_category` AS `pc` ON `p`.`project_category_id` = `pc`.`project_category_id`
-                  LEFT JOIN `view_reported_projects` ON ((`view_reported_projects`.`project_id` = `p`.`project_id`))
-                  LEFT JOIN `project_license` ON ((`project_license`.`project_license_id` = `p`.`project_license_id`))
-                WHERE 
-                  `p`.`project_id` = :projectId
-                  AND `p`.`status` >= :projectStatus AND `p`.`type_id` = :typeId
-        ';
-        $result = $this->_db->fetchRow($sql, array(
-            'projectId'     => $project_id,
-            'projectStatus' => self::PROJECT_INACTIVE,
-            'typeId'        => self::PROJECT_TYPE_STANDARD
-        ));
-
-        if ($result) {
-            return $this->generateRowClass($result);
-        } else {
-            return null;
+        if (empty($productInfo)) {
+            return $productInfo;
         }
+
+        $unwantedKeys = array(
+            'roleId'           => 0,
+            'mail'             => 0,
+            'dwolla_id'        => 0,
+            'paypal_mail'      => 0,
+            'content_type'     => 0,
+            'hive_category_id' => 0,
+            'is_active'        => 0,
+            'is_deleted'       => 0,
+            'start_date'       => 0,
+            'source_id'        => 0,
+            'source_pk'        => 0,
+            'source_type'      => 0
+        );
+
+        $productInfo = array_diff_key($productInfo, $unwantedKeys);
+
+        return $productInfo;
     }
 
     /**

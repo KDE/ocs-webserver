@@ -1338,4 +1338,31 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         }
     }
 
+    public static function cleanAuthMemberForJson(array $authMember)
+    {
+        if (empty($authMember)) {
+            return $authMember;
+        }
+
+        $unwantedKeys = array(
+            'mail' => 0,
+            'firstname' => 0,
+            'lastname' => 0,
+            'street' => 0,
+            'zip' => 0,
+            'phone' => 0,
+            'paypal_mail' => 0,
+            'gravatar_email' => 0,
+            'source_pk' => 0,
+            'source_id' => 0,
+            'password_old' => 0,
+            'password_type_old' => 0,
+            'username_old' => 0,
+            'mail_old' => 0
+        );
+
+        $authMember = array_diff_key($authMember, $unwantedKeys);
+
+        return $authMember;
+    }
 }

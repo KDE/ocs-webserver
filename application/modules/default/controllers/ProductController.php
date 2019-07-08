@@ -336,7 +336,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             }
 
              if(null != $this->_authMember) {
-                $this->view->authMemberJson = Zend_Json::encode( $this->_authMember );
+                $this->view->authMemberJson = Zend_Json::encode( Default_Model_Member::cleanAuthMemberForJson($this->_authMember) );
             }
 
             $helpAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
@@ -348,7 +348,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $this->view->product->facebook_code = Default_Model_HtmlPurify::purify($this->view->product->facebook_code,Default_Model_HtmlPurify::ALLOW_URL);
             $this->view->product->twitter_code = Default_Model_HtmlPurify::purify($this->view->product->twitter_code,Default_Model_HtmlPurify::ALLOW_URL);
             $this->view->product->google_code = Default_Model_HtmlPurify::purify($this->view->product->google_code,Default_Model_HtmlPurify::ALLOW_URL);
-            $this->view->productJson = Zend_Json::encode($this->view->product );
+            $this->view->productJson = Zend_Json::encode(Default_Model_Collection::cleanProductInfoForJson($this->view->product) );
 
             $fmodel =new  Default_Model_DbTable_PploadFiles();
             $files = $fmodel->fetchFilesForProject($this->view->product->ppload_collection_id);
@@ -1707,9 +1707,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $product->toArray());
 
         // add published project to search index
-        $productInfo = $tableProduct->fetchProductInfo($this->_projectId);
-        $modelSearch = new Default_Model_Search_Lucene();
-        $modelSearch->addDocument($productInfo);
+//        $productInfo = $tableProduct->fetchProductInfo($this->_projectId);
+//        $modelSearch = new Default_Model_Search_Lucene();
+//        $modelSearch->addDocument($productInfo);
 
         // ppload
         if ($product->ppload_collection_id) {
