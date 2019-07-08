@@ -370,7 +370,6 @@ function CategoryPanel(props){
     }
 
     function onSetCategoryPanelHeight(panelHeight){
-        console.log(panelHeight);
         adjustSliderHeight(panelHeight);
     }
 
