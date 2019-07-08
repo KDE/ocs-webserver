@@ -18,20 +18,7 @@ class HomeMainContainer extends Component {
          <div className="top">
            <Introduction />
          </div>
-         <div className="left">
-         </div>
-         <div className="middle">
-          <RssNewsContainer />
-          <BlogFeedContainer />
-          <CommentsContainer comments={this.state.comments}/>
-          <ProductsContainer title="Apps and Addons" products={this.state.products}/>
-          <ProductsContainer title="Themes" products={this.state.products}/>
-          <ChatContainer />
-          <ProductsGitContainer />
-          <div className="placeholder" aria-hidden="true"/>
-          <div className="placeholder" aria-hidden="true"/>
-          </div>
-         <div className="right"> </div>
+
       </div>
     );
   }
