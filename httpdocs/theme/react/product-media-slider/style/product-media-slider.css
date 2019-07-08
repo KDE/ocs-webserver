@@ -188,12 +188,20 @@ video:focus {
   padding: 0;
   text-align: center;
 }
+#media-slider .swiper-wrapper .slide-item.audio {
+  overflow: hidden;
+  width: 100%;
+}
 #media-slider .swiper-wrapper .slide-item.image {
   background-color: white !important;
   max-height: 100%;
 }
 #media-slider .swiper-wrapper .slide-item > div {
   text-align: center;
+  height: 100%;
+}
+#media-slider .swiper-wrapper .slide-item > div iframe {
+  height: 100%;
 }
 #media-slider .swiper-wrapper .slide-item > div > div {
   margin: 0 auto;
@@ -213,6 +221,13 @@ video:focus {
 #media-slider .swiper-wrapper .slide-item #book-container {
   width: auto;
   display: table;
+}
+#media-slider .swiper-wrapper .slide-item #iframe-container {
+  margin: 0 auto;
+}
+#media-slider .swiper-wrapper .slide-item #iframe-container iframe {
+  width: 560px !important;
+  height: 315px !important;
 }
 #media-slider .swiper-pagination {
   display: none;
@@ -317,6 +332,15 @@ video:focus {
   border: 1px solid #eee;
   background: white;
   margin: 0 auto;
+}
+#book-reader-wrapper #book-pager {
+  position: absolute;
+  bottom: 0;
+  z-index: 100;
+  color: white;
+  font-weight: bold;
+  left: 0;
+  width: 100%;
 }
 #book-reader-wrapper .arrow {
   position: fixed;
@@ -553,4 +577,92 @@ video:focus {
 #book-reader-wrapper #opener:hover {
   stroke: #777;
   fill: #777;
+}
+#music-player-wrapper .rc-slider {
+  position: relative;
+  flex: 1 1 auto;
+}
+#music-player-wrapper .rc-slider .rc-slider-track {
+  position: absolute;
+  top: 0;
+  height: 100%;
+}
+#music-player-wrapper .audio-lists-panel .audio-lists-panel-header .close-btn {
+  display: block;
+  margin-right: 30px;
+}
+#music-player-wrapper .audio-lists-panel .audio-lists-panel-header .line,
+#music-player-wrapper .audio-lists-panel .audio-lists-panel-header .delete-btn {
+  display: none;
+}
+#music-player-wrapper .audio-lists-panel .audio-item .group.player-delete {
+  display: none;
+}
+#music-player-wrapper .audio-lists-panel .audio-lists-panel-content ul {
+  text-align: left;
+}
+#music-player-wrapper.desktop .music-player-panel {
+  height: 100%;
+  width: 100%;
+}
+#music-player-wrapper.desktop .music-player-panel .panel-content {
+  display: block !important;
+  padding: 20px !important;
+}
+#music-player-wrapper.desktop .music-player-panel .panel-content .img-content {
+  width: 100%;
+  height: 200px;
+  background-size: contain;
+  display: block;
+  background-position: center;
+  margin-bottom: 20px;
+  border-radius: 0;
+  box-shadow: none;
+}
+#music-player-wrapper.desktop .music-player-panel .panel-content .progress-bar-content {
+  padding: 0;
+  flex: none;
+  margin-bottom: 20px;
+  display: block;
+  float: left;
+  width: 100%;
+}
+#music-player-wrapper.desktop .music-player-panel .panel-content .progress-bar-content .audio-main {
+  margin-top: 20px;
+}
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content {
+  padding: 0;
+}
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content .play-btn {
+  padding: 0 5px;
+}
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group {
+  margin: 0 5px;
+}
+#music-player-wrapper.desktop .audio-lists-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  display: none !important;
+}
+#music-player-wrapper.desktop.show-playlist .music-player-panel {
+  width: 50%;
+}
+#music-player-wrapper.desktop.show-playlist .audio-lists-panel {
+  display: block !important;
+}
+#music-player-wrapper .react-jinke-music-player-mobile {
+  height: inherit;
+}
+#music-player-wrapper .react-jinke-music-player-mobile .react-jinke-music-player-mobile-play-model-tip,
+#music-player-wrapper .react-jinke-music-player-mobile .react-jinke-music-player-mobile-singer,
+#music-player-wrapper .react-jinke-music-player-mobile .react-jinke-music-player-mobile-switch,
+#music-player-wrapper .react-jinke-music-player-mobile .react-jinke-music-player-mobile-header > .right.item {
+  display: none;
+}
+#music-player-wrapper .react-jinke-music-player-mobile .react-jinke-music-player-mobile-cover {
+  width: 145px;
+  height: 145px;
 }
