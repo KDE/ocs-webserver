@@ -41,27 +41,27 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
       line-height: 1.5;
       text-rendering: optimizelegibility;
       color: rgb(112, 108, 100);
+      .intro-table-row{
+        display: table-row;
+      }
       .intro-container
       {
-        display: block;
-        width: 500px;
+        display: table;
+        width: 1000px;
         margin: 0 auto;
         .sub-container{
           width: 50%;
-          display: block;
-          float: left;
-          height: 100px;
-          color: #fff;
+          display: table-cell;
 
         }
         .code-container{
 
-            text-align: right;
+
             padding-right: 10px;
             //background-color: #0899A1;
             border-right:1px solid #0899A1;
             border-bottom:1px solid #0899A1;
-            line-height: 180px;
+
         }
         .pub-container{
 
@@ -70,11 +70,11 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
             //background-color: #FF3C00;
             border-left:1px solid #FF3C00;
             border-bottom:1px solid #FF3C00;
-            line-height: 180px;
+
         }
         .comm-container{
 
-            text-align: right;
+
             padding-right: 10px;
             //background-color: #BA0E64;
             border-top:1px solid #BA0E64;
@@ -90,6 +90,7 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
 
         }
       }
+/**
      ul{
        list-style: none;
        padding-left: 0px;
@@ -107,7 +108,7 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
             color: #E7F3F8;
           }
        }
-     }
+      **/
    }
   }
 	.left{
@@ -346,6 +347,219 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
     }
 
 	}
+
+
+
+  .panelContainer{
+        /*border: 1px solid #ccc;*/
+        border-radius: 5px;
+        background-image: url(http://cp1.hive01.com/img/opendesktop/back3.jpg);
+        padding: 8px;
+        margin: 0px 5px 5px 0;
+
+        div.title{
+          color: #888888;
+          font-size:11pt;
+          font-weight: bold;
+          border-bottom: 1px solid #ccc;
+          height: 20px;
+          padding-left: 5px;
+          margin-bottom: 10px;
+
+          color: #888888;
+          font-size: 9pt;
+
+        }
+        .chatUser
+        {
+          width: 100%;
+          display: inline-block;
+          min-height: 45px;
+          line-height: 42px;
+          padding-left: 15px;
+          img{
+            width: 42px;
+            height: 42px;
+            border-radius: 100%;
+            display: block;
+            float: left;
+          }
+          .name{
+            margin-left: 50px;
+            display: block;
+          }
+
+        }
+
+        ul, ol {
+          list-style: none;
+          padding-left: 20px;
+          li {
+            padding: 5px 0px;
+            &.chatMember{
+              a{
+                 font-size: 9pt;
+                 font-weight: bold;
+              }
+            }
+            .productrow
+            {
+               padding-bottom: 5px;
+               padding-top: 5px;
+               font-size: small;
+
+               .rating
+                {
+                      width: 60px;
+                }
+                .time
+                {
+                      font-size: smaller;
+                }
+              .cntComments
+                 {
+                    font-size: smaller;
+                    display: block;
+                    padding-top: 5px;
+
+                }
+                .defaultProjectAvatar{
+                  width: 50px;
+                  height: 50px;
+                  color: #3B658A;
+                  line-height: 50px;
+                  text-align: center;
+                  background-color: #e8eaf6;
+                }
+                .productimg
+                    {
+                        width:50px;
+                        height:50px;
+                    }
+                .product-user{
+                  width: 42px;
+                  height: 42px;
+                  border-radius: 100%;
+                }
+                .commenttext{
+                  padding-left: 20px;
+
+                }
+                .product-info {
+                    span {
+                      display: block;
+                      float: left;
+                      width: 100%;
+                      line-height: 14px;
+                      height: auto;
+
+                      &.product-info-title {
+                        color: #444444;
+                        font-size: 10pt;
+                        font-weight: bold;
+                        display: block;
+                      }
+                      &.product-info-date{
+                        padding-top: 10px;
+                      }
+
+
+                      &.product-info-user {
+                        color: #666;
+                      }
+                    }
+                  }
+                .score-info {
+                  text-align: center;
+                  width: 80%;
+                  .score-number {
+                    width: 100%;
+                    text-align: center;
+                    margin-bottom: 0px;
+                    font-size: 8pt;
+                  }
+
+                  .score-bar-container {
+                    width: 100%;
+                    height: 10px;
+                    background: #ccc;
+                    margin-bottom: 5px;
+
+                    .score-bar {
+                      height: 9px;
+                      background-color: #30c830;
+                      border-bottom: 1px solid darken( #30c830,5%);
+                    }
+                  }
+                }
+            }
+            .cm-content{
+                min-height: 60px;
+                .cm-userinfo {
+
+                    float: right;
+                    width: 80px;
+                    text-align: center;
+                    padding: 3px;
+
+                    img {
+                      width: 42px;
+                      height: 42px;
+                      border-radius: 100%;
+                    }
+
+                    .username {
+                      display: block;
+                      text-align: center;
+                      overflow: hidden;
+                      white-space: nowrap;
+                      text-overflow: ellipsis;
+                      font-size: small;
+
+                    }
+                  }
+            }
+            .title, .info-row {
+              display: block;
+              width: 100%;
+              color: #777777;
+            }
+
+            .title {
+              color: #444444;
+              font-size: 10pt;
+              font-weight: bold;
+            }
+
+            .content {
+              font-size: 13px;
+              line-height: 1;
+            }
+
+            .info-row {
+              /*overflow: auto;
+              */
+
+              span {
+                /*
+                float: left;
+                display: inline-block;
+                  font-size: 12px;
+                */
+
+                &.comment-counter {
+                  float: right;
+                }
+              }
+            }
+          }
+
+          li + li {
+            border-top:1px solid #ccc;
+          }
+        }
+
+    }
 
 
 }
