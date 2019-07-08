@@ -197,18 +197,18 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
          */
         
         //Admin Select with extended data
-        $sqlAdmin = "    SELECT  f.*
-                    , count_dl_totday.cnt AS count_dl_today
+        $sqlAdmin = "SELECT  f.*
+                    , count_dl_today.cnt AS count_dl_today
+                    , count_dl_uk_today.cnt AS count_dl_uk_today
                     ,(SELECT count_dl AS cnt
                         FROM ppload.stat_ppload_files_downloaded f3
                         WHERE f3.collection_id = f.collection_id AND f3.file_id = f.id) AS count_dl_all
                     ,(SELECT count_dl AS cnt
                         FROM ppload.stat_ppload_files_downloaded_nounique f4
                         WHERE f4.collection_id = f.collection_id AND f4.file_id = f.id) AS count_dl_all_nouk
-                    ,(SELECT COUNT(1) AS cnt
-                        FROM ppload.ppload_files_downloaded_unique f5
-                        WHERE f5.collection_id = f.collection_id AND f5.file_id = f.id
-			AND f5.downloaded_timestamp >= '2019-06-01 00:00:00') AS count_dl_all_uk
+                    ,(SELECT count_dl AS cnt
+                        FROM ppload.stat_ppload_files_downloaded_unique f3
+                        WHERE f3.collection_id = f.collection_id AND f3.file_id = f.id) AS count_dl_all_uk
 
                     from ppload.ppload_files f 
                     LEFT JOIN (
@@ -216,20 +216,32 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
                               FROM ppload.ppload_files_downloaded f2
                               WHERE f2.downloaded_timestamp >= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:01') 
                               GROUP BY collection_id, file_id
-                    ) count_dl_totday ON count_dl_totday.collection_id = f.collection_id AND count_dl_totday.file_id = f.id
+                    ) count_dl_today ON count_dl_today.collection_id = f.collection_id AND count_dl_today.file_id = f.id
+                    LEFT JOIN (
+                            SELECT COUNT(1) AS cnt, collection_id, file_id
+                              FROM ppload.ppload_files_downloaded_unique f2
+                              WHERE f2.downloaded_timestamp >= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:01') 
+                              GROUP BY collection_id, file_id
+                    ) count_dl_uk_today ON count_dl_uk_today.collection_id = f.collection_id AND count_dl_uk_today.file_id = f.id
                     where f.collection_id = :collection_id  
                     ";
-        $sqlNormal = "    SELECT  f.*
+        $sqlNormal = "SELECT  f.*
                     , 0 AS count_dl_today
+                    , count_dl_uk_today.cnt AS count_dl_uk_today
                     ,0 AS count_dl_all
                     ,(SELECT count_dl AS cnt
                         FROM ppload.stat_ppload_files_downloaded_nounique f4
                         WHERE f4.collection_id = f.collection_id AND f4.file_id = f.id) AS count_dl_all_nouk
-                    ,(SELECT COUNT(1) AS cnt
-                        FROM ppload.ppload_files_downloaded_unique f5
-                        WHERE f5.collection_id = f.collection_id AND f5.file_id = f.id
-			AND f5.downloaded_timestamp >= '2019-06-01 00:00:00') AS count_dl_all_uk
+                    ,(SELECT count_dl AS cnt
+                        FROM ppload.stat_ppload_files_downloaded_unique f3
+                        WHERE f3.collection_id = f.collection_id AND f3.file_id = f.id) AS count_dl_all_uk
                     from ppload.ppload_files f 
+                    LEFT JOIN (
+                            SELECT COUNT(1) AS cnt, collection_id, file_id
+                              FROM ppload.ppload_files_downloaded_unique f2
+                              WHERE f2.downloaded_timestamp >= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:01') 
+                              GROUP BY collection_id, file_id
+                    ) count_dl_uk_today ON count_dl_uk_today.collection_id = f.collection_id AND count_dl_uk_today.file_id = f.id
                     where f.collection_id = :collection_id  
                     ";
         

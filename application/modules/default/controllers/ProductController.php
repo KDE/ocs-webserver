@@ -249,9 +249,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 //new counter IP based
                 $counterUkAll = $file['count_dl_all_uk'];
                 $counterNoUkAll = $file['count_dl_all_nouk'];
+                $counterUkToday = $file['count_dl_uk_today'];
                 $counterNew = 0;
                 if(!empty($counterUkAll)) {
                     $counterNew = $counterNew + $counterUkAll;
+                }
+                if(!empty($counterUkToday)) {
+                    $counterNew = $counterNew + $counterUkToday;
                 }
                 if(!empty($counterNoUkAll)) {
                     $counterNew = $counterNew + $counterNoUkAll;
@@ -275,6 +279,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     unset($file['count_dl_all']);
                     unset($file['count_dl_all_nouk']);
                     unset($file['count_dl_all_uk']);
+                    unset($file['count_dl_uk_today']);
                     unset($file['count_dl_today']);
                     unset($file['downloaded_count']);
                 }
