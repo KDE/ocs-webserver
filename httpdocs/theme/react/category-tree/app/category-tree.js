@@ -69,10 +69,12 @@ function CategoryTree(){
             if  (searchPhrase.length > 0){
                 newSearchMode = true;
                 newCurrentViewedCategories = [...currentViewedCategories];
+                setCurrentViewedCategories(newCurrentViewedCategories);
                 if (searchMode === true) newCurrentViewedCategories.length = selectedCategoriesId.length;
+                let searchPhraseCategories = GetCategoriesBySearchPhrase(categoryTree,searchPhrase);
                 newCurrentViewedCategories = [
                     ...newCurrentViewedCategories,
-                    {id:"-1",title:'Search',searchPhrase:searchPhrase,categories:GetCategoriesBySearchPhrase(categoryTree,searchPhrase)}
+                    {id:"-1",title:'Search',searchPhrase:searchPhrase,categories:searchPhraseCategories}
                 ]
             } else {
                 newCurrentViewedCategories = [...currentViewedCategories];
@@ -325,6 +327,7 @@ function CategoryPanelsContainer(props){
             parentCategory={cp.categoryId}
             categoryId={props.categoryId}
             containerWidth={containerWidth}
+            searchMode={props.searchMode}
             searchPhrase={props.searchPhrase}
             onSetSliderHeight={(height) => onSetSliderHeight(height)}
             onCategorySelect={(c,catLink) => onCategorySelect(c,catLink)}
@@ -400,6 +403,8 @@ function CategoryPanel(props){
                             currentViewedCategories={props.currentViewedCategories}
                             selectedCategoriesId={props.selectedCategoriesId}
                             onCategoryClick={(c,catLink) => props.onCategorySelect(c,catLink)}
+                            searchMode={props.searchMode}
+                            searchPhrase={props.searchPhrase}
                         />
                     )
                 }
@@ -425,20 +430,19 @@ function CategoryPanel(props){
 function CategoryMenuItem(props){
 
     const c = props.category;
-    let initialCatLink;
-    if (c.id){
-        initialCatLink = getUrlContext(window.location.href);
-        initialCatLink += c.id === "0" ? "/browse/" : "/browse/cat/"+c.id+"/order/latest/"
-    }
-    else {
-        if (c.menuhref.indexOf('http') > -1) initialCatLink = c.menuhref; 
-        else  initialCatLink = "https://" + c.menuhref; 
-    }
-    const [ catLink, setCatLink ] = useState(initialCatLink)
 
     function onCategoryClick(c,catLink){
         props.onCategoryClick(c,catLink)
-        // window.location.href = catLink;
+    }
+
+    let catLink;
+    if (c.id){
+        catLink = getUrlContext(window.location.href);
+        catLink += c.id === "0" ? "/browse/" : "/browse/cat/"+c.id+"/order/latest/"
+    }
+    else {
+        if (c.menuhref.indexOf('http') > -1) catLink = c.menuhref; 
+        else  catLink = "https://" + c.menuhref; 
     }
 
     let catTitle;

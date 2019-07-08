@@ -198,6 +198,10 @@ video:focus {
 }
 #media-slider .swiper-wrapper .slide-item > div {
   text-align: center;
+  height: 100%;
+}
+#media-slider .swiper-wrapper .slide-item > div iframe {
+  height: 100%;
 }
 #media-slider .swiper-wrapper .slide-item > div > div {
   margin: 0 auto;
