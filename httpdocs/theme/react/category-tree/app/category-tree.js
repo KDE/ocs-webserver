@@ -363,33 +363,24 @@ function CategoryPanelsContainer(props){
 
 function CategoryPanel(props){
 
-    React.useEffect(() => {adjustSliderHeight()},[])
-    React.useEffect(() => {
-        adjustSliderHeight()
-    },[props.currentCategoryLevel])
-    function adjustSliderHeight(){
-
+    function adjustSliderHeight(panelHeight){
         let currentCategoryLevel = props.currentCategoryLevel
         if (isShowRealDomainAsUrl ) currentCategoryLevel = props.currentCategoryLevel + 1;
-        if (currentCategoryLevel === props.level){
-            if (props.categories){
-                let panelHeight = (props.categories.length * 24) + props.categories.length;
-                if (props.parentCategory === -1){
-                    function isShowInMenuCheck(obj){
-                        return obj.is_show_in_menu == "1"
-                    }
-                    panelHeight = ((props.categories.filter(isShowInMenuCheck).length + 1) * 24) + props.categories.length;
-                }
-                props.onSetSliderHeight(panelHeight);
-            }
-        }
+        if (currentCategoryLevel === props.level) props.onSetSliderHeight(panelHeight);
+    }
+
+    function onSetCategoryPanelHeight(panelHeight){
+        console.log(panelHeight);
+        adjustSliderHeight(panelHeight);
     }
 
     let categoryPanelContent;
     if (props.categories){
         let categories;
         if (props.categories.length > 0){
-            categories = props.categories.sort(sortArrayAlphabeticallyByTitle).map((c,index) =>{
+            categories = props.categories.sort(sortArrayAlphabeticallyByTitle);
+            categories = categories.map((c,index) =>{
+                if (categories.length === (index + 1)){ onSetCategoryPanelHeight(categories.length * 24); } 
                 let showCategory = true;
                 if (c.is_show_in_menu){
                     if (c.is_show_in_menu === "0") showCategory = false;
