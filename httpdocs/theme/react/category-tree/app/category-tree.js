@@ -370,7 +370,7 @@ function CategoryPanel(props){
     }
 
     function onSetCategoryPanelHeight(panelHeight){
-        adjustSliderHeight(panelHeight);
+        adjustSliderHeight(panelHeight + 25);
     }
 
     let categoryPanelContent;
