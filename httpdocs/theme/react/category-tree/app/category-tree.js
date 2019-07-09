@@ -260,7 +260,6 @@ function CategoryPanelsContainer(props){
     /* COMPONENT */
 
     React.useEffect(() => {
-        console.log(sliderPosition)
         let val = false;
         if (sliderPosition === 0) val = false;
         else val = true;
@@ -468,7 +467,7 @@ function CategoryMenuItem(props){
     )
 
     let categoryMenuItemClassName;
-    if (props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink) categoryMenuItemClassName = "active";
+    if (props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink || window.location.href.indexOf(catLink) > -1) categoryMenuItemClassName = "active";
 
     return(
         <li className={categoryMenuItemClassName} >
