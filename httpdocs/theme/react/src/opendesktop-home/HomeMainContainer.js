@@ -21,11 +21,11 @@ class HomeMainContainer extends Component {
          <div className="left">
          </div>
          <div className="middle">
-          <RssNewsContainer />
-          <BlogFeedContainer />
-          <CommentsContainer comments={this.state.comments}/>
-          <ProductsContainer title="Apps and Addons" products={this.state.products}/>
           <ProductsContainer title="Themes" products={this.state.products}/>
+          <ProductsContainer title="Apps and Addons" products={this.state.products}/>
+          <RssNewsContainer />
+          <CommentsContainer comments={this.state.comments}/>
+          <BlogFeedContainer />
           <ChatContainer />
           <ProductsGitContainer />
           <div className="placeholder" aria-hidden="true"/>
