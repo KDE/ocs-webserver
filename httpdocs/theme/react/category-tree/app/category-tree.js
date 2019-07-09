@@ -57,6 +57,11 @@ function CategoryTree(){
     const [ searchPhrase, setSearchPhrase ] = useState();
     const [ searchMode, setSearchMode ] = useState();
 
+    console.log('----');
+    console.log(currentViewedCategories);
+    console.log(selectedCategoriesId);
+    console.log('-----');
+
     /* COMPONENT */
 
     React.useEffect(() => { onSearchPhraseUpdate() },[searchPhrase])
@@ -115,12 +120,12 @@ function CategoryTree(){
     }
 
     // on category panel item click
-    function onCategoryPanleItemClick(ccl,cvc,catLink){
+    function onCategoryPanleItemClick(ccl,cvc){
         const newCurrentCategoryLevel = ccl;
         const newCurrentViewedCategories = cvc;
         setCurrentCategoryLevel(newCurrentCategoryLevel) 
         setCurrentViewedCategories(newCurrentViewedCategories)
-        if (catLink) window.location.href = catLink;
+        // if (catLink) window.location.href = catLink;
     }
 
     // search phrase
@@ -422,7 +427,9 @@ function CategoryMenuItem(props){
     const c = props.category;
 
     function onCategoryClick(c,catLink){
-        if (c.has_children === true) props.onCategoryClick(c,catLink)
+        setTimeout(() => {
+            if (c.has_children === true) props.onCategoryClick(c,catLink)            
+        }, 500);
     }
 
     let catLink;
