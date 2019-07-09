@@ -433,7 +433,7 @@ function CategoryMenuItem(props){
     function onCategoryClick(c,catLink){
         setTimeout(() => {
             if (c.has_children === true) props.onCategoryClick(c,catLink)            
-        }, 100);
+        }, 50);
     }
 
     let catLink;
