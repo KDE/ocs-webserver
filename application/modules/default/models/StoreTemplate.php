@@ -62,7 +62,7 @@ class Default_Model_StoreTemplate
             $storeTemplate = require $templatePath . 'client_' . $defaultStoreName . '.ini.php';
         } else {
             Zend_Registry::get('logger')->warn(__METHOD__ . ' :: can not access default template file for store.');
-            throw new Zend_Exception(__METHOD__ . ' :: can not access default template file for store context');
+            throw new Zend_Exception(__METHOD__ . ' :: can not access default template file for store context: ' . $fileNameDefaultTemplate);
         }
 
         return $storeTemplate;
