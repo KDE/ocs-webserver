@@ -471,7 +471,7 @@ function CategoryMenuItem(props){
         if (window.location.href === catLink || window.location.href === catLink + "/") categoryMenuItemClassName = "active";
     } else if (c.id === "00") {
         let baseName = window.config.sName;
-        if (window.config.sName.indexOf('http') > -1 ) baseName = "https://" + window.config.sName;
+        if (window.config.sName.indexOf('http') === -1 ) baseName = "https://" + window.config.sName;
         if (window.location.href === window.config.baseUrl + catLink || window.location.href === window.config.baseUrl + catLink.split("/browse")[0] ||
             window.location.href === baseName + catLink || window.location.href === baseName + catLink.split("/browse")[0]){
             categoryMenuItemClassName = "active";
