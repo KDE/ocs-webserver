@@ -196,8 +196,6 @@ function CategoryTreeHeader(props){
         const newCategories = categories;
         newCategories.length = index + 1;
         setCategories(newCategories)
-        const catLink = getUrlContext(window.location.href) + ( cvc.id === "0" ? "/browse/" : "/browse/cat/"+cvc.id+"/order/latest/")
-        window.location.href = catLink;
     }
 
     let categoryTreeHeaderNavigationDisplay;
@@ -208,8 +206,9 @@ function CategoryTreeHeader(props){
                 title = cvc.title;
                 titleHoverElement = '';
             }
+            const catLink = getUrlContext(window.location.href) + ( cvc.id === "0" ? "/browse/" : "/browse/cat/"+cvc.id+"/order/latest/")
             return (
-                <a key={index} onClick={() => onHeaderNavigationItemClick(cvc,index)}>
+                <a key={index} href={catLink} onClick={() => onHeaderNavigationItemClick(cvc,index)}>
                     {title}
                     {titleHoverElement}
                 </a>
@@ -264,7 +263,7 @@ function CategoryPanelsContainer(props){
         else val = true;
         props.onSetShowBreadCrumbs(val);
     },[panels]);
-    
+
     React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories])
     React.useEffect(() => { updatePanlesOnSearch() },[props.searchMode,props.searchPhrase])
 
