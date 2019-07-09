@@ -58,6 +58,7 @@ function CategoryTree(){
     const [ searchMode, setSearchMode ] = useState();
 
     console.log('----');
+    console.log(window.config);
     console.log(currentViewedCategories);
     console.log(selectedCategoriesId);
     console.log('-----');
