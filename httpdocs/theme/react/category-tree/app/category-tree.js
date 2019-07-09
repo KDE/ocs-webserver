@@ -24,7 +24,7 @@ function CategoryTree(){
 
     /* STATE */
 
-    let initialCatTree = [{title:"All",id:"0"},...window.catTree]
+    let initialCatTree = [{title:"All",id:"00"},...window.catTree]
 
     const [ categoryTree, setCategoryTree ] = useState(initialCatTree);    
     const [ categoryId, SetCategoryId ] = useState(window.categoryId);
@@ -206,7 +206,7 @@ function CategoryTreeHeader(props){
                 title = cvc.title;
                 titleHoverElement = '';
             }
-            const catLink = getUrlContext(window.location.href) + ( cvc.id === "0" ? "/browse/" : "/browse/cat/"+cvc.id+"/order/latest/")
+            const catLink = getUrlContext(window.location.href) + ( cvc.id === "00" ? "/browse/" : "/browse/cat/"+cvc.id+"/order/latest/")
             return (
                 <a key={index} href={catLink} onClick={() => onHeaderNavigationItemClick(cvc,index)}>
                     {title}
@@ -447,8 +447,11 @@ function CategoryMenuItem(props){
 
     let catLink;
     if (c.id){
-        catLink = getUrlContext(window.location.href);
-        catLink += c.id === "0" ? "/browse/" : "/browse/cat/"+c.id+"/order/latest/"
+        if (c.id === "0") catLink = window.config.baseUrl;
+        else {
+            catLink = getUrlContext(window.location.href);
+            catLink += c.id === "00" ? "/browse/" : "/browse/cat/"+c.id+"/order/latest/";         
+        }
     }
     else {
         if (c.menuhref.indexOf('http') > -1) catLink = c.menuhref; 
@@ -467,7 +470,7 @@ function CategoryMenuItem(props){
     )
 
     let categoryMenuItemClassName;
-    if (props.categoryId === "0"){
+    if (c.id === "0" || c.id === "00"){
         if (window.location.href === catLink) categoryMenuItemClassName = "active";
     } else {
         if (props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink || window.location.href.indexOf(catLink) > -1) categoryMenuItemClassName = "active";
