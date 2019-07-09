@@ -217,7 +217,11 @@ function CategoryTreeHeader(props){
     }
 
     let sNameDisplay;
-    if (window.config && window.config.sName) sNameDisplay = <a href={window.config.sName.indexOf('http') > -1 ? window.config.sName : "https://"+window.config.sName}>{window.config.sName}</a>
+    if (categories.length === 0){
+        if (window.config && window.config.sName){
+            sNameDisplay = <a href={window.config.sName.indexOf('http') > -1 ? window.config.sName : "https://"+window.config.sName}>{window.config.sName}</a>
+        }
+    }
 
     return (
         <div id="category-tree-header">
@@ -464,7 +468,7 @@ function CategoryMenuItem(props){
     )
 
     let categoryMenuItemClassName;
-    if (props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1) categoryMenuItemClassName = "active";
+    if (props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink) categoryMenuItemClassName = "active";
 
     return(
         <li className={categoryMenuItemClassName} >
