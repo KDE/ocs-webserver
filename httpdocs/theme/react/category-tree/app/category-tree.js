@@ -213,8 +213,12 @@ function CategoryTreeHeader(props){
         })
     }
 
+    let sNameDisplay;
+    if (window.config && window.config.sName) sNameDisplay = <a href={window.config.sName.indexOf('http') > -1 ? window.config.sName : "https://"+window.config.sName}>{window.config.sName}</a>
+
     return (
         <div id="category-tree-header">
+            {sNameDisplay}
             {categoryTreeHeaderNavigationDisplay}
         </div>
     )
@@ -429,7 +433,7 @@ function CategoryMenuItem(props){
     function onCategoryClick(c,catLink){
         setTimeout(() => {
             if (c.has_children === true) props.onCategoryClick(c,catLink)            
-        }, 500);
+        }, 100);
     }
 
     let catLink;
