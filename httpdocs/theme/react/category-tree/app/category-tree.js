@@ -467,7 +467,11 @@ function CategoryMenuItem(props){
     )
 
     let categoryMenuItemClassName;
-    if (props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink || window.location.href.indexOf(catLink) > -1) categoryMenuItemClassName = "active";
+    if (props.categoryId === "0"){
+        if (window.location.href === catLink) categoryMenuItemClassName = "active";
+    } else {
+        if (props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink || window.location.href.indexOf(catLink) > -1) categoryMenuItemClassName = "active";
+    }
 
     return(
         <li className={categoryMenuItemClassName} >
