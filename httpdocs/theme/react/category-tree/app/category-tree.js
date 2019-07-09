@@ -57,6 +57,8 @@ function CategoryTree(){
     const [ searchPhrase, setSearchPhrase ] = useState();
     const [ searchMode, setSearchMode ] = useState();
 
+    const [ showBreadCrumbs, setShowBreadCrumbs ] = useState(true);
+
     console.log('----');
     console.log(window.config);
     console.log(currentViewedCategories);
@@ -150,12 +152,13 @@ function CategoryTree(){
     if (selectedCategory) tagCloudDisplay = <CategoryTagCloud selectedCategory={selectedCategory} />
 
     let categoryTreeHeaderDisplay;
-    if (currentViewedCategories.length > 0){
+    if (showBreadCrumbs === true){
         categoryTreeHeaderDisplay = (
             <CategoryTreeHeader 
                 currentCategoryLevel={currentCategoryLevel}
                 currentViewedCategories={currentViewedCategories}  
                 onHeaderNavigationItemClick={(cvc) => onHeaderNavigationItemClick(cvc)}
+                onGoBackClick={goBack}
             />
         )
     }
@@ -173,7 +176,7 @@ function CategoryTree(){
                 currentViewedCategories={currentViewedCategories}
                 selectedCategoriesId={selectedCategoriesId}
                 onCategoryPanleItemClick={(ccl,cvc,catLink) => onCategoryPanleItemClick(ccl,cvc,catLink)}
-                onGoBackClick={goBack}
+                onSetShowBreadCrumbs={(val) => setShowBreadCrumbs(val)}
             />
             {tagCloudDisplay}
         </div>
@@ -219,6 +222,7 @@ function CategoryTreeHeader(props){
 
     return (
         <div id="category-tree-header">
+            <a id="back-button" onClick={props.onGoBackClick}><span className="glyphicon glyphicon-chevron-left"></span></a>
             {sNameDisplay}
             {categoryTreeHeaderNavigationDisplay}
         </div>
@@ -237,6 +241,8 @@ function CategoryPanelsContainer(props){
     if (props.currentViewedCategories.length > 0) initialPanelsValue = initialRootCategoryPanels.concat(props.currentViewedCategories);
     const [ panels, setPanels ] = useState(initialPanelsValue);
     
+    console.log(panels.length);
+
     const [ containerWidth, setContainerWidth ] = useState(document.getElementById('category-tree-container').offsetWidth);
     const [ sliderWidth, setSliderWidth ] = useState(containerWidth * panels.length);
     const [ sliderHeight, setSliderHeight ] = useState();
@@ -353,17 +359,11 @@ function CategoryPanelsContainer(props){
         width:sliderWidth+"px",
     }
 
-    let categoryPanelsContainerClassName = "", backButtonDisplay;
-    if (showBackButton){
-        categoryPanelsContainerClassName += "show-back-button ";
-        backButtonDisplay = <a id="back-button" onClick={props.onGoBackClick}><span className="glyphicon glyphicon-chevron-left"></span></a>
-    }
-
+    let categoryPanelsContainerClassName = "";
     if (containerVisibility === true) categoryPanelsContainerClassName += "visible ";
 
     return (
         <div id="category-panles-container" className={categoryPanelsContainerClassName} style={categoryPanelsContainerCss}>
-            {backButtonDisplay}
             <div id="category-panels-slider" style={categoryPanelsSliderCss}>
                 {categoryPanelsDislpay}
             </div>
@@ -434,7 +434,7 @@ function CategoryMenuItem(props){
     function onCategoryClick(c,catLink){
         setTimeout(() => {
             if (c.has_children === true) props.onCategoryClick(c,catLink)            
-        }, 50);
+        }, 100);
     }
 
     let catLink;
