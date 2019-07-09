@@ -240,8 +240,6 @@ function CategoryPanelsContainer(props){
     if (props.currentViewedCategories.length > 0) initialPanelsValue = initialRootCategoryPanels.concat(props.currentViewedCategories);
     const [ panels, setPanels ] = useState(initialPanelsValue);
     
-    console.log(panels.length);
-
     const [ containerWidth, setContainerWidth ] = useState(document.getElementById('category-tree-container').offsetWidth);
     const [ sliderWidth, setSliderWidth ] = useState(containerWidth * panels.length);
     const [ sliderHeight, setSliderHeight ] = useState();
@@ -258,11 +256,12 @@ function CategoryPanelsContainer(props){
     /* COMPONENT */
 
     React.useEffect(() => {
+        console.log(sliderPosition)
         let val = false;
-        if (panels.length === 1) val = false;
+        if (sliderPosition === 0) val = false;
         else val = true;
         props.onSetShowBreadCrumbs(val);
-    },[panels]);
+    },[sliderPosition]);
 
     React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories])
     React.useEffect(() => { updatePanlesOnSearch() },[props.searchMode,props.searchPhrase])
