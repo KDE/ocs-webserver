@@ -59,12 +59,6 @@ function CategoryTree(){
 
     const [ showBreadCrumbs, setShowBreadCrumbs ] = useState(true);
 
-    console.log('----');
-    console.log(window.config);
-    console.log(currentViewedCategories);
-    console.log(selectedCategoriesId);
-    console.log('-----');
-
     /* COMPONENT */
 
     React.useEffect(() => { onSearchPhraseUpdate() },[searchPhrase])
@@ -447,7 +441,10 @@ function CategoryMenuItem(props){
 
     let catLink;
     if (c.id){
-        if (c.id === "0") catLink = window.config.baseUrl;
+        if (c.id === "0"){
+            catLink = window.config.baseUrl;
+            if (window.config.baseUrl.indexOf('http') === -1) catLink = "http://" + window.config.baseUrl;
+        }
         else {
             catLink = getUrlContext(window.location.href);
             catLink += c.id === "00" ? "/browse/" : "/browse/cat/"+c.id+"/order/latest/";         
@@ -470,8 +467,14 @@ function CategoryMenuItem(props){
     )
 
     let categoryMenuItemClassName;
-    if (c.id === "0" || c.id === "00"){
+    if (c.id === "0"){
+        console.log(c.id);
+        console.log(window.location.href);
         if (window.location.href === catLink) categoryMenuItemClassName = "active";
+    } else if (c.id === "00") {
+        console.log(c.id);
+        console.log(window.location.href);        
+        if (window.location.href === catLink || window.location.href === catLink.split("/browse")[0]) categoryMenuItemClassName = "active";
     } else {
         if (props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink || window.location.href.indexOf(catLink) > -1) categoryMenuItemClassName = "active";
     }
