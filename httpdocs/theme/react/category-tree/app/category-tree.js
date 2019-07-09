@@ -422,7 +422,7 @@ function CategoryMenuItem(props){
     const c = props.category;
 
     function onCategoryClick(c,catLink){
-        if (c.has_children) props.onCategoryClick(c,catLink)
+        if (c.has_children === true) props.onCategoryClick(c,catLink)
     }
 
     let catLink;
@@ -439,22 +439,12 @@ function CategoryMenuItem(props){
     if (c.title) catTitle = c.title;
     else catTitle = c.name;
 
-    let categoryMenuItemDisplay;
-    /*if (c.has_children === true){
-        categoryMenuItemDisplay = (
-            <a>
-                <span className="cat-title">{catTitle}</span>
-                <span className="cat-product-counter">{c.product_count}</span>
-            </a>
-        )
-    } else {*/
-        categoryMenuItemDisplay = (
-            <a href={catLink}>
-                <span className="cat-title">{catTitle}</span>
-                <span className="cat-product-counter">{c.product_count}</span>
-            </a>
-        )        
-    //}
+    const categoryMenuItemDisplay = (
+        <a href={catLink} onClick={() => onCategoryClick(c,catLink)}>
+            <span className="cat-title">{catTitle}</span>
+            <span className="cat-product-counter">{c.product_count}</span>
+        </a>
+    )
 
     let categoryMenuItemClassName;
     if (props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1) categoryMenuItemClassName = "active";
