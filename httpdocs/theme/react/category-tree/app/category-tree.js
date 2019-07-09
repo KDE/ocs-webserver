@@ -258,6 +258,13 @@ function CategoryPanelsContainer(props){
 
     /* COMPONENT */
 
+    React.useEffect(() => {
+        let val = false;
+        if (panels.length === 1) val = false;
+        else val = true;
+        props.onSetShowBreadCrumbs(val);
+    },[panels]);
+    
     React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories])
     React.useEffect(() => { updatePanlesOnSearch() },[props.searchMode,props.searchPhrase])
 
