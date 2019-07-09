@@ -449,7 +449,7 @@ function CategoryMenuItem(props){
         )
     } else {*/
         categoryMenuItemDisplay = (
-            <a href={catLink} onClick={() => onCategoryClick(c,catLink)}>
+            <a href={catLink}>
                 <span className="cat-title">{catTitle}</span>
                 <span className="cat-product-counter">{c.product_count}</span>
             </a>
