@@ -16,7 +16,7 @@ class ProductsContainer extends React.Component {
     }
     return (
       <div className="panelContainer">
-        <div className="title"><a href="https://pling.com">Publish</a></div>
+        <div className="title">{this.props.title}</div>
         {container}
       </div>
     )

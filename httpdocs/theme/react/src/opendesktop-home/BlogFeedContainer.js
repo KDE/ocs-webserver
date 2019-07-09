@@ -38,7 +38,7 @@ class BlogFeedContainer extends React.Component {
     }
     return (
       <div className="panelContainer">
-        <div className="title"><a href="https://forum.opendesktop.org">Community-Forum</a></div>
+        <div className="title">Forum</div>
         {feedItemsContainer}
       </div>
     )

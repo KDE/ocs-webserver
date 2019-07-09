@@ -44,7 +44,7 @@ class ProductsGitContainer extends React.Component {
     }
     return (
       <div className="panelContainer">
-        <div className="title"> <a href="https://opencode.net">Code</a> </div>
+        <div className="title"> Git-Projects</div>
         {container}
       </div>
     )
