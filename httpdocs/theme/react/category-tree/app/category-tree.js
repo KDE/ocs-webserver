@@ -24,7 +24,7 @@ function CategoryTree(){
 
     /* STATE */
 
-    let initialCatTree = [{title:"All",id:"0"},...window.catTree]
+    let initialCatTree = [{title:"All",id:"00"},...window.catTree]
 
     const [ categoryTree, setCategoryTree ] = useState(initialCatTree);    
     const [ categoryId, SetCategoryId ] = useState(window.categoryId);
@@ -56,6 +56,8 @@ function CategoryTree(){
 
     const [ searchPhrase, setSearchPhrase ] = useState();
     const [ searchMode, setSearchMode ] = useState();
+
+    const [ showBreadCrumbs, setShowBreadCrumbs ] = useState(true);
 
     /* COMPONENT */
 
@@ -115,12 +117,12 @@ function CategoryTree(){
     }
 
     // on category panel item click
-    function onCategoryPanleItemClick(ccl,cvc,catLink){
+    function onCategoryPanleItemClick(ccl,cvc){
         const newCurrentCategoryLevel = ccl;
         const newCurrentViewedCategories = cvc;
         setCurrentCategoryLevel(newCurrentCategoryLevel) 
         setCurrentViewedCategories(newCurrentViewedCategories)
-        if (catLink) window.location.href = catLink;
+        // if (catLink) window.location.href = catLink;
     }
 
     // search phrase
@@ -144,12 +146,13 @@ function CategoryTree(){
     if (selectedCategory) tagCloudDisplay = <CategoryTagCloud selectedCategory={selectedCategory} />
 
     let categoryTreeHeaderDisplay;
-    if (currentViewedCategories.length > 0){
+    if (showBreadCrumbs === true){
         categoryTreeHeaderDisplay = (
             <CategoryTreeHeader 
                 currentCategoryLevel={currentCategoryLevel}
                 currentViewedCategories={currentViewedCategories}  
                 onHeaderNavigationItemClick={(cvc) => onHeaderNavigationItemClick(cvc)}
+                onGoBackClick={goBack}
             />
         )
     }
@@ -167,7 +170,7 @@ function CategoryTree(){
                 currentViewedCategories={currentViewedCategories}
                 selectedCategoriesId={selectedCategoriesId}
                 onCategoryPanleItemClick={(ccl,cvc,catLink) => onCategoryPanleItemClick(ccl,cvc,catLink)}
-                onGoBackClick={goBack}
+                onSetShowBreadCrumbs={(val) => setShowBreadCrumbs(val)}
             />
             {tagCloudDisplay}
         </div>
@@ -187,8 +190,6 @@ function CategoryTreeHeader(props){
         const newCategories = categories;
         newCategories.length = index + 1;
         setCategories(newCategories)
-        const catLink = getUrlContext(window.location.href) + ( cvc.id === "0" ? "/browse/" : "/browse/cat/"+cvc.id+"/order/latest/")
-        window.location.href = catLink;
     }
 
     let categoryTreeHeaderNavigationDisplay;
@@ -199,8 +200,9 @@ function CategoryTreeHeader(props){
                 title = cvc.title;
                 titleHoverElement = '';
             }
+            const catLink = getUrlContext(window.location.href) + ( cvc.id === "00" ? "/browse/" : "/browse/cat/"+cvc.id+"/order/latest/")
             return (
-                <a key={index} onClick={() => onHeaderNavigationItemClick(cvc,index)}>
+                <a key={index} href={catLink} onClick={() => onHeaderNavigationItemClick(cvc,index)}>
                     {title}
                     {titleHoverElement}
                 </a>
@@ -208,8 +210,17 @@ function CategoryTreeHeader(props){
         })
     }
 
+    let sNameDisplay;
+    if (categories.length === 0){
+        if (window.config && window.config.sName){
+            sNameDisplay = <a href={window.config.sName.indexOf('http') > -1 ? window.config.sName : "https://"+window.config.sName}>{window.config.sName}</a>
+        }
+    }
+
     return (
         <div id="category-tree-header">
+            <a id="back-button" onClick={props.onGoBackClick}><span className="glyphicon glyphicon-chevron-left"></span></a>
+            {sNameDisplay}
             {categoryTreeHeaderNavigationDisplay}
         </div>
     )
@@ -241,6 +252,13 @@ function CategoryPanelsContainer(props){
     const [ containerVisibility, setContainerVisibility ] = useState(false);
 
     /* COMPONENT */
+
+    React.useEffect(() => {
+        let val = false;
+        if (sliderPosition === 0) val = false;
+        else val = true;
+        props.onSetShowBreadCrumbs(val);
+    },[sliderPosition]);
 
     React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories])
     React.useEffect(() => { updatePanlesOnSearch() },[props.searchMode,props.searchPhrase])
@@ -343,17 +361,11 @@ function CategoryPanelsContainer(props){
         width:sliderWidth+"px",
     }
 
-    let categoryPanelsContainerClassName = "", backButtonDisplay;
-    if (showBackButton){
-        categoryPanelsContainerClassName += "show-back-button ";
-        backButtonDisplay = <a id="back-button" onClick={props.onGoBackClick}><span className="glyphicon glyphicon-chevron-left"></span></a>
-    }
-
+    let categoryPanelsContainerClassName = "";
     if (containerVisibility === true) categoryPanelsContainerClassName += "visible ";
 
     return (
         <div id="category-panles-container" className={categoryPanelsContainerClassName} style={categoryPanelsContainerCss}>
-            {backButtonDisplay}
             <div id="category-panels-slider" style={categoryPanelsSliderCss}>
                 {categoryPanelsDislpay}
             </div>
@@ -422,13 +434,21 @@ function CategoryMenuItem(props){
     const c = props.category;
 
     function onCategoryClick(c,catLink){
-        props.onCategoryClick(c,catLink)
+        setTimeout(() => {
+            if (c.has_children === true) props.onCategoryClick(c,catLink)            
+        }, 100);
     }
 
     let catLink;
     if (c.id){
-        catLink = getUrlContext(window.location.href);
-        catLink += c.id === "0" ? "/browse/" : "/browse/cat/"+c.id+"/order/latest/"
+        if (c.id === "0"){
+            catLink = window.config.baseUrl;
+            if (window.config.baseUrl.indexOf('http') === -1) catLink = "http://" + window.config.baseUrl;
+        }
+        else {
+            catLink = getUrlContext(window.location.href);
+            catLink += c.id === "00" ? "/browse/" : "/browse/cat/"+c.id+"/order/latest/";         
+        }
     }
     else {
         if (c.menuhref.indexOf('http') > -1) catLink = c.menuhref; 
@@ -439,25 +459,26 @@ function CategoryMenuItem(props){
     if (c.title) catTitle = c.title;
     else catTitle = c.name;
 
-    let categoryMenuItemDisplay;
-    if (c.has_children === true){
-        categoryMenuItemDisplay = (
-            <a onClick={() => onCategoryClick(c,catLink)}>
-                <span className="cat-title">{catTitle}</span>
-                <span className="cat-product-counter">{c.product_count}</span>
-            </a>
-        )
-    } else {
-        categoryMenuItemDisplay = (
-            <a href={catLink}>
-                <span className="cat-title">{catTitle}</span>
-                <span className="cat-product-counter">{c.product_count}</span>
-            </a>
-        )        
-    }
+    const categoryMenuItemDisplay = (
+        <a href={catLink} onClick={() => onCategoryClick(c,catLink)}>
+            <span className="cat-title">{catTitle}</span>
+            <span className="cat-product-counter">{c.product_count}</span>
+        </a>
+    )
 
     let categoryMenuItemClassName;
-    if (props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1) categoryMenuItemClassName = "active";
+    if (c.id === "0"){
+        if (window.location.href === catLink || window.location.href === catLink + "/") categoryMenuItemClassName = "active";
+    } else if (c.id === "00") {
+        let baseName = window.config.sName;
+        if (window.config.sName.indexOf('http') === -1 ) baseName = "https://" + window.config.sName;
+        if (window.location.href === window.config.baseUrl + catLink || window.location.href === window.config.baseUrl + catLink.split("/browse")[0] ||
+            window.location.href === baseName + catLink || window.location.href === baseName + catLink.split("/browse")[0]){
+            categoryMenuItemClassName = "active";
+        }
+    } else {
+        if (props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink || window.location.href.indexOf(catLink) > -1) categoryMenuItemClassName = "active";
+    }
 
     return(
         <li className={categoryMenuItemClassName} >

@@ -83,7 +83,7 @@ class ChatContainer extends Component {
     }
     return (
       <div id="chat-container" className="panelContainer">
-        <div className="title"><a href="https://chat.opendesktop.org">Community - Riot Chat</a> </div>
+        <div className="title"><a href="https://chat.opendesktop.org">Riot Chat</a> </div>
         {container}
       </div>
     )
