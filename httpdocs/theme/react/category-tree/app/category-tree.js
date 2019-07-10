@@ -173,6 +173,7 @@ function CategoryTree(){
                 currentViewedCategories={currentViewedCategories}  
                 onHeaderNavigationItemClick={(cvc) => onHeaderNavigationItemClick(cvc)}
                 showBreadCrumbs={showBreadCrumbs}
+                showForwardButton={showForwardButton}
                 onGoBackClick={goBack}
                 onGoForwardClick={goForward}
             />
@@ -186,6 +187,7 @@ function CategoryTree(){
                 selectedCategoriesId={selectedCategoriesId}
                 onCategoryPanleItemClick={(ccl,cvc,catLink) => onCategoryPanleItemClick(ccl,cvc,catLink)}
                 onSetShowBreadCrumbs={(val) => setShowBreadCrumbs(val)}
+                onSetShowForwardButton={(val) => setShowForwardButton(val)}
             />
             {tagCloudDisplay}
         </div>
@@ -243,12 +245,17 @@ function CategoryTreeHeader(props){
         backButtonDisplay = <a id="back-button" className="disabled"><span className="glyphicon glyphicon-chevron-left"></span></a>
     }
 
+    let forwadButtonDisplay;
+    if (props.showForwardButton === true){
+        forwadButtonDisplay = <a id="forward-button" onClick={props.onGoForwardClick}><span className="glyphicon glyphicon-chevron-right"></span></a>
+    }
+
     return (
         <div id="category-tree-header">
             {backButtonDisplay}
             {sNameDisplay}
             {categoryTreeHeaderNavigationDisplay}
-            <a id="forward-button" onClick={props.onGoForwardClick}><span className="glyphicon glyphicon-chevron-right"></span></a>
+            {forwadButtonDisplay}
         </div>
     )
 }
@@ -288,9 +295,10 @@ function CategoryPanelsContainer(props){
     },[sliderPosition]);
 
     React.useEffect(() => {
-        console.log(panels.length);
-        console.log(currentCategoryLevel);
-    },[panels])
+        let val = false;
+        if (panels.length === (props.currentCategoryLevel + 1)) val = true;
+        props.onSetShowForwardButton(val);
+    },[props.currentCategoryLevel])
 
     React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories])
     React.useEffect(() => { updatePanlesOnSearch() },[props.searchMode,props.searchPhrase])
