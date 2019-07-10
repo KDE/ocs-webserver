@@ -22,6 +22,8 @@ else {
 
 function CategoryTree(){
 
+    console.log(window.config);
+
     /* STATE */
 
     let initialCatTree = [...window.catTree]
