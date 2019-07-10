@@ -288,17 +288,19 @@ function CategoryPanelsContainer(props){
     /* COMPONENT */
 
     React.useEffect(() => {
-        let val = false;
-        if (sliderPosition === 0) val = false;
-        else val = true;
-        props.onSetShowBreadCrumbs(val);
+        console.log(sliderPosition);
+        console.log(containerWidth);
+        console.log(panles.length);
+        console.log(sliderPosition < (panles.length * containerWidth));
+        let showback = true, showForward = false;
+        if (sliderPosition === 0){
+            showback = false;
+            showForward = true;
+        }
+        if (sliderPosition < (panles.length * containerWidth)) showForward = true;
+        props.onSetShowBreadCrumbs(showback);
+        props.onSetShowForwardButton(showForward);
     },[sliderPosition]);
-
-    React.useEffect(() => {
-        let val = false;
-        if (panels.length === (props.currentCategoryLevel + 1)) val = true;
-        props.onSetShowForwardButton(val);
-    },[props.currentCategoryLevel])
 
     React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories])
     React.useEffect(() => { updatePanlesOnSearch() },[props.searchMode,props.searchPhrase])
