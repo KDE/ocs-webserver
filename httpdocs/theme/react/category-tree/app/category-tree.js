@@ -19,8 +19,6 @@ else {
     }
 }
 
-console.log(window.config);
-
 function CategoryTree(){
 
     /* STATE */
@@ -166,8 +164,6 @@ function CategoryTree(){
         )
     }
 
-    console.log(showForwardButton);
-
     return(
         <div id="category-tree">
             {searchInputDisplay}
@@ -252,8 +248,6 @@ function CategoryTreeHeader(props){
         backButtonDisplay = <a id="back-button" className="disabled"><span className="glyphicon glyphicon-chevron-left"></span></a>
     }
 
-    console.log(props.showForwardButton);
-
     let forwadButtonDisplay;
     if (props.showForwardButton === true){
         forwadButtonDisplay = <a id="forward-button" onClick={props.onGoForwardClick}><span className="glyphicon glyphicon-chevron-right"></span></a>
@@ -305,9 +299,7 @@ function CategoryPanelsContainer(props){
             } else {
                 showForward = true;
             }            
-        }
-        if (sliderPosition < ((panels.length - 1) * containerWidth)){
-            console.log(window.config.baseUrlStore + "/" === window.location.href);
+        } else if (sliderPosition < ((panels.length - 1) * containerWidth)){
             if (window.config.baseUrlStore + "/" === window.location.href){
                 showForward = false;
             } else {
