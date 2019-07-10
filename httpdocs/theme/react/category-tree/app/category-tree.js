@@ -196,9 +196,10 @@ function CategoryTree(){
 
 function CategoryTreeHeader(props){
 
-    const [ categories, setCategories ] = useState(props.currentViewedCategories)
+    const initialCurrentViewedCategories = props.currentViewedCategories.slice(0,props.currentCategoryLevel);
+    const [ categories, setCategories ] = useState(initialCurrentViewedCategories)
     React.useEffect(() => {
-        const newCurrentViewedCategories = props.currentViewedCategories;
+        const newCurrentViewedCategories = props.currentViewedCategories.slice(0,props.currentCategoryLevel);
         setCategories(newCurrentViewedCategories);
     },[props.currentViewedCategories,props.currentCategoryLevel])
 
@@ -212,18 +213,14 @@ function CategoryTreeHeader(props){
     let categoryTreeHeaderNavigationDisplay;
     if (categories.length > 0){
         categoryTreeHeaderNavigationDisplay = categories.map((cvc,index) =>{
-            let title = "/", titleHoverElement = <span>{cvc.title}</span>;
             if (categories.length === index + 1){
-                title = cvc.title;
-                titleHoverElement = '';
+                const catLink = getUrlContext(window.location.href) + ( cvc.id === "00" ? "/browse/" : "/browse/cat/"+cvc.id+"/order/latest/")
+                return (
+                    <a key={index} href={catLink} onClick={() => onHeaderNavigationItemClick(cvc,index)}>
+                        {cvc.title}
+                    </a>
+                )
             }
-            const catLink = getUrlContext(window.location.href) + ( cvc.id === "00" ? "/browse/" : "/browse/cat/"+cvc.id+"/order/latest/")
-            return (
-                <a key={index} href={catLink} onClick={() => onHeaderNavigationItemClick(cvc,index)}>
-                    {title}
-                    {titleHoverElement}
-                </a>
-            )
         })
     }
 
