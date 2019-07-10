@@ -297,22 +297,23 @@ function CategoryPanelsContainer(props){
     /* COMPONENT */
 
     React.useEffect(() => {
-        console.log(window.location.href);
-        console.log(window.config.baseUrlStore);
-        console.log(window.config.baseUrlStore + "/" === window.location.href);
-        if (window.config.baseUrlStore + "/" === window.location.href){
-            props.onSetShowBreadCrumbs(false);
-            props.onSetShowForwardButton(false);
-        }
-    },[]);
-
-    React.useEffect(() => {
         let showback = true, showForward = false;
         if (sliderPosition === 0){
             showback = false;
-            showForward = true;
+            if (window.config.baseUrlStore + "/" === window.location.href){
+                showForward = false;
+            } else {
+                showForward = true;
+            }            
         }
-        if (sliderPosition < ((panels.length - 1) * containerWidth) && window.config.baseUrlStore + "/" !== window.location.href) showForward = true;
+        if (sliderPosition < ((panels.length - 1) * containerWidth)){
+            console.log(window.config.baseUrlStore + "/" === window.location.href);
+            if (window.config.baseUrlStore + "/" === window.location.href){
+                showForward = false;
+            } else {
+                showForward = true;
+            }
+        }
         if (panels.length === 1){
             showBack = false;
             showForward = false;
