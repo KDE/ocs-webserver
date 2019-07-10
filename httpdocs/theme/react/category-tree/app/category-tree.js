@@ -19,6 +19,7 @@ else {
     }
 }
 
+console.log(window.config);
 
 function CategoryTree(){
 
@@ -292,7 +293,7 @@ function CategoryPanelsContainer(props){
     /* COMPONENT */
 
     React.useEffect(() => {
-        if (sliderPosition === 0){
+        if (window.location.hostname === window.location.href){
             props.onSetShowBreadCrumbs(false);
             props.onSetShowForwardButton(false);
         }
