@@ -147,18 +147,6 @@ function CategoryTree(){
     let tagCloudDisplay;
     if (selectedCategory) tagCloudDisplay = <CategoryTagCloud selectedCategory={selectedCategory} />
 
-    let categoryTreeHeaderDisplay;
-    if (showBreadCrumbs === true){
-        categoryTreeHeaderDisplay = (
-            <CategoryTreeHeader 
-                currentCategoryLevel={currentCategoryLevel}
-                currentViewedCategories={currentViewedCategories}  
-                onHeaderNavigationItemClick={(cvc) => onHeaderNavigationItemClick(cvc)}
-                onGoBackClick={goBack}
-            />
-        )
-    }
-
     let searchInputDisplay;
     if (window.config.isAdmin === true){
         searchInputDisplay = (
@@ -168,8 +156,14 @@ function CategoryTree(){
 
     return(
         <div id="category-tree">
-            {categoryTreeHeaderDisplay}
             {searchInputDisplay}
+            <CategoryTreeHeader 
+                currentCategoryLevel={currentCategoryLevel}
+                currentViewedCategories={currentViewedCategories}  
+                onHeaderNavigationItemClick={(cvc) => onHeaderNavigationItemClick(cvc)}
+                showBreadCrumbs={showBreadCrumbs}
+                onGoBackClick={goBack}
+            />
             <CategoryPanelsContainer
                 categoryTree={categoryTree}
                 categoryId={categoryId}
@@ -222,13 +216,24 @@ function CategoryTreeHeader(props){
     let sNameDisplay;
     if (categories.length === 0){
         if (window.config && window.config.sName){
-            sNameDisplay = <a href={window.config.sName.indexOf('http') > -1 ? window.config.sName : "https://"+window.config.sName}>{window.config.sName}</a>
+            let storeName;
+            window.config.domains.forEach(function(d,index){
+                if (d.host === window.config.sName) storeName = d.name;
+            });
+            sNameDisplay = <a href={window.config.sName.indexOf('http') > -1 ? window.config.sName : "https://"+window.config.sName}>{storeName}</a>
         }
+    }
+
+    let backButtonDisplay;
+    if (props.showBreadCrumbs === true){
+        backButtonDisplay = <a id="back-button" onClick={props.onGoBackClick}><span className="glyphicon glyphicon-chevron-left"></span></a>;
+    } else {
+        backButtonDisplay = <a id="back-button" className="disabled"><span className="glyphicon glyphicon-chevron-left"></span></a>
     }
 
     return (
         <div id="category-tree-header">
-            <a id="back-button" onClick={props.onGoBackClick}><span className="glyphicon glyphicon-chevron-left"></span></a>
+            {backButtonDisplay}
             {sNameDisplay}
             {categoryTreeHeaderNavigationDisplay}
         </div>
