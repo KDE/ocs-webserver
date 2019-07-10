@@ -307,7 +307,7 @@ function CategoryPanelsContainer(props){
 
     // update slider
     function updateSlider(){
-        const trimedPanelsArray =  [...initialRootCategoryPanels,...props.currentViewedCategories];
+        /*const trimedPanelsArray =  [...initialRootCategoryPanels,...props.currentViewedCategories];
         if (props.searchMode === false ){
             let currentCategoryLevel = props.currentCategoryLevel;
             if (isShowRealDomainAsUrl === 1 ) currentCategoryLevel = props.currentCategoryLevel + 1;
@@ -316,7 +316,7 @@ function CategoryPanelsContainer(props){
         setPanels(trimedPanelsArray);
 
         const newSliderWidth = containerWidth * trimedPanelsArray.length;
-        setSliderWidth(newSliderWidth);
+        setSliderWidth(newSliderWidth);*/
 
         let currentCategoryLevel = props.currentCategoryLevel + 1;
         const newSliderPosition = currentCategoryLevel * containerWidth;
