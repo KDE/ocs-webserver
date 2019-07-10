@@ -201,7 +201,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             }
 
              if(null != $this->_authMember) {
-                $this->view->authMemberJson = Zend_Json::encode( $this->_authMember );
+                $this->view->authMemberJson = Zend_Json::encode( Default_Model_Member::cleanAuthMemberForJson($this->_authMember) );
             }
 
             $helpAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
@@ -213,7 +213,7 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             $this->view->product->facebook_code = Default_Model_HtmlPurify::purify($this->view->product->facebook_code,Default_Model_HtmlPurify::ALLOW_URL);
             $this->view->product->twitter_code = Default_Model_HtmlPurify::purify($this->view->product->twitter_code,Default_Model_HtmlPurify::ALLOW_URL);
             $this->view->product->google_code = Default_Model_HtmlPurify::purify($this->view->product->google_code,Default_Model_HtmlPurify::ALLOW_URL);
-            $this->view->productJson = Zend_Json::encode($this->view->product );
+            $this->view->productJson = Zend_Json::encode(Default_Model_Collection::cleanProductInfoForJson($this->view->product) );
 
             $tableProjectUpdates = new Default_Model_ProjectUpdates();
             $this->view->updatesJson =  Zend_Json::encode($tableProjectUpdates->fetchProjectUpdates($this->_projectId));
@@ -284,7 +284,6 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         if(null != $this->_authMember && null != $this->_authMember->member_id) {
             $this->view->member_id = $this->_authMember->member_id;
         }
-        //        $this->fetchDataForIndexView();
         $modelProduct = new Default_Model_Collection();
         $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
         if (empty($productInfo)) {
@@ -964,10 +963,10 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
         $projectTable->setStatus(Default_Model_Collection::PROJECT_ACTIVE, $this->_projectId);
 
         // add to search index
-        $modelProject = new Default_Model_Collection();
-        $productInfo = $modelProject->fetchProductInfo($this->_projectId);
-        $modelSearch = new Default_Model_Search_Lucene();
-        $modelSearch->addDocument($productInfo->toArray());
+//        $modelProject = new Default_Model_Collection();
+//        $productInfo = $modelProject->fetchProductInfo($this->_projectId);
+//        $modelSearch = new Default_Model_Search_Lucene();
+//        $modelSearch->addDocument($productInfo->toArray());
 
         $this->redirect('/member/' . $this->_authMember->member_id . '/products/');
     }
@@ -1382,9 +1381,9 @@ class CollectionController extends Local_Controller_Action_DomainSwitch
             $product->toArray());
 
         // add published project to search index
-        $productInfo = $tableProduct->fetchProductInfo($this->_projectId);
-        $modelSearch = new Default_Model_Search_Lucene();
-        $modelSearch->addDocument($productInfo);
+//        $productInfo = $tableProduct->fetchProductInfo($this->_projectId);
+//        $modelSearch = new Default_Model_Search_Lucene();
+//        $modelSearch->addDocument($productInfo);
 
         $this->forward('collections', 'user', 'default', array('member_id' => $memberId));
         //$this->redirect('/member/'.$memberId.'/products');
