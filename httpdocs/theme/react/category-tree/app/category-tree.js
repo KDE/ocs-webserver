@@ -227,11 +227,11 @@ function CategoryTreeHeader(props){
     let sNameDisplay;
     if (categories.length === 0){
         if (window.config && window.config.sName){
-            let storeName, storeHref;
+            let storeName = window.config.sName, storeHref = window.config.sName;
             window.config.domains.forEach(function(d,index){
                 if (d.host === window.config.sName){
-                    storeName = d.name;
-                    storeHref = d.menuhref;
+                    if (d.name) storeName = d.name;
+                    if (d.menuhref) storeHref = d.menuhref;
                 }
             });
             sNameDisplay = <a href={storeHref}>{storeName}</a>
@@ -288,16 +288,16 @@ function CategoryPanelsContainer(props){
     /* COMPONENT */
 
     React.useEffect(() => {
-        console.log(sliderPosition);
-        console.log(containerWidth);
-        console.log(panels.length);
-        console.log(sliderPosition < (panels.length * containerWidth));
         let showback = true, showForward = false;
         if (sliderPosition === 0){
             showback = false;
             showForward = true;
         }
         if (sliderPosition < ((panels.length - 1) * containerWidth)) showForward = true;
+        if (panels.length === 1){
+            showBack = false;
+            showForward = false;
+        }
         props.onSetShowBreadCrumbs(showback);
         props.onSetShowForwardButton(showForward);
     },[sliderPosition]);
@@ -510,9 +510,6 @@ function CategoryMenuItem(props){
 
     let categoryMenuItemClassName;
     if (c.id === "0"){
-        console.log(window.location.href);
-        console.log(catLink);
-        console.log(window.location.href === catLink)
         if (window.location.href === catLink || window.location.href === catLink + "/"){
             categoryMenuItemClassName = "active";
         }
