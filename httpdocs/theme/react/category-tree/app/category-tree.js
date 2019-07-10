@@ -118,6 +118,18 @@ function CategoryTree(){
         //}
     }
 
+    // go forward
+    function goForward(){
+        //if (currentCategoryLevel > 0){
+            const newCurrentCategoryLevel = currentCategoryLevel + 1;
+            setCurrentCategoryLevel(newCurrentCategoryLevel);
+            const newSearchPhrase = '';
+            const newSearchMode = false;
+            setSearchPhrase(newSearchPhrase);
+            setSearchMode(newSearchMode);
+        //}
+    }
+
     // on category panel item click
     function onCategoryPanleItemClick(ccl,cvc){
         const newCurrentCategoryLevel = ccl;
@@ -163,6 +175,7 @@ function CategoryTree(){
                 onHeaderNavigationItemClick={(cvc) => onHeaderNavigationItemClick(cvc)}
                 showBreadCrumbs={showBreadCrumbs}
                 onGoBackClick={goBack}
+                onGoForwardClick={goForward}
             />
             <CategoryPanelsContainer
                 categoryTree={categoryTree}
@@ -236,6 +249,7 @@ function CategoryTreeHeader(props){
             {backButtonDisplay}
             {sNameDisplay}
             {categoryTreeHeaderNavigationDisplay}
+            <a id="forward-button" onClick={props.onGoForwardClick}><span className="glyphicon glyphicon-chevron-right"></span></a>;
         </div>
     )
 }
