@@ -288,6 +288,13 @@ function CategoryPanelsContainer(props){
     /* COMPONENT */
 
     React.useEffect(() => {
+        if (panels.length === 1){
+            props.onSetShowBreadCrumbs(false);
+            props.onSetShowForwardButton(false);
+        }
+    },[]);
+
+    React.useEffect(() => {
         let showback = true, showForward = false;
         if (sliderPosition === 0){
             showback = false;
