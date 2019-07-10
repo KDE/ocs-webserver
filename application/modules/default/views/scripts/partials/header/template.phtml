@@ -90,7 +90,7 @@ $category_id_parent = $helperFetchCatParent->getCatParentId(array('project_categ
 $cat_title_length = strlen($cat_title);
 //check logo-width:
 $logoWidth = (int)$this->template['header-logo']['width'];
-$cat_title_left = $logoWidth + strlen($store_name)+60;
+$cat_title_left = (int)$logoWidth + (int)strlen($store_name)+120;
 $tabs_left = (int)$this->template['header-nav-tabs']['absolute-left'];
 $tabs_left += $cat_title_length*10;
 //$idCat = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
