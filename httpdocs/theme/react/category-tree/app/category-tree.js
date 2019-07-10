@@ -230,8 +230,6 @@ function CategoryPanelsContainer(props){
 
     /* STATE */
 
-    console.log(window.config.domains)
-
     const rootListingPanel = {categoryId:0,categories:props.categoryTree}
     const storeListingPanel = {categoryId:-1,categories:[{name:"All",id:"0"}, ...window.config.domains]}
     let initialRootCategoryPanels = [rootListingPanel];
