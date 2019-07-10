@@ -230,7 +230,11 @@ function CategoryTreeHeader(props){
             let storeName = window.config.sName, storeHref = window.config.sName;
             window.config.domains.forEach(function(d,index){
                 if (d.host === window.config.sName){
-                    if (d.name) storeName = d.name;
+                    if (d.name){
+                        storeName = d.name;
+                    } else {
+                        storeName = window.config.sName.split('.')[0];
+                    }
                     if (d.menuhref) storeHref = d.menuhref;
                 }
             });
