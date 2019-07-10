@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS ppload.stat_ppload_files_downloaded_unique;
+CREATE TABLE ppload.stat_ppload_files_downloaded_unique like ppload.stat_ppload_files_downloaded;
+
 DELIMITER $$
 drop PROCEDURE generate_stat_files_downloaded;
 CREATE  PROCEDURE `generate_stat_files_downloaded`()
