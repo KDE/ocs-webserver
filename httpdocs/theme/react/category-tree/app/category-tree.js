@@ -233,7 +233,7 @@ function CategoryTreeHeader(props){
                     if (d.name){
                         storeName = d.name;
                     } else {
-                        storeName = window.config.sName.split('.')[0];
+                        storeName = window.config.sName.split('.')[0].toUpperCase();
                     }
                     if (d.menuhref) storeHref = d.menuhref;
                 }
@@ -292,7 +292,7 @@ function CategoryPanelsContainer(props){
     /* COMPONENT */
 
     React.useEffect(() => {
-        if (panels.length === 1){
+        if (sliderPosition === 0){
             props.onSetShowBreadCrumbs(false);
             props.onSetShowForwardButton(false);
         }
