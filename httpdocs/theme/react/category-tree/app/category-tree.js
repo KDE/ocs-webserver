@@ -290,14 +290,14 @@ function CategoryPanelsContainer(props){
     React.useEffect(() => {
         console.log(sliderPosition);
         console.log(containerWidth);
-        console.log(panles.length);
-        console.log(sliderPosition < (panles.length * containerWidth));
+        console.log(panels.length);
+        console.log(sliderPosition < (panels.length * containerWidth));
         let showback = true, showForward = false;
         if (sliderPosition === 0){
             showback = false;
             showForward = true;
         }
-        if (sliderPosition < (panles.length * containerWidth)) showForward = true;
+        if (sliderPosition < (panels.length * containerWidth)) showForward = true;
         props.onSetShowBreadCrumbs(showback);
         props.onSetShowForwardButton(showForward);
     },[sliderPosition]);
