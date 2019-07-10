@@ -110,6 +110,12 @@ class Backend_StoreController extends Local_Controller_Action_Backend
             if (!isset($values['is_show_forum_news'])) {
                 $values['is_show_forum_news'] = 0;
             }
+            if (!isset($values['is_show_in_menu'])) {
+                $values['is_show_in_menu'] = 0;
+            }
+            if (!isset($values['is_show_real_domain_as_url'])) {
+                $values['is_show_real_domain_as_url'] = 0;
+            }
             if (!isset($values['cross_domain_login'])) {
                 $values['cross_domain_login'] = 0;
             }

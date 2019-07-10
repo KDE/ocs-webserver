@@ -445,7 +445,9 @@ class HomeController extends Local_Controller_Action_DomainSwitch
                 $tmp['order'] = $obj['order'];
                 $tmp['calcOrder'] = $obj['calcOrder'];
                 $tmp['host'] = $obj['host'];
-                $tmp['name'] = $obj['name'];                
+                $tmp['name'] = $obj['name']; 
+                $tmp['is_show_in_menu'] = $obj['is_show_in_menu']; 
+                $tmp['is_show_real_domain_as_url'] = $obj['is_show_real_domain_as_url']; 
 
                 if($curOrder==30) {
                     // Desktop set calcOrder = 9 manuelly put desktop in front                    
@@ -469,9 +471,18 @@ class HomeController extends Local_Controller_Action_DomainSwitch
                     }
 
                     $order =  $obj['order'];
-                     // z.b 150001 ende ==1 go real link otherwise /s/$name
-                    $last_char_check = substr($order, -1);
+                    //OLD: z.b 150001 ende ==1 go real link otherwise /s/$name
+                    /*$last_char_check = substr($order, -1);
                     if($last_char_check=='1')
+                    {
+                        $obj['menuhref'] = $obj['host'];
+                    }else{
+                        $obj['menuhref'] = $baseurl.'/s/'.$obj['name'];
+                    }
+                     * 
+                     */
+                    $domainAsUrl = $obj['is_show_real_domain_as_url'];
+                    if($domainAsUrl)
                     {
                         $obj['menuhref'] = $obj['host'];
                     }else{
