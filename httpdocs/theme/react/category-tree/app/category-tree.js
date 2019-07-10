@@ -223,27 +223,25 @@ function CategoryTreeHeader(props){
         })
     }
 
-    let sNameDisplay;
-    if (categories.length === 0){
-        if (window.config && window.config.sName){
-            let storeName = window.config.sName, storeHref = window.config.sName;
-            window.config.domains.forEach(function(d,index){
-                if (d.host === window.config.sName){
-                    if (d.name){
-                        storeName = d.name;
-                    } else {
-                        storeName = window.config.sName.split('.')[0].toUpperCase();
-                    }
-                    if (d.menuhref) storeHref = d.menuhref;
-                }
-            });
-            sNameDisplay = <a href={storeHref}>{storeName}</a>
-        }
-    }
-
-    let backButtonDisplay;
+    let backButtonDisplay, sNameDisplay;
     if (props.showBreadCrumbs === true){
         backButtonDisplay = <a id="back-button" onClick={props.onGoBackClick}><span className="glyphicon glyphicon-chevron-left"></span></a>;
+        if (categories.length === 0){
+            if (window.config && window.config.sName){
+                let storeName = window.config.sName, storeHref = window.config.sName;
+                window.config.domains.forEach(function(d,index){
+                    if (d.host === window.config.sName){
+                        if (d.name){
+                            storeName = d.name;
+                        } else {
+                            storeName = window.config.sName.split('.')[0].toUpperCase();
+                        }
+                        if (d.menuhref) storeHref = d.menuhref;
+                    }
+                });
+                sNameDisplay = <a href={storeHref}>{storeName}</a>
+            }
+        }    
     } else {
         backButtonDisplay = <a id="back-button" className="disabled"><span className="glyphicon glyphicon-chevron-left"></span></a>
     }
