@@ -573,9 +573,14 @@ div#preloaded-images {
                                                 <?php
                                                 $cntGitp = 0;
                                                 if(!empty($this->member->gitlab_user_id)) {
-                                                $gitlab = new Default_Model_Ocs_Gitlab();
-                                                $gitProjects = $gitlab->getUserProjects($this->member->gitlab_user_id);
-                                                $cntGitp = count($gitProjects);
+                                                    
+                                                    try {
+                                                        $gitlab = new Default_Model_Ocs_Gitlab();
+                                                        $gitProjects = $gitlab->getUserProjects($this->member->gitlab_user_id);
+                                                        $cntGitp = count($gitProjects);
+                                                    } catch (Exception $exc) {
+                                                        $cntGitp = 0;
+                                                    }
                                                 }
                                                 $gittext = 'opencode.net/'.$this->member->username;
                                                 if($cntGitp>0){
