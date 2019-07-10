@@ -184,6 +184,16 @@ function (_React$Component) {
           href: logoLink
         }, this.state.store.name));
       }
+      
+      var siteHeaderCatNameDisplay;
+      if (window.config.isAdmin === true){
+        var catLink = this.state.serverUrl + this.state.serverUri + '/browse/cat' + this.state.categoryId;
+        siteHeaderCatNameDisplay = React.createElement("div", {
+          id: "site-header-cat-name-container"
+        }, React.createElement("a", {
+          href: catLink
+        }, '/' + this.state.cat_title));
+      }
 
       var HeaderDisplay;
 
@@ -202,7 +212,7 @@ function (_React$Component) {
           href: logoLink
         }, React.createElement("img", {
           src: this.state.template['header-logo']['image-src']
-        }))), siteHeaderStoreNameDisplay), React.createElement("div", {
+        }))), siteHeaderStoreNameDisplay, siteHeaderCatNameDisplay), React.createElement("div", {
           id: "site-header-right"
         }, React.createElement("div", {
           id: "site-header-right-top",
