@@ -24,7 +24,7 @@ function CategoryTree(){
 
     /* STATE */
 
-    let initialCatTree = [{title:"All",id:"00"},...window.catTree]
+    let initialCatTree = [...window.catTree]
 
     const [ categoryTree, setCategoryTree ] = useState(initialCatTree);    
     const [ categoryId, SetCategoryId ] = useState(window.categoryId);
@@ -229,9 +229,9 @@ function CategoryTreeHeader(props){
 function CategoryPanelsContainer(props){
 
     /* STATE */
-
+ 
     const rootListingPanel = {categoryId:0,categories:props.categoryTree}
-    const storeListingPanel = {categoryId:-1,categories:[{name:"All",id:"0"}, ...window.config.domains]}
+    const storeListingPanel = {categoryId:-1,categories:[...window.config.domains]}
     let initialRootCategoryPanels = [rootListingPanel];
     if (isShowRealDomainAsUrl  === 1) initialRootCategoryPanels = [storeListingPanel,rootListingPanel];
     let initialPanelsValue = initialRootCategoryPanels;
