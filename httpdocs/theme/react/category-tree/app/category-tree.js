@@ -297,7 +297,7 @@ function CategoryPanelsContainer(props){
             showback = false;
             showForward = true;
         }
-        if (sliderPosition < (panels.length * containerWidth)) showForward = true;
+        if (sliderPosition < ((panels.length - 1) * containerWidth)) showForward = true;
         props.onSetShowBreadCrumbs(showback);
         props.onSetShowForwardButton(showForward);
     },[sliderPosition]);
