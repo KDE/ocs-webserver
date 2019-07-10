@@ -230,11 +230,14 @@ function CategoryTreeHeader(props){
     let sNameDisplay;
     if (categories.length === 0){
         if (window.config && window.config.sName){
-            let storeName;
+            let storeName, storeHref;
             window.config.domains.forEach(function(d,index){
-                if (d.host === window.config.sName) storeName = d.name;
+                if (d.host === window.config.sName){
+                    storeName = d.name;
+                    storeHref = d.menuhref;
+                }
             });
-            sNameDisplay = <a href={window.config.sName.indexOf('http') > -1 ? window.config.sName : "https://"+window.config.sName}>{storeName}</a>
+            sNameDisplay = <a href={storeHref}>{storeName}</a>
         }
     }
 
