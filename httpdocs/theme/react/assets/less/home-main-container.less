@@ -27,12 +27,11 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
     padding-bottom:20px;
     justify-content:center;
     background-color: #F7F7F7;
-    //background-image: url(../img/start-bg.png);
+    //background-image: url(../img/home/bg.png);
     //background-position: center; /* Center the image */
-   //background-repeat: no-repeat; /* Do not repeat the image */
-   //background-size: cover; /* Resize the background image to cover the entire container */
+    //background-size: cover; /* Resize the background image to cover the entire container */
+    border-top:1px solid #706C64; 
    .introduction{
-
      display: block;
      font-family: aktiv-grotesk, sans-serif;
      font-size: 1.25rem !important;
@@ -40,7 +39,19 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
       font-weight: 400 !important;
       line-height: 1.5;
       text-rendering: optimizelegibility;
-      color: rgb(112, 108, 100);
+      //color: #fff;
+      color: #706c64;
+      text-align: center;
+      width: 66.66666%;
+      padding: 10px 60px;
+      .intro-desc{
+        h1{
+          font-size: 28px;
+        }
+        width: 550px;
+        display: block;
+        margin: 0 auto;
+      }
      ul{
        list-style: none;
        padding-left: 0px;
@@ -49,15 +60,43 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
        li{
         padding: 15px;
          display: block;
-         background-color: rgb(112, 108, 100);
-         color: #E7F3F8;
-        width: 25%;
+         color: #706C64;
+         width: 25%;
          float: left;
          text-align: center;
-         border: 1px solid #fff;
-          a{
-            color: #E7F3F8;
-          }
+         span.link-image{
+           height: 94px;
+           width: 240px;
+           border-radius: 5px;
+           display: block;
+           cursor: pointer;
+           background-repeat: no-repeat;
+
+         }
+         span.link-code
+         {
+           background-image: url(../img/home/code.png);
+         }
+         span.link-publish
+         {
+
+           background-image: url(../img/home/publish.png);
+
+         }
+         span.link-community
+         {
+           background-image: url(../img/home/community.png);
+           }
+         span.link-personal
+         {
+           background-image: url(../img/home/personal.png);
+           }
+
+        a{
+          //color: #E7F3F8;
+          color:#706C64;
+          cursor: pointer;
+        }
        }
      }
    }
