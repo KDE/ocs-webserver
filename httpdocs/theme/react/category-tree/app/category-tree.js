@@ -294,9 +294,9 @@ function CategoryPanelsContainer(props){
 
     React.useEffect(() => {
         console.log(window.location.href);
-        console.log(window.location.hostname);
-        console.log(window.config.baseStoreUrl);
-        if ("https://" + window.location.hostname + "/" === window.location.href|| window.config.baseUrlStore + "/" === window.location.href){
+        console.log(window.config.baseUrlStore);
+        console.log(window.config.baseUrlStore + "/" === window.location.href);
+        if (window.config.baseUrlStore + "/" === window.location.href){
             props.onSetShowBreadCrumbs(false);
             props.onSetShowForwardButton(false);
         }
