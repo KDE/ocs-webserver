@@ -468,7 +468,12 @@ function CategoryMenuItem(props){
 
     let categoryMenuItemClassName;
     if (c.id === "0"){
-        if (window.location.href === catLink || window.location.href === catLink + "/") categoryMenuItemClassName = "active";
+        console.log(window.location.href);
+        console.log(catLink);
+        console.log(window.location.href === catLink)
+        if (window.location.href === catLink || window.location.href === catLink + "/"){
+            categoryMenuItemClassName = "active";
+        }
     } else if (c.id === "00") {
         let baseName = window.config.sName;
         if (window.config.sName.indexOf('http') === -1 ) baseName = "https://" + window.config.sName;
