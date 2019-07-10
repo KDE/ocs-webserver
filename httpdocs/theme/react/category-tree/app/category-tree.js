@@ -108,9 +108,9 @@ function CategoryTree(){
         //if (currentCategoryLevel > 0){
             const newCurrentCategoryLevel = currentCategoryLevel - 1;
             setCurrentCategoryLevel(newCurrentCategoryLevel);
-            const trimedCurrentViewedCategoriesArray = currentViewedCategories;
+            /*const trimedCurrentViewedCategoriesArray = currentViewedCategories;
             trimedCurrentViewedCategoriesArray.length = newCurrentCategoryLevel > 0 ? newCurrentCategoryLevel : 0;    
-            setCurrentViewedCategories(trimedCurrentViewedCategoriesArray)
+            setCurrentViewedCategories(trimedCurrentViewedCategoriesArray)*/
             const newSearchPhrase = '';
             const newSearchMode = false;
             setSearchPhrase(newSearchPhrase);
@@ -249,7 +249,7 @@ function CategoryTreeHeader(props){
             {backButtonDisplay}
             {sNameDisplay}
             {categoryTreeHeaderNavigationDisplay}
-            <a id="forward-button" onClick={props.onGoForwardClick}><span className="glyphicon glyphicon-chevron-right"></span></a>;
+            <a id="forward-button" onClick={props.onGoForwardClick}><span className="glyphicon glyphicon-chevron-right"></span></a>
         </div>
     )
 }
