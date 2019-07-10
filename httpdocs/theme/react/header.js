@@ -187,9 +187,9 @@ function (_React$Component) {
       
       var siteHeaderCatNameDisplay;
       if (window.config.isAdmin === true){
-        var catLink = this.state.serverUrl + this.state.serverUri + '/browse/cat' + this.state.categoryId;
+        var catLink = this.state.serverUrl + this.state.serverUri;
         siteHeaderCatNameDisplay = React.createElement("div", {
-          id: "site-header-cat-name-container"
+          id: "site-header-cat-name-container", className: "header_cat_link"
         }, React.createElement("a", {
           href: catLink
         }, '/' + this.state.cat_title));

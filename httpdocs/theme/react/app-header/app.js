@@ -90,12 +90,12 @@ class SiteHeader extends React.Component {
     }
     
     
-    let catLink = this.state.serverUrl + this.state.serverUri + '/browse/cat' + this.state.categoryId;
+    let catLink = this.state.serverUrl + this.state.serverUri;
 
     let siteHeaderCatNameDisplay;
     if (window.config.isAdmin === true){
       siteHeaderCatNameDisplay = (
-        <div id="site-header-cat-name-container">
+        <div id="site-header-cat-name-container" class="header_cat_link">
           <a href={catLink}>
             {'/' + this.state.cat_title}
           </a>
