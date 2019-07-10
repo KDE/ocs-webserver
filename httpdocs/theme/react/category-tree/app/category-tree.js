@@ -159,10 +159,17 @@ function CategoryTree(){
         )
     }
 
+    let searchInputDisplay;
+    if (window.config.isAdmin === true){
+        searchInputDisplay = (
+            <input type="text" defaultValue={searchPhrase} onChange={e => onSetSearchPhrase(e)}/>
+        )
+    }
+
     return(
         <div id="category-tree">
-            <input type="text" defaultValue={searchPhrase} onChange={e => onSetSearchPhrase(e)}/>
             {categoryTreeHeaderDisplay}
+            {searchInputDisplay}
             <CategoryPanelsContainer
                 categoryTree={categoryTree}
                 categoryId={categoryId}
