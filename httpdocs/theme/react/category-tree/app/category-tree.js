@@ -22,8 +22,6 @@ else {
 
 function CategoryTree(){
 
-    console.log(window.config);
-
     /* STATE */
 
     let initialCatTree = [...window.catTree]
@@ -60,6 +58,7 @@ function CategoryTree(){
     const [ searchMode, setSearchMode ] = useState();
 
     const [ showBreadCrumbs, setShowBreadCrumbs ] = useState(true);
+    const [ showForwardButton, setShowForwardButton ] = useState(false);
 
     /* COMPONENT */
 
@@ -287,6 +286,11 @@ function CategoryPanelsContainer(props){
         else val = true;
         props.onSetShowBreadCrumbs(val);
     },[sliderPosition]);
+
+    React.useEffect(() => {
+        console.log(panels.length);
+        console.log(currentCategoryLevel);
+    },[panels])
 
     React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories])
     React.useEffect(() => { updatePanlesOnSearch() },[props.searchMode,props.searchPhrase])
