@@ -2,6 +2,7 @@ import React from 'react';
 function IntroductionDetailPersonal(props){
   return(
     <div className="detail-personal detail">
+      <span class="arrow-down"></span>
       <div className="icon-container">
         <a href="https://cloud.opendesktop.org/">
           <div className="icon"></div>

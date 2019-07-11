@@ -207,8 +207,7 @@ class Backend_StoreController extends Local_Controller_Action_Backend
                 FROM `config_store_tag_group`,`tag_group`            
                 WHERE `tag_group`.`group_id` = `config_store_tag_group`.`tag_group_id` AND `config_store_tag_group`.`store_id` = `config_store`.`store_id`        
                 GROUP BY `config_store_tag_group`.`store_id`)')
-        ))->order($sorting)->limit($pageSize, $startIndex)->setIntegrityCheck(false)
-        ;
+        ))->order($sorting)->limit($pageSize, $startIndex)->setIntegrityCheck(false);
 
         foreach ($filter as $key => $value) {
             if (false === empty($value)) {
@@ -315,7 +314,10 @@ class Backend_StoreController extends Local_Controller_Action_Backend
             $resultForSelect = array();
             $resultForSelect[] = array('DisplayText' => '', 'Value' => '');
             foreach ($resultRows as $row) {
-                $resultForSelect[] = array('DisplayText' => $row['tag_name'] . '[' . $row['tag_id'] . ']', 'Value' => $row['tag_id']);
+                $resultForSelect[] = array(
+                    'DisplayText' => $row['tag_name'] . '[' . $row['tag_id'] . ']',
+                    'Value'       => $row['tag_id']
+                );
             }
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
@@ -343,7 +345,10 @@ class Backend_StoreController extends Local_Controller_Action_Backend
             $resultForSelect[] = array('DisplayText' => '', 'Value' => '');
             foreach ($resultRows as $row) {
                 $resultForSelect[] =
-                    array('DisplayText' => $row['group_name'] . '[' . $row['group_id'] . ']', 'Value' => $row['group_id']);
+                    array(
+                        'DisplayText' => $row['group_name'] . '[' . $row['group_id'] . ']',
+                        'Value'       => $row['group_id']
+                    );
             }
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
@@ -357,8 +362,8 @@ class Backend_StoreController extends Local_Controller_Action_Backend
 
         $this->_helper->json($jTableResult);
     }
-    
-    
+
+
     public function createaboutAction()
     {
         $store_id = (int)$this->getParam('c');

@@ -45,7 +45,11 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
         max-width: 1200px;
         display: block;
         margin: 0 auto;
-
+      .intro-menu{
+        display: inline-block;
+        width: 100%;
+        padding-bottom: 5px;
+      }
       .intro-desc{
         h1{
           font-size: 28px;
@@ -233,6 +237,7 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
             padding-top:30px;
             color: #99DCF9;
             animation: fadeEffect 1s; /* Fading effect takes 1 second */
+            position: relative;
             h2{
               color: #fff;
             }
@@ -255,33 +260,52 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
             .description{
               text-align: left;
               margin-left: 120px;
-
                 font-size: 1.5rem !important;
-
                 line-height: 1.5;
-
-
             }
+            .arrow-down {
+
+              background: url(../img/home/show-more-arrow-light.png) no-repeat;
+              width: 56px;
+              height: 26px;
+              position: absolute;
+              top: 0;
+              -webkit-animation: mover 1s infinite  alternate;
+              animation: mover 1s infinite  alternate;
+              }
          }
          .detail-code
          {
            .icon{
             background-image: url(../img/home/code-icon-rnd.png);
           }
+            .arrow-down {
+              left: 157px;
+            }
+
          }
          .detail-publish{
            .icon{
               background-image: url(../img/home/publish-icon-rnd.png);
+           }
+           .arrow-down {
+             left: 457px;
            }
          }
          .detail-community{
            .icon{
               background-image: url(../img/home/community-icon-rnd.png);
            }
+           .arrow-down {
+             left: 757px;
+           }
          }
          .detail-personal{
            .icon{
               background-image: url(../img/home/personal-icon-rnd.png);
+           }
+           .arrow-down {
+             left: 1057px;
            }
          }
        }
@@ -533,14 +557,23 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
   to {opacity: 1;}
 }
 
+@-webkit-keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
+}
+
+@keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
+}
   // Small devices (landscape phones, 576px and up)
   @media only screen and (min-width: 576px) {
-
+    .arrow-down { display: none; }
   }
 
   // Medium devices (tablets, 768px and up)
   @media only screen and (min-width: 768px) {
-
+    .arrow-down { display: none; }
 
   }
 
@@ -548,10 +581,12 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
   @media only screen and (min-width: 992px) {
     #home-main-container .top .introduction .introduction-head ul li { width: 25%; }
     #home-main-container .middle .panelContainer{ width: 40%}
+    .arrow-down { display: block; }
   }
 
   // Extra large devices (large desktops, 1200px and up)
   @media only screen and (min-width: 1200px) {
         #home-main-container .top .introduction .introduction-head ul li { width: 25%; }
         #home-main-container .middle .panelContainer{ width: 30%}
+        .arrow-down { display: block; }
    }

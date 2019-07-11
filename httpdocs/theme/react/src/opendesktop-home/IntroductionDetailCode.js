@@ -2,6 +2,7 @@ import React from 'react';
 function IntroductionDetailCode(props){
   return(
     <div className="detail-code detail">
+      <span class="arrow-down"></span>
       <div className="icon-container">
         <a href="https://www.opencode.net/dashboard/projects">
           <div className="icon"></div>
