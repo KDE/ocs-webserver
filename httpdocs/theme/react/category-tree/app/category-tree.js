@@ -71,6 +71,7 @@ function CategoryTree(){
     const [ storeInfo, setStoreInfo ] = useState(initialStoreInfo);
 
     console.log(storeInfo);
+    console.log(window.config.domains);
 
     /* COMPONENT */
 
@@ -319,7 +320,7 @@ function CategoryPanelsContainer(props){
 
         props.onSetShowBreadCrumbs(showback);
         props.onSetShowForwardButton(showForward);
-        
+
     },[sliderPosition]);
 
     React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories])
