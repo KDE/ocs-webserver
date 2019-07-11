@@ -287,6 +287,7 @@ function CategoryPanelsContainer(props){
         console.log(window.location.href);
 
         if (sliderPosition === minSliderPosition){
+            console.log('slider is in min position');
             showback = false;
             if (homePageUrl === window.location.href){
                 showForward = false;
@@ -294,6 +295,7 @@ function CategoryPanelsContainer(props){
                 showForward = true;
             }            
         } else if (sliderPosition < ((panels.length - 1) * containerWidth)){
+            console.log('slider is in max position');
             if (homePageUrl === window.location.href){
                 showForward = false;
             } else {
