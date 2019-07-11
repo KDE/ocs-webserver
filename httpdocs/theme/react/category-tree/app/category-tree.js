@@ -293,9 +293,7 @@ function CategoryPanelsContainer(props){
             } else {
                 showForward = true;
             }            
-        } 
-        
-        if (sliderPosition < ((panels.length - 1) * containerWidth)){
+        } else if (sliderPosition < ((panels.length - 1) * containerWidth)){
             if (homePageUrl === window.location.href){
                 showForward = false;
             } else {
