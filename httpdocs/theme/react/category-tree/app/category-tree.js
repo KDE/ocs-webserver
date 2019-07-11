@@ -117,29 +117,22 @@ function CategoryTree(){
 
     // go back
     function goBack(){
-        //if (currentCategoryLevel > 0){
-            const newCurrentCategoryLevel = currentCategoryLevel - 1;
-            setCurrentCategoryLevel(newCurrentCategoryLevel);
-            /*const trimedCurrentViewedCategoriesArray = currentViewedCategories;
-            trimedCurrentViewedCategoriesArray.length = newCurrentCategoryLevel > 0 ? newCurrentCategoryLevel : 0;    
-            setCurrentViewedCategories(trimedCurrentViewedCategoriesArray)*/
-            const newSearchPhrase = '';
-            const newSearchMode = false;
-            setSearchPhrase(newSearchPhrase);
-            setSearchMode(newSearchMode);
-        //}
+        const newCurrentCategoryLevel = currentCategoryLevel - 1;
+        setCurrentCategoryLevel(newCurrentCategoryLevel);
+        const newSearchPhrase = '';
+        const newSearchMode = false;
+        setSearchPhrase(newSearchPhrase);
+        setSearchMode(newSearchMode);
     }
 
     // go forward
     function goForward(){
-        //if (currentCategoryLevel > 0){
-            const newCurrentCategoryLevel = currentCategoryLevel + 1;
-            setCurrentCategoryLevel(newCurrentCategoryLevel);
-            const newSearchPhrase = '';
-            const newSearchMode = false;
-            setSearchPhrase(newSearchPhrase);
-            setSearchMode(newSearchMode);
-        //}
+        const newCurrentCategoryLevel = currentCategoryLevel + 1;
+        setCurrentCategoryLevel(newCurrentCategoryLevel);
+        const newSearchPhrase = '';
+        const newSearchMode = false;
+        setSearchPhrase(newSearchPhrase);
+        setSearchMode(newSearchMode);
     }
 
     // on category panel item click
@@ -148,22 +141,11 @@ function CategoryTree(){
         const newCurrentViewedCategories = cvc;
         setCurrentCategoryLevel(newCurrentCategoryLevel) 
         setCurrentViewedCategories(newCurrentViewedCategories)
-        // if (catLink) window.location.href = catLink;
     }
 
     // search phrase
     function onSetSearchPhrase(e){
         setSearchPhrase(e.target.value);
-    }
-
-
-    // on back button click
-    function onBackButtonClick(){
-        /*props.goBack();
-        let newCategories = categories;
-        if (categories.length <= 1) newCategories = []
-        else newCategories.length = categories.length - 1;
-        setCategories(newCategories);*/
     }
 
     /* RENDER */
@@ -297,6 +279,9 @@ function CategoryPanelsContainer(props){
         let showback = true, showForward = false;
         let minSliderPosition = 0;
         if (props.storeInfo && props.storeInfo.is_show_in_menu === 0) minSliderPosition = containerWidth;
+
+        console.log(minSliderPosition);
+        console.log(sliderPosition);
 
         if (sliderPosition === minSliderPosition){
             showback = false;
