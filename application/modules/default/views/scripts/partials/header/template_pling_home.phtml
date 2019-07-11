@@ -127,7 +127,7 @@ echo $this->render('partials/header/metaheader.phtml');
     var json_loginurl = <?php echo Zend_Json::encode($url_login); ?>;  
     var json_logouturl = <?php echo Zend_Json::encode($url_logout); ?>;  
     
-    var json_store_for_tree = <?php echo Zend_Json::encode($json_tree); ?>;
+    var json_store_for_tree = <?php echo $json_tree; ?>;
 
     
 </script>
