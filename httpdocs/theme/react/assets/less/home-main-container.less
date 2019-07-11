@@ -17,6 +17,8 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
   line-height: 16px;
   a{
     color:#444444;
+    text-decoration: none;
+    cursor: pointer;
   }
   .top{
     display: flex;
@@ -32,24 +34,18 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
     //background-size: cover; /* Resize the background image to cover the entire container */
     border-top:1px solid #706C64;
    .introduction{
-     font-family: aktiv-grotesk, sans-serif;
-     font-size: 1.25rem !important;
       margin: 0px;
-      font-weight: 400 !important;
       line-height: 1.5;
-      text-rendering: optimizelegibility;
-      //color: #fff;
       color: #706c64;
       text-align: center;
-      //width: 66.66666%;
       width: 100%;
-
       text-align: center;
       .introduction-head{
-        width: 66.66666%;
+        width: 90%;
+        max-width: 1200px;
         display: block;
         margin: 0 auto;
-        padding:10px 60px;
+
       .intro-desc{
         h1{
           font-size: 28px;
@@ -70,39 +66,56 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
          padding: 15px;
          display: block;
          color: #706C64;
+         /*padding: 15px;*/
          width: 25%;
          float: left;
          text-align: center;
          padding-bottom: 0px;
          .showmore{
-           font-size: 18px;
+             font-size: 18px;
+
          }
+         a{
+            display: block;
+            width: 100%;
+            font-size: 1.5rem;
+            &:hover{
+              opacity:.8;
+            }
+         }
+
          span.link-image{
-           height: 94px;
-           width: 240px;
-           border-radius: 5px;
+
+           padding-top: 34px;
+           padding-bottom: 34px;
            display: block;
            cursor: pointer;
            background-repeat: no-repeat;
            background-size: cover;
+           border-radius: 6px;
+           color: #fff;
+          font-size: 1.4rem;
+          font-weight: bold;
+          text-decoration: none;
+          text-shadow: 2px 4px 4px rgba(0,0,0,0.6);
          }
          span.link-code
          {
-           background-image: url(../img/home/code.png);
+           background-image: url(../img/home/code-block-background.jpg);
          }
          span.link-publish
          {
 
-           background-image: url(../img/home/publish.png);
+           background-image: url(../img/home/publish-block-background.jpg);
 
          }
          span.link-community
          {
-           background-image: url(../img/home/community.png);
+           background-image: url(../img/home/community-block-background.jpg);
            }
          span.link-personal
          {
-           background-image: url(../img/home/personal.png);
+           background-image: url(../img/home/personal-block-background.jpg);
            }
           a{
             //color: #E7F3F8;
@@ -143,8 +156,18 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
          display: block;
          width: 100%;
          clear:both;
-         background-color: #333E4B;
-         text-align: center;
+
+          background: url(../img/home/showmore-background.jpg) #111;
+          background-repeat: repeat;
+          background-size: auto;
+
+          background-repeat: no-repeat;
+          border: 0;
+          font-size: 1.25rem !important;
+          margin: 0;
+          font-weight: 400 !important;
+          line-height: 1.5;
+          text-rendering: optimizelegibility;
          .detail{
             min-height: 200px;
             width: 66.66667%;
@@ -152,9 +175,14 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
             margin: 0 auto;
             padding: 10px 60px;
             padding-top:30px;
-            color: #fff;
+
+            color: #99DCF9;
+            h2{
+              color: #fff;
+            }
             a{
-              color: #1B6499;
+              color: #1F95EA;
+              display: block;
             }
             .icon-container
             {
@@ -171,6 +199,12 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
             .description{
               text-align: left;
               margin-left: 120px;
+
+                font-size: 1.5rem !important;
+
+                line-height: 1.5;
+
+
             }
          }
          .detail-code
