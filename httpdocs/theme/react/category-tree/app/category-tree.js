@@ -29,6 +29,8 @@ function CategoryTree(){
     const [ categoryId, SetCategoryId ] = useState(window.categoryId);
     const [ selectedCategory, setSelectedCategory ] = useState(GetSelectedCategory(categoryTree,categoryId));
     
+    console.log(categoryTree);
+
     let initialCurrentViewedCategories = []
     if (selectedCategory){
         initialCurrentViewedCategories = GenerateCurrentViewedCategories(categoryTree,selectedCategory,[])
