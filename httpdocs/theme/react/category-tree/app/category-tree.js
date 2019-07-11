@@ -227,8 +227,8 @@ function CategoryTreeHeader(props){
         if (categories.length === 0){
             if (props.storeInfo){
                 let storeName = window.config.sName, storeHref = window.config.sName;
-                if (props.storeInfo.name) storeName = props.storeInfo.name;
-                if (props.storeInfo.menuhref) storeHref = props.storeInfo.menuhref;
+                if (props.storeInfo.name.length > 0) storeName = props.storeInfo.name;
+                if (props.storeInfo.menuhref.length > 0) storeHref = props.storeInfo.menuhref;
                 sNameDisplay = <a href={storeHref}>{storeName}</a>
             }
         }    
