@@ -28,6 +28,8 @@ $userRoleName = $helperUserRole->userRole();
 ?>
 <style type="text/css">
 
+    #category-tree input[type="text"] { width:calc(100% - 55px) !important; }
+
     .naviblock {
         list-style-type: none;
         margin: 0;
@@ -65,7 +67,8 @@ $userRoleName = $helperUserRole->userRole();
         color: <?=$this->navBackgroundColorActive?>;
     }
 
-    ul.naviblock a.active.child {
+    ul.naviblock a.active.child,
+    #category-tree #category-tree-header a {
         background-color: <?=$this->navBackgroundColorActive?>;
         color: <?=$this->navColorActive?>;
     }
