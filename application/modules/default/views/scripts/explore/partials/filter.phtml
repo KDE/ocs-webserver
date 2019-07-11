@@ -67,15 +67,15 @@ $userRoleName = $helperUserRole->userRole();
         color: <?=$this->navBackgroundColorActive?>;
     }
 
-    ul.naviblock a.active.child,
-    #category-tree #category-tree-header a {
+    ul.naviblock a.active.child {
         background-color: <?=$this->navBackgroundColorActive?>;
         color: <?=$this->navColorActive?>;
     }
 
     li.navilink.active.parent a.active.parent,
     #category-tree-container #category-tree ul li.active > a,
-    #category-tree-container #category-tree ul li a:hover {
+    #category-tree-container #category-tree ul li a:hover,
+    #category-tree #category-tree-header a {
         background-color: <?=$this->navBackgroundColorActive?> !important;
         color: <?=$this->navColorActive?> !important;
     }
