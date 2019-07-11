@@ -266,7 +266,9 @@ function CategoryPanelsContainer(props){
     /* STATE */
  
     const rootListingPanel = {categoryId:0,categories:props.categoryTree}
-    const storeListingPanel = {categoryId:-1,categories:[...window.config.domains]}
+    console.log(window.json_store_for_tree);
+    console.log(window.config.domains);
+    const storeListingPanel = {categoryId:-1,categories:[...window.json_store_for_tree]}
     let initialRootCategoryPanels = [rootListingPanel];
     if (isShowRealDomainAsUrl  === 1) initialRootCategoryPanels = [storeListingPanel,rootListingPanel];
     let initialPanelsValue = initialRootCategoryPanels;
