@@ -50,6 +50,7 @@ function CategoryTree(){
     const [ selectedCategoriesId, setSelectedCategoriesId ] = useState(initialSelectedCategoriesId)
     const [ currentViewedCategories, setCurrentViewedCategories ] = useState(initialCurrentViewedCategories);
 
+    console.log(currentViewedCategories);
 
     let initialCurrentCategoryLevel = initialCurrentViewedCategories.length;
     if (isShowRealDomainAsUrl && showStoreListingsFirst) initialCurrentCategoryLevel = -1;
