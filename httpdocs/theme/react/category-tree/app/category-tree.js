@@ -297,7 +297,7 @@ function CategoryPanelsContainer(props){
         }
 
         if (sliderPosition === minSliderPosition){
-            showback = false;
+            showBack = false;
             showBreadCrumbs = false;
             if (panels.length > 1) showBreadCrumbs = true;
         }
