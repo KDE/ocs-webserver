@@ -118,8 +118,8 @@
         .attr("dy", "0.32em")
         .text(function(d) { 
 
-          if(d=='amountnowallpapers') return 'No-Wallpapers';
-          if(d=='amountwallpapers') return 'Wallpapers';
+          if(d=='amountnowallpapers') return 'Wallpapers';
+          if(d=='amountwallpapers') return 'No-Wallpapers';
           // return d; 
         });
   });
