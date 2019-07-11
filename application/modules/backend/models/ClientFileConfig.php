@@ -48,17 +48,6 @@ class Backend_Model_ClientFileConfig
 
     public function loadClientConfig()
     {
-//        $clientFileId = '_' . Zend_Registry::get('config')->settings->store->template->default;
-//        if (false == empty($this->_clientName)) {
-//            $clientFileId = '_' . $this->_clientName;
-//        }
-//        $clientConfigPath = Zend_Registry::get('config')->settings->store->template->path;
-//        $clientConfigFileName = "client{$clientFileId}.ini.php";
-//        if (file_exists($clientConfigPath . $clientConfigFileName)) {
-//            $this->_clientConfigData = require $clientConfigPath . $clientConfigFileName;
-//        } else {
-//
-//        }
         $this->_clientConfigData = Default_Model_StoreTemplate::getStoreTemplate($this->_clientName);
     }
 
@@ -80,6 +69,7 @@ class Backend_Model_ClientFileConfig
 
     /**
      * @return Zend_Form
+     * @throws Zend_Form_Exception
      */
     public function getForm()
     {
@@ -99,6 +89,7 @@ class Backend_Model_ClientFileConfig
      * @param mixed     $value
      * @param Zend_Form $form
      * @return mixed
+     * @throws Zend_Form_Exception
      */
     private function generateSubForm($key, $value, $form)
     {
@@ -137,7 +128,7 @@ class Backend_Model_ClientFileConfig
         if (false == empty($clientName)) {
             $clientFileId = '_' . $clientName;
         }
-        $clientConfigPath = Zend_Registry::get('config')->settings->client->config->path;
+        $clientConfigPath = Zend_Registry::get('config')->settings->store->template->path;
         $clientConfigFileName = "client{$clientFileId}.ini.php";
 
         file_put_contents($clientConfigPath . $clientConfigFileName, '<?php
