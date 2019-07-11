@@ -45,7 +45,7 @@ export function GenerateCurrentViewedCategories(categories,selectedCategory){
 }
 
 function getCategoryParents(categories,selectedCategories){
-  if (selectedCategories[0].parent_id !== "34"){
+  //if (selectedCategories[0].parent_id !== "34"){
     const parentId = parseInt(selectedCategories[0].parent_id);
     const parentCategory = GetSelectedCategory(categories,parentId);
     if (parentCategory){
@@ -56,9 +56,9 @@ function getCategoryParents(categories,selectedCategories){
     } else {
       return selectedCategories;
     }
-  } else {
+  /*} else {
     return selectedCategories;
-  }
+  }*/
 }
 
 export function GetCategoriesBySearchPhrase(categories,searchPhrase){

@@ -29,7 +29,7 @@ function CategoryTree(){
     const [ categoryId, SetCategoryId ] = useState(window.categoryId);
     const [ selectedCategory, setSelectedCategory ] = useState(GetSelectedCategory(categoryTree,categoryId));
     
-    console.log(window.catTree);
+    console.log(categoryTree);
 
     let initialCurrentViewedCategories = []
     if (selectedCategory){
@@ -42,6 +42,8 @@ function CategoryTree(){
         }
     }
 
+    console.log(selectedCategory);
+
     let initialSelectedCategoriesId = [];
     initialCurrentViewedCategories.forEach(function(c,index){
         initialSelectedCategoriesId.push(c.id);
@@ -50,7 +52,7 @@ function CategoryTree(){
     const [ selectedCategoriesId, setSelectedCategoriesId ] = useState(initialSelectedCategoriesId)
     const [ currentViewedCategories, setCurrentViewedCategories ] = useState(initialCurrentViewedCategories);
 
-    console.log(currentViewedCategories);
+    console.log(selectedCategoriesId);
 
     let initialCurrentCategoryLevel = initialCurrentViewedCategories.length;
     if (isShowRealDomainAsUrl && showStoreListingsFirst) initialCurrentCategoryLevel = -1;
@@ -73,9 +75,6 @@ function CategoryTree(){
     }
 
     const [ storeInfo, setStoreInfo ] = useState(initialStoreInfo);
-
-    console.log(storeInfo);
-    console.log(window.config.domains);
 
     /* COMPONENT */
 
@@ -286,8 +285,6 @@ function CategoryPanelsContainer(props){
     const [ showBackButton, setShowBackButton ] = useState(initialShowBackButtonValue);
 
     const [ containerVisibility, setContainerVisibility ] = useState(false);
-
-    console.log(panels);
 
     /* COMPONENT */
 
