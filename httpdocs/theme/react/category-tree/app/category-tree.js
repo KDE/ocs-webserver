@@ -19,10 +19,7 @@ else {
     }
 }
 
-
 function CategoryTree(){
-
-    console.log(window.config);
 
     /* STATE */
 
@@ -60,6 +57,7 @@ function CategoryTree(){
     const [ searchMode, setSearchMode ] = useState();
 
     const [ showBreadCrumbs, setShowBreadCrumbs ] = useState(true);
+    const [ showForwardButton, setShowForwardButton ] = useState(false);
 
     /* COMPONENT */
 
@@ -174,6 +172,7 @@ function CategoryTree(){
                 currentViewedCategories={currentViewedCategories}  
                 onHeaderNavigationItemClick={(cvc) => onHeaderNavigationItemClick(cvc)}
                 showBreadCrumbs={showBreadCrumbs}
+                showForwardButton={showForwardButton}
                 onGoBackClick={goBack}
                 onGoForwardClick={goForward}
             />
@@ -187,6 +186,7 @@ function CategoryTree(){
                 selectedCategoriesId={selectedCategoriesId}
                 onCategoryPanleItemClick={(ccl,cvc,catLink) => onCategoryPanleItemClick(ccl,cvc,catLink)}
                 onSetShowBreadCrumbs={(val) => setShowBreadCrumbs(val)}
+                onSetShowForwardButton={(val) => setShowForwardButton(val)}
             />
             {tagCloudDisplay}
         </div>
@@ -195,9 +195,10 @@ function CategoryTree(){
 
 function CategoryTreeHeader(props){
 
-    const [ categories, setCategories ] = useState(props.currentViewedCategories)
+    const initialCurrentViewedCategories = props.currentViewedCategories.slice(0,props.currentCategoryLevel);
+    const [ categories, setCategories ] = useState(initialCurrentViewedCategories)
     React.useEffect(() => {
-        const newCurrentViewedCategories = props.currentViewedCategories;
+        const newCurrentViewedCategories = props.currentViewedCategories.slice(0,props.currentCategoryLevel);
         setCategories(newCurrentViewedCategories);
     },[props.currentViewedCategories,props.currentCategoryLevel])
 
@@ -211,37 +212,43 @@ function CategoryTreeHeader(props){
     let categoryTreeHeaderNavigationDisplay;
     if (categories.length > 0){
         categoryTreeHeaderNavigationDisplay = categories.map((cvc,index) =>{
-            let title = "/", titleHoverElement = <span>{cvc.title}</span>;
             if (categories.length === index + 1){
-                title = cvc.title;
-                titleHoverElement = '';
+                const catLink = getUrlContext(window.location.href) + ( cvc.id === "00" ? "/browse/" : "/browse/cat/"+cvc.id+"/order/latest/")
+                return (
+                    <a key={index} href={catLink} onClick={() => onHeaderNavigationItemClick(cvc,index)}>
+                        {cvc.title}
+                    </a>
+                )
             }
-            const catLink = getUrlContext(window.location.href) + ( cvc.id === "00" ? "/browse/" : "/browse/cat/"+cvc.id+"/order/latest/")
-            return (
-                <a key={index} href={catLink} onClick={() => onHeaderNavigationItemClick(cvc,index)}>
-                    {title}
-                    {titleHoverElement}
-                </a>
-            )
         })
     }
 
-    let sNameDisplay;
-    if (categories.length === 0){
-        if (window.config && window.config.sName){
-            let storeName;
-            window.config.domains.forEach(function(d,index){
-                if (d.host === window.config.sName) storeName = d.name;
-            });
-            sNameDisplay = <a href={window.config.sName.indexOf('http') > -1 ? window.config.sName : "https://"+window.config.sName}>{storeName}</a>
-        }
-    }
-
-    let backButtonDisplay;
+    let backButtonDisplay, sNameDisplay;
     if (props.showBreadCrumbs === true){
         backButtonDisplay = <a id="back-button" onClick={props.onGoBackClick}><span className="glyphicon glyphicon-chevron-left"></span></a>;
+        if (categories.length === 0){
+            if (window.config && window.config.sName){
+                let storeName = window.config.sName, storeHref = window.config.sName;
+                window.config.domains.forEach(function(d,index){
+                    if (d.host === window.config.sName){
+                        if (d.name){
+                            storeName = d.name;
+                        } else {
+                            storeName = window.config.sName.split('.')[0].toUpperCase();
+                        }
+                        if (d.menuhref) storeHref = d.menuhref;
+                    }
+                });
+                sNameDisplay = <a href={storeHref}>{storeName}</a>
+            }
+        }    
     } else {
         backButtonDisplay = <a id="back-button" className="disabled"><span className="glyphicon glyphicon-chevron-left"></span></a>
+    }
+
+    let forwadButtonDisplay;
+    if (props.showForwardButton === true){
+        forwadButtonDisplay = <a id="forward-button" onClick={props.onGoForwardClick}><span className="glyphicon glyphicon-chevron-right"></span></a>
     }
 
     return (
@@ -249,7 +256,7 @@ function CategoryTreeHeader(props){
             {backButtonDisplay}
             {sNameDisplay}
             {categoryTreeHeaderNavigationDisplay}
-            <a id="forward-button" onClick={props.onGoForwardClick}><span className="glyphicon glyphicon-chevron-right"></span></a>
+            {forwadButtonDisplay}
         </div>
     )
 }
@@ -282,10 +289,27 @@ function CategoryPanelsContainer(props){
     /* COMPONENT */
 
     React.useEffect(() => {
-        let val = false;
-        if (sliderPosition === 0) val = false;
-        else val = true;
-        props.onSetShowBreadCrumbs(val);
+        let showback = true, showForward = false;
+        if (sliderPosition === 0){
+            showback = false;
+            if (window.config.baseUrlStore + "/" === window.location.href){
+                showForward = false;
+            } else {
+                showForward = true;
+            }            
+        } else if (sliderPosition < ((panels.length - 1) * containerWidth)){
+            if (window.config.baseUrlStore + "/" === window.location.href){
+                showForward = false;
+            } else {
+                showForward = true;
+            }
+        }
+        if (panels.length === 1){
+            showBack = false;
+            showForward = false;
+        }
+        props.onSetShowBreadCrumbs(showback);
+        props.onSetShowForwardButton(showForward);
     },[sliderPosition]);
 
     React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories])
@@ -293,7 +317,7 @@ function CategoryPanelsContainer(props){
 
     // update slider
     function updateSlider(){
-        const trimedPanelsArray =  [...initialRootCategoryPanels,...props.currentViewedCategories];
+        /*const trimedPanelsArray =  [...initialRootCategoryPanels,...props.currentViewedCategories];
         if (props.searchMode === false ){
             let currentCategoryLevel = props.currentCategoryLevel;
             if (isShowRealDomainAsUrl === 1 ) currentCategoryLevel = props.currentCategoryLevel + 1;
@@ -302,7 +326,7 @@ function CategoryPanelsContainer(props){
         setPanels(trimedPanelsArray);
 
         const newSliderWidth = containerWidth * trimedPanelsArray.length;
-        setSliderWidth(newSliderWidth);
+        setSliderWidth(newSliderWidth);*/
 
         let currentCategoryLevel = props.currentCategoryLevel + 1;
         const newSliderPosition = currentCategoryLevel * containerWidth;
@@ -496,9 +520,6 @@ function CategoryMenuItem(props){
 
     let categoryMenuItemClassName;
     if (c.id === "0"){
-        console.log(window.location.href);
-        console.log(catLink);
-        console.log(window.location.href === catLink)
         if (window.location.href === catLink || window.location.href === catLink + "/"){
             categoryMenuItemClassName = "active";
         }
