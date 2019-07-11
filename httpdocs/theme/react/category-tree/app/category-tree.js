@@ -278,7 +278,7 @@ function CategoryPanelsContainer(props){
 
         let showback = true, showForward = false;
         let minSliderPosition = 0;
-        if (props.storeInfo && props.storeInfo.is_show_in_menu === 0) minSliderPosition = containerWidth;
+        if (props.storeInfo && props.storeInfo.is_show_in_menu === "0") minSliderPosition = containerWidth;
 
         console.log(minSliderPosition);
         console.log(sliderPosition);
