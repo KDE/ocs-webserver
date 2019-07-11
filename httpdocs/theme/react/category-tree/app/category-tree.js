@@ -290,7 +290,7 @@ function CategoryPanelsContainer(props){
 
     React.useEffect(() => {
 
-        let showback = true, showBreadCrumbs = true, showForward = false;
+        let showBack = true, showBreadCrumbs = true, showForward = false;
         let minSliderPosition = 0;
         if (props.storeInfo && props.storeInfo.is_show_in_menu === "0"){
             minSliderPosition = containerWidth;
