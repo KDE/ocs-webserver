@@ -287,18 +287,13 @@ function CategoryPanelsContainer(props){
         console.log(window.location.href);
 
         if (sliderPosition === minSliderPosition){
-            showback = false;
-            if (homePageUrl === window.location.href){
-                showForward = false;
-            } else {
-                showForward = true;
-            }            
-        } else if (sliderPosition < ((panels.length - 1) * containerWidth)){
-            if (homePageUrl === window.location.href){
-                showForward = false;
-            } else {
-                showForward = true;
-            }
+            showback = false;       
+        }
+
+        if (homePageUrl === window.location.href){
+            showForward = false;
+        } else {
+            showForward = true;
         }
 
         if (panels.length === 1){
