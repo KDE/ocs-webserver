@@ -12,7 +12,7 @@ function IntroductionDetailPublish(props){
              Pling.com
             </h2>
             <div>
-            An overview site part of opendesktop.org for all Creatives.
+            The publishing platform for open source software and free content.
             <p>Powered by Pling.</p>
             <a href="www.pling.com"> www.pling.com </a>
             </div>

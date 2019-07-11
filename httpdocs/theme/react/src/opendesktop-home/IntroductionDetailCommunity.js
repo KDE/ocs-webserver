@@ -9,12 +9,13 @@ function IntroductionDetailCommunity(props){
       </div>
       <div className="description">
             <h2>
-              Discussion boards
+              Discourse, Matrix/Riot
             </h2>
             <div>
-             Join the coummnity , begin to discuss.
-            <p>Powered by Discourse.</p>
+             Join openDesktop community, discuss on Discourse or chat with members on Riot chat and Matrix.
+
             <a href="https://forum.opendesktop.org/"> https://forum.opendesktop.org/ </a>
+            <a href="https://chat.opendesktop.org/"> https://chat.opendesktop.org </a>
             </div>
       </div>
     </div>

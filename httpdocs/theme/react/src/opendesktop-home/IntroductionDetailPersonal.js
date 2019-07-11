@@ -9,12 +9,12 @@ function IntroductionDetailPersonal(props){
       </div>
       <div className="description">
             <h2>
-              Cloud Storage
+              Nextcloud
             </h2>
             <div>
-             Cloud service
-            <p>Powered by nextcloud.</p>
-            <a href="https://cloud.opendesktop.org/"> https://cloud.opendesktop.org/ </a>
+             The productivity platform that keeps you in control. Nextcloud offers industry-leading on-premises file sync and online collaboration technology.
+
+            <a href="https://my.opendesktop.org"> https://my.opendesktop.org </a>
             </div>
       </div>
     </div>
