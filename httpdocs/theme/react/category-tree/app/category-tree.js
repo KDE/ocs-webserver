@@ -282,9 +282,6 @@ function CategoryPanelsContainer(props){
             minSliderPosition = containerWidth;
         }
 
-        console.log(homePageUrl);
-        console.log(homePageUrl === window.location.href);
-
         if (sliderPosition === minSliderPosition){
             showback = false;       
         } else {
