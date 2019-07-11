@@ -29,8 +29,6 @@ function CategoryTree(){
     const [ categoryId, SetCategoryId ] = useState(window.categoryId);
     const [ selectedCategory, setSelectedCategory ] = useState(GetSelectedCategory(categoryTree,categoryId));
     
-    console.log(categoryTree);
-
     let initialCurrentViewedCategories = []
     if (selectedCategory){
         initialCurrentViewedCategories = GenerateCurrentViewedCategories(categoryTree,selectedCategory,[])
@@ -285,6 +283,8 @@ function CategoryPanelsContainer(props){
     const [ showBackButton, setShowBackButton ] = useState(initialShowBackButtonValue);
 
     const [ containerVisibility, setContainerVisibility ] = useState(false);
+
+    console.log(panels);
 
     /* COMPONENT */
 
