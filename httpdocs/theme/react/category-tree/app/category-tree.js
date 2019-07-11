@@ -59,6 +59,19 @@ function CategoryTree(){
     const [ showBreadCrumbs, setShowBreadCrumbs ] = useState(true);
     const [ showForwardButton, setShowForwardButton ] = useState(false);
 
+    let initialStoreInfo;
+    if (window.config.sName){
+        window.config.domains.forEach(function(d,index){
+            if (d.host === window.config.sName){
+                initialStoreInfo = d;
+            }
+        });
+    }
+
+    const [ storeInfo, setStoreInfo ] = useState(initialStoreInfo);
+
+    console.log(storeInfo);
+
     /* COMPONENT */
 
     React.useEffect(() => { onSearchPhraseUpdate() },[searchPhrase])
@@ -169,10 +182,11 @@ function CategoryTree(){
             {searchInputDisplay}
             <CategoryTreeHeader 
                 currentCategoryLevel={currentCategoryLevel}
-                currentViewedCategories={currentViewedCategories}  
-                onHeaderNavigationItemClick={(cvc) => onHeaderNavigationItemClick(cvc)}
+                currentViewedCategories={currentViewedCategories}
                 showBreadCrumbs={showBreadCrumbs}
                 showForwardButton={showForwardButton}
+                storeInfo={storeInfo}
+                onHeaderNavigationItemClick={(cvc) => onHeaderNavigationItemClick(cvc)}
                 onGoBackClick={goBack}
                 onGoForwardClick={goForward}
             />
@@ -227,29 +241,17 @@ function CategoryTreeHeader(props){
     if (props.showBreadCrumbs === true){
         backButtonDisplay = <a id="back-button" onClick={props.onGoBackClick}><span className="glyphicon glyphicon-chevron-left"></span></a>;
         if (categories.length === 0){
-            if (window.config && window.config.sName){
+            if (props.storeInfo){
                 let storeName = window.config.sName, storeHref = window.config.sName;
-                window.config.domains.forEach(function(d,index){
-                    if (d.host === window.config.sName){
-                        if (d.name){
-                            storeName = d.name;
-                        } else {
-                            storeName = window.config.sName.split('.')[0].toUpperCase();
-                        }
-                        if (d.menuhref) storeHref = d.menuhref;
-                    }
-                });
+                if (props.storeInfo.name) storeName = props.storeInfo.name;
+                if (props.storeInfo.menuhref) storeHref = props.storeInfo.menuhref;
                 sNameDisplay = <a href={storeHref}>{storeName}</a>
             }
         }    
-    } else {
-        backButtonDisplay = <a id="back-button" className="disabled"><span className="glyphicon glyphicon-chevron-left"></span></a>
-    }
+    } else backButtonDisplay = <a id="back-button" className="disabled"><span className="glyphicon glyphicon-chevron-left"></span></a>
 
     let forwadButtonDisplay;
-    if (props.showForwardButton === true){
-        forwadButtonDisplay = <a id="forward-button" onClick={props.onGoForwardClick}><span className="glyphicon glyphicon-chevron-right"></span></a>
-    }
+    if (props.showForwardButton === true) forwadButtonDisplay = <a id="forward-button" onClick={props.onGoForwardClick}><span className="glyphicon glyphicon-chevron-right"></span></a>
 
     return (
         <div id="category-tree-header">
