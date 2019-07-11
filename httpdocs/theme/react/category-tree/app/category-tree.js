@@ -277,22 +277,24 @@ function CategoryPanelsContainer(props){
     React.useEffect(() => {
 
         let showback = true, showForward = false;
-        let minSliderPosition = 0;
-        if (props.storeInfo && props.storeInfo.is_show_in_menu === "0") minSliderPosition = containerWidth;
+        let minSliderPosition = 0, homePageUrl = window.config.baseUrlStore + "/";
+        if (props.storeInfo && props.storeInfo.is_show_in_menu === "0"){
+            minSliderPosition = containerWidth;
+            homePageUrl = props.storeInfo.menuhref + "/";
+        }
 
-        console.log(panels.length);
-        console.log(containerWidth);
-        console.log(sliderPosition);
+        console.log(homePageUrl);
+        console.log(window.location.href);
 
         if (sliderPosition === minSliderPosition){
             showback = false;
-            if (window.config.baseUrlStore + "/" === window.location.href){
+            if (homePageUrl === window.location.href){
                 showForward = false;
             } else {
                 showForward = true;
             }            
         } else if (sliderPosition < ((panels.length - 1) * containerWidth)){
-            if (window.config.baseUrlStore + "/" === window.location.href){
+            if (homePageUrl === window.location.href){
                 showForward = false;
             } else {
                 showForward = true;
