@@ -277,28 +277,18 @@ function CategoryPanelsContainer(props){
     React.useEffect(() => {
 
         let showback = true, showForward = false;
-        let minSliderPosition = 0, homePageUrl = window.config.baseUrlStore + "/";
+        let minSliderPosition = 0;
         if (props.storeInfo && props.storeInfo.is_show_in_menu === "0"){
             minSliderPosition = containerWidth;
-            homePageUrl = props.storeInfo.menuhref + "/";
         }
 
         console.log(homePageUrl);
-        console.log(window.location.href);
+        console.log(homePageUrl === window.location.href);
 
         if (sliderPosition === minSliderPosition){
             showback = false;       
-        }
-
-        if (homePageUrl === window.location.href){
-            showForward = false;
         } else {
             showForward = true;
-        }
-
-        if (panels.length === 1){
-            showBack = false;
-            showForward = false;
         }
 
         props.onSetShowBreadCrumbs(showback);
