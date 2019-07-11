@@ -284,7 +284,10 @@ function CategoryPanelsContainer(props){
 
         if (sliderPosition === minSliderPosition){
             showback = false;       
-        } else {
+        }
+        
+        let maxSliderPosition = ( containerWidth * panels.length ) - containerWidth;
+        if (sliderPosition !== maxSliderPosition) {
             showForward = true;
         }
 
