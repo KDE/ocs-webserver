@@ -41,7 +41,6 @@ class Default_View_Helper_FetchStoresForCatTreeJson extends Zend_View_Helper_Abs
             foreach ($result as $obj) {
                 $tmp = array();
                 $tmp['order'] = $obj['order'];
-                $tmp['calcOrder'] = $obj['calcOrder'];
                 $tmp['host'] = $obj['host'];
                 $tmp['name'] = $obj['name'];
                 $tmp['is_show_in_menu'] = $obj['is_show_in_menu'];
