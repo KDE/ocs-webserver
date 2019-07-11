@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -47,19 +48,18 @@ class Backend_Model_ClientFileConfig
 
     public function loadClientConfig()
     {
-        $clientFileId = '';
-        if (false == empty($this->_clientName)) {
-            $clientFileId = '_' . $this->_clientName;
-        }
-        $clientConfigPath = Zend_Registry::get('config')->settings->client->config->path;
-        $clientConfigFileName = "client{$clientFileId}.ini.php";
-        if (file_exists($clientConfigPath . $clientConfigFileName)) {
-            $this->_clientConfigData = require $clientConfigPath . $clientConfigFileName;
-        } else {
-            // load default config
-            $this->_clientConfigData = require $clientConfigPath . "default.ini.php";
-            $this->defaultConfigLoaded = true;
-        }
+//        $clientFileId = '_' . Zend_Registry::get('config')->settings->store->template->default;
+//        if (false == empty($this->_clientName)) {
+//            $clientFileId = '_' . $this->_clientName;
+//        }
+//        $clientConfigPath = Zend_Registry::get('config')->settings->store->template->path;
+//        $clientConfigFileName = "client{$clientFileId}.ini.php";
+//        if (file_exists($clientConfigPath . $clientConfigFileName)) {
+//            $this->_clientConfigData = require $clientConfigPath . $clientConfigFileName;
+//        } else {
+//
+//        }
+        $this->_clientConfigData = Default_Model_StoreTemplate::getStoreTemplate($this->_clientName);
     }
 
     /**
@@ -95,8 +95,8 @@ class Backend_Model_ClientFileConfig
     }
 
     /**
-     * @param string $key
-     * @param mixed $value
+     * @param string    $key
+     * @param mixed     $value
      * @param Zend_Form $form
      * @return mixed
      */
@@ -112,6 +112,7 @@ class Backend_Model_ClientFileConfig
             $form->addElement('text', $key);
             $form->$key->setValue($value);
             $form->$key->setLabel($key);
+
             return $form;
         }
 
@@ -139,9 +140,9 @@ class Backend_Model_ClientFileConfig
         $clientConfigPath = Zend_Registry::get('config')->settings->client->config->path;
         $clientConfigFileName = "client{$clientFileId}.ini.php";
 
-        file_put_contents($clientConfigPath.$clientConfigFileName, '<?php
+        file_put_contents($clientConfigPath . $clientConfigFileName, '<?php
 
-return '.var_export($getAllParams, true).';'
+return ' . var_export($getAllParams, true) . ';'
         );
     }
 
