@@ -42,7 +42,30 @@ class Introduction extends Component {
         <div className="intro-desc">
           <h1> Welcome to opendesktop.org</h1>
           <h4>
-            OpenDesktop is a portal providing 100% libre services for coding, publishing, messenging and personal data storage.
+          OpenDesktop is a <a href="#network-sites">network of sites</a> all following the same <a href="#standards">standards</a>.
+
+              <a href="#_" className="lightbox" id="network-sites">
+              <div className="lightbox-container">
+                <h2>Network of sites</h2>
+                <ul>
+                  <li>openCode.net</li>
+                  <li>Pling.com</li>
+                  <li>Forums and Chat</li>
+                  <li>Personal cloud</li>
+                </ul>
+              </div>
+            </a>
+
+            <a href="#_" className="lightbox" id="standards">
+              <div class="lightbox-container">
+                <h2>Standards</h2>
+                <ul>
+                  <li>100% Libre software</li>
+                  <li>We respect users privacy</li>
+                  <li>We do not sell data</li>
+                </ul>
+              </div>
+            </a>
           </h4>
         </div>
         <div className="intro-menu">

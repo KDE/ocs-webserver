@@ -56,6 +56,62 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
         width: 550px;
         display: block;
         margin: 0 auto;
+
+          .lightbox {
+              	/** Default lightbox to hidden */
+              	display: none;
+
+              	/** Position and style */
+              	position: fixed;
+              	z-index: 999;
+              	width: 100%;
+              	height: 100%;
+              	text-align: center;
+              	top: 0;
+              	left: 0;
+              	background: rgba(0,0,0,0.8);
+                img {
+                	/** Pad the lightbox image */
+                	max-width: 90%;
+                	max-height: 80%;
+                	margin-top: 2%;
+                }
+                &:target {
+                	/** Remove default browser outline */
+                	outline: none;
+                	/** Unhide lightbox **/
+                	display: block;
+                }
+              }
+              .lightbox-container {
+                  color: #333;
+
+                  max-width: 480px;
+                  margin: 60px auto 0 auto;
+                  background: #fff;
+                  padding: 40px;
+                  border-radius: 6px;
+                  background: #fff url(../img/home/opendesktop-logo-mono.png) no-repeat 280px center;
+                  h2{
+                    text-align: left;
+                  }
+                  ul li {
+                   padding: 0;
+                   width: auto;
+                   float: none;
+                   text-align: left;
+                   &:before {
+                         content: " ";
+                         display: inline-block;
+                         width: 12px;
+                         height: 6px;
+                         background: #D1D3DF;
+                         margin-right: 12px;
+                         margin-bottom: 4px;
+                         border-radius: 4px;
+                     }
+                 }
+            }
       }
         ul{
        list-style: none;
@@ -67,7 +123,7 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
          display: block;
          color: #706C64;
          /*padding: 15px;*/
-         width: 25%;
+         width: 50%;
          float: left;
          text-align: center;
          padding-bottom: 0px;
@@ -175,8 +231,8 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
             margin: 0 auto;
             padding: 10px 60px;
             padding-top:30px;
-
             color: #99DCF9;
+            animation: fadeEffect 1s; /* Fading effect takes 1 second */
             h2{
               color: #fff;
             }
@@ -261,7 +317,8 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
         background-image: url(http://cp1.hive01.com/img/opendesktop/back3.jpg);
         padding: 8px;
         margin: 0px 5px 5px 0;
-        width: 30%;
+        /*width: 30%;*/
+        width: 95%;
         div.title{
           color: #888888;
           font-size:11pt;
@@ -470,3 +527,31 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
 
 
 }
+
+@keyframes fadeEffect {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+  // Small devices (landscape phones, 576px and up)
+  @media only screen and (min-width: 576px) {
+
+  }
+
+  // Medium devices (tablets, 768px and up)
+  @media only screen and (min-width: 768px) {
+
+
+  }
+
+  // Large devices (desktops, 992px and up)
+  @media only screen and (min-width: 992px) {
+    #home-main-container .top .introduction .introduction-head ul li { width: 25%; }
+    #home-main-container .middle .panelContainer{ width: 40%}
+  }
+
+  // Extra large devices (large desktops, 1200px and up)
+  @media only screen and (min-width: 1200px) {
+        #home-main-container .top .introduction .introduction-head ul li { width: 25%; }
+        #home-main-container .middle .panelContainer{ width: 30%}
+   }
