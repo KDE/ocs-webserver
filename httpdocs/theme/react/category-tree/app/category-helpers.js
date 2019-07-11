@@ -28,7 +28,7 @@ export function GetSelectedCategory(categories,categoryId){
 }
 
 export function GenerateCurrentViewedCategories(categories,selectedCategory){
-  if (selectedCategory.parent_id && selectedCategory.parent_id !== "34"){
+  if (selectedCategory.parent_id){
     const parentId = parseInt(selectedCategory.parent_id);
     let parentCategory = GetSelectedCategory(categories,parentId);
     if (parentCategory){
