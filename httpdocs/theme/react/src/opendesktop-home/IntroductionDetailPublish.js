@@ -2,6 +2,7 @@ import React from 'react';
 function IntroductionDetailPublish(props){
   return(
     <div className="detail-publish detail">
+      <span class="arrow-down"></span>
       <div className="icon-container">
         <a href="https://www.pling.com">
           <div className="icon"></div>

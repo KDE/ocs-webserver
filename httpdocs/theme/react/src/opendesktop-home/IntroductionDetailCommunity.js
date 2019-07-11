@@ -2,6 +2,7 @@ import React from 'react';
 function IntroductionDetailCommunity(props){
   return(
     <div className="detail-community detail">
+      <span class="arrow-down"></span>
       <div className="icon-container">
         <a href="https://forum.opendesktop.org/">
           <div className="icon"></div>
