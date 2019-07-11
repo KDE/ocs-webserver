@@ -1365,6 +1365,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $values['created_at'] = (!array_key_exists('created_at', $values)) ? new Zend_Db_Expr('NOW()') : $values['created_at'];
         $values['start_date'] = (!array_key_exists('start_date', $values)) ? new Zend_Db_Expr('NULL') : $values['start_date'];
         $values['creator_id'] = (!array_key_exists('creator_id', $values)) ? $member_id : $values['creator_id'];
+        $values['gitlab_project_id'] = (empty($values['gitlab_project_id'])) ? new Zend_Db_Expr('NULL') : $values['gitlab_project_id'];
 
         if ($username == 'pling editor') {
             $values['claimable'] = (!array_key_exists('claimable', $values)) ? self::PROJECT_CLAIMABLE : $values['claimable'];
@@ -1390,6 +1391,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         if (empty($projectData)) {
             throw new Zend_Db_Table_Exception('project_id not found');
         }
+
+        $values['gitlab_project_id'] = (empty($values['gitlab_project_id'])) ? new Zend_Db_Expr('NULL') : $values['gitlab_project_id'];
 
         $projectData->setFromArray($values)->save();
 
