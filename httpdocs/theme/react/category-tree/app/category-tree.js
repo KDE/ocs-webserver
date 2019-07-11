@@ -198,6 +198,7 @@ function CategoryTree(){
                 currentCategoryLevel={currentCategoryLevel}
                 currentViewedCategories={currentViewedCategories}
                 selectedCategoriesId={selectedCategoriesId}
+                storeInfo={storeInfo}
                 onCategoryPanleItemClick={(ccl,cvc,catLink) => onCategoryPanleItemClick(ccl,cvc,catLink)}
                 onSetShowBreadCrumbs={(val) => setShowBreadCrumbs(val)}
                 onSetShowForwardButton={(val) => setShowForwardButton(val)}
@@ -291,8 +292,12 @@ function CategoryPanelsContainer(props){
     /* COMPONENT */
 
     React.useEffect(() => {
+
         let showback = true, showForward = false;
-        if (sliderPosition === 0){
+        let minSliderPosition = 0;
+        if (props.storeInfo.is_show_in_menu === 0) minSliderPosition = containerWidth;
+
+        if (sliderPosition === minSliderPosition){
             showback = false;
             if (window.config.baseUrlStore + "/" === window.location.href){
                 showForward = false;
@@ -306,12 +311,15 @@ function CategoryPanelsContainer(props){
                 showForward = true;
             }
         }
+
         if (panels.length === 1){
             showBack = false;
             showForward = false;
         }
+
         props.onSetShowBreadCrumbs(showback);
         props.onSetShowForwardButton(showForward);
+        
     },[sliderPosition]);
 
     React.useEffect(() => { updateSlider() },[props.currentCategoryLevel,props.currentViewedCategories])
