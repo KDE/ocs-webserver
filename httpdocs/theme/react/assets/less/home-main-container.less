@@ -30,9 +30,8 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
     //background-image: url(../img/home/bg.png);
     //background-position: center; /* Center the image */
     //background-size: cover; /* Resize the background image to cover the entire container */
-    border-top:1px solid #706C64; 
+    border-top:1px solid #706C64;
    .introduction{
-     display: block;
      font-family: aktiv-grotesk, sans-serif;
      font-size: 1.25rem !important;
       margin: 0px;
@@ -42,28 +41,42 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
       //color: #fff;
       color: #706c64;
       text-align: center;
-      width: 66.66666%;
-      padding: 10px 60px;
+      //width: 66.66666%;
+      width: 100%;
+
+      text-align: center;
+      .introduction-head{
+        width: 66.66666%;
+        display: block;
+        margin: 0 auto;
+        padding:10px 60px;
       .intro-desc{
         h1{
           font-size: 28px;
+        }
+        h4{
+          font-size: 18px;
         }
         width: 550px;
         display: block;
         margin: 0 auto;
       }
-     ul{
+        ul{
        list-style: none;
        padding-left: 0px;
        font-size: 20px;
        width: 100%;
        li{
-        padding: 15px;
+         padding: 15px;
          display: block;
          color: #706C64;
          width: 25%;
          float: left;
          text-align: center;
+         padding-bottom: 0px;
+         .showmore{
+           font-size: 18px;
+         }
          span.link-image{
            height: 94px;
            width: 240px;
@@ -71,7 +84,7 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
            display: block;
            cursor: pointer;
            background-repeat: no-repeat;
-
+           background-size: cover;
          }
          span.link-code
          {
@@ -91,14 +104,97 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
          {
            background-image: url(../img/home/personal.png);
            }
-
-        a{
-          //color: #E7F3F8;
-          color:#706C64;
-          cursor: pointer;
-        }
+          a{
+            //color: #E7F3F8;
+            color:#706C64;
+            cursor: pointer;
+          }
+          .arrowbox{
+            position: relative;
+            &:after, &:before
+            {
+              top: 100%;
+            	left: 50%;
+            	border: solid transparent;
+            	content: " ";
+            	height: 0;
+            	width: 0;
+            	position: absolute;
+            	pointer-events: none;
+            }
+            &:after {
+              border-color: rgba(136, 183, 213, 0);
+            	border-top-color: #F7F7F7;
+            	border-width: 20px;
+            	margin-left: -20px;
+            }
+            &:before {
+              border-color: rgba(194, 225, 245, 0);
+              	border-top-color: #F7F7F7;
+              	border-width: 26px;
+              	margin-left: -26px;
+            }
+          }
        }
      }
+       }
+       .introduction-detail
+       {
+         display: block;
+         width: 100%;
+         clear:both;
+         background-color: #333E4B;
+         text-align: center;
+         .detail{
+            min-height: 200px;
+            width: 66.66667%;
+            display: block;
+            margin: 0 auto;
+            padding: 10px 60px;
+            padding-top:30px;
+            color: #fff;
+            a{
+              color: #1B6499;
+            }
+            .icon-container
+            {
+                display: block;
+                float: left;
+                padding-top: 20px;
+                .icon{
+                  background-size: 100px;
+                  background-repeat: no-repeat;
+                  width: 100px;
+                  height: 105px;
+                }
+            }
+            .description{
+              text-align: left;
+              margin-left: 120px;
+            }
+         }
+         .detail-code
+         {
+           .icon{
+            background-image: url(../img/logo-opencode.png);
+          }
+         }
+         .detail-publish{
+           .icon{
+              background-image: url(../img/logo-opendesktop.png);
+           }
+         }
+         .detail-community{
+           .icon{
+              background-image: url(../img/logo-discourse.png);
+           }
+         }
+         .detail-personal{
+           .icon{
+              background-image: url(../img/logo-storage.png);
+           }
+         }
+       }
    }
   }
 	.left{
