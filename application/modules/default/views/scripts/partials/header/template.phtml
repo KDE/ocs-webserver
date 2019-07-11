@@ -72,6 +72,7 @@ $request = Zend_Controller_Front::getInstance()->getRequest();
 $http_scheme = $request->getScheme();
 
 $json_menu = $this->fetchMetaheaderMenuJson();
+$json_tree = $this->fetchStoresForCatTreeJson();
 
 
 $filter = new Local_Filter_Url_Encrypt();
@@ -458,7 +459,9 @@ echo $this->render('partials/header/metaheader.phtml');
     var json_tabs_left = <?php echo  Zend_Json::encode($tabs_left);?>;
     
     var json_loginurl = <?php echo Zend_Json::encode($url_login); ?>;  
-    var json_logouturl = <?php echo Zend_Json::encode($url_logout); ?>;  
+    var json_logouturl = <?php echo Zend_Json::encode($url_logout); ?>;
+    
+    var json_store_for_tree = <?php echo Zend_Json::encode($json_tree); ?>;
     
 </script>
 <link href="/theme/react/assets/css/header.css" type="text/css" rel="stylesheet" />
