@@ -296,7 +296,7 @@ function CategoryPanelsContainer(props){
 
         if (sliderPosition === minSliderPosition){
             showback = false;
-            showBackButton = false;
+            showBreadCrumbs = false;
             if (panels.length > 1) showBreadCrumbs = true;
         }
         
