@@ -56,6 +56,7 @@ function CategoryTree(){
     const [ searchPhrase, setSearchPhrase ] = useState();
     const [ searchMode, setSearchMode ] = useState();
 
+    const [ showBackButton, setShowBackButton ] = useState(true);
     const [ showBreadCrumbs, setShowBreadCrumbs ] = useState(true);
     const [ showForwardButton, setShowForwardButton ] = useState(false);
 
@@ -148,6 +149,11 @@ function CategoryTree(){
         setSearchPhrase(e.target.value);
     }
 
+    function onSetShowBreadCrumbs(val){
+        setShowBreadCrumbs(val);
+        setShowBackButton(val);
+    }
+
     /* RENDER */
 
     let tagCloudDisplay;
@@ -166,6 +172,7 @@ function CategoryTree(){
             <CategoryTreeHeader 
                 currentCategoryLevel={currentCategoryLevel}
                 currentViewedCategories={currentViewedCategories}
+                showBackButton={showBackButton}
                 showBreadCrumbs={showBreadCrumbs}
                 showForwardButton={showForwardButton}
                 storeInfo={storeInfo}
@@ -184,6 +191,7 @@ function CategoryTree(){
                 storeInfo={storeInfo}
                 onCategoryPanleItemClick={(ccl,cvc,catLink) => onCategoryPanleItemClick(ccl,cvc,catLink)}
                 onSetShowBreadCrumbs={(val) => setShowBreadCrumbs(val)}
+                onSetShowBackButton={(val) => setShowBackButton(val)}
                 onSetShowForwardButton={(val) => setShowForwardButton(val)}
             />
             {tagCloudDisplay}
@@ -221,9 +229,13 @@ function CategoryTreeHeader(props){
         })
     }
 
-    let backButtonDisplay, sNameDisplay;
-    if (props.showBreadCrumbs === true){
+    let backButtonDisplay;
+    if (props.showBackButton){
         backButtonDisplay = <a id="back-button" onClick={props.onGoBackClick}><span className="glyphicon glyphicon-chevron-left"></span></a>;
+    } else backButtonDisplay = <a id="back-button" className="disabled"><span className="glyphicon glyphicon-chevron-left"></span></a>;
+
+    let sNameDisplay;
+    if (props.showBreadCrumbs === true){
         if (categories.length === 0){
             if (props.storeInfo){
                 let storeName = window.config.sName, storeHref = window.config.sName;
@@ -232,7 +244,7 @@ function CategoryTreeHeader(props){
                 sNameDisplay = <a href={storeHref}>{storeName}</a>
             }
         }    
-    } else backButtonDisplay = <a id="back-button" className="disabled"><span className="glyphicon glyphicon-chevron-left"></span></a>
+    }
 
     let forwadButtonDisplay;
     if (props.showForwardButton === true) forwadButtonDisplay = <a id="forward-button" onClick={props.onGoForwardClick}><span className="glyphicon glyphicon-chevron-right"></span></a>
@@ -276,14 +288,16 @@ function CategoryPanelsContainer(props){
 
     React.useEffect(() => {
 
-        let showback = true, showForward = false;
+        let showback = true, showBreadCrumbs = true, showForward = false;
         let minSliderPosition = 0;
         if (props.storeInfo && props.storeInfo.is_show_in_menu === "0"){
             minSliderPosition = containerWidth;
         }
 
         if (sliderPosition === minSliderPosition){
-            showback = false;       
+            showback = false;
+            showBackButton = false;
+            if (panels.length > 1) showBreadCrumbs = true;
         }
         
         let maxSliderPosition = ( containerWidth * panels.length ) - containerWidth;
@@ -291,7 +305,8 @@ function CategoryPanelsContainer(props){
             showForward = true;
         }
 
-        props.onSetShowBreadCrumbs(showback);
+        props.onSetShowBackButton(showBack);
+        props.onSetShowBreadCrumbs(showBreadCrumbs);
         props.onSetShowForwardButton(showForward);
 
     },[sliderPosition]);
