@@ -302,7 +302,7 @@ function CategoryPanelsContainer(props){
         if (sliderPosition === minSliderPosition){
             showBack = false;
             showBreadCrumbs = false;
-            if (panels.length > 1) showBreadCrumbs = true;
+            if (panels.length > 1 && sliderPosition > 0) showBreadCrumbs = true;
         }
         
         let maxSliderPosition = ( containerWidth * panels.length ) - containerWidth;
