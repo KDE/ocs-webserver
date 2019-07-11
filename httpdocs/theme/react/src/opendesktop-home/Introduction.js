@@ -42,7 +42,8 @@ class Introduction extends Component {
         <div className="intro-desc">
           <h1> Welcome to opendesktop.org</h1>
           <h4>
-          OpenDesktop is a <a href="#network-sites">network of sites</a> all following the same <a href="#standards">standards</a>.
+          OpenDesktop is a <a href="#network-sites">network of sites</a> that follows the same <a href="#standards">open standards</a>.
+          Get one account to access these areas:
 
               <a href="#_" className="lightbox" id="network-sites">
               <div className="lightbox-container">
@@ -58,7 +59,7 @@ class Introduction extends Component {
 
             <a href="#_" className="lightbox" id="standards">
               <div class="lightbox-container">
-                <h2>Standards</h2>
+                <h2>Open standards</h2>
                 <ul>
                   <li>100% Libre software</li>
                   <li>We respect users privacy</li>
@@ -91,7 +92,7 @@ class Introduction extends Component {
           </li>
           <li>
               <div className={this.state.section=='personal'?'':''}>
-              <a href="https://my.opendesktop.org"><span className="link-personal link-image">Personal</span></a>
+              <a href="https://my.opendesktop.org"><span className="link-personal link-image">Personal data</span></a>
               <span className="showmore"><a onClick={()=>this.handleClick('personal')}>Show more</a></span>
               </div>
           </li>
