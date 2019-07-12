@@ -89,10 +89,7 @@ export function GetCategoriesBySearchPhrase(categories,searchPhrase){
         }        
       });
     }
-  })
-  
-  console.log(searchResults);
-  
+  })  
   return searchResults;
 }
 
