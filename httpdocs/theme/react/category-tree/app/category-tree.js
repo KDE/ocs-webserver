@@ -549,7 +549,7 @@ function CategoryMenuItem(props){
         if (c.id && props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink ||  window.location.href === catLink + "/") categoryMenuItemClassName = "active";
     }
 
-    console.log(catTitle,json_store_name,cid,json_cat_id);
+    console.log(catTitle,json_store_name,c.id,json_cat_id);
 
     if (catTitle === json_store_name && c.id === json_cat_id) categoryMenuItemClassName = "active";
 
