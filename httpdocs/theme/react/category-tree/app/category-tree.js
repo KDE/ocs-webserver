@@ -275,6 +275,7 @@ function CategoryPanelsContainer(props){
     let currentCategoryLevel = props.currentCategoryLevel + 1;
     let initialSliderPosition = currentCategoryLevel * containerWidth;
     if (window.location.href === "https://www.pling.com/" || window.location.href === "https://www.pling.com") initialSliderPosition = 0;
+    console.log(initialSliderPosition);
     const [ sliderPosition, setSliderPosition ] = useState(initialSliderPosition);
 
     let initialShowBackButtonValue = true;
@@ -511,6 +512,7 @@ function CategoryMenuItem(props){
     else catTitle = c.name;
 
     if (catTitle === "ALL" && props.parentCategory === "-1") catLink += "/browse/";
+    console.log(catTitle,catLink);
 
     const categoryMenuItemDisplay = (
         <a href={catLink} onClick={() => onCategoryClick(c,catLink)}>
