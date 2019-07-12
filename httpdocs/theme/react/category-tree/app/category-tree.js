@@ -432,6 +432,10 @@ function CategoryPanelsContainer(props){
 
 function CategoryPanel(props){
 
+    if (props.parentCategory === "-1"){
+        console.log(props);
+    }
+
     function adjustSliderHeight(panelHeight){
         let currentCategoryLevel = props.currentCategoryLevel
         if (isShowRealDomainAsUrl ) currentCategoryLevel = props.currentCategoryLevel + 1;
