@@ -73,26 +73,26 @@ class Introduction extends Component {
         <ul>
           <li>
               <div className={this.state.section=='code'?'':''}>
-              <a href="https://opencode.net"><span className="link-code link-image">Code</span></a>
+              <a href={this.props.urlCode}><span className="link-code link-image">Code</span></a>
               <span className="showmore"><a className="link-code-showmore" onClick={()=>this.handleClick('code')}>Show more</a></span>
               </div>
           </li>
           <li>
             <div className={this.state.section=='publish'?'':''}>
-              <a href="https://pling.com"><span className="link-publish link-image">Publish</span></a>
+              <a href={this.props.urlPublish}><span className="link-publish link-image">Publish</span></a>
               <span className="showmore"><a className="link-publish-showmore" onClick={()=>this.handleClick('publish')}>Show more</a></span>
               </div>
           </li>
           <li>
               <div className={this.state.section=='community'?'':''}>
-              <a href="https://forum.opendesktop.org"><span className="link-community link-image">Community</span></a>
+              <a href={this.props.urlCommunity}><span className="link-community link-image">Community</span></a>
               <span className="showmore"><a onClick={()=>this.handleClick('community')}>Show more</a></span>
               </div>
 
           </li>
           <li>
               <div className={this.state.section=='personal'?'':''}>
-              <a href="https://my.opendesktop.org"><span className="link-personal link-image">Personal data</span></a>
+              <a href={this.props.urlPersonal}><span className="link-personal link-image">Personal data</span></a>
               <span className="showmore"><a onClick={()=>this.handleClick('personal')}>Show more</a></span>
               </div>
           </li>
