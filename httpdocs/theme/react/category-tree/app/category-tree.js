@@ -151,11 +151,9 @@ function CategoryTree(){
     if (selectedCategory) tagCloudDisplay = <CategoryTagCloud selectedCategory={selectedCategory} />
 
     let searchInputDisplay;
-    if (window.config.isAdmin === true){
         searchInputDisplay = (
             <input type="text" defaultValue={searchPhrase} onChange={e => onSetSearchPhrase(e)}/>
         )
-    }
 
     return(
         <div id="category-tree">
