@@ -484,6 +484,8 @@ function CategoryPanel(props){
 
 function CategoryMenuItem(props){
 
+    console.log(props.parentCategory);
+
     const c = props.category;
 
     function onCategoryClick(c,catLink){
