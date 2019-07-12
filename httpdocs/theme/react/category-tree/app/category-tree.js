@@ -95,6 +95,7 @@ function CategoryTree(){
                     ...newCurrentViewedCategories,
                     {id:"-1",title:'Search',searchPhrase:searchPhrase,categories:searchPhraseCategories}
                 ]
+                setCurrentViewedCategories(newCurrentViewedCategories);
             } else {
                 newCurrentViewedCategories = [...currentViewedCategories];
                 newCurrentViewedCategories.length = selectedCategoriesId.length;
