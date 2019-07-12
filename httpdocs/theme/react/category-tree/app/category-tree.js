@@ -437,7 +437,7 @@ function CategoryPanel(props){
     }
 
     function onSetCategoryPanelHeight(panelHeight){
-        adjustSliderHeight(panelHeight + 20);
+        adjustSliderHeight(panelHeight + 25);
     }
 
     let categoryPanelContent;
@@ -446,7 +446,7 @@ function CategoryPanel(props){
         if (props.categories.length > 0){
             categories = props.categories.sort(sortArrayAlphabeticallyByTitle);
             categories = categories.map((c,index) =>{
-                if (categories.length === (index + 1)){ onSetCategoryPanelHeight(categories.length * 20); } 
+                if (categories.length === (index + 1)){ onSetCategoryPanelHeight(categories.length * 25); } 
                 let showCategory = true;
                 if (c.is_show_in_menu){
                     if (c.is_show_in_menu === "0") showCategory = false;
