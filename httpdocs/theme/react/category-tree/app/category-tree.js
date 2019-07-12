@@ -87,7 +87,7 @@ function CategoryTree(){
                 let searchPhraseCategories = GetCategoriesBySearchPhrase(categoryTree,searchPhrase);
                 newCurrentViewedCategories = [
                     ...newCurrentViewedCategories,
-                    {id:"-1",title:'Search',searchPhrase:searchPhrase,categories:searchPhraseCategories}
+                    {categoryId:"-1",id:"-1",title:'Search',searchPhrase:searchPhrase,categories:searchPhraseCategories}
                 ]
             } else {
                 newCurrentViewedCategories = [...currentViewedCategories];
@@ -143,11 +143,6 @@ function CategoryTree(){
     // search phrase
     function onSetSearchPhrase(e){
         setSearchPhrase(e.target.value);
-    }
-
-    function onSetShowBreadCrumbs(val){
-        setShowBreadCrumbs(val);
-        setShowBackButton(val);
     }
 
     /* RENDER */
@@ -283,8 +278,6 @@ function CategoryPanelsContainer(props){
 
     const [ containerVisibility, setContainerVisibility ] = useState(false);
 
-    console.log(sliderPosition);
-
     /* COMPONENT */
 
     React.useEffect(() => {
@@ -307,11 +300,8 @@ function CategoryPanelsContainer(props){
         }
 
         if (window.location.href === "https://www.pling.com/" || window.location.href === "https://www.pling.cc/"){
-            console.log('what!');
             showForward = false;
         }
-
-        console.log('show forward - ' + showForward);
 
         props.onSetShowBackButton(showBack);
         props.onSetShowBreadCrumbs(showBreadCrumbs);
@@ -337,7 +327,9 @@ function CategoryPanelsContainer(props){
 
         let currentCategoryLevel = props.currentCategoryLevel + 1;
         let newSliderPosition = currentCategoryLevel * containerWidth;
-        if (window.location.href === "https://www.pling.com/" || window.location.href === "https://www.pling.cc/") newSliderPosition = 0;
+        if (window.location.href === "https://www.pling.com/" || window.location.href === "https://www.pling.cc/"){
+            if (props.searchMode !== true) newSliderPosition = 0;
+        }
         setSliderPosition(newSliderPosition);
 
         let newShowBackButton = true;
@@ -442,16 +434,21 @@ function CategoryPanel(props){
     }
 
     function onSetCategoryPanelHeight(panelHeight){
-        adjustSliderHeight(panelHeight + 20);
+        adjustSliderHeight(panelHeight + 25);
+    }
+
+    let panelCategories = props.categories;
+    if (props.parentCategory === "-1"){
+        if (props.currentViewedCategories && props.currentViewedCategories.length > 0) panelCategories = props.currentViewedCategories[props.currentViewedCategories.length - 1].categories;
     }
 
     let categoryPanelContent;
-    if (props.categories){
+    if (panelCategories){
         let categories;
-        if (props.categories.length > 0){
-            categories = props.categories.sort(sortArrayAlphabeticallyByTitle);
+        if (panelCategories.length > 0){
+            categories = panelCategories.sort(sortArrayAlphabeticallyByTitle);
             categories = categories.map((c,index) =>{
-                if (categories.length === (index + 1)){ onSetCategoryPanelHeight(categories.length * 20); } 
+                if (categories.length === (index + 1)){ onSetCategoryPanelHeight(categories.length * 25); } 
                 let showCategory = true;
                 if (c.is_show_in_menu){
                     if (c.is_show_in_menu === "0") showCategory = false;
@@ -492,8 +489,6 @@ function CategoryPanel(props){
 
 function CategoryMenuItem(props){
 
-    console.log(props.parentCategory);
-
     const c = props.category;
 
     function onCategoryClick(c,catLink){
@@ -523,7 +518,6 @@ function CategoryMenuItem(props){
     else catTitle = c.name;
 
     if (catTitle === "ALL" && props.parentCategory === -1) catLink += "/browse/";
-    console.log(catTitle,catLink,props.parentCategory);
 
     const categoryMenuItemDisplay = (
         <a href={catLink} onClick={() => onCategoryClick(c,catLink)}>
