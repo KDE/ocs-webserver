@@ -28,6 +28,8 @@ $userRoleName = $helperUserRole->userRole();
 ?>
 <style type="text/css">
 
+    #category-tree input[type="text"] { width:calc(100% - 55px) !important; }
+
     .naviblock {
         list-style-type: none;
         margin: 0;
@@ -72,7 +74,8 @@ $userRoleName = $helperUserRole->userRole();
 
     li.navilink.active.parent a.active.parent,
     #category-tree-container #category-tree ul li.active > a,
-    #category-tree-container #category-tree ul li a:hover {
+    #category-tree-container #category-tree ul li a:hover,
+    #category-tree #category-tree-header a {
         background-color: <?=$this->navBackgroundColorActive?> !important;
         color: <?=$this->navColorActive?> !important;
     }
@@ -101,6 +104,10 @@ $userRoleName = $helperUserRole->userRole();
     <?php
     $catIdExists = isset($this->cat_id) ? $this->cat_id : "null";
     echo "var categoryId = {$catIdExists};";
+    
+    $store_config = Zend_Registry::get('store_config');
+    $is_show_real_domain_as_url = $store_config->is_show_real_domain_as_url;
+    echo "var is_show_real_domain_as_url = $is_show_real_domain_as_url;";
     ?>
 </script>
 <?php  if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName){ ?>
