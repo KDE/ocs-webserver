@@ -439,7 +439,7 @@ function CategoryPanel(props){
 
     let panelCategories = props.categories;
     if (props.parentCategory === "-1"){
-        if (props.currentViewedCategories && props.currentViewedCategories.length > 0) panelCategories = props.currentViewedCategories[0].categories;
+        if (props.currentViewedCategories && props.currentViewedCategories.length > 0) panelCategories = props.currentViewedCategories[props.currentViewedCategories.length - 1].categories;
     }
 
     let categoryPanelContent;
