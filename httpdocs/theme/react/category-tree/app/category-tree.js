@@ -553,6 +553,8 @@ function CategoryMenuItem(props){
         if (window.location.href.indexOf(catLink) > -1) categoryMenuItemClassName = "active";
     }
 
+    if (catTitle === json_store_name) categoryMenuItemClassName = "active";
+
     return(
         <li className={categoryMenuItemClassName} >
             {categoryMenuItemDisplay}
