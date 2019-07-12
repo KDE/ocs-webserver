@@ -93,6 +93,7 @@ function CategoryTree(){
                 newCurrentViewedCategories = [...currentViewedCategories];
                 newCurrentViewedCategories.length = selectedCategoriesId.length;
             }
+            console.log(newCurrentViewedCategories);
             setCurrentViewedCategories(newCurrentViewedCategories);
             setCurrentCategoryLevel(newCurrentViewedCategories.length)
         } else if (searchMode === true){
@@ -101,6 +102,7 @@ function CategoryTree(){
             setCurrentViewedCategories(newCurrentViewedCategories);
             setCurrentCategoryLevel(newCurrentViewedCategories.length)       
         }
+        console.log('new search mode - ' + newSearchMode);
         setSearchMode(newSearchMode);
     }
 
@@ -142,12 +144,8 @@ function CategoryTree(){
 
     // search phrase
     function onSetSearchPhrase(e){
+        console.log('on search - ' + e.target.value);
         setSearchPhrase(e.target.value);
-    }
-
-    function onSetShowBreadCrumbs(val){
-        setShowBreadCrumbs(val);
-        setShowBackButton(val);
     }
 
     /* RENDER */
@@ -283,8 +281,6 @@ function CategoryPanelsContainer(props){
 
     const [ containerVisibility, setContainerVisibility ] = useState(false);
 
-    console.log(sliderPosition);
-
     /* COMPONENT */
 
     React.useEffect(() => {
@@ -307,11 +303,8 @@ function CategoryPanelsContainer(props){
         }
 
         if (window.location.href === "https://www.pling.com/" || window.location.href === "https://www.pling.cc/"){
-            console.log('what!');
             showForward = false;
         }
-
-        console.log('show forward - ' + showForward);
 
         props.onSetShowBackButton(showBack);
         props.onSetShowBreadCrumbs(showBreadCrumbs);
@@ -347,7 +340,9 @@ function CategoryPanelsContainer(props){
 
     // update panels on search
     function updatePanlesOnSearch(){
+        console.log('update panels on saerch');
         const newPanels = [...initialRootCategoryPanels,...props.currentViewedCategories];
+        console.log(newPanels);
         const newSliderWidth = containerWidth * newPanels.length;
         setPanels(newPanels);
         setSliderWidth(newSliderWidth);
@@ -492,8 +487,6 @@ function CategoryPanel(props){
 
 function CategoryMenuItem(props){
 
-    console.log(props.parentCategory);
-
     const c = props.category;
 
     function onCategoryClick(c,catLink){
@@ -523,7 +516,6 @@ function CategoryMenuItem(props){
     else catTitle = c.name;
 
     if (catTitle === "ALL" && props.parentCategory === -1) catLink += "/browse/";
-    console.log(catTitle,catLink,props.parentCategory);
 
     const categoryMenuItemDisplay = (
         <a href={catLink} onClick={() => onCategoryClick(c,catLink)}>
