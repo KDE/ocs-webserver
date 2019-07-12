@@ -330,7 +330,9 @@ function CategoryPanelsContainer(props){
 
         let currentCategoryLevel = props.currentCategoryLevel + 1;
         let newSliderPosition = currentCategoryLevel * containerWidth;
-        if (window.location.href === "https://www.pling.com/" || window.location.href === "https://www.pling.cc/") newSliderPosition = 0;
+        if (window.location.href === "https://www.pling.com/" || window.location.href === "https://www.pling.cc/"){
+            if (props.searchMode !== true) newSliderPosition = 0;
+        }
         setSliderPosition(newSliderPosition);
 
         let newShowBackButton = true;
