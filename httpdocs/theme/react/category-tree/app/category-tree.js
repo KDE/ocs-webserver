@@ -329,7 +329,8 @@ function CategoryPanelsContainer(props){
         setSliderWidth(newSliderWidth);*/
 
         let currentCategoryLevel = props.currentCategoryLevel + 1;
-        const newSliderPosition = currentCategoryLevel * containerWidth;
+        let newSliderPosition = currentCategoryLevel * containerWidth;
+        if (window.location.href === "https://www.pling.com/" || window.location.href === "https://www.pling.cc/") newSliderPosition = 0;
         setSliderPosition(newSliderPosition);
 
         let newShowBackButton = true;
