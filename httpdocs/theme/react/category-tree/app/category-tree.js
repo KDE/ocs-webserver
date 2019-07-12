@@ -311,6 +311,8 @@ function CategoryPanelsContainer(props){
             showForward = false;
         }
 
+        console.log('show forward - ' + showForward);
+
         props.onSetShowBackButton(showBack);
         props.onSetShowBreadCrumbs(showBreadCrumbs);
         props.onSetShowForwardButton(showForward);
