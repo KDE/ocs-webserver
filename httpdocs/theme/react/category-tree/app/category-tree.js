@@ -435,9 +435,6 @@ function CategoryPanel(props){
     }
 
     function onSetCategoryPanelHeight(panelHeight){
-        console.log(panelHeight);
-        console.log(props.categories);
-        console.log(props.categories.length);
         adjustSliderHeight(panelHeight + 25);
     }
 
@@ -543,6 +540,8 @@ function CategoryMenuItem(props){
             categoryMenuItemClassName = "active";
         }
     } else {
+        console.log(c);
+        console.log(window.location.href);
         if (c.id && props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink) categoryMenuItemClassName = "active";
     }
 
