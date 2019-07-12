@@ -93,7 +93,6 @@ function CategoryTree(){
                 newCurrentViewedCategories = [...currentViewedCategories];
                 newCurrentViewedCategories.length = selectedCategoriesId.length;
             }
-            console.log(newCurrentViewedCategories);
             setCurrentViewedCategories(newCurrentViewedCategories);
             setCurrentCategoryLevel(newCurrentViewedCategories.length)
         } else if (searchMode === true){
@@ -102,7 +101,6 @@ function CategoryTree(){
             setCurrentViewedCategories(newCurrentViewedCategories);
             setCurrentCategoryLevel(newCurrentViewedCategories.length)       
         }
-        console.log('new search mode - ' + newSearchMode);
         setSearchMode(newSearchMode);
     }
 
@@ -144,7 +142,6 @@ function CategoryTree(){
 
     // search phrase
     function onSetSearchPhrase(e){
-        console.log('on search - ' + e.target.value);
         setSearchPhrase(e.target.value);
     }
 
@@ -342,9 +339,7 @@ function CategoryPanelsContainer(props){
 
     // update panels on search
     function updatePanlesOnSearch(){
-        console.log('update panels on saerch');
         const newPanels = [...initialRootCategoryPanels,...props.currentViewedCategories];
-        console.log(newPanels);
         const newSliderWidth = containerWidth * newPanels.length;
         setPanels(newPanels);
         setSliderWidth(newSliderWidth);
@@ -431,10 +426,6 @@ function CategoryPanelsContainer(props){
 }
 
 function CategoryPanel(props){
-
-    if (props.parentCategory === "-1"){
-        console.log(props);
-    }
 
     function adjustSliderHeight(panelHeight){
         let currentCategoryLevel = props.currentCategoryLevel
