@@ -274,8 +274,6 @@ function CategoryPanelsContainer(props){
 
     let currentCategoryLevel = props.currentCategoryLevel + 1;
     let initialSliderPosition = currentCategoryLevel * containerWidth;
-    if (window.location.href === "https://www.pling.com/" || window.location.href === "https://www.pling.com") initialSliderPosition = 0;
-    console.log(initialSliderPosition);
     const [ sliderPosition, setSliderPosition ] = useState(initialSliderPosition);
 
     let initialShowBackButtonValue = true;
@@ -291,7 +289,7 @@ function CategoryPanelsContainer(props){
         let showBack = true, showBreadCrumbs = true, showForward = false;
         let minSliderPosition = 0;
         if (props.storeInfo && props.storeInfo.is_show_in_menu === "0"){
-            minSliderPosition = containerWidth;
+            if (window.location.href !== "https://www.pling.com/" || window.location.href !== "https://www.pling.cc/") minSliderPosition = containerWidth;
         }
 
         if (sliderPosition === minSliderPosition){
