@@ -520,7 +520,7 @@ function CategoryMenuItem(props){
     if (c.title) catTitle = c.title;
     else catTitle = c.name;
 
-    if (catTitle === "ALL" && props.parentCategory === "-1") catLink += "/browse/";
+    if (catTitle === "ALL" && props.parentCategory === -1) catLink += "/browse/";
     console.log(catTitle,catLink,props.parentCategory);
 
     const categoryMenuItemDisplay = (
