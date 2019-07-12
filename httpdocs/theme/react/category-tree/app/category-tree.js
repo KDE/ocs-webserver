@@ -274,7 +274,7 @@ function CategoryPanelsContainer(props){
 
     let currentCategoryLevel = props.currentCategoryLevel + 1;
     let initialSliderPosition = currentCategoryLevel * containerWidth;
-    if (window.location.href !== "https://www.pling.com/" || window.location.href !== "https://www.pling.cc/") initialSliderPosition = 0;
+    if (window.location.href === "https://www.pling.com/" || window.location.href === "https://www.pling.cc/") initialSliderPosition = 0;
     const [ sliderPosition, setSliderPosition ] = useState(initialSliderPosition);
 
     let initialShowBackButtonValue = true;
