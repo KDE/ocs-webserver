@@ -529,8 +529,6 @@ function CategoryMenuItem(props){
         </a>
     )
 
-    console.log(catTitle,json_store_name);
-
     let categoryMenuItemClassName;
     if (c.id === "0"){
         if (window.location.href === catLink || window.location.href === catLink + "/"){
