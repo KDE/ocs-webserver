@@ -179,16 +179,16 @@ if($this->inputFilterOriginal ==1)
                   </li>
                   <li <?=$this->filters['order'] == 'rating' ? 'class="active"' :'' ?>>
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
-                          'rating') ?>"><span><?= $this->translate('Rating') ?></span></a>
+                          'rating') ?>"><span><?= $this->translate('Score') ?></span></a>
                   </li>
                    <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {?>
                   <li <?=$this->filters['order'] == 'top' ? 'class="active"' :'' ?>>
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
-                          'top') ?>"><span><?= $this->translate('Top') ?></span></a>
+                          'top') ?>"><span><?= $this->translate('Score_old') ?></span></a>
                   </li>
                   <li <?=$this->filters['order'] == 'test' ? 'class="active"' :'' ?>>
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
-                          'test') ?>"><span><?= $this->translate('test') ?></span></a>
+                          'test') ?>"><span><?= $this->translate('Score_test') ?></span></a>
                   </li>
                 <?php }?>
                   <li style="float: right">
