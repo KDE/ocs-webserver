@@ -64,7 +64,7 @@ class Default_View_Helper_FetchStoresForCatTreeJson extends Zend_View_Helper_Abs
                     $domainAsUrl = $obj['is_show_real_domain_as_url'];
                     if($domainAsUrl)
                     {
-                        $obj['menuhref'] = $obj['host'];
+                        $obj['menuhref'] = 'https://' . $obj['host'];
                     }else{
                         $obj['menuhref'] = $baseurl.'/s/'.$obj['name'];
                     }
