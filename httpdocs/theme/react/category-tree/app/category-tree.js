@@ -28,8 +28,6 @@ function CategoryTree(){
     const [ categoryTree, setCategoryTree ] = useState(initialCatTree);    
     const [ categoryId, SetCategoryId ] = useState(window.categoryId);
     const [ selectedCategory, setSelectedCategory ] = useState(GetSelectedCategory(categoryTree,categoryId));
-    
-    console.log(categoryTree);
 
     let initialCurrentViewedCategories = []
     if (selectedCategory){
@@ -452,6 +450,7 @@ function CategoryPanel(props){
                             key={index}
                             category={c}
                             categoryId={props.categoryId}
+                            parentCategory={props.parentCategory}
                             currentViewedCategories={props.currentViewedCategories}
                             selectedCategoriesId={props.selectedCategoriesId}
                             onCategoryClick={(c,catLink) => props.onCategorySelect(c,catLink)}
@@ -493,7 +492,7 @@ function CategoryMenuItem(props){
     if (c.id){
         if (c.id === "0"){
             catLink = window.config.baseUrl;
-            if (window.config.baseUrl.indexOf('http') === -1) catLink = "http://" + window.config.baseUrl;
+            if (window.config.baseUrl.indexOf('http') === -1) catLink = "https://" + window.config.baseUrl;
         }
         else {
             catLink = getUrlContext(window.location.href);
@@ -508,6 +507,8 @@ function CategoryMenuItem(props){
     let catTitle;
     if (c.title) catTitle = c.title;
     else catTitle = c.name;
+
+    if (catTitle === "All" && props.parentCategory === "-1") catLink += "/browse/";
 
     const categoryMenuItemDisplay = (
         <a href={catLink} onClick={() => onCategoryClick(c,catLink)}>
@@ -531,6 +532,9 @@ function CategoryMenuItem(props){
     } else {
         if (props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink || window.location.href.indexOf(catLink) > -1) categoryMenuItemClassName = "active";
     }
+
+    console.log(c);
+    console.log(categoryMenuItemClassName);
 
     return(
         <li className={categoryMenuItemClassName} >
