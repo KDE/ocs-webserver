@@ -306,6 +306,11 @@ function CategoryPanelsContainer(props){
             showForward = true;
         }
 
+        if (window.location.href === "https://www.pling.com/" || window.location.href === "https://www.pling.cc/"){
+            console.log('what!');
+            showForward = false;
+        }
+
         props.onSetShowBackButton(showBack);
         props.onSetShowBreadCrumbs(showBreadCrumbs);
         props.onSetShowForwardButton(showForward);
