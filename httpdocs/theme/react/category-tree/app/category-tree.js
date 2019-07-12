@@ -543,11 +543,10 @@ function CategoryMenuItem(props){
             window.location.href === baseName + catLink || window.location.href === baseName + catLink.split("/browse")[0]){
             categoryMenuItemClassName = "active";
         }
-        if (catTitle === json_store_name) categoryMenuItemClassName = "active";
     } else {
         if (c.id && props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink ||  window.location.href === catLink + "/") categoryMenuItemClassName = "active";
     }    
-
+    if (catTitle === json_store_name) categoryMenuItemClassName = "active";
     return(
         <li className={categoryMenuItemClassName} >
             {categoryMenuItemDisplay}
