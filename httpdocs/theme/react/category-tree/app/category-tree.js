@@ -42,8 +42,6 @@ function CategoryTree(){
         }
     }
 
-    console.log(selectedCategory);
-
     let initialSelectedCategoriesId = [];
     initialCurrentViewedCategories.forEach(function(c,index){
         initialSelectedCategoriesId.push(c.id);
@@ -51,8 +49,6 @@ function CategoryTree(){
     
     const [ selectedCategoriesId, setSelectedCategoriesId ] = useState(initialSelectedCategoriesId)
     const [ currentViewedCategories, setCurrentViewedCategories ] = useState(initialCurrentViewedCategories);
-
-    console.log(selectedCategoriesId);
 
     let initialCurrentCategoryLevel = initialCurrentViewedCategories.length;
     if (isShowRealDomainAsUrl && showStoreListingsFirst) initialCurrentCategoryLevel = -1;
@@ -266,8 +262,7 @@ function CategoryPanelsContainer(props){
     /* STATE */
  
     const rootListingPanel = {categoryId:0,categories:props.categoryTree}
-    console.log(window.json_store_for_tree);
-    console.log(window.config.domains);
+    
     const storeListingPanel = {categoryId:-1,categories:[...window.json_store_for_tree]}
     let initialRootCategoryPanels = [rootListingPanel];
     if (isShowRealDomainAsUrl  === 1) initialRootCategoryPanels = [storeListingPanel,rootListingPanel];
@@ -294,7 +289,7 @@ function CategoryPanelsContainer(props){
 
         let showBack = true, showBreadCrumbs = true, showForward = false;
         let minSliderPosition = 0;
-        if (props.storeInfo && props.storeInfo.is_show_in_menu === "0"){
+        if (props.storeInfo && props.storeInfo.is_show_in_menu === "0" && window.location.href !== "https://www.pling.com/"){
             minSliderPosition = containerWidth;
         }
 
