@@ -151,11 +151,9 @@ function CategoryTree(){
     if (selectedCategory) tagCloudDisplay = <CategoryTagCloud selectedCategory={selectedCategory} />
 
     let searchInputDisplay;
-    if (window.config.isAdmin === true){
         searchInputDisplay = (
             <input type="text" defaultValue={searchPhrase} onChange={e => onSetSearchPhrase(e)}/>
         )
-    }
 
     return(
         <div id="category-tree">
@@ -539,7 +537,6 @@ function CategoryMenuItem(props){
             categoryMenuItemClassName = "active";
         }
     } else if (c.id === "00") {
-        
         //let baseName = window.config.sName;
         //if (window.config.sName.indexOf('http') === -1 ) baseName = "https://" + window.config.sName;
         //if (window.location.href === window.config.baseUrl + catLink || window.location.href === window.config.baseUrl + catLink.split("/browse")[0] ||
@@ -549,11 +546,7 @@ function CategoryMenuItem(props){
         if (catTitle === json_store_name) categoryMenuItemClassName = "active";
     } else {
         if (c.id && props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink ||  window.location.href === catLink + "/") categoryMenuItemClassName = "active";
-    }
-
-    console.log(catTitle,json_store_name,c.id,json_cat_id);
-
-    
+    }    
 
     return(
         <li className={categoryMenuItemClassName} >
