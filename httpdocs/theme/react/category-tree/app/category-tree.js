@@ -549,8 +549,8 @@ function CategoryMenuItem(props){
         if (c.id && props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink ||  window.location.href === catLink + "/") categoryMenuItemClassName = "active";
     }
 
-    if (window.location.href === "https://www.appimagehub.com/browse" || "https://www.appimagehub.com/browse/"){
-        if (catLink === "https://www.appimagehub.com") categoryMenuItemClassName = "active";
+    if (catLink.indexOf('browse') === -1){
+        if (window.location.href.indexOf(catLink) > -1) categoryMenuItemClassName = "active";
     }
 
     return(
