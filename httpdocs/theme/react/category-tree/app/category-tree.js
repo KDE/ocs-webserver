@@ -61,7 +61,7 @@ function CategoryTree(){
 
     let initialStoreInfo;
     if (window.config.sName){
-        window.config.domains.forEach(function(d,index){
+        json_store_for_tree.forEach(function(d,index){
             if (d.host === window.config.sName){
                 initialStoreInfo = d;
             }
