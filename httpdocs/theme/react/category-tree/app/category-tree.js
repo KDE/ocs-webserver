@@ -273,7 +273,9 @@ function CategoryPanelsContainer(props){
     const [ sliderHeight, setSliderHeight ] = useState();
 
     let currentCategoryLevel = props.currentCategoryLevel + 1;
-    const [ sliderPosition, setSliderPosition ] = useState(currentCategoryLevel * containerWidth);
+    let initialSliderPosition = currentCategoryLevel * containerWidth;
+    if (window.location.href === "https://www.pling.com/" || window.location.href === "https://www.pling.com") initialSliderPosition = 0;
+    const [ sliderPosition, setSliderPosition ] = useState(initialSliderPosition);
 
     let initialShowBackButtonValue = true;
     if (sliderPosition === 0) initialShowBackButtonValue = false;
@@ -508,7 +510,7 @@ function CategoryMenuItem(props){
     if (c.title) catTitle = c.title;
     else catTitle = c.name;
 
-    if (catTitle === "All" && props.parentCategory === "-1") catLink += "/browse/";
+    if (catTitle === "ALL" && props.parentCategory === "-1") catLink += "/browse/";
 
     const categoryMenuItemDisplay = (
         <a href={catLink} onClick={() => onCategoryClick(c,catLink)}>
@@ -530,11 +532,8 @@ function CategoryMenuItem(props){
             categoryMenuItemClassName = "active";
         }
     } else {
-        if (props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink || window.location.href.indexOf(catLink) > -1) categoryMenuItemClassName = "active";
+        if (c.id && props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink) categoryMenuItemClassName = "active";
     }
-
-    console.log(c);
-    console.log(categoryMenuItemClassName);
 
     return(
         <li className={categoryMenuItemClassName} >
