@@ -13,7 +13,7 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
   font-family: Verdana,"Bitstream Vera Sans",Arial,Helvetica,Sans,"Bitstream Vera Serif";
   color: rgb(112, 108, 100);
   /*color: #444444;*/
-  font-size: 8pt;
+  // font-size: 8pt;
   line-height: 16px;
   a{
     color:#444444;
@@ -233,40 +233,42 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
             //width: 66.66667%;
             width: 90%;
             max-width: 1200px;
+            min-height: 270px;
             display: block;
             margin: 0 auto;
-            padding: 10px 60px;
-            padding-top:30px;
+            padding: 60px 0;
             color: #99DCF9;
             animation: fadeEffect 1s; /* Fading effect takes 1 second */
             position: relative;
             h2{
               color: #fff;
+              font-size: 3.8rem;
+              margin: .2em 0;
             }
             a{
               color: #1F95EA;
               display: block;
+              font-size: 1.4rem;
             }
             .icon-container
             {
                 display: block;
                 float: left;
-                padding-top: 20px;
                 .icon{
-                  background-size: 100px;
+                  background-size: 140px;
                   background-repeat: no-repeat;
-                  width: 100px;
-                  height: 105px;
+                  width: 140px;
+                  height: 140px;
                 }
+                margin-right: 48px;
             }
             .description{
               text-align: left;
               margin-left: 120px;
-                font-size: 1.5rem !important;
+                font-size: 2rem !important;
                 line-height: 1.5;
             }
             .arrow-down {
-
               background: url(../img/home/show-more-arrow-light.png) no-repeat;
               width: 56px;
               height: 26px;
