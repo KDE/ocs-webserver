@@ -510,7 +510,7 @@ function CategoryMenuItem(props){
     else catTitle = c.name;
 
     if (catTitle === "ALL" && props.parentCategory === "-1") catLink += "/browse/";
-    console.log(catTitle,catLink);
+    console.log(catTitle,catLink,props.parentCategory);
 
     const categoryMenuItemDisplay = (
         <a href={catLink} onClick={() => onCategoryClick(c,catLink)}>
