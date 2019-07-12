@@ -24,7 +24,8 @@ $cssNoVotes = (($this->product->count_likes+$this->product->count_dislikes) == 0
 
 $model = new Default_Model_DbTable_ProjectRating();
 $score2 = $model->getScore($this->product->project_id);   
-$score2 = round($score2/100,2);
+//$score2 = round($score2/10,1);
+$score2 = $score2/10;
 
 $userScore=0;
 if($this->ratingOfUser)
@@ -55,18 +56,14 @@ krsort($options);
                 <div class="rating">
                     <div class="rating-text">
                         <small class="center-block text-center">
-                        
-                        <?php                            
-                            $t = explode(".", number_format($score2,1));
-                        ?>
-                        <span style="font-size: large;"><?=$t[0]?></span><span >.<?=$t[1]?></span>                      
+                        Score <?=number_format($score2,1)?>%                             
                         </small>
                     </div>
                     <div class="progress" style="margin-bottom: 0;height:12px;background-color: transparent; box-shadow: none; padding:2px;">
-                        <div class="progress-bar" style="background-color: <?=$this->fetchScoreColor($score2)?>;width: <?= floor($score2)*10 ?>%;">
+                        <div class="progress-bar" style="background-color: <?=$this->fetchScoreColor($score2/10)?>;width: <?= floor($score2)?>%;">
                             
                         </div>
-                        <div class="progress-bar" style="background-color:#eeeeee;width: <?= floor(100 - $score2*10) ?>%;<?=$cssNoVotes?>">
+                        <div class="progress-bar" style="background-color:#eeeeee;width: <?= floor(100 - $score2) ?>%;<?=$cssNoVotes?>">
                           
                         </div>
                     </div>
@@ -95,111 +92,6 @@ krsort($options);
         </select> 
     </div>
 </div>
-<script type="text/javascript">    
-     /*$(document).ready(function(){          
 
-            var preRatingSelected=0;
-            var currentSelect;
-            
-            $( "#ratingoptions" ).focus(function() {
-                currentSelect = $(this);
-                preRatingSelected = $(this).val();               
-            }).change(function() {        
-          
-             var optionSelected = $( "#ratingoptions option:selected" );             
-             var valueSelected  = optionSelected.val();
-             var textSelected   = optionSelected.text();
-             if(valueSelected==0){
-                return false;
-             }
-
-             var loginuser = $('#score-product-modal').find('#loginuser').val();
-             var productcreator = $('#score-product-modal').find('#productcreator').val();
-             if(!loginuser)
-             {                
-                $('#score-product-modal').modal('show');
-                return;
-             }
-
-             if (loginuser == productcreator) {
-                // ignore
-                $('#score-product-modal').find('#votelabel').text('Project owner not allowed');
-                $('#score-product-modal').find('.modal-body').empty();
-                $('#score-product-modal').find('#modal-btn-onsubmit').remove();
-                
-                $('#score-product-modal').modal('show');
-                return;
-             }
-             
-             if(valueSelected==-1)
-             {
-                $('#score-product-modal').find('#votelabel').empty()
-                        .append('Remove Rating ');
-             }
-             else if(valueSelected<=5)
-             {
-                 $('#score-product-modal').find('#votelabel').empty()
-                        .append('Add a review to your rating "'+textSelected +'" (min. 5 chars) <span style="font-size:10px; display:block"> Please explain the reason for downvote to help the creator to make it better </span> ');
-                  $('#score-product-modal').find('#voteup').val(2);
-             }                     
-             else
-             {                
-                 $('#score-product-modal').find('#votelabel').empty()
-                    .append('Add a review to your rating "'+textSelected+'" (min. 1 char):');       
-                    $('#score-product-modal').find('#voteup').val(1);       
-             }
-
-             var userscore = $('#score-product-modal').find('#userscore').val();
-                // -1 = no rate yet. 
-             if(userscore>0)
-             {
-                $('#score-product-modal').find('#votelabel')
-                    .append('Score '+userscore+' is given already with comment:'+$('#score-product-modal').find('#otxt').val());                
-
-             }
-
-             $('#score-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
-             $('#score-product-modal').find('#commenttext').removeAttr("disabled");
-             if(valueSelected>=1 && valueSelected<=3)
-             {
-                $('#score-product-modal').find('#commenttext').val('');   
-             }else
-             {
-                $('#score-product-modal').find('#commenttext').val(textSelected);   
-             }             
-             $('#score-product-modal').find('#userscorevalue').val(valueSelected);
-             
-             if(valueSelected=='-1')
-             {
-                $('#score-product-modal').find(':submit').text("Remove Rating");                             
-             }else
-             {
-                $('#score-product-modal').find(':submit').text("Rate Now");                          
-             }
-             
-             $('#score-product-modal').modal('show');
-           });
-
-            $("#modal-btn-cancel").on("click", function(){                                        
-                 $(currentSelect).find("option[value="+preRatingSelected+"]").prop('selected', true);       
-                $("#score-product-modal").modal('hide');                
-              });
-            
-            var bOnsubmit = false;     
-            $('#modal-btn-onsubmit').on("click",function(){
-                bOnsubmit = true;
-            });
-            $('#score-product-modal').on('hidden.bs.modal', function () {
-                
-                 if(!bOnsubmit)
-                 {                  
-                    $(currentSelect).find("option[value="+preRatingSelected+"]").prop('selected', true);   
-                 }                 
-            });     
-
-            
-
-        });*/
-</script>
 
 
