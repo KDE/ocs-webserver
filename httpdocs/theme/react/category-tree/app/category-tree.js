@@ -210,7 +210,8 @@ function CategoryTreeHeader(props){
     if (categories.length > 0){
         categoryTreeHeaderNavigationDisplay = categories.map((cvc,index) =>{
             if (categories.length === index + 1){
-                const catLink = getUrlContext(window.location.href) + ( cvc.id === "00" ? "/browse/" : "/browse/cat/"+cvc.id+"/order/latest/")
+                let catLink;
+                if (cvc.title !== "Search") catLink = getUrlContext(window.location.href) + ( cvc.id === "00" ? "/browse/" : "/browse/cat/"+cvc.id+"/order/latest/")
                 return (
                     <a key={index} href={catLink} onClick={() => onHeaderNavigationItemClick(cvc,index)}>
                         {cvc.title}
@@ -434,6 +435,9 @@ function CategoryPanel(props){
     }
 
     function onSetCategoryPanelHeight(panelHeight){
+        console.log(panelHeight);
+        console.log(props.categories);
+        console.log(props.categories.length);
         adjustSliderHeight(panelHeight + 25);
     }
 
