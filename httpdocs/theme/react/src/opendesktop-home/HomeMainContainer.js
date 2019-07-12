@@ -16,23 +16,22 @@ class HomeMainContainer extends Component {
     return (
       <div id="home-main-container">
          <div className="top">
-           <Introduction />
-         </div>
-         <div className="left">
+           <Introduction urlCode={this.state.gitlabUrl}
+                         urlPublish={this.state.baseUrl}
+                         urlCommunity={this.state.forumUrl}
+                         urlPersonal={this.state.url_myopendesktop}
+                         />
          </div>
          <div className="middle">
           <ProductsContainer title="Themes" cat="381" products={this.state.products}/>
           <ProductsContainer title="Apps and Addons" cat="282" products={this.state.products}/>
+          <ProductsContainer title="Multimedia" cat="282" products={this.state.productsMultimedia}/>
           <ProductsGitContainer />
           <CommentsContainer comments={this.state.comments}/>
           <BlogFeedContainer />
           <ChatContainer />
           <RssNewsContainer />
-
-          <div className="placeholder" aria-hidden="true"/>
-          <div className="placeholder" aria-hidden="true"/>
           </div>
-         <div className="right"> </div>
       </div>
     );
   }

@@ -8,7 +8,7 @@ class Product extends React.Component {
       const scoreDisplay=(
           <div className="score-info">
             <div className="score-number">
-               {this.props.product.laplace_score/10 + "%"}
+               {(this.props.product.laplace_score/10).toFixed(1) + "%"}
             </div>
             <div className="score-bar-container">
               <div className={"score-bar"} style={{"width":this.props.product.laplace_score/10 + "%"}}></div>

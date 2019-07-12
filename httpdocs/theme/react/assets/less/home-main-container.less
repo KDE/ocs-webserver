@@ -230,7 +230,9 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
           text-rendering: optimizelegibility;
          .detail{
             min-height: 200px;
-            width: 66.66667%;
+            //width: 66.66667%;
+            width: 90%;
+            max-width: 1200px;
             display: block;
             margin: 0 auto;
             padding: 10px 60px;
@@ -280,7 +282,7 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
             background-image: url(../img/home/code-icon-rnd.png);
           }
             .arrow-down {
-              left: 157px;
+              left: 125px;
             }
 
          }
@@ -289,7 +291,7 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
               background-image: url(../img/home/publish-icon-rnd.png);
            }
            .arrow-down {
-             left: 457px;
+             left: 425px;
            }
          }
          .detail-community{
@@ -297,7 +299,7 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
               background-image: url(../img/home/community-icon-rnd.png);
            }
            .arrow-down {
-             left: 757px;
+             left: 725px;
            }
          }
          .detail-personal{
@@ -305,44 +307,33 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
               background-image: url(../img/home/personal-icon-rnd.png);
            }
            .arrow-down {
-             left: 1057px;
+             left: 1025px;
            }
          }
        }
    }
   }
-	.left{
-		 flex: 0 0 16.66666667%;
-		 padding-right: 15px;
-		 padding-left: 15px;
-		 min-width: 200px;
 
-	}
-	.right{
-		 flex: 0 0 16.66666667%;
-		 padding-right: 15px;
-		 min-width: 200px;
-
-	}
 	.middle{
 		flex:1;
-		padding: 5px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: left;
+    max-width: 1420px;
+    margin: 0 auto;
     .placeholder{
-      width: 30%;
+      width: 25%;
       margin: 0px 5px 5px 0;
     }
     .panelContainer{
         border: 1px solid #ccc;
         border-radius: 5px;
-        background-image: url(http://cp1.hive01.com/img/opendesktop/back3.jpg);
+        background-image: url(../img/home/back3.jpg);
         padding: 8px;
         margin: 0px 5px 5px 0;
         /*width: 30%;*/
-        width: 95%;
+        width:350px;
         div.title{
           color: #888888;
           font-size:11pt;
@@ -580,13 +571,11 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
   // Large devices (desktops, 992px and up)
   @media only screen and (min-width: 992px) {
     #home-main-container .top .introduction .introduction-head ul li { width: 25%; }
-    #home-main-container .middle .panelContainer{ width: 40%}
     .arrow-down { display: block; }
   }
 
   // Extra large devices (large desktops, 1200px and up)
   @media only screen and (min-width: 1200px) {
         #home-main-container .top .introduction .introduction-head ul li { width: 25%; }
-        #home-main-container .middle .panelContainer{ width: 30%}
         .arrow-down { display: block; }
    }
