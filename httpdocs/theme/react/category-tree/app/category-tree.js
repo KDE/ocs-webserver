@@ -83,6 +83,8 @@ function CategoryTree(){
     // on search phrase update
     function onSearchPhraseUpdate(){
         let newSearchMode = false;
+        console.log(searchPhrase);
+        
         if (searchPhrase){
             let newCurrentViewedCategories;
             if  (searchPhrase.length > 0){
@@ -95,11 +97,13 @@ function CategoryTree(){
                     ...newCurrentViewedCategories,
                     {id:"-1",title:'Search',searchPhrase:searchPhrase,categories:searchPhraseCategories}
                 ]
-                setCurrentViewedCategories(newCurrentViewedCategories);
             } else {
                 newCurrentViewedCategories = [...currentViewedCategories];
                 newCurrentViewedCategories.length = selectedCategoriesId.length;
             }
+            
+            console.log(newCurrentViewedCategories);
+            
             setCurrentViewedCategories(newCurrentViewedCategories);
             setCurrentCategoryLevel(newCurrentViewedCategories.length)
         } else if (searchMode === true){
@@ -108,6 +112,7 @@ function CategoryTree(){
             setCurrentViewedCategories(newCurrentViewedCategories);
             setCurrentCategoryLevel(newCurrentViewedCategories.length)       
         }
+        
         setSearchMode(newSearchMode);
     }
 
