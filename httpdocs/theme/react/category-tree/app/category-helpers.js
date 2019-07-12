@@ -28,7 +28,7 @@ export function GetSelectedCategory(categories,categoryId){
 }
 
 export function GenerateCurrentViewedCategories(categories,selectedCategory){
-  if (selectedCategory.parent_id && selectedCategory.parent_id !== "34"){
+  if (selectedCategory.parent_id){
     const parentId = parseInt(selectedCategory.parent_id);
     let parentCategory = GetSelectedCategory(categories,parentId);
     if (parentCategory){
@@ -45,16 +45,20 @@ export function GenerateCurrentViewedCategories(categories,selectedCategory){
 }
 
 function getCategoryParents(categories,selectedCategories){
-  if (selectedCategories[0].parent_id !== "34"){
+  //if (selectedCategories[0].parent_id !== "34"){
     const parentId = parseInt(selectedCategories[0].parent_id);
     const parentCategory = GetSelectedCategory(categories,parentId);
-    parentCategory.categories = ConvertObjectToArray(parentCategory.children);
-    parentCategory.categoryId = parentCategory.id;
-    selectedCategories = [parentCategory,...selectedCategories];
-    return getCategoryParents(categories,selectedCategories);
-  } else {
+    if (parentCategory){
+      parentCategory.categories = ConvertObjectToArray(parentCategory.children);
+      parentCategory.categoryId = parentCategory.id;
+      selectedCategories = [parentCategory,...selectedCategories];
+      return getCategoryParents(categories,selectedCategories);
+    } else {
+      return selectedCategories;
+    }
+  /*} else {
     return selectedCategories;
-  }
+  }*/
 }
 
 export function GetCategoriesBySearchPhrase(categories,searchPhrase){
@@ -86,6 +90,9 @@ export function GetCategoriesBySearchPhrase(categories,searchPhrase){
       });
     }
   })
+  
+  console.log(searchResults);
+  
   return searchResults;
 }
 
@@ -118,8 +125,14 @@ export function generateCategoryLink(baseUrl,urlContext,catId,locationHref){
 }
 
 export function sortArrayAlphabeticallyByTitle(a, b){
-  const titleA = a.title.trim().toLowerCase();
-  const titleB = b.title.trim().toLowerCase();
+  let titleA, titleB;
+  if (a.title){
+    titleA = a.title.trim().toLowerCase();
+    titleB = b.title.trim().toLowerCase();
+  } else {
+    titleA = a.name.trim().toLowerCase();
+    titleB = b.name.trim().toLowerCase();
+  }
   if(titleA < titleB) { return -1; }
   if(titleA > titleB) { return 1; }
   return 0;
