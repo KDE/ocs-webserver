@@ -542,7 +542,7 @@ function CategoryMenuItem(props){
     } else {
         console.log(c);
         console.log(window.location.href);
-        if (c.id && props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink) categoryMenuItemClassName = "active";
+        if (c.id && props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink ||  window.location.href === catLink + "/") categoryMenuItemClassName = "active";
     }
 
     return(
