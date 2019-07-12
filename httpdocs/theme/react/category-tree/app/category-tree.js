@@ -87,7 +87,7 @@ function CategoryTree(){
                 let searchPhraseCategories = GetCategoriesBySearchPhrase(categoryTree,searchPhrase);
                 newCurrentViewedCategories = [
                     ...newCurrentViewedCategories,
-                    {id:"-1",title:'Search',searchPhrase:searchPhrase,categories:searchPhraseCategories}
+                    {categoryId:"-1",id:"-1",title:'Search',searchPhrase:searchPhrase,categories:searchPhraseCategories}
                 ]
             } else {
                 newCurrentViewedCategories = [...currentViewedCategories];
