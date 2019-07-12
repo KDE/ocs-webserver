@@ -430,7 +430,9 @@ function CategoryPanel(props){
 
     function adjustSliderHeight(panelHeight){
         let currentCategoryLevel = props.currentCategoryLevel
-        if (isShowRealDomainAsUrl ) currentCategoryLevel = props.currentCategoryLevel + 1;
+        if (isShowRealDomainAsUrl){
+            if (window.location.href !== "https://www.pling.com/" && window.location.href !== "https://www.pling.cc/") currentCategoryLevel = props.currentCategoryLevel + 1;
+        }
         if (currentCategoryLevel === props.level) props.onSetSliderHeight(panelHeight);
     }
 
