@@ -89,20 +89,6 @@ class SiteHeader extends React.Component {
       );
     }
     
-    
-    let catLink = this.state.serverUrl + this.state.serverUri;
-
-    let siteHeaderCatNameDisplay;
-    if (window.config.isAdmin === true && this.state.cat_title !== "All"){
-      siteHeaderCatNameDisplay = (
-        <div id="site-header-cat-name-container" class="header_cat_link">
-          <a href={catLink}>
-            {'/' + this.state.cat_title}
-          </a>
-        </div>
-      );
-    }
-
     let HeaderDisplay;
     if (this.state.device !== "tablet"){
       HeaderDisplay = (
@@ -114,7 +100,6 @@ class SiteHeader extends React.Component {
               </a>
             </div>
             {siteHeaderStoreNameDisplay}
-            {siteHeaderCatNameDisplay}
           </div>
           <div id="site-header-right">
             <div id="site-header-right-top" className={siteHeaderTopRightCssClass}>

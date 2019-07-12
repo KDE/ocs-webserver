@@ -185,6 +185,7 @@ function (_React$Component) {
         }, this.state.store.name));
       }
       
+      /* 20190711 ronald: removed for now
       var siteHeaderCatNameDisplay;
       if (window.config.isAdmin === true && this.state.cat_title !== "All"){
         var catLink = this.state.serverUrl + this.state.serverUri;
@@ -194,7 +195,7 @@ function (_React$Component) {
           href: catLink
         }, '/' + this.state.cat_title));
       }
-
+      */
       var HeaderDisplay;
 
       if (this.state.device !== "tablet") {
@@ -212,7 +213,7 @@ function (_React$Component) {
           href: logoLink
         }, React.createElement("img", {
           src: this.state.template['header-logo']['image-src']
-        }))), siteHeaderStoreNameDisplay, siteHeaderCatNameDisplay), React.createElement("div", {
+        }))), siteHeaderStoreNameDisplay), React.createElement("div", {
           id: "site-header-right"
         }, React.createElement("div", {
           id: "site-header-right-top",
