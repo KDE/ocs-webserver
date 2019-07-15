@@ -42,6 +42,7 @@ class HomeController extends Local_Controller_Action_DomainSwitch
                         $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name.'-test'.$index);   
                     }
                     
+                    $this->view->index=$index;
                  }else{
                     $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);   
                  }                 
