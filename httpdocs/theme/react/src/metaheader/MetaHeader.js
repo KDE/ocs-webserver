@@ -95,6 +95,7 @@ class MetaHeader extends React.Component {
           domains={this.state.domains}
           user={this.state.user}
           baseUrl={this.state.baseUrl}
+          baseUrlStore={this.state.baseUrlStore}
           blogUrl={this.state.blogUrl}
           forumUrl={this.state.forumUrl}
           sName={this.state.sName}
@@ -111,6 +112,7 @@ class MetaHeader extends React.Component {
           domains={this.state.domains}
           user={this.state.user}
           baseUrl={this.state.baseUrl}
+          baseUrlStore={this.state.baseUrlStore}
           blogUrl={this.state.blogUrl}
           forumUrl={this.state.forumUrl}
           sName={this.state.sName}
