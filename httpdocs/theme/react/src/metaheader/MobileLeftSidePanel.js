@@ -56,7 +56,7 @@ class MobileLeftSidePanel extends React.Component {
             <li>
               <a className="groupname"><b>Community</b></a>
               <ul>
-                <li><a href={this.props.baseUrl + "/community"}>Member</a></li>
+                <li><a href={this.props.baseUrl + "/community"}>Members</a></li>
                 <li><a href={this.props.forumUrl}>Discussion</a></li>
               </ul>
             </li>
@@ -65,7 +65,7 @@ class MobileLeftSidePanel extends React.Component {
               <a className="groupname"><b>More</b></a>
               <ul>
                 <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
-                <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>                
+                <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
                 {apiLinkItem}
                 {aboutPlingItem}
                 {aboutopencodeItem}
