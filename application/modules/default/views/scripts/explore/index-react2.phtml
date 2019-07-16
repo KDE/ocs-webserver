@@ -250,58 +250,60 @@ if($this->inputFilterOriginal ==1)
           </section>
       </div>
 
-<?php
-$time_start = microtime(true);
-     $this->comments = $modelInfo->getLatestComments(5, $this->cat_id, $this->tags);
-     //$donations = $modelInfo->getLatestPlings(5, $this->cat_id);
-     $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id, $this->tags);
-     $asidehide = '';
-     if(!$this->catabout && count($this->comments)==0  && count($topprods)==0 )
-     {
-        $asidehide = 'hide';
-     }
-     $this->show_git = false;
-?>
-      <div class="GridFlex-cell sidebar-right">
-          <aside  id="explore-sidebar <?=$asidehide?>" >
-             <?php
-                echo $this->render('/home/partials/common_rightsidebar.phtml');
-            ?>
-
-            <div  class="row sidebar-right-info" >
+  <?php
+  $time_start = microtime(true);
+      $this->comments = $modelInfo->getLatestComments(5, $this->cat_id, $this->tags);
+      //$donations = $modelInfo->getLatestPlings(5, $this->cat_id);
+      $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id, $this->tags);
+      $asidehide = '';
+      if(!$this->catabout && count($this->comments)==0  && count($topprods)==0 )
+      {
+          $asidehide = 'hide';
+      }
+      $this->show_git = false;
+  ?>
+        <div class="GridFlex-cell sidebar-right">
+            <aside  id="explore-sidebar <?=$asidehide?>" >
               <?php
-              if (count($topprods) > 0) {
-                  ?>
-                  <span class="commentTitle"> Popularity <span class="small light"> (based on plings, downloads, etc.)</span></span>
+                  echo $this->render('/home/partials/common_rightsidebar.phtml');
+              ?>
 
-                  <div class="prod-widget-box right bgwhite" id="mostdownloaded">
-                      <?php
-                      $this->rownum = 1;
-                      foreach ($topprods as $this->product) {
-                          echo $this->render('explore/partials/productTop.phtml');
-                          $this->rownum++;
-                      }
-                      ?>
-                  </div>
-              <?php } ?>
+              <div  class="row sidebar-right-info" >
+                <?php
+                if (count($topprods) > 0) {
+                    ?>
+                    <span class="commentTitle"> Popularity <span class="small light"> (based on plings, downloads, etc.)</span></span>
 
-            </div>
-        </aside>
-          <?php
-          $time_elapsed = microtime(true) - $time_start;
-          if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
-              echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
-          }?>
+                    <div class="prod-widget-box right bgwhite" id="mostdownloaded">
+                        <?php
+                        $this->rownum = 1;
+                        foreach ($topprods as $this->product) {
+                            echo $this->render('explore/partials/productTop.phtml');
+                            $this->rownum++;
+                        }
+                        ?>
+                    </div>
+                <?php } ?>
+
+              </div>
+          </aside>
+            <?php
+            $time_elapsed = microtime(true) - $time_start;
+            if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
+            }?>
+        </div>
       </div>
-    </div>
-    </section>
+      </section>
 
-    <div class="tooltip_templates" style="display: none">
-    <span id="tooltip_content">
-        <i class="fa fa-spinner"></i>
-    </span>
-</div>
+      <div class="tooltip_templates" style="display: none">
+      <span id="tooltip_content">
+          <i class="fa fa-spinner"></i>
+      </span>
+  </div>
 </main>
+
+<main id="product-browse-container"></div>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
