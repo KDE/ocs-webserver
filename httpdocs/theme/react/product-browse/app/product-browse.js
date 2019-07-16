@@ -62,9 +62,17 @@ function ProductBrowseItem(props){
         console.log(props.product);
     },[])
 
+    const p = props.product;
 
     return (
-        <div className="product-browse-item"></div>
+        <div className="product-browse-item" id={"product-"+p.project_id}>
+            <img src={"https://cn.pling.cc/cache/167x167-0/img/"+p.image_small}/>
+            <h2>{p.title}</h2>
+            <span>{p.cat_title}</span>
+            <span>by <a href={"/u/" + p.member_id}>{p.username}</a></span>
+            <span>score {p.laplace_score}</span>
+            <span>{p.created_at}</span>
+        </div>
     )
 }
 
