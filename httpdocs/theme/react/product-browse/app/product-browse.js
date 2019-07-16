@@ -67,9 +67,9 @@ function ProductBrowseItem(props){
     return (
         <div className="product-browse-item" id={"product-"+p.project_id}>
             <img src={"https://cn.pling.cc/cache/167x167-0/img/"+p.image_small}/>
-            <h2><a href={"/" + p.type_id === "3" ? "c" : "p" + "/" + p.project_id}>{p.title}</a></h2>
+            <h2><a href={"https://"+window.location.host+"/" + p.type_id === "3" ? "c" : "p" + "/" + p.project_id}>{p.title}</a></h2>
             <span>{p.cat_title}</span>
-            <span>by <a href={"/u/" + p.member_id}>{p.username}</a></span>
+            <span>by <a href={"https://"+window.location.host+"/u/" + p.member_id}>{p.username}</a></span>
             <span>score {p.laplace_score}</span>
             <span>{p.created_at}</span>
         </div>
