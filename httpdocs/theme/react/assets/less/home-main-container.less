@@ -1,8 +1,6 @@
 out: ../css/home-main-container.css, sourcemap: true, compress: true
 
 #home-main-container{
-  width: 100%;
-  height: 100%;
 	display: flex;
 	flex-wrap: wrap;
 	display: -webkit-flex; /* Safari */
@@ -11,12 +9,11 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
 	margin:0;
 	padding: 0;
   font-family: Verdana,"Bitstream Vera Sans",Arial,Helvetica,Sans,"Bitstream Vera Serif";
-  color: rgb(112, 108, 100);
-  /*color: #444444;*/
+  color: #706c64;
   font-size: 8pt;
   line-height: 16px;
   a{
-    color:#444444;
+    color:#444;
     text-decoration: none;
     cursor: pointer;
   }
@@ -28,15 +25,20 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
     min-height: 250px;
     padding-bottom:20px;
     justify-content:center;
-    background-color: #F7F7F7;
-    //background-image: url(../img/home/bg.png);
-    //background-position: center; /* Center the image */
-    //background-size: cover; /* Resize the background image to cover the entire container */
     border-top:1px solid #706C64;
+    a{
+      color:#2673b0;
+      text-decoration: none;
+      cursor: pointer;
+      &:hover,&:focus
+      {
+        color: #23527c;
+      }
+    }
    .introduction{
       margin: 0px;
       line-height: 1.5;
-      color: #706c64;
+      color: inherit;
       text-align: center;
       width: 100%;
       text-align: center;
@@ -177,11 +179,7 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
          {
            background-image: url(../img/home/personal-block-background.jpg);
            }
-          a{
-            //color: #E7F3F8;
-            color:#706C64;
-            cursor: pointer;
-          }
+
           .arrowbox{
             position: relative;
             &:after, &:before
@@ -217,7 +215,7 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
          width: 100%;
          clear:both;
 
-          background: url(../img/home/showmore-background.jpg) #111;
+          background: url(../img/home/showmore-bg-light-2.jpg) #f2f2f2;
           background-repeat: repeat;
           background-size: auto;
 
@@ -236,12 +234,10 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
             min-height: 270px;
             display: block;
             margin: 0 auto;
-            padding: 60px 0;
-            color: #99DCF9;
+            padding: 60px 0;          
             animation: fadeEffect 1s; /* Fading effect takes 1 second */
             position: relative;
             h2{
-              color: #fff;
               font-size: 3.8rem;
               margin: .2em 0;
             }
@@ -269,7 +265,7 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
                 line-height: 1.5;
             }
             .arrow-down {
-              background: url(../img/home/show-more-arrow-light.png) no-repeat;
+              background: url(../img/home/indicator-arrow.png) no-repeat;
               width: 56px;
               height: 26px;
               position: absolute;
@@ -321,7 +317,7 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: left;
+    justify-content: center;
     max-width: 1420px;
     margin: 0 auto;
     .placeholder{
@@ -334,8 +330,7 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
         background-image: url(../img/home/back3.jpg);
         padding: 8px;
         margin: 0px 5px 5px 0;
-        /*width: 30%;*/
-        width:350px;
+        width:320px;
         div.title{
           color: #888888;
           font-size:11pt;
@@ -372,7 +367,7 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
 
         ul, ol {
           list-style: none;
-          padding-left: 20px;
+          padding-left: 5px;
           li {
             padding: 5px 0px;
             &.chatMember{
