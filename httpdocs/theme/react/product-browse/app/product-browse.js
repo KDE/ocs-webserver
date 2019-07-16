@@ -56,7 +56,7 @@ function ProductBrowseItemList(){
     )
 }
 
-function ProductBrowseItem(){
+function ProductBrowseItem(props){
 
     React.useEffect(() => {
         console.log(props.product);
