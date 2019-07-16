@@ -65,7 +65,7 @@ class Default_View_Helper_BuildProductUrl
             unset($params['store_id']);
         }
         
-        /*
+        
         //20190710 ronald: removed to stay in context, if set in store config
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         
@@ -74,7 +74,7 @@ class Default_View_Helper_BuildProductUrl
         } else {
             
             $baseurl = "{$host}{$storeId}";
-        }*/
+        }
 
         $url_param = '';
         if (is_array($params)) {
@@ -86,9 +86,9 @@ class Default_View_Helper_BuildProductUrl
             $action = $action . '/';
         }
 
-        return "{$host}/{$storeId}p/{$product_id}/{$action}{$url_param}";
+        //return "{$host}/{$storeId}p/{$product_id}/{$action}{$url_param}";
         
-        //return "{$baseurl}/p/{$product_id}/{$action}{$url_param}";
+        return "{$baseurl}/p/{$product_id}/{$action}{$url_param}";
     }
 
 }
