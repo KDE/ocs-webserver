@@ -5,7 +5,12 @@ import {isMobile} from 'react-device-detect';
 function ProductBrowse(){
 
     React.useEffect(() => {
-        console.log('product browse');
+        console.log(catId);
+        console.log(filters);
+        console.log(products);
+        console.log(topProducts);
+        console.log(pagination);
+        console.log(baseUrl);
     },[])
 
     return (
@@ -14,3 +19,6 @@ function ProductBrowse(){
         </div>
     )
 }
+
+const rootElement = document.getElementById("product-browse-container");
+ReactDOM.render(<ProductBrowse />, rootElement);
