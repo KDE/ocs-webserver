@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import Gallery from "react-photo-gallery";
 import {isMobile} from 'react-device-detect';
 
 console.log(window.config);
@@ -51,6 +52,21 @@ function ProductBrowseItemList(){
         console.log(pagination);
     },[])
 
+    let imgBaseUrl = "https://cn.";
+    imgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
+
+    var min=1; 
+    var max=4;  
+
+    let photos = []
+    products.forEach(function(p,index){
+        photos.push({
+            src:imgBaseUrl + "/img/" + p.image_small,
+            width:Math.floor(Math.random() * (+max - +min)) + +min,
+            height:Math.floor(Math.random() * (+max - +min)) + +min
+        })
+    })
+
 
     const productsDisplay = products.map((p,index) => (
         <ProductBrowseItem
@@ -62,7 +78,7 @@ function ProductBrowseItemList(){
 
     return (
         <div id="product-browse-item-list">
-            {productsDisplay}
+            <Gallery photos={photos} />
         </div>
     )
 }
