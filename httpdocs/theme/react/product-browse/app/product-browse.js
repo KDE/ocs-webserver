@@ -47,7 +47,7 @@ function ProductBrowseItemList(){
         const containerWidth = $('#product-browse-container').width();
         let imgBaseUrl = "https://cn.";
         imgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
-        let productsGallery = [];
+        let productsGallery = []
         let rowNumber = 0;
         let rowWidth = 0;
         products.forEach(function(p,index){
@@ -59,6 +59,7 @@ function ProductBrowseItemList(){
                 const decreasePercentage = rowHeight / this.naturalHeight;
                 const adjustedWidth = this.naturalWidth * decreasePercentage;
                 const newRowWidth = rowWidth + adjustedWidth;
+
                 if (newRowWidth > containerWidth){
                     rowNumber += 1;
                     rowWidth = adjustedWidth;
@@ -66,7 +67,8 @@ function ProductBrowseItemList(){
                     rowWidth = newRowWidth;
                 }
                 // add adjusted width to totalRowWidth, if below zero
-                productsGallery.push({
+                if (!productsGallery[rowNumber]) productsGallery[rowNumber] = []
+                productsGallery[rowNumber].push({
                     src:imgUrl,
                     width:adjustedWidth,
                     height:rowHeight,
