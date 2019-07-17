@@ -52,7 +52,9 @@ function ProductBrowseItemList(){
         let rowWidth = 0;
 
         function sortByCurrentFilter(a,b){
-            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+            console.log(a.created_at);
+            console.log(Date(a.created_at).getTime);
+            return Date(b.created_at).getTime() - Date(a.created_at).getTime();
         }
 
         const sortedProducts = products.sort(sortByCurrentFilter);
@@ -110,7 +112,7 @@ function ProductBrowseItemListRow(props){
         <img key={index} src={p.src} width={p.width} height={p.height}/>
     ))
     return (
-        <div class="product-browse-item-list-row">
+        <div className="product-browse-item-list-row">
             {productsDisplay}
         </div>
     )
