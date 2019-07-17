@@ -73,7 +73,7 @@ function ProductBrowseItemList(){
                     row:rowNumber,
                     product:p
                 })
-                if ((index + 1) === products.length) setGallery(photos);
+                if ((index + 1) === products.length) setGallery(productsGallery);
             });
             img.src = imgUrl;
         })
