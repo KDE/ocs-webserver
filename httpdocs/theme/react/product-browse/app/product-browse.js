@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import {isMobile} from 'react-device-detect';
 
+console.log(window.config);
+console.log(window.location);
+
 function ProductBrowse(){
 
     React.useEffect(() => {
