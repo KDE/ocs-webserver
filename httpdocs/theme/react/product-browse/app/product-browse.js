@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import Masonry from 'react-masonry-component';
 import {isMobile} from 'react-device-detect';
 
 console.log(window.config);
@@ -46,7 +45,10 @@ function ProductBrowseFilterContainer(){
 function ProductBrowseItemList(){
     
     React.useEffect(() => {
-        console.log('product browse item list - with masonry')
+        console.log('product browse item list')
+        console.log(products);
+        console.log(topProducts);
+        console.log(pagination);
     },[])
 
 
@@ -58,24 +60,19 @@ function ProductBrowseItemList(){
         />
     ))
 
-    const masonryOptions = { };
-
     return (
         <div id="product-browse-item-list">
-            <Masonry
-                className={'masonry-gallery-container'} // default ''
-                options={masonryOptions} // default {}
-                disableImagesLoaded={false} // default false
-                updateOnEachImageLoad={false} // default false and works only if disableImagesLoaded is false
-            >
-                {productsDisplay}
-            </Masonry>
+            {productsDisplay}
         </div>
     )
 }
 
 function ProductBrowseItem(props){
-    
+
+    React.useEffect(() => {
+        console.log(props.product);
+    },[])
+
     const p = props.product;
     let imgBaseUrl = "https://cn.";
     imgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";

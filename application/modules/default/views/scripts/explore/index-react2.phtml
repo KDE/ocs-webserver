@@ -302,7 +302,14 @@ if($this->inputFilterOriginal ==1)
       </span>
   </div>
 </main>
+<style>
 
+    #product-browse-item-list {
+      display:flex;
+      flex-wrap:wrap;
+    }
+
+</style>
 <div id="product-browse-container"></div>
 <script type="text/javascript">
   var categories = <?php echo $this->categoriesJson ?>;
