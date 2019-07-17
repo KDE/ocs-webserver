@@ -36,8 +36,6 @@ function ProductBrowseItemList(){
     
     const [ gallery, setGallery ] = useState();
 
-    console.log(gallery);
-
     React.useEffect(() => {
         initGallery()
     },[])
@@ -62,6 +60,7 @@ function ProductBrowseItemList(){
         }
 
         const sortedProducts = products.sort(sortByCurrentFilter);
+        console.log(sortedProducts);-
         sortedProducts.forEach(function(p,index){
             const imgUrl = imgBaseUrl + "/img/" + p.image_small;
             const img = new Image();
