@@ -30,6 +30,14 @@ function ProductBrowseFilterContainer(){
 
     return (
         <div id="product-browse-top-menu">
+            <ul>
+                <li><a>Latest</a></li>
+                <li><a>Score</a></li>
+            </ul>
+            <span>
+                <label>Original</label>
+                <input type="checkbox"/>
+            </span>
         </div>
     )
 }
@@ -72,11 +80,13 @@ function ProductBrowseItem(props){
     return (
         <div className="product-browse-item" id={"product-" + p.project_id}>
             <img src={imgBaseUrl + "/img/" + p.image_small}/>
-            <h2><a href={window.config.baseUrl + "/" + p.type_id === "3" ? "c" : "p" + "/" + p.project_id}>{p.title}</a></h2>
-            <span>{p.cat_title}</span>
-            <span>by <a href={window.config.baseUrl + "/u/" + p.member_id}>{p.username}</a></span>
-            <span>score {p.laplace_score}</span>
-            <span>{p.created_at}</span>
+            <div className="product-browse-item-info" style={{"display":"none"}}>
+                <h2><a href={window.config.baseUrl + "/" + p.type_id === "3" ? "c" : "p" + "/" + p.project_id}>{p.title}</a></h2>
+                <span>{p.cat_title}</span>
+                <span>by <a href={window.config.baseUrl + "/u/" + p.member_id}>{p.username}</a></span>
+                <span>score {p.laplace_score}</span>
+                <span>{p.created_at}</span>
+            </div>
         </div>
     )
 }
