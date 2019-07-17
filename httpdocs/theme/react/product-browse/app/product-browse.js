@@ -73,8 +73,8 @@ function ProductBrowseItemList(){
     let photos = []
     products.forEach(function(p,index){
         const imgUrl = imgBaseUrl + "/img/" + p.image_small;
-        const dimensions = getMeta(url);
-        console.log(dimensions);
+        const dimensions = getMeta(imgUrl);
+        console.log(dimensions); 
         photos.push({
             src:imgUrl,
             width:Math.floor(Math.random() * (+max - +min)) + +min,
