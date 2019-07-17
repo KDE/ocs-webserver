@@ -6,6 +6,7 @@ import ProductsContainer from './ProductsContainer';
 import ChatContainer from './ChatContainer';
 import ProductsGitContainer from './ProductsGitContainer';
 import Introduction from './Introduction';
+import PersonalActivityContainer from './PersonalActivityContainer';
 
 class HomeMainContainer extends Component {
   constructor(props){
@@ -13,26 +14,49 @@ class HomeMainContainer extends Component {
   	this.state ={...window.data};
   }
   render() {
-    return (
-      <div id="home-main-container">
-         <div className="top">
-           <Introduction urlCode={this.state.gitlabUrl}
-                         urlPublish={this.state.baseUrl}
-                         urlCommunity={this.state.forumUrl}
-                         urlPersonal={this.state.url_myopendesktop}
-                         />
-         </div>
-         <div className="middle">
-          <ProductsContainer title="Themes" cat="381" products={this.state.products}/>
-          <ProductsContainer title="Apps and Addons" cat="282" products={this.state.products}/>
-          <ProductsContainer title="Multimedia" cat="282" products={this.state.productsMultimedia}/>
-          <ProductsGitContainer />
-          <CommentsContainer comments={this.state.comments}/>
-          <BlogFeedContainer />
-          <ChatContainer />
-          <RssNewsContainer />
+    let content;
+    if(this.state.user)
+    {
+      content = (
+          <div id="home-main-container">
+            <div className="top">
+                <h1>
+                  Hi {this.state.user.username}, welcome to your personal start page!
+                </h1>
+            </div>
+            <div className="middle">
+                <PersonalActivityContainer  user={this.state.user.member_id}/>
+            </div>
           </div>
-      </div>
+          )
+    }else{
+      content = (
+                <div id="home-main-container">
+                  <div className="top">
+                      <Introduction urlCode={this.state.gitlabUrl}
+                                  urlPublish={this.state.baseUrl}
+                                  urlCommunity={this.state.forumUrl}
+                                  urlPersonal={this.state.url_myopendesktop}
+                                  />
+                  </div>
+                  <div className="middle">
+                     <ProductsContainer title="Themes" cat="381" products={this.state.products}/>
+                     <ProductsContainer title="Apps and Addons" cat="282" products={this.state.products}/>
+                     <ProductsContainer title="Multimedia" cat="282" products={this.state.productsMultimedia}/>
+                     <ProductsGitContainer />
+                     <CommentsContainer comments={this.state.comments}/>
+                     <BlogFeedContainer />
+                     <ChatContainer />
+                     <RssNewsContainer />
+                  </div>
+             </div>
+           )
+    }
+
+    return (
+      <React.Fragment>
+       {content}
+      </React.Fragment>
     );
   }
 }
