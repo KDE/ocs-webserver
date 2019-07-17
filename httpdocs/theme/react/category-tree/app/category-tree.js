@@ -378,6 +378,7 @@ function CategoryPanelsContainer(props){
 
     // on set slider height
     function onSetSliderHeight(height){
+        console.log(height);
         setContainerVisibility(true);
         setSliderHeight(height)
     }
@@ -435,6 +436,7 @@ function CategoryPanel(props){
     }
 
     function onSetCategoryPanelHeight(panelHeight){
+        console.log(panelHeight);
         adjustSliderHeight(panelHeight + 25);
     }
 
