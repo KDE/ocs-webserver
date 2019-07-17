@@ -81,8 +81,31 @@ function ProductBrowseItemList(){
         })
     }
 
+    let productRowsDisplay;
+    if (gallery){
+        productRowsDisplay = gallery.map((pr,index) => (
+            <ProductBrowseItemListRow 
+                key={index}
+                rowNumber={index}
+                products={pr}
+            />
+        ))
+    }
+
     return (
         <div id="product-browse-item-list">
+            {productRowsDisplay}
+        </div>
+    )
+}
+
+function ProductBrowseItemListRow(props){
+    const productsDisplay = props.products.map((p,index) => (
+        <img key={index} src={p.src} width={p.width} height={p.height}/>
+    ))
+    return (
+        <div class="product-browse-item-list-row">
+            {productsDisplay}
         </div>
     )
 }
