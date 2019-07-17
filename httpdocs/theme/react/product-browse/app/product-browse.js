@@ -56,7 +56,7 @@ function ProductBrowseItemList(){
             img.addEventListener("load", function(){
                 // find the percentage decrease of the naturalHeight / 250px and decrease the width by that
                 const decrease = this.naturalHeight - rowHeight;
-                const decreasePercentage = (decrease / this.naturalHeight) * 100;
+                const decreasePercentage = (decrease / this.naturalHeight);
                 console.log(decrease);
                 console.log(decreasePercentage);
                 const adjustedWidth = this.naturalWidth * decreasePercentage;
