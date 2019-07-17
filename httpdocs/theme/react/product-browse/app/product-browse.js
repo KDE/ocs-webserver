@@ -36,25 +36,42 @@ function ProductBrowseItemList(){
     
     const [ gallery, setGallery ] = useState();
 
+    console.log(gallery);
+
     React.useEffect(() => {
         initGallery()
     },[])
 
     function initGallery(){
+        const rowHeight = 250;
+        const containerWidth = $('#product-browse-container').width();
         let imgBaseUrl = "https://cn.";
         imgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
-    
-        let photos = []
+        let productsGallery = [];
+        let rowNumber = 0;
+        let rowWidth = 0;
         products.forEach(function(p,index){
             const imgUrl = imgBaseUrl + "/img/" + p.image_small;
             const img = new Image();
             img.addEventListener("load", function(){
-                photos.push({
-                    key:{index},
+                // find the percentage decrease of the naturalHeight / 250px and decrease the width by that
+                const decrease = this.naturalHeight - rowHeight;
+                const decreasePercentage = (decrease / this.naturalHeight) * 100;
+                const adjustedWidth = this.naturalWidth * decreasePercentage;
+                const newRowWidth = rowWidth + adjustedWidth;
+                if (newRowWidth > containerWidth){
+                    rowNumber += 1;
+                    rowWidth = adjustedWidth;
+                } else {
+                    rowWidth = newRowWidth;
+                }
+                // add adjusted width to totalRowWidth, if below zero
+                productsGallery.push({
                     src:imgUrl,
-                    thumbnail:imgUrl,
-                    thumbnailWidth:this.naturalWidth,
-                    thumbnailHeight:this.naturalHeight
+                    width:adjustedWidth,
+                    height:rowHeight,
+                    row:rowNumber,
+                    product:p
                 })
                 if ((index + 1) === products.length) setGallery(photos);
             });
@@ -62,20 +79,8 @@ function ProductBrowseItemList(){
         })
     }
 
-    let galleryDisplay;
-    if (gallery) {
-        galleryDisplay = (
-            <Gallery 
-                images={gallery} 
-                enableImageSelection={false}
-                rowHeight={250}
-            />
-        )
-    }
-
     return (
         <div id="product-browse-item-list">
-            {galleryDisplay}
         </div>
     )
 }
