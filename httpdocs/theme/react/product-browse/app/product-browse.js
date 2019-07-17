@@ -46,10 +46,7 @@ function ProductBrowseFilterContainer(){
 function ProductBrowseItemList(){
     
     React.useEffect(() => {
-        console.log('product browse item list')
-        console.log(products);
-        console.log(topProducts);
-        console.log(pagination);
+        console.log('product browse item list - with masonry')
     },[])
 
 
@@ -60,6 +57,8 @@ function ProductBrowseItemList(){
             index={index}
         />
     ))
+
+    const masonryOptions = { };
 
     return (
         <div id="product-browse-item-list">
@@ -76,11 +75,7 @@ function ProductBrowseItemList(){
 }
 
 function ProductBrowseItem(props){
-
-    React.useEffect(() => {
-        console.log(props.product);
-    },[])
-
+    
     const p = props.product;
     let imgBaseUrl = "https://cn.";
     imgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
