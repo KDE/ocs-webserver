@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import Masonry from 'react-masonry-component';
 import {isMobile} from 'react-device-detect';
 
 console.log(window.config);
@@ -62,7 +63,14 @@ function ProductBrowseItemList(){
 
     return (
         <div id="product-browse-item-list">
-            {productsDisplay}
+            <Masonry
+                className={'masonry-gallery-container'} // default ''
+                options={masonryOptions} // default {}
+                disableImagesLoaded={false} // default false
+                updateOnEachImageLoad={false} // default false and works only if disableImagesLoaded is false
+            >
+                {productsDisplay}
+            </Masonry>
         </div>
     )
 }
