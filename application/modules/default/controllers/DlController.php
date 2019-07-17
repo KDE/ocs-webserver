@@ -111,8 +111,8 @@ class DlController extends Local_Controller_Action_DomainSwitch
             $this->view->url = $url;
 
 
-            // anonymous dl save to member_download_fingerprint
-            if(isset($file_id) && isset($projectId) && !isset($memberId)) {
+            // anonymous dl save to member_download_fingerprint 17.07 temperately deactived
+            /*if(isset($file_id) && isset($projectId) && !isset($memberId)) {
                 $config = Zend_Registry::get('config');                
                 $cookieName = $config->settings->session->auth->anonymous;
                 $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
@@ -126,7 +126,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
                 $memberDlAnonymous = new Default_Model_DbTable_MemberDownloadAnonymous();
                 $data = array('project_id' => $projectId, 'user' => $_COOKIE[$cookieName], 'file_id' => $file_id);
                 $memberDlAnonymous->createRow($data)->save();
-            }
+            }*/
         }
         
 
