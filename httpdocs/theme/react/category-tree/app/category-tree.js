@@ -378,7 +378,6 @@ function CategoryPanelsContainer(props){
 
     // on set slider height
     function onSetSliderHeight(height){
-        console.log(height);
         setContainerVisibility(true);
         setSliderHeight(height)
     }
@@ -432,11 +431,14 @@ function CategoryPanel(props){
         if (isShowRealDomainAsUrl){
             if (window.location.href !== "https://www.pling.com/" && window.location.href !== "https://www.pling.cc/") currentCategoryLevel = props.currentCategoryLevel + 1;
         }
-        if (currentCategoryLevel === props.level) props.onSetSliderHeight(panelHeight);
+        if (currentCategoryLevel === props.level) {
+            console.log(panelHeight);
+            console.log(props);
+            props.onSetSliderHeight(panelHeight);
+        }
     }
 
     function onSetCategoryPanelHeight(panelHeight){
-        console.log(panelHeight);
         adjustSliderHeight(panelHeight + 25);
     }
 
@@ -451,7 +453,7 @@ function CategoryPanel(props){
         if (panelCategories.length > 0){
             categories = panelCategories.sort(sortArrayAlphabeticallyByTitle);
             categories = categories.map((c,index) =>{
-                if (categories.length === (index + 1)){ 
+                if (categories.length === (index + 1)){
                     onSetCategoryPanelHeight(categories.length * 25); 
                 } 
                 let showCategory = true;

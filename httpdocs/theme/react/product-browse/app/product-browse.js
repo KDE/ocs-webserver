@@ -8,11 +8,6 @@ console.log(window.location);
 
 function ProductBrowse(){
 
-    React.useEffect(() => {
-        console.log('product browse')
-        console.log(catId);
-    },[])
-
     return (
         <div id="product-browse">
             <ProductBrowseFilterContainer/>
@@ -23,12 +18,6 @@ function ProductBrowse(){
 }
 
 function ProductBrowseFilterContainer(){
-
-    React.useEffect(() => {
-        console.log('product browse filter container');
-        console.log(filters);
-    },[])
-
     return (
         <div id="product-browse-top-menu">
             <ul>
@@ -46,8 +35,6 @@ function ProductBrowseFilterContainer(){
 function ProductBrowseItemList(){
     
     const [ gallery, setGallery ] = useState();
-
-    console.log(gallery);
 
     React.useEffect(() => {
         initGallery()
@@ -76,7 +63,15 @@ function ProductBrowseItemList(){
     }
 
     let galleryDisplay;
-    if (gallery) galleryDisplay = <Gallery images={gallery} />
+    if (gallery) {
+        galleryDisplay = (
+            <Gallery 
+                images={gallery} 
+                enableImageSelection={false}
+                rowHeight={250}
+            />
+        )
+    }
 
     return (
         <div id="product-browse-item-list">
@@ -87,14 +82,9 @@ function ProductBrowseItemList(){
 
 function ProductBrowseItem(props){
 
-    React.useEffect(() => {
-        console.log(props.product);
-    },[])
-
     const p = props.product;
     let imgBaseUrl = "https://cn.";
     imgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
-    console.log(imgBaseUrl);
     return (
         <div className="product-browse-item" id={"product-" + p.project_id}>
             <img src={imgBaseUrl + "/img/" + p.image_small}/>
@@ -110,11 +100,6 @@ function ProductBrowseItem(props){
 }
 
 function ProductBrowsePagination(){
-
-    React.useEffect(() => {
-        console.log('product browse pagination')
-        console.log(pagination);
-    },[])
 
     return (
         <div id="product-browse-pagination"></div>
