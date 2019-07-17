@@ -57,6 +57,15 @@ class UserMenu extends React.Component {
     if (!this.props.user){
       anonymousMenu= <AnonymousMenu baseUrl={this.props.baseUrl} user={this.props.user}/>
     }
+
+    let chatItem;
+    if (this.props.user && this.props.user.member_id ){
+      chatItem=(<li id="chat-link-item"><a href={this.props.riotUrl}>
+        <img src={this.props.baseUrl+"/theme/react/assets/img/logo-riot.svg"} className="riotIcon"></img>Chat
+      </a></li>);
+    }
+
+
     let userMenuContainerDisplay;
     if (this.props.device === "large"){
 
@@ -67,13 +76,6 @@ class UserMenu extends React.Component {
                                   isAdmin={this.props.isAdmin}
                                   />
 
-       let chatItem;
-       //const urlEnding = this.props.baseUrl.split('opendesktop.')[1];
-       if (this.props.user && this.props.user.member_id ){
-         chatItem=(<li id="chat-link-item"><a href={this.props.riotUrl}>
-           <img src={this.props.baseUrl+"/theme/react/assets/img/logo-riot.svg"} className="riotIcon"></img>Chat
-         </a></li>);
-       }
 
 
       userMenuContainerDisplay = (
@@ -91,7 +93,7 @@ class UserMenu extends React.Component {
     } else {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
-
+          {chatItem}
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
 

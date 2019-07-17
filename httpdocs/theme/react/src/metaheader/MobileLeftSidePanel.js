@@ -40,6 +40,7 @@ class MobileLeftSidePanel extends React.Component {
     } else {
       apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={this.props.baseUrl + "/#api"}>API</a></li>);
     }
+    
 
     return (
       <div id="left-side-panel">
@@ -64,7 +65,7 @@ class MobileLeftSidePanel extends React.Component {
             <li>
               <a className="groupname"><b>More</b></a>
               <ul>
-                <li><a href={this.props.baseUrl + "/support"}>Support</a></li>
+                <li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>
                 <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
                 {apiLinkItem}
                 {aboutPlingItem}
