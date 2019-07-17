@@ -52,7 +52,7 @@ function ProductBrowseItemList(){
         let rowWidth = 0;
 
         function sortByCurrentFilter(a,b){
-            return Date(a.created_at) - Date(b.created_at);
+            return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
         }
 
         const sortedProducts = products.sort(sortByCurrentFilter);
