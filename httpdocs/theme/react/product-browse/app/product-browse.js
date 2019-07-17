@@ -60,8 +60,8 @@ function ProductBrowseItemList(){
                 height:this.naturalHeight,
                 width:this.naturalWidth
             }
-
-            console.log(this);
+            console.log(dimensions);
+            console.log(this.naturalHeight)
             return dimensions;
         });
         img.src = url;
