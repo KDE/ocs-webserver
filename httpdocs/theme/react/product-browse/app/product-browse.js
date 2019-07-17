@@ -54,11 +54,9 @@ function ProductBrowseItemList(){
         function sortByCurrentFilter(a,b){
             const aCreatedAt = new Date(a.created_at);
             const aTimeStamp = aCreatedAt.getTime();
-            console.log(aTimeStamp);
             const bCreatedAt = new Date(b.created_at);
             const bTimeStamp = bCreatedAt.getTime();
-            console.log(bTimeStamp);
-            return aTimeStamp - bTimeStamp;
+            return bTimeStamp - aTimeStamp;
         }
 
         const sortedProducts = products.sort(sortByCurrentFilter);
