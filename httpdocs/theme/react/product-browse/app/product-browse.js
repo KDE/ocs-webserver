@@ -52,6 +52,18 @@ function ProductBrowseItemList(){
         console.log(pagination);
     },[])
 
+    function getMeta(url){   
+        var img = new Image();
+        img.addEventListener("load", function(){
+            const dimensions = {
+                height:this.naturalHeight,
+                width:this.naturalWidth
+            }
+            return dimensions;
+        });
+        img.src = url;
+    }
+
     let imgBaseUrl = "https://cn.";
     imgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
 
@@ -60,8 +72,11 @@ function ProductBrowseItemList(){
 
     let photos = []
     products.forEach(function(p,index){
+        const imgUrl = imgBaseUrl + "/img/" + p.image_small;
+        const dimensions = getMeta(url);
+        console.log(dimensions);
         photos.push({
-            src:imgBaseUrl + "/img/" + p.image_small,
+            src:imgUrl,
             width:Math.floor(Math.random() * (+max - +min)) + +min,
             height:Math.floor(Math.random() * (+max - +min)) + +min
         })
