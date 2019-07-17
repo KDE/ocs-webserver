@@ -452,7 +452,7 @@ function CategoryPanel(props){
             categories = panelCategories.sort(sortArrayAlphabeticallyByTitle);
             categories = categories.map((c,index) =>{
                 if (categories.length === (index + 1)){ 
-                    onSetCategoryPanelHeight(index * 25); 
+                    onSetCategoryPanelHeight(categories.length * 25); 
                 } 
                 let showCategory = true;
                 if (c.is_show_in_menu){
