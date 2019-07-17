@@ -66,7 +66,8 @@ function ProductBrowseItem(props){
     },[])
 
     const p = props.product;
-    const imgBaseUrl = "https://cn." + window.location.host.endsWith('cc') ? "pling.cc" : "opendesktop.org";
+    let imgBaseUrl = "https://cn.";
+    imgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
     console.log(imgBaseUrl);
     return (
         <div className="product-browse-item" id={"product-" + p.project_id}>
