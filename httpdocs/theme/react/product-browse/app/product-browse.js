@@ -66,13 +66,14 @@ function ProductBrowseItem(props){
     },[])
 
     const p = props.product;
+    const imgBaseUrl = "https://cn." + window.location.host.endsWith('cc') ? "pling.cc" : "opendesktop.org";
 
     return (
-        <div className="product-browse-item" id={"product-"+p.project_id}>
-            <img src={"https://cn.pling.cc/cache/167x167-0/img/"+p.image_small}/>
-            <h2><a href={"https://"+window.location.host+"/" + p.type_id === "3" ? "c" : "p" + "/" + p.project_id}>{p.title}</a></h2>
+        <div className="product-browse-item" id={"product-" + p.project_id}>
+            <img src={imgBaseUrl + "/img/" + p.image_small}/>
+            <h2><a href={window.config.baseUrl + "/" + p.type_id === "3" ? "c" : "p" + "/" + p.project_id}>{p.title}</a></h2>
             <span>{p.cat_title}</span>
-            <span>by <a href={"https://"+window.location.host+"/u/" + p.member_id}>{p.username}</a></span>
+            <span>by <a href={window.config.baseUrl + "/u/" + p.member_id}>{p.username}</a></span>
             <span>score {p.laplace_score}</span>
             <span>{p.created_at}</span>
         </div>
