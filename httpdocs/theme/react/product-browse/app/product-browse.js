@@ -50,11 +50,12 @@ function ProductBrowseItemList(){
         let rowWidth = 0;
 
         function sortByCurrentFilter(a,b){
-            const aCreatedAt = new Date(a.created_at);
+            const aDate = a.changed_at !== null ? a.changed_at : a.created_at;
+            const aCreatedAt = new Date(aDate);
             const aTimeStamp = aCreatedAt.getTime();
-            const bCreatedAt = new Date(b.created_at);
+            const bDate = a.changed_at !== null ? b.changed_at : b.created_at;
+            const bCreatedAt = new Date(bDate);
             const bTimeStamp = bCreatedAt.getTime();
-            console.log(aTimeStamp,bTimeStamp)
             if (aTimeStamp > bTimeStamp) return 1;
             else return -1;
         }
@@ -84,7 +85,7 @@ function ProductBrowseItemList(){
                     width:adjustedWidth,
                     height:rowHeight,
                     row:rowNumber,
-                    product:p
+                    ...p
                 })
                 if ((index + 1) === products.length) setGallery(productsGallery);
             });
