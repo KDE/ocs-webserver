@@ -52,21 +52,6 @@ function ProductBrowseItemList(){
         console.log(pagination);
     },[])
 
-    function getMeta(url){   
-        var img = new Image();
-        img.addEventListener("load", function(){
-            console.log('image loads');
-            const dimensions = {
-                height:this.naturalHeight,
-                width:this.naturalWidth
-            }
-            console.log(dimensions);
-            console.log(this.naturalHeight)
-            return dimensions;
-        });
-        img.src = url;
-    }
-
     let imgBaseUrl = "https://cn.";
     imgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
 
@@ -76,23 +61,19 @@ function ProductBrowseItemList(){
     let photos = []
     products.forEach(function(p,index){
         const imgUrl = imgBaseUrl + "/img/" + p.image_small;
-        const dimensions = getMeta(imgUrl);
-        console.log(dimensions); 
-        photos.push({
-            src:imgUrl,
-            width:Math.floor(Math.random() * (+max - +min)) + +min,
-            height:Math.floor(Math.random() * (+max - +min)) + +min
-        })
+        var img = new Image();
+        img.addEventListener("load", function(){
+            photos.push({
+                key:{index},
+                src:imgUrl,
+                width:this.naturalWidth,
+                height:this.naturalHeight
+            })
+        });
+        img.src = url;
     })
 
-
-    const productsDisplay = products.map((p,index) => (
-        <ProductBrowseItem
-            key={index}
-            product={p}
-            index={index}
-        />
-    ))
+    console.log(photos);
 
     return (
         <div id="product-browse-item-list">
