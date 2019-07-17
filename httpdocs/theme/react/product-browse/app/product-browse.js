@@ -61,7 +61,7 @@ function ProductBrowseItemList(){
     let photos = []
     products.forEach(function(p,index){
         const imgUrl = imgBaseUrl + "/img/" + p.image_small;
-        var img = new Image();
+        const img = new Image();
         img.addEventListener("load", function(){
             photos.push({
                 key:{index},
@@ -70,7 +70,7 @@ function ProductBrowseItemList(){
                 height:this.naturalHeight
             })
         });
-        img.src = url;
+        img.src = imgUrl;
     })
 
     console.log(photos);
