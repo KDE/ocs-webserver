@@ -169,99 +169,20 @@ if($this->inputFilterOriginal ==1)
           }?>
       </div>
       <div class="GridFlex-cell content">
-        <section class="explore-products" id="explore-products">
-
-            <div class="pling-nav-tabs">
-              <ul class="nav nav-tabs pling-nav-tabs" id="sort">
-                  <li  <?=$this->filters['order'] == 'latest' ? 'class="active"' :'' ?>>
-                      <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
-                          'latest') ?>"><span><?= $this->translate('Latest') ?></span></a>
-                  </li>
-                  <li <?=$this->filters['order'] == 'rating' ? 'class="active"' :'' ?>>
-                      <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
-                          'rating') ?>"><span><?= $this->translate('Score') ?></span></a>
-                  </li>
-                   <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {?>
-                  <li <?=$this->filters['order'] == 'top' ? 'class="active"' :'' ?>>
-                      <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
-                          'top') ?>"><span><?= $this->translate('Score_old') ?></span></a>
-                  </li>
-                  <li <?=$this->filters['order'] == 'test' ? 'class="active"' :'' ?>>
-                      <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
-                          'test') ?>"><span><?= $this->translate('Score_test') ?></span></a>
-                  </li>
-                <?php }?>
-                  <li style="float: right">
-                      <input type="checkbox" name="filter_browse_original" value="1" id="filter_browse_original" <?=$checkedOriginal?> >  Original
-
-
-                  <?php //Insert flexible tag-group-filter
-                  $tagGroupFilter  = Zend_Registry::isRegistered('config_store_taggroups') ? Zend_Registry::get('config_store_taggroups') : null;
-                  $tagGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
-
-                  if(!empty($tagGroupFilter)) {
-                      foreach ($tagGroupFilter as $tagGroup ) {
-                          $tags = $tagGroupHelper->fetchList($tagGroup);
-                          $select = $this->tag_group_filter[$tagGroup];
-                          echo "<select id='tag_group_filter_".$tagGroup."' data_group_id='".$tagGroup."' class='filter_browse_tag_group'>";
-                          echo "<option value=''></option>";
-                          foreach (array_keys($tags) as $tag_id) {
-                              if($select == $tag_id) {
-                                  echo "<option value='".$tag_id."' selected>".$tags[$tag_id]."</option>";
-                              } else {
-                                  echo "<option value='".$tag_id."'>".$tags[$tag_id]."</option>";
-                              }
-
-                          }
-
-                          echo "</select>";
-                      }
-
-
-                  }
-                  ?>
-                  </li>
-              </ul>
-            </div>
-
-              <div class="product-list">
-                  <?php
-                  if (count($this->products) == 0) {
-                      echo '<div class="empty">No products to show in this category.</div>';
-                  } else {
-                       $time_start = microtime(true);
-                       echo $this->render('explore/partials/products.phtml');
-                       $time_elapsed = microtime(true) - $time_start;
-                  }
-                  ?>
-                  <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
-                      echo '<div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12">';
-                      echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
-                      echo '</div>';
-                  }?>
-              </div>
-
-
-              <section class="explore-footer">
-                  <?php echo $this->paginationControl($this->products, 'Sliding',
-                      'explore/partials/paginationControl.phtml',
-                      array('params' => $this->filters, 'dom_target' => 'section.explore-products')); ?>
-              </section>
-          </section>
+        <div id="product-browse-container"></div>
       </div>
-
-  <?php
-  $time_start = microtime(true);
-      $this->comments = $modelInfo->getLatestComments(5, $this->cat_id, $this->tags);
-      //$donations = $modelInfo->getLatestPlings(5, $this->cat_id);
-      $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id, $this->tags);
-      $asidehide = '';
-      if(!$this->catabout && count($this->comments)==0  && count($topprods)==0 )
-      {
-          $asidehide = 'hide';
-      }
-      $this->show_git = false;
-  ?>
+        <?php
+        $time_start = microtime(true);
+            $this->comments = $modelInfo->getLatestComments(5, $this->cat_id, $this->tags);
+            //$donations = $modelInfo->getLatestPlings(5, $this->cat_id);
+            $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id, $this->tags);
+            $asidehide = '';
+            if(!$this->catabout && count($this->comments)==0  && count($topprods)==0 )
+            {
+                $asidehide = 'hide';
+            }
+            $this->show_git = false;
+        ?>
         <div class="GridFlex-cell sidebar-right">
             <aside  id="explore-sidebar <?=$asidehide?>" >
               <?php
@@ -310,7 +231,6 @@ if($this->inputFilterOriginal ==1)
     }
 
 </style>
-<div id="product-browse-container"></div>
 <script type="text/javascript">
   var categories = <?php echo $this->categoriesJson ?>;
   var catId = <?php echo $this->cat_idJson ?>;
