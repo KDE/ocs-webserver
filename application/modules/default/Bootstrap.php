@@ -830,6 +830,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'page'       => 'terms-payout'
         )));
 
+        $router->addRoute('static_terms_cookies', new Zend_Controller_Router_Route_Static('/terms/cookies', array(
+            'module'     => 'default',
+            'controller' => 'content',
+            'action'     => 'index',
+            'page'       => 'terms-cookies'
+        )));
+
         $router->addRoute('static_privacy', new Zend_Controller_Router_Route_Static('/privacy', array(
             'module'     => 'default',
             'controller' => 'content',
