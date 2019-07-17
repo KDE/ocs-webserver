@@ -50,7 +50,8 @@ function ProductBrowseItemList(){
         let productsGallery = []
         let rowNumber = 0;
         let rowWidth = 0;
-        products.forEach(function(p,index){
+        const sortedProducts = products.sort(function(a,b){return a.created_at - b.created_at});
+        sortedProducts.forEach(function(p,index){
             const imgUrl = imgBaseUrl + "/img/" + p.image_small;
             const img = new Image();
             img.addEventListener("load", function(){
