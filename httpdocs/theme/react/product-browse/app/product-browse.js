@@ -55,10 +55,13 @@ function ProductBrowseItemList(){
     function getMeta(url){   
         var img = new Image();
         img.addEventListener("load", function(){
+            console.log('image loads');
             const dimensions = {
                 height:this.naturalHeight,
                 width:this.naturalWidth
             }
+
+            console.log(this);
             return dimensions;
         });
         img.src = url;
