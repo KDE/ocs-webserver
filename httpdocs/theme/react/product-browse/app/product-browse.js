@@ -56,7 +56,9 @@ function ProductBrowseItemList(){
             const aTimeStamp = aCreatedAt.getTime();
             const bCreatedAt = new Date(b.created_at);
             const bTimeStamp = bCreatedAt.getTime();
-            return bTimeStamp - aTimeStamp;
+            console.log(aTimeStamp,bTimeStamp)
+            if (aTimeStamp > bTimeStamp) return 1;
+            else return -1;
         }
 
         const sortedProducts = products.sort(sortByCurrentFilter);
