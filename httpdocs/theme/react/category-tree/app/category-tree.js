@@ -454,7 +454,6 @@ function CategoryPanel(props){
             categories = panelCategories.sort(sortArrayAlphabeticallyByTitle);
             let itemIndex = 0;
             categories = categories.map((c,index) =>{
-
                 let showCategory = true;
                 if (c.is_show_in_menu){
                     if (c.is_show_in_menu === "0") showCategory = false;
@@ -462,6 +461,7 @@ function CategoryPanel(props){
                 if (showCategory === true){
                     itemIndex += 1;
                     if (categories.length === (index + 1)){
+                        console.log(itemIndex);
                         onSetCategoryPanelHeight(itemIndex * 25); 
                     }                     
                     return (
