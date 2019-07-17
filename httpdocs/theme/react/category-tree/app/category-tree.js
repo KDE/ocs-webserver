@@ -431,11 +431,7 @@ function CategoryPanel(props){
         if (isShowRealDomainAsUrl){
             if (window.location.href !== "https://www.pling.com/" && window.location.href !== "https://www.pling.cc/") currentCategoryLevel = props.currentCategoryLevel + 1;
         }
-        if (currentCategoryLevel === props.level) {
-            console.log(panelHeight);
-            console.log(props);
-            props.onSetSliderHeight(panelHeight);
-        }
+        if (currentCategoryLevel === props.level) props.onSetSliderHeight(panelHeight);
     }
 
     function onSetCategoryPanelHeight(panelHeight){
@@ -455,15 +451,10 @@ function CategoryPanel(props){
             let itemIndex = 0;
             categories = categories.map((c,index) =>{
                 let showCategory = true;
-                if (c.is_show_in_menu){
-                    if (c.is_show_in_menu === "0") showCategory = false;
-                }
+                if (c.is_show_in_menu && c.is_show_in_menu === "0") showCategory = false;
                 if (showCategory === true){
                     itemIndex += 1;
-                    if (categories.length === (index + 1)){
-                        console.log(itemIndex);
-                        onSetCategoryPanelHeight(itemIndex * 25); 
-                    }                     
+                    if (categories.length === (index + 1)) onSetCategoryPanelHeight(itemIndex * 25);
                     return (
                         <CategoryMenuItem 
                             key={index}
