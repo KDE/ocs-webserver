@@ -452,15 +452,18 @@ function CategoryPanel(props){
         let categories;
         if (panelCategories.length > 0){
             categories = panelCategories.sort(sortArrayAlphabeticallyByTitle);
+            let itemIndex = 0;
             categories = categories.map((c,index) =>{
-                if (categories.length === (index + 1)){
-                    onSetCategoryPanelHeight(categories.length * 25); 
-                } 
+
                 let showCategory = true;
                 if (c.is_show_in_menu){
                     if (c.is_show_in_menu === "0") showCategory = false;
                 }
                 if (showCategory === true){
+                    itemIndex += 1;
+                    if (categories.length === (index + 1)){
+                        onSetCategoryPanelHeight(itemIndex * 25); 
+                    }                     
                     return (
                         <CategoryMenuItem 
                             key={index}
