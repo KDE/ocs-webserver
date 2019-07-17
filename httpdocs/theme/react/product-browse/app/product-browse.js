@@ -68,7 +68,7 @@ function ProductBrowseItemList(){
                     width:this.naturalWidth,
                     height:this.naturalHeight
                 })
-                if ((index + 1) === product.length) setGallery(photos);
+                if ((index + 1) === products.length) setGallery(photos);
             });
             img.src = imgUrl;
         })
