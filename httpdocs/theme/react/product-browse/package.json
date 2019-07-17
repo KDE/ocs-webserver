@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "react-device-detect": "^1.6.2",
+    "react-grid-gallery": "^0.5.5",
     "react-photo-gallery": "^8.0.0"
   }
 }

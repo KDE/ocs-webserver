@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import Gallery from "react-photo-gallery";
+import Gallery from 'react-grid-gallery';
 import {isMobile} from 'react-device-detect';
 
 console.log(window.config);
@@ -65,8 +65,9 @@ function ProductBrowseItemList(){
                 photos.push({
                     key:{index},
                     src:imgUrl,
-                    width:this.naturalWidth,
-                    height:this.naturalHeight
+                    thumbnail:imgUrl,
+                    thumbnailWidth:this.naturalWidth,
+                    thumbnailHeight:this.naturalHeight
                 })
                 if ((index + 1) === products.length) setGallery(photos);
             });
@@ -75,7 +76,7 @@ function ProductBrowseItemList(){
     }
 
     let galleryDisplay;
-    if (gallery) galleryDisplay = <Gallery photos={gallery} />
+    if (gallery) galleryDisplay = <Gallery images={gallery} />
 
     return (
         <div id="product-browse-item-list">
