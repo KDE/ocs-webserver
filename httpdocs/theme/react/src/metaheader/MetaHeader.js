@@ -145,6 +145,7 @@ class MetaHeader extends React.Component {
             onSwitchStyle={this.onSwitchStyle}
             onSwitchStyleChecked={paraChecked}
             isExternal={this.state.isExternal}
+            riotUrl={this.state.riotUrl}
           />
         </div>
       </nav>

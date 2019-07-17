@@ -62,8 +62,7 @@ class DevelopmentAppMenu extends React.Component {
 
   render(){
 
-    const urlEnding = this.props.baseUrl.split('opendesktop.')[1];
-
+    
     return (
       <li ref={node => this.node = node} id="development-app-menu-container">
         <div className={"user-dropdown " + this.state.dropdownClass}>
@@ -84,14 +83,14 @@ class DevelopmentAppMenu extends React.Component {
                 <span>Add Collection</span>
               </a>
             </li>
-            
+
             <li id="addproduct-link-item">
               <a href={this.props.gitlabUrl+"/projects/new"}>
                 <div className="icon"></div>
                 <span>Add Project</span>
               </a>
             </li>
-            
+
             <li id="listproduct-link-item">
               <a href={this.props.baseUrlStore + "/u/" + this.props.user.username + "/products"}>
                 <div className="icon"></div>
@@ -110,8 +109,8 @@ class DevelopmentAppMenu extends React.Component {
                 <span>Projects</span>
               </a>
             </li>
-            
-            
+
+
             <li id="plings-link-item">
               <a href={this.props.baseUrlStore + "/u/" + this.props.user.username + "/payout"}>
                 <div className="icon"></div>

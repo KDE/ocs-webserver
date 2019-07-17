@@ -68,9 +68,9 @@ class UserMenu extends React.Component {
                                   />
 
        let chatItem;
-       const urlEnding = this.props.baseUrl.split('opendesktop.')[1];
+       //const urlEnding = this.props.baseUrl.split('opendesktop.')[1];
        if (this.props.user && this.props.user.member_id ){
-         chatItem=(<li id="chat-link-item"><a href={"https://chat.opendesktop."+urlEnding}>
+         chatItem=(<li id="chat-link-item"><a href={this.props.riotUrl}>
            <img src={this.props.baseUrl+"/theme/react/assets/img/logo-riot.svg"} className="riotIcon"></img>Chat
          </a></li>);
        }
@@ -85,7 +85,7 @@ class UserMenu extends React.Component {
 
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
-          
+
         </ul>
       );
     } else {

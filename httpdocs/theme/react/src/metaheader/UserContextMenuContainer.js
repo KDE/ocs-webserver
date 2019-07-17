@@ -74,8 +74,16 @@ class UserContextMenuContainer extends React.Component {
       </a>
     </li>
     */
-
-    const urlEnding = this.props.baseUrl.split('opendesktop.')[1];
+    
+    let urlEnding;
+    if(this.props.baseUrl.endsWith("cc"))
+    {
+      urlEnding = "cc";
+    }else if(this.props.baseUrl.endsWith("com")){
+      urlEnding = "com";
+    }else{
+      urlEnding = "com";
+    }
 
     let contextMenuDisplay;
     if (this.props.isAdmin){
