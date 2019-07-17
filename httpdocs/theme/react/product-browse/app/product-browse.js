@@ -45,39 +45,41 @@ function ProductBrowseFilterContainer(){
 
 function ProductBrowseItemList(){
     
+    const [ gallery, setGallery ] = useState();
+
+    console.log(gallery);
+
     React.useEffect(() => {
-        console.log('product browse item list')
-        console.log(products);
-        console.log(topProducts);
-        console.log(pagination);
+        initGallery()
     },[])
 
-    let imgBaseUrl = "https://cn.";
-    imgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
+    function initGallery(){
+        let imgBaseUrl = "https://cn.";
+        imgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
+    
+        let photos = []
+        products.forEach(function(p,index){
+            const imgUrl = imgBaseUrl + "/img/" + p.image_small;
+            const img = new Image();
+            img.addEventListener("load", function(){
+                photos.push({
+                    key:{index},
+                    src:imgUrl,
+                    width:this.naturalWidth,
+                    height:this.naturalHeight
+                })
+                if ((index + 1) === product.length) setGallery(photos);
+            });
+            img.src = imgUrl;
+        })
+    }
 
-    var min=1; 
-    var max=4;  
-
-    let photos = []
-    products.forEach(function(p,index){
-        const imgUrl = imgBaseUrl + "/img/" + p.image_small;
-        const img = new Image();
-        img.addEventListener("load", function(){
-            photos.push({
-                key:{index},
-                src:imgUrl,
-                width:this.naturalWidth,
-                height:this.naturalHeight
-            })
-        });
-        img.src = imgUrl;
-    })
-
-    console.log(photos);
+    let galleryDisplay;
+    if (gallery) galleryDisplay = <Gallery photos={gallery} />
 
     return (
         <div id="product-browse-item-list">
-            <Gallery photos={photos} />
+            {galleryDisplay}
         </div>
     )
 }
