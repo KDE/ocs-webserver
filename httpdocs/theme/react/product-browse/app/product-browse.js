@@ -50,7 +50,12 @@ function ProductBrowseItemList(){
         let productsGallery = []
         let rowNumber = 0;
         let rowWidth = 0;
-        const sortedProducts = products.sort(function(a,b){return a.created_at - b.created_at});
+
+        function sortByCurrentFilter(a,b){
+            return Date(a.created_at) - Date(b.created_at);
+        }
+
+        const sortedProducts = products.sort(sortByCurrentFilter);
         sortedProducts.forEach(function(p,index){
             const imgUrl = imgBaseUrl + "/img/" + p.image_small;
             const img = new Image();
