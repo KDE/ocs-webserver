@@ -15,7 +15,7 @@ function IntroductionDetailPublish(props){
             <div>
             The publishing platform for open source software and free content.
             <p>Powered by Pling.</p>
-            <a href="www.pling.com"> www.pling.com </a>
+            <a href="https://www.pling.com"> www.pling.com </a>
             </div>
       </div>
     </div>
