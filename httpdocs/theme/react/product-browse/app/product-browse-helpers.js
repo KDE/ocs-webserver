@@ -1,9 +1,13 @@
 export function SortByCurrentFilter(a,b){
-    const aDate = typeof a.changed_at !== undefined ? a.changed_at : a.created_at
-    const aCreatedAt = new Date(aDate);
-    // const aTimeStamp = aCreatedAt.getTime();
-    const bDate = typeof b.changed_at !== undefined ? b.changed_at : b.created_at
-    const bCreatedAt = new Date(bDate);
-    // const bTimeStamp = bCreatedAt.getTime();
-    return aCreatedAt - bCreatedAt;
+    let aComparedValue, bComparedValue;
+    if (filters.order === "latest"){
+        const aDate = typeof a.changed_at !== undefined ? a.changed_at : a.created_at
+        aComparedValue = new Date(aDate);
+        const bDate = typeof b.changed_at !== undefined ? b.changed_at : b.created_at
+        bComparedValue = new Date(bDate);
+    } else if (filters.order === "rating"){
+        aComparedValue = a.laplace_score;
+        bComparedValue = b.laplace_score;
+    }
+    return aComparedValue - bComparedValue;
 }

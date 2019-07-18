@@ -5,7 +5,6 @@ console.log(window.config);
 console.log(window.location);
 
 function ProductBrowse(){
-
     return (
         <div id="product-browse">
             <ProductBrowseFilterContainer/>
@@ -119,7 +118,8 @@ function ProductBrowseItemList(){
 }
 
 function ProductBrowseItemListRow(props){
-    const productsDisplay = props.products.map((p,index) => (
+    const sortedRowProducts = props.products.sort(SortByCurrentFilter);
+    const productsDisplay = sortedRowProducts.map((p,index) => (
         <ProductBrowseItem 
             key={index}
             product={p}
@@ -133,21 +133,14 @@ function ProductBrowseItemListRow(props){
 }
 
 function ProductBrowseItem(props){
-
     const p = props.product;
-
     const productBrowseItemStyle = {
         height:p.height,
         width:p.width
     }
-    
     let itemLink = window.config.baseUrl + "/";
-    console.log(itemLink);
     itemLink += p.type_id === "3" ? "c" : "p";
-    console.log(itemLink);
     itemLink += "/" + p.project_id
-    console.log(itemLink);
-
     return (
         <div className="product-browse-item-wrapper" style={productBrowseItemStyle}>
             <div className="product-browse-item" id={"product-" + p.project_id}>
@@ -169,7 +162,6 @@ function ProductBrowseItem(props){
 }
 
 function ProductBrowsePagination(){
-
     return (
         <div id="product-browse-pagination"></div>
     )
