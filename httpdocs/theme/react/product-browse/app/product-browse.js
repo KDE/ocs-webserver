@@ -36,7 +36,7 @@ function ProductBrowseFilterContainer(){
                     <li className={filters.order === "plinged" ? "active" : ""}>
                         <a href={filtersBaseUrl + "ord/plinged/" + window.location.search}>Plinged</a>
                     </li>
-                    <li style={{"float":"right"}}>
+                    <li style={{"float":"right","paddingTop":"10px"}}>
                         <input type="checkbox"/>
                         <label>Original</label>
                     </li>
