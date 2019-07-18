@@ -48,8 +48,8 @@ $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images
 // {
     $modelInfo = new Default_Model_Info();
     $productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'152,233');
-    $productsThemes = $modelInfo->getLastProductsForHostStores(5,'158,509,330,404,148,491,445,295');
-    $productsMultimedia = $modelInfo->getLastProductsForHostStores(5,'509,588,587,58');
+    $productsThemes = $modelInfo->getLastProductsForHostStores(5,'148');
+    $productsMultimedia = $modelInfo->getLastProductsForHostStores(5,'586');
 
 
     foreach ($productsAppAddons as &$p) {
