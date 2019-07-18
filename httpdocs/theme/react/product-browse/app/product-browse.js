@@ -62,7 +62,7 @@ function ProductBrowseItemList(){
             const bDate = b.changed_at ? b.changed_at : b.created_at
             const bCreatedAt = new Date(bDate);
             // const bTimeStamp = bCreatedAt.getTime();
-            return aCreatedAt - bCreatedAt;
+            return bCreatedAt - aCreatedAt;
         }
 
         const sortedProducts = products.sort(sortByCurrentFilter);
