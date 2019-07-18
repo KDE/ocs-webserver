@@ -14,7 +14,7 @@ function IntroductionDetailCommunity(props){
             </h2>
             <div>
               <p>
-             Join openDesktop community, discuss on Discourse or chat with members on Riot chat and Matrix.
+                Join the community and discuss on Discourse or chat with anyone via Riot/Matrix.
              </p>
             <a href="https://forum.opendesktop.org/"> https://forum.opendesktop.org/ </a>
             <a href="https://chat.opendesktop.org/"> https://chat.opendesktop.org </a>

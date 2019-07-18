@@ -13,8 +13,7 @@ function IntroductionDetailPersonal(props){
               Nextcloud
             </h2>
             <div>
-             <p>The productivity platform that keeps you in control.
-               Opendesktop's version offers file storage, contacts, calendar and online Office document editing technology.
+             <p>Nextcloud offers file storage, contacts, calendar and online Office document editing technology. Keep your data private.
               </p>
             <a href="https://my.opendesktop.org"> https://my.opendesktop.org </a>
             </div>
