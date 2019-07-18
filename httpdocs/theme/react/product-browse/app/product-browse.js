@@ -21,7 +21,7 @@ function ProductBrowseFilterContainer(){
     },[])
 
     let filtersBaseUrl = window.config.baseUrl + "/browse/";
-    if (filters.category) filtersBaseUrl += "cat/" + filters.category + "/";
+    if (typeof filters.category === Number) filtersBaseUrl += "cat/" + filters.category + "/";
 
     return (
         <div id="product-browse-top-menu">
