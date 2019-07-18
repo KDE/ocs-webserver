@@ -43,6 +43,7 @@ function ProductBrowseFilterContainer(){
 function ProductBrowseItemList(){
     
     const [ gallery, setGallery ] = useState();
+    const [ secondGallery, setSecondGallery] = useState();
 
     console.log(gallery);
 
@@ -56,7 +57,8 @@ function ProductBrowseItemList(){
         const containerWidth = $('#product-browse-container').width();
         let imgBaseUrl = "https://cn.";
         imgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
-        let productsGallery = []
+        let productsGallery = [];
+        let secondProductsGallery = [];
         let rowNumber = 0;
         let rowWidth = 0;
 
@@ -100,7 +102,17 @@ function ProductBrowseItemList(){
                     ...p
                 })
 
-                if ((index + 1) === products.length) setGallery(productsGallery);
+                secondProductsGallery.push({
+                    src:imgUrl,
+                    thumbnail:thumbnail,
+                    thumbnailwidth:adjustedWidth,
+                    thumbnailheight:rowHeight,                    
+                })
+
+                if ((index + 1) === products.length){
+                    setGallery(productsGallery);
+                    setSecondGallery(secondProductsGallery);
+                }
             });
 
             img.src = imgUrl;
@@ -119,9 +131,17 @@ function ProductBrowseItemList(){
         ))
     }
 
+    let secondGalleryDisplay;
+    if (secondGallery){
+        secondGalleryDisplay = (
+            <Gallery images={secondGallery}/>
+        )
+    }
+
     return (
         <div id="product-browse-item-list">
             {productRowsDisplay}
+            {secondGalleryDisplay}
         </div>
     )
 }
