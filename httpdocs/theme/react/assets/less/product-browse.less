@@ -8,7 +8,7 @@
         .product-browse-item-list-row {
             display: flex;
             justify-content: space-evenly;
-            
+             
             .product-browse-item-wrapper { 
                 padding:5px;
 
@@ -16,6 +16,7 @@
                     background: #fbfbfb;
                     height:100%;
                     padding:5px;
+                    position: relative;
 
                     img {
                         max-width: 100%;
@@ -23,6 +24,27 @@
                         margin: 0 auto;
                         display: table;
                         background: #fbfbfb;
+                    }
+
+                    .product-browse-item-info {
+                        position: absolute;
+                        left: 0;
+                        bottom: 0;
+                        padding: 10px;
+                        height: 100%;
+                        opacity: 0;
+
+                        .product-browse-item-info-content {
+                            position: absolute;
+                            left: 0;
+                            bottom: 0;
+                        }
+                    }
+
+                    &:hover {
+                        .product-browse-item-info {
+                            opacity: 1;
+                        }
                     }
                 }
             }
