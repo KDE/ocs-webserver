@@ -100,7 +100,18 @@ class JsonController extends Zend_Controller_Action
         $timeago = new Default_View_Helper_PrintDateSince();        
         foreach ( $results->topic_list->topics as &$t) {                
                 $tmp = str_replace('T',' ',substr($t->last_posted_at, 0, 19));
-                $t->timeago = $timeago->printDateSince($tmp);                
+                $t->timeago = $timeago->printDateSince($tmp);   
+
+                $r='Reply';
+                $counts = $t->posts_count -1;
+                 if($counts==0){
+                    $r = 'Replies';
+                 }else if($counts==1){
+                    $r = 'Reply';
+                 }else{
+                    $r = 'Replies';
+                 }   
+                $t->replyMsg = $counts.' '.$r;          
         }        
     	$this->_sendResponse($results, $this->_format);
 	}

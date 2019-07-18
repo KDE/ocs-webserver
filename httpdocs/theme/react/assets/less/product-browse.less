@@ -4,6 +4,7 @@
 #product-browse-container {
 
     #product-browse-item-list {
+        padding: 25px 0;
 
         .product-browse-item-list-row {
             display: flex;
@@ -15,8 +16,10 @@
                 .product-browse-item {
                     background: #fbfbfb;
                     height:100%;
-                    padding:5px;
                     position: relative;
+                    background-position: center center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
 
                     img {
                         max-width: 100%;
@@ -40,10 +43,15 @@
                             left: 0;
                             bottom: 0;
                             padding:5px;
+                            width:100%;
 
                             > div {
-                                width:100%;
-
+                                width: 100%;
+                                padding: 5px;
+                                font-size: 14px;
+                                color: white;
+                                float: left;
+                                
                                 h2 {
                                     white-space: nowrap;
                                     overflow: hidden;
@@ -51,6 +59,8 @@
                                     text-overflow: ellipsis;
                                     width: 100%;
                                     color:white;
+                                    font-size: 26px;
+                                    height: 30px;
 
                                     a {
                                         color:white;

@@ -15,21 +15,21 @@ class HomeMainContainer extends Component {
   }
   render() {
     let content;
-    if(this.state.user)
-    {
-      content = (
-          <div id="home-main-container">
-            <div className="top">
-                <h1>
-                  Hi {this.state.user.username}, welcome to your personal start page!
-                </h1>
-            </div>
-            <div className="middle">
-                <PersonalActivityContainer  user={this.state.user.member_id}/>
-            </div>
-          </div>
-          )
-    }else{
+    // if(this.state.user)
+    // {
+    //   content = (
+    //       <div id="home-main-container">
+    //         <div className="top">
+    //             <h1>
+    //               Hi {this.state.user.username}, welcome to your personal start page!
+    //             </h1>
+    //         </div>
+    //         <div className="middle">
+    //             <PersonalActivityContainer  user={this.state.user.member_id}/>
+    //         </div>
+    //       </div>
+    //       )
+    // }else{
       content = (
                 <div id="home-main-container">
                   <div className="top">
@@ -40,18 +40,18 @@ class HomeMainContainer extends Component {
                                   />
                   </div>
                   <div className="middle">
+                     <ProductsGitContainer />
                      <ProductsContainer title="Themes" cat="381" products={this.state.products}/>
                      <ProductsContainer title="Apps and Addons" cat="282" products={this.state.products}/>
                      <ProductsContainer title="Multimedia" cat="282" products={this.state.productsMultimedia}/>
-                     <ProductsGitContainer />
+                     <ChatContainer />
                      <CommentsContainer comments={this.state.comments}/>
                      <BlogFeedContainer />
-                     <ChatContainer />
                      <RssNewsContainer />
                   </div>
              </div>
            )
-    }
+    // }
 
     return (
       <React.Fragment>
