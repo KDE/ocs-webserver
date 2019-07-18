@@ -138,17 +138,25 @@ function ProductBrowseItemListRow(props){
 }
 
 function ProductBrowseItem(props){
+    
     const p = props.product;
-    const productBrowseItemStyle = {
+    
+    const productBrowseItemContainerStyle = {
         height:p.height,
         width:p.width
     }
+    
+    const productBrowseItemStyle = {
+        backgroundImage:p.src
+    }
+
     let itemLink = window.config.baseUrl + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
-    itemLink += "/" + p.project_id
+    itemLink += "/" + p.project_id;
+    
     return (
-        <div className="product-browse-item-wrapper" style={productBrowseItemStyle}>
-            <div className="product-browse-item" id={"product-" + p.project_id} style={{"backgroundImage":p.src}}>
+        <div className="product-browse-item-wrapper" style={productBrowseItemContainerStyle}>
+            <div className="product-browse-item" id={"product-" + p.project_id} style={productBrowseItemStyle}>
                 <div className="product-browse-item-info">
                     <div className="product-browse-item-info-content">
                         <div>
