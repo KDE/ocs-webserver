@@ -137,7 +137,6 @@ function ProductBrowseItem(props){
     const p = props.product;
 
     const productBrowseItemStyle = {
-        width:p.width,
         height:p.height
     }
     
