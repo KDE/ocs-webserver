@@ -6,8 +6,8 @@ export function SortByCurrentFilter(a,b){
         const bDate = typeof b.changed_at !== undefined ? b.changed_at : b.created_at
         bComparedValue = new Date(bDate);
     } else if (filters.order === "rating"){
-        aComparedValue = a.laplace_score;
-        bComparedValue = b.laplace_score;
+        aComparedValue = parseInt(a.laplace_score);
+        bComparedValue = parseInt(b.laplace_score);
     }
     return aComparedValue - bComparedValue;
 }
