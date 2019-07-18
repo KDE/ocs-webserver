@@ -36,11 +36,13 @@ function ProductBrowseItemList(){
     
     const [ gallery, setGallery ] = useState();
 
+
     React.useEffect(() => {
         initGallery()
     },[])
 
     function initGallery(){
+
         const rowHeight = 250;
         const containerWidth = $('#product-browse-container').width();
         let imgBaseUrl = "https://cn.";
@@ -50,23 +52,23 @@ function ProductBrowseItemList(){
         let rowWidth = 0;
 
         function sortByCurrentFilter(a,b){
-            const aDate = a.changed_at !== null ? a.changed_at : a.created_at;
-            const aCreatedAt = new Date(aDate);
-            const aTimeStamp = aCreatedAt.getTime();
-            const bDate = a.changed_at !== null ? b.changed_at : b.created_at;
-            const bCreatedAt = new Date(bDate);
-            const bTimeStamp = bCreatedAt.getTime();
-            if (aTimeStamp > bTimeStamp) return 1;
-            else return -1;
+            const aCreatedAt = new Date(a.created_at);
+            // const aTimeStamp = aCreatedAt.getTime();
+            const bCreatedAt = new Date(b.created_at);
+            // const bTimeStamp = bCreatedAt.getTime();
+            return aCreatedAt - bCreatedAt;
         }
 
         const sortedProducts = products.sort(sortByCurrentFilter);
-        console.log(sortedProducts);-
+        console.log(sortedProducts);
+
         sortedProducts.forEach(function(p,index){
+            
             const imgUrl = imgBaseUrl + "/img/" + p.image_small;
             const img = new Image();
+
             img.addEventListener("load", function(){
-                // find the percentage decrease of the naturalHeight / 250px and decrease the width by that
+
                 const decrease = this.naturalHeight - rowHeight;
                 const decreasePercentage = rowHeight / this.naturalHeight;
                 const adjustedWidth = this.naturalWidth * decreasePercentage;
@@ -75,10 +77,8 @@ function ProductBrowseItemList(){
                 if (newRowWidth > containerWidth){
                     rowNumber += 1;
                     rowWidth = adjustedWidth;
-                } else {
-                    rowWidth = newRowWidth;
-                }
-                // add adjusted width to totalRowWidth, if below zero
+                } else rowWidth = newRowWidth;
+
                 if (!productsGallery[rowNumber]) productsGallery[rowNumber] = []
                 productsGallery[rowNumber].push({
                     src:imgUrl,
@@ -87,9 +87,12 @@ function ProductBrowseItemList(){
                     row:rowNumber,
                     ...p
                 })
+
                 if ((index + 1) === products.length) setGallery(productsGallery);
             });
+
             img.src = imgUrl;
+        
         })
     }
 
@@ -113,7 +116,10 @@ function ProductBrowseItemList(){
 
 function ProductBrowseItemListRow(props){
     const productsDisplay = props.products.map((p,index) => (
-        <img key={index} src={p.src} width={p.width} height={p.height}/>
+        <ProductBrowseItem 
+            key={index}
+            product={p}
+        />
     ))
     return (
         <div className="product-browse-item-list-row">
@@ -125,11 +131,10 @@ function ProductBrowseItemListRow(props){
 function ProductBrowseItem(props){
 
     const p = props.product;
-    let imgBaseUrl = "https://cn.";
-    imgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
+    
     return (
         <div className="product-browse-item" id={"product-" + p.project_id}>
-            <img src={imgBaseUrl + "/img/" + p.image_small}/>
+            <img src={p.src} width={p.width} height={p.height} />
             <div className="product-browse-item-info" style={{"display":"none"}}>
                 <h2><a href={window.config.baseUrl + "/" + p.type_id === "3" ? "c" : "p" + "/" + p.project_id}>{p.title}</a></h2>
                 <span>{p.cat_title}</span>
