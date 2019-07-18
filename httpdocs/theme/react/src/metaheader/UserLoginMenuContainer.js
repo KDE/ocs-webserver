@@ -83,19 +83,19 @@ class UserLoginMenuContainer extends React.Component {
             </a>
           </li>
           <li id="storage-link-item">
-            <a href={"https://cloud.opendesktop." + urlEnding}>
+            <a href={"https://my.opendesktop." + urlEnding}>
               <div className="icon"></div>
               <span>Storage</span>
             </a>
           </li>
           <li id="contacts-link-item">
-            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
+            <a href={"https://my.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
               <div className="icon"></div>
               <span>Contacts</span>
             </a>
           </li>
           <li id="calendar-link-item">
-            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
+            <a href={"https://my.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
               <div className="icon"></div>
               <span>Calendar</span>
             </a>
@@ -129,19 +129,19 @@ class UserLoginMenuContainer extends React.Component {
           </li>
 
           <li id="storage-link-item">
-            <a href={"https://cloud.opendesktop." + urlEnding}>
+            <a href={"https://my.opendesktop." + urlEnding}>
               <div className="icon"></div>
               <span>Storage</span>
             </a>
           </li>
           <li id="contacts-link-item">
-            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
+            <a href={"https://my.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
               <div className="icon"></div>
               <span>Contacts</span>
             </a>
           </li>
           <li id="calendar-link-item">
-            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
+            <a href={"https://my.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
               <div className="icon"></div>
               <span>Calendar</span>
             </a>
