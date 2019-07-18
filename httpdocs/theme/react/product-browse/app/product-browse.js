@@ -43,7 +43,6 @@ function ProductBrowseFilterContainer(){
 function ProductBrowseItemList(){
     
     const [ gallery, setGallery ] = useState();
-    const [ secondGallery, setSecondGallery] = useState();
 
     console.log(gallery);
 
@@ -58,7 +57,6 @@ function ProductBrowseItemList(){
         let imgBaseUrl = "https://cn.";
         imgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
         let productsGallery = [];
-        let secondProductsGallery = [];
         let rowNumber = 0;
         let rowWidth = 0;
 
@@ -74,6 +72,9 @@ function ProductBrowseItemList(){
 
         const sortedProducts = products.sort(sortByCurrentFilter);
         console.log(sortedProducts);
+
+
+        let imgLoadIndex = 0;
 
         sortedProducts.forEach(function(p,index){
             
@@ -103,17 +104,9 @@ function ProductBrowseItemList(){
                     ...p
                 })
 
-                secondProductsGallery.push({
-                    src:imgUrl,
-                    thumbnail:imgUrl,
-                    thumbnailwidth:adjustedWidth,
-                    thumbnailheight:rowHeight,                    
-                })
+                imgLoadIndex += 1;
 
-                if ((index + 1) === products.length){
-                    setGallery(productsGallery);
-                    setSecondGallery(secondProductsGallery);
-                }
+                if ((imgLoadIndex + 1) === sortedProducts.length) setGallery(productsGallery);
             });
 
             img.src = imgUrl;
@@ -132,17 +125,9 @@ function ProductBrowseItemList(){
         ))
     }
 
-    let secondGalleryDisplay;
-    if (secondGallery){
-        secondGalleryDisplay = (
-            <Gallery images={secondGallery}/>
-        )
-    }
-
     return (
         <div id="product-browse-item-list">
             {productRowsDisplay}
-            {secondGalleryDisplay}
         </div>
     )
 }
