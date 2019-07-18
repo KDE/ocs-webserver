@@ -155,8 +155,11 @@ function ProductBrowseItem(props){
         width:p.width
     }
     
-    let itemLink = window.config.baseUrl;
-    itemLink += "/" + p.type_id === "3" ? "c" : "p" + "/" + p.project_id;
+    let itemLink = window.config.baseUrl + "/";
+    console.log(itemLink);
+    itemLink += p.type_id === "3" ? "c" : "p";
+    console.log(itemLink);
+    itemLink += "/" + p.project_id
     console.log(itemLink);
 
     return (
