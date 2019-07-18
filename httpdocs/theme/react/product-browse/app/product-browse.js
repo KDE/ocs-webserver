@@ -25,14 +25,18 @@ function ProductBrowseFilterContainer(){
 
     return (
         <div id="product-browse-top-menu">
-            <ul>
+            <div className="pling-nav-tabs">
+
+            </div>
+            <ul className="nav nav-tabs pling-nav-tabs" id="sort">
                 <li><a>Latest</a></li>
                 <li><a>Score</a></li>
+                <li><a>Plinged</a></li>
+                <li>
+                    <input type="checkbox"/>
+                    <label>Original</label>
+                </li>
             </ul>
-            <span>
-                <label>Original</label>
-                <input type="checkbox"/>
-            </span>
         </div>
     )
 }
