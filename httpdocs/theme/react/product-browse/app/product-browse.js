@@ -58,7 +58,6 @@ function ProductBrowseItemList(){
         let productsGallery = [], rowNumber = 0,rowWidth = 0, imgLoadIndex = 0;
 
         sortedProducts.forEach(function(p,index){
-            console.log(p);
             const imgUrl = imgBaseUrl + "/img/" + p.image_small;
             const img = new Image();
             img.addEventListener("load", function(){
@@ -84,6 +83,7 @@ function ProductBrowseItemList(){
                 })
                 productsGallery[rowNumber].rowWidth = rowWidth;
                 imgLoadIndex += 1;
+                console.log(imgLoadIndex);
                 if ((imgLoadIndex + 1) === sortedProducts.length) setGallery(productsGallery);
             
             });
