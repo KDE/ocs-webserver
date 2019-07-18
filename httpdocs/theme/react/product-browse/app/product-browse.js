@@ -28,13 +28,13 @@ function ProductBrowseFilterContainer(){
             <div className="pling-nav-tabs">
                 <ul className="nav nav-tabs pling-nav-tabs" id="sort">
                     <li className={filters.order === "latest" ? "active" : ""}>
-                        <a href={filtersBaseUrl + "order/latest/" + window.location.search}>Latest</a>
+                        <a href={filtersBaseUrl + "ord/latest/" + window.location.search}>Latest</a>
                     </li>
-                    <li className={filters.order === "score" ? "active" : ""}>
-                        <a href={filtersBaseUrl + "order/rating/" + window.location.search}>Score</a>
+                    <li className={filters.order === "rating" ? "active" : ""}>
+                        <a href={filtersBaseUrl + "ord/rating/" + window.location.search}>Score</a>
                     </li>
                     <li className={filters.order === "plinged" ? "active" : ""}>
-                        <a href={filtersBaseUrl + "order/plinged/" + window.location.search}>Plinged</a>
+                        <a href={filtersBaseUrl + "ord/plinged/" + window.location.search}>Plinged</a>
                     </li>
                     <li style={{"float":"right"}}>
                         <input type="checkbox"/>
