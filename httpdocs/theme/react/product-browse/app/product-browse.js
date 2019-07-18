@@ -63,6 +63,8 @@ function ProductBrowseItemList(){
         const sortedProducts = products.sort(SortByCurrentFilter);
         let productsGallery = [], rowNumber = 0,rowWidth = 0, imgLoadIndex = 0;
 
+        console.log(sortedProducts);
+
         sortedProducts.forEach(function(p,index){
 
             const imgUrl = imgBaseUrl + "/img/" + p.image_small;

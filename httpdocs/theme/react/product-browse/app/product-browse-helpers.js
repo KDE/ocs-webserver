@@ -9,9 +9,8 @@ export function SortByCurrentFilter(a,b){
         aComparedValue = parseInt(a.laplace_score);
         bComparedValue = parseInt(b.laplace_score);
     } else if (filters.order === "plinged"){
-        aComparedValue = a.count_plings !== null ? a.count_plings : 0;
-        bComparedValue = b.count_plings !== null ? b.count_plings : 0;
+        aComparedValue = parseInt(a.count_plings) !== null ? parseInt(a.count_plings) : 0;
+        bComparedValue = parseInt(b.count_plings) !== null ? parseInt(b.count_plings) : 0;
     }
-    console.log(aComparedValue,bComparedValue);
     return aComparedValue - bComparedValue;
 }
