@@ -150,11 +150,13 @@ function ProductBrowseItem(props){
                 <img src={p.src} />
                 <div className="product-browse-item-info">
                     <div className="product-browse-item-info-content">
-                        <h2><a href={window.config.baseUrl + "/" + p.type_id === "3" ? "c" : "p" + "/" + p.project_id}>{p.title}</a></h2>
-                        <span>{p.cat_title}</span>
-                        <span>by <a href={window.config.baseUrl + "/u/" + p.member_id}>{p.username}</a></span>
-                        <span>score {p.laplace_score}</span>
-                        <span>{p.created_at}</span>
+                        <div>
+                            <h2><a href={window.config.baseUrl + "/" + p.type_id === "3" ? "c" : "p" + "/" + p.project_id}>{p.title}</a></h2>
+                            <span>{p.cat_title}</span>
+                            <span>by <a href={window.config.baseUrl + "/u/" + p.member_id}>{p.username}</a></span>
+                            <span>score {p.laplace_score}</span>
+                            <span>{p.created_at}</span>
+                        </div>
                     </div>
                 </div>
             </div>
