@@ -82,7 +82,6 @@ function ProductBrowseItemList(){
 
             img.addEventListener("load", function(){
 
-                const decrease = this.naturalHeight - rowHeight;
                 const decreasePercentage = rowHeight / this.naturalHeight;
                 let adjustedWidth = this.naturalWidth * decreasePercentage;
                 if (adjustedWidth > this.naturalWidth) adjustedWidth = this.naturalWidth;
@@ -104,7 +103,7 @@ function ProductBrowseItemList(){
 
                 secondProductsGallery.push({
                     src:imgUrl,
-                    thumbnail:thumbnail,
+                    thumbnail:imgUrl,
                     thumbnailwidth:adjustedWidth,
                     thumbnailheight:rowHeight,                    
                 })
