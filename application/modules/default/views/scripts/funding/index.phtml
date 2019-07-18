@@ -25,6 +25,7 @@ $this->countDownloadsOverall = 0;
 
 $currentDate = date("Ym",time());
 $currentYear = date("Y",time());
+
 $modelDownload = new Default_Model_Section();
 $downloadYears = $modelDownload->getAllDownloadYears();
 #$this->countDownloadsOverall = count($this->downloads);
@@ -50,6 +51,7 @@ $downloadYears = $modelDownload->getAllDownloadYears();
                                 echo '    <a style="font-size: 18px;" data-year="'.$currentYear.'" data-toggle="yeartabajax" href="/funding/plingsajax?year='.$currentYear.'" data-target="#my-payout-list" id="tab_year_'.$currentYear.'">'.$currentYear.'</a>';
                                 echo '</li>';
                             }
+
                             foreach ($downloadYears as $yearobj) {
                                 echo '<li role="presentation" class="yeartabs">';
                                 echo '    <a style="font-size: 18px;" data-year="'.$yearobj['year'].'" data-toggle="yeartabajax" href="/funding/plingsajax?year='.$yearobj['year'].'" data-target="#my-payout-list" id="tab_year_'.$yearobj['year'].'">'.$yearobj['year'].'</a>';
@@ -62,6 +64,7 @@ $downloadYears = $modelDownload->getAllDownloadYears();
                 <?php
                     echo "<script>";
                     echo "var yearList = new Array();";
+
                     if(count($downloadYears) == 0 ||  $downloadYears[0]['year'] != $currentYear) {
                         //Current year
                         echo "var yearListObj = new Array();";
@@ -88,6 +91,7 @@ $downloadYears = $modelDownload->getAllDownloadYears();
         </section>
     </section>
 </main>
+
 <script>
 $(document).ready(function(){
     
@@ -121,6 +125,7 @@ $(document).ready(function(){
                 $.get(loadurl, function(data) {
                     $(targ).html(data);
                 });
+
                 $this.tab('show');
                 return false;
             });
@@ -179,6 +184,7 @@ $(document).ready(function(){
         $.get(loadurl, function(data) {
             $(targ).html(data);
         });
+
         $this.tab('show');
         
 

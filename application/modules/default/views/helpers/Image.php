@@ -46,11 +46,6 @@ class Default_View_Helper_Image extends Zend_View_Helper_Abstract
         }
 
         $httpScheme = 'https';
-        if (PHP_SAPI != 'cli') {
-            /** @var Zend_Controller_Request_Http $request */
-            $request = Zend_Controller_Front::getInstance()->getRequest();
-            $httpScheme = $request->getScheme();
-        }
         $uri = $this->replaceScheme($filename, $httpScheme);
 
         if (empty($options)) {

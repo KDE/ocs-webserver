@@ -509,7 +509,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             'project_id',
             'image_small',
             'title',
-            'catTitle' => 'cat_title'
+            'catTitle' => 'cat_title',
+            'changed_at'
         ))->setIntegrityCheck(false)
           ->where('project.status = ?', self::PROJECT_ACTIVE)
           ->where('project.member_id = ?', $project->member_id, 'INTEGER')
@@ -611,7 +612,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             'project_id',
             'image_small',
             'title',
-            'catTitle' => 'cat_title'
+            'catTitle' => 'cat_title',
+            'changed_at'
         ))->setIntegrityCheck(false)->where('status = ?', self::PROJECT_ACTIVE)
                   ->where('member_id != ?', $project->member_id, 'INTEGER')->where('type_id = ?', 1)
                   ->where('amount_reports is null')
@@ -1270,6 +1272,9 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                 ));*/
                 $statement->order('project.laplace_score DESC');
                 break;
+            case 'plinged':
+                $statement->order('project.count_plings DESC');
+                break;
             case 'test':
                 $statement->order('project.laplace_score_test DESC');
                 break;
@@ -1285,12 +1290,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
 
             case 'hot':
-                //$statement->order(array('amount_received DESC', 'count_plings DESC', 'latest_pling DESC', 'project.created_at DESC'));
+               
                 $statement->order(array(
-                    new Zend_Db_Expr('(round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC'),
-                    'amount_received DESC',
-                    'count_plings DESC',
-                    'latest_pling DESC',
+                    new Zend_Db_Expr('(round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC'),                    
+                    'count_plings DESC',                    
                     'project.created_at DESC'
                 ));
                 $statement->where(' project.created_at >= (NOW()- INTERVAL 14 DAY)');
@@ -1363,6 +1366,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $values['created_at'] = (!array_key_exists('created_at', $values)) ? new Zend_Db_Expr('NOW()') : $values['created_at'];
         $values['start_date'] = (!array_key_exists('start_date', $values)) ? new Zend_Db_Expr('NULL') : $values['start_date'];
         $values['creator_id'] = (!array_key_exists('creator_id', $values)) ? $member_id : $values['creator_id'];
+        $values['gitlab_project_id'] = (empty($values['gitlab_project_id'])) ? new Zend_Db_Expr('NULL') : $values['gitlab_project_id'];
 
         if ($username == 'pling editor') {
             $values['claimable'] = (!array_key_exists('claimable', $values)) ? self::PROJECT_CLAIMABLE : $values['claimable'];
@@ -1388,6 +1392,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         if (empty($projectData)) {
             throw new Zend_Db_Table_Exception('project_id not found');
         }
+
+        $values['gitlab_project_id'] = (empty($values['gitlab_project_id'])) ? new Zend_Db_Expr('NULL') : $values['gitlab_project_id'];
 
         $projectData->setFromArray($values)->save();
 

@@ -25,7 +25,7 @@ class Default_View_Helper_FetchDomains extends Zend_View_Helper_Abstract
     const CACHE_DOMAIN_OBJECTS = 'helper_domain_objects';
 
     public function fetchDomainObjects()
-    {        
+    {
 
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
@@ -36,48 +36,27 @@ class Default_View_Helper_FetchDomains extends Zend_View_Helper_Abstract
 
             $tbl = new Default_Model_DbTable_ConfigStore();
             $result = $tbl->fetchDomainObjects();
-                // sort Desktop in front
+            // sort Desktop in front
             $arrayDesktop = array();
-            $arrayRest =  array();        
+            $arrayRest = array();
             foreach ($result as $obj) {
-                $o =  $obj['order'];   
-                $curOrder = floor($obj['order']/1000);      
-                 if($curOrder<10 or $curOrder>50) continue;
-                 $obj['calcOrder'] = $curOrder;
-                 if($curOrder==30) {
+                $o = $obj['order'];
+                $curOrder = floor($obj['order'] / 1000);
+                if ($curOrder < 10 or $curOrder > 50) {
+                    continue;
+                }
+                $obj['calcOrder'] = $curOrder;
+                if ($curOrder == 30) {
                     // Desktop set calcOrder = 9 manuelly put desktop in front
                     $obj['calcOrder'] = 9;
-                    $arrayDesktop[] = $obj;    
-                 }else{
-                    $arrayRest[] = $obj;    
-                 }                        
+                    $arrayDesktop[] = $obj;
+                } else {
+                    $arrayRest[] = $obj;
+                }
             }
             $domainobjects = array_merge($arrayDesktop, $arrayRest);
             $cache->save($domainobjects, $cacheName, array(), 28800);
         }
-
-      
-
-
-        /*
-        foreach ($result as &$obj) {
-            $clientFileId = '_' . $obj['config_id_name'];;
-            $clientConfigPath = Zend_Registry::get('config')->settings->client->config->path;
-            $clientConfigFileName = "client{$clientFileId}.ini.php";
-
-            $clientConfigData = null;
-            if (file_exists($clientConfigPath . $clientConfigFileName)) {
-                $clientConfigData = require $clientConfigPath . $clientConfigFileName;
-            } else {
-                $clientConfigData = require $clientConfigPath . "default.ini.php";
-            }
-
-            // $obj['meta_keywords'] = $clientConfigData['head']['meta_keywords'];
-            $obj['meta_keywords'] = $clientConfigData['footer_heading'];
-
-        }
-    */
-        
 
         return $domainobjects;
     }

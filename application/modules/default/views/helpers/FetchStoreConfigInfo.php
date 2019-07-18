@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -30,20 +31,12 @@ class Default_View_Helper_FetchStoreConfigInfo
     public function getDomainLogo($storeHostName)
     {
         $configName = $this->getConfigIdName($storeHostName);
-        $clientFileId = '_' . $configName;
-        $clientConfigPath = Zend_Registry::get('config')->settings->client->config->path;
-        $clientConfigFileName = "client{$clientFileId}.ini.php";
         $clientConfigData = null;
-        if (file_exists($clientConfigPath . $clientConfigFileName)) {
-            $clientConfigData = require $clientConfigPath . $clientConfigFileName;
-        } else {
-            $clientConfigData = require $clientConfigPath . "default.ini.php";
-        }
+        $clientConfigData = Default_Model_StoreTemplate::getStoreTemplate($configName);
 
         return $clientConfigData['header-logo']['image-src'];
     }
 
-   
 
     /**
      * @param string $hostname
@@ -58,6 +51,7 @@ class Default_View_Helper_FetchStoreConfigInfo
 
         if (isset($store_config_list[$hostname])) {
             $clientName = $store_config_list[$hostname]['config_id_name'];
+
             return $clientName;
         } else {
             Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . $hostname . ' :: no store id name configured');
@@ -108,6 +102,7 @@ class Default_View_Helper_FetchStoreConfigInfo
                 Zend_Registry::get('logger')->warn(__METHOD__ . ' - storeIdName: ' . $storeHostName . ' no categories defined for this context');
             }
         }
+
         return $idCategory;
     }
 

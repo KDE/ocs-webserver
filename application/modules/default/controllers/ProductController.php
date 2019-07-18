@@ -47,6 +47,17 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_collectionId = (int)$this->getParam('collection_id');
         $this->_auth = Zend_Auth::getInstance();
         $this->_browserTitlePrepend = $this->templateConfigData['head']['browser_title_prepend'];
+
+        $action = $this->getRequest()->getActionName();
+         $title = $action;
+        if($action =='add')
+        {
+          $title = 'add product';
+        }else
+        {
+          $title = $action;
+        }
+        $this->view->headTitle($title . ' - ' . $this->getHeadTitle(), 'SET');
     }
 
     public function ratingAction()
@@ -625,7 +636,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         Zend_Registry::get('logger')->info(__METHOD__ . ' - $post: ' . print_r($_POST, true));
         Zend_Registry::get('logger')->info(__METHOD__ . ' - $files: ' . print_r($_FILES, true));
-        Zend_Registry::get('logger')->info(__METHOD__ . ' _ input values: ' . print_r($values, true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - input values: ' . print_r($values, true));
 
         $newProject = null;
         try {
@@ -947,7 +958,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         // save changes
-        $projectData->setFromArray($values);
+        $projectModel->updateProject($this->_projectId, $values);
 
         //update the gallery pics
         $pictureSources = array_merge($values['gallery']['online_picture'],

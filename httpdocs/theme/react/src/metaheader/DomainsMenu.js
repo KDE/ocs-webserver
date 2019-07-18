@@ -1,8 +1,6 @@
 import React from 'react';
 import MoreDropDownMenu from './MoreDropDownMenu';
-import DomainsDropDownMenu from './DomainsDropDownMenu';
 import DiscussionBoardsDropDownMenu from './DiscussionBoardsDropDownMenu';
-import DevelopmentDropDownMenu from './DevelopmentDropDownMenu';
 class DomainsMenu extends React.Component {
   constructor(props){
     super(props);
@@ -37,22 +35,14 @@ class DomainsMenu extends React.Component {
             openDesktop.org :
           </a>
         </li>
-        <DomainsDropDownMenu
-          domains={this.props.domains}
-        />
-        <DevelopmentDropDownMenu
-          user={this.props.user}
-          baseUrl={this.props.baseUrl}
-          gitlabUrl={this.props.gitlabUrl}
-          isAdmin={this.props.isAdmin}
-          isExternal = {this.props.isExternal}
-        />
+        <li><a href={this.props.baseUrlStore}>Publish</a></li>
+        <li><a href={this.props.gitlabUrl}>Code</a></li>           
         <DiscussionBoardsDropDownMenu
           forumUrl={this.props.forumUrl}
           user={this.props.user}
           baseUrl={this.props.baseUrl}
         />
-        
+
         {moreMenuItemDisplay}
       </ul>
     )

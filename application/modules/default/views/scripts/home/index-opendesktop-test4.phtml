@@ -28,28 +28,74 @@ $this->headMeta()->appendProperty('og:site_name','www.opendesktop.org');
 $this->headMeta()->appendProperty('og:description','A community where developers and artists share applications, themes and other content');
 $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images/system/opendesktop-logo.png');
 
-$modelInfo = new Default_Model_Info();
-$productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'152,233');
-$productsThemes = $modelInfo->getLastProductsForHostStores(5,'158,509,330,404,148,491,445,295');
-//$productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'33,233');
-//$productsThemes = $modelInfo->getLastProductsForHostStores(5,'33,295');
-foreach ($productsAppAddons as &$p) {
-  $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
-}
-foreach ($productsThemes as &$p) {
-  $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
-}
-/*'products' => array('title' =>'KDE Plasma','catIds' =>'365','products' => $productsThemesPlasma),*/
-$response = array(
-  'comments' => $modelInfo->getLatestComments(5),
-  'products' => $productsAppAddons,
-  'productsThemes' => $productsThemes,
 
-);
+if (Zend_Auth::getInstance()->hasIdentity()){
+    $identity = Zend_Auth::getInstance()->getStorage()->read();
+    $helperImage = new Default_View_Helper_Image();
+    $avatar = $helperImage->image($identity->profile_image_url,array('width' => 100, 'height' => 100, 'crop' => 2));
+    
+    $user = array(
+        "username" => $identity->username,
+        "member_id" => $identity->member_id,
+        "mail" => $identity->mail,
+        "avatar" => $avatar, 
+        "roleName" =>$identity->roleName
+    );
+    $response = array(
+      'user' => $user      
+    );
+}else
+{
+    $modelInfo = new Default_Model_Info();
+    $productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'152,233');
+    $productsThemes = $modelInfo->getLastProductsForHostStores(5,'158,509,330,404,148,491,445,295');
+    $productsMultimedia = $modelInfo->getLastProductsForHostStores(5,'509,588,587,58');
+    //$productsThemes = $modelInfo->getLastProductsForHostStores(5,'33,295');
+
+    foreach ($productsAppAddons as &$p) {
+      $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
+    }
+    foreach ($productsThemes as &$p) {
+      $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
+    }
+    foreach ($productsMultimedia as &$p) {
+      $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
+    }
+
+    $config = Zend_Registry::get('config')->settings->client->default;
+    $baseurl = $config->baseurl;
+    $baseurlStore = $config->baseurl_store;
+    $url_forum = $config->url_forum;
+    $url_blog = $config->url_blog;
+    $url_gitlab = $config->url_gitlab;
+    $url_riot = $config->url_riot;
+    $url_myopendesktop = $config->url_myopendesktop;
+    $url_cloudopendesktop = $config->url_cloudopendesktop;
+    $url_musicopendesktop = $config->url_musicopendesktop;
+    $url_mastodon = $config->url_mastodon;
+    $response = array(
+      'comments' => $modelInfo->getLatestComments(5),
+      'products' => $productsAppAddons,
+      'productsThemes' => $productsThemes,
+      'productsMultimedia' => $productsMultimedia,
+      "baseUrl" => $baseurl,
+      "baseUrlStore" => $baseurlStore,
+      "blogUrl" => $url_blog,
+      "forumUrl" => $url_forum,
+      "mastodonUrl" => $url_mastodon,
+      "gitlabUrl" => $url_gitlab,
+      "riotUrl" => $url_riot,
+      "url_myopendesktop" => $url_myopendesktop,
+      "url_cloudopendesktop" => $url_cloudopendesktop,
+      "url_musicopendesktop" => $url_musicopendesktop,
+      "url_mastodon" => $url_mastodon,      
+    );
+
+
+}
 
 ?>
 
-<link type="text/css" rel="stylesheet" href="/theme/react/assets/css/home-main-container.css"/>
 
 <div class="tooltip_templates" style="display:none">
       <span id="tooltip_content">

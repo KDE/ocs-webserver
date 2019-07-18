@@ -28,6 +28,7 @@ class Default_Model_Ocs_Gitlab
     protected $cache;
     protected $config;
     protected $messages;
+    /** @var Zend_Http_Client */
     protected $httpClient;
 
     /**
@@ -41,10 +42,24 @@ class Default_Model_Ocs_Gitlab
             $this->config = Zend_Registry::get('config')->settings->server->opencode;
         }
         $uri = $this->config->host;
-        $this->httpClient = new Zend_Http_Client($uri, array('keepalive' => true, 'strictredirects' => true));
+        $this->httpClient = $this->getHttpClient($uri);
 
         $this->cache = Zend_Registry::get('cache');
         $this->messages = array();
+    }
+
+    /**
+     * @param $uri
+     * @return Zend_Http_Client
+     * @throws Default_Model_Ocs_Gitlab_Exception
+     */
+    protected function getHttpClient($uri)
+    {
+        try {
+            return new Zend_Http_Client($uri, array('keepalive' => true, 'strictredirects' => true));
+        } catch (Zend_Exception $e) {
+            throw new Default_Model_Ocs_Gitlab_Exception('Can not create http client for uri: ' . $uri, 0, $e);
+        }
     }
 
     /**
@@ -90,7 +105,8 @@ class Default_Model_Ocs_Gitlab
         $memberLog = new Default_Model_MemberDeactivationLog();
         foreach ($response as $project) {
             $log_data =
-                $memberLog->getLogEntries($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_PROJECT,
+                $memberLog->getLogEntries($member_data['member_id'],
+                    Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_PROJECT,
                     $project['id']);
             if (false === $log_data) {
                 continue;
@@ -116,7 +132,8 @@ class Default_Model_Ocs_Gitlab
             }
             $this->messages[] = "Successful unblock user project: {$project['id']}";
 
-            $memberLog->deleteLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_PROJECT,
+            $memberLog->deleteLog($member_data['member_id'],
+                Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_PROJECT,
                 $project['id']);
         }
 
@@ -203,7 +220,6 @@ class Default_Model_Ocs_Gitlab
      */
     public function getUserByExternUid($extern_uid)
     {
-        $this->httpClient->resetParameters();
         $uri = $this->config->host . "/api/v4/users?extern_uid={$extern_uid}&provider=" . $this->config->provider_name;
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
@@ -332,6 +348,7 @@ class Default_Model_Ocs_Gitlab
      * @return bool|array
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Json_Exception
+     * @throws Zend_Uri_Exception
      */
     protected function httpRequest($uri, $uid, $method = Zend_Http_Client::GET, $post_param = null)
     {
@@ -394,7 +411,8 @@ class Default_Model_Ocs_Gitlab
 
         foreach ($response as $project) {
             $memberLog = new Default_Model_MemberDeactivationLog();
-            $memberLog->addLogData($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_PROJECT,
+            $memberLog->addLogData($member_data['member_id'],
+                Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_PROJECT,
                 $project['id'], json_encode($project));
 
             $uri = $this->config->host . "/api/v4/projects/{$project['id']}";
@@ -465,7 +483,8 @@ class Default_Model_Ocs_Gitlab
         $this->messages[] = "Successful block user: {$member_data['username']}";
 
         $memberLog = new Default_Model_MemberDeactivationLog();
-        $memberLog->addLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_USER, $user['id']);
+        $memberLog->addLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_USER,
+            $user['id']);
 
         return true;
     }
@@ -514,7 +533,8 @@ class Default_Model_Ocs_Gitlab
         $this->messages[] = "Successful unblock user: {$member_data['username']}";
 
         $memberLog = new Default_Model_MemberDeactivationLog();
-        $memberLog->deleteLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_USER, $user['id']);
+        $memberLog->deleteLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_GITLAB_USER,
+            $user['id']);
 
         return true;
     }
@@ -577,8 +597,10 @@ class Default_Model_Ocs_Gitlab
         $paramEmail = '';
         if (isset($user['email_address'])) {
             $paramEmail = $user['email_address'];
-        } else if (isset($user['mail'])) {
-            $paramEmail = $user['mail'];
+        } else {
+            if (isset($user['mail'])) {
+                $paramEmail = $user['mail'];
+            }
         }
 
         if (strlen($user['biography']) > 254) {
@@ -631,7 +653,7 @@ class Default_Model_Ocs_Gitlab
     private function httpUserUpdate($data, $id)
     {
         $this->httpClient->resetParameters();
-        $uri = $this->config->host . $this->config->url->user_create . '/' . $id;
+        $uri = $this->config->host . '/api/v4/users/' . $id;
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -642,7 +664,7 @@ class Default_Model_Ocs_Gitlab
         $response = $this->httpClient->request();
         if ($response->getStatus() < 200 OR $response->getStatus() >= 300) {
             throw new Default_Model_Ocs_Exception('update user data failed. OCS OpenCode server send message: '
-                . $response->getRawBody());
+                                                  . $response->getRawBody());
         }
 
         $body = Zend_Json::decode($response->getRawBody());
@@ -828,7 +850,7 @@ class Default_Model_Ocs_Gitlab
     private function httpUserCreate($data)
     {
         $this->httpClient->resetParameters();
-        $uri = $this->config->host . $this->config->url->user_create;
+        $uri = $this->config->host . '/api/v4/users';
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -839,7 +861,7 @@ class Default_Model_Ocs_Gitlab
         $response = $this->httpClient->request();
         if ($response->getStatus() < 200 OR $response->getStatus() >= 300) {
             throw new Default_Model_Ocs_Exception('push user data failed. OCS OpenCode server send message: '
-                . $response->getRawBody());
+                                                  . $response->getRawBody());
         }
 
         $body = Zend_Json::decode($response->getRawBody());
@@ -854,7 +876,7 @@ class Default_Model_Ocs_Gitlab
     }
 
     /**
-     * @param  int $member_id
+     * @param int $member_id
      *
      * @return bool
      * @throws Zend_Exception
@@ -909,7 +931,7 @@ class Default_Model_Ocs_Gitlab
 
         if ($response->getStatus() < 200 AND $response->getStatus() >= 300) {
             throw new Default_Model_Ocs_Exception('delete user failed. OCS OpenCode server send message: ' . $response->getRawBody()
-                . PHP_EOL . " - OpenCode user id: {$id}");
+                                                  . PHP_EOL . " - OpenCode user id: {$id}");
         }
 
         $body = Zend_Json::decode($response->getRawBody());
@@ -959,7 +981,7 @@ class Default_Model_Ocs_Gitlab
 
         if ($response->getStatus() < 200 AND $response->getStatus() >= 300) {
             throw new Zend_Exception('exists user failed. OCS OpenCode server send message: ' . $response->getBody() . PHP_EOL
-                . " - OpenCode user id: {$username}");
+                                     . " - OpenCode user id: {$username}");
         }
 
         $this->messages[0] =
@@ -1039,7 +1061,17 @@ class Default_Model_Ocs_Gitlab
 
         $response = $this->httpClient->request();
 
-        $body = Zend_Json::decode($response->getRawBody());
+        try {
+            $body = Zend_Json::decode($response->getRawBody());
+        } catch (Zend_Json_Exception $e) {
+            throw new Default_Model_Ocs_Exception($e,0, $e);
+        } catch (Zend_Http_Client_Exception $e) {
+            // Gitlab send empty response when group not found, this cause an Exception in http client
+            // we cannot distinguish between a real error and a successful empty response
+            // so we catch this exception and log only
+            // TODO: maybe use plain curl request
+            error_log($e->getMessage());
+        }
 
         if (count($body) > 0) {
             return true;
@@ -1320,12 +1352,12 @@ class Default_Model_Ocs_Gitlab
         $response = null;
         try {
             $response = $this->httpClient->request();
-            
+
         } catch (Exception $ex) {
             $response = null;
         }
-        
-        if($response && !empty($response)) {
+
+        if ($response && !empty($response)) {
 
             $body = Zend_Json::decode($response->getRawBody());
 
@@ -1339,6 +1371,7 @@ class Default_Model_Ocs_Gitlab
                     throw new Default_Model_Ocs_Exception($body["message"]);
                 }
             }
+
             return $body;
         }
 

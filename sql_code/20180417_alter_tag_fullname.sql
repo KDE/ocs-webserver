@@ -1,1 +1,2 @@
-ALTER TABLE tag MODIFY tag_fullname VARCHAR(100);
+ALTER TABLE `tag`
+    MODIFY `tag_fullname` VARCHAR(100);

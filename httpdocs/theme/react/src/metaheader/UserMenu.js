@@ -6,6 +6,8 @@ import DevelopmentAppMenu from './DevelopmentAppMenu';
 import SearchMenuContainer from './SearchMenuContainer';
 //import SwitchItem from './SwitchItem';
 import AboutMenu from './AboutMenu';
+import AnonymousMenu from './AnonymousMenu';
+
 class UserMenu extends React.Component {
   constructor(props){
     super(props);
@@ -18,21 +20,13 @@ class UserMenu extends React.Component {
       searchMenuDisplay = <SearchMenuContainer baseUrl={this.props.baseUrl}/>
     }
 
-    let userDropdownDisplay, userAppsContextDisplay, developmentAppMenuDisplay;
+    let userDropdownDisplay, developmentAppMenuDisplay;
     if (this.props.user && this.props.user.member_id){
-      // userDropdownDisplay = (
-      //   <UserLoginMenuContainerVersionTwo
-      //     user={this.props.user}
-      //     logoutUrl={this.props.logoutUrl}
-      //     baseUrl={this.props.baseUrl}
-      //      onSwitchStyle={this.props.onSwitchStyle}
-      //      onSwitchStyleChecked={this.props.onSwitchStyleChecked}
-      //   />
-      // );
-
       userDropdownDisplay = (
         <UserLoginMenuContainer
           user={this.props.user}
+          forumUrl={this.props.forumUrl}
+          isAdmin={this.props.isAdmin}
           logoutUrl={this.props.logoutUrl}
           baseUrl={this.props.baseUrl}
           onSwitchStyle={this.props.onSwitchStyle}
@@ -40,16 +34,7 @@ class UserMenu extends React.Component {
         />
       );
 
-      userAppsContextDisplay = (
-        <UserContextMenuContainer
-          user={this.props.user}
-          forumUrl={this.props.forumUrl}
-          gitlabUrl={this.props.gitlabUrl}
-          isAdmin={this.props.isAdmin}
-          baseUrl={this.props.baseUrl}
 
-        />
-      );
       developmentAppMenuDisplay = (
         <DevelopmentAppMenu
           user={this.props.user}
@@ -68,6 +53,18 @@ class UserMenu extends React.Component {
         </React.Fragment>
     )
     }
+    let anonymousMenu;
+    if (!this.props.user){
+      anonymousMenu= <AnonymousMenu baseUrl={this.props.baseUrl} user={this.props.user}/>
+    }
+
+    let chatItem;
+    if (this.props.user && this.props.user.member_id ){
+      chatItem=(<li id="chat-link-item"><a href={this.props.riotUrl}>
+        <img src={this.props.baseUrl+"/theme/react/assets/img/logo-riot.svg"} className="riotIcon"></img>Chat
+      </a></li>);
+    }
+
 
     let userMenuContainerDisplay;
     if (this.props.device === "large"){
@@ -79,34 +76,27 @@ class UserMenu extends React.Component {
                                   isAdmin={this.props.isAdmin}
                                   />
 
-       let chatItem;
-       const urlEnding = this.props.baseUrl.split('opendesktop.')[1];
-       if (this.props.user && this.props.user.member_id ){
-         chatItem=(<li id="chat-link-item"><a href={"https://chat.opendesktop."+urlEnding}>
-           <img src={this.props.baseUrl+"/theme/react/assets/img/logo-riot.svg"} className="riotIcon"></img>Chat
-         </a></li>);
-       }
-
 
 
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
-          <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
-          <li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>          
+          <li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>
           {aboutMenu}
           {searchMenuDisplay}
           {chatItem}
-          {userAppsContextDisplay}
+
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
+
         </ul>
       );
     } else {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
-          {userAppsContextDisplay}
+          {chatItem}
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
+
         </ul>
       );
     }

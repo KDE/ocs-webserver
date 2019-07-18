@@ -43,10 +43,8 @@ RUN test "$BUILD_ENV" = "development" \
 COPY --chown=www-data . /usr/src/ocs-webserver
 WORKDIR /usr/src/ocs-webserver
 
-# Add the local configuration-template
-#COPY ./.docker_init/conf/application.local.ini application/configs/application.local.ini
-#COPY ./.docker_init/conf/client_opendesktop.ini.php application/configs/client_opendesktop.ini.php
-COPY ./.docker_init/conf/* application/configs/
+# Add the local store templates
+COPY ./.docker_init/templates/* data/stores/templates/
 
 # Prepare file- & directory-permissions
 RUN test "$BUILD_ENV" != "development" \

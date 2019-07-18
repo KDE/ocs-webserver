@@ -68,21 +68,17 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
     }
 
     /**
-     * @throws Zend_Controller_Action_Exception
      * @throws Zend_Exception
      */
     private function initTemplateData()
     {
         if (Zend_Registry::isRegistered('store_template')) {
             $this->templateConfigData = Zend_Registry::get('store_template');
-        } else {
-            $fileNameConfig = APPLICATION_PATH . '/configs/client_' . $this->getNameForStoreClient() . '.ini.php';
-            if (file_exists($fileNameConfig)) {
-                $this->templateConfigData = require $fileNameConfig;
-            } else {
-                throw new Zend_Controller_Action_Exception('template file not exists or not accessible in ' . $fileNameConfig);
-            }
+
+            return;
         }
+
+        $this->templateConfigData = Default_Model_StoreTemplate::getStoreTemplate($this->getNameForStoreClient());
     }
 
     /**
@@ -102,28 +98,15 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
         return $clientName;
     }
 
-    public function getHeadTitle()
-    {
-        $headTitle = $this->templateConfigData['head']['browser_title'];
-        if($headTitle==$this::METAHEADER_DEFAULT){
-                $headTitle=$this::METAHEADER_DEFAULT_TITLE;
-        }
-        return $headTitle;
-    }
-
     public function initView()
     {
         if (!Zend_Registry::isRegistered('headMetaSet')) {
 
-            $headTitle = $this->templateConfigData['head']['browser_title'];
+            $headTitle = $this->getHeadTitle();
             $headDesc = $this->templateConfigData['head']['meta_description'];
             $headKeywords = $this->templateConfigData['head']['meta_keywords'];
             //set default site-title
             $this->view->headTitle($headTitle, Zend_View_Helper_Placeholder_Container_Abstract::SET);
-
-            if ($headTitle == $this::METAHEADER_DEFAULT) {
-                $headTitle = $this::METAHEADER_DEFAULT_TITLE;
-            }
             if ($headDesc == $this::METAHEADER_DEFAULT) {
                 $headDesc = $this::METAHEADER_DEFAULT_DESCRIPTION;
             }
@@ -131,17 +114,30 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
                 $headKeywords = $this::METAHEADER_DEFAULT_KEYWORDS;
             }
 
-            $this->view->headMeta()->appendName('author', $this->templateConfigData['head']['meta_author'])
-                       ->appendName('robots', 'all')->appendName('robots', 'index')->appendName('robots', 'follow')
-                       ->appendName('revisit-after', '3 days')->appendName('title', $headTitle)
+            $this->view->headMeta()
+                       ->appendName('author', $this->templateConfigData['head']['meta_author'])
+                       ->appendName('robots', 'all')
+                       ->appendName('robots', 'index')
+                       ->appendName('robots', 'follow')
+                       ->appendName('revisit-after', '3 days')
+                       ->appendName('title', $headTitle)
                        ->appendName('description', $headDesc, array('lang' => 'en-US'))
-                       ->appendName('keywords', $headKeywords, array('lang' => 'en-US'))
-            ;
+                       ->appendName('keywords', $headKeywords, array('lang' => 'en-US'));
 
             Zend_Registry::set('headMetaSet', true);
         }
 
         $this->view->template = $this->templateConfigData;
+    }
+
+    public function getHeadTitle()
+    {
+        $headTitle = $this->templateConfigData['head']['browser_title'];
+        if ($headTitle == $this::METAHEADER_DEFAULT) {
+            $headTitle = $this::METAHEADER_DEFAULT_TITLE;
+        }
+
+        return $headTitle;
     }
 
     protected function setLayout()
@@ -160,11 +156,12 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
         $duration = 1800; // in seconds
         $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
 
-        $this->getResponse()->setHeader('X-FRAME-OPTIONS', 'ALLOWALL', true)
+        $this->getResponse()
+             ->setHeader('X-FRAME-OPTIONS', 'ALLOWALL', true)
 //            ->setHeader('Last-Modified', $modifiedTime, true)
-             ->setHeader('Expires', $expires, true)->setHeader('Pragma', 'no-cache', true)
-             ->setHeader('Cache-Control', 'private, no-store, no-cache, must-revalidate, post-check=0, pre-check=0', true)
-        ;
+             ->setHeader('Expires', $expires, true)
+             ->setHeader('Pragma', 'no-cache', true)
+             ->setHeader('Cache-Control', 'private, no-store, no-cache, must-revalidate, post-check=0, pre-check=0',true);
     }
 
     private function _initAdminDbLogger()

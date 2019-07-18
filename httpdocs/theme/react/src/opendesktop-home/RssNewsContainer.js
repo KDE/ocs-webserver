@@ -34,7 +34,7 @@ class RssNewsContainer extends Component {
     }
     return (
       <div id="rss-new-container" className="panelContainer">
-        <div className="title">News</div>
+        <div className="title"><a href="https://blog.opendesktop.org/">News</a></div>
         {feedItemsContainer}
       </div>
     )

@@ -69,6 +69,30 @@
     <script type="text/javascript" src="/theme/react/lib/mdl/material.min.js"></script>
     <script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
     <script type="text/javascript" src="/theme/react/lib/md5/md5.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/theme/flatui/js/lib/cookieconsent/cookieconsent.min.css" />    
+    
+    <script type="text/javascript" src="/theme/flatui/js/lib/cookieconsent/cookieconsent.min.js"></script>
+    <script>
+   window.addEventListener("load", function(){
+   window.cookieconsent.initialise({
+     "palette": {
+       "popup": {
+         "background": "#000"
+       },
+       "button": {
+         "background": "#f1d600"
+       }
+     },
+     "content": {
+       "message": "This website uses cookies to ensure certain functionality of our web offerings.",
+       "dismiss": "OK",
+       "link": "Learn more",
+       "href": "/terms/cookies"
+     }
+   })});
+   </script>
+   
 </head>
 <body id="od-body">
 

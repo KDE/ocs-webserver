@@ -22,6 +22,7 @@
 
 $helpImage = new Default_View_Helper_Image();
 $helpBuildCollectionUrl = new Default_View_Helper_BuildCollectionUrl();
+$helpDate = new Default_View_Helper_PrintDateSince();
 ?>
 <div class="prod-widget-box right moreproducts">
 
@@ -34,6 +35,7 @@ $helpBuildCollectionUrl = new Default_View_Helper_BuildCollectionUrl();
                     $imgUrl = $helpImage->Image($product->image_small, array('width' => 200, 'height' => 160));
                     $title = substr($product->title, 0, 20);
                     $title = str_replace('"', '&#8221;', $title);
+                    $changed_at = $helpDate->printDateSince($product->changed_at);
                     ?>
                     <!-- product item -->
                     <div class="col-md-3 col-lg-3 col-sm-4 col-xs-3 product-thumbnail"
@@ -46,7 +48,7 @@ $helpBuildCollectionUrl = new Default_View_Helper_BuildCollectionUrl();
 			                     </div>
                                 <div class='content'>
                                     <div class='title'>
-                                        <p><?= $title ?></p>
+                                        <p><?= $title ?><br/>last update date: <?= $changed_at ?>
                                       
                                     </div>  			                                                  
                                 </div>">

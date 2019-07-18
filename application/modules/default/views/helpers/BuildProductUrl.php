@@ -40,7 +40,8 @@ class Default_View_Helper_BuildProductUrl
 
         /** @var Zend_Controller_Request_Http $request */
         $request = Zend_Controller_Front::getInstance()->getRequest();
-
+        $baseurl = '';
+        
         $host = '';
         if ($withHost) {
 //            $member_host = Zend_Registry::get('config')->settings->member->page->server;
@@ -63,6 +64,17 @@ class Default_View_Helper_BuildProductUrl
             $storeId = "s/{$params['store_id']}/";
             unset($params['store_id']);
         }
+        
+        
+        //20190710 ronald: removed to stay in context, if set in store config
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        
+        if(null != $storeConfig && $storeConfig->stay_in_context == false) {
+            $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl_product;
+        } else {
+            
+            $baseurl = "{$host}{$storeId}";
+        }
 
         $url_param = '';
         if (is_array($params)) {
@@ -74,7 +86,9 @@ class Default_View_Helper_BuildProductUrl
             $action = $action . '/';
         }
 
-        return "{$host}/{$storeId}p/{$product_id}/{$action}{$url_param}";
+        //return "{$host}/{$storeId}p/{$product_id}/{$action}{$url_param}";
+        
+        return "{$baseurl}/p/{$product_id}/{$action}{$url_param}";
     }
 
 }

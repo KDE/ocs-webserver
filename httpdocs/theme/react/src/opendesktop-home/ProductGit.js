@@ -27,10 +27,10 @@ class ProductGit extends React.Component {
                 line={3}
                 truncateText="…"
                 text={this.props.product.description}
-                
+
             />
           </span>
-          <span className="product-info-date"><TimeAgo date={this.props.product.created_at} /></span>
+          <span className="product-info-date">{this.props.product.timeago}</span>
         </div>
       );
 

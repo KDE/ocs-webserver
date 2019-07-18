@@ -163,8 +163,28 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
         $page = (int)$this->getParam('page', 1);
 
+        $index = $this->getParam('index');
+
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        if ($storeConfig->layout_explore && $storeConfig->isRenderReact()) {
+        if($index)
+        {
+            // only switch view via index=2 parameter
+            $pageLimit = 50;
+            $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);
+            $this->view->productsJson = Zend_Json::encode($requestedElements['elements']);
+            $this->view->filtersJson = Zend_Json::encode($filter);
+            $this->view->cat_idJson = Zend_Json::encode($inputCatId);
+            $modelInfo = new Default_Model_Info();
+            $topprods = $modelInfo->getMostDownloaded(100, $inputCatId, $tagFilter);
+            $this->view->topprodsJson = Zend_Json::encode($topprods);
+            $comments = $modelInfo->getLatestComments(5, $inputCatId, $tagFilter);
+            $this->view->commentsJson = Zend_Json::encode($comments);
+            $modelCategory = new Default_Model_ProjectCategory();
+            $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());
+            $this->_helper->viewRenderer('index-react2');
+
+        }
+        else if ($storeConfig->layout_explore && $storeConfig->isRenderReact()) {
             $pageLimit = 50;
             $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);
             $this->view->productsJson = Zend_Json::encode($requestedElements['elements']);

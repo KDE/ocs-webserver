@@ -181,6 +181,10 @@ if($this->inputFilterOriginal ==1)
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
                           'rating') ?>"><span><?= $this->translate('Score') ?></span></a>
                   </li>
+                  <li <?=$this->filters['order'] == 'plinged' ? 'class="active"' :'' ?>>
+                      <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
+                          'plinged') ?>"><span><?= $this->translate('Plinged') ?></span></a>
+                  </li>
                    <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {?>
                   <li <?=$this->filters['order'] == 'top' ? 'class="active"' :'' ?>>
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,

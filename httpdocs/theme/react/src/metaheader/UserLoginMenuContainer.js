@@ -5,6 +5,7 @@ class UserLoginMenuContainer extends React.Component {
     super(props);
     this.state = {};
     this.handleClick = this.handleClick.bind(this);
+    this.loadNotification = this.loadNotification.bind(this);
   }
 
   componentWillMount() {
@@ -13,6 +14,29 @@ class UserLoginMenuContainer extends React.Component {
 
   componentWillUnmount() {
     document.removeEventListener('click',this.handleClick, false);
+  }
+
+  componentDidMount(){
+    this.loadNotification();
+   }
+
+  loadNotification(){
+    if(this.props.user){
+      let url = this.props.baseUrl+'/membersetting/notification';
+      //let url = "http://pling.local/membersetting/notification";
+      fetch(url,{
+                 mode: 'cors',
+                 credentials: 'include'
+                 })
+      .then(response => response.json())
+      .then(data => {
+          const nots = data.notifications.filter(note => note.read==false);
+          if(nots.length>0 && this.state.notification_count !== nots.length)
+          {
+              this.setState(prevState => ({ notification: true, notification_count:nots.length }))
+          }
+       });
+     }
   }
 
   handleClick(e){
@@ -34,6 +58,83 @@ class UserLoginMenuContainer extends React.Component {
 
   render(){
     const theme = this.props.onSwitchStyleChecked?"Metaheader theme dark":"Metaheader theme light";
+    let badgeNot;
+    if(this.state.notification)
+    {
+      badgeNot = (<span className="badge-notification">{this.state.notification_count}</span>);
+    }
+    let urlEnding;
+    if(this.props.baseUrl.endsWith("cc"))
+    {
+      urlEnding = "cc";
+    }else if(this.props.baseUrl.endsWith("com")){
+      urlEnding = "com";
+    }else{
+      urlEnding = "com";
+    }
+
+    let contextMenuDisplay;
+    if (this.props.isAdmin){
+      contextMenuDisplay = (
+        <ul className="user-context-menu-container">
+
+          <li id="messages-link-item">
+            <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
+              <div className="icon"></div>
+              <span>Messages</span>
+              {badgeNot}
+            </a>
+          </li>
+          <li id="contacts-link-item">
+            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
+              <div className="icon"></div>
+              <span>Contacts</span>
+            </a>
+          </li>
+
+          <li id="storage-link-item">
+            <a href={"https://cloud.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Storage</span>
+            </a>
+          </li>
+          <li id="docs-link-item">
+            <a href={"https://docs.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Docs</span>
+            </a>
+          </li>
+
+          <li id="calendar-link-item">
+            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
+              <div className="icon"></div>
+              <span>Calendar</span>
+            </a>
+          </li>
+          <li id="music-link-item">
+            <a href={"https://music.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Music</span>
+            </a>
+          </li>
+
+        </ul>
+      );
+    } else {
+      contextMenuDisplay = (
+        <ul  className="user-context-menu-container">
+          <li id="messages-link-item" >
+            <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
+              <div className="icon"></div>
+              <span>Messages</span>
+              {badgeNot}
+            </a>
+          </li>
+
+        </ul>
+      );
+    }
+
     return (
       <li id="user-login-menu-container" ref={node => this.node = node}>
         <div className={"user-dropdown " + this.state.dropdownClass}>
@@ -42,6 +143,7 @@ class UserLoginMenuContainer extends React.Component {
             type="button"
             id="userLoginDropdown">
             <img className="th-icon" src={this.props.user.avatar}/>
+            {badgeNot}
           </button>
           <ul className="dropdown-menu dropdown-menu-right">
             <li id="user-info-menu-item">
@@ -58,6 +160,9 @@ class UserLoginMenuContainer extends React.Component {
                   </ul>
                 </div>
               </div>
+            </li>
+            <li className="user-context-menu">
+              {contextMenuDisplay}
             </li>
             <li className="user-settings-item">
              <span className="user-settings-item-title">Metaheader theme light</span>

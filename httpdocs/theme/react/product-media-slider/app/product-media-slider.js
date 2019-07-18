@@ -3,40 +3,18 @@ import ReactDOM from 'react-dom';
 import {isMobile} from 'react-device-detect';
 import VideoPlayerWrapper from './video-player';
 import BookReaderWrapper from './book-reader';
+import MusicPlayerWrapper from './music-player';
+
+import {GenerateGalleryArray, CheckForMultipleAudioFiles, GroupAudioFilesInGallery} from './product-media-slider-helpers';
 
 function ProductMediaSlider(){ 
 
   /* Component */
 
   const [ product, setProduct ] = useState(window.product);
-
-  let galleryArray = []
-  if (window.galleryPicturesJson) window.galleryPicturesJson.forEach(function(gp,index){ galleryArray.push({url:gp,type:'image'}); });
-  else galleryArray = [{url:product.image_small,type:'image'} ];
-  if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... galleryArray ];
-  if (window.filesJson) {
-    window.filesJson.forEach(function(f,index){
-      if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 || f.type.indexOf('epub') > -1){
-        let type;
-        if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 ) type = f.type.split('/')[0]
-        else if (f.type.indexOf('epub') > -1 ) type = "book";
-        let url_preview, url_thumb;
-        if (f.url_thumb) url_thumb = f.url_thumb.replace(/%2F/g,'/').replace(/%3A/g,':');
-        if (f.url_preview) url_preview = f.url_preview.replace(/%2F/g,'/').replace(/%3A/g,':');
-          const gItem = {
-            url:f.url.replace(/%2F/g,'/').replace(/%3A/g,':'),
-            collection_id:f.collection_id,
-            type:type,
-            file_id:f.id,
-            title:f.title,
-            url_thumb:url_thumb,
-            url_preview:url_preview
-          }
-          galleryArray = [gItem, ... galleryArray] 
-        }
-    })
-  }
-
+  let galleryArray = GenerateGalleryArray(product);
+  const galleryHasMultipleAudioFiles = CheckForMultipleAudioFiles(galleryArray);
+  if (galleryHasMultipleAudioFiles) galleryArray = GroupAudioFilesInGallery(galleryArray);
   const [ gallery, setGallery ] = useState(galleryArray);
   const [ disableGallery, setDisableGallery ] = useState(gallery.length > 1 ? false : true)
   const parentContainerElement = document.getElementById('product-title-div');
@@ -51,6 +29,8 @@ function ProductMediaSlider(){
   const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(true);
 
   let sliderFadeControlTimeOut;
+
+  console.log(gallery);
 
   // use effects
   React.useEffect(() => { initProductMediaSlider(currentSlide) },[currentSlide])
@@ -212,6 +192,7 @@ function ProductMediaSlider(){
       sliderHeight={sliderHeight}
       cinemaMode={cinemaMode}
       gallery={gallery}
+      product={product}
       disableGallery={disableGallery}
       onFinishedSlidesRender={onFinishedSlidesRender}
       onCinemaModeClick={toggleCinemaMode}
@@ -286,54 +267,50 @@ function SlideItem(props){
   const [ itemSetHeight, setItemSetHeight ] = useState();
 
   React.useEffect(() => {
-    if (props.gallery && props.gallery.length === props.slideIndex + 1){
-      props.onFinishedSlidesRender();
-    }
+    if (props.gallery && props.gallery.length === props.slideIndex + 1) props.onFinishedSlidesRender();
   }, [props.gallery])
   React.useEffect(() => { getSlideContentHeight(props.cinemaMode) },[props.currentSlide, props.cinemaMode]);
 
   function getSlideContentHeight(cinemaMode){
     if (props.currentSlide === props.slideIndex){    
-    if (props.slide.type === "image"){
-      const imageEl = document.getElementById('slide-img-'+props.slideIndex);
-      if ( cinemaMode === true ){
-        let imageHeight = imageEl.naturalHeight;
-        if (imageEl.naturalWidth > window.innerWidth){
-          let dimensionsPercentage = window.innerWidth / imageEl.naturalWidth;
-          imageHeight = imageEl.naturalHeight * dimensionsPercentage;
-        }
-        setMediaStyle({height:imageHeight})
-        props.onSetSliderHeight(imageHeight);
-      } else {
-        if (imageEl.offsetHeight > 0) {
-          if (props.disableGallery){
-            let imageHeight = itemSetHeight;
-            if (!itemSetHeight) setItemSetHeight(imageEl.offsetHeight)
-            setMediaStyle({maxHeight:itemSetHeight})
-            props.onSetSliderHeight(itemSetHeight)
-          } else {
-            setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
-            props.onSetSliderHeight(360)
-          }          
+      if (props.slide.type === "image"){
+        const imageEl = document.getElementById('slide-img-'+props.slideIndex);
+        if ( cinemaMode === true ){
+          let imageHeight = imageEl.naturalHeight;
+          if (imageEl.naturalWidth > window.innerWidth){
+            let dimensionsPercentage = window.innerWidth / imageEl.naturalWidth;
+            imageHeight = imageEl.naturalHeight * dimensionsPercentage;
+          }
+          setMediaStyle({height:imageHeight})
+          props.onSetSliderHeight(imageHeight);
         } else {
-          if (props.disableGallery) setMediaStyle({maxHeight:360})
+          if (imageEl.offsetHeight > 0) {
+            if (props.disableGallery){
+              let imageHeight = itemSetHeight;
+              if (!itemSetHeight) setItemSetHeight(imageEl.offsetHeight)
+              setMediaStyle({maxHeight:itemSetHeight})
+              props.onSetSliderHeight(itemSetHeight)
+            } else {
+              setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
+              props.onSetSliderHeight(360)
+            }          
+          } else {
+            if (props.disableGallery) setMediaStyle({maxHeight:360})
+          }
         }
       }
-    }
-    
-    else if (props.slide.type === "embed"){ 
-      if (cinemaMode === true) props.onSetSliderHeight(315)
-    } 
-    
-    else if (props.slide.type === "video" || props.slide.type === "audio" || props.slide.type === "book"){
-      if (cinemaMode === true){
-        props.onSetSliderHeight(screen.height * 0.7); 
-      } else {
+      else if (props.slide.type === "embed"){ 
+        if (cinemaMode === true) props.onSetSliderHeight(315)
+      }
+      else if (props.slide.type === "video"){
+        if (cinemaMode === true) props.onSetSliderHeight(screen.height * 0.7); 
+        else props.onSetSliderHeight(360)
+      } else if (props.slide.type === "book"){
+        props.onSetSliderHeight(360)
+      } else if ( props.slide.type === "audio"){
         props.onSetSliderHeight(360)
       }
     }
-  } 
-
   }
 
   function onCinemaModeClick(){
@@ -344,7 +321,11 @@ function SlideItem(props){
   
   let slideContentDisplay;
   if (props.slide.type === "embed"){
-    slideContentDisplay = <div dangerouslySetInnerHTML={{__html: props.slide.url}} />;
+    slideContentDisplay = (
+      <div id="iframe-container">
+        <div dangerouslySetInnerHTML={{__html: props.slide.url}} />
+      </div>
+    )
   }
   else if (props.slide.type === "image") {
     slideContentDisplay = (
@@ -369,6 +350,21 @@ function SlideItem(props){
         onFullScreenToggle={props.onFullScreenToggle}
       />
     )
+  }
+  else if (props.slide.type === "audio"){
+    slideContentDisplay = (
+      <MusicPlayerWrapper 
+        height={props.sliderHeight}
+        width={props.containerWidth}
+        cinemaMode={props.cinemaMode} 
+        onCinemaModeClick={onCinemaModeClick}
+        slide={props.slide}
+        playAudio={props.currentSlide === props.slideIndex}
+        product={props.product}
+        onUpdateDimensions={props.onUpdateDimensions}
+        onFullScreenToggle={props.onFullScreenToggle}
+      />
+    )    
   }
   else if (props.slide.type === "book"){
     slideContentDisplay = (
@@ -399,9 +395,7 @@ function ThumbNavigationItem(props){
 
   React.useEffect(() => { if (props.gallery && props.gallery.length === props.slideIndex + 1){ props.onfinishedThumbsRender() } }, [props.gallery])
   React.useEffect(() => {
-    if (window.galleryThumbs){
-      window.galleryThumbs.slideTo(props.currentSlide);
-    }
+    if (window.galleryThumbs) window.galleryThumbs.slideTo(props.currentSlide);
   },[props.currentSlide])
 
   let previewImageContainer;
@@ -410,9 +404,6 @@ function ThumbNavigationItem(props){
       <div className="pages preview-image">
         <div className="page">
           {props.item.title}
-        </div>
-        <div className="page">
-
         </div>
       </div>
     )

@@ -88,7 +88,7 @@ class SiteHeader extends React.Component {
         </div>
       );
     }
-
+    
     let HeaderDisplay;
     if (this.state.device !== "tablet"){
       HeaderDisplay = (

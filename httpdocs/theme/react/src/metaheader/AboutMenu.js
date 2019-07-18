@@ -40,7 +40,7 @@ class AboutMenu extends React.Component {
 
     let faqLinkItem, apiLinkItem, aboutLinkItem,aboutPlingItem, aboutopencodeItem;
     if (this.props.isAdmin ){
-      faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>Plings</a></li>);
+      faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>Plings (admin only)</a></li>);
     }
     aboutPlingItem = (<li><a id="faq" href={this.props.baseUrl +"/faq-pling"}>FAQ Pling</a></li>);
     aboutopencodeItem = (<li><a id="faq" href={this.props.baseUrl +"/faq-opencode"}>FAQ Opencode</a></li>);

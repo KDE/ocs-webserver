@@ -184,7 +184,18 @@ function (_React$Component) {
           href: logoLink
         }, this.state.store.name));
       }
-
+      
+      /* 20190711 ronald: removed for now
+      var siteHeaderCatNameDisplay;
+      if (window.config.isAdmin === true && this.state.cat_title !== "All"){
+        var catLink = this.state.serverUrl + this.state.serverUri;
+        siteHeaderCatNameDisplay = React.createElement("div", {
+          id: "site-header-cat-name-container", className: "header_cat_link"
+        }, React.createElement("a", {
+          href: catLink
+        }, '/' + this.state.cat_title));
+      }
+      */
       var HeaderDisplay;
 
       if (this.state.device !== "tablet") {

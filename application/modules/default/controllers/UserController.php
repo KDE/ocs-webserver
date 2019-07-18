@@ -41,6 +41,17 @@ class UserController extends Local_Controller_Action_DomainSwitch
         } else {
             $this->_memberId = (int)$this->getParam('member_id');
         }
+
+        $action = $this->getRequest()->getActionName();
+        $title='';
+        if($action =='index')
+        {
+          $title = 'aboutme';
+        }else
+        {
+          $title = $action;
+        }
+        $this->view->headTitle($title . ' - ' . $this->getHeadTitle(), 'SET');
     }
 
     public function indexAction()

@@ -1,0 +1,146 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperFetchCategory = new Default_View_Helper_CatTitle();
+$helperFetchCatParent = new Default_View_Helper_CatParent();
+$getAuthUser = new Default_View_Helper_GetAuthUser();
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperBuildBaseUrl = new Default_View_Helper_BuildBaseUrl();
+$helperImage = new Default_View_Helper_Image();
+$auth = Zend_Auth::getInstance();
+$member = $getAuthUser->getAuthUser();
+$phash = null;
+$ltat = null;
+if ($auth->hasIdentity()) {
+    $sess = new Zend_Session_Namespace('ocs_meta');
+    $phash = $sess->phash;
+    $ltat = $sess->openid;
+}
+
+$jsonmember = null;
+if($member && !empty($member->username)){
+    $jsonmember=array(
+        'member_id' => $member->member_id,
+        'username' => $member->username,
+        'avatar' => $member->avatar,
+        'profile_image_url' => $member->profile_image_url
+    );
+}
+
+
+$serverUrl = $this->serverUrl();
+
+$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+
+$searchbaseurl = $this->buildSearchBaseUrl();
+$sname = Zend_Registry::get('store_host');
+$store_config = Zend_Registry::get('store_config');
+$store_order = $store_config->order;
+$store_name = $store_config->name;
+$is_show_title = $store_config->is_show_title;
+$last_char_store_order = substr($store_order, -1);
+
+$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
+$url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
+$url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
+$config_domain = $config = Zend_Registry::get('config')->settings->domain;
+$url_openid = $config_domain->openid->host;
+
+/** @var Zend_Controller_Request_Http $request */
+$request = Zend_Controller_Front::getInstance()->getRequest();
+$http_scheme = $request->getScheme();
+
+$json_menu = $this->fetchMetaheaderMenuJson();
+$json_tree = $this->fetchStoresForCatTreeJson();
+
+
+$filter = new Local_Filter_Url_Encrypt();
+//$thisurl = $helperBuildBaseUrl->buildBaserUrl();
+$thisurl = "/";
+if(isset($_GET['url'])) {
+    $thisurl = $_GET['url'];
+}
+$url_logout = "/logout?redirect=".$filter->filter($thisurl);
+$url_login = "/logint?redirect=".$filter->filter($thisurl);
+
+
+
+$cat_title = $helperFetchCategory->catTitle($this->cat_id);
+$category_id = $this->cat_id;
+$category_id_parent = $helperFetchCatParent->getCatParentId(array('project_category_id' =>  $category_id));
+$cat_title_length = strlen($cat_title);
+//check logo-width:
+$logoWidth = (int)$this->template['header-logo']['width'];
+$cat_title_left = (int)$logoWidth + (int)strlen($store_name)+120;
+$tabs_left = (int)$this->template['header-nav-tabs']['absolute-left'];
+$tabs_left += $cat_title_length*10;
+echo $this->render('partials/header/metaheader.phtml');
+
+?>
+
+
+
+<script type="text/javascript">
+    var json_hasIdentity = <?php  if( $auth->hasIdentity() ) { echo '1' ;} else { echo '0';} ?>;
+    var json_redirectString = <?php  if( $auth->hasIdentity() ) { echo Zend_Json::encode(null);} else {
+    $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
+    $redirectString = '/redirect/' . $helperEncryptUrl->EncryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"]);
+    echo Zend_Json::encode($redirectString);} ?>;
+    var json_serverUri = <?php echo Zend_Json::encode($_SERVER["REQUEST_URI"]);?>;
+    var json_member = <?php echo Zend_Json::encode($jsonmember); ?>;     
+    var json_member_avatar = <?php if( $auth->hasIdentity() ) {                
+        echo Zend_Json::encode($this->Image($member->profile_image_url,array('width' => 30, 'height' => 30)));
+    } else { echo Zend_Json::encode(null);}?>;
+    var json_template = <?php echo Zend_Json::encode($this->template); ?>;
+    var json_serverUrl = <?php echo Zend_Json::encode($serverUrl); ?>;
+    var json_baseurl = <?php echo  Zend_Json::encode($baseurl);?>;
+    var json_searchbaseurl = <?php echo  Zend_Json::encode($searchbaseurl);?>;    
+    var json_sname =  <?php echo  Zend_Json::encode($sname);?>;
+    var json_store_order =  <?php echo  Zend_Json::encode($store_order);?>;
+    var json_store_name =  <?php echo  Zend_Json::encode($store_name);?>;
+    var json_is_show_title =  <?php echo  Zend_Json::encode($is_show_title);?>;
+    var json_last_char_store_order = <?php echo  Zend_Json::encode($last_char_store_order);?>;
+    var json_cat_title =  <?php echo  Zend_Json::encode($cat_title);?>;
+    var json_cat_id =  <?php echo  Zend_Json::encode($category_id);?>;
+    var json_logoWidth = <?php echo  Zend_Json::encode($logoWidth);?>;
+    var json_cat_title_left = <?php echo  Zend_Json::encode($cat_title_left);?>;
+    var json_tabs_left = <?php echo  Zend_Json::encode($tabs_left);?>;
+    
+    var json_loginurl = <?php echo Zend_Json::encode($url_login); ?>;  
+    var json_logouturl = <?php echo Zend_Json::encode($url_logout); ?>;  
+    
+    var json_store_for_tree = <?php echo $json_tree; ?>;
+
+    
+</script>
+<script type="text/javascript" src="/theme/react/lib/react/react.production.min.js"></script>
+<script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.production.min.js"></script>
+
+
+<?php $this->inlineScript()->appendScript(
+    '$(document).ready(function(){
+        MenuHover.setup();
+        Popuppanel.setup();
+        LoginContainer.update();
+        PlingsRedirect.setup();
+    });'
+);

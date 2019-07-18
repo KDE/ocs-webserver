@@ -1,3 +1,6 @@
-alter table project_moderation drop column updated_by;
-alter table project_moderation drop column updated_at;
-alter table project_moderation add column `value` int(1) not null after `project_id`;
+ALTER TABLE `project_moderation`
+    DROP COLUMN `updated_by`;
+ALTER TABLE `project_moderation`
+    DROP COLUMN `updated_at`;
+ALTER TABLE `project_moderation`
+    ADD COLUMN `value` int(1) NOT NULL AFTER `project_id`;

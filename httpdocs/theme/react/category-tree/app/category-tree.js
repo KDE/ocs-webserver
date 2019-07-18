@@ -435,7 +435,6 @@ function CategoryPanel(props){
     }
 
     function onSetCategoryPanelHeight(panelHeight){
-        console.log(panelHeight);
         adjustSliderHeight(panelHeight + 25);
     }
 
@@ -449,16 +448,13 @@ function CategoryPanel(props){
         let categories;
         if (panelCategories.length > 0){
             categories = panelCategories.sort(sortArrayAlphabeticallyByTitle);
+            let itemIndex = 0;
             categories = categories.map((c,index) =>{
-                if (categories.length === (index + 1)){ 
-                    onSetCategoryPanelHeight(index * 25); 
-                    console.log(index);
-                } 
                 let showCategory = true;
-                if (c.is_show_in_menu){
-                    if (c.is_show_in_menu === "0") showCategory = false;
-                }
+                if (c.is_show_in_menu && c.is_show_in_menu === "0") showCategory = false;
                 if (showCategory === true){
+                    itemIndex += 1;
+                    if (categories.length === (index + 1)) onSetCategoryPanelHeight(itemIndex * 25);
                     return (
                         <CategoryMenuItem 
                             key={index}
@@ -537,17 +533,16 @@ function CategoryMenuItem(props){
             categoryMenuItemClassName = "active";
         }
     } else if (c.id === "00") {
-        //let baseName = window.config.sName;
-        //if (window.config.sName.indexOf('http') === -1 ) baseName = "https://" + window.config.sName;
-        //if (window.location.href === window.config.baseUrl + catLink || window.location.href === window.config.baseUrl + catLink.split("/browse")[0] ||
-        //    window.location.href === baseName + catLink || window.location.href === baseName + catLink.split("/browse")[0]){
-        //    categoryMenuItemClassName = "active";
-        //}
-        if (catTitle === json_store_name) categoryMenuItemClassName = "active";
+        let baseName = window.config.sName;
+        if (window.config.sName.indexOf('http') === -1 ) baseName = "https://" + window.config.sName;
+        if (window.location.href === window.config.baseUrl + catLink || window.location.href === window.config.baseUrl + catLink.split("/browse")[0] ||
+            window.location.href === baseName + catLink || window.location.href === baseName + catLink.split("/browse")[0]){
+            categoryMenuItemClassName = "active";
+        }
     } else {
         if (c.id && props.categoryId === parseInt(c.id) || props.selectedCategoriesId.indexOf(c.id) > -1 || window.location.href === catLink ||  window.location.href === catLink + "/") categoryMenuItemClassName = "active";
     }    
-
+    if (catTitle === json_store_name) categoryMenuItemClassName = "active";
     return(
         <li className={categoryMenuItemClassName} >
             {categoryMenuItemDisplay}

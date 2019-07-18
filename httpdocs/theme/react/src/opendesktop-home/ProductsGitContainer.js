@@ -4,8 +4,10 @@ import ProductGit from './ProductGit';
 class ProductsGitContainer extends React.Component {
   constructor(props){
   	super(props);
-    this.gitUrl='https://opencode.net/api/v4/projects?order_by=created_at&sort=desc&visibility=public&page=1&per_page=5';
-    this.gitUserUrl='https://opencode.net/api/v4/users?username=';
+    //this.gitUrl='https://opencode.net/api/v4/projects?order_by=created_at&sort=desc&visibility=public&page=1&per_page=5';
+    this.gitUrl = '/json/gitlabnewprojects';
+    //this.gitUserUrl='https://opencode.net/api/v4/users?username=';
+    this.gitUserUrl = '/json/gitlabfetchuser?username=';
     this.state = {items:[]};
   }
 
@@ -42,7 +44,7 @@ class ProductsGitContainer extends React.Component {
     }
     return (
       <div className="panelContainer">
-        <div className="title"> Git-Projects </div>
+        <div className="title"> <a href="https://www.opencode.net/explore/projects">Git-Projects</a></div>
         {container}
       </div>
     )

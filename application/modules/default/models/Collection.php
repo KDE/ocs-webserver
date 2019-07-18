@@ -577,7 +577,8 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
         $q = $this->select()->from(array('project' => 'project'), array(
             'project_id',
             'image_small',
-            'title'
+            'title',
+            'changed_at'
         ))->setIntegrityCheck(false)
           ->where('project.status = ?', self::PROJECT_ACTIVE)
           ->where('project.member_id = ?', $project->member_id, 'INTEGER')
@@ -674,7 +675,8 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
             'project_id',
             'image_small',
             'title',
-            'catTitle' => 'cat_title'
+            'catTitle' => 'cat_title',
+            'changed_at'
         ))->setIntegrityCheck(false)->where('status = ?', self::PROJECT_ACTIVE)
                   ->where('member_id != ?', $project->member_id, 'INTEGER')
                   ->where('amount_reports is null')
@@ -1408,10 +1410,8 @@ class Default_Model_Collection extends Default_Model_DbTable_Project
             case 'hot':
                 //$statement->order(array('amount_received DESC', 'count_plings DESC', 'latest_pling DESC', 'project.created_at DESC'));
                 $statement->order(array(
-                    new Zend_Db_Expr('(round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC'),
-                    'amount_received DESC',
-                    'count_plings DESC',
-                    'latest_pling DESC',
+                    new Zend_Db_Expr('(round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC'),                    
+                    'count_plings DESC',                    
                     'project.created_at DESC'
                 ));
                 $statement->where(' project.created_at >= (NOW()- INTERVAL 14 DAY)');
