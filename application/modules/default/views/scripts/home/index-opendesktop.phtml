@@ -50,8 +50,7 @@ $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images
     $productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'152,233');
     $productsThemes = $modelInfo->getLastProductsForHostStores(5,'148');
     $productsMultimedia = $modelInfo->getLastProductsForHostStores(5,'586');
-
-
+    $comments = $modelInfo->getLatestComments(5);
     foreach ($productsAppAddons as &$p) {
       $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
     }
@@ -60,6 +59,9 @@ $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images
     }
     foreach ($productsMultimedia as &$p) {
       $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
+    }
+    foreach ($comments as &$p) {
+      $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
     }
 
     $config = Zend_Registry::get('config')->settings->client->default;
@@ -74,7 +76,7 @@ $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images
     $url_musicopendesktop = $config->url_musicopendesktop;
     $url_mastodon = $config->url_mastodon;
     $response = array(
-      'comments' => $modelInfo->getLatestComments(5),
+      'comments' => $comments,
       'products' => $productsAppAddons,
       'productsThemes' => $productsThemes,
       'productsMultimedia' => $productsMultimedia,
