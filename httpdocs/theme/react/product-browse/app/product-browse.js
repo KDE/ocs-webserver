@@ -99,6 +99,8 @@ function ProductBrowseItemList(){
         })
     }
 
+    console.log(gallery);
+
     let productRowsDisplay;
     if (gallery){
         productRowsDisplay = gallery.map((pr,index) => (
