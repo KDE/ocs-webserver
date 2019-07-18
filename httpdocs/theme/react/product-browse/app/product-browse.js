@@ -18,6 +18,11 @@ function ProductBrowse(){
 }
 
 function ProductBrowseFilterContainer(){
+
+    React.useEffect(() => {
+        console.log(filters);
+    },[])
+
     return (
         <div id="product-browse-top-menu">
             <ul>
@@ -131,10 +136,15 @@ function ProductBrowseItemListRow(props){
 function ProductBrowseItem(props){
 
     const p = props.product;
+
+    const productBrowseItemStyle = {
+        width:p.width,
+        height:p.height
+    }
     
     return (
-        <div className="product-browse-item" id={"product-" + p.project_id}>
-            <img src={p.src} width={p.width} height={p.height} />
+        <div className="product-browse-item" id={"product-" + p.project_id} style={productBrowseItemStyle}>
+            <img src={p.src} />
             <div className="product-browse-item-info" style={{"display":"none"}}>
                 <h2><a href={window.config.baseUrl + "/" + p.type_id === "3" ? "c" : "p" + "/" + p.project_id}>{p.title}</a></h2>
                 <span>{p.cat_title}</span>
