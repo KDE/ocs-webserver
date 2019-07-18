@@ -3,7 +3,7 @@ import TimeAgo from 'react-timeago';
 
 class Product extends React.Component {
   render(){
-      let projectUrl = "/p/"+this.props.product.project_id;
+      let projectUrl = this.props.baseUrlStore+"/p/"+this.props.product.project_id;
       const createdDate = this.props.product.changed_at?this.props.product.changed_at:this.props.product.created_at;
       const scoreDisplay=(
           <div className="score-info">
