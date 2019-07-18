@@ -75,7 +75,8 @@ function ProductBrowseItemList(){
 
                 const decrease = this.naturalHeight - rowHeight;
                 const decreasePercentage = rowHeight / this.naturalHeight;
-                const adjustedWidth = this.naturalWidth * decreasePercentage;
+                let adjustedWidth = this.naturalWidth * decreasePercentage;
+                if (adjustedWidth > this.naturalWidth) adjustedWidth = this.naturalWidth;
                 const newRowWidth = rowWidth + adjustedWidth;
 
                 if (newRowWidth > containerWidth){
@@ -137,7 +138,8 @@ function ProductBrowseItem(props){
     const p = props.product;
 
     const productBrowseItemStyle = {
-        height:p.height
+        height:p.height,
+        width:p.width
     }
     
     return (
