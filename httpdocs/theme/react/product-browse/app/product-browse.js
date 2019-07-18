@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import Gallery from 'react-grid-gallery';
-import {isMobile} from 'react-device-detect';
-
+import {SortByCurrentFilter} from './product-browse-helpers';
 console.log(window.config);
 console.log(window.location);
 
@@ -43,53 +41,32 @@ function ProductBrowseFilterContainer(){
 function ProductBrowseItemList(){
     
     const [ gallery, setGallery ] = useState();
+    const [ containerWidth, setContainerWidth ] = useState( $('#product-browse-container').width());
+    const [ rowHeight, setRowHeight ] = useState(250);
 
-    console.log(gallery);
+    let InitialImgBaseUrl = "https://cn.";
+    InitialImgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
+    const [ imgBaseUrl, setImageBaseUrl ] = useState(InitialImgBaseUrl)
 
-    React.useEffect(() => {
-        initGallery()
-    },[])
+    React.useEffect(() => { initGallery() },[])
 
     function initGallery(){
 
-        const rowHeight = 250;
-        const containerWidth = $('#product-browse-container').width();
-        let imgBaseUrl = "https://cn.";
-        imgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
-        let productsGallery = [];
-        let rowNumber = 0;
-        let rowWidth = 0;
-
-        function sortByCurrentFilter(a,b){
-            const aDate = typeof a.changed_at !== undefined ? a.changed_at : a.created_at
-            const aCreatedAt = new Date(aDate);
-            // const aTimeStamp = aCreatedAt.getTime();
-            const bDate = typeof b.changed_at !== undefined ? b.changed_at : b.created_at
-            const bCreatedAt = new Date(bDate);
-            // const bTimeStamp = bCreatedAt.getTime();
-            return aCreatedAt - bCreatedAt;
-        }
-
-        const sortedProducts = products.sort(sortByCurrentFilter);
-        console.log(sortedProducts);
-
-
-        let imgLoadIndex = 0;
+        const sortedProducts = products.sort(SortByCurrentFilter);
+        let productsGallery = [], rowNumber = 0,rowWidth = 0, imgLoadIndex = 0;
 
         sortedProducts.forEach(function(p,index){
-            
+
             const imgUrl = imgBaseUrl + "/img/" + p.image_small;
             const img = new Image();
-
             img.addEventListener("load", function(){
-
-                const decrease = this.naturalHeight - rowHeight;
+                
                 const decreasePercentage = rowHeight / this.naturalHeight;
                 let adjustedWidth = this.naturalWidth * decreasePercentage;
                 if (adjustedWidth > this.naturalWidth) adjustedWidth = this.naturalWidth;
                 if (typeof adjustedWidth === undefined) adjustedWidth = 250;
+                
                 const newRowWidth = rowWidth + adjustedWidth;
-
                 if (newRowWidth > containerWidth){
                     rowNumber += 1;
                     rowWidth = adjustedWidth;
@@ -103,10 +80,10 @@ function ProductBrowseItemList(){
                     row:rowNumber,
                     ...p
                 })
-
+                
                 imgLoadIndex += 1;
-
                 if ((imgLoadIndex + 1) === sortedProducts.length) setGallery(productsGallery);
+            
             });
 
             img.src = imgUrl;
