@@ -122,7 +122,7 @@ function ProductBrowseItemList(){
 }
 
 function ProductBrowseItemListRow(props){
-    console.log(props.rowWidth,props.containerWidth);
+    console.log(props.rowWidth / props.containerWidth);
     const sortedRowProducts = props.products.sort(SortByCurrentFilter);
     const productsDisplay = sortedRowProducts.map((p,index) => (
         <ProductBrowseItem 
@@ -140,15 +140,8 @@ function ProductBrowseItemListRow(props){
 function ProductBrowseItem(props){
     
     const p = props.product;
-    
-    const productBrowseItemContainerStyle = {
-        height:p.height,
-        width:p.width
-    }
-    
-    const productBrowseItemStyle = {
-        backgroundImage:p.src
-    }
+    const productBrowseItemContainerStyle = { height:p.height, width:p.width }
+    const productBrowseItemStyle = { backgroundImage:url(p.src) }
 
     let itemLink = window.config.baseUrl + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
