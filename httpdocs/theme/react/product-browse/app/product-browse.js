@@ -56,13 +56,12 @@ function ProductBrowseItemList(){
 
         const sortedProducts = products.sort(SortByCurrentFilter);
         let productsGallery = [], rowNumber = 0,rowWidth = 0, imgLoadIndex = 0;
-        
+
         sortedProducts.forEach(function(p,index){
-            
             const imgUrl = imgBaseUrl + "/img/" + p.image_small;
             const img = new Image();
-
             img.addEventListener("load", function(){
+                
                 const decreasePercentage = rowHeight / this.naturalHeight;
                 let adjustedWidth = this.naturalWidth * decreasePercentage;
                 if (adjustedWidth > this.naturalWidth) adjustedWidth = this.naturalWidth;
@@ -83,19 +82,17 @@ function ProductBrowseItemList(){
                     ...p
                 })
                 productsGallery[rowNumber].rowWidth = rowWidth;
+                imgLoadIndex += 1;
+                console.log(imgLoadIndex);
                 if ((imgLoadIndex + 1) === sortedProducts.length) setGallery(productsGallery);
+            
             });
-
+            img.addEventListener("error", function(){
+                imgLoadIndex += 1;
+                if ((imgLoadIndex + 1) === sortedProducts.length) setGallery(productsGallery);                
+            });
             img.src = imgUrl;
-            img.onerror = function(){ imageLoadIndex += 1 };
-            if ((imgLoadIndex + 1) === sortedProducts.length) setGallery(productsGallery);
-        
         })
-    }
-
-
-    function imageFound(){
-        
     }
 
     let productRowsDisplay;
