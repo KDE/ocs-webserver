@@ -16,7 +16,7 @@ function IntroductionDetailCode(props){
             Version control system. Opencode is open source software to
             collaborate on code.
             <p>Powered by Gitlab.</p>
-            <a href="www.opencode.net"> www.opencode.net </a>
+            <a href="https://www.opencode.net"> www.opencode.net </a>
             </div>
       </div>
     </div>

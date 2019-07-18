@@ -42,7 +42,7 @@ class Introduction extends Component {
         <div className="intro-desc">
           <h1> Welcome to opendesktop.org</h1>
           <h4>
-          OpenDesktop is a <a href="#network-sites">network of sites</a> that follows the same <a href="#standards">open standards</a>.
+          OpenDesktop is a <a href="#network-sites">network of sites</a> that follow the same <a href="#standards">open standards</a>.
           Get one account to access these areas:
 
               <a href="#_" className="lightbox" id="network-sites">
