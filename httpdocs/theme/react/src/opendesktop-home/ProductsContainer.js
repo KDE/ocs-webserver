@@ -9,7 +9,7 @@ class ProductsContainer extends React.Component {
     if (this.props.products){
       const products = this.props.products.map((product,index) => (
         <li key={index}>
-        <Product product={product}/>
+        <Product product={product} baseUrlStore={this.props.baseUrlStore}/>
         </li>
       ));
      container = <ul>{products}</ul>
