@@ -40,13 +40,13 @@ class HomeMainContainer extends Component {
                                   />
                   </div>
                   <div className="middle">
+                     <ProductsGitContainer />
                      <ProductsContainer title="Themes" cat="381" products={this.state.products}/>
                      <ProductsContainer title="Apps and Addons" cat="282" products={this.state.products}/>
                      <ProductsContainer title="Multimedia" cat="282" products={this.state.productsMultimedia}/>
-                     <ProductsGitContainer />
-                     <CommentsContainer comments={this.state.comments}/>
-                     <BlogFeedContainer />
                      <ChatContainer />
+                     <CommentsContainer comments={this.state.comments}/>
+                     <BlogFeedContainer />                     
                      <RssNewsContainer />
                   </div>
              </div>
