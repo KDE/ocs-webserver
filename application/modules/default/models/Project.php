@@ -1272,6 +1272,9 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                 ));*/
                 $statement->order('project.laplace_score DESC');
                 break;
+            case 'plinged':
+                $statement->order('project.count_plings DESC');
+                break;
             case 'test':
                 $statement->order('project.laplace_score_test DESC');
                 break;
