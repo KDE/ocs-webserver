@@ -30,16 +30,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="alternate" type="application/rss+xml" title="Latest Products" href="/content.rdf"/>
 
-
-
-    <!-- Loading Bootstrap 
-     
-    <link rel="stylesheet" href="/theme/flatui/js/lib/bootstrap-4.0.0-dist/css/bootstrap.min.css" type="text/css"  crossorigin="anonymous">
-    -->
-    
-     <link rel="stylesheet" href="/theme/flatui/css/bootstrap/bootstrap.min.css" type="text/css"  crossorigin="anonymous">
-   
-     
+    <!-- Loading Bootstrap -->
+    <link rel="stylesheet" href="/theme/flatui/css/bootstrap/bootstrap.min.css" type="text/css"  crossorigin="anonymous">
     <link rel="stylesheet" href="/tools/fancybox2.1.4/jquery.fancybox.css?v=2.1.4" type="text/css" media="screen" />
     <link rel="stylesheet" type="text/css" href="/theme/flatui/js/lib/tooltipster/dist/css/tooltipster.bundle.min.css" />
     <link rel="stylesheet" type="text/css" href="/theme/flatui/js/lib/tooltipster/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-light.min.css" />
@@ -51,7 +43,6 @@
     <link href="/theme/flatui/css/startpage.css" rel="stylesheet">
     <link href="/theme/react/assets/css/metaheader.css?<?= APPLICATION_VERSION ?>" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="/theme/react/assets/css/home-main-container.css"/>
-
     <!-- third party -->
     <link href="/theme/flatui/css/fontawsome/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous">
     <script src="/theme/flatui/js/lib/jquery-3.2.1.min.js" ></script>
@@ -59,8 +50,7 @@
 
     <script type="text/javascript" src="/theme/react/lib/react/react.production.min.js"></script>
     <script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.production.min.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="/theme/flatui/js/lib/cookieconsent/cookieconsent.min.css" />    
+    <link rel="stylesheet" type="text/css" href="/theme/flatui/js/lib/cookieconsent/cookieconsent.min.css" />            
     <script type="text/javascript" src="/theme/flatui/js/lib/cookieconsent/cookieconsent.min.js"></script>
 
     <script>
@@ -72,17 +62,30 @@
         },
         "button": {
           "background": "#f1d600"
-        },
-        "content": {
-            "href": "www.pling.com"
-          }
+        }
+      },
+      "content": {
+        "message": "This website uses cookies to ensure certain functionality of our web offerings.",
+        "dismiss": "OK",
+        "link": "Learn more",
+        "href": "/terms/cookies"
       }
     })});
    </script>
+
 </head>
 <body id="od-body">
 
-<?php echo $this->render('partials/header/template_pling_home.phtml'); ?>
+<?php 
+ if($this->index && $this->index==4)
+ {
+    echo $this->render('partials/header/template_pling_home.phtml');   
+ }else
+ {
+    echo $this->render('partials/header/template.phtml'); 
+ }
+?>
+
 <?php echo $this->render('partials/flashMessage.phtml'); ?>
 <?php echo $this->layout()->content; ?>
 <?php echo $this->render('partials/footer/template.phtml'); ?>
@@ -91,10 +94,8 @@
     <div class="modal-body"></div>
     <div id="error"></div>
 </div>
-<!--
+
 <script src="/theme/flatui/js/lib/bootstrap.min.js" crossorigin="anonymous"></script>
--->
-<script src="/theme/flatui/js/lib/bootstrap-4.0.0-dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
 <script src="/theme/flatui/js/lib/moment.min.js"></script>
 <script src="/tools/md5.js"></script>
 <script src="/theme/flatui/js/script.js?<?= APPLICATION_VERSION ?>"></script>
