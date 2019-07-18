@@ -21,13 +21,22 @@ function ProductBrowseFilterContainer(){
         console.log(filters);
     },[])
 
+    let filtersBaseUrl = window.config.baseUrl + "/browse/";
+    if (filters.category) filtersBaseUrl += "cat/" + filters.category + "/";
+
     return (
         <div id="product-browse-top-menu">
             <div className="pling-nav-tabs">
                 <ul className="nav nav-tabs pling-nav-tabs" id="sort">
-                    <li className={filters.order === "latest" ? "active" : ""}><a >Latest</a></li>
-                    <li className={filters.order === "score" ? "active" : ""}><a>Score</a></li>
-                    <li className={filters.order === "plinged" ? "active" : ""}><a>Plinged</a></li>
+                    <li className={filters.order === "latest" ? "active" : ""}>
+                        <a href={filtersBaseUrl + "order/latest/" + window.location.search}>Latest</a>
+                    </li>
+                    <li className={filters.order === "score" ? "active" : ""}>
+                        <a href={filtersBaseUrl + "order/rating/" + window.location.search}>Score</a>
+                    </li>
+                    <li className={filters.order === "plinged" ? "active" : ""}>
+                        <a href={filtersBaseUrl + "order/plinged/" + window.location.search}>Plinged</a>
+                    </li>
                     <li style={{"float":"right"}}>
                         <input type="checkbox"/>
                         <label>Original</label>
