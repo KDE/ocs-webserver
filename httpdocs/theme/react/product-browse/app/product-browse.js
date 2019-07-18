@@ -122,12 +122,13 @@ function ProductBrowseItemList(){
 }
 
 function ProductBrowseItemListRow(props){
-    console.log(props.containerWidth / props.rowWidth);
+    const percentageIncrease = props.containerWidth / props.rowWidth;
     const sortedRowProducts = props.products.sort(SortByCurrentFilter);
     const productsDisplay = sortedRowProducts.map((p,index) => (
         <ProductBrowseItem 
             key={index}
             product={p}
+            percentageIncrease={percentageIncrease}
         />
     ))
     return (
@@ -140,7 +141,7 @@ function ProductBrowseItemListRow(props){
 function ProductBrowseItem(props){
     
     const p = props.product;
-    const productBrowseItemContainerStyle = { height:p.height, width:p.width }
+    const productBrowseItemContainerStyle = { height:p.height, width:p.width * props.percentageIncrease }
     const productBrowseItemStyle = { backgroundImage:'url('+p.src+')' }
 
     let itemLink = window.config.baseUrl + "/";
