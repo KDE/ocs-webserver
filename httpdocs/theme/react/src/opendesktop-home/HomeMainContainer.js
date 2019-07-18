@@ -34,7 +34,7 @@ class HomeMainContainer extends Component {
                 <div id="home-main-container">
                   <div className="top">
                       <Introduction urlCode={this.state.gitlabUrl}
-                                  urlPublish={this.state.baseUrl}
+                                  urlPublish={this.state.baseUrlStore}
                                   urlCommunity={this.state.forumUrl}
                                   urlPersonal={this.state.url_myopendesktop}
                                   />
