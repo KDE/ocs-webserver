@@ -86,6 +86,7 @@ function ProductBrowseItemList(){
                 const decreasePercentage = rowHeight / this.naturalHeight;
                 let adjustedWidth = this.naturalWidth * decreasePercentage;
                 if (adjustedWidth > this.naturalWidth) adjustedWidth = this.naturalWidth;
+                if (typeof adjustedWidth === undefined) adjustedWidth = 250;
                 const newRowWidth = rowWidth + adjustedWidth;
 
                 if (newRowWidth > containerWidth){
