@@ -1,9 +1,5 @@
 export function SortByCurrentFilter(a,b){
-    
     let aComparedValue, bComparedValue;
-
-    console.log(filters)
-
     if (filters.order === "latest"){
         const aDate = typeof a.changed_at !== undefined ? a.changed_at : a.created_at
         aComparedValue = new Date(aDate);
@@ -16,9 +12,6 @@ export function SortByCurrentFilter(a,b){
         aComparedValue = a.count_plings !== null ? a.count_plings : 0;
         bComparedValue = b.count_plings !== null ? b.count_plings : 0;
     }
-
     console.log(aComparedValue,bComparedValue);
-
     return aComparedValue - bComparedValue;
-
 }
