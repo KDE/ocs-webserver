@@ -115,18 +115,24 @@ foreach ($this->products as $this->product) {
         $this->widgetRating->project_id = $this->product->project_id;
         $this->widgetRating->laplace_score = $this->product->laplace_score;
         $this->widgetRating->count_likes = $this->product->count_likes;
-        $this->widgetRating->count_dislikes = $this->product->count_dislikes;
+        $this->widgetRating->count_dislikes = $this->product->count_dislikes;        
         // it is a trial
         include APPLICATION_PATH . '/modules/default/views/scripts/partials/widgetRating.phtml';
         //echo $this->render('partials/widgetRating.phtml'); ?>
         <!-- /RATING -->
+        
+        <?php if($this->product->count_plings && $this->product->count_plings>0){
+                 echo '<div class="plinged">Plings: '.$this->product->count_plings.'</div>';    
+              }
+          ?>
+
+        
         <div class="progress">
             <div class="bar no-goal">
             </div>
         </div>
 
         <div class="collected">
-
              <span><?php echo $updateTime ?></span>
         </div>
 
