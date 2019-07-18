@@ -1290,12 +1290,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
 
             case 'hot':
-                //$statement->order(array('amount_received DESC', 'count_plings DESC', 'latest_pling DESC', 'project.created_at DESC'));
+               
                 $statement->order(array(
-                    new Zend_Db_Expr('(round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC'),
-                    'amount_received DESC',
-                    'count_plings DESC',
-                    'latest_pling DESC',
+                    new Zend_Db_Expr('(round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC'),                    
+                    'count_plings DESC',                    
                     'project.created_at DESC'
                 ));
                 $statement->where(' project.created_at >= (NOW()- INTERVAL 14 DAY)');
