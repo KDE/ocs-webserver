@@ -143,14 +143,16 @@ function ProductBrowseItem(props){
     }
     
     return (
-        <div className="product-browse-item" id={"product-" + p.project_id} style={productBrowseItemStyle}>
-            <img src={p.src} />
-            <div className="product-browse-item-info" style={{"display":"none"}}>
-                <h2><a href={window.config.baseUrl + "/" + p.type_id === "3" ? "c" : "p" + "/" + p.project_id}>{p.title}</a></h2>
-                <span>{p.cat_title}</span>
-                <span>by <a href={window.config.baseUrl + "/u/" + p.member_id}>{p.username}</a></span>
-                <span>score {p.laplace_score}</span>
-                <span>{p.created_at}</span>
+        <div className="product-browse-item-wrapper" style={productBrowseItemStyle}>
+            <div className="product-browse-item" id={"product-" + p.project_id}>
+                <img src={p.src} />
+                <div className="product-browse-item-info" style={{"display":"none"}}>
+                    <h2><a href={window.config.baseUrl + "/" + p.type_id === "3" ? "c" : "p" + "/" + p.project_id}>{p.title}</a></h2>
+                    <span>{p.cat_title}</span>
+                    <span>by <a href={window.config.baseUrl + "/u/" + p.member_id}>{p.username}</a></span>
+                    <span>score {p.laplace_score}</span>
+                    <span>{p.created_at}</span>
+                </div>
             </div>
         </div>
     )
