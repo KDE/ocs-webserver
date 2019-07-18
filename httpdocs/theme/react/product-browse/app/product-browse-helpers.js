@@ -8,6 +8,8 @@ export function SortByCurrentFilter(a,b){
     } else if (filters.order === "rating"){
         aComparedValue = parseInt(a.laplace_score);
         bComparedValue = parseInt(b.laplace_score);
+        console.log(aComparedValue);
+        console.log(bComparedValue);
     }
     return aComparedValue - bComparedValue;
 }

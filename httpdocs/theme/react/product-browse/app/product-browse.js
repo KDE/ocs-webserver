@@ -145,8 +145,7 @@ function ProductBrowseItem(props){
     itemLink += "/" + p.project_id
     return (
         <div className="product-browse-item-wrapper" style={productBrowseItemStyle}>
-            <div className="product-browse-item" id={"product-" + p.project_id}>
-                <img src={p.src} />
+            <div className="product-browse-item" id={"product-" + p.project_id} style={{"backgroundImage":p.src}}>
                 <div className="product-browse-item-info">
                     <div className="product-browse-item-info-content">
                         <div>
