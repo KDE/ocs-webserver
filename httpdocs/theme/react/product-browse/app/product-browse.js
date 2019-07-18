@@ -45,6 +45,8 @@ function ProductBrowseItemList(){
     
     const [ gallery, setGallery ] = useState();
 
+    console.log(gallery);
+
     React.useEffect(() => {
         initGallery()
     },[])
