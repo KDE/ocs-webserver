@@ -8,7 +8,9 @@ class BlogFeedContainer extends React.Component {
 
   componentDidMount() {
     const self = this;
-    $.ajax("https://forum.opendesktop.org/latest.json").then(function (result) {
+    var json_url = '/json/forum';
+    //$.ajax("https://forum.opendesktop.org/latest.json").then(function (result) {
+    $.ajax(json_url).then(function (result) {
       let topics = result.topic_list.topics;
       topics.sort(function(a,b){
         return new Date(b.last_posted_at) - new Date(a.last_posted_at);
@@ -24,12 +26,12 @@ class BlogFeedContainer extends React.Component {
 
       const feedItems = this.state.items.map((fi,index) => (
         <li key={index}>
-          <a className="title" href={"https://forum.opendesktop.org//t/" + fi.id}>
+          <a className="title" href={"https://forum.opendesktop.org/t/" + fi.id}>
             <span>{fi.title}</span>
           </a>
           <span className="info-row">
-            <span className="date"><TimeAgo date={fi.created_at} /></span>
-            <span className="comment-counter">{fi.reply_count} replies</span>
+            <span className="date">{fi.timeago}</span>
+            <span className="comment-counter">{fi.replyMsg}</span>
           </span>
         </li>
       ));
