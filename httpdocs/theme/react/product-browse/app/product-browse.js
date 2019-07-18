@@ -122,7 +122,7 @@ function ProductBrowseItemList(){
 }
 
 function ProductBrowseItemListRow(props){
-    console.log(props.rowWidth / props.containerWidth);
+    console.log(props.containerWidth / props.rowWidth);
     const sortedRowProducts = props.products.sort(SortByCurrentFilter);
     const productsDisplay = sortedRowProducts.map((p,index) => (
         <ProductBrowseItem 
