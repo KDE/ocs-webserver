@@ -56,13 +56,13 @@ function ProductBrowseItemList(){
         let rowWidth = 0;
 
         function sortByCurrentFilter(a,b){
-            const aDate = a.changed_at ? a.changed_at : a.created_at
+            const aDate = typeof a.changed_at !== undefined ? a.changed_at : a.created_at
             const aCreatedAt = new Date(aDate);
             // const aTimeStamp = aCreatedAt.getTime();
-            const bDate = b.changed_at ? b.changed_at : b.created_at
+            const bDate = typeof b.changed_at !== undefined ? b.changed_at : b.created_at
             const bCreatedAt = new Date(bDate);
             // const bTimeStamp = bCreatedAt.getTime();
-            return bCreatedAt - aCreatedAt;
+            return aCreatedAt - bCreatedAt;
         }
 
         const sortedProducts = products.sort(sortByCurrentFilter);
