@@ -108,16 +108,15 @@ function ProductBrowseItemList(){
                     thumbnailwidth:adjustedWidth,
                     thumbnailheight:rowHeight,                    
                 })
-
-                if ((index + 1) === products.length){
-                    setGallery(productsGallery);
-                    setSecondGallery(secondProductsGallery);
-                }
             });
 
             img.src = imgUrl;
         
         })
+
+        
+        setGallery(productsGallery);
+        setSecondGallery(secondProductsGallery);
     }
 
     let productRowsDisplay;
