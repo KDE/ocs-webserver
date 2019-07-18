@@ -141,7 +141,7 @@ function ProductBrowseItem(props){
     
     const p = props.product;
     const productBrowseItemContainerStyle = { height:p.height, width:p.width }
-    const productBrowseItemStyle = { backgroundImage:url(p.src) }
+    const productBrowseItemStyle = { backgroundImage:'url('+p.src+')' }
 
     let itemLink = window.config.baseUrl + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
