@@ -27,10 +27,10 @@ function ProductBrowseFilterContainer(){
         <div id="product-browse-top-menu">
             <div className="pling-nav-tabs">
                 <ul className="nav nav-tabs pling-nav-tabs" id="sort">
-                    <li><a>Latest</a></li>
-                    <li><a>Score</a></li>
-                    <li><a>Plinged</a></li>
-                    <li>
+                    <li className={filters.order === "latest" ? "active" : ""}><a >Latest</a></li>
+                    <li className={filters.order === "score" ? "active" : ""}><a>Score</a></li>
+                    <li className={filters.order === "plinged" ? "active" : ""}><a>Plinged</a></li>
+                    <li style={{"float":"right"}}>
                         <input type="checkbox"/>
                         <label>Original</label>
                     </li>
