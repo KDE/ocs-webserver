@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import {SortByCurrentFilter} from './product-browse-helpers';
-console.log(window.config);
-console.log(window.location);
 
 function ProductBrowse(){
     return (
@@ -15,10 +13,6 @@ function ProductBrowse(){
 }
 
 function ProductBrowseFilterContainer(){
-
-    React.useEffect(() => {
-        console.log(filters);
-    },[])
 
     let filtersBaseUrl = window.config.baseUrl + "/browse/";
     if (typeof filters.category === Number) filtersBaseUrl += "cat/" + filters.category + "/";
@@ -63,10 +57,8 @@ function ProductBrowseItemList(){
         const sortedProducts = products.sort(SortByCurrentFilter);
         let productsGallery = [], rowNumber = 0,rowWidth = 0, imgLoadIndex = 0;
 
-        console.log(sortedProducts);
-
         sortedProducts.forEach(function(p,index){
-
+            console.log(p);
             const imgUrl = imgBaseUrl + "/img/" + p.image_small;
             const img = new Image();
             img.addEventListener("load", function(){
@@ -100,8 +92,6 @@ function ProductBrowseItemList(){
         
         })
     }
-
-    console.log(gallery);
 
     let productRowsDisplay;
     if (gallery){
