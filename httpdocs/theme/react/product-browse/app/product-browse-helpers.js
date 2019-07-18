@@ -12,6 +12,5 @@ export function SortByCurrentFilter(a,b){
         aComparedValue = parseInt(a.count_plings) !== null ? parseInt(a.count_plings) : 0;
         bComparedValue = parseInt(b.count_plings) !== null ? parseInt(b.count_plings) : 0;
     }
-    console.log(aComparedValue,bComparedValue);
     return aComparedValue - bComparedValue;
 }
