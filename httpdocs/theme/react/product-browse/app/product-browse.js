@@ -80,15 +80,15 @@ function ProductBrowseItemList(){
                     rowWidth = adjustedWidth;
                 } else rowWidth = newRowWidth;
 
-                if (!productsGallery[rowNumber]) productsGallery[rowNumber] = []
-                productsGallery[rowNumber].push({
+                if (!productsGallery[rowNumber]) productsGallery[rowNumber] = {products:[],rowWidth:rowWidth}
+                productsGallery[rowNumber].products.push({
                     src:imgUrl,
                     width:adjustedWidth,
                     height:rowHeight,
                     row:rowNumber,
                     ...p
                 })
-                
+                productsGallery[rowNumber].rowWidth = rowWidth;
                 imgLoadIndex += 1;
                 if ((imgLoadIndex + 1) === sortedProducts.length) setGallery(productsGallery);
             
@@ -107,7 +107,9 @@ function ProductBrowseItemList(){
             <ProductBrowseItemListRow 
                 key={index}
                 rowNumber={index}
-                products={pr}
+                rowWidth={pr.rowWidth}
+                containerWidth={containerWidth}
+                products={pr.products}
             />
         ))
     }
@@ -120,6 +122,7 @@ function ProductBrowseItemList(){
 }
 
 function ProductBrowseItemListRow(props){
+    console.log(props.rowWidth,props.containerWidth);
     const sortedRowProducts = props.products.sort(SortByCurrentFilter);
     const productsDisplay = sortedRowProducts.map((p,index) => (
         <ProductBrowseItem 
