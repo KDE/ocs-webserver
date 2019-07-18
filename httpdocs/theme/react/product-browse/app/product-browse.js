@@ -41,7 +41,6 @@ function ProductBrowseItemList(){
     
     const [ gallery, setGallery ] = useState();
 
-
     React.useEffect(() => {
         initGallery()
     },[])
@@ -61,7 +60,7 @@ function ProductBrowseItemList(){
             // const aTimeStamp = aCreatedAt.getTime();
             const bCreatedAt = new Date(b.created_at);
             // const bTimeStamp = bCreatedAt.getTime();
-            return aCreatedAt - bCreatedAt;
+            return bCreatedAt - aCreatedAt;
         }
 
         const sortedProducts = products.sort(sortByCurrentFilter);
