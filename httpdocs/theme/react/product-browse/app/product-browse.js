@@ -82,6 +82,7 @@ function ProductBrowseItemList(){
 
             img.addEventListener("load", function(){
 
+                const decrease = this.naturalHeight - rowHeight;
                 const decreasePercentage = rowHeight / this.naturalHeight;
                 let adjustedWidth = this.naturalWidth * decreasePercentage;
                 if (adjustedWidth > this.naturalWidth) adjustedWidth = this.naturalWidth;
@@ -107,15 +108,16 @@ function ProductBrowseItemList(){
                     thumbnailwidth:adjustedWidth,
                     thumbnailheight:rowHeight,                    
                 })
+
+                if ((index + 1) === products.length){
+                    setGallery(productsGallery);
+                    setSecondGallery(secondProductsGallery);
+                }
             });
 
             img.src = imgUrl;
         
         })
-
-        
-        setGallery(productsGallery);
-        setSecondGallery(secondProductsGallery);
     }
 
     let productRowsDisplay;
