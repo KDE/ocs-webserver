@@ -29,28 +29,28 @@ $this->headMeta()->appendProperty('og:description','A community where developers
 $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images/system/opendesktop-logo.png');
 
 
-if (Zend_Auth::getInstance()->hasIdentity()){
-    $identity = Zend_Auth::getInstance()->getStorage()->read();
-    $helperImage = new Default_View_Helper_Image();
-    $avatar = $helperImage->image($identity->profile_image_url,array('width' => 100, 'height' => 100, 'crop' => 2));
-    
-    $user = array(
-        "username" => $identity->username,
-        "member_id" => $identity->member_id,
-        "mail" => $identity->mail,
-        "avatar" => $avatar, 
-        "roleName" =>$identity->roleName
-    );
-    $response = array(
-      'user' => $user      
-    );
-}else
-{
+// if (Zend_Auth::getInstance()->hasIdentity()){
+//     $identity = Zend_Auth::getInstance()->getStorage()->read();
+//     $helperImage = new Default_View_Helper_Image();
+//     $avatar = $helperImage->image($identity->profile_image_url,array('width' => 100, 'height' => 100, 'crop' => 2));
+//
+//     $user = array(
+//         "username" => $identity->username,
+//         "member_id" => $identity->member_id,
+//         "mail" => $identity->mail,
+//         "avatar" => $avatar,
+//         "roleName" =>$identity->roleName
+//     );
+//     $response = array(
+//       'user' => $user
+//     );
+// }else
+// {
     $modelInfo = new Default_Model_Info();
     $productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'152,233');
     $productsThemes = $modelInfo->getLastProductsForHostStores(5,'158,509,330,404,148,491,445,295');
     $productsMultimedia = $modelInfo->getLastProductsForHostStores(5,'509,588,587,58');
-    //$productsThemes = $modelInfo->getLastProductsForHostStores(5,'33,295');
+
 
     foreach ($productsAppAddons as &$p) {
       $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
@@ -88,11 +88,11 @@ if (Zend_Auth::getInstance()->hasIdentity()){
       "url_myopendesktop" => $url_myopendesktop,
       "url_cloudopendesktop" => $url_cloudopendesktop,
       "url_musicopendesktop" => $url_musicopendesktop,
-      "url_mastodon" => $url_mastodon,      
+      "url_mastodon" => $url_mastodon,
     );
 
 
-}
+// }
 
 ?>
 

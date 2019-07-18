@@ -15,21 +15,21 @@ class HomeMainContainer extends Component {
   }
   render() {
     let content;
-    if(this.state.user)
-    {
-      content = (
-          <div id="home-main-container">
-            <div className="top">
-                <h1>
-                  Hi {this.state.user.username}, welcome to your personal start page!
-                </h1>
-            </div>
-            <div className="middle">
-                <PersonalActivityContainer  user={this.state.user.member_id}/>
-            </div>
-          </div>
-          )
-    }else{
+    // if(this.state.user)
+    // {
+    //   content = (
+    //       <div id="home-main-container">
+    //         <div className="top">
+    //             <h1>
+    //               Hi {this.state.user.username}, welcome to your personal start page!
+    //             </h1>
+    //         </div>
+    //         <div className="middle">
+    //             <PersonalActivityContainer  user={this.state.user.member_id}/>
+    //         </div>
+    //       </div>
+    //       )
+    // }else{
       content = (
                 <div id="home-main-container">
                   <div className="top">
@@ -46,12 +46,12 @@ class HomeMainContainer extends Component {
                      <ProductsContainer title="Multimedia" cat="282" products={this.state.productsMultimedia}/>
                      <ChatContainer />
                      <CommentsContainer comments={this.state.comments}/>
-                     <BlogFeedContainer />                     
+                     <BlogFeedContainer />
                      <RssNewsContainer />
                   </div>
              </div>
            )
-    }
+    // }
 
     return (
       <React.Fragment>
