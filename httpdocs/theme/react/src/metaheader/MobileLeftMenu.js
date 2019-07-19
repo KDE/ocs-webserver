@@ -63,6 +63,7 @@ class MobileLeftMenu extends React.Component {
             user={this.props.user}
             baseUrl={this.props.baseUrl}
             gitlabUrl={this.props.gitlabUrl}
+            baseUrlStore={this.props.baseUrlStore}
           />
         </div>
       </div>

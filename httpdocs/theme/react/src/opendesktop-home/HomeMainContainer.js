@@ -15,43 +15,43 @@ class HomeMainContainer extends Component {
   }
   render() {
     let content;
-    if(this.state.user)
-    {
-      content = (
-          <div id="home-main-container">
-            <div className="top">
-                <h1>
-                  Hi {this.state.user.username}, welcome to your personal start page!
-                </h1>
-            </div>
-            <div className="middle">
-                <PersonalActivityContainer  user={this.state.user.member_id}/>
-            </div>
-          </div>
-          )
-    }else{
+    // if(this.state.user)
+    // {
+    //   content = (
+    //       <div id="home-main-container">
+    //         <div className="top">
+    //             <h1>
+    //               Hi {this.state.user.username}, welcome to your personal start page!
+    //             </h1>
+    //         </div>
+    //         <div className="middle">
+    //             <PersonalActivityContainer  user={this.state.user.member_id}/>
+    //         </div>
+    //       </div>
+    //       )
+    // }else{
       content = (
                 <div id="home-main-container">
                   <div className="top">
                       <Introduction urlCode={this.state.gitlabUrl}
-                                  urlPublish={this.state.baseUrl}
+                                  urlPublish={this.state.baseUrlStore}
                                   urlCommunity={this.state.forumUrl}
                                   urlPersonal={this.state.url_myopendesktop}
                                   />
                   </div>
                   <div className="middle">
                      <ProductsGitContainer />
-                     <ProductsContainer title="Themes" cat="381" products={this.state.products}/>
-                     <ProductsContainer title="Apps and Addons" cat="282" products={this.state.products}/>
-                     <ProductsContainer title="Multimedia" cat="282" products={this.state.productsMultimedia}/>
+                     <ProductsContainer baseUrlStore={this.state.baseUrlStore} title="Apps and Addons" cat="152" products={this.state.products}/>
+                     <ProductsContainer baseUrlStore={this.state.baseUrlStore} title="Themes" cat="148" products={this.state.productsThemes}/>
+                     <ProductsContainer baseUrlStore={this.state.baseUrlStore} title="Multimedia" cat="586" products={this.state.productsMultimedia}/>
                      <ChatContainer />
-                     <CommentsContainer comments={this.state.comments}/>
-                     <BlogFeedContainer />                     
+                     <CommentsContainer baseUrlStore={this.state.baseUrlStore} comments={this.state.comments}/>
+                     <BlogFeedContainer />
                      <RssNewsContainer />
                   </div>
              </div>
            )
-    }
+    // }
 
     return (
       <React.Fragment>

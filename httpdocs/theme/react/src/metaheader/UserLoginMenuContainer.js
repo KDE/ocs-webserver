@@ -23,7 +23,6 @@ class UserLoginMenuContainer extends React.Component {
   loadNotification(){
     if(this.props.user){
       let url = this.props.baseUrl+'/membersetting/notification';
-      //let url = "http://pling.local/membersetting/notification";
       fetch(url,{
                  mode: 'cors',
                  credentials: 'include'
@@ -67,17 +66,32 @@ class UserLoginMenuContainer extends React.Component {
     if(this.props.baseUrl.endsWith("cc"))
     {
       urlEnding = "cc";
-    }else if(this.props.baseUrl.endsWith("com")){
-      urlEnding = "com";
     }else{
-      urlEnding = "com";
+      urlEnding = "org";
     }
 
     let contextMenuDisplay;
     if (this.props.isAdmin){
       contextMenuDisplay = (
         <ul className="user-context-menu-container">
-
+          <li id="storage-link-item">
+            <a href={"https://my.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Storage</span>
+            </a>
+          </li>
+          <li id="contacts-link-item">
+            <a href={"https://my.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
+              <div className="icon"></div>
+              <span>Contacts</span>
+            </a>
+          </li>
+          <li id="calendar-link-item">
+            <a href={"https://my.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
+              <div className="icon"></div>
+              <span>Calendar</span>
+            </a>
+          </li>
           <li id="messages-link-item">
             <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
               <div className="icon"></div>
@@ -85,19 +99,7 @@ class UserLoginMenuContainer extends React.Component {
               {badgeNot}
             </a>
           </li>
-          <li id="contacts-link-item">
-            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
-              <div className="icon"></div>
-              <span>Contacts</span>
-            </a>
-          </li>
 
-          <li id="storage-link-item">
-            <a href={"https://cloud.opendesktop." + urlEnding}>
-              <div className="icon"></div>
-              <span>Storage</span>
-            </a>
-          </li>
           <li id="docs-link-item">
             <a href={"https://docs.opendesktop." + urlEnding}>
               <div className="icon"></div>
@@ -105,12 +107,7 @@ class UserLoginMenuContainer extends React.Component {
             </a>
           </li>
 
-          <li id="calendar-link-item">
-            <a href={"https://cloud.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
-              <div className="icon"></div>
-              <span>Calendar</span>
-            </a>
-          </li>
+
           <li id="music-link-item">
             <a href={"https://music.opendesktop." + urlEnding}>
               <div className="icon"></div>
@@ -123,14 +120,31 @@ class UserLoginMenuContainer extends React.Component {
     } else {
       contextMenuDisplay = (
         <ul  className="user-context-menu-container">
+          <li id="storage-link-item">
+            <a href={"https://my.opendesktop." + urlEnding}>
+              <div className="icon"></div>
+              <span>Storage</span>
+            </a>
+          </li>
+          <li id="contacts-link-item">
+            <a href={"https://my.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
+              <div className="icon"></div>
+              <span>Contacts</span>
+            </a>
+          </li>
+          <li id="calendar-link-item">
+            <a href={"https://my.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
+              <div className="icon"></div>
+              <span>Calendar</span>
+            </a>
+          </li>
           <li id="messages-link-item" >
             <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
               <div className="icon"></div>
               <span>Messages</span>
               {badgeNot}
             </a>
-          </li>
-
+          </li>        
         </ul>
       );
     }
