@@ -57,9 +57,11 @@ function ProductBrowseFilterContainer(){
 
 function ProductBrowseItemList(props){
     
+    const [ loading, setLoading ] = useState(true)
+
     const [ gallery, setGallery ] = useState();
     const [ containerWidth, setContainerWidth ] = useState( $('#product-browse-container').width());
-    const [ rowHeight, setRowHeight ] = useState(containerWidth / 5);
+    const [ rowHeight, setRowHeight ] = useState(250);
 
     let InitialImgBaseUrl = "https://cn.";
     InitialImgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
@@ -73,13 +75,17 @@ function ProductBrowseItemList(props){
     
 
     function initGallery(){
-        console.log('init gallery');
+
+        setLoading(true);
+
         const sortedProducts = products.sort(SortByCurrentFilter);
         let productsGallery = [], rowNumber = 0,rowWidth = 0, imgLoadIndex = 0;
 
         sortedProducts.forEach(function(p,index){
+            
             const imgUrl = imgBaseUrl + "/img/" + p.image_small;
             const img = new Image();
+
             img.addEventListener("load", function(){
                 
                 const decreasePercentage = rowHeight / this.naturalHeight;
@@ -103,29 +109,40 @@ function ProductBrowseItemList(props){
                 })
                 productsGallery[rowNumber].rowWidth = rowWidth;
                 imgLoadIndex += 1;
-                if ((imgLoadIndex + 1) === sortedProducts.length) setGallery(productsGallery);
-            
+                if ((imgLoadIndex + 1) === sortedProducts.length) finishLoadingProducts(productsGallery);
             });
+
             img.addEventListener("error", function(){
                 imgLoadIndex += 1;
-                if ((imgLoadIndex + 1) === sortedProducts.length) setGallery(productsGallery);                
+                if ((imgLoadIndex + 1) === sortedProducts.length) finishLoadingProducts(productsGallery);              
             });
+            
             img.src = imgUrl;
+        
         })
     }
 
+    function finishLoadingProducts(productsGallery){
+        setLoading(false)
+        setGallery(productsGallery);
+    }
+
     let productRowsDisplay;
-    if (gallery){
-        productRowsDisplay = gallery.map((pr,index) => (
-            <ProductBrowseItemListRow 
-                key={index}
-                rowNumber={index}
-                rowWidth={pr.rowWidth}
-                containerWidth={containerWidth}
-                products={pr.products}
-                itemBackgroundSize={props.itemBackgroundSize}
-            />
-        ))
+    if (loading){
+        productRowsDisplay = <span>Loading...</span>
+    } else {
+        if (gallery){
+            productRowsDisplay = gallery.map((pr,index) => (
+                <ProductBrowseItemListRow 
+                    key={index}
+                    rowNumber={index}
+                    rowWidth={pr.rowWidth}
+                    containerWidth={containerWidth}
+                    products={pr.products}
+                    itemBackgroundSize={props.itemBackgroundSize}
+                />
+            ))
+        }
     }
 
     return (
