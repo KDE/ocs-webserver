@@ -211,8 +211,52 @@ function ProductBrowseItem(props){
 }
 
 function ProductBrowsePagination(){
+
+    const [ totalItems, setTotalItems ] = useState(pagination.totalcount);
+    const [ itemsPerPage, setItemsPerPage ] = useState(50);
+    const [ currentPage, setCurrentPage ] = useState(pagination.page);
+    const [ totalPages, setTotalPages ] = useState(Math.ceil(totalItems / itemsPerPage));
+
+    let paginationArray = [];
+    for (var i = 0; i < totalPages; i++){ paginationArray.push(i + 1); }
+    
+    let pageLinkBase = window.config.baseUrl + "/browse/page/";
+    if (typeof filters.category === Number) pageLinkBase += "cat/" + filters.category + "/";
+    let pageLinkSuffix = "/ord/" + filters.order;
+    if (filters.original !== null) pageLinkSuffix += "/filteroriginal/" + filters.original;
+
+    const paginationDisplay = paginationArray.map((p,index) => (
+        <li key={index}>
+            <a href={pageLinkBase + p + pageLinkSuffix}>{p}</a>
+        </li>
+    ))
+
+    let previousButtonDisplay;
+    if (currentPage > 0){
+        previousButtonDisplay = (
+            <li>
+                <a href={pageLinkBase + (currentPage - 1) + pageLinkSuffix}><span className="glyphicon glyphicon-chevron-left"></span> Previous</a>
+            </li>
+        )
+    }
+
+    let nextButtonDisplay;
+    if (currentPage < totalPages){
+        nextButtonDisplay = (
+            <li>
+                <a href={pageLinkBase + (currentPage + 1) + pageLinkSuffix}>Next <span className="glyphicon glyphicon-chevron-right"></span></a>
+            </li>
+        )        
+    }
+
     return (
-        <div id="product-browse-pagination"></div>
+        <div id="product-browse-pagination">
+            <ul>
+                {previousButtonDisplay}
+                {paginationDisplay}
+                {nextButtonDisplay}
+            </ul>
+        </div>
     )
 }
 
