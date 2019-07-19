@@ -194,17 +194,17 @@ function ProductBrowseItem(props){
     return (
         <div className="product-browse-item-wrapper" style={productBrowseItemContainerStyle}>
             <div className="product-browse-item" id={"product-" + p.project_id} style={productBrowseItemStyle}>
-                <div className="product-browse-item-info">
+                <a href={itemLink} className="product-browse-item-info">
                     <div className="product-browse-item-info-content">
                         <div>
-                            <h2><a href={itemLink}>{p.title}</a></h2>
+                            <h2>{p.title}</h2>
                             <span>{p.cat_title}</span>
-                            <span>by <a href={window.config.baseUrl + "/u/" + p.member_id}>{p.username}</a></span>
+                            <span>by <a>{p.username}</a></span>
                             <span>score {p.laplace_score}</span>
                             <span>{p.created_at}</span>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     )
