@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TimeAgo from 'react-timeago';
+
 class CommentsContainer extends React.Component {
   render(){
     let commentsContainer;
@@ -17,7 +17,8 @@ class CommentsContainer extends React.Component {
             </span>
             <span className="info-row">
               <span className="date">
-                <TimeAgo date={cm.comment_created_at} />
+                {cm.comment_created_at}
+
               </span>
             </span>
           </div>
