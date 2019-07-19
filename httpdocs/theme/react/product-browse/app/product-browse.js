@@ -3,10 +3,25 @@ import ReactDOM from 'react-dom';
 import {SortByCurrentFilter} from './product-browse-helpers';
 
 function ProductBrowse(){
+
+    const [ itemBackgroundSize, setItemBackgroundSize ] = useState('contain');
+
+    const divStyle = {
+        textAlign: "right",
+        margin: "20px 0 0 0",
+        fontSize: "15px"
+    }
+
     return (
         <div id="product-browse">
             <ProductBrowseFilterContainer/>
-            <ProductBrowseItemList/>
+            <div style={divStyle}>
+                <span>set background size: </span> 
+                <a onClick={() => setItemBackgroundSize('cover')}>bg cover</a> | <a onClick={() => setItemBackgroundSize('contain')}>bg contain</a>
+            </div>
+            <ProductBrowseItemList 
+                itemBackgroundSize={itemBackgroundSize}
+            />
             <ProductBrowsePagination/>
         </div>
     )
@@ -40,20 +55,25 @@ function ProductBrowseFilterContainer(){
     )
 }
 
-function ProductBrowseItemList(){
+function ProductBrowseItemList(props){
     
     const [ gallery, setGallery ] = useState();
     const [ containerWidth, setContainerWidth ] = useState( $('#product-browse-container').width());
-    const [ rowHeight, setRowHeight ] = useState(250);
+    const [ rowHeight, setRowHeight ] = useState(containerWidth / 5);
 
     let InitialImgBaseUrl = "https://cn.";
     InitialImgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
     const [ imgBaseUrl, setImageBaseUrl ] = useState(InitialImgBaseUrl)
 
-    React.useEffect(() => { initGallery() },[])
+    React.useEffect(() => { 
+        window.addEventListener("resize", function(event){initGallery()});
+        window.addEventListener("orientationchange",  function(event){initGallery()});    
+        initGallery() 
+    },[])
+    
 
     function initGallery(){
-
+        console.log('init gallery');
         const sortedProducts = products.sort(SortByCurrentFilter);
         let productsGallery = [], rowNumber = 0,rowWidth = 0, imgLoadIndex = 0;
 
@@ -83,7 +103,6 @@ function ProductBrowseItemList(){
                 })
                 productsGallery[rowNumber].rowWidth = rowWidth;
                 imgLoadIndex += 1;
-                console.log(imgLoadIndex);
                 if ((imgLoadIndex + 1) === sortedProducts.length) setGallery(productsGallery);
             
             });
@@ -104,6 +123,7 @@ function ProductBrowseItemList(){
                 rowWidth={pr.rowWidth}
                 containerWidth={containerWidth}
                 products={pr.products}
+                itemBackgroundSize={props.itemBackgroundSize}
             />
         ))
     }
@@ -123,6 +143,7 @@ function ProductBrowseItemListRow(props){
             key={index}
             product={p}
             percentageIncrease={percentageIncrease}
+            itemBackgroundSize={props.itemBackgroundSize}
         />
     ))
     return (
@@ -136,7 +157,10 @@ function ProductBrowseItem(props){
     
     const p = props.product;
     const productBrowseItemContainerStyle = { height:p.height, width:p.width * props.percentageIncrease }
-    const productBrowseItemStyle = { backgroundImage:'url('+p.src+')' }
+    const productBrowseItemStyle = { 
+        backgroundImage:'url('+p.src+')',
+        backgroundSize:props.itemBackgroundSize 
+    }
 
     let itemLink = window.config.baseUrl + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
