@@ -76,15 +76,7 @@
 </head>
 <body id="od-body">
 
-<?php 
- if($this->index && $this->index==4)
- {
-    echo $this->render('partials/header/template_pling_home.phtml');   
- }else
- {
-    echo $this->render('partials/header/template.phtml'); 
- }
-?>
+<?php echo $this->render('partials/header/template_pling_home.phtml'); ?>
 
 <?php echo $this->render('partials/flashMessage.phtml'); ?>
 <?php echo $this->layout()->content; ?>
