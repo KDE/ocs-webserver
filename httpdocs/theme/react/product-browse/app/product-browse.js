@@ -223,7 +223,7 @@ function ProductBrowsePagination(){
     let pageLinkBase = window.config.baseUrl + "/browse/page/";
     if (typeof filters.category === Number) pageLinkBase += "cat/" + filters.category + "/";
     let pageLinkSuffix = "/ord/" + filters.order;
-    if (filters.original !== null) pageLinkSuffix += "/filteroriginal/" + filters.original;
+    if (filters.original !== null) pageLinkSuffix += "/filteroriginal/" + filters.original + window.location.search;
 
     const paginationDisplay = paginationArray.map((p,index) => (
         <li key={index}>
@@ -232,7 +232,7 @@ function ProductBrowsePagination(){
     ))
 
     let previousButtonDisplay;
-    if (currentPage > 0){
+    if (currentPage > 1){
         previousButtonDisplay = (
             <li>
                 <a href={pageLinkBase + (currentPage - 1) + pageLinkSuffix}><span className="glyphicon glyphicon-chevron-left"></span> Previous</a>
