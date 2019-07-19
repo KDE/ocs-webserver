@@ -46,7 +46,9 @@ $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images
 //     );
 // }else
 // {
+
     $modelInfo = new Default_Model_Info();
+    $helpPrintDate = new Default_View_Helper_PrintDate();
     $productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'152,233');
     $productsThemes = $modelInfo->getLastProductsForHostStores(5,'148');
     $productsMultimedia = $modelInfo->getLastProductsForHostStores(5,'586');
@@ -62,6 +64,7 @@ $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images
     }
     foreach ($comments as &$p) {
       $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
+      $p['comment_created_at'] = $helpPrintDate->printDate($p['comment_created_at']);
     }
 
     $config = Zend_Registry::get('config')->settings->client->default;
