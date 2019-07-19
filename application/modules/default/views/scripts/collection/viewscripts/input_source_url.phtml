@@ -25,7 +25,9 @@
         <?php if ($this->element->isRequired()) { ?>
             <div class="small grey bold-font pull-left margin-right-5">*</div>
         <?php } ?>
-        <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">Source *needed for plings depending on product category (link to git-repo or to original if based on someone elses unmodified work)</label>
+        <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">
+          Link to Source/Code *(needed for plings depending on product category). Link to original if your product is unmodified and based on someone elses work. If it is modified, you need to link to a repository with FULLY EXTRACTED source code, NOT an archive. If Link is not valid, product can be excluded or removed.
+        </label>
     </div>
     <div class="col-sm-12">
         <input placeholder="https://github.com/github-tools/github" 
