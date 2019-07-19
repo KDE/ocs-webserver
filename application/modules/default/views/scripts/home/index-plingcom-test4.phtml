@@ -33,7 +33,7 @@ $productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'152,233');
 $productsThemes = $modelInfo->getLastProductsForHostStores(5,'158,509,330,404,148,491,445,295');
 $productsMultimedia = $modelInfo->getLastProductsForHostStores(5,'509,588,587,58');
 //$productsThemes = $modelInfo->getLastProductsForHostStores(5,'33,295');
-
+$comments = $modelInfo->getLatestComments(5);
 foreach ($productsAppAddons as &$p) {
   $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
 }
@@ -43,6 +43,10 @@ foreach ($productsThemes as &$p) {
 foreach ($productsMultimedia as &$p) {
   $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
 }
+foreach ($comments as &$p) {
+      $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
+      $p['comment_created_at'] = $helpPrintDate->printDate($p['comment_created_at']);
+    }
 
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 $baseurlStore = Zend_Registry::get('config')->settings->client->default->baseurl_store;
@@ -56,7 +60,7 @@ $url_musicopendesktop = Zend_Registry::get('config')->settings->client->default-
 $url_mastodon = Zend_Registry::get('config')->settings->client->default->url_mastodon;
 
 $response = array(
-  'comments' => $modelInfo->getLatestComments(5),
+  'comments' => $comments,
   'products' => $productsAppAddons,
   'productsThemes' => $productsThemes,
   'productsMultimedia' => $productsMultimedia,
