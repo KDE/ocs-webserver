@@ -6,6 +6,9 @@ function ProductBrowse(){
 
     const [ itemBackgroundSize, setItemBackgroundSize ] = useState('contain');
 
+    console.log(filters);
+    console.log(window.location);
+
     const divStyle = {
         textAlign: "right",
         margin: "20px 0 0 0",
@@ -32,6 +35,11 @@ function ProductBrowseFilterContainer(){
     let filtersBaseUrl = window.config.baseUrl + "/browse/";
     if (typeof filters.category === Number) filtersBaseUrl += "cat/" + filters.category + "/";
 
+    function onOriginalCheckboxClick(){
+        let val = filters.original !== null ? 0 : 1;
+        window.location.href = window.config.baseUrl + "/" + window.location.pathname + "filteroriginal/" + val;
+    }
+
     return (
         <div id="product-browse-top-menu">
             <div className="pling-nav-tabs">
@@ -46,7 +54,7 @@ function ProductBrowseFilterContainer(){
                         <a href={filtersBaseUrl + "ord/plinged/" + window.location.search}>Plinged</a>
                     </li>
                     <li style={{"float":"right","paddingTop":"10px"}}>
-                        <input type="checkbox"/>
+                        <input onChange={onOriginalCheckboxClick} defaultChecked={filters.original} type="checkbox"/>
                         <label>Original</label>
                     </li>
                 </ul>
