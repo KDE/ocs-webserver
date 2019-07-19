@@ -74,14 +74,6 @@ class UserLoginMenuContainer extends React.Component {
     if (this.props.isAdmin){
       contextMenuDisplay = (
         <ul className="user-context-menu-container">
-
-          <li id="messages-link-item">
-            <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
-              <div className="icon"></div>
-              <span>Messages</span>
-              {badgeNot}
-            </a>
-          </li>
           <li id="storage-link-item">
             <a href={"https://my.opendesktop." + urlEnding}>
               <div className="icon"></div>
@@ -100,6 +92,14 @@ class UserLoginMenuContainer extends React.Component {
               <span>Calendar</span>
             </a>
           </li>
+          <li id="messages-link-item">
+            <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
+              <div className="icon"></div>
+              <span>Messages</span>
+              {badgeNot}
+            </a>
+          </li>
+
           <li id="docs-link-item">
             <a href={"https://docs.opendesktop." + urlEnding}>
               <div className="icon"></div>
@@ -120,14 +120,6 @@ class UserLoginMenuContainer extends React.Component {
     } else {
       contextMenuDisplay = (
         <ul  className="user-context-menu-container">
-          <li id="messages-link-item" >
-            <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
-              <div className="icon"></div>
-              <span>Messages</span>
-              {badgeNot}
-            </a>
-          </li>
-
           <li id="storage-link-item">
             <a href={"https://my.opendesktop." + urlEnding}>
               <div className="icon"></div>
@@ -146,7 +138,13 @@ class UserLoginMenuContainer extends React.Component {
               <span>Calendar</span>
             </a>
           </li>
-
+          <li id="messages-link-item" >
+            <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
+              <div className="icon"></div>
+              <span>Messages</span>
+              {badgeNot}
+            </a>
+          </li>        
         </ul>
       );
     }
