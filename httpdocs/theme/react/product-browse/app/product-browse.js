@@ -78,8 +78,6 @@ function ProductBrowseItem(props){
     itemLink += p.type_id === "3" ? "c" : "p";
     itemLink += "/" + p.project_id;
     
-    console.log(p);
-
     return (
         <div className="product-browse-item" id={"product-" + p.project_id} style={{"width":itemWidth}}>
             <a href={itemLink} className="product-browse-item-wrapper">
@@ -103,8 +101,15 @@ function ProductBrowsePagination(){
     const [ currentPage, setCurrentPage ] = useState(pagination.page);
     const [ totalPages, setTotalPages ] = useState(Math.ceil(totalItems / itemsPerPage));
 
+    console.log(currentPage)
+    let minPage = 0, maxPage = 10;
+    if (currentPage > 5){
+        minPage = currentPage - 5;
+        maxPage = currentPage + 5;
+    }
+
     let paginationArray = [];
-    for (var i = 0; i < totalPages; i++){ paginationArray.push(i + 1); }
+    for (var i = minPage; i < maxPage; i++){ paginationArray.push(i + 1); }
     
     let pageLinkBase = window.config.baseUrl + "/browse/page/";
     if (typeof filters.category === Number) pageLinkBase += "cat/" + filters.category + "/";
@@ -117,11 +122,16 @@ function ProductBrowsePagination(){
     let nextButtonDisplay;
     if (currentPage < totalPages) nextButtonDisplay = <li><a href={pageLinkBase + (currentPage + 1) + pageLinkSuffix}>Next <span className="glyphicon glyphicon-chevron-right"></span></a></li>
 
-    const paginationDisplay = paginationArray.map((p,index) => (
-        <li key={index}>
-            <a href={pageLinkBase + p + pageLinkSuffix}>{p}</a>
-        </li>
-    ));
+    const paginationDisplay = paginationArray.map((p,index) => {
+        let pageLinkDisplay;
+        if (currentPage === p) pageLinkDisplay = <span className="no-link">{p}</span>
+        else pageLinkDisplay = <a href={pageLinkBase + p + pageLinkSuffix}>{p}</a>
+        return (                
+            <li key={index}>
+                {pageLinkDisplay}
+            </li>
+        )
+    });
 
     return (
         <div id="product-browse-pagination">
