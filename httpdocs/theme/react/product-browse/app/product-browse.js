@@ -3,28 +3,10 @@ import ReactDOM from 'react-dom';
 import {SortByCurrentFilter} from './product-browse-helpers';
 
 function ProductBrowse(){
-
-    const [ itemBackgroundSize, setItemBackgroundSize ] = useState('contain');
-
-    console.log(filters);
-    console.log(window.location);
-
-    const divStyle = {
-        textAlign: "right",
-        margin: "20px 0 0 0",
-        fontSize: "15px"
-    }
-
     return (
         <div id="product-browse">
             <ProductBrowseFilterContainer/>
-            <div style={divStyle}>
-                <span>set background size: </span> 
-                <a onClick={() => setItemBackgroundSize('cover')}>bg cover</a> | <a onClick={() => setItemBackgroundSize('contain')}>bg contain</a>
-            </div>
-            <ProductBrowseItemList 
-                itemBackgroundSize={itemBackgroundSize}
-            />
+            <ProductBrowseItemList />
             <ProductBrowsePagination/>
         </div>
     )
@@ -65,114 +47,15 @@ function ProductBrowseFilterContainer(){
 
 function ProductBrowseItemList(props){
     
-    const [ loading, setLoading ] = useState(true)
-
-    const [ gallery, setGallery ] = useState();
-    const [ containerWidth, setContainerWidth ] = useState( $('#product-browse-container').width());
-    const [ rowHeight, setRowHeight ] = useState(250);
-
-    let InitialImgBaseUrl = "https://cn.";
-    InitialImgBaseUrl += window.location.host.endsWith('cc') === true ? "pling.cc" : "opendesktop.org";
-    const [ imgBaseUrl, setImageBaseUrl ] = useState(InitialImgBaseUrl)
-
-    React.useEffect(() => { 
-        window.addEventListener("resize", function(event){initGallery()});
-        window.addEventListener("orientationchange",  function(event){initGallery()});    
-        initGallery() 
-    },[])
-    
-
-    function initGallery(){
-
-        setLoading(true);
-
-        const sortedProducts = products.sort(SortByCurrentFilter);
-        let productsGallery = [], rowNumber = 0,rowWidth = 0, imgLoadIndex = 0;
-
-        sortedProducts.forEach(function(p,index){
-            
-            const imgUrl = imgBaseUrl + "/img/" + p.image_small;
-            const img = new Image();
-
-            img.addEventListener("load", function(){
-                
-                const decreasePercentage = rowHeight / this.naturalHeight;
-                let adjustedWidth = this.naturalWidth * decreasePercentage;
-                if (adjustedWidth > this.naturalWidth) adjustedWidth = this.naturalWidth;
-                if (typeof adjustedWidth === undefined) adjustedWidth = 250;
-                
-                const newRowWidth = rowWidth + adjustedWidth;
-                if (newRowWidth > containerWidth){
-                    rowNumber += 1;
-                    rowWidth = adjustedWidth;
-                } else rowWidth = newRowWidth;
-
-                if (!productsGallery[rowNumber]) productsGallery[rowNumber] = {products:[],rowWidth:rowWidth}
-                productsGallery[rowNumber].products.push({
-                    src:imgUrl,
-                    width:adjustedWidth,
-                    height:rowHeight,
-                    row:rowNumber,
-                    ...p
-                })
-                productsGallery[rowNumber].rowWidth = rowWidth;
-                imgLoadIndex += 1;
-                if ((imgLoadIndex + 1) === sortedProducts.length) finishLoadingProducts(productsGallery);
-            });
-
-            img.addEventListener("error", function(){
-                imgLoadIndex += 1;
-                if ((imgLoadIndex + 1) === sortedProducts.length) finishLoadingProducts(productsGallery);              
-            });
-            
-            img.src = imgUrl;
-        
-        })
-    }
-
-    function finishLoadingProducts(productsGallery){
-        setLoading(false)
-        setGallery(productsGallery);
-    }
-
-    let productRowsDisplay;
-    if (loading){
-        productRowsDisplay = <span>Loading...</span>
-    } else {
-        if (gallery){
-            productRowsDisplay = gallery.map((pr,index) => (
-                <ProductBrowseItemListRow 
-                    key={index}
-                    rowNumber={index}
-                    rowWidth={pr.rowWidth}
-                    containerWidth={containerWidth}
-                    products={pr.products}
-                    itemBackgroundSize={props.itemBackgroundSize}
-                />
-            ))
-        }
-    }
+    const productsDisplay = products.sort(SortByCurrentFilter).map((p,index) => (
+        <ProductBrowseItem
+            key={index} 
+            product={p}
+        />
+    ))
 
     return (
         <div id="product-browse-item-list">
-            {productRowsDisplay}
-        </div>
-    )
-}
-
-function ProductBrowseItemListRow(props){
-    const percentageIncrease = props.containerWidth / props.rowWidth;
-    const sortedRowProducts = props.products.sort(SortByCurrentFilter);
-    const productsDisplay = sortedRowProducts.map((p,index) => (
-        <ProductBrowseItem 
-            key={index}
-            product={p}
-            percentageIncrease={percentageIncrease}
-            itemBackgroundSize={props.itemBackgroundSize}
-        />
-    ))
-    return (
-        <div className="product-browse-item-list-row">
             {productsDisplay}
         </div>
     )
@@ -181,31 +64,34 @@ function ProductBrowseItemListRow(props){
 function ProductBrowseItem(props){
     
     const p = props.product;
-    const productBrowseItemContainerStyle = { height:p.height, width:p.width * props.percentageIncrease }
-    const productBrowseItemStyle = { 
-        backgroundImage:'url('+p.src+')',
-        backgroundSize:props.itemBackgroundSize 
-    }
+
+    const containerWidth = $('#product-browse-container').width();
+    const itemWidth = containerWidth / 3;
+    const imgHeight = itemWidth / 1.75;
+
+
+    let imgUrl = "https://cn.";
+    imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "opendesktop.org" : "pling.it";
+    imgUrl += "/img/" + p.image_small;
 
     let itemLink = window.config.baseUrl + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
     itemLink += "/" + p.project_id;
     
+    console.log(p);
+
     return (
-        <div className="product-browse-item-wrapper" style={productBrowseItemContainerStyle}>
-            <div className="product-browse-item" id={"product-" + p.project_id} style={productBrowseItemStyle}>
-                <a href={itemLink} className="product-browse-item-info">
-                    <div className="product-browse-item-info-content">
-                        <div>
-                            <h2>{p.title}</h2>
-                            <span>{p.cat_title}</span>
-                            <span>by <a>{p.username}</a></span>
-                            <span>score {p.laplace_score}</span>
-                            <span>{p.created_at}</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
+        <div className="product-browse-item" id={"product-" + p.project_id} style={{"width":itemWidth}}>
+            <a href={itemLink} className="product-browse-item-wrapper">
+                <div className="product-browse-image" style={{"height":imgHeight}}>
+                    <img src={imgUrl}/>
+                </div>
+                <div className="product-browse-item-info">
+                    <h2>{p.title}</h2>
+                    <span>{p.cat_title}</span>
+                    <span>by <a>{p.username}</a></span>
+                </div>
+            </a>
         </div>
     )
 }
@@ -225,29 +111,17 @@ function ProductBrowsePagination(){
     let pageLinkSuffix = "/ord/" + filters.order;
     if (filters.original !== null) pageLinkSuffix += "/filteroriginal/" + filters.original + window.location.search;
 
+    let previousButtonDisplay;
+    if (currentPage > 1) previousButtonDisplay = <li><a href={pageLinkBase + (currentPage - 1) + pageLinkSuffix}><span className="glyphicon glyphicon-chevron-left"></span> Previous</a></li>
+
+    let nextButtonDisplay;
+    if (currentPage < totalPages) nextButtonDisplay = <li><a href={pageLinkBase + (currentPage + 1) + pageLinkSuffix}>Next <span className="glyphicon glyphicon-chevron-right"></span></a></li>
+
     const paginationDisplay = paginationArray.map((p,index) => (
         <li key={index}>
             <a href={pageLinkBase + p + pageLinkSuffix}>{p}</a>
         </li>
-    ))
-
-    let previousButtonDisplay;
-    if (currentPage > 1){
-        previousButtonDisplay = (
-            <li>
-                <a href={pageLinkBase + (currentPage - 1) + pageLinkSuffix}><span className="glyphicon glyphicon-chevron-left"></span> Previous</a>
-            </li>
-        )
-    }
-
-    let nextButtonDisplay;
-    if (currentPage < totalPages){
-        nextButtonDisplay = (
-            <li>
-                <a href={pageLinkBase + (currentPage + 1) + pageLinkSuffix}>Next <span className="glyphicon glyphicon-chevron-right"></span></a>
-            </li>
-        )        
-    }
+    ));
 
     return (
         <div id="product-browse-pagination">

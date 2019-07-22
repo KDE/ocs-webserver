@@ -5,92 +5,66 @@
 
     #product-browse-item-list {
         padding: 25px 0;
+        float: left;
+        width: 100%;
 
-        .product-browse-item-list-row {
-            display: flex;
-            justify-content: space-evenly;
-             
-            .product-browse-item-wrapper { 
-                padding:5px;
+        .product-browse-item {
+            float:left;
+            margin-bottom:30px;
 
-                .product-browse-item {
-                    background: #fbfbfb;
-                    height:100%;
-                    position: relative;
-                    background-position: center center;
-                    background-repeat: no-repeat;
-                    background-size: contain;
+            > a {
+               display: block;
+               width:100%;
+               height:auto;
+            }
 
-                    .img-link {
-                        display: block;
-                        width:100%;
-                        height: 100%;
-                        cursor: pointer;
-                    }
+            .product-browse-image {
+                width: 100%;
+                overflow: hidden;
+                box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 
-                    img {
-                        max-width: 100%;
-                        max-height: 100%;
-                        margin: 0 auto;
-                        display: table;
-                        background: #fbfbfb;
-                    }
-
-                    .product-browse-item-info {
-                        overflow: hidden;
-                        position: absolute;
-                        display: block;
-                        left: 0;
-                        bottom: 0;
-                        height: 100%;
-                        opacity: 0;
-                        width: 100%;
-                        background-image: linear-gradient(180deg,rgba(22,26,31,0),#161a1f);
-
-                        .product-browse-item-info-content {
-                            position: absolute;
-                            left: 0;
-                            bottom: 0;
-                            padding:5px;
-                            width:100%;
-
-                            > div {
-                                width: 100%;
-                                padding: 5px;
-                                font-size: 14px;
-                                color: white;
-                                float: left;
-                                
-                                h2 {
-                                    white-space: nowrap;
-                                    overflow: hidden;
-                                    display: block;
-                                    text-overflow: ellipsis;
-                                    width: 100%;
-                                    color:white;
-                                    font-size: 26px;
-                                    height: 30px;
-
-                                    a {
-                                        color:white;
-                                    }
-                                }
-
-                                span {
-                                    display: block;
-                                    float: left;
-                                    width:100%;
-                                }
-                            }
-                        }
-                    }
-
-                    &:hover {
-                        .product-browse-item-info {
-                            opacity: 1;
-                        }
-                    }
+                img {
+                    width: 100%;
                 }
+            }
+
+            .product-browse-item-info {
+                font-size:14px;
+                font-weight: bold;
+                overflow: hidden;
+
+                h2 {
+                    font-size: 20px;
+                    font-weight: bold;
+                    margin-bottom: 3px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    display: block;
+                    text-overflow: ellipsis;
+                }
+
+                span {
+                    width: 50%;
+                    float: left;
+                    display: block;
+                }
+
+                span + span {
+                    text-align: right;
+                }
+            }
+
+            &:nth-child(3n+1){
+                padding-right:10px;
+            }
+
+            &:nth-child(3n+2){
+                padding-left:5px;
+                padding-right:5px;
+            }
+
+            &:nth-child(3n+3){
+                padding-left:10px;
             }
         }
     }
