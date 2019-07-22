@@ -33,7 +33,7 @@ class UserMenu extends React.Component {
           myopendesktopUrl={this.props.myopendesktopUrl}
           cloudopendesktopUrl={this.props.cloudopendesktopUrl}
           musicopendesktopUrl={this.props.musicopendesktopUrl}
-          docsopendesktopUrl={this.props.docsopendesktopUrl}          
+          docsopendesktopUrl={this.props.docsopendesktopUrl}
           onSwitchStyle={this.props.onSwitchStyle}
           onSwitchStyleChecked={this.props.onSwitchStyleChecked}
         />
@@ -62,13 +62,11 @@ class UserMenu extends React.Component {
     if (!this.props.user){
       anonymousMenu= <AnonymousMenu baseUrl={this.props.baseUrl} user={this.props.user}/>
     }
-
-    let chatItem;
-    if (this.props.user && this.props.user.member_id ){
-      chatItem=(<li id="chat-link-item"><a href={this.props.riotUrl}>
+        
+    let  chatItem=(<li id="chat-link-item"><a href={this.props.riotUrl}>
         <img src={this.props.baseUrl+"/theme/react/assets/img/logo-riot.svg"} className="riotIcon"></img>Chat
       </a></li>);
-    }
+
 
 
     let userMenuContainerDisplay;

@@ -73,12 +73,15 @@ if (Zend_Auth::getInstance()->hasIdentity()){
     $comments = $modelInfo->getLatestComments(5);
     foreach ($productsAppAddons as &$p) {
       $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
+      $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
     }
     foreach ($productsThemes as &$p) {
       $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
+      $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
     }
     foreach ($productsMultimedia as &$p) {
       $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
+      $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
     }
     foreach ($comments as &$p) {
       $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
