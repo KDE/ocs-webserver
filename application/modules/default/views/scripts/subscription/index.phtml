@@ -24,6 +24,17 @@
 $modelInfo = new Default_Model_Info();
 $countActiveMembers = $modelInfo->countTotalActiveMembers();
 $modelInfo= new Default_Model_Info();
+$filter = new Local_Filter_Url_Encrypt();
+$thisurl = "/";
+if(isset($_GET['url'])) {
+    $thisurl = $_GET['url'];
+}else
+{
+   $thisurl= Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"];
+}
+
+
+$url_login = "/login/redirect/".$filter->filter($thisurl);
 
 ?>
 <link href="/theme/flatui/css/support.css" rel="stylesheet">
@@ -38,37 +49,31 @@ $modelInfo= new Default_Model_Info();
                 <div class="sidebar-left col-md-2"></div>
                 
    
-                <div class="content col-md-8">
+                <div class="content col-md-6">
                     <h2>Become a Supporter</h2>
                     <p>Your donation supports potentially all <b> <?=$countActiveMembers?></b> creators on opendesktop.org (see <a href="/faq-pling">pling FAQ</a>).
                     </p>
                     <div class="x-donation-widget">
                          <div class="row disply-flex">
-                            <div class="col-lg-2 col-md-2" style="padding-left: 15px;">        
-                                <div class="x-tabs-header " style="padding-left: 40px;text-align:right">
-                                  <div class="header-content">                                                
-                                    Base Amount                                      
+                            <div class="col-lg-4 col-md-4" style="padding-left: 15px;">        
+                                <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
+                                  <div class="header-content">                                                                                     
+                                    Base Amount Monthly
+                                 
                                   </div>
                                 </div>                                                  
                             </div>                        
 
-                            <div class="col-lg-4 col-md-12">        
-                                <div class="x-tabs-header " style="padding-left: 30px;">
-                                  <div class="header-content">                                                
-                                    Monthly Payment  
-                                    <br><span style="font-size: small;" class="extrasmall">(can be cancelled at any time)</span>
-                                  </div>
-                                </div>                                                  
-                            </div>
-                            <div class="col-lg-4 col-md-12" style="">
+                           
+                            <div class="col-lg-6 col-md-6" style="">
                             <div class="x-tabs-header ">
                               <div class="header-content">                                                
-                                 Yearly Payment   
-                                 <br><span style="font-size: small;" class="extrasmall">(can be cancelled at any time before the next year)</span>
+                                 Yearly Payment 
+                                 <br><span style="font-size: small;" class="extrasmall">(done for one year, can be cancelled at any time before next year)</span>
                               </div>
                             </div>                                                                                     
                             </div>
-                            <div class="col-lg-2 col-md-12 " style="padding-right: 15px;">
+                            <div class="col-lg-2 col-md-2 " style="padding-right: 15px;">
                             <div class="x-tabs-header ">
                               <div class="header-content" style="text-align:right;padding-right:15px;">                                                
                                  Supporters
@@ -77,20 +82,14 @@ $modelInfo= new Default_Model_Info();
                             </div>
                         </div> <!--end of row-->
                         <div class="row disply-flex">
-                            <div class="col-lg-2 col-md-12">  
+                            <div class="col-lg-4 col-md-4">  
                             <?php
                                 echo $this->partial('/subscription/partials/tier.phtml',
                                         array('tier' => '0.99'));
                             ?>
                             </div>
-                            <div class="col-lg-4 col-md-12">  
-                           <?php
-                                echo $this->partial('/subscription/partials/option_monthly.phtml',
-                                        $this->payment_options['Option1']
-                                );
-                            ?>
-                            </div>
-                            <div class="col-lg-4 col-md-12">  
+                          
+                            <div class="col-lg-6 col-md-6">  
                                 <?php
                                 echo $this->partial('/subscription/partials/option.phtml',
                                         $this->payment_options['Option5']
@@ -111,20 +110,14 @@ $modelInfo= new Default_Model_Info();
                         </div> <!--end of row-->
 
                         <div class="row disply-flex">
-                            <div class="col-lg-2 col-md-12">  
+                            <div class="col-lg-4 col-md-4">  
                                 <?php
                                 echo $this->partial('/subscription/partials/tier.phtml',
                                         array('tier' => '2'));
                                 ?>
                             </div>
-                            <div class="col-lg-4 col-md-12">  
-                           <?php
-                                echo $this->partial('/subscription/partials/option_monthly.phtml',
-                                        $this->payment_options['Option2']
-                                );
-                            ?>
-                            </div>
-                            <div class="col-lg-4 col-md-12">  
+                           
+                            <div class="col-lg-6 col-md-6">  
                                 <?php
                                 echo $this->partial('/subscription/partials/option.phtml',
                                         $this->payment_options['Option6']
@@ -145,20 +138,14 @@ $modelInfo= new Default_Model_Info();
                         </div> <!--end of row-->
                             
                         <div class="row disply-flex">
-                            <div class="col-lg-2 col-md-12">  
+                            <div class="col-lg-4 col-md-4">  
                             <?php
                                 echo $this->partial('/subscription/partials/tier.phtml',
                                         array('tier' => '5'));
                             ?>
                             </div>
-                            <div class="col-lg-4 col-md-12">  
-                           <?php
-                                echo $this->partial('/subscription/partials/option_monthly.phtml',
-                                        $this->payment_options['Option3']
-                                );
-                            ?>
-                            </div>
-                            <div class="col-lg-4 col-md-12">  
+                            
+                            <div class="col-lg-6 col-md-6">  
                                
                                  <?php
                                 echo $this->partial('/subscription/partials/option.phtml',
@@ -181,21 +168,15 @@ $modelInfo= new Default_Model_Info();
                         </div> <!--end of row-->
 
                         <div class="row disply-flex">
-                            <div class="col-lg-2 col-md-12">  
+                            <div class="col-lg-4 col-md-4">  
                                 <?php
                                 echo $this->partial('/subscription/partials/tier.phtml',
                                         array('tier' => '10'));
                             ?>
                             </div>
-                            <div class="col-lg-4 col-md-12">  
-                           <?php
-                                echo $this->partial('/subscription/partials/option_monthly.phtml',
-                                        $this->payment_options['Option4']
-                                );
-                            ?>
-                            </div>
+                           
 
-                            <div class="col-lg-4 col-md-12">  
+                            <div class="col-lg-6 col-md-6">  
                                
                                  <?php
                                 echo $this->partial('/subscription/partials/option.phtml',
@@ -222,13 +203,12 @@ $modelInfo= new Default_Model_Info();
                         
 
                         <div class="row disply-flex">
-                            <div class="col-lg-2 col-md-12">  
+                            <div class="col-lg-4 col-md-4">  
                                 
                             </div>
-                            <div class="col-lg-4 col-md-12">                             
-                            </div>                            
+                                                   
 
-                            <div class="col-lg-4 col-md-12">  
+                            <div class="col-lg-6 col-md-6">  
 
                                  <ul class="x-suggested-amounts">
                                 <li class="amount-item <?=(isset($this->islast) ? 'last':'')?>">  
@@ -251,7 +231,7 @@ $modelInfo= new Default_Model_Info();
                         </div> <!--end of row-->
             
                         <div class="row disply-flex">
-                              <div class="col-lg-12 col-md-12">  
+                              <div class="col-lg-8 col-md-8">  
                                 <div class="tabs-footer">
                                     <?php if (Zend_Auth::getInstance()->hasIdentity()) {?>
                                   <button type="submit" class="dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
@@ -262,7 +242,7 @@ $modelInfo= new Default_Model_Info();
                                     </span>
                                     </button>
                                      <?php }else{
-                                        echo "Please login to donate";
+                                        echo "<a href='".$url_login."'>Please login to donate</a>";
                                     }?>
                                 </div>
                                     </div>
