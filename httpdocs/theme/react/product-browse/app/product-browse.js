@@ -67,7 +67,7 @@ function ProductBrowseItem(props){
 
     const containerWidth = $('#product-browse-container').width();
     const itemWidth = containerWidth / 3;
-    const imgHeight = itemWidth / 1.8;
+    const imgHeight = itemWidth / 1.85;
 
 
     let imgUrl = "https://cn.opendesktop.";
