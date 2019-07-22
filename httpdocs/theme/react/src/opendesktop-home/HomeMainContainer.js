@@ -57,13 +57,13 @@ class HomeMainContainer extends Component {
                                   />
                   </div>
                   <div className="middle">
-                     <ProductsGitContainer />
+                     <ProductsGitContainer urlCode={this.state.gitlabUrl}/>
                      <ProductsContainer baseUrlStore={this.state.baseUrlStore} title="Apps and Addons" cat="152" products={this.state.products}/>
                      <ProductsContainer baseUrlStore={this.state.baseUrlStore} title="Themes" cat="148" products={this.state.productsThemes}/>
                      <ProductsContainer baseUrlStore={this.state.baseUrlStore} title="Multimedia" cat="586" products={this.state.productsMultimedia}/>
                      <ChatContainer />
                      <CommentsContainer title="Comments" baseUrlStore={this.state.baseUrlStore} comments={this.state.comments}/>
-                     <BlogFeedContainer />
+                     <BlogFeedContainer urlCommunity={this.state.forumUrl}/>
                      <RssNewsContainer />
                   </div>
              </div>
