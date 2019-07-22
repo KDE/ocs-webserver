@@ -1,5 +1,19 @@
 import React from 'react';
 import SwitchItem from './SwitchItem';
+
+function MyButton(props)
+{
+  return (
+    <li id={props.id}>
+      <a href={props.url}>
+        <div className="icon"></div>
+        <span>{props.label}</span>
+        {props.badgeNot}
+      </a>
+    </li>
+  );
+}
+
 class UserLoginMenuContainer extends React.Component {
   constructor(props){
     super(props);
@@ -62,89 +76,50 @@ class UserLoginMenuContainer extends React.Component {
     {
       badgeNot = (<span className="badge-notification">{this.state.notification_count}</span>);
     }
-    let urlEnding;
-    if(this.props.baseUrl.endsWith("cc"))
-    {
-      urlEnding = "cc";
-    }else{
-      urlEnding = "org";
-    }
 
     let contextMenuDisplay;
     if (this.props.isAdmin){
       contextMenuDisplay = (
         <ul className="user-context-menu-container">
-          <li id="storage-link-item">
-            <a href={"https://my.opendesktop." + urlEnding}>
-              <div className="icon"></div>
-              <span>Storage</span>
-            </a>
-          </li>
-          <li id="contacts-link-item">
-            <a href={"https://my.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
-              <div className="icon"></div>
-              <span>Contacts</span>
-            </a>
-          </li>
-          <li id="calendar-link-item">
-            <a href={"https://my.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
-              <div className="icon"></div>
-              <span>Calendar</span>
-            </a>
-          </li>
-          <li id="messages-link-item">
-            <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
-              <div className="icon"></div>
-              <span>Messages</span>
-              {badgeNot}
-            </a>
-          </li>
-
-          <li id="docs-link-item">
-            <a href={"https://docs.opendesktop." + urlEnding}>
-              <div className="icon"></div>
-              <span>Docs</span>
-            </a>
-          </li>
-
-
-          <li id="music-link-item">
-            <a href={"https://music.opendesktop." + urlEnding}>
-              <div className="icon"></div>
-              <span>Music</span>
-            </a>
-          </li>
-
+           <MyButton id="storage-link-item"
+                   url={this.props.myopendesktopUrl}
+                   label="Storage" />
+           <MyButton id="calendar-link-item"
+                   url={this.props.myopendesktopUrl+"/index.php/apps/calendar/"}
+                   label="Calendar" />
+           <MyButton id="contacts-link-item"
+                   url={this.props.myopendesktopUrl+"/index.php/apps/contacts/"}
+                   label="Contacts" />
+           <MyButton id="messages-link-item"
+                   url={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}
+                   label="Messages"
+                   badge={badgeNot}
+                    />
+          <MyButton id="docs-link-item"
+                  url={this.props.docsopendesktopUrl}
+                  label="Docs" />
+          <MyButton id="music-link-item"
+                  url={this.props.musicopendesktopUrl}
+                  label="Music" />
         </ul>
       );
     } else {
       contextMenuDisplay = (
         <ul  className="user-context-menu-container">
-          <li id="storage-link-item">
-            <a href={"https://my.opendesktop." + urlEnding}>
-              <div className="icon"></div>
-              <span>Storage</span>
-            </a>
-          </li>
-          <li id="contacts-link-item">
-            <a href={"https://my.opendesktop." + urlEnding + "/index.php/apps/contacts/"}>
-              <div className="icon"></div>
-              <span>Contacts</span>
-            </a>
-          </li>
-          <li id="calendar-link-item">
-            <a href={"https://my.opendesktop." + urlEnding + "/index.php/apps/calendar/"}>
-              <div className="icon"></div>
-              <span>Calendar</span>
-            </a>
-          </li>
-          <li id="messages-link-item" >
-            <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
-              <div className="icon"></div>
-              <span>Messages</span>
-              {badgeNot}
-            </a>
-          </li>        
+          <MyButton id="storage-link-item"
+                  url={this.props.myopendesktopUrl}
+                  label="Storage" />
+          <MyButton id="calendar-link-item"
+                  url={this.props.myopendesktopUrl+"/index.php/apps/calendar/"}
+                  label="Calendar" />
+          <MyButton id="contacts-link-item"
+                  url={this.props.myopendesktopUrl+"/index.php/apps/contacts/"}
+                  label="Contacts" />
+          <MyButton id="messages-link-item"
+                  url={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}
+                  label="Messages"
+                  badge={badgeNot}
+                   />
         </ul>
       );
     }

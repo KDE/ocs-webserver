@@ -23,6 +23,7 @@ class DomainsMenu extends React.Component {
           user={this.props.user}
           gitlabUrl={this.props.gitlabUrl}
           isExternal = {this.props.isExternal}
+          baseUrlStore={this.props.baseUrlStore}
         />
       )
     }
@@ -35,8 +36,8 @@ class DomainsMenu extends React.Component {
             openDesktop.org :
           </a>
         </li>
-        <li><a href={this.props.baseUrlStore}>Publish</a></li>
-        <li><a href={this.props.gitlabUrl}>Code</a></li>           
+        <li><a href={this.props.gitlabUrl+"/explore/projects"}>Code</a></li>
+        <li><a href={this.props.baseUrlStore}>Store</a></li>
         <DiscussionBoardsDropDownMenu
           forumUrl={this.props.forumUrl}
           user={this.props.user}

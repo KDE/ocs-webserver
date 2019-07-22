@@ -1023,16 +1023,20 @@ class Default_Model_Info
         if (false !== ($resultSet = $cache->load($cacheName))) {
             return $resultSet;
         }
+       
 
         $sql = '
                 SELECT 
                 comment_id
                 ,comment_text
                 , member.member_id
+                ,member.profile_image_url
                 ,comment_created_at
                 ,username            
                 ,title
                 ,project_id
+                ,comments.comment_target_id
+
                 FROM comments           
                 JOIN project ON comments.comment_target_id = project.project_id AND comments.comment_type = 0
                 STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id
@@ -1072,17 +1076,22 @@ class Default_Model_Info
         $sql = '
                 SELECT 
                 `rating_id`                
-                , `member`.`member_id`                
+                ,`member`.`member_id`   
+                ,`member`.`profile_image_url`                           
                 ,`username`            
                 ,`user_like`
                 ,`user_dislike`
+                ,`score`
                 ,`project_rating`.`project_id`
                 ,`project_rating`.`created_at`
                 ,`project`.`title`
+                ,`comments`.`comment_text`
+                ,`comments`.`comment_id`
                 FROM `project_rating`           
                 JOIN `project` ON `project_rating`.`project_id` = `project`.`project_id` 
+                join `comments` on `project_rating`.`comment_id` = `comments`.`comment_id`   
                 STRAIGHT_JOIN `member` ON `project_rating`.`member_id` = `member`.`member_id`
-                WHERE `project`.`status` = 100
+                WHERE `project`.`status` = 100 and `project_rating`.`rating_active`=1
                 AND `project`.`member_id` = :member_id
                 ORDER BY `rating_id` DESC               
         ';

@@ -141,6 +141,10 @@ class MetaHeader extends React.Component {
             loginUrl={this.state.loginUrl}
             logoutUrl={this.state.logoutUrl}
             gitlabUrl={this.state.gitlabUrl}
+            myopendesktopUrl={this.state.myopendesktopUrl}
+            cloudopendesktopUrl={this.state.cloudopendesktopUrl}
+            musicopendesktopUrl={this.state.musicopendesktopUrl}
+            docsopendesktopUrl={this.state.docsopendesktopUrl}
             isAdmin={this.state.isAdmin}
             onSwitchStyle={this.onSwitchStyle}
             onSwitchStyleChecked={paraChecked}
