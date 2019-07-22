@@ -70,8 +70,8 @@ function ProductBrowseItem(props){
     const imgHeight = itemWidth / 1.75;
 
 
-    let imgUrl = "https://cn.";
-    imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "opendesktop.org" : "pling.it";
+    let imgUrl = "https://cn.opendesktop.";
+    imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
     imgUrl += "/img/" + p.image_small;
 
     let itemLink = window.config.baseUrl + "/";
