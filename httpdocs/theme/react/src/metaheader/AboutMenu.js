@@ -40,21 +40,21 @@ class AboutMenu extends React.Component {
 
     let faqLinkItem, apiLinkItem, aboutLinkItem,aboutPlingItem, aboutopencodeItem;
     if (this.props.isAdmin ){
-      faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>Plings (admin only)</a></li>);
+      faqLinkItem = (<li><a className="popuppanel"  href={"/plings"}>Plings (admin only)</a></li>);
     }
-    aboutPlingItem = (<li><a id="faq" href={this.props.baseUrl +"/faq-pling"}>FAQ Pling</a></li>);
-    aboutopencodeItem = (<li><a id="faq" href={this.props.baseUrl +"/faq-opencode"}>FAQ Opencode</a></li>);
-
-    aboutLinkItem = (<li><a id="about" href={this.props.baseUrl +"/about"}>About</a></li>);
-    if (this.props.isExternal === false){
-      //faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>Plings</a></li>);
-      apiLinkItem = (<li><a className="popuppanel" id="api" href={"/partials/ocsapicontent.phtml"}>API</a></li>);
-      //aboutLinkItem = (<li><a className="popuppanel" id="about" href={"/partials/about.phtml"}>About</a></li>);
-    } else {
-      //faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={this.props.baseUrl + "/#faq"}>FAQ</a></li>);
-      apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={this.props.baseUrl + "/#api"}>API</a></li>);
-      //aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={this.props.baseUrl + "/#about"}>About</a></li>);
-    }
+    aboutPlingItem = (<li><a  href={this.props.baseUrl +"/faq-pling"}>FAQ Pling</a></li>);
+    aboutopencodeItem = (<li><a  href={this.props.baseUrl +"/faq-opencode"}>FAQ Opencode</a></li>);
+    apiLinkItem = (<li><a  href={this.props.baseUrl +"/ocs-api"}>API</a></li>);
+    aboutLinkItem = (<li><a  href={this.props.baseUrl +"/about"}>About</a></li>);
+    // if (this.props.isExternal === false){
+    //   //faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>Plings</a></li>);
+    //   apiLinkItem = (<li><a className="popuppanel" id="api" href={"/partials/ocsapicontent.phtml"}>API</a></li>);
+    //   //aboutLinkItem = (<li><a className="popuppanel" id="about" href={"/partials/about.phtml"}>About</a></li>);
+    // } else {
+    //   //faqLinkItem = (<li><a className="popuppanel" target="_blank" id="faq" href={this.props.baseUrl + "/#faq"}>FAQ</a></li>);
+    //   apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={this.props.baseUrl + "/#api"}>API</a></li>);
+    //   //aboutLinkItem = (<li><a className="popuppanel" target="_blank" id="about" href={this.props.baseUrl + "/#about"}>About</a></li>);
+    // }
 
     return (
       <li ref={node => this.node = node} id="about-dropdown-menu" className={this.state.dropdownClass}>
