@@ -30,53 +30,92 @@ $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images
 
 $modelInfo = new Default_Model_Info();
 $helpPrintDate = new Default_View_Helper_PrintDate();
-$productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'152,233');
-$productsThemes = $modelInfo->getLastProductsForHostStores(5,'158,509,330,404,148,491,445,295');
-$productsMultimedia = $modelInfo->getLastProductsForHostStores(5,'509,588,587,58');
-//$productsThemes = $modelInfo->getLastProductsForHostStores(5,'33,295');
-$comments = $modelInfo->getLatestComments(5);
-foreach ($productsAppAddons as &$p) {
-  $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
-}
-foreach ($productsThemes as &$p) {
-  $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
-}
-foreach ($productsMultimedia as &$p) {
-  $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
-}
-foreach ($comments as &$p) {
+$helperImage = new Default_View_Helper_Image();
+
+if (Zend_Auth::getInstance()->hasIdentity()){
+    $identity = Zend_Auth::getInstance()->getStorage()->read();
+    $avatar = $helperImage->image($identity->profile_image_url,array('width' => 100, 'height' => 100, 'crop' => 2));
+    $user = array(
+        "username" => $identity->username,
+        "member_id" => $identity->member_id,
+        "mail" => $identity->mail,
+        "avatar" => $avatar,
+        "roleName" =>$identity->roleName
+    );
+
+    $comments = $modelInfo->getLastCommentsForUsersProjects($identity->member_id);
+    $votes = $modelInfo->getLastVotesForUsersProjects($identity->member_id);
+    $donations = $modelInfo->getLastDonationsForUsersProjects($identity->member_id);
+    foreach ($comments as &$p) {
+      $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
+      $p['comment_created_at'] = $helpPrintDate->printDate($p['comment_created_at']);
+    }
+    foreach ($votes as &$p) {
+      $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
+      $p['created_at'] = $helpPrintDate->printDate($p['created_at']);
+    }
+    $tableMembers = new Default_Model_Member();
+    $supporterinfo = $tableMembers->fetchSupporterDonationInfo($identity->member_id);
+
+    $response = array(
+      'user' => $user,
+      'supporterinfo' => $supporterinfo,
+      'comments' =>$comments,
+      'votes' => $votes,
+    );
+}else
+{
+
+
+    $productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'152,233');
+    $productsThemes = $modelInfo->getLastProductsForHostStores(5,'148');
+    $productsMultimedia = $modelInfo->getLastProductsForHostStores(5,'586');
+    $comments = $modelInfo->getLatestComments(5);
+    foreach ($productsAppAddons as &$p) {
+      $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
+    }
+    foreach ($productsThemes as &$p) {
+      $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
+    }
+    foreach ($productsMultimedia as &$p) {
+      $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
+    }
+    foreach ($comments as &$p) {
       $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
       $p['comment_created_at'] = $helpPrintDate->printDate($p['comment_created_at']);
     }
 
-$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
-$baseurlStore = Zend_Registry::get('config')->settings->client->default->baseurl_store;
-$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
-$url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
-$url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
-$url_riot = Zend_Registry::get('config')->settings->client->default->url_riot;
-$url_myopendesktop = Zend_Registry::get('config')->settings->client->default->url_myopendesktop;
-$url_cloudopendesktop = Zend_Registry::get('config')->settings->client->default->url_cloudopendesktop;
-$url_musicopendesktop = Zend_Registry::get('config')->settings->client->default->url_musicopendesktop;
-$url_mastodon = Zend_Registry::get('config')->settings->client->default->url_mastodon;
+    $config = Zend_Registry::get('config')->settings->client->default;
+    $baseurl = $config->baseurl;
+    $baseurlStore = $config->baseurl_store;
+    $url_forum = $config->url_forum;
+    $url_blog = $config->url_blog;
+    $url_gitlab = $config->url_gitlab;
+    $url_riot = $config->url_riot;
+    $url_myopendesktop = $config->url_myopendesktop;
+    $url_cloudopendesktop = $config->url_cloudopendesktop;
+    $url_musicopendesktop = $config->url_musicopendesktop;
+    $url_mastodon = $config->url_mastodon;
+    $response = array(
+      'comments' => $comments,
+      'products' => $productsAppAddons,
+      'productsThemes' => $productsThemes,
+      'productsMultimedia' => $productsMultimedia,
+      "baseUrl" => $baseurl,
+      "baseUrlStore" => $baseurlStore,
+      "blogUrl" => $url_blog,
+      "forumUrl" => $url_forum,
+      "mastodonUrl" => $url_mastodon,
+      "gitlabUrl" => $url_gitlab,
+      "riotUrl" => $url_riot,
+      "url_myopendesktop" => $url_myopendesktop,
+      "url_cloudopendesktop" => $url_cloudopendesktop,
+      "url_musicopendesktop" => $url_musicopendesktop,
+      "url_mastodon" => $url_mastodon,
+    );
 
-$response = array(
-  'comments' => $comments,
-  'products' => $productsAppAddons,
-  'productsThemes' => $productsThemes,
-  'productsMultimedia' => $productsMultimedia,
-  "baseUrl" => $baseurl,
-  "baseUrlStore" => $baseurlStore,
-  "blogUrl" => $url_blog,
-  "forumUrl" => $url_forum,
-  "mastodonUrl" => $url_mastodon,
-  "gitlabUrl" => $url_gitlab,
-  "riotUrl" => $url_riot,
-  "url_myopendesktop" => $url_myopendesktop,
-  "url_cloudopendesktop" => $url_cloudopendesktop,
-  "url_musicopendesktop" => $url_musicopendesktop,
-  "url_mastodon" => $url_mastodon
-);
+
+}
 
 ?>
 

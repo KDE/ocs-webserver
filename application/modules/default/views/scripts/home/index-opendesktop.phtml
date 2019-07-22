@@ -28,27 +28,45 @@ $this->headMeta()->appendProperty('og:site_name','www.opendesktop.org');
 $this->headMeta()->appendProperty('og:description','A community where developers and artists share applications, themes and other content');
 $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images/system/opendesktop-logo.png');
 
+$modelInfo = new Default_Model_Info();
+$helpPrintDate = new Default_View_Helper_PrintDate();
+$helperImage = new Default_View_Helper_Image();
 
-// if (Zend_Auth::getInstance()->hasIdentity()){
-//     $identity = Zend_Auth::getInstance()->getStorage()->read();
-//     $helperImage = new Default_View_Helper_Image();
-//     $avatar = $helperImage->image($identity->profile_image_url,array('width' => 100, 'height' => 100, 'crop' => 2));
-//
-//     $user = array(
-//         "username" => $identity->username,
-//         "member_id" => $identity->member_id,
-//         "mail" => $identity->mail,
-//         "avatar" => $avatar,
-//         "roleName" =>$identity->roleName
-//     );
-//     $response = array(
-//       'user' => $user
-//     );
-// }else
-// {
+if (Zend_Auth::getInstance()->hasIdentity()){
+    $identity = Zend_Auth::getInstance()->getStorage()->read();
+    $avatar = $helperImage->image($identity->profile_image_url,array('width' => 100, 'height' => 100, 'crop' => 2));
+    $user = array(
+        "username" => $identity->username,
+        "member_id" => $identity->member_id,
+        "mail" => $identity->mail,
+        "avatar" => $avatar,
+        "roleName" =>$identity->roleName
+    );
 
-    $modelInfo = new Default_Model_Info();
-    $helpPrintDate = new Default_View_Helper_PrintDate();
+    $comments = $modelInfo->getLastCommentsForUsersProjects($identity->member_id);
+    $votes = $modelInfo->getLastVotesForUsersProjects($identity->member_id);
+    $donations = $modelInfo->getLastDonationsForUsersProjects($identity->member_id);
+    foreach ($comments as &$p) {
+      $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
+      $p['comment_created_at'] = $helpPrintDate->printDate($p['comment_created_at']);
+    }
+    foreach ($votes as &$p) {
+      $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
+      $p['created_at'] = $helpPrintDate->printDate($p['created_at']);
+    }
+    $tableMembers = new Default_Model_Member();
+    $supporterinfo = $tableMembers->fetchSupporterDonationInfo($identity->member_id);
+
+    $response = array(
+      'user' => $user,
+      'supporterinfo' => $supporterinfo,
+      'comments' =>$comments,
+      'votes' => $votes,
+    );
+}else
+{
+
+
     $productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'152,233');
     $productsThemes = $modelInfo->getLastProductsForHostStores(5,'148');
     $productsMultimedia = $modelInfo->getLastProductsForHostStores(5,'586');
@@ -97,7 +115,7 @@ $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images
     );
 
 
-// }
+}
 
 ?>
 
