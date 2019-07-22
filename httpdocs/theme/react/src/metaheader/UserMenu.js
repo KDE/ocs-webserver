@@ -29,6 +29,11 @@ class UserMenu extends React.Component {
           isAdmin={this.props.isAdmin}
           logoutUrl={this.props.logoutUrl}
           baseUrl={this.props.baseUrl}
+          baseUrlStore={this.props.baseUrlStore}
+          myopendesktopUrl={this.props.myopendesktopUrl}
+          cloudopendesktopUrl={this.props.cloudopendesktopUrl}
+          musicopendesktopUrl={this.props.musicopendesktopUrl}
+          docsopendesktopUrl={this.props.docsopendesktopUrl}          
           onSwitchStyle={this.props.onSwitchStyle}
           onSwitchStyleChecked={this.props.onSwitchStyleChecked}
         />
