@@ -4,7 +4,7 @@ import {isMobile} from 'react-device-detect';
 
 function MusicPlayerWrapper(props){
 
-  const [ showPlaylist, setShowPlaylist ] = useState(true);
+  const [ showPlaylist, setShowPlaylist ] = useState(isMobile ? false : true);
 
   /*const options = {
         audioLists:props.slide.items,
