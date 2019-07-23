@@ -4,7 +4,7 @@ import {isMobile} from 'react-device-detect';
 
 function MusicPlayerWrapper(props){
 
-  const [ showPlaylist, setShowPlaylist ] = useState(false);
+  const [ showPlaylist, setShowPlaylist ] = useState(true);
 
   /*const options = {
         audioLists:props.slide.items,
@@ -20,6 +20,7 @@ function MusicPlayerWrapper(props){
     const options = {
         //audio lists model
         audioLists: props.slide.items,
+        audioListsPanelVisible:true,
         //default play index of the audio player  [type `number` default `0`]
         defaultPlayIndex: 0,
         //if you want dynamic change current play audio you can change it [type `number` default `0`]
@@ -75,7 +76,7 @@ function MusicPlayerWrapper(props){
         //Whether the audio is played after loading is completed. [type `Boolean` default 'true']
         autoPlay: false,
         //Whether you can switch between two modes, full => mini  or mini => full   [type 'Boolean' default 'true']
-        toggleMode: true,
+        toggleMode: false,
         //audio cover is show of the "mini" mode [type `Boolean` default 'true']
         showMiniModeCover: true,   
         //audio playing progress is show of the "mini"  mode
@@ -97,7 +98,7 @@ function MusicPlayerWrapper(props){
         showReload: true,
       
         //download button display of the audio player panel   [type `Boolean` default `true`]
-        showDownload: true,
+        showDownload: false,
       
         //loop button display of the audio player panel   [type `Boolean` default `true`]
         showPlayMode: true,
@@ -106,7 +107,7 @@ function MusicPlayerWrapper(props){
         showThemeSwitch: true,
       
         //lyric display of the audio player panel   [type `Boolean` default `false`]
-        showLyric: true,
+        showLyric: false,
       
         //Extensible custom content       [type 'Array' default '[]' ]
         extendsContent: [],
@@ -219,8 +220,6 @@ function MusicPlayerWrapper(props){
     let musicPlayerWrapperCssClass = "desktop ";
     if (isMobile) musicPlayerWrapperCssClass = "mobile ";
     if (showPlaylist) musicPlayerWrapperCssClass += " show-playlist";
-
-    console.log(window.innerWidth);
 
     return (
         <div id="music-player-wrapper" className={musicPlayerWrapperCssClass}>

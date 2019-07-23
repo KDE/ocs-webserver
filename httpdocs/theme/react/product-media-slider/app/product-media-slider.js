@@ -30,8 +30,6 @@ function ProductMediaSlider(){
 
   let sliderFadeControlTimeOut;
 
-  console.log(gallery);
-
   // use effects
   React.useEffect(() => { initProductMediaSlider(currentSlide) },[currentSlide])
   React.useEffect((event) => { updateDimensions(event,currentSlide) },[currentSlide, cinemaMode])

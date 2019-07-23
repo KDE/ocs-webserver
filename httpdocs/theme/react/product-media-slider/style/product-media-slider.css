@@ -639,6 +639,17 @@ video:focus {
 #music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group {
   margin: 0 5px;
 }
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.audio-download,
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.hide-panel,
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.lyric-btn {
+  display: none;
+}
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.reload-btn {
+  order: 10;
+}
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.theme-switch {
+  order: 11;
+}
 #music-player-wrapper.desktop .audio-lists-panel {
   position: absolute;
   top: 0;
