@@ -591,6 +591,7 @@ video:focus {
 #music-player-wrapper .rc-slider .rc-slider-rail {
   display: block;
   height: 4px;
+  z-index: 11;
 }
 #music-player-wrapper .rc-slider .rc-slider-handle {
   position: absolute;
