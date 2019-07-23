@@ -580,12 +580,21 @@ video:focus {
 }
 #music-player-wrapper .rc-slider {
   position: relative;
-  flex: 1 1 auto;
+  height: 4px;
+  overflow: hidden;
 }
 #music-player-wrapper .rc-slider .rc-slider-track {
   position: absolute;
   top: 0;
   height: 100%;
+}
+#music-player-wrapper .rc-slider .rc-slider-rail {
+  display: block;
+  height: 4px;
+}
+#music-player-wrapper .rc-slider .rc-slider-handle {
+  position: absolute;
+  top: 0;
 }
 #music-player-wrapper .audio-lists-panel .audio-lists-panel-header .close-btn {
   display: block;

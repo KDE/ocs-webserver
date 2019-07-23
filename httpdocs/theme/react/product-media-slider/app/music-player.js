@@ -5,6 +5,7 @@ import {isMobile} from 'react-device-detect';
 function MusicPlayerWrapper(props){
 
   const [ showPlaylist, setShowPlaylist ] = useState(isMobile ? false : true);
+  const [ bAudioInfo, setAudioInfo ] = useState();
 
   /*const options = {
         audioLists:props.slide.items,
@@ -82,7 +83,7 @@ function MusicPlayerWrapper(props){
         //audio playing progress is show of the "mini"  mode
         showMiniProcessBar: false,
         //audio controller is can be drag of the "mini" mode     [type `Boolean` default `true`]
-        drag: true,
+        drag: false,
         //drag the audio progress bar [type `Boolean` default `true`]
         seeked: true,
         //audio controller title [type `String | ReactNode`  default <FaHeadphones/>]
@@ -129,6 +130,7 @@ function MusicPlayerWrapper(props){
       
         //audio play handle
         onAudioPlay(audioInfo) {
+          setAudioInfo(audioInfo)
           console.log("audio playing", audioInfo);
         },
       
@@ -220,6 +222,9 @@ function MusicPlayerWrapper(props){
     let musicPlayerWrapperCssClass = "desktop ";
     if (isMobile) musicPlayerWrapperCssClass = "mobile ";
     if (showPlaylist) musicPlayerWrapperCssClass += " show-playlist";
+
+    let audioInfoDisplay;
+    if (bAudioInfo) audioInfoDisplay = JSON.stringify(bAudioInfo);
 
     return (
         <div id="music-player-wrapper" className={musicPlayerWrapperCssClass}>

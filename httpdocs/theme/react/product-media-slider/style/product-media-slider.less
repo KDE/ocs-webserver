@@ -713,13 +713,25 @@ video:focus {
 
   .rc-slider {
     position: relative;
-    flex:1 1 auto;
-  
+    height: 4px;
+    overflow: hidden;
+
     .rc-slider-track {
       position: absolute;
       top:0;
       height:100%;
     }
+
+    .rc-slider-rail {
+      display: block;
+      height:4px;
+    }
+
+    .rc-slider-handle {
+      position: absolute;
+      top:0;
+    }
+
   }
 
   .audio-lists-panel {
