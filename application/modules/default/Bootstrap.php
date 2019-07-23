@@ -788,6 +788,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'action'     => 'index',
             'page'       => 'gitfaq'
         )));
+        $router->addRoute('static_ocsapi', new Zend_Controller_Router_Route_Static('/ocs-api', array(
+            'module'     => 'default',
+            'controller' => 'content',
+            'action'     => 'index',
+            'page'       => 'ocsapi'
+        )));
         $router->addRoute('static_plings', new Zend_Controller_Router_Route_Static('/about', array(
             'module'     => 'default',
             'controller' => 'content',
