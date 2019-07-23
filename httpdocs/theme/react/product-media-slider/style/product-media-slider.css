@@ -580,20 +580,30 @@ video:focus {
 }
 #music-player-wrapper .rc-slider {
   position: relative;
-  height: 4px;
-  overflow: hidden;
+  flex: 1 1 auto;
 }
 #music-player-wrapper .rc-slider .rc-slider-track {
   position: absolute;
   top: 0;
   height: 100%;
 }
-#music-player-wrapper .rc-slider .rc-slider-rail {
+#music-player-wrapper.desktop .rc-slider {
+  position: relative;
+  height: 4px;
+  flex: none;
+  overflow: hidden;
+}
+#music-player-wrapper.desktop .rc-slider .rc-slider-track {
+  position: absolute;
+  top: 0;
+  height: 100%;
+}
+#music-player-wrapper.desktop .rc-slider .rc-slider-rail {
   display: block;
   height: 4px;
   z-index: 11;
 }
-#music-player-wrapper .rc-slider .rc-slider-handle {
+#music-player-wrapper.desktop .rc-slider .rc-slider-handle {
   position: absolute;
   top: 0;
 }
