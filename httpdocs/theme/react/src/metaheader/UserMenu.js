@@ -26,6 +26,7 @@ class UserMenu extends React.Component {
         <UserLoginMenuContainer
           user={this.props.user}
           forumUrl={this.props.forumUrl}
+          gitlabUrl={this.props.gitlabUrl}
           isAdmin={this.props.isAdmin}
           logoutUrl={this.props.logoutUrl}
           baseUrl={this.props.baseUrl}
@@ -48,6 +49,10 @@ class UserMenu extends React.Component {
           isAdmin={this.props.isAdmin}
           baseUrl={this.props.baseUrl}
           baseUrlStore={this.props.baseUrlStore}
+          myopendesktopUrl={this.props.myopendesktopUrl}
+          cloudopendesktopUrl={this.props.cloudopendesktopUrl}
+          musicopendesktopUrl={this.props.musicopendesktopUrl}
+          docsopendesktopUrl={this.props.docsopendesktopUrl}
         />
       );
     } else {

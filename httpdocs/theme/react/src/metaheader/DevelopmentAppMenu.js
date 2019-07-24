@@ -1,4 +1,5 @@
 import React from 'react';
+import MyButton from './MyButton';
 class DevelopmentAppMenu extends React.Component {
   constructor(props){
     super(props);
@@ -62,7 +63,58 @@ class DevelopmentAppMenu extends React.Component {
 
   render(){
 
-    
+    let badgeNot;
+    if(this.state.notification)
+    {
+      badgeNot = (<span className="badge-notification">{this.state.notification_count}</span>);
+    }
+    let contextMenuDisplay;
+    if (this.props.isAdmin){
+      contextMenuDisplay = (
+          <React.Fragment>
+           <MyButton id="storage-link-item"
+                   url={this.props.myopendesktopUrl}
+                   label="Storage" />
+           <MyButton id="calendar-link-item"
+                   url={this.props.myopendesktopUrl+"/index.php/apps/calendar/"}
+                   label="Calendar" />
+           <MyButton id="contacts-link-item"
+                   url={this.props.myopendesktopUrl+"/index.php/apps/contacts/"}
+                   label="Contacts" />
+           <MyButton id="messages-link-item"
+                   url={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}
+                   label="Messages"
+                   badge={badgeNot}
+                    />
+          <MyButton id="docs-link-item"
+                  url={this.props.docsopendesktopUrl}
+                  label="Docs" />
+          <MyButton id="music-link-item"
+                  url={this.props.musicopendesktopUrl}
+                  label="Music" />
+              </React.Fragment>
+      );
+    } else {
+      contextMenuDisplay = (
+        <React.Fragment>
+          <MyButton id="storage-link-item"
+                  url={this.props.myopendesktopUrl}
+                  label="Storage" />
+          <MyButton id="calendar-link-item"
+                  url={this.props.myopendesktopUrl+"/index.php/apps/calendar/"}
+                  label="Calendar" />
+          <MyButton id="contacts-link-item"
+                  url={this.props.myopendesktopUrl+"/index.php/apps/contacts/"}
+                  label="Contacts" />
+          <MyButton id="messages-link-item"
+                  url={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}
+                  label="Messages"
+                  badge={badgeNot}
+                   />
+        </React.Fragment>
+      );
+    }
+
     return (
       <li ref={node => this.node = node} id="development-app-menu-container">
         <div className={"user-dropdown " + this.state.dropdownClass}>
@@ -71,58 +123,20 @@ class DevelopmentAppMenu extends React.Component {
             <span className="th-icon"></span>
           </button>
           <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
-            <li id="addproduct-link-item">
-              <a href={this.props.baseUrlStore+"/product/add"}>
-                <div className="icon"></div>
-                <span>Add Product</span>
-              </a>
-            </li>
-            <li id="addproduct-link-item">
-              <a href={this.props.baseUrlStore+"/collection/add"}>
-                <div className="icon"></div>
-                <span>Add Collection</span>
-              </a>
-            </li>
+              {contextMenuDisplay}
+                    {/*
 
-            <li id="addproduct-link-item">
-              <a href={this.props.gitlabUrl+"/projects/new"}>
-                <div className="icon"></div>
-                <span>Add Project</span>
-              </a>
-            </li>
+                      <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/product/add"} label="Add Product" />
+                      <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/collection/add"} label="Add Collection" />
+                      <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/projects/new"} label="Add Project" />
 
-            <li id="listproduct-link-item">
-              <a href={this.props.baseUrlStore + "/u/" + this.props.user.username + "/products"}>
-                <div className="icon"></div>
-                <span>Products</span>
-              </a>
-            </li>
-            <li id="listproduct-link-item">
-              <a href={this.props.baseUrlStore + "/u/" + this.props.user.username + "/collections"}>
-                <div className="icon"></div>
-                <span>Collections</span>
-              </a>
-            </li>
-            <li id="opencode-link-item">
-              <a href={this.props.gitlabUrl+"/dashboard/projects"}>
-                <div className="icon"></div>
-                <span>Projects</span>
-              </a>
-            </li>
+                      <MyButton id="listproduct-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/products"} label="Products" />
+                      <MyButton id="listproduct-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/collections"} label="Collections" />
+                      <MyButton id="opencode-link-item" url={this.props.gitlabUrl+"/dashboard/projects"} label="Projects" />
 
-
-            <li id="plings-link-item">
-              <a href={this.props.baseUrlStore + "/u/" + this.props.user.username + "/payout"}>
-                <div className="icon"></div>
-                <span>Payout</span>
-              </a>
-            </li>
-            <li id="issues-link-item">
-              <a href={this.state.gitlabLink}>
-                <div className="icon"></div>
-                <span>Issues</span>
-              </a>
-            </li>
+                      <MyButton id="plings-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/payout"} label="Payout" />
+                      <MyButton id="issues-link-item" url={this.state.gitlabLink} label="Issues" />
+                      */}
           </ul>
         </div>
       </li>
