@@ -81,7 +81,7 @@ $age = $helperHumanTiming->humanTiming($comment['comment_created_at']);
 
                     <div class="maker-comment comment-content">
                         <div class="popover-content">
-                            <form class="full-width" action="<?= $helperBuildBaseUrl->buildBaserUrl('productcomment/addreply') ?>">
+                            <form class="full-width" action="<?= $helperBuildBaseUrl->buildBaseUrl('productcomment/addreply') ?>">
                                 <input type="hidden" name="i" value="<?= $comment['comment_id'] ?>">
                                 <input type="hidden" name="p" value="<?= $comment['comment_target_id'] ?>">
                                 <input type="hidden" name="m" value="<?= $identity->member_id ?>">

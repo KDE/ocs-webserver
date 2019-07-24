@@ -90,7 +90,7 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
     
 
     <li class="header-menu-left-item <?php echo $this->tab == 'profiles' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperBase->buildBaserUrl('settings/profile'); ?>">
+        <a href="<?php echo $helperBase->buildBaseUrl('settings/profile'); ?>">
             <span class="glyphicon glyphicon-user"></span>
             <?= $this->translate('Profile') ?>
         </a>
@@ -98,7 +98,7 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
     
     
     <li class="header-menu-left-item <?php echo $this->tab == 'settings' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperBase->buildBaserUrl('settings'); ?>">
+        <a href="<?php echo $helperBase->buildBaseUrl('settings'); ?>">
             <span class="glyphicon glyphicon-cog"></span>
             <?= $this->translate('Settings') ?>
         </a>

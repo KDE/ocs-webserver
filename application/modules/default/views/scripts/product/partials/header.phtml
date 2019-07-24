@@ -26,41 +26,38 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
 ?>
 
 <div class="my-products-heading">
-       <h1 class="page-title left"><?= $this->translate('Products/Collections') ?></h1>                  
+    <h1 class="page-title left"><?= $this->translate('Products/Collections') ?></h1>
 </div>
-                    
-<div class="pling-nav-tabs">
-<ul class="nav nav-tabs">                           
 
-    <li class="<?php echo $this->tab == 'products' ? 'active' : ''; ?>">
+<div class="pling-nav-tabs">
+    <ul class="nav nav-tabs">
+
+        <li class="<?php echo $this->tab == 'products' ? 'active' : ''; ?>">
             <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'products'); ?>">
                 <span class="glyphicon glyphicon-th-list"></span>
                 <?= $this->translate('Products') ?>
             </a>
         </li>
 
-     <li class="<?php echo $this->tab == 'collections' ? 'active' : ''; ?>">
+        <li class="<?php echo $this->tab == 'collections' ? 'active' : ''; ?>">
             <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'collections'); ?>">
                 <span class="glyphicon glyphicon-th-list"></span>
                 <?= $this->translate('Collections') ?>
             </a>
         </li>
-    <li class="header-menu-left-item <?php echo $this->tab == 'add' ? 'active' : ''; ?>">
+        <li class="header-menu-left-item <?php echo $this->tab == 'add' ? 'active' : ''; ?>">
             <?php if ($this->mode == 'edit') : ?>
                 <a href="<?= Zend_Controller_Front::getInstance()->getRequest()->getRequestUri() ?>">
                     <span class="glyphicon glyphicon-pencil"></span>
                     <?= $this->translate('Edit Product') ?>
                 </a>
             <?php else : ?>
-                <a href="<?php echo $helperBase->buildBaserUrl('product/add'); ?>">
+                <a href="<?php echo $helperBase->buildBaseUrl('product/add'); ?>">
                     <span class="glyphicon glyphicon-plus"></span>
                     <?= $this->translate('Add Product') ?>
                 </a>
             <?php endif ?>
-        </li>    
-        
-        
-        
+        </li>
         <li class="header-menu-left-item <?php echo $this->tab == 'addcollection' ? 'active' : ''; ?>">
             <?php if ($this->mode == 'editcollection') : ?>
                 <a href="<?= Zend_Controller_Front::getInstance()->getRequest()->getRequestUri() ?>">
@@ -68,13 +65,12 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
                     <?= $this->translate('Edit Collection') ?>
                 </a>
             <?php else : ?>
-            <a href="<?php echo $helperBase->buildBaserUrl('collection/add'); ?>">
+                <a href="<?php echo $helperBase->buildBaseUrl('collection/add'); ?>">
                     <span class="glyphicon glyphicon-plus"></span>
                     <?= $this->translate('Add Collection') ?>
                 </a>
             <?php endif ?>
         </li>
 
-       
-</ul>
+    </ul>
 </div>

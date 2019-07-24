@@ -9,15 +9,12 @@ services:
       - '80:80'
     volumes:
       - .:/usr/src/ocs-webserver
-      - ./.docker_init/conf/application.local.ini:/usr/src/ocs-webserver/application/configs/application.local.ini
-      - ./.docker_init/conf/client_opendesktop.ini.php:/usr/src/ocs-webserver/application/configs/client_opendesktop.ini.php
-      - ./.docker_init/conf/client_appimagehub.ini.php:/usr/src/ocs-webserver/application/configs/client_appimagehub.ini.php
-      - ./.docker_init/conf/client_kde-store.ini.php:/usr/src/ocs-webserver/application/configs/client_kde-store.ini.php
-      - ./.docker_init/conf/client_kde.ini.php:/usr/src/ocs-webserver/application/configs/client_kde.ini.php
+      - ./.docker_init/configs/application.dev.ini:/usr/src/ocs-webserver/application/configs/application.local.ini
       - ./.docker_init/httpdocs/.htaccess:/usr/src/ocs-webserver/httpdocs/.htaccess
       - ./.docker_init/httpdocs/images_sys/store_kde:/usr/src/ocs-webserver/httpdocs/images_sys/store_kde
       - ./.docker_init/httpdocs/images_sys/store_opendesktop:/usr/src/ocs-webserver/httpdocs/images_sys/store_opendesktop
       - ./.docker_init/httpdocs/images_sys/superstore:/usr/src/ocs-webserver/httpdocs/images_sys/superstore
+#      - ./.docker_init/templates:/usr/src/ocs-webserver/data/stores/templates
     expose:
       - '80'
     depends_on:
