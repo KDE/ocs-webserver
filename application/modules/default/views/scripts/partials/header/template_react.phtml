@@ -225,7 +225,7 @@ $url_logout = "/logout?redirect=".$filter->filter($thisurl);
                             <ul class="profile-menu menu-dropdown">
                                 <div class="dropdown-header"></div>
                                 <li class="link first">
-                                    <a href="<?= $helperBuildBaseUrl->buildBaserUrl('product/add') ?>"><?= $this->translate('Add Product') ?></a>
+                                    <a href="<?= $helperBuildBaseUrl->buildBaseUrl('product/add') ?>"><?= $this->translate('Add Product') ?></a>
                                 </li>
                                 <li class="link">
                                     <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->username, 'products') ?>"><?= $this->translate('Products') ?></a>
@@ -234,7 +234,7 @@ $url_logout = "/logout?redirect=".$filter->filter($thisurl);
                                     <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->username, 'plings') ?>"><?= $this->translate('Payout') ?></a>
                                 </li>
                                 <li class="link">
-                                    <a href="<?= $helperBuildBaseUrl->buildBaserUrl('settings') ?>"><?= $this->translate('Settings') ?></a>
+                                    <a href="<?= $helperBuildBaseUrl->buildBaseUrl('settings') ?>"><?= $this->translate('Settings') ?></a>
                                 </li>
                                 <li class="link">
                                     <a href="<?= $url_logout ?>"><?= $this->translate('Logout') ?></a>

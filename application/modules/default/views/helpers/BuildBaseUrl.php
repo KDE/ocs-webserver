@@ -24,21 +24,18 @@ class Default_View_Helper_BuildBaseUrl extends Zend_View_Helper_Abstract
 {
 
     /**
-     * @param int|string $member_ident
      * @param string $action
      * @param array  $params
+     * @param string $scheme
      *
      * @return string
      * @throws Zend_Exception
      */
-    public function buildBaserUrl($action = '', $params = null)
+    public function buildBaseUrl($action = '', $params = null, $scheme = null)
     {
         /** @var Zend_Controller_Request_Http $request */
         $request = Zend_Controller_Front::getInstance()->getRequest();
-        $http_scheme = $request->getScheme();
-        
-        $baseurl = '';
-        
+
         $http_host = $request->getHttpHost();
         $http_scheme = isset($scheme) ? $scheme : $request->getScheme();
         $host = $http_scheme . '://' . $http_host;
@@ -53,16 +50,12 @@ class Default_View_Helper_BuildBaseUrl extends Zend_View_Helper_Abstract
             unset($params['store_id']);
         }
 
-        //20190214 ronald: removed to stay in context, if set in store config
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        
-        if(null != $storeConfig && $storeConfig->stay_in_context == false) {
+
+        $baseurl = "{$host}{$storeId}";
+        if (null != $storeConfig && $storeConfig->stay_in_context == false) {
             $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
-        } else {
-            
-            $baseurl = "{$host}{$storeId}";
         }
-        
 
         $url_param = '';
         if (is_array($params)) {
@@ -70,14 +63,16 @@ class Default_View_Helper_BuildBaseUrl extends Zend_View_Helper_Abstract
             $url_param = implode('/', $params);
         }
 
-        if ($action != '') {
-            $action = $action;
-        }
-        
         return "{$baseurl}/{$action}{$url_param}";
     }
-    
-    
+
+    /**
+     * @param string $action
+     * @param array  $params
+     *
+     * @return string
+     * @throws Zend_Exception
+     */
     public function buildMainBaserUrl($action = '', $params = null)
     {
         $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
@@ -88,57 +83,8 @@ class Default_View_Helper_BuildBaseUrl extends Zend_View_Helper_Abstract
             $url_param = implode('/', $params);
         }
 
-        if ($action != '') {
-            $action = $action;
-        }
-        
         return "{$baseurl}/{$action}{$url_param}";
     }
-
-
-    /**
-     * @param int    $member_id
-     * @param string $action
-     * @param array  $params
-     * @param bool   $withHost
-     * @param string $scheme
-     *
-     * @return string
-     */
-    /*
-    public function buildMemberUrl($member_id, $action = '', $params = null, $withHost = false, $scheme = null)
-    {      
-        $request = Zend_Controller_Front::getInstance()->getRequest();
-
-        $host = '';
-        if ($withHost) {
-            $http_scheme = isset($scheme) ? $scheme : $request->getScheme();
-            $host = $http_scheme . '://' . $request->getHttpHost();
-        }
-
-        $storeId = null;
-        if (false === isset($params['store_id'])) {
-            if ($request->getParam('domain_store_id')) {
-                $storeId = 's/' . $request->getParam('domain_store_id') . '/';
-            }
-        } else {
-            $storeId = "s/{$params['store_id']}/";
-            unset($params['store_id']);
-        }
-
-        $url_param = '';
-        if (is_array($params)) {
-            array_walk($params, create_function('&$i,$k', '$i="$k/$i/";'));
-            $url_param = implode('/', $params);
-        }
-
-        if ($action != '') {
-            $action = $action . '/';
-        }
-
-        return "{$host}/{$storeId}member/{$member_id}/{$action}{$url_param}";
-    }
-    */
 
     public function buildExternalUrl($member_id, $action = null, $params = null)
     {
