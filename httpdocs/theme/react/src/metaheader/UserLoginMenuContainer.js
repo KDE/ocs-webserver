@@ -37,14 +37,14 @@ class UserLoginMenuContainer extends React.Component {
    }
 
    loadAnonymousDl(){
-       let url = this.props.baseUrl+'/json/anonymousdl';
+       let url = this.props.baseUrlStore+'/json/anonymousdl';
        fetch(url,{
                   mode: 'cors',
                   credentials: 'include'
                   })
        .then(response => response.json())
        .then(data => {
-          this.setState(prevState => ({ anonymousdl: data.dls , section:data.section}))
+          this.setState(prevState => ({ anonymousdl: data.dls , section:data.section}));
         });
    }
   loadNotification(){
@@ -56,10 +56,12 @@ class UserLoginMenuContainer extends React.Component {
                  })
       .then(response => response.json())
       .then(data => {
-          const nots = data.notifications.filter(note => note.read==false);
-          if(nots.length>0 && this.state.notification_count !== nots.length)
-          {
-              this.setState(prevState => ({ notification: true, notification_count:nots.length }))
+          if(data.notifications){
+            const nots = data.notifications.filter(note => note.read==false);
+            if(nots.length>0 && this.state.notification_count !== nots.length)
+            {
+                this.setState(prevState => ({ notification: true, notification_count:nots.length }))
+            }
           }
        });
      }
