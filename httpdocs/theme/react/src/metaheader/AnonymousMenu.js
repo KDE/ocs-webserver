@@ -20,7 +20,7 @@ class AnonymousMenu extends React.Component {
    }
 
    loadAnonymousDl(){
-       let url = this.props.baseUrl+'/json/anonymousdl';
+       let url = this.props.baseUrlStore+'/json/anonymousdl';
        fetch(url,{
                   mode: 'cors',
                   credentials: 'include'

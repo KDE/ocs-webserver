@@ -62,7 +62,7 @@ class UserMenu extends React.Component {
     let  anonymousMenu;
     if(!this.props.user)
     {
-        anonymousMenu= <AnonymousMenu baseUrl={this.props.baseUrl} user={this.props.user}/>
+        anonymousMenu= <AnonymousMenu baseUrlStore={this.props.baseUrlStore} user={this.props.user}/>
     }
 
 
