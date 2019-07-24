@@ -124,37 +124,30 @@ function MusicPlayerWrapper(props){
       
         //Music is downloaded handle
         onAudioDownload(audioInfo) {
-          swal("download successfully", "", "success");
-          console.log("audio download", audioInfo);
+          // swal("download successfully", "", "success");
+          // console.log("audio download", audioInfo);
         },
-      
         //audio play handle
         onAudioPlay(audioInfo) {
-          setAudioInfo(audioInfo)
           console.log("audio playing", audioInfo);
         },
-      
         //audio pause handle
         onAudioPause(audioInfo) {
           console.log("audio pause", audioInfo);
         },
-      
         //When the user has moved/jumped to a new location in audio
         onAudioSeeked(audioInfo) {
           console.log("audio seeked", audioInfo);
         },
-      
         //When the volume has changed  min = 0.0  max = 1.0
         onAudioVolumeChange(currentVolume) {
           console.log("audio volume change", currentVolume);
         },
-      
         //The single song is ended handle
         onAudioEnded(audioInfo) {
           swal("Audio is ended!", "", "success");
           console.log("audio ended", audioInfo);
         },
-      
         //audio load abort The target event like {...,audioName:xx,audioSrc:xx,playMode:xx}
         onAudioAbort(e) {
           console.log("audio abort", e);
@@ -185,6 +178,7 @@ function MusicPlayerWrapper(props){
           console.log("[currentPlayId] audio lists change:", currentPlayId);
           console.log("[audioLists] audio lists change:", audioLists);
           console.log("[audioInfo] audio lists change:", audioInfo);
+          console.log(audioInfo)
         },
       
         onAudioPlayTrackChange(currentPlayId, audioLists, audioInfo) {
@@ -207,7 +201,6 @@ function MusicPlayerWrapper(props){
         onAudioListsPanelChange(panelVisible) {
           const newShowPlayListValue = showPlaylist === true ? false : true;
           setShowPlaylist(newShowPlayListValue);
-          // console.log("audio lists panel visible:", panelVisible);
         },
       
         onAudioListsDragEnd(fromIndex, endIndex) {
@@ -222,9 +215,6 @@ function MusicPlayerWrapper(props){
     let musicPlayerWrapperCssClass = "desktop ";
     if (isMobile) musicPlayerWrapperCssClass = "mobile ";
     if (showPlaylist) musicPlayerWrapperCssClass += " show-playlist";
-
-    let audioInfoDisplay;
-    if (bAudioInfo) audioInfoDisplay = JSON.stringify(bAudioInfo);
 
     return (
         <div id="music-player-wrapper" className={musicPlayerWrapperCssClass}>
