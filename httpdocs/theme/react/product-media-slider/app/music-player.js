@@ -130,6 +130,7 @@ function MusicPlayerWrapper(props){
         //audio play handle
         onAudioPlay(audioInfo) {
           console.log("audio playing", audioInfo);
+          $('.play-btn[title="Click to play"]').trigger("click");
         },
         //audio pause handle
         onAudioPause(audioInfo) {
