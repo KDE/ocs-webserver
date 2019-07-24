@@ -54,7 +54,7 @@ class Default_View_Helper_BuildBaseUrl extends Zend_View_Helper_Abstract
 
         $baseurl = "{$host}{$storeId}";
         if (null != $storeConfig && $storeConfig->stay_in_context == false) {
-            $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl_store;
+            $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
         }
 
         $url_param = '';

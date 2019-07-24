@@ -52,7 +52,7 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
                     <?= $this->translate('Edit Product') ?>
                 </a>
             <?php else : ?>
-                <a href="<?php echo $helperBase->buildBaseUrl('product/add'); ?>">
+                <a href="<?php echo Zend_Registry::get('config')->settings->client->default->baseurl_store . '/product/add'; ?>">
                     <span class="glyphicon glyphicon-plus"></span>
                     <?= $this->translate('Add Product') ?>
                 </a>
@@ -65,7 +65,7 @@ $helperBase = new Default_View_Helper_BuildBaseUrl();
                     <?= $this->translate('Edit Collection') ?>
                 </a>
             <?php else : ?>
-                <a href="<?php echo $helperBase->buildBaseUrl('collection/add'); ?>">
+                <a href="<?php echo Zend_Registry::get('config')->settings->client->default->baseurl_store . '/collection/add'; ?>">
                     <span class="glyphicon glyphicon-plus"></span>
                     <?= $this->translate('Add Collection') ?>
                 </a>
