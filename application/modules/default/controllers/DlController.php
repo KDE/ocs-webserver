@@ -57,12 +57,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
         $memberId = $this->_authMember->member_id;
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
-            if(isset($file_id) && isset($projectId) && isset($memberId)) {
-                $memberDlHistory = new Default_Model_DbTable_MemberDownloadHistory();
-                $data = array('project_id' => $projectId, 'member_id' => $memberId, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size);
-                $memberDlHistory->createRow($data)->save();
-            }
-
+            
 
             /*
             //Log download
@@ -109,6 +104,29 @@ class DlController extends Local_Controller_Action_DomainSwitch
                     . '&filename=' . urldecode($file_name);
             }
             $this->view->url = $url;
+
+
+            // save to member_download_history
+            $config = Zend_Registry::get('config');                
+            $cookieName = $config->settings->session->auth->anonymous;
+            $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
+            if(!$storedInCookie)
+            {
+               $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
+               $cookieExpire = time() + $remember_me_seconds;
+               $storedInCookie = $hash;
+               setcookie($cookieName, $hash, $cookieExpire, '/'); 
+            }
+
+            if(isset($file_id) && isset($projectId)) {            
+                
+                $data = array('project_id' => $projectId, 'member_id' => $memberId,'anonymous_cookie'=>$storedInCookie, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size,'downloaded_ip' => $this->getRealIpAddr());                
+        
+                $memberDlHistory = new Default_Model_DbTable_MemberDownloadHistory();
+                $memberDlHistory->createRow($data)->save();
+
+            }
+
 
 
             // anonymous dl save to member_download_fingerprint 17.07 temperately deactived

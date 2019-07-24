@@ -58,11 +58,14 @@ class UserMenu extends React.Component {
         </React.Fragment>
     )
     }
-    let anonymousMenu;
-    if (!this.props.user){
-      anonymousMenu= <AnonymousMenu baseUrl={this.props.baseUrl} user={this.props.user}/>
+
+    let  anonymousMenu;
+    if(!this.props.user)
+    {
+        anonymousMenu= <AnonymousMenu baseUrl={this.props.baseUrl} user={this.props.user}/>
     }
-        
+
+
     let  chatItem=(<li id="chat-link-item"><a href={this.props.riotUrl}>
         <img src={this.props.baseUrl+"/theme/react/assets/img/logo-riot.svg"} className="riotIcon"></img>Chat
       </a></li>);
@@ -90,7 +93,7 @@ class UserMenu extends React.Component {
 
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
-
+          {anonymousMenu}
         </ul>
       );
     } else {
@@ -99,11 +102,10 @@ class UserMenu extends React.Component {
           {chatItem}
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
-
+          {anonymousMenu}
         </ul>
       );
     }
-
 
     return (
       <div id="user-menu-container" className="right">

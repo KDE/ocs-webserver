@@ -20,6 +20,7 @@ class UserLoginMenuContainer extends React.Component {
     this.state = {};
     this.handleClick = this.handleClick.bind(this);
     this.loadNotification = this.loadNotification.bind(this);
+    this.loadAnonymousDl = this.loadAnonymousDl.bind(this);
   }
 
   componentWillMount() {
@@ -32,8 +33,20 @@ class UserLoginMenuContainer extends React.Component {
 
   componentDidMount(){
     this.loadNotification();
+    this.loadAnonymousDl();
    }
 
+   loadAnonymousDl(){
+       let url = this.props.baseUrl+'/json/anonymousdl';
+       fetch(url,{
+                  mode: 'cors',
+                  credentials: 'include'
+                  })
+       .then(response => response.json())
+       .then(data => {
+          this.setState(prevState => ({ anonymousdl: data.dls , section:data.section}))
+        });
+   }
   loadNotification(){
     if(this.props.user){
       let url = this.props.baseUrl+'/membersetting/notification';
@@ -75,6 +88,19 @@ class UserLoginMenuContainer extends React.Component {
     if(this.state.notification)
     {
       badgeNot = (<span className="badge-notification">{this.state.notification_count}</span>);
+    }
+
+    let plingSectionDisplay;
+    if (this.state.section){
+      let sections = this.state.section.map((mg,i) => (
+        <div className="section">{mg.name}: {mg.dls}</div>
+      ));
+
+      plingSectionDisplay = (<li className="user-pling-section-container">
+                            <div className="title">Download Pling Section</div>
+                              {sections}
+                            </li>
+                          );
     }
 
     let contextMenuDisplay;
@@ -150,6 +176,9 @@ class UserLoginMenuContainer extends React.Component {
                 </div>
               </div>
             </li>
+
+            {plingSectionDisplay}
+
             <li className="user-context-menu">
               {contextMenuDisplay}
             </li>
