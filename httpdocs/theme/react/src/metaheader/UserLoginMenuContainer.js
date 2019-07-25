@@ -67,7 +67,12 @@ class UserLoginMenuContainer extends React.Component {
       } else {
         dropdownClass = "open";
       }
+
+      console.log(e.target.className);
+    }else {
+        console.log("this.node.contains null");
     }
+
     this.setState({dropdownClass:dropdownClass});
 
   }
@@ -93,22 +98,22 @@ class UserLoginMenuContainer extends React.Component {
                           );
     }
 
-    let contextMenuDisplay;
-
-    contextMenuDisplay = (
-      <ul className="user-context-menu-container">
-        <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/product/add"} label="Add Product" />
-        <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/collection/add"} label="Add Collection" />
-        <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/projects/new"} label="Add Project" />
-
-        <MyButton id="listproduct-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/products"} label="Products" />
-        <MyButton id="listproduct-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/collections"} label="Collections" />
-        <MyButton id="opencode-link-item" url={this.props.gitlabUrl+"/dashboard/projects"} label="Projects" />
-
-        <MyButton id="plings-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/payout"} label="Payout" />
-        <MyButton id="issues-link-item" url={this.state.gitlabLink} label="Issues" />
-      </ul>
-    );
+    // let contextMenuDisplay;
+    //
+    // contextMenuDisplay = (
+    //   <ul className="user-context-menu-container">
+    //     <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/product/add"} label="Add Product" />
+    //     <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/collection/add"} label="Add Collection" />
+    //     <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/projects/new"} label="Add Project" />
+    //
+    //     <MyButton id="listproduct-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/products"} label="Products" />
+    //     <MyButton id="listproduct-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/collections"} label="Collections" />
+    //     <MyButton id="opencode-link-item" url={this.props.gitlabUrl+"/dashboard/projects"} label="Projects" />
+    //
+    //     <MyButton id="plings-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/payout"} label="Payout" />
+    //     <MyButton id="issues-link-item" url={this.state.gitlabLink} label="Issues" />
+    //   </ul>
+    // );
 
     // if (this.props.isAdmin){
     //   contextMenuDisplay = (
@@ -178,6 +183,12 @@ class UserLoginMenuContainer extends React.Component {
                   <ul>
                     <li id="user-details-username"><b>{this.props.user.username}</b></li>
                     <li id="user-details-email">{this.props.user.mail}</li>
+                    {this.props.user.isSupporter ? (
+                      <li id="user-is-supporter">Thanks for being a supporter!</li>
+                    ) : (
+                      <li id="user-is-supporter"> <a src={this.props.baseUrl+"/support"}>Become a supporter</a> </li>
+                    )}
+
                   </ul>
                 </div>
               </div>
@@ -185,9 +196,12 @@ class UserLoginMenuContainer extends React.Component {
 
             {plingSectionDisplay}
 
+            {
+              /*
             <li className="user-context-menu">
               {contextMenuDisplay}
-            </li>
+            </li>*/
+            }
             <li className="user-settings-item">
              <span className="user-settings-item-title">Metaheader theme light</span>
                <SwitchItem onSwitchStyle={this.props.onSwitchStyle}

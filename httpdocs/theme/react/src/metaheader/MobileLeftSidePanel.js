@@ -35,12 +35,7 @@ class MobileLeftSidePanel extends React.Component {
     aboutPlingItem = (<li><a id="faq" href={this.props.baseUrl +"/faq-pling"}>FAQ Pling</a></li>);
     aboutopencodeItem = (<li><a id="faq" href={this.props.baseUrl +"/faq-opencode"}>FAQ Opencode</a></li>);
     aboutLinkItem = (<li><a id="about" href={this.props.baseUrl +"/about"}>About</a></li>);
-    apiLinkItem = (<li><a  href={this.props.baseUrl +"/ocs-api"}>API</a></li>);
-    // if (this.props.isExternal === false){
-    //   apiLinkItem = (<li><a className="popuppanel" id="api" href={"/partials/ocsapicontent.phtml"}>API</a></li>);
-    // } else {
-    //   apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={this.props.baseUrl + "/#api"}>API</a></li>);
-    // }
+    apiLinkItem = (<li><a  href={this.props.baseUrl +"/ocs-api"}>API</a></li>);    
     if (this.props.isAdmin ){
       faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>Plings (admin only)</a></li>);
     }

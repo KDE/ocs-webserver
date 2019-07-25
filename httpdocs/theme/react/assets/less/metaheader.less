@@ -675,7 +675,6 @@
             #user-info-section {
               .user-details {
                 width: 100%;
-
                 .buttons {
                   padding-left: 0;
                   padding-right: 0;
@@ -684,20 +683,24 @@
               }
             }
 
-            #user-details-username {
-              h2 {
-                margin: 10px 0;
-                font-size: 26px;
-                color: #353a3d;
-                font-weight: bold;
-              }
-            }
+            // #user-details-username {
+            //   h2 {
+            //     margin: 10px 0;
+            //     font-size: 26px;
+            //     color: #353a3d;
+            //     font-weight: bold;
+            //   }
+            // }
 
-            #user-details-email {
-              color: #687a86;
-              font-size: 18px;
-              margin-bottom: 5px;
-            }
+            // #user-details-email {
+            //   color: #687a86;
+            //   font-size: 18px;
+            //   margin-bottom: 5px;
+            // }
+            //
+            // #user-is-supporter{
+            //
+            // }
           }
 
           #user-tabs-menu-item {
@@ -1190,6 +1193,11 @@
             border: 1px solid white;
             margin: 5px 0 10px 0;
 
+            &.section-seperator{
+              display: flex;
+              width: 100%;
+              border-top: 1px solid #ccc;
+            }
             a {
               display: block;
               width: 100%;
@@ -1458,21 +1466,7 @@
             width: 100%;
             border-bottom: 1px solid #ccc;
             background-color: #fff;
-            .user-pling-section-container
-            {
-               min-height: 300px;
-               display: flex; 
-               flex-direction: column;
-               width: 100%;
-               .title{
-                 text-align: center;
-                 border-bottom: 1px solid #ccc;
-                 padding:5px;
-               }
-              .section{
-                padding:5px;
-              }
-            }
+
            }
         }
 
@@ -1505,6 +1499,7 @@
                display: flex;
                flex-direction: column;
                border-bottom: 1px solid #ccc;
+               width: 100%;
                .title{
                  text-align: center;
                  border-bottom: 1px solid #ccc;
