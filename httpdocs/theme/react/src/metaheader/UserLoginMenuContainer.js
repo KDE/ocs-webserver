@@ -7,7 +7,7 @@ class UserLoginMenuContainer extends React.Component {
     super(props);
     this.state = {};
     this.handleClick = this.handleClick.bind(this);
-    this.loadNotification = this.loadNotification.bind(this);
+    //this.loadNotification = this.loadNotification.bind(this);
     this.loadAnonymousDl = this.loadAnonymousDl.bind(this);
   }
 
@@ -20,7 +20,7 @@ class UserLoginMenuContainer extends React.Component {
   }
 
   componentDidMount(){
-    this.loadNotification();
+    //this.loadNotification();
     this.loadAnonymousDl();
    }
 
@@ -35,25 +35,25 @@ class UserLoginMenuContainer extends React.Component {
           this.setState(prevState => ({ anonymousdl: data.dls , section:data.section}));
         });
    }
-  loadNotification(){
-    if(this.props.user){
-      let url = this.props.baseUrl+'/membersetting/notification';
-      fetch(url,{
-                 mode: 'cors',
-                 credentials: 'include'
-                 })
-      .then(response => response.json())
-      .then(data => {
-          if(data.notifications){
-            const nots = data.notifications.filter(note => note.read==false);
-            if(nots.length>0 && this.state.notification_count !== nots.length)
-            {
-                this.setState(prevState => ({ notification: true, notification_count:nots.length }))
-            }
-          }
-       });
-     }
-  }
+  // loadNotification(){
+  //   if(this.props.user){
+  //     let url = this.props.baseUrl+'/membersetting/notification';
+  //     fetch(url,{
+  //                mode: 'cors',
+  //                credentials: 'include'
+  //                })
+  //     .then(response => response.json())
+  //     .then(data => {
+  //         if(data.notifications){
+  //           const nots = data.notifications.filter(note => note.read==false);
+  //           if(nots.length>0 && this.state.notification_count !== nots.length)
+  //           {
+  //               this.setState(prevState => ({ notification: true, notification_count:nots.length }))
+  //           }
+  //         }
+  //      });
+  //    }
+  // }
 
   handleClick(e){
     let dropdownClass = "";
@@ -68,7 +68,7 @@ class UserLoginMenuContainer extends React.Component {
       } else {
         dropdownClass = "open";
       }
-    
+
     }
 
     this.setState({dropdownClass:dropdownClass});
@@ -77,11 +77,11 @@ class UserLoginMenuContainer extends React.Component {
 
   render(){
     const theme = this.props.onSwitchStyleChecked?"Metaheader theme dark":"Metaheader theme light";
-    let badgeNot;
-    if(this.state.notification)
-    {
-      badgeNot = (<span className="badge-notification">{this.state.notification_count}</span>);
-    }
+    // let badgeNot;
+    // if(this.state.notification)
+    // {
+    //   badgeNot = (<span className="badge-notification">{this.state.notification_count}</span>);
+    // }
 
     let plingSectionDisplay;
     if (this.state.section){
@@ -167,7 +167,7 @@ class UserLoginMenuContainer extends React.Component {
             type="button"
             id="userLoginDropdown">
             <img className="th-icon" src={this.props.user.avatar}/>
-            {badgeNot}
+            {/*badgeNot*/}
           </button>
           <ul className="dropdown-menu dropdown-menu-right">
             <li id="user-info-menu-item">
