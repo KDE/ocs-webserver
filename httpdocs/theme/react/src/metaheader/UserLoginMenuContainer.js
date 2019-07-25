@@ -57,6 +57,7 @@ class UserLoginMenuContainer extends React.Component {
 
   handleClick(e){
     let dropdownClass = "";
+
     if (this.node.contains(e.target)){
       if (this.state.dropdownClass === "open"){
         if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle"){
@@ -67,10 +68,7 @@ class UserLoginMenuContainer extends React.Component {
       } else {
         dropdownClass = "open";
       }
-
-      console.log(e.target.className);
-    }else {
-        console.log("this.node.contains null");
+    
     }
 
     this.setState({dropdownClass:dropdownClass});
@@ -186,7 +184,7 @@ class UserLoginMenuContainer extends React.Component {
                     {this.props.user.isSupporter ? (
                       <li id="user-is-supporter">Thanks for being a supporter!</li>
                     ) : (
-                      <li id="user-is-supporter"> <a src={this.props.baseUrl+"/support"}>Become a supporter</a> </li>
+                      <li id="user-is-supporter"> <a className="become-supporter" href={this.props.baseUrl+"/support"}>Become a supporter</a> </li>
                     )}
 
                   </ul>
