@@ -184,7 +184,9 @@ class UserLoginMenuContainer extends React.Component {
                     {this.props.user.isSupporter ? (
                       <li id="user-is-supporter">Thanks for being a supporter!</li>
                     ) : (
-                      <li id="user-is-supporter"> <a className="become-supporter" href={this.props.baseUrl+"/support"}>Become a supporter</a> </li>
+                      <li id="user-is-supporter">
+                        You are not a <a className="become-supporter" href={this.props.baseUrl+"/support"}>supporter</a> yet.
+                      </li>
                     )}
 
                   </ul>
