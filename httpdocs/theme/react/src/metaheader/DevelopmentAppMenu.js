@@ -1,5 +1,5 @@
 import React from 'react';
-import MyButton from './MyButton';
+import MyButton from './function/MyButton';
 
 class DevelopmentAppMenu extends React.Component {
   constructor(props){
@@ -49,17 +49,7 @@ class DevelopmentAppMenu extends React.Component {
         }
       }else{
         dropdownClass = "";
-      }
-
-      // if (this.state.dropdownClass === "open"){
-      //   if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle"){
-      //     dropdownClass = "";
-      //   } else {
-      //     dropdownClass = "open";
-      //   }
-      // } else {
-      //   dropdownClass = "open";
-      // }
+      }    
     }
     this.setState({dropdownClass:dropdownClass});
   }
@@ -116,7 +106,7 @@ class DevelopmentAppMenu extends React.Component {
                  label="Calendar" />
          <MyButton id="contacts-link-item"
                  url={this.props.myopendesktopUrl+"/index.php/apps/contacts/"}
-                 label="Contacts" />         
+                 label="Contacts" />
           <li id="messages-link-item">
               <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
                 <div className="icon"></div>
