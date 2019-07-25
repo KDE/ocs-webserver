@@ -85,6 +85,8 @@
   background: transparent;
   z-index: 1111;
   cursor: pointer;
+  top: 0;
+  height: 14px;
 }
 .rc-slider-dot {
   position: absolute;

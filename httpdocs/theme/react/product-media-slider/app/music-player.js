@@ -101,7 +101,10 @@ function MusicPlayerWrapper(props){
       //Music is downloaded handle
       //onAudioDownload(audioInfo) { console.log("audio download", audioInfo); },
       //audio play handle
-      onAudioPlay(audioInfo) { $('.play-btn[title="Click to play"]').trigger("click"); },
+      onAudioPlay(audioInfo) { 
+        $('.play-btn[title="Click to play"]').trigger("click"); 
+        console.log(audioInfo);
+      },
       //audio pause handle
       onAudioPause(audioInfo) { console.log("audio pause", audioInfo); },
       //When the user has moved/jumped to a new location in audio
