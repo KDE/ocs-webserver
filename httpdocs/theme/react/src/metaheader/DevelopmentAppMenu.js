@@ -8,6 +8,7 @@ class DevelopmentAppMenu extends React.Component {
       gitlabLink:this.props.gitlabUrl+"/dashboard/issues?assignee_id="
     };
     this.handleClick = this.handleClick.bind(this);
+    this.loadNotification = this.loadNotification.bind(this);
   }
 
   componentWillMount() {
@@ -20,6 +21,7 @@ class DevelopmentAppMenu extends React.Component {
   }
 
   componentDidMount() {
+    this.loadNotification();
     const self = this;
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -62,6 +64,26 @@ class DevelopmentAppMenu extends React.Component {
     this.setState({dropdownClass:dropdownClass});
   }
 
+  loadNotification(){
+    if(this.props.user){
+      let url = this.props.baseUrl+'/membersetting/notification';
+      fetch(url,{
+                 mode: 'cors',
+                 credentials: 'include'
+                 })
+      .then(response => response.json())
+      .then(data => {
+          if(data.notifications){
+            const nots = data.notifications.filter(note => note.read==false);
+            if(nots.length>0 && this.state.notification_count !== nots.length)
+            {
+                this.setState(prevState => ({ notification: true, notification_count:nots.length }))
+            }
+          }
+       });
+     }
+  }
+
   render(){
 
     let badgeNot;
@@ -94,13 +116,14 @@ class DevelopmentAppMenu extends React.Component {
                  label="Calendar" />
          <MyButton id="contacts-link-item"
                  url={this.props.myopendesktopUrl+"/index.php/apps/contacts/"}
-                 label="Contacts" />
-         <MyButton id="messages-link-item"
-                 url={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}
-                 label="Messages"
-                 badge={badgeNot}
-                  />
-
+                 label="Contacts" />         
+          <li id="messages-link-item">
+              <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
+                <div className="icon"></div>
+                <span>Messages</span>
+                  {badgeNot}
+              </a>
+          </li>
             {this.props.isAdmin  &&
               <React.Fragment>
                 <MyButton id="docs-link-item"
@@ -118,13 +141,15 @@ class DevelopmentAppMenu extends React.Component {
       <li ref={node => this.node = node} id="development-app-menu-container">
         <div className={"user-dropdown " + this.state.dropdownClass}>
           <button
+            id="developmentDropdownBtn"
             className="btn btn-default dropdown-toggle" type="button" onClick={this.toggleDropDown}>
             <span className="th-icon"></span>
+            {badgeNot}
           </button>
           <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
 
               {contextMenuDisplay}
-            <li className="section-seperator"></li>  
+            <li className="section-seperator"></li>
               {personalMenuDisplay}
 
           </ul>

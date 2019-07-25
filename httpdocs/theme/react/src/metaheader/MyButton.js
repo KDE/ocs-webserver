@@ -6,7 +6,7 @@ function MyButton(props)
       <a href={props.url}>
         <div className="icon"></div>
         <span>{props.label}</span>
-        {props.badgeNot}
+      
       </a>
     </li>
   );
