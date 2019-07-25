@@ -34,25 +34,43 @@ class Default_Model_DbTable_MemberDownloadHistory extends Zend_Db_Table_Abstract
         return count($select->query()->fetchAll());
     }
 
-    public function getDownloadhistory($member_id){                      
+    public function countDownloadsAnonymous($cookie)
+    {
+        $sql = "select count(1) as cnt from member_download_history where anonymous_cookie=:cookie";
+        $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql, array('cookie'=>$cookie));
+        return (int)$result['cnt'];
+    }
+
+    public function getAnonymousDLSection($cookie)
+    {
+       $sql = "select c.section_id, c.name, c.description, count(h.project_id) as dls
+                from member_download_history h 
+                join project p on h.project_id = p.project_id
+                join section_category s on p.project_category_id = s.project_category_id
+                join section c on c.section_id = s.section_id and c.is_active = 1
+                where h.anonymous_cookie=:cookie
+                group by c.section_id, c.name, c.description";
+        $result = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('cookie'=>$cookie));
+        return $result;
+    }
+    public function getDownloadhistory($member_id){
             $sql = "
-                      select 
-                      m.member_id                              
+                      select
+                      m.member_id
                       ,m.project_id
-                      ,m.file_id                               
-                      ,m.downloaded_timestamp                               
+                      ,m.file_id
+                      ,m.downloaded_timestamp
                       ,p.project_category_id
                       ,(select c.title from project_category c where p.project_category_id = c.project_category_id) as catTitle
                       ,p.member_id as project_member_id
-                      ,p.title                               
+                      ,p.title
                       ,p.laplace_score
                       ,p.image_small
                       ,p.count_likes
                       ,p.count_dislikes
                       ,m.file_name as file_name
                       ,m.file_type as file_type
-                      ,m.file_size as file_size                             
-                  
+                      ,m.file_size as file_size
                       from member_download_history m
                       join stat_projects p on p.project_id = m.project_id
                       where m.member_id = :member_id
@@ -61,36 +79,5 @@ class Default_Model_DbTable_MemberDownloadHistory extends Zend_Db_Table_Abstract
             ";
            $result = $this->_db->fetchAll($sql, array("member_id"=>$member_id));
           return new Zend_Paginator(new Zend_Paginator_Adapter_Array($result ));
-          // return $result; 
       }
-
-      /*public function getDownloadhistory($member_id){                      
-              $sql = "
-                        select 
-                        m.member_id                              
-                        ,m.project_id
-                        ,m.file_id                               
-                        ,m.downloaded_timestamp                               
-                        ,p.project_category_id
-                        ,(select c.title from project_category c where p.project_category_id = c.project_category_id) as catTitle
-                        ,p.member_id as project_member_id
-                        ,p.title                               
-                        ,p.laplace_score
-                        ,p.image_small
-                        ,p.count_likes
-                        ,p.count_dislikes
-                        ,m.file_name as file_name
-                        ,m.file_type as file_type
-                        ,m.file_size as file_size                             
-                        ,(select max(d.downloaded_timestamp) from member_download_history d where m.project_id = d.project_id and d.member_id = m.member_id) as max_downloaded_timestamp
-                        from member_download_history m
-                        join stat_projects p on p.project_id = m.project_id
-                        where m.member_id = :member_id
-                        order by m.downloaded_timestamp desc
-                        limit 1000
-              ";
-             $result = $this->_db->fetchAll($sql, array("member_id"=>$member_id));
-            return new Zend_Paginator(new Zend_Paginator_Adapter_Array($result ));
-            // return $result; 
-        }*/
 }

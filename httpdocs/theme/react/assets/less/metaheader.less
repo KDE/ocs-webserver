@@ -1431,7 +1431,6 @@
     }
     #anonymous-dropdown-menu-container{
       .user-dropdown {
-
         .th-icon {
           height: 24px;
           width: 24px;
@@ -1441,6 +1440,40 @@
           background-position: center;
           cursor: pointer;
           float: left;
+        }
+        .dropdown-toggle {
+          img {
+            height: 26px;
+            width: 26px;
+            border-radius: 100%;
+            margin-top: -1px;
+          }
+        }
+        .dropdown-menu {
+          &::before {
+            right: 9px;
+          }
+
+          .user-context-menu{
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+            background-color: #fff;
+            .user-pling-section-container
+            {
+               min-height: 300px;
+               display: flex; 
+               flex-direction: column;
+               width: 100%;
+               .title{
+                 text-align: center;
+                 border-bottom: 1px solid #ccc;
+                 padding:5px;
+               }
+              .section{
+                padding:5px;
+              }
+            }
+           }
         }
 
       }
@@ -1466,6 +1499,22 @@
             border-bottom: 1px solid #ccc;
           }
 
+          .user-pling-section-container
+          {
+
+               display: flex;
+               flex-direction: column;
+               border-bottom: 1px solid #ccc;
+               .title{
+                 text-align: center;
+                 border-bottom: 1px solid #ccc;
+                 padding:5px;
+               }
+              .section{
+                padding:5px;
+              }
+          }
+
           .user-context-menu{
             width: 100%;
             border-bottom: 1px solid #ccc;
@@ -1473,6 +1522,7 @@
             ul.user-context-menu-container{
                 list-style: none;
                 padding-left: 20px;
+                min-height: 200px;
                   li {
                             height: auto;
                             width: 86px;

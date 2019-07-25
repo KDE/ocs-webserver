@@ -27,7 +27,7 @@ $member = $helperAuthUser->getAuthUser();
 <ul class="dropdown-menu small" role="menu" aria-labelledby="user-dropdown-menu">
     <li class="presentation"><a class="black"
                                 role="menuitem"
-                                href="/product/add/"><?= $this->translate('Add Product') ?></a></li>
+                                href="<?php echo $helperBase->buildBaseUrl('product/add'); ?>"><?= $this->translate('Add Product') ?></a></li>
     <li class="presentation"><a class="black" role="menuitem"
                                 href="<?= $helperBuildMemberUrl->buildMemberUrl($member->username, 'products') ?>"><?= $this->translate('My Products') ?></a>
     </li>

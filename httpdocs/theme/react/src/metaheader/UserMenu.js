@@ -26,6 +26,7 @@ class UserMenu extends React.Component {
         <UserLoginMenuContainer
           user={this.props.user}
           forumUrl={this.props.forumUrl}
+          gitlabUrl={this.props.gitlabUrl}
           isAdmin={this.props.isAdmin}
           logoutUrl={this.props.logoutUrl}
           baseUrl={this.props.baseUrl}
@@ -48,6 +49,10 @@ class UserMenu extends React.Component {
           isAdmin={this.props.isAdmin}
           baseUrl={this.props.baseUrl}
           baseUrlStore={this.props.baseUrlStore}
+          myopendesktopUrl={this.props.myopendesktopUrl}
+          cloudopendesktopUrl={this.props.cloudopendesktopUrl}
+          musicopendesktopUrl={this.props.musicopendesktopUrl}
+          docsopendesktopUrl={this.props.docsopendesktopUrl}
         />
       );
     } else {
@@ -58,11 +63,14 @@ class UserMenu extends React.Component {
         </React.Fragment>
     )
     }
-    let anonymousMenu;
-    if (!this.props.user){
-      anonymousMenu= <AnonymousMenu baseUrl={this.props.baseUrl} user={this.props.user}/>
+
+    let  anonymousMenu;
+    if(!this.props.user)
+    {
+        anonymousMenu= <AnonymousMenu baseUrlStore={this.props.baseUrlStore} user={this.props.user}/>
     }
-        
+
+
     let  chatItem=(<li id="chat-link-item"><a href={this.props.riotUrl}>
         <img src={this.props.baseUrl+"/theme/react/assets/img/logo-riot.svg"} className="riotIcon"></img>Chat
       </a></li>);
@@ -90,7 +98,7 @@ class UserMenu extends React.Component {
 
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
-
+          {anonymousMenu}
         </ul>
       );
     } else {
@@ -99,11 +107,10 @@ class UserMenu extends React.Component {
           {chatItem}
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
-
+          {anonymousMenu}
         </ul>
       );
     }
-
 
     return (
       <div id="user-menu-container" className="right">

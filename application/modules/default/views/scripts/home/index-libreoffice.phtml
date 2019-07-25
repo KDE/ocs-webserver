@@ -41,7 +41,7 @@ $host = $_SERVER['SERVER_NAME'];
 $modelProject = new Default_Model_Project();
 $totalProjects = $modelProject->fetchTotalProjectsCount(true);
 
-$basrUrl = $helperBuildBaseUrl->buildBaserUrl();
+$basrUrl = $helperBuildBaseUrl->buildBaseUrl();
 
 if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
     $products1 = $modelInfo->getJsonLastProductsForHostStores(15,"104");
