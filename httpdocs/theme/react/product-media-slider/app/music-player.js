@@ -7,12 +7,12 @@ function MusicPlayerWrapper(props){
   const [ showPlaylist, setShowPlaylist ] = useState(isMobile ? false : true);
   let initialPLayedAudioArray = []
   props.slide.items.forEach(function(i,index){
-    let pl = 0, st = 0;
-    if (index === 0) pl = -1, st = -1;
+    let pl = 0;
+    if (index === 0) pl = -1;
     const pa = {
       ...i,
       played:pl,
-      stopped:st
+      stopped:0
     }
     initialPLayedAudioArray.push(pa);
   })
@@ -31,14 +31,15 @@ function MusicPlayerWrapper(props){
       ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
     ];
     setPlayedAudioArray(newPLayedAudioArray);
+    // console.log('played - ' + playedAudioArray[audioItemIndex].played)
     if (playedAudioArray[audioItemIndex].played === 0){
       const audioStartUrl = 'startvideoajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
       $.ajax({url: audioStartUrl}).done(function(res) { 
-        console.log(res);
+        // console.log(res);
         const newAudioItem = {
           ...audioItem,
           mediaViewId:res.MediaViewId,
-          stopped:audioItem.stopped + 1
+          played:audioItem.played + 1
         }
         const newPLayedAudioArray = [
           ...playedAudioArray.slice(0,audioItemIndex),
@@ -63,10 +64,9 @@ function MusicPlayerWrapper(props){
       ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
     ];
     setPlayedAudioArray(newPLayedAudioArray);
-    console.log(playedAudioArray[audioItemIndex].stopped);
-    if (playedAudioArray[audioItemIndex].stopped === 0){
+    // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
+    if  (playedAudioArray[audioItemIndex].stopped === 0){
       const audioStopUrl = "stopvideoajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
-      console.log(audioStopUrl);
       $.ajax({url: audioStopUrl}).done(function(res) { 
         // console.log(res);
       });
@@ -175,7 +175,7 @@ function MusicPlayerWrapper(props){
       //audio pause handle
       onAudioPause(audioInfo) { 
         console.log("audio pause", audioInfo); 
-        onReportAudioStop(audioInfo);
+        onReportAudioStop(audioInfo)
       },
       //When the user has moved/jumped to a new location in audio
       onAudioSeeked(audioInfo) { console.log("audio seeked", audioInfo); },
