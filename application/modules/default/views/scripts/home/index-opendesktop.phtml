@@ -32,6 +32,18 @@ $modelInfo = new Default_Model_Info();
 $helpPrintDate = new Default_View_Helper_PrintDate();
 $helperImage = new Default_View_Helper_Image();
 
+$config = Zend_Registry::get('config')->settings->client->default;
+$baseurl = $config->baseurl;
+$baseurlStore = $config->baseurl_store;
+$url_forum = $config->url_forum;
+$url_blog = $config->url_blog;
+$url_gitlab = $config->url_gitlab;
+$url_riot = $config->url_riot;
+$url_myopendesktop = $config->url_myopendesktop;
+$url_cloudopendesktop = $config->url_cloudopendesktop;
+$url_musicopendesktop = $config->url_musicopendesktop;
+$url_mastodon = $config->url_mastodon;
+
 if (Zend_Auth::getInstance()->hasIdentity()){
     $identity = Zend_Auth::getInstance()->getStorage()->read();
     $avatar = $helperImage->image($identity->profile_image_url,array('width' => 100, 'height' => 100, 'crop' => 2));
@@ -62,6 +74,17 @@ if (Zend_Auth::getInstance()->hasIdentity()){
       'supporterinfo' => $supporterinfo,
       'comments' =>$comments,
       'votes' => $votes,
+      "baseUrl" => $baseurl,
+      "baseUrlStore" => $baseurlStore,
+      "blogUrl" => $url_blog,
+      "forumUrl" => $url_forum,
+      "mastodonUrl" => $url_mastodon,
+      "gitlabUrl" => $url_gitlab,
+      "riotUrl" => $url_riot,
+      "url_myopendesktop" => $url_myopendesktop,
+      "url_cloudopendesktop" => $url_cloudopendesktop,
+      "url_musicopendesktop" => $url_musicopendesktop,
+      "url_mastodon" => $url_mastodon,
     );
 }else
 {
@@ -88,17 +111,8 @@ if (Zend_Auth::getInstance()->hasIdentity()){
       $p['comment_created_at'] = $helpPrintDate->printDate($p['comment_created_at']);
     }
 
-    $config = Zend_Registry::get('config')->settings->client->default;
-    $baseurl = $config->baseurl;
-    $baseurlStore = $config->baseurl_store;
-    $url_forum = $config->url_forum;
-    $url_blog = $config->url_blog;
-    $url_gitlab = $config->url_gitlab;
-    $url_riot = $config->url_riot;
-    $url_myopendesktop = $config->url_myopendesktop;
-    $url_cloudopendesktop = $config->url_cloudopendesktop;
-    $url_musicopendesktop = $config->url_musicopendesktop;
-    $url_mastodon = $config->url_mastodon;
+
+
     $response = array(
       'comments' => $comments,
       'products' => $productsAppAddons,
