@@ -181,7 +181,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $this->view->commentsJson = Zend_Json::encode($comments);
             $modelCategory = new Default_Model_ProjectCategory();
             $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());
-            $this->_helper->viewRenderer('index-react2');
+            $this->_helper->viewRenderer('index-react'.$index);
 
         }
         else if ($storeConfig->layout_explore && $storeConfig->isRenderReact()) {
