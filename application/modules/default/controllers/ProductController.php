@@ -2957,14 +2957,19 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         return $gitProjectIssues;
     }
     
-    
+
     public function startvideoajaxAction() {
         $this->_helper->layout()->disableLayout();
         
         $collection_id = null;
         $file_id = null;
         $memberId = $this->_authMember->member_id;
-        
+        $media_view_type_id = $this->getParam('type_id');
+        if(!$media_view_type_id)
+        {
+            // default
+            $media_view_type_id = Default_Model_DbTable_MediaViews::MEDIA_TYPE_VIDEO;            
+        }
         
         if($this->hasParam('collection_id') && $this->hasParam('file_id')) {
             $collection_id = $this->getParam('collection_id');
@@ -2975,7 +2980,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             try {
                 $mediaviewsTable = new Default_Model_DbTable_MediaViews();
                 $id = $mediaviewsTable->getNewId();
-                $data = array('media_view_id' => $id, 'media_view_type_id' => $mediaviewsTable::MEDIA_TYPE_VIDEO, 'project_id' => $this->_projectId, 'collection_id' => $collection_id, 'file_id' => $file_id, 'start_timestamp' => new Zend_Db_Expr ('Now()'), 'ip' => $this->getRealIpAddr(), 'referer' => $this->getReferer());
+                $data = array('media_view_id' => $id, 'media_view_type_id' => $media_view_type_id, 'project_id' => $this->_projectId, 'collection_id' => $collection_id, 'file_id' => $file_id, 'start_timestamp' => new Zend_Db_Expr ('Now()'), 'ip' => $this->getRealIpAddr(), 'referer' => $this->getReferer());
                 if(!empty($memberId)) {
                    $data['member_id'] = $memberId;
                 }
