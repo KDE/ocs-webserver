@@ -67,7 +67,7 @@ function ProductBrowseItem(props){
     const p = props.product;
     const containerWidth = $('#product-browse-container').width();
     let itemsInRow = 3;
-    if (window.catId === 7) itemsInRow = 4;
+    if (window.catId === 7 || window.config.sName === "music.pling.com") itemsInRow = 4;
     const itemWidth = containerWidth / itemsInRow;
     const imgHeight = itemWidth / 1.85;
 
