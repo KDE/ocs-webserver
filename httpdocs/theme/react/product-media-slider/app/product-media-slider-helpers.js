@@ -21,6 +21,7 @@ export function GenerateGalleryArray(product){
                 type:type,
                 file_type:SplitByLastDot(f.title),
                 file_id:f.id,
+                collection_id:f.collection_id,
                 title:f.title,
                 url_thumb:url_thumb,
                 url_preview:url_preview

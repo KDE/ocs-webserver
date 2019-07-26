@@ -101,7 +101,6 @@ function ProductBrowsePagination(){
     const [ currentPage, setCurrentPage ] = useState(pagination.page);
     const [ totalPages, setTotalPages ] = useState(Math.ceil(totalItems / itemsPerPage));
 
-    console.log(currentPage)
     let minPage = 0, maxPage = 10;
     if (currentPage > 5){
         minPage = currentPage - 5;

@@ -5,6 +5,36 @@ import {isMobile} from 'react-device-detect';
 function MusicPlayerWrapper(props){
 
   const [ showPlaylist, setShowPlaylist ] = useState(isMobile ? false : true);
+  let initialPLayedAudioArray = []
+  props.slide.items.forEach(function(i,index){
+    let pl = 0;
+    if (index === 0) pl = -1;
+    const pa = {
+      ...i,
+      played:pl
+    }
+    initialPLayedAudioArray.push(pa);
+  })
+  const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
+
+  function onReportAudioPlay(audioInfo){
+    const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
+    const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
+    const newAudioItem = {
+      ...audioItem,
+      played:audioItem.played + 1
+    }
+    const newPLayedAudioArray = [
+      ...playedAudioArray.slice(0,audioItemIndex),
+      newAudioItem,
+      ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+    ];
+    setPlayedAudioArray(newPLayedAudioArray);
+    if (playedAudioArray[audioItemIndex].played === 0){
+      const audioStartUrl = 'startvideoajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+      $.ajax({url: audioStartUrl}).done(function(res) { console.log(res); });
+    }    
+  }
 
   const options = {
       //audio lists model
@@ -101,9 +131,9 @@ function MusicPlayerWrapper(props){
       //Music is downloaded handle
       //onAudioDownload(audioInfo) { console.log("audio download", audioInfo); },
       //audio play handle
-      onAudioPlay(audioInfo) { 
-        $('.play-btn[title="Click to play"]').trigger("click"); 
-        console.log(audioInfo);
+      onAudioPlay(audioInfo) {
+          $('.play-btn[title="Click to play"]').trigger("click");
+          onReportAudioPlay(audioInfo);
       },
       //audio pause handle
       onAudioPause(audioInfo) { console.log("audio pause", audioInfo); },
