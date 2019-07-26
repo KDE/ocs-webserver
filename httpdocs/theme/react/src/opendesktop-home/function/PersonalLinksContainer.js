@@ -25,7 +25,7 @@ function PersonalLinksContainer(props)
       <li id="messages-link-item">
         <a href={props.forumUrl+"/u/"+props.user.username+"/messages"} >
           <div className="icon"></div>
-          <span>Contacts</span>
+          <span>Messages</span>
         </a>
       </li>
 
