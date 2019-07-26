@@ -36,12 +36,14 @@ class HomeMainContainer extends Component {
                     {supporterinfo}
                   </div>
                   <h1>
-                    Hi {this.state.user.username}, what do you want to do today:
+                    Hi {this.state.user.username}, good to see you !
                   </h1>
                   <PersonalLinksContainer myopendesktopUrl={this.state.url_myopendesktop}
                                           docsopendesktopUrl={this.state.url_docsopendesktop}
                                           riotUrl = {this.state.riotUrl}
-                                          isAdmin = {this.state.user.isAdmin}
+                                          forumUrl ={this.state.forumUrl}
+                                          user ={this.state.user}
+                                          
                     />
                 </div>
             </div>

@@ -69,7 +69,7 @@ class UserMenu extends React.Component {
 
 
     let  chatItem=(<li id="chat-link-item"><a href={this.props.riotUrl}>
-        <img src={this.props.baseUrl+"/theme/react/assets/img/logo-riot.svg"} className="riotIcon"></img>Chat
+        <img src={this.props.baseUrl+"/theme/react/assets/img/chat.jpg"} className="riotIcon"></img>Chat
       </a></li>);
 
 
