@@ -29,13 +29,14 @@ class HomeMainContainer extends Component {
           <div id="home-main-container">
             <div className="top">
                 <div className="personal-container-top">
-                    <h1>
-                      Hi {this.state.user.username}, welcome to your personal start page!
-                    </h1>
+
                   <div className="userinfo">
                     <img className="image-profile" src={this.state.user.avatar}></img>
                     {supporterinfo}
                   </div>
+                  <h1>
+                    Hi {this.state.user.username}, welcome to your personal start page!
+                  </h1>
 
                 </div>
             </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import DownloadSection from './function/DownloadSection';
 class AnonymousMenu extends React.Component {
   constructor(props){
     super(props);
@@ -50,16 +51,10 @@ class AnonymousMenu extends React.Component {
 
   render(){
 
-    let contextMenuDisplay;
-
+    let downloadSection;
     if (this.state.section){
-      contextMenuDisplay = this.state.section.map((mg,i) => (
-        <div className="section">{mg.name}: {mg.dls}</div>
-      ));
+      downloadSection = <DownloadSection section={this.state.section}/>
     }
-
-
-
     return (
       <li ref={node => this.node = node} id="anonymous-dropdown-menu-container" >
         <div className={"user-dropdown " + this.state.dropdownClass}>
@@ -69,11 +64,8 @@ class AnonymousMenu extends React.Component {
         </button>
         <ul className="dropdown-menu dropdown-menu-right">
           <li className="user-context-menu">
-          <div className="user-pling-section-container">
-              <div className="title">Download Pling Section</div>
-              {contextMenuDisplay}
-          </div>
-        </li>
+            {downloadSection}
+          </li>
         </ul>
       </div>
       </li>

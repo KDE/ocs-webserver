@@ -121,13 +121,14 @@ if (Zend_Auth::getInstance()->hasIdentity()){
     $identity = Zend_Auth::getInstance()->getStorage()->read();
     $helperImage = new Default_View_Helper_Image();
     $avatar = $helperImage->image($identity->profile_image_url,array('width' => 100, 'height' => 100, 'crop' => 2));
-
+    $isSupporter = $this->isSupporter($identity->member_id);
     $user = array(
         "username" => $identity->username,
         "member_id" => $identity->member_id,
         "mail" => $identity->mail,
         "avatar" => $avatar,
-        "roleName" =>$identity->roleName
+        "roleName" =>$identity->roleName,
+        "isSupporter" => $isSupporter
     );
 
     $settingmodel = new Default_Model_MemberSettingValue();

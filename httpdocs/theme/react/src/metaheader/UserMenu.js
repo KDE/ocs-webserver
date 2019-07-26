@@ -1,10 +1,7 @@
 import React from 'react';
 import UserLoginMenuContainer from './UserLoginMenuContainer';
-// import UserLoginMenuContainerVersionTwo from './UserLoginMenuContainerVersionTwo';
-import UserContextMenuContainer from './UserContextMenuContainer';
 import DevelopmentAppMenu from './DevelopmentAppMenu';
 import SearchMenuContainer from './SearchMenuContainer';
-//import SwitchItem from './SwitchItem';
 import AboutMenu from './AboutMenu';
 import AnonymousMenu from './AnonymousMenu';
 

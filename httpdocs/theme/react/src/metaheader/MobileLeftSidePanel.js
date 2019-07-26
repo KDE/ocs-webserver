@@ -1,5 +1,6 @@
 import React from 'react';
-
+import AboutMenuItems from './function/AboutMenuItems';
+import CommunityMenuItems from './function/CommunityMenuItems';
 class MobileLeftSidePanel extends React.Component {
   constructor(props){
     super(props);
@@ -30,21 +31,6 @@ class MobileLeftSidePanel extends React.Component {
     // }
 
 
-    let faqLinkItem, apiLinkItem, aboutLinkItem,aboutPlingItem, aboutopencodeItem;
-
-    aboutPlingItem = (<li><a id="faq" href={this.props.baseUrl +"/faq-pling"}>FAQ Pling</a></li>);
-    aboutopencodeItem = (<li><a id="faq" href={this.props.baseUrl +"/faq-opencode"}>FAQ Opencode</a></li>);
-    aboutLinkItem = (<li><a id="about" href={this.props.baseUrl +"/about"}>About</a></li>);
-    apiLinkItem = (<li><a  href={this.props.baseUrl +"/ocs-api"}>API</a></li>);
-    // if (this.props.isExternal === false){
-    //   apiLinkItem = (<li><a className="popuppanel" id="api" href={"/partials/ocsapicontent.phtml"}>API</a></li>);
-    // } else {
-    //   apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={this.props.baseUrl + "/#api"}>API</a></li>);
-    // }
-    if (this.props.isAdmin ){
-      faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>Plings (admin only)</a></li>);
-    }
-
     return (
       <div id="left-side-panel">
         <div id="panel-header">
@@ -60,20 +46,16 @@ class MobileLeftSidePanel extends React.Component {
             <li>
               <a className="groupname"><b>Community</b></a>
               <ul>
-                <li><a href={this.props.baseUrl + "/community"}>Members</a></li>
-                <li><a href={this.props.forumUrl}>Discussion</a></li>
+                <CommunityMenuItems baseUrl={this.props.baseUrl}
+                                    forumUrl = {this.props.forumUrl}  />
               </ul>
             </li>
             <li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>
             <li>
               <a className="groupname"><b>About</b></a>
               <ul>
-                <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-                {faqLinkItem}
-                {apiLinkItem}
-                {aboutPlingItem}
-                {aboutopencodeItem}
-                {aboutLinkItem}
+                <AboutMenuItems baseUrl={this.props.baseUrl}
+                                isAdmin={this.props.isAdmin}/>
               </ul>
             </li>
           </ul>
