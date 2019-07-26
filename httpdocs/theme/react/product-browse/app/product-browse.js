@@ -64,9 +64,10 @@ function ProductBrowseItemList(props){
 function ProductBrowseItem(props){
     
     const p = props.product;
-
     const containerWidth = $('#product-browse-container').width();
-    const itemWidth = containerWidth / 3;
+    let itemsInRow = 3;
+    if (window.catId === 7) itemsInRow = 4;
+    const itemWidth = containerWidth / itemsInRow;
     const imgHeight = itemWidth / 1.85;
 
 
@@ -79,7 +80,7 @@ function ProductBrowseItem(props){
     itemLink += "/" + p.project_id;
     
     return (
-        <div className="product-browse-item" id={"product-" + p.project_id} style={{"width":itemWidth}}>
+        <div className={"product-browse-item " + (itemsInRow === 4 ? "four-in-row" : "three-in-row")} id={"product-" + p.project_id} style={{"width":itemWidth}}>
             <a href={itemLink} className="product-browse-item-wrapper">
                 <div className="product-browse-image" style={{"height":imgHeight}}>
                     <img src={imgUrl}/>
