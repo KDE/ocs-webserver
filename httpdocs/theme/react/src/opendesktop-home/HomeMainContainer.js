@@ -8,6 +8,7 @@ import ChatContainer from './ChatContainer';
 import ProductsGitContainer from './ProductsGitContainer';
 import Introduction from './Introduction';
 import PersonalActivityContainer from './PersonalActivityContainer';
+import PersonalLinksContainer from './function/PersonalLinksContainer';
 
 class HomeMainContainer extends Component {
   constructor(props){
@@ -35,9 +36,13 @@ class HomeMainContainer extends Component {
                     {supporterinfo}
                   </div>
                   <h1>
-                    Hi {this.state.user.username}, welcome to your personal start page!
+                    Hi {this.state.user.username}, what do you want to do today:
                   </h1>
-
+                  <PersonalLinksContainer myopendesktopUrl={this.state.url_myopendesktop}
+                                          docsopendesktopUrl={this.state.url_docsopendesktop}
+                                          riotUrl = {this.state.riotUrl}
+                                          isAdmin = {this.state.user.isAdmin}
+                    />
                 </div>
             </div>
             <div className="middle">

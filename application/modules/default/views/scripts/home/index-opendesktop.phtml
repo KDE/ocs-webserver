@@ -43,7 +43,14 @@ $url_myopendesktop = $config->url_myopendesktop;
 $url_cloudopendesktop = $config->url_cloudopendesktop;
 $url_musicopendesktop = $config->url_musicopendesktop;
 $url_mastodon = $config->url_mastodon;
+$url_docsopendesktop = $config->url_docsopendesktop;
 
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+$isAdmin = false;
+if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+    $isAdmin = true;
+}
 if (Zend_Auth::getInstance()->hasIdentity()){
     $identity = Zend_Auth::getInstance()->getStorage()->read();
     $avatar = $helperImage->image($identity->profile_image_url,array('width' => 100, 'height' => 100, 'crop' => 2));
@@ -52,7 +59,8 @@ if (Zend_Auth::getInstance()->hasIdentity()){
         "member_id" => $identity->member_id,
         "mail" => $identity->mail,
         "avatar" => $avatar,
-        "roleName" =>$identity->roleName
+        "roleName" =>$identity->roleName,
+        "isAdmin" => $isAdmin
     );
 
     $comments = $modelInfo->getLastCommentsForUsersProjects($identity->member_id);
@@ -84,6 +92,7 @@ if (Zend_Auth::getInstance()->hasIdentity()){
       "url_myopendesktop" => $url_myopendesktop,
       "url_cloudopendesktop" => $url_cloudopendesktop,
       "url_musicopendesktop" => $url_musicopendesktop,
+      "url_docsopendesktop" => $url_docsopendesktop,
       "url_mastodon" => $url_mastodon,
     );
 }else
