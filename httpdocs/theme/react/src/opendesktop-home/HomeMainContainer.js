@@ -21,7 +21,7 @@ class HomeMainContainer extends Component {
     {
       supporterinfo = "Thanks for supporting Pling.com";
     }else{
-      supporterinfo = <div><a href={this.state.baseUrlStore+'/support'}>Become a Supporter</a></div>
+      supporterinfo = <div><a href={this.state.baseUrlStore+"/support"}>Become a Supporter</a></div>
     }
     if(this.state.user)
     {
