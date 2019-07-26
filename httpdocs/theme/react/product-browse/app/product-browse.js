@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import {SortByCurrentFilter} from './product-browse-helpers';
 
 function ProductBrowse(){
+    console.log(window.config);
     return (
         <div id="product-browse">
             <ProductBrowseFilterContainer/>
