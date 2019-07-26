@@ -578,6 +578,16 @@ video:focus {
   stroke: #777;
   fill: #777;
 }
+#music-player-wrapper .progress-bar {
+  margin: -3px 20px 0 20px;
+}
+#music-player-wrapper .progress-bar .rc-slider {
+  height: 20px;
+  padding: 8px 0;
+}
+#music-player-wrapper .progress-bar .rc-slider .rc-slider-step {
+  height: 20px;
+}
 #music-player-wrapper .audio-lists-panel .audio-lists-panel-header .close-btn {
   display: block;
   margin-right: 30px;
