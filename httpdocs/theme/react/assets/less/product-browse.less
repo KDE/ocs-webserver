@@ -54,9 +54,27 @@
                 }
             }
 
+            .product-browse-music-item-info {
+                font-size:14px;
+                padding:5px;
+
+                h2 {
+                    font-size: 16px;
+                    font-weight: bold;
+                    margin-bottom: 3px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    display: block;
+                    text-overflow: ellipsis;
+                    margin: 5px 0;
+                    width:100%;
+                }
+            }
+
             &.three-in-row {
                 &:nth-child(3n+1){
                     padding-right:10px;
+                    clear: both;
                 }
     
                 &:nth-child(3n+2){
@@ -69,23 +87,33 @@
                 }                
             }
 
-            &.four-in-row {
-                &:nth-child(4n+1){
+            &.six-in-row {
+                &:nth-child(6n+1){
                     padding-right:10px;
+                    clear: both;
                 }
     
-                &:nth-child(4n+2){
+                &:nth-child(6n+2){
                     padding-left:5px;
                     padding-right:10px;
                 }
     
-    
-                &:nth-child(4n+3){
+                &:nth-child(6n+3){
+                    padding-left:5px;
+                    padding-right:10px;
+                }
+
+                &:nth-child(6n+4){
+                    padding-left:5px;
+                    padding-right:10px;
+                }
+                
+                &:nth-child(6n+5){
                     padding-left:5px;
                     padding-right:5px;
                 }
 
-                &:nth-child(4n+4){
+                &:nth-child(6n+6){
                     padding-left:10px;
                 }
             }

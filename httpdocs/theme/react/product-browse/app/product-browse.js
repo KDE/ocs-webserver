@@ -63,14 +63,16 @@ function ProductBrowseItemList(props){
 }
 
 function ProductBrowseItem(props){
-    
+
     const p = props.product;
     const containerWidth = $('#product-browse-container').width();
-    let itemsInRow = 3;
-    if (window.catId === 7 || window.config.sName === "music.pling.com") itemsInRow = 4;
+
+    let productBrowseItemType = 0;
+    if (window.catId === 7 || window.config.sName === "music.pling.com") productBrowseItemType = 1;
+    
+    const itemsInRow = productBrowseItemType === 0 ? 3 : 6;
     const itemWidth = containerWidth / itemsInRow;
     const imgHeight = itemWidth / 1.85;
-
 
     let imgUrl = "https://cn.opendesktop.";
     imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
@@ -80,17 +82,36 @@ function ProductBrowseItem(props){
     itemLink += p.type_id === "3" ? "c" : "p";
     itemLink += "/" + p.project_id;
     
+    let itemInfoDisplay;
+    if (productBrowseItemType === 0){
+        itemInfoDisplay = (
+            <div className="product-browse-item-info">
+                <h2>{p.title}</h2>
+                <span>{p.cat_title}</span>
+                <span>by <a>{p.username}</a></span>
+            </div>
+        )
+    }
+
+    let musicItemInfoDisplay;
+    if (productBrowseItemType === 1){
+        musicItemInfoDisplay = (
+            <div className="product-browse-music-item-info">
+                <h2>{p.title}</h2>
+                <span>{p.cat_title}</span>
+                <span>by <a>{p.username}</a></span>
+            </div>            
+        )
+    }
+
     return (
-        <div className={"product-browse-item " + (itemsInRow === 4 ? "four-in-row" : "three-in-row")} id={"product-" + p.project_id} style={{"width":itemWidth}}>
+        <div className={"product-browse-item " + (itemsInRow === 6 ? "six-in-row" : "three-in-row")} id={"product-" + p.project_id} style={{"width":itemWidth}}>
             <a href={itemLink} className="product-browse-item-wrapper">
-                <div className="product-browse-image" style={{"height":imgHeight}}>
-                    <img src={imgUrl}/>
+                <div className="product-browse-image">
+                    <img src={imgUrl} height={imgHeight}/>
+                    {musicItemInfoDisplay}
                 </div>
-                <div className="product-browse-item-info">
-                    <h2>{p.title}</h2>
-                    <span>{p.cat_title}</span>
-                    <span>by <a>{p.username}</a></span>
-                </div>
+                {itemInfoDisplay}
             </a>
         </div>
     )
