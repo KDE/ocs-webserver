@@ -66,12 +66,15 @@ function ProductBrowseItem(props){
 
     const p = props.product;
     const containerWidth = $('#product-browse-container').width();
+
     let productBrowseItemType = 0;
     if (window.catId === 7 || window.config.sName === "music.pling.com" || window.location.search === "?index=3") productBrowseItemType = 1;
     
     const itemsInRow = productBrowseItemType === 0 ? 3 : 6;
     const itemWidth = containerWidth / itemsInRow;
-    const imgHeight = itemWidth / 1.85;
+
+    const itemHeightDivider = productBrowseItemType === 0 ? 1.85 : 2.15;
+    const imgHeight = itemWidth / itemHeightDivider;
 
     let imgUrl = "https://cn.opendesktop.";
     imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
