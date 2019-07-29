@@ -49,7 +49,7 @@ class DevelopmentAppMenu extends React.Component {
         }
       }else{
         dropdownClass = "";
-      }    
+      }
     }
     this.setState({dropdownClass:dropdownClass});
   }
@@ -83,10 +83,11 @@ class DevelopmentAppMenu extends React.Component {
     }
     let personalMenuDisplay=(
         <React.Fragment>
+          {/*
           <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/product/add"} label="Add Product" />
           <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/collection/add"} label="Add Collection" />
           <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/projects/new"} label="Add Project" />
-
+            */}           
           <MyButton id="listproduct-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/products"} label="Products" />
           <MyButton id="listproduct-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/collections"} label="Collections" />
           <MyButton id="opencode-link-item" url={this.props.gitlabUrl+"/dashboard/projects"} label="Projects" />
