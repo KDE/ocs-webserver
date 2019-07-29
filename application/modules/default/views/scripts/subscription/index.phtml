@@ -49,27 +49,35 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                 <div class="sidebar-left col-md-2"></div>
                 
    
-                <div class="content col-md-6">
+                <div class="content col-md-8">
                     <h2>Become a Supporter</h2>
-                    <p>Your donation supports potentially all <b> <?=$countActiveMembers?></b> creators on opendesktop.org (see <a href="/faq-pling">pling FAQ</a>).
+                    <p>Your donation helps support the <b> <?=$countActiveMembers?></b> creators of the platform (see <a href="/faq-pling">pling FAQ</a>).
                     </p>
                     <div class="x-donation-widget">
                          <div class="row disply-flex">
-                            <div class="col-lg-4 col-md-4" style="padding-left: 15px;">        
+                            <div class="col-lg-2" style="padding-left: 15px;">        
+                               <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
+                                  <div class="header-content">                                                                                     
+                                     Select Tier
+                                 
+                                  </div>
+                                </div>                                          
+                            </div>    
+                            <div class="col-lg-4 col-md-4" >        
                                 <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
                                   <div class="header-content">                                                                                     
-                                    Base Amount Monthly
+                                     Amount Monthly
                                  
                                   </div>
                                 </div>                                                  
                             </div>                        
 
                            
-                            <div class="col-lg-6 col-md-6" style="">
+                            <div class="col-lg-4 col-md-4" style="">
                             <div class="x-tabs-header ">
                               <div class="header-content">                                                
-                                 Yearly Payment 
-                                 <br><span style="font-size: small;" class="extrasmall">(done for one year, can be cancelled at any time before next year)</span>
+                                  Payment 
+                                 <br><span style="font-size: small;" class="extrasmall">(can be cancelled at any time before next year)</span>
                               </div>
                             </div>                                                                                     
                             </div>
@@ -82,6 +90,15 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                             </div>
                         </div> <!--end of row-->
                         <div class="row disply-flex">
+
+                            <div class="col-lg-2" style="padding-left: 15px;">        
+                                                                            
+                                      <div class="radiocontainer">
+                                      <input class="suggested-amount mdl-radio__button" <?=$this->payment_options['Option5']['checked']?> id="sam-15" type="radio" value="<?=$this->payment_options['Option5']['name']?>" name="amount_predefined"/>
+                                    </div>
+                                                                        
+                            </div>    
+
                             <div class="col-lg-4 col-md-4">  
                             <?php
                                 echo $this->partial('/subscription/partials/tier.phtml',
@@ -89,7 +106,7 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                             ?>
                             </div>
                           
-                            <div class="col-lg-6 col-md-6">  
+                            <div class="col-lg-4 col-md-4">  
                                 <?php
                                 echo $this->partial('/subscription/partials/option.phtml',
                                         $this->payment_options['Option5']
@@ -110,6 +127,15 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                         </div> <!--end of row-->
 
                         <div class="row disply-flex">
+
+                            <div class="col-lg-2" style="padding-left: 15px;">        
+                                                                                             
+                                    <div class="radiocontainer">
+                                      <input class="suggested-amount mdl-radio__button" <?=$this->payment_options['Option6']['checked']?> id="sam-15" type="radio" value="<?=$this->payment_options['Option6']['name']?>" name="amount_predefined"/>
+                                    </div>
+                                                                       
+                            </div>  
+
                             <div class="col-lg-4 col-md-4">  
                                 <?php
                                 echo $this->partial('/subscription/partials/tier.phtml',
@@ -117,7 +143,7 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                                 ?>
                             </div>
                            
-                            <div class="col-lg-6 col-md-6">  
+                            <div class="col-lg-4 col-md-4">  
                                 <?php
                                 echo $this->partial('/subscription/partials/option.phtml',
                                         $this->payment_options['Option6']
@@ -138,6 +164,17 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                         </div> <!--end of row-->
                             
                         <div class="row disply-flex">
+
+
+                            <div class="col-lg-2" style="padding-left: 15px;">        
+                                                                                                                   
+                                      <div class="radiocontainer">
+                                      <input class="suggested-amount mdl-radio__button" <?=$this->payment_options['Option8']['checked']?> id="sam-15" type="radio" value="<?=$this->payment_options['Option8']['name']?>" name="amount_predefined"/>
+                                    </div>
+                                 
+                                                                     
+                            </div>  
+
                             <div class="col-lg-4 col-md-4">  
                             <?php
                                 echo $this->partial('/subscription/partials/tier.phtml',
@@ -145,7 +182,7 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                             ?>
                             </div>
                             
-                            <div class="col-lg-6 col-md-6">  
+                            <div class="col-lg-4 col-md-4">  
                                
                                  <?php
                                 echo $this->partial('/subscription/partials/option.phtml',
@@ -168,6 +205,15 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                         </div> <!--end of row-->
 
                         <div class="row disply-flex">
+
+                            <div class="col-lg-2" style="padding-left: 15px;">        
+                                                                                                                   
+                                      <div class="radiocontainer">
+                                      <input class="suggested-amount mdl-radio__button" <?=$this->payment_options['Option9']['checked']?> id="sam-15" type="radio" value="<?=$this->payment_options['Option9']['name']?>" name="amount_predefined"/>
+                                    </div>
+                                                                      
+                            </div>  
+
                             <div class="col-lg-4 col-md-4">  
                                 <?php
                                 echo $this->partial('/subscription/partials/tier.phtml',
@@ -176,7 +222,7 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                             </div>
                            
 
-                            <div class="col-lg-6 col-md-6">  
+                            <div class="col-lg-4 col-md-4">  
                                
                                  <?php
                                 echo $this->partial('/subscription/partials/option.phtml',
@@ -203,18 +249,23 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                         
 
                         <div class="row disply-flex">
+
+                            <div class="col-lg-2" style="padding-left: 15px;">      
+
+                                    <div class="radiocontainer">
+                                      <input class="suggested-amount custom_amount_item" <?=$this->checked?> id="custom_amount_item" type="radio" value="Option7" name="amount_predefined">
+                                    </div>                        
+                            </div>  
                             <div class="col-lg-4 col-md-4">  
                                 
                             </div>
                                                    
 
-                            <div class="col-lg-6 col-md-6">  
+                            <div class="col-lg-4 col-md-4">  
 
                                  <ul class="x-suggested-amounts">
                                 <li class="amount-item <?=(isset($this->islast) ? 'last':'')?>">  
-                                     <div class="radiocontainer">
-                                      <input class="suggested-amount custom_amount_item" <?=$this->checked?> id="custom_amount_item" type="radio" value="Option7" name="amount_predefined">
-                                    </div>
+                                    
                                       <div class="item-text">
                                         <span class="unit-wrapper">
                                           <span class="unit">$</span>
@@ -231,7 +282,7 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                         </div> <!--end of row-->
             
                         <div class="row disply-flex">
-                              <div class="col-lg-8 col-md-8">  
+                              <div class="col-lg-12 col-md-12">  
                                 <div class="tabs-footer">
                                     <?php if (Zend_Auth::getInstance()->hasIdentity()) {?>
                                   <button type="submit" class="dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
