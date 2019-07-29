@@ -99,7 +99,7 @@ function MusicPlayerWrapper(props){
       //The next time you access the player, do you keep the last state  [type `Boolean` default `false`]
       remember: false,
       //The Audio Can be deleted  [type `Boolean`, default `true`]
-      remove: true,
+      remove: false,
       //audio controller initial position    [ type `Object` default '{top:0,left:0}' ]
       defaultPosition: {
         top: 300,
@@ -148,7 +148,7 @@ function MusicPlayerWrapper(props){
       //play button display of the audio player panel   [type `Boolean` default `true`]
       showPlay: true,
       //reload button display of the audio player panel   [type `Boolean` default `true`]
-      showReload: true,
+      showReload: false,
       //download button display of the audio player panel   [type `Boolean` default `true`]
       showDownload: false,
       //loop button display of the audio player panel   [type `Boolean` default `true`]
