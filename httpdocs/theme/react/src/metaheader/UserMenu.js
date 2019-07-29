@@ -4,6 +4,7 @@ import DevelopmentAppMenu from './DevelopmentAppMenu';
 import SearchMenuContainer from './SearchMenuContainer';
 import AboutMenu from './AboutMenu';
 import AnonymousMenu from './AnonymousMenu';
+import DiscussionBoardsDropDownMenu from './DiscussionBoardsDropDownMenu';
 
 class UserMenu extends React.Component {
   constructor(props){
@@ -62,10 +63,9 @@ class UserMenu extends React.Component {
     }
 
     let  anonymousMenu;
-    if(!this.props.user)
-    {
-        anonymousMenu= <AnonymousMenu baseUrlStore={this.props.baseUrlStore} user={this.props.user}/>
-    }
+
+    anonymousMenu= <AnonymousMenu baseUrlStore={this.props.baseUrlStore} user={this.props.user}/>
+
 
 
     let  chatItem=(<li id="chat-link-item"><a href={this.props.riotUrl}>
@@ -86,25 +86,30 @@ class UserMenu extends React.Component {
 
 
 
+
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
-          <li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>
+          <li><a href={this.props.baseUrlStore}>Store</a></li>
+          <li><a href={this.props.gitlabUrl+"/explore/projects"}>Code</a></li>
+            <DiscussionBoardsDropDownMenu
+              forumUrl={this.props.forumUrl}
+              user={this.props.user}
+              baseUrl={this.props.baseUrl}
+            />
+          
           {aboutMenu}
           {searchMenuDisplay}
-          {chatItem}
-
-          {developmentAppMenuDisplay}
-          {userDropdownDisplay}
           {anonymousMenu}
+          {userDropdownDisplay}
+
         </ul>
       );
     } else {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
-          {chatItem}
-          {developmentAppMenuDisplay}
-          {userDropdownDisplay}
           {anonymousMenu}
+          {userDropdownDisplay}
+
         </ul>
       );
     }

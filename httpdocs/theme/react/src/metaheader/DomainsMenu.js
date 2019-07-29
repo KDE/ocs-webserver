@@ -1,6 +1,7 @@
 import React from 'react';
 import MoreDropDownMenu from './MoreDropDownMenu';
-import DiscussionBoardsDropDownMenu from './DiscussionBoardsDropDownMenu';
+
+import DevelopmentAppMenu from './DevelopmentAppMenu';
 class DomainsMenu extends React.Component {
   constructor(props){
     super(props);
@@ -11,6 +12,27 @@ class DomainsMenu extends React.Component {
 
 
   render(){
+
+    let developmentAppMenuDisplay;
+      if (this.props.user && this.props.user.member_id){
+         developmentAppMenuDisplay = (
+        <DevelopmentAppMenu
+          user={this.props.user}
+          forumUrl={this.props.forumUrl}
+          gitlabUrl={this.props.gitlabUrl}
+          isAdmin={this.props.isAdmin}
+          baseUrl={this.props.baseUrl}
+          baseUrlStore={this.props.baseUrlStore}
+          myopendesktopUrl={this.props.myopendesktopUrl}
+          cloudopendesktopUrl={this.props.cloudopendesktopUrl}
+          musicopendesktopUrl={this.props.musicopendesktopUrl}
+          docsopendesktopUrl={this.props.docsopendesktopUrl}
+        />
+      );
+    }
+    let  chatItem=(<li id="chat-link-item"><a href={this.props.riotUrl}>
+        <img src={this.props.baseUrl+"/theme/react/assets/img/chat.jpg"} className="riotIcon"></img>Chat
+      </a></li>);
 
     let moreMenuItemDisplay, adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
     if (this.props.device !== "large"){
@@ -36,13 +58,8 @@ class DomainsMenu extends React.Component {
             openDesktop.org :
           </a>
         </li>
-        <li><a href={this.props.gitlabUrl+"/explore/projects"}>Code</a></li>
-        <li><a href={this.props.baseUrlStore}>Store</a></li>
-        <DiscussionBoardsDropDownMenu
-          forumUrl={this.props.forumUrl}
-          user={this.props.user}
-          baseUrl={this.props.baseUrl}
-        />
+        {developmentAppMenuDisplay}
+        {chatItem}
 
         {moreMenuItemDisplay}
       </ul>

@@ -87,7 +87,7 @@ class DevelopmentAppMenu extends React.Component {
           <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/product/add"} label="Add Product" />
           <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/collection/add"} label="Add Collection" />
           <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/projects/new"} label="Add Project" />
-            */}           
+            */}
           <MyButton id="listproduct-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/products"} label="Products" />
           <MyButton id="listproduct-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/collections"} label="Collections" />
           <MyButton id="opencode-link-item" url={this.props.gitlabUrl+"/dashboard/projects"} label="Projects" />
@@ -120,11 +120,11 @@ class DevelopmentAppMenu extends React.Component {
                 <MyButton id="docs-link-item"
                         url={this.props.docsopendesktopUrl}
                         label="Docs"/>
-                <MyButton id="music-link-item"
-                        url={this.props.musicopendesktopUrl}
-                        label="Music" />
               </React.Fragment>
             }
+          <MyButton id="music-link-item"
+                        url={this.props.musicopendesktopUrl}
+                        label="Music" />
         </React.Fragment>
         );
 
