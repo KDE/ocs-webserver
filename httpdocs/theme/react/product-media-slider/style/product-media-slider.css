@@ -588,10 +588,7 @@ video:focus {
 #music-player-wrapper .progress-bar .rc-slider .rc-slider-step {
   height: 20px;
 }
-#music-player-wrapper .audio-lists-panel .audio-lists-panel-header .close-btn {
-  display: block;
-  margin-right: 30px;
-}
+
 #music-player-wrapper .audio-lists-panel .audio-lists-panel-header .line,
 #music-player-wrapper .audio-lists-panel .audio-lists-panel-header .delete-btn {
   display: none;

@@ -848,6 +848,15 @@
   float: right;
   cursor: pointer;
 }
+
+.audio-lists-panel-header .close-btn {
+  display: block;
+  margin-right: 0;
+  position: absolute;
+  top: 0;
+  right: 40px;
+}
+
 .audio-lists-panel-header .delete-btn svg {
   font-size: 21px;
 }
@@ -880,6 +889,7 @@
   overflow: hidden;
   display: block;
   text-overflow: ellipsis;
+  width: calc(100% - 40px);
 }
 .audio-lists-panel-content {
   overflow-x: hidden;
