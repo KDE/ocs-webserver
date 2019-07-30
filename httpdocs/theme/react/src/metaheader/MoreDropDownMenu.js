@@ -51,7 +51,7 @@ class MoreDropDownMenu extends React.Component {
       <li ref={node => this.node = node} id="more-dropdown-menu" className={this.state.dropdownClass}>
         <a className="more-menu-link-item">More</a>
         <ul className="dropdown-menu">
-          <li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>
+        {/*<li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>*/}  
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
             {faqLinkItem}
             {apiLinkItem}
