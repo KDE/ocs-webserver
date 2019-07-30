@@ -1,6 +1,7 @@
 import React from 'react';
 import MoreDropDownMenu from './MoreDropDownMenu';
-
+import AboutMenu from './AboutMenu';
+import DiscussionBoardsDropDownMenu from './DiscussionBoardsDropDownMenu';
 class DomainsMenu extends React.Component {
   constructor(props){
     super(props);
@@ -12,10 +13,12 @@ class DomainsMenu extends React.Component {
 
   render(){
 
+    const aboutMenu = <AboutMenu blogUrl={this.props.blogUrl}
+                                isExternal={this.props.isExternal}
+                                baseUrl={this.props.baseUrl}
+                                isAdmin={this.props.isAdmin}
+                                />
 
-    let  chatItem=(<li id="chat-link-item"><a href={this.props.riotUrl}>
-        <img src={this.props.baseUrl+"/theme/react/assets/img/chat.jpg"} className="riotIcon"></img>Chat
-      </a></li>);
 
     let moreMenuItemDisplay, adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
     if (this.props.device !== "large"){
@@ -42,7 +45,14 @@ class DomainsMenu extends React.Component {
           </a>
         </li>
 
-        {chatItem}
+        <DiscussionBoardsDropDownMenu
+              forumUrl={this.props.forumUrl}
+              user={this.props.user}
+              baseUrl={this.props.baseUrl}
+            />
+
+        {aboutMenu}
+
 
         {moreMenuItemDisplay}
       </ul>

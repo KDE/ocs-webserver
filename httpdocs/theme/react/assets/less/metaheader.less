@@ -341,7 +341,7 @@
             }
           }
 
-          &#discussion-boards, &#admins-dropdown-menu, &#more-dropdown-menu, &#cd-dropdown-menu {
+          &#about-dropdown-menu,&#discussion-boards, &#admins-dropdown-menu, &#more-dropdown-menu, &#cd-dropdown-menu {
 
             position: relative;
             cursor: pointer;
@@ -1469,16 +1469,18 @@
             display: flex;
             width: 100%;
             justify-content: center;
-            border-bottom: 1px solid #ccc;
+            padding-top: 20px;
             a{
               display: inline-block;
               padding: 0px 5px;
+              color: #36c;
+
             }
           }
 
           .user-context-menu{
             width: 100%;
-            
+
             background-color: #fff;
 
             .user-pling-section-container
@@ -1494,7 +1496,14 @@
                      padding:5px;
                    }
                   .section{
-                    padding:5px;
+                    padding: 5px;
+                    display: flex;
+                      .section-name{
+                        width: 100px;
+                      }
+                      .section-value{
+                        flex: 1;
+                      }
                   }
               }
            }

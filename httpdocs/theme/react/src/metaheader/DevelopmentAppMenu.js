@@ -124,7 +124,9 @@ class DevelopmentAppMenu extends React.Component {
           <MyButton id="music-link-item"
                         url={this.props.musicopendesktopUrl}
                         label="Music" />
-          <MyButton id="plings-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/payout"} label="Payout" />
+                      {/*
+                        <MyButton id="plings-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/payout"} label="Payout" />
+                        */}
           <MyButton id="issues-link-item" url={this.state.gitlabLink} label="Issues" />
         </React.Fragment>
         );

@@ -5,7 +5,7 @@ function DownloadSection(props)
     <div className="user-pling-section-container">
         <div className="title">Download Sections</div>
         { props.section.map((mg,i) => (
-            <div className="section">{mg.name}: {mg.dls}</div>
+            <div className="section"><div className="section-name">{mg.name}:</div><div className="section-value"> {mg.dls}</div></div>
           ))
         }
     </div>

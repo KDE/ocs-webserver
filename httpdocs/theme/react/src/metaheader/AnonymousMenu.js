@@ -63,7 +63,10 @@ class AnonymousMenu extends React.Component {
           <span className="th-icon"></span>{this.state.anonymousdl}
         </button>
         <ul className="dropdown-menu dropdown-menu-right">
-
+          <li className="user-context-menu">
+            {downloadSection}
+          </li>
+          
           {this.props.user.isSupporter ? (
             <li id="user-is-supporter">Thanks for being a supporter!</li>
           ) : (
@@ -71,10 +74,6 @@ class AnonymousMenu extends React.Component {
               You are not a <a className="become-supporter" href={this.props.baseUrl+"/support"}>supporter</a> yet.
             </li>
           )}
-
-          <li className="user-context-menu">
-            {downloadSection}
-          </li>
         </ul>
       </div>
       </li>

@@ -2,9 +2,8 @@ import React from 'react';
 import UserLoginMenuContainer from './UserLoginMenuContainer';
 import DevelopmentAppMenu from './DevelopmentAppMenu';
 import SearchMenuContainer from './SearchMenuContainer';
-import AboutMenu from './AboutMenu';
+
 import AnonymousMenu from './AnonymousMenu';
-import DiscussionBoardsDropDownMenu from './DiscussionBoardsDropDownMenu';
 
 class UserMenu extends React.Component {
   constructor(props){
@@ -78,11 +77,11 @@ class UserMenu extends React.Component {
     if (this.props.device === "large"){
 
 
-      const aboutMenu = <AboutMenu blogUrl={this.props.blogUrl}
-                                  isExternal={this.props.isExternal}
-                                  baseUrl={this.props.baseUrl}
-                                  isAdmin={this.props.isAdmin}
-                                  />
+      // const aboutMenu = <AboutMenu blogUrl={this.props.blogUrl}
+      //                             isExternal={this.props.isExternal}
+      //                             baseUrl={this.props.baseUrl}
+      //                             isAdmin={this.props.isAdmin}
+      //                             />
 
 
 
@@ -91,13 +90,8 @@ class UserMenu extends React.Component {
         <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrlStore}>Store</a></li>
           <li><a href={this.props.gitlabUrl+"/explore/projects"}>Code</a></li>
-            <DiscussionBoardsDropDownMenu
-              forumUrl={this.props.forumUrl}
-              user={this.props.user}
-              baseUrl={this.props.baseUrl}
-            />
 
-          {aboutMenu}
+          {chatItem}
           {searchMenuDisplay}
           {anonymousMenu}
           {developmentAppMenuDisplay}
