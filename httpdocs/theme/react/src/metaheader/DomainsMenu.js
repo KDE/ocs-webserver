@@ -1,6 +1,5 @@
 import React from 'react';
 import MoreDropDownMenu from './MoreDropDownMenu';
-import AboutMenu from './AboutMenu';
 import DiscussionBoardsDropDownMenu from './DiscussionBoardsDropDownMenu';
 class DomainsMenu extends React.Component {
   constructor(props){
@@ -12,13 +11,6 @@ class DomainsMenu extends React.Component {
 
 
   render(){
-
-    const aboutMenu = <AboutMenu blogUrl={this.props.blogUrl}
-                                isExternal={this.props.isExternal}
-                                baseUrl={this.props.baseUrl}
-                                isAdmin={this.props.isAdmin}
-                                />
-
 
     let moreMenuItemDisplay, adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
     if (this.props.device !== "large"){
@@ -44,14 +36,15 @@ class DomainsMenu extends React.Component {
             openDesktop.org :
           </a>
         </li>
-
+        <li><a href={this.props.baseUrlStore}>Store</a></li>
+        <li><a href={this.props.gitlabUrl+"/explore/projects"}>Code</a></li>
         <DiscussionBoardsDropDownMenu
               forumUrl={this.props.forumUrl}
               user={this.props.user}
               baseUrl={this.props.baseUrl}
             />
 
-        {aboutMenu}
+
 
 
         {moreMenuItemDisplay}
