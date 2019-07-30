@@ -4,8 +4,6 @@ import {SortByCurrentFilter} from './product-browse-helpers';
 import ReactJkMusicPlayer from "react-jinke-music-player";
 import {isMobile} from 'react-device-detect';
 
-console.log('fuck');
-
 function ProductBrowse(){
     console.log(window.config);
     return (
@@ -132,7 +130,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
     const options = {
         //audio lists model
         audioLists:[{
-            musicSrc:"http://cc.ppload.com/api/files/download/id/1560774943/s/6c86972fc79bad3f8f10a8d5cccd0838b0710238f054b9b79e1b1a6f5dcdd1da9d49635d5775b4460ae147a270acef1667629cf3659cbfe0fcd19903a0d01986/t/1564483634/u//lt/filepreview/Bobson+Dugnutt+-+01+-+The+Clock.mp3",
+            musicSrc:"https://dl.opendesktop.cc/api/files/download/id/1547562832/s/6f2460b73d7a4e2ff8e3a7e4a0d2cc689e82cb66c9becb6cbb1f7995abebf579fe6f1bf2e44188ab4732dabd584a8b469987e0b8e725e666c2df7f8767edc6ab/t/1564503924/u/24/lt/filepreview/NEVER_LOOK_BACK.mp3",
             name:'The Clock',
             cover:'https://cn.opendesktop.cc/img/0/8/3/4/d8444241b5a7516df10961094da4643840cc.jpg'
         }],
@@ -282,7 +280,6 @@ function ProductBrowseItemPreviewMusicPlayer(props){
     )
 }
 
-console.log('wat');
 
 function ProductBrowsePagination(){
 
