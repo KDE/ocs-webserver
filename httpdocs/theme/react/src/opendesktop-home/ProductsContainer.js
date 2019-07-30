@@ -13,11 +13,10 @@ class ProductsContainer extends React.Component {
         </li>
       ));
      container = <ul>{products}</ul>
-    }
-    let link = "https://www.pling.com/browse/cat/"+this.props.cat+"/order/latest/";
+    }    
     return (
       <div className="panelContainer">
-        <div className="title"><a href={link}>{this.props.title}</a></div>
+        <div className="title"><a href={this.props.baseUrlStore+"/browse/cat/"+this.props.cat+"/order/latest/"}>{this.props.title}</a></div>
         {container}
       </div>
     )

@@ -446,6 +446,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'action'     => 'index'
         )));
 
+
+        $router->addRoute('home_home', new Zend_Controller_Router_Route('/home', array(
+            'module'     => 'default',
+            'controller' => 'home',
+            'action'     => 'index'
+        )));
+
+        $router->addRoute('home_start', new Zend_Controller_Router_Route('/start', array(
+            'module'     => 'default',
+            'controller' => 'home',
+            'action'     => 'start'
+        )));
+
         $router->addRoute('home_ajax', new Zend_Controller_Router_Route('/showfeatureajax/*', array(
             'module'     => 'default',
             'controller' => 'home',
@@ -787,6 +800,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'controller' => 'content',
             'action'     => 'index',
             'page'       => 'gitfaq'
+        )));
+        $router->addRoute('static_ocsapi', new Zend_Controller_Router_Route_Static('/ocs-api', array(
+            'module'     => 'default',
+            'controller' => 'content',
+            'action'     => 'index',
+            'page'       => 'ocsapi'
         )));
         $router->addRoute('static_plings', new Zend_Controller_Router_Route_Static('/about', array(
             'module'     => 'default',

@@ -26,7 +26,7 @@ class BlogFeedContainer extends React.Component {
 
       const feedItems = this.state.items.map((fi,index) => (
         <li key={index}>
-          <a className="title" href={"https://forum.opendesktop.org/t/" + fi.id}>
+          <a className="title" href={this.props.urlCommunity+"/t/" + fi.id}>
             <span>{fi.title}</span>
           </a>
           <span className="info-row">
@@ -40,7 +40,7 @@ class BlogFeedContainer extends React.Component {
     }
     return (
       <div className="panelContainer">
-        <div className="title"><a href="https://forum.opendesktop.org">Forum</a></div>
+        <div className="title"><a href={this.props.urlCommunity}>Forum</a></div>
         {feedItemsContainer}
       </div>
     )

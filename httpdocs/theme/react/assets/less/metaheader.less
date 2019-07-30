@@ -341,7 +341,7 @@
             }
           }
 
-          &#discussion-boards, &#admins-dropdown-menu, &#more-dropdown-menu, &#cd-dropdown-menu {
+          &#about-dropdown-menu,&#discussion-boards, &#admins-dropdown-menu, &#more-dropdown-menu, &#cd-dropdown-menu {
 
             position: relative;
             cursor: pointer;
@@ -452,12 +452,12 @@
             }
           }
 
-            &#about-dropdown-menu{
+            &#about-dropdown-menu, &#discussion-boards{
 
             position: relative;
             cursor: pointer;
             z-index: 1000;
-            a.about-menu-link-item
+            a.about-menu-link-item, a.discussion-menu-link-item
             {
 
 
@@ -484,7 +484,7 @@
               width: 200px;
               top: 45px;
               /*right: auto;*/
-              right: -125px;
+              right: -115px;
               min-height: 104px;
               bottom: auto !important;
               &::before {
@@ -582,7 +582,7 @@
           margin-top: 2px;
         }
 
-        &#userLoginDropdown {
+        &#userLoginDropdown, &#developmentDropdownBtn{
           width: 26px;
           height: 25px;
           position: relative;
@@ -675,29 +675,33 @@
             #user-info-section {
               .user-details {
                 width: 100%;
-
                 .buttons {
                   padding-left: 0;
                   padding-right: 0;
                   background: white;
                 }
+
               }
             }
 
-            #user-details-username {
-              h2 {
-                margin: 10px 0;
-                font-size: 26px;
-                color: #353a3d;
-                font-weight: bold;
-              }
-            }
+            // #user-details-username {
+            //   h2 {
+            //     margin: 10px 0;
+            //     font-size: 26px;
+            //     color: #353a3d;
+            //     font-weight: bold;
+            //   }
+            // }
 
-            #user-details-email {
-              color: #687a86;
-              font-size: 18px;
-              margin-bottom: 5px;
-            }
+            // #user-details-email {
+            //   color: #687a86;
+            //   font-size: 18px;
+            //   margin-bottom: 5px;
+            // }
+            //
+            // #user-is-supporter{
+            //
+            // }
           }
 
           #user-tabs-menu-item {
@@ -1190,6 +1194,11 @@
             border: 1px solid white;
             margin: 5px 0 10px 0;
 
+            &.section-seperator{
+              display: flex;
+              width: 100%;
+              border-top: 1px solid #ccc;
+            }
             a {
               display: block;
               width: 100%;
@@ -1288,37 +1297,36 @@
               }
             }
 
-
             &#messages-link-item {
-              a {
-                .icon {
-                  background-image: url(../img/messages.png);
-                  background-size: 45px;
-                }
-              }
-
-              span.badge-notification{
-                display: inline-block;
-                font-weight: normal;
-                white-space: nowrap;
-                border-radius: 10px;
-                padding: 2px 4px;
-                min-width: 8px;
-                vertical-align: middle;
-                color: #fff;
-                font-size: .7579em;
-                line-height: 1;
-                text-align: center;
-                background-color: #bdbdbd;
-                position: absolute;
-                z-index: 1;
-                min-width: 6px;
-                top: -3px;
-                left: -5px;
-                background: #090;
-              }
-            }
-
+                                  position: relative;
+                                  a {
+                                    .icon {
+                                      background-image: url(../img/messages.png);
+                                      background-size: 45px;
+                                    }
+                                  }
+                                span.badge-notification{
+                                    display: inline-block;
+                                    font-weight: normal;
+                                    white-space: nowrap;
+                                    border-radius: 10px;
+                                    padding: 2px 4px;
+                                    min-width: 8px;
+                                    vertical-align: middle;
+                                    color: #fff;
+                                    font-size: .7579em;
+                                    line-height: 1;
+                                    text-align: center;
+                                    background-color: #bdbdbd;
+                                    position: absolute;
+                                    z-index: 1;
+                                    min-width: 6px;
+                                    width:15px;
+                                    top: 10px;
+                                    left: 15px;
+                                    background: #090;
+                                  }
+                            }
 
             &#issues-link-item {
               a {
@@ -1390,7 +1398,8 @@
               clear: both;
               a {
                 .icon {
-                  background-image: url(../img/logo-riot.svg);
+                 /*  background-image: url(../img/logo-riot.svg);*/
+                 background-image: url(../img/chat.jpg);
                   background-size: 45px;
                 }
               }
@@ -1436,11 +1445,68 @@
           height: 24px;
           width: 24px;
           display: block;
-          background-image: url(../img/user.png);
+          background-image: url(../img/black-down-arrow-icon-0.jpg);
           background-size: 24px;
           background-position: center;
           cursor: pointer;
           float: left;
+        }
+        .dropdown-toggle {
+          img {
+            height: 26px;
+            width: 26px;
+            border-radius: 100%;
+            margin-top: -1px;
+          }
+        }
+        .dropdown-menu {
+          padding:20px 10px;
+          &::before {
+            right: 9px;
+          }
+
+          #user-is-supporter{
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            padding-top: 20px;
+            a{
+              display: inline-block;
+              padding: 0px 5px;
+              color: #36c;
+
+            }
+          }
+
+          .user-context-menu{
+            width: 100%;
+
+            background-color: #fff;
+
+            .user-pling-section-container
+              {
+
+                   display: flex;
+                   flex-direction: column;
+
+                   width: 100%;
+                   .title{
+                     text-align: center;
+                     border-bottom: 1px solid #ccc;
+                     padding:5px;
+                   }
+                  .section{
+                    padding: 5px;
+                    display: flex;
+                      .section-name{
+                        width: 100px;
+                      }
+                      .section-value{
+                        flex: 1;
+                      }
+                  }
+              }
+           }
         }
 
       }
@@ -1466,6 +1532,8 @@
             border-bottom: 1px solid #ccc;
           }
 
+
+
           .user-context-menu{
             width: 100%;
             border-bottom: 1px solid #ccc;
@@ -1473,6 +1541,7 @@
             ul.user-context-menu-container{
                 list-style: none;
                 padding-left: 20px;
+                min-height: 200px;
                   li {
                             height: auto;
                             width: 86px;
@@ -1518,172 +1587,172 @@
                             }
 
 
-                            &#opendesktop-link-item {
-                              a {
-                                .icon {
-                                  background-image: url('../img/logo-opendesktop.png');
-                                }
-                              }
-                            }
-
-                            &#discourse-link-item {
-                              a {
-                                .icon {
-                                  background-image: url('../img/logo-discourse.png');
-                                  background-size: 58px;
-                                }
-                              }
-                            }
-
-                            &#gitlab-link-item {
-                              a {
-                                .icon {
-                                  background-image: url(../img/logo-gitlab.png);
-                                }
-                              }
-                            }
-
-                            &#opencode-link-item {
-                              a {
-                                .icon {
-                                  background-image: url(../img/logo-opencode.png);
-                                  background-size: 40px;
-                                }
-                              }
-                            }
-
-                            &#addproduct-link-item {
-                              a {
-                                .icon {
-                                  background-image: url(../img/add.svg);
-                                  background-size: 40px;
-                                }
-                              }
-                            }
-                            &#listproduct-link-item {
-                              a {
-                                .icon {
-                                  background-image: url(../img/products.png);
-                                  background-size: 40px;
-                                }
-                              }
-                            }
-                             &#plings-link-item {
-                              a {
-                                .icon {
-                                  background-image: url(../img/pling.png);
-                                  background-size: 40px;
-                                }
-                              }
-                            }
-
-
-                            &#messages-link-item {
-                                  position: relative;
-                                  a {
-                                    .icon {
-                                      background-image: url(../img/messages.png);
-                                      background-size: 45px;
-                                    }
-                                  }
-                                span.badge-notification{
-                                    display: inline-block;
-                                    font-weight: normal;
-                                    white-space: nowrap;
-                                    border-radius: 10px;
-                                    padding: 2px 4px;
-                                    min-width: 8px;
-                                    vertical-align: middle;
-                                    color: #fff;
-                                    font-size: .7579em;
-                                    line-height: 1;
-                                    text-align: center;
-                                    background-color: #bdbdbd;
-                                    position: absolute;
-                                    z-index: 1;
-                                    min-width: 6px;
-                                    width:15px;
-                                    top: 10px;
-                                    left: 15px;
-                                    background: #090;
-                                  }
-                            }
-
-                            &#issues-link-item {
-                              a {
-                                .icon {
-                                  background-image: url(../img/issues.png);
-                                  background-size: 45px;
-                                }
-                              }
-                            }
-
-
-
-                            &#music-link-item {
-                              a {
-                                .icon {
-                                  background-image: url(../img/logo-music.png);
-                                  background-size: 45px;
-                                }
-                              }
-                            }
-
-                            &#docs-link-item {
-                              a {
-                                .icon {
-                                  background-image: url(../img/logo-docs.png);
-                                  background-size: 45px;
-                                }
-                              }
-                            }
-
-                            &#storage-link-item {
-                              a {
-                                .icon {
-                                  background-image: url(../img/logo-storage.png);
-                                  background-size: 45px;
-                                }
-                              }
-                            }
-
-                            &#contacts-link-item {
-                              a {
-                                .icon {
-                                  background-image: url(../img/logo-contacts.png);
-                                  background-size: 45px;
-                                }
-                              }
-                            }
-
-                            &#calendar-link-item {
-                              a {
-                                .icon {
-                                  background-image: url(../img/logo-calendar.png);
-                                  background-size: 45px;
-                                }
-                              }
-                            }
-
-                            &#talk-link-item {
-                              a {
-                                .icon {
-                                  background-image: url(../img/logo-talk.png);
-                                  background-size: 45px;
-                                }
-                              }
-                            }
-
-                            &#chat-link-item {
-                              display: block;
-                              clear: both;
-                              a {
-                                .icon {
-                                  background-image: url(../img/logo-riot.svg);
-                                  background-size: 45px;
-                                }
-                              }
-                            }
+                            // &#opendesktop-link-item {
+                            //   a {
+                            //     .icon {
+                            //       background-image: url('../img/logo-opendesktop.png');
+                            //     }
+                            //   }
+                            // }
+                            //
+                            // &#discourse-link-item {
+                            //   a {
+                            //     .icon {
+                            //       background-image: url('../img/logo-discourse.png');
+                            //       background-size: 58px;
+                            //     }
+                            //   }
+                            // }
+                            //
+                            // &#gitlab-link-item {
+                            //   a {
+                            //     .icon {
+                            //       background-image: url(../img/logo-gitlab.png);
+                            //     }
+                            //   }
+                            // }
+                            //
+                            // &#opencode-link-item {
+                            //   a {
+                            //     .icon {
+                            //       background-image: url(../img/logo-opencode.png);
+                            //       background-size: 40px;
+                            //     }
+                            //   }
+                            // }
+                            //
+                            // &#addproduct-link-item {
+                            //   a {
+                            //     .icon {
+                            //       background-image: url(../img/add.svg);
+                            //       background-size: 40px;
+                            //     }
+                            //   }
+                            // }
+                            // &#listproduct-link-item {
+                            //   a {
+                            //     .icon {
+                            //       background-image: url(../img/products.png);
+                            //       background-size: 40px;
+                            //     }
+                            //   }
+                            // }
+                            //  &#plings-link-item {
+                            //   a {
+                            //     .icon {
+                            //       background-image: url(../img/pling.png);
+                            //       background-size: 40px;
+                            //     }
+                            //   }
+                            // }
+                            //
+                            //
+                            // &#messages-link-item {
+                            //       position: relative;
+                            //       a {
+                            //         .icon {
+                            //           background-image: url(../img/messages.png);
+                            //           background-size: 45px;
+                            //         }
+                            //       }
+                            //     span.badge-notification{
+                            //         display: inline-block;
+                            //         font-weight: normal;
+                            //         white-space: nowrap;
+                            //         border-radius: 10px;
+                            //         padding: 2px 4px;
+                            //         min-width: 8px;
+                            //         vertical-align: middle;
+                            //         color: #fff;
+                            //         font-size: .7579em;
+                            //         line-height: 1;
+                            //         text-align: center;
+                            //         background-color: #bdbdbd;
+                            //         position: absolute;
+                            //         z-index: 1;
+                            //         min-width: 6px;
+                            //         width:15px;
+                            //         top: 10px;
+                            //         left: 15px;
+                            //         background: #090;
+                            //       }
+                            // }
+                            //
+                            // &#issues-link-item {
+                            //   a {
+                            //     .icon {
+                            //       background-image: url(../img/issues.png);
+                            //       background-size: 45px;
+                            //     }
+                            //   }
+                            // }
+                            //
+                            //
+                            //
+                            // &#music-link-item {
+                            //   a {
+                            //     .icon {
+                            //       background-image: url(../img/logo-music.png);
+                            //       background-size: 45px;
+                            //     }
+                            //   }
+                            // }
+                            //
+                            // &#docs-link-item {
+                            //   a {
+                            //     .icon {
+                            //       background-image: url(../img/logo-docs.png);
+                            //       background-size: 45px;
+                            //     }
+                            //   }
+                            // }
+                            //
+                            // &#storage-link-item {
+                            //   a {
+                            //     .icon {
+                            //       background-image: url(../img/logo-storage.png);
+                            //       background-size: 45px;
+                            //     }
+                            //   }
+                            // }
+                            //
+                            // &#contacts-link-item {
+                            //   a {
+                            //     .icon {
+                            //       background-image: url(../img/logo-contacts.png);
+                            //       background-size: 45px;
+                            //     }
+                            //   }
+                            // }
+                            //
+                            // &#calendar-link-item {
+                            //   a {
+                            //     .icon {
+                            //       background-image: url(../img/logo-calendar.png);
+                            //       background-size: 45px;
+                            //     }
+                            //   }
+                            // }
+                            //
+                            // &#talk-link-item {
+                            //   a {
+                            //     .icon {
+                            //       background-image: url(../img/logo-talk.png);
+                            //       background-size: 45px;
+                            //     }
+                            //   }
+                            // }
+                            //
+                            // &#chat-link-item {
+                            //   display: block;
+                            //   clear: both;
+                            //   a {
+                            //     .icon {
+                            //       background-image: url(../img/logo-riot.svg);
+                            //       background-size: 45px;
+                            //     }
+                            //   }
+                            // }
 
                             &:hover {
                               border:1px solid #e5e5e5;
@@ -1796,7 +1865,9 @@
                   font-size: 13px;
                   min-height: 8px;
                   color: #6a7686;
-
+                  &#user-is-supporter{
+                    padding-top: 20px;
+                  }
                   a {
                     color: #36c;
                   }
@@ -1865,9 +1936,11 @@
         ul.dropdown-menu {
           /*right: -76px;*/
           right: -40px;
+
           &::before {
             /*right: 78px;*/
             right: 42px;
+
           }
         }
       }
@@ -2139,7 +2212,15 @@
         /*background-image: url(../img/development-app-menu-item-white.png);*/
           background-image: url(../img/glyphicons-th-light.svg);
       }
-      #user-search-menu-container .user-dropdown .th-icon {
-            background-image: url(../img/search-light.svg);
-          }
+  #user-search-menu-container .user-dropdown .th-icon {
+        background-image: url(../img/search-light.svg);
+      }
+  #anonymous-dropdown-menu-container .user-dropdown{
+      button{
+        color:#fff;
+      }
+      .th-icon{
+          background-image: url(../img/white-down-arrow-icon-0.png);
+      }
+    }
 }

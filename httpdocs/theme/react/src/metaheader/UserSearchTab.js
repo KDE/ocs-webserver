@@ -1,6 +1,6 @@
 import React from 'react';
 import UserCommentsTabThreadsContainer from './UserCommentsTabThreadsContainer';
-import UserInfo from './UserInfo';
+import UserInfo from './function/UserInfo';
 class UserSearchTab extends React.Component {
   constructor(props){
   	super(props);
@@ -40,7 +40,7 @@ class UserSearchTab extends React.Component {
                   credentials: 'include'
                   })
         .then(response => response.json())
-        .then(data => {        
+        .then(data => {
           this.setState({odComments:data.commentsOpendeskop,loading:false},function(){
                //this.getUserForumComments();
              });

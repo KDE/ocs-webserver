@@ -11,6 +11,7 @@
         .product-browse-item {
             float:left;
             margin-bottom:30px;
+            position: relative;
 
             > a {
                display: block;
@@ -22,6 +23,13 @@
                 width: 100%;
                 overflow: hidden;
                 box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+                position: relative;
+
+                .product-browse-item-preview-music-player {
+                    position: absolute;
+                    top:0;
+                    left:0;
+                }
 
                 img {
                     width: 100%;
@@ -54,17 +62,92 @@
                 }
             }
 
-            &:nth-child(3n+1){
-                padding-right:10px;
+            .product-browse-music-item-info {
+                font-size: 14px;
+                padding: 5px;
+                float: left;
+                margin-bottom: 5px;
+                width:100%;
+
+                h2 {
+                    font-size: 16px;
+                    font-weight: bold;
+                    margin-bottom: 3px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    display: block;
+                    text-overflow: ellipsis;
+                    margin: 5px 0;
+                    width:100%;
+                }
+
+                span {
+                    width: 100%;
+                    float: left;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    display: block;
+                    text-overflow: ellipsis;
+                    margin: 2px 0;
+                }
             }
 
-            &:nth-child(3n+2){
-                padding-left:5px;
-                padding-right:5px;
+            &.three-in-row {
+                &:nth-child(3n+1){
+                    padding-right:10px;
+                    clear: both;
+                }
+    
+                &:nth-child(3n+2){
+                    padding-left:5px;
+                    padding-right:5px;
+                }
+    
+                &:nth-child(3n+3){
+                    padding-left:10px;
+                }                
             }
 
-            &:nth-child(3n+3){
-                padding-left:10px;
+            &.six-in-row {
+                &:nth-child(6n+1){
+                    padding-right:10px;
+                    clear: both;
+                }
+    
+                &:nth-child(6n+2){
+                    padding-left:5px;
+                    padding-right:10px;
+                }
+    
+                &:nth-child(6n+3){
+                    padding-left:5px;
+                    padding-right:10px;
+                }
+
+                &:nth-child(6n+4){
+                    padding-left:5px;
+                    padding-right:10px;
+                }
+                
+                &:nth-child(6n+5){
+                    padding-left:5px;
+                    padding-right:5px;
+                }
+
+                &:nth-child(6n+6){
+                    padding-left:10px;
+                }
+            }
+        }
+
+        .product-browse-item-preview-music-player {
+
+            .react-jinke-music-player {
+                position: absolute;
+
+                .music-player-controller {
+                    position: absolute;
+                }
             }
         }
     }

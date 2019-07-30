@@ -151,7 +151,7 @@ class MembersettingController extends Zend_Controller_Action
         			$this->_sendResponse($response, $this->_format);
         			return;
         	}
-            $modelForum = new Default_Model_Ocs_Forum();            
+            $modelForum = new Default_Model_Ocs_Forum();
             $data = $modelForum->getUserNotifications($identity->member_id);
             $results = $data;
 
@@ -167,44 +167,44 @@ class MembersettingController extends Zend_Controller_Action
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             $data = curl_exec($ch);
             curl_close($ch);
-    		$results = json_decode($data);  */          
+    		$results = json_decode($data);  */
 
         	$this->_sendResponse($results, $this->_format);
 
 		}
 
-        public function anonymousdlAction()
-        {
-
-            $this->_initResponseHeader();
-            $identity = Zend_Auth::getInstance()->getStorage()->read();
-            if($identity==null)
-            {
-                $config = Zend_Registry::get('config');                
-                $cookieName = $config->settings->session->auth->anonymous;
-                $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
-                if($storedInCookie)
-                {
-                    $memberDlAnonymous = new Default_Model_DbTable_MemberDownloadAnonymous();
-                    $dls = $memberDlAnonymous->countDownloads($storedInCookie);
-
-                    $response = array(  
-                    'status'     => 'ok',
-                    'dls'    => $dls
-                    );
-                    $this->_sendResponse($response, $this->_format);
-                    return;
-                }
-                
-            }         
-
-            $response = array(  
-                'status'     => 'ok',
-                'dls'    => 0
-                );                     
-            $this->_sendResponse($response, $this->_format);
-
-        }
+        // public function anonymousdlAction()
+        // {
+				//
+        //     $this->_initResponseHeader();
+        //     $identity = Zend_Auth::getInstance()->getStorage()->read();
+        //     if($identity==null)
+        //     {
+        //         $config = Zend_Registry::get('config');
+        //         $cookieName = $config->settings->session->auth->anonymous;
+        //         $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
+        //         if($storedInCookie)
+        //         {
+        //             $memberDlAnonymous = new Default_Model_DbTable_MemberDownloadAnonymous();
+        //             $dls = $memberDlAnonymous->countDownloads($storedInCookie);
+				//
+        //             $response = array(
+        //             'status'     => 'ok',
+        //             'dls'    => $dls
+        //             );
+        //             $this->_sendResponse($response, $this->_format);
+        //             return;
+        //         }
+				//
+        //     }
+				//
+        //     $response = array(
+        //         'status'     => 'ok',
+        //         'dls'    => 0
+        //         );
+        //     $this->_sendResponse($response, $this->_format);
+				//
+        // }
 
 		public function memberjsonAction()
     {

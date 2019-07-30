@@ -58,6 +58,27 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         $this->forward('index', 'explore', 'default', $params);        
     }
 
+    public function startAction()
+    {
+        /** @var Default_Model_ConfigStore $storeConfig */
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        
+        if ($storeConfig) {
+            $this->view->tag_filter  = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;                    
+            if($storeConfig->isShowHomepage())
+            {                
+                //index-opendesktop-start.phtml view
+                $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name.'-start');                               
+                return;
+            }
+        }
+        $params = array('ord' => 'latest');
+        if ($this->hasParam('domain_store_id')) {
+            $params['domain_store_id'] = $this->getParam('domain_store_id');
+        }
+        $this->forward('index', 'explore', 'default', $params);        
+    }
+
      public function showfeatureajaxAction()
     {
         $this->_helper->layout->disableLayout();
