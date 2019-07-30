@@ -71,6 +71,7 @@ function ProductBrowseItem(props){
     const containerWidth = $('#product-browse-container').width();
 
     let productBrowseItemType = 0;
+    console.log(window.location.search);
     if (window.location.search === "?index=3") productBrowseItemType = 1;
     
     const itemsInRow = productBrowseItemType === 0 ? 3 : 6;
@@ -109,10 +110,15 @@ function ProductBrowseItem(props){
         )
     }
 
+    let musicPlayerDisplay;
+    if (productBrowseItemType === 1){
+        musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer projectId={p.project_id} imgHeight={imgHeight}/>
+    }
+
     return (
         <div className={"product-browse-item " + (itemsInRow === 6 ? "six-in-row" : "three-in-row")} id={"product-" + p.project_id} style={{"width":itemWidth}}>
             <div className="wrapper">
-                <ProductBrowseItemPreviewMusicPlayer projectId={p.project_id} imgHeight={imgHeight}/>
+                {musicPlayerDisplay}
                 <a href={itemLink} className="product-browse-item-wrapper">
                     <div className="product-browse-image">
                         <img src={imgUrl} height={imgHeight}/>
