@@ -73,6 +73,8 @@ function MusicPlayerWrapper(props){
     }
   }
 
+  console.log(props.slide.items);
+
   const options = {
       //audio lists model
       audioLists: props.slide.items,

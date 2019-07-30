@@ -11,6 +11,7 @@
         .product-browse-item {
             float:left;
             margin-bottom:30px;
+            position: relative;
 
             > a {
                display: block;
@@ -22,6 +23,13 @@
                 width: 100%;
                 overflow: hidden;
                 box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+                position: relative;
+
+                .product-browse-item-preview-music-player {
+                    position: absolute;
+                    top:0;
+                    left:0;
+                }
 
                 img {
                     width: 100%;
@@ -128,6 +136,17 @@
 
                 &:nth-child(6n+6){
                     padding-left:10px;
+                }
+            }
+        }
+
+        .product-browse-item-preview-music-player {
+
+            .react-jinke-music-player {
+                position: absolute;
+
+                .music-player-controller {
+                    position: absolute;
                 }
             }
         }
