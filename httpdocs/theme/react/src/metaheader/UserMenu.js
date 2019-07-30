@@ -64,7 +64,7 @@ class UserMenu extends React.Component {
 
     let  anonymousMenu;
 
-    anonymousMenu= <AnonymousMenu baseUrlStore={this.props.baseUrlStore} user={this.props.user}/>
+    anonymousMenu= <AnonymousMenu baseUrl={this.props.baseUrlStore} baseUrlStore={this.props.baseUrlStore} user={this.props.user}/>
 
 
 
@@ -99,8 +99,8 @@ class UserMenu extends React.Component {
 
           {aboutMenu}
           {searchMenuDisplay}
-          {developmentAppMenuDisplay}
           {anonymousMenu}
+          {developmentAppMenuDisplay}
           {userDropdownDisplay}
 
         </ul>
@@ -108,8 +108,8 @@ class UserMenu extends React.Component {
     } else {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
-          {developmentAppMenuDisplay}
           {anonymousMenu}
+          {developmentAppMenuDisplay}
           {userDropdownDisplay}
 
         </ul>

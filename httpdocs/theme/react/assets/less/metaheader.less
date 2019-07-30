@@ -1440,11 +1440,12 @@
     }
     #anonymous-dropdown-menu-container{
       .user-dropdown {
+
         .th-icon {
           height: 24px;
           width: 24px;
           display: block;
-          background-image: url(../img/user.png);
+          background-image: url(../img/black-down-arrow-icon-0.jpg);
           background-size: 24px;
           background-position: center;
           cursor: pointer;
@@ -1459,22 +1460,50 @@
           }
         }
         .dropdown-menu {
+          padding:20px 10px;
           &::before {
             right: 9px;
           }
 
+          #user-is-supporter{
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            border-bottom: 1px solid #ccc;
+            a{
+              display: inline-block;
+              padding: 0px 5px;
+            }
+          }
+
           .user-context-menu{
             width: 100%;
-            border-bottom: 1px solid #ccc;
+            
             background-color: #fff;
 
+            .user-pling-section-container
+              {
+
+                   display: flex;
+                   flex-direction: column;
+
+                   width: 100%;
+                   .title{
+                     text-align: center;
+                     border-bottom: 1px solid #ccc;
+                     padding:5px;
+                   }
+                  .section{
+                    padding:5px;
+                  }
+              }
            }
         }
 
       }
     }
 
-    #user-login-menu-container,#anonymous-dropdown-menu-container {
+    #user-login-menu-container {
       .user-dropdown {
         .dropdown-toggle {
           img {
@@ -1494,22 +1523,7 @@
             border-bottom: 1px solid #ccc;
           }
 
-          .user-pling-section-container
-          {
 
-               display: flex;
-               flex-direction: column;
-               border-bottom: 1px solid #ccc;
-               width: 100%;
-               .title{
-                 text-align: center;
-                 border-bottom: 1px solid #ccc;
-                 padding:5px;
-               }
-              .section{
-                padding:5px;
-              }
-          }
 
           .user-context-menu{
             width: 100%;
@@ -2189,7 +2203,15 @@
         /*background-image: url(../img/development-app-menu-item-white.png);*/
           background-image: url(../img/glyphicons-th-light.svg);
       }
-      #user-search-menu-container .user-dropdown .th-icon {
-            background-image: url(../img/search-light.svg);
-          }
+  #user-search-menu-container .user-dropdown .th-icon {
+        background-image: url(../img/search-light.svg);
+      }
+  #anonymous-dropdown-menu-container .user-dropdown{
+      button{
+        color:#fff;
+      }
+      .th-icon{
+          background-image: url(../img/white-down-arrow-icon-0.png);
+      }
+    }
 }

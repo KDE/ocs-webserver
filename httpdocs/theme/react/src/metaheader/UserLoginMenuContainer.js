@@ -1,5 +1,5 @@
 import React from 'react';
-import SwitchItem from './SwitchItem';
+import SwitchItem from './function/SwitchItem';
 
 class UserLoginMenuContainer extends React.Component {
   constructor(props){
@@ -7,7 +7,7 @@ class UserLoginMenuContainer extends React.Component {
     this.state = {};
     this.handleClick = this.handleClick.bind(this);
 
-    
+
   }
 
   componentWillMount() {
@@ -72,20 +72,14 @@ class UserLoginMenuContainer extends React.Component {
                   <ul>
                     <li id="user-details-username"><b>{this.props.user.username}</b></li>
                     <li id="user-details-email">{this.props.user.mail}</li>
-                    {this.props.user.isSupporter ? (
-                      <li id="user-is-supporter">Thanks for being a supporter!</li>
-                    ) : (
-                      <li id="user-is-supporter">
-                        You are not a <a className="become-supporter" href={this.props.baseUrl+"/support"}>supporter</a> yet.
-                      </li>
-                    )}
+                  
 
                   </ul>
                 </div>
               </div>
             </li>
 
-        
+
 
             <li className="user-settings-item">
              <span className="user-settings-item-title">Metaheader theme light</span>

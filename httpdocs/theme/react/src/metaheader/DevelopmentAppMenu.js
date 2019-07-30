@@ -92,8 +92,7 @@ class DevelopmentAppMenu extends React.Component {
           <MyButton id="listproduct-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/collections"} label="Collections" />
           <MyButton id="opencode-link-item" url={this.props.gitlabUrl+"/dashboard/projects"} label="Projects" />
 
-          <MyButton id="plings-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/payout"} label="Payout" />
-          <MyButton id="issues-link-item" url={this.state.gitlabLink} label="Issues" />
+
         </React.Fragment>
     );
 
@@ -125,6 +124,8 @@ class DevelopmentAppMenu extends React.Component {
           <MyButton id="music-link-item"
                         url={this.props.musicopendesktopUrl}
                         label="Music" />
+          <MyButton id="plings-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/payout"} label="Payout" />
+          <MyButton id="issues-link-item" url={this.state.gitlabLink} label="Issues" />
         </React.Fragment>
         );
 
@@ -138,10 +139,9 @@ class DevelopmentAppMenu extends React.Component {
             {badgeNot}
           </button>
           <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
-
-              {contextMenuDisplay}
-            <li className="section-seperator"></li>
               {personalMenuDisplay}
+            <li className="section-seperator"></li>
+              {contextMenuDisplay}
 
           </ul>
 
