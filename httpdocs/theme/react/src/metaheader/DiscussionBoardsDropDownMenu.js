@@ -35,7 +35,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
 
     return (
       <li ref={node => this.node = node}  id="discussion-boards" className={this.state.dropdownClass}>
-        <a className="discussion-menu-link-item">Community</a>
+        <a className="discussion-menu-link-item">Community &#8964;</a>
         <ul className="discussion-menu dropdown-menu dropdown-menu-right">
           <CommunityMenuItems baseUrl={this.props.baseUrl}
                               forumUrl = {this.props.forumUrl}  />

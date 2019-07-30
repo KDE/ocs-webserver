@@ -1,13 +1,13 @@
 import React from 'react';
-import SwitchItem from './SwitchItem';
-import DownloadSection from './function/DownloadSection';
+import SwitchItem from './function/SwitchItem';
+
 class UserLoginMenuContainer extends React.Component {
   constructor(props){
     super(props);
     this.state = {};
     this.handleClick = this.handleClick.bind(this);
 
-    this.loadAnonymousDl = this.loadAnonymousDl.bind(this);
+
   }
 
   componentWillMount() {
@@ -20,19 +20,7 @@ class UserLoginMenuContainer extends React.Component {
 
   componentDidMount(){
 
-    this.loadAnonymousDl();
-   }
 
-   loadAnonymousDl(){
-       let url = this.props.baseUrlStore+'/json/anonymousdl';
-       fetch(url,{
-                  mode: 'cors',
-                  credentials: 'include'
-                  })
-       .then(response => response.json())
-       .then(data => {
-          this.setState(prevState => ({ anonymousdl: data.dls , section:data.section}));
-        });
    }
 
   handleClick(e){
@@ -84,21 +72,15 @@ class UserLoginMenuContainer extends React.Component {
                   <ul>
                     <li id="user-details-username"><b>{this.props.user.username}</b></li>
                     <li id="user-details-email">{this.props.user.mail}</li>
-                    {this.props.user.isSupporter ? (
-                      <li id="user-is-supporter">Thanks for being a supporter!</li>
-                    ) : (
-                      <li id="user-is-supporter">
-                        You are not a <a className="become-supporter" href={this.props.baseUrl+"/support"}>supporter</a> yet.
-                      </li>
-                    )}
+                  
 
                   </ul>
                 </div>
               </div>
             </li>
 
-            {downloadSection}
-            
+
+
             <li className="user-settings-item">
              <span className="user-settings-item-title">Metaheader theme light</span>
                <SwitchItem onSwitchStyle={this.props.onSwitchStyle}

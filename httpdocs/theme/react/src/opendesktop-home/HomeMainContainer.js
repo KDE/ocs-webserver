@@ -36,8 +36,9 @@ class HomeMainContainer extends Component {
                     {supporterinfo}
                   </div>
                   <h1>
-                    Hi {this.state.user.username}, good to see you!
-                  </h1>
+                    Hi {this.state.user.username}, good to see you!</h1>
+                   go <a href={this.state.baseUrlStore+'/start'}>here</a> for the startpage.
+                
                   <PersonalLinksContainer myopendesktopUrl={this.state.url_myopendesktop}
                                           docsopendesktopUrl={this.state.url_docsopendesktop}
                                           riotUrl = {this.state.riotUrl}

@@ -87,13 +87,14 @@ class DevelopmentAppMenu extends React.Component {
           <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/product/add"} label="Add Product" />
           <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/collection/add"} label="Add Collection" />
           <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/projects/new"} label="Add Project" />
-            */}           
+            */}
           <MyButton id="listproduct-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/products"} label="Products" />
-          <MyButton id="listproduct-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/collections"} label="Collections" />
+          {/*
+            <MyButton id="listproduct-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/collections"} label="Collections" />
+            */}
           <MyButton id="opencode-link-item" url={this.props.gitlabUrl+"/dashboard/projects"} label="Projects" />
-
-          <MyButton id="plings-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/payout"} label="Payout" />
           <MyButton id="issues-link-item" url={this.state.gitlabLink} label="Issues" />
+
         </React.Fragment>
     );
 
@@ -120,11 +121,15 @@ class DevelopmentAppMenu extends React.Component {
                 <MyButton id="docs-link-item"
                         url={this.props.docsopendesktopUrl}
                         label="Docs"/>
-                <MyButton id="music-link-item"
-                        url={this.props.musicopendesktopUrl}
-                        label="Music" />
               </React.Fragment>
             }
+          <MyButton id="music-link-item"
+                        url={this.props.musicopendesktopUrl}
+                        label="Music" />
+                      {/*
+                        <MyButton id="plings-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/payout"} label="Payout" />
+                        */}
+
         </React.Fragment>
         );
 
@@ -138,10 +143,9 @@ class DevelopmentAppMenu extends React.Component {
             {badgeNot}
           </button>
           <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
-
-              {contextMenuDisplay}
-            <li className="section-seperator"></li>
               {personalMenuDisplay}
+            <li className="section-seperator"></li>
+              {contextMenuDisplay}
 
           </ul>
 

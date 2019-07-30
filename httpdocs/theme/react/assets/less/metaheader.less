@@ -341,7 +341,7 @@
             }
           }
 
-          &#discussion-boards, &#admins-dropdown-menu, &#more-dropdown-menu, &#cd-dropdown-menu {
+          &#about-dropdown-menu,&#discussion-boards, &#admins-dropdown-menu, &#more-dropdown-menu, &#cd-dropdown-menu {
 
             position: relative;
             cursor: pointer;
@@ -452,12 +452,12 @@
             }
           }
 
-            &#about-dropdown-menu{
+            &#about-dropdown-menu, &#discussion-boards{
 
             position: relative;
             cursor: pointer;
             z-index: 1000;
-            a.about-menu-link-item
+            a.about-menu-link-item, a.discussion-menu-link-item
             {
 
 
@@ -484,7 +484,7 @@
               width: 200px;
               top: 45px;
               /*right: auto;*/
-              right: -125px;
+              right: -115px;
               min-height: 104px;
               bottom: auto !important;
               &::before {
@@ -1440,11 +1440,12 @@
     }
     #anonymous-dropdown-menu-container{
       .user-dropdown {
+
         .th-icon {
           height: 24px;
           width: 24px;
           display: block;
-          background-image: url(../img/user.png);
+          background-image: url(../img/black-down-arrow-icon-0.jpg);
           background-size: 24px;
           background-position: center;
           cursor: pointer;
@@ -1459,22 +1460,59 @@
           }
         }
         .dropdown-menu {
+          padding:20px 10px;
           &::before {
             right: 9px;
           }
 
+          #user-is-supporter{
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            padding-top: 20px;
+            a{
+              display: inline-block;
+              padding: 0px 5px;
+              color: #36c;
+
+            }
+          }
+
           .user-context-menu{
             width: 100%;
-            border-bottom: 1px solid #ccc;
+
             background-color: #fff;
 
+            .user-pling-section-container
+              {
+
+                   display: flex;
+                   flex-direction: column;
+
+                   width: 100%;
+                   .title{
+                     text-align: center;
+                     border-bottom: 1px solid #ccc;
+                     padding:5px;
+                   }
+                  .section{
+                    padding: 5px;
+                    display: flex;
+                      .section-name{
+                        width: 100px;
+                      }
+                      .section-value{
+                        flex: 1;
+                      }
+                  }
+              }
            }
         }
 
       }
     }
 
-    #user-login-menu-container,#anonymous-dropdown-menu-container {
+    #user-login-menu-container {
       .user-dropdown {
         .dropdown-toggle {
           img {
@@ -1494,22 +1532,7 @@
             border-bottom: 1px solid #ccc;
           }
 
-          .user-pling-section-container
-          {
 
-               display: flex;
-               flex-direction: column;
-               border-bottom: 1px solid #ccc;
-               width: 100%;
-               .title{
-                 text-align: center;
-                 border-bottom: 1px solid #ccc;
-                 padding:5px;
-               }
-              .section{
-                padding:5px;
-              }
-          }
 
           .user-context-menu{
             width: 100%;
@@ -1913,9 +1936,11 @@
         ul.dropdown-menu {
           /*right: -76px;*/
           right: -40px;
+
           &::before {
             /*right: 78px;*/
             right: 42px;
+
           }
         }
       }
@@ -2187,7 +2212,15 @@
         /*background-image: url(../img/development-app-menu-item-white.png);*/
           background-image: url(../img/glyphicons-th-light.svg);
       }
-      #user-search-menu-container .user-dropdown .th-icon {
-            background-image: url(../img/search-light.svg);
-          }
+  #user-search-menu-container .user-dropdown .th-icon {
+        background-image: url(../img/search-light.svg);
+      }
+  #anonymous-dropdown-menu-container .user-dropdown{
+      button{
+        color:#fff;
+      }
+      .th-icon{
+          background-image: url(../img/white-down-arrow-icon-0.png);
+      }
+    }
 }

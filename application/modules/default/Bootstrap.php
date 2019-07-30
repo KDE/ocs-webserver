@@ -446,6 +446,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'action'     => 'index'
         )));
 
+
+        $router->addRoute('home_home', new Zend_Controller_Router_Route('/home', array(
+            'module'     => 'default',
+            'controller' => 'home',
+            'action'     => 'index'
+        )));
+
+        $router->addRoute('home_start', new Zend_Controller_Router_Route('/start', array(
+            'module'     => 'default',
+            'controller' => 'home',
+            'action'     => 'start'
+        )));
+
         $router->addRoute('home_ajax', new Zend_Controller_Router_Route('/showfeatureajax/*', array(
             'module'     => 'default',
             'controller' => 'home',

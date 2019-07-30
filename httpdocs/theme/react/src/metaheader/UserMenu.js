@@ -2,7 +2,7 @@ import React from 'react';
 import UserLoginMenuContainer from './UserLoginMenuContainer';
 import DevelopmentAppMenu from './DevelopmentAppMenu';
 import SearchMenuContainer from './SearchMenuContainer';
-import AboutMenu from './AboutMenu';
+
 import AnonymousMenu from './AnonymousMenu';
 
 class UserMenu extends React.Component {
@@ -62,10 +62,9 @@ class UserMenu extends React.Component {
     }
 
     let  anonymousMenu;
-    if(!this.props.user)
-    {
-        anonymousMenu= <AnonymousMenu baseUrlStore={this.props.baseUrlStore} user={this.props.user}/>
-    }
+
+    anonymousMenu= <AnonymousMenu baseUrl={this.props.baseUrlStore} baseUrlStore={this.props.baseUrlStore} user={this.props.user}/>
+
 
 
     let  chatItem=(<li id="chat-link-item"><a href={this.props.riotUrl}>
@@ -78,33 +77,35 @@ class UserMenu extends React.Component {
     if (this.props.device === "large"){
 
 
-      const aboutMenu = <AboutMenu blogUrl={this.props.blogUrl}
-                                  isExternal={this.props.isExternal}
-                                  baseUrl={this.props.baseUrl}
-                                  isAdmin={this.props.isAdmin}
-                                  />
+      // const aboutMenu = <AboutMenu blogUrl={this.props.blogUrl}
+      //                             isExternal={this.props.isExternal}
+      //                             baseUrl={this.props.baseUrl}
+      //                             isAdmin={this.props.isAdmin}
+      //                             />
+
 
 
 
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
-          <li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>
-          {aboutMenu}
-          {searchMenuDisplay}
-          {chatItem}
+          <li><a href={this.props.baseUrlStore}>Store</a></li>
+          <li><a href={this.props.gitlabUrl+"/explore/projects"}>Code</a></li>
 
+          {chatItem}
+          {searchMenuDisplay}
+          {anonymousMenu}
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
-          {anonymousMenu}
+
         </ul>
       );
     } else {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
-          {chatItem}
+          {anonymousMenu}
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
-          {anonymousMenu}
+
         </ul>
       );
     }

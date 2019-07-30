@@ -37,7 +37,7 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
                 <div class="pull-left">
                     <div class="intro">
                         <div class="large">Hi
-                            <span class="lightblue"><?php echo $this->member->username; ?></span><?= $this->translate(', welcome to your store backend!') ?>
+                            <span class="lightblue"><?php echo $this->member->username; ?></span><?= $this->translate(', welcome to your account page!') ?>
                         </div>
                         <div class="small lightgrey">
                             <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->member->username); ?>"><?= $this->translate('Click here to go to your About Me page.') ?></a>
