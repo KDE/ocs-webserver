@@ -73,7 +73,7 @@ function ProductBrowseItem(props){
     const containerWidth = $('#product-browse-container').width();
 
     let productBrowseItemType = 0;
-    if (window.catId === 7 || window.config.sName === "music.pling.com" || window.location.search === "?index=3") productBrowseItemType = 1;
+    if (window.location.search === "?index=3") productBrowseItemType = 1;
     
     const itemsInRow = productBrowseItemType === 0 ? 3 : 6;
     const itemWidth = containerWidth / itemsInRow;
@@ -113,13 +113,16 @@ function ProductBrowseItem(props){
 
     return (
         <div className={"product-browse-item " + (itemsInRow === 6 ? "six-in-row" : "three-in-row")} id={"product-" + p.project_id} style={{"width":itemWidth}}>
-            <a href={itemLink} className="product-browse-item-wrapper">
-                <div className="product-browse-image">
-                    <img src={imgUrl} height={imgHeight}/>
-                    {musicItemInfoDisplay}
-                </div>
-                {itemInfoDisplay}
-            </a>
+            <div className="wrapper">
+                <ProductBrowseItemPreviewMusicPlayer projectId={p.project_id} imgHeight={imgHeight}/>
+                <a href={itemLink} className="product-browse-item-wrapper">
+                    <div className="product-browse-image">
+                        <img src={imgUrl} height={imgHeight}/>
+                        {musicItemInfoDisplay}
+                    </div>
+                    {itemInfoDisplay}
+                </a>
+            </div>
         </div>
     )
 }
@@ -182,7 +185,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
         panelTitle: "Test",
         defaultPlayMode: "order",
         //audio mode        mini | full          [type `String`  default `mini`]
-        mode: "mini",
+        mode: "full",
           // [ type `Boolean` default 'false' ]
           // The default audioPlay handle function will be played again after each pause, If you only want to trigger it once, you can set 'true'
         once: true,
@@ -191,17 +194,17 @@ function ProductBrowseItemPreviewMusicPlayer(props){
         //Whether you can switch between two modes, full => mini  or mini => full   [type 'Boolean' default 'true']
         toggleMode: false,
         //audio cover is show of the "mini" mode [type `Boolean` default 'true']
-        showMiniModeCover: true,   
+        showMiniModeCover: false,   
         //audio playing progress is show of the "mini"  mode
-        showMiniProcessBar: true,
+        showMiniProcessBar: false,
         //audio controller is can be drag of the "mini" mode     [type `Boolean` default `true`]
-        drag: false,
+        drag: true,
         //drag the audio progress bar [type `Boolean` default `true`]
-        seeked: true,
+        seeked: false,
         //audio controller title [type `String | ReactNode`  default <FaHeadphones/>]
         // controllerTitle: <FaHeadphones />,
         //Displays the audio load progress bar.  [type `Boolean` default `true`]
-        showProgressLoadBar: true,
+        showProgressLoadBar: false,
         //play button display of the audio player panel   [type `Boolean` default `true`]
         showPlay: true,
         //reload button display of the audio player panel   [type `Boolean` default `true`]
@@ -209,7 +212,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
         //download button display of the audio player panel   [type `Boolean` default `true`]
         showDownload: false,
         //loop button display of the audio player panel   [type `Boolean` default `true`]
-        showPlayMode: true,
+        showPlayMode: false,
         //theme toggle switch  display of the audio player panel   [type `Boolean` default `true`]
         showThemeSwitch: false,
         //lyric display of the audio player panel   [type `Boolean` default `false`]
@@ -221,7 +224,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
         //playModeText show time [type `Number(ms)` default `700`]
         playModeShowTime: 600,
         //Whether to try playing the next audio when the current audio playback fails [type `Boolean` default `true`]
-        loadAudioErrorPlayNext: true,
+        loadAudioErrorPlayNext: false,
         //Music is downloaded handle
         //onAudioDownload(audioInfo) { console.log("audio download", audioInfo); },
         //audio play handle
@@ -239,7 +242,11 @@ function ProductBrowseItemPreviewMusicPlayer(props){
         //audio load abort The target event like {...,audioName:xx,audioSrc:xx,playMode:xx}
         onAudioAbort(e) { console.log("audio abort", e); },
         //audio play progress handle
-        onAudioProgress(audioInfo) { /*console.log('audio progress',audioInfo);*/ },
+        onAudioProgress(audioInfo) { 
+            if (audioInfo.currentTime >= 30){
+                console.log('stop audio');
+            }
+        },
         //audio reload handle
         onAudioReload(audioInfo) { console.log("audio reload:", audioInfo);},
         //audio load failed error handle
@@ -269,7 +276,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
     };
 
     return (
-        <div className="product-browse-item-preview-music-player">
+        <div className="product-browse-item-preview-music-player" style={{"top":props.imgHeight}}>
             <ReactJkMusicPlayer {...options} />
         </div>
     )
