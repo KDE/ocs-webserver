@@ -151,11 +151,12 @@
             position: absolute;
             top: 38px;
             left: 0;
-            
+
             .react-jinke-music-player-main .music-player-panel {
                 position: absolute;
                 height: 38px;
-                width:100%;
+                width: 38px;
+                overflow: hidden;
 
                 .play-mode-title {
                     display: none;
@@ -167,8 +168,9 @@
                     position: relative;
                     display: block;
                 
-                    .progress-bar-content,
-                    .img-content {
+                    .img-content,
+                    .audio-title,
+                    .progress-bar-content {
                         display: none;
                     }
                 
@@ -181,7 +183,8 @@
 
                             &.prev-audio,
                             &.next-audio,
-                            &.audio-lists-btn {
+                            &.audio-lists-btn,
+                            &.play-sounds {
                                 display: none;
                             }
 

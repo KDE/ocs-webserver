@@ -274,7 +274,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
     };
 
     return (
-        <div className="product-browse-item-preview-music-player" style={{"top":props.imgHeight}}>
+        <div className="product-browse-item-preview-music-player">
             <ReactJkMusicPlayer {...options} />
         </div>
     )
