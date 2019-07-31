@@ -68,7 +68,7 @@ function ProductBrowseItemList(props){
 function ProductBrowseItem(props){
 
     const p = props.product;
-    const containerWidth = $('#product-browse-container').width();
+    const containerWidth = $('#product-browse-container').width() + 30;
 
     let productBrowseItemType = 0;
     console.log(window.location.search);
@@ -77,8 +77,8 @@ function ProductBrowseItem(props){
     const itemsInRow = productBrowseItemType === 0 ? 3 : 6;
     const itemWidth = containerWidth / itemsInRow;
 
-    const itemHeightDivider = productBrowseItemType === 0 ? 1.85 : 1.05;
-    const imgHeight = itemWidth / itemHeightDivider;
+    const itemHeightDivider = productBrowseItemType === 0 ? 1.85 : 1;
+    const imgHeight = productBrowseItemType === 0 ? itemWidth / itemHeightDivider : ( itemWidth - 30) / itemHeightDivider;
 
     let imgUrl = "https://cn.opendesktop.";
     imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
