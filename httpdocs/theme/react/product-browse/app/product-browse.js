@@ -49,7 +49,7 @@ function ProductBrowseFilterContainer(){
 }
 
 function ProductBrowseItemList(props){
-    
+    console.log(files);
     const productsDisplay = products.sort(SortByCurrentFilter).map((p,index) => (
         <ProductBrowseItem
             key={index} 
@@ -71,8 +71,8 @@ function ProductBrowseItem(props){
     const containerWidth = $('#product-browse-container').width() + 30;
 
     let productBrowseItemType = 0;
-    console.log(window.location.search);
     if (window.location.search === "?index=3") productBrowseItemType = 1;
+    // const file = files.find( f => p.project_id === f.project_id);
     
     const itemsInRow = productBrowseItemType === 0 ? 3 : 6;
     const itemWidth = containerWidth / itemsInRow;
