@@ -232,7 +232,9 @@ function ProductBrowseItemPreviewMusicPlayer(props){
         //Music is downloaded handle
         //onAudioDownload(audioInfo) { console.log("audio download", audioInfo); },
         //audio play handle
-        onAudioPlay(audioInfo) { console.log('audio play') },
+        onAudioPlay(audioInfo) { 
+            $('#project-'+props.projectId).find('.play-btn[title="Click to play"]').trigger("click");
+         },
         //audio pause handle
         onAudioPause(audioInfo) { 
           console.log("audio pause"); 
