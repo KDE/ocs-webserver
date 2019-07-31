@@ -12,9 +12,10 @@ class UserMenu extends React.Component {
   }
 
   render(){
-    let searchMenuDisplay;
+    let searchMenuDisplay,anonymousMenu;
     if (this.props.user && this.props.isAdmin ){
       searchMenuDisplay = <SearchMenuContainer baseUrl={this.props.baseUrl}/>
+      anonymousMenu= <AnonymousMenu baseUrl={this.props.baseUrlStore} baseUrlStore={this.props.baseUrlStore} user={this.props.user}/>
     }
 
     let userDropdownDisplay, developmentAppMenuDisplay;
@@ -61,9 +62,6 @@ class UserMenu extends React.Component {
     )
     }
 
-    let  anonymousMenu;
-
-    anonymousMenu= <AnonymousMenu baseUrl={this.props.baseUrlStore} baseUrlStore={this.props.baseUrlStore} user={this.props.user}/>
 
 
 
@@ -101,6 +99,7 @@ class UserMenu extends React.Component {
     } else {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
+          {chatItem}
           {anonymousMenu}
           {developmentAppMenuDisplay}
           {userDropdownDisplay}

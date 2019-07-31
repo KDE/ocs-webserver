@@ -88,7 +88,7 @@ class SiteHeader extends React.Component {
         </div>
       );
     }
-    
+
     let HeaderDisplay;
     if (this.state.device !== "tablet"){
       HeaderDisplay = (
@@ -323,9 +323,11 @@ class MobileSiteHeader extends React.Component {
           <a className="menu-item" onClick={this.showMobileSearchForm} id="user-menu-switch">
             <span className="glyphicon glyphicon-search"></span>
           </a>
+          {/*
           <a className="menu-item" onClick={this.showMobileUserMenu} id="search-menu-switch">
             <span className="glyphicon glyphicon-option-horizontal"></span>
           </a>
+          */}
         </div>
       );
     } else if (this.state.status === "user"){
