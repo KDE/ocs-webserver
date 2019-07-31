@@ -36,11 +36,18 @@ $this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(5,"366,363,2
 $this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(5,"365,119,123,266,114,118,349,417,101,100,111,422,423,446,417");
 $this->productsWindowmanager = $modelInfo->getLastProductsForHostStores(5,"117,267,139,143,142,140,141,144");
 $this->productsIconsCursors= $modelInfo->getLastProductsForHostStores(5,"386,107");
-$this->productsScreenshots= $modelInfo->getLastProductsForHostStores(5,"225,445");
+//$this->productsScreenshots= $modelInfo->getLastProductsForHostStores(5,"225,445");
 $this->productsApps = $modelInfo->getLastProductsForHostStores(5,233);
 $this->productsAddons = $modelInfo->getLastProductsForHostStores(5,"152");
-$this->productsWallpapersOriginal = $modelInfo->getLastProductsForHostStores(5,"295,158",null,true);
-$this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,"295,158",null,false);
+$this->productsWallpapersOriginal = $modelInfo->getLastProductsForHostStores(5,"295",null,true);
+$this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,"295",null,false);
+
+$this->productsArtwork = $modelInfo->getLastProductsForHostStores(5,"158");
+$this->productsVideos = $modelInfo->getLastProductsForHostStores(5,"586");
+$this->productsComics = $modelInfo->getLastProductsForHostStores(5,"39");
+$this->productsPhone = $modelInfo->getLastProductsForHostStores(5,"491");
+$this->productsDistors = $modelInfo->getLastProductsForHostStores(5,"404");
+
 $this->countSupporters = $modelInfo->getCountAllSupporters();
 
 $this->featureProducts = $modelInfo->getRandFeaturedProduct();
@@ -216,8 +223,37 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
             <div id="carousel-module-container"></div>                                                                                                              
         </div>
 
+
+
         <div class="row" id="productgroup1">
         <?php
+                    echo $this->partial('/home/partials/product_group.phtml', array(
+                            "title"  => "Videos",
+                            "products" => $this->productsVideos,
+                            "catIDs" =>"586"
+                        )
+                    );
+
+                    echo $this->partial('/home/partials/product_group.phtml', array(
+                            "title"  => "Comics",
+                            "products" => $this->productsComics,
+                            "catIDs" =>"39"
+                        )
+                    );        
+        ?>
+        </div>
+
+
+        <div class="row blockpadding">
+        <?php
+
+                  echo $this->partial('/home/partials/product_group.phtml', array(
+                          "title"  => "Artwork",
+                          "products" => $this->productsArtwork,
+                          "catIDs" =>"158"
+                      )
+                  );   
+
                     echo $this->partial('/home/partials/product_group.phtml', array(
                             "title"  => "Collections/Rankings",
                             "products" => $this->productsCollections,
@@ -225,12 +261,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                         )
                     );
 
-                    echo $this->partial('/home/partials/product_group.phtml', array(
-                            "title"  => "Concepts, Screenshots",
-                            "products" => $this->productsScreenshots,
-                            "catIDs" =>"445,225"
-                        )
-                    );        
+                         
         ?>
         </div>
 
@@ -291,22 +322,42 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
         <div class="row blockpadding">
         <?php
                 echo $this->partial('/home/partials/product_group.phtml', array(
-                        "title"  => "Artwork, Wallpapers ",
+                        "title"  => "Wallpapers ",
                         "products" => $this->productsWallpapers,
-                        "catIDs" =>"158,295"
+                        "catIDs" =>"295"
                     )
                 );
 
 
                     echo $this->partial('/home/partials/product_group.phtml', array(
-                            "title"  => "Artwork, Wallpapers (Original)",
+                            "title"  => "Wallpapers (Original)",
                             "products" => $this->productsWallpapersOriginal,
-                            "catIDs" =>"158,295"
+                            "catIDs" =>"295"
 
                         )
                     );
         ?>
-        </div>                           
+        </div> 
+
+        <div class="row blockpadding">
+        <?php
+                echo $this->partial('/home/partials/product_group.phtml', array(
+                        "title"  => "Phone ",
+                        "products" => $this->productsPhone,
+                        "catIDs" =>"491"
+                    )
+                );
+
+
+                    echo $this->partial('/home/partials/product_group.phtml', array(
+                            "title"  => "Distros",
+                            "products" => $this->productsDistors,
+                            "catIDs" =>"404"
+
+                        )
+                    );
+        ?>
+        </div>                            
       </div>
     </div>
     <div class="GridFlex-cell sidebar-right">
