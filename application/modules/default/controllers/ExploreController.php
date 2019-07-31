@@ -181,6 +181,15 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $this->view->commentsJson = Zend_Json::encode($comments);
             $modelCategory = new Default_Model_ProjectCategory();
             $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());
+
+            // temperately when index=3 return product files too... in the future could be replaced by category parameter.
+            if($index==3)
+            {
+                $modelProject = new Default_Model_Project();
+                $files = $modelProject->fetchFilesForProjects($requestedElements['elements']);
+                $this->view->filesJson = Zend_Json::encode($files);
+            }
+
             $this->_helper->viewRenderer('index-react'.$index);
 
         }

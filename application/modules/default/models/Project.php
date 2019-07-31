@@ -1575,6 +1575,29 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
     }
 
+    public function fetchFilesForProjects($projects)
+    {
+
+        $ids=[];
+        foreach ($projects as $p) {
+            $ids[] = $p->project_id;
+        }        
+        $sql = "
+                select 
+                p.project_id
+                ,f.id
+                ,f.name
+                ,f.type
+                ,f.size
+                ,f.title
+                from stat_projects p, ppload.ppload_files f
+                where p.ppload_collection_id = f.collection_id
+                and f.active = 1 
+                and p.project_id in ( ".implode(',', $ids).")
+        ";      
+        $result = $this->_db->fetchAll($sql);
+        return $result;
+    }
     /**
      * @param int      $member_id
      * @param int|null $limit
