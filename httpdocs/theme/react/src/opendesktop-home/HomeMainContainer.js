@@ -43,6 +43,7 @@ class HomeMainContainer extends Component {
                                           docsopendesktopUrl={this.state.url_docsopendesktop}
                                           riotUrl = {this.state.riotUrl}
                                           forumUrl ={this.state.forumUrl}
+                                          musicopendesktopUrl ={this.state.url_musicopendesktop}
                                           user ={this.state.user}
 
                     />
