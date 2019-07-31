@@ -29,6 +29,13 @@ function PersonalLinksContainer(props)
         </a>
       </li>
 
+      <li id="music-link-item">
+        <a href={props.musicopendesktopUrl}>
+          <div className="icon"></div>
+          <span>Music</span>
+        </a>
+      </li>
+
       { props.user.isAdmin &&
         <React.Fragment>
         <li id="mail-link-item">
