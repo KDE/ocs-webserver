@@ -70,7 +70,6 @@ function ProductBrowseItem(props){
     const [ productFiles, setProductFiles ] = useState();
 
     const p = props.product;
-    const containerWidth = $('#product-browse-container').width() + 30;
 
     let productBrowseItemType = 0;
     if (window.location.search === "?index=3") productBrowseItemType = 1;
@@ -96,7 +95,8 @@ function ProductBrowseItem(props){
             });
         }
     },[])
-
+    
+    const containerWidth = $('#product-browse-container').width() + 30;
     const itemsInRow = productBrowseItemType === 0 ? 3 : 6;
     const itemWidth = containerWidth / itemsInRow;
 
