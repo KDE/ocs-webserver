@@ -111,7 +111,13 @@ function ProductBrowseItem(props){
 
     let musicPlayerDisplay;
     if (productBrowseItemType === 1){
-        let productFiles = []
+        let productFiles = [];
+        const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
+        $.ajax({
+            url: ajaxUrl
+        }).done(function(res) {
+            console.log(res);
+        });
         files.forEach(function(f,index){
             if (f.project_id === p.project_id && f.type.split('/')[0] === "audio"){
                 const nf = f;
@@ -119,7 +125,6 @@ function ProductBrowseItem(props){
                 productFiles.push(nf);
             }
         });
-        console.log(productFiles);
         if (productFiles.length > 0 ){
             musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer files={productFiles} projectId={p.project_id} imgHeight={imgHeight}/>
         }
