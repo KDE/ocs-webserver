@@ -140,6 +140,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
         url: ajaxUrl
     }).done(function(res) {
         let newProductFiles = [];
+        console.log(res);
         res.forEach(function(f,index){
             if (f.project_id === props.projectId && f.type.split('/')[0] === "audio"){
                 const nf = f;
