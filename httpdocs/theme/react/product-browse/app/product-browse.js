@@ -111,8 +111,18 @@ function ProductBrowseItem(props){
 
     let musicPlayerDisplay;
     if (productBrowseItemType === 1){
-        const file = files.find( f => p.project_id === f.project_id);
-        musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer file={file} projectId={p.project_id} imgHeight={imgHeight}/>
+        let productFiles = []
+        files.forEach(function(f,index){
+            if (f.project_id === p.project_id && f.type.split('/')[0] === "audio"){
+                const nf = f;
+                nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
+                productFiles.push(nf);
+            }
+        });
+        console.log(productFiles);
+        if (productFiles.length > 0 ){
+            musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer files={productFiles} projectId={p.project_id} imgHeight={imgHeight}/>
+        }
     }
 
     return (
@@ -134,18 +144,12 @@ function ProductBrowseItem(props){
 function ProductBrowseItemPreviewMusicPlayer(props){
 
     let musicPlayerDisplay;
-    let musicSrc, title; 
-    
-    if (props.file && props.file.url) {
-        musicSrc = props.file.url.replace(/%2F/g,'/').replace(/%3A/g,':');
-        title = props.file.title;
+
+    if (props.files) {
+
         const options = {
             //audio lists model
-            audioLists:[{
-                musicSrc:musicSrc,
-                name:title,
-                cover:''
-            }],
+            audioLists:props.files,
             audioListsPanelVisible:false,
             //default play index of the audio player  [type `number` default `0`]
             defaultPlayIndex: 0,
@@ -238,9 +242,9 @@ function ProductBrowseItemPreviewMusicPlayer(props){
             //Music is downloaded handle
             //onAudioDownload(audioInfo) { console.log("audio download", audioInfo); },
             //audio play handle
-            onAudioPlay(audioInfo) { 
-                $('#project-'+props.projectId).find('.play-btn[title="Click to play"]').trigger("click");
-             },
+            onAudioPlay(audioInfo) {
+                console.log('audio play');
+            },
             //audio pause handle
             onAudioPause(audioInfo) { 
               console.log("audio pause"); 
@@ -255,9 +259,8 @@ function ProductBrowseItemPreviewMusicPlayer(props){
             onAudioAbort(e) { console.log("audio abort", e); },
             //audio play progress handle
             onAudioProgress(audioInfo) { 
-                if (audioInfo.currentTime >= 30){
-                    console.log('stop audio');
-                }
+                console.log(audioInfo.paused);
+                if (audioInfo.paused === false) $('#music-player-'+props.projectId).find('.play-btn.play').trigger("click");
             },
             //audio reload handle
             onAudioReload(audioInfo) { console.log("audio reload:", audioInfo);},
@@ -272,7 +275,10 @@ function ProductBrowseItemPreviewMusicPlayer(props){
               console.log("[audioInfo] audio lists change:", audioInfo);
               console.log(audioInfo)
             },
-            onAudioPlayTrackChange(currentPlayId, audioLists, audioInfo) { console.log( "audio play track change:", currentPlayId, audioLists, audioInfo ); },
+            onAudioPlayTrackChange(currentPlayId, audioLists, audioInfo) {
+                console.log( "audio play track change:", currentPlayId, audioLists, audioInfo ); 
+                // $('#music-player-'+props.projectId).find('.play-btn[title="Click to play"]').trigger("click");
+            },
             onPlayModeChange(playMode) { console.log("play mode change:", playMode); },
             onModeChange(mode) { console.log("mode change:", mode); },
             onAudioListsPanelChange(panelVisible) {
@@ -293,7 +299,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
     }
 
     return (
-        <div className="product-browse-item-preview-music-player">
+        <div className="product-browse-item-preview-music-player" id={"music-player-"+props.projectId}>
             {musicPlayerDisplay}
         </div>
     )
