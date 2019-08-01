@@ -80,7 +80,7 @@ function ProductBrowseItem(props){
         if (productBrowseItemType === 1 && productsFetched === false){
             console.log('hi');
             setProductFetched(true);
-            const ajaxUrl = window.location.origin + "/p/"+props.projectId+"/loadfilesjson";
+            const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
             $.ajax({
                 url: ajaxUrl
             }).done(function(res) {
