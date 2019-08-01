@@ -73,29 +73,7 @@ function ProductBrowseItem(props){
 
     let productBrowseItemType = 0;
     if (window.location.search === "?index=3") productBrowseItemType = 1;
-    
 
-    React.useEffect(() => {
-        if (productBrowseItemType === 1 && productsFetched === false){
-            console.log('hi');
-            setProductFetched(true);
-            const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
-            $.ajax({
-                url: ajaxUrl
-            }).done(function(res) {
-                let newProductFiles = [];
-                console.log(res);
-                res.forEach(function(f,index){
-                    let nf = f;
-                    nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
-                    newProductFiles.push(nf);
-                });
-                console.log(newProductFiles);
-                setProductFiles(newProductFiles);
-            });
-        }
-    },[])
-    
     const containerWidth = $('#product-browse-container').width() + 30;
     const itemsInRow = isMobile ? 1 : productBrowseItemType === 0 ? 3 : 6;
     console.log(itemsInRow);
@@ -110,8 +88,30 @@ function ProductBrowseItem(props){
 
     let itemLink = window.config.baseUrlStore + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
-    itemLink += "/" + p.project_id;
-    
+    itemLink += "/" + p.project_id;    
+
+    React.useEffect(() => {
+        if (productBrowseItemType === 1 && productsFetched === false){
+            console.log('hi');
+            setProductFetched(true);
+            const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
+            $.ajax({
+                url: ajaxUrl
+            }).done(function(res) {
+                let newProductFiles = [];
+                console.log(res);
+                res.forEach(function(f,index){
+                    let nf = f;
+                    nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
+                    nf.cover = imgUrl;
+                    newProductFiles.push(nf);
+                });
+                console.log(newProductFiles);
+                setProductFiles(newProductFiles);
+            });
+        }
+    },[])
+        
     let itemInfoDisplay;
     if (productBrowseItemType === 0){
         itemInfoDisplay = (
