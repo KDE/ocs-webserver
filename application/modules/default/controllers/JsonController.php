@@ -99,9 +99,14 @@ class JsonController extends Zend_Controller_Action
         $results = json_decode($data);
         $timeago = new Default_View_Helper_PrintDateSince();
         foreach ( $results->topic_list->topics as &$t) {
-                $tmp = str_replace('T',' ',substr($t->last_posted_at, 0, 19));
-                $t->timeago = $timeago->printDateSince($tmp);
 
+                $strTime = str_replace('T',' ',substr($t->last_posted_at, 0, 19));
+                $fromFormat='Y-m-d H:i:s';
+                $date = DateTime::createFromFormat($fromFormat, $strTime);        
+                // forum/latest.json last_posted_at is two hours earlier as real somehow.. quick workaround
+                $date->add(new DateInterval('PT2H'));                
+                $t->timeago = $timeago->printDateSince($date->format('Y-m-d h:s:m'));
+                //$t->timeago =  $date->format('Y-m-d H:i:s');
                 $r='Reply';
                 $counts = $t->posts_count -1;
                  if($counts==0){
