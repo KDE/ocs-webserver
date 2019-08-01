@@ -139,7 +139,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
     }).done(function(res) {
         let newProductFiles = [];
         res.forEach(function(f,index){
-            if (f.project_id === p.project_id && f.type.split('/')[0] === "audio"){
+            if (f.project_id === props.projectId && f.type.split('/')[0] === "audio"){
                 const nf = f;
                 nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
                 newProductFiles.push(nf);
