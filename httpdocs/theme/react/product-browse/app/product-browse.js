@@ -9,7 +9,6 @@ function ProductBrowse(){
         <div id="product-browse">
             <ProductBrowseFilterContainer/>
             <ProductBrowseItemList />
-            <ProductBrowsePagination/>
         </div>
     )
 }
@@ -49,16 +48,69 @@ function ProductBrowseFilterContainer(){
 
 function ProductBrowseItemList(props){
 
-    const productsDisplay = products.sort(SortByCurrentFilter).map((p,index) => (
-        <ProductBrowseItem
-            key={index} 
-            index={index}
-            product={p}
-        />
-    ))
+    const [ containerWidth, setContainerWidth ] = useState($('#product-browse-container').width() + 30);
+
+    let productBrowseItemType = 0;
+    if (window.location.search === "?index=3") productBrowseItemType = 1;
+
+    const [ itemsInRow, setItemsInRow ] = useState(isMobile ? 1 : productBrowseItemType === 0 ? 3 : 6)
+    const [ minWidth, setMinWidth ] = useState(productBrowseItemType === 0 ? 400 : 200);
+    console.log(minWidth);
+    const [ itemWidth, setItemWidth ] = useState();
+
+    const itemHeightDivider = productBrowseItemType === 0 ? 1.85 : 1;
+    const imgHeight = productBrowseItemType === 0 ? itemWidth / itemHeightDivider : ( itemWidth - 30) / itemHeightDivider;
+
+    React.useEffect(() => {
+        window.addEventListener("resize", function(event){ updateDimensions() });
+        window.addEventListener("orientationchange",  function(event){ updateDimensions() });
+    },[])
+
+    React.useEffect(() => {
+        generateItemWidth(containerWidth,itemsInRow,minWidth);
+    },[containerWidth])
+
+    function updateDimensions(){
+        const newContainerWidth = $('#product-browse-container').width() + 30;
+        setContainerWidth(newContainerWidth);
+    }
+
+    function generateItemWidth(containerWidth,itemsInRow,minWidth){
+        console.log(containerWidth);
+        let newItemWidth = containerWidth / itemsInRow;
+        if (newItemWidth < minWidth){
+            const newItemsInRow = itemsInRow - 1;
+            generateItemWidth(containerWidth,newItemsInRow,minWidth)
+        } else {
+            setItemWidth(newItemWidth);
+        }
+    }
+
+    let productsDisplay;
+    if (itemWidth){
+        const productList = products.sort(SortByCurrentFilter).map((p,index) => (
+            <ProductBrowseItem
+                key={index} 
+                index={index}
+                product={p}
+                productBrowseItemType={productBrowseItemType}
+                itemWidth={itemWidth}
+                imgHeight={imgHeight}
+            />
+        ));
+
+        productsDisplay = (
+            <div id="product-browse-list-container">
+                {productList}
+                <ProductBrowsePagination/>
+            </div>
+        )
+    } else {
+        productsDisplay = "Loading..."
+    }
 
     return (
-        <div id="product-browse-item-list">
+        <div id="product-browse-item-list" className={isMobile ? "mobile" : ""}>
             {productsDisplay}
         </div>
     )
@@ -66,21 +118,10 @@ function ProductBrowseItemList(props){
 
 function ProductBrowseItem(props){
 
-    const [ productsFetched, setProductFetched ] = useState(false);
-    const [ productFiles, setProductFiles ] = useState();
-
     const p = props.product;
 
-    let productBrowseItemType = 0;
-    if (window.location.search === "?index=3") productBrowseItemType = 1;
-
-    const containerWidth = $('#product-browse-container').width() + 30;
-    const itemsInRow = isMobile ? 1 : productBrowseItemType === 0 ? 3 : 6;
-    console.log(itemsInRow);
-    const itemWidth = containerWidth / itemsInRow;
-
-    const itemHeightDivider = productBrowseItemType === 0 ? 1.85 : 1;
-    const imgHeight = productBrowseItemType === 0 ? itemWidth / itemHeightDivider : ( itemWidth - 30) / itemHeightDivider;
+    const [ productsFetched, setProductFetched ] = useState(false);
+    const [ productFiles, setProductFiles ] = useState();
 
     let imgUrl = "https://cn.opendesktop.";
     imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
@@ -91,29 +132,26 @@ function ProductBrowseItem(props){
     itemLink += "/" + p.project_id;    
 
     React.useEffect(() => {
-        if (productBrowseItemType === 1 && productsFetched === false){
-            console.log('hi');
+        if (props.productBrowseItemType === 1 && productsFetched === false){
             setProductFetched(true);
             const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
             $.ajax({
                 url: ajaxUrl
             }).done(function(res) {
                 let newProductFiles = [];
-                console.log(res);
                 res.forEach(function(f,index){
                     let nf = f;
                     nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
                     nf.cover = imgUrl;
                     newProductFiles.push(nf);
                 });
-                console.log(newProductFiles);
                 setProductFiles(newProductFiles);
             });
         }
     },[])
         
     let itemInfoDisplay;
-    if (productBrowseItemType === 0){
+    if (props.productBrowseItemType === 0){
         itemInfoDisplay = (
             <div className="product-browse-item-info">
                 <h2>{p.title}</h2>
@@ -124,7 +162,7 @@ function ProductBrowseItem(props){
     }
 
     let musicItemInfoDisplay, musicPlayerDisplay;
-    if (productBrowseItemType === 1){
+    if (props.productBrowseItemType === 1){
         musicItemInfoDisplay = (
             <div className="product-browse-music-item-info">
                 <h2>{p.title}</h2>
@@ -132,16 +170,16 @@ function ProductBrowseItem(props){
                 <span>by <b>{p.username}</b></span>
             </div>            
         );
-        if (productFiles) musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer productFiles={productFiles} projectId={p.project_id} imgHeight={imgHeight}/>
+        if (productFiles && productFiles.length > 0) musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer productFiles={productFiles} projectId={p.project_id} imgHeight={imgHeight}/>
     }
     
     return (
-        <div className={"product-browse-item " + (itemsInRow === 6 ? "six-in-row" : "three-in-row")} id={"product-" + p.project_id} style={{"width":itemWidth}}>
+        <div className={"product-browse-item "} id={"product-" + p.project_id} style={{"width":props.itemWidth}}>
             <div className="wrapper">
                 {musicPlayerDisplay}
                 <a href={itemLink} className="product-browse-item-wrapper">
                     <div className="product-browse-image">
-                        <img src={imgUrl} height={imgHeight}/>
+                        <img src={imgUrl} height={props.imgHeight}/>
                         {musicItemInfoDisplay}
                     </div>
                     {itemInfoDisplay}
