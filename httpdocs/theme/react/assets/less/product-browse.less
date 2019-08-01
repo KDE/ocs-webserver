@@ -184,18 +184,27 @@
             .react-jinke-music-player-mobile {
                 height: auto;
                 position: absolute;
-
+                top: -44px;
+                
                 .react-jinke-music-player-mobile-header,
                 .react-jinke-music-player-mobile-singer,
                 .react-jinke-music-player-mobile-switch,
                 .react-jinke-music-player-mobile-cover,
-                .react-jinke-music-player-mobile-progress {
+                .react-jinke-music-player-mobile-progress,
+                .react-jinke-music-player-mobile-operation {
                     display: none;
+                }
+
+                .react-jinke-music-player-mobile-toggle {
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
                 }
 
                 .group.prev-audio,
                 .group.next-audio {
                     display: none;
+                    padding-top: 6px;
                 }
             }
 
@@ -215,9 +224,9 @@
                         display: block !important;
                     }
                 }
-            }
 
-            
+
+            }
         }
     }
 
