@@ -72,7 +72,6 @@ function ProductBrowseItem(props){
 
     let productBrowseItemType = 0;
     if (window.location.search === "?index=3") productBrowseItemType = 1;
-    // const file = files.find( f => p.project_id === f.project_id);
     
     const itemsInRow = productBrowseItemType === 0 ? 3 : 6;
     const itemWidth = containerWidth / itemsInRow;
@@ -112,7 +111,8 @@ function ProductBrowseItem(props){
 
     let musicPlayerDisplay;
     if (productBrowseItemType === 1){
-        musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer projectId={p.project_id} imgHeight={imgHeight}/>
+        const file = files.find( f => p.project_id === f.project_id);
+        musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer file={file} projectId={p.project_id} imgHeight={imgHeight}/>
     }
 
     return (
@@ -133,12 +133,18 @@ function ProductBrowseItem(props){
 
 function ProductBrowseItemPreviewMusicPlayer(props){
 
+    let musicSrc, title;
+    if (props.file && props.file.url) {
+        musicSrc = props.file.url.replace(/%2F/g,'/').replace(/%3A/g,':');
+        title = props.file.title;
+    }
+
     const options = {
         //audio lists model
         audioLists:[{
-            musicSrc:"https://dl.opendesktop.cc/api/files/download/id/1547562832/s/6f2460b73d7a4e2ff8e3a7e4a0d2cc689e82cb66c9becb6cbb1f7995abebf579fe6f1bf2e44188ab4732dabd584a8b469987e0b8e725e666c2df7f8767edc6ab/t/1564503924/u/24/lt/filepreview/NEVER_LOOK_BACK.mp3",
-            name:'The Clock',
-            cover:'https://cn.opendesktop.cc/img/0/8/3/4/d8444241b5a7516df10961094da4643840cc.jpg'
+            musicSrc:musicSrc,
+            name:title,
+            cover:''
         }],
         audioListsPanelVisible:false,
         //default play index of the audio player  [type `number` default `0`]
