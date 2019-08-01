@@ -187,6 +187,17 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             {
                 $modelProject = new Default_Model_Project();
                 $files = $modelProject->fetchFilesForProjects($requestedElements['elements']);
+                $salt = PPLOAD_DOWNLOAD_SECRET;
+                foreach ($files as &$file) {
+                    $timestamp = time() + 3600; // one hour valid
+                    $hash = hash('sha512',$salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
+                    $url = PPLOAD_API_URI . 'files/download/id/' . $file['id'] . '/s/' . $hash . '/t/' . $timestamp;
+                    if(null != $this->_authMember) {
+                        $url .= '/u/' . $this->_authMember->member_id;
+                    }
+                    $url .= '/lt/filepreview/' . $file['name'];
+                    $file['url'] = urlencode($url);                    
+                }
                 $this->view->filesJson = Zend_Json::encode($files);
             }
 
