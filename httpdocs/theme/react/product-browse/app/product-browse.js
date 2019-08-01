@@ -146,13 +146,12 @@ function ProductBrowseItemPreviewMusicPlayer(props){
                 const nf = f;
                 nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
                 newProductFiles.push(nf);
-            }
-            if (res.length === (index + 1)){
                 console.log(newProductFiles);
-                setProductFiles(newProductFiles);
             }
         });
 
+        console.log(newProductFiles);
+        setProductFiles(newProductFiles);
     });
 
     if (productFiles) {
