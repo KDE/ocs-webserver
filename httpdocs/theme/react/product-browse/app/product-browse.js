@@ -170,7 +170,7 @@ function ProductBrowseItem(props){
                 <span>by <b>{p.username}</b></span>
             </div>            
         );
-        if (productFiles && productFiles.length > 0) musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer productFiles={productFiles} projectId={p.project_id} imgHeight={imgHeight}/>
+        if (productFiles && productFiles.length > 0) musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer productFiles={productFiles} projectId={p.project_id} imgHeight={props.imgHeight}/>
     }
     
     return (
