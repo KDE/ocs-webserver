@@ -107,9 +107,7 @@ class JsonController extends Zend_Controller_Action
                 $fromFormat='Y-m-d H:i:s';
                 $date = DateTime::createFromFormat($fromFormat, $strTime);        
                 // forum/latest.json last_posted_at is 5 hours later as server somehow.. quick workaround
-                //$date->sub(new DateInterval('PT5H'));  
-                $date->sub(new DateInterval('PT4H'));               
-                $date->sub(new DateInterval('PT30M'));               
+                $date->sub(new DateInterval('PT5H'))->add(new DateInterval('PT30M'));                
                 $t->timeago = $timeago->printDateSince($date->format('Y-m-d h:s:m'));
                 //$t->timeago =  $date->format('Y-m-d H:i:s');
                 $r='Reply';
