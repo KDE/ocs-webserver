@@ -55,7 +55,6 @@ function ProductBrowseItemList(props){
 
     const [ itemsInRow, setItemsInRow ] = useState(isMobile ? 1 : productBrowseItemType === 0 ? 3 : 6)
     const [ minWidth, setMinWidth ] = useState(productBrowseItemType === 0 ? 400 : 200);
-    console.log(minWidth);
     const [ itemWidth, setItemWidth ] = useState();
 
     const itemHeightDivider = productBrowseItemType === 0 ? 1.85 : 1;
