@@ -112,10 +112,11 @@ function ProductBrowseItem(props){
     let musicPlayerDisplay;
     if (productBrowseItemType === 1){
         let productFiles = [];
-        const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
+        const ajaxUrl = window.location.protocol + "//" + window.location.host + "/p/"+p.project_id+"/loadfilesjson";
         $.ajax({
             url: ajaxUrl
         }).done(function(res) {
+            console.log('res:');
             console.log(res);
         });
         files.forEach(function(f,index){
