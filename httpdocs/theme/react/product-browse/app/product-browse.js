@@ -143,6 +143,9 @@ function ProductBrowseItem(props){
 
 function ProductBrowseItemPreviewMusicPlayer(props){
 
+    const [ showAudioControls, setShowAudioControls ] = useState(false);
+    const [ playIndex, setPlayIndex ] = useState();
+
     let musicPlayerDisplay;
 
     if (props.files) {
@@ -244,10 +247,14 @@ function ProductBrowseItemPreviewMusicPlayer(props){
             //audio play handle
             onAudioPlay(audioInfo) {
                 console.log('audio play');
+                setShowAudioControls(true);
+                const currentIndex = props.files.findIndex(f => audioInfo.name === f.title);
+                setPlayIndex(currentIndex + 1);
             },
             //audio pause handle
             onAudioPause(audioInfo) { 
               console.log("audio pause"); 
+              setShowAudioControls(false)
             },
             //When the user has moved/jumped to a new location in audio
             onAudioSeeked(audioInfo) { console.log("audio seeked", audioInfo); },
@@ -259,31 +266,41 @@ function ProductBrowseItemPreviewMusicPlayer(props){
             onAudioAbort(e) { console.log("audio abort", e); },
             //audio play progress handle
             onAudioProgress(audioInfo) { 
-                console.log(audioInfo.paused);
-                if (audioInfo.paused === false) $('#music-player-'+props.projectId).find('.play-btn.play').trigger("click");
+                if (audioInfo.paused === false){
+                    $('#music-player-'+props.projectId).find('.play-btn.play').trigger("click");
+                }
             },
             //audio reload handle
-            onAudioReload(audioInfo) { console.log("audio reload:", audioInfo);},
+            onAudioReload(audioInfo) { 
+                console.log("audio reload:", audioInfo);
+            },
             //audio load failed error handle
-            onAudioLoadError(e) { console.log("audio load err", e); },
+            onAudioLoadError(e) { 
+                console.log("audio load err", e); 
+            },
             //theme change handle
-            onThemeChange(theme) { console.log("theme change:", theme); },
+            onThemeChange(theme) { 
+                console.log("theme change:", theme); 
+            },
             //audio lists change
             onAudioListsChange(currentPlayId, audioLists, audioInfo) {
               console.log("[currentPlayId] audio lists change:", currentPlayId);
               console.log("[audioLists] audio lists change:", audioLists);
               console.log("[audioInfo] audio lists change:", audioInfo);
-              console.log(audioInfo)
             },
             onAudioPlayTrackChange(currentPlayId, audioLists, audioInfo) {
-                console.log( "audio play track change:", currentPlayId, audioLists, audioInfo ); 
-                // $('#music-player-'+props.projectId).find('.play-btn[title="Click to play"]').trigger("click");
+                const currentIndex = props.files.findIndex(f => audioInfo.name === f.title);
+                setPlayIndex(currentIndex + 1);
             },
-            onPlayModeChange(playMode) { console.log("play mode change:", playMode); },
-            onModeChange(mode) { console.log("mode change:", mode); },
+            onPlayModeChange(playMode) { 
+                console.log("play mode change:", playMode); 
+            },
+            onModeChange(mode) { 
+                console.log("mode change:", mode); 
+            },
             onAudioListsPanelChange(panelVisible) {
-              const newShowPlayListValue = showPlaylist === true ? false : true;
-              setShowPlaylist(newShowPlayListValue);
+              /*const newShowPlayListValue = showPlaylist === true ? false : true;
+              setShowPlaylist(newShowPlayListValue);*/
             }, 
             onAudioListsDragEnd(fromIndex, endIndex) {
               console.log("audio lists drag end:", fromIndex, endIndex);
@@ -293,13 +310,21 @@ function ProductBrowseItemPreviewMusicPlayer(props){
             }
         };
     
-        musicPlayerDisplay = <ReactJkMusicPlayer {...options} />
-        
-        
+        musicPlayerDisplay = (
+            <div>
+                <ReactJkMusicPlayer {...options} />
+                <span className="music-player-counter">{playIndex}/{props.files.length}</span>
+            </div>
+        )
+    }
+
+    let showControlsCssClass = "";
+    if (showAudioControls === true) {
+        showControlsCssClass = "show-controls"
     }
 
     return (
-        <div className="product-browse-item-preview-music-player" id={"music-player-"+props.projectId}>
+        <div className={"product-browse-item-preview-music-player " + showControlsCssClass} id={"music-player-"+props.projectId}>
             {musicPlayerDisplay}
         </div>
     )
