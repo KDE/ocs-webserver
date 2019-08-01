@@ -109,11 +109,6 @@ function ProductBrowseItem(props){
         )
     }
 
-    if (productBrowseItemType === 1){
-        if (productFiles.length > 0 ){
-        }
-    }
-
     return (
         <div className={"product-browse-item " + (itemsInRow === 6 ? "six-in-row" : "three-in-row")} id={"product-" + p.project_id} style={{"width":itemWidth}}>
             <div className="wrapper">
@@ -138,7 +133,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
 
     let musicPlayerDisplay;
 
-    const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
+    const ajaxUrl = window.location.origin + "/p/"+props.projectId+"/loadfilesjson";
     $.ajax({
         url: ajaxUrl
     }).done(function(res) {
