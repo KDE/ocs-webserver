@@ -111,24 +111,22 @@ function ProductBrowseItem(props){
 
     let musicPlayerDisplay;
     if (productBrowseItemType === 1){
-        let productFiles = [];
         const ajaxUrl = window.location.protocol + "//" + window.location.host + "/p/"+p.project_id+"/loadfilesjson";
         $.ajax({
             url: ajaxUrl
         }).done(function(res) {
-            console.log('res:');
-            console.log(res);
-        });
-        files.forEach(function(f,index){
-            if (f.project_id === p.project_id && f.type.split('/')[0] === "audio"){
-                const nf = f;
-                nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
-                productFiles.push(nf);
+            let productFiles = [];
+            res.forEach(function(f,index){
+                if (f.project_id === p.project_id && f.type.split('/')[0] === "audio"){
+                    const nf = f;
+                    nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
+                    productFiles.push(nf);
+                }
+            });
+            if (productFiles.length > 0 ){
+                musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer files={productFiles} projectId={p.project_id} imgHeight={imgHeight}/>
             }
         });
-        if (productFiles.length > 0 ){
-            musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer files={productFiles} projectId={p.project_id} imgHeight={imgHeight}/>
-        }
     }
 
     return (
