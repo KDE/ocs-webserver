@@ -97,7 +97,8 @@ function ProductBrowseItem(props){
     },[])
     
     const containerWidth = $('#product-browse-container').width() + 30;
-    const itemsInRow = productBrowseItemType === 0 ? 3 : 6;
+    const itemsInRow = isMobile ? 1 : productBrowseItemType === 0 ? 3 : 6;
+    console.log(itemsInRow);
     const itemWidth = containerWidth / itemsInRow;
 
     const itemHeightDivider = productBrowseItemType === 0 ? 1.85 : 1;
@@ -128,7 +129,7 @@ function ProductBrowseItem(props){
             <div className="product-browse-music-item-info">
                 <h2>{p.title}</h2>
                 <span>{p.cat_title}</span>
-                <span>by <a>{p.username}</a></span>
+                <span>by <b>{p.username}</b></span>
             </div>            
         );
         if (productFiles) musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer productFiles={productFiles} projectId={p.project_id} imgHeight={imgHeight}/>
