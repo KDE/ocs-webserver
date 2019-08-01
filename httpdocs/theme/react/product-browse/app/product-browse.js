@@ -49,7 +49,7 @@ function ProductBrowseFilterContainer(){
 }
 
 function ProductBrowseItemList(props){
-    console.log(files);
+
     const productsDisplay = products.sort(SortByCurrentFilter).map((p,index) => (
         <ProductBrowseItem
             key={index} 
