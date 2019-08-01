@@ -79,7 +79,7 @@ class Introduction extends Component {
           </li>
           <li>
             <div className={this.state.section=='publish'?'':''}>
-              <a href={this.props.urlPublish}><span className="link-publish link-image">Publish</span></a>
+              <a href={this.props.urlPublish}><span className="link-publish link-image">Store</span></a>
               <span className="showmore"><a className="link-publish-showmore" onClick={()=>this.handleClick('publish')}>Show more</a></span>
               </div>
           </li>
@@ -92,7 +92,7 @@ class Introduction extends Component {
           </li>
           <li>
               <div className={this.state.section=='personal'?'':''}>
-              <a href={this.props.urlPersonal}><span className="link-personal link-image">Personal data</span></a>
+              <a href={this.props.urlPersonal}><span className="link-personal link-image">Personal Services (Beta)</span></a>
               <span className="showmore"><a onClick={()=>this.handleClick('personal')}>Show more</a></span>
               </div>
           </li>
