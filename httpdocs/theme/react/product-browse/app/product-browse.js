@@ -68,9 +68,6 @@ function ProductBrowseItemList(props){
 function ProductBrowseItem(props){
 
     const p = props.product;
-
-    const [ productFiles, setProductFiles ] = useState([]);
-
     const containerWidth = $('#product-browse-container').width() + 30;
 
     let productBrowseItemType = 0;
@@ -89,27 +86,6 @@ function ProductBrowseItem(props){
     let itemLink = window.config.baseUrl + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
     itemLink += "/" + p.project_id;
-
-    React.useEffect(() => {
-        if (productBrowseItemType === 1){
-            const ajaxUrl = window.location.protocol + "//" + window.location.host + "/p/"+p.project_id+"/loadfilesjson";
-            console.log(ajaxUrl);
-            $.ajax({
-                url: ajaxUrl
-            }).done(function(res) {
-                console.log(res);
-                let newProductFiles = [];
-                res.forEach(function(f,index){
-                    if (f.project_id === p.project_id && f.type.split('/')[0] === "audio"){
-                        const nf = f;
-                        nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
-                        productFiles.push(nf);
-                    }
-                });
-                setProductFiles(newProductFiles);
-            });
-        }
-    },[])
     
     let itemInfoDisplay;
     if (productBrowseItemType === 0){
@@ -133,16 +109,15 @@ function ProductBrowseItem(props){
         )
     }
 
-    console.log(productFiles);
-    let musicPlayerDisplay;
-    if (productFiles.length > 0 ){
-        musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer files={productFiles} projectId={p.project_id} imgHeight={imgHeight}/>
+    if (productBrowseItemType === 1){
+        if (productFiles.length > 0 ){
+        }
     }
 
     return (
         <div className={"product-browse-item " + (itemsInRow === 6 ? "six-in-row" : "three-in-row")} id={"product-" + p.project_id} style={{"width":itemWidth}}>
             <div className="wrapper">
-                {musicPlayerDisplay}
+                <ProductBrowseItemPreviewMusicPlayer projectId={p.project_id} imgHeight={imgHeight}/>
                 <a href={itemLink} className="product-browse-item-wrapper">
                     <div className="product-browse-image">
                         <img src={imgUrl} height={imgHeight}/>
@@ -157,12 +132,32 @@ function ProductBrowseItem(props){
 
 function ProductBrowseItemPreviewMusicPlayer(props){
 
+    const [ productFiles, setProductFiles ] = useState()
     const [ showAudioControls, setShowAudioControls ] = useState(false);
     const [ playIndex, setPlayIndex ] = useState();
 
     let musicPlayerDisplay;
 
-    if (props.files) {
+    const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
+    $.ajax({
+        url: ajaxUrl
+    }).done(function(res) {
+        let newProductFiles = [];
+        res.forEach(function(f,index){
+            if (f.project_id === p.project_id && f.type.split('/')[0] === "audio"){
+                const nf = f;
+                nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
+                newProductFiles.push(nf);
+            }
+            if (res.length === (index + 1)){
+                console.log(newProductFiles);
+                setProductFiles(newProductFiles);
+            }
+        });
+
+    });
+
+    if (productFiles) {
 
         const options = {
             //audio lists model
@@ -262,7 +257,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
             onAudioPlay(audioInfo) {
                 console.log('audio play');
                 setShowAudioControls(true);
-                const currentIndex = props.files.findIndex(f => audioInfo.name === f.title);
+                const currentIndex = productFiles.findIndex(f => audioInfo.name === f.title);
                 setPlayIndex(currentIndex + 1);
             },
             //audio pause handle
@@ -303,7 +298,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
               console.log("[audioInfo] audio lists change:", audioInfo);
             },
             onAudioPlayTrackChange(currentPlayId, audioLists, audioInfo) {
-                const currentIndex = props.files.findIndex(f => audioInfo.name === f.title);
+                const currentIndex = productFiles.findIndex(f => audioInfo.name === f.title);
                 setPlayIndex(currentIndex + 1);
             },
             onPlayModeChange(playMode) { 
