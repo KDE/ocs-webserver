@@ -239,6 +239,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $this->view->tags = $tagFilter;
     }
 
+    
+
     /**
      * @param $inputCatId
      *

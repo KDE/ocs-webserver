@@ -91,20 +91,20 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
 
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
     <div class="row">
-        <span class=" col-lg-6 col-md-6 col-sm-6 col-xs-6">downloads today old</span>
+        <span class=" col-lg-6 col-md-6 col-sm-6 col-xs-6">downloads 24h old</span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <div id="downloadscntdb"><?= $countDownloadsToday ?></div></span>
     </div>
     <?php endif; ?>
     
     <div class="row">
-        <span class=" col-lg-6 col-md-6 col-sm-6 col-xs-6">downloads today</span>
+        <span class=" col-lg-6 col-md-6 col-sm-6 col-xs-6">downloads 24h</span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <div id="downloadscntdb2"><?= $countDownloadsTodayUk ?></div></span>
     </div>
     
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
 
     <div class="row">
-        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">video views today </span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">video views 24h </span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countMediaViewsToday ?></span>
     </div>
     
@@ -116,7 +116,7 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
     <?php endif; ?>    
     
     <div class="row">
-        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">page views today </span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">page views 24h </span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countPageviewsToday ?></span>
     </div>
 
