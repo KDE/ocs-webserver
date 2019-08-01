@@ -68,6 +68,9 @@ function ProductBrowseItemList(props){
 function ProductBrowseItem(props){
 
     const p = props.product;
+
+    const [ productFiles, setProductFiles ] = useState([]);
+
     const containerWidth = $('#product-browse-container').width() + 30;
 
     let productBrowseItemType = 0;
@@ -86,6 +89,27 @@ function ProductBrowseItem(props){
     let itemLink = window.config.baseUrl + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
     itemLink += "/" + p.project_id;
+
+    React.useEffect(() => {
+        if (productBrowseItemType === 1){
+            const ajaxUrl = window.location.protocol + "//" + window.location.host + "/p/"+p.project_id+"/loadfilesjson";
+            console.log(ajaxUrl);
+            $.ajax({
+                url: ajaxUrl
+            }).done(function(res) {
+                console.log(res);
+                let newProductFiles = [];
+                res.forEach(function(f,index){
+                    if (f.project_id === p.project_id && f.type.split('/')[0] === "audio"){
+                        const nf = f;
+                        nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
+                        productFiles.push(nf);
+                    }
+                });
+                setProductFiles(newProductFiles);
+            });
+        }
+    },[])
     
     let itemInfoDisplay;
     if (productBrowseItemType === 0){
@@ -109,26 +133,10 @@ function ProductBrowseItem(props){
         )
     }
 
+    console.log(productFiles);
     let musicPlayerDisplay;
-    if (productBrowseItemType === 1){
-        const ajaxUrl = window.location.protocol + "//" + window.location.host + "/p/"+p.project_id+"/loadfilesjson";
-        console.log(ajaxUrl);
-        $.ajax({
-            url: ajaxUrl
-        }).done(function(res) {
-            console.log(res);
-            let productFiles = [];
-            res.forEach(function(f,index){
-                if (f.project_id === p.project_id && f.type.split('/')[0] === "audio"){
-                    const nf = f;
-                    nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
-                    productFiles.push(nf);
-                }
-            });
-            if (productFiles.length > 0 ){
-                musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer files={productFiles} projectId={p.project_id} imgHeight={imgHeight}/>
-            }
-        });
+    if (productFiles.length > 0 ){
+        musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer files={productFiles} projectId={p.project_id} imgHeight={imgHeight}/>
     }
 
     return (
