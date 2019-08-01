@@ -434,14 +434,14 @@
     transform: rotateX(360deg);
   }
 }*/
-/*@keyframes audioLoading {
+@keyframes audioLoading {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
   }
-}*/
+}
 /*@keyframes scale {
   from {
     transform: scale(0);
@@ -475,7 +475,7 @@
     opacity: 0;
   }
 }*/
-@keyframes imgRotate {
+/*@keyframes imgRotate {
   from {
     transform: rotate(0deg);
   }
@@ -526,7 +526,7 @@
     transform: translate3d(-100%, 0, 0);
     opacity: 0;
   }
-}
+}*/
 .react-jinke-music-player-main .img-rotate-pause {
   animation-play-state: paused !important;
 }

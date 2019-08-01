@@ -131,21 +131,37 @@ function ProductBrowseItem(props){
     itemLink += "/" + p.project_id;    
 
     React.useEffect(() => {
-        if (props.productBrowseItemType === 1 && productsFetched === false){
-            setProductFetched(true);
-            const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
-            $.ajax({
-                url: ajaxUrl
-            }).done(function(res) {
-                let newProductFiles = [];
-                res.forEach(function(f,index){
+        console.log(window.location.host);
+        if (window.location.host === "192.168.2.130"){
+            let newProductFiles = [];
+            files.forEach(function(f,index){
+                if (f.project_id === p.project_id && f.type.split('/')[0] === "audio"){
                     let nf = f;
                     nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
                     nf.cover = imgUrl;
                     newProductFiles.push(nf);
-                });
-                setProductFiles(newProductFiles);
+                }
             });
+            setProductFiles(newProductFiles);            
+        } else {
+            if (props.productBrowseItemType === 1 && productsFetched === false){
+                setProductFetched(true);
+                const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
+                $.ajax({
+                    url: ajaxUrl
+                }).done(function(res) {
+                    let newProductFiles = [];
+                    res.forEach(function(f,index){
+                        if ( f.type.split('/')[0] === "audio"){
+                            let nf = f;
+                            nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
+                            nf.cover = imgUrl;
+                            newProductFiles.push(nf);
+                        }
+                    });
+                    setProductFiles(newProductFiles);
+                });
+            }
         }
     },[])
         
