@@ -1599,6 +1599,25 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $result = $this->_db->fetchAll($sql);
         return $result;
     }
+    public function fetchFilesForProject($project_id)
+    {
+   
+        $sql = "
+                select 
+                f.id
+                ,f.name
+                ,f.type
+                ,f.size
+                ,f.title
+                ,f.collection_id
+                from stat_projects p, ppload.ppload_files f
+                where p.ppload_collection_id = f.collection_id
+                and f.active = 1 
+                and p.project_id = :project_id
+        ";      
+        $result = $this->_db->fetchAll($sql,array("project_id"=>$project_id));
+        return $result;
+    }
     /**
      * @param int      $member_id
      * @param int|null $limit
