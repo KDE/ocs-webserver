@@ -331,7 +331,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
             //audio play progress handle
             onAudioProgress(audioInfo) { 
                 if (audioInfo.paused === false){
-                    // $('#music-player-'+props.projectId).find('.play-btn.play').trigger("click");
+                    $('#music-player-'+props.projectId).find('.play-btn.play').trigger("click");
                 }
             },
             //audio reload handle
