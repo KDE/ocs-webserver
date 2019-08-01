@@ -5,7 +5,6 @@ import ReactJkMusicPlayer from "react-jinke-music-player";
 import {isMobile} from 'react-device-detect';
 
 function ProductBrowse(){
-    console.log(window.config);
     return (
         <div id="product-browse">
             <ProductBrowseFilterContainer/>
@@ -67,12 +66,37 @@ function ProductBrowseItemList(props){
 
 function ProductBrowseItem(props){
 
+    const [ productsFetched, setProductFetched ] = useState(false);
+    const [ productFiles, setProductFiles ] = useState();
+
     const p = props.product;
     const containerWidth = $('#product-browse-container').width() + 30;
 
     let productBrowseItemType = 0;
     if (window.location.search === "?index=3") productBrowseItemType = 1;
     
+
+    React.useEffect(() => {
+        if (productBrowseItemType === 1 && productsFetched === false){
+            console.log('hi');
+            setProductFetched(true);
+            const ajaxUrl = window.location.origin + "/p/"+props.projectId+"/loadfilesjson";
+            $.ajax({
+                url: ajaxUrl
+            }).done(function(res) {
+                let newProductFiles = [];
+                console.log(res);
+                res.forEach(function(f,index){
+                    let nf = f;
+                    nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
+                    newProductFiles.push(nf);
+                });
+                console.log(newProductFiles);
+                setProductFiles(newProductFiles);
+            });
+        }
+    },[])
+
     const itemsInRow = productBrowseItemType === 0 ? 3 : 6;
     const itemWidth = containerWidth / itemsInRow;
 
@@ -82,8 +106,6 @@ function ProductBrowseItem(props){
     let imgUrl = "https://cn.opendesktop.";
     imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
     imgUrl += "/img/" + p.image_small;
-
-    console.log(window.config);
 
     let itemLink = window.config.baseUrlStore + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
@@ -100,7 +122,7 @@ function ProductBrowseItem(props){
         )
     }
 
-    let musicItemInfoDisplay;
+    let musicItemInfoDisplay, musicPlayerDisplay;
     if (productBrowseItemType === 1){
         musicItemInfoDisplay = (
             <div className="product-browse-music-item-info">
@@ -108,13 +130,14 @@ function ProductBrowseItem(props){
                 <span>{p.cat_title}</span>
                 <span>by <a>{p.username}</a></span>
             </div>            
-        )
+        );
+        if (productFiles) musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer productFiles={productFiles} projectId={p.project_id} imgHeight={imgHeight}/>
     }
-
+    
     return (
         <div className={"product-browse-item " + (itemsInRow === 6 ? "six-in-row" : "three-in-row")} id={"product-" + p.project_id} style={{"width":itemWidth}}>
             <div className="wrapper">
-                <ProductBrowseItemPreviewMusicPlayer projectId={p.project_id} imgHeight={imgHeight}/>
+                {musicPlayerDisplay}
                 <a href={itemLink} className="product-browse-item-wrapper">
                     <div className="product-browse-image">
                         <img src={imgUrl} height={imgHeight}/>
@@ -129,26 +152,11 @@ function ProductBrowseItem(props){
 
 function ProductBrowseItemPreviewMusicPlayer(props){
 
-    const [ productFiles, setProductFiles ] = useState()
+    const [ productFiles, setProductFiles ] = useState(props.productFiles)
     const [ showAudioControls, setShowAudioControls ] = useState(false);
     const [ playIndex, setPlayIndex ] = useState();
 
     let musicPlayerDisplay;
-
-    const ajaxUrl = window.location.origin + "/p/"+props.projectId+"/loadfilesjson";
-    $.ajax({
-        url: ajaxUrl
-    }).done(function(res) {
-        let newProductFiles = [];
-        console.log(res);
-        res.forEach(function(f,index){
-            let nf = f;
-            nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
-            newProductFiles.push(nf);
-        });
-        console.log(newProductFiles);
-        setProductFiles(newProductFiles);
-    });
 
     if (productFiles) {
 
