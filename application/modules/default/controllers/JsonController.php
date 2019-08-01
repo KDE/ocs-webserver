@@ -101,13 +101,14 @@ class JsonController extends Zend_Controller_Action
         foreach ( $results->topic_list->topics as &$t) {
 
                 $strTime = str_replace('T',' ',substr($t->last_posted_at, 0, 19));
-                $t->timeago = $timeago->printDateSince($strTime);
+                
+                //$t->timeago = $timeago->printDateSince($strTime);
 
-                //$fromFormat='Y-m-d H:i:s';
-                //$date = DateTime::createFromFormat($fromFormat, $strTime);        
+                $fromFormat='Y-m-d H:i:s';
+                $date = DateTime::createFromFormat($fromFormat, $strTime);        
                 // forum/latest.json last_posted_at is 4 hours later as server somehow.. quick workaround
-                //$date->sub(new DateInterval('PT1H'));                
-                //$t->timeago = $timeago->printDateSince($date->format('Y-m-d h:s:m'));
+                $date->sub(new DateInterval('PT4H'));                
+                $t->timeago = $timeago->printDateSince($date->format('Y-m-d h:s:m'));
                 //$t->timeago =  $date->format('Y-m-d H:i:s');
                 $r='Reply';
                 $counts = $t->posts_count -1;
