@@ -156,7 +156,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
 
         const options = {
             //audio lists model
-            audioLists:props.files,
+            audioLists:productFiles,
             audioListsPanelVisible:false,
             //default play index of the audio player  [type `number` default `0`]
             defaultPlayIndex: 0,
@@ -317,7 +317,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
         musicPlayerDisplay = (
             <div>
                 <ReactJkMusicPlayer {...options} />
-                <span className="music-player-counter">{playIndex}/{props.files.length}</span>
+                <span className="music-player-counter">{playIndex}/{productFiles.length}</span>
             </div>
         )
     }
