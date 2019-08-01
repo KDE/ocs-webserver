@@ -83,7 +83,9 @@ function ProductBrowseItem(props){
     imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
     imgUrl += "/img/" + p.image_small;
 
-    let itemLink = window.config.baseUrl + "/";
+    console.log(window.config);
+
+    let itemLink = window.config.baseUrlStore + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
     itemLink += "/" + p.project_id;
     
