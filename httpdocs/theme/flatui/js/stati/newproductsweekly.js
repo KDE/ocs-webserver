@@ -119,7 +119,7 @@
         .text(function(d) { 
 
           if(d=='amountnowallpapers') return 'Wallpapers';
-          if(d=='amountwallpapers') return 'No-Wallpapers';
+          if(d=='amountwallpapers') return 'Non-Wallpapers';
           // return d; 
         });
   });
