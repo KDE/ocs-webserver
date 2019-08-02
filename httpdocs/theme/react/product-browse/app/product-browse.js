@@ -48,41 +48,26 @@ function ProductBrowseFilterContainer(){
 
 function ProductBrowseItemList(props){
 
-    const [ containerWidth, setContainerWidth ] = useState($('#product-browse-container').width() + 30);
+    const [ containerWidth, setContainerWidth ] = useState($('#product-browse-container').width() + 14);
 
     let productBrowseItemType = 0;
     if (window.location.search === "?index=3") productBrowseItemType = 1;
 
     const [ itemsInRow, setItemsInRow ] = useState(isMobile ? 1 : productBrowseItemType === 0 ? 3 : 6)
     const [ minWidth, setMinWidth ] = useState(productBrowseItemType === 0 ? 400 : 200);
-    const [ itemWidth, setItemWidth ] = useState();
+    const [ itemWidth, setItemWidth ] = useState(containerWidth / itemsInRow);
 
     const itemHeightDivider = productBrowseItemType === 0 ? 1.85 : 1;
-    const imgHeight = productBrowseItemType === 0 ? itemWidth / itemHeightDivider : ( itemWidth - 30) / itemHeightDivider;
+    const imgHeight = productBrowseItemType === 0 ? itemWidth / itemHeightDivider : ( itemWidth - 14) / itemHeightDivider;
 
     React.useEffect(() => {
         window.addEventListener("resize", function(event){ updateDimensions() });
         window.addEventListener("orientationchange",  function(event){ updateDimensions() });
     },[])
 
-    React.useEffect(() => {
-        generateItemWidth(containerWidth,itemsInRow,minWidth);
-    },[containerWidth])
-
     function updateDimensions(){
         const newContainerWidth = $('#product-browse-container').width() + 30;
         setContainerWidth(newContainerWidth);
-    }
-
-    function generateItemWidth(containerWidth,itemsInRow,minWidth){
-        console.log(containerWidth);
-        let newItemWidth = containerWidth / itemsInRow;
-        if (newItemWidth < minWidth){
-            const newItemsInRow = itemsInRow - 1;
-            generateItemWidth(containerWidth,newItemsInRow,minWidth)
-        } else {
-            setItemWidth(newItemWidth);
-        }
     }
 
     let productsDisplay;
@@ -131,8 +116,7 @@ function ProductBrowseItem(props){
     itemLink += "/" + p.project_id;    
 
     React.useEffect(() => {
-        console.log(window.location.host);
-        if (window.location.host === "192.168.2.130"){
+        if (window.location.host === "192.168.2.130" && props.productBrowseItemType === 1){
             let newProductFiles = [];
             files.forEach(function(f,index){
                 if (f.project_id === p.project_id && f.type.split('/')[0] === "audio"){
