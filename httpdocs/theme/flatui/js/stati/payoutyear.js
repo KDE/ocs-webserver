@@ -5,7 +5,7 @@
   var parseTime = d3.timeParse("%Y%m");
   var svgLine = d3.select("#payoutyear")
       .append("svg")
-      .attr("width", 500)
+      .attr("width", 1200)
       .attr("height", 250);
 
   var marginLine = {top: 30, right: 50, bottom: 50, left: 30},
