@@ -228,18 +228,20 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
         <div class="row" id="productgroup1">
         <?php
                     echo $this->partial('/home/partials/product_group.phtml', array(
+                            "title"  => "Comics",
+                            "products" => $this->productsComics,
+                            "catIDs" =>"39"
+                        )
+                    );  
+                    
+                    echo $this->partial('/home/partials/product_group.phtml', array(
                             "title"  => "Videos",
                             "products" => $this->productsVideos,
                             "catIDs" =>"586"
                         )
                     );
 
-                    echo $this->partial('/home/partials/product_group.phtml', array(
-                            "title"  => "Comics",
-                            "products" => $this->productsComics,
-                            "catIDs" =>"39"
-                        )
-                    );        
+                         
         ?>
         </div>
 
