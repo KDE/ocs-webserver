@@ -53,7 +53,7 @@ function ProductBrowseItemList(props){
     let productBrowseItemType = 0;
     if (window.location.search === "?index=3") productBrowseItemType = 1;
 
-    const [ itemsInRow, setItemsInRow ] = useState(isMobile ? 1 : productBrowseItemType === 0 ? 3 : 6)
+    const [ itemsInRow, setItemsInRow ] = useState(isMobile ? 2 : productBrowseItemType === 0 ? 3 : 6)
     const [ minWidth, setMinWidth ] = useState(productBrowseItemType === 0 ? 400 : 200);
     const [ itemWidth, setItemWidth ] = useState(containerWidth / itemsInRow);
 
