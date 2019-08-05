@@ -161,15 +161,15 @@ class DlController extends Local_Controller_Action_DomainSwitch
     {
         if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
         {
-          $ip='HTTP_CLIENT_IP:'.$_SERVER['HTTP_CLIENT_IP'];
+          $ip=$_SERVER['HTTP_CLIENT_IP'];
         }
         elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
         {
-          $ip='HTTP_X_FORWARDED_FOR:'.$_SERVER['HTTP_X_FORWARDED_FOR'];
+          $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
         }
         else
         {
-          $ip='REMOTE_ADDR:'.$_SERVER['REMOTE_ADDR'];
+          $ip=$_SERVER['REMOTE_ADDR'];
         }
         return $ip;
     }
