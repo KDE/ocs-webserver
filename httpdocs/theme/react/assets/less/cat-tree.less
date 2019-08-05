@@ -213,7 +213,14 @@
       cursor: pointer;
       overflow: hidden;
       position: relative;
-      height:24px;
+      min-height: 24px;
+      max-width: 100%;
+      word-break: break-word;
+      
+      &#back-button,
+      &#forward-button {
+        height:24px;
+      } 
 
       span {
         .transition();

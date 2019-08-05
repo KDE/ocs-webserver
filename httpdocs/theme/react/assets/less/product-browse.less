@@ -6,12 +6,19 @@
     #product-browse-item-list {
         padding: 25px 0;
         float: left;
-        width: 100%;
+        margin-right: -7px;
+        margin-left: -7px;
+        min-width: 100%;
 
+        &.on-mobile {
+            margin: 0;
+        }
+        
         .product-browse-item {
             float:left;
             margin-bottom:30px;
             position: relative;
+            padding: 0 7px;
 
             > a {
                display: block;
@@ -55,6 +62,13 @@
                     width: 50%;
                     float: left;
                     display: block;
+                    font-weight: normal;
+                    color: black;
+                    font-size: 1.2rem;
+
+                    a {
+                        color:black;
+                    }
                 }
 
                 span + span {
@@ -92,68 +106,144 @@
                 }
             }
 
-            &.three-in-row {
-                &:nth-child(3n+1){
-                    padding-right:10px;
-                    clear: both;
-                }
-    
-                &:nth-child(3n+2){
-                    padding-left:5px;
-                    padding-right:5px;
-                }
-    
-                &:nth-child(3n+3){
-                    padding-left:10px;
-                }                
+            
+            .wrapper {
+                width:100%;
+                position: relative;
             }
 
-            &.six-in-row {
-                &:nth-child(6n+1){
-                    padding-right:10px;
-                    clear: both;
-                }
-    
-                &:nth-child(6n+2){
-                    padding-left:5px;
-                    padding-right:10px;
-                }
-    
-                &:nth-child(6n+3){
-                    padding-left:5px;
-                    padding-right:10px;
-                }
-
-                &:nth-child(6n+4){
-                    padding-left:5px;
-                    padding-right:10px;
-                }
-                
-                &:nth-child(6n+5){
-                    padding-left:5px;
-                    padding-right:5px;
-                }
-
-                &:nth-child(6n+6){
-                    padding-left:10px;
-                }
-            }
         }
 
+
+
         .product-browse-item-preview-music-player {
+            width:100%;
+            position: absolute;
+            top: 44px;
+            left: 0;
 
-            .react-jinke-music-player {
+            .music-player-counter {
                 position: absolute;
+                top: -44px;
+                background-color: rgba(0, 0, 0, 0.7);
+                right: 0;
+                display: block;
+                z-index: 100000;
+                height: 44px;
+                color: white;
+                line-height: 35px;
+                padding: 5px;
+                display: none;
+            }
 
-                .music-player-controller {
-                    position: absolute;
+            .react-jinke-music-player-main .music-player-panel {
+                position: absolute;
+                height: 44px;
+                width: 38px;
+                overflow: hidden;
+                .transition();
+
+                .play-mode-title {
+                    display: none;
                 }
+
+                .panel-content {
+                    padding:5px;
+                    height: 100%;
+                    position: relative;
+                    display: block;
+                
+                    .img-content,
+                    .audio-title,
+                    .progress-bar-content {
+                        display: none;
+                    }
+                
+                    .player-content {
+                        padding:0px;
+
+                        .group {
+                            padding:0;
+                            margin:0;
+
+
+                            &.prev-audio,
+                            &.next-audio,
+                            &.audio-lists-btn,
+                            &.play-sounds {
+                                display: none;
+                            }
+
+                            &.play-btn.play {
+                                margin-right:5px;
+                                margin-top: 3px;
+                            }
+
+                            &.loading {
+                                margin-top: 2px;
+                                margin-left: 42px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .react-jinke-music-player-mobile {
+                height: auto;
+                position: absolute;
+                top: -44px;
+                
+                .react-jinke-music-player-mobile-header,
+                .react-jinke-music-player-mobile-singer,
+                .react-jinke-music-player-mobile-switch,
+                .react-jinke-music-player-mobile-cover,
+                .react-jinke-music-player-mobile-progress,
+                .react-jinke-music-player-mobile-operation {
+                    display: none;
+                }
+
+                .react-jinke-music-player-mobile-toggle {
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+
+                    .play-btn {
+                        padding:0 20px;
+                    }
+                }
+
+                .group.prev-audio,
+                .group.next-audio {
+                    display: none;
+                    padding-top: 6px;
+                }
+            }
+
+            &.show-controls {
+
+                .music-player-counter {
+                    display: block;
+                }
+
+                .react-jinke-music-player-main .music-player-panel {
+                    width:110px;
+                }
+                
+                .group {
+                    &.prev-audio,
+                    &.next-audio {
+                        display: block !important;
+                    }
+                }
+
+
             }
         }
     }
 
     #product-browse-pagination {
         text-align: center;
+        clear: both;
 
         ul {
             display: table;

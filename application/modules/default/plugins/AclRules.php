@@ -247,6 +247,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'startdownload',
             'ppload',
             'loadratings',
+            'loadfilesjson',
             'loadinstallinstruction',
             'gettaggroupsforcatajax',
             'getfilesajax',
