@@ -22,7 +22,7 @@ function AdminlLinksContainer(props)
 
           <li id="new-products-link-item">
             <a href={props.baseUrlStore+"/newproducts/"} >
-              <span>New Products</span>
+              <span>Most New Products</span>
             </a>
           </li>
         </ul>
