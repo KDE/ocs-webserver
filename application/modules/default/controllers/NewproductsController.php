@@ -80,9 +80,19 @@ class NewproductsController extends Local_Controller_Action_DomainSwitch
                 join member m on p.member_id = m.member_id
                 where p.status = 100                 
                 ";      
-         if($nonwallpaper==1)
+
+         $lft = 0;
+         $rgt = 0;
+
+         if($nonwallpaper==1)            
          {
-            $sql = $sql.' and (t.lft<975 or t.rgt>1068) ';
+            //get wallpaper category lft rgt
+            $tmpsql = "select lft, rgt from stat_cat_tree where project_category_id=295";
+            $wal = Zend_Db_Table::getDefaultAdapter()->fetchRow($tmpsql);            
+
+            $lft = $wal['lft'];
+            $rgt = $wal['rgt'];
+            $sql = $sql.' and (t.lft<'.$lft.' or t.rgt>'.$rgt.') ';
          }
 
          $sql = $sql.'  and p.created_at between :time_begin and :time_end
@@ -101,7 +111,7 @@ class NewproductsController extends Local_Controller_Action_DomainSwitch
              $sql .= ' offset ' . (int)$startIndex;
          }
 
-      
+
 
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array( 'time_begin' => $time_begin, 'time_end'=>$time_end) );
         
@@ -115,8 +125,8 @@ class NewproductsController extends Local_Controller_Action_DomainSwitch
           ";
 
         if($nonwallpaper==1)
-        {
-           $sqlTotal = $sqlTotal.' and (t.lft<975 or t.rgt>1068) ';
+        {           
+           $sqlTotal = $sqlTotal.' and (t.lft<'.$lft.' or t.rgt>'.$rgt.') ';
         }
 
         $sqlTotal = $sqlTotal.'  and p.created_at between :time_begin and :time_end
