@@ -21,7 +21,7 @@
  **/
 
 $modelCategory = new Default_Model_ProjectCategory();
-$this->categories = $modelCategory->fetchTreeForView(22);
+$this->categories = $modelCategory->fetchTreeForView();
 $jsonTree = json_encode($this->categories);
 ?>
 <?= $this->partial('yui.phtml'); ?>
