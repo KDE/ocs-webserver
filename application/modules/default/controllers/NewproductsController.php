@@ -56,6 +56,7 @@ class NewproductsController extends Local_Controller_Action_DomainSwitch
     		$sorting = 'cnt desc';
     	}
         $filterMonth= $this->getParam('filterMonth');
+        $nonwallpaper = $this->getParam('nonwallpaper');
         if($filterMonth == null)
         {
             $now = new DateTime('now');
@@ -75,37 +76,63 @@ class NewproductsController extends Local_Controller_Action_DomainSwitch
                 m.created_at,
                 (select count(1) from stat_projects pp where pp.member_id = p.member_id and pp.status=100 and pp.created_at < :time_begin) as cntOther
                 from stat_projects p
+                join stat_cat_tree t on p.project_category_id = t.project_category_id    
                 join member m on p.member_id = m.member_id
-                where p.status = 100 
-                and p.created_at between :time_begin and :time_end
-                group by member_id
-                ";            
-             if(isset($sorting)){
-                $sql = $sql.'  order by '.$sorting;
-             }
+                where p.status = 100                 
+                ";      
 
-             if (isset($pageSize)) {
-                 $sql .= ' limit ' . (int)$pageSize;
-             }
+         $lft = 0;
+         $rgt = 0;
 
-             if (isset($jtStartIndex)) {
-                 $sql .= ' offset ' . (int)$jtStartIndex;
-             }
+         if($nonwallpaper==1)            
+         {
+            //get wallpaper category lft rgt
+            $tmpsql = "select lft, rgt from stat_cat_tree where project_category_id=295";
+            $wal = Zend_Db_Table::getDefaultAdapter()->fetchRow($tmpsql);            
+
+            $lft = $wal['lft'];
+            $rgt = $wal['rgt'];
+            $sql = $sql.' and (t.lft<'.$lft.' or t.rgt>'.$rgt.') ';
+         }
+
+         $sql = $sql.'  and p.created_at between :time_begin and :time_end
+                        group by member_id';
 
 
-             // Zend_Registry::get('logger')->info(__METHOD__ . ' sql - ' . $sql);
+         if(isset($sorting)){
+            $sql = $sql.'  order by '.$sorting;
+         }
+
+         if (isset($pageSize)) {
+             $sql .= ' limit ' . (int)$pageSize;
+         }
+
+         if (isset($startIndex)) {
+             $sql .= ' offset ' . (int)$startIndex;
+         }
+
+
 
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array( 'time_begin' => $time_begin, 'time_end'=>$time_end) );
         
         $sqlTotal = "select count(1) as cnt from(
                         select                         
                                p.member_id
-                        from stat_projects p                                
+                        from stat_projects p         
+                        join stat_cat_tree t on p.project_category_id = t.project_category_id                           
                         where p.status = 100 
-                        and p.created_at between  :time_begin and :time_end
-                        group by member_id
-                        ) t
+                        
           ";
+
+        if($nonwallpaper==1)
+        {           
+           $sqlTotal = $sqlTotal.' and (t.lft<'.$lft.' or t.rgt>'.$rgt.') ';
+        }
+
+        $sqlTotal = $sqlTotal.'  and p.created_at between :time_begin and :time_end
+                       group by member_id 
+                        ) t ';
+
         $resultTotal = Zend_Db_Table::getDefaultAdapter()->fetchRow($sqlTotal, array( 'time_begin' => $time_begin, 'time_end'=>$time_end) );
 
     	$totalRecordCount = $resultTotal['cnt'];    	

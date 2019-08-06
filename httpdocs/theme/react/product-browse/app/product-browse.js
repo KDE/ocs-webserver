@@ -107,46 +107,40 @@ function ProductBrowseItem(props){
     const [ productsFetched, setProductFetched ] = useState(false);
     const [ productFiles, setProductFiles ] = useState();
 
-    let imgUrl = "https://cn.opendesktop.";
-    imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
-    imgUrl += "/img/" + p.image_small;
+
+    let imgUrl = "";
+    if (p.image_small.indexOf('https://') > -1 || p.image_small.indexOf('http://') > -1 ) imgUrl = p.image_small;
+    else {
+        imgUrl = "https://cn.opendesktop.";
+        imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
+        imgUrl += "/img/" + p.image_small;    
+    }
 
     let itemLink = window.config.baseUrlStore + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
     itemLink += "/" + p.project_id;    
 
     React.useEffect(() => {
-        if (window.location.host === "192.168.2.130" && props.productBrowseItemType === 1){
-            let newProductFiles = [];
-            files.forEach(function(f,index){
-                if (f.project_id === p.project_id && f.type.split('/')[0] === "audio"){
-                    let nf = f;
-                    nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
-                    nf.cover = imgUrl;
-                    newProductFiles.push(nf);
-                }
-            });
-            setProductFiles(newProductFiles);            
-        } else {
-            if (props.productBrowseItemType === 1 && productsFetched === false){
-                setProductFetched(true);
-                const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
-                $.ajax({
-                    url: ajaxUrl
-                }).done(function(res) {
-                    let newProductFiles = [];
-                    res.forEach(function(f,index){
-                        if ( f.type.split('/')[0] === "audio"){
-                            let nf = f;
-                            nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
-                            nf.cover = imgUrl;
-                            newProductFiles.push(nf);
-                        }
-                    });
-                    setProductFiles(newProductFiles);
+
+        if (props.productBrowseItemType === 1 && productsFetched === false){
+            setProductFetched(true);
+            const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
+            $.ajax({
+                url: ajaxUrl
+            }).done(function(res) {
+                let newProductFiles = [];
+                res.forEach(function(f,index){
+                    if ( f.type.split('/')[0] === "audio"){
+                        let nf = f;
+                        nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
+                        nf.cover = imgUrl;
+                        newProductFiles.push(nf);
+                    }
                 });
-            }
+                setProductFiles(newProductFiles);
+            });
         }
+
     },[])
         
     let itemInfoDisplay;
@@ -377,7 +371,6 @@ function ProductBrowseItemPreviewMusicPlayer(props){
         </div>
     )
 }
-
 
 function ProductBrowsePagination(){
 

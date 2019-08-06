@@ -9,7 +9,7 @@ import ProductsGitContainer from './ProductsGitContainer';
 import Introduction from './Introduction';
 import PersonalActivityContainer from './PersonalActivityContainer';
 import PersonalLinksContainer from './function/PersonalLinksContainer';
-
+import AdminLinksContainer from './function/AdminLinksContainer';
 class HomeMainContainer extends Component {
   constructor(props){
   	super(props);
@@ -53,6 +53,13 @@ class HomeMainContainer extends Component {
                 <PersonalActivityContainer  user={this.state.user.member_id}/>
                 <CommentsContainer title="Last 10 comments received" baseUrlStore={this.state.baseUrlStore} comments={this.state.comments}/>
                 <RatingContainer title="Last 10 ratings received" baseUrlStore={this.state.baseUrlStore} votes={this.state.votes}/>
+
+                  { this.state.user.isAdmin &&
+                    <div className="panelContainer">
+                      <div className="title">Special links (Admin only)</div>
+                      <AdminLinksContainer  user={this.state.user} baseUrlStore={this.state.baseUrlStore}/>
+                    </div>
+                  }
             </div>
           </div>
           )

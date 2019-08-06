@@ -120,13 +120,20 @@ class DlController extends Local_Controller_Action_DomainSwitch
 
             if(isset($file_id) && isset($projectId)) {            
                 
-                $data = array('project_id' => $projectId, 'member_id' => $memberId,'anonymous_cookie'=>$storedInCookie, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size,'downloaded_ip' => $this->getRealIpAddr());                
+                // $data = array('project_id' => $projectId, 'member_id' => $memberId,'anonymous_cookie'=>$storedInCookie, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size,'downloaded_ip' => $this->getRealIpAddr());                
         
+                $data = array('project_id' => $projectId, 'member_id' => $memberId,'anonymous_cookie'=>$storedInCookie, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size,'downloaded_ip' => $this->getRealIpAddr()
+                             ,'HTTP_X_FORWARDED_FOR' => $_SERVER['HTTP_X_FORWARDED_FOR']
+                             ,'HTTP_X_FORWARDED' =>     $_SERVER['HTTP_X_FORWARDED']
+                             ,'HTTP_CLIENT_IP' =>       $_SERVER['HTTP_CLIENT_IP']
+                             ,'HTTP_FORWARDED_FOR' =>   $_SERVER['HTTP_FORWARDED_FOR']
+                             ,'HTTP_FORWARDED' =>       $_SERVER['HTTP_FORWARDED']
+                             ,'REMOTE_ADDR' =>          $_SERVER['REMOTE_ADDR']                             
+                            );
+
                 $memberDlHistory = new Default_Model_DbTable_MemberDownloadHistory();
                 $memberDlHistory->createRow($data)->save();
-
             }
-
 
 
             // anonymous dl save to member_download_fingerprint 17.07 temperately deactived
