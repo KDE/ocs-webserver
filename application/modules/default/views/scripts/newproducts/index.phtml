@@ -93,17 +93,15 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 <main id="explore-content">
   <section class="wrapper" id="products-wrapper" >
 <h1>
-    New Products   
+    Most New Products   
 </h1>
  <form style="margin-top: 20px; margin-bottom: 20px">
        
-            Month <input name="filterMonth" id="filterMonth" value="<?php echo date("Ym") ?>" />
-          
-         
+            Month <input name="filterMonth" id="filterMonth" value="<?php echo date("Ym") ?>" />                   
                 <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
-               
+                <input type="checkbox" name="nonwallpaper" id="nonwallpaper" >Non-Wallpaper filter 
           
-        </form>
+  </form>
     <div id="TableContainer"></div>    
     
     </section>
@@ -120,7 +118,8 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
         $('#LoadRecordsButton').click(function (e) {
             e.preventDefault();
             $('#TableContainer').jtable('load', {
-                filterMonth: $('#filterMonth').val(),              
+                filterMonth: $('#filterMonth').val(),       
+                nonwallpaper:($('#nonwallpaper').is(':checked')?1:0) 
             },function(){
             
             });
