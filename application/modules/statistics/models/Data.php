@@ -77,7 +77,7 @@ class Statistics_Model_Data
                   FROM project p
                   join stat_cat_tree t on p.project_category_id = t.project_category_id                
                   where status=100 and type_id = 1                   
-                  and (t.lft<899 or t.rgt>988)
+                  and (t.lft<975 or t.rgt>1068)
                   group by  yyyykw    
                   order by yyyykw 
                   desc limit 60";
@@ -90,7 +90,7 @@ class Statistics_Model_Data
                   FROM project p
                   join stat_cat_tree t on p.project_category_id = t.project_category_id                
                   where status=100 and type_id = 1                   
-                  and (t.lft>899 and t.rgt<988)
+                  and (t.lft>975 and t.rgt<1068)
                   group by  yyyykw    
                   order by yyyykw 
                   desc limit 60";
