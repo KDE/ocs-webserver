@@ -169,6 +169,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         //Old: index as Param
         $index = $this->getParam('index');
         
+        Zend_Registry::get('logger')->err(__METHOD__ . ' - IndexParam : ' . $index);
+        
         if($index) {
             $index = 'index-react'.$index;
         } else {
@@ -184,6 +186,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
                 }
             }
         }
+        
+        Zend_Registry::get('logger')->err(__METHOD__ . ' - IndexParam2 : ' . $index);
         
 
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
