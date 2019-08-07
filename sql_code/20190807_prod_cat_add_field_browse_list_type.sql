@@ -6,7 +6,7 @@ CREATE TABLE `browse_list_types` (
 	`browse_list_type_id` INT(11) NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(50) NOT NULL,
 	`desc` VARCHAR(255) NULL DEFAULT NULL,
-	`render-page-name` VARCHAR(50) NULL DEFAULT 'index-react',
+	`render_page_name` VARCHAR(50) NULL DEFAULT 'index-react',
 	`is_active` INT(1) UNSIGNED NULL DEFAULT '1',
 	`deleted_at` TIMESTAMP NULL DEFAULT NULL,
 	PRIMARY KEY (`browse_list_type_id`)
@@ -14,6 +14,7 @@ CREATE TABLE `browse_list_types` (
 COLLATE='latin1_swedish_ci'
 ENGINE=InnoDB
 ;
+
 
 
 INSERT INTO `pling`.`browse_list_types` (`browse_list_type_id`, `type_name`, `type_desc`) VALUES ('0', 'default', 'Default List type is list');
