@@ -228,6 +228,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
             //$this->_helper->viewRenderer('index-react'.$index);
             $this->_helper->viewRenderer($index);
+            
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - Show Page : /explore/' . $index);
 
         }
         else if ($storeConfig->layout_explore && $storeConfig->isRenderReact()) {
@@ -244,9 +246,13 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $modelCategory = new Default_Model_ProjectCategory();
             $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());
             $this->_helper->viewRenderer('index-react');
+            
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - Show Page : /explore/index-react');
         } else {
             $pageLimit = 10;
             $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);
+            
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - Show Page : /explore/index');
         }
         if($storeConfig) {
             $this->view->storeabout = $this->getStoreAbout($storeConfig->store_id);
