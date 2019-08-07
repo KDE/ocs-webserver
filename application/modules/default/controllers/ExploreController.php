@@ -178,7 +178,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             }
             
         } else {
-            $index = 2;
+            
             //Now the list type is in backend categories set
             $tableCat = new Default_Model_DbTable_ProjectCategory();
             $cat = $tableCat->findCategory($this->view->cat_id);
@@ -188,6 +188,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
                 $listType = $listTypeTable->findBrowseListType($indexListType);
                 if(isset($listType)) {
                    $browseListType =  $listType['name'];
+                   $index = 2;
                 }
             }
         }
