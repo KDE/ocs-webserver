@@ -1,0 +1,105 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+?>
+
+<div class="messages">
+    <?php foreach (Zend_Controller_Action_HelperBroker::getStaticHelper('flashMessenger')
+                       ->getCurrentMessages() as $message) : ?>
+        <p><?php echo $this->escape($message); ?></p>
+    <?php endforeach; ?>
+</div>
+<div id="TableContainer"></div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,
+            defaultSorting: 'order asc',
+            title: 'Table of Sponsors',
+            actions: {
+                listAction: '/backend/browselisttype/list',
+                createAction: '/backend/browselisttype/create',
+                updateAction: function (postData) {
+                    return $.Deferred(function ($dfd) {
+                        $.ajax({
+                            url: '/backend/browselisttype/update',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: postData,
+                            success: function (data) {
+                                $dfd.resolve(data);
+                                $('#TableContainer').jtable('reload');
+                            },
+                            error: function () {
+                                $dfd.reject();
+                            }
+                        });
+                    });
+                },
+                deleteAction: '/backend/browselisttype/delete'
+            },
+            fields: {
+                browse_list_type_id: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    title: 'Id',
+                    width: '5%',
+                },
+                name: {
+                    title: 'Name',
+                    width: '10%',
+                    list: true,
+                    create: true
+                },
+                desc: {
+                    title: 'Description',
+                    width: '20%',
+                    list: true,
+                    create: true
+                },
+                render_page_name: {
+                    title: 'View-Page',
+                    width: '20%',
+                    list: true,
+                    create: true
+                },
+                is_active: {
+                    title: 'Is active',
+                    width: '5%',
+                    type: 'checkbox',
+                    values: { '0': 'No', '1': 'Yes' },
+                    defaultValue: '1',
+                }
+            }
+
+            
+        });
+
+        $('#TableContainer').jtable('load');
+    });
+</script>

@@ -59,6 +59,7 @@ var aItemData = [
             id: "category",
             itemdata: [
                 {text: "Categories", url: "/backend/categories"},
+                {text: "Browse-List-Types", url: "/backend/browselisttype"},
                 {text: "Virtual Categories", url: "/backend/vcategories"},
                 {text: "Category-Tag", url: "/backend/categorytag"},
                 {text: "Category-Tag-Group", url: "/backend/categorytaggroup"},

@@ -462,6 +462,24 @@
                     defaultValue: '0',
                     width: '8%'
                 },
+                browse_list_type_name: {
+                    title: 'Browse-List-Type',
+                    type: 'textarea',
+                    create: false,
+                    edit: false,
+                    width: '8%'
+                }, 
+                browse_list_type: {
+                    title: 'Browse-List-Type',
+                    type: 'multiselectddl',
+                    create: true,
+                    edit: true,
+                    list: false,
+                    options: function (data) {
+                        data.clearCache();                        
+                        return '/backend/browselisttype/allbrowselisttypes';
+                    }
+                },
                 is_active: {
                     title: 'Status',
                     inputTitle: 'Status*',

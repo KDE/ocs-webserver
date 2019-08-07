@@ -474,7 +474,25 @@
                        0:'no'
                     },
                     defaultValue: 1
-                },       
+                },  
+                browse_list_type_name: {
+                    title: 'Browse-Type',
+                    type: 'textarea',
+                    create: false,
+                    edit: false,
+                    width: '8%'
+                }, 
+                browse_list_type: {
+                    title: 'Browse-List-Type',
+                    type: 'multiselectddl',
+                    create: true,
+                    edit: true,
+                    list: false,
+                    options: function (data) {
+                        data.clearCache();                        
+                        return '/backend/browselisttype/allbrowselisttypes';
+                    }
+                },
 /*                initSearchIndex: {
                     title: '',
                     width: '1%',

@@ -131,6 +131,8 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('backend_section'));
         $this->addResource(new Zend_Acl_Resource ('backend_sectioncategories'));
         $this->addResource(new Zend_Acl_Resource ('backend_sponsor'));
+        
+        $this->addResource(new Zend_Acl_Resource ('backend_browselisttype'));
 
         $this->addResource(new Zend_Acl_Resource ('backend_cdiscourse'));
         $this->addResource(new Zend_Acl_Resource ('backend_cgitlab'));
