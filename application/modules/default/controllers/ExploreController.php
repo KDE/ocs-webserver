@@ -171,7 +171,14 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $cat = $tableCat->findCategory($this->view->cat_id);
         $index = null;
         if(isset($cat) && isset($cat['browse_list_type'])) {
-            $index = $cat['browse_list_type'];
+            $indexListType = $cat['browse_list_type'];
+            $listTypeTable = new Default_Model_DbTable_BrowseListType();
+            $listType = $listTypeTable->find($indexListType);
+            if(isset($listType)) {
+               $index =  $listType['render_page_name'];
+            }
+            
+            
         }
         
 
