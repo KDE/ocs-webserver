@@ -5,98 +5,249 @@
 
     #product-browse-item-list {
         padding: 25px 0;
+        float: left;
+        margin-right: -7px;
+        margin-left: -7px;
+        min-width: 100%;
 
-        .product-browse-item-list-row {
-            display: flex;
-            justify-content: space-evenly;
-             
-            .product-browse-item-wrapper { 
-                padding:5px;
+        &.on-mobile {
+            margin: 0;
+        }
+        
+        .product-browse-item {
+            float:left;
+            margin-bottom:30px;
+            position: relative;
+            padding: 0 7px;
 
-                .product-browse-item {
-                    background: #fbfbfb;
-                    height:100%;
+            > a {
+               display: block;
+               width:100%;
+               height:auto;
+            }
+
+            .product-browse-image {
+                width: 100%;
+                overflow: hidden;
+                box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+                position: relative;
+
+                .product-browse-item-preview-music-player {
+                    position: absolute;
+                    top:0;
+                    left:0;
+                }
+
+                img {
+                    width: 100%;
+                }
+            }
+
+            .product-browse-item-info {
+                font-size:14px;
+                font-weight: bold;
+                overflow: hidden;
+
+                h2 {
+                    font-size: 20px;
+                    font-weight: bold;
+                    margin-bottom: 3px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    display: block;
+                    text-overflow: ellipsis;
+                    font-size: 18px;
+                    min-height: 22px;
+                    margin-top: 8px;
+                    margin-bottom: 4px;
+                }
+
+                span {
+                    width: 50%;
+                    float: left;
+                    display: block;
+                    font-weight: normal;
+                    color: black;
+                    font-size: 1.2rem;
+
+                    a {
+                        color:black;
+                    }
+                }
+
+                span + span {
+                    text-align: right;
+                }
+            }
+
+            .product-browse-music-item-info {
+                font-size: 14px;
+                padding: 5px;
+                float: left;
+                margin-bottom: 5px;
+                width:100%;
+
+                h2 {
+                    font-size: 16px;
+                    font-weight: bold;
+                    margin-bottom: 3px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    display: block;
+                    text-overflow: ellipsis;
+                    margin: 5px 0;
+                    width:100%;
+                }
+
+                span {
+                    width: 100%;
+                    float: left;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    display: block;
+                    text-overflow: ellipsis;
+                    margin: 2px 0;
+                }
+            }
+
+            
+            .wrapper {
+                width:100%;
+                position: relative;
+            }
+
+        }
+
+
+
+        .product-browse-item-preview-music-player {
+            width:100%;
+            position: absolute;
+            top: 44px;
+            left: 0;
+
+            .music-player-counter {
+                position: absolute;
+                top: -44px;
+                background-color: rgba(0, 0, 0, 0.7);
+                right: 0;
+                display: block;
+                z-index: 100000;
+                height: 44px;
+                color: white;
+                line-height: 35px;
+                padding: 5px;
+                display: none;
+            }
+
+            .react-jinke-music-player-main .music-player-panel {
+                position: absolute;
+                height: 44px;
+                width: 38px;
+                overflow: hidden;
+                .transition();
+
+                .play-mode-title {
+                    display: none;
+                }
+
+                .panel-content {
+                    padding:5px;
+                    height: 100%;
                     position: relative;
-                    background-position: center center;
-                    background-repeat: no-repeat;
-                    background-size: contain;
-
-                    .img-link {
-                        display: block;
-                        width:100%;
-                        height: 100%;
-                        cursor: pointer;
+                    display: block;
+                
+                    .img-content,
+                    .audio-title,
+                    .progress-bar-content {
+                        display: none;
                     }
+                
+                    .player-content {
+                        padding:0px;
 
-                    img {
-                        max-width: 100%;
-                        max-height: 100%;
-                        margin: 0 auto;
-                        display: table;
-                        background: #fbfbfb;
-                    }
+                        .group {
+                            padding:0;
+                            margin:0;
 
-                    .product-browse-item-info {
-                        overflow: hidden;
-                        position: absolute;
-                        display: block;
-                        left: 0;
-                        bottom: 0;
-                        height: 100%;
-                        opacity: 0;
-                        width: 100%;
-                        background-image: linear-gradient(180deg,rgba(22,26,31,0),#161a1f);
 
-                        .product-browse-item-info-content {
-                            position: absolute;
-                            left: 0;
-                            bottom: 0;
-                            padding:5px;
-                            width:100%;
+                            &.prev-audio,
+                            &.next-audio,
+                            &.audio-lists-btn,
+                            &.play-sounds {
+                                display: none;
+                            }
 
-                            > div {
-                                width: 100%;
-                                padding: 5px;
-                                font-size: 14px;
-                                color: white;
-                                float: left;
-                                
-                                h2 {
-                                    white-space: nowrap;
-                                    overflow: hidden;
-                                    display: block;
-                                    text-overflow: ellipsis;
-                                    width: 100%;
-                                    color:white;
-                                    font-size: 26px;
-                                    height: 30px;
+                            &.play-btn.play {
+                                margin-right:5px;
+                                margin-top: 3px;
+                            }
 
-                                    a {
-                                        color:white;
-                                    }
-                                }
-
-                                span {
-                                    display: block;
-                                    float: left;
-                                    width:100%;
-                                }
+                            &.loading {
+                                margin-top: 2px;
+                                margin-left: 42px;
                             }
                         }
                     }
+                }
+            }
 
-                    &:hover {
-                        .product-browse-item-info {
-                            opacity: 1;
-                        }
+            .react-jinke-music-player-mobile {
+                height: auto;
+                position: absolute;
+                top: -44px;
+                
+                .react-jinke-music-player-mobile-header,
+                .react-jinke-music-player-mobile-singer,
+                .react-jinke-music-player-mobile-switch,
+                .react-jinke-music-player-mobile-cover,
+                .react-jinke-music-player-mobile-progress,
+                .react-jinke-music-player-mobile-operation {
+                    display: none;
+                }
+
+                .react-jinke-music-player-mobile-toggle {
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+
+                    .play-btn {
+                        padding:0 20px;
                     }
                 }
+
+                .group.prev-audio,
+                .group.next-audio {
+                    display: none;
+                    padding-top: 6px;
+                }
+            }
+
+            &.show-controls {
+
+                .music-player-counter {
+                    display: block;
+                }
+
+                .react-jinke-music-player-main .music-player-panel {
+                    width:110px;
+                }
+                
+                .group {
+                    &.prev-audio,
+                    &.next-audio {
+                        display: block !important;
+                    }
+                }
+
+
             }
         }
     }
 
     #product-browse-pagination {
         text-align: center;
+        clear: both;
 
         ul {
             display: table;
@@ -107,11 +258,12 @@
             li {
                 float: left;
 
-                a {
+                a, span.no-link {
                     display: block;
                     padding: 5px 4px;
                     cursor: pointer;
                 }
+                
             }
         }
     }

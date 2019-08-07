@@ -1,4 +1,5 @@
 import React from 'react';
+import DownloadSection from './function/DownloadSection';
 class AnonymousMenu extends React.Component {
   constructor(props){
     super(props);
@@ -20,43 +21,40 @@ class AnonymousMenu extends React.Component {
    }
 
    loadAnonymousDl(){
-     if(!this.props.user){
-       let url = this.props.baseUrl+'/membersetting/anonymousdl';
-
+       let url = this.props.baseUrlStore+'/json/anonymousdl';
        fetch(url,{
                   mode: 'cors',
                   credentials: 'include'
                   })
        .then(response => response.json())
        .then(data => {
-          this.setState(prevState => ({ anonymousdl: data.dls }))
+          this.setState(prevState => ({ anonymousdl: data.dls , section:data.section}))
         });
-      }
    }
 
-
   handleClick(e){
-    // let dropdownClass = "";
-    //
-    // if (this.node.contains(e.target)){
-    //
-    //   if(e.target.className === "about-menu-link-item" || "th-icon"===e.target.className)
-    //   {
-    //     // only btn click open dropdown
-    //     if (this.state.dropdownClass === "open"){
-    //       dropdownClass = "";
-    //     }else{
-    //       dropdownClass = "open";
-    //     }
-    //   }else{
-    //     dropdownClass = "";
-    //   }
-    // }
-    // this.setState({dropdownClass:dropdownClass});
+    let dropdownClass = "";
+    if (this.node.contains(e.target)){
+      if (this.state.dropdownClass === "open"){
+        if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle"){
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({dropdownClass:dropdownClass});
+
   }
 
   render(){
 
+    let downloadSection;
+    if (this.state.section){
+      downloadSection = <DownloadSection section={this.state.section}/>
+    }
     return (
       <li ref={node => this.node = node} id="anonymous-dropdown-menu-container" >
         <div className={"user-dropdown " + this.state.dropdownClass}>
@@ -64,6 +62,19 @@ class AnonymousMenu extends React.Component {
           className="btn btn-default dropdown-toggle" type="button" onClick={this.toggleDropDown}>
           <span className="th-icon"></span>{this.state.anonymousdl}
         </button>
+        <ul className="dropdown-menu dropdown-menu-right">
+          <li className="user-context-menu">
+            {downloadSection}
+          </li>
+
+          {(this.props.user && this.props.user.isSupporter) ? (
+            <li id="user-is-supporter">Thanks for being a supporter!</li>
+          ) : (
+            <li id="user-is-supporter">
+              You are not a <a className="become-supporter" href={this.props.baseUrl+"/support"}>supporter</a> yet.
+            </li>
+          )}
+        </ul>
       </div>
       </li>
     )

@@ -311,6 +311,7 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
        }
    }
 	 .personal-container-top{
+		 text-align: center;
 			.userinfo{
 					text-align: center;
 				 .image-profile{
@@ -319,8 +320,127 @@ out: ../css/home-main-container.css, sourcemap: true, compress: true
 					 height: 100px;
 				 }
 			 }
-		}
+			 ul#personal-links-container
+			 {
 
+					 list-style: none;
+				 	 li {
+					 height: auto;
+					 width: 86px;
+					 border: 1px solid white;
+					 margin: 5px 20px 10px 20px;;
+					 float: left;
+					 box-sizing: border-box;
+						 a {
+							 display: block;
+							 width: 100%;
+							 padding: 0;
+							 height: auto;
+							 float: left;
+
+							 &:hover {
+								 background-color: white ;
+							 }
+
+							 .icon {
+								 width: 55px;
+								 height: 55px;
+								 margin: 5px auto;
+								 background-size: 50px;
+								 background-position: center center;
+								 background-repeat: no-repeat;
+								 width: 100%;
+							 }
+
+							 span {
+								 float: left;
+								 width: 100%;
+								 text-align: center;
+								 display: block;
+								 color:rgba(0,0,0,0.87);
+								 font-size: 13px;
+							 }
+
+							 &:active {
+								 background-color: white;
+							 }
+						 }
+						 &#docs-link-item {
+							 a {
+									 .icon {
+										 background-image: url(../img/logo-docs.png);
+										 background-size: 45px;
+									 }
+							 	 }
+						 	}
+
+							&#storage-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-storage.png);
+                  background-size: 45px;
+                }
+              	}
+            	}
+
+							&#messages-link-item {
+                  a {
+                    .icon {
+                      background-image: url(../img/messages.png);
+                      background-size: 45px;
+                    }
+                  }
+								}
+
+							&#contacts-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-contacts.png);
+                  background-size: 45px;
+                }
+              }
+            }
+						&#mail-link-item{
+							a {
+                .icon {
+                  background-image: url(../img/secure-mail.png);
+                  background-size: 45px;
+                }
+              }
+						}
+            &#calendar-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-calendar.png);
+                  background-size: 45px;
+                }
+              }
+            }
+
+						&#music-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-music.png);
+                  background-size: 45px;
+                }
+              }
+            }
+						  &#chat-link-item {
+
+              a {
+                .icon {
+                  background-image: url(../img/chat.png);
+                  background-size: 45px;
+                }
+              }
+            }
+
+
+
+			 			}
+
+			 }
+		}
 	}
 
 	.middle{

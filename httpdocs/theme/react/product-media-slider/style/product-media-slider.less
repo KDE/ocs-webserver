@@ -711,14 +711,16 @@ video:focus {
 
 #music-player-wrapper {
 
-  .rc-slider {
-    position: relative;
-    flex:1 1 auto;
-  
-    .rc-slider-track {
-      position: absolute;
-      top:0;
-      height:100%;
+  .progress-bar {
+    margin: -3px 20px 0 20px;
+
+    .rc-slider {
+      height: 20px;
+      padding: 8px 0;
+
+      .rc-slider-step {
+        height:20px;
+      }
     }
   }
 
@@ -789,6 +791,20 @@ video:focus {
   
           > .group {
             margin: 0 5px;
+
+            &.audio-download,
+            &.hide-panel, 
+            &.lyric-btn {
+              display:none;
+            }
+
+            &.reload-btn {
+              order:10;
+            }
+
+            &.theme-switch {
+              order:11;
+            }
           }
         }
       }

@@ -1738,6 +1738,25 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json($ratings);
     }
     
+    public function loadfilesjsonAction()
+   {
+        $this->_helper->layout->disableLayout();
+        // $project_id = $this->getParam('pid');
+        $modelProject = new Default_Model_Project();
+        $files = $modelProject->fetchFilesForProject($this->_projectId);
+        $salt = PPLOAD_DOWNLOAD_SECRET;
+        foreach ($files as &$file) {
+            $timestamp = time() + 3600; // one hour valid
+            $hash = hash('sha512',$salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
+            $url = PPLOAD_API_URI . 'files/download/id/' . $file['id'] . '/s/' . $hash . '/t/' . $timestamp;
+            if(null != $this->_authMember) {
+                $url .= '/u/' . $this->_authMember->member_id;
+            }
+            $url .= '/lt/filepreview/' . $file['name'];
+            $file['url'] = urlencode($url);                    
+        }        
+        $this->_helper->json($files);
+    }
     public function loadinstallinstructionAction()
     {
         $this->_helper->layout->disableLayout();
@@ -2957,14 +2976,19 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         return $gitProjectIssues;
     }
     
-    
+
     public function startvideoajaxAction() {
         $this->_helper->layout()->disableLayout();
         
         $collection_id = null;
         $file_id = null;
         $memberId = $this->_authMember->member_id;
-        
+        $media_view_type_id = $this->getParam('type_id');
+        if(!$media_view_type_id)
+        {
+            // default
+            $media_view_type_id = Default_Model_DbTable_MediaViews::MEDIA_TYPE_VIDEO;            
+        }
         
         if($this->hasParam('collection_id') && $this->hasParam('file_id')) {
             $collection_id = $this->getParam('collection_id');
@@ -2975,7 +2999,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             try {
                 $mediaviewsTable = new Default_Model_DbTable_MediaViews();
                 $id = $mediaviewsTable->getNewId();
-                $data = array('media_view_id' => $id, 'media_view_type_id' => $mediaviewsTable::MEDIA_TYPE_VIDEO, 'project_id' => $this->_projectId, 'collection_id' => $collection_id, 'file_id' => $file_id, 'start_timestamp' => new Zend_Db_Expr ('Now()'), 'ip' => $this->getRealIpAddr(), 'referer' => $this->getReferer());
+                $data = array('media_view_id' => $id, 'media_view_type_id' => $media_view_type_id, 'project_id' => $this->_projectId, 'collection_id' => $collection_id, 'file_id' => $file_id, 'start_timestamp' => new Zend_Db_Expr ('Now()'), 'ip' => $this->getRealIpAddr(), 'referer' => $this->getReferer());
                 if(!empty($memberId)) {
                    $data['member_id'] = $memberId;
                 }

@@ -34,6 +34,7 @@
               if($xdgType) $files_toinstall[]=$f;
             } 
         }
+        $project->description = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($project->description));
         $i++;
 ?>
         <div class="row smaller row-collection" >

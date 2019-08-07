@@ -578,19 +578,17 @@ video:focus {
   stroke: #777;
   fill: #777;
 }
-#music-player-wrapper .rc-slider {
-  position: relative;
-  flex: 1 1 auto;
+#music-player-wrapper .progress-bar {
+  margin: -3px 20px 0 20px;
 }
-#music-player-wrapper .rc-slider .rc-slider-track {
-  position: absolute;
-  top: 0;
-  height: 100%;
+#music-player-wrapper .progress-bar .rc-slider {
+  height: 20px;
+  padding: 8px 0;
 }
-#music-player-wrapper .audio-lists-panel .audio-lists-panel-header .close-btn {
-  display: block;
-  margin-right: 30px;
+#music-player-wrapper .progress-bar .rc-slider .rc-slider-step {
+  height: 20px;
 }
+
 #music-player-wrapper .audio-lists-panel .audio-lists-panel-header .line,
 #music-player-wrapper .audio-lists-panel .audio-lists-panel-header .delete-btn {
   display: none;
@@ -638,6 +636,17 @@ video:focus {
 }
 #music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group {
   margin: 0 5px;
+}
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.audio-download,
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.hide-panel,
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.lyric-btn {
+  display: none;
+}
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.reload-btn {
+  order: 10;
+}
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.theme-switch {
+  order: 11;
 }
 #music-player-wrapper.desktop .audio-lists-panel {
   position: absolute;

@@ -1,6 +1,6 @@
 import React from 'react';
 import UserCommentsTab from './UserCommentsTab';
-import UserInfo from './UserInfo';
+import UserInfo from './function/UserInfo';
 import UserCommentsTabThreadsContainer from './UserCommentsTabThreadsContainer';
 class UserAutoCompleteTabs extends React.Component {
   constructor(props){

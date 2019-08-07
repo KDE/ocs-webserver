@@ -1,6 +1,6 @@
 import React from 'react';
 import UserAutoCompleteInput from './UserAutoCompleteInput';
-import SwitchItem from './SwitchItem';
+import SwitchItem from './function/SwitchItem';
 class UserLoginMenuContainerVersionTwo extends React.Component {
   constructor(props){
     super(props);

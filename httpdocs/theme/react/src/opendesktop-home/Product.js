@@ -4,7 +4,6 @@ import TimeAgo from 'react-timeago';
 class Product extends React.Component {
   render(){
       let projectUrl = this.props.baseUrlStore+"/p/"+this.props.product.project_id;
-      const createdDate = this.props.product.changed_at?this.props.product.changed_at:this.props.product.created_at;
       const scoreDisplay=(
           <div className="score-info">
             <div className="score-number">
@@ -20,7 +19,7 @@ class Product extends React.Component {
         <div className="product-info">
           <span className="product-info-title"><a href={projectUrl} >{this.props.product.title}</a></span>
           <span className="product-info-category">{this.props.product.cat_title}</span>
-          <span className="product-info-date"><TimeAgo date={createdDate} /></span>
+          <span className="product-info-date">{this.props.product.updated_at}</span>
         </div>
       );
 

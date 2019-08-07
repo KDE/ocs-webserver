@@ -16,13 +16,25 @@ RUN apt-get update \
  && apt-get install -y apt-utils \
  && DEBIAN_FRONTEND=noninteractive \
     apt-get install -y build-essential \
-    libmemcached-dev libmcrypt-dev zlib1g-dev \
+    libmemcached-dev \
+    libmcrypt-dev \
+    zlib1g-dev \
+    libwebp-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libmagickwand-dev --no-install-recommends \
+    libldap2-dev \
+ && rm -rf /var/lib/apt/lists/* \
 # Memcached and APCU must be installed via pecl
  && yes '' | pecl install memcached-2.2.0 \
  && yes '' | pecl install apcu-4.0.11 \
+ && yes '' | pecl install imagick \
 # MySQL, Mcrypt and Curl via the docker-specific extension-handler
- && docker-php-ext-install mysql mcrypt pdo_mysql \
- && docker-php-ext-enable memcached apcu
+ && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-webp-dir=/usr/include/  --with-jpeg-dir=/usr/include/ \
+ && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
+ && docker-php-ext-install gd mysql mcrypt pdo_mysql ldap \
+ && docker-php-ext-enable memcached apcu imagick
 
 # Install Debug-extensions
 RUN test "$BUILD_ENV" = "development" \

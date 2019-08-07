@@ -1,10 +1,7 @@
 import React from 'react';
 import UserLoginMenuContainer from './UserLoginMenuContainer';
-// import UserLoginMenuContainerVersionTwo from './UserLoginMenuContainerVersionTwo';
-import UserContextMenuContainer from './UserContextMenuContainer';
 import DevelopmentAppMenu from './DevelopmentAppMenu';
 import SearchMenuContainer from './SearchMenuContainer';
-//import SwitchItem from './SwitchItem';
 import AboutMenu from './AboutMenu';
 import AnonymousMenu from './AnonymousMenu';
 
@@ -15,9 +12,10 @@ class UserMenu extends React.Component {
   }
 
   render(){
-    let searchMenuDisplay;
+    let searchMenuDisplay,anonymousMenu;
     if (this.props.user && this.props.isAdmin ){
       searchMenuDisplay = <SearchMenuContainer baseUrl={this.props.baseUrl}/>
+      anonymousMenu= <AnonymousMenu baseUrl={this.props.baseUrlStore} baseUrlStore={this.props.baseUrlStore} user={this.props.user}/>
     }
 
     let userDropdownDisplay, developmentAppMenuDisplay;
@@ -26,9 +24,15 @@ class UserMenu extends React.Component {
         <UserLoginMenuContainer
           user={this.props.user}
           forumUrl={this.props.forumUrl}
+          gitlabUrl={this.props.gitlabUrl}
           isAdmin={this.props.isAdmin}
           logoutUrl={this.props.logoutUrl}
           baseUrl={this.props.baseUrl}
+          baseUrlStore={this.props.baseUrlStore}
+          myopendesktopUrl={this.props.myopendesktopUrl}
+          cloudopendesktopUrl={this.props.cloudopendesktopUrl}
+          musicopendesktopUrl={this.props.musicopendesktopUrl}
+          docsopendesktopUrl={this.props.docsopendesktopUrl}
           onSwitchStyle={this.props.onSwitchStyle}
           onSwitchStyleChecked={this.props.onSwitchStyleChecked}
         />
@@ -43,6 +47,10 @@ class UserMenu extends React.Component {
           isAdmin={this.props.isAdmin}
           baseUrl={this.props.baseUrl}
           baseUrlStore={this.props.baseUrlStore}
+          myopendesktopUrl={this.props.myopendesktopUrl}
+          cloudopendesktopUrl={this.props.cloudopendesktopUrl}
+          musicopendesktopUrl={this.props.musicopendesktopUrl}
+          docsopendesktopUrl={this.props.docsopendesktopUrl}
         />
       );
     } else {
@@ -53,17 +61,14 @@ class UserMenu extends React.Component {
         </React.Fragment>
     )
     }
-    let anonymousMenu;
-    if (!this.props.user){
-      anonymousMenu= <AnonymousMenu baseUrl={this.props.baseUrl} user={this.props.user}/>
-    }
 
-    let chatItem;
-    if (this.props.user && this.props.user.member_id ){
-      chatItem=(<li id="chat-link-item"><a href={this.props.riotUrl}>
-        <img src={this.props.baseUrl+"/theme/react/assets/img/logo-riot.svg"} className="riotIcon"></img>Chat
+
+
+
+    let  chatItem=(<li id="chat-link-item"><a href={this.props.riotUrl}>
+        <img src={this.props.baseUrl+"/theme/react/assets/img/chat.png"} className="riotIcon"></img>Chat
       </a></li>);
-    }
+
 
 
     let userMenuContainerDisplay;
@@ -78,13 +83,14 @@ class UserMenu extends React.Component {
 
 
 
+
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
-          <li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>
-          {aboutMenu}
-          {searchMenuDisplay}
-          {chatItem}
 
+          {aboutMenu}
+          {chatItem}
+          {searchMenuDisplay}
+          {anonymousMenu}
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
 
@@ -94,13 +100,13 @@ class UserMenu extends React.Component {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
           {chatItem}
+          {anonymousMenu}
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
 
         </ul>
       );
     }
-
 
     return (
       <div id="user-menu-container" className="right">

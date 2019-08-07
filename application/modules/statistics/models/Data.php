@@ -72,12 +72,18 @@ class Statistics_Model_Data
           $result = $this->_db->fetchAll($sql);
           return $result;  
     }
-    public function getNewprojectWeeklystatsWithoutWallpapers(){        
+    public function getNewprojectWeeklystatsWithoutWallpapers(){       
+
+               $tmpsql = "select lft, rgt from stat_cat_tree where project_category_id=295";
+               $wal = $this->_db->fetchRow($tmpsql);            
+               $lft = $wal['lft'];
+               $rgt = $wal['rgt'];
+
           $sql = "SELECT YEARWEEK(`created_at`) as yyyykw , count(*) as amount  
                   FROM project p
                   join stat_cat_tree t on p.project_category_id = t.project_category_id                
-                  where status=100 and type_id = 1                   
-                  and (t.lft<899 or t.rgt>988)
+                  where status=100 and type_id = 1                                     
+                  and (t.lft<".$lft." or t.rgt>".$rgt." )
                   group by  yyyykw    
                   order by yyyykw 
                   desc limit 60";
@@ -85,12 +91,18 @@ class Statistics_Model_Data
           return $result;  
     }
 
-    public function getNewprojectWeeklystatsWallpapers(){        
+    public function getNewprojectWeeklystatsWallpapers(){    
+
+              $tmpsql = "select lft, rgt from stat_cat_tree where project_category_id=295";
+               $wal = $this->_db->fetchRow($tmpsql);            
+               $lft = $wal['lft'];
+               $rgt = $wal['rgt'];
+
           $sql = "SELECT YEARWEEK(`created_at`) as yyyykw , count(*) as amount  
                   FROM project p
                   join stat_cat_tree t on p.project_category_id = t.project_category_id                
-                  where status=100 and type_id = 1                   
-                  and (t.lft>899 and t.rgt<988)
+                  where status=100 and type_id = 1                                     
+                  and (t.lft>".$lft." and t.rgt<".$rgt." )
                   group by  yyyykw    
                   order by yyyykw 
                   desc limit 60";

@@ -181,7 +181,26 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $this->view->commentsJson = Zend_Json::encode($comments);
             $modelCategory = new Default_Model_ProjectCategory();
             $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());
-            $this->_helper->viewRenderer('index-react2');
+
+            // temperately when index=3 return product files too... in the future could be replaced by category parameter.
+            if($index==3)
+            {
+                $modelProject = new Default_Model_Project();
+                $files = $modelProject->fetchFilesForProjects($requestedElements['elements']);
+                $salt = PPLOAD_DOWNLOAD_SECRET;
+                foreach ($files as &$file) {
+                    $timestamp = time() + 3600; // one hour valid
+                    $hash = hash('sha512',$salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
+                    $url = PPLOAD_API_URI . 'files/download/id/' . $file['id'] . '/s/' . $hash . '/t/' . $timestamp;
+                    if(null != $this->_authMember) {
+                        $url .= '/u/' . $this->_authMember->member_id;
+                    }
+                    $url .= '/lt/filepreview/' . $file['name'];
+                    $file['url'] = urlencode($url);                    
+                }
+            }
+
+            $this->_helper->viewRenderer('index-react'.$index);
 
         }
         else if ($storeConfig->layout_explore && $storeConfig->isRenderReact()) {
@@ -218,6 +237,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $this->view->package_type = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
         $this->view->tags = $tagFilter;
     }
+
+    
 
     /**
      * @param $inputCatId

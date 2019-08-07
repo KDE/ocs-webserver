@@ -39,7 +39,7 @@
 
 
 
-<?php 
+<?php
 //Change from opendesktop to pling
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 $baseurlStore = Zend_Registry::get('config')->settings->client->default->baseurl_store;
@@ -51,7 +51,7 @@ $url_myopendesktop = Zend_Registry::get('config')->settings->client->default->ur
 $url_cloudopendesktop = Zend_Registry::get('config')->settings->client->default->url_cloudopendesktop;
 $url_musicopendesktop = Zend_Registry::get('config')->settings->client->default->url_musicopendesktop;
 $url_mastodon = Zend_Registry::get('config')->settings->client->default->url_mastodon;
-
+$url_docsopendesktop = Zend_Registry::get('config')->settings->client->default->url_docsopendesktop;
 $filter = new Local_Filter_Url_Encrypt();
 $url_login;
 $url_logout;
@@ -82,27 +82,29 @@ if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
     $isAdmin = true;
 }
 
+
 $user = null;
 $metamenuTheme = '';
 if (Zend_Auth::getInstance()->hasIdentity()){
     $identity = Zend_Auth::getInstance()->getStorage()->read();
     $helperImage = new Default_View_Helper_Image();
     $avatar = $helperImage->image($identity->profile_image_url,array('width' => 100, 'height' => 100, 'crop' => 2));
-    
+    $isSupporter = $this->isSupporter($identity->member_id);
     $user = array(
         "username" => $identity->username,
         "member_id" => $identity->member_id,
         "mail" => $identity->mail,
-        "avatar" => $avatar, 
-        "roleName" =>$identity->roleName
+        "avatar" => $avatar,
+        "roleName" =>$identity->roleName,
+        "isSupporter" => $isSupporter
     );
-  
+
     $settingmodel = new Default_Model_MemberSettingValue();
     $result = $settingmodel->fetchMemberSettingItem($identity->member_id,1);
     if($result && $result['value']==1)
     {
         $metamenuTheme = 'metamenu-theme-dark';
-    } 
+    }
 
 
 }
@@ -121,13 +123,16 @@ $response = array(
     "forumUrl" => $url_forum,
     "mastodonUrl" => $url_mastodon,
     "gitlabUrl" => $url_gitlab,
+    "myopendesktopUrl" => $url_myopendesktop,
+    "cloudopendesktopUrl" => $url_cloudopendesktop,
+    "musicopendesktopUrl" => $url_musicopendesktop,
+    "docsopendesktopUrl" => $url_docsopendesktop,
     "riotUrl" => $url_riot,
     "loginUrl" => $url_login,
     "logoutUrl" => $url_logout,
     "sName" => $sname,
     "metamenuTheme" => $metamenuTheme
 );
-
 
 ?>
 

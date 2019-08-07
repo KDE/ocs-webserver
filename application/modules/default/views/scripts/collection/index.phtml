@@ -604,9 +604,9 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                         <?php } ?>
 
 
-                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
+                        <?php /*if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
                         <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
-                       <?php } ?>
+                       <?php } */?>
                         
                         <li><a href="#ratings-panel2" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>   
 
@@ -883,7 +883,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                         <?php } ?>
 
                        <!-- ratings panel -->
-                        <?php  if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) { ?>
+                        <?php /* if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) { ?>
                         <div class="tab-pane" id="ratings-panel">
                             <div id="ratings-panel-wrapper" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                             <article>
@@ -895,7 +895,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                             </article>
                             </div>
                         </div>
-                       <?php } ?>
+                       <?php } */?>
 
 
                         <!-- ratings panel2 -->

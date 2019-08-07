@@ -23,12 +23,12 @@
 class JsonController extends Zend_Controller_Action
 {
 
-	
+
 	protected $_format = 'json';
 	public function init()
     {
         parent::init();
-        $this->initView();      
+        $this->initView();
     }
 
     public function initView()
@@ -80,13 +80,13 @@ class JsonController extends Zend_Controller_Action
     	header('Content-Type: application/json; charset=UTF-8');
     	echo json_encode($response);
     }
-   
+
 	public function forumAction()
 	{
 
 		$this->_initResponseHeader();
-    	
-    	$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;    	
+
+    	$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
     	$url=$url_forum.'/latest.json';
     	$ch = curl_init();
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
@@ -94,14 +94,22 @@ class JsonController extends Zend_Controller_Action
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        $data = curl_exec($ch);        
+        $data = curl_exec($ch);
         curl_close($ch);
-        $results = json_decode($data);     	  
-        $timeago = new Default_View_Helper_PrintDateSince();        
-        foreach ( $results->topic_list->topics as &$t) {                
-                $tmp = str_replace('T',' ',substr($t->last_posted_at, 0, 19));
-                $t->timeago = $timeago->printDateSince($tmp);   
+        $results = json_decode($data);
+        $timeago = new Default_View_Helper_PrintDateSince();
+        foreach ( $results->topic_list->topics as &$t) {
 
+                $strTime = str_replace('T',' ',substr($t->last_posted_at, 0, 19));
+                
+                //$t->timeago = $timeago->printDateSince($strTime);
+
+                $fromFormat='Y-m-d H:i:s';
+                $date = DateTime::createFromFormat($fromFormat, $strTime);        
+                // forum/latest.json last_posted_at is 5 hours later as server somehow.. quick workaround
+                $date->sub(new DateInterval('PT4H40M'));                
+                $t->timeago = $timeago->printDateSince($date->format('Y-m-d h:s:m'));
+                //$t->timeago =  $date->format('Y-m-d H:i:s');
                 $r='Reply';
                 $counts = $t->posts_count -1;
                  if($counts==0){
@@ -110,17 +118,17 @@ class JsonController extends Zend_Controller_Action
                     $r = 'Reply';
                  }else{
                     $r = 'Replies';
-                 }   
-                $t->replyMsg = $counts.' '.$r;          
-        }        
+                 }
+                $t->replyMsg = $counts.' '.$r;
+        }
     	$this->_sendResponse($results, $this->_format);
 	}
 
     public function gitlabnewprojectsAction()
     {
 
-        $this->_initResponseHeader();                
-        $url_git = Zend_Registry::get('config')->settings->server->opencode->host;      
+        $this->_initResponseHeader();
+        $url_git = Zend_Registry::get('config')->settings->server->opencode->host;
         $url=$url_git.'/api/v4/projects?order_by=created_at&sort=desc&visibility=public&page=1&per_page=5';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
@@ -128,22 +136,22 @@ class JsonController extends Zend_Controller_Action
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        $data = curl_exec($ch);        
+        $data = curl_exec($ch);
         curl_close($ch);
-        $results = json_decode($data);        
-        $timeago = new Default_View_Helper_PrintDateSince();        
-        foreach ( $results as &$t) {                
+        $results = json_decode($data);
+        $timeago = new Default_View_Helper_PrintDateSince();
+        foreach ( $results as &$t) {
                 $tmp = str_replace('T',' ',substr($t->created_at, 0, 19));
-                $t->timeago = $timeago->printDateSince($tmp);                
-        }        
+                $t->timeago = $timeago->printDateSince($tmp);
+        }
         $this->_sendResponse($results, $this->_format);
     }
 
     public function gitlabfetchuserAction()
     {
 
-        $this->_initResponseHeader();                
-        $url_git = Zend_Registry::get('config')->settings->server->opencode->host;      
+        $this->_initResponseHeader();
+        $url_git = Zend_Registry::get('config')->settings->server->opencode->host;
         $url=$url_git.'/api/v4/users?username='.$this->getParam('username');
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
@@ -151,26 +159,57 @@ class JsonController extends Zend_Controller_Action
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        $data = curl_exec($ch);        
+        $data = curl_exec($ch);
         curl_close($ch);
-        $results = json_decode($data);                
+        $results = json_decode($data);
         $this->_sendResponse($results, $this->_format);
     }
 
     public function cattagsAction()
     {
 
-        $this->_initResponseHeader();                
+        $this->_initResponseHeader();
         $catid = $this->getParam('id');
         $results = array();
         if($catid)
         {
-            $m = new Default_Model_Tags(); 
-            $results = $m->getTagsPerCategory($catid);    
-        }        
+            $m = new Default_Model_Tags();
+            $results = $m->getTagsPerCategory($catid);
+        }
         $this->_sendResponse($results, $this->_format);
     }
-      
-	
+
+		  public function anonymousdlAction()
+      {
+          $this->_initResponseHeader();
+          $identity = Zend_Auth::getInstance()->getStorage()->read();
+
+          $config = Zend_Registry::get('config');
+          $cookieName = $config->settings->session->auth->anonymous;
+          $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
+          if($storedInCookie)
+          {
+               $model = new Default_Model_DbTable_MemberDownloadHistory();
+							 $dlsection = $model->getAnonymousDLSection($storedInCookie);
+							 $dls=0;
+							 foreach ($dlsection as $value) {
+							 	 $dls = $dls+$value['dls'];
+							 }
+               //$dls = $model->countDownloadsAnonymous($storedInCookie);
+                  $response = array(
+                  'status'     => 'ok',
+									'section' => $dlsection,
+                  'dls'    => $dls
+                  );
+                  $this->_sendResponse($response, $this->_format);
+                  return;
+          }
+          $response = array(
+              'status'     => 'ok',
+              'dls'    => 0
+              );
+          $this->_sendResponse($response, $this->_format);
+      }
+
 
 }
