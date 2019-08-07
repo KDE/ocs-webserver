@@ -163,23 +163,26 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
         $page = (int)$this->getParam('page', 1);
 
-        //Old: index as Param
-        //$index = $this->getParam('index');
-        
-        
-        //Now the index is in backend categories set
-        $tableCat = new Default_Model_DbTable_ProjectCategory();
-        $cat = $tableCat->findCategory($this->view->cat_id);
         $index = null;
-        if(isset($cat) && isset($cat['browse_list_type'])) {
-            $indexListType = $cat['browse_list_type'];
-            $listTypeTable = new Default_Model_DbTable_BrowseListType();
-            $listType = $listTypeTable->findBrowseListType($indexListType);
-            if(isset($listType)) {
-               $index =  $listType['render_page_name'];
+        
+        
+        //Old: index as Param
+        $index = $this->getParam('index');
+        
+        if($index) {
+            $index = 'index-react'.$index;
+        } else {
+            //Now the index is in backend categories set
+            $tableCat = new Default_Model_DbTable_ProjectCategory();
+            $cat = $tableCat->findCategory($this->view->cat_id);
+            if(isset($cat) && isset($cat['browse_list_type'])) {
+                $indexListType = $cat['browse_list_type'];
+                $listTypeTable = new Default_Model_DbTable_BrowseListType();
+                $listType = $listTypeTable->findBrowseListType($indexListType);
+                if(isset($listType)) {
+                   $index =  $listType['render_page_name'];
+                }
             }
-            
-            
         }
         
 
