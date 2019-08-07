@@ -431,6 +431,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
                 `pc`.`show_description`,
                 `pc`.`source_required`,
                 `blt`.`name` as `browse_list_type_name`,
+                `pc`.`browse_list_type`,
                 MIN(`pc2`.`is_active`)                                       AS `parent_active`,
                 concat(repeat('&nbsp;&nbsp;',count(`pc`.`lft`) - 1), `pc`.`title`) AS `title_show`,
                 concat(repeat('&nbsp;&nbsp;',count(`pc`.`lft`) - 1), IF(LENGTH(TRIM(`pc`.`name_legacy`))>0,`pc`.`name_legacy`,`pc`.`title`)) AS `title_legacy`,
