@@ -164,17 +164,22 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $page = (int)$this->getParam('page', 1);
 
         $index = null;
-        
+        $browseListType = null;
         
         //Old: index as Param
         $index = $this->getParam('index');
         
-        Zend_Registry::get('logger')->err(__METHOD__ . ' - IndexParam : ' . $index);
-        
         if($index) {
-            $index = 'index-react'.$index;
+            if($index == 2) {
+                $browseListType = 'picture';
+            }
+            if($index == 3) {
+                $browseListType = 'music';
+            }
+            
         } else {
-            //Now the index is in backend categories set
+            $index = 2;
+            //Now the list type is in backend categories set
             $tableCat = new Default_Model_DbTable_ProjectCategory();
             $cat = $tableCat->findCategory($this->view->cat_id);
             if(isset($cat) && isset($cat['browse_list_type'])) {
@@ -182,12 +187,12 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
                 $listTypeTable = new Default_Model_DbTable_BrowseListType();
                 $listType = $listTypeTable->findBrowseListType($indexListType);
                 if(isset($listType)) {
-                   $index =  $listType['render_page_name'];
+                   $browseListType =  $listType['name'];
                 }
             }
         }
         
-        Zend_Registry::get('logger')->err(__METHOD__ . ' - IndexParam2 : ' . $index);
+        Zend_Registry::get('logger')->err(__METHOD__ . ' - browseListType : ' . $browseListType);
         
 
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
@@ -206,10 +211,10 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $this->view->commentsJson = Zend_Json::encode($comments);
             $modelCategory = new Default_Model_ProjectCategory();
             $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());
+            $this->view->browseListType = $browseListType;
 
             // temperately when index=3 return product files too... in the future could be replaced by category parameter.
-            //if($index==3)
-            if($index=='index-react3')
+            if($index==3 || $browseListType == 'music')
             {
                 $modelProject = new Default_Model_Project();
                 $files = $modelProject->fetchFilesForProjects($requestedElements['elements']);
@@ -226,10 +231,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
                 }
             }
 
-            //$this->_helper->viewRenderer('index-react'.$index);
-            $this->_helper->viewRenderer($index);
-            
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - Show Page : /explore/' . $index);
+            $this->_helper->viewRenderer('index-react'.$index);
 
         }
         else if ($storeConfig->layout_explore && $storeConfig->isRenderReact()) {
