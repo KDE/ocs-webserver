@@ -109,7 +109,7 @@ function ProductBrowseItem(props){
 
 
     let imgUrl = "";
-    if (p.image_small.indexOf('https://') > -1 || p.image_small.indexOf('http://') > -1 ) imgUrl = p.image_small;
+    if (p.image_small && p.image_small.indexOf('https://') > -1 || p.image_small && p.image_small.indexOf('http://') > -1 ) imgUrl = p.image_small;
     else {
         imgUrl = "https://cn.opendesktop.";
         imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
@@ -384,8 +384,6 @@ function ProductBrowsePagination(){
     const minPage = currentPage - 5 > 0 ? currentPage - 5 : 0;
     const maxPage = currentPage + 5 < totalPages ? currentPage + 5 : totalPages;
 
-    console.log(typeof filters.category);
-
     let paginationArray = [];
     for (var i = minPage; i < maxPage; i++){ paginationArray.push(i + 1); }
     
@@ -394,8 +392,6 @@ function ProductBrowsePagination(){
     if (typeof filters.category === 'number') pageLinkSuffix += "/cat/" + filters.category + "/";
     pageLinkSuffix += "ord/" + filters.order;
     if (filters.original !== null) pageLinkSuffix += "/filteroriginal/" + filters.original + window.location.search;
-
-    console.log(pageLinkBase);
 
     let previousButtonDisplay;
     if (currentPage > 1) previousButtonDisplay = <li><a href={pageLinkBase + (currentPage - 1) + pageLinkSuffix}><span className="glyphicon glyphicon-chevron-left"></span> Previous</a></li>
