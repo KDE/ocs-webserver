@@ -164,9 +164,9 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $page = (int)$this->getParam('page', 1);
 
         //Old: index as Param
-        $index = $this->getParam('index');
+        //$index = $this->getParam('index');
         
-        /*
+        
         //Now the index is in backend categories set
         $tableCat = new Default_Model_DbTable_ProjectCategory();
         $cat = $tableCat->findCategory($this->view->cat_id);
@@ -180,7 +180,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             }
             
             
-        }*/
+        }
         
 
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
@@ -201,8 +201,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());
 
             // temperately when index=3 return product files too... in the future could be replaced by category parameter.
-            if($index==3)
-            //if($index=='index-react3')
+            //if($index==3)
+            if($index=='index-react3')
             {
                 $modelProject = new Default_Model_Project();
                 $files = $modelProject->fetchFilesForProjects($requestedElements['elements']);
@@ -219,8 +219,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
                 }
             }
 
-            $this->_helper->viewRenderer('index-react'.$index);
-            //$this->_helper->viewRenderer($index);
+            //$this->_helper->viewRenderer('index-react'.$index);
+            $this->_helper->viewRenderer($index);
 
         }
         else if ($storeConfig->layout_explore && $storeConfig->isRenderReact()) {
