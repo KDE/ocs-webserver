@@ -374,24 +374,28 @@ function ProductBrowseItemPreviewMusicPlayer(props){
 
 function ProductBrowsePagination(){
 
+    console.log(pagination)
+    
     const [ totalItems, setTotalItems ] = useState(pagination.totalcount);
     const [ itemsPerPage, setItemsPerPage ] = useState(50);
     const [ currentPage, setCurrentPage ] = useState(pagination.page);
     const [ totalPages, setTotalPages ] = useState(Math.ceil(totalItems / itemsPerPage));
 
-    let minPage = 0, maxPage = 10;
-    if (currentPage > 5){
-        minPage = currentPage - 5;
-        maxPage = currentPage + 5;
-    }
+    const minPage = currentPage - 5 > 0 ? currentPage - 5 : 0;
+    const maxPage = currentPage + 5 < totalPages ? currentPage + 5 : totalPages;
+
+    console.log(typeof filters.category);
 
     let paginationArray = [];
     for (var i = minPage; i < maxPage; i++){ paginationArray.push(i + 1); }
     
     let pageLinkBase = window.config.baseUrl + "/browse/page/";
-    if (typeof filters.category === Number) pageLinkBase += "cat/" + filters.category + "/";
-    let pageLinkSuffix = "/ord/" + filters.order;
+    let pageLinkSuffix = "" 
+    if (typeof filters.category === 'number') pageLinkSuffix += "/cat/" + filters.category + "/";
+    pageLinkSuffix += "ord/" + filters.order;
     if (filters.original !== null) pageLinkSuffix += "/filteroriginal/" + filters.original + window.location.search;
+
+    console.log(pageLinkBase);
 
     let previousButtonDisplay;
     if (currentPage > 1) previousButtonDisplay = <li><a href={pageLinkBase + (currentPage - 1) + pageLinkSuffix}><span className="glyphicon glyphicon-chevron-left"></span> Previous</a></li>
