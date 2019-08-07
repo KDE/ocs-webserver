@@ -51,7 +51,8 @@ function ProductBrowseItemList(props){
     const [ containerWidth, setContainerWidth ] = useState($('#product-browse-container').width() + 14);
 
     let productBrowseItemType = 0;
-    if (window.location.search === "?index=3") productBrowseItemType = 1;
+    console.log(browseListType);
+    if (browseListType === "music") productBrowseItemType = 1;
 
     const [ itemsInRow, setItemsInRow ] = useState(isMobile ? 2 : productBrowseItemType === 0 ? 3 : 6)
     const [ minWidth, setMinWidth ] = useState(productBrowseItemType === 0 ? 400 : 200);
@@ -373,8 +374,6 @@ function ProductBrowseItemPreviewMusicPlayer(props){
 }
 
 function ProductBrowsePagination(){
-
-    console.log(pagination)
     
     const [ totalItems, setTotalItems ] = useState(pagination.totalcount);
     const [ itemsPerPage, setItemsPerPage ] = useState(50);
