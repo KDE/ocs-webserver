@@ -212,7 +212,9 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $modelCategory = new Default_Model_ProjectCategory();
             $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());
             $this->view->browseListType = $browseListType;
-
+            
+            $this->view->pageLimit = $pageLimit;
+                    
             // temperately when index=3 return product files too... in the future could be replaced by category parameter.
             if($index==3 || $browseListType == 'music')
             {
@@ -248,11 +250,13 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $modelCategory = new Default_Model_ProjectCategory();
             $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());
             $this->_helper->viewRenderer('index-react');
+            $this->view->pageLimit = $pageLimit;
             
             Zend_Registry::get('logger')->err(__METHOD__ . ' - Show Page : /explore/index-react');
         } else {
             $pageLimit = 10;
             $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);
+            $this->view->pageLimit = $pageLimit;
             
             Zend_Registry::get('logger')->err(__METHOD__ . ' - Show Page : /explore/index');
         }
