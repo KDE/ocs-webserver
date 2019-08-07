@@ -277,31 +277,5 @@ class Backend_CategoriesController extends Local_Controller_Action_Backend
 
         $this->_helper->json($jTableResult);
     }
-    
-    public function allbrowselisttypesAction()
-    {
-
-        $result = true;
-        $tagmodel  = new Default_Model_DbTable_BrowseListType();
-        try {
-                $resultRows = $tagmodel->fetchAll();
-                $resultForSelect = array();
-                $resultForSelect[] = array('DisplayText' => '', 'Value' => null);
-                foreach ($resultRows as $row) {         
-                    $resultForSelect[] = array('DisplayText' => $row['name'].'['.$row['browse_list_type_id'].']', 'Value' => $row['browse_list_type_id']);
-                }
-
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
-            $result = false;
-            $records = array();
-        }
-
-        $jTableResult = array();
-        $jTableResult['Result'] = ($result == true) ? self::RESULT_OK : self::RESULT_ERROR;
-        $jTableResult['Options'] = $resultForSelect;
-
-        $this->_helper->json($jTableResult);
-    }
 
 } 

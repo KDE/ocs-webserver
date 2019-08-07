@@ -127,7 +127,7 @@ class Backend_BrowselisttypeController extends Local_Controller_Action_Backend
     {
 
         $result = true;
-        $tagmodel  = new Default_Model_DbTable_Sponsor();
+        $tagmodel  = new Default_Model_DbTable_BrowseListType();
         try {
                 $resultRows = $tagmodel->fetchAll();
                 $resultForSelect = array();
