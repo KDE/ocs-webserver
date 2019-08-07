@@ -173,7 +173,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         if(isset($cat) && isset($cat['browse_list_type'])) {
             $indexListType = $cat['browse_list_type'];
             $listTypeTable = new Default_Model_DbTable_BrowseListType();
-            $listType = $listTypeTable->find($indexListType);
+            $listType = $listTypeTable->findBrowseListType($indexListType);
             if(isset($listType)) {
                $index =  $listType['render_page_name'];
             }

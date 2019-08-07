@@ -165,6 +165,20 @@ class Default_Model_DbTable_BrowseListType extends Local_Model_Table
         return $configArray;
     }
     
-    
+    /**
+     * @param int $nodeId
+     *
+     * @return Zend_Db_Table_Row_Abstract
+     * @throws Zend_Db_Table_Exception
+     */
+    public function findBrowseListType($nodeId)
+    {
+        $result = $this->find($nodeId);
+        if (count($result) > 0) {
+            return $result->current();
+        }
+        
+        return null;
+    }
     
 }
