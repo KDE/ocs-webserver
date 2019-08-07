@@ -6,13 +6,15 @@ CREATE TABLE `browse_list_types` (
 	`browse_list_type_id` INT(11) NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(50) NOT NULL,
 	`desc` VARCHAR(255) NULL DEFAULT NULL,
+	`render-page-name` VARCHAR(50) NULL DEFAULT 'index-react',
 	`is_active` INT(1) UNSIGNED NULL DEFAULT '1',
 	`deleted_at` TIMESTAMP NULL DEFAULT NULL,
 	PRIMARY KEY (`browse_list_type_id`)
 )
+COLLATE='latin1_swedish_ci'
 ENGINE=InnoDB
-AUTO_INCREMENT=4
 ;
+
 
 INSERT INTO `pling`.`browse_list_types` (`browse_list_type_id`, `type_name`, `type_desc`) VALUES ('0', 'default', 'Default List type is list');
 INSERT INTO `pling`.`browse_list_types` (`type_name`, `type_desc`) VALUES ('picture', 'Gridview with big pictures');
