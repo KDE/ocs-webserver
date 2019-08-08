@@ -395,8 +395,10 @@ function ProductBrowsePagination(){
     let paginationArray = [];
     for (var i = minPage; i < maxPage; i++){ paginationArray.push(i + 1); }
     
-    let pageLinkBase = window.config.baseStoreUrl + "/browse/page/";
-    let pageLinkSuffix = "" 
+    let pageLinkBase = json_serverUrl;
+    pageLinkBase += json_store_name === "ALL" ? "/" : "/s/" + json_store_name + "/";
+    pageLinkBase += "browse/page/";
+    let pageLinkSuffix = "/" 
     if (typeof filters.category === 'number') pageLinkSuffix += "/cat/" + filters.category + "/";
     pageLinkSuffix += "ord/" + filters.order;
     if (filters.original !== null) pageLinkSuffix += "/filteroriginal/" + filters.original + window.location.search;
