@@ -18,15 +18,18 @@ function ProductBrowseFilterContainer(){
     console.log(json_serverUrl);
     console.log(json_serverUri);
     console.log(window.config);
+    console.log(json_store_name)
 
-    let filtersBaseUrl = window.config.baseStoreUrl + "/browse/";
+    let filtersBaseUrl = json_serverUrl;
+    filtersBaseUrl += json_store_name === "ALL" ? "/" : "/s/" + json_store_name + "/";
+    filtersBaseUrl += "browse/";
     if (typeof filters.category === 'number') filtersBaseUrl += "cat/" + filters.category + "/";
 
     function onOriginalCheckboxClick(){
         let val = filters.original !== null ? 0 : 1;
         console.log(window.config.baseStoreUrl);
         console.log(window.location.pathname);
-        window.location.href = window.config.baseStoreUrl + "/" + window.location.pathname + "/filteroriginal/" + val;
+        window.location.href = filtersBaseUrl + "filteroriginal/" + val;
     }
 
     return (
