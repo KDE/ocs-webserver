@@ -15,6 +15,8 @@ function ProductBrowse(){
 
 function ProductBrowseFilterContainer(){
 
+    console.log(window.config.baseStoreUrl);
+
     let filtersBaseUrl = window.config.baseStoreUrl + "/browse/";
     if (typeof filters.category === 'number') filtersBaseUrl += "cat/" + filters.category + "/";
 
