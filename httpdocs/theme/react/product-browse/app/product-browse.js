@@ -383,7 +383,7 @@ function ProductBrowsePagination(){
     const [ totalPages, setTotalPages ] = useState(Math.ceil(totalItems / itemsPerPage));
 
     const minPage = currentPage - 5 > 0 ? currentPage - 5 : 0;
-    const maxPage = currentPage + 5 < totalPages ? currentPage + 5 : totalPages;
+    const maxPage = minPage + 10 < totalPages ? minPage + 10 : totalPages;
 
     let paginationArray = [];
     for (var i = minPage; i < maxPage; i++){ paginationArray.push(i + 1); }
