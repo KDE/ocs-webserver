@@ -15,11 +15,6 @@ function ProductBrowse(){
 
 function ProductBrowseFilterContainer(){
 
-    console.log(json_serverUrl);
-    console.log(json_serverUri);
-    console.log(window.config);
-    console.log(json_store_name)
-
     let filtersBaseUrl = json_serverUrl;
     filtersBaseUrl += json_store_name === "ALL" ? "/" : "/s/" + json_store_name + "/";
     filtersBaseUrl += "browse/";
@@ -27,8 +22,6 @@ function ProductBrowseFilterContainer(){
 
     function onOriginalCheckboxClick(){
         let val = filters.original !== null ? 0 : 1;
-        console.log(window.config.baseStoreUrl);
-        console.log(window.location.pathname);
         window.location.href = filtersBaseUrl + "filteroriginal/" + val;
     }
 
@@ -398,11 +391,12 @@ function ProductBrowsePagination(){
     let pageLinkBase = json_serverUrl;
     pageLinkBase += json_store_name === "ALL" ? "/" : "/s/" + json_store_name + "/";
     pageLinkBase += "browse/page/";
+    console.log(pageLinkBase);
     let pageLinkSuffix = "/" 
-    if (typeof filters.category === 'number') pageLinkSuffix += "/cat/" + filters.category + "/";
-    pageLinkSuffix += "ord/" + filters.order;
-    if (filters.original !== null) pageLinkSuffix += "/filteroriginal/" + filters.original + window.location.search;
-
+    if (typeof filters.category === 'number') pageLinkSuffix += "cat/" + filters.category + "/";
+    pageLinkSuffix += "ord/" + filters.order + "/";
+    if (filters.original !== null) pageLinkSuffix += "filteroriginal/" + filters.original + window.location.search;
+    console.log(pageLinkSuffix);
     let previousButtonDisplay;
     if (currentPage > 1) previousButtonDisplay = <li><a href={pageLinkBase + (currentPage - 1) + pageLinkSuffix}><span className="glyphicon glyphicon-chevron-left"></span> Previous</a></li>
 
