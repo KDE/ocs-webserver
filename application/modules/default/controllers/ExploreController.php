@@ -159,7 +159,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $this->view->tag_group_filter = $filterArray;
         }
         
-        
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
 
         $page = (int)$this->getParam('page', 1);
 
@@ -177,8 +177,19 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
                 $browseListType = 'music';
             }
             
-        } else {
-            $index = 2;
+        }
+        
+        if($storeConfig->browse_list_type) {
+            $listTypeTable = new Default_Model_DbTable_BrowseListType();
+            $listType = $listTypeTable->findBrowseListType($storeConfig->browse_list_type);
+            if(isset($listType)) {
+               $browseListType =  $listType['name'];
+               $index = 2;
+            }
+        }
+
+        //Browse List config in Category set?
+        if(!$index) {
             //Now the list type is in backend categories set
             $tableCat = new Default_Model_DbTable_ProjectCategory();
             $cat = $tableCat->findCategory($this->view->cat_id);
@@ -188,6 +199,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
                 $listType = $listTypeTable->findBrowseListType($indexListType);
                 if(isset($listType)) {
                    $browseListType =  $listType['name'];
+                   $index = 2;
                 }
             }
         }
@@ -195,7 +207,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         Zend_Registry::get('logger')->err(__METHOD__ . ' - browseListType : ' . $browseListType);
         
 
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        
         if($index)
         {
             // only switch view via index=2 parameter

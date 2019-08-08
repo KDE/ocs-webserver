@@ -124,6 +124,24 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
         $httpHost = $this->getRequest()->getHttpHost();
         $this->view->urlPay =  '/support/pay';
+        
+        $sectionsTable = new Default_Model_Section();
+        $sections = $sectionsTable->fetchAllSections();
+        $this->view->sections = $sections;
+        
+    }
+    
+    public function support2Action()
+    {
+        $this->view->authMember = $this->_authMember;
+        $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
+        $httpHost = $this->getRequest()->getHttpHost();
+        $this->view->urlPay =  '/support/pay';
+        
+        $sectionsTable = new Default_Model_Section();
+        $sections = $sectionsTable->fetchAllSections();
+        $this->view->sections = $sections;
+        
     }
 
     public function showAction()
@@ -158,7 +176,9 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout()->disableLayout();
         $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
         
-        //get parameter
+        //get parameter for every section
+        
+        
         $paymentOption = $this->getParam('amount_predefined');
         $amount_predefined = (float)$this->getParam('amount_predefined', 1);
         $amount_handish  = (float)$this->getParam('amount_handish', 1);
