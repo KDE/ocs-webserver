@@ -16,10 +16,12 @@ function ProductBrowse(){
 function ProductBrowseFilterContainer(){
 
     let filtersBaseUrl = window.config.baseStoreUrl + "/browse/";
-    if (typeof filters.category === Number) filtersBaseUrl += "cat/" + filters.category + "/";
+    if (typeof filters.category === 'number') filtersBaseUrl += "cat/" + filters.category + "/";
 
     function onOriginalCheckboxClick(){
         let val = filters.original !== null ? 0 : 1;
+        console.log(window.config.baseStoreUrl);
+        console.log(window.location.pathname);
         window.location.href = window.config.baseStoreUrl + "/" + window.location.pathname + "/filteroriginal/" + val;
     }
 
@@ -386,7 +388,7 @@ function ProductBrowsePagination(){
     let paginationArray = [];
     for (var i = minPage; i < maxPage; i++){ paginationArray.push(i + 1); }
     
-    let pageLinkBase = window.config.baseUrl + "/browse/page/";
+    let pageLinkBase = window.config.baseStoreUrl + "/browse/page/";
     let pageLinkSuffix = "" 
     if (typeof filters.category === 'number') pageLinkSuffix += "/cat/" + filters.category + "/";
     pageLinkSuffix += "ord/" + filters.order;
