@@ -391,6 +391,8 @@ function SlideItem(props){
         slideIndex={props.slideIndex}
         currentSlide={props.currentSlide}
         cinemaMode={props.cinemaMode}
+        containerWidth={props.containerWidth}
+        sliderHeight={props.sliderHeight}
         playVideo={props.currentSlide === props.slideIndex}
         onUpdateDimensions={props.onUpdateDimensions}
         onFullScreenToggle={props.onFullScreenToggle}

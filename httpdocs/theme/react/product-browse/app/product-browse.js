@@ -20,7 +20,7 @@ function ProductBrowseFilterContainer(){
 
     function onOriginalCheckboxClick(){
         let val = filters.original !== null ? 0 : 1;
-        window.location.href = window.config.baseUrl + "/" + window.location.pathname + "filteroriginal/" + val;
+        window.location.href = window.config.baseStoreUrl + "/" + window.location.pathname + "/filteroriginal/" + val;
     }
 
     return (
