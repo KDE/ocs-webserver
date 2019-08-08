@@ -1454,6 +1454,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 $id_server = new Default_Model_Ocs_OAuth();
                 $id_server->updateMailForUser($this->_authMember->member_id);
                 Zend_Registry::get('logger')->debug(__METHOD__ . ' - oauth : ' . implode(PHP_EOL . " - ", $id_server->getMessages()));
+                Zend_Registry::get('logger')->debug(__METHOD__ . ' - oauth : ' . print_r($id_server->getMessages(), true));
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
