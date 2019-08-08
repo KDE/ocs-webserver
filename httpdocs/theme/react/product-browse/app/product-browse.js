@@ -15,7 +15,7 @@ function ProductBrowse(){
 
 function ProductBrowseFilterContainer(){
 
-    let filtersBaseUrl = window.config.baseUrl + "/browse/";
+    let filtersBaseUrl = window.config.baseStoreUrl + "/browse/";
     if (typeof filters.category === Number) filtersBaseUrl += "cat/" + filters.category + "/";
 
     function onOriginalCheckboxClick(){
