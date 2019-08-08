@@ -53,7 +53,7 @@ function ProductBrowseItemList(props){
     const [ containerWidth, setContainerWidth ] = useState($('#product-browse-container').width() + 14);
 
     let productBrowseItemType = 0;
-    console.log(browseListType);
+
     if (browseListType === "music") productBrowseItemType = 1;
 
     const [ itemsInRow, setItemsInRow ] = useState(isMobile ? 2 : productBrowseItemType === 0 ? 3 : 6)
@@ -116,7 +116,7 @@ function ProductBrowseItem(props){
     else {
         imgUrl = "https://cn.opendesktop.";
         imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
-        imgUrl += "/img/" + p.image_small;    
+        imgUrl += "/cache/" + props.itemWidth + "x" + props.imgHeight + "/img/" + p.image_small;    
     }
 
     let itemLink = window.config.baseUrlStore + "/";
@@ -391,12 +391,12 @@ function ProductBrowsePagination(){
     let pageLinkBase = json_serverUrl;
     pageLinkBase += json_store_name === "ALL" ? "/" : "/s/" + json_store_name + "/";
     pageLinkBase += "browse/page/";
-    console.log(pageLinkBase);
+
     let pageLinkSuffix = "/" 
     if (typeof filters.category === 'number') pageLinkSuffix += "cat/" + filters.category + "/";
     pageLinkSuffix += "ord/" + filters.order + "/";
     if (filters.original !== null) pageLinkSuffix += "filteroriginal/" + filters.original + window.location.search;
-    console.log(pageLinkSuffix);
+
     let previousButtonDisplay;
     if (currentPage > 1) previousButtonDisplay = <li><a href={pageLinkBase + (currentPage - 1) + pageLinkSuffix}><span className="glyphicon glyphicon-chevron-left"></span> Previous</a></li>
 
