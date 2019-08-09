@@ -1,0 +1,98 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+if ($this->error) {
+    echo $this->error_text;
+} else {
+    ?>
+    <div style="text-align: center;">
+        <h3>Please wait. We will redirect you to PayPal. </h3>
+        <p>Or press the Subscribe button:</p>
+        
+        <form action="<?= $this->form_endpoint ?>" method="post" target="_top" id="payform">
+            <input type="hidden" name="cmd" value="_xclick-subscriptions">
+            <input type="hidden" name="business" value="<?= $this->form_merchant ?>">
+            <input type="hidden" name="lc" value="US">
+            <input type="hidden" name="item_name" value="Thank you for supporting opendesktop.org">
+            <input type="hidden" name="item_number" value="S1">
+            <input type="hidden" name="no_note" value="1">
+            <input type="hidden" name="no_shipping" value="1">
+            <input type="hidden" name="rm" value="1">
+            <input type="hidden" name="return" value="<?= $this->form_return_url_ok ?>">
+            <input type="hidden" name="cancel_return" value="<?= $this->form_return_url_cancel ?>">
+            <input type="hidden" name="notify_url" value="<?= $this->form_ipn_endpoint ?>">
+            <input type="hidden" name="src" value="1">
+            <input type="hidden" name="currency_code" value="USD">
+            <input type="hidden" name="bn" value="PP-SubscriptionsBF:btn_subscribeCC_LG.gif:NonHosted">
+            <input type="hidden" name="custom" value="<?= $this->transaction_id ?>">
+            
+            <?php 
+                $amount = $this->amount;
+                if($this->payment_option == "Option7") {
+                    $amount = $this->amount; 
+                } else {
+                    if($this->payment_options[$this->payment_option]['period_short'] == 'M') {
+                        $amount = $this->calcDonation($this->payment_options[$this->payment_option]['amount']); 
+                    } else if($this->payment_options[$this->payment_option]['period_short'] == 'Y') {
+                        $amount = $this->calcDonation($this->payment_options[$this->payment_option]['amount']*12); 
+                    }
+                }
+            ?>
+            
+            <input type="hidden" name="a3" value="<?= $amount ?>">
+            <input type="hidden" name="p3" value="<?= $this->payment_options[$this->payment_option]['period_frequency'] ?>">
+            <input type="hidden" name="t3" value="<?= $this->payment_options[$this->payment_option]['period_short'] ?>">
+            
+            <p>You choose: $<?= $amount ?> <?= $this->payment_options[$this->payment_option]['period'] ?></p>
+            <?php if($this->payment_option != "Option7") {?>
+            <p>
+                <?php 
+                    if($this->payment_options[$this->payment_option]['period_short'] == 'M') {
+                ?>
+                        <span class="extrasmall"><?=$this->calcDonationText($this->payment_options[$this->payment_option]['amount'])?></span>
+                <?php 
+                    } else if($this->payment_options[$this->payment_option]['period_short'] == 'Y') {
+                ?>
+                        <span class="extrasmall"><?=$this->calcDonationYearlyText($this->payment_options[$this->payment_option]['amount'])?></span>
+                <?php 
+                    }
+                ?>
+            </p>
+            <?php } ?>
+            
+            <input type="hidden" name="option_index" value="0">
+            <input type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+            <img alt="" border="0" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+        </form>
+
+        
+        
+    </div>
+    <script>
+        /*
+        setTimeout(function () {
+            document.getElementById("payform").submit();
+        }, 5000);
+        */
+        
+    </script>
+<?php } ?>
