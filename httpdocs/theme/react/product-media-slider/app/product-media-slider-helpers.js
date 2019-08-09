@@ -8,13 +8,12 @@ export function GenerateGalleryArray(product){
 
         if (f.type.indexOf('video') > -1 || 
             f.type.indexOf('audio') > -1 || 
-            f.type.indexOf('epub') > -1 || 
-            f.type.indexOf('zip') > -1 || f.type.indexOf('x-rar') > -1){
+            f.type.indexOf('epub') > -1 /*|| f.type.indexOf('zip') > -1 || f.type.indexOf('x-rar') > -1*/){
             
             let type;
             if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 ) type = f.type.split('/')[0]
             else if (f.type.indexOf('epub') > -1 ) type = "book";
-            else if (f.name.indexOf('.cbr') > -1 || f.name.indexOf('.cbz') > -1) type = "comics";
+            // else if (f.name.indexOf('.cbr') > -1 || f.name.indexOf('.cbz') > -1) type = "comics";
             
             let url_preview, url_thumb;
             if (f.url_thumb) url_thumb = f.url_thumb.replace(/%2F/g,'/').replace(/%3A/g,':');
