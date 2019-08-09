@@ -107,17 +107,18 @@ function ProductBrowseItem(props){
 
     const p = props.product;
 
-    const [ productsFetched, setProductFetched ] = useState(false);
+    const [ productFilesFetched, setProductFilesFetched ] = useState(false);
     const [ productFiles, setProductFiles ] = useState();
 
-
-    let imgUrl = "";
-    if (p.image_small && p.image_small.indexOf('https://') > -1 || p.image_small && p.image_small.indexOf('http://') > -1 ) imgUrl = p.image_small;
+    let initialImgUrl = "";
+    if (p.image_small && p.image_small.indexOf('https://') > -1 || p.image_small && p.image_small.indexOf('http://') > -1 ) initialImgUrl = p.image_small;
     else {
-        imgUrl = "https://cn.opendesktop.";
-        imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
-        imgUrl += "/cache/" + Math.ceil(props.itemWidth * 2) + "x" + Math.ceil(props.imgHeight * 2) + "/img/" + p.image_small;    
+        initialImgUrl = "https://cn.opendesktop.";
+        initialImgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
+        initialImgUrl += "/cache/" + Math.ceil(props.itemWidth * 2) + "x" + Math.ceil(props.imgHeight * 2) + "/img/" + p.image_small;    
     }
+
+    const [ imgUrl, setImgUrl ] = useState(initialImgUrl);
 
     let itemLink = json_serverUrl;
     itemLink = json_store_name === "ALL" ? "/" : "/s/" + json_store_name + "/";
@@ -126,8 +127,8 @@ function ProductBrowseItem(props){
 
     React.useEffect(() => {
 
-        if (props.productBrowseItemType === 1 && productsFetched === false){
-            setProductFetched(true);
+        if (props.productBrowseItemType === 1 && productFilesFetched === false){
+            setProductFilesFetched(true);
             const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
             $.ajax({
                 url: ajaxUrl
@@ -147,6 +148,16 @@ function ProductBrowseItem(props){
 
     },[])
         
+    function onImageLoadError(){
+        console.log('on image load error');
+        const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
+        $.ajax({
+            url: ajaxUrl
+        }).done(function(res) {
+            console.log(res);
+        });
+    }
+
     let itemInfoDisplay;
     if (props.productBrowseItemType === 0){
         itemInfoDisplay = (
@@ -169,14 +180,14 @@ function ProductBrowseItem(props){
         );
         if (productFiles && productFiles.length > 0) musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer productFiles={productFiles} projectId={p.project_id} imgHeight={props.imgHeight}/>
     }
-    
+
     return (
         <div className={"product-browse-item "} id={"product-" + p.project_id} style={{"width":props.itemWidth}}>
             <div className="wrapper">
                 {musicPlayerDisplay}
                 <a href={itemLink} className="product-browse-item-wrapper">
                     <div className="product-browse-image">
-                        <img src={imgUrl} height={props.imgHeight}/>
+                        <img src={imgUrl} height={props.imgHeight} onError={onImageLoadError}/>
                         {musicItemInfoDisplay}
                     </div>
                     {itemInfoDisplay}
