@@ -1739,7 +1739,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     }
     
     public function loadfilesjsonAction()
-   {
+    {
         $this->_helper->layout->disableLayout();
         // $project_id = $this->getParam('pid');
         $modelProject = new Default_Model_Project();
@@ -1757,6 +1757,28 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }        
         $this->_helper->json($files);
     }
+    
+    public function loadfirstfilejsonAction()
+    {
+        $this->_helper->layout->disableLayout();
+        // $project_id = $this->getParam('pid');
+        $modelProject = new Default_Model_Project();
+        $files = $modelProject->fetchFilesForProject($this->_projectId);
+        $salt = PPLOAD_DOWNLOAD_SECRET;
+        $file = $files[0];
+        
+        $timestamp = time() + 3600; // one hour valid
+        $hash = hash('sha512',$salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
+        $url = PPLOAD_API_URI . 'files/download/id/' . $file['id'] . '/s/' . $hash . '/t/' . $timestamp;
+        if(null != $this->_authMember) {
+            $url .= '/u/' . $this->_authMember->member_id;
+        }
+        $url .= '/lt/filepreview/' . $file['name'];
+        $file['url'] = urlencode($url);                    
+
+        $this->_helper->json($file);
+    }
+    
     public function loadinstallinstructionAction()
     {
         $this->_helper->layout->disableLayout();
