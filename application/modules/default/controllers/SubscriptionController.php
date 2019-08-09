@@ -386,8 +386,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         //Save Section-Support
         foreach ($supportArray as $support) {
             $modelSectionSupport = new Default_Model_DbTable_SectionSupport();
-            $supportId = $modelSectionSupport->createNewSectionSupport(
-                $support['support_id']
+            $sectionSupportId = $modelSectionSupport->createNewSectionSupport(
+                $supportId
                 , $support['section_id']
                 , $support['amount']
                 ,$support['tier']
