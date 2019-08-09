@@ -149,16 +149,23 @@ function ProductBrowseItem(props){
     },[])
         
     function onImageLoadError(){
-        console.log('on image load error');
         const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
         $.ajax({
             url: ajaxUrl
         }).done(function(res) {
+            let newImgUrl;
             res.forEach(function(f,index){
                 if ( f.type.split('/')[0] === "image"){
-                    setImgUrl(f.url.replace(/%2F/g,'/').replace(/%3A/g,':'));
+                    newImgUrl = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
                 }
             });
+            if (!newImgUrl){
+                newImgUrl = "https://cn.opendesktop.";
+                newImgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
+                newImgUrl += "/cache/" + Math.ceil(props.itemWidth * 2) + "x" + Math.ceil(props.imgHeight * 2) + "/img/default.png";                 
+            }
+            console.log(newImgUrl);
+            setImgUrl(newImgUrl);
         });
     }
 
