@@ -42,9 +42,13 @@
   var supporters = <?php echo json_encode($this->supporters) ?>;
   var pagination = {
     totalcount:<?php echo $this->totalcount ?>,
-    page:<?php echo $this->page ?>
+    page:<?php echo $this->page ?>,
+    pagelimit:<?php echo $this->pageLimit ?>
   }
   var view = "explore";
   var baseUrl = <?php echo Zend_Json::encode($basrUrl)?>;
+  
+  var browseListType = "<?php echo $this->browseListType ?>";
+  
 </script>
 <script type="text/javascript" src="/theme/react/all.js"></script>

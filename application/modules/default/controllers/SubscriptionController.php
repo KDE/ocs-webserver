@@ -124,6 +124,24 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
         $httpHost = $this->getRequest()->getHttpHost();
         $this->view->urlPay =  '/support/pay';
+        
+        $sectionsTable = new Default_Model_Section();
+        $sections = $sectionsTable->fetchAllSections();
+        $this->view->sections = $sections;
+        
+    }
+    
+    public function support2Action()
+    {
+        $this->view->authMember = $this->_authMember;
+        $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
+        $httpHost = $this->getRequest()->getHttpHost();
+        $this->view->urlPay =  '/support/pay2';
+        
+        $sectionsTable = new Default_Model_Section();
+        $sections = $sectionsTable->fetchAllSections();
+        $this->view->sections = $sections;
+        
     }
 
     public function showAction()
@@ -276,6 +294,107 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
             $modelComments->save($dataComment);
         }
         **/
+    }
+    
+    public function pay2Action()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
+        
+        $sectionsTable = new Default_Model_Section();
+        $sections = $sectionsTable->fetchAllSections();
+        
+        $amount = 0;
+        
+        //get parameter for every section
+        $supportArray = array();
+        foreach ($sections as $section) {
+            
+            $paymentOption = $this->getParam('amount_predefined-'.$section['section_id']);
+            $amount_predefined = (float)$this->getParam('amount_predefined-'.$section['section_id'], null);
+            $amount_handish  = (float)$this->getParam('amount_handish-'.$section['section_id'], null);
+            
+            if(null != $paymentOption) {
+                $isHandish = false;
+                $data = array();
+                if(null != $paymentOption && $paymentOption != 'Option7') {
+                    $calModel = new Default_View_Helper_CalcDonation();
+                    if($this::$SUPPORT_OPTIONS[$paymentOption]['period_short']=='Y')
+                    {
+                        $v = $calModel->calcDonation($this::$SUPPORT_OPTIONS[$paymentOption]['amount']*12);
+                    }else{
+                        $v = $calModel->calcDonation($this::$SUPPORT_OPTIONS[$paymentOption]['amount']);    
+                    }   
+                    
+                    $amount += $v;
+                    
+                    $data['support_id'] = $sid;
+                    $data['section_id'] = $section['section_id'];
+                    $data['amount'] = $v;
+                    $data['tier'] = $this::$SUPPORT_OPTIONS[$paymentOption]['amount'];
+                    $data['period'] = $this::$SUPPORT_OPTIONS[$paymentOption]['period_short'];
+                    $data['period_frequency'] = $this::$SUPPORT_OPTIONS[$paymentOption]['period_frequency'];
+                } else {
+                    $isHandish = true;
+                    $amount += $amount_handish;
+                    $data['support_id'] = $sid;
+                    $data['section_id'] = $section['section_id'];
+                    $data['amount'] = $amount_handish;
+                    $data['tier'] = $amount_handish;
+                    $data['period'] = 'Y';
+                    $data['period_frequency'] = 1;
+                    
+                }
+                $supportArray[] = $data;
+            }
+        }
+        
+        $comment = Default_Model_HtmlPurify::purify($this->getParam('comment'));
+        $paymentProvider =
+            mb_strtolower(html_entity_decode(strip_tags($this->getParam('provider'), null), ENT_QUOTES, 'utf-8'),
+                'utf-8');
+        $httpHost = $this->getRequest()->getHttpHost();
+        $config = Zend_Registry::get('config');
+        
+        $form_url = $config->third_party->paypal->form->endpoint . '/cgi-bin/webscr';
+        $ipn_endpoint =  'http://'.$httpHost.'/gateway/paypal';
+        $return_url_success =  'http://'.$httpHost.'/support/paymentok';
+        $return_url_cancel =   'http://'.$httpHost.'/support/paymentcancel';
+        $merchantid = $config->third_party->paypal->merchantid;
+        
+        $this->view->form_endpoint = $form_url;
+        $this->view->form_ipn_endpoint = $ipn_endpoint;
+        $this->view->form_return_url_ok = $return_url_success;
+        $this->view->form_return_url_cancel = $return_url_cancel;
+        $this->view->form_merchant = $merchantid;
+        $this->view->member_id = $this->_authMember->member_id;
+        $this->view->transaction_id = $this->_authMember->member_id . '_' . time();
+        
+        $this->view->amount = $amount;
+        $this->view->payment_option = $paymentOption;
+        
+        //Add pling
+        $modelSupport = new Default_Model_DbTable_Support();
+        $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id
+            , $this->_authMember->member_id
+            , $amount
+            ,null
+            ,'Y'
+            ,1
+        );
+        
+        //Save Section-Support
+        foreach ($supportArray as $support) {
+            $modelSectionSupport = new Default_Model_DbTable_SectionSupport();
+            $sectionSupportId = $modelSectionSupport->createNewSectionSupport(
+                $supportId
+                , $support['section_id']
+                , $support['amount']
+                ,$support['tier']
+                ,$support['period']
+                ,$support['period_frequency']
+            );
+        }
     }
 
     /**

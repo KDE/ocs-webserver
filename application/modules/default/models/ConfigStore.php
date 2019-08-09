@@ -55,6 +55,7 @@ class Default_Model_ConfigStore
     public $created_at;
     public $changed_at;
     public $deleted_at;
+    public $browse_list_type;
 
     public function __construct($storeHostName)
     {
@@ -88,6 +89,7 @@ class Default_Model_ConfigStore
             $this->created_at = $storeConfig['created_at'];
             $this->changed_at = $storeConfig['changed_at'];
             $this->deleted_at = $storeConfig['deleted_at'];
+            $this->browse_list_type = $storeConfig['browse_list_type'];
         } else {
             Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - ' . $host
                 . ' :: no domain config context configured')

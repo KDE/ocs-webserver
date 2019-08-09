@@ -143,13 +143,6 @@ class Default_Model_Ocs_OAuth
             $member = $this->getUserData($member);
         }
 
-        //$data = $this->mapData($member, false, false);
-        //$uid = $member['member_id'];
-        //
-        //$uri = $this->config->host . "/api/v2/users/update";
-        //$method = Zend_Http_Client::PUT;
-        //$user = $this->httpServer->httpRequest($uri, $uid, $method, $data);
-
         $result = $this->createUserFromArray($member, $force = true);
 
         return $result;

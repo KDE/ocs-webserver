@@ -4,6 +4,7 @@ import {isMobile} from 'react-device-detect';
 import VideoPlayerWrapper from './video-player';
 import BookReaderWrapper from './book-reader';
 import MusicPlayerWrapper from './music-player';
+import ComicsReaderWrapper from './comics-reader';
 
 import {GenerateGalleryArray, CheckForMultipleAudioFiles, GroupAudioFilesInGallery} from './product-media-slider-helpers';
 
@@ -304,7 +305,7 @@ function SlideItem(props){
       else if (props.slide.type === "video"){
         if (cinemaMode === true) props.onSetSliderHeight(screen.height * 0.7); 
         else props.onSetSliderHeight(360)
-      } else if (props.slide.type === "book"){
+      } else if (props.slide.type === "book" || "comics"){
         props.onSetSliderHeight(360)
       } else if ( props.slide.type === "audio"){
         props.onSetSliderHeight(360)
@@ -373,6 +374,25 @@ function SlideItem(props){
         onCinemaModeClick={props.onCinemaModeClick}
         slide={props.slide}
         cinemaMode={props.cinemaMode}
+        playVideo={props.currentSlide === props.slideIndex}
+        onUpdateDimensions={props.onUpdateDimensions}
+        onFullScreenToggle={props.onFullScreenToggle}
+      />
+    )    
+  }
+  else if (props.slide.type === "comics"){
+
+    slideContentDisplay = (
+      <ComicsReaderWrapper 
+        height={props.sliderHeight}
+        width={props.containerWidth}
+        onCinemaModeClick={props.onCinemaModeClick}
+        slide={props.slide}
+        slideIndex={props.slideIndex}
+        currentSlide={props.currentSlide}
+        cinemaMode={props.cinemaMode}
+        containerWidth={props.containerWidth}
+        sliderHeight={props.sliderHeight}
         playVideo={props.currentSlide === props.slideIndex}
         onUpdateDimensions={props.onUpdateDimensions}
         onFullScreenToggle={props.onFullScreenToggle}

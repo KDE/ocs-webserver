@@ -159,13 +159,55 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $this->view->tag_group_filter = $filterArray;
         }
         
-        
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
 
         $page = (int)$this->getParam('page', 1);
 
+        $index = null;
+        $browseListType = null;
+        
+        //Old: index as Param
         $index = $this->getParam('index');
+        
+        if($index) {
+            if($index == 2) {
+                $browseListType = 'picture';
+            }
+            if($index == 3) {
+                $browseListType = 'music';
+            }
+            
+        }
+        
+        if($storeConfig->browse_list_type) {
+            $listTypeTable = new Default_Model_DbTable_BrowseListType();
+            $listType = $listTypeTable->findBrowseListType($storeConfig->browse_list_type);
+            if(isset($listType)) {
+               $browseListType =  $listType['name'];
+               $index = 2;
+            }
+        }
 
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        //Browse List config in Category set?
+        if(!$index) {
+            //Now the list type is in backend categories set
+            $tableCat = new Default_Model_DbTable_ProjectCategory();
+            $cat = $tableCat->findCategory($this->view->cat_id);
+            if(isset($cat) && isset($cat['browse_list_type'])) {
+                $indexListType = $cat['browse_list_type'];
+                $listTypeTable = new Default_Model_DbTable_BrowseListType();
+                $listType = $listTypeTable->findBrowseListType($indexListType);
+                if(isset($listType)) {
+                   $browseListType =  $listType['name'];
+                   $index = 2;
+                }
+            }
+        }
+        
+        Zend_Registry::get('logger')->err(__METHOD__ . ' - browseListType : ' . $browseListType);
+        
+
+        
         if($index)
         {
             // only switch view via index=2 parameter
@@ -181,9 +223,13 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $this->view->commentsJson = Zend_Json::encode($comments);
             $modelCategory = new Default_Model_ProjectCategory();
             $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());
-
+            $this->view->browseListType = $browseListType;
+            
+            $this->view->pageLimit = $pageLimit;
+                  
+            /*
             // temperately when index=3 return product files too... in the future could be replaced by category parameter.
-            if($index==3)
+            if($index==3 || $browseListType == 'music')
             {
                 $modelProject = new Default_Model_Project();
                 $files = $modelProject->fetchFilesForProjects($requestedElements['elements']);
@@ -198,7 +244,23 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
                     $url .= '/lt/filepreview/' . $file['name'];
                     $file['url'] = urlencode($url);                    
                 }
+            } else {
+                $modelProject = new Default_Model_Project();
+                $files = $modelProject->fetchFilesForProjects($requestedElements['elements']);
+                $salt = PPLOAD_DOWNLOAD_SECRET;
+                foreach ($files as &$file) {
+                    $timestamp = time() + 3600; // one hour valid
+                    $hash = hash('sha512',$salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
+                    $url = PPLOAD_API_URI . 'files/download/id/' . $file['id'] . '/s/' . $hash . '/t/' . $timestamp;
+                    if(null != $this->_authMember) {
+                        $url .= '/u/' . $this->_authMember->member_id;
+                    }
+                    $url .= '/lt/filepreview/' . $file['name'];
+                    $file['url'] = urlencode($url);                    
+                }
             }
+             * 
+             */
 
             $this->_helper->viewRenderer('index-react'.$index);
 
@@ -217,9 +279,15 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $modelCategory = new Default_Model_ProjectCategory();
             $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());
             $this->_helper->viewRenderer('index-react');
+            $this->view->pageLimit = $pageLimit;
+            
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - Show Page : /explore/index-react');
         } else {
             $pageLimit = 10;
             $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);
+            $this->view->pageLimit = $pageLimit;
+            
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - Show Page : /explore/index');
         }
         if($storeConfig) {
             $this->view->storeabout = $this->getStoreAbout($storeConfig->store_id);

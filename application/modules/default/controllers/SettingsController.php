@@ -39,9 +39,9 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
     public function init()
     {
         parent::init();
-        $this->getResponse()->clearHeaders(array('Expires', 'Pragma', 'Cache-Control'))->setHeader('Pragma', 'no-cache', true)
-             ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true)
-        ;
+        $this->getResponse()->clearHeaders(array('Expires', 'Pragma', 'Cache-Control'))->setHeader('Pragma', 'no-cache',
+            true)
+             ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true);
 
         $this->_auth = Zend_Auth::getInstance();
         $this->_memberId = $this->_auth->getStorage()->read()->member_id;
@@ -58,15 +58,13 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $mainproject_rowset = $this->_projectTable->find($main_project_id);
         $this->_mainproject = $this->view->mainproject = $mainproject_rowset->current();
 
-        
+
         $action = $this->getRequest()->getActionName();
-        $title='';
-        if($action =='index')
-        {
-          $title = 'settings';
-        }else
-        {
-          $title = $action;
+        $title = '';
+        if ($action == 'index') {
+            $title = 'settings';
+        } else {
+            $title = $action;
         }
         $this->view->headTitle($title . ' - ' . $this->getHeadTitle(), 'SET');
     }
@@ -101,48 +99,14 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $websiteOwner = new Local_Verification_WebsiteOwner();
         $linkWebsite = stripslashes($this->_memberSettings->link_website);
         $this->view->homepageform =
-            $this->formHomepage($linkWebsite, $websiteOwner->generateAuthCode($linkWebsite), $this->_memberSettings->validated);
+            $this->formHomepage($linkWebsite, $websiteOwner->generateAuthCode($linkWebsite),
+                $this->_memberSettings->validated);
 
         $this->view->newsletterform = $this->formNewsletter(stripslashes($this->_memberSettings->newsletter));
 
         $this->view->paymentform = $this->formPayment();
         $this->view->paymentform->populate($memberSettings);
     }
-
-
-    public function profileAction()
-    {
-        $this->view->member = $this->_memberSettings;
-        $memberSettings = $this->_memberSettings->toArray();
-        
-
-        $this->view->profileform = $this->formProfile();
-        $this->view->profileform->populate($memberSettings);
-        $this->view->profileform->aboutme->setValue($this->_mainproject->description);
-
-        $this->view->accounts = $this->formConnectedAccounts();
-        $this->view->accounts->populate($memberSettings);
-
-
-        $this->view->pictureform = $this->formProfilePicture();
-        $this->view->pictureform->populate($memberSettings);
-
-        $this->view->pictureformbg = $this->formProfilePictureBackground();
-        $this->view->pictureformbg->populate($memberSettings);
-
-
-        $websiteOwner = new Local_Verification_WebsiteOwner();
-        $linkWebsite = stripslashes($this->_memberSettings->link_website);
-        $this->view->homepageform =
-            $this->formHomepage($linkWebsite, $websiteOwner->generateAuthCode($linkWebsite), $this->_memberSettings->validated);
-    }
-
-    
-
-
-    /**
-     * Forms
-     */
 
     /**
      * @return Default_Form_Settings
@@ -155,7 +119,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
         $userNameLength = new Zend_Validate_StringLength(array('min' => 4, 'max' => 35));
         $username =
-            $form->createElement('text', 'username')->setLabel("Username:")->setRequired(false)->setFilters(array('StringTrim'))
+            $form->createElement('text',
+                'username')->setLabel("Username:")->setRequired(false)->setFilters(array('StringTrim'))
                  ->addValidator($userNameLength)->setAttrib('readonly', 'true')->setDecorators(array(
                     'ViewHelper',
                     'Label',
@@ -167,11 +132,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                             'placement'  => false
                         )
                     )
-                ))
-        ;
+                ));
         $form->addElement($username);
 
-        $firstname = $form->createElement('text', 'firstname')->setLabel("First Name:")->setRequired(false)->removeDecorator('HtmlTag')
+        $firstname = $form->createElement('text',
+            'firstname')->setLabel("First Name:")->setRequired(false)->removeDecorator('HtmlTag')
                           ->setFilters(array('StringTrim'))->setDecorators(array(
                 'ViewHelper',
                 'Label',
@@ -183,11 +148,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                         'placement'  => false
                     )
                 )
-            ))
-        ;
+            ));
         $form->addElement($firstname);
 
-        $lastname = $form->createElement('text', 'lastname')->setLabel("Last Name:")->setRequired(false)->removeDecorator('HtmlTag')
+        $lastname = $form->createElement('text',
+            'lastname')->setLabel("Last Name:")->setRequired(false)->removeDecorator('HtmlTag')
                          ->setFilters(array('StringTrim'))->setDecorators(array(
                 'ViewHelper',
                 'Label',
@@ -199,11 +164,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                         'placement'  => false
                     )
                 )
-            ))
-        ;
+            ));
         $form->addElement($lastname);
 
-        $city = $form->createElement('text', 'city')->setLabel("City:")->setRequired(false)->setFilters(array('StringTrim'))
+        $city = $form->createElement('text',
+            'city')->setLabel("City:")->setRequired(false)->setFilters(array('StringTrim'))
                      ->removeDecorator('HtmlTag')->setDecorators(array(
                 'ViewHelper',
                 'Label',
@@ -215,11 +180,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                         'placement'  => false
                     )
                 )
-            ))
-        ;
+            ));
         $form->addElement($city);
 
-        $country = $form->createElement('text', 'country')->setLabel("Country:")->setRequired(false)->setFilters(array('StringTrim'))
+        $country = $form->createElement('text',
+            'country')->setLabel("Country:")->setRequired(false)->setFilters(array('StringTrim'))
                         ->removeDecorator('HtmlTag')->setDecorators(array(
                 'ViewHelper',
                 'Label',
@@ -231,11 +196,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                         'placement'  => false
                     )
                 )
-            ))
-        ;
+            ));
         $form->addElement($country);
 
-        $about = $form->createElement('textarea', 'aboutme')->setLabel('About me:')->setRequired(false)->setAttrib('class', 'about')
+        $about = $form->createElement('textarea',
+            'aboutme')->setLabel('About me:')->setRequired(false)->setAttrib('class', 'about')
                       ->setDecorators(array(
                           'ViewHelper',
                           'Label',
@@ -247,12 +212,16 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                                   'placement'  => false
                               )
                           )
-                      ))
-        ;
+                      ));
         $form->addElement($about);
 
         return $form;
     }
+
+
+    /**
+     * Forms
+     */
 
     /**
      * @return Default_Form_Settings
@@ -275,13 +244,13 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                         'placement'  => false
                     )
                 )
-            ))
-        ;
+            ));
         $facebook->addValidator(new Local_Validate_PartialUrl());
         $form->addElement($facebook);
 
         $twitter =
-            $form->createElement('text', 'link_twitter')->setLabel("Twitter Profile:")->setRequired(false)->removeDecorator('HtmlTag')
+            $form->createElement('text',
+                'link_twitter')->setLabel("Twitter Profile:")->setRequired(false)->removeDecorator('HtmlTag')
                  ->setDecorators(array(
                      'ViewHelper',
                      'Label',
@@ -293,13 +262,13 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                              'placement'  => false
                          )
                      )
-                 ))
-        ;
+                 ));
         $twitter->addValidator(new Local_Validate_PartialUrl);
         $form->addElement($twitter);
 
         $github =
-            $form->createElement('text', 'link_github')->setLabel("GitHub Profile:")->setRequired(false)->removeDecorator('HtmlTag')
+            $form->createElement('text',
+                'link_github')->setLabel("GitHub Profile:")->setRequired(false)->removeDecorator('HtmlTag')
                  ->setDecorators(array(
                      'ViewHelper',
                      'Label',
@@ -311,8 +280,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                              'placement'  => false
                          )
                      )
-                 ))
-        ;
+                 ));
         $github->addValidator(new Local_Validate_PartialUrl);
         $form->addElement($github);
 
@@ -340,8 +308,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     'placement'  => false
                 )
             )
-        ))
-        ;
+        ));
         $form->addElement($github);
 
         $token = new Default_Form_Element_TokenGithub('token_github');
@@ -356,8 +323,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     'placement'  => false
                 )
             )
-        ))
-        ;
+        ));
         $form->addElement($token);
 
         return $form;
@@ -372,8 +338,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
     {
         $form = new Default_Form_Settings();
         $form->setMethod("POST")->setAttrib("id", "settingsPictureForm")->setAction('/settings/picture')
-             ->setAttrib('enctype', 'multipart/form-data')
-        ;
+             ->setAttrib('enctype', 'multipart/form-data');
 
         $hiddenProfilePicture = $form->createElement('hidden', 'profile_image_url')->setDecorators(array(
             'ViewHelper',
@@ -384,14 +349,14 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     'placement'  => false
                 )
             )
-        ))->setAttrib('data-target', '#profile-picture-preview')
-        ;
+        ))->setAttrib('data-target', '#profile-picture-preview');
 
         $form->addElement($hiddenProfilePicture);
 
         $imageTable = new Default_Model_DbTable_Image();
         $productPicture =
-            $form->createElement('file', 'profile_picture_upload')->setDisableLoadDefaultDecorators(true)->setLabel('Profile Picture')
+            $form->createElement('file',
+                'profile_picture_upload')->setDisableLoadDefaultDecorators(true)->setLabel('Profile Picture')
                  ->setRequired(false)->setDecorators(array(
                     'File',
                     array(
@@ -404,57 +369,59 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
                 ))->setAttrib('class', 'product-picture')
                  ->setAttrib('onchange', 'ImagePreview.previewImage(this, \'profile-picture-preview\');')
-                 ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())->setMaxFileSize(2097152)->addValidator('Count', false, 1)
+                 ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())->setMaxFileSize(2097152)->addValidator('Count',
+                    false, 1)
                  ->addValidator('Size', false, array('min' => '5kB', 'max' => '2MB'))
-                 ->addValidator('Extension', false, $imageTable->getAllowedFileExtension())->addValidator('ImageSize', false, array(
-                    'minwidth'  => 20,
-                    'maxwidth'  => 1024,
-                    'minheight' => 20,
-                    'maxheight' => 1024
-                ))->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes())
-        ;
+                 ->addValidator('Extension', false, $imageTable->getAllowedFileExtension())->addValidator('ImageSize',
+                    false, array(
+                        'minwidth'  => 20,
+                        'maxwidth'  => 1024,
+                        'minheight' => 20,
+                        'maxheight' => 1024
+                    ))->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes());
 
         $form->addElement($productPicture);
 
-        $facebook_username = $form->createElement('text', 'facebook_username')->setLabel("From Facebook Profile:")->setRequired(false)
+        $facebook_username = $form->createElement('text',
+            'facebook_username')->setLabel("From Facebook Profile:")->setRequired(false)
                                   ->removeDecorator('HtmlTag')
                                   ->setAttrib('data-href', 'https://graph.facebook.com/{username}/picture?type=large')
-                                  ->setAttrib('data-target', '#profile-picture-preview')->setAttrib('data-src', 'facebook')
+                                  ->setAttrib('data-target', '#profile-picture-preview')->setAttrib('data-src',
+                'facebook')
                                   ->setAttrib('class', 'avatar')->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors'
-            ))
-        ;
+            ));
         $form->addElement($facebook_username);
 
-        $twitter_username = $form->createElement('text', 'twitter_username')->setLabel("From Twitter Profile:")->setRequired(false)
+        $twitter_username = $form->createElement('text',
+            'twitter_username')->setLabel("From Twitter Profile:")->setRequired(false)
                                  ->removeDecorator('HtmlTag')
                                  ->setAttrib('data-href', 'http://twitter.com/api/users/profile_image/{username}')
-                                 ->setAttrib('data-target', '#profile-picture-preview')->setAttrib('data-src', 'twitter')
+                                 ->setAttrib('data-target', '#profile-picture-preview')->setAttrib('data-src',
+                'twitter')
                                  ->setAttrib('class', 'avatar')->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors'
-            ))
-        ;
+            ));
         $form->addElement($twitter_username);
 
-        $gravatar_email = $form->createElement('text', 'gravatar_email')->setLabel("From Gravatar Profile:")->setRequired(false)
+        $gravatar_email = $form->createElement('text',
+            'gravatar_email')->setLabel("From Gravatar Profile:")->setRequired(false)
                                ->setAttrib('data-href', 'http://www.gravatar.com/avatar/{username}.jpg')
                                ->setAttrib('data-target', '#profile-picture-preview')->setAttrib('data-func', 'MD5')
                                ->setAttrib('data-src', 'gravatar')->setAttrib('class', 'avatar')->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors'
-            ))
-        ;
+            ));
         $form->addElement($gravatar_email);
 
         $hiddenProfilePictureSrc = $form->createElement('hidden', 'profile_img_src')->setDecorators(array(
             'ViewHelper'
-        ))
-        ;
+        ));
 
         $form->addElement($hiddenProfilePictureSrc);
 
@@ -469,9 +436,9 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
     private function formProfilePictureBackground()
     {
         $form = new Default_Form_Settings();
-        $form->setMethod("POST")->setAttrib("id", "settingsPictureBackgroundForm")->setAction('/settings/picturebackground')
-             ->setAttrib('enctype', 'multipart/form-data')
-        ;
+        $form->setMethod("POST")->setAttrib("id",
+            "settingsPictureBackgroundForm")->setAction('/settings/picturebackground')
+             ->setAttrib('enctype', 'multipart/form-data');
 
         $hiddenProfilePicture = $form->createElement('hidden', 'profile_image_url_bg')->setDecorators(array(
             'ViewHelper',
@@ -482,13 +449,13 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     'placement'  => false
                 )
             )
-        ))->setAttrib('data-target', '#profile-picture-bg-preview')
-        ;
+        ))->setAttrib('data-target', '#profile-picture-bg-preview');
 
         $form->addElement($hiddenProfilePicture);
 
         $imageTable = new Default_Model_DbTable_Image();
-        $productPicture = $form->createElement('file', 'profile_picture_background_upload')->setDisableLoadDefaultDecorators(true)
+        $productPicture = $form->createElement('file',
+            'profile_picture_background_upload')->setDisableLoadDefaultDecorators(true)
                                ->setLabel('Background Picture')->setRequired(false)->setDecorators(array(
                 'File',
                 array(
@@ -502,10 +469,10 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             ))->setAttrib('class', 'product-picture')->setAttrib('onchange',
                 'ImagePreview.previewImageMember(this, \'profile-picture-background-preview\');')
                                ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())//->setMaxFileSize(2097152)
-                               ->addValidator('Count', false, 1)//->addValidator('Size', false, array('min' => '5kB', 'max' => '2MB'))
+                               ->addValidator('Count', false,
+                1)//->addValidator('Size', false, array('min' => '5kB', 'max' => '2MB'))
                                ->addValidator('Extension', false, $imageTable->getAllowedFileExtension())
-                               ->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes())
-        ;
+                               ->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes());
 
         $form->addElement($productPicture);
 
@@ -533,8 +500,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                         'placement'  => false
                     )
                 )
-            ))
-        ;
+            ));
 
         $pass1 = $form->createElement('password', 'password1')->setLabel('Enter new Password:')->setRequired(true)
                       ->addValidator(new Zend_Validate_NotEmpty(Zend_Validate_NotEmpty::STRING))->removeDecorator('HtmlTag')
@@ -549,8 +515,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                                   'placement'  => false
                               )
                           )
-                      ))
-        ;
+                      ));
 
         $pass2 = $form->createElement('password', 'password2')->setLabel('Re-enter new Password:')->setRequired(true)
                       ->addValidator(new Zend_Validate_NotEmpty(Zend_Validate_NotEmpty::STRING))->removeDecorator('HtmlTag')
@@ -565,8 +530,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                                   'placement'  => false
                               )
                           )
-                      ))
-        ;
+                      ));
 
         $passValid = new Local_Validate_PasswordConfirm($pass2->getValue());
         $pass1->addValidator($passValid);
@@ -589,10 +553,10 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
         $form = new Local_Form();
         $form->setMethod("POST")->setAttrib("id", "settingsHomepageForm")->setAction('/settings/homepage')
-             ->addPrefixPath('Local_Form_Element_', 'Local/Form/Element/', 'element')
-        ;
+             ->addPrefixPath('Local_Form_Element_', 'Local/Form/Element/', 'element');
 
-        $homepage = $form->createElement('text', 'link_website')->setLabel("Website:")->setRequired(false)->setValue($valHomepage)
+        $homepage = $form->createElement('text',
+            'link_website')->setLabel("Website:")->setRequired(false)->setValue($valHomepage)
                          ->addValidator(new Local_Validate_PartialUrl)->setDecorators(array(
                 'ViewHelper',
                 'Label',
@@ -604,8 +568,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                         'placement'  => false
                     )
                 )
-            ))
-        ;
+            ));
         if ($isVerified) {
             $homepage->setDescription('<div class="image checked"></div>');
         } else {
@@ -625,7 +588,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         if ('' != $valVerifyKey) {
             $value = str_replace('?', $valVerifyKey, $this->htmlVerifier);
             $verifyCode =
-                $form->createElement('note', 'html_verifier')->setValue($value)->removeDecorator('HtmlTag')->removeDecorator('Label');
+                $form->createElement('note',
+                    'html_verifier')->setValue($value)->removeDecorator('HtmlTag')->removeDecorator('Label');
             $form->addElement($verifyCode);
         }
 
@@ -648,8 +612,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $questionValid->setMessage('Yes is required!');
 
         $question = $form->createElement('checkbox', 'newsletter')//            ->addValidator($questionValid, true)
-                         ->setRequired(true)->removeDecorator('HtmlTag')->removeDecorator('Label')
-        ;
+                         ->setRequired(true)->removeDecorator('HtmlTag')->removeDecorator('Label');
 
         $question->setValue($valNewsletter);
         $form->addElement($question);
@@ -678,8 +641,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                        ->setMessage("RegisterFormEmailErrWrongHost", Zend_Validate_EmailAddress::INVALID_HOSTNAME)
                        ->setMessage("RegisterFormEmailErrWrongHost2", Zend_Validate_Hostname::INVALID_HOSTNAME)
                        ->setMessage("RegisterFormEmailErrHostLocal", Zend_Validate_Hostname::LOCAL_NAME_NOT_ALLOWED)
-                       ->setOptions(array('domain' => true))
-        ;
+                       ->setOptions(array('domain' => true));
 
         $mailEmpty = new Zend_Validate_NotEmpty();
         $mailEmpty->setMessage('RegisterFormEmailErrEmpty', Zend_Validate_NotEmpty::IS_EMPTY);
@@ -699,13 +661,13 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                         'placement'  => false
                     )
                 )
-            ))
-        ;
+            ));
         $mail->setValue($valPaypalEmail);
         $form->addElement($mail);
 
         $bitcoinAddress =
-            $form->createElement('text', 'wallet_address')->setLabel('Bitcoin: Your Public Wallet Address')->setRequired(false)
+            $form->createElement('text',
+                'wallet_address')->setLabel('Bitcoin: Your Public Wallet Address')->setRequired(false)
                  ->setDecorators(array(
                      'ViewHelper',
                      'Label',
@@ -726,12 +688,12 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                             'messages' => 'The Bitcoin Address is not valid.'
                         )
                     )
-                ))
-        ;
+                ));
         $bitcoinAddress->setValue($valWalletAddress);
         $form->addElement($bitcoinAddress);
 
-        $dwolla = $form->createElement('text', 'dwolla_id')->setLabel('Dwolla: User ID (xxx-xxx-xxxx)')->setRequired(false)
+        $dwolla = $form->createElement('text',
+            'dwolla_id')->setLabel('Dwolla: User ID (xxx-xxx-xxxx)')->setRequired(false)
                        ->setDecorators(array(
                            'ViewHelper',
                            'Label',
@@ -743,31 +705,56 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                                    'placement'  => false
                                )
                            )
-                       ))
-        ;
+                       ));
         $dwolla->setValue($valDwollaId);
         $form->addElement($dwolla);
 
         return $form;
     }
 
+    public function profileAction()
+    {
+        $this->view->member = $this->_memberSettings;
+        $memberSettings = $this->_memberSettings->toArray();
+
+
+        $this->view->profileform = $this->formProfile();
+        $this->view->profileform->populate($memberSettings);
+        $this->view->profileform->aboutme->setValue($this->_mainproject->description);
+
+        $this->view->accounts = $this->formConnectedAccounts();
+        $this->view->accounts->populate($memberSettings);
+
+
+        $this->view->pictureform = $this->formProfilePicture();
+        $this->view->pictureform->populate($memberSettings);
+
+        $this->view->pictureformbg = $this->formProfilePictureBackground();
+        $this->view->pictureformbg->populate($memberSettings);
+
+
+        $websiteOwner = new Local_Verification_WebsiteOwner();
+        $linkWebsite = stripslashes($this->_memberSettings->link_website);
+        $this->view->homepageform =
+            $this->formHomepage($linkWebsite, $websiteOwner->generateAuthCode($linkWebsite),
+                $this->_memberSettings->validated);
+    }
 
     public function savetagsAction()
     {
         $this->_helper->layout->disableLayout();
         $error_text = '';
-        
+
         $tag_id = null;
-        if(!empty($_POST['tag_id'])) {
-          $tag_id = $_POST['tag_id'];
+        if (!empty($_POST['tag_id'])) {
+            $tag_id = $_POST['tag_id'];
         }
-        $tag_group_id = $_POST['tag_group_id'];       
+        $tag_group_id = $_POST['tag_group_id'];
         $tag_object_id = $this->_memberId;
         $model = new Default_Model_Tags();
-        $model->saveOSTagForUser($tag_id,$tag_group_id,$tag_object_id);
-        $this->_helper->json(array('status' => 'ok'));                
+        $model->saveOSTagForUser($tag_id, $tag_group_id, $tag_object_id);
+        $this->_helper->json(array('status' => 'ok'));
     }
-
 
     public function saveprofileAction()
     {
@@ -939,8 +926,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 $tmpProfilePictureTitle =
                     IMAGES_UPLOAD_PATH . 'tmp/' . Local_Tools_UUID::generateUUID() . '_' . $profilePictureTitleFilename['basename'];
                 $form->getElement('profile_picture_upload')
-                     ->addFilter('Rename', array('target' => $tmpProfilePictureTitle, 'overwrite' => true))
-                ;
+                     ->addFilter('Rename', array('target' => $tmpProfilePictureTitle, 'overwrite' => true));
 
                 $values = $form->getValues();
 
@@ -979,7 +965,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 try {
                     $ldap_server = new Default_Model_Ocs_Ldap();
                     $ldap_server->updateAvatar($this->_memberSettings->member_id);
-                    Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
+                    Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL . " - ",
+                            $ldap_server->getMessages()));
                 } catch (Exception $e) {
                     Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
                 }
@@ -1045,8 +1032,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 $tmpProfilePictureTitle =
                     IMAGES_UPLOAD_PATH . 'tmp/' . Local_Tools_UUID::generateUUID() . '_' . $profilePictureTitleFilename['basename'];
                 $form->getElement('profile_picture_background_upload')
-                     ->addFilter('Rename', array('target' => $tmpProfilePictureTitle, 'overwrite' => true))
-                ;
+                     ->addFilter('Rename', array('target' => $tmpProfilePictureTitle, 'overwrite' => true));
 
                 $values = $form->getValues();
 
@@ -1099,7 +1085,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     $this->view->error = 1;
                 } else {
                     //20180801 ronald: If a Hive User changes his password, we change the password type to our Default
-                    if($this->_memberSettings->password_type == Default_Model_Member::PASSWORD_TYPE_HIVE) {
+                    if ($this->_memberSettings->password_type == Default_Model_Member::PASSWORD_TYPE_HIVE) {
                         //Save old data
                         $this->_memberSettings->password_old = $this->_memberSettings->password;
                         $this->_memberSettings->password_type_old = Default_Model_Member::PASSWORD_TYPE_HIVE;
@@ -1107,9 +1093,10 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                         //Change type and password
                         $this->_memberSettings->password_type = Default_Model_Member::PASSWORD_TYPE_OCS;
                     }
-                    
+
                     $this->_memberSettings->password =
-                        Local_Auth_Adapter_Ocs::getEncryptedPassword($values['password1'], $this->_memberSettings->password_type);
+                        Local_Auth_Adapter_Ocs::getEncryptedPassword($values['password1'],
+                            $this->_memberSettings->password_type);
                     $this->_memberSettings->save();
                     $this->view->passwordform = $this->formPassword();
                     $this->view->save = 1;
@@ -1124,7 +1111,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     try {
                         $ldap_server = new Default_Model_Ocs_Ldap();
                         $ldap_server->updatePassword($this->_memberSettings->member_id);
-                        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
+                        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL . " - ",
+                                $ldap_server->getMessages()));
                     } catch (Exception $e) {
                         Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
                     }
@@ -1148,7 +1136,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         if ($this->_request->isGet()) {
             $websiteVerifier = new Local_Verification_WebsiteOwner();
             $authCode = $websiteVerifier->generateAuthCode($this->_memberSettings->link_website);
-            $form = $this->formHomepage($this->_memberSettings->link_website, $authCode, $this->_memberSettings->validated);
+            $form = $this->formHomepage($this->_memberSettings->link_website, $authCode,
+                $this->_memberSettings->validated);
             $this->view->homepageform = $form;
 
             return;
@@ -1238,7 +1227,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     //$showMember->paypal_valid_status = null;
                     //$this->_memberTable->save($showMember);
                     //$this->view->member = $showMember;
-                    $this->_memberTable->update(array('paypal_valid_status' => null), 'member_id = ' . $this->_memberId);
+                    $this->_memberTable->update(array('paypal_valid_status' => null),
+                        'member_id = ' . $this->_memberId);
 
                     //Log if paypal changes
 
@@ -1363,7 +1353,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             'field'   => 'email_address',
             'exclude' => array('field' => 'email_deleted', 'value' => 1)
         ));
-        $mailExistCheck->setMessage('RegisterFormEmailErrAlreadyRegistered', Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND);
+        $mailExistCheck->setMessage('RegisterFormEmailErrAlreadyRegistered',
+            Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND);
 
         // Filter-Parameter
         $filterInput = new Zend_Filter_Input(array('*' => 'StringTrim', 'user_email' => 'StripTags'), array(
@@ -1390,7 +1381,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $data['email_address'] = $filterInput->getEscaped('user_email');
         $data['email_hash'] = md5($filterInput->getEscaped('user_email'));
         $data['email_verification_value'] =
-            Default_Model_MemberEmail::getVerificationValue($this->_authMember->username, $filterInput->getEscaped('user_email'));
+            Default_Model_MemberEmail::getVerificationValue($this->_authMember->username,
+                $filterInput->getEscaped('user_email'));
         $modelMemberEmail = new Default_Model_DbTable_MemberEmail();
 
         return $modelMemberEmail->save($data);
@@ -1398,6 +1390,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
     /**
      * @param array $data
+     * @throws Zend_Exception
      */
     protected function sendConfirmationMail($data)
     {
@@ -1460,20 +1453,22 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             try {
                 $id_server = new Default_Model_Ocs_OAuth();
                 $id_server->updateMailForUser($this->_authMember->member_id);
+                Zend_Registry::get('logger')->debug(__METHOD__ . ' - oauth : ' . implode(PHP_EOL . " - ", $id_server->getMessages()));
+                Zend_Registry::get('logger')->debug(__METHOD__ . ' - oauth : ' . print_r($id_server->getMessages(), true));
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
             try {
                 $ldap_server = new Default_Model_Ocs_Ldap();
                 $ldap_server->updateMail($this->_authMember->member_id);
-                Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
+                Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL . " - ", $ldap_server->getMessages()));
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
             try {
                 $openCode = new Default_Model_Ocs_Gitlab();
                 $openCode->updateMail($this->_authMember->member_id);
-                Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $openCode->getMessages()));
+                Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL . " - ", $openCode->getMessages()));
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }

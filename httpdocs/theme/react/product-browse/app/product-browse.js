@@ -15,12 +15,14 @@ function ProductBrowse(){
 
 function ProductBrowseFilterContainer(){
 
-    let filtersBaseUrl = window.config.baseUrl + "/browse/";
-    if (typeof filters.category === Number) filtersBaseUrl += "cat/" + filters.category + "/";
+    let filtersBaseUrl = json_serverUrl;
+    filtersBaseUrl += json_store_name === "ALL" ? "/" : "/s/" + json_store_name + "/";
+    filtersBaseUrl += "browse/";
+    if (typeof filters.category === 'number') filtersBaseUrl += "cat/" + filters.category + "/";
 
     function onOriginalCheckboxClick(){
         let val = filters.original !== null ? 0 : 1;
-        window.location.href = window.config.baseUrl + "/" + window.location.pathname + "filteroriginal/" + val;
+        window.location.href = filtersBaseUrl + "filteroriginal/" + val;
     }
 
     return (
@@ -51,7 +53,8 @@ function ProductBrowseItemList(props){
     const [ containerWidth, setContainerWidth ] = useState($('#product-browse-container').width() + 14);
 
     let productBrowseItemType = 0;
-    if (window.location.search === "?index=3") productBrowseItemType = 1;
+
+    if (browseListType === "music") productBrowseItemType = 1;
 
     const [ itemsInRow, setItemsInRow ] = useState(isMobile ? 2 : productBrowseItemType === 0 ? 3 : 6)
     const [ minWidth, setMinWidth ] = useState(productBrowseItemType === 0 ? 400 : 200);
@@ -104,26 +107,28 @@ function ProductBrowseItem(props){
 
     const p = props.product;
 
-    const [ productsFetched, setProductFetched ] = useState(false);
+    const [ productFilesFetched, setProductFilesFetched ] = useState(false);
     const [ productFiles, setProductFiles ] = useState();
 
-
-    let imgUrl = "";
-    if (p.image_small.indexOf('https://') > -1 || p.image_small.indexOf('http://') > -1 ) imgUrl = p.image_small;
+    let initialImgUrl = "";
+    if (p.image_small && p.image_small.indexOf('https://') > -1 || p.image_small && p.image_small.indexOf('http://') > -1 ) initialImgUrl = p.image_small;
     else {
-        imgUrl = "https://cn.opendesktop.";
-        imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
-        imgUrl += "/img/" + p.image_small;    
+        initialImgUrl = "https://cn.opendesktop.";
+        initialImgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
+        initialImgUrl += "/cache/" + Math.ceil(props.itemWidth * 2) + "x" + Math.ceil(props.imgHeight * 2) + "/img/" + p.image_small;    
     }
 
-    let itemLink = window.config.baseUrlStore + "/";
+    const [ imgUrl, setImgUrl ] = useState(initialImgUrl);
+
+    let itemLink = json_serverUrl;
+    itemLink = json_store_name === "ALL" ? "/" : "/s/" + json_store_name + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
     itemLink += "/" + p.project_id;    
 
     React.useEffect(() => {
 
-        if (props.productBrowseItemType === 1 && productsFetched === false){
-            setProductFetched(true);
+        if (props.productBrowseItemType === 1 && productFilesFetched === false){
+            setProductFilesFetched(true);
             const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
             $.ajax({
                 url: ajaxUrl
@@ -143,6 +148,20 @@ function ProductBrowseItem(props){
 
     },[])
         
+    function onImageLoadError(){
+        console.log('on image load error');
+        const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
+        $.ajax({
+            url: ajaxUrl
+        }).done(function(res) {
+            res.forEach(function(f,index){
+                if ( f.type.split('/')[0] === "image"){
+                    setImgUrl(f.url.replace(/%2F/g,'/').replace(/%3A/g,':'));
+                }
+            });
+        });
+    }
+
     let itemInfoDisplay;
     if (props.productBrowseItemType === 0){
         itemInfoDisplay = (
@@ -165,14 +184,14 @@ function ProductBrowseItem(props){
         );
         if (productFiles && productFiles.length > 0) musicPlayerDisplay = <ProductBrowseItemPreviewMusicPlayer productFiles={productFiles} projectId={p.project_id} imgHeight={props.imgHeight}/>
     }
-    
+
     return (
         <div className={"product-browse-item "} id={"product-" + p.project_id} style={{"width":props.itemWidth}}>
             <div className="wrapper">
                 {musicPlayerDisplay}
                 <a href={itemLink} className="product-browse-item-wrapper">
                     <div className="product-browse-image">
-                        <img src={imgUrl} height={props.imgHeight}/>
+                        <img src={imgUrl} height={props.imgHeight} onError={onImageLoadError}/>
                         {musicItemInfoDisplay}
                     </div>
                     {itemInfoDisplay}
@@ -373,25 +392,26 @@ function ProductBrowseItemPreviewMusicPlayer(props){
 }
 
 function ProductBrowsePagination(){
-
+    
     const [ totalItems, setTotalItems ] = useState(pagination.totalcount);
     const [ itemsPerPage, setItemsPerPage ] = useState(50);
     const [ currentPage, setCurrentPage ] = useState(pagination.page);
     const [ totalPages, setTotalPages ] = useState(Math.ceil(totalItems / itemsPerPage));
 
-    let minPage = 0, maxPage = 10;
-    if (currentPage > 5){
-        minPage = currentPage - 5;
-        maxPage = currentPage + 5;
-    }
+    const minPage = currentPage - 5 > 0 ? currentPage - 5 : 0;
+    const maxPage = minPage + 10 < totalPages ? minPage + 10 : totalPages;
 
     let paginationArray = [];
     for (var i = minPage; i < maxPage; i++){ paginationArray.push(i + 1); }
     
-    let pageLinkBase = window.config.baseUrl + "/browse/page/";
-    if (typeof filters.category === Number) pageLinkBase += "cat/" + filters.category + "/";
-    let pageLinkSuffix = "/ord/" + filters.order;
-    if (filters.original !== null) pageLinkSuffix += "/filteroriginal/" + filters.original + window.location.search;
+    let pageLinkBase = json_serverUrl;
+    pageLinkBase += json_store_name === "ALL" ? "/" : "/s/" + json_store_name + "/";
+    pageLinkBase += "browse/page/";
+
+    let pageLinkSuffix = "/" 
+    if (typeof filters.category === 'number') pageLinkSuffix += "cat/" + filters.category + "/";
+    pageLinkSuffix += "ord/" + filters.order + "/";
+    if (filters.original !== null) pageLinkSuffix += "filteroriginal/" + filters.original + window.location.search;
 
     let previousButtonDisplay;
     if (currentPage > 1) previousButtonDisplay = <li><a href={pageLinkBase + (currentPage - 1) + pageLinkSuffix}><span className="glyphicon glyphicon-chevron-left"></span> Previous</a></li>

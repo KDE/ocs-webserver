@@ -588,7 +588,10 @@ video:focus {
 #music-player-wrapper .progress-bar .rc-slider .rc-slider-step {
   height: 20px;
 }
-
+#music-player-wrapper .audio-lists-panel .audio-lists-panel-header .close-btn {
+  display: block;
+  margin-right: 30px;
+}
 #music-player-wrapper .audio-lists-panel .audio-lists-panel-header .line,
 #music-player-wrapper .audio-lists-panel .audio-lists-panel-header .delete-btn {
   display: none;
@@ -674,4 +677,24 @@ video:focus {
 #music-player-wrapper .react-jinke-music-player-mobile .react-jinke-music-player-mobile-cover {
   width: 145px;
   height: 145px;
+}
+#comics-reader-wrapper {
+  height: 100%;
+  position: relative;
+}
+#comics-reader-wrapper .comic-book-navigation {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 1000;
+}
+#comics-reader-wrapper #comic-book-slider {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#comics-reader-wrapper #comic-book-slider .comic-book-page {
+  float: left;
+  height: 100%;
 }

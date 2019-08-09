@@ -36,6 +36,8 @@ if(isset($_GET['url'])) {
 
 $url_login = "/login/redirect/".$filter->filter($thisurl);
 
+$sections = $this->sections;
+
 ?>
 <link href="/theme/flatui/css/support.css" rel="stylesheet">
 
@@ -53,9 +55,19 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                     <h2>Become a Supporter</h2>
                     <p>Your donation helps support the <b> <?=$countActiveMembers?></b> creators of the platform (see <a href="/faq-pling">pling FAQ</a>).
                     </p>
+                    
+                    
                     <div class="x-donation-widget">
                          <div class="row disply-flex">
                             <div class="col-lg-2" style="padding-left: 15px;">        
+                               <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
+                                  <div class="header-content">                                                                                     
+                                     Section
+                                 
+                                  </div>
+                                </div>                                          
+                            </div> 
+                            <div class="col-lg-2">        
                                <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
                                   <div class="header-content">                                                                                     
                                      Select Tier
@@ -81,6 +93,7 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                               </div>
                             </div>                                                                                     
                             </div>
+                             <?php /*
                             <div class="col-lg-2 col-md-2 " style="padding-right: 15px;">
                             <div class="x-tabs-header ">
                               <div class="header-content" style="text-align:right;padding-right:15px;">                                                
@@ -88,13 +101,24 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                               </div>
                             </div>                                                                                     
                             </div>
+                              * 
+                              */?>
                         </div> <!--end of row-->
-                        <div class="row disply-flex" style="border-bottom: dotted thin #E7E7E7 !important;">
-
+                        <?php
+                            foreach ($sections as $section) {
+                        ?>
+                        <div class="row disply-flex">
+                            <div class="col-lg-2" style="padding-left: 15px;">        
+                                                                            
+                                <div class="text" style="padding: 16px;">
+                                    <?= $section['name'] ?>
+                                </div>
+                                                                        
+                            </div>
                             <div class="col-lg-2" style="padding-left: 15px;">        
                                                                             
                                       <div class="radiocontainer">
-                                      <input class="suggested-amount mdl-radio__button" <?=$this->payment_options['Option5']['checked']?> id="sam-15" type="radio" value="<?=$this->payment_options['Option5']['name']?>" name="amount_predefined"/>
+                                      <input class="suggested-amount mdl-radio__button" <?=$this->payment_options['Option5']['checked']?> id="sam-15-<?= $section['section_id'] ?>" type="radio" value="<?=$this->payment_options['Option5']['name']?>" name="amount_predefined-<?= $section['section_id'] ?>"/>
                                     </div>
                                                                         
                             </div>    
@@ -113,6 +137,7 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                                 );
                             ?>                                    
                             </div>
+                            <?php /*
                             <div class="col-lg-2 text-right" >
                                 <ul class="x-suggested-amounts">
                                 <li class="amount-item">       
@@ -124,9 +149,12 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                                 </ul>
                                
                             </div>
+                             * 
+                             */?>
                         </div> <!--end of row-->
 
-                        <div class="row disply-flex" style="border-bottom: dotted thin #E7E7E7 !important;">
+                        <?php /*
+                        <div class="row disply-flex">
 
                             <div class="col-lg-2" style="padding-left: 15px;">        
                                                                                              
@@ -150,6 +178,7 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                                 );
                             ?>                                    
                             </div>
+                         
                             <div class="col-lg-2 text-right">
                                 <ul class="x-suggested-amounts">
                                 <li class="amount-item">       
@@ -163,7 +192,7 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                             </div>
                         </div> <!--end of row-->
                             
-                        <div class="row disply-flex" style="border-bottom: dotted thin #E7E7E7 !important;">
+                        <div class="row disply-flex">
 
 
                             <div class="col-lg-2" style="padding-left: 15px;">        
@@ -204,7 +233,7 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                             </div>
                         </div> <!--end of row-->
 
-                        <div class="row disply-flex" style="border-bottom: dotted thin #E7E7E7 !important;">
+                        <div class="row disply-flex">
 
                             <div class="col-lg-2" style="padding-left: 15px;">        
                                                                                                                    
@@ -246,21 +275,24 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                             </div>
                         </div> <!--end of row-->
 
-                        
+                        */ ?>
 
                         <div class="row disply-flex" style="border-bottom: dotted thin #E7E7E7 !important;">
-
+                            <div class="col-lg-2">        
+                                <div class="text">
+                                </div>
+                            </div>
                             <div class="col-lg-2" style="padding-left: 15px;">      
 
                                     <div class="radiocontainer">
-                                      <input class="suggested-amount custom_amount_item" <?=$this->checked?> id="custom_amount_item" type="radio" value="Option7" name="amount_predefined">
+                                      <input class="suggested-amount custom_amount_item" <?=$this->checked?> id="custom_amount_item_<?= $section['section_id'] ?>" type="radio" value="Option7" name="amount_predefined-<?= $section['section_id'] ?>">
                                     </div>                        
                             </div>  
                             <div class="col-lg-4 col-md-4">  
                                 
                             </div>
                                                    
-
+                            
                             <div class="col-lg-4 col-md-4">  
 
                                  <ul class="x-suggested-amounts">
@@ -270,7 +302,7 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                                         <span class="unit-wrapper">
                                           <span class="unit">$</span>
                                         </span>
-                                        <span class="amount"><input id="custom_amount" min="15.01" step="any" inputmode="numeric" type="number" name="amount_handish"> </span>
+                                        <span class="amount"><input id="custom_amount" min="15.01" step="any" inputmode="numeric" type="number" name="amount_handish-<?= $section['section_id'] ?>"> </span>
                                         <span class="desc">Enter a free amount > $15</span>
                                       </div>
                                     
@@ -280,8 +312,12 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                             </div>
                             
                         </div> <!--end of row-->
+                        
+                        <?php
+                            }
+                        ?>
             
-                        <div class="row disply-flex" style="border-bottom: dotted thin #E7E7E7 !important;">
+                        <div class="row disply-flex">
                               <div class="col-lg-12 col-md-12">  
                                 <div class="tabs-footer">
                                     <?php if (Zend_Auth::getInstance()->hasIdentity()) {?>

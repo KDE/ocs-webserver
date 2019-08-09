@@ -208,6 +208,9 @@ class Backend_StoreController extends Local_Controller_Action_Backend
                 WHERE `tag_group`.`group_id` = `config_store_tag_group`.`tag_group_id` AND `config_store_tag_group`.`store_id` = `config_store`.`store_id`        
                 GROUP BY `config_store_tag_group`.`store_id`)')
         ))->order($sorting)->limit($pageSize, $startIndex)->setIntegrityCheck(false);
+        
+        $select->joinLeft('browse_list_types', 'browse_list_types.browse_list_type_id = config_store.browse_list_type',
+                     array('browse_list_type_name' => 'name'));
 
         foreach ($filter as $key => $value) {
             if (false === empty($value)) {

@@ -560,6 +560,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'controller' => 'subscription',
             'action'     => 'index'
         )));
+        
+        $router->addRoute('support_new2', new Zend_Controller_Router_Route('/support2', array(
+            'module'     => 'default',
+            'controller' => 'subscription',
+            'action'     => 'support2'
+        )));
+        
+        $router->addRoute('support_new_pay2', new Zend_Controller_Router_Route('/support/pay2', array(
+            'module'     => 'default',
+            'controller' => 'subscription',
+            'action'     => 'pay2'
+        )));
+
 
         $router->addRoute('support_new_pay', new Zend_Controller_Router_Route('/support/pay', array(
             'module'     => 'default',
