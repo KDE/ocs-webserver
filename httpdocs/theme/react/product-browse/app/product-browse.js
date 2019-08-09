@@ -75,7 +75,7 @@ function ProductBrowseItemList(props){
 
     let productsDisplay;
     if (itemWidth){
-        const productList = products.sort(SortByCurrentFilter).map((p,index) => (
+        const productList = products.map((p,index) => (
             <ProductBrowseItem
                 key={index} 
                 index={index}
