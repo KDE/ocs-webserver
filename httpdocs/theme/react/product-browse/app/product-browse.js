@@ -116,7 +116,7 @@ function ProductBrowseItem(props){
     else {
         imgUrl = "https://cn.opendesktop.";
         imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
-        imgUrl += "/cache/" + (props.itemWidth * 2) + "x" + (props.imgHeight * 2) + "/img/" + p.image_small;    
+        imgUrl += "/cache/" + Math.ceil(props.itemWidth * 2) + "x" + Math.ceil(props.imgHeight * 2) + "/img/" + p.image_small;    
     }
 
     let itemLink = json_serverUrl;
