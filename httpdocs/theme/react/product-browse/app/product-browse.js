@@ -154,7 +154,11 @@ function ProductBrowseItem(props){
         $.ajax({
             url: ajaxUrl
         }).done(function(res) {
-            console.log(res);
+            res.forEach(function(f,index){
+                if ( f.type.split('/')[0] === "image"){
+                    setImgUrl(f.url.replace(/%2F/g,'/').replace(/%3A/g,':'));
+                }
+            });
         });
     }
 
