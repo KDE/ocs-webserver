@@ -164,7 +164,6 @@ function ProductBrowseItem(props){
                 newImgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
                 newImgUrl += "/cache/" + Math.ceil(props.itemWidth * 2) + "x" + Math.ceil(props.imgHeight * 2) + "/img/default.png";                 
             }
-            console.log(newImgUrl);
             setImgUrl(newImgUrl);
         });
     }
