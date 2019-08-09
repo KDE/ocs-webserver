@@ -119,7 +119,8 @@ function ProductBrowseItem(props){
         imgUrl += "/cache/" + (props.itemWidth * 2) + "x" + (props.imgHeight * 2) + "/img/" + p.image_small;    
     }
 
-    let itemLink = window.config.baseUrlStore + "/";
+    let itemLink = json_serverUrl;
+    itemLink = json_store_name === "ALL" ? "/" : "/s/" + json_store_name + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
     itemLink += "/" + p.project_id;    
 
