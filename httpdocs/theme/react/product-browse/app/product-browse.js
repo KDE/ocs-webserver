@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import {isMobile} from 'react-device-detect';
 import {ProductBrowseItem} from './product-browse-item';
-import {getNumberOfItemsPerRow, getImageHeight} from './product-browse-helpers';
+import {getNumberOfItemsPerRow, getImageHeight, chunkArray} from './product-browse-helpers';
 
 function ProductBrowse(){
     console.log(browseListType);
@@ -52,7 +52,8 @@ function ProductBrowseFilterContainer(){
 function ProductBrowseItemList(props){
 
     const [ containerWidth, setContainerWidth ] = useState($('#product-browse-container').width() + 14);
-    const [ itemsInRow, setItemsInRow ] = useState(getNumberOfItemsPerRow(browseListType,isMobile));
+    const [ itemsInRow, setItemsInRow ] = useState(getNumberOfItemsPerRow(browseListType,isMobile,containerWidth));
+    console.log(itemsInRow);
     const [ itemWidth, setItemWidth ] = useState(containerWidth / itemsInRow);
     const [ imgHeight, setImgHeight ] = useState(getImageHeight(browseListType,itemWidth));
 
@@ -62,34 +63,52 @@ function ProductBrowseItemList(props){
     },[])
 
     function updateDimensions(){
-        const newContainerWidth = $('#product-browse-container').width() + 30;
+        const newContainerWidth = $('#product-browse-container').width() + 14;
         setContainerWidth(newContainerWidth);
+        const newItemsInRow = getNumberOfItemsPerRow(browseListType,isMobile,newContainerWidth);
+        setItemsInRow(newItemsInRow);
+        const newItemWidth = newContainerWidth / newItemsInRow;
+        setItemWidth(newItemWidth);
+        const newImgHeight = getImageHeight(browseListType,newItemWidth);
+        setImgHeight(newImgHeight);
     }
 
-    let productsDisplay;
-    if (itemWidth){
-        const productList = products.map((p,index) => (
-            <ProductBrowseItem
+    let productsRowsDisplay;
+    if (itemsInRow){   
+        productsRowsDisplay = chunkArray(products,itemsInRow).map((ac,index) => (
+            <ProductBrowseItemsRow
                 key={index} 
-                index={index}
-                product={p}
+                products={ac}
                 itemWidth={itemWidth}
                 imgHeight={imgHeight}
             />
-        ));
-
-        productsDisplay = (
-            <div id="product-browse-list-container">
-                {productList}
-                <ProductBrowsePagination/>
-            </div>
-        )
-    } else {
-        productsDisplay = "Loading..."
+        ))
     }
 
     return (
         <div id="product-browse-item-list" className={isMobile ? "mobile" : ""}>
+            <div id="product-browse-list-container">
+                {productsRowsDisplay}
+                <ProductBrowsePagination/>
+            </div>
+        </div>
+    )
+}
+
+function ProductBrowseItemsRow(props){
+
+    const productsDisplay = props.products.map((p,index) => (
+        <ProductBrowseItem
+            key={index} 
+            index={index}
+            product={p}
+            itemWidth={props.itemWidth}
+            imgHeight={props.imgHeight}
+        />
+    ));
+
+    return (
+        <div className={"product-browse-item-row " + ( browseListType ? browseListType + "-row" : "")}>
             {productsDisplay}
         </div>
     )
