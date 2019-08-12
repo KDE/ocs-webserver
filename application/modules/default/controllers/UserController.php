@@ -43,13 +43,11 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
 
         $action = $this->getRequest()->getActionName();
-        $title='';
-        if($action =='index')
-        {
-          $title = 'aboutme';
-        }else
-        {
-          $title = $action;
+        $title = '';
+        if ($action == 'index') {
+            $title = 'aboutme';
+        } else {
+            $title = $action;
         }
         $this->view->headTitle($title . ' - ' . $this->getHeadTitle(), 'SET');
     }
@@ -63,7 +61,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     public function aboutmeAction()
     {
-        
+
         $tableMember = new Default_Model_Member();
         $tableProject = new Default_Model_Project();
         $earnModel = new Default_Model_StatDownload();
@@ -71,10 +69,10 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $pageLimit = 500;
         $projectpage = (int)$this->getParam('projectpage', 1);
 
-        $this->view->authMember = $this->_authMember;        
+        $this->view->authMember = $this->_authMember;
         $this->view->member = $tableMember->fetchMemberData($this->_memberId);
 
-        
+
         if (null == $this->view->member) {
             $this->redirect("/");
         }
@@ -86,26 +84,24 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $this->view->mainProject = $this->view->member->findDependentRowset($tableProject, 'MainProject')->current();
 
         $this->view->userProjectCategories = $tableProject->getUserCreatingCategorys($this->_memberId);
-        $this->view->aboutmeUserInfo = $this->getAboutmeUserInfo($this->_memberId,$this->view->member->username);
-        
+        $this->view->aboutmeUserInfo = $this->getAboutmeUserInfo($this->_memberId, $this->view->member->username);
+
 
         $userRoleName = $helperUserRole->userRole();
         if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
             $datetime = new DateTime();
             $datetime->sub(new DateInterval('P1M'));
             $month = $datetime->format('Ym');
-            $amount = $earnModel->getMonthEarn($this->_memberId,$month);
-            if($amount && $amount['amount'])
-            {                 
-                $this->view->earnInfo = ' Last month I earned $'.number_format($amount['amount'], 2, '.', '').'.';
-            }else
-            {
-                $this->view->earnInfo=' Last month I earned 0.';
+            $amount = $earnModel->getMonthEarn($this->_memberId, $month);
+            if ($amount && $amount['amount']) {
+                $this->view->earnInfo = ' Last month I earned $' . number_format($amount['amount'], 2, '.', '') . '.';
+            } else {
+                $this->view->earnInfo = ' Last month I earned 0.';
             }
-        }else{
-            $this->view->earnInfo='';
+        } else {
+            $this->view->earnInfo = '';
         }
-        
+
 
         // ajax load more products
         if ($this->getParam('projectpage', null)) {
@@ -113,13 +109,14 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->view->pageLimit = $pageLimit;
             $this->view->projectpage = $projectpage;
             $this->view->total_records = $total_records;
-            
+
             // get last project category id
-            $lastproject = $tableProject->getUserActiveProjects($this->_memberId, 1, (($projectpage - 1) * $pageLimit-1));
-            foreach ($lastproject as $value) {                
-                $this->view->lastcatid = $value['project_category_id'];                
+            $lastproject = $tableProject->getUserActiveProjects($this->_memberId, 1,
+                (($projectpage - 1) * $pageLimit - 1));
+            foreach ($lastproject as $value) {
+                $this->view->lastcatid = $value['project_category_id'];
             }
-            
+
             $this->view->userProducts =
                 $tableProject->getUserActiveProjects($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit);
 
@@ -137,7 +134,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
             //$this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit,true);
             $this->view->userProducts =
                 $tableProject->getUserActiveProjects($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit);
-       
+
             $this->view->userFeaturedProducts = $tableProject->fetchAllFeaturedProjectsForMember($this->_memberId);
             $this->view->userCollections = $tableProject->fetchAllCollectionsForMember($this->_memberId);
 
@@ -189,7 +186,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
             } else {
                 $stat['cntFProducts'] = 0;
             }
-            
+
             if ($this->view->userCollections) {
                 $cnt = 0;
                 foreach ($this->view->userCollections as $tmp) {
@@ -216,22 +213,24 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 $stat['donationMin'] = $donationinfo['active_time_min'];
                 $stat['donationCnt'] = $donationinfo['cnt'];
             }
-            
+
             $subscriptioninfo = $tableMember->fetchSupporterSubscriptionInfo($this->_memberId);
             if ($subscriptioninfo) {
                 $stat['subscriptionIssupporter'] = true;
                 $stat['subscriptionStart'] = $subscriptioninfo['create_time'];
                 $stat['subscriptionAmount'] = $subscriptioninfo['amount'];
                 $stat['subscriptionPeriod'] = $subscriptioninfo['period'];
-                if($subscriptioninfo['period'] == 'M') {
+                if ($subscriptioninfo['period'] == 'M') {
                     $stat['subscriptionPeriodText'] = 'monthly';
-                } else if($subscriptioninfo['period'] == 'Y') {
-                    $stat['subscriptionPeriodText'] = 'yearly';
                 } else {
-                    $stat['subscriptionPeriodText'] = '';
+                    if ($subscriptioninfo['period'] == 'Y') {
+                        $stat['subscriptionPeriodText'] = 'yearly';
+                    } else {
+                        $stat['subscriptionPeriodText'] = '';
+                    }
                 }
-                    
-                
+
+
                 $stat['subscriptionPeriodFreq'] = $subscriptioninfo['period_frequency'];
             } else {
                 $stat['subscriptionIssupporter'] = false;
@@ -250,136 +249,132 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
     }
 
+    public function getAboutmeUserInfo($member_id, $username)
+    {
+        $tableProject = new Default_Model_Project();
+        $userProjectCategories = $tableProject->getUserCreatingCategorys($member_id);
+        $cnt = sizeof($userProjectCategories);
+        $userinfo = '';
+        $isAdmin = false;
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $isAdmin = true;
+        }
+        if ($cnt > 0) {
+            $userinfo = "Hi, I am <b>" . $username . "</b> and I create ";
+            if ($cnt == 1) {
+                $userinfo = $userinfo . ' <b>' . $userProjectCategories[0]['category1'] . '</b>';
+                $userinfo = $userinfo . '.';
+                /* if($isAdmin)
+                 {
+                     $userinfo = $userinfo.' ('.$userProjectCategories[0]['cnt'].').';
+                 }else{
+                     $userinfo = $userinfo.'.';
+                 }*/
+            } else {
+                if ($cnt == 2) {
+                    $userinfo = $userinfo . ' <b>' . $userProjectCategories[0]['category1'] . '</b>';
+                    /*if($isAdmin)
+                    {
+                    $userinfo = $userinfo.' ('.$userProjectCategories[0]['cnt'].')';
+                    }*/
+                    $userinfo = $userinfo . ' and <b>' . $userProjectCategories[1]['category1'] . '</b>';
+                    /*if($isAdmin)
+                    {
+                        $userinfo = $userinfo.'('.$userProjectCategories[1]['cnt'].').';
+                    }else{
+                        $userinfo = $userinfo.'.';
+                    }*/
+                    $userinfo = $userinfo . '.';
+                } else {
+                    if ($cnt == 3) {
+                        $userinfo = $userinfo . ' <b>' . $userProjectCategories[0]['category1'] . '</b>';
+                        /*if($isAdmin)
+                        {
+                            $userinfo = $userinfo.' ('.$userProjectCategories[0]['cnt'].')';
+                        }*/
+                        $userinfo = $userinfo . ',<b> ' . $userProjectCategories[1]['category1'] . '</b>';
+                        /* if($isAdmin)
+                         {
+                             $userinfo = $userinfo.' ('.$userProjectCategories[1]['cnt'].')';
+                         }*/
+                        $userinfo = $userinfo . ' and <b>' . $userProjectCategories[2]['category1'] . '</b>';
+                        /*if($isAdmin)
+                        {
+                            $userinfo = $userinfo.' ('.$userProjectCategories[2]['cnt'].').';
+                        }*/
+                        /*else{
+                            $userinfo = $userinfo.'.';
+                        }*/
+                        $userinfo = $userinfo . '.';
+                    } else {
+                        if ($cnt > 3) {
+                            $userinfo = $userinfo . ' <b>' . $userProjectCategories[0]['category1'] . '</b>';
+                            /*if($isAdmin)
+                            {
+                            $userinfo = $userinfo.' ('.$userProjectCategories[0]['cnt'].')';
+                            }*/
+                            $userinfo = $userinfo . ', <b>' . $userProjectCategories[1]['category1'] . '</b>';
+                            /*if($isAdmin)
+                            {
+                            $userinfo = $userinfo.' ('.$userProjectCategories[1]['cnt'].')';
+                            }*/
+                            $userinfo = $userinfo . ', <b>' . $userProjectCategories[2]['category1'] . '</b>';
+                            /*if($isAdmin)
+                            {
+                            $userinfo = $userinfo.' ('.$userProjectCategories[2]['cnt'].')';
+                            }*/
+                            $userinfo = $userinfo . ' and more.';
+                        }
+                    }
+                }
+            }
+        }
+
+        return $userinfo;
+    }
+
     public function duplicatesAction()
     {
-         $tableProject = new Default_Model_Project();
+        $tableProject = new Default_Model_Project();
         $pageLimit = 1000;
         $projectpage = 1;
         $total_records = $tableProject->countAllProjectsForMemberCatFilter($this->_memberId, true, null);
         $this->view->pageLimit = $pageLimit;
         $this->view->projectpage = $projectpage;
-        $this->view->total_records = $total_records;        
-        
+        $this->view->total_records = $total_records;
+
         $this->view->userProducts =
-            $tableProject->getUserActiveProjectsDuplicatedSourceurl($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit);
+            $tableProject->getUserActiveProjectsDuplicatedSourceurl($this->_memberId, $pageLimit,
+                ($projectpage - 1) * $pageLimit);
 
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer('partials/aboutmeProducts');
-    
+
     }
-    public function getAboutmeUserInfo($member_id,$username)
-    {
-        $tableProject = new Default_Model_Project();
-        $userProjectCategories = $tableProject->getUserCreatingCategorys($member_id);
-        $cnt = sizeof($userProjectCategories ); 
-        $userinfo='';
-        $isAdmin = false;
-        $helperUserRole = new Backend_View_Helper_UserRole();
-         $userRoleName = $helperUserRole->userRole();
-        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName){
-            $isAdmin= true;
-        }
-        if($cnt>0)
-        {
-            $userinfo = "Hi, I am <b>".$username."</b> and I create ";
-            if($cnt==1)
-            {
-                $userinfo = $userinfo.' <b>'.$userProjectCategories[0]['category1'].'</b>';
-                $userinfo = $userinfo.'.';
-               /* if($isAdmin)
-                {
-                    $userinfo = $userinfo.' ('.$userProjectCategories[0]['cnt'].').';
-                }else{
-                    $userinfo = $userinfo.'.';
-                }*/
-            }else if($cnt==2)
-            {
-                $userinfo = $userinfo.' <b>'.$userProjectCategories[0]['category1'].'</b>';
-                /*if($isAdmin)
-                {
-                $userinfo = $userinfo.' ('.$userProjectCategories[0]['cnt'].')';
-                }*/
-                $userinfo = $userinfo.' and <b>'.$userProjectCategories[1]['category1'].'</b>';
-                /*if($isAdmin)
-                { 
-                    $userinfo = $userinfo.'('.$userProjectCategories[1]['cnt'].').';
-                }else{
-                    $userinfo = $userinfo.'.';
-                }*/
-                $userinfo = $userinfo.'.';
-            }else if($cnt==3)
-            {
-                $userinfo = $userinfo.' <b>'.$userProjectCategories[0]['category1'].'</b>';
-                /*if($isAdmin)
-                { 
-                    $userinfo = $userinfo.' ('.$userProjectCategories[0]['cnt'].')';
-                }*/
-                $userinfo = $userinfo.',<b> '.$userProjectCategories[1]['category1'].'</b>';
-               /* if($isAdmin)
-                { 
-                    $userinfo = $userinfo.' ('.$userProjectCategories[1]['cnt'].')';
-                }*/
-                $userinfo = $userinfo.' and <b>'.$userProjectCategories[2]['category1'].'</b>';
-                /*if($isAdmin)
-                { 
-                    $userinfo = $userinfo.' ('.$userProjectCategories[2]['cnt'].').';
-                }*/
-                /*else{
-                    $userinfo = $userinfo.'.';
-                }*/
-                $userinfo = $userinfo.'.';
-            }else if($cnt>3)
-            {
-                $userinfo = $userinfo.' <b>'.$userProjectCategories[0]['category1'].'</b>';
-                /*if($isAdmin)
-                { 
-                $userinfo = $userinfo.' ('.$userProjectCategories[0]['cnt'].')';
-                }*/
-                $userinfo = $userinfo.', <b>'.$userProjectCategories[1]['category1'].'</b>';
-                /*if($isAdmin)
-                { 
-                $userinfo = $userinfo.' ('.$userProjectCategories[1]['cnt'].')';
-                }*/
-                $userinfo = $userinfo.', <b>'.$userProjectCategories[2]['category1'].'</b>';
-                /*if($isAdmin)
-                { 
-                $userinfo = $userinfo.' ('.$userProjectCategories[2]['cnt'].')';
-                }*/
-                $userinfo = $userinfo.' and more.';
-            }                                                
-        }
-        return $userinfo;
-    }
+
+    /**
+     * to get an avatar picture you can call
+     * /member/avatar/:emailhash/:size
+     * or
+     * /member/u/:user_name/avatar/size/:size
+     *
+     * @throws Zend_Exception
+     */
     public function avatarAction()
     {
         $this->_helper->layout->disableLayout();
 
         $size = (int)$this->getParam("size", 200);
         $width = (int)$this->getParam("width", ($size / 2));
-        $this->view->size = (int)$size / 2;
-
         $emailHash = $this->getParam("emailhash", null);
+        $username = $this->getParam('user_name', null);
 
-        if ($emailHash) {
-            $memberTable = new Default_Model_Member();
-            $member = $memberTable->findMemberForMailHash($emailHash);
+        $avatar = new Default_Model_Avatar();
+        $img_url = $avatar->getAvatarUrl($emailHash, $username, $width);
 
-            if ($member) {
-
-                $helperImage = new Default_View_Helper_Image();
-                $imgUrl = $helperImage->Image($member['profile_image_url'], array('width' => $width, 'height' => $width));
-                $this->view->avatar = $imgUrl;
-
-                $this->redirect($imgUrl);
-
-                return;
-            }
-        }
-
-        $this->view->avatar = "";
-        $helperImage = new Default_View_Helper_Image();
-        $imgUrl = $helperImage->Image("default-profile.png", array('width' => $width, 'height' => $width));
-        $this->redirect($imgUrl);
+        $this->redirect($img_url);
     }
 
     public function aboutAction()
@@ -412,10 +407,10 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
         header('Access-Control-Allow-Origin: *');
 
-        $this->getResponse()->setHeader('Access-Control-Allow-Origin', '*')->setHeader('Access-Control-Allow-Credentials', 'true')
+        $this->getResponse()->setHeader('Access-Control-Allow-Origin',
+            '*')->setHeader('Access-Control-Allow-Credentials', 'true')
              ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
-        ;
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
 
         $userid = $this->getParam('id');
 
@@ -431,17 +426,19 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $resultArray['username'] = $user->username;
             $resultArray['mail'] = $user->mail;
             $resultArray['avatar'] = $user->profile_image_url;
-        } else if (null != $userid && null != $user) {
-
-            $resultArray['member_id'] = $user['member_id'];
-            $resultArray['username'] = $user['username'];
-            $resultArray['mail'] = $user['mail'];
-            $resultArray['avatar'] = $user['profile_image_url'];
         } else {
-            $resultArray['member_id'] = null;
-            $resultArray['username'] = null;
-            $resultArray['mail'] = null;
-            $resultArray['avatar'] = null;
+            if (null != $userid && null != $user) {
+
+                $resultArray['member_id'] = $user['member_id'];
+                $resultArray['username'] = $user['username'];
+                $resultArray['mail'] = $user['mail'];
+                $resultArray['avatar'] = $user['profile_image_url'];
+            } else {
+                $resultArray['member_id'] = null;
+                $resultArray['username'] = null;
+                $resultArray['mail'] = null;
+                $resultArray['avatar'] = null;
+            }
         }
 
         $resultAll = array();
@@ -471,8 +468,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
         $newVals = array('member_id' => $this->_memberId, 'follower_id' => (int)$this->_authMember->member_id);
         $where = $memberFollowTable->select()->where('member_id = ?', $this->_memberId)
-                                   ->where('follower_id = ?', $this->_authMember->member_id, 'INTEGER')
-        ;
+                                   ->where('follower_id = ?', $this->_authMember->member_id, 'INTEGER');
         $result = $memberFollowTable->fetchRow($where);
         if (null === $result) {
             $memberFollowTable->createRow($newVals)->save();
@@ -517,7 +513,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
 
         $modelProject = new Default_Model_Project();
-        $userProjects = $modelProject->fetchAllProjectsForMember($this->_authMember->member_id, $pageLimit, ($page - 1) * $pageLimit);
+        $userProjects = $modelProject->fetchAllProjectsForMember($this->_authMember->member_id, $pageLimit,
+            ($page - 1) * $pageLimit);
 
         $paginator = Local_Paginator::factory($userProjects);
         $paginator->setItemCountPerPage($pageLimit);
@@ -528,7 +525,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $modelMember = new Default_Model_Member();
         $this->view->member = $modelMember->fetchMemberData($this->_authMember->member_id);
     }
-    
+
     public function collectionsAction()
     {
         $pageLimit = 25;
@@ -540,7 +537,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
 
         $modelProject = new Default_Model_Collection();
-        $userProjects = $modelProject->fetchAllCollectionsForMember($this->_authMember->member_id, $pageLimit, ($page - 1) * $pageLimit);
+        $userProjects = $modelProject->fetchAllCollectionsForMember($this->_authMember->member_id, $pageLimit,
+            ($page - 1) * $pageLimit);
 
         $paginator = Local_Paginator::factory($userProjects);
         $paginator->setItemCountPerPage($pageLimit);
@@ -669,8 +667,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->view->member = $this->_authMember;
         }
     }
-    
-    
+
+
     public function plingsoldAction()
     {
         $tableMember = new Default_Model_Member();
@@ -689,12 +687,12 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->view->member = $this->_authMember;
         }
     }
-    
-    
+
+
     public function plingsajaxAction()
     {
         $this->_helper->layout->disableLayout();
-        
+
         $tableMember = new Default_Model_Member();
         $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
 
@@ -710,20 +708,20 @@ class UserController extends Local_Controller_Action_DomainSwitch
         } else {
             $this->view->member = $this->_authMember;
         }
-        
+
         $year = null;
-        if($this->hasParam('year')) {
+        if ($this->hasParam('year')) {
             $year = $this->getParam('year');
         }
         $this->view->year = $year;
-        
+
         $this->_helper->viewRenderer('/plingsajax');
     }
-    
+
     public function plingsmonthajaxAction()
     {
         $this->_helper->layout->disableLayout();
-        
+
         $tableMember = new Default_Model_Member();
         $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
 
@@ -739,13 +737,13 @@ class UserController extends Local_Controller_Action_DomainSwitch
         } else {
             $this->view->member = $this->_authMember;
         }
-        
+
         $yearmonth = null;
-        if($this->hasParam('yearmonth')) {
+        if ($this->hasParam('yearmonth')) {
             $yearmonth = $this->getParam('yearmonth');
         }
         $this->view->yearmonth = $yearmonth;
-        
+
         $this->_helper->viewRenderer('/plingsmonthajax');
     }
 
@@ -807,13 +805,14 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->view->likes = array();
         }
     }
+
     public function supportAction()
     {
-        
+
         $helperUserRole = new Backend_View_Helper_UserRole();
         $userRoleName = $helperUserRole->userRole();
         if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
-             $tableMember = new Default_Model_Member();
+            $tableMember = new Default_Model_Member();
             $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
             $this->view->member = $this->view->view_member;
         } else {
@@ -822,7 +821,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
         $model = new Default_Model_DbTable_Support();
         $this->view->supporterlist = $model->getSupporterDonationList($this->view->member->member_id);
-        
+
 
     }
 
@@ -859,20 +858,19 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->view->member = $this->view->view_member;
         } else {
             $this->view->member = $this->_authMember;
-            if($this->_memberId!=$this->_authMember->member_id)
-            {
+            if ($this->_memberId != $this->_authMember->member_id) {
                 throw new Zend_Controller_Action_Exception('no authorization found');
             }
         }
 
         $model = new Default_Model_StatDownload();
-        $resultSet = $model->getPayoutHistory($this->view->member->member_id);        
+        $resultSet = $model->getPayoutHistory($this->view->member->member_id);
 
-        $this->view->payouthistory=$resultSet;
+        $this->view->payouthistory = $resultSet;
 
 
     }
-    
+
 
     public function _payouthistoryAction()
     {
@@ -887,39 +885,40 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->view->member = $this->view->view_member;
         } else {
             $this->view->member = $this->_authMember;
-            if($this->_memberId!=$this->_authMember->member_id)
-            {
+            if ($this->_memberId != $this->_authMember->member_id) {
                 throw new Zend_Controller_Action_Exception('no authorization found');
             }
         }
 
         // these are already payed
-        $sql="select yearmonth, amount from member_payout where member_id = :member_id order by yearmonth asc";
-        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql,array('member_id' =>$this->view->member->member_id));
+        $sql = "SELECT `yearmonth`, `amount` FROM `member_payout` WHERE `member_id` = :member_id ORDER BY `yearmonth` ASC";
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql,
+            array('member_id' => $this->view->member->member_id));
 
-        
+
         // there are probably payed last 2 months
         // current month
         $date = new DateTime();
         $ym = $date->format('Ym');
         $is_in = false;
         foreach ($resultSet as $value) {
-            if($ym==$value['yearmonth'])
-            {
+            if ($ym == $value['yearmonth']) {
                 $is_in = true;
                 break;
             }
         }
 
-        if(!$is_in){
+        if (!$is_in) {
             $model = new Default_Model_StatDownload();
             $result = $model->getUserDownloadsForMonth($this->view->member->member_id, $ym);
             $amount = 0;
             foreach ($result as $value) {
-                 if($value['is_license_missing_now'] == 1 
-                        || $value['is_source_missing_now'] == 1
-                        || $value['is_pling_excluded_now'] == 1                                            
-                    ) continue;
+                if ($value['is_license_missing_now'] == 1
+                    || $value['is_source_missing_now'] == 1
+                    || $value['is_pling_excluded_now'] == 1
+                ) {
+                    continue;
+                }
                 $amount = $amount + $value['probably_payout_amount'];
             }
             $currentMonth = array('yearmonth' => $ym, 'amount' => $amount);
@@ -930,34 +929,34 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $ym = $lastmonthdate->format('Ym');
             $is_in = false;
             foreach ($resultSet as $value) {
-                    if($ym==$value['yearmonth'])
-                    {
-                        $is_in = true;
-                        break;
-                    }
+                if ($ym == $value['yearmonth']) {
+                    $is_in = true;
+                    break;
                 }
-            if(!$is_in){
+            }
+            if (!$is_in) {
                 $model = new Default_Model_StatDownload();
                 $result = $model->getUserDownloadsForMonth($this->view->member->member_id, $ym);
                 $amount = 0;
-                foreach ($result as $value) {                    
-                    if($value['is_license_missing'] == 1 
+                foreach ($result as $value) {
+                    if ($value['is_license_missing'] == 1
                         || $value['is_source_missing'] == 1
-                        || $value['is_pling_excluded'] == 1                                            
-                    ) continue;
+                        || $value['is_pling_excluded'] == 1
+                    ) {
+                        continue;
+                    }
                     $amount = $amount + $value['probably_payout_amount'];
                 }
                 $lastMonth = array('yearmonth' => $ym, 'amount' => $amount);
-                array_push($resultSet,$lastMonth);
+                array_push($resultSet, $lastMonth);
             }
-            array_push($resultSet,$currentMonth);
+            array_push($resultSet, $currentMonth);
         }
 
-        $this->view->payouthistory=$resultSet;
+        $this->view->payouthistory = $resultSet;
 
 
     }
-    
 
 
     /**
@@ -967,7 +966,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
     private function formPassword()
     {
         $form = new Default_Form_Settings();
-        $form->setMethod("POST")->setAttrib("id", "settingsPasswordForm")->setAction('/member/' . $this->_memberId . '/changepass');
+        $form->setMethod("POST")->setAttrib("id",
+            "settingsPasswordForm")->setAction('/member/' . $this->_memberId . '/changepass');
 
         $passOld = $form->createElement('password', 'passwordOld')->setLabel('Enter old Password:')->setRequired(true)
                         ->removeDecorator('HtmlTag')->addValidator(new Local_Validate_OldPasswordConfirm())->setDecorators(array(
@@ -981,8 +981,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
                         'placement'  => false
                     )
                 )
-            ))
-        ;
+            ));
 
         $pass1 = $form->createElement('password', 'password1')->setLabel('Enter new Password:')->setRequired(true)
                       ->addValidator(new Zend_Validate_NotEmpty(Zend_Validate_NotEmpty::STRING))->removeDecorator('HtmlTag')
@@ -997,8 +996,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
                                   'placement'  => false
                               )
                           )
-                      ))
-        ;
+                      ));
 
         $pass2 = $form->createElement('password', 'password2')->setLabel('Re-enter new Password:')->setRequired(true)
                       ->addValidator(new Zend_Validate_NotEmpty(Zend_Validate_NotEmpty::STRING))->removeDecorator('HtmlTag')
@@ -1013,8 +1011,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
                                   'placement'  => false
                               )
                           )
-                      ))
-        ;
+                      ));
 
         $passValid = new Local_Validate_PasswordConfirm($pass2->getValue());
         $pass1->addValidator($passValid);
