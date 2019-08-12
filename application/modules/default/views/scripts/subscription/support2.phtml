@@ -118,7 +118,7 @@ $sections = $this->sections;
                                 <div class="radiocontainer" style="text-align: left;">
                                   <input class="suggested-amount mdl-radio__button" <?=$this->payment_options['Option5']['checked']?> id="sam-15-<?= $section['section_id'] ?>" type="radio" value="<?=$this->payment_options['Option5']['name']?>" name="amount_predefined-<?= $section['section_id'] ?>"/>
                                   <?php
-                                    echo $this->partial('/subscription/partials/tier.phtml',
+                                    echo $this->partial('/subscription/partials/tier2.phtml',
                                             array('tier' => '0.99'));
                                 ?>
                                 </div>
