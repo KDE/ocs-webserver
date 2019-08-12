@@ -175,15 +175,19 @@ class Default_Model_Section
     }
 
     
-    public function getAllDownloadYears()
+    public function getAllDownloadYears($isForAdmin = false)
     {
         $sql = "
                 SELECT 
                     SUBSTR(`member_dl_plings`.`yearmonth`,1,4) as year,
                     MAX(`member_dl_plings`.`yearmonth`) as max_yearmonth
                 FROM
-                    `member_dl_plings`
-                GROUP BY SUBSTR(`member_dl_plings`.`yearmonth`,1,4)
+                    `member_dl_plings`";
+        if(!$isForAdmin) {
+            $sql .= " WHERE SUBSTR(`member_dl_plings`.`yearmonth`,1,4) = DATE_FORMAT(NOW(),'%Y')";
+        }
+        
+        $sql .= " GROUP BY SUBSTR(`member_dl_plings`.`yearmonth`,1,4)
                 ORDER BY SUBSTR(`member_dl_plings`.`yearmonth`,1,4) DESC
             ";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql);
@@ -197,7 +201,7 @@ class Default_Model_Section
     }
     
     
-    public function getAllDownloadMonths($year)
+    public function getAllDownloadMonths($year, $isForAdmin = false)
     {
         $sql = "
                 SELECT 
@@ -205,9 +209,13 @@ class Default_Model_Section
                 FROM
                     `member_dl_plings`
                 WHERE
-                SUBSTR(`member_dl_plings`.`yearmonth`,1,4) = :year
-                ORDER BY `member_dl_plings`.`yearmonth` DESC
-            ";
+                SUBSTR(`member_dl_plings`.`yearmonth`,1,4) = :year ";
+                
+        if(!$isForAdmin) {
+            $sql .= " AND `member_dl_plings`.`yearmonth` >= DATE_FORMAT((NOW() - INTERVAL 1 MONTH),'%Y%m')";
+        }
+
+        $sql .= " ORDER BY `member_dl_plings`.`yearmonth` DESC";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('year' => $year));
 
         if ($result->rowCount() > 0) {
