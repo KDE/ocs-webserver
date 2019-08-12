@@ -76,7 +76,7 @@ class Default_Model_Section
      *
      * @return array
      */
-    public function fetchAllSectionStats($yearmonth = null)
+    public function fetchAllSectionStats($yearmonth = null, $isForAdmin = false)
     {
         $sql = "SELECT p.yearmonth, s.section_id, s.name AS section_name
                 ,(SELECT ROUND(SUM(ss.tier)/12,2) AS sum_support FROM section_support ss
@@ -110,8 +110,13 @@ class Default_Model_Section
                                 HAVING sum(`m`.`probably_payout_amount`) >= 1
                         ) A GROUP BY yearmonth, section_id
                 ) p3 ON p3.yearmonth = p.yearmonth AND p3.section_id = s.section_id
-                WHERE p.yearmonth = :yearmonth
-                GROUP BY s.section_id";
+                WHERE p.yearmonth = :yearmonth";
+        
+        if(!$isForAdmin) {
+            $sql .= " AND p.yearmonth >= DATE_FORMAT((NOW() - INTERVAL 1 MONTH),'%Y%m')";
+        }
+        
+        $sql .= " GROUP BY s.section_id";
         if(empty($yearmonth)) {
             $yearmonth = "DATE_FORMAT(NOW(),'%Y%m')";
         }
