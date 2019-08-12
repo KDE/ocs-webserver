@@ -57,7 +57,15 @@ export function ProductBrowseItem(props){
         musicItemInfoDisplay, 
         musicPlayerDisplay;
     
-    if (browseListType === "music"){
+    if (browseListType === "picture") {
+        itemInfoDisplay = (
+            <div className="product-browse-item-info">
+                <h2>{p.title}</h2>
+                <span>{p.cat_title}</span>
+                <span>by <b>{p.username}</b></span>
+            </div>
+        )
+    } else if (browseListType === "music"){
         musicItemInfoDisplay = (
             <div className="product-browse-music-item-info">
                 <h2>{p.title}</h2>
@@ -74,14 +82,6 @@ export function ProductBrowseItem(props){
                 />
             )
         }
-    } else {
-        itemInfoDisplay = (
-            <div className="product-browse-item-info">
-                <h2>{p.title}</h2>
-                <span>{p.cat_title}</span>
-                <span>by <b>{p.username}</b></span>
-            </div>
-        )
     }
 
     let itemLink = json_serverUrl;
