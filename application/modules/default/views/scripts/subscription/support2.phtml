@@ -113,9 +113,9 @@ $sections = $this->sections;
                                 </div>
                                                                         
                             </div>
-                            <div class="col-lg-4" style="padding-left: 15px;">        
+                            <div class="col-lg-3" style="padding-left: 15px;">        
                                                                             
-                                <div class="radiocontainer">
+                                <div class="radiocontainer" style="text-align: left;">
                                   <input class="suggested-amount mdl-radio__button" <?=$this->payment_options['Option5']['checked']?> id="sam-15-<?= $section['section_id'] ?>" type="radio" value="<?=$this->payment_options['Option5']['name']?>" name="amount_predefined-<?= $section['section_id'] ?>"/>
                                   <?php
                                     echo $this->partial('/subscription/partials/tier.phtml',
@@ -126,8 +126,8 @@ $sections = $this->sections;
 
                             </div>    
 
-                            <div class="col-lg-4 col-md-4">  
-                                <div class="radiocontainer">
+                            <div class="col-lg-3 col-md-4">  
+                                <div class="radiocontainer" style="text-align: left;">
                                     <input class="suggested-amount custom_amount_item" <?=$this->checked?> id="custom_amount_item_<?= $section['section_id'] ?>" type="radio" value="Option7" name="amount_predefined-<?= $section['section_id'] ?>">
                                     <span class="unit-wrapper">
                                       <span class="unit">$</span>
