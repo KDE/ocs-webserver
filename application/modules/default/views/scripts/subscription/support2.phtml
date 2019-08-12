@@ -62,7 +62,7 @@ $sections = $this->sections;
                             <div class="col-lg-2" style="padding-left: 15px;">        
                                <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
                                   <div class="header-content">                                                                                     
-                                     Section
+                                     Pick a Section
                                  
                                   </div>
                                 </div>                                          
@@ -70,22 +70,21 @@ $sections = $this->sections;
                             <div class="col-lg-2">        
                                <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
                                   <div class="header-content">                                                                                     
-                                     Select Tier
+                                     Pick Amount
                                  
                                   </div>
                                 </div>                                          
                             </div>    
-                            <div class="col-lg-4 col-md-4" >        
+                            <div class="col-lg-3 col-md-3" >        
                                 <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
-                                  <div class="header-content">                                                                                     
-                                     Amount Monthly
-                                 
+                                  <div class="header-content">   
+                                    Free Amount
                                   </div>
                                 </div>                                                  
                             </div>                        
 
                            
-                            <div class="col-lg-4 col-md-4" style="">
+                            <div class="col-lg-3 col-md-3" style="">
                             <div class="x-tabs-header ">
                               <div class="header-content">                                                
                                   Payment 
@@ -93,16 +92,21 @@ $sections = $this->sections;
                               </div>
                             </div>                                                                                     
                             </div>
-                             <?php /*
-                            <div class="col-lg-2 col-md-2 " style="padding-right: 15px;">
+                             
+                             <div class="col-lg-2 col-md-2" style="">
                             <div class="x-tabs-header ">
-                              <div class="header-content" style="text-align:right;padding-right:15px;">                                                
-                                 Supporters
+                              <div class="header-content">                                                
+                                  Supporters 
                               </div>
                             </div>                                                                                     
                             </div>
-                              * 
-                              */?>
+                            <div class="col-lg-2 col-md-2 " style="padding-right: 15px;">
+                            <div class="x-tabs-header ">
+                              <div class="header-content" style="text-align:right;padding-right:15px;">                                                
+                                 Next Goal
+                              </div>
+                            </div>                                                                                     
+                            </div>
                         </div> <!--end of row-->
                         <?php
                             foreach ($sections as $section) {
@@ -117,27 +121,42 @@ $sections = $this->sections;
                             </div>
                             <div class="col-lg-2" style="padding-left: 15px;">        
                                                                             
-                                      <div class="radiocontainer">
-                                      <input class="suggested-amount mdl-radio__button" <?=$this->payment_options['Option5']['checked']?> id="sam-15-<?= $section['section_id'] ?>" type="radio" value="<?=$this->payment_options['Option5']['name']?>" name="amount_predefined-<?= $section['section_id'] ?>"/>
-                                    </div>
-                                                                        
+                                <div class="radiocontainer" style="text-align: left;">
+                                  <input class="suggested-amount mdl-radio__button" <?=$this->payment_options['Option5']['checked']?> id="sam-15-<?= $section['section_id'] ?>" type="radio" value="<?=$this->payment_options['Option5']['name']?>" name="amount_predefined-<?= $section['section_id'] ?>"/>
+                                  <?php
+                                    echo $this->partial('/subscription/partials/tier2.phtml',
+                                            array('tier' => '0.99'));
+                                ?>
+                                          
+                                    <span class="amount" > 
+                                        <?php
+                                            echo $this->partial('/subscription/partials/option2.phtml',
+                                                    $this->payment_options['Option5']
+                                            );    
+                                        ?>
+                                    </span>
+                                </div>
+                                
+
                             </div>    
 
-                            <div class="col-lg-4 col-md-4">  
-                            <?php
-                                echo $this->partial('/subscription/partials/tier.phtml',
-                                        array('tier' => '0.99'));
-                            ?>
+                            <div class="col-lg-3 col-md-3">  
+                                <div class="radiocontainer" style="text-align: left;">
+                                    <input class="suggested-amount custom_amount_item" <?=$this->checked?> id="custom_amount_item_<?= $section['section_id'] ?>" type="radio" value="Option7" name="amount_predefined-<?= $section['section_id'] ?>">
+                                    <span class="unit-wrapper">
+                                      <span class="unit">$</span>
+                                    </span>
+                                    <span class="amount"><input id="custom_amount" min="15.01" step="any" inputmode="numeric" type="number" name="amount_handish-<?= $section['section_id'] ?>"> </span>
+                                    <span class="amount" ><span style="font-size: x-small;">Enter a free amount > $1 </span></span>    
+                                </div>
                             </div>
                           
-                            <div class="col-lg-4 col-md-4">  
-                                <?php
-                                echo $this->partial('/subscription/partials/option.phtml',
-                                        $this->payment_options['Option5']
-                                );
-                            ?>                                    
+                            <div class="col-lg-3 col-md-3">  
+                                <span class="amount">Total: xxx</span>
+                                <span class="amount" ><span style="font-size: x-small;">(incl. x Taxes and y Paypal Fees)</span></span>
+                                    
                             </div>
-                            <?php /*
+                            
                             <div class="col-lg-2 text-right" >
                                 <ul class="x-suggested-amounts">
                                 <li class="amount-item">       
@@ -149,8 +168,18 @@ $sections = $this->sections;
                                 </ul>
                                
                             </div>
-                             * 
-                             */?>
+                            
+                            <div class="col-lg-2 text-right" >
+                                <ul class="x-suggested-amounts">
+                                <li class="amount-item">       
+                                      <div class="item-text">          
+                                        <span class="amount" > 
+                                            (Balken)      
+                                      </div>    
+                                </li>
+                                </ul>
+                               
+                            </div>
                         </div> <!--end of row-->
 
                         <?php /*
@@ -277,6 +306,10 @@ $sections = $this->sections;
 
                         */ ?>
 
+                        
+                        
+                        <?php /*
+                        
                         <div class="row disply-flex" style="border-bottom: dotted thin #E7E7E7 !important;">
                             <div class="col-lg-2">        
                                 <div class="text">
@@ -312,6 +345,8 @@ $sections = $this->sections;
                             </div>
                             
                         </div> <!--end of row-->
+                         * 
+                         */?>
                         
                         <?php
                             }
