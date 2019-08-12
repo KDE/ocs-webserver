@@ -84,3 +84,5 @@ node_modules/*
 .ftpconfig
 appimagehub-bu/*
 /nbproject/
+
+robots.txt
