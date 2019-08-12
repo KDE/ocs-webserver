@@ -90,7 +90,7 @@ export function ProductBrowseItem(props){
     itemLink += "/" + p.project_id;
 
     return (
-        <div className={"product-browse-item "} id={"product-" + p.project_id} style={{"width":props.itemWidth}}>
+        <div className={"product-browse-item " + browseListType} id={"product-" + p.project_id} style={{"width":props.itemWidth}}>
             <div className="wrapper">
                 {musicPlayerDisplay}
                 <a href={itemLink} className="product-browse-item-wrapper">
