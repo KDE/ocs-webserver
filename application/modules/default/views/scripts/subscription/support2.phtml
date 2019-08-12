@@ -70,7 +70,7 @@ $sections = $this->sections;
                             <div class="col-lg-2">        
                                <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
                                   <div class="header-content">                                                                                     
-                                     Select Tier
+                                     Amount Monthly
                                  
                                   </div>
                                 </div>                                          
@@ -78,8 +78,6 @@ $sections = $this->sections;
                             <div class="col-lg-4 col-md-4" >        
                                 <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
                                   <div class="header-content">                                                                                     
-                                     Amount Monthly
-                                 
                                   </div>
                                 </div>                                                  
                             </div>                        
@@ -115,27 +113,33 @@ $sections = $this->sections;
                                 </div>
                                                                         
                             </div>
-                            <div class="col-lg-2" style="padding-left: 15px;">        
+                            <div class="col-lg-4" style="padding-left: 15px;">        
                                                                             
-                                      <div class="radiocontainer">
-                                      <input class="suggested-amount mdl-radio__button" <?=$this->payment_options['Option5']['checked']?> id="sam-15-<?= $section['section_id'] ?>" type="radio" value="<?=$this->payment_options['Option5']['name']?>" name="amount_predefined-<?= $section['section_id'] ?>"/>
-                                    </div>
-                                                                        
+                                <div class="radiocontainer">
+                                  <input class="suggested-amount mdl-radio__button" <?=$this->payment_options['Option5']['checked']?> id="sam-15-<?= $section['section_id'] ?>" type="radio" value="<?=$this->payment_options['Option5']['name']?>" name="amount_predefined-<?= $section['section_id'] ?>"/>
+                                </div>
+                                <?php
+                                    echo $this->partial('/subscription/partials/tier.phtml',
+                                            array('tier' => '0.99'));
+                                ?>
+
                             </div>    
 
                             <div class="col-lg-4 col-md-4">  
-                            <?php
-                                echo $this->partial('/subscription/partials/tier.phtml',
-                                        array('tier' => '0.99'));
-                            ?>
+                                <div class="radiocontainer">
+                                    <input class="suggested-amount custom_amount_item" <?=$this->checked?> id="custom_amount_item_<?= $section['section_id'] ?>" type="radio" value="Option7" name="amount_predefined-<?= $section['section_id'] ?>">
+                                </div> 
+                                <div class="item-text">
+                                    <span class="unit-wrapper">
+                                      <span class="unit">$</span>
+                                    </span>
+                                    <span class="amount"><input id="custom_amount" min="15.01" step="any" inputmode="numeric" type="number" name="amount_handish-<?= $section['section_id'] ?>"> </span>
+                                    <span class="desc">Enter a free amount > $15</span>
+                                </div>
                             </div>
                           
                             <div class="col-lg-4 col-md-4">  
-                                <?php
-                                echo $this->partial('/subscription/partials/option.phtml',
-                                        $this->payment_options['Option5']
-                                );
-                            ?>                                    
+                                
                             </div>
                             <?php /*
                             <div class="col-lg-2 text-right" >
@@ -277,6 +281,10 @@ $sections = $this->sections;
 
                         */ ?>
 
+                        
+                        
+                        <?php /*
+                        
                         <div class="row disply-flex" style="border-bottom: dotted thin #E7E7E7 !important;">
                             <div class="col-lg-2">        
                                 <div class="text">
@@ -312,6 +320,8 @@ $sections = $this->sections;
                             </div>
                             
                         </div> <!--end of row-->
+                         * 
+                         */?>
                         
                         <?php
                             }
