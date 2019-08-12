@@ -5,6 +5,7 @@ import {ProductBrowseItem} from './product-browse-item';
 import {getNumberOfItemsPerRow, getImageHeight} from './product-browse-helpers';
 
 function ProductBrowse(){
+    console.log(browseListType);
     return (
         <div id="product-browse">
             <ProductBrowseFilterContainer/>
