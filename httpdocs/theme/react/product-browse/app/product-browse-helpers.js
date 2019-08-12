@@ -20,6 +20,7 @@ export function getNumberOfItemsPerRow(browseListType,isMobile){
     if (isMobile) itemsPerRow = 2;
     else {
         if (browseListType === "music") itemsPerRow = 6;
+        else if (browseListType === "phone-pictures") itemsPerRow = 5;
         else itemsPerRow = 3;
     }
     return itemsPerRow;
@@ -27,20 +28,21 @@ export function getNumberOfItemsPerRow(browseListType,isMobile){
 
 export function getImageHeight(browseListType,itemWidth){
     
-    let itemHeightDivider;
+    let itemHeightDivider, imgHeight;
+
     if (browseListType === "music"){
         itemHeightDivider = 1;
-    } else {
-        itemHeightDivider = 1.85;
-    }
-
-    let imgHeight;
-    if (browseListType === "music"){
         imgHeight = itemWidth / itemHeightDivider;
-    } else {
+    } 
+    else if (browseListType === "phone-pictures"){
+        itemHeightDivider = .5;
+        imgHeight = itemWidth / itemHeightDivider;
+    } 
+    else {
+        itemHeightDivider = 1.85;
         imgHeight = ( itemWidth - 14) / itemHeightDivider;
     }
-    
+
     return imgHeight;
 }
 
