@@ -57,6 +57,8 @@
 
 $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
+
+$isForAdmin = (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName);
     
 $isCurrentMonth = false;
 $currentYear = date("Y",time());
@@ -75,7 +77,7 @@ $css_active = 'active';
 $printCurrentMonth = new DateTime($currentDate.'01');
 
 $modelDownload = new Default_Model_Section();
-$downloadMonths = $modelDownload->getAllDownloadMonths($currentYear);
+$downloadMonths = $modelDownload->getAllDownloadMonths($currentYear, $isForAdmin);
 $countDownloadsOverall = count($downloadMonths);
 $minDate = null;
 

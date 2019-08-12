@@ -64,6 +64,8 @@ if(isset($this->yearmonth)) {
 $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
 
+$isForAdmin = (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName);
+
 $css_active = ' in active';
 $has_paypal = false;
 $currency = new Zend_Currency('en_US');
@@ -74,7 +76,7 @@ $printCurrentMonth = new DateTime($currentDate.'01');
 $printMonth = new DateTime($yearmonth.'01');
 $printDate = $printMonth->format('M Y');
 
-$allSections = $modelDownload->fetchAllSectionStats($yearmonth);
+$allSections = $modelDownload->fetchAllSectionStats($yearmonth, $isForAdmin);
 $countDownloadsOverall = count($allSections);
 
 $countIncome = 0;

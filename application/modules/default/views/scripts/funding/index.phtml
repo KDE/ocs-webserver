@@ -20,6 +20,11 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+
+$isForAdmin = (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName);
+
 $this->tab = 'payout';
 $this->countDownloadsOverall = 0;
 
@@ -27,7 +32,7 @@ $currentDate = date("Ym",time());
 $currentYear = date("Y",time());
 
 $modelDownload = new Default_Model_Section();
-$downloadYears = $modelDownload->getAllDownloadYears();
+$downloadYears = $modelDownload->getAllDownloadYears($isForAdmin);
 #$this->countDownloadsOverall = count($this->downloads);
 ?>
 
