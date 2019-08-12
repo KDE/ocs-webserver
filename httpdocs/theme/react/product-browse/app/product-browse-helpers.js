@@ -15,16 +15,54 @@ export function SortByCurrentFilter(a,b){
     return aComparedValue - bComparedValue;
 }
 
-export function getNumberOfItemsPerRow(browseListType,isMobile){
+export function getNumberOfItemsPerRow(browseListType,isMobile,containerWidth){
     let itemsPerRow;
     if (isMobile) itemsPerRow = 2;
     else {
-        if (browseListType === "music") itemsPerRow = 6;
-        else if (browseListType === "phone-pictures") itemsPerRow = 5;
-        else itemsPerRow = 3;
+        if (browseListType === "music") itemsPerRow = getAdujustItemsPerRow(6,containerWidth,180) 
+        else if (browseListType === "phone-pictures") itemsPerRow = getAdujustItemsPerRow(5,containerWidth,210)
+        else itemsPerRow = getAdujustItemsPerRow(3,containerWidth,300)
     }
+    itemsPerRow;
     return itemsPerRow;
 }
+
+function getAdujustItemsPerRow(itemsPerRow,containerWidth,minWidth){
+    if (containerWidth / itemsPerRow > minWidth) return itemsPerRow;
+    else {
+        itemsPerRow = itemsPerRow - 1;
+        if (containerWidth / itemsPerRow > minWidth) return itemsPerRow;
+        else {
+            itemsPerRow = itemsPerRow - 1;
+            if (containerWidth / itemsPerRow > minWidth) return itemsPerRow;
+            else {
+                itemsPerRow = itemsPerRow - 1;
+                if (containerWidth / itemsPerRow > minWidth) return itemsPerRow;
+                else {
+                    itemsPerRow = itemsPerRow - 1;
+                    if (containerWidth / itemsPerRow > minWidth) return itemsPerRow;
+                    else {
+                        itemsPerRow = itemsPerRow - 1;
+                        if (containerWidth / itemsPerRow > minWidth) return itemsPerRow;        
+                    }        
+                }
+            }
+        }
+    }
+}
+
+export function chunkArray(myArray, chunk_size){
+    var index = 0;
+    var arrayLength = myArray.length;
+    var tempArray = [];
+    
+    for (index = 0; index < arrayLength; index += chunk_size) {
+        const myChunk = myArray.slice(index, index+chunk_size);
+        // Do something if you want with the group
+        tempArray.push(myChunk);
+    }
+    return tempArray;
+} 
 
 export function getImageHeight(browseListType,itemWidth){
     
