@@ -121,14 +121,14 @@ $sections = $this->sections;
                                     echo $this->partial('/subscription/partials/tier2.phtml',
                                             array('tier' => '0.99'));
                                 ?>
-                                  <ul class="x-suggested-amounts">
-                                    <li class="amount-item">       
-                                          <div class="item-text">          
-                                            <span class="amount" > 
-                                                <?php echo $modelInfo->getCountTierSupporters(0.99);?></span>       
-                                          </div>    
-                                    </li>
-                                  </ul>
+                                          
+                                    <span class="amount" > 
+                                        <?php
+                                            echo $this->partial('/subscription/partials/option2.phtml',
+                                                    $this->payment_options['Option5']
+                                            );    
+                                        ?>
+                                    </span>
                                 </div>
                                 
 
