@@ -14,3 +14,43 @@ export function SortByCurrentFilter(a,b){
     }
     return aComparedValue - bComparedValue;
 }
+
+export function getNumberOfItemsPerRow(browseListType,isMobile){
+    let itemsPerRow;
+    if (isMobile) itemsPerRow = 2;
+    else {
+        if (browseListType === "music") itemsPerRow = 6;
+        else itemsPerRow = 3;
+    }
+    return itemsPerRow;
+}
+
+export function getImageHeight(browseListType,itemWidth){
+    
+    let itemHeightDivider;
+    if (browseListType === "music"){
+        itemHeightDivider = 1;
+    } else {
+        itemHeightDivider = 1.85;
+    }
+
+    let imgHeight;
+    if (browseListType === "music"){
+        imgHeight = itemWidth / itemHeightDivider;
+    } else {
+        imgHeight = ( itemWidth - 14) / itemHeightDivider;
+    }
+    
+    return imgHeight;
+}
+
+export function getImageUrl(p,itemWidth,imgHeight){
+    let imgUrl = "";
+    if (p.image_small && p.image_small.indexOf('https://') > -1 || p.image_small && p.image_small.indexOf('http://') > -1 ) imgUrl = p.image_small;
+    else {
+        imgUrl = "https://cn.opendesktop.";
+        imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
+        imgUrl += "/cache/" + Math.ceil(itemWidth * 2) + "x" + Math.ceil(imgHeight * 2) + "/img/" + p.image_small;    
+    }
+    return imgUrl;
+}
