@@ -79,18 +79,15 @@ class Default_Model_Section
     public function fetchAllSectionStats($yearmonth = null)
     {
         $sql = "SELECT p.yearmonth, s.section_id, s.name AS section_name
-                ,(SELECT SUM(tier * (s.percent_of_support/100)) AS sum_support FROM (
-                        SELECT * FROM support su
-                        WHERE su.status_id = 2
-                        AND su.type_id = 0
-                        AND DATE_FORMAT(su.active_time, '%Y%m') <= :yearmonth
-                        AND DATE_FORMAT(su.active_time + INTERVAL 1 YEAR, '%Y%m') >= :yearmonth
-                        UNION ALL 
-                        SELECT * FROM support su2
-                        WHERE su2.status_id = 2
-                        AND su2.type_id = 1
-                        AND DATE_FORMAT(su2.active_time, '%Y%m') <= :yearmonth
-                ) A) AS sum_support
+                ,(SELECT ROUND(SUM(ss.tier)/12,2) AS sum_support FROM section_support ss
+                    JOIN support su2 ON su2.id = ss.support_id
+                    WHERE s.section_id = ss.section_id
+                    AND ss.is_active = 1
+                    AND su2.status_id = 2
+                    AND su2.type_id = 1
+                    AND DATE_FORMAT(su2.active_time, '%Y%m') <= :yearmonth 
+                    GROUP BY ss.section_id
+                ) AS sum_support
                 ,(SELECT SUM(sp.amount * (ssp.percent_of_sponsoring/100)) AS sum_sponsor FROM sponsor sp
                 LEFT JOIN section_sponsor ssp ON ssp.sponsor_id = sp.sponsor_id
                 WHERE sp.is_active = 1
