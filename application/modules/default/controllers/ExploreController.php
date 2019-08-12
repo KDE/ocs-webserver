@@ -176,6 +176,9 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             if($index == 3) {
                 $browseListType = 'music';
             }
+            if($index == 4) {
+                $browseListType = 'phone-pictures';
+            }
             
         }
         
