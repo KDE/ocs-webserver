@@ -101,16 +101,13 @@ $sections = $this->sections;
                               </div>
                             </div>                                                                                     
                             </div>
-                             <?php /*
                             <div class="col-lg-2 col-md-2 " style="padding-right: 15px;">
                             <div class="x-tabs-header ">
                               <div class="header-content" style="text-align:right;padding-right:15px;">                                                
-                                 Supporters
+                                 Next Goal
                               </div>
                             </div>                                                                                     
                             </div>
-                              * 
-                              */?>
                         </div> <!--end of row-->
                         <?php
                             foreach ($sections as $section) {
@@ -167,6 +164,18 @@ $sections = $this->sections;
                                       <div class="item-text">          
                                         <span class="amount" > 
                                             <?php echo $modelInfo->getCountTierSupporters(0.99);?></span>       
+                                      </div>    
+                                </li>
+                                </ul>
+                               
+                            </div>
+                            
+                            <div class="col-lg-2 text-right" >
+                                <ul class="x-suggested-amounts">
+                                <li class="amount-item">       
+                                      <div class="item-text">          
+                                        <span class="amount" > 
+                                            (Balken)      
                                       </div>    
                                 </li>
                                 </ul>
