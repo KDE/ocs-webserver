@@ -62,22 +62,23 @@ $sections = $this->sections;
                             <div class="col-lg-2" style="padding-left: 15px;">        
                                <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
                                   <div class="header-content">                                                                                     
-                                     Section
+                                     Pick a Section
                                  
                                   </div>
                                 </div>                                          
                             </div> 
-                            <div class="col-lg-2">        
+                            <div class="col-lg-3">        
                                <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
                                   <div class="header-content">                                                                                     
-                                     Amount
+                                     Pick Amount
                                  
                                   </div>
                                 </div>                                          
                             </div>    
                             <div class="col-lg-4 col-md-4" >        
                                 <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
-                                  <div class="header-content">                                                                                     
+                                  <div class="header-content">   
+                                    Free Amount
                                   </div>
                                 </div>                                                  
                             </div>                        
@@ -87,6 +88,15 @@ $sections = $this->sections;
                             <div class="x-tabs-header ">
                               <div class="header-content">                                                
                                   Payment 
+                                 <br><span style="font-size: small;" class="extrasmall">(can be cancelled at any time before next year)</span>
+                              </div>
+                            </div>                                                                                     
+                            </div>
+                             
+                             <div class="col-lg-2 col-md-4" style="">
+                            <div class="x-tabs-header ">
+                              <div class="header-content">                                                
+                                  Supporters 
                                  <br><span style="font-size: small;" class="extrasmall">(can be cancelled at any time before next year)</span>
                               </div>
                             </div>                                                                                     
@@ -141,15 +151,16 @@ $sections = $this->sections;
                                       <span class="unit">$</span>
                                     </span>
                                     <span class="amount"><input id="custom_amount" min="15.01" step="any" inputmode="numeric" type="number" name="amount_handish-<?= $section['section_id'] ?>"> </span>
-                                    <span class="amount" ><span style="font-size: x-small;">Enter a free amount > $15 </span></span>    
+                                    <span class="amount" ><span style="font-size: x-small;">Enter a free amount > $1 </span></span>    
                                 </div>
                             </div>
                           
                             <div class="col-lg-4 col-md-4">  
-                                
+                                <span class="amount">Total: xxx</span>
+                                <span class="amount" ><span style="font-size: x-small;">(incl. x Taxes and y Paypal Fees)</span></span>
                                     
                             </div>
-                            <?php /*
+                            
                             <div class="col-lg-2 text-right" >
                                 <ul class="x-suggested-amounts">
                                 <li class="amount-item">       
@@ -161,8 +172,6 @@ $sections = $this->sections;
                                 </ul>
                                
                             </div>
-                             * 
-                             */?>
                         </div> <!--end of row-->
 
                         <?php /*
