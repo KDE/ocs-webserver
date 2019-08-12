@@ -70,7 +70,7 @@ export function getImageHeight(browseListType,itemWidth){
 
     if (browseListType === "music"){
         itemHeightDivider = 1;
-        imgHeight = itemWidth / itemHeightDivider;
+        imgHeight = (itemWidth - 14) / itemHeightDivider;
     } 
     else if (browseListType === "phone-pictures"){
         itemHeightDivider = .5;
