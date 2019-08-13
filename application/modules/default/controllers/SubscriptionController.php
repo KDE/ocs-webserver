@@ -344,6 +344,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
             }
         }
         
+        $amountTier = $amount;
+        
         if($paymentFrequenz=='Y')
         {
             $amount = $calModel->calcDonation($amount*12);
@@ -373,6 +375,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $this->view->transaction_id = $this->_authMember->member_id . '_' . time();
         
         $this->view->amount = $amount;
+        
         $this->view->payment_option = $paymentOption;
         
         //Add pling
@@ -380,8 +383,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id
             , $this->_authMember->member_id
             , $amount
-            ,null
-            ,'Y'
+            , $amountTier
+            ,$paymentFrequenz
             ,1
         );
         
