@@ -425,9 +425,7 @@ $sections = $this->sections;
                    $input = $('#custom_amount-'+$section_id);
                    
                    if($input.val() != '') {
-                       alert('InputVal for section ' + $section_id + ': ' + $input.val());
                        $num = parseFloat($input.val());
-                       alert('Number: ' + $num);
                        $sumNum += $num;
                    }
                 } else {
