@@ -327,8 +327,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
                     $data['section_id'] = $section['section_id'];
                     $data['amount'] = 0.99;
                     $data['tier'] = 0.99;
-                    $data['period'] = 1;
-                    $data['period_frequency'] = $paymentFrequenz;
+                    $data['period'] = $paymentFrequenz;
+                    $data['period_frequency'] = 1;
                 } else {
                     $isHandish = true;
                     $amount += $amount_handish;
@@ -337,8 +337,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
                     $data['section_id'] = $section['section_id'];
                     $data['amount'] = $amount_handish;
                     $data['tier'] = $amount_handish;
-                    $data['period'] = 1;
-                    $data['period_frequency'] = $paymentFrequenz;
+                    $data['period'] = $paymentFrequenz;
+                    $data['period_frequency'] = 1;
                     
                 }
                 $supportArray[] = $data;
