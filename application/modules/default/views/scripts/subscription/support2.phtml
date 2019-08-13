@@ -265,6 +265,7 @@ $sections = $this->sections;
             $yearNum = calForYear($sumNum);
             
             
+            
             $sumNum = Math.round($sumNum * 100 )/100;
             $sumNum = $sumNum.toFixed(2);
 
@@ -272,7 +273,7 @@ $sections = $this->sections;
             
             
             
-            $('#desc_1').text("(Pay $" + $monthNum + " per Month, "+calFees($monthNum)+" or Pay $" + $yearNum + " per Year, "+calFees($monthNum)+")");
+            $('#desc_1').text("(Pay $" + $monthNum + " per Month, "+calFees($sumNum)+" or Pay $" + $yearNum + " per Year, "+calFees($sumNum*12)+")");
         });  
         
         
