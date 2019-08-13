@@ -148,7 +148,7 @@ $sections = $this->sections;
                                     <span class="unit-wrapper">
                                       <span class="unit">$</span>
                                     </span>
-                                    <span class="amount"><input class="custom_amount" id="custom_amount-<?= $section['section_id'] ?>" min="15.01" step="any" inputmode="numeric" type="number" name="amount_handish-<?= $section['section_id'] ?>"> </span>
+                                    <span class="amount"><input data-section-id="<?= $section['section_id'] ?>" class="custom_amount" id="custom_amount-<?= $section['section_id'] ?>" min="15.01" step="any" inputmode="numeric" type="number" name="amount_handish-<?= $section['section_id'] ?>"> </span>
                                     <div>
                                         <span class="amount" ><span style="font-size: x-small;">Enter a free amount > $1 </span></span>    
                                     </div>
@@ -389,6 +389,8 @@ $sections = $this->sections;
 <script>
     $(document).ready(function(){
         $(".custom_amount").click(function(){
+            $section_id = $(this).attr('data-section-id');
+            alert('Section: ' + $section_id);
             $('.mdl-radio__button').removeAttr('checked');
             $('.custom_amount_item').prop("checked", true);            
         });      
