@@ -104,7 +104,7 @@ if ($countDownloadsOverall > 0) {
             foreach ($allSections as $section) { ?>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
                     
-                    <div class="col-md-1 cell-default" style=""><?=$section['section_name']?></div>
+                    <div class="col-md-2 cell-default" style="" id="<?=$section['section_id']?>"><?=$section['section_name']?></div>
                     <div class="col-md-1 text-right cell-default" style=""><strong><?= round($section['sum_support'] + $section['sum_sponsor'], 2) ?></strong></div>
                     <!--<div class="col-md-1 text-right cell-default" style=""><?=$section['sum_dls']?></div>-->
                     <div class="col-md-1 text-right cell-default" style=""><strong><?=$section['sum_amount']?></strong></div>
