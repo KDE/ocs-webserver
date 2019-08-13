@@ -1640,6 +1640,20 @@ class Default_Model_Info
         return $result[0]['cnt'];
     }
     
+    public function getCountSectionSupporters($section_id)
+    {        
+        $sql = "
+                select count(1) as cnt FROM
+                    section_support
+                    JOIN support ON support.id = section_support.support_id
+                    where support.status_id = 2
+                    AND support.type_id = 1
+                    AND section_support.section_id = :section_id
+        ";
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' =>$section_id))->fetchAll();
+        return $result[0]['cnt'];
+    }
+    
     public function getSumSupporting()
     {        
         $sql = "
