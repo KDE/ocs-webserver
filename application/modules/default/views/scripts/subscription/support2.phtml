@@ -279,8 +279,7 @@ $sections = $this->sections;
             
             
             
-            $('#desc_1').text("(Pay $" + $monthNum + " per Month)");
-            $('#desc_2').text("(Pay $" + $yearNum + " per Year)");
+            $('#desc_1').text("(Pay $" + $monthNum + " per Month, "+calFees($monthNum)+" or Pay $" + $yearNum + " per Year, "+calFees($monthNum)+")");
         });  
         
         
