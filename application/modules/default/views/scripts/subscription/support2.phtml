@@ -399,10 +399,10 @@ $sections = $this->sections;
             $wasChecked = $(this).attr("data-checked");
             if($wasChecked == "false") {
                 $(this).prop("checked", true);
-                $(this).attr("data-checked") = "true";
+                $(this).setAttr("data-checked","true");
             } else {
                 $(this).prop("checked", false);
-                $(this).attr("data-checked") = "false";
+                $(this).setAttr("data-checked","false");
             }
         });  
     });
