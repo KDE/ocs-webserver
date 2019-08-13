@@ -263,6 +263,7 @@ $sections = $this->sections;
             $monthNum = calForMonth($sumNum);
             $yearNum = calForYear($sumNum);
             
+            $('#desc_1').text("(Pay $" + $monthNum + " per Month, "+calFees($sumNum)+" or Pay $" + $yearNum + " per Year, "+calFees($sumNum*12)+")");
             
             $sumNum = Math.round($sumNum * 100 )/100;
             $sumNum = $sumNum.toFixed(2);
@@ -271,7 +272,7 @@ $sections = $this->sections;
             
             
             
-            $('#desc_1').text("(Pay $" + $monthNum + " per Month, "+calFees($sumNum)+" or Pay $" + $yearNum + " per Year, "+calFees($sumNum*12)+")");
+            
         });  
         
         
@@ -303,6 +304,8 @@ $sections = $this->sections;
             $monthNum = calForMonth($sumNum);
             $yearNum = calForYear($sumNum);
             
+            $('#desc_1').text("(Pay $" + $monthNum + " per Month, "+calFees($sumNum)+" or Pay $" + $yearNum + " per Year, "+calFees($sumNum*12)+")");
+            
             
             $sumNum = Math.round($sumNum * 100 )/100;
             $sumNum = $sumNum.toFixed(2);
@@ -311,7 +314,7 @@ $sections = $this->sections;
             
             
             
-            $('#desc_1').text("(Pay $" + $monthNum + " per Month, "+calFees($sumNum)+" or Pay $" + $yearNum + " per Year, "+calFees($sumNum*12)+")");
+            
             
             
         });  
@@ -353,7 +356,7 @@ $sections = $this->sections;
             t=total*tax;
             g = total+t;
                 
-            r = 'incl. $' + (Math.round(g * 100 )/100).toFixed(2) + ' Tax and $'+(Math.round(t * 100 )/100).toFixed(2)+' PayPal Fees';
+            r = 'incl. $' + (Math.round(t * 100 )/100).toFixed(2) + ' Tax and $'+(Math.round(paypal * 100 )/100).toFixed(2)+' PayPal Fees';
             return r;
         }
         
