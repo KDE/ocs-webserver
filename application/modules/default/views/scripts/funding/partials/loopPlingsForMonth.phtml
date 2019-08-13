@@ -64,6 +64,8 @@ if(isset($this->yearmonth)) {
 $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
 
+$isForAdmin = (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName);
+
 $css_active = ' in active';
 $has_paypal = false;
 $currency = new Zend_Currency('en_US');
@@ -74,7 +76,7 @@ $printCurrentMonth = new DateTime($currentDate.'01');
 $printMonth = new DateTime($yearmonth.'01');
 $printDate = $printMonth->format('M Y');
 
-$allSections = $modelDownload->fetchAllSectionStats($yearmonth);
+$allSections = $modelDownload->fetchAllSectionStats($yearmonth, $isForAdmin);
 $countDownloadsOverall = count($allSections);
 
 $countIncome = 0;
@@ -103,8 +105,6 @@ if ($countDownloadsOverall > 0) {
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
                     
                     <div class="col-md-1 cell-default" style=""><?=$section['section_name']?></div>
-                    <div class="col-md-1 text-right cell-default" style=""><?= round($section['sum_support'],2)?></div>
-                    <div class="col-md-1 text-right cell-default" style=""><?=round($section['sum_sponsor'],2)?></div>
                     <div class="col-md-1 text-right cell-default" style=""><strong><?= round($section['sum_support'] + $section['sum_sponsor'], 2) ?></strong></div>
                     <!--<div class="col-md-1 text-right cell-default" style=""><?=$section['sum_dls']?></div>-->
                     <div class="col-md-1 text-right cell-default" style=""><strong><?=$section['sum_amount']?></strong></div>
@@ -121,6 +121,9 @@ if ($countDownloadsOverall > 0) {
                             echo "1.00";
                         }
                     ?></strong></div>
+                    
+                    <div class="col-md-1 text-right cell-default" style="">60</div>
+                    <div class="col-md-1 text-right cell-default" style="">Balken</div>
                 </div>
             <?php
                 $countIncome += $section['sum_support'] + $section['sum_sponsor'];
@@ -130,8 +133,6 @@ if ($countDownloadsOverall > 0) {
             ?>
             <div class='row row-total'>
                 <div class='col-md-1' style=""></div>
-                <div class='col-md-1 text-right' style=""></div>
-                <div class='col-md-1 text-right' style=""></div>
                 <div class='col-md-1 text-right' style=""><strong><?= round($countIncome,2) ?></strong></div>
                 <div class='col-md-1 text-right' style=""><strong><?= round($countPayout,2) ?></strong></div>
                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
@@ -139,6 +140,8 @@ if ($countDownloadsOverall > 0) {
                 <div class='col-md-1 text-right' style=""><?= round($countPayout2,2) ?></div>
                 <?php endif; ?>
                 <div class='col-md-1 text-right' style=""></div>
+                
+                
             </div>
             
         </div>
