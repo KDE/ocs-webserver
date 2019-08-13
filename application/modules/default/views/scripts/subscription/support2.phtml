@@ -53,7 +53,7 @@ $sections = $this->sections;
    
                 <div class="content col-md-8">
                     <h2>Become a Supporter</h2>
-                    <p>Your donation helps support the <b> <?=$countActiveMembers?></b> creators of the platform (see <a href="/faq-pling">pling FAQ</a>).
+                    <p>Help sustain any of the sections and the creators providing content for it (see pling <a href="/faq-pling">pling FAQ</a>).</p>
                     </p>
                     
                     
@@ -63,7 +63,7 @@ $sections = $this->sections;
                             <div class="col-lg-2" style="padding-left: 15px;">        
                                <div class="x-tabs-header " style="text-align: center;">
                                   <div class="header-content">                                                                                     
-                                     Pick a Section
+                                     Section
                                  
                                   </div>
                                 </div>                                          
@@ -320,8 +320,7 @@ $sections = $this->sections;
             
             
             
-            $('#desc_1').text("(Pay $" + $monthNum + " per Month)");
-            $('#desc_2').text("(Pay $" + $yearNum + " per Year)");
+            $('#desc_1').text("(Pay $" + $monthNum + " per Month, "+calFees($monthNum)+" or Pay $" + $yearNum + " per Year, "+calFees($monthNum)+")");
             
             
         });  
@@ -349,6 +348,22 @@ $sections = $this->sections;
             v = Math.round(v * 100 )/100;
             v = v.toFixed(2);
             return v;
+        }
+        
+        
+        function calFees(num) {
+            paypal_fix = 0.3;
+            paypal_var = 0.029;
+            tax = 0.19;
+            
+            v = (num + paypal_fix)/( 1- ( ( paypal_var/(1+paypal_var)) + (tax/(1+tax)) ));		
+            $paypal = paypal_fix+v*paypal_var;
+            total = num + paypal;
+            t=total*tax;
+            g = total+t;
+                
+            r = 'incl. $' + (Math.round(g * 100 )/100).toFixed(2) + ' Tax and $'+(Math.round(t * 100 )/100).toFixed(2)+' PayPal Fees';
+            return r;
         }
         
         
