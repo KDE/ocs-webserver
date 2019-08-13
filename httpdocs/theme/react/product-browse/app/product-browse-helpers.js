@@ -1,25 +1,9 @@
-export function SortByCurrentFilter(a,b){
-    let aComparedValue, bComparedValue;
-    if (filters.order === "latest"){
-        const aDate = typeof a.changed_at !== undefined ? a.changed_at : a.created_at
-        aComparedValue = new Date(aDate);
-        const bDate = typeof b.changed_at !== undefined ? b.changed_at : b.created_at
-        bComparedValue = new Date(bDate);
-    } else if (filters.order === "rating"){
-        aComparedValue = parseInt(a.laplace_score);
-        bComparedValue = parseInt(b.laplace_score);
-    } else if (filters.order === "plinged"){
-        aComparedValue = parseInt(a.count_plings) !== null ? parseInt(a.count_plings) : 0;
-        bComparedValue = parseInt(b.count_plings) !== null ? parseInt(b.count_plings) : 0;
-    }
-    return aComparedValue - bComparedValue;
-}
-
 export function getNumberOfItemsPerRow(browseListType,isMobile,containerWidth){
     let itemsPerRow;
     if (isMobile) itemsPerRow = 2;
     else {
-        if (browseListType === "music") itemsPerRow = getAdujustItemsPerRow(6,containerWidth,180) 
+        if (browseListType === "music") itemsPerRow = getAdujustItemsPerRow(6,containerWidth,160 + 14)
+        else if (browseListType === "comics") itemsPerRow = getAdujustItemsPerRow(6,containerWidth,160 + 14)
         else if (browseListType === "phone-pictures") itemsPerRow = getAdujustItemsPerRow(5,containerWidth,210)
         else itemsPerRow = getAdujustItemsPerRow(3,containerWidth,300)
     }
@@ -64,21 +48,33 @@ export function chunkArray(myArray, chunk_size){
     return tempArray;
 } 
 
+export function getItemWidth(browseListType,containerWidth,itemsInRow){
+    let itemWidth;
+    if (browseListType === "music") itemWidth = 160 + 14;
+    else if (browseListType === "comics") itemWidth = 160 + 14;
+    else itemWidth = containerWidth / itemsInRow;
+    return itemWidth;
+}
+
 export function getImageHeight(browseListType,itemWidth){
     
     let itemHeightDivider, imgHeight;
 
+    itemWidth = itemWidth - 14;
+
     if (browseListType === "music"){
-        itemHeightDivider = 1;
-        imgHeight = (itemWidth - 14) / itemHeightDivider;
+       imgHeight = 155;
     } 
     else if (browseListType === "phone-pictures"){
         itemHeightDivider = .5;
         imgHeight = itemWidth / itemHeightDivider;
     } 
+    else if (browseListType === "comics"){
+        imgHeight = 220;
+    }
     else {
         itemHeightDivider = 1.85;
-        imgHeight = ( itemWidth - 14) / itemHeightDivider;
+        imgHeight = itemWidth / itemHeightDivider;
     }
 
     return imgHeight;

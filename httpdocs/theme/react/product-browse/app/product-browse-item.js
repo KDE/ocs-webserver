@@ -13,6 +13,7 @@ export function ProductBrowseItem(props){
     React.useEffect(() => {
         if (browseListType === "music" && productFilesFetched === false) onMusicProductLoad()
     },[])
+
         
     function onMusicProductLoad(){
         setProductFilesFetched(true);
@@ -71,7 +72,16 @@ export function ProductBrowseItem(props){
                 <h2>{p.title}</h2>
             </div>
         )        
-    } else if (browseListType === "music"){
+    } 
+    else if (browseListType === "comics"){
+        console.log(p);
+        itemInfoDisplay = (
+            <div className="product-browse-item-info">
+                <h2>{p.title}</h2>
+            </div>
+        )
+    }
+    else if (browseListType === "music"){
         musicItemInfoDisplay = (
             <div className="product-browse-music-item-info">
                 <h2>{p.title}</h2>

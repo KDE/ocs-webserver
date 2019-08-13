@@ -29,6 +29,60 @@
                display: block;
                width:100%;
                height:auto;
+               text-decoration: none;
+
+               &:hover {
+                   text-decoration: none !important;
+               }
+            }
+
+            .product-score-stars {
+                display: block;
+                width:83px !important;
+                float: left;
+                background-image: url('../img/rating_stars.png');
+                background-position: 0px 0px;
+                height: 25px !important;
+
+                &.stars-5 {
+                    background-position: 0px -22px;
+                }
+
+                &.stars-10 {
+                    background-position: 0px -44px;
+                }
+
+                &.stars-15 {
+                    background-position: 0px -66px;
+                }
+
+                &.stars-20 {
+                    background-position: 0px -88px;
+                }
+
+                &.stars-25 {
+                    background-position: 0px -110px;
+                }
+
+                &.stars-30 {
+                    background-position: 0px -132px;
+                }
+
+                &.stars-35 {
+                    background-position: 0px -154px;
+                }
+
+                &.stars-40 {
+                    background-position: 0px -176px;
+                }
+
+                &.stars-45 {
+                    background-position: 0px -198px;
+                }
+
+                &.stars-50 {
+                    background-position: 0px -220px;
+                }
             }
 
             .product-browse-image {
@@ -124,6 +178,53 @@
             &.phone-pictures {
                 .product-browse-image {
                     border-radius: 5px 5px 5px 5px;
+                }
+            }
+
+            &.comics {
+                .product-browse-item-info {
+                    h2 {
+                        font-size: 13px;
+                        line-height: 14px;
+                        font-weight: 400;
+                    }
+                    
+                    .score-container {
+                        margin-top: -10px;
+                    }
+
+                    .likes-counter {
+                        margin-top: 10px;
+                        font-size: 12px;
+                        font-weight: 400;
+
+                        .hearts-container {
+
+                            .glyphicon {
+                                width: auto;
+                                font-size: 15px;
+                                color: #c1c1c1;
+                                font-weight: normal;
+                                margin-right: 5px;
+    
+                                &.glyphicon-heart {
+                                    display: none;
+                                }
+                            }
+                            
+                            &:hover {
+                                    .glyphicon {
+                                        display: none;
+                                    }
+                                    .glyphicon-heart {
+                                        display: block ;
+                                        color:red;
+                                    }
+                                
+                            }
+
+                        }
+                    }
                 }
             }
 
