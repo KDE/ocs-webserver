@@ -441,8 +441,8 @@ $sections = $this->sections;
             $monthNum = calForMonth($sumNum);
             $yearNum = calForYear($sumNum);
             
-            $('#desc_1').text($monthNum);
-            $('#desc_2').text($yearNum);
+            $('#desc_1').text("Pay $" + $monthNum + " per Month");
+            $('#desc_2').text("Pay $" + $yearNum + " per Year");
             
             
         });  
@@ -468,18 +468,7 @@ $sections = $this->sections;
             return v;
         }
         
-        function calcDonationText($tier)
-        {
-            //($0.99 + 35 cents paypal + 26 cents taxes = $1.60 monthly)
-            $v = ($tier + self::paypal_fix)/( 1- ( ( self::paypal_var/(1+self::paypal_var)) + (self::tax/(1+self::tax)) ));		
-            $paypal = self::paypal_fix+$v*self::paypal_var;
-            $total = $tier + $paypal;
-            $t=$total*self::tax;
-            $g = $total+$t;
-            $r = '($'.$tier.' + $'.number_format($paypal, 2).' paypal + $'.number_format($t, 2).' tax = $'
-                            .number_format($g,2).' monthly)';
-            return $r;
-        }
+        
         
     });
 </script>
