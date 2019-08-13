@@ -306,6 +306,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         
         $amount = 0;
         
+        $paymentFrequenz = $this->getParam('paymentFrequenz', 'Y');
+        
         //get parameter for every section
         $supportArray = array();
         foreach ($sections as $section) {
@@ -319,21 +321,14 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
                 $data = array();
                 if(null != $paymentOption && $paymentOption != 'Option7') {
                     $calModel = new Default_View_Helper_CalcDonation();
-                    if($this::$SUPPORT_OPTIONS[$paymentOption]['period_short']=='Y')
-                    {
-                        $v = $calModel->calcDonation($this::$SUPPORT_OPTIONS[$paymentOption]['amount']*12);
-                    }else{
-                        $v = $calModel->calcDonation($this::$SUPPORT_OPTIONS[$paymentOption]['amount']);    
-                    }   
-                    
-                    $amount += $v;
+                    $amount += 0.99;
                     
                     $data['support_id'] = $sid;
                     $data['section_id'] = $section['section_id'];
                     $data['amount'] = $v;
-                    $data['tier'] = $this::$SUPPORT_OPTIONS[$paymentOption]['amount'];
-                    $data['period'] = $this::$SUPPORT_OPTIONS[$paymentOption]['period_short'];
-                    $data['period_frequency'] = $this::$SUPPORT_OPTIONS[$paymentOption]['period_frequency'];
+                    $data['tier'] = 0.99;
+                    $data['period'] = $paymentFrequenz;
+                    $data['period_frequency'] = 1;
                 } else {
                     $isHandish = true;
                     $amount += $amount_handish;
@@ -341,13 +336,20 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
                     $data['section_id'] = $section['section_id'];
                     $data['amount'] = $amount_handish;
                     $data['tier'] = $amount_handish;
-                    $data['period'] = 'Y';
+                    $data['period'] = $paymentFrequenz;
                     $data['period_frequency'] = 1;
                     
                 }
                 $supportArray[] = $data;
             }
         }
+        
+        if($paymentFrequenz=='Y')
+        {
+            $amount = $calModel->calcDonation($amount*12);
+        }else{
+            $amount = $calModel->calcDonation($amount);    
+        }   
         
         $comment = Default_Model_HtmlPurify::purify($this->getParam('comment'));
         $paymentProvider =
