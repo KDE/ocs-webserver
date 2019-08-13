@@ -436,7 +436,7 @@ $sections = $this->sections;
                 }
             });
 
-            $sum.text(Math.round($sumNum,2));
+            $sum.text(Math.round($sumNum * 100 )/100);
             
             $monthNum = calForMonth($sumNum);
             $yearNum = calForYear($sumNum);
@@ -455,7 +455,7 @@ $sections = $this->sections;
             tax = 0.19;
 
             v = (num + paypal_fix)/( 1- ( ( paypal_var) + (tax/(1+tax)) ));
-            return Math.round(v,2);
+            return Math.round(v * 100 )/100;
         }
         
         function calForYear(num) {
@@ -465,7 +465,7 @@ $sections = $this->sections;
             tax = 0.19;
 
             v = (num + paypal_fix)/( 1- ( ( paypal_var) + (tax/(1+tax)) ));
-            return Math.round(v,2);
+            return Math.round(v * 100 )/100;
         }
         
         
