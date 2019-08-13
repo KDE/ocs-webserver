@@ -77,17 +77,7 @@ export function ProductBrowseItem(props){
         console.log(p);
         itemInfoDisplay = (
             <div className="product-browse-item-info">
-                <div className="likes-counter">
-                    <div className="hearts-container">
-                        <span className="glyphicon glyphicon-heart-empty"></span>
-                        <span className="glyphicon glyphicon-heart"></span>
-                    </div>
-                    ({p.count_likes - p.count_dislikes}) Likes
-                </div>
                 <h2>{p.title}</h2>
-                <div className="score-container">
-                    <span className={"product-score-stars stars-" + (Math.ceil(parseInt(p.laplace_score) / 10) / 2 )}></span>
-                </div>
             </div>
         )
     }
