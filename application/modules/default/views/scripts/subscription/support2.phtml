@@ -389,6 +389,11 @@ $sections = $this->sections;
 <script>
     $(document).ready(function(){
         $(".custom_amount").click(function(){
+            
+            if($(this).prop("checked")) {
+                $(this).removeAttr('checked');
+            }
+            
             $section_id = $(this).attr('data-section-id');
             //alert('Section: ' + $section_id);
             $('#sam-15-'+$section_id).removeAttr('checked');
