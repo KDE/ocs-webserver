@@ -435,13 +435,17 @@ $sections = $this->sections;
                    $sumNum += 0.99;
                 }
             });
+            
+            $monthNum = calForMonth($sumNum);
+            $yearNum = calForYear($sumNum);
+            
+            
             $sumNum = Math.round($sumNum * 100 )/100;
             $sumNum = $sumNum.toFixed(2);
 
             $sum.text($sumNum);
             
-            $monthNum = calForMonth($sumNum);
-            $yearNum = calForYear($sumNum);
+            
             
             $('#desc_1').text("(Pay $" + $monthNum + " per Month)");
             $('#desc_2').text("(Pay $" + $yearNum + " per Year)");
