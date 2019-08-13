@@ -337,8 +337,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
                     $data['section_id'] = $section['section_id'];
                     $data['amount'] = $amount_handish;
                     $data['tier'] = $amount_handish;
-                    $data['period'] = $paymentFrequenz;
-                    $data['period_frequency'] = 1;
+                    $data['period'] = 1;
+                    $data['period_frequency'] = $paymentFrequenz;
                     
                 }
                 $supportArray[] = $data;
