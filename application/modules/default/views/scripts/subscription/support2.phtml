@@ -397,12 +397,22 @@ $sections = $this->sections;
         
         $(".mdl-radio__button").click(function(){
             $wasChecked = $(this).attr("data-checked");
+            $section_id = $(this).attr('data-section-id');
+            
+            $obj = null;
+            
+            if($(this).hasClass('custom_amount_item')) {
+               $obj = $('#sam-15-'+$section_id); 
+            } else {
+               $obj = $('#custom_amount_item_'+$section_id); 
+            }
+            
             if($wasChecked == "false") {
                 $(this).prop("checked", true);
-                $(this).setAttr("data-checked","true");
+                $obj.setAttr("data-checked","true");
             } else {
                 $(this).prop("checked", false);
-                $(this).setAttr("data-checked","false");
+                $obj.setAttr("data-checked","false");
             }
         });  
     });
