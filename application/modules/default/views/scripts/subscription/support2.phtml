@@ -356,7 +356,7 @@ $sections = $this->sections;
             tax = 0.19;
             
             v = (num + paypal_fix)/( 1- ( ( paypal_var/(1+paypal_var)) + (tax/(1+tax)) ));		
-            $paypal = paypal_fix+v*paypal_var;
+            paypal = paypal_fix+v*paypal_var;
             total = num + paypal;
             t=total*tax;
             g = total+t;
