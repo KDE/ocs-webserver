@@ -411,6 +411,10 @@ $sections = $this->sections;
             $sum = $("#sum");
             $sumNum = $sum.html();
             
+            if($sumNum == "undefined") {
+                $sumNum = 0.0;
+            }
+            
             alert($sumNum);
             
             if($(this).hasClass('custom_amount_item')) {
