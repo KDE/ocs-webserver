@@ -51,7 +51,7 @@ export function chunkArray(myArray, chunk_size){
 export function getItemWidth(browseListType,containerWidth,itemsInRow){
     let itemWidth;
     if (browseListType === "music") itemWidth = 160 + 14;
-    else if (browseListType === "comics") itemWidth = 171 + 14;
+    else if (browseListType === "comics") itemWidth = 160 + 14;
     else itemWidth = containerWidth / itemsInRow;
     return itemWidth;
 }
