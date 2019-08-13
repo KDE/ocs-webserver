@@ -411,8 +411,8 @@ $sections = $this->sections;
             $sum = $("#sum");
             $sumNum = $sum.html();
             
-            if($sumNum == "undefined") {
-                $sumNum = 0.0;
+            if($sumNum == "undefined" || $sumNum == "") {
+                $sumNum = 0;
             }
             
             alert($sumNum);
