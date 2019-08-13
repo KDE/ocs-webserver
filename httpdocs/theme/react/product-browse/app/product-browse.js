@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import {isMobile} from 'react-device-detect';
 import {ProductBrowseItem} from './product-browse-item';
-import {getNumberOfItemsPerRow, getImageHeight, chunkArray} from './product-browse-helpers';
+import {getNumberOfItemsPerRow, getImageHeight, chunkArray, getItemWidth} from './product-browse-helpers';
 
 function ProductBrowse(){
     console.log(browseListType);
@@ -51,10 +51,12 @@ function ProductBrowseFilterContainer(){
 
 function ProductBrowseItemList(props){
 
+    console.log(filters.category);
+    if (filters.category === 81) browseListType = "comics";
+
     const [ containerWidth, setContainerWidth ] = useState($('#product-browse-container').width() + 14);
     const [ itemsInRow, setItemsInRow ] = useState(getNumberOfItemsPerRow(browseListType,isMobile,containerWidth));
-    console.log(itemsInRow);
-    const [ itemWidth, setItemWidth ] = useState(containerWidth / itemsInRow);
+    const [ itemWidth, setItemWidth ] = useState(getItemWidth(browseListType,containerWidth,itemsInRow));
     const [ imgHeight, setImgHeight ] = useState(getImageHeight(browseListType,itemWidth));
 
     React.useEffect(() => {
@@ -67,7 +69,7 @@ function ProductBrowseItemList(props){
         setContainerWidth(newContainerWidth);
         const newItemsInRow = getNumberOfItemsPerRow(browseListType,isMobile,newContainerWidth);
         setItemsInRow(newItemsInRow);
-        const newItemWidth = newContainerWidth / newItemsInRow;
+        const newItemWidth = getItemWidth(browseListType,newContainerWidth,newItemsInRow)
         setItemWidth(newItemWidth);
         const newImgHeight = getImageHeight(browseListType,newItemWidth);
         setImgHeight(newImgHeight);
