@@ -435,7 +435,23 @@ $sections = $this->sections;
 
             $sum.text($sumNum);
             
+            $monthNum = calForMonth($sumNum);
+            
+            $('#desc_1').text($monthNum);
+            
             
         });  
+        
+        
+        function calForMonth(num) {
+        
+            paypal_fix = 0.3;
+            paypal_var = 0.029;
+            tax = 0.19;
+
+            v = (num + paypal_fix)/( 1- ( ( paypal_var) + (tax/(1+tax)) ));
+            return v;
+        }
+        
     });
 </script>
