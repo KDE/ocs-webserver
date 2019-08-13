@@ -65,7 +65,7 @@ export function ProductBrowseItem(props){
                 <span>by <b>{p.username}</b></span>
             </div>
         )
-    } else if (browseListType === "phone-pictures"){
+    } else if (browseListType === "phone-pictures" || browseListType === "comics"){
         itemInfoDisplay = (
             <div className="product-browse-item-info">
                 <h2>{p.title}</h2>
