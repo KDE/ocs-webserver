@@ -409,7 +409,9 @@ $sections = $this->sections;
             
             $obj = null;
             $sum = $("#sum");
-            $sumNum = $sum.html()
+            $sumNum = $sum.html();
+            
+            alert($sumNum);
             
             if($(this).hasClass('custom_amount_item')) {
                $obj = $('#sam-15-'+$section_id); 
@@ -421,8 +423,6 @@ $sections = $this->sections;
                $sumNum = $sumNum + $obj.val();
                $sum.html($sumNum);
             }
-            
-            alert($obj);
             
             if($wasChecked == "false") {
                 $(this).prop("checked", true);
