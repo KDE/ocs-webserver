@@ -375,6 +375,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         
         $this->view->amount = $amount;
         $this->view->payment_option = $paymentOption;
+        $this->view->paymentFrequenz = $paymentFrequenz;
         
         //Add pling
         $modelSupport = new Default_Model_DbTable_Support();

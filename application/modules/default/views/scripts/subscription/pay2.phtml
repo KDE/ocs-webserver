@@ -51,9 +51,9 @@ if ($this->error) {
             
             <input type="hidden" name="a3" value="<?= $amount ?>">
             <input type="hidden" name="p3" value="1">
-            <input type="hidden" name="t3" value="Y">
+            <input type="hidden" name="t3" value="<?= $this->paymentFrequenz ?>">
             
-            <p>You choose: $<?= $amount ?> per Year</p>
+            <p>You choose: $<?= $amount ?> per <?= $this->paymentFrequenz ?></p>
             
             <input type="hidden" name="option_index" value="0">
             <input type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
