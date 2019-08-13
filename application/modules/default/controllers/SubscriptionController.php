@@ -325,7 +325,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
                     
                     $data['support_id'] = $sid;
                     $data['section_id'] = $section['section_id'];
-                    $data['amount'] = $v;
+                    $data['amount'] = 0.99;
                     $data['tier'] = 0.99;
                     $data['period'] = $paymentFrequenz;
                     $data['period_frequency'] = 1;
@@ -375,7 +375,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $this->view->transaction_id = $this->_authMember->member_id . '_' . time();
         
         $this->view->amount = $amount;
-        
+        $this->view->paymentFrequenz = $paymentFrequenz;
         $this->view->payment_option = $paymentOption;
         
         //Add pling
