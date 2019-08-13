@@ -51,8 +51,6 @@ function ProductBrowseFilterContainer(){
 
 function ProductBrowseItemList(props){
 
-    if (filters.category === 81) browseListType = "comics";
-
     const [ containerWidth, setContainerWidth ] = useState($('#product-browse-container').width() + 14);
     const [ itemsInRow, setItemsInRow ] = useState(getNumberOfItemsPerRow(browseListType,isMobile,containerWidth));
     console.log(itemsInRow);
