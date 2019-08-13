@@ -389,8 +389,9 @@ $sections = $this->sections;
 <script>
     $(document).ready(function(){
         $(".custom_amount").click(function(){
-            
-            if($(this).prop("checked")) {
+            $checked = $(this).is(':checked');
+            alert('IsChecked: ' + $checked);
+            if($(this).attr("checked")) {
                 $(this).removeAttr('checked');
             }
             
