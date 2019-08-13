@@ -421,34 +421,20 @@ $sections = $this->sections;
             $("input[type=radio]:checked").each(function() {
                 $section_id = $(this).attr('data-section-id');
                 if($(this).hasClass('custom_amount_item')) {
-                   $obj = $('#custom_amount_item_'+$section_id); 
                    $input = $('#custom_amount-'+$section_id);
                    
                    if($input.val() != '') {
+                       alert('InputVal for section ' + $section_id + ': ' + $input.val());
                        $num = parseFloat($input.val());
                        alert('Number: ' + $num);
                        $sumNum += $num;
                    }
                 } else {
-                   $obj = $('#sam-15-'+$section_id); 
                    $sumNum += 0.99;
                 }
             });
 
             $sum.text($sumNum);
-            
-            
-            
-            if($wasChecked == "false") {
-                $(this).prop("checked", true);
-                
-                $obj.attr("data-checked","true");
-            } else {
-                $(this).prop("checked", false);
-                $obj.attr("data-checked","false");
-            }
-            
-            
             
             
         });  
