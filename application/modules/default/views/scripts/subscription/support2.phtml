@@ -251,6 +251,8 @@ $sections = $this->sections;
         
         $('.custom_amount').change(function(){
             $sumNum = 0;
+            $sum = $("#sum");
+            
             $("input[type=radio]:checked").each(function() {
                 $section_id = $(this).attr('data-section-id');
                 
