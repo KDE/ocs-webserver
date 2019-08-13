@@ -421,7 +421,7 @@ $sections = $this->sections;
             $("input[type=radio]:checked").each(function() {
                 if($(this).hasClass('custom_amount_item')) {
                    $obj = $('#custom_amount_item_'+$section_id); 
-                   $input = $('custom_amount-'+$section_id);
+                   $input = $('#custom_amount-'+$section_id);
                    
                    if($input.val() != '') {
                        $num = parseFloat($input.val());
