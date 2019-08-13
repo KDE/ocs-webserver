@@ -59,6 +59,17 @@ class Backend_SectioncategoriesController extends Local_Controller_Action_Backen
             $section_id = $this->getParam('section_id', null);
             $tagmodel  = new Default_Model_DbTable_SectionCategory();
             $tagmodel->updateSectionPerCategory((int)$this->getParam('project_category_id', null), $section_id);
+            
+            //Update also SubCategories
+            $catmodel  = new Default_Model_DbTable_ProjectCategory();
+            $subCats = $catmodel->fetchChildIds((int)$this->getParam('project_category_id', null), true);
+            if($subCats) {
+                foreach ($subCats as $cat) {
+                    $tagmodel->updateSectionPerCategory($cat, $section_id);
+                }
+            }
+            
+            
             $jTableResult = array();
             $jTableResult['Result'] = self::RESULT_OK;
            // $jTableResult['Record'] = $record->toArray();
