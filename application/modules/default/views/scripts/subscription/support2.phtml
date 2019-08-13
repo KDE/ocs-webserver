@@ -61,7 +61,7 @@ $sections = $this->sections;
                          <div class="row disply-flex">
                              
                             <div class="col-lg-2" style="padding-left: 15px;">        
-                               <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
+                               <div class="x-tabs-header " style="text-align: center;">
                                   <div class="header-content">                                                                                     
                                      Pick a Section
                                  
@@ -69,7 +69,7 @@ $sections = $this->sections;
                                 </div>                                          
                             </div> 
                             <div class="col-lg-3">        
-                               <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
+                               <div class="x-tabs-header " style="padding: 0 40px;">
                                   <div class="header-content">                                                                                     
                                      Pick Amount
                                  
@@ -77,7 +77,7 @@ $sections = $this->sections;
                                 </div>                                          
                             </div>    
                             <div class="col-lg-3 col-md-2" >        
-                                <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
+                                <div class="x-tabs-header " style="padding: 0 40px;">
                                   <div class="header-content">   
                                     Free Amount
                                   </div>
@@ -128,14 +128,15 @@ $sections = $this->sections;
                                       <span class="unit">$</span>
                                     </span>
                                     <span class="amount">0.99 monthly</span>                                        
-                                          
-                                    <span class="amount" > 
-                                        <?php
-                                            echo $this->partial('/subscription/partials/option2.phtml',
-                                                    $this->payment_options['Option5']
-                                            );    
-                                        ?>
-                                    </span>
+                                    <div>      
+                                        <span class="amount" > 
+                                            <?php
+                                                echo $this->partial('/subscription/partials/option2.phtml',
+                                                        $this->payment_options['Option5']
+                                                );    
+                                            ?>
+                                        </span>
+                                    </div>
                                 </div>
                                 
 
@@ -148,7 +149,9 @@ $sections = $this->sections;
                                       <span class="unit">$</span>
                                     </span>
                                     <span class="amount"><input class="custom_amount" id="custom_amount-<?= $section['section_id'] ?>" min="15.01" step="any" inputmode="numeric" type="number" name="amount_handish-<?= $section['section_id'] ?>"> </span>
-                                    <span class="amount" ><span style="font-size: x-small;">Enter a free amount > $1 </span></span>    
+                                    <div>
+                                        <span class="amount" ><span style="font-size: x-small;">Enter a free amount > $1 </span></span>    
+                                    </div>
                                 </div>
                             </div>
                           
