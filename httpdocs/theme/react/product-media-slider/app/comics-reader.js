@@ -4,10 +4,14 @@ function ComicsReaderWrapper(props){
 
     const [ loadingState, setLoadingState ] = useState('Loading...');
     const [ pages, setPages ] = useState([]);
+    const [ currentPage, setCurrentPage ] = useState(0);
+    const [ displayType, setDisplayType ] = useState("single")
 
     React.useEffect(() => {
         if (props.currentSlide === props.slideIndex) fetchArchive();
     },[props.currentSlide]);
+
+    /* INIT */
 
     function fetchArchive(){
         var request = new XMLHttpRequest();
@@ -62,33 +66,29 @@ function ComicsReaderWrapper(props){
         });
     }
 
+    /* /INIT */
+
+    /* COMPONENT */
+
+    function onPrevPageBtnClick(){
+      const newCurrentPage = currentPage - 1;
+      setCurrentPage(newCurrentPage);
+    }
+
+
+    function onNextPageBtnClick(){
+      const newCurrentPage = currentPage + 1;
+      setCurrentPage(newCurrentPage);
+    }
 
     let comicsReaderDisplay = loadingState
     if (pages.length > 0){
-        const options = {
-            width: props.containerWidth,
-            height: props.sliderHeight,
-            autoCenter: true,
-            display: "single",
-            acceleration: true,
-            elevation: 50,
-            gradients: !$.isTouch,
-            when: {
-              turned: function(e, page) {
-                console.log("Current view: ", $(this).turn("view"));
-              }
-            }
-        };
-
-        comicsReaderDisplay = (
-            <Turn options={options} className="magazine" currentSlide={props.currentSlide} slideIndex={props.slideIndex}>
-            {pages.map((page, index) => (
-              <div key={index} className="page">
-                <img src={page} alt="" />
-              </div>
-            ))}
-          </Turn>
-        )
+      comicsReaderDisplay = (
+        <ComicBookReader 
+          pages={pages}
+          currentSlide={props.currentSlide}
+        />
+      )
     }
 
     return (
@@ -98,97 +98,44 @@ function ComicsReaderWrapper(props){
     )
 }
 
+function ComicBookReader(props){
 
-/*function ComicBookSlider(props){
+  React.useEffect(() => (
+    $(function() {
+      $( '#bb-bookblock-'+props.currentSlide ).bookblock()
+    })
+  ),[])
 
-    const [ currentPage, setCurrentPage ] = useState(0)
-    const [ sliderWidth, setSliderWidth ] = useState(props.containerWidth * props.pages.length);
-    const [ sliderPosition, setSliderPosition ] = useState(currentPage * props.containerWidth);
+  const comicPages = props.pages.map((p,index) => (
+    <div className="bb-item">
+      <img key={index} src={p}/>
+    </div>
+  ));
 
-    console.log(currentPage,sliderPosition);
+  return (
+    <div className="comic-book-reader">
+      <div id={"bb-bookblock-" + props.currentSlide} className="bb-bookblock">
+        {comicPages}
+      </div>
+    </div>
+  )
+}
 
-    function goPrev(){
-        console.log('goPrev');
-    }
+function ComicBookReaderNavigation(props){
 
-    function goNext(){
-        const newCurrentPage = currentPage + 1 <= pages.length ? currentPage + 1 : 0;
-        setCurrentPage(newCurrentPage);
-        const newSliderPosition = props.containerWidth * newCurrentPage;
-        setSliderPosition(newSliderPosition);
-    }
-
-    let comicBookSliderStyle = {
-        width:sliderWidth,
-        left:'-' + sliderPosition + 'px'
-    }
-
-    const comicBookPagesDisplay = props.pages.map((p,index) => (
-        <div className="comic-book-page" style={{"width":props.containerWidth}} key={index}>
-            <img src={p} key={index}/>
-        </div>
-    ))
-
-    return (
-        <div id="comic-book-container">
-            <div className="comic-book-navigation">
-                <a onClick={goPrev}>Prev</a>
-                <a onClick={goNext}>NExt</a>
-            </div>
-            <div id="comic-book-slider" style={comicBookSliderStyle}>
-                {comicBookPagesDisplay}
-            </div>
-        </div>
-    )
-
-}*/
-
-
-class Turn extends React.Component {
-    
-    constructor(props){
-      super(props);
-      this.handleKeyDown = this.handleKeyDown.bind(this);
-    }
-
-    componentDidMount() {
-      if (this.el) {
-        $(this.el).turn(Object.assign({}, this.props.options));
-      }
-      document.addEventListener("keydown", this.handleKeyDown, false);
-    }
-  
-    componentWillUnmount() {
-      if (this.el) {
-        $(this.el)
-          .turn("destroy")
-          .remove();
-      }
-      document.removeEventListener("keydown", this.handleKeyDown, false);
-    }
-  
-    handleKeyDown(event){
-      if (this.props.slideIndex === this.props.currentSlide){
-        if (event.keyCode === 37) {
-          $(this.el).turn("previous");
-        }
-        if (event.keyCode === 39) {
-          $(this.el).turn("next");
-        }
-      }
-    };
-  
-    render() {
-      return (
-        <div
-          className={this.props.className}
-          style={Object.assign({}, this.props.style)}
-          ref={el => (this.el = el)}
-        >
-          {this.props.children}
-        </div>
-      );
-    }
-  }
+  return (
+    <div className="comic-book-reader-navigation">
+      <div className="scroll-bar"></div>
+      <div className="actions-menu">
+        <a className="page-counter"> {props.currentPage + "/" + props.totalPages} </a>
+        <a onClick={props.onPrevPageBtnClick} className="prev-page"></a> 
+        <a onClick={props.onNextPageBtnClick} className="next-page"></a>
+        <a className="one-page-view"></a>
+        <a className="two-page-view"></a>
+        <a className="full-screen"></a>
+      </div>
+    </div>
+  )
+}
 
 export default ComicsReaderWrapper;

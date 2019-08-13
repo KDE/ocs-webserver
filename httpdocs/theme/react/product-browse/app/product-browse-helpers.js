@@ -20,7 +20,7 @@ export function getNumberOfItemsPerRow(browseListType,isMobile,containerWidth){
     if (isMobile) itemsPerRow = 2;
     else {
         if (browseListType === "music") itemsPerRow = getAdujustItemsPerRow(6,containerWidth,180) 
-        else if (browseListType === "phone-pictures") itemsPerRow = getAdujustItemsPerRow(5,containerWidth,210)
+        else if (browseListType === "phone-pictures" || browseListType === "comics") itemsPerRow = getAdujustItemsPerRow(5,containerWidth,210)
         else itemsPerRow = getAdujustItemsPerRow(3,containerWidth,300)
     }
     itemsPerRow;
@@ -72,7 +72,7 @@ export function getImageHeight(browseListType,itemWidth){
         itemHeightDivider = 1;
         imgHeight = (itemWidth - 14) / itemHeightDivider;
     } 
-    else if (browseListType === "phone-pictures"){
+    else if (browseListType === "phone-pictures" || browseListType === "comics"){
         itemHeightDivider = .5;
         imgHeight = itemWidth / itemHeightDivider;
     } 
