@@ -110,7 +110,8 @@ class Default_Model_Section
                                 HAVING sum(`m`.`probably_payout_amount`) >= 1
                         ) A GROUP BY yearmonth, section_id
                 ) p3 ON p3.yearmonth = p.yearmonth AND p3.section_id = s.section_id
-                WHERE p.yearmonth = :yearmonth";
+                WHERE p.yearmonth = :yearmonth
+                AND sc.section_id IS NOT null ";
         
         if(!$isForAdmin) {
             $sql .= " AND p.yearmonth >= DATE_FORMAT((NOW() - INTERVAL 1 MONTH),'%Y%m')";
