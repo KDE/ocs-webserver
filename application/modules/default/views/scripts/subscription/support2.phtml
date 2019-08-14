@@ -316,6 +316,7 @@ $sections = $this->sections;
             console.log($checkedBoxes);
             
             if($checkedBoxes.includes($(this).attr('id'))) {
+                console.log('is selected');
                 //Is checked, so remove marker and elem in array
                 for( var i = 0; i < $checkedBoxes.length; i++){ 
                     if ( $checkedBoxes[i] === $(this).attr('id')) {
@@ -323,8 +324,8 @@ $sections = $this->sections;
                     }
                 }
                 //$(this).removeAttr('checked');
-                return;
             } else {
+                console.log('is not selected');
                 $checkedBoxes.push($(this).attr('id'));
                 //$(this).prop("checked", true);
             }
