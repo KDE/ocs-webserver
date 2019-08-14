@@ -315,12 +315,13 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
             $paymentOption = $this->getParam('amount_predefined-'.$section['section_id'], null);
             $amount_predefined = (float)$this->getParam('amount_predefined-'.$section['section_id'], null);
             $amount_handish  = (float)$this->getParam('amount_handish-'.$section['section_id'], null);
+            $calModel = new Default_View_Helper_CalcDonation();
             
             if(null != $paymentOption) {
                 $isHandish = false;
                 $data = array();
                 if(null != $paymentOption && $paymentOption != 'Option7') {
-                    $calModel = new Default_View_Helper_CalcDonation();
+                    
                     $amount += 0.99;
                     
                     $data['support_id'] = $sid;
