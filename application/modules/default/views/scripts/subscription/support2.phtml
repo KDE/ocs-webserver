@@ -41,7 +41,7 @@ $sections = $this->sections;
 
 
 <style>
-    .item-text .amount input {
+    .amount input {
         opacity: .95;
         margin-top: -8px;
         color: #000;
@@ -60,12 +60,12 @@ $sections = $this->sections;
         background-color: #fff;
     }
     
-    .x-donation-widget ul.x-suggested-amounts li.amount-item .item-text .unit-wrapper {
+    .unit-wrapper {
         position: absolute;
         display: inline-block;
     }
     
-    .x-donation-widget ul.x-suggested-amounts li.amount-item .item-text .unit-wrapper .unit {
+    .unit-wrapper .unit {
         color: #231f20;
         opacity: .6;
         font-size: 13px;
@@ -176,6 +176,7 @@ $sections = $this->sections;
                             <div class="col-lg-3 col-md-3" style="min-width: 250px;">  
                                 <div class="radiocontainer" style="text-align: left;">
                                     <input data-section-id="<?= $section['section_id'] ?>" class="suggested-amount custom_amount_item mdl-radio__button" data-checked="false" <?=$this->checked?> id="custom_amount_item_<?= $section['section_id'] ?>" type="radio" value="Option7" name="amount_predefined-<?= $section['section_id'] ?>">
+                                    
                                     <span class="unit-wrapper">
                                       <span class="unit">$</span>
                                     </span>
