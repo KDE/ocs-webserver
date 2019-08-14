@@ -85,6 +85,10 @@ $sections = $this->sections;
         box-shadow: 0 2px 0 0 #404040 !important;
     }
     
+    .hiddden {
+        display: none !important;
+    }
+    
 </style>
 
 <main>
@@ -165,10 +169,11 @@ $sections = $this->sections;
                             <div class="col-lg-4" style="padding-left: 15px;min-width: 250px;">        
                                                                             
                                 <div class="text" style="padding: 16px;">
-                                    <a href=""><?= $section['name'] ?> &#8964; </a>
+                                    <a href="" data-section-id="<?= $section['section_id'] ?>" class="cat_drop_down" id="cat_drop_down_link-<?= $section['section_id'] ?>"><?= $section['name'] ?> &#8964; </a>
                                 </div>
-                                <ul>
+                                <ul style="" class="hidden" id="cat_drop_down-<?= $section['section_id'] ?>">
                                     <li>Cat1</li>
+                                    <li>Cat2</li>
                                 </ul>
                                                                         
                             </div>
@@ -298,6 +303,18 @@ $sections = $this->sections;
         $checkedBoxes = [];
         
         calSum();
+        
+        $('.cat_drop_down').click(function(){
+            $section_id = $(this).attr('data-section-id');
+            $dropdown = $('cat_drop_down-'+$section_id);
+            
+            if($dropdown.hasClass('hidden')) {
+                $dropdown.removeClass('hidden');
+            } else {
+                $dropdown.addClass('hidden');
+            }
+            
+        });
         
         $('#submit').click(function(){
             $("input[type=radio]:checked").each(function() {
