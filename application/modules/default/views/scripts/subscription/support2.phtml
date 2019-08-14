@@ -306,6 +306,7 @@ $sections = $this->sections;
             $wasChecked = $(this).attr("data-checked");
             $section_id = $(this).attr('data-section-id');
             
+            console.log('Start');
             console.log($checkedBoxes);
             
             if($checkedBoxes.includes($(this).attr('id'))) {
@@ -321,6 +322,9 @@ $sections = $this->sections;
                 $checkedBoxes.push($(this).attr('id'));
                 $(this).prop("checked", true);
             }
+            
+            console.log($checkedBoxes);
+            console.log('End');
             
             calSum();
         });  
