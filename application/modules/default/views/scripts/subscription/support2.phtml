@@ -80,9 +80,9 @@ $sections = $this->sections;
     }
     
     .disabled {
-        cursor: not-allowed;
-        background-color: #959595;
-        box-shadow: 0 2px 0 0 #404040;
+        cursor: not-allowed !important;
+        background-color: #959595 !important;
+        box-shadow: 0 2px 0 0 #404040 !important;
     }
     
 </style>
@@ -368,13 +368,14 @@ $sections = $this->sections;
 
                 $sum.text($sumNum);
                 $('#submit').prop('disabled', false);
-                $('#submit').addClass('disabled');
+                $('#submit').removeClass('disabled');
                 
             } else {
                 $sum.text('0.00');
                 $('#desc_1').text("");
                 $('#submit').prop('disabled', true);
-                $('#submit').removeClass('disabled');
+                
+                $('#submit').addClass('disabled');
             }
             
         }
