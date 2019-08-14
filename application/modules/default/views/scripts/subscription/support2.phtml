@@ -58,7 +58,7 @@ $sections = $this->sections;
                     <div class="x-donation-widget">
                          <div class="row disply-flex">
                              
-                            <div class="col-lg-2" style="padding-left: 15px;">        
+                            <div class="col-lg-2" style="padding-left: 15px; min-width: 250px;">        
                                <div class="x-tabs-header " style="text-align: center;">
                                   <div class="header-content">                                                                                     
                                      Section
@@ -99,6 +99,8 @@ $sections = $this->sections;
                               </div>
                             </div>                                                                                     
                             </div>
+                             
+                            <!-- 
                             <div class="col-lg-2 col-md-2 " style="padding-right: 15px;">
                             <div class="x-tabs-header ">
                               <div class="header-content" style="text-align:right;padding-right:15px;">                                                
@@ -106,6 +108,7 @@ $sections = $this->sections;
                               </div>
                             </div>                                                                                     
                             </div>
+                            -->
                         </div> <!--end of row-->
                         <?php
                             foreach ($sections as $section) {
@@ -120,7 +123,7 @@ $sections = $this->sections;
                             </div>
                             <div class="col-lg-3" style="padding-left: 0;">        
                                                                             
-                                <div class="radiocontainer" style="text-align: left;">
+                                <div class="radiocontainer" style="text-align: left;min-width: 250px;">
                                     <input data-section-id="<?= $section['section_id'] ?>" class="suggested-amount mdl-radio__button" data-checked="false" <?=$this->payment_options['Option5']['checked']?> id="sam-15-<?= $section['section_id'] ?>" type="radio" value="<?=$this->payment_options['Option5']['name']?>" name="amount_predefined-<?= $section['section_id'] ?>"/>
                                     <span class="unit-wrapper">
                                       <span class="unit">$</span>
@@ -162,7 +165,7 @@ $sections = $this->sections;
                                 </ul>
                                
                             </div>
-                            
+                            <!--
                             <div class="col-lg-2" >
                                 <ul class="x-suggested-amounts">
                                 <li class="amount-item">       
@@ -174,6 +177,7 @@ $sections = $this->sections;
                                 </ul>
                                
                             </div>
+                            -->
                         </div> <!--end of row-->
 
 
