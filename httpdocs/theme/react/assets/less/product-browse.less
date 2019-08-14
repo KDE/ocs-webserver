@@ -169,7 +169,47 @@
                     margin: 2px 0;
                 }
             }
-  
+
+            .likes-counter {
+                margin-top: 3px;
+                font-size: 12px;
+                font-weight: 400;
+                margin-bottom: 5px;
+
+                .hearts-container {
+                    
+                    .glyphicon {
+                        width: auto;
+                        font-size: 15px;
+                        color: #c1c1c1;
+                        font-weight: normal;
+                        margin-right: 5px;
+                        margin-top: 0px;
+
+                        &.glyphicon-heart {
+                            display: none;
+                        }
+                    }
+                    
+                    &:hover {
+                            .glyphicon {
+                                display: none;
+                            }
+                            .glyphicon-heart {
+                                display: block ;
+                                color:red;
+                            }
+                        
+                    }
+
+                }
+            }
+            
+            .info-container {
+                width:100%;
+                float:left;
+            }
+
             .wrapper {
                 width:100%;
                 position: relative;
@@ -178,6 +218,11 @@
             &.phone-pictures {
                 .product-browse-image {
                     border-radius: 5px 5px 5px 5px;
+                }
+                h2, span {
+                    font-size: 13px;
+                    line-height: 14px;
+                    font-weight: 400;
                 }
             }
 
@@ -192,42 +237,18 @@
                     .score-container {
                         margin-top: -10px;
                     }
-
-                    .likes-counter {
-                        margin-top: 10px;
-                        font-size: 12px;
-                        font-weight: 400;
-
-                        .hearts-container {
-
-                            .glyphicon {
-                                width: auto;
-                                font-size: 15px;
-                                color: #c1c1c1;
-                                font-weight: normal;
-                                margin-right: 5px;
-    
-                                &.glyphicon-heart {
-                                    display: none;
-                                }
-                            }
-                            
-                            &:hover {
-                                    .glyphicon {
-                                        display: none;
-                                    }
-                                    .glyphicon-heart {
-                                        display: block ;
-                                        color:red;
-                                    }
-                                
-                            }
-
-                        }
-                    }
                 }
             }
 
+            &.music {
+                .product-browse-music-item-info {
+                    h2, span {
+                        font-size: 13px;
+                        line-height: 14px;
+                        font-weight: 400;
+                    }
+                }
+            }
         }
 
         .product-browse-item-preview-music-player {

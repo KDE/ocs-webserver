@@ -54,6 +54,17 @@ export function ProductBrowseItem(props){
         });
     }
 
+
+    const productBrowseItemLikesDislpay = (
+        <div className="likes-counter">
+            <div className="hearts-container">
+                <span className="glyphicon glyphicon-heart"></span>
+                <span className="glyphicon glyphicon-heart-empty"></span>
+            </div>
+            ({p.count_likes - p.count_dislikes}) Likes
+        </div>
+    )
+
     let itemInfoDisplay,
         musicItemInfoDisplay, 
         musicPlayerDisplay;
@@ -74,10 +85,10 @@ export function ProductBrowseItem(props){
         )        
     } 
     else if (browseListType === "comics"){
-        console.log(p);
         itemInfoDisplay = (
             <div className="product-browse-item-info">
                 <h2>{p.title}</h2>
+                {productBrowseItemLikesDislpay}
             </div>
         )
     }
@@ -85,6 +96,7 @@ export function ProductBrowseItem(props){
         musicItemInfoDisplay = (
             <div className="product-browse-music-item-info">
                 <h2>{p.title}</h2>
+                {productBrowseItemLikesDislpay}
                 <span>{p.cat_title}</span>
                 <span>by <b>{p.username}</b></span>
             </div>            
@@ -98,6 +110,18 @@ export function ProductBrowseItem(props){
                 />
             )
         }
+    }
+    else if (browseListType === "videos"){
+        itemInfoDisplay = (
+            <div className="product-browse-item-info">
+                <h2>{p.title}</h2>
+                {productBrowseItemLikesDislpay}
+                <div className="info-container">
+                    <span>{p.cat_title}</span>
+                    <span>by <b>{p.username}</b></span>
+                </div>
+            </div>
+        )
     }
 
     let itemLink = json_serverUrl;

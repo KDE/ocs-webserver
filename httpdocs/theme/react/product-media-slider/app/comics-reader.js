@@ -3,12 +3,28 @@ import React, { useState } from 'react';
 function ComicsReaderWrapper(props){
 
     const [ loadingState, setLoadingState ] = useState('Loading...');
-    const [ pages, setPages ] = useState([]);
+
+    const initPages = [
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/1.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/2.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/3.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/4.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/5.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/6.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/7.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/8.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/9.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/10.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/11.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/12.jpg"
+    ]
+
+    const [ pages, setPages ] = useState(initPages);
     const [ currentPage, setCurrentPage ] = useState(0);
     const [ displayType, setDisplayType ] = useState("single")
 
     React.useEffect(() => {
-        if (props.currentSlide === props.slideIndex) fetchArchive();
+        // if (props.currentSlide === props.slideIndex) fetchArchive();
     },[props.currentSlide]);
 
     /* INIT */
@@ -70,17 +86,6 @@ function ComicsReaderWrapper(props){
 
     /* COMPONENT */
 
-    function onPrevPageBtnClick(){
-      const newCurrentPage = currentPage - 1;
-      setCurrentPage(newCurrentPage);
-    }
-
-
-    function onNextPageBtnClick(){
-      const newCurrentPage = currentPage + 1;
-      setCurrentPage(newCurrentPage);
-    }
-
     let comicsReaderDisplay = loadingState
     if (pages.length > 0){
       comicsReaderDisplay = (
@@ -102,7 +107,46 @@ function ComicBookReader(props){
 
   React.useEffect(() => (
     $(function() {
-      $( '#bb-bookblock-'+props.currentSlide ).bookblock()
+
+      var config = {
+        $bookBlock : $( '#bb-bookblock-'+props.currentSlide ),
+        $navNext : $( '#bb-nav-next' ),
+        $navPrev : $( '#bb-nav-prev' ),
+        $navFirst : $( '#bb-nav-first' ),
+        $navLast : $( '#bb-nav-last' )
+      }
+
+      config.$bookBlock.bookblock( {
+        speed : 800,
+        shadowSides : 0.8,
+        shadowFlip : 0.7
+      } );
+
+						
+      var $slides = config.$bookBlock.children();
+
+      // add navigation events
+      config.$navNext.on( 'click touchstart', function() {
+        config.$bookBlock.bookblock( 'next' );
+        return false;
+      } );
+
+      config.$navPrev.on( 'click touchstart', function() {
+        config.$bookBlock.bookblock( 'prev' );
+        return false;
+      } );
+
+      config.$navFirst.on( 'click touchstart', function() {
+        config.$bookBlock.bookblock( 'first' );
+        return false;
+      } );
+
+      config.$navLast.on( 'click touchstart', function() {
+        config.$bookBlock.bookblock( 'last' );
+        return false;
+      } );
+      
+
     })
   ),[])
 
@@ -117,6 +161,12 @@ function ComicBookReader(props){
       <div id={"bb-bookblock-" + props.currentSlide} className="bb-bookblock">
         {comicPages}
       </div>
+      <nav>
+        <a id="bb-nav-first" href="#" class="bb-custom-icon bb-custom-icon-first"><span className="glyphicon glyphicon-step-backward"></span></a>
+        <a id="bb-nav-prev" href="#" class="bb-custom-icon bb-custom-icon-arrow-left"><span className="glyphicon glyphicon-triangle-left"></span></a>
+        <a id="bb-nav-next" href="#" class="bb-custom-icon bb-custom-icon-arrow-right"><span className="glyphicon glyphicon-triangle-right"></span></a>
+        <a id="bb-nav-last" href="#" class="bb-custom-icon bb-custom-icon-last"><span className="glyphicon glyphicon-step-forward"></span></a>
+      </nav>
     </div>
   )
 }
@@ -137,5 +187,62 @@ function ComicBookReaderNavigation(props){
     </div>
   )
 }
+/*
+			var Page = (function() {
+				
+				var config = {
+						$bookBlock : $( '#bb-bookblock' ),
+						$navNext : $( '#bb-nav-next' ),
+						$navPrev : $( '#bb-nav-prev' ),
+						$navFirst : $( '#bb-nav-first' ),
+						$navLast : $( '#bb-nav-last' )
+					},
+					init = function() {
+						config.$bookBlock.bookblock( {
+							speed : 800,
+							shadowSides : 0.8,
+							shadowFlip : 0.7
+						} );
+						initEvents();
+					},
+					initEvents = function() {
 
+						// add swipe events
+						$slides.on( {
+							'swipeleft' : function( event ) {
+								config.$bookBlock.bookblock( 'next' );
+								return false;
+							},
+							'swiperight' : function( event ) {
+								config.$bookBlock.bookblock( 'prev' );
+								return false;
+							}
+						} );
+
+						// add keyboard events
+						$( document ).keydown( function(e) {
+							var keyCode = e.keyCode || e.which,
+								arrow = {
+									left : 37,
+									up : 38,
+									right : 39,
+									down : 40
+								};
+
+							switch (keyCode) {
+								case arrow.left:
+									config.$bookBlock.bookblock( 'prev' );
+									break;
+								case arrow.right:
+									config.$bookBlock.bookblock( 'next' );
+									break;
+							}
+						} );
+					};
+
+					return { init : init };
+
+      })();
+      
+      */
 export default ComicsReaderWrapper;
