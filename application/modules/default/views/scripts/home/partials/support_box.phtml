@@ -22,7 +22,9 @@
 $modelInfo = new Default_Model_Info();
 
 $catId = $this->cat_id;
+$section = null;
 
+/*
 if($catId && $catId > 0) {
     $section = $modelSectionCat->fetchSectionForCategory($catId);
     
@@ -30,7 +32,7 @@ if($catId && $catId > 0) {
     $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
     $section = $modelSectionCat->fetchFirstSectionForStoreCategories($storeCatIds);
 }
-
+*/
 if(!$section) {
     $section = array('name' => 'Test');
 }
