@@ -5,7 +5,7 @@ import { getImageUrl } from './product-browse-helpers';
 export function ProductBrowseItem(props){
 
     const p = props.product;
-    console.log(p);
+
     const [ productFilesFetched, setProductFilesFetched ] = useState(false);
     const [ productFiles, setProductFiles ] = useState();
     const [ imgUrl, setImgUrl ] = useState(getImageUrl(p,props.itemWidth,props.imgHeight));
@@ -111,7 +111,7 @@ export function ProductBrowseItem(props){
             )
         }
     }
-    else if (browseListType === "video"){
+    else if (browseListType === "videos"){
         itemInfoDisplay = (
             <div className="product-browse-item-info">
                 <h2>{p.title}</h2>

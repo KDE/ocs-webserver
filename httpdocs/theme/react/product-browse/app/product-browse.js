@@ -5,8 +5,7 @@ import {ProductBrowseItem} from './product-browse-item';
 import {getNumberOfItemsPerRow, getImageHeight, chunkArray, getItemWidth} from './product-browse-helpers';
 
 function ProductBrowse(){
-    console.log(browseListType);
-    console.log('blyatz');
+    
     return (
         <div id="product-browse">
             <ProductBrowseFilterContainer/>
@@ -51,9 +50,6 @@ function ProductBrowseFilterContainer(){
 }
 
 function ProductBrowseItemList(props){
-
-    if (filters.category === 5) browseListType = "video";
-    else if (filters.category === 81) browseListType = "phone-pictures";
 
     const [ containerWidth, setContainerWidth ] = useState($('#product-browse-container').width() + 14);
     const [ itemsInRow, setItemsInRow ] = useState(getNumberOfItemsPerRow(browseListType,isMobile,containerWidth));
