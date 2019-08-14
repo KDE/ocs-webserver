@@ -312,13 +312,9 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $supportArray = array();
         foreach ($sections as $section) {
             
-            $paymentOption = $this->getParam('amount_predefined-'.$section['section_id']);
+            $paymentOption = $this->getParam('amount_predefined-'.$section['section_id'], null);
             $amount_predefined = (float)$this->getParam('amount_predefined-'.$section['section_id'], null);
-            if($this->hasParam('amount_handish-'.$section['section_id'])) {
-                $amount_handish  = (float)$this->getParam('amount_handish-'.$section['section_id'], null);
-            } else {
-                $amount_handish  = null;
-            }
+            $amount_handish  = (float)$this->getParam('amount_handish-'.$section['section_id'], null);
             
             if(null != $paymentOption) {
                 $isHandish = false;
