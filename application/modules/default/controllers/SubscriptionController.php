@@ -306,48 +306,55 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         
         $amount = 0;
         
+        $paymentFrequenz = $this->getParam('paymentFrequenz', 'Y');
+        
         //get parameter for every section
         $supportArray = array();
         foreach ($sections as $section) {
             
-            $paymentOption = $this->getParam('amount_predefined-'.$section['section_id']);
+            $paymentOption = $this->getParam('amount_predefined-'.$section['section_id'], null);
             $amount_predefined = (float)$this->getParam('amount_predefined-'.$section['section_id'], null);
             $amount_handish  = (float)$this->getParam('amount_handish-'.$section['section_id'], null);
+            $calModel = new Default_View_Helper_CalcDonation();
             
             if(null != $paymentOption) {
                 $isHandish = false;
                 $data = array();
                 if(null != $paymentOption && $paymentOption != 'Option7') {
-                    $calModel = new Default_View_Helper_CalcDonation();
-                    if($this::$SUPPORT_OPTIONS[$paymentOption]['period_short']=='Y')
-                    {
-                        $v = $calModel->calcDonation($this::$SUPPORT_OPTIONS[$paymentOption]['amount']*12);
-                    }else{
-                        $v = $calModel->calcDonation($this::$SUPPORT_OPTIONS[$paymentOption]['amount']);    
-                    }   
                     
-                    $amount += $v;
+                    $amount += 0.99;
                     
                     $data['support_id'] = $sid;
                     $data['section_id'] = $section['section_id'];
-                    $data['amount'] = $v;
-                    $data['tier'] = $this::$SUPPORT_OPTIONS[$paymentOption]['amount'];
-                    $data['period'] = $this::$SUPPORT_OPTIONS[$paymentOption]['period_short'];
-                    $data['period_frequency'] = $this::$SUPPORT_OPTIONS[$paymentOption]['period_frequency'];
-                } else {
-                    $isHandish = true;
-                    $amount += $amount_handish;
-                    $data['support_id'] = $sid;
-                    $data['section_id'] = $section['section_id'];
-                    $data['amount'] = $amount_handish;
-                    $data['tier'] = $amount_handish;
-                    $data['period'] = 'Y';
+                    $data['amount'] = 0.99;
+                    $data['tier'] = 0.99;
+                    $data['period'] = $paymentFrequenz;
                     $data['period_frequency'] = 1;
+                } else {
+                    if(null != $amount_handish) {
+                        $isHandish = true;
+                        $amount += $amount_handish;
+                        $data['support_id'] = $sid;
+                        $data['section_id'] = $section['section_id'];
+                        $data['amount'] = $amount_handish;
+                        $data['tier'] = $amount_handish;
+                        $data['period'] = $paymentFrequenz;
+                        $data['period_frequency'] = 1;
+                    }
                     
                 }
                 $supportArray[] = $data;
             }
         }
+        
+        $amountTier = $amount;
+        
+        if($paymentFrequenz=='Y')
+        {
+            $amount = $calModel->calcDonation($amount*12);
+        }else{
+            $amount = $calModel->calcDonation($amount);    
+        }   
         
         $comment = Default_Model_HtmlPurify::purify($this->getParam('comment'));
         $paymentProvider =
@@ -371,6 +378,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $this->view->transaction_id = $this->_authMember->member_id . '_' . time();
         
         $this->view->amount = $amount;
+        $this->view->paymentFrequenz = $paymentFrequenz;
         $this->view->payment_option = $paymentOption;
         
         //Add pling
@@ -378,8 +386,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id
             , $this->_authMember->member_id
             , $amount
-            ,null
-            ,'Y'
+            , $amountTier
+            ,$paymentFrequenz
             ,1
         );
         

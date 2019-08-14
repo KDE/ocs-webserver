@@ -104,9 +104,7 @@ if ($countDownloadsOverall > 0) {
             foreach ($allSections as $section) { ?>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
                     
-                    <div class="col-md-1 cell-default" style=""><?=$section['section_name']?></div>
-                    <div class="col-md-1 text-right cell-default" style=""><?= round($section['sum_support'],2)?></div>
-                    <div class="col-md-1 text-right cell-default" style=""><?=round($section['sum_sponsor'],2)?></div>
+                    <div class="col-md-2 cell-default" style="" id="<?=$section['section_id']?>"><?=$section['section_name']?></div>
                     <div class="col-md-1 text-right cell-default" style=""><strong><?= round($section['sum_support'] + $section['sum_sponsor'], 2) ?></strong></div>
                     <!--<div class="col-md-1 text-right cell-default" style=""><?=$section['sum_dls']?></div>-->
                     <div class="col-md-1 text-right cell-default" style=""><strong><?=$section['sum_amount']?></strong></div>
@@ -123,6 +121,10 @@ if ($countDownloadsOverall > 0) {
                             echo "1.00";
                         }
                     ?></strong></div>
+                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                    <div class="col-md-1 text-right cell-default" style="">60</div>
+                    <div class="col-md-1 text-right cell-default" style="">Balken</div>
+                    <?php endif; ?>
                 </div>
             <?php
                 $countIncome += $section['sum_support'] + $section['sum_sponsor'];
@@ -131,9 +133,7 @@ if ($countDownloadsOverall > 0) {
             }
             ?>
             <div class='row row-total'>
-                <div class='col-md-1' style=""></div>
-                <div class='col-md-1 text-right' style=""></div>
-                <div class='col-md-1 text-right' style=""></div>
+                <div class='col-md-2' style=""></div>
                 <div class='col-md-1 text-right' style=""><strong><?= round($countIncome,2) ?></strong></div>
                 <div class='col-md-1 text-right' style=""><strong><?= round($countPayout,2) ?></strong></div>
                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
@@ -141,6 +141,8 @@ if ($countDownloadsOverall > 0) {
                 <div class='col-md-1 text-right' style=""><?= round($countPayout2,2) ?></div>
                 <?php endif; ?>
                 <div class='col-md-1 text-right' style=""></div>
+                
+                
             </div>
             
         </div>
