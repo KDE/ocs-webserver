@@ -73,7 +73,7 @@ class Default_Model_Section
             AND section_category.project_category_id in (:category_id)
             LIMIT 1
         ";
-        $resultSet = $this->getAdapter()->fetchRow($sql, array('category_id' => $category_id))->toArray();
+        $resultSet = $this->getAdapter()->fetchRow($sql, array('category_id' => $category_array))->toArray();
 
         return $resultSet;
     }
