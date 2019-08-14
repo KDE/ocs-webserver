@@ -26,11 +26,18 @@ $section = null;
 
 
 if($catId && $catId > 0) {
-    $section = $modelSection->fetchSectionForCategory($catId);
-    
+    try {
+        $section = $modelSection->fetchSectionForCategory($catId);
+    } catch (Exception $exc) {
+        $section = null;
+    }
 } else {
     $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
-    $section = $modelSection->fetchFirstSectionForStoreCategories($storeCatIds);
+    try {
+        $section = $modelSection->fetchFirstSectionForStoreCategories($storeCatIds);
+    } catch (Exception $exc) {
+        $section = null;
+    }
 }
 
 
