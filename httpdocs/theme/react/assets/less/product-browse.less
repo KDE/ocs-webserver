@@ -169,7 +169,41 @@
                     margin: 2px 0;
                 }
             }
-  
+
+            .likes-counter {
+                margin-top: 10px;
+                font-size: 12px;
+                font-weight: 400;
+
+                .hearts-container {
+                    
+                    .glyphicon {
+                        width: auto;
+                        font-size: 15px;
+                        color: #c1c1c1;
+                        font-weight: normal;
+                        margin-right: 5px;
+                        margin-top: 0px;
+
+                        &.glyphicon-heart {
+                            display: none;
+                        }
+                    }
+                    
+                    &:hover {
+                            .glyphicon {
+                                display: none;
+                            }
+                            .glyphicon-heart {
+                                display: block ;
+                                color:red;
+                            }
+                        
+                    }
+
+                }
+            }            
+
             .wrapper {
                 width:100%;
                 position: relative;
@@ -191,39 +225,6 @@
                     
                     .score-container {
                         margin-top: -10px;
-                    }
-
-                    .likes-counter {
-                        margin-top: 10px;
-                        font-size: 12px;
-                        font-weight: 400;
-
-                        .hearts-container {
-
-                            .glyphicon {
-                                width: auto;
-                                font-size: 15px;
-                                color: #c1c1c1;
-                                font-weight: normal;
-                                margin-right: 5px;
-    
-                                &.glyphicon-heart {
-                                    display: none;
-                                }
-                            }
-                            
-                            &:hover {
-                                    .glyphicon {
-                                        display: none;
-                                    }
-                                    .glyphicon-heart {
-                                        display: block ;
-                                        color:red;
-                                    }
-                                
-                            }
-
-                        }
                     }
                 }
             }

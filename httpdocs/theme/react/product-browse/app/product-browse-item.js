@@ -54,6 +54,17 @@ export function ProductBrowseItem(props){
         });
     }
 
+
+    const productBrowseItemLikesDislpay = (
+        <div className="likes-counter">
+            <div className="hearts-container">
+                <span className="glyphicon glyphicon-heart"></span>
+                <span className="glyphicon glyphicon-heart-empty"></span>
+            </div>
+            ({p.count_likes - p.count_dislikes}) Likes
+        </div>
+    )
+
     let itemInfoDisplay,
         musicItemInfoDisplay, 
         musicPlayerDisplay;
@@ -74,9 +85,9 @@ export function ProductBrowseItem(props){
         )        
     } 
     else if (browseListType === "comics"){
-        console.log(p);
         itemInfoDisplay = (
             <div className="product-browse-item-info">
+                {productBrowseItemLikesDislpay}
                 <h2>{p.title}</h2>
             </div>
         )
@@ -84,6 +95,7 @@ export function ProductBrowseItem(props){
     else if (browseListType === "music"){
         musicItemInfoDisplay = (
             <div className="product-browse-music-item-info">
+                {productBrowseItemLikesDislpay}
                 <h2>{p.title}</h2>
                 <span>{p.cat_title}</span>
                 <span>by <b>{p.username}</b></span>

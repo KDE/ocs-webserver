@@ -5,7 +5,6 @@ import {ProductBrowseItem} from './product-browse-item';
 import {getNumberOfItemsPerRow, getImageHeight, chunkArray, getItemWidth} from './product-browse-helpers';
 
 function ProductBrowse(){
-    console.log(browseListType);
     return (
         <div id="product-browse">
             <ProductBrowseFilterContainer/>
@@ -50,9 +49,6 @@ function ProductBrowseFilterContainer(){
 }
 
 function ProductBrowseItemList(props){
-
-    console.log(filters.category);
-    if (filters.category === 81) browseListType = "comics";
 
     const [ containerWidth, setContainerWidth ] = useState($('#product-browse-container').width() + 14);
     const [ itemsInRow, setItemsInRow ] = useState(getNumberOfItemsPerRow(browseListType,isMobile,containerWidth));
