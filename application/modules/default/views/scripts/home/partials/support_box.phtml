@@ -23,6 +23,8 @@ $modelInfo = new Default_Model_Info();
 $this->supporters = $modelInfo->getNewActiveSupporters(9);
 $catId = $this->cat_id;
 
+
+
 $modelSectionCat = new Default_Model_Section();
 //$section = $modelSectionCat->fetchSectionForCategory($catId);
 $section = array('name' => 'Test');
@@ -34,9 +36,9 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 
 
         <div  class="supportDiv  withborder" >
-            <h2>Support-Box</h2>
-        <span>The category is part of <?= $section['name'] ?> and supported by the following people</span>        
-         <div class="row">
+            <h4>Support-Box</h4>
+            <span style="padding-bottom: 10px;font-size: small;">The category is part of <?= $section['name'] ?> (<?= $catId ?>) and supported by the following people:</span>        
+            <div class="row" style="margin-top: 10px;margin-bottom: 20px;">
             <?php 
                     $i=0;
                    foreach ($this->supporters as $user) {                                                      
