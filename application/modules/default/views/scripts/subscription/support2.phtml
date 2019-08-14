@@ -325,13 +325,8 @@ $sections = $this->sections;
                     }
                 }
                 $(this).removeAttr('checked');
-                if($(this).hasClass('custom_amount_item')) {
-                    $('#custom_amount_item_'+$section_id).removeAttr('checked'); 
-                    document.getElementById('#custom_amount_item_'+$section_id).reset();
-                } else {
-                   $('#sam-15-'+$section_id).removeAttr('checked');
-                   document.getElementById('#sam-15-'+$section_id).reset();
-                }
+                $(this).prop('checked', false);
+                
             } else {
                 console.log('is not selected');
                 $checkedBoxes.push($(this).attr('id'));
