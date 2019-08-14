@@ -75,6 +75,10 @@ $sections = $this->sections;
         line-height: 10px;
     }
     
+    .item-text {
+        padding-left: 15px;
+    }
+    
 </style>
 
 <main>
@@ -112,7 +116,7 @@ $sections = $this->sections;
                                   </div>
                                 </div>                                          
                             </div>    
-                             <div class="col-lg-3 col-md-2" style="min-width: 250px;">        
+                             <div class="col-lg-3 col-md-2" style="min-width: 150px;">        
                                 <div class="x-tabs-header " style="padding: 0 20px;">
                                   <div class="header-content">   
                                     Enter Amount
@@ -163,27 +167,29 @@ $sections = $this->sections;
                                                                             
                                 <div class="radiocontainer" style="text-align: left;">
                                     <input data-section-id="<?= $section['section_id'] ?>" class="suggested-amount mdl-radio__button" data-checked="false" <?=$this->payment_options['Option5']['checked']?> id="sam-15-<?= $section['section_id'] ?>" type="radio" value="<?=$this->payment_options['Option5']['name']?>" name="amount_predefined-<?= $section['section_id'] ?>"/>
-                                    <span class="unit-wrapper">
-                                      <span class="unit">$</span>
+                                    <span class="item-text">
+                                        <span class="unit-wrapper">
+                                          <span class="unit">$</span>
+                                        </span>
+                                        <span class="amount">0.99 monthly</span>                                        
                                     </span>
-                                    <span class="amount">0.99 monthly</span>                                        
-                                    
                                 </div>
                                 
 
                             </div>    
 
-                            <div class="col-lg-3 col-md-3" style="min-width: 250px;">  
+                            <div class="col-lg-3 col-md-3" style="min-width: 150px;">  
                                 <div class="radiocontainer" style="text-align: left;">
                                     <input data-section-id="<?= $section['section_id'] ?>" class="suggested-amount custom_amount_item mdl-radio__button" data-checked="false" <?=$this->checked?> id="custom_amount_item_<?= $section['section_id'] ?>" type="radio" value="Option7" name="amount_predefined-<?= $section['section_id'] ?>">
-                                    
-                                    <span class="unit-wrapper">
-                                      <span class="unit">$</span>
+                                    <span class="item-text">
+                                        <span class="unit-wrapper">
+                                          <span class="unit">$</span>
+                                        </span>
+                                        <span class="amount"><input data-section-id="<?= $section['section_id'] ?>" class="custom_amount" id="custom_amount-<?= $section['section_id'] ?>" min="1" step="any" inputmode="numeric" type="number" name="amount_handish-<?= $section['section_id'] ?>"> </span>
+                                        <div>
+                                            <span class="amount" ><span style="font-size: x-small;">Enter a amount > $1 </span></span>    
+                                        </div>
                                     </span>
-                                    <span class="amount"><input data-section-id="<?= $section['section_id'] ?>" class="custom_amount" id="custom_amount-<?= $section['section_id'] ?>" min="1" step="any" inputmode="numeric" type="number" name="amount_handish-<?= $section['section_id'] ?>"> </span>
-                                    <div>
-                                        <span class="amount" ><span style="font-size: x-small;">Enter a amount > $1 </span></span>    
-                                    </div>
                                 </div>
                             </div>
                             <!--
