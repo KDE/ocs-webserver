@@ -24,8 +24,8 @@ $this->supporters = $modelInfo->getNewActiveSupporters(9);
 $catId = $this->cat_id;
 
 $modelSectionCat = new Default_Model_Section();
-$section = $modelSectionCat->fetchSectionForCategory($catId);
-
+//$section = $modelSectionCat->fetchSectionForCategory($catId);
+$section = array('name' => 'Test');
 
 $helpPrintDate = new Default_View_Helper_PrintDate();
 
@@ -58,7 +58,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                 $identity = Zend_Auth::getInstance()->getIdentity();
                 if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
         ?>
-            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter</a>
+            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support</a>
         <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
             <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Thank you for your support!</a>
         <?php   }?>
