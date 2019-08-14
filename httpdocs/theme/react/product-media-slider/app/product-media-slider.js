@@ -17,7 +17,6 @@ function ProductMediaSlider(){
   const galleryHasMultipleAudioFiles = CheckForMultipleAudioFiles(galleryArray);
   if (galleryHasMultipleAudioFiles) galleryArray = GroupAudioFilesInGallery(galleryArray);
   const [ gallery, setGallery ] = useState(galleryArray);
-
   const [ disableGallery, setDisableGallery ] = useState(gallery.length > 1 ? false : true)
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
@@ -25,7 +24,6 @@ function ProductMediaSlider(){
   const [ sliderHeight, setSliderHeight ] = useState(360);
   const [ cinemaMode, setCinemaMode ] = useState(false);
   const [ isFullScreen, setIsFullScreen] = useState(false)
-
   const [ showPlaylist, setShowPlaylist ] = useState(false);
   const [ showSliderArrows, setShowSliderArrows ] = useState(isMobile === true ? true : false);  
   const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(true);

@@ -32,7 +32,7 @@ if ($this->error) {
             <input type="hidden" name="cmd" value="_xclick-subscriptions">
             <input type="hidden" name="business" value="<?= $this->form_merchant ?>">
             <input type="hidden" name="lc" value="US">
-            <input type="hidden" name="item_name" value="Thank you for supporting opendesktop.org">
+            <input type="hidden" name="item_name" value="Thank you for supporting pling.com">
             <input type="hidden" name="item_number" value="S1">
             <input type="hidden" name="no_note" value="1">
             <input type="hidden" name="no_shipping" value="1">
@@ -51,9 +51,19 @@ if ($this->error) {
             
             <input type="hidden" name="a3" value="<?= $amount ?>">
             <input type="hidden" name="p3" value="1">
-            <input type="hidden" name="t3" value="Y">
+            <input type="hidden" name="t3" value="<?= $this->paymentFrequenz ?>">
             
+            <?php 
+                if($this->paymentFrequenz == 'Y') {
+            ?>
             <p>You choose: $<?= $amount ?> per Year</p>
+            <?php
+                } else {
+            ?>
+            <p>You choose: $<?= $amount ?> per Month</p>
+            <?php
+                }
+            ?>
             
             <input type="hidden" name="option_index" value="0">
             <input type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">

@@ -21,8 +21,6 @@
  *
  * Created: 31.05.2017
  */
-$modelInfo = new Default_Model_Info();
-$countActiveMembers = $modelInfo->countTotalActiveMembers();
 $modelInfo= new Default_Model_Info();
 $filter = new Local_Filter_Url_Encrypt();
 $thisurl = "/";
@@ -41,6 +39,54 @@ $sections = $this->sections;
 ?>
 <link href="/theme/flatui/css/support.css" rel="stylesheet">
 
+
+<style>
+    .amount input {
+        opacity: .95;
+        margin-top: -8px;
+        color: #000;
+        font-size: 24px;
+        width: 50%;
+        margin: 0;
+            margin-top: 0px;
+        margin-top: 0;
+        border: 0;
+            border-bottom-color: currentcolor;
+            border-bottom-style: none;
+            border-bottom-width: 0px;
+        border-bottom: 1px solid #d0d0d0;
+        padding: 0;
+        box-shadow: none;
+        background-color: #fff;
+    }
+    
+    .unit-wrapper {
+        position: absolute;
+        display: inline-block;
+    }
+    
+    .unit-wrapper .unit {
+        color: #231f20;
+        opacity: .6;
+        font-size: 13px;
+        position: absolute;
+        top: 5px;
+        right: 3px;
+        line-height: 10px;
+    }
+    
+    .item-text {
+        padding-left: 15px;
+    }
+    
+    .disabled {
+        cursor: not-allowed !important;
+        background-color: #959595 !important;
+        box-shadow: 0 2px 0 0 #404040 !important;
+    }
+    
+</style>
+
 <main>
     <section class="wrapper" id="products-wrapper">
         <form class="donation-form" id="new_donation" action="<?= $this->urlPay ?>" accept-charset="UTF-8" data-remote="true" method="post">  
@@ -53,14 +99,14 @@ $sections = $this->sections;
    
                 <div class="content col-md-8">
                     <h2>Become a Supporter</h2>
-                    <p>Help sustain any of the sections and the creators providing content for it (see pling <a href="/faq-pling">pling FAQ</a>).</p>
+                    <p>Help sustain any of the sections and the creators providing content for it (see <a href="/faq-pling">Pling FAQ</a> and <a href="/funding">Public Funding</a>).</p>
                     </p>
                     
                     
                     <div class="x-donation-widget">
                          <div class="row disply-flex">
                              
-                            <div class="col-lg-2" style="padding-left: 15px;">        
+                            <div class="col-lg-4" style="padding-left: 15px; min-width: 250px;">        
                                <div class="x-tabs-header " style="text-align: center;">
                                   <div class="header-content">                                                                                     
                                      Section
@@ -76,7 +122,7 @@ $sections = $this->sections;
                                   </div>
                                 </div>                                          
                             </div>    
-                            <div class="col-lg-3 col-md-2" >        
+                             <div class="col-lg-3 col-md-2" style="min-width: 150px;">        
                                 <div class="x-tabs-header " style="padding: 0 20px;">
                                   <div class="header-content">   
                                     Enter Amount
@@ -94,13 +140,15 @@ $sections = $this->sections;
                             </div>                                                                                     
                             </div>
                              -->
-                             <div class="col-lg-2 col-md-2 text-right" style="">
+                             <div class="col-lg-2 col-md-2 text-right" style="padding-right: 15px;">
                             <div class="x-tabs-header ">
                               <div class="header-content">                                                
                                   Supporters 
                               </div>
                             </div>                                                                                     
                             </div>
+                             
+                            <!-- 
                             <div class="col-lg-2 col-md-2 " style="padding-right: 15px;">
                             <div class="x-tabs-header ">
                               <div class="header-content" style="text-align:right;padding-right:15px;">                                                
@@ -108,12 +156,13 @@ $sections = $this->sections;
                               </div>
                             </div>                                                                                     
                             </div>
+                            -->
                         </div> <!--end of row-->
                         <?php
                             foreach ($sections as $section) {
                         ?>
                         <div class="row disply-flex">
-                            <div class="col-lg-2" style="padding-left: 15px;">        
+                            <div class="col-lg-4" style="padding-left: 15px;min-width: 250px;">        
                                                                             
                                 <div class="text" style="padding: 16px;">
                                     <?= $section['name'] ?>
@@ -124,26 +173,29 @@ $sections = $this->sections;
                                                                             
                                 <div class="radiocontainer" style="text-align: left;">
                                     <input data-section-id="<?= $section['section_id'] ?>" class="suggested-amount mdl-radio__button" data-checked="false" <?=$this->payment_options['Option5']['checked']?> id="sam-15-<?= $section['section_id'] ?>" type="radio" value="<?=$this->payment_options['Option5']['name']?>" name="amount_predefined-<?= $section['section_id'] ?>"/>
-                                    <span class="unit-wrapper">
-                                      <span class="unit">$</span>
+                                    <span class="item-text">
+                                        <span class="unit-wrapper">
+                                          <span class="unit">$</span>
+                                        </span>
+                                        <span class="amount" style="font-size: 24px;">0.99</span> monthly                                  
                                     </span>
-                                    <span class="amount">0.99 monthly</span>                                        
-                                    
                                 </div>
                                 
 
                             </div>    
 
-                            <div class="col-lg-3 col-md-3">  
+                            <div class="col-lg-3 col-md-3" style="min-width: 150px;">  
                                 <div class="radiocontainer" style="text-align: left;">
                                     <input data-section-id="<?= $section['section_id'] ?>" class="suggested-amount custom_amount_item mdl-radio__button" data-checked="false" <?=$this->checked?> id="custom_amount_item_<?= $section['section_id'] ?>" type="radio" value="Option7" name="amount_predefined-<?= $section['section_id'] ?>">
-                                    <span class="unit-wrapper">
-                                      <span class="unit">$</span>
+                                    <span class="item-text">
+                                        <span class="unit-wrapper">
+                                          <span class="unit">$</span>
+                                        </span>
+                                        <span class="amount"><input data-section-id="<?= $section['section_id'] ?>" class="custom_amount" id="custom_amount-<?= $section['section_id'] ?>" min="1" step="any" inputmode="numeric" type="number" name="amount_handish-<?= $section['section_id'] ?>"> </span>
+                                        <div>
+                                            <span class="amount" ><span style="font-size: x-small;padding-left: 32px;">Enter a amount > $1 </span></span>    
+                                        </div>
                                     </span>
-                                    <span class="amount"><input data-section-id="<?= $section['section_id'] ?>" class="custom_amount" id="custom_amount-<?= $section['section_id'] ?>" min="1" step="any" inputmode="numeric" type="number" name="amount_handish-<?= $section['section_id'] ?>"> </span>
-                                    <div>
-                                        <span class="amount" ><span style="font-size: x-small;">Enter a amount > $1 </span></span>    
-                                    </div>
                                 </div>
                             </div>
                             <!--
@@ -158,13 +210,13 @@ $sections = $this->sections;
                                 <li class="amount-item">       
                                       <div class="item-text">          
                                         <span class="amount" > 
-                                            <?php echo $modelInfo->getCountTierSupporters(0.99);?></span>       
+                                            <?php echo $modelInfo->getCountSectionSupporters($section['section_id']);?></span>       
                                       </div>    
                                 </li>
                                 </ul>
                                
                             </div>
-                            
+                            <!--
                             <div class="col-lg-2" >
                                 <ul class="x-suggested-amounts">
                                 <li class="amount-item">       
@@ -176,6 +228,7 @@ $sections = $this->sections;
                                 </ul>
                                
                             </div>
+                            -->
                         </div> <!--end of row-->
 
 
@@ -185,10 +238,14 @@ $sections = $this->sections;
                         ?>
                         
                         <div class="row disply-flex">
-                            <div class="col-lg-12 col-md-12">  
+                            <div class="col-lg-12 col-md-12" style="border-top: dotted thin #E7E7E7 !important;padding-top: 35px;">  
                                 <div class="tabs-footer">
                                     Donation-Sum: $<span id="sum">0.00</span>/Month
-
+                                    - Pay 
+                                    <select name="paymentFrequenz">
+                                        <option value="Y">Yearly</option>
+                                        <option value="M">Monthly</option>
+                                    </select>
                                 <div>
                                     <span style="font-size: x-small;" id="desc_1"></span>
                                 </div>
@@ -205,7 +262,7 @@ $sections = $this->sections;
                               <div class="col-lg-12 col-md-12">  
                                 <div class="tabs-footer">
                                     <?php if (Zend_Auth::getInstance()->hasIdentity()) {?>
-                                  <button type="submit" class="dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
+                                    <button disabled="true" type="submit" id="submit" class="disabled dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
                                     <span class="donate" id="linkButton">
                                       <span class="amount">
                                         <span isolate="">Donate via PayPal</span>
@@ -233,46 +290,43 @@ $sections = $this->sections;
 
 <script>
     $(document).ready(function(){
-        $(".custom_amount").click(function(){
-            $section_id = $(this).attr('data-section-id');
-            //alert('Section: ' + $section_id);
-            $('#sam-15-'+$section_id).removeAttr('checked');
-            $('#custom_amount_item_'+$section_id).prop("checked", true);            
-        });
+        $checkedBoxes = [];
         
+        calSum();
         
-        $('.custom_amount').change(function(){
-            $sumNum = 0;
-            $sum = $("#sum");
-            
+        $('#submit').click(function(){
             $("input[type=radio]:checked").each(function() {
                 $section_id = $(this).attr('data-section-id');
                 
                 if($(this).hasClass('custom_amount_item')) {
                    $input = $('#custom_amount-'+$section_id);
                    
-                   if($input.val() != '') {
-                       $num = parseFloat($input.val());
-                       $sumNum += $num;
+                   if($input.val() == '') {
+                       $(this).prop('checked', false);
                    }
-                } else {
-                   $sumNum += 0.99;
                 }
             });
             
-            $monthNum = calForMonth($sumNum);
-            $yearNum = calForYear($sumNum);
+        });
+        
+        $(".custom_amount").click(function(){
+            $section_id = $(this).attr('data-section-id');
+            //alert('Section: ' + $section_id);
+            $('#sam-15-'+$section_id).removeAttr('checked');
+            $('#custom_amount_item_'+$section_id).prop("checked", true); 
             
-            $('#desc_1').text("(Pay $" + $monthNum + " per Month, "+calFees($sumNum)+" or Pay $" + $yearNum + " per Year, "+calFees($sumNum*12)+")");
+            for( var i = 0; i < $checkedBoxes.length; i++){ 
+                if ( $checkedBoxes[i] === '#sam-15-'+$section_id) {
+                  $checkedBoxes.splice(i, 1); 
+                }
+            }
             
-            $sumNum = Math.round($sumNum * 100 )/100;
-            $sumNum = $sumNum.toFixed(2);
-
-            $sum.text($sumNum);
-            
-            
-            
-            
+            calSum();
+        });
+        
+        
+        $('.custom_amount').change(function(){
+            calSum();
         });  
         
         
@@ -281,9 +335,26 @@ $sections = $this->sections;
             $wasChecked = $(this).attr("data-checked");
             $section_id = $(this).attr('data-section-id');
             
+            if($checkedBoxes.includes($(this).attr('id'))) {
+                //Is checked, so remove marker and elem in array
+                for( var i = 0; i < $checkedBoxes.length; i++){ 
+                    if ( $checkedBoxes[i] === $(this).attr('id')) {
+                      $checkedBoxes.splice(i, 1); 
+                    }
+                }
+                $(this).removeAttr('checked');
+                $(this).prop('checked', false);
+                
+            } else {
+                $checkedBoxes.push($(this).attr('id'));
+                //$(this).prop("checked", true);
+            }
+            calSum();
+        });  
+        
+        function calSum() {
             $obj = null;
             $sum = $("#sum");
-            $sumNum = $sum.text();
             $sumNum = 0;
 
             $("input[type=radio]:checked").each(function() {
@@ -301,23 +372,30 @@ $sections = $this->sections;
                 }
             });
             
-            $monthNum = calForMonth($sumNum);
-            $yearNum = calForYear($sumNum);
+            if($sumNum>0) { 
             
-            $('#desc_1').text("(Pay $" + $monthNum + " per Month, "+calFees($sumNum)+" or Pay $" + $yearNum + " per Year, "+calFees($sumNum*12)+")");
-            
-            
-            $sumNum = Math.round($sumNum * 100 )/100;
-            $sumNum = $sumNum.toFixed(2);
+                $monthNum = calForMonth($sumNum);
+                $yearNum = calForYear($sumNum);
 
-            $sum.text($sumNum);
+                $('#desc_1').text("(Pay $" + $monthNum + " per Month, "+calFees($sumNum)+" or Pay $" + $yearNum + " per Year, "+calFees($sumNum*12)+")");
+
+
+                $sumNum = Math.round($sumNum * 100 )/100;
+                $sumNum = $sumNum.toFixed(2);
+
+                $sum.text($sumNum);
+                $('#submit').prop('disabled', false);
+                $('#submit').removeClass('disabled');
+                
+            } else {
+                $sum.text('0.00');
+                $('#desc_1').text("");
+                $('#submit').prop('disabled', true);
+                
+                $('#submit').addClass('disabled');
+            }
             
-            
-            
-            
-            
-            
-        });  
+        }
         
         
         function calForMonth(num) {

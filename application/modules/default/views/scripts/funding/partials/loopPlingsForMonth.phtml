@@ -121,9 +121,10 @@ if ($countDownloadsOverall > 0) {
                             echo "1.00";
                         }
                     ?></strong></div>
-                    
+                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-md-1 text-right cell-default" style="">60</div>
                     <div class="col-md-1 text-right cell-default" style="">Balken</div>
+                    <?php endif; ?>
                 </div>
             <?php
                 $countIncome += $section['sum_support'] + $section['sum_sponsor'];
