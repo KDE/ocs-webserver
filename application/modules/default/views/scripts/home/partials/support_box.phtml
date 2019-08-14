@@ -24,15 +24,15 @@ $modelSection = new Default_Model_Section();
 $catId = $this->cat_id;
 $section = null;
 
-
+/*
 if($catId && $catId > 0) {
     try {
         $section = $modelSection->fetchSectionForCategory($catId);
     } catch (Exception $exc) {
         $section = null;
     }
-}
-/*
+
+
 } else {
     $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
     try {
