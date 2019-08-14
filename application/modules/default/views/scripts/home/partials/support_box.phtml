@@ -35,7 +35,7 @@ if(!$section) {
     $section = array('name' => 'Test');
 }
 
-$this->supporters = $modelInfo->getNewActiveSupportersForSection($section['section_id'],9);
+$this->supporters = $modelInfo->getNewActiveSupporters(9);
 
 
 $helpPrintDate = new Default_View_Helper_PrintDate();
