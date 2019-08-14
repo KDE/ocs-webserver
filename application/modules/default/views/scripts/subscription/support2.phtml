@@ -293,12 +293,14 @@ $sections = $this->sections;
         calSum();
         
         $('#submit').click(function(){
+            console.log($checkedBoxes);
             for( var i = 0; i < $checkedBoxes.length; i++){ 
-                $section_id = $($checkedBoxes[i]).attr('data-section-id');
-                $radio = $($checkedBoxes[i]);
+                $section_id = $(''+$checkedBoxes[i]).attr('data-section-id');
+                console.log("Section: " + $section_id);
+                $radio = $(''+$checkedBoxes[i]);
                 if($radio.hasClass('custom_amount_item')) {
                    $input = $('#custom_amount-'+$section_id);
-                   
+                   console.log("Amount: " + $input.val());
                    if($input.val() == '') {
                        $(this).prop('checked', false);
                    }
