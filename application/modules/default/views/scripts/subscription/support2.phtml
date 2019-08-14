@@ -323,7 +323,7 @@ $sections = $this->sections;
                       $checkedBoxes.splice(i, 1); 
                     }
                 }
-                //$(this).removeAttr('checked');
+                $(this).removeAttr('checked');
             } else {
                 console.log('is not selected');
                 $checkedBoxes.push($(this).attr('id'));
