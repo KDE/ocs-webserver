@@ -57,7 +57,20 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                     <img height="25" width="25" src="<?php echo $this->Image($user['profile_image_url'], array('width' => '25', 'height' => '25', 'crop' => 2)); ?>" class="supporterx" />                   
                </a>
                <?php } ?>
-         </div>
+            </div>
+            
+            <div>
+                <span>Support all products via a monthly donation of</span>
+                <span>  
+                    <input type="radio" name="support_amount" value="0.99"> $0.99
+                    <input type="radio" name="support_amount" value="2"> $2
+                    <input type="radio" name="support_amount" value="5"> $5
+                    <input type="radio" name="support_amount" value="10"> $10
+                    <input type="text" name="support_amount"> Free Amount
+                
+                </span>
+            </div>   
+            
         <!--
          <span>
                 <a href="/community#supportersPanel">see all</a>
