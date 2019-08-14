@@ -322,11 +322,11 @@ $sections = $this->sections;
                       $checkedBoxes.splice(i, 1); 
                     }
                 }
-                $(this).removeAttr('checked');
+                //$(this).removeAttr('checked');
                 return;
             } else {
                 $checkedBoxes.push($(this).attr('id'));
-                $(this).prop("checked", true);
+                //$(this).prop("checked", true);
             }
             
             console.log($checkedBoxes);
