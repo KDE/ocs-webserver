@@ -312,12 +312,7 @@ $sections = $this->sections;
             $wasChecked = $(this).attr("data-checked");
             $section_id = $(this).attr('data-section-id');
             
-            console.log('Start');
-            console.log($checkedBoxes);
-            
             if($checkedBoxes.includes($(this).attr('id'))) {
-                console.log('is selected');
-                console.log($(this).attr('checked'));
                 //Is checked, so remove marker and elem in array
                 for( var i = 0; i < $checkedBoxes.length; i++){ 
                     if ( $checkedBoxes[i] === $(this).attr('id')) {
@@ -328,14 +323,9 @@ $sections = $this->sections;
                 $(this).prop('checked', false);
                 
             } else {
-                console.log('is not selected');
                 $checkedBoxes.push($(this).attr('id'));
                 //$(this).prop("checked", true);
             }
-            
-            console.log($checkedBoxes);
-            console.log('End');
-            
             calSum();
         });  
         
@@ -371,11 +361,11 @@ $sections = $this->sections;
                 $sumNum = $sumNum.toFixed(2);
 
                 $sum.text($sumNum);
-                $(':input[type="submit"]').prop('disabled', false);
+                $('#submit').prop('disabled', false);
             } else {
                 $sum.text('0.00');
                 $('#desc_1').text("");
-                $(':input[type="submit"]').prop('disabled', true);
+                $('#submit').prop('disabled', true);
             }
             
         }
