@@ -1,0 +1,111 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$modelInfo = new Default_Model_Info();
+$this->supporters = $modelInfo->getNewActiveSupportersForSection(9);
+$catId = $this->cat_id;
+
+$modelSectionCat = new Default_Model_Section();
+$section = $modelSectionCat->fetchSectionForCategory($catId);
+
+
+$helpPrintDate = new Default_View_Helper_PrintDate();
+
+?>
+
+<style>
+.s40 {
+    min-width: 40px;
+    min-height: 40px;
+}
+.s40.avatar, .s40.avatar-container {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+.avatar, .avatar-container {
+    border-radius: 3px;
+}
+
+.avatar-container .avatar {
+    border-radius: 0;
+    border: 0;
+    height: auto;
+    width: 100%;
+    margin: 0;
+    align-self: center;
+}
+.identicon.bg2 {
+    background-color: #e8eaf6;
+}
+.identicon.s40 {
+    font-size: 16px;
+    line-height: 38px;
+}
+
+.git-project {
+    border-bottom: 1px solid #ccd4d8;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    overflow: hidden;
+}
+
+.git-project:last-child {
+    border-bottom: none;
+}
+
+</style>    
+
+        <div  class="supportDiv  withborder" >
+            <h2>Support-Box</h2>
+        <span>The category is part of <?= $section['name'] ?> and supported by the following people</span>        
+         <div class="row">
+            <?php 
+                    $i=0;
+                   foreach ($this->supporters as $user) {                                                      
+                    if($i++>6) break;
+               ?>         
+               <a href="<?php echo $this->buildMemberUrl($user['username']); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>">                   
+                    <img height="25" width="25" src="<?php echo $this->Image($user['profile_image_url'], array('width' => '25', 'height' => '25', 'crop' => 2)); ?>" class="supporterx" />                   
+               </a>
+               <?php } ?>
+         </div>
+        <!--
+         <span>
+                <a href="/community#supportersPanel">see all</a>
+         </span>
+        </div>
+        -->
+        <div class="supportDiv" >
+        <?php 
+                $identity = Zend_Auth::getInstance()->getIdentity();
+                if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
+        ?>
+            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter</a>
+        <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
+            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Thank you for your support!</a>
+        <?php   }?>
+        </div>
+
+
+            
+        </div>
+
