@@ -39,6 +39,44 @@ $sections = $this->sections;
 ?>
 <link href="/theme/flatui/css/support.css" rel="stylesheet">
 
+
+<style>
+    .item-text .amount input {
+        opacity: .95;
+        margin-top: -8px;
+        color: #000;
+        font-size: 24px;
+        width: 50%;
+        margin: 0;
+            margin-top: 0px;
+        margin-top: 0;
+        border: 0;
+            border-bottom-color: currentcolor;
+            border-bottom-style: none;
+            border-bottom-width: 0px;
+        border-bottom: 1px solid #d0d0d0;
+        padding: 0;
+        box-shadow: none;
+        background-color: #fff;
+    }
+    
+    .x-donation-widget ul.x-suggested-amounts li.amount-item .item-text .unit-wrapper {
+        position: absolute;
+        display: inline-block;
+    }
+    
+    .x-donation-widget ul.x-suggested-amounts li.amount-item .item-text .unit-wrapper .unit {
+        color: #231f20;
+        opacity: .6;
+        font-size: 13px;
+        position: absolute;
+        top: 5px;
+        right: 3px;
+        line-height: 10px;
+    }
+    
+</style>
+
 <main>
     <section class="wrapper" id="products-wrapper">
         <form class="donation-form" id="new_donation" action="<?= $this->urlPay ?>" accept-charset="UTF-8" data-remote="true" method="post">  
@@ -74,7 +112,7 @@ $sections = $this->sections;
                                   </div>
                                 </div>                                          
                             </div>    
-                            <div class="col-lg-3 col-md-2" >        
+                             <div class="col-lg-3 col-md-2" style="min-width: 250px;">        
                                 <div class="x-tabs-header " style="padding: 0 20px;">
                                   <div class="header-content">   
                                     Enter Amount
@@ -135,7 +173,7 @@ $sections = $this->sections;
 
                             </div>    
 
-                            <div class="col-lg-3 col-md-3">  
+                            <div class="col-lg-3 col-md-3" style="min-width: 250px;">  
                                 <div class="radiocontainer" style="text-align: left;">
                                     <input data-section-id="<?= $section['section_id'] ?>" class="suggested-amount custom_amount_item mdl-radio__button" data-checked="false" <?=$this->checked?> id="custom_amount_item_<?= $section['section_id'] ?>" type="radio" value="Option7" name="amount_predefined-<?= $section['section_id'] ?>">
                                     <span class="unit-wrapper">
@@ -190,7 +228,11 @@ $sections = $this->sections;
                             <div class="col-lg-12 col-md-12" style="border-top: dotted thin #E7E7E7 !important;padding-top: 35px;">  
                                 <div class="tabs-footer">
                                     Donation-Sum: $<span id="sum">0.00</span>/Month
-
+                                    - Pay 
+                                    <select name="paymentFrequenz">
+                                        <option value="Y">Yearly</option>
+                                        <option value="M">Monthly</option>
+                                    </select>
                                 <div>
                                     <span style="font-size: x-small;" id="desc_1"></span>
                                 </div>
