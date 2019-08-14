@@ -292,6 +292,20 @@ $sections = $this->sections;
     $(document).ready(function(){
         calSum();
         
+        $('#submit').click(function(){
+            for( var i = 0; i < $checkedBoxes.length; i++){ 
+                $section_id = $($checkedBoxes[i]).attr('data-section-id');
+                $radio = $($checkedBoxes[i]);
+                if($radio.hasClass('custom_amount_item')) {
+                   $input = $('#custom_amount-'+$section_id);
+                   
+                   if($input.val() == '') {
+                       $(this).prop('checked', false);
+                   }
+                }
+            }
+        });
+        
         $(".custom_amount").click(function(){
             $section_id = $(this).attr('data-section-id');
             //alert('Section: ' + $section_id);
