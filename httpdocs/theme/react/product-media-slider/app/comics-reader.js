@@ -3,12 +3,28 @@ import React, { useState } from 'react';
 function ComicsReaderWrapper(props){
 
     const [ loadingState, setLoadingState ] = useState('Loading...');
-    const [ pages, setPages ] = useState([]);
+
+    const initPages = [
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/1.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/2.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/3.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/4.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/5.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/6.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/7.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/8.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/9.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/10.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/11.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/12.jpg"
+    ]
+
+    const [ pages, setPages ] = useState(initPages);
     const [ currentPage, setCurrentPage ] = useState(0);
     const [ displayType, setDisplayType ] = useState("single")
 
     React.useEffect(() => {
-        if (props.currentSlide === props.slideIndex) fetchArchive();
+        // if (props.currentSlide === props.slideIndex) fetchArchive();
     },[props.currentSlide]);
 
     /* INIT */
@@ -69,17 +85,6 @@ function ComicsReaderWrapper(props){
     /* /INIT */
 
     /* COMPONENT */
-
-    function onPrevPageBtnClick(){
-      const newCurrentPage = currentPage - 1;
-      setCurrentPage(newCurrentPage);
-    }
-
-
-    function onNextPageBtnClick(){
-      const newCurrentPage = currentPage + 1;
-      setCurrentPage(newCurrentPage);
-    }
 
     let comicsReaderDisplay = loadingState
     if (pages.length > 0){
@@ -157,10 +162,10 @@ function ComicBookReader(props){
         {comicPages}
       </div>
       <nav>
-        <a id="bb-nav-first" href="#" class="bb-custom-icon bb-custom-icon-first">First page</a>
-        <a id="bb-nav-prev" href="#" class="bb-custom-icon bb-custom-icon-arrow-left">Previous</a>
-        <a id="bb-nav-next" href="#" class="bb-custom-icon bb-custom-icon-arrow-right">Next</a>
-        <a id="bb-nav-last" href="#" class="bb-custom-icon bb-custom-icon-last">Last page</a>
+        <a id="bb-nav-first" href="#" class="bb-custom-icon bb-custom-icon-first"><span className="glyphicon glyphicon-step-backward"></span></a>
+        <a id="bb-nav-prev" href="#" class="bb-custom-icon bb-custom-icon-arrow-left"><span className="glyphicon glyphicon-triangle-left"></span></a>
+        <a id="bb-nav-next" href="#" class="bb-custom-icon bb-custom-icon-arrow-right"><span className="glyphicon glyphicon-triangle-right"></span></a>
+        <a id="bb-nav-last" href="#" class="bb-custom-icon bb-custom-icon-last"><span className="glyphicon glyphicon-step-forward"></span></a>
       </nav>
     </div>
   )

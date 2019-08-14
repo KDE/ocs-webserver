@@ -87,16 +87,16 @@ export function ProductBrowseItem(props){
     else if (browseListType === "comics"){
         itemInfoDisplay = (
             <div className="product-browse-item-info">
-                {productBrowseItemLikesDislpay}
                 <h2>{p.title}</h2>
+                {productBrowseItemLikesDislpay}
             </div>
         )
     }
     else if (browseListType === "music"){
         musicItemInfoDisplay = (
             <div className="product-browse-music-item-info">
-                {productBrowseItemLikesDislpay}
                 <h2>{p.title}</h2>
+                {productBrowseItemLikesDislpay}
                 <span>{p.cat_title}</span>
                 <span>by <b>{p.username}</b></span>
             </div>            
@@ -110,6 +110,18 @@ export function ProductBrowseItem(props){
                 />
             )
         }
+    }
+    else if (browseListType === "video"){
+        itemInfoDisplay = (
+            <div className="product-browse-item-info">
+                <h2>{p.title}</h2>
+                {productBrowseItemLikesDislpay}
+                <div className="info-container">
+                    <span>{p.cat_title}</span>
+                    <span>by <b>{p.username}</b></span>
+                </div>
+            </div>
+        )
     }
 
     let itemLink = json_serverUrl;

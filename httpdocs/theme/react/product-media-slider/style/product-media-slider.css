@@ -757,10 +757,12 @@ video:focus {
   height: 30px;
   text-align: center;
   border-radius: 2px;
-  background: #72b890;
+  background: rgba(0, 0, 0, 0.35);
   color: #fff;
-  font-size: 0;
   margin: 2px;
+}
+#comics-reader-wrapper nav a .glyphicon {
+  top: 7px;
 }
 #comics-reader-wrapper nav a:hover {
   opacity: 0.6;

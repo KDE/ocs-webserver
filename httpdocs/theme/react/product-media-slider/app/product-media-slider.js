@@ -10,7 +10,7 @@ import {GenerateGalleryArray, CheckForMultipleAudioFiles, GroupAudioFilesInGalle
 
 function ProductMediaSlider(){ 
 
-  /* Component */
+  /* Component */ 
 
   const [ product, setProduct ] = useState(window.product);
   let galleryArray = GenerateGalleryArray(product);
