@@ -301,8 +301,6 @@ $sections = $this->sections;
                 if($(this).hasClass('custom_amount_item')) {
                    $input = $('#custom_amount-'+$section_id);
                    
-                   alert('Amount: ' + $input.val());
-                   
                    if($input.val() == '') {
                        $(this).prop('checked', false);
                    }
