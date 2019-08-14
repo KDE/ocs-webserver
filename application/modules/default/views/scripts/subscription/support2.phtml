@@ -355,16 +355,23 @@ $sections = $this->sections;
                 }
             });
             
-            $monthNum = calForMonth($sumNum);
-            $yearNum = calForYear($sumNum);
+            if($sumNum>0) { 
             
-            $('#desc_1').text("(Pay $" + $monthNum + " per Month, "+calFees($sumNum)+" or Pay $" + $yearNum + " per Year, "+calFees($sumNum*12)+")");
-            
-            
-            $sumNum = Math.round($sumNum * 100 )/100;
-            $sumNum = $sumNum.toFixed(2);
+                $monthNum = calForMonth($sumNum);
+                $yearNum = calForYear($sumNum);
 
-            $sum.text($sumNum);
+                $('#desc_1').text("(Pay $" + $monthNum + " per Month, "+calFees($sumNum)+" or Pay $" + $yearNum + " per Year, "+calFees($sumNum*12)+")");
+
+
+                $sumNum = Math.round($sumNum * 100 )/100;
+                $sumNum = $sumNum.toFixed(2);
+
+                $sum.text($sumNum);
+            
+            } else {
+                $sum.text('0.00');
+                $('#desc_1').text("");
+            }
         }
         
         
