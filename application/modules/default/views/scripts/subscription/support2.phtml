@@ -290,22 +290,25 @@ $sections = $this->sections;
 
 <script>
     $(document).ready(function(){
+        $checkedBoxes = [];
+        
         calSum();
         
         $('#submit').click(function(){
-            console.log($checkedBoxes);
-            for( var i = 0; i < $checkedBoxes.length; i++){ 
-                $section_id = $(''+$checkedBoxes[i]).attr('data-section-id');
-                console.log("Section: " + $section_id);
-                $radio = $(''+$checkedBoxes[i]);
-                if($radio.hasClass('custom_amount_item')) {
+            $("input[type=radio]:checked").each(function() {
+                $section_id = $(this).attr('data-section-id');
+                
+                if($(this).hasClass('custom_amount_item')) {
                    $input = $('#custom_amount-'+$section_id);
-                   console.log("Amount: " + $input.val());
+                   
+                   alert('Amount: ' + $input.val());
+                   
                    if($input.val() == '') {
                        $(this).prop('checked', false);
                    }
                 }
-            }
+            });
+            
         });
         
         $(".custom_amount").click(function(){
@@ -328,7 +331,7 @@ $sections = $this->sections;
             calSum();
         });  
         
-        $checkedBoxes = [];
+        
         
         $(".mdl-radio__button").click(function(){
             $wasChecked = $(this).attr("data-checked");
