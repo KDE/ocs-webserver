@@ -79,6 +79,12 @@ $sections = $this->sections;
         padding-left: 15px;
     }
     
+    .disabled {
+        cursor: not-allowed;
+        background-color: #959595;
+        box-shadow: 0 2px 0 0 #404040;
+    }
+    
 </style>
 
 <main>
@@ -256,7 +262,7 @@ $sections = $this->sections;
                               <div class="col-lg-12 col-md-12">  
                                 <div class="tabs-footer">
                                     <?php if (Zend_Auth::getInstance()->hasIdentity()) {?>
-                                    <button disabled="true" type="submit" id="submit" class="dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
+                                    <button disabled="true" type="submit" id="submit" class="disabled dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
                                     <span class="donate" id="linkButton">
                                       <span class="amount">
                                         <span isolate="">Donate via PayPal</span>
@@ -362,10 +368,13 @@ $sections = $this->sections;
 
                 $sum.text($sumNum);
                 $('#submit').prop('disabled', false);
+                $('#submit').addClass('disabled');
+                
             } else {
                 $sum.text('0.00');
                 $('#desc_1').text("");
                 $('#submit').prop('disabled', true);
+                $('#submit').removeClass('disabled');
             }
             
         }
