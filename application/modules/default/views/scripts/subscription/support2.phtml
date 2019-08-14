@@ -58,7 +58,7 @@ $sections = $this->sections;
                     <div class="x-donation-widget">
                          <div class="row disply-flex">
                              
-                            <div class="col-lg-2" style="padding-left: 15px; min-width: 250px;">        
+                            <div class="col-lg-3" style="padding-left: 15px; min-width: 250px;">        
                                <div class="x-tabs-header " style="text-align: center;">
                                   <div class="header-content">                                                                                     
                                      Section
@@ -114,7 +114,7 @@ $sections = $this->sections;
                             foreach ($sections as $section) {
                         ?>
                         <div class="row disply-flex">
-                            <div class="col-lg-2" style="padding-left: 15px;">        
+                            <div class="col-lg-3" style="padding-left: 15px;min-width: 250px;">        
                                                                             
                                 <div class="text" style="padding: 16px;">
                                     <?= $section['name'] ?>
@@ -123,7 +123,7 @@ $sections = $this->sections;
                             </div>
                             <div class="col-lg-3" style="padding-left: 0;">        
                                                                             
-                                <div class="radiocontainer" style="text-align: left;min-width: 250px;">
+                                <div class="radiocontainer" style="text-align: left;">
                                     <input data-section-id="<?= $section['section_id'] ?>" class="suggested-amount mdl-radio__button" data-checked="false" <?=$this->payment_options['Option5']['checked']?> id="sam-15-<?= $section['section_id'] ?>" type="radio" value="<?=$this->payment_options['Option5']['name']?>" name="amount_predefined-<?= $section['section_id'] ?>"/>
                                     <span class="unit-wrapper">
                                       <span class="unit">$</span>
