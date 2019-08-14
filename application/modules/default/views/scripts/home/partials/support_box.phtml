@@ -38,10 +38,10 @@ if($catId && $catId > 0) {
 
 
 if(!$section) {
-    $section = array('name' => 'Test');
+    $section = array('name' => 'Test', 'section_id' => '1');
 }
 
-$this->supporters = $modelInfo->getNewActiveSupporters(9);
+$this->supporters = $modelInfo->getNewActiveSupportersForSection($section['section_id'],9);
 
 
 $helpPrintDate = new Default_View_Helper_PrintDate();
