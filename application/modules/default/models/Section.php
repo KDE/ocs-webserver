@@ -63,14 +63,15 @@ class Default_Model_Section
         return $resultSet;
     }
     
-    public function fetchSectionForCategory($category_id)
+    public function fetchFirstSectionForStoreCategories($category_array)
     {
         $sql = "
             SELECT *
             FROM section
             JOIN section_category on section_category.section_id = section.section_id
             WHERE is_active = 1
-            AND section_category.project_category_id = :category_id
+            AND section_category.project_category_id in (:category_id)
+            LIMIT 1
         ";
         $resultSet = $this->getAdapter()->fetchRow($sql, array('category_id' => $category_id))->toArray();
 
