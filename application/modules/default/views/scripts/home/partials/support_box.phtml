@@ -20,19 +20,20 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 $modelInfo = new Default_Model_Info();
-
+$modelSection = new Default_Model_Section();
 $catId = $this->cat_id;
 $section = null;
 
-/*
+
 if($catId && $catId > 0) {
-    $section = $modelSectionCat->fetchSectionForCategory($catId);
+    $section = $modelSection->fetchSectionForCategory($catId);
     
 } else {
     $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
-    $section = $modelSectionCat->fetchFirstSectionForStoreCategories($storeCatIds);
+    $section = $modelSection->fetchFirstSectionForStoreCategories($storeCatIds);
 }
-*/
+
+
 if(!$section) {
     $section = array('name' => 'Test');
 }
