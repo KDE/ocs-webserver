@@ -306,6 +306,8 @@ $sections = $this->sections;
             $wasChecked = $(this).attr("data-checked");
             $section_id = $(this).attr('data-section-id');
             
+            console.log($checkedBoxes);
+            
             if($checkedBoxes.includes($(this).attr('id'))) {
                 //Is checked, so remove marker and elem in array
                 for( var i = 0; i < $checkedBoxes.length; i++){ 
