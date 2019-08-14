@@ -26,17 +26,6 @@ $section = null;
 
 if($catId && $catId > 0) {
     $section = $modelSection->fetchSectionForCategory($catId);
-}
-
-/*
-if($catId && $catId > 0) {
-    try {
-        $section = $modelSection->fetchSectionForCategory($catId);
-    } catch (Exception $exc) {
-        $section = null;
-    }
-
-
 } else {
     $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
     try {
@@ -45,7 +34,8 @@ if($catId && $catId > 0) {
         $section = null;
     }
 }
-*/
+
+
 
 if(!$section) {
     $section = array('name' => 'Test');
