@@ -24,6 +24,10 @@ $modelSection = new Default_Model_Section();
 $catId = $this->cat_id;
 $section = null;
 
+if($catId && $catId > 0) {
+    $section = $modelSection->fetchSectionForCategory($catId);
+}
+
 /*
 if($catId && $catId > 0) {
     try {
