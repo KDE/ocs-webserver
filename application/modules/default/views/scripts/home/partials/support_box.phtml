@@ -24,13 +24,15 @@ $modelSection = new Default_Model_Section();
 $catId = $this->cat_id;
 $section = null;
 
-/*
+
 if($catId && $catId > 0) {
     try {
         $section = $modelSection->fetchSectionForCategory($catId);
     } catch (Exception $exc) {
         $section = null;
     }
+}
+/*
 } else {
     $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
     try {
@@ -74,10 +76,10 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                 <span>  
                     <ul>
                         <li><input type="radio" name="support_amount" value="0.99"> $0.99</li>
-                        <li><input type="radio" name="support_amount" value="2"> $2/li>
-                        <li><input type="radio" name="support_amount" value="5"> $5/li>
-                        <li><input type="radio" name="support_amount" value="10"> $10/li>
-                        <li><input type="radio" name="support_amount" value="free">$<input type="text" name="support_amount"> Free Amount/li>
+                        <li><input type="radio" name="support_amount" value="2"> $2</li>
+                        <li><input type="radio" name="support_amount" value="5"> $5</li>
+                        <li><input type="radio" name="support_amount" value="10"> $10</li>
+                        <li><input type="radio" name="support_amount" value="free">$<input type="text" name="support_amount"> Free Amount</li>
                     </ul>
                 </span>
             </div>   
