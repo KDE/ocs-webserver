@@ -284,6 +284,8 @@ $sections = $this->sections;
 
 <script>
     $(document).ready(function(){
+        
+        
         $(".custom_amount").click(function(){
             $section_id = $(this).attr('data-section-id');
             //alert('Section: ' + $section_id);
@@ -326,11 +328,25 @@ $sections = $this->sections;
             
         });  
         
-        
+        $checkedBoxes = [];
         
         $(".mdl-radio__button").click(function(){
             $wasChecked = $(this).attr("data-checked");
             $section_id = $(this).attr('data-section-id');
+            
+            if($checkedBoxes.includes($(this).attr('id'))) {
+                //Is checked, so remove marker and elem in array
+                for( var i = 0; i < $checkedBoxes.length; i++){ 
+                    if ( $checkedBoxes[i] === $(this).attr('id')) {
+                      $checkedBoxes.splice(i, 1); 
+                    }
+                }
+                $(this).removeAttr('checked');
+                return;
+            } else {
+                $checkedBoxes.push($(this).attr('id'));
+                $(this).prop("checked", true);
+            }
             
             $obj = null;
             $sum = $("#sum");
