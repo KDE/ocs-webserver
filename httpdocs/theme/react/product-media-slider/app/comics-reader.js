@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {generatePagesArray} from './product-media-slider-helpers';
 
 function ComicsReaderWrapper(props){
 
@@ -20,12 +21,6 @@ function ComicsReaderWrapper(props){
     ]
 
     const [ pages, setPages ] = useState(initPages);
-    const [ currentPage, setCurrentPage ] = useState(0);
-    const [ displayType, setDisplayType ] = useState("single")
-
-    React.useEffect(() => {
-        // if (props.currentSlide === props.slideIndex) fetchArchive();
-    },[props.currentSlide]);
 
     /* INIT */
 
@@ -105,67 +100,87 @@ function ComicsReaderWrapper(props){
 
 function ComicBookReader(props){
 
+  const [ loading, setLoading ] = useState(false);
+  const [ displayType, setDisplayType ] = useState("double")
+  const [ pages, setPages ] = useState(generatePagesArray(props.pages,displayType))
+  console.log(pages);
+  const [ currentPage, setCurrentPage ] = useState(1)
+  const [ totalPages, setTotalPages ] = useState(pages.length)
+
   React.useEffect(() => (
-    $(function() {
-
-      var config = {
-        $bookBlock : $( '#bb-bookblock-'+props.currentSlide ),
-        $navNext : $( '#bb-nav-next' ),
-        $navPrev : $( '#bb-nav-prev' ),
-        $navFirst : $( '#bb-nav-first' ),
-        $navLast : $( '#bb-nav-last' )
-      }
-
-      config.$bookBlock.bookblock( {
-        speed : 800,
-        shadowSides : 0.8,
-        shadowFlip : 0.7
-      } );
-
-						
-      var $slides = config.$bookBlock.children();
-
-      // add navigation events
-      config.$navNext.on( 'click touchstart', function() {
-        config.$bookBlock.bookblock( 'next' );
-        return false;
-      } );
-
-      config.$navPrev.on( 'click touchstart', function() {
-        config.$bookBlock.bookblock( 'prev' );
-        return false;
-      } );
-
-      config.$navFirst.on( 'click touchstart', function() {
-        config.$bookBlock.bookblock( 'first' );
-        return false;
-      } );
-
-      config.$navLast.on( 'click touchstart', function() {
-        config.$bookBlock.bookblock( 'last' );
-        return false;
-      } );
-      
-
-    })
+    initComicReader()
   ),[])
 
-  const comicPages = props.pages.map((p,index) => (
-    <div className="bb-item">
-      <img key={index} src={p}/>
-    </div>
-  ));
+  function initComicReader(){
+    $(function() {
+      $( '#bb-bookblock-'+props.currentSlide ).bookblock( {
+        speed : 800,
+        shadowSides : 0.8,
+        shadowFlip : 0.7,
+        onBeforeFlip: function( page ) { onBeforeFlip(page) },
+        onEndFlip	: function( page, isLimit ) {  readerOnEndFlip(page,isLimit) },
+      } );
+    })
+  }
+
+  function onComicReaderNavClick(val){
+    $( '#bb-bookblock-'+props.currentSlide).bookblock(val);
+  }
+
+  function onBeforeFlip(page){
+    return false;
+  }
+
+  function readerOnEndFlip(page,isLimit){
+    setCurrentPage(isLimit + 1);
+    return false;
+  }
+  
+  function onComicReaderDisplayTypeChange(value){
+    setLoading(true);
+    const newDisplayType = value;
+    setDisplayType(newDisplayType);
+    const newPages = generatePagesArray(props.pages,newDisplayType);
+    setPages(newPages);
+    const newCurrentPage = newPages * ( totalPages / currentPage );
+    setCurrentPage(newCurrentPage);
+    const newTotalPages = newPages.length;
+    setTotalPages(newTotalPages);
+    setLoading(false);
+  }
+
+  let comicPages;
+  if (loading) comicPages = "loading...";
+  else {
+    if (displayType === "single"){
+      comicPages = pages.map((p,index) => (
+        <div key={index} className="bb-item">
+          <img src={p}/>
+        </div>
+      ));
+    } else if (displayType === "double"){
+      comicPages = pages.map((p,index) => (
+        <div key={index} className="bb-item">
+          <img src={p[0]}/>
+          <img src={p[1]}/>
+        </div>      
+      ))
+    }
+  }
 
   return (
     <div className="comic-book-reader">
-      <div id={"bb-bookblock-" + props.currentSlide} className="bb-bookblock">
+      <div id={"bb-bookblock-" + props.currentSlide} className={"bb-bookblock " + props.displayType}>
         {comicPages}
       </div>
       <nav>
-        <a id="bb-nav-first" href="#" class="bb-custom-icon bb-custom-icon-first"><span className="glyphicon glyphicon-step-backward"></span></a>
-        <a id="bb-nav-prev" href="#" class="bb-custom-icon bb-custom-icon-arrow-left"><span className="glyphicon glyphicon-triangle-left"></span></a>
-        <a id="bb-nav-next" href="#" class="bb-custom-icon bb-custom-icon-arrow-right"><span className="glyphicon glyphicon-triangle-right"></span></a>
-        <a id="bb-nav-last" href="#" class="bb-custom-icon bb-custom-icon-last"><span className="glyphicon glyphicon-step-forward"></span></a>
+        <a id="bb-nav-counter" href="#">{currentPage + "/" + totalPages}</a>
+        <a id="bb-nav-first" href="#" onClick={() => onComicReaderNavClick('first')} className="bb-custom-icon bb-custom-icon-first"><span className="glyphicon glyphicon-step-backward"></span></a>
+        <a id="bb-nav-prev" href="#" onClick={() => onComicReaderNavClick('prev')} className="bb-custom-icon bb-custom-icon-arrow-left"><span className="glyphicon glyphicon-triangle-left"></span></a>
+        <a id="bb-nav-next" href="#" onClick={() => onComicReaderNavClick('next')} className="bb-custom-icon bb-custom-icon-arrow-right"><span className="glyphicon glyphicon-triangle-right"></span></a>
+        <a id="bb-nav-last" href="#" onClick={() => onComicReaderNavClick('last')} className="bb-custom-icon bb-custom-icon-last"><span className="glyphicon glyphicon-step-forward"></span></a>
+        <a id="bb-nav-counter" onClick={() => onComicReaderDisplayTypeChange('single')} href="#">single</a>
+        <a id="bb-nav-counter" onClick={() => onComicReaderDisplayTypeChange('double')} href="#">double</a>
       </nav>
     </div>
   )
