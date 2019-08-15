@@ -25,8 +25,6 @@ $userRoleName = $helperUserRole->userRole();
 $isAdmin = false;
 if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
     $isAdmin = true;
-    return;
-}
 
 
 $modelInfo = new Default_Model_Info();
@@ -54,8 +52,8 @@ if($catId && $catId > 0) {
 if(!$section) {
     $section = array('name' => 'Test', 'section_id' => '1');
 }
-$isSupporter = false;
-if($identity) { 
+$identity = Zend_Auth::getInstance()->getStorage()->read();
+if($identity) {
     $isSupporter = $modelSection->isMemberSectionSupporter($section['section_id'], $identity->member_id);
 }
 
@@ -129,3 +127,6 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
             
         </div>
 
+<?php
+
+}
