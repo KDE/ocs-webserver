@@ -78,7 +78,7 @@ class Default_Model_DbTable_SectionSupport extends Zend_Db_Table_Abstract
     
     public function fetchLatestSectionSupportForMember($section_id, $member_id) {
         $sql = "
-            SELECT *
+            SELECT section_support.section_support_id, section_support.support_id, section_support.section_id, section_support.amount, section_support.tier, section_support.period_frequency
             FROM section_support 
             JOIN section ON section.section_id = section_support.section_id
             JOIN support ON support.id = section_support.support_id AND support.status_id = 2
