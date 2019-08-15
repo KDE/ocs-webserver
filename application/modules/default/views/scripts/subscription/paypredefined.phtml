@@ -46,7 +46,7 @@ if ($this->error) {
             <input type="hidden" name="custom" value="<?= $this->transaction_id ?>">
             
             <?php 
-                $amount = $this->amount;
+                $amount = $this->amountPay;
             ?>
             
             <input type="hidden" name="a3" value="<?= $amount ?>">
@@ -64,6 +64,20 @@ if ($this->error) {
             <?php
                 }
             ?>
+            
+            <p>
+                <?php 
+                    if($this->paymentFrequenz == 'M') {
+                ?>
+                        <span class="extrasmall"><?=$this->calcDonationText($this->amount)?></span>
+                <?php 
+                    } else if($this->paymentFrequenz == 'Y') {
+                ?>
+                        <span class="extrasmall"><?=$this->calcDonationYearlyText($this->amount)?></span>
+                <?php 
+                    }
+                ?>
+            </p>
             
             <input type="hidden" name="option_index" value="0">
             <input type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">

@@ -489,6 +489,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         }else{
             $v = $calModel->calcDonation($amount);    
         } 
+        $this->view->amountPay = $v;
+        
         $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id
             ,$this->_authMember->member_id
             ,$v
