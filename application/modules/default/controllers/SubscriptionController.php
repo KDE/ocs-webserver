@@ -432,7 +432,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         
         $amount = 0;
         
-        /*
+        
         
         //get parameter
         $paymentFrequenz = $this->getParam('paymentFrequenz', 'Y');
@@ -489,12 +489,6 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         }else{
             $v = $calModel->calcDonation($amount);    
         } 
-         * 
-         */
-        
-        
-        
-        /*
         $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id
             ,$this->_authMember->member_id
             ,$v
@@ -512,8 +506,6 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
             , $paymentFrequenz
             , 1
         );
-         * 
-         */
     }
 
     /**
