@@ -139,8 +139,10 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         
         $amount_predefined = (float)$this->getParam('amount_predefined', null);
         $section_predefined = (float)$this->getParam('section_predefined', null);
+        $support_amount = (float)$this->getParam('support_amount', null);
         
         $this->view->amount_predefined = $amount_predefined;
+        $this->view->support_amount = $support_amount;
         $this->view->section_predefined = $section_predefined;
     }
     

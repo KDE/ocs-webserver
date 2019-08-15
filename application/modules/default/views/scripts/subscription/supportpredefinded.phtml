@@ -34,7 +34,15 @@ if(isset($_GET['url'])) {
 
 $url_login = "/login/redirect/".$filter->filter($thisurl);
 
-$sections = $this->sections;
+$sumPayment = 0;
+
+if($this->amount_predefined == "free") {
+    $sumPayment = $this->support_amount;
+} else {
+    $sumPayment = $this->amount_predefined;
+}
+
+
 
 ?>
 <link href="/theme/flatui/css/support.css" rel="stylesheet">
@@ -113,14 +121,25 @@ $sections = $this->sections;
                             <div class="col-lg-12 col-md-12" style="border-top: dotted thin #E7E7E7 !important;padding-top: 35px;">  
                                 
                                 <div class="tabs-footer">
-                                    You support SECTION_NAME with $<span id="sum">0.00</span>/Month
+                                    <input type="hidden" name="amount_predefined-<?= $this->section_predefined ?>" value="">
+                                    <?php 
+                                        if($this->amount_predefined == "free") {
+                                            echo "<input type='hidden' name='amount_handish-<?= $this->section_predefined ?>' value='<?= $this->support_amount ?>'>";
+                                            echo "<input type='hidden' name='amount_predefined-". $this->section_predefined ."' value='Option7'>";
+                                        } else {
+                                            echo "<input type='hidden' name='amount_predefined-". $this->section_predefined ."' value='Option5'>";
+                                        }
+                                    ?>
+                                    <input type="hidden" name="" value="">
+                                    
+                                    You support SECTION_NAME with $<span id="sum"><?= $sumPayment ?></span>/Month
                                     - Pay 
                                     <select name="paymentFrequenz">
                                         <option value="Y">Yearly</option>
                                         <option value="M">Monthly</option>
                                     </select>
                                     <div>
-                                        <span style="font-size: x-small;" id="desc_1">(xxx)</span>
+                                        <span class="extrasmall"><?=$this->calcDonationTextBoth($sumPayment)?></span>
                                     </div>
 
                                     
