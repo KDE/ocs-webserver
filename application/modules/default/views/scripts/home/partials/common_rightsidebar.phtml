@@ -96,6 +96,17 @@ $git_url = Zend_Registry::get('config')->settings->server->opencode->host;
              </span>
         </div>
 
+        <div class="supportDiv" >
+        <?php 
+                $identity = Zend_Auth::getInstance()->getIdentity();
+                if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
+        ?>
+            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter</a>
+        <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
+            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Thank you for your support!</a>
+        <?php   }?>
+        </div>
+
         <?php echo $this->render('/home/partials/support_box.phtml'); ?>
 
         <div  class="row sidebar-right-info" >       
