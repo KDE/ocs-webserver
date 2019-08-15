@@ -31,11 +31,11 @@ if($this->dataCategory['project_category_id'])
   $catTitle = $this->dataCategory['title'];
 }
 if($this->filters['order'] == 'latest'){
-  $og_title = 'Browse '.$catTitle.' Latest | '.$site_name;
+  $og_title = 'Browse '.$catTitle.' Latest | '.$og_server;
 }else if($this->filters['order'] == 'top'){
-  $og_title = 'Browse '.$catTitle.' Top | '.$site_name;
+  $og_title = 'Browse '.$catTitle.' Top | '.$og_server;
 }else{
-  $og_title='Browse '.$catTitle.' | '.$site_name;
+  $og_title='Browse '.$catTitle.' | '.$og_server;
 }
 $og_description = $og_title .' | A community for free and open source software and libre content';
 $this->templateConfigData = Zend_Registry::get('store_template');
@@ -46,7 +46,7 @@ $this->headMeta()->appendProperty('og:url', $og_server);
 $this->headMeta()->appendProperty('og:title', $og_title);
 $this->headMeta()->appendProperty('og:description',$og_description);
 $this->headMeta()->appendProperty('og:image',$og_image);
-$this->headMeta()->appendProperty('og:site_name',$site_name);
+$this->headMeta()->appendProperty('og:site_name',$og_server);
 
 
 $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
