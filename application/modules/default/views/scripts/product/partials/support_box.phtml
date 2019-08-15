@@ -61,14 +61,15 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 ?>
 
 
-
-        <div  class="supportDiv  withborder" >
+<div class="prod-widget-box prod-user right ">
+    <div class="sidebar-content">
+        <div class="product-maker-sidebar">
             <h4>Support-Box</h4>
             
             <?php
                 if($isSupporter) {
             ?>
-                <span style="padding-bottom: 10px;font-size: small;">Thank you very much for supporting <?= $section['name'] ?> with xxx per month.</span>
+                <span style="padding-bottom: 10px;font-size: small;">Thank you very much for supporting <?= $section['name'] ?> with <?= $support['tier'] ?> per month.</span>
                 <!--
                 <div class="supportDiv" style="padding-top: 15px;">
                     <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Thank you for your support!</a>
@@ -117,4 +118,6 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 
             
         </div>
+    </div>
+</div>
 
