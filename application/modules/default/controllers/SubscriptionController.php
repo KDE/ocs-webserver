@@ -437,8 +437,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         //get parameter
         $paymentFrequenz = $this->getParam('paymentFrequenz', 'Y');
         $section_id = $this->getParam('section_id', null);
-        $amount_predefined = (float)$this->getParam('amount_predefined-'.$section['section_id'], null);
-        $amount_handish  = (float)$this->getParam('amount_handish-'.$section['section_id'], null);
+        $amount_predefined = (float)$this->getParam('amount_predefined', null);
+        $amount_handish  = (float)$this->getParam('amount_handish', null);
 
         
         $this->_helper->layout()->disableLayout();
