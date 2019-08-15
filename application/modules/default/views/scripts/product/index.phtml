@@ -877,7 +877,17 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                 </div>
                         </div>
 
-                        <?php echo $this->render('partials/support_box.phtml'); ?>
+                        <?php
+                            echo $this->partial(
+                                '/product/partials/support_box.phtml',
+                                array(
+                                    "authMember"  => $identity,
+                                    "project_id" => $this->product->project_id,
+                                    "ppload_collection_id" => $this->product->ppload_collection_id,
+                                    "project_category_id" => $this->product->project_category_id
+                                )
+                            );
+                        ?>
 
                         <?php /* echo $this->render('partials/sidebarRating.phtml');  */ ?>
                           <?php /*

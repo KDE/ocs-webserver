@@ -20,20 +20,17 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$helperUserRole = new Backend_View_Helper_UserRole();
-$userRoleName = $helperUserRole->userRole();
+$authMember = $this->authMember;
 $isAdmin = false;
-if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
-    $isAdmin = true;
    
 
-/*
+
 $modelInfo = new Default_Model_Info();
 $modelSection = new Default_Model_Section();
 $modelSectionSupport = new Default_Model_DbTable_SectionSupport();
 
 
-$catId = null;
+$catId = $this->project_category_id;
 $section = null;
 
 if($catId && $catId > 0) {
@@ -56,7 +53,7 @@ if($isSupporter) {
     $support = $modelSectionSupport->fetchLatestSectionSupportForMember($section['section_id'], $identity->member_id);
 }
 
-$this->supporters = $modelInfo->getNewActiveSupportersForSection($section['section_id'],9);
+$supporters = $modelInfo->getNewActiveSupportersForSection($section['section_id'],9);
 
 
 $helpPrintDate = new Default_View_Helper_PrintDate();
@@ -85,7 +82,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
             <div class="row" style="margin-top: 10px;margin-bottom: 20px;">
             <?php 
                     $i=0;
-                   foreach ($this->supporters as $user) {                                                      
+                   foreach ($supporters as $user) {                                                      
                     if($i++>6) break;
                ?>         
                <a href="<?php echo $this->buildMemberUrl($user['username']); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>">                   
@@ -121,6 +118,3 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
             
         </div>
 
-<?php
-*/
-}
