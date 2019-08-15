@@ -122,15 +122,15 @@ if($this->amount_predefined == "free") {
                                 
                                 <div class="tabs-footer">
                                     <?php 
+                                        echo "<input type='hidden' name='section_id' value='".$this->section_id."'>";
                                         if($this->amount_predefined == "free") {
-                                            echo "<input type='hidden' name='amount_handish-". $this->section_id ."' value='". $this->support_amount ."'>";
-                                            echo "<input type='hidden' name='amount_predefined-". $this->section_id ."' value='Option7'>";
+                                            echo "<input type='hidden' name='amount_handish' value='". $this->support_amount ."'>";
                                         } else {
-                                            echo "<input type='hidden' name='amount_predefined-". $this->section_id ."' value='Option5'>";
+                                            echo "<input type='hidden' name='amount_predefined' value='".$this->amount_predefined."'>";
                                         }
                                     ?>
                                     
-                                    You support SECTION_NAME (<?= $this->section_id ?>) with $<span id="sum"><?= $sumPayment ?></span>/Month
+                                    You support <?= $this->section ?> (<?= $this->section_id ?>) with $<span id="sum"><?= $sumPayment ?></span>/Month
                                     - Pay 
                                     <select name="paymentFrequenz">
                                         <option value="Y">Yearly</option>

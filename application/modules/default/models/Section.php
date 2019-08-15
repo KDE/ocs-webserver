@@ -175,6 +175,18 @@ class Default_Model_Section
         return $resultSet;
     }
     
+    public function fetchSection($section_id)
+    {
+        $sql = "
+            SELECT *
+            FROM section
+            WHERE is_active = 1
+        ";
+        $resultSet = $this->getAdapter()->fetchRow($sql, array('section_id' => $section_id));
+
+        return $resultSet;
+    }
+    
     /**
      * @param int $yearmonth
      * @param int $section_id

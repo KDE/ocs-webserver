@@ -102,7 +102,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                             <li><input type="radio" name="amount_predefined" id="amount-2" value="2"> $2</li>
                             <li><input type="radio" name="amount_predefined" id="amount-3" value="5"> $5</li>
                             <li><input type="radio" name="amount_predefined" id="amount-4" value="10"> $10</li>
-                            <li><input type="radio" name="amount_predefined" id="amount-5" value="free">$<input type="text" class="custom_amount" name="support_amount"><div style="font-size: x-small;padding-left: 21px;">Enter a free Amount</div></li>
+                            <li><input type="radio" name="amount_predefined" id="amount-5" value="free">$<input type="text" min="10.01" step="any" inputmode="numeric" type="number" class="custom_amount" name="support_amount"><div style="font-size: x-small;padding-left: 21px;">Enter a free Amount</div></li>
                         </ul>
                     </span>
                 </div>   
