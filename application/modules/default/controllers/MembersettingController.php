@@ -220,26 +220,26 @@ class MembersettingController extends Zend_Controller_Action
         $this->_sendResponse($results, $this->_format);
     }
 
-		public function searchmemberAction()
+    public function searchmemberAction()
     {
         $this->_initResponseHeader();
         $username = $this->getParam('username');
         $results = null;
-        if(strlen(trim($username))>2)
-        {
-						$username = str_replace("_","\_",$username);
+        if (strlen(trim($username)) > 2) {
+            $username = str_replace("_", "\_", $username);
             $model = new Default_Model_Member();
             $results = $model->findActiveMemberByName($username);
             $helperImage = new Default_View_Helper_Image();
             foreach ($results as &$value) {
-                $avatar = $helperImage->image($value['profile_image_url'],array('width' => 100, 'height' => 100, 'crop' => 2));
+                $avatar = $helperImage->image($value['profile_image_url'],
+                    array('width' => 100, 'height' => 100, 'crop' => 2));
                 $value['profile_image_url'] = $avatar;
             }
         }
-				$this->_sendResponse($results, $this->_format);
+        $this->_sendResponse($results, $this->_format);
     }
 
-		public function userinfoAction()
+    public function userinfoAction()
 		{
 			$this->_initResponseHeader();
 			$member_id = $this->getParam('member_id');

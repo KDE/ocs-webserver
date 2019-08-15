@@ -858,15 +858,15 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     }
 
     /**
-     * @param string $value
-     *
+     * @param string $username
      * @return mixed
      */
     public function findActiveMemberByName($username)
     {
         $sql = '
-          select m.member_id,m.username,profile_image_url from member m where m.is_active=1 and m.is_deleted = 0 
-          and m.username like "' . $username . '%"
+          select m.member_id,m.username,profile_image_url 
+          from member m 
+          where m.is_active=1 and m.is_deleted = 0 and m.username like "' . $username . '%"
           limit 20
       ';
         $result = $this->getAdapter()->fetchAll($sql);
@@ -875,27 +875,31 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     }
 
     /**
-     * @param string $value
+     * @param string $hash
+     * @param bool   $only_active
      *
-     * @return mixed
+     * @return array | false
      */
-    public function findMemberForMailHash($value)
+    public function findMemberForMailHash($hash, $only_active = true)
     {
         $sql = "
-            SELECT `m`.* FROM `member_email` `me`
-            JOIN `member` `m` ON `m`.`member_id` = `me`.`email_member_id`
-            WHERE `m`.`is_active` = 1
-            AND `m`.`is_deleted` = 0
-            AND `me`.`email_hash` = :email_hash
+            SELECT `m`.* 
+            FROM `member_email` AS `me`
+            JOIN `member` AS `m` ON `m`.`member_id` = `me`.`email_member_id`
+            WHERE `me`.`email_hash` = :email_hash
         ";
 
-        $result = $this->getAdapter()->fetchAll($sql, array('email_hash' => $value));
-
-        if ($result && count($result) > 0) {
-            $member = $result[0];
-
-            return $member;
+        if ($only_active) {
+            $sql .= " `m`.`is_active` = 1 AND `m`.`is_deleted` = 0";
         }
+
+        $member = $this->getAdapter()->fetchRow($sql, array('email_hash' => $hash));
+
+        if (empty($member)) {
+            return false;
+        }
+
+        return $member;
     }
 
     /**
@@ -929,6 +933,11 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         return $result;
     }
 
+    /**
+     * @param $username
+     * @return int|null
+     * @throws Zend_Db_Statement_Exception
+     */
     public function fetchActiveUserByUsername($username)
     {
         $sql = 'SELECT DISTINCT `member`.`member_id`
@@ -940,7 +949,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $result = $this->getAdapter()->query($sql, array('username' => strtolower($username)))->fetchAll();
 
         if ($result && count($result) > 0) {
-            $member_id = $result[0]['member_id'];
+            $member_id = (int)$result[0]['member_id'];
 
             return $member_id;
         }
@@ -1176,12 +1185,12 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     /**
      * @param string $value
      * @param int    $test_case_sensitive
-     *
      * @param array  $omitMember
+     * @param bool   $onlyActive
      *
-     * @return array
+     * @return array return an array of rows
      */
-    public function findUsername($value, $test_case_sensitive = self::CASE_INSENSITIVE, $omitMember = array())
+    public function findUsername($value, $test_case_sensitive = self::CASE_INSENSITIVE, $omitMember = array(), $onlyActive = false)
     {
         $sql = "
             SELECT *
@@ -1195,6 +1204,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
         if (count($omitMember) > 0) {
             $sql .= " AND member.member_id NOT IN (" . implode(',', $omitMember) . ")";
+        }
+
+        if ($onlyActive) {
+            $sql .= " AND member.is_active = 1 and member.is_deleted = 0";
         }
 
         return $this->_db->fetchAll($sql, array('username' => $value));
