@@ -21,6 +21,9 @@
  **/
 $modelInfo = new Default_Model_Info();
 $modelSection = new Default_Model_Section();
+$modelSectionSupport = new Default_Model_DbTable_SectionSupport();
+
+
 $catId = $this->cat_id;
 $section = null;
 
@@ -41,6 +44,13 @@ if($catId && $catId > 0) {
 if(!$section) {
     $section = array('name' => 'Test', 'section_id' => '1');
 }
+$identity = Zend_Auth::getInstance()->getStorage()->read();
+$isSupporter = $modelSection->isMemberSectionSupporter($section['section_id'], $identity->member_id);
+
+$supportData = array();
+if($isSupporter) {
+    $support = $modelSectionSupport->fetchLatestSectionSupportForMember($section['section_id'], $identity->member_id);
+}
 
 $this->supporters = $modelInfo->getNewActiveSupportersForSection($section['section_id'],9);
 
@@ -53,7 +63,19 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 
         <div  class="supportDiv  withborder" >
             <h4>Support-Box</h4>
-            <span style="padding-bottom: 10px;font-size: small;">The category is part of <?= $section['name'] ?> (<?= $storeCatIds ?>) and supported by the following people:</span>        
+            
+            <?php
+                if($isSupporter) {
+            ?>
+                <span style="padding-bottom: 10px;font-size: small;">Thank you very much for supporting <?= $section['name'] ?> with <?= $support['tier'] ?> per month.</span>
+                <div class="supportDiv" >
+                    <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Thank you for your support!</a>
+                </div>
+            <?php
+                } else {
+            ?>
+            
+            <span style="padding-bottom: 10px;font-size: small;">The category is part of <?= $section['name'] ?> and supported by the following people:</span>        
             <div class="row" style="margin-top: 10px;margin-bottom: 20px;">
             <?php 
                     $i=0;
@@ -66,7 +88,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                <?php } ?>
             </div>
             
-            <div>
+            <div style="">
                 <span style="text-align: left;font-size: small">Support all products via a monthly donation of</span>
                 <span style="text-align: left;">  
                     <ul style="list-style: none;">
@@ -86,15 +108,13 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
         </div>
         -->
         <div class="supportDiv" >
-        <?php 
-                $identity = Zend_Auth::getInstance()->getIdentity();
-                if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
-        ?>
             <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support</a>
-        <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
-            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Thank you for your support!</a>
-        <?php   }?>
         </div>
+        
+        
+        <?php
+            }
+        ?>
 
 
             

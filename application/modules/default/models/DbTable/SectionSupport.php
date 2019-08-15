@@ -75,6 +75,23 @@ class Default_Model_DbTable_SectionSupport extends Zend_Db_Table_Abstract
         return count($q->query()->fetchAll());
     }
     
+    
+    public function fetchLatestSectionSupportForMember($section_id, $member_id) {
+        $sql = "
+            SELECT *
+            FROM section_support 
+            JOIN section ON section.section_id = section_support.section_id
+            JOIN support ON support.id = section_support.support_id AND support.status_id = 2
+            WHERE section_support.is_active = 1
+            AND section.section_id = :section_id
+            AND support.member_id = :member_id
+            ORDER BY section_support.created_at desc 
+            LIMIT 1
+        ";
+        $resultSet = $this->getAdapter()->fetchRow($sql, array('section_id' => $section_id, 'member_id' => $member_id));
+        
+        return $resultSet;
+    }
 }
 
 
