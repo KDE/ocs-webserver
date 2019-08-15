@@ -34,19 +34,11 @@ $modelSection = new Default_Model_Section();
 $modelSectionSupport = new Default_Model_DbTable_SectionSupport();
 
 
-$catId = $this->cat_id;
+$catId = $this->$this->product->project_category_id;
 $section = null;
 
 if($catId && $catId > 0) {
     $section = $modelSection->fetchSectionForCategory($catId);
-} else {
-    $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
-    $storeCatIds = implode( ", ", $storeCatIds );
-    try {
-        $section = $modelSection->fetchFirstSectionForStoreCategories($storeCatIds);
-    } catch (Exception $exc) {
-        $section = null;
-    }
 }
 
 
@@ -54,6 +46,7 @@ if($catId && $catId > 0) {
 if(!$section) {
     $section = array('name' => 'Test', 'section_id' => '1');
 }
+$identity = Zend_Auth::getInstance()->getStorage()->read();
 $isSupporter = false;
 if($identity) { 
     $isSupporter = $modelSection->isMemberSectionSupporter($section['section_id'], $identity->member_id);
