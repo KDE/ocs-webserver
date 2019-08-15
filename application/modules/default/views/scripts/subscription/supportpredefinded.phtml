@@ -121,17 +121,16 @@ if($this->amount_predefined == "free") {
                             <div class="col-lg-12 col-md-12" style="border-top: dotted thin #E7E7E7 !important;padding-top: 35px;">  
                                 
                                 <div class="tabs-footer">
-                                    <input type="hidden" name="amount_predefined-<?= $this->section_predefined ?>" value="">
                                     <?php 
                                         if($this->amount_predefined == "free") {
-                                            echo "<input type='hidden' name='amount_handish-<?= $this->section_predefined ?>' value='<?= $this->support_amount ?>'>";
-                                            echo "<input type='hidden' name='amount_predefined-". $this->section_predefined ."' value='Option7'>";
+                                            echo "<input type='hidden' name='amount_handish-". $this->section_id ."' value='". $this->support_amount ."'>";
+                                            echo "<input type='hidden' name='amount_predefined-". $this->section_id ."' value='Option7'>";
                                         } else {
-                                            echo "<input type='hidden' name='amount_predefined-". $this->section_predefined ."' value='Option5'>";
+                                            echo "<input type='hidden' name='amount_predefined-". $this->section_id ."' value='Option5'>";
                                         }
                                     ?>
                                     
-                                    You support SECTION_NAME with $<span id="sum"><?= $sumPayment ?></span>/Month
+                                    You support SECTION_NAME (<?= $this->section_id ?>) with $<span id="sum"><?= $sumPayment ?></span>/Month
                                     - Pay 
                                     <select name="paymentFrequenz">
                                         <option value="Y">Yearly</option>

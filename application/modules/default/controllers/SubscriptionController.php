@@ -138,12 +138,12 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $this->view->urlPay =  '/support/pay2';
         
         $amount_predefined = (float)$this->getParam('amount_predefined', null);
-        $section_predefined = (float)$this->getParam('section_predefined', null);
+        $section_id = (float)$this->getParam('section_id', null);
         $support_amount = (float)$this->getParam('support_amount', null);
         
         $this->view->amount_predefined = $amount_predefined;
         $this->view->support_amount = $support_amount;
-        $this->view->section_predefined = $section_predefined;
+        $this->view->section_id = $section_id;
     }
     
     public function support2Action()
