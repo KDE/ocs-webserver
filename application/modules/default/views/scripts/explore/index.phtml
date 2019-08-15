@@ -23,6 +23,7 @@ $modelCategory = new Default_Model_DbTable_ProjectCategory();
 $this->dataCategory = $modelCategory->findSingleRow($this->cat_id);
 $store_config = Zend_Registry::get('store_config');
 $host = $store_config->host;
+$site_name = $store_config->name;
 $og_server = $this->serverUrl(true);
 $catTitle = '';
 if($this->dataCategory['project_category_id'])
@@ -30,22 +31,22 @@ if($this->dataCategory['project_category_id'])
   $catTitle = $this->dataCategory['title'];
 }
 if($this->filters['order'] == 'latest'){
-  $og_title = 'Browse '.$catTitle.' Latest | '.$host;
+  $og_title = 'Browse '.$catTitle.' Latest | '.$og_server;
 }else if($this->filters['order'] == 'top'){
-  $og_title = 'Browse '.$catTitle.' Top | '.$host;
+  $og_title = 'Browse '.$catTitle.' Top | '.$og_server;
 }else{
-  $og_title='Browse '.$catTitle.' | '.$host;
+  $og_title='Browse '.$catTitle.' | '.$og_server;
 }
-$og_description = $og_title .'| A community for free and open source software and libre content';
+$og_description = $og_title .' | A community for free and open source software and libre content';
 $this->templateConfigData = Zend_Registry::get('store_template');
-$og_image = 'https://' . $_SERVER['HTTP_HOST'] .$this->templateConfigData['logo'];
+$og_image = 'https://' . $_SERVER['HTTP_HOST'] .$this->templateConfigData['header-logo']['image-src'];
 $this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
 $this->headMeta()->appendProperty('og:type', 'website');
 $this->headMeta()->appendProperty('og:url', $og_server);
 $this->headMeta()->appendProperty('og:title', $og_title);
-$this->headMeta()->appendProperty('og:site_name',$host);
 $this->headMeta()->appendProperty('og:description',$og_description);
 $this->headMeta()->appendProperty('og:image',$og_image);
+$this->headMeta()->appendProperty('og:site_name',$og_server);
 
 
 $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();

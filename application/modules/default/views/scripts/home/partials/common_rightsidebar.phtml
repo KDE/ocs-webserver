@@ -75,38 +75,7 @@ $git_url = Zend_Registry::get('config')->settings->server->opencode->host;
             <a href="https://www.opendesktop.org/p/1175480/"><img src="/images/system/ocsstore-download-button.png" /></a>
         </div>
 
-        <div  class="supportDiv  withborder" >    
-        <span><b><?=$this->countSupporters?></b> people support </span>        
-        <span style="display: block">
-        those who create freedom
-         </span>
-         <div class="row">
-            <?php 
-                    $i=0;
-                   foreach ($this->supporters as $user) {                                                      
-                    if($i++>6) break;
-               ?>         
-               <a href="<?php echo $this->buildMemberUrl($user['username']); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>">                   
-                    <img height="25" width="25" src="<?php echo $this->Image($user['profile_image_url'], array('width' => '25', 'height' => '25', 'crop' => 2)); ?>" class="supporterx" />                   
-               </a>
-               <?php } ?>
-         </div>
-         <span>
-                <a href="/community#supportersPanel">see all</a>
-         </span>
-        </div>
-
-        <div class="supportDiv" >
-        <?php 
-                $identity = Zend_Auth::getInstance()->getIdentity();
-                if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
-        ?>
-            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter</a>
-        <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
-            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Thank you for your support!</a>
-        <?php   }?>
-        </div>
-
+        <?php echo $this->render('/home/partials/support_box.phtml'); ?>
 
         <div  class="row sidebar-right-info" >       
             <?php

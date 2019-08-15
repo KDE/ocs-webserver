@@ -131,6 +131,25 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         
     }
     
+    public function supportpredefindedAction() {
+        $this->view->authMember = $this->_authMember;
+        $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
+        $httpHost = $this->getRequest()->getHttpHost();
+        $this->view->urlPay =  '/support/paypredefined';
+        
+        $amount_predefined = (float)$this->getParam('amount_predefined', null);
+        $section_id = (float)$this->getParam('section_id', null);
+        $support_amount = (float)$this->getParam('support_amount', null);
+        
+        $sectionsTable = new Default_Model_Section();
+        $section = $sectionsTable->fetchSection($section_id);
+        
+        $this->view->amount_predefined = $amount_predefined;
+        $this->view->support_amount = $support_amount;
+        $this->view->section_id = $section_id;
+        $this->view->section = $section;
+    }
+    
     public function support2Action()
     {
         $this->view->authMember = $this->_authMember;
@@ -403,6 +422,92 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
                 ,$support['period_frequency']
             );
         }
+    }
+    
+    
+    public function paypredefinedAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
+        
+        $amount = 0;
+        
+        
+        
+        //get parameter
+        $paymentFrequenz = $this->getParam('paymentFrequenz', 'Y');
+        $section_id = $this->getParam('section_id', null);
+        $amount_predefined = (float)$this->getParam('amount_predefined', null);
+        $amount_handish  = (float)$this->getParam('amount_handish', null);
+
+        
+        $this->_helper->layout()->disableLayout();
+        $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
+        
+        
+        $isHandish = false;
+        
+        $amount = 0;
+        if(null != ($this->getParam('amount_predefined') && $amount_predefined > 0)) {
+            $amount = $amount_predefined;
+        } else {
+            $isHandish = true;
+            $amount = $amount_handish;
+        }
+        
+        $paymentProvider =
+            mb_strtolower(html_entity_decode(strip_tags($this->getParam('provider'), null), ENT_QUOTES, 'utf-8'),
+                'utf-8');
+        $httpHost = $this->getRequest()->getHttpHost();
+        $config = Zend_Registry::get('config');
+        
+        $form_url = $config->third_party->paypal->form->endpoint . '/cgi-bin/webscr';
+        $ipn_endpoint =  'http://'.$httpHost.'/gateway/paypal';
+        $return_url_success =  'http://'.$httpHost.'/support/paymentok';
+        $return_url_cancel =   'http://'.$httpHost.'/support/paymentcancel';
+        $merchantid = $config->third_party->paypal->merchantid;
+        
+        $this->view->form_endpoint = $form_url;
+        $this->view->form_ipn_endpoint = $ipn_endpoint;
+        $this->view->form_return_url_ok = $return_url_success;
+        $this->view->form_return_url_cancel = $return_url_cancel;
+        $this->view->form_merchant = $merchantid;
+        $this->view->member_id = $this->_authMember->member_id;
+        $this->view->transaction_id = $this->_authMember->member_id . '_' . time();
+        
+        $this->view->amount = $amount;
+        $this->view->paymentFrequenz = $paymentFrequenz;
+        
+        //Add pling
+        $modelSupport = new Default_Model_DbTable_Support();
+        //$supportId = $modelSupport->createNewSupport($this->view->transaction_id, $this->_authMember->member_id, $amount);
+        $calModel = new Default_View_Helper_CalcDonation();
+        
+        if($paymentFrequenz=='Y')
+        {
+            $v = $calModel->calcDonation($amount*12);
+        }else{
+            $v = $calModel->calcDonation($amount);    
+        } 
+        $this->view->amountPay = $v;
+        
+        $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id
+            ,$this->_authMember->member_id
+            ,$v
+            ,$amount               
+            ,$paymentFrequenz
+            ,1);
+        
+        
+        $modelSectionSupport = new Default_Model_DbTable_SectionSupport();
+        $sectionSupportId = $modelSectionSupport->createNewSectionSupport(
+            $supportId
+            , $section_id
+            , $v
+            , $amount
+            , $paymentFrequenz
+            , 1
+        );
     }
 
     /**

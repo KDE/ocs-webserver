@@ -62,6 +62,55 @@ class Default_Model_Section
 
         return $resultSet;
     }
+    
+    public function fetchFirstSectionForStoreCategories($category_array)
+    {
+        $sql = "
+            SELECT *
+            FROM section
+            JOIN section_category on section_category.section_id = section.section_id
+            WHERE is_active = 1
+            AND section_category.project_category_id in (:category_id)
+            LIMIT 1
+        ";
+        $resultSet = $this->getAdapter()->fetchRow($sql, array('category_id' => $category_array));
+
+        return $resultSet;
+    }
+    
+    public function fetchSectionForCategory($category_id)
+    {
+        $sql = "
+            SELECT *
+            FROM section
+            JOIN section_category on section_category.section_id = section.section_id
+            WHERE is_active = 1
+            AND section_category.project_category_id = :category_id
+            LIMIT 1
+        ";
+        $resultSet = $this->getAdapter()->fetchRow($sql, array('category_id' => $category_id));
+
+        return $resultSet;
+    }
+    
+    public function isMemberSectionSupporter($section_id, $member_id) {
+        $sql = "
+            SELECT *
+            FROM section_support 
+            JOIN section ON section.section_id = section_support.section_id
+            JOIN support ON support.id = section_support.support_id AND support.status_id = 2
+            WHERE section_support.is_active = 1
+            AND section.section_id = :section_id
+            AND support.member_id = :member_id
+            LIMIT 1
+        ";
+        $resultSet = $this->getAdapter()->fetchRow($sql, array('section_id' => $section_id, 'member_id' => $member_id));
+        
+        if($resultSet) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * @return Zend_Db_Adapter_Abstract
@@ -122,6 +171,18 @@ class Default_Model_Section
             $yearmonth = "DATE_FORMAT(NOW(),'%Y%m')";
         }
         $resultSet = $this->getAdapter()->fetchAll($sql, array('yearmonth' => $yearmonth));
+
+        return $resultSet;
+    }
+    
+    public function fetchSection($section_id)
+    {
+        $sql = "
+            SELECT *
+            FROM section
+            WHERE is_active = 1
+        ";
+        $resultSet = $this->getAdapter()->fetchRow($sql, array('section_id' => $section_id));
 
         return $resultSet;
     }

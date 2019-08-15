@@ -38,6 +38,11 @@ class Default_View_Helper_Image extends Zend_View_Helper_Abstract
 
     protected $_separator = '-';
 
+    /**
+     * @param       $filename
+     * @param array $options
+     * @return string|null
+     */
     public function Image($filename, $options = array())
     {
         if (false === $this->validUri($filename)) {
@@ -56,11 +61,20 @@ class Default_View_Helper_Image extends Zend_View_Helper_Abstract
         return $this->updateImageUri($uri, $options);
     }
 
+    /**
+     * @param $filename
+     * @return bool
+     */
     private function validUri($filename)
     {
         return Zend_Uri::check($filename);
     }
 
+    /**
+     * @param $filename
+     * @param $options
+     * @return string
+     */
     private function createImageUri($filename, $options)
     {
         $operations = "";
@@ -96,6 +110,11 @@ class Default_View_Helper_Image extends Zend_View_Helper_Abstract
         return $url;
     }
 
+    /**
+     * @param $filename
+     * @param $getScheme
+     * @return string|string[]|null
+     */
     private function replaceScheme($filename, $getScheme)
     {
         $result = preg_replace("|^https?|", $getScheme, $filename);
@@ -103,15 +122,24 @@ class Default_View_Helper_Image extends Zend_View_Helper_Abstract
         return $result;
     }
 
+    /**
+     * @param $filename
+     * @param $options
+     * @return string|string[]|null
+     */
     private function updateImageUri($filename, $options)
     {
         $dimension = '';
         if (isset($options['width']) && isset($options['height'])) {
             $dimension = $options['width'] . 'x' . $options['height'];
-        } else if (isset($options['width']) && (false === isset($options['height']))) {
-            $dimension = $options['width'] . 'x' . $options['width'];
-        } else if (isset($options['height']) && (false === isset($options['width']))) {
-            $dimension = $options['height'] . 'x' . $options['height'];
+        } else {
+            if (isset($options['width']) && (false === isset($options['height']))) {
+                $dimension = $options['width'] . 'x' . $options['width'];
+            } else {
+                if (isset($options['height']) && (false === isset($options['width']))) {
+                    $dimension = $options['height'] . 'x' . $options['height'];
+                }
+            }
         }
         $uri = preg_replace("/\d\d\dx\d\d\d/", $dimension, $filename);
 

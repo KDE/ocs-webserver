@@ -1,0 +1,136 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$isAdmin = $this->isAdmin;
+   
+if($isAdmin) {
+
+$modelInfo = new Default_Model_Info();
+$modelSection = new Default_Model_Section();
+$modelSectionSupport = new Default_Model_DbTable_SectionSupport();
+
+
+$catId = $this->project_category_id;
+$section = null;
+
+if($catId && $catId > 0) {
+    $section = $modelSection->fetchSectionForCategory($catId);
+}
+
+
+
+if(!$section) {
+    $section = array('name' => 'Test', 'section_id' => '1');
+}
+$identity = Zend_Auth::getInstance()->getStorage()->read();
+$isSupporter = false;
+if($identity) { 
+    $isSupporter = $modelSection->isMemberSectionSupporter($section['section_id'], $identity->member_id);
+}
+
+$supportData = array();
+if($isSupporter) {
+    $support = $modelSectionSupport->fetchLatestSectionSupportForMember($section['section_id'], $identity->member_id);
+}
+
+$supporters = $modelInfo->getNewActiveSupportersForSection($section['section_id'],9);
+
+
+$helpPrintDate = new Default_View_Helper_PrintDate();
+
+?>
+
+
+<div class="prod-widget-box prod-user right ">
+    <div class="sidebar-content" style="text-align: center;">
+        <div class="product-maker-sidebar">
+            <h4>Support-Box</h4>
+            
+            <?php
+                if($isSupporter) {
+            ?>
+                <span style="padding-bottom: 10px;font-size: small;">Thank you very much for supporting <?= $section['name'] ?> with <?= $support['tier'] ?> per month.</span>
+                <!--
+                <div class="supportDiv" style="padding-top: 15px;">
+                    <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Thank you for your support!</a>
+                </div>
+                -->
+            <?php
+                } else {
+            ?>
+            
+            <span style="padding-bottom: 10px;font-size: small;">
+                This product is part <?= $section['name'] ?>, which is supported by the following people:
+            </span>        
+            <div class="row" style="margin-top: 10px;margin-bottom: 20px;">
+            <?php 
+                    $i=0;
+                   foreach ($supporters as $user) {                                                      
+                    if($i++>6) break;
+               ?>         
+               <a href="<?php echo $this->buildMemberUrl($user['username']); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>">                   
+                    <img height="25" width="25" src="<?php echo $this->Image($user['profile_image_url'], array('width' => '25', 'height' => '25', 'crop' => 2)); ?>" class="supporterx" />                   
+               </a>
+               <?php } ?>
+            </div>
+            <form action="/support-predefined" method="POST">
+                <input type="hidden" name="section_id" value="<?= $section['section_id'] ?>">
+                <div style="">
+                    <span style="text-align: left;font-size: small">Support this and all other products via a monthly donation of</span>
+                    <span style="text-align: left;">  
+                        <ul style="list-style: none;">
+                            <li><input type="radio" name="amount_predefined" id="amount-1" value="0.99" checked="checked"> $0.99</li>
+                            <li><input type="radio" name="amount_predefined" id="amount-2" value="2"> $2</li>
+                            <li><input type="radio" name="amount_predefined" id="amount-3" value="5"> $5</li>
+                            <li><input type="radio" name="amount_predefined" id="amount-4" value="10"> $10</li>
+                            <li><input type="radio" name="amount_predefined" id="amount-5" value="free">$<input type="text" min="10.01" step="any" inputmode="numeric" type="number" class="custom_amount" name="support_amount"><div style="font-size: x-small;padding-left: 21px;">Enter a free Amount</div></li>
+                        </ul>
+                    </span>
+                </div>   
+
+                <div class="supportDiv" >
+                    <button type="submit" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support</button>
+                </div>
+            </form>
+        
+        <?php
+            }
+        ?>
+
+
+            
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        
+        $(".custom_amount").click(function(){
+            $('#amount-5').prop("checked", true);
+        });
+    });
+</script>
+
+<?php
+
+}

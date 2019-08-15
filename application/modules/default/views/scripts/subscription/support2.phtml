@@ -85,6 +85,10 @@ $sections = $this->sections;
         box-shadow: 0 2px 0 0 #404040 !important;
     }
     
+    .hiddden {
+        display: none !important;
+    }
+    
 </style>
 
 <main>
@@ -143,7 +147,7 @@ $sections = $this->sections;
                              <div class="col-lg-2 col-md-2 text-right" style="padding-right: 15px;">
                             <div class="x-tabs-header ">
                               <div class="header-content">                                                
-                                  Supporters 
+                                  <?php /*Supporters */?>
                               </div>
                             </div>                                                                                     
                             </div>
@@ -167,7 +171,6 @@ $sections = $this->sections;
                                 <div class="text" style="padding: 16px;">
                                     <?= $section['name'] ?>
                                 </div>
-                                                                        
                             </div>
                             <div class="col-lg-3" style="padding-left: 0;">        
                                                                             
@@ -177,7 +180,7 @@ $sections = $this->sections;
                                         <span class="unit-wrapper">
                                           <span class="unit">$</span>
                                         </span>
-                                        <span class="amount" style="font-size: 24px;">0.99</span> monthly                                  
+                                        <span class="amount" style="font-size: 18px;">0.99</span> monthly                                  
                                     </span>
                                 </div>
                                 
@@ -192,9 +195,11 @@ $sections = $this->sections;
                                           <span class="unit">$</span>
                                         </span>
                                         <span class="amount"><input data-section-id="<?= $section['section_id'] ?>" class="custom_amount" id="custom_amount-<?= $section['section_id'] ?>" min="1" step="any" inputmode="numeric" type="number" name="amount_handish-<?= $section['section_id'] ?>"> </span>
+                                        <!--
                                         <div>
                                             <span class="amount" ><span style="font-size: x-small;padding-left: 32px;">Enter a amount > $1 </span></span>    
                                         </div>
+                                        -->
                                     </span>
                                 </div>
                             </div>
@@ -210,7 +215,7 @@ $sections = $this->sections;
                                 <li class="amount-item">       
                                       <div class="item-text">          
                                         <span class="amount" > 
-                                            <?php echo $modelInfo->getCountSectionSupporters($section['section_id']);?></span>       
+                                            <?php /*<?php echo $modelInfo->getCountSectionSupporters($section['section_id']);?></span>  */?>     
                                       </div>    
                                 </li>
                                 </ul>
@@ -293,6 +298,18 @@ $sections = $this->sections;
         $checkedBoxes = [];
         
         calSum();
+        
+        $('.cat_drop_down').click(function(){
+            $section_id = $(this).attr('data-section-id');
+            $dropdown = $('cat_drop_down-'+$section_id);
+            
+            if($dropdown.hasClass('hidden')) {
+                $dropdown.removeClass('hidden');
+            } else {
+                $dropdown.addClass('hidden');
+            }
+            
+        });
         
         $('#submit').click(function(){
             $("input[type=radio]:checked").each(function() {

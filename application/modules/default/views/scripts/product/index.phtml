@@ -28,6 +28,13 @@ $helpTruncate = new Default_View_Helper_Truncate();
 $helpProductUrl = new Default_View_Helper_BuildProductUrl();
 $helpBBCode = new Default_View_Helper_Bbcode2html();
 
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+$isAdmin = false;
+if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+    $isAdmin = true;
+}
+
 $identity = Zend_Auth::getInstance()->getStorage()->read();
 
 $loginUrl = '/login?redirect=' . $helpEncryptUrl->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()
@@ -797,6 +804,33 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 flex-right" id="product-maker">
                 <div>
                     <div class="project-share-new col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <!-- Download/Install-->
+                        <div>
+                            <div class="prod-widget-box right">
+                                <div  class="btn-group dropleft" style="width: 100%">
+                                    <button style="width: 100%" id="project_btn_download" class="btn dropdown-toggle disabled" type="button" data-toggle="dropdown">Download
+                                    <span class="caret"></span></button>
+                                    <ul class="dropdown-menu hide" id="dropdown_downloads" style="min-width: 270px;">
+                                    </ul>
+                                </div>
+
+                                <div id="project_btn_grp_install" class="btn-group dropleft hide" style="width: 100%; padding-top: 10px;">
+                                    <button style="width: 100%" id="project_btn_install" class="btn btn-primary dropdown-toggle disabled hide" type="button" data-toggle="dropdown">Install
+                                    <span class="caret"></span></button>
+                                    <ul class="dropdown-menu hide" id="dropdown_installs" style="min-width: 270px; top:50px">
+                                    </ul>
+                                    <span style="display: absolute; bottom:0">*Needs <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a> to install things</span>
+                                </div>
+
+
+                                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                    <div id="get-it-container" class="btn-group dropleft " style="width: 100%; padding-top: 10px;">
+                                     </div>
+                               <?php endif; ?>
+                            </div>
+                        </div>
+                        
+                        <!-- User -->
                         <?php if (empty($this->product->claimable)) { ?>
                             <div class="prod-widget-box prod-user right ">
                                 <div class="sidebar-content">
@@ -828,6 +862,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                             </div>
                         <?php } ?>
 
+                        <!-- Plings -->
                         <div class="prod-widget-box right ">
 
                                 <div class="projectdtailHeart">
@@ -849,7 +884,20 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                 </div>
                         </div>
 
-
+                        
+                        <!-- Support Box -->
+                        <?php
+                            echo $this->partial(
+                                '/product/partials/support_box.phtml',
+                                array(
+                                    "authMember"  => $identity,
+                                    "project_id" => $this->product->project_id,
+                                    "ppload_collection_id" => $this->product->ppload_collection_id,
+                                    "project_category_id" => $this->product->project_category_id,
+                                    "isAdmin" => $isAdmin
+                                )
+                            );
+                        ?>
 
                         <?php /* echo $this->render('partials/sidebarRating.phtml');  */ ?>
                           <?php /*
@@ -884,30 +932,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                             }
                         ?>
 
-                        <div>
-                            <div class="prod-widget-box right">
-                                <div  class="btn-group dropleft" style="width: 100%">
-                                    <button style="width: 100%" id="project_btn_download" class="btn dropdown-toggle disabled" type="button" data-toggle="dropdown">Download
-                                    <span class="caret"></span></button>
-                                    <ul class="dropdown-menu hide" id="dropdown_downloads" style="min-width: 270px;">
-                                    </ul>
-                                </div>
-
-                                <div id="project_btn_grp_install" class="btn-group dropleft hide" style="width: 100%; padding-top: 10px;">
-                                    <button style="width: 100%" id="project_btn_install" class="btn btn-primary dropdown-toggle disabled hide" type="button" data-toggle="dropdown">Install
-                                    <span class="caret"></span></button>
-                                    <ul class="dropdown-menu hide" id="dropdown_installs" style="min-width: 270px; top:50px">
-                                    </ul>
-                                    <span style="display: absolute; bottom:0">*Needs <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a> to install things</span>
-                                </div>
-
-
-                                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                                    <div id="get-it-container" class="btn-group dropleft " style="width: 100%; padding-top: 10px;">
-                                     </div>
-                               <?php endif; ?>
-                            </div>
-                        </div>
+                        
 
 
                        <!-- origins-->
