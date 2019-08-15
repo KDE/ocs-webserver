@@ -78,3 +78,25 @@ export function GroupAudioFilesInGallery(galleryArray){
     });
     return newGalleryArray;
 }
+
+export function generatePagesArray(pages,displayType){
+    let pagesArray;
+    if (displayType === "single") pagesArray = pages;
+    else if (displayType === "double"){
+        pagesArray = chunkArray(pages,2);
+    }
+    return pagesArray;
+}
+
+function chunkArray(myArray, chunk_size){
+    var index = 0;
+    var arrayLength = myArray.length;
+    var tempArray = [];
+    
+    for (index = 0; index < arrayLength; index += chunk_size) {
+        const myChunk = myArray.slice(index, index+chunk_size);
+        // Do something if you want with the group
+        tempArray.push(myChunk);
+    }
+    return tempArray;
+} 
