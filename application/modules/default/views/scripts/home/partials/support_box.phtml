@@ -68,9 +68,11 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                 if($isSupporter) {
             ?>
                 <span style="padding-bottom: 10px;font-size: small;">Thank you very much for supporting <?= $section['name'] ?> with $<?= $support['tier'] ?> per month.</span>
+                <!--
                 <div class="supportDiv" style="padding-top: 15px;">
                     <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Thank you for your support!</a>
                 </div>
+                -->
             <?php
                 } else {
             ?>
@@ -87,30 +89,25 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                </a>
                <?php } ?>
             </div>
-            
-            <div style="">
-                <span style="text-align: left;font-size: small">Support all products via a monthly donation of</span>
-                <span style="text-align: left;">  
-                    <ul style="list-style: none;">
-                        <li><input type="radio" name="support_amount" value="0.99"> $0.99</li>
-                        <li><input type="radio" name="support_amount" value="2"> $2</li>
-                        <li><input type="radio" name="support_amount" value="5"> $5</li>
-                        <li><input type="radio" name="support_amount" value="10"> $10</li>
-                        <li><input type="radio" name="support_amount" value="free">$<input type="text" name="support_amount"> Free Amount</li>
-                    </ul>
-                </span>
-            </div>   
-            
-        <!--
-         <span>
-                <a href="/community#supportersPanel">see all</a>
-         </span>
-        </div>
-        -->
-        <div class="supportDiv" >
-            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support</a>
-        </div>
-        
+            <form action="/support-predefined">
+                <input type="hidden" name="section_id" value="<?= $section['section_id'] ?>">
+                <div style="">
+                    <span style="text-align: left;font-size: small">Support all products via a monthly donation of</span>
+                    <span style="text-align: left;">  
+                        <ul style="list-style: none;">
+                            <li><input type="radio" name="amount_predefined" value="0.99"> $0.99</li>
+                            <li><input type="radio" name="amount_predefined" value="2"> $2</li>
+                            <li><input type="radio" name="amount_predefined" value="5"> $5</li>
+                            <li><input type="radio" name="amount_predefined" value="10"> $10</li>
+                            <li><input type="radio" name="amount_predefined" value="free">$<input type="text" name="support_amount"> Free Amount</li>
+                        </ul>
+                    </span>
+                </div>   
+
+                <div class="supportDiv" >
+                    <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support</a>
+                </div>
+            </form>
         
         <?php
             }

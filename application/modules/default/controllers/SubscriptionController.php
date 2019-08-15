@@ -131,6 +131,19 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         
     }
     
+    public function supportpredefindedAction() {
+        $this->view->authMember = $this->_authMember;
+        $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
+        $httpHost = $this->getRequest()->getHttpHost();
+        $this->view->urlPay =  '/support/pay2';
+        
+        $amount_predefined = (float)$this->getParam('amount_predefined', null);
+        $section_predefined = (float)$this->getParam('section_predefined', null);
+        
+        $this->view->amount_predefined = $amount_predefined;
+        $this->view->section_predefined = $section_predefined;
+    }
+    
     public function support2Action()
     {
         $this->view->authMember = $this->_authMember;

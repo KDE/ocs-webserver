@@ -561,6 +561,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'action'     => 'index'
         )));
         
+        $router->addRoute('support_predefined', new Zend_Controller_Router_Route('/support-predefined', array(
+            'module'     => 'default',
+            'controller' => 'subscription',
+            'action'     => 'supportpredefinded'
+        )));
+        
         $router->addRoute('support_new2', new Zend_Controller_Router_Route('/support2', array(
             'module'     => 'default',
             'controller' => 'subscription',
