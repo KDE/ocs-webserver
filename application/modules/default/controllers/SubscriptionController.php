@@ -486,7 +486,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
             $v = $calModel->calcDonation($amount*12);
         }else{
             $v = $calModel->calcDonation($amount);    
-        }        
+        }     
+        /*
         $supportId = $modelSupport->createNewSupportSubscriptionSignup($this->view->transaction_id
             ,$this->_authMember->member_id
             ,$v
@@ -494,7 +495,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
             ,$paymentFrequenz
             ,1);
         
-        /*
+        
         $modelSectionSupport = new Default_Model_DbTable_SectionSupport();
         $sectionSupportId = $modelSectionSupport->createNewSectionSupport(
             $supportId
