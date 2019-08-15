@@ -20,10 +20,9 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$authMember = $this->authMember;
-$isAdmin = false;
+$isAdmin = $this->isAdmin;
    
-
+if($isAdmin) {
 
 $modelInfo = new Default_Model_Info();
 $modelSection = new Default_Model_Section();
@@ -121,3 +120,6 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
     </div>
 </div>
 
+<?php
+
+}
