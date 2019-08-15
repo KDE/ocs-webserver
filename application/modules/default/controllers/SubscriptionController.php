@@ -494,6 +494,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
             ,$paymentFrequenz
             ,1);
         
+        /*
         $modelSectionSupport = new Default_Model_DbTable_SectionSupport();
         $sectionSupportId = $modelSectionSupport->createNewSectionSupport(
             $supportId
@@ -503,6 +504,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
             , $paymentFrequenz
             , 1
         );
+         * 
+         */
     }
 
     /**
