@@ -78,7 +78,9 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                 } else {
             ?>
             
-            <span style="padding-bottom: 10px;font-size: small;">The category is part of <?= $section['name'] ?> and supported by the following people:</span>        
+            <span style="padding-bottom: 10px;font-size: small;">
+                This product is part <?= $section['name'] ?>, which is supported by the following people:
+            </span>        
             <div class="row" style="margin-top: 10px;margin-bottom: 20px;">
             <?php 
                     $i=0;
@@ -93,7 +95,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
             <form action="/support-predefined" method="POST">
                 <input type="hidden" name="section_id" value="<?= $section['section_id'] ?>">
                 <div style="">
-                    <span style="text-align: left;font-size: small">Support all products via a monthly donation of</span>
+                    <span style="text-align: left;font-size: small">Support this and all other products via a monthly donation of</span>
                     <span style="text-align: left;">  
                         <ul style="list-style: none;">
                             <li><input type="radio" name="amount_predefined" value="0.99" checked="checked"> $0.99</li>
