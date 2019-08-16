@@ -397,8 +397,10 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $this->view->transaction_id = $this->_authMember->member_id . '_' . time();
         
         $this->view->amount = $amount;
+        $this->view->amountTier = $amountTier;
         $this->view->paymentFrequenz = $paymentFrequenz;
         $this->view->payment_option = $paymentOption;
+        
         
         //Add pling
         $modelSupport = new Default_Model_DbTable_Support();
