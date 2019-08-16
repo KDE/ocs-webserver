@@ -35,7 +35,8 @@ $modelDownload = new Default_Model_Section();
 $downloadYears = $modelDownload->getAllDownloadYears($isForAdmin);
 #$this->countDownloadsOverall = count($this->downloads);
 
-
+$config = Zend_Registry::get('config')->settings->client->default;
+$baseurlStore = $config->baseurl_store;
 ?>
 
 
@@ -46,7 +47,7 @@ $downloadYears = $modelDownload->getAllDownloadYears($isForAdmin);
             <section class="my-products-page">
                 <div class="my-products-heading" style="border-bottom: none; padding-bottom: 0px;">
                     <h1 class="page-title left"><?= $this->translate('Public Funding') ?></h1>
-                    <br><br><br><br><div>To support any section, click <a href="/support">here</a>.</div>
+                    <br><br><br><br><div>To support any section, click <a href="<?= $baseurlStore ?>/support">here</a>.</div>
                 </div>
                 
                 <!-- year tabs nav -->

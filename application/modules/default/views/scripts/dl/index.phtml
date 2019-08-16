@@ -190,11 +190,13 @@
                         <br>
                         
                             <?php 
+                                    $config = Zend_Registry::get('config')->settings->client->default;
+                                    $baseurlStore = $config->baseurl_store;
                                     $identity = Zend_Auth::getInstance()->getIdentity();
                                     if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
                             ?>
                         <p style="font-size: 18px; position: absolute; bottom: 0px; width: 100%; left: 0%;">
-                            To help <b><?= $this->project_owner ?></b> and other creators become a <a href="/support" target="_TOP" style="color: #0088d7;text-decoration: underline;">Supporter</a>.
+                            To help <b><?= $this->project_owner ?></b> and other creators become a <a href="<?= $baseurlStore ?>/support" target="_TOP" style="color: #0088d7;text-decoration: underline;">Supporter</a>.
                             <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
                         <p style="font-size: 18px; position: absolute; bottom: 0px; width: 100%; left: 0%;">
                             Thank you for your support!
