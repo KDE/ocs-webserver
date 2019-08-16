@@ -99,7 +99,12 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                </a>
                <?php } ?>
             </div>
-            <form action="/support-predefined" method="POST">
+            
+            <?php
+            $config = Zend_Registry::get('config')->settings->client->default;
+            $baseurlStore = $config->baseurl_store;
+            ?>
+            <form action="<?= $baseurlStore ?>/support-predefined" method="POST">
                 <input type="hidden" name="section_id" value="<?= $section['section_id'] ?>">
                 <div style="">
                     <span style="text-align: left;font-size: small">Support all products via a monthly donation of</span>
