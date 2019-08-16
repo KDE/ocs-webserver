@@ -128,7 +128,7 @@ class Default_Model_Section
     public function fetchAllSectionStats($yearmonth = null, $isForAdmin = false)
     {
         $sql = "SELECT p.yearmonth, s.section_id, s.name AS section_name
-                ,(SELECT ROUND(SUM(ss.tier)/12,2) AS sum_support FROM section_support ss
+                ,(SELECT ROUND(SUM(ss.tier),2) AS sum_support FROM section_support ss
                     JOIN support su2 ON su2.id = ss.support_id
                     WHERE s.section_id = ss.section_id
                     AND ss.is_active = 1
