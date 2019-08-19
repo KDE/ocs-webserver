@@ -62,6 +62,55 @@ class Default_Model_Section
 
         return $resultSet;
     }
+    
+    public function fetchFirstSectionForStoreCategories($category_array)
+    {
+        $sql = "
+            SELECT *
+            FROM section
+            JOIN section_category on section_category.section_id = section.section_id
+            WHERE is_active = 1
+            AND section_category.project_category_id in (:category_id)
+            LIMIT 1
+        ";
+        $resultSet = $this->getAdapter()->fetchRow($sql, array('category_id' => $category_array));
+
+        return $resultSet;
+    }
+    
+    public function fetchSectionForCategory($category_id)
+    {
+        $sql = "
+            SELECT *
+            FROM section
+            JOIN section_category on section_category.section_id = section.section_id
+            WHERE is_active = 1
+            AND section_category.project_category_id = :category_id
+            LIMIT 1
+        ";
+        $resultSet = $this->getAdapter()->fetchRow($sql, array('category_id' => $category_id));
+
+        return $resultSet;
+    }
+    
+    public function isMemberSectionSupporter($section_id, $member_id) {
+        $sql = "
+            SELECT *
+            FROM section_support 
+            JOIN section ON section.section_id = section_support.section_id
+            JOIN support ON support.id = section_support.support_id AND support.status_id = 2
+            WHERE section_support.is_active = 1
+            AND section.section_id = :section_id
+            AND support.member_id = :member_id
+            LIMIT 1
+        ";
+        $resultSet = $this->getAdapter()->fetchRow($sql, array('section_id' => $section_id, 'member_id' => $member_id));
+        
+        if($resultSet) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * @return Zend_Db_Adapter_Abstract
@@ -79,7 +128,7 @@ class Default_Model_Section
     public function fetchAllSectionStats($yearmonth = null, $isForAdmin = false)
     {
         $sql = "SELECT p.yearmonth, s.section_id, s.name AS section_name
-                ,(SELECT ROUND(SUM(ss.tier)/12,2) AS sum_support FROM section_support ss
+                ,(SELECT ROUND(SUM(ss.tier),2) AS sum_support FROM section_support ss
                     JOIN support su2 ON su2.id = ss.support_id
                     WHERE s.section_id = ss.section_id
                     AND ss.is_active = 1
@@ -126,27 +175,21 @@ class Default_Model_Section
         return $resultSet;
     }
     
+    
     /**
      * @param int $yearmonth
-     * @param int $section_id
      *
      * @return array
      */
-    public function fetchSectionStats($section_id, $yearmonth = null)
+    public function fetchSectionStats($yearmonth = null, $section_id, $isForAdmin = false)
     {
         $sql = "SELECT p.yearmonth, s.section_id, s.name AS section_name
-                ,(SELECT SUM(tier * (s.percent_of_support/100)) AS sum_support FROM (
-                        SELECT * FROM support su
-                        WHERE su.status_id = 2
-                        AND su.type_id = 0
-                        AND DATE_FORMAT(su.active_time, '%Y%m') <= :yearmonth
-                        AND DATE_FORMAT(su.active_time + INTERVAL 1 YEAR, '%Y%m') >= :yearmonth
-                        UNION ALL 
-                        SELECT * FROM support su2
-                        WHERE su2.status_id = 2
-                        AND su2.type_id = 1
-                        AND DATE_FORMAT(su2.active_time, '%Y%m') <= :yearmonth
-                ) A) AS sum_support
+                ,(SELECT ROUND(SUM(ss.tier),2) AS sum_support FROM section_support_paypements ss
+                    JOIN support su2 ON su2.id = ss.support_id
+                    WHERE s.section_id = ss.section_id
+                    AND ss.yearmonth = :yearmonth 
+                    GROUP BY ss.section_id
+                ) AS sum_support
                 ,(SELECT SUM(sp.amount * (ssp.percent_of_sponsoring/100)) AS sum_sponsor FROM sponsor sp
                 LEFT JOIN section_sponsor ssp ON ssp.sponsor_id = sp.sponsor_id
                 WHERE sp.is_active = 1
@@ -154,6 +197,14 @@ class Default_Model_Section
                 , SUM(p.num_downloads) AS sum_dls
                 , ROUND(SUM(p.probably_payout_amount),2) AS sum_amount
                 , p3.num_downloads AS sum_dls_payout, p3.amount AS sum_amount_payout
+                ,(SELECT COUNT(1) AS num_supporter FROM (
+						 	SELECT COUNT(1) AS num_supporter,ss.section_id, su2.member_id FROM section_support_paypements ss
+	                    JOIN support su2 ON su2.id = ss.support_id
+	                    WHERE ss.yearmonth = :yearmonth 
+	                    GROUP BY ss.section_id, su2.member_id
+                    ) A
+                    WHERE A.section_id = s.section_id
+                ) AS num_supporter
                 FROM member_dl_plings p
                 LEFT JOIN section_category sc ON sc.project_category_id = p.project_category_id
                 LEFT JOIN section s ON s.section_id = sc.section_id
@@ -170,16 +221,68 @@ class Default_Model_Section
                         ) A GROUP BY yearmonth, section_id
                 ) p3 ON p3.yearmonth = p.yearmonth AND p3.section_id = s.section_id
                 WHERE p.yearmonth = :yearmonth
-                AND p.section_id = :section_id
-                GROUP BY s.section_id";
+                AND sc.section_id IS NOT null
+                AND s.section_id = :section_id ";
+        
+        if(!$isForAdmin) {
+            $sql .= " AND p.yearmonth >= DATE_FORMAT((NOW() - INTERVAL 1 MONTH),'%Y%m')";
+        }
+        
+        $sql .= " GROUP BY p.yearmonth, s.section_id, s.name";
         if(empty($yearmonth)) {
             $yearmonth = "DATE_FORMAT(NOW(),'%Y%m')";
         }
-        $resultSet = $this->getAdapter()->fetchAll($sql, array('yearmonth' => $yearmonth, 'section_id' => $section_id));
+        $resultSet = $this->getAdapter()->fetchRow($sql, array('yearmonth' => $yearmonth, 'section_id' => $section_id));
 
         return $resultSet;
     }
+    
+    
+    /**
+     * @param int $yearmonth
+     *
+     * @return array
+     */
+    public function fetchSectionSupportStats($yearmonth = null, $section_id, $isForAdmin = false)
+    {
+        $sql = "SELECT p.yearmonth, p.section_id, SUM(p.tier) AS sum_support, null AS sum_sponsor, null AS sum_dls, null AS sum_dls_payout, null AS sum_amount_payout, null AS sum_amount
+					,(SELECT COUNT(1) AS num_supporter FROM (
+						 	SELECT COUNT(1) AS num_supporter,ss.section_id, su2.member_id FROM section_support_paypements ss
+	                    JOIN support su2 ON su2.id = ss.support_id
+	                    WHERE ss.yearmonth = :yearmonth
+	                    GROUP BY ss.section_id, su2.member_id
+                    ) A
+                    WHERE A.section_id = p.section_id
+                ) AS num_supporter FROM section_support_paypements p
+					WHERE p.yearmonth = :yearmonth
+					AND p.section_id = :section_id ";
+        
+        if(!$isForAdmin) {
+            $sql .= " AND p.yearmonth >= DATE_FORMAT((NOW() - INTERVAL 1 MONTH),'%Y%m')";
+        }
+        
+        $sql .= " GROUP BY p.yearmonth, p.section_id";
+        if(empty($yearmonth)) {
+            $yearmonth = "DATE_FORMAT(NOW(),'%Y%m')";
+        }
+        $resultSet = $this->getAdapter()->fetchRow($sql, array('yearmonth' => $yearmonth, 'section_id' => $section_id));
 
+        return $resultSet;
+    }
+    
+    
+    public function fetchSection($section_id)
+    {
+        $sql = "
+            SELECT *
+            FROM section
+            WHERE is_active = 1
+        ";
+        $resultSet = $this->getAdapter()->fetchRow($sql, array('section_id' => $section_id));
+
+        return $resultSet;
+    }
+    
     
     public function getAllDownloadYears($isForAdmin = false)
     {
