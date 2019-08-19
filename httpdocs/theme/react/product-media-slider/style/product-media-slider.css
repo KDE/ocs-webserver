@@ -697,28 +697,38 @@ video:focus {
   width: 50%;
   float: left;
 }
-#comics-reader-wrapper nav {
+#comics-reader-wrapper .nav-container {
   width: 100%;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  z-index: 111;
+  height: 34px;
+}
+#comics-reader-wrapper .nav-container nav {
+  width: auto;
   height: 34px;
   margin: 0 auto 0;
-  position: absolute;
-  z-index: 111;
-  text-align: center;
-  bottom: 0;
+  display: table;
 }
-#comics-reader-wrapper nav a {
-  display: inline-block;
-  width: 30px;
+#comics-reader-wrapper .nav-container nav a {
+  display: block;
+  min-width: 30px;
   height: 30px;
   text-align: center;
   border-radius: 2px;
   background: rgba(0, 0, 0, 0.35);
   color: #fff;
   margin: 2px;
+  float: left;
 }
-#comics-reader-wrapper nav a .glyphicon {
+#comics-reader-wrapper .nav-container nav a .glyphicon {
   top: 7px;
 }
-#comics-reader-wrapper nav a:hover {
+#comics-reader-wrapper .nav-container nav a:hover {
   opacity: 0.6;
+}
+#comics-reader-wrapper .nav-container nav a#bb-nav-counter {
+  line-height: 30px;
+  font-size: 12px;
 }

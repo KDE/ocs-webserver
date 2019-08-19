@@ -106,10 +106,11 @@ function ComicBookReader(props){
   console.log(pages);
   const [ currentPage, setCurrentPage ] = useState(1)
   const [ totalPages, setTotalPages ] = useState(pages.length)
+  const [ viewMode, setViewMode ] = useState('normal');
 
-  React.useEffect(() => (
+  React.useEffect(() => { 
     initComicReader()
-  ),[])
+  },[])
 
   function initComicReader(){
     $(function() {
@@ -135,53 +136,38 @@ function ComicBookReader(props){
     setCurrentPage(isLimit + 1);
     return false;
   }
-  
-  function onComicReaderDisplayTypeChange(value){
-    setLoading(true);
-    const newDisplayType = value;
-    setDisplayType(newDisplayType);
-    const newPages = generatePagesArray(props.pages,newDisplayType);
-    setPages(newPages);
-    const newCurrentPage = newPages * ( totalPages / currentPage );
-    setCurrentPage(newCurrentPage);
-    const newTotalPages = newPages.length;
-    setTotalPages(newTotalPages);
-    setLoading(false);
-  }
 
-  let comicPages;
+  let comicBookDisplay;
   if (loading) comicPages = "loading...";
   else {
-    if (displayType === "single"){
-      comicPages = pages.map((p,index) => (
-        <div key={index} className="bb-item">
-          <img src={p}/>
-        </div>
-      ));
-    } else if (displayType === "double"){
-      comicPages = pages.map((p,index) => (
-        <div key={index} className="bb-item">
-          <img src={p[0]}/>
-          <img src={p[1]}/>
-        </div>      
-      ))
-    }
+    const comicPages = pages.map((p,index) => (
+      <div key={index} className="bb-item">
+        <img src={p[0]}/>
+        <img src={p[1]}/>
+      </div>      
+    ))
+
+    comicBookDisplay = (
+      <div id={"bb-bookblock-" + props.currentSlide} className="bb-bookblock">
+        {comicPages}
+      </div>
+    )
   }
 
   return (
-    <div className="comic-book-reader">
-      <div id={"bb-bookblock-" + props.currentSlide} className={"bb-bookblock " + props.displayType}>
-        {comicPages}
+    <div className={"comic-book-reader " + viewMode}>
+      {comicBookDisplay}
+      <div className="nav-container">
+        <nav>
+          <a id="bb-nav-counter" href="#">{currentPage + "/" + totalPages}</a>
+          <a id="bb-nav-first" href="#" onClick={() => onComicReaderNavClick('first')}><span className="glyphicon glyphicon-step-backward"></span></a>
+          <a id="bb-nav-prev" href="#" onClick={() => onComicReaderNavClick('prev')}><span className="glyphicon glyphicon-triangle-left"></span></a>
+          <a id="bb-nav-next" href="#" onClick={() => onComicReaderNavClick('next')}><span className="glyphicon glyphicon-triangle-right"></span></a>
+          <a id="bb-nav-last" href="#" onClick={() => onComicReaderNavClick('last')}><span className="glyphicon glyphicon-step-forward"></span></a>
+          <a id="bb-nav-last" href="#" onClick={() => onComicReaderNavClick('last')}><span className="glyphicon glyphicon-step-forward"></span></a>
+          <a id="bb-nav-viewmode" href="#" onClick={() => setViewMode('fullscreen')}><span className="glyphicon glyphicon-fullscreen"></span></a>
+        </nav>
       </div>
-      <nav>
-        <a id="bb-nav-counter" href="#">{currentPage + "/" + totalPages}</a>
-        <a id="bb-nav-first" href="#" onClick={() => onComicReaderNavClick('first')} className="bb-custom-icon bb-custom-icon-first"><span className="glyphicon glyphicon-step-backward"></span></a>
-        <a id="bb-nav-prev" href="#" onClick={() => onComicReaderNavClick('prev')} className="bb-custom-icon bb-custom-icon-arrow-left"><span className="glyphicon glyphicon-triangle-left"></span></a>
-        <a id="bb-nav-next" href="#" onClick={() => onComicReaderNavClick('next')} className="bb-custom-icon bb-custom-icon-arrow-right"><span className="glyphicon glyphicon-triangle-right"></span></a>
-        <a id="bb-nav-last" href="#" onClick={() => onComicReaderNavClick('last')} className="bb-custom-icon bb-custom-icon-last"><span className="glyphicon glyphicon-step-forward"></span></a>
-        <a id="bb-nav-counter" onClick={() => onComicReaderDisplayTypeChange('single')} href="#">single</a>
-        <a id="bb-nav-counter" onClick={() => onComicReaderDisplayTypeChange('double')} href="#">double</a>
-      </nav>
     </div>
   )
 }
