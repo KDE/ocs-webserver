@@ -76,7 +76,7 @@ $printCurrentMonth = new DateTime($currentDate.'01');
 $printMonth = new DateTime($yearmonth.'01');
 $printDate = $printMonth->format('M Y');
 
-$allSections = $modelDownload->fetchAllSectionStats($yearmonth, $isForAdmin);
+$allSections = $modelDownload->fetchAllSections();
 $countDownloadsOverall = count($allSections);
 
 $countIncome = 0;
@@ -86,7 +86,7 @@ $countPayout2 = 0;
 if ($countDownloadsOverall > 0) {
     $firstProduct = $allSections[0];
     if ($firstProduct) {
-        $printMonth = new DateTime($firstProduct['yearmonth'].'01');
+        $printMonth = new DateTime($yearmonth.'01');
         $printCurrentMonth = new DateTime($currentDate.'01');
         
         if($printMonth == $printCurrentMonth) {
@@ -97,39 +97,61 @@ if ($countDownloadsOverall > 0) {
         
         
         ?>
-        <div class="tab-pane fade <?=$css_active?>" id="<?=$firstProduct['yearmonth']?>">
+        <div class="tab-pane fade <?=$css_active?>" id="<?=$yearmonth?>">
             <?php
             $css_active = '';
-
-            foreach ($allSections as $section) { ?>
+            
+            foreach ($allSections as $section) { 
+                $sectionStats = $modelDownload->fetchSectionStats($yearmonth, $section['section_id'], $isForAdmin);
+                if(!$sectionStats) {
+                    $sectionStats = $modelDownload->fetchSectionSupportStats($yearmonth, $section['section_id'], $isForAdmin);
+                }
+            ?>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
                     
-                    <div class="col-md-2 cell-default" style="" id="<?=$section['section_id']?>"><?=$section['section_name']?></div>
-                    <div class="col-md-1 text-right cell-default" style=""><strong><?= round($section['sum_support'] + $section['sum_sponsor'], 2) ?></strong></div>
-                    <!--<div class="col-md-1 text-right cell-default" style=""><?=$section['sum_dls']?></div>-->
-                    <div class="col-md-1 text-right cell-default" style=""><strong><?=$section['sum_amount']?></strong></div>
+                    <div class="col-md-2 cell-default" style="" id="<?=$section['section_id']?>"><?=$section['name']?></div>
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?= round($sectionStats['sum_support'] + $sectionStats['sum_sponsor'], 2) ?></strong></div>
+                    <!--<div class="col-md-1 text-right cell-default" style=""><?=$sectionStats['sum_dls']?></div>-->
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?=$sectionStats['sum_amount']?></strong></div>
 
 
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                    <!--<div class="col-md-1 text-right cell-default" style=""><?=$section['sum_dls_payout']?></div>-->
-                    <div class="col-md-1 text-right cell-default" style=""><?=$section['sum_amount_payout']?></div>
+                    <!--<div class="col-md-1 text-right cell-default" style=""><?=$sectionStats['sum_dls_payout']?></div>-->
+                    <div class="col-md-1 text-right cell-default" style=""><?=$sectionStats['sum_amount_payout']?></div>
                     <?php endif; ?>
                     <div class="col-md-1 text-right cell-default" style=""><strong><?php 
-                        if(($section['sum_support'] + $section['sum_sponsor']) < $section['sum_amount']) {
-                            echo round(($section['sum_support'] + $section['sum_sponsor']) / $section['sum_amount'], 2);
+                        if(($sectionStats['sum_support'] + $sectionStats['sum_sponsor']) < $sectionStats['sum_amount']) {
+                            echo round(($sectionStats['sum_support'] + $sectionStats['sum_sponsor']) / $sectionStats['sum_amount'], 2);
                         } else {
                             echo "1.00";
                         }
                     ?></strong></div>
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                    <div class="col-md-1 text-right cell-default" style="">60</div>
-                    <div class="col-md-1 text-right cell-default" style="">Balken</div>
+                    <div class="col-md-1 text-right cell-default" style=""><?= $sectionStats['num_supporter'] ?></div>
+                    <div class="col-md-1 text-right cell-default" style="">
+                        <?php 
+                            if($sectionStats['sum_support']>0 && $sectionStats['sum_amount']>0) {
+                                $percentFactor = ($sectionStats['sum_support'] + $sectionStats['sum_sponsor']) / $sectionStats['sum_amount'] * 100;
+                            } else {
+                                $percentFactor = 0;
+                            }
+                            if($percentFactor>100) {
+                                $percentFactor = 100;
+                            } 
+                           
+                        ?>
+                        <div style="height: 20px;border: 1px solid gray;width: 100px;padding: 0;margin: 0;">
+                            <div style="padding: 0;margin: 0;background-color: green;height: 10px;width: <?= round($percentFactor, 2) ?>px;"></div>
+                            <div style="padding: 0;margin: 0;background-color: red;height: 10px;width: 100px;"></div>
+                        </div>
+                        
+                    </div>
                     <?php endif; ?>
                 </div>
             <?php
-                $countIncome += $section['sum_support'] + $section['sum_sponsor'];
-                $countPayout += $section['sum_amount'];
-                $countPayout2 += $section['sum_amount_payout'];
+                $countIncome += $sectionStats['sum_support'] + $sectionStats['sum_sponsor'];
+                $countPayout += $sectionStats['sum_amount'];
+                $countPayout2 += $sectionStats['sum_amount_payout'];
             }
             ?>
             <div class='row row-total'>
