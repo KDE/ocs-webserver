@@ -22,6 +22,10 @@
 
 ?>
 <style>
+    .inline {
+        display: inline-block;
+    }
+    
     .cell-default {
         line-height: 2em;
         vertical-align: middle;
@@ -57,12 +61,15 @@ $yearmonth = null;
 if(isset($this->yearmonth)) {
     $yearmonth = $this->yearmonth;
 }
+
 ?>
 
 <div class="tab-content">
 <?php
 $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
+
+$modelInfo = new Default_Model_Info();
 
 $isForAdmin = (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName);
 
@@ -106,6 +113,8 @@ if ($countDownloadsOverall > 0) {
                 if(!$sectionStats) {
                     $sectionStats = $modelDownload->fetchSectionSupportStats($yearmonth, $section['section_id'], $isForAdmin);
                 }
+                $supporters = $modelInfo->getNewActiveSupportersForSectionAndMonth($sectionStats['section_id'], $yearmonth);
+                
             ?>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
                     
@@ -147,6 +156,22 @@ if ($countDownloadsOverall > 0) {
                         </div>
                         
                     </div>
+                    <div class="co4-md-4 text-left cell-default" style="max-width: 300px;">
+                        <div style="">
+                    <?php 
+                    $i=0;
+                        foreach ($supporters as $user) {                                                      
+                    ?>   
+                            <div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="" data-trigger="hover" data-html="true" data-content="This month <b><?= $user['username']?></b> supports this section with $<?= $user['sum_tier'] ?>." >
+                                <a href="<?php echo $this->buildMemberUrl($user['username']); ?>" class="tooltipuserleft" data-user="<?=$user['member_id']?>" data-amaount="<?=$user['sum_tier']?>">                   
+                                    <img height="25" width="25" src="<?php echo $this->Image($user['profile_image_url'], array('width' => '25', 'height' => '25', 'crop' => 2)); ?>" class="supporterx" />                   
+                                </a>
+                            </div>
+                    <?php 
+                        } 
+                    ?>
+                        </div>
+                    </div>
                 </div>
             <?php
                 $countIncome += $sectionStats['sum_support'] + $sectionStats['sum_sponsor'];
@@ -175,7 +200,13 @@ if ($countDownloadsOverall > 0) {
 }
 ?>
 
-</div>    
+</div> 
+<script>
+$(document).ready(function(){
+  $('[data-toggle="popover"]').popover();
+});
+</script>
+
     
 <script>
     $('#payout_info').click(function (event ) {

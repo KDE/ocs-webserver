@@ -1280,7 +1280,7 @@ class Default_Model_Info
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5((int)$limit);
+        $cacheName = __FUNCTION__ . '_' . $section_id . '_' . md5((int)$limit);
 
         if (false !== ($newSupporters = $cache->load($cacheName))) {
             return $newSupporters;
@@ -1293,17 +1293,52 @@ class Default_Model_Info
                 ,(select username from member m where m.member_id = s.member_id) as username
                 ,(select profile_image_url from member m where m.member_id = s.member_id) as profile_image_url
                 ,MAX(s.active_time) AS active_time_max
-                from section_support ss
+                from section_support_paypements ss
                 JOIN support s ON s.id = ss.support_id
                 WHERE ss.section_id = :section_id
-                AND s.status_id = 2
+                AND ss.yearmonth = DATE_FORMAT(NOW(), "%Y%m")
                 GROUP BY s.member_id
-                order BY active_time_max desc                                       
+                order BY ss.tier DESC, active_time_max desc                                       
         ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' => $section_id))->fetchAll();
+        $cache->save($result, $cacheName, array(), 300);
+
+        return $result;
+    }
+    
+    
+    public function getNewActiveSupportersForSectionAndMonth($section_id, $yearmonth, $limit = 100)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . $section_id . '_' . $yearmonth . '_' . md5((int)$limit);
+
+        if (false !== ($newSupporters = $cache->load($cacheName))) {
+            return $newSupporters;
+        }
+        
+        $sql = '
+                SELECT  s.*,
+                s.member_id as supporter_id
+                ,s.member_id
+                ,(select username from member m where m.member_id = s.member_id) as username
+                ,(select profile_image_url from member m where m.member_id = s.member_id) as profile_image_url
+                ,MAX(s.active_time) AS active_time_max
+                ,SUM(ss.tier) AS sum_tier
+                from section_support_paypements ss
+                JOIN support s ON s.id = ss.support_id
+                WHERE ss.section_id = :section_id
+                AND ss.yearmonth = :yearmonth
+                GROUP BY s.member_id
+                order BY SUM(ss.tier) DESC, active_time_max desc                                       
+        ';
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' => $section_id, 'yearmonth' => $yearmonth))->fetchAll();
         $cache->save($result, $cacheName, array(), 300);
 
         return $result;
