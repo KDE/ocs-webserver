@@ -44,8 +44,20 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
     ) {
         parent::__construct($request, $response, $invokeArgs);
         $this->config = Zend_Registry::get('config')->settings->server->ldap;
-        $this->log = Zend_Registry::get('logger');
+        $this->log = self::initLog();
         $this->_helper->viewRenderer->setNoRender(false);
+    }
+
+    /**
+     * @return Zend_Log
+     * @throws Zend_Log_Exception
+     */
+    private static function initLog()
+    {
+        $writer = new Zend_Log_Writer_Stream(APPLICATION_DATA . '/logs/validateLdapUser.log');
+        $logger = new Zend_Log($writer);
+
+        return $logger;
     }
 
 
@@ -222,7 +234,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
 
         while ($member = $members->fetch()) {
             $modelOcsIdent->resetMessages();
-            $this->log->info("process " . json_encode($member));
+            //$this->log->info("process " . json_encode($member));
             try {
                 $ldapEntry = $modelOcsIdent->hasUser($member['member_id'], $member['username']);
                 if (empty($ldapEntry)) {
