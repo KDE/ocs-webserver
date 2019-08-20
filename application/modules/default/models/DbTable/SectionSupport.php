@@ -75,6 +75,46 @@ class Default_Model_DbTable_SectionSupport extends Zend_Db_Table_Abstract
         return count($q->query()->fetchAll());
     }
     
+    
+    public function fetchLatestSectionSupportForMember($section_id, $member_id) {
+        $sql = "
+            SELECT section_support.section_support_id, section_support.support_id, section_support.section_id, section_support.amount, section_support.tier, section_support.period_frequency
+            FROM section_support 
+            JOIN section ON section.section_id = section_support.section_id
+            JOIN support ON support.id = section_support.support_id AND support.status_id = 2
+            WHERE section_support.is_active = 1
+            AND section.section_id = :section_id
+            AND support.member_id = :member_id
+            ORDER BY section_support.created_at desc 
+            LIMIT 1
+        ";
+        $resultSet = $this->getAdapter()->fetchRow($sql, array('section_id' => $section_id, 'member_id' => $member_id));
+        
+        return $resultSet;
+    }
+    
+    
+    public function fetchAllSectionSupportsForMember($section_id, $member_id) {
+        $sql = "
+            SELECT section_support.section_support_id, section_support.support_id, section_support.section_id, section_support.amount, section_support.tier, section_support.period, section_support.period_frequency, support.status_id, support.type_id, support.active_time, support.delete_time, support.payment_provider,member.member_id,member.username,
+            case 
+            when support.status_id = 2 AND support.type_id = 0 AND (date_format(support.active_time  + interval 1 YEAR, '%Y%m')) >= date_format(NOW(), '%Y%m') then 'active'
+            when support.status_id = 2 AND support.type_id = 1 then 'active'
+            ELSE 'inactive'
+            END AS active_status,(support.active_time  + interval 1 YEAR) AS active_time_one_year
+            FROM section_support 
+            JOIN section ON section.section_id = section_support.section_id
+            JOIN support ON support.id = section_support.support_id AND support.status_id >= 2
+            JOIN member ON member.member_id = support.member_id
+            WHERE section_support.is_active = 1
+            AND section.section_id = :section_id
+            AND support.member_id = :member_id
+            ORDER BY support.active_time DESC  
+        ";
+        $resultSet = $this->getAdapter()->fetchAll($sql, array('section_id' => $section_id, 'member_id' => $member_id));
+        
+        return $resultSet;
+    }
 }
 
 
