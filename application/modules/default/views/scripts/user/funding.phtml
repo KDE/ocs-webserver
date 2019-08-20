@@ -1,0 +1,127 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$this->tab = 'funding';
+
+
+$modelSection = new Default_Model_Section();
+$modelSectionSupport = new Default_Model_DbTable_SectionSupport();
+
+$allSections = $modelSection->fetchAllSections();
+
+?>
+<main class="user-admin-page">
+    <?php echo $this->render('user/partials/userHeader_top.phtml'); ?>  
+    <section class="body-wrap">
+        <section class="wrapper product-page">
+            <!-- PAGE BODY -->
+            <section class="my-products-page">
+                <!-- NAVIGATION -->
+                <?php echo $this->render('user/partials/userHeader.phtml'); ?>
+                <!-- /NAVIGATION -->
+             
+              <div class="my-products-heading">
+                   <h1 class="page-title left"><?= $this->translate('Funding') ?></h1>                   
+               </div>
+
+                <div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0; padding-bottom: 10px;">
+                    <div class="row"> 
+                        <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Section</strong></div>
+                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Status</strong></div>
+                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Amount</strong></div>
+                        <div class="col-md-3 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Details</strong></div>
+                    </div>
+                    
+                <?php 
+                    foreach ($allSections as $section) { 
+                        $isFirst = true;
+                        if($modelSection->isMemberSectionSupporter($section['section_id'], $this->member['member_id'])) {
+                            $supports = $modelSectionSupport->fetchAllSectionSupportsForMember($section['section_id'], $this->member['member_id']);
+                            foreach ($supports as $support) {
+                ?>
+                    <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;<?php if($isFirst) echo "border-top: 1px solid #ddd;margin-top: 15px;padding-top: 5px;" ?>">
+                        <div class="col-md-2 cell-default" style="">
+                            <?php if($isFirst) { 
+                                echo $section['name']; 
+                                $isFirst = false;
+                            } ?>
+                        </div>
+                        <div class="col-md-1 cell-default" style="">
+                            <?php
+                                if($support['active_status'] == 'active') {
+                                    echo "<span class='label label-success'>active</span>";
+                                } else {
+                                    echo "<span class='label label-danger'>inactive</span>";
+                                }
+                            ?>
+                            
+                        </div>
+                        <div class="col-md-1 cell-default" style="">$<?= $support['tier'] ?>/month</div>
+                        <div class="col-md-3 cell-default" style="">
+                            <?php 
+                                $text = "Your ";
+                                if($support['type_id'] == 0) {
+                                    $text .= "One-Time-Payment ";
+                                } else {
+                                    if($support['period'] == 'Y') {
+                                        $text .= "yearly Subscription ";
+                                    } else {
+                                        $text .= "monthly Subscription ";
+                                    }
+                                }
+                                if($support['active_status'] == 'active') {
+                                    $text .= "is active since ". $this->printDate($support['active_time']);
+                                    if($support['type_id'] == 0) {
+                                        $text .= " until ". $this->printDate($support['active_time_one_year']);
+                                    }
+                                } else {
+                                    $text .= "was active from ". $this->printDate($support['active_time']);
+                                    if($support['type_id'] == 0) {
+                                        $text .= " to ". $this->printDate($support['active_time_one_year']);
+                                    } else {
+                                        $text .= " to ". $this->printDate($support['delete_time']);
+                                    }
+                                }
+                                
+                                
+                                echo $text;
+                            ?>
+                        
+                        </div>
+                    </div>
+                    
+                <?php    
+                            }
+                        }
+                    }
+                ?>
+                    
+                </div>
+            </section>
+
+            <!-- /PAGE BODY -->
+
+        </section>
+
+    </section>
+
+</main>
