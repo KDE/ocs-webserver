@@ -88,13 +88,14 @@ $allSections = $modelSection->fetchAllSections();
                                         $text .= "monthly Subscription ";
                                     }
                                 }
+                                $text .= " via ". $support['payment_provider'];
                                 if($support['active_status'] == 'active') {
-                                    $text .= "is active since ". $this->printDate($support['active_time']);
+                                    $text .= " is active since ". $this->printDate($support['active_time']);
                                     if($support['type_id'] == 0) {
                                         $text .= " until ". $this->printDate($support['active_time_one_year']);
                                     }
                                 } else {
-                                    $text .= "was active from ". $this->printDate($support['active_time']);
+                                    $text .= " was active from ". $this->printDate($support['active_time']);
                                     if($support['type_id'] == 0) {
                                         $text .= " to ". $this->printDate($support['active_time_one_year']);
                                     } else {
