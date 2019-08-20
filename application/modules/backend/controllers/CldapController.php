@@ -279,11 +279,12 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         }
         $attr = Zend_Ldap_Attribute::getAttribute($ldapEntry, 'cn', 0);
         $username = mb_strtolower($member['username']);
-        if ($username != $attr) {
+        if ($username != mb_strtolower($attr)) {
             return array('username', 'cn');
         }
         $attr = Zend_Ldap_Attribute::getAttribute($ldapEntry, 'email', 0);
-        if ($member['email_address'] != $attr) {
+        $mail_address = mb_strtolower($member['email_address']);
+        if ($mail_address != mb_strtolower($attr)) {
             return array('email_address', 'email');
         }
         $attr = Zend_Ldap_Attribute::getAttribute($ldapEntry, 'userPassword', 0);
