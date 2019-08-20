@@ -253,7 +253,9 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
                 $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
             $messages = $modelOcsIdent->getMessages();
-            $this->log->info(json_encode($messages));
+            if (false == empty($messages)) {
+                $this->log->info(json_encode($messages));
+            }
         }
 
         return true;
