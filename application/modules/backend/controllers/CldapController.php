@@ -238,12 +238,12 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
             try {
                 $ldapEntry = $modelOcsIdent->hasUser($member['member_id'], $member['username']);
                 if (empty($ldapEntry)) {
-                    $this->log->info('Fail : user not exist (' . $member['member_id'] . ', ' . $member['username'] . ')');
+                    $this->log->info('user not exist (' . $member['member_id'] . ', ' . $member['username'] . ')');
                     continue;
                 }
                 $result = $this->validateEntry($member, $ldapEntry);
                 if (isset($result)) {
-                    $this->log->info('Fail : unequal ' . implode("<=>", $result). ' ' .
+                    $this->log->info('member (' . $member['member_id'] . ', ' . $member['username'] . ') unequal: ' . PHP_EOL . implode("<=>", $result). ' ' .
                         mb_strtolower($member[$result[0]]) . '<=>' . Zend_Ldap_Attribute::getAttribute($ldapEntry, $result[1], 0));
                     if ($force) {
                         $modelOcsIdent->createUserFromArray($member, true);
