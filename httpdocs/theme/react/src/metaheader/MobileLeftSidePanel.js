@@ -41,8 +41,8 @@ class MobileLeftSidePanel extends React.Component {
         </div>
         <div id="panel-menu">
           <ul>
-            <li><a href={this.props.baseUrlStore}>Store</a></li>
-            <li><a href={this.props.gitlabUrl}>Code</a></li>
+            <li><a href={this.props.baseUrlStore}>Pling</a></li>
+            <li><a href={this.props.gitlabUrl}>Opencode</a></li>
             <li>
               <a className="groupname"><b>Community</b></a>
               <ul>
@@ -50,7 +50,7 @@ class MobileLeftSidePanel extends React.Component {
                                     forumUrl = {this.props.forumUrl}  />
               </ul>
             </li>
-          
+
             <li>
               <a className="groupname"><b>About</b></a>
               <ul>

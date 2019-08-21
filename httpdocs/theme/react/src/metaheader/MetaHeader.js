@@ -139,6 +139,7 @@ class MetaHeader extends React.Component {
     return (
       <nav id="metaheader-nav" className="metaheader">
         <div style={{"display":"block"}} className={metamenuCls}>
+          {domainsMenuDisplay}
           <UserMenu
             device={this.state.device}
             user={this.state.user}
@@ -160,7 +161,7 @@ class MetaHeader extends React.Component {
             riotUrl={this.state.riotUrl}
           />
 
-          {domainsMenuDisplay}
+
         </div>
       </nav>
     )
