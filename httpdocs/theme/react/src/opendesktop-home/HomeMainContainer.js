@@ -19,8 +19,8 @@ class HomeMainContainer extends Component {
     let content;
     let supporterinfo;
     if(this.state.supporterinfo && this.state.supporterinfo.member_id)
-    {
-      supporterinfo = "Thanks for supporting Pling.com";
+    {       
+       supporterinfo =   <div>Thanks for supporting Pling.com</div>
     }else{
       supporterinfo = <div><a href={this.state.baseUrlStore+"/support"}>Become a Supporter</a></div>
     }
