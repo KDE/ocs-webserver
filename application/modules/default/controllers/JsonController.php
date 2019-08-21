@@ -101,13 +101,13 @@ class JsonController extends Zend_Controller_Action
         foreach ( $results->topic_list->topics as &$t) {
 
                 $strTime = str_replace('T',' ',substr($t->last_posted_at, 0, 19));
-                
+
                 //$t->timeago = $timeago->printDateSince($strTime);
 
                 $fromFormat='Y-m-d H:i:s';
-                $date = DateTime::createFromFormat($fromFormat, $strTime);        
+                $date = DateTime::createFromFormat($fromFormat, $strTime);
                 // forum/latest.json last_posted_at is 5 hours later as server somehow.. quick workaround
-                $date->sub(new DateInterval('PT4H40M'));                
+                $date->sub(new DateInterval('PT4H40M'));
                 $t->timeago = $timeago->printDateSince($date->format('Y-m-d h:s:m'));
                 //$t->timeago =  $date->format('Y-m-d H:i:s');
                 $r='Reply';
@@ -186,11 +186,16 @@ class JsonController extends Zend_Controller_Action
 
           $config = Zend_Registry::get('config');
           $cookieName = $config->settings->session->auth->anonymous;
-          $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
-          if($storedInCookie)
+          $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;				
+					if($storedInCookie)
           {
                $model = new Default_Model_DbTable_MemberDownloadHistory();
-							 $dlsection = $model->getAnonymousDLSection($storedInCookie);
+							 if($identity && $identity->member_id)
+		 					 {
+								$dlsection = $model->getAnonymousDLSection($storedInCookie,$identity->member_id);
+							}else{
+								$dlsection = $model->getAnonymousDLSection($storedInCookie);
+							}
 							 $dls=0;
 							 foreach ($dlsection as $value) {
 							 	 $dls = $dls+$value['dls'];
