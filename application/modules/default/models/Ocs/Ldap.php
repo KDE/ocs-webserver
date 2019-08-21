@@ -154,7 +154,6 @@ class Default_Model_Ocs_Ldap
 
     /**
      * @param array     $member_data
-     *
      * @param Zend_Ldap $ldap_connection
      *
      * @return array
@@ -178,17 +177,23 @@ class Default_Model_Ocs_Ldap
             return $entries[0];
         }
 
-        return array();
+        $username = $member_data['username'];
+        $enc = mb_detect_encoding($username) ? mb_detect_encoding($username) : 'UTF-8';
+        $username = mb_strtolower($username, $enc);
+        $entry = $ldap_connection->getEntry("cn={$username},{$this->baseDnUser}");
+
+        return empty($entry) ? array() : $entry;
     }
 
     /**
-     * @param int $member_id
+     * @param int  $member_id
      *
+     * @param string|null $password
      * @return bool
      * @throws Zend_Exception
      * @throws Zend_Ldap_Exception
      */
-    public function updatePassword($member_id)
+    public function updatePassword($member_id, $password = null)
     {
         $connection = $this->getConnectionUser();
         $member_data = $this->getMemberData($member_id);
@@ -208,8 +213,12 @@ class Default_Model_Ocs_Ldap
             return false;
         }
         Zend_Ldap_Attribute::removeFromAttribute($entry, 'userPassword', Zend_Ldap_Attribute::getAttribute($entry, 'userPassword'));
-        $password = '{MD5}' . base64_encode(pack("H*", $member_data['password']));
-        Zend_Ldap_Attribute::setAttribute($entry, 'userPassword', $password);
+        if (isset($password)) {
+            $hash = Local_Auth_Adapter_Ocs::getEncryptedLdapPass($password);
+        } else {
+            $hash = '{MD5}' . base64_encode(pack("H*", $member_data['password']));
+        }
+        Zend_Ldap_Attribute::setAttribute($entry, 'userPassword', $hash);
 
         $connection->update($entry['dn'], $entry);
         $connection->getLastError($this->errCode, $this->errMessages);
@@ -485,7 +494,8 @@ class Default_Model_Ocs_Ldap
         $im->destroy();
         $avatarJpeg = $imgTempPath;
         $avatarFileData = file_get_contents($avatarJpeg);
-        Zend_Ldap_Attribute::removeFromAttribute($entry, 'jpegPhoto', Zend_Ldap_Attribute::getAttribute($entry, 'jpegPhoto'));
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'jpegPhoto',
+            Zend_Ldap_Attribute::getAttribute($entry, 'jpegPhoto'));
         Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatarFileData);
 
         return $entry;
@@ -613,7 +623,7 @@ class Default_Model_Ocs_Ldap
      * @param $member_id
      * @param $username
      *
-     * @return array|null
+     * @return bool
      * @throws Default_Model_Ocs_Exception
      * @throws Zend_Ldap_Exception
      */
@@ -635,10 +645,11 @@ class Default_Model_Ocs_Ldap
             return $entries[0];
         }
 
-        $username = mb_strtolower($username);
+        $enc = mb_detect_encoding($username) ? mb_detect_encoding($username) : 'UTF-8';
+        $username = mb_strtolower($username, $enc);
         $entry = $ldap->getEntry("cn={$username},{$this->baseDnUser}");
 
-        return $entry;
+        return empty($entry) ? false : true;
     }
 
     private function hasChangedUsername($user_name, $user)
@@ -759,8 +770,7 @@ class Default_Model_Ocs_Ldap
         if (empty($entry) AND (strtolower($group_access) == 'owner')) {
             if (empty($group_id) OR empty($group_path)) {
                 Zend_Registry::get('logger')->warn(__METHOD__
-                    . ' - ldap entry for group does not exists and owner is given. But group_id or group_path is empty.')
-                ;
+                                                   . ' - ldap entry for group does not exists and owner is given. But group_id or group_path is empty.');
 
                 return false;
             }

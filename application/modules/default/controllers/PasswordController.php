@@ -149,7 +149,6 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
 
     public function changeAction()
     {
-
         $debugMsg = '' . __METHOD__ . PHP_EOL;
         $uri_part = explode("?", $this->_request->getRequestUri());
         $debugMsg .= ' - $uri_part = ' . print_r($uri_part, true) . PHP_EOL;
@@ -239,12 +238,20 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
         try {
             $id_server = new Default_Model_Ocs_OAuth();
             $id_server->updatePasswordForUser($member_data->member_id);
+            $messages = $id_server->getMessages();
+            if (false == empty($messages)) {
+                Zend_Registry::get('logger')->info(json_encode($messages));
+            }
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
             $ldap_server = new Default_Model_Ocs_Ldap();
-            $ldap_server->updatePassword($member_data->member_id);
+            $ldap_server->updatePassword($member_data->member_id, $password1);
+            $messages = $ldap_server->getMessages();
+            if (false == empty($messages)) {
+                Zend_Registry::get('logger')->info(json_encode($messages));
+            }
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
@@ -307,12 +314,20 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
         try {
             $id_server = new Default_Model_Ocs_OAuth();
             $id_server->updatePasswordForUser($member_data->member_id);
+            $messages = $id_server->getMessages();
+            if (false == empty($messages)) {
+                Zend_Registry::get('logger')->info(json_encode($messages));
+            }
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
             $ldap_server = new Default_Model_Ocs_Ldap();
-            $ldap_server->updatePassword($member_data->member_id);
+            $ldap_server->updatePassword($member_data->member_id, $password1);
+            $messages = $ldap_server->getMessages();
+            if (false == empty($messages)) {
+                Zend_Registry::get('logger')->info(json_encode($messages));
+            }
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }

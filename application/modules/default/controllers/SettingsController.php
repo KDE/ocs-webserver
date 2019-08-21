@@ -1072,59 +1072,62 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer('partials/password');
 
-        if ($this->_request->isPost()) {
-            $form = $this->formPassword();
+        $form = $this->formPassword();
 
-            if ($form->isValid($_POST)) {
-                $values = $form->getValues();
-
-                if ($this->_memberSettings->password != Local_Auth_Adapter_Ocs::getEncryptedPassword($values['passwordOld'],
-                        $this->_memberSettings->password_type)) {
-                    $form->addErrorMessage('Your old Password is wrong!');
-                    $this->view->passwordform = $form;
-                    $this->view->error = 1;
-                } else {
-                    //20180801 ronald: If a Hive User changes his password, we change the password type to our Default
-                    if ($this->_memberSettings->password_type == Default_Model_Member::PASSWORD_TYPE_HIVE) {
-                        //Save old data
-                        $this->_memberSettings->password_old = $this->_memberSettings->password;
-                        $this->_memberSettings->password_type_old = Default_Model_Member::PASSWORD_TYPE_HIVE;
-
-                        //Change type and password
-                        $this->_memberSettings->password_type = Default_Model_Member::PASSWORD_TYPE_OCS;
-                    }
-
-                    $this->_memberSettings->password =
-                        Local_Auth_Adapter_Ocs::getEncryptedPassword($values['password1'],
-                            $this->_memberSettings->password_type);
-                    $this->_memberSettings->save();
-                    $this->view->passwordform = $this->formPassword();
-                    $this->view->save = 1;
-
-                    //Update Auth-Services
-                    try {
-                        $id_server = new Default_Model_Ocs_OAuth();
-                        $id_server->updatePasswordForUser($this->_memberSettings->member_id);
-                    } catch (Exception $e) {
-                        Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
-                    }
-                    try {
-                        $ldap_server = new Default_Model_Ocs_Ldap();
-                        $ldap_server->updatePassword($this->_memberSettings->member_id);
-                        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL . " - ",
-                                $ldap_server->getMessages()));
-                    } catch (Exception $e) {
-                        Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
-                    }
-                }
-            } else {
-                $this->view->passwordform = $form;
-                $this->view->error = 1;
-            }
-        } else {
-            $form = $this->formPassword();
+        if (false === $this->_request->isPost()) {
 
             $this->view->passwordform = $form;
+
+            return;
+        }
+
+        if (false === $form->isValid($_POST)) {
+            $this->view->passwordform = $form;
+            $this->view->error = 1;
+
+            return;
+        }
+
+        $values = $form->getValues();
+
+        if ($this->_memberSettings->password != Local_Auth_Adapter_Ocs::getEncryptedPassword($values['passwordOld'], $this->_memberSettings->password_type)) {
+            $form->addErrorMessage('Your old Password is wrong!');
+            $this->view->passwordform = $form;
+            $this->view->error = 1;
+
+            return;
+        }
+
+        //20180801 ronald: If a Hive User changes his password, we change the password type to our Default
+        if ($this->_memberSettings->password_type == Default_Model_Member::PASSWORD_TYPE_HIVE) {
+            //Save old data
+            $this->_memberSettings->password_old = $this->_memberSettings->password;
+            $this->_memberSettings->password_type_old = Default_Model_Member::PASSWORD_TYPE_HIVE;
+
+            //Change type and password
+            $this->_memberSettings->password_type = Default_Model_Member::PASSWORD_TYPE_OCS;
+        }
+
+        $this->_memberSettings->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($values['password1'], $this->_memberSettings->password_type);
+        $this->_memberSettings->save();
+
+        $this->view->passwordform = $form;
+        $this->view->save = 1;
+
+        //Update Auth-Services
+        try {
+            $id_server = new Default_Model_Ocs_OAuth();
+            $id_server->updatePasswordForUser($this->_memberSettings->member_id);
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - ldap : ' . implode(PHP_EOL . " - ", $id_server->getMessages()));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $ldap_server = new Default_Model_Ocs_Ldap();
+            $ldap_server->updatePassword($this->_memberSettings->member_id, $values['password1']);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL . " - ", $ldap_server->getMessages()));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
     }
 
