@@ -1,3 +1,7 @@
+#backend-statistic a{
+  cursor: pointer;
+}
+
 .pling-nav-tabs a{
   cursor: pointer;
 }
@@ -233,6 +237,8 @@ table.tablestati td.number {
     min-width: 804px;
     margin: 0 auto;
     background-color: #FAF7F7;
+    float: left;
+    display: block;
 }
 
 .chart-wrapper .inner-wrapper {

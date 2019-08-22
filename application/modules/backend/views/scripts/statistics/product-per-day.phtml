@@ -1,0 +1,37 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<h3>Statistics: Product/Day</h3>
+<div id="topDownloadsPerDayTab" class="tab-pane ">
+            <div style="display: block; clear: both">
+                <input name="filterTopDownloadsDate" id="filterTopDownloadsDate" value="<?php echo date("Y-m-j") ?>"/>
+                <button class="filterTopDownloadsDate">go!</button>
+                <button class="filterTopDownloadsDateClear">clear!</button>
+
+            </div>
+            <div id="topDownloadsPerDayTabContainer" style="display: block;clear: left"></div>
+        </div> 
+<script type="text/javascript">
+	$(document).ready(function () {		
+        $('button.filterTopDownloadsDate').trigger('click');
+	});
+</script>
