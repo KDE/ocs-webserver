@@ -68,4 +68,6 @@ class Default_Model_Spam
         }
     }
 
+    
+
 }

@@ -1113,6 +1113,40 @@ class Default_Model_Info
         }
     }
 
+     public function getLastSpamProjects($member_id, $limit = 10)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$member_id . (int)$limit);
+
+        if (false !== ($resultSet = $cache->load($cacheName))) {
+            return $resultSet;
+        }
+
+        $sql = "
+            SELECT *
+            FROM `stat_projects`
+            WHERE `stat_projects`.`amount_reports` >= :threshold AND `stat_projects`.`status` = 100
+            AND  `stat_projects`.`member_id` = :member_id
+            ORDER BY `stat_projects`.`changed_at` DESC, `stat_projects`.`created_at` DESC, `stat_projects`.`amount_reports` DESC
+        ";
+
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('threshold' => Default_Model_Spam::SPAM_THRESHOLD, 'member_id' => $member_id));
+
+        if ($result->rowCount() > 0) {            
+            $resultSet = $result->fetchAll();        
+        } else {
+            $resultSet = array();
+        }
+        $cache->save($resultSet, $cacheName, array(), 300);
+        return $resultSet;
+        
+    }
+
     public function getLastDonationsForUsersProjects($member_id, $limit = 10)
     {
         /** @var Zend_Cache_Core $cache */
