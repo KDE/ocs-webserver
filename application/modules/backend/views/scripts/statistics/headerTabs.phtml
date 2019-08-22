@@ -28,7 +28,7 @@ $helperBuildBaseUrl = new Default_View_Helper_BuildBaseUrl();
         <li class="<?php echo $this->tab == 'new-members-projects' ? 'active' : ''; ?>">
             <a class="newuserprojectTab" href="<?=$helperBuildBaseUrl->buildBaseUrl('statistics/new-members-projects')?>" data-toggle="tab">New Members & Projects </a></li>
 
-         <li class="<?php echo $this->tab == 'new-products-weekly' ? 'active' : ''; ?>"><a class="newproductsweeklyTab" href="<?=$helperBuildBaseUrl->buildBaseUrl('statistics/new-products-weekly')?>">New Products weekly</a></li>
+         <li class="<?php echo $this->tab == 'new-products-weekly' ? 'active' : ''; ?>"><a class="newproductsweeklyTab" href="/statistics/new-products-weekly">New Products weekly</a></li>
 
         <li class="<?php echo $this->tab == 'downloads-domain' ? 'active' : ''; ?>"><a class="downloadsDomainTab" href="<?=$helperBuildBaseUrl->buildBaseUrl('statistics/downloads-domain')?>" data-toggle="tab">Downloads Domain</a></li>
 
