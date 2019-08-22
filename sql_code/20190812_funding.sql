@@ -560,6 +560,61 @@ CREATE DEVENT `e_update_member_dl_plings_current_month`
 	JOIN section_category sc ON sc.project_category_id = p.project_category_id
 	SET p.section_id = sc.section_id
 	WHERE p.yearmonth = DATE_FORMAT(NOW(),'%Y%m');
+
+
+        #Update support payments for the current month
+        DELETE FROM section_support_paypements WHERE yearmonth = DATE_FORMAT(NOW(),'%Y%m');
+
+        #One-Time-Supports
+        INSERT INTO section_support_paypements (yearmonth, section_support_id, support_id, section_id, amount, tier, period, period_frequenzy)
+
+        SELECT DATE_FORMAT(NOW(),'%Y%m') AS yearmonth, s.section_support_id, s.support_id, s.section_id, s.amount, s.tier, s.period, s.period_frequency FROM section_support s
+        JOIN support su ON su.id = s.support_id
+        WHERE s.is_active = 1
+        AND su.status_id = 2
+        AND su.type_id = 0
+        AND DATE_FORMAT(su.active_time,'%Y%m')  <= DATE_FORMAT(NOW(),'%Y%m')
+        AND DATE_FORMAT(su.active_time,'%Y%m')  > DATE_FORMAT(NOW() - INTERVAL 12 MONTH,'%Y%m')
+        ;
+
+        #Subscriptions
+        INSERT INTO section_support_paypements (yearmonth, section_support_id, support_id, section_id, amount, tier, period, period_frequenzy)
+
+        SELECT DATE_FORMAT(NOW(),'%Y%m') AS yearmonth, s.section_support_id, s.support_id, s.section_id, s.amount, s.tier, s.period, s.period_frequency FROM section_support s
+        JOIN support su ON su.id = s.support_id
+        WHERE s.is_active = 1
+        AND su.status_id = 2
+        AND su.type_id = 1
+        AND DATE_FORMAT(su.active_time,'%Y%m')  <= DATE_FORMAT(NOW(),'%Y%m')
+        ;
+
+        #Canceled Yearly Subscriptions
+        INSERT INTO section_support_paypements (yearmonth, section_support_id, support_id, section_id, amount, tier, period, period_frequenzy)
+
+        SELECT DATE_FORMAT(NOW(),'%Y%m') AS yearmonth, s.section_support_id, s.support_id, s.section_id, s.amount, s.tier, s.period, s.period_frequency FROM section_support s
+        JOIN support su ON su.id = s.support_id
+        WHERE s.is_active = 1
+        AND su.status_id = 99
+        AND su.type_id = 1
+        AND su.period = 'Y'
+        AND DATE_FORMAT(su.active_time,'%Y%m')  <= DATE_FORMAT(NOW(),'%Y%m')
+        AND DATE_FORMAT(su.active_time,'%Y%m')  > DATE_FORMAT(NOW() - INTERVAL 12 MONTH,'%Y%m')
+        ;
+
+
+        #Canceled Monthly Subscriptions
+        INSERT INTO section_support_paypements (yearmonth, section_support_id, support_id, section_id, amount, tier, period, period_frequenzy)
+
+        SELECT DATE_FORMAT(NOW(),'%Y%m') AS yearmonth, s.section_support_id, s.support_id, s.section_id, s.amount, s.tier, s.period, s.period_frequency FROM section_support s
+        JOIN support su ON su.id = s.support_id
+        WHERE s.is_active = 1
+        AND su.status_id = 99
+        AND su.type_id = 1
+        AND su.period = 'M'
+        AND DATE_FORMAT(su.active_time,'%Y%m')  <= DATE_FORMAT(NOW(),'%Y%m')
+        AND DATE_FORMAT(su.active_time,'%Y%m')  > DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')
+        ;
+
 	
 	CALL `generate_section_funding_stats`(DATE_FORMAT(NOW(),'%Y%m'));
 	

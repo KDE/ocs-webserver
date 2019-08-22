@@ -64,6 +64,7 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
         if(!empty($signUp)) {
             $new_row->member_id = $signUp['member_id'];
             $new_row->subscription_id = $signUp['subscription_id'];
+            $new_row->tier = $signUp['tier'];
             $new_row->period = $signUp['period'];
             $new_row->period_frequency = $signUp['period_frequency'];
         }
