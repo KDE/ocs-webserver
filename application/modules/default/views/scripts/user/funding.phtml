@@ -40,14 +40,19 @@ $allSections = $modelSection->fetchAllSections();
                 <!-- /NAVIGATION -->
              
               <div class="my-products-heading">
-                   <h1 class="page-title left"><?= $this->translate('Funding') ?></h1>                   
+                   <h1 class="page-title left"><?= $this->translate('Funding') ?></h1> 
+                   <p>Supporter Level = (S1,S2)</p>
                </div>
 
                 <div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0; padding-bottom: 10px;">
                     <div class="row"> 
                         <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Section</strong></div>
+                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Total</strong></div>
                         <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Status</strong></div>
                         <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Amount</strong></div>
+                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Payed Since</strong></div>
+                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Payed Until</strong></div>
+                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Months</strong></div>
                         <div class="col-md-3 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Details</strong></div>
                     </div>
                     
@@ -58,24 +63,76 @@ $allSections = $modelSection->fetchAllSections();
                             $supports = $modelSectionSupport->fetchAllSectionSupportsForMember($section['section_id'], $this->member['member_id']);
                             foreach ($supports as $support) {
                 ?>
+                    
                     <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;<?php if($isFirst) echo "border-top: 1px solid #ddd;margin-top: 15px;padding-top: 5px;" ?>">
                         <div class="col-md-2 cell-default" style="">
                             <?php if($isFirst) { 
                                 echo $section['name']; 
-                                $isFirst = false;
                             } ?>
+                        </div>
+                        
+                        <div class="col-md-1 cell-default" style="">
+                            <?php
+                            /*
+                            active, ongoing, green
+                            active, canceled, yellow
+                            active, one-time, yellow
+                            inactive, canceled, red
+                            inactive, one-time, red
+                             */
+                            ?>
+                        </div>
+                        <div class="col-md-1 cell-default" style="">$<?= $support['tier'] ?>/month</div>
+
+                        
+                        <div class="col-md-1 cell-default" style=""><?= $support['active_time'] ?></div>
+                        <div class="col-md-1 cell-default" style="">
+                            <?php 
+                                if($support['period'] == 'Y') {
+                                    
+                                    $d1 = strtotime($support['active_time']);
+                                    $d2 = strtotime();
+                                    
+                                    if($support['active_status'] == 'inactive') {
+                                        $d2 = strtotime($support['active_time_one_year']);
+                                    }
+                                    
+                                    $min_date = min($d1, $d2);
+                                    $max_date = max($d1, $d2);
+                                    $i = 0;
+
+                                    while (($min_date = strtotime("+1 MONTH", $min_date)) <= $max_date) {
+                                        $i++;
+                                    }
+                                    echo $i; // 8
+                                } else {
+                                    $d1 = strtotime($support['active_time']);
+                                    $d2 = strtotime();
+                                    
+                                    if($support['active_status'] == 'inactive') {
+                                        $d2 = strtotime($support['active_time_one_month']);
+                                    }
+                                    
+                                    $min_date = min($d1, $d2);
+                                    $max_date = max($d1, $d2);
+                                    $i = 0;
+
+                                    while (($min_date = strtotime("+1 MONTH", $min_date)) <= $max_date) {
+                                        $i++;
+                                    }
+                                    echo $i; // 8
+
+                                }
+                                    
+                            ?>
                         </div>
                         <div class="col-md-1 cell-default" style="">
                             <?php
-                                if($support['active_status'] == 'active') {
-                                    echo "<span class='label label-success'>active</span>";
-                                } else {
-                                    echo "<span class='label label-danger'>inactive</span>";
-                                }
+                                //Months
                             ?>
-                            
                         </div>
-                        <div class="col-md-1 cell-default" style="">$<?= $support['tier'] ?>/month</div>
+                        
+                        
                         <div class="col-md-3 cell-default" style="">
                             <?php 
                                 $text = "Your ";
@@ -102,9 +159,12 @@ $allSections = $modelSection->fetchAllSections();
                                         $text .= " to ". $this->printDate($support['delete_time']);
                                     }
                                 }
+                                $text .= ". Transaction-Id: ";
                                 
                                 
                                 echo $text;
+                                $isFirst = false;
+
                             ?>
                         
                         </div>

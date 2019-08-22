@@ -85,6 +85,7 @@ class Default_Model_StatDownload
                     `project`.`pling_excluded` AS `is_pling_excluded_now`,
                     (SELECT u.num_downloads FROM member_dl_plings_nouk u WHERE u.member_id = `member_dl_plings`.`member_id` and u.project_id = `member_dl_plings`.`project_id` AND u.yearmonth = `member_dl_plings`.yearmonth) AS num_downloads_nouk,
                     (SELECT u.probably_payout_amount FROM member_dl_plings_nouk u WHERE u.member_id = `member_dl_plings`.`member_id` and u.project_id = `member_dl_plings`.`project_id` AND u.yearmonth = `member_dl_plings`.yearmonth) AS probably_payout_amount_nouk
+                    ,sc.section_id,s.name AS section_name,`member_dl_plings`.section_payout_factor
                 FROM
                     `member_dl_plings`
                 STRAIGHT_JOIN
@@ -95,6 +96,8 @@ class Default_Model_StatDownload
                     `member_payout` ON `member_payout`.`member_id` = `member_dl_plings`.`member_id`
                         AND `member_payout`.`yearmonth` = `member_dl_plings`.`yearmonth`
                 LEFT JOIN `tag_object` ON `tag_object`.`tag_type_id` = 1 AND `tag_object`.`tag_group_id` = 7 AND `tag_object`.`is_deleted` = 0 AND `tag_object`.`tag_object_id` = `project`.`project_id`
+                LEFT JOIN section_category sc ON sc.project_category_id = `member_dl_plings`.`project_category_id`
+                LEFT JOIN section s ON s.section_id = sc.section_id
                 WHERE
                     `member_dl_plings`.`member_id` = :member_id
                     AND `member_dl_plings`.`yearmonth` = :yearmonth

@@ -1293,6 +1293,7 @@ class Default_Model_Info
                 ,(select username from member m where m.member_id = s.member_id) as username
                 ,(select profile_image_url from member m where m.member_id = s.member_id) as profile_image_url
                 ,MAX(s.active_time) AS active_time_max
+                ,ss.tier AS section_support_tier
                 from section_support_paypements ss
                 JOIN support s ON s.id = ss.support_id
                 WHERE ss.section_id = :section_id
