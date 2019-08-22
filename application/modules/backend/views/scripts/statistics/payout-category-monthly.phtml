@@ -24,6 +24,8 @@
 $modelCategory = new Default_Model_ProjectCategory();
 $this->categories = $modelCategory->fetchTreeForView();
 $jsonTree = json_encode($this->categories);
+$this->tab = 'payout-category-monthly';
+echo $this->render('statistics/headerTabs.phtml'); 
 ?>
 <h3>Statistics: Payout Category Monthly</h3>
 

@@ -23,6 +23,8 @@
 $modelCategory = new Default_Model_ProjectCategory();
 $this->categories = $modelCategory->fetchTreeForView();
 $jsonTree = json_encode($this->categories);
+$this->tab = 'product-per-month';
+echo $this->render('statistics/headerTabs.phtml'); 
 ?>
 <h3>Statistics: Product/Month</h3>
 <div id="topDownloadsPerMonthTab" class="tab-pane ">

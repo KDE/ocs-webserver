@@ -1,0 +1,51 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperBuildBaseUrl = new Default_View_Helper_BuildBaseUrl();
+?>
+
+<div class="pling-nav-tabs">
+    <ul class="nav nav-tabs ">
+        <li class="<?php echo $this->tab == 'new-members-projects' ? 'active' : ''; ?>">
+            <a class="newuserprojectTab" href="<?=$helperBuildBaseUrl->buildBaseUrl('statistics/new-members-projects')?>" data-toggle="tab">New Members & Projects </a></li>
+
+         <li class="<?php echo $this->tab == 'new-products-weekly' ? 'active' : ''; ?>"><a class="newproductsweeklyTab" href="<?=$helperBuildBaseUrl->buildBaseUrl('statistics/new-products-weekly')?>">New Products weekly</a></li>
+
+        <li class="<?php echo $this->tab == 'downloads-domain' ? 'active' : ''; ?>"><a class="downloadsDomainTab" href="<?=$helperBuildBaseUrl->buildBaseUrl('statistics/downloads-domain')?>" data-toggle="tab">Downloads Domain</a></li>
+
+        <li class="<?php echo $this->tab == 'downloads-payouts-daily' ? 'active' : ''; ?>"><a class="downloadsdailyTab" href="<?=$helperBuildBaseUrl->buildBaseUrl('statistics/downloads-payouts-daily')?>" data-toggle="tab">Downloads&Payouts daily</a></li>
+
+        <li class="<?php echo $this->tab == 'product-per-day' ? 'active' : ''; ?>"><a class="topDownloadsPerDayTab" href="<?=$helperBuildBaseUrl->buildBaseUrl('statistics/product-per-day')?>" data-toggle="tab">Product/Day</a></li>
+        <li class="<?php echo $this->tab == 'product-per-month' ? 'active' : ''; ?>"><a class="topDownloadsPerMonthTab" href="<?=$helperBuildBaseUrl->buildBaseUrl('statistics/product-per-month')?>" data-toggle="tab">Product/Month</a></li>
+
+        <li class="<?php echo $this->tab == 'payout-member' ? 'active' : ''; ?>">
+            <a class="payoutTab" href="<?=$helperBuildBaseUrl->buildBaseUrl('statistics/payout-member')?>" data-toggle="tab">Payout Member</a></li>
+        <li class="<?php echo $this->tab == 'payout-newcomer' ? 'active' : ''; ?>"
+            ><a class="payoutNewcomerTab" href="<?=$helperBuildBaseUrl->buildBaseUrl('statistics/payout-newcomer')?>" data-toggle="tab">Payout Newcomer</a></li>
+        <li class="<?php echo $this->tab == 'payout-newloser' ? 'active' : ''; ?>"><a class="payoutNewloserTab" href="<?=$helperBuildBaseUrl->buildBaseUrl('statistics/payout-newloser')?>" data-toggle="tab">Payout Newloser</a></li>
+        <li class="<?php echo $this->tab == 'payout-month-diff' ? 'active' : ''; ?>"><a class="payoutMonthDiffTab" href="<?=$helperBuildBaseUrl->buildBaseUrl('statistics/payout-month-diff')?>" data-toggle="tab">Payout Month Diff</a></li>
+
+        <li class="<?php echo $this->tab == 'payout-categories' ? 'active' : ''; ?>"><a class="payoutCategoryMonthlyTab" href="<?=$helperBuildBaseUrl->buildBaseUrl('statistics/payout-categories')?>" data-toggle="tab">Payout Categories</a></li>
+
+        <li class="<?php echo $this->tab == 'payout-category-monthly' ? 'active' : ''; ?>"><a class="payoutCategoryTab" href="<?=$helperBuildBaseUrl->buildBaseUrl('statistics/payout-category-monthly')?>" data-toggle="tab">Payout Category monthly</a></li>              
+    </ul>
+</div>
