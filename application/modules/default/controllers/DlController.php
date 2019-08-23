@@ -124,11 +124,12 @@ class DlController extends Local_Controller_Action_DomainSwitch
 
 
                 $server_info = '';               
-                foreach ($_SERVER as $arg) {
-                    if ($_SERVER[$arg]) {
-                        $server_info = $server_info.$arg.': '.$_SERVER[$arg].' ';                        
-                    }                    
-                } 
+
+                foreach ( $_SERVER as $key=>$value ) {                   
+                   if ($value) {
+                        $server_info = $server_info.$key.': '.$value.' ';                        
+                    } 
+                }
                 
 
                 $data = array('project_id' => $projectId, 'member_id' => $memberId,'anonymous_cookie'=>$storedInCookie, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size,'downloaded_ip' => $this->getRealIpAddr()
