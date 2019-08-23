@@ -47,6 +47,9 @@ class Default_Model_DbTable_MemberDownloadHistory extends Zend_Db_Table_Abstract
        if($member_id)
        {
          $sql_filter = " and h.member_id =".$member_id;
+       }else
+       {
+        $sql_filter = " and h.anonymous_cookie ='".$cookie."'";
        }
        $sql = "select
             c.section_id,
@@ -56,12 +59,12 @@ class Default_Model_DbTable_MemberDownloadHistory extends Zend_Db_Table_Abstract
             where h.project_id = p.project_id
             and p.project_category_id = s.project_category_id
             and s.section_id = c.section_id
-            and h.anonymous_cookie=:cookie ".$sql_filter
+            ".$sql_filter
             ."
             )  as dls
             from section c
             where c.is_active = 1";
-        $result = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('cookie'=>$cookie));
+        $result = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
         return $result;
     }
     public function getDownloadhistory($member_id){
