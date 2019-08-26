@@ -92,7 +92,7 @@ if($target == 'opendesktop') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_gitlab);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_gitlab);
     $targetObject['logo'] = "opencode";
-    $targetObject['link'] = $url_cloudopendesktop;
+    $targetObject['link'] = $url_gitlab;
     $targetObject['logoLabel'] = "Opencode";
 
 } else if($target == 'riot') {
