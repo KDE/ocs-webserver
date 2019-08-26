@@ -8,6 +8,8 @@ async function initConfig(target, redirect)
          if (window.location.hostname.endsWith('cc')) {
             url = `https://www.opendesktop.cc/home/metamenubundlejs?target=${target}&url=${redirect}`;
           }
+
+          console.log("initConfig:"+url);
           // else if (location.hostname.endsWith('localhost')) {
           //   url = `http://localhost:${location.port}/config-dummy.php`;
           // }
