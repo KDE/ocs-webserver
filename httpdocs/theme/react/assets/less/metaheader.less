@@ -72,6 +72,7 @@
 
   .metamenu {
     height: 34px;
+    text-align: center;
   }
 
 
@@ -94,6 +95,42 @@
       background: -webkit-linear-gradient(top, #4387fd, #4683ea);
       margin-top: -2px;
       margin-right: 5px;
+    }
+    #whereami{
+      display: inline-block;
+      margin: 0 auto;
+      width: 200px;
+      height: 34px;
+      .icon {
+        height: 34px;
+        width: 34px;
+        background-size: 34px;
+        background-position: center center;
+        background-repeat: no-repeat;
+        float: left;
+      }
+      .opendesktop{
+        background-image: url('../img/logo-opendesktop.png');
+      }
+      .pling{
+        background-image: url('../img/logo-pling.png');
+      }
+      .opencode{
+        background-image: url('../img/logo-opencode.png');
+      }
+      .chat{
+        background-image: url('../img/chat.png');
+      }
+
+      span {
+        float: left;
+        line-height: 34px;
+        padding-left: 10px;
+        text-align: center;
+        display: block;
+        color:rgba(0,0,0,0.87);
+        font-size: 13px;
+      }
     }
 
     #user-menu-container {
@@ -2223,4 +2260,9 @@
           background-image: url(../img/white-down-arrow-icon-0.png);
       }
     }
+  #whereami{
+    span{
+      color:#fff
+    }
+  }
 }

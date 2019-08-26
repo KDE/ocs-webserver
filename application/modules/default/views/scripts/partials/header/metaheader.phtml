@@ -52,14 +52,33 @@ $url_cloudopendesktop = Zend_Registry::get('config')->settings->client->default-
 $url_musicopendesktop = Zend_Registry::get('config')->settings->client->default->url_musicopendesktop;
 $url_mastodon = Zend_Registry::get('config')->settings->client->default->url_mastodon;
 $url_docsopendesktop = Zend_Registry::get('config')->settings->client->default->url_docsopendesktop;
+
 $filter = new Local_Filter_Url_Encrypt();
 $url_login;
 $url_logout;
 
+// intern metaheader diff opendesktop/pling
+$storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
 $target = 'opendesktop';
+if($storeConfig->config_id_name=='plingcom')
+{
+  $target = 'pling';
+}
+
 if(isset($_GET['target'])) {
     $target = $_GET['target'];
 }
+$targetObject=array();
+$targetObject['target'] = $target;
+if($target=="pling")
+{
+  $targetObject['logo'] = "pling";
+  $targetObject['logoLabel'] = "";
+}else{
+  $targetObject['logo'] = "opendesktop";
+  $targetObject['logoLabel'] = "Opendesktop";
+}
+
 
 $thisurl = "/";
 if(isset($_GET['url'])) {
@@ -131,7 +150,8 @@ $response = array(
     "loginUrl" => $url_login,
     "logoutUrl" => $url_logout,
     "sName" => $sname,
-    "metamenuTheme" => $metamenuTheme
+    "metamenuTheme" => $metamenuTheme,
+    "target" => $targetObject
 );
 
 ?>

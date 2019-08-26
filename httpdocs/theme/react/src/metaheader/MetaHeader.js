@@ -4,6 +4,7 @@ import React from 'react';
 import MobileLeftMenu from './MobileLeftMenu';
 import DomainsMenu from './DomainsMenu';
 import UserMenu from './UserMenu';
+import WhereAmI from './function/WhereAmI';
 
 class MetaHeader extends React.Component {
   constructor(props){
@@ -136,10 +137,12 @@ class MetaHeader extends React.Component {
     if(this.state.metamenuTheme){
         paraChecked=true;
     }
+
     return (
       <nav id="metaheader-nav" className="metaheader">
         <div style={{"display":"block"}} className={metamenuCls}>
           {domainsMenuDisplay}
+          <WhereAmI target={this.state.target}></WhereAmI>
           <UserMenu
             device={this.state.device}
             user={this.state.user}
