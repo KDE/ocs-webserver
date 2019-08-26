@@ -150,12 +150,11 @@ if (Zend_Auth::getInstance()->hasIdentity()){
 }
 
 $sname = Zend_Registry::get('store_host');
-$json_menu = $this->fetchMetaheaderMenuJson();
-
+//$json_menu = $this->fetchMetaheaderMenuJson();
+//"domains" => Zend_Json::decode($json_menu),
 $response = array(
     "json_isAdmin" => $isAdmin,
     "isExternal" => $is_external,
-    "domains" => Zend_Json::decode($json_menu),
     "user" => $user,
     "baseUrl" => $baseurl,
     "baseUrlStore" => $baseurlStore,
