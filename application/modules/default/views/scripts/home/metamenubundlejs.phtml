@@ -79,9 +79,9 @@ Zend_Registry::get('logger')->info('metamenubundlejs.phtml  - redirect url : ' .
 $isExternal = 'var isExternal = true;';
 $is_external = true;
 $targetObject = array();
-$targetObject->target = $target;
-$targetObject->logo = "opendesktop";
-$targetObject->logoLabel = "OpenDesktop";
+$targetObject['target'] = $target;
+$targetObject['logo'] = "opendesktop";
+$targetObject['logoLabel'] = "OpenDesktop";
 if($target == 'opendesktop') {
     $url_login = "/login/redirect/".$filter->filter($thisurl);
     $url_logout = "/logout?redirect=".$filter->filter($thisurl);
@@ -90,13 +90,13 @@ if($target == 'opendesktop') {
 } else if($target == 'gitlab') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_gitlab);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_gitlab);
-    $targetObject->logo = "opencode";
-    $targetObject->logoLabel = "Opencode";
+    $targetObject['logo'] = "opencode";
+    $targetObject['logoLabel'] = "Opencode";
 } else if($target == 'riot') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_riot);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_riot);
-    $targetObject->logo = "chat";
-    $targetObject->logoLabel = "Chat24";
+    $targetObject['logo'] = "chat";
+    $targetObject['logoLabel'] = "Chat24";
 }
 else if($target == 'forum') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_forum);
