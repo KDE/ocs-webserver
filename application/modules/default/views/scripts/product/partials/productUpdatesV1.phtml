@@ -21,7 +21,7 @@
  **/
 
 $helperHumanTiming = new Default_View_Helper_HumanTiming();
-$date = $helperHumanTiming->humanTiming($this->productUpdate['created_at']);
+$date = $helperHumanTiming->humanTiming($this->productUpdate['changed_at']);
 ?>
 <h3 class="product-heading product-update-heading" >
     <?= $this->productUpdate['title'] ?><span class="small light lightgrey product-update-date"> <?= $date['age'] ?> <?= $date['unit'] ?> ago</span>
