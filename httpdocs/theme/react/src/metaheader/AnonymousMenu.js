@@ -60,7 +60,7 @@ class AnonymousMenu extends React.Component {
         <div className={"user-dropdown " + this.state.dropdownClass}>
         <button
           className="btn btn-default dropdown-toggle" type="button" onClick={this.toggleDropDown}>
-          <span className="th-icon"></span>{this.state.anonymousdl}
+          <span className="th-icon"></span><span className="anonymousNumber">{this.state.anonymousdl}</span>
         </button>
         <ul className="dropdown-menu dropdown-menu-right">
           <li className="user-context-menu">

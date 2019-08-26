@@ -9,10 +9,6 @@ async function initConfig(target, redirect)
             url = `https://www.opendesktop.cc/home/metamenubundlejs?target=${target}&url=${redirect}`;
           }
 
-          console.log("initConfig:"+url);
-          // else if (location.hostname.endsWith('localhost')) {
-          //   url = `http://localhost:${location.port}/config-dummy.php`;
-          // }
 
           try {
             const response = await fetch(url, {

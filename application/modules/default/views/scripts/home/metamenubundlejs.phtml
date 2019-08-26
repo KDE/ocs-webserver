@@ -82,6 +82,7 @@ $targetObject = array();
 $targetObject['target'] = $target;
 $targetObject['logo'] = "opendesktop";
 $targetObject['logoLabel'] = "OpenDesktop";
+$targetObject['link'] = $baseurl;
 if($target == 'opendesktop') {
     $url_login = "/login/redirect/".$filter->filter($thisurl);
     $url_logout = "/logout?redirect=".$filter->filter($thisurl);
@@ -91,10 +92,13 @@ if($target == 'opendesktop') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_gitlab);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_gitlab);
     $targetObject['logo'] = "opencode";
+    $targetObject['link'] = $url_cloudopendesktop;
     $targetObject['logoLabel'] = "Opencode";
+
 } else if($target == 'riot') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_riot);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_riot);
+    $targetObject['link'] = $url_riot;
     $targetObject['logo'] = "chat";
     $targetObject['logoLabel'] = "Chat24";
 }
