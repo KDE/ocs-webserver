@@ -99,24 +99,39 @@ if($target == 'opendesktop') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_riot);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_riot);
     $targetObject['link'] = $url_riot;
-    $targetObject['logo'] = "chat";
+    $targetObject['logo'] = "opendesktop";
     $targetObject['logoLabel'] = "Chat24";
 }
 else if($target == 'forum') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_forum);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_forum);
+    $targetObject['link'] = $url_forum;
+    $targetObject['logo'] = "opendesktop";
+    $targetObject['logoLabel'] = "Forum";
 } else if($target == 'myopendesktop') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_myopendesktop);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_myopendesktop);
+    $targetObject['link'] = $url_myopendesktop;
+    $targetObject['logo'] = "opendesktop";
+    $targetObject['logoLabel'] = "My";
 } else if($target == 'cloudopendesktop') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_cloudopendesktop);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_cloudopendesktop);
+    $targetObject['link'] = $url_cloudopendesktop;
+    $targetObject['logo'] = "opendesktop";
+    $targetObject['logoLabel'] = "Cloud";
 } else if($target == 'musicopendesktop') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_musicopendesktop);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_musicopendesktop);
+    $targetObject['link'] = $url_musicopendesktop;
+    $targetObject['logo'] = "opendesktop";
+    $targetObject['logoLabel'] = "Music";
 } else if($target == 'mastodon') {
     $url_login = $baseurl."/login/redirect/".$filter->filter($url_mastodon);
     $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_mastodon);
+    $targetObject['link'] = $url_mastodon;
+    $targetObject['logo'] = "opendesktop";
+    $targetObject['logoLabel'] = "Mastodon";
 }
 
 
