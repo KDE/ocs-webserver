@@ -142,9 +142,7 @@ class MetaHeader extends React.Component {
       <nav id="metaheader-nav" className="metaheader">
         <div style={{"display":"block"}} className={metamenuCls}>
           {domainsMenuDisplay}
-          {this.state.isAdmin &&
-            <WhereAmI target={this.state.target}></WhereAmI>
-          }
+
           <UserMenu
             device={this.state.device}
             user={this.state.user}
@@ -165,7 +163,9 @@ class MetaHeader extends React.Component {
             isExternal={this.state.isExternal}
             riotUrl={this.state.riotUrl}
           />
-
+          {this.state.isAdmin &&
+            <WhereAmI target={this.state.target}></WhereAmI>
+          }
 
         </div>
       </nav>
