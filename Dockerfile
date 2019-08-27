@@ -55,9 +55,6 @@ RUN test "$BUILD_ENV" = "development" \
 COPY --chown=www-data . /usr/src/ocs-webserver
 WORKDIR /usr/src/ocs-webserver
 
-# Add the local store templates
-COPY ./.docker_init/templates/* data/stores/templates/
-
 # Prepare file- & directory-permissions
 RUN test "$BUILD_ENV" != "development" \
  && mkdir -vpm 700 cache/data \
@@ -69,6 +66,7 @@ RUN test "$BUILD_ENV" != "development" \
  && mkdir -vpm 700 httpdocs/img/data/tmp \
  && chown -vR www-data cache \
  && chown -vR www-data data/cache \
+ && chown -vR www-data data/stores/templates \
  && chown -vR www-data application/log \
  && chown -vR www-data httpdocs/img/cache \
  && chown -vR www-data httpdocs/img/data \
