@@ -58,6 +58,8 @@ class MobileLeftSidePanel extends React.Component {
                                 isAdmin={this.props.isAdmin}/>
               </ul>
             </li>
+
+            <li><a href={this.props.riotUrl}>Chat</a></li>
           </ul>
         </div>
       </div>
