@@ -115,15 +115,23 @@ if ($countDownloadsOverall > 0) {
                     <div class="col-md-2 text-left cell-default">
                         <a href="/member/<?= $this->member->member_id ?>/sectionplingsmonthajax?yearmonth=<?= $section['yearmonth'] ?>&section_id=<?= $section['section_id'] ?>" data-toggle="sectiondetailajax" data-target="#pling-tab-content-<?= $section['yearmonth'] ?>-<?= $section['section_id'] ?>" id="sec_<?= $section['yearmonth'] ?>"><?= $section['section_name'] ?></a>
                     </div>
+
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
                         <span><?= $section['count_projects'] ?></span>
                     </div>
+                    
+                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
                         <span><?= $section['num_downloads'] ?></span>
                     </div>
+                    <?php endif; ?>
+                    
+                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
                         <span><?php print($currency->toCurrency($section['sum_probably_payout_amount'])); ?></span>
                     </div>
+                    <?php endif; ?>
+                    
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
                         <span><?php print($section['section_payout_factor']); ?></span>
                     </div>
