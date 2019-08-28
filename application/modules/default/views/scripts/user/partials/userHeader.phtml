@@ -44,6 +44,13 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
         </a>
     </li>
     
+    <li class="header-menu-left-item <?php echo $this->tab == 'payoutsection' ? 'active' : ''; ?>">
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payout2'); ?>">
+            <span class="glyphicon glyphicon-usd"></span>
+            <?= $this->translate('Payout-Section') ?>
+        </a>
+    </li>
+    
     <li class="header-menu-left-item <?php echo $this->tab == 'payouthistory' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payouthistory'); ?>">                                   
             <span class="payouthistory-icon" aria-hidden="true"></span>
