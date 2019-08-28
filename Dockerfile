@@ -1,6 +1,5 @@
 FROM php:5-apache
 
-ENV APPLICATION_ENV development
 ENV DEBIAN_FRONTEND noninteractive
 
 ARG BUILD_ENV=production
@@ -56,27 +55,23 @@ COPY --chown=www-data . /usr/src/ocs-webserver
 WORKDIR /usr/src/ocs-webserver
 
 # Prepare file- & directory-permissions
-RUN test "$BUILD_ENV" != "development" \
- && mkdir -vpm 700 cache/data \
- && mkdir -vpm 700 cache/sessions \
- && mkdir -vpm 700 data/cache \
- && mkdir -vpm 700 application/log \
- && mkdir -vpm 700 httpdocs/img/cache/rendered \
- && mkdir -vpm 700 httpdocs/img/cache/request \
- && mkdir -vpm 700 httpdocs/img/data/tmp \
- && chown -vR www-data cache \
- && chown -vR www-data data/cache \
- && chown -vR www-data data/stores/templates \
- && chown -vR www-data application/log \
+#RUN test "$BUILD_ENV" != "development" \
+RUN chown -vR www-data data \
  && chown -vR www-data httpdocs/img/cache \
  && chown -vR www-data httpdocs/img/data \
- || :
+ && chown -vR www-data httpdocs/img/data \
+ && chown -vR www-data httpdocs/partials \
+ && chown -vR www-data httpdocs/rss \
+ && chown -vR www-data httpdocs/template \
+ && chown -vR www-data httpdocs/video
+# || :
+
+# Set new default entrypoint of Apache
+ENV APACHE_DOCUMENT_ROOT=/usr/src/ocs-webserver/httpdocs
 
 # Prepare apache htaccess file and mod_rewrite
-RUN a2enmod rewrite
-RUN cp httpdocs/_htaccess-default httpdocs/.htaccess
-
+RUN a2enmod rewrite \
+ && cp httpdocs/_htaccess-default httpdocs/.htaccess \
 # Replace the default entrypoint of Apache
-ENV APACHE_DOCUMENT_ROOT=/usr/src/ocs-webserver/httpdocs
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
+ && sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
  && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf

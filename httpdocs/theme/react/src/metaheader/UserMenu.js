@@ -99,7 +99,7 @@ class UserMenu extends React.Component {
     } else {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu right" id="user-menu">
-          {chatItem}
+        
           {anonymousMenu}
           {developmentAppMenuDisplay}
           {userDropdownDisplay}

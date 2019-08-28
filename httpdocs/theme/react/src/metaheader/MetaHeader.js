@@ -103,6 +103,7 @@ class MetaHeader extends React.Component {
           isAdmin={this.state.isAdmin}
           isExternal={this.state.isExternal}
           gitlabUrl={this.state.gitlabUrl}
+          riotUrl={this.state.riotUrl}
         />
       )
     } else {
