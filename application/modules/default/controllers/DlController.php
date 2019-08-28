@@ -88,11 +88,26 @@ class DlController extends Local_Controller_Action_DomainSwitch
             //20181009 ronald: change hash from MD5 to SHA512
             //$hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
             $hash = hash('sha512',$salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
+
+            // handle cookie
+            $config = Zend_Registry::get('config');                
+            $cookieName = $config->settings->session->auth->anonymous;
+            $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
+            if(!$storedInCookie)
+            {
+               $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
+               $cookieExpire = time() + $remember_me_seconds;
+               $storedInCookie = $hash;
+               setcookie($cookieName, $hash, $cookieExpire, '/'); 
+            }            
+
             $url = PPLOAD_API_URI . 'files/download/id/' . $file_id . '/s/' . $hash . '/t/' . $timestamp;
             if(isset($memberId)) {
                 $url .= '/u/' . $memberId;
             }
+            $url .= '/c/' . $storedInCookie;            
             $url .= '/lt/' . $linkType . '/' . $file_name;
+
             
             if($linkType == 'install') {
                 $helperCatXdgType = new Default_View_Helper_CatXdgType();
@@ -106,22 +121,21 @@ class DlController extends Local_Controller_Action_DomainSwitch
             $this->view->url = $url;
 
 
-            // save to member_download_history
-            $config = Zend_Registry::get('config');                
-            $cookieName = $config->settings->session->auth->anonymous;
-            $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
-            if(!$storedInCookie)
-            {
-               $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
-               $cookieExpire = time() + $remember_me_seconds;
-               $storedInCookie = $hash;
-               setcookie($cookieName, $hash, $cookieExpire, '/'); 
-            }
-
+            // save to member_download_history            
             if(isset($file_id) && isset($projectId)) {            
                 
-                // $data = array('project_id' => $projectId, 'member_id' => $memberId,'anonymous_cookie'=>$storedInCookie, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size,'downloaded_ip' => $this->getRealIpAddr());                
-        
+                // $data = array('project_id' => $projectId, 'member_id' => $memberId,'anonymous_cookie'=>$storedInCookie, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size,'downloaded_ip' => $this->getRealIpAddr());               
+
+
+                $server_info = '';               
+
+                foreach ( $_SERVER as $key=>$value ) {                   
+                   if ($value) {
+                        $server_info = $server_info.$key.': '.$value.' ';                        
+                    } 
+                }
+                
+
                 $data = array('project_id' => $projectId, 'member_id' => $memberId,'anonymous_cookie'=>$storedInCookie, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size,'downloaded_ip' => $this->getRealIpAddr()
                              ,'HTTP_X_FORWARDED_FOR' => $_SERVER['HTTP_X_FORWARDED_FOR']
                              ,'HTTP_X_FORWARDED' =>     $_SERVER['HTTP_X_FORWARDED']
@@ -129,6 +143,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
                              ,'HTTP_FORWARDED_FOR' =>   $_SERVER['HTTP_FORWARDED_FOR']
                              ,'HTTP_FORWARDED' =>       $_SERVER['HTTP_FORWARDED']
                              ,'REMOTE_ADDR' =>          $_SERVER['REMOTE_ADDR']                             
+                             ,'server_info' => $server_info
                             );
 
                 $memberDlHistory = new Default_Model_DbTable_MemberDownloadHistory();

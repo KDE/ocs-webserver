@@ -222,11 +222,12 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
     }
 
     /**
-     * @param $members
-     *
+     * @param      $members
+     * @param bool $force
      * @return bool
+     *
+     * @throws Default_Model_Ocs_Exception
      * @throws Zend_Exception
-     * @throws Zend_Validate_Exception
      */
     private function validateMembers($members, $force = false)
     {
@@ -244,7 +245,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
                 $result = $this->validateEntry($member, $ldapEntry);
                 if (isset($result)) {
                     $this->log->info('member (' . $member['member_id'] . ', ' . $member['username'] . ') unequal: ' . PHP_EOL . implode("<=>", $result). ' ' .
-                        mb_strtolower($member[$result[0]]) . '<=>' . Zend_Ldap_Attribute::getAttribute($ldapEntry, $result[1], 0));
+                        $member[$result[0]] . '<=>' . Zend_Ldap_Attribute::getAttribute($ldapEntry, $result[1], 0));
                     if ($force) {
                         $modelOcsIdent->createUserFromArray($member, true);
                     }

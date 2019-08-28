@@ -283,11 +283,12 @@ h3.product-newsfeed-update {
 .product-header-title a:focus {
     color: #08a5c1;
 }
-
+/*
 .pling {
   margin-top: 15px;
   padding: 0;
 }
+*/
 
 .btn-pling-1 {
     font-size: 18px;
@@ -605,15 +606,15 @@ h3.product-update-heading {
        right: 18px;
        position: fixed;
        z-index: 3000;
-      
+
 }
  */
 
 a.partial{
-  
+
   padding:3px 6px;
 }
-a.partialreview{  
+a.partialreview{
   padding:3px 6px;
 }
 
@@ -648,7 +649,7 @@ a.partialreview{
  cursor: not-allowed;
 }
 
-#product-main #product-header #product-maker {  
+#product-main #product-header #product-maker {
     padding-top: 12px;
   }
 
@@ -657,14 +658,14 @@ a.partialreview{
 .carouselContainer img{
   cursor: pointer;
   cursor: -webkit-zoom-in;
-  cursor: -moz-zoom-in;      
+  cursor: -moz-zoom-in;
 }
 
 
 .imgfull img{
     cursor: pointer;
     cursor: -webkit-zoom-out;
-    cursor: -moz-zoom-out;    
+    cursor: -moz-zoom-out;
     max-height: 100% !important;
 }
 
@@ -779,12 +780,12 @@ input[type=number] {
           overflow: visible;
           height: 30px;
       }
-  
+
   .project-share-new a.share-button:first-of-type {
       border-radius: 6px 0 0 6px;
   }
   .project-share-new a.twitter{
-      
+
       padding-right: 15px;
   }
   .project-share-new a.facebook {
@@ -798,11 +799,11 @@ input[type=number] {
       background-position: 5px 50%;
   }
   .project-share-new a.gplus{
-   
+
       background: url(/images/system/gplus_pling.png) no-repeat;
   }
   .project-share-new .share-button {
-   
+
       display: inline-block;
       -moz-box-sizing: border-box;
       -webkit-box-sizing: border-box;
@@ -814,7 +815,7 @@ input[type=number] {
       color: blue;
       text-decoration: none;
       text-shadow: 1px 0 0 rgba(0,0,0,0.1);
-      border: 1px solid #F5F5F5;                               
+      border: 1px solid #F5F5F5;
       background: #2673B0;
       background: -webkit-linear-gradient(top, #21659B, #80B3F5);
       background: -moz-linear-gradient(top, #21659B, #80B3F5);
@@ -830,16 +831,16 @@ input[type=number] {
       position: relative;
        float: left;
        padding-left: 25px;
-       
+
   }
-  
+
   .project-share-new .share-button {
-     display: inline-block;    
-   
+     display: inline-block;
+
   }
   .project-share-new .share-button img{
-     
-      float: left;                            
+
+      float: left;
   }
 
 
@@ -857,7 +858,7 @@ iframe[id^="oauth2relay"] { position: fixed !important; }
 .label
 {
   padding: .0em 1em 0em;
-  margin-left: 3px;  
+  margin-left: 3px;
 }
 
 #pling-box .product-maker-thumbnail > a .sidebar-profile-image
@@ -879,7 +880,7 @@ iframe[id^="oauth2relay"] { position: fixed !important; }
 #comments-container .user .u-wrap img
 {
   width: 100px;
-  height:100px; 
+  height:100px;
   border-radius: 50%;
 }
 
@@ -887,7 +888,7 @@ iframe[id^="oauth2relay"] { position: fixed !important; }
 {
    width: 100px;
    height:100px;
-   border-radius: 50%; 
+   border-radius: 50%;
 }
 
 /**** Explore index ****************/
@@ -946,7 +947,7 @@ iframe[id^="oauth2relay"] { position: fixed !important; }
 
 div.explore-product-details span.packagetypeos
 {
-  
+
 }
 span.packagetypeos
 {
@@ -974,15 +975,15 @@ span.packagetypeos
         border-bottom: 1px dashed #ccc;
         margin-left: 10px;
     }
-  .comments-list .user_name a{        
-        color: rgb(102, 189, 221) !important;        
+  .comments-list .user_name a{
+        color: rgb(102, 189, 221) !important;
     }
 .comments-list .media-body{
     border-bottom: 1px solid #000;
 }
 .comments-list .media-body .text{
     padding-left: 10px
-}    
+}
  .comments-list img{
     border-radius: 50%;
     width: 40px;
@@ -990,7 +991,7 @@ span.packagetypeos
     border: 1px solid #ccc;
 }
 
-.comments-list img.img1{        
+.comments-list img.img1{
     width: 60px;
     height: 60px;
 }
@@ -1060,7 +1061,7 @@ span.packagetypeos
 }
 .comments-list .mod-badge-1{
     text-align: center;
-    font-size: 12px;   
+    font-size: 12px;
     font-weight: bold;
 }
 
@@ -1069,7 +1070,7 @@ span.packagetypeos
     -webkit-animation: spin2 1s infinite linear;
     float:left;
     margin-top:5px;
-    margin-right:5px;    
+    margin-right:5px;
 }
 
 @keyframes spin {

@@ -682,64 +682,53 @@ video:focus {
   height: 100%;
   position: relative;
 }
-#comics-reader-wrapper .comic-book-navigation {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  z-index: 1000;
-}
-#comics-reader-wrapper #comic-book-slider {
+#comics-reader-wrapper .comic-book-reader {
+  margin: 0 auto;
   height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
+  padding-bottom: 34px;
 }
-#comics-reader-wrapper #comic-book-slider .comic-book-page {
+#comics-reader-wrapper .comic-book-reader .bb-bookblock {
+  width: 450px;
+  height: 327px;
+}
+#comics-reader-wrapper .comic-book-reader .bb-bookblock .bb-item img,
+#comics-reader-wrapper .comic-book-reader .bb-bookblock .bb-page img {
+  width: 50%;
   float: left;
-  height: 100%;
 }
-#comics-reader-wrapper .comic-book-reader-navigation {
+#comics-reader-wrapper .nav-container {
   width: 100%;
-  height: 34px;
+  text-align: center;
   position: absolute;
   bottom: 0;
-  left: 0;
-  background-color: #818181;
-}
-#comics-reader-wrapper .comic-book-reader-navigation .actions-menu {
-  float: right;
-}
-#comics-reader-wrapper .comic-book-reader-navigation .actions-menu a {
-  float: left;
-  display: block;
-  width: 34px;
+  z-index: 111;
   height: 34px;
-  border-left: 1px solid #000;
 }
-#comics-reader-wrapper .comic-book-reader-navigation .actions-menu a.page-counter {
+#comics-reader-wrapper .nav-container nav {
   width: auto;
-  padding: 0 5px;
-  color: white;
-  line-height: 34px;
+  height: 34px;
+  margin: 0 auto 0;
+  display: table;
+}
+#comics-reader-wrapper .nav-container nav a {
+  display: block;
+  min-width: 30px;
+  height: 30px;
+  text-align: center;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  margin: 2px;
+  float: left;
+}
+#comics-reader-wrapper .nav-container nav a .glyphicon {
+  top: 7px;
+}
+#comics-reader-wrapper .nav-container nav a:hover {
+  opacity: 0.6;
+}
+#comics-reader-wrapper .nav-container nav a#bb-nav-counter {
+  line-height: 30px;
   font-size: 12px;
-}
-#comics-reader-wrapper .comic-book-reader-navigation .actions-menu a.next-page {
-  background-image: url(../../assets/img/comicbook_reader_sprite.svg);
-  background-position: -523px center;
-}
-#comics-reader-wrapper .comic-book-reader-navigation .actions-menu a.prev-page {
-  background-image: url(../../assets/img/comicbook_reader_sprite.svg);
-  background-position: -443px center;
-}
-#comics-reader-wrapper .comic-book-reader-navigation .actions-menu a.one-page-view {
-  background-image: url(../../assets/img/comicbook_reader_sprite.svg);
-  background-position: -1003px center;
-}
-#comics-reader-wrapper .comic-book-reader-navigation .actions-menu a.two-page-view {
-  background-image: url(../../assets/img/comicbook_reader_sprite.svg);
-  background-position: -923px center;
-}
-#comics-reader-wrapper .comic-book-reader-navigation .actions-menu a.full-screen {
-  background-image: url(../../assets/img/comicbook_reader_sprite.svg);
-  background-position: -363px center;
 }

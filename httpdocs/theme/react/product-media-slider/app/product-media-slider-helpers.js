@@ -8,12 +8,14 @@ export function GenerateGalleryArray(product){
             if (f.active === "1"){
                 if (f.type.indexOf('video') > -1 || 
                     f.type.indexOf('audio') > -1 || 
-                    f.type.indexOf('epub') > -1 /*|| 
+                    f.type.indexOf('epub') > -1 || 
+                    f.type.indexOf("image") > -1 /*||
                     f.type.indexOf('zip') > -1 || f.type.indexOf('x-rar') > -1*/){
                     
                     let type;
                     if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 ) type = f.type.split('/')[0]
                     else if (f.type.indexOf('epub') > -1 ) type = "book";
+                    else if (f.type.indexOf('image') > -1) type = "image";
                     // else if (f.name.indexOf('.cbr') > -1 || f.name.indexOf('.cbz') > -1) type = "comics";
                     
                     let url_preview, url_thumb;
@@ -76,3 +78,25 @@ export function GroupAudioFilesInGallery(galleryArray){
     });
     return newGalleryArray;
 }
+
+export function generatePagesArray(pages,displayType){
+    let pagesArray;
+    if (displayType === "single") pagesArray = pages;
+    else if (displayType === "double"){
+        pagesArray = chunkArray(pages,2);
+    }
+    return pagesArray;
+}
+
+function chunkArray(myArray, chunk_size){
+    var index = 0;
+    var arrayLength = myArray.length;
+    var tempArray = [];
+    
+    for (index = 0; index < arrayLength; index += chunk_size) {
+        const myChunk = myArray.slice(index, index+chunk_size);
+        // Do something if you want with the group
+        tempArray.push(myChunk);
+    }
+    return tempArray;
+} 

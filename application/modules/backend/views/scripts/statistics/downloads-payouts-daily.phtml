@@ -1,0 +1,47 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$this->tab = 'downloads-payouts-daily';
+echo $this->render('statistics/headerTabs.phtml'); 
+?>
+<h3>Statistics: Downloads&Payouts daily</h3>
+ <div id="downloadsdailyTab" class="tab-pane">
+            <span style="float: left">#number of months back</span>
+            <select id="numofmonthback" style="float: left">
+                <option>2</option>
+                <option selected>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+            </select>
+            <div id="downloadsdailyTabContainer" class="d3linepath"></div>
+        </div>
+<script type="text/javascript">
+	$(document).ready(function () {		
+		$.getScript("/theme/flatui/js/stati/downloadsdaily.js");
+	});
+</script>

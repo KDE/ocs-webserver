@@ -9,7 +9,7 @@ function AdminlLinksContainer(props)
             </a>
           </li>
           <li id="spam-comment-link-item">
-            <a href={props.baseUrlStore+"/backend/comments/"} >
+            <a href={props.baseUrlStore+"/spam/comments/"} >
               <span>Spam comments</span>
             </a>
           </li>

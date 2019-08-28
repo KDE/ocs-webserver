@@ -32,6 +32,7 @@ class Default_Model_Ocs_OAuth
      */
     public function __construct($config = null)
     {
+        $this->messages = array();
         if (isset($config)) {
             $this->config = $config;
         } else {
@@ -360,7 +361,7 @@ class Default_Model_Ocs_OAuth
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getMessages()
     {

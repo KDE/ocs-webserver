@@ -60,7 +60,7 @@ $(document).ready(function () {
         cache: false
     });
 
-    $.getScript("/theme/flatui/js/stati/newUserProject.js");
+    //$.getScript("/theme/flatui/js/stati/newUserProject.js");
     $(".newuserprojectTab").click(function () {
         $.getScript("/theme/flatui/js/stati/newUserProject.js");
     });
@@ -169,7 +169,10 @@ $(document).ready(function () {
     } 
 
     function loadTopdownloadspermonth_daily(project_id){
-        $('#topDownloadsPerMonthTabContainer').append('<div class="chart-wrapper" id="topDownloadsPerMonthTabContainer_DetailMonthly"></div>').append('<div class="chart-wrapper" id="topDownloadsPerMonthTabContainer_DetailDayly"></div>');
+        if($('#topDownloadsPerMonthTabContainer_DetailMonthly').length==0)
+        {
+            $('#topDownloadsPerMonthTabContainer').append('<div class="chart-wrapper" id="topDownloadsPerMonthTabContainer_DetailMonthly"></div>').append('<div class="chart-wrapper" id="topDownloadsPerMonthTabContainer_DetailDayly"></div>');    
+        }        
 
         window.project_id = project_id;
         $.getScript("/theme/flatui/js/stati/productMonthly.js");                
@@ -206,7 +209,9 @@ $(document).ready(function () {
     $('#selectmonthNewcomer').change(function () {
         $(".payoutNewcomerTab").trigger('click');
     });
-    $(".payoutNewcomerTab").click(function () {
+
+
+    function loadNewComer(){
         $('#payoutNewcomerTabContainer').empty();
         let yyyymm = $("#selectmonthNewcomer option:selected").text();
         $.getJSON("/backend/index/newcomer?yyyymm=" + yyyymm, function (response) {
@@ -218,6 +223,10 @@ $(document).ready(function () {
             table = table + "</table>";
             $('#payoutNewcomerTabContainer').html(table);
         });
+    }
+
+    $(".payoutNewcomerTab").click(function () {        
+        loadNewComer();
     });
 
     $('#payoutNewloserTab').prepend(createMonthFilter('selectmonthNewloser'));
@@ -281,7 +290,8 @@ $(document).ready(function () {
 
             $('body').on('click', '#category-tree a', function (event) {
                 event.preventDefault();
-                event.stopPropagation();            
+                event.stopPropagation();           
+
                 var start = this.href.indexOf("cat");
                 var catid;
                 var title;
@@ -295,10 +305,12 @@ $(document).ready(function () {
                 }
                 window.selectedCatid = catid;
                 window.selectedCatTitle = title;
+
                 if(window.selectedTab=='#payoutCategoryTab')
                 {
                     if($('#payoutCategoryLineChart').find('#payoutCategoryLineChart'+catid).length==0)
                     {
+                        $('#payoutCategoryLineChart').empty();
                         $('#payoutCategoryLineChart').append('<div class="chart-wrapper" id="payoutCategoryLineChart'+catid+'"> loading ... </div>');
                         $.getScript("/theme/flatui/js/stati/payoutCategory.js");
                     }

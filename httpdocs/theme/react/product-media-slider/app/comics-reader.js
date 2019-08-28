@@ -1,15 +1,26 @@
 import React, { useState } from 'react';
+import {generatePagesArray} from './product-media-slider-helpers';
 
 function ComicsReaderWrapper(props){
 
     const [ loadingState, setLoadingState ] = useState('Loading...');
-    const [ pages, setPages ] = useState([]);
-    const [ currentPage, setCurrentPage ] = useState(0);
-    const [ displayType, setDisplayType ] = useState("single")
 
-    React.useEffect(() => {
-        if (props.currentSlide === props.slideIndex) fetchArchive();
-    },[props.currentSlide]);
+    const initPages = [
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/1.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/2.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/3.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/4.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/5.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/6.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/7.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/8.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/9.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/10.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/11.jpg",
+      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/12.jpg"
+    ]
+
+    const [ pages, setPages ] = useState(initPages);
 
     /* INIT */
 
@@ -70,17 +81,6 @@ function ComicsReaderWrapper(props){
 
     /* COMPONENT */
 
-    function onPrevPageBtnClick(){
-      const newCurrentPage = currentPage - 1;
-      setCurrentPage(newCurrentPage);
-    }
-
-
-    function onNextPageBtnClick(){
-      const newCurrentPage = currentPage + 1;
-      setCurrentPage(newCurrentPage);
-    }
-
     let comicsReaderDisplay = loadingState
     if (pages.length > 0){
       comicsReaderDisplay = (
@@ -100,22 +100,73 @@ function ComicsReaderWrapper(props){
 
 function ComicBookReader(props){
 
-  React.useEffect(() => (
+  const [ loading, setLoading ] = useState(false);
+  const [ displayType, setDisplayType ] = useState("double")
+  const [ pages, setPages ] = useState(generatePagesArray(props.pages,displayType))
+  console.log(pages);
+  const [ currentPage, setCurrentPage ] = useState(1)
+  const [ totalPages, setTotalPages ] = useState(pages.length)
+  const [ viewMode, setViewMode ] = useState('normal');
+
+  React.useEffect(() => { 
+    initComicReader()
+  },[])
+
+  function initComicReader(){
     $(function() {
-      $( '#bb-bookblock-'+props.currentSlide ).bookblock()
+      $( '#bb-bookblock-'+props.currentSlide ).bookblock( {
+        speed : 800,
+        shadowSides : 0.8,
+        shadowFlip : 0.7,
+        onBeforeFlip: function( page ) { onBeforeFlip(page) },
+        onEndFlip	: function( page, isLimit ) {  readerOnEndFlip(page,isLimit) },
+      } );
     })
-  ),[])
+  }
 
-  const comicPages = props.pages.map((p,index) => (
-    <div className="bb-item">
-      <img key={index} src={p}/>
-    </div>
-  ));
+  function onComicReaderNavClick(val){
+    $( '#bb-bookblock-'+props.currentSlide).bookblock(val);
+  }
 
-  return (
-    <div className="comic-book-reader">
+  function onBeforeFlip(page){
+    return false;
+  }
+
+  function readerOnEndFlip(page,isLimit){
+    setCurrentPage(isLimit + 1);
+    return false;
+  }
+
+  let comicBookDisplay;
+  if (loading) comicPages = "loading...";
+  else {
+    const comicPages = pages.map((p,index) => (
+      <div key={index} className="bb-item">
+        <img src={p[0]}/>
+        <img src={p[1]}/>
+      </div>      
+    ))
+
+    comicBookDisplay = (
       <div id={"bb-bookblock-" + props.currentSlide} className="bb-bookblock">
         {comicPages}
+      </div>
+    )
+  }
+
+  return (
+    <div className={"comic-book-reader " + viewMode}>
+      {comicBookDisplay}
+      <div className="nav-container">
+        <nav>
+          <a id="bb-nav-counter" href="#">{currentPage + "/" + totalPages}</a>
+          <a id="bb-nav-first" href="#" onClick={() => onComicReaderNavClick('first')}><span className="glyphicon glyphicon-step-backward"></span></a>
+          <a id="bb-nav-prev" href="#" onClick={() => onComicReaderNavClick('prev')}><span className="glyphicon glyphicon-triangle-left"></span></a>
+          <a id="bb-nav-next" href="#" onClick={() => onComicReaderNavClick('next')}><span className="glyphicon glyphicon-triangle-right"></span></a>
+          <a id="bb-nav-last" href="#" onClick={() => onComicReaderNavClick('last')}><span className="glyphicon glyphicon-step-forward"></span></a>
+          <a id="bb-nav-last" href="#" onClick={() => onComicReaderNavClick('last')}><span className="glyphicon glyphicon-step-forward"></span></a>
+          <a id="bb-nav-viewmode" href="#" onClick={() => setViewMode('fullscreen')}><span className="glyphicon glyphicon-fullscreen"></span></a>
+        </nav>
       </div>
     </div>
   )
@@ -137,5 +188,62 @@ function ComicBookReaderNavigation(props){
     </div>
   )
 }
+/*
+			var Page = (function() {
+				
+				var config = {
+						$bookBlock : $( '#bb-bookblock' ),
+						$navNext : $( '#bb-nav-next' ),
+						$navPrev : $( '#bb-nav-prev' ),
+						$navFirst : $( '#bb-nav-first' ),
+						$navLast : $( '#bb-nav-last' )
+					},
+					init = function() {
+						config.$bookBlock.bookblock( {
+							speed : 800,
+							shadowSides : 0.8,
+							shadowFlip : 0.7
+						} );
+						initEvents();
+					},
+					initEvents = function() {
 
+						// add swipe events
+						$slides.on( {
+							'swipeleft' : function( event ) {
+								config.$bookBlock.bookblock( 'next' );
+								return false;
+							},
+							'swiperight' : function( event ) {
+								config.$bookBlock.bookblock( 'prev' );
+								return false;
+							}
+						} );
+
+						// add keyboard events
+						$( document ).keydown( function(e) {
+							var keyCode = e.keyCode || e.which,
+								arrow = {
+									left : 37,
+									up : 38,
+									right : 39,
+									down : 40
+								};
+
+							switch (keyCode) {
+								case arrow.left:
+									config.$bookBlock.bookblock( 'prev' );
+									break;
+								case arrow.right:
+									config.$bookBlock.bookblock( 'next' );
+									break;
+							}
+						} );
+					};
+
+					return { init : init };
+
+      })();
+      
+      */
 export default ComicsReaderWrapper;

@@ -4,6 +4,7 @@ import React from 'react';
 import MobileLeftMenu from './MobileLeftMenu';
 import DomainsMenu from './DomainsMenu';
 import UserMenu from './UserMenu';
+import WhereAmI from './function/WhereAmI';
 
 class MetaHeader extends React.Component {
   constructor(props){
@@ -102,6 +103,7 @@ class MetaHeader extends React.Component {
           isAdmin={this.state.isAdmin}
           isExternal={this.state.isExternal}
           gitlabUrl={this.state.gitlabUrl}
+          riotUrl={this.state.riotUrl}
         />
       )
     } else {
@@ -136,9 +138,12 @@ class MetaHeader extends React.Component {
     if(this.state.metamenuTheme){
         paraChecked=true;
     }
+
     return (
       <nav id="metaheader-nav" className="metaheader">
         <div style={{"display":"block"}} className={metamenuCls}>
+          {domainsMenuDisplay}
+
           <UserMenu
             device={this.state.device}
             user={this.state.user}
@@ -159,8 +164,10 @@ class MetaHeader extends React.Component {
             isExternal={this.state.isExternal}
             riotUrl={this.state.riotUrl}
           />
+          {this.state.isAdmin &&
+            <WhereAmI target={this.state.target}></WhereAmI>
+          }
 
-          {domainsMenuDisplay}
         </div>
       </nav>
     )

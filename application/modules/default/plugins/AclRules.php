@@ -139,6 +139,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('backend_cldap'));
         $this->addResource(new Zend_Acl_Resource ('backend_coauth'));
         $this->addResource(new Zend_Acl_Resource ('backend_cexport'));
+        $this->addResource(new Zend_Acl_Resource ('backend_statistics'));
 
         $this->addResource(new Zend_Acl_Resource ('statistics_data'));
 

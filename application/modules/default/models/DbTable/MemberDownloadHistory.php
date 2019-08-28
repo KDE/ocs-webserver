@@ -41,28 +41,30 @@ class Default_Model_DbTable_MemberDownloadHistory extends Zend_Db_Table_Abstract
         return (int)$result['cnt'];
     }
 
-    public function getAnonymousDLSection($cookie)
+    public function getAnonymousDLSection($cookie, $member_id=null)
     {
-       // $sql = "select c.section_id, c.name, c.description, count(h.project_id) as dls
-       //          from member_download_history h
-       //          join project p on h.project_id = p.project_id
-       //          join section_category s on p.project_category_id = s.project_category_id
-       //          join section c on c.section_id = s.section_id and c.is_active = 1
-       //          where h.anonymous_cookie=:cookie
-       //          group by c.section_id, c.name, c.description";
+      $sql_filter = '';
+       if($member_id)
+       {
+         $sql_filter = " and h.member_id =".$member_id;
+       }else
+       {
+        $sql_filter = " and h.anonymous_cookie ='".$cookie."'";
+       }
        $sql = "select
-            c.section_id, 
+            c.section_id,
             c.name,
             c.description,
             (select count(1) from member_download_history h , project p, section_category s
             where h.project_id = p.project_id
             and p.project_category_id = s.project_category_id
             and s.section_id = c.section_id
-            and h.anonymous_cookie=:cookie
+            ".$sql_filter
+            ."
             )  as dls
             from section c
             where c.is_active = 1";
-        $result = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('cookie'=>$cookie));
+        $result = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
         return $result;
     }
     public function getDownloadhistory($member_id){

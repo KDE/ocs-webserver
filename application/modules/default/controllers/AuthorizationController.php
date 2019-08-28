@@ -261,6 +261,12 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json(array('status' => 'ok', 'message' => 'User is OK.'));
     }
 
+    /**
+     * @param int $member_id
+     * @param string $password
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
+     */
     private function changePasswordIfNeeded($member_id, $password)
     {
         $userTabel = new Default_Model_Member();
@@ -280,20 +286,27 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
             //Change type and password
             $memberSettings->password_type = Default_Model_Member::PASSWORD_TYPE_OCS;
-            $memberSettings->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($password,
-                $memberSettings->password_type);
+            $memberSettings->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($password, Default_Model_Member::PASSWORD_TYPE_OCS);
             $memberSettings->save();
 
             //Update Auth-Services
             try {
                 $id_server = new Default_Model_Ocs_OAuth();
                 $id_server->updatePasswordForUser($memberSettings->member_id);
+                $messages = $id_server->getMessages();
+                if (false == empty($messages)) {
+                    Zend_Registry::get('logger')->info(json_encode($messages));
+                }
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
             try {
                 $ldap_server = new Default_Model_Ocs_Ldap();
-                $ldap_server->updatePassword($memberSettings->member_id);
+                $ldap_server->updatePassword($memberSettings->member_id,$password);
+                $messages = $ldap_server->getMessages();
+                if (false == empty($messages)) {
+                    Zend_Registry::get('logger')->info(json_encode($messages));
+                }
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }

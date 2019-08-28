@@ -2,10 +2,10 @@ export function getNumberOfItemsPerRow(browseListType,isMobile,containerWidth){
     let itemsPerRow;
     if (isMobile) itemsPerRow = 2;
     else {
-        if (browseListType === "music") itemsPerRow = getAdujustItemsPerRow(6,containerWidth,160 + 14)
-        else if (browseListType === "comics") itemsPerRow = getAdujustItemsPerRow(6,containerWidth,160 + 14)
+        if (browseListType === "music") itemsPerRow = getAdujustItemsPerRow(7,containerWidth,160 + 14)
+        else if (browseListType === "comics") itemsPerRow = getAdujustItemsPerRow(7,containerWidth,160 + 14)
         else if (browseListType === "phone-pictures") itemsPerRow = getAdujustItemsPerRow(5,containerWidth,210)
-        else itemsPerRow = getAdujustItemsPerRow(3,containerWidth,300)
+        else itemsPerRow = getAdujustItemsPerRow(3,containerWidth,250 + 14)
     }
     itemsPerRow;
     return itemsPerRow;

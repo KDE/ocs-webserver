@@ -85,7 +85,7 @@ class UserMenu extends React.Component {
 
 
       userMenuContainerDisplay = (
-        <ul className="metaheader-menu" id="user-menu">
+        <ul className="metaheader-menu right" id="user-menu">
 
           {aboutMenu}
           {chatItem}
@@ -98,8 +98,8 @@ class UserMenu extends React.Component {
       );
     } else {
       userMenuContainerDisplay = (
-        <ul className="metaheader-menu" id="user-menu">
-          {chatItem}
+        <ul className="metaheader-menu right" id="user-menu">
+        
           {anonymousMenu}
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
@@ -109,9 +109,9 @@ class UserMenu extends React.Component {
     }
 
     return (
-      <div id="user-menu-container" className="right">
+      <React.Fragment>
         {userMenuContainerDisplay}
-      </div>
+      </React.Fragment>
     )
   }
 }

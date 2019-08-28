@@ -4,6 +4,7 @@ import BlogFeedContainer from './BlogFeedContainer';
 import CommentsContainer from './CommentsContainer';
 import RatingContainer from './RatingContainer';
 import ProductsContainer from './ProductsContainer';
+import MySpamContainer from './MySpamContainer';
 import ChatContainer from './ChatContainer';
 import ProductsGitContainer from './ProductsGitContainer';
 import Introduction from './Introduction';
@@ -20,7 +21,7 @@ class HomeMainContainer extends Component {
     let supporterinfo;
     if(this.state.supporterinfo && this.state.supporterinfo.member_id)
     {
-      supporterinfo = "Thanks for supporting Pling.com";
+       supporterinfo =   <div>Thanks for supporting Pling.com</div>
     }else{
       supporterinfo = <div><a href={this.state.baseUrlStore+"/support"}>Become a Supporter</a></div>
     }
@@ -53,7 +54,9 @@ class HomeMainContainer extends Component {
                 <PersonalActivityContainer  user={this.state.user.member_id}/>
                 <CommentsContainer title="Last 10 comments received" baseUrlStore={this.state.baseUrlStore} comments={this.state.comments}/>
                 <RatingContainer title="Last 10 ratings received" baseUrlStore={this.state.baseUrlStore} votes={this.state.votes}/>
-
+                { this.state.spams.length>0 && 
+                <MySpamContainer title="Spam" baseUrlStore={this.state.baseUrlStore} spams={this.state.spams}/>
+                }
                   { this.state.user.isAdmin &&
                     <div className="panelContainer">
                       <div className="title">Special links (Admin only)</div>

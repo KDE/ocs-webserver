@@ -230,7 +230,7 @@
                     list: true,
                     display: function (data) {
                         if (data.record.cntreport>0) {                            
-                            return '<a role="button" class="btn btn-warning btn-xs removecomment pull-right" style="color:white;"  data-record="' + data.record.comment_id + '"><span>Remove Comment</span></a><a role="button" class="btn btn-warning btn-xs removereports pull-right" style="color:white;"  data-record="' + data.record.comment_id + '"><span>Remove Reports</span></a>'
+                            return '<a role="button" class="btn btn-warning btn-xs removecomment pull-right" style="color:white;"  data-record="' + data.record.comment_id + '"><span>Remove Comment</span></a><a role="button" class="btn btn-warning btn-xs removereports pull-right" style="color:white;"  data-record="' + data.record.comment_id + '"><span>Remove Reports</span></a><a role="button" class="btn btn-warning btn-xs removeuser pull-right" style="color:white;"  data-record="' + data.record.comment_member_id + '"><span>Remove User</span></a>'
                                 ;
                         }
                     }
@@ -297,44 +297,6 @@
             
         });
 
-        $('body').on("click", 'a.removeuser', function (event) {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-           
-            var elementRecord = $(this).data("memberid");
-
-            $("#dialog-confirm").html('are you sure to delete this member ?').dialog({
-                autoOpen: true,
-                title:'Confirm Delete Member',
-                width: 600,
-                modal: true,
-                buttons: {
-                     "Confirm" : function() {
-                            jQuery.ajax({
-                                data: {'member_id': elementRecord},
-                                url: '/backend/user/delete',
-                                type: 'post',
-                                error: function () {
-                                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
-                                    return false;
-                                },
-                                success: function (results) {
-                                    $("#dialog-confirm").dialog("close");
-                                    $('#TableContainer').jtable('reload');
-                                    return false;
-                                }
-                            });         
-                    },
-                    "Cancel" : function() {
-                      $(this).dialog("close");
-                    }
-                }
-            });
-            
-            return false;
-            
-        });
 
         $('body').on("click", 'a.removereports', function (event) {
             event.preventDefault();
@@ -342,7 +304,7 @@
 
             var elementRecord = $(this).data("record");
 
-            $("#dialog-confirm").html('are you sure to delete this comment ?').dialog({
+            $("#dialog-confirm").html('are you sure to delete this reports ?').dialog({
                 autoOpen: true,
                 html: 'are you sure to delete this reports ?',
                 width: 600,
@@ -355,6 +317,45 @@
                                 type: 'post',
                                 error: function () {
                                     alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                                    return false;
+                                },
+                                success: function (results) {
+                                    $("#dialog-confirm").dialog("close");
+                                    $('#TableContainer').jtable('reload');
+                                    return false;
+                                }
+                            });     
+                    },
+                    "Cancel" : function() {
+                      $(this).dialog("close");
+                    }
+                }
+            });
+
+            
+
+            return false;
+        });
+
+        $('body').on("click", 'a.removeuser', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+            alert(elementRecord);
+            $("#dialog-confirm").html('Delete this member and all his products and comments? ?').dialog({
+                autoOpen: true,
+                html: 'Delete this member and all his products and comments? ?',
+                width: 600,
+                modal: true,
+                buttons: {
+                     "Confirm" : function() {
+                            jQuery.ajax({
+                                data: {'member_id': elementRecord},
+                                url: '/backend/user/delete',
+                                type: 'post',
+                                error: function () {
+                                    alert("Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. Find out why you may have encountered this error.");
                                     return false;
                                 },
                                 success: function (results) {

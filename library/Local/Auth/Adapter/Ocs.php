@@ -26,8 +26,8 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     const MD5 = 'enc01';
     const SHA = 'enc02';
     const PASSWORDSALT = 'ghdfklsdfgjkldfghdklgioerjgiogkldfgndfohgfhhgfhgfhgfhgfhfghfgnndf';
-    const USER_DEAVIVATED = '_double';
-    const EMAIL_DEAVIVATED = '_double';
+    const USER_DEACTIVATED = '_double';
+    const EMAIL_DEACTIVATED = '_double';
 
     protected $_db;
     protected $_tableName;
@@ -57,10 +57,25 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
         $this->_tableName = $tableName;
     }
 
+    /**
+     * @param string $password
+     * @param int    $passwordType
+     * @return string
+     */
     public static function getEncryptedPassword($password, $passwordType)
     {
-        return $passwordType == Default_Model_DbTable_Member::PASSWORD_TYPE_HIVE ? sha1((self::PASSWORDSALT . $password
-            . self::PASSWORDSALT)) : md5($password);
+        return $passwordType == Default_Model_DbTable_Member::PASSWORD_TYPE_HIVE
+            ? sha1((self::PASSWORDSALT . $password . self::PASSWORDSALT))
+            : md5($password);
+    }
+
+    /**
+     * @param string $password
+     * @return string
+     */
+    public static function getEncryptedLdapPass($password)
+    {
+        return '{MD5}' . base64_encode(md5($password, true));
     }
 
     /**
@@ -94,12 +109,14 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
         }
 
         if ($resultSet[0]['is_active'] == 0) {
-            return $this->createAuthResult(Local_Auth_Result::ACCOUNT_INACTIVE, $this->_identity, array('User account is inactive.'));
+            return $this->createAuthResult(Local_Auth_Result::ACCOUNT_INACTIVE, $this->_identity,
+                array('User account is inactive.'));
         }
 
         $this->_resultRow = array_shift($resultSet);
 
-        return $this->createAuthResult(Zend_Auth_Result::SUCCESS, $this->_identity, array('Authentication successful.'));
+        return $this->createAuthResult(Zend_Auth_Result::SUCCESS, $this->_identity,
+            array('Authentication successful.'));
     }
 
     /**
@@ -128,7 +145,7 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             'deleted'          => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
             'login'            => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
             'mail'             => $this->_identity,
-            'user_deactivated' => $this::EMAIL_DEAVIVATED,
+            'user_deactivated' => $this::EMAIL_DEACTIVATED,
             'pwd'              => $this->_credential
         ));
 
@@ -140,8 +157,7 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
 
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - SQL: ' . $sql . ' - sql take seconds: ' . $this->_db->getProfiler()
                                                                                                                  ->getLastQueryProfile()
-                                                                                                                 ->getElapsedSecs())
-        ;
+                                                                                                                 ->getElapsedSecs());
         $this->_db->getProfiler()->setEnabled(false);
 
         return $resultSet;
@@ -176,7 +192,7 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             'deleted'          => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
             'login'            => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
             'username'         => $this->_identity,
-            'user_deactivated' => $this::USER_DEAVIVATED,
+            'user_deactivated' => $this::USER_DEACTIVATED,
             'pwd'              => $this->_credential
         ));
 
@@ -184,13 +200,12 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
         $sql = str_replace(':deleted', Default_Model_DbTable_Member::MEMBER_NOT_DELETED, $sql);
         $sql = str_replace(':login', "'" . Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL . "'", $sql);
         $sql = str_replace(':username', "'" . $this->_identity . "'", $sql);
-        $sql = str_replace(':user_deactivated', "'" . $this::USER_DEAVIVATED . "'", $sql);
+        $sql = str_replace(':user_deactivated', "'" . $this::USER_DEACTIVATED . "'", $sql);
         $sql = str_replace(':pwd', "'" . $this->_credential . "'", $sql);
 
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - SQL: ' . $sql . ' - sql take seconds: ' . $this->_db->getProfiler()
                                                                                                                  ->getLastQueryProfile()
-                                                                                                                 ->getElapsedSecs())
-        ;
+                                                                                                                 ->getElapsedSecs());
         $this->_db->getProfiler()->setEnabled(false);
 
         return $resultSet;
@@ -205,7 +220,6 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
      * @param string $identity
      *
      * @return Local_Auth_Adapter_Ocs
-     * @throws Zend_Exception
      */
     public function setIdentity($identity)
     {
@@ -251,8 +265,8 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     /**
      * getResultRowObject() - Returns the result row as a stdClass object
      *
-     * @param  string|array $returnColumns
-     * @param  string|array $omitColumns
+     * @param string|array $returnColumns
+     * @param string|array $omitColumns
      *
      * @return stdClass|boolean
      */
@@ -274,23 +288,25 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             }
 
             return $returnObject;
-        } else if (null !== $omitColumns) {
+        } else {
+            if (null !== $omitColumns) {
 
-            $omitColumns = (array)$omitColumns;
-            foreach ($this->_resultRow as $resultColumn => $resultValue) {
-                if (!in_array($resultColumn, $omitColumns)) {
+                $omitColumns = (array)$omitColumns;
+                foreach ($this->_resultRow as $resultColumn => $resultValue) {
+                    if (!in_array($resultColumn, $omitColumns)) {
+                        $returnObject->{$resultColumn} = $resultValue;
+                    }
+                }
+
+                return $returnObject;
+            } else {
+
+                foreach ($this->_resultRow as $resultColumn => $resultValue) {
                     $returnObject->{$resultColumn} = $resultValue;
                 }
+
+                return $returnObject;
             }
-
-            return $returnObject;
-        } else {
-
-            foreach ($this->_resultRow as $resultColumn => $resultValue) {
-                $returnObject->{$resultColumn} = $resultValue;
-            }
-
-            return $returnObject;
         }
     }
 

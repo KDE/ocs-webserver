@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import IntroductionDetailCode from './IntroductionDetailCode';
-import IntroductionDetailPublish from './IntroductionDetailPublish';
-import IntroductionDetailCommunity from './IntroductionDetailCommunity';
-import IntroductionDetailPersonal from './IntroductionDetailPersonal';
+import IntroductionDetailCode from './function/IntroductionDetailCode';
+import IntroductionDetailPublish from './function/IntroductionDetailPublish';
+import IntroductionDetailCommunity from './function/IntroductionDetailCommunity';
+import IntroductionDetailPersonal from './function/IntroductionDetailPersonal';
 
 class Introduction extends Component {
   constructor(props){

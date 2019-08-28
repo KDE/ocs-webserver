@@ -471,6 +471,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'action'     => 'index'
         )));
 
+        $router->addRoute('backend_statistics', new Zend_Controller_Router_Route('/statistics/:action/*', array(
+            'module'     => 'backend',
+            'controller' => 'statistics',
+            'action'     => 'index'
+        )));
+
         $router->addRoute('browse', new Zend_Controller_Router_Route('/browse/*', array(
             'module'     => 'default',
             'controller' => 'explore',

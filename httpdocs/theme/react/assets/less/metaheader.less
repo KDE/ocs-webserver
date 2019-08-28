@@ -72,6 +72,7 @@
 
   .metamenu {
     height: 34px;
+    text-align: center;
   }
 
 
@@ -94,6 +95,56 @@
       background: -webkit-linear-gradient(top, #4387fd, #4683ea);
       margin-top: -2px;
       margin-right: 5px;
+    }
+    #whereami{
+      margin: 0 auto;
+      height: 34px;
+      width: 128px;
+      .icon {
+        height: 34px;
+        width: 34px;
+        background-size: 34px;
+        background-position: center center;
+        background-repeat: no-repeat;
+        float: left;
+      }
+      .opendesktop{
+        height: 30px;
+        width: 30px;
+        background-size: 25px;
+        background-image: url('../img/logo-opendesktop.png');
+        background-position: left 3px top 4px;
+      }
+      .pling{
+        height: 50px;
+        width: 50px;
+        background-size: 50px;
+        background-image: url('../img/logo-pling.png');
+        background-position: left 0px top 5px;
+      }
+      .opencode{
+        height: 30px;
+        width: 30px;
+        background-size: 22px;
+        background-position: left 5px top 5px;
+        background-image: url('../img/logo-opencode.png');
+      }
+      .chat{
+        height: 30px;
+        width: 30px;
+        background-size: 25px;
+        background-position: left 5px top 5px;
+        background-image: url('../img/chat.png');
+      }
+
+      span {
+        float: left;
+        line-height: 34px;
+        padding-left: 4px;
+        text-align: center;
+        display: block;
+        color:rgba(0,0,0,0.87);
+      }
     }
 
     #user-menu-container {
@@ -437,7 +488,7 @@
 
       &#user-menu {
         margin-right: 10px;
-
+        float: right;
         > li {
 
           &#user-login-container {
@@ -1439,8 +1490,13 @@
       }
     }
     #anonymous-dropdown-menu-container{
+      min-width: 50px;
       .user-dropdown {
-
+        .anonymousNumber
+        {
+          min-width: 25px;
+          display: inline-block;
+        }
         .th-icon {
           height: 24px;
           width: 24px;
@@ -1499,10 +1555,10 @@
                     padding: 5px;
                     display: flex;
                       .section-name{
-                        width: 100px;
+                      flex: 1;
                       }
                       .section-value{
-                        flex: 1;
+
                       }
                   }
               }
@@ -2223,4 +2279,9 @@
           background-image: url(../img/white-down-arrow-icon-0.png);
       }
     }
+  #whereami{
+    span{
+      color:#fff
+    }
+  }
 }
