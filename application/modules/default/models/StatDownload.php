@@ -259,7 +259,7 @@ class Default_Model_StatDownload
     {
         $sql="
                 SELECT pl.yearmonth
-                ,TRUNCATE(sum(probably_payout_amount), 2) amount
+                ,TRUNCATE(sum(probably_payout_amount*section_payout_factor), 2) amount
                 ,(select count(1) from member_payout p where p.yearmonth=pl.yearmonth and p.member_id = pl.member_id) cnt
                 from member_dl_plings pl
                 where pl.member_id =:member_id and yearmonth > 201704
