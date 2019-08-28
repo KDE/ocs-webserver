@@ -1,0 +1,176 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+?>
+<style>
+    .cell-default {
+        line-height: 4em;
+        vertical-align: middle;
+    }
+    .popover {
+        min-width:350px;
+    }
+    
+    .popover-title { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+    
+    .popover-content { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+</style>
+
+<ul class="nav nav-tabs margin-bottom-10 tabs-up" id="plingtabs">
+<?php
+
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+    
+$isCurrentMonth = false;
+$currentYear = date("Y",time());
+
+$member = $this->view_member;
+
+if($this->year) {
+    $currentYear = $this->year;
+}
+
+
+$currentDate = date("Ym",time());
+$currentMonth = '';
+$monthlyDownload = null;
+$allDownloads = array();
+$css_active = 'active';
+
+$printCurrentMonth = new DateTime($currentDate.'01');
+
+$modelDownload = new Default_Model_StatDownload();
+$downloadMonths = $modelDownload->getUserDownloadMonths($this->member->member_id, $currentYear);
+$countDownloadsOverall = count($downloadMonths);
+$minDate = null;
+
+if ($countDownloadsOverall > 0) {  
+    foreach ($downloadMonths as $download) {
+        $printMonth = new DateTime($download['yearmonth'].'01');
+        if($minDate == null) {
+            $minDate = $download['yearmonth'];
+        }
+        
+        $printDate = $printMonth->format('M Y');
+        $printDateNow = $printCurrentMonth->format('M Y');
+        
+        if($printDateNow == $printDate) {
+            $printDate = 'Current month';
+            $isCurrentMonth = true;
+        } else {
+            $isCurrentMonth = false;
+        }
+        
+        if ($printDate != $currentMonth) {
+            $monthlyDownload = array();
+            $currentMonth = $printDate;
+        
+    ?>
+    
+    <?php   
+        $showDiv = false;
+        $infoTextLinkToPaypal = "";
+        
+        if(isset($download['payment_transaction_id'])) {
+            $infoTextLinkToPaypal = ' Your PayPal TransactionId:'.$download['payment_transaction_id'].'.';
+        }
+        $payoutStatusTable = new Default_Model_DbTable_PayoutStatus();
+        $payoutStatus = $payoutStatusTable->find($download['status'])->current();
+        
+        $infoTitle = $payoutStatus['title'];
+        $infoText = $payoutStatus['description'];
+        $infoIconStyle = "color: ".$payoutStatus['color']." ";
+        $infoClass = $payoutStatus['type'];
+        $infoIcon = $payoutStatus['icon'];
+        
+        $infoText .= $infoTextLinkToPaypal;
+        
+        $popover = "";
+        if(isset($download['status']) && isset($infoText)) {
+            $popover = '<div class="inline payout-popover-'.$infoClass.'" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="'.$infoTitle.'" data-trigger="hover" data-html="true" data-content="'.$infoText.'"><span style="'. $infoIconStyle .'" class="glyphicon '.$infoIcon.'" aria-hidden="true"></span></div>';
+        }
+    ?>
+    
+    <?php if($isCurrentMonth) {?>
+    
+    <li class="media_node span <?=$css_active?> ">
+        <a href="/member/<?= $member->member_id ?>/sectionsmonthajax?yearmonth=<?= $download['yearmonth'] ?>" data-toggle="tabajax" data-target="#pling-tab-content" id="tab_<?= $download['yearmonth'] ?>"><?= $printDate ?><?= $popover ?></a>
+    </li>
+    
+    <?php } else { ?>
+    
+    <li class="media_node span <?=$css_active?> ">
+        <a href="/member/<?= $member->member_id ?>/sectionsmonthajax?yearmonth=<?= $download['yearmonth'] ?>" data-toggle="tabajax" data-target="#pling-tab-content" id="tab_<?= $download['yearmonth'] ?>"><?= $printDate ?><?= $popover ?></a>
+    </li>
+    
+    <?php } ?>
+    
+    <?php
+        }
+        $css_active = '';
+        $monthlyDownload[] = $download;
+        $allDownloads[$download['yearmonth']] = $monthlyDownload;
+    }
+     
+} else {
+    $currentMonth = '';
+    $currentDate = date("Ym",time());
+    $printMonth = new DateTime($currentDate.'01');
+    
+    $printDate = $printMonth->format('M Y');
+    $printDate = 'Current month';
+    
+    $minDate = $currentDate;
+    
+    ?>
+    <li class="in active">
+        <a href="/member/<?= $member->member_id ?>/sectionsmonthajax?yearmonth=<?= $currentDate  ?>" data-toggle="tabajax" data-target="#pling-tab-content" id="tab_<?= $currentDate  ?>"><?= $printDate ?></a>
+    </li>
+<?php
+}
+?>
+</ul>
+
+
+
+<div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0;">
+    <div class="row">
+        <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Section</strong></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Products</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Products" data-trigger="hover" data-html="true" data-content="Number of products within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Downloads</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads" data-trigger="hover" data-html="true" data-content="Sum of all downloads of all files (active or archived of this product within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong style="color: #BBB">Potential Payout</strong></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Section-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Section-Factor" data-trigger="hover" data-html="true" data-content="The Section-Factor's depends on the product section and the funding of this section.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Actual Payout</strong></div>
+
+    </div>
+</div>
+
+
+
+<div class="tab-content" id="pling-tab-content"><i class="fa fa-spinner"></i></div>
