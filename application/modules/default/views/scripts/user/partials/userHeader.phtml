@@ -72,14 +72,12 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
         -->
         <?php }?>
 
-        <?php  if($this->isSupporter($this->member->member_id)){?>
         <li class="header-menu-left-item <?php echo $this->tab == 'funding' ? 'active' : ''; ?>">           
              <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'funding'); ?>">        
                 <span class="glyphicon glyphicon-usd"></span>
                 <?= $this->translate('Funding') ?>
             </a>
         </li>
-        <?php }?>
 
         
     <?php }?>
