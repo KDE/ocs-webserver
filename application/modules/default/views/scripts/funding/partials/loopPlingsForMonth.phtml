@@ -116,7 +116,7 @@ if ($countDownloadsOverall > 0) {
                 $supporters = $modelInfo->getNewActiveSupportersForSectionAndMonth($sectionStats['section_id'], $yearmonth);
                 
             ?>
-                <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
+                <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 25px;">
                     
                     <div class="col-md-2 cell-default" style="" id="<?=$section['section_id']?>"><?=$section['name']?></div>
                     <div class="col-md-1 text-right cell-default" style=""><?= $sectionStats['num_supporter'] ?></div>
@@ -138,6 +138,8 @@ if ($countDownloadsOverall > 0) {
                             echo "1.00";
                         }
                     ?></strong></div>
+                    
+                    <?php /*
                     <div class="col-md-1 text-right cell-default" style="">
                         <?php 
                             if($sectionStats['sum_support']>0 && $sectionStats['sum_amount']>0) {
@@ -156,7 +158,9 @@ if ($countDownloadsOverall > 0) {
                         </div>
                         
                     </div>
-                    <div class="co4-md-4 text-left cell-default" style="max-width: 300px;">
+                     * 
+                     */?>
+                    <div class="col-md-4 text-left cell-default">
                         <div style="">
                     <?php 
                     $i=0;
