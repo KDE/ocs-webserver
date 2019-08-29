@@ -124,7 +124,7 @@ if ($countDownloadsOverall > 0) {
                     <div class="col-md-1 text-right cell-default" style=""><strong><?php print($currency->toCurrency($sectionStats['sum_support'] + $sectionStats['sum_sponsor'])); ?></strong></div>
                     <!--<div class="col-md-1 text-right cell-default" style=""><?=$sectionStats['sum_dls']?></div>-->
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                    <div class="col-md-1 text-right cell-default" style=""><strong><?php print($currency->toCurrency($sectionStats['sum_amount']));?></strong></div>
+                    <div class="col-md-1 text-right cell-default" style=" min-width: 215px;"><strong><?php print($currency->toCurrency($sectionStats['sum_amount']));?></strong></div>
                     <?php endif; ?>
 
 
