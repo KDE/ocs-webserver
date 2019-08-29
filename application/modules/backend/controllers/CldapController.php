@@ -26,7 +26,6 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
 {
 
     const filename = "members";
-    const filename_errors = "members";
 
     protected $domain;
     protected $tld;
@@ -54,7 +53,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
      */
     private static function initLog()
     {
-        $writer = new Zend_Log_Writer_Stream(APPLICATION_DATA . '/logs/validateLdapUser.log');
+        $writer = new Zend_Log_Writer_Stream(APPLICATION_DATA . '/logs/ldap-' . date("Ymd-His") . '.log');
         $logger = new Zend_Log($writer);
 
         return $logger;
@@ -62,8 +61,9 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
 
 
     /**
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Db_Statement_Exception
      * @throws Zend_Exception
-     * @throws Zend_Validate_Exception
      */
     public function runAction()
     {
@@ -73,7 +73,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         $method = $this->getParam('method', 'create');
 
         $this->log->info("METHOD: {$method}\n--------------\n");
-        $this->log->err("METHOD: {$method}\n--------------\n");
+        $this->log->info(print_r($this->config->toArray(), true));
 
         if ($this->hasParam('member_id')) {
             $member_id = $this->getParam('member_id');
@@ -95,6 +95,11 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         }
         if ('validate' == $method) {
             $this->validateMembers($members, $force);
+
+            return;
+        }
+        if ('updateAvatar' == $method) {
+            $this->updateAvatar($members);
 
             return;
         }
@@ -134,8 +139,8 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
               AND `me`.`email_deleted` = 0
               AND LOCATE('_double', `m`.`username`) = 0 
               AND LOCATE('_double', `me`.`email_address`) = 0
-            " . $filter . "
-            ORDER BY `m`.`member_id` ASC
+            {$filter}
+            ORDER BY `m`.`member_id`
             # LIMIT 100
         ";
 
@@ -146,6 +151,29 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         return $result;
     }
 
+    private function updateAvatar($members)
+    {
+        $modelOcsLdap = new Default_Model_Ocs_Ldap();
+
+        while ($member = $members->fetch()) {
+            try {
+                $modelOcsLdap->updateAvatar($member['member_id'], $member['profile_image_url']);
+            } catch (Zend_Ldap_Exception $e) {
+                $this->log->info("process " . Zend_Json::encode($member));
+                $this->log->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+
+                continue;
+            }
+            $messages = $modelOcsLdap->getMessages();
+            if (isset($messages[0]) AND $messages[0] != "Success") {
+                $this->log->info("process " . Zend_Json::encode($member));
+                $this->log->info("messages " . Zend_Json::encode($messages));
+            }
+        }
+
+        return true;
+    }
+
     /**
      * @param Zend_Db_Statement_Interface $members
      *
@@ -153,34 +181,26 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
      *
      * @return bool
      * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
      */
     private function exportMembers($members, $force = false)
     {
-        $usernameValidChars = new Local_Validate_UsernameValid();
-        $mailAddressValid = new Zend_Validate_EmailAddress();
-        $modelOcsIdent = new Default_Model_Ocs_Ldap();
+        $modelOcsLdap = new Default_Model_Ocs_Ldap();
 
         while ($member = $members->fetch()) {
-            $this->log->info("process " . Zend_Json::encode($member));
-            echo "process " . Zend_Json::encode($member) . PHP_EOL;
+            try {
+                $modelOcsLdap->createUserFromArray($member, $force);
+            } catch (Zend_Ldap_Exception $e) {
+                $this->log->info("process " . Zend_Json::encode($member));
+                $this->log->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
 
-            //if (false === $usernameValidChars->isValid($member['username'])) {
-            //    $this->log->info("messages [\"username validation error\"] ");
-            //    continue;
-            //}
-            if (false === $mailAddressValid->isValid($member['email_address'])) {
-                $this->log->info("messages [\"email address validation error\"] ");
-                echo "response [\"email address validation error\"]" . PHP_EOL;
                 continue;
             }
-            try {
-                $modelOcsIdent->createUserFromArray($member, $force);
-            } catch (Zend_Ldap_Exception $e) {
-                $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            $messages = $modelOcsLdap->getMessages();
+            if (isset($messages[0]) AND $messages[0] != "Success") {
+                $this->log->info("process " . Zend_Json::encode($member));
+                $this->log->info("messages " . Zend_Json::encode($messages));
             }
-            $messages = $modelOcsIdent->getMessages();
-            $this->log->info("messages " . Zend_Json::encode($messages));
-            echo "response " . Zend_Json::encode($messages) . PHP_EOL;
         }
 
         return true;
@@ -191,31 +211,25 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
      *
      * @return bool
      * @throws Zend_Exception
-     * @throws Zend_Validate_Exception
      */
     private function updateMembers($members)
     {
-        $usernameValidChars = new Local_Validate_UsernameValid();
-        $mailAddressValid = new Zend_Validate_EmailAddress();
         $modelOcsIdent = new Default_Model_Ocs_Ldap();
 
         while ($member = $members->fetch()) {
-            //if (false === $usernameValidChars->isValid($member['username'])) {
-            //    $this->log->info("username validation error " . json_encode($member));
-            //    continue;
-            //}
-            if (false === $mailAddressValid->isValid($member['email_address'])) {
-                $this->log->info("email address validation error " . json_encode($member));
-                continue;
-            }
-            $this->log->info("process " . json_encode($member));
             try {
                 $modelOcsIdent->updateUserFromArray($member);
             } catch (Zend_Ldap_Exception $e) {
+                $this->log->info("process " . json_encode($member));
                 $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+
+                continue;
             }
             $messages = $modelOcsIdent->getMessages();
-            $this->log->info(json_encode($messages));
+            if (isset($messages[0]) AND $messages[0] != "Success") {
+                $this->log->info("process " . Zend_Json::encode($member));
+                $this->log->info("messages " . Zend_Json::encode($messages));
+            }
         }
 
         return true;
@@ -235,17 +249,19 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
 
         while ($member = $members->fetch()) {
             $modelOcsIdent->resetMessages();
-            //$this->log->info("process " . json_encode($member));
             try {
-                $ldapEntry = $modelOcsIdent->hasUser($member['member_id'], $member['username']);
+                $ldapEntry = $modelOcsIdent->getLdapUser($member);
                 if (empty($ldapEntry)) {
                     $this->log->info('user not exist (' . $member['member_id'] . ', ' . $member['username'] . ')');
+
                     continue;
                 }
                 $result = $this->validateEntry($member, $ldapEntry);
                 if (isset($result)) {
-                    $this->log->info('member (' . $member['member_id'] . ', ' . $member['username'] . ') unequal: ' . PHP_EOL . implode("<=>", $result). ' ' .
-                        $member[$result[0]] . '<=>' . Zend_Ldap_Attribute::getAttribute($ldapEntry, $result[1], 0));
+                    $this->log->info('member (' . $member['member_id'] . ', ' . $member['username'] . ') unequal: ' . PHP_EOL . implode("<=>", $result)
+                                     . ' '
+                                     . $member[$result[0]] . '<=>' . Zend_Ldap_Attribute::getAttribute($ldapEntry, $result[1], 0))
+                    ;
                     if ($force) {
                         $modelOcsIdent->createUserFromArray($member, true);
                     }
@@ -262,14 +278,14 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         return true;
     }
 
-    private function prepareLogTable()
-    {
-        $db = Zend_Db_Table::getDefaultAdapter();
-        $db->query('truncate `_ldap_user_validate`;');
-    }
-
     private function validateEntry($member, $ldapEntry)
     {
+        $enc = mb_detect_encoding($member['username']) ? mb_detect_encoding($member['username']) : 'UTF-8';
+        $lower_username = mb_strtolower($member['username'], $enc);
+
+        $enc = mb_detect_encoding($member['email_address']) ? mb_detect_encoding($member['email_address']) : 'UTF-8';
+        $lower_mail = mb_strtolower($member['email_address'], $enc);
+
         $attr = Zend_Ldap_Attribute::getAttribute($ldapEntry, 'uidNumber', 0);
         if ($member['member_id'] != $attr) {
             return array('member_id', 'uidNumber');
@@ -279,13 +295,13 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
             return array('external_id', 'memberUid');
         }
         $attr = Zend_Ldap_Attribute::getAttribute($ldapEntry, 'cn', 0);
-        $username = mb_strtolower($member['username']);
-        if ($username != mb_strtolower($attr)) {
+        $enc = mb_detect_encoding($attr) ? mb_detect_encoding($attr) : 'UTF-8';
+        if ($lower_username != mb_strtolower($attr, $enc)) {
             return array('username', 'cn');
         }
         $attr = Zend_Ldap_Attribute::getAttribute($ldapEntry, 'email', 0);
-        $mail_address = mb_strtolower($member['email_address']);
-        if ($mail_address != mb_strtolower($attr)) {
+        $enc = mb_detect_encoding($attr) ? mb_detect_encoding($attr) : 'UTF-8';
+        if ($lower_mail != mb_strtolower($attr, $enc)) {
             return array('email_address', 'email');
         }
         $attr = Zend_Ldap_Attribute::getAttribute($ldapEntry, 'userPassword', 0);
@@ -293,9 +309,14 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         if ($password != $attr) {
             return array('password', 'userPassword');
         }
-        //if ($member['member_id'] != Zend_Ldap_Attribute::getAttribute($ldapEntry, 'uidNumber')) return false;
-        //if ($member['member_id'] != Zend_Ldap_Attribute::getAttribute($ldapEntry, 'uidNumber')) return false;
+
         return null;
+    }
+
+    private function prepareLogTable()
+    {
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $db->query('truncate `_ldap_user_validate`;');
     }
 
     private function dbLog($member_id, $string, $string1, $encode, $encode1)
@@ -304,7 +325,13 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
             "INSERT INTO `_ldap_user_validate` (`member_id`, `status`, `msg`, `json_ldap`, `json_db`) VALUES (:memberId, :statusVal, :msgVal, :ldapVal, :dbVal)";
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->query($sql,
-            array('memberId' => $member_id, 'statusVal' => $string, 'msgVal' => $string1, 'ldapVal' => $encode, 'dbVal' => $encode1));
+            array(
+                'memberId'  => $member_id,
+                'statusVal' => $string,
+                'msgVal'    => $string1,
+                'ldapVal'   => $encode,
+                'dbVal'     => $encode1
+            ));
     }
 
     /**
@@ -354,7 +381,7 @@ uid: {$member['email_address']}
 userPassword: {MD5}{$password}
 cn: {$member['username']}
 email: {$member['email_address']}\n" . (empty(trim($member['firstname'])) ? "" : "gn: {$member['firstname']}\n")
-            . (empty(trim($member['lastname'])) ? "" : "sn: {$member['lastname']}\n") . "uidNumber: {$member['member_id']}
+               . (empty(trim($member['lastname'])) ? "" : "sn: {$member['lastname']}\n") . "uidNumber: {$member['member_id']}
 gidNumber: {$member['roleId']}
 memberUid: {$member['external_id']}
 ";

@@ -1,0 +1,312 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+?>
+<style>
+    .cell-default {
+        line-height: 4em;
+        vertical-align: middle;
+    }
+    
+    .row-total {
+        border-top: #1595ee solid thin;
+        padding-top: 1em;
+        padding-bottom: 1em;
+        line-height: 30px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    
+    .popover {
+        min-width:350px;
+    }
+    
+    .popover-title { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+    
+    .popover-content { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+</style>
+<ul class="nav nav-tabs margin-bottom-10">
+<?php
+    
+$isCurrentMonth = false;
+$modelDownload = new Default_Model_StatDownload();
+$yearmonth = null;
+
+if(isset($this->yearmonth)) {
+    $yearmonth = $this->yearmonth;
+}
+?>
+
+<div class="tab-content">
+<?php
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helpImage = new Default_View_Helper_Image();
+$css_active = ' in active';
+$has_paypal = false;
+$currency = new Zend_Currency('en_US');
+
+$currentDate = date("Ym",time());
+$printCurrentMonth = new DateTime($currentDate.'01');
+
+$printMonth = new DateTime($yearmonth.'01');
+$printDate = $printMonth->format('M Y');
+
+$allDownloads = $modelDownload->getUserSectionsForMonth($this->member->member_id, $yearmonth);
+$countDownloadsOverall = count($allDownloads);
+
+if ($countDownloadsOverall > 0) {
+    $firstProduct = $allDownloads[0];
+    if ($firstProduct) {
+        $printMonth = new DateTime($firstProduct['yearmonth'].'01');
+        $printCurrentMonth = new DateTime($currentDate.'01');
+        
+        if($printMonth == $printCurrentMonth) {
+            $isCurrentMonth = true;
+        } else {
+            $isCurrentMonth = false;
+        }
+        $sum_total_month_score = 0;
+        $sum_total_month = 0;
+        $sum_total_month_uk = 0;
+        $sum_total_month_new = 0;
+        $sum_total_text = '';
+        $sum_total_payout = 0;
+        $sum_total_payout_uk = 0;
+        $sum_total_payout_new = 0;
+        
+        $sum_total_month_potential_payout = 0;
+        $sum_total_potential_payout = 0;
+        
+        ?>
+        <div class="tab-pane fade <?=$css_active?>" id="<?=$firstProduct['yearmonth']?>">
+            <?php
+            $css_active = '';
+
+            foreach ($allDownloads as $section) { ?>
+                <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
+                    <div class="col-md-2 text-left cell-default">
+                        <a href="/member/<?= $this->member->member_id ?>/sectionplingsmonthajax?yearmonth=<?= $section['yearmonth'] ?>&section_id=<?= $section['section_id'] ?>" data-toggle="sectiondetailajax" data-target="#pling-tab-content-<?= $section['yearmonth'] ?>-<?= $section['section_id'] ?>" id="sec_<?= $section['yearmonth'] ?>"><?= $section['section_name'] ?></a>
+                    </div>
+
+                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                        <span><?= $section['count_projects'] ?></span>
+                    </div>
+                    
+                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                        <span><?= $section['num_downloads'] ?></span>
+                    </div>
+                    <?php endif; ?>
+                    
+                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                        <span><?php print($currency->toCurrency($section['sum_probably_payout_amount'])); ?></span>
+                    </div>
+                    <?php endif; ?>
+                    
+                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                        <span><?php print($section['section_payout_factor']); ?></span>
+                    </div>
+                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                        <span><?php print($currency->toCurrency($section['sum_real_payout_amount']*$section['section_payout_factor'])); ?></span>
+                    </div>
+                </div>
+                <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;padding-left: 80px;font-size: small;">
+                    <div class="col-md-1 text-right cell-default"></div>
+                    <div class="col-md-11 text-right cell-default">
+                        <div id="pling-tab-content-<?= $section['yearmonth'] ?>-<?= $section['section_id'] ?>" class="hidden"></div>
+                    </div>
+                    
+                </div>
+                    
+            
+            
+                <?php
+                
+                $payout_sum = $section['sum_real_payout_amount']*$section['section_payout_factor'];
+                
+                $sum_total_month_potential_payout += ($section['sum_probably_payout_amount']);
+                $sum_total_potential_payout = $currency->toCurrency($sum_total_month_potential_payout);
+                
+                $sum_total_month += $payout_sum;
+                $sum_total_payout = $currency->toCurrency($sum_total_month);
+                
+                $sum_total_text = 'Possible payout for this month (<span style="font-size: smaller;">*</span>):';
+                
+                $payout_success = false;
+                if ($section['payout_status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
+                    $payout_success = true;
+                    $sum_total_payout_success = $currency->toCurrency($section['payout_amount']);
+                    $sum_total_text_success = 'Actually successfully paid amount: ';
+                }
+                $has_paypal = $section['paypal_mail'] ? true : false;
+            }
+
+            $sum_total_month_view = number_format($sum_total_month);
+            ?>
+            <div class='row row-total'>
+                <div class='col-md-3 text-right' style="min-width: 700px;"><?=$sum_total_text?></div>
+                <div class='col-md-1 text-right' style="min-width: 170px;"><strong style="color: #BBB"><?=$sum_total_potential_payout?></strong></div>
+                <div class='col-md-1 text-right' style="min-width: 190px;"></div>
+                <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?=$sum_total_payout?>**</strong></div>
+            </div>
+            
+            
+            
+            <?php 
+
+
+            $currentDate = date("Ym",time());
+            $viewDate = $firstProduct['yearmonth']."";
+            $paypalWarning = '';
+            if($currentDate == $viewDate) {
+                $member = $this->view_member;
+                if(!isset($member['paypal_mail']) || $member['paypal_mail'] == '') {
+                    $has_paypal = false;
+                    $paypalWarning = 'You have no PayPal account configured. Please go to your settings page <a href="/settings#form-payment-panel">here</a>.';
+                } else {
+                    $has_paypal = true;
+                }
+            } else {
+                $paypalWarning = 'We found no valid Paypal account for this month. That\'s why we could not pay you any money. In order to receive money for the current month, please make sure that a paypal account is registered. Go to your settings page <a href="/settings#form-payment-panel">here</a>.';
+            }
+            if (false == $has_paypal) {
+                echo '<div class="alert alert-danger" role="alert">'.$paypalWarning.'</div>';
+            }
+
+            if (($sum_total_month/100) < 1) {
+                echo '<div class="alert alert-warning" role="alert">We only pay out money if the total sum is over $1.</div>';
+            }
+?>
+            
+        </div>
+<?php
+    }
+} else {
+    
+    echo '<div class="tab-pane fade in active" id="'.$printDate.'">';
+    echo '    <div style="text-align: center;" class="row margin-bottom-12"><div class="col-md-8 cell-default">No Data</div></div>';
+    echo '    <div class="row row-total">';
+    echo '        <div class="col-md-1 text-right" style="min-width: 150px;"></div><div class="col-md-4 text-right"></div><div class="col-md-3 text-right" style="min-width: 570px;">Possible payout for this month (<span style="font-size: smaller;">*</span>):</div><div class="col-md-1 text-right" style="min-width: 190px;"><strong>$0.00</strong></div>';
+    echo '    </div>';
+    echo '</div>';
+}
+    
+    
+?>
+
+<?php /*    
+    <div id="le-alert"  class="alert alert-warning alert-block" role="alert">
+        <p>(**) The Payout is planned to become active on May 2019.</p>
+    </div>
+*/ ?>
+
+    <div id="le-alert"  class="alert alert-warning alert-block" role="alert">
+        <p>(*) Info:</p>
+        <p>This service will become active on May, 1st 2017. All previous months are shown for internal testing only.
+        </p>
+        <p>This service is considered Beta until otherwise announced.</p>
+        <br>
+        <p>For the full Terms of Service, please read here: <a href="/terms/payout">Payout T&C</a></p> 
+        <br><br>
+        <p>**Paypal might deduct general fees and conversion rate from this sum.</p>
+            
+    </div>
+</div>    
+    
+<script>
+$(document).ready(function(){ 
+    
+    $('[data-toggle="sectiondetailajax"]').click(function(e) {
+        var $this = $(this),
+            loadurl = $this.attr('href'),
+            targ = $this.attr('data-target');
+        
+        if($(targ).hasClass('hidden')) {
+            $(targ).html('<i class="fa fa-spinner"></i>');
+            $(targ).removeClass('hidden');
+            $(targ).addClass('shown');
+
+            $.get(loadurl, function(data) {
+                $(targ).html(data);
+            });
+        } else {
+            $(targ).removeClass('shown');
+            $(targ).addClass('hidden');
+        }
+            
+
+        return false;
+    });
+
+    
+    $('#payout_info').click(function (event ) {
+        event.preventDefault();
+        $('#le-alert').addClass('in'); // shows alert with Bootstrap CSS3 implem
+    });
+
+    $('.close').click(function () {
+        $(this).parent().removeClass('in'); // hides alert with Bootstrap CSS3 implem
+    });
+    
+    $(function(){
+        // Enables popover
+        $(".payout-popover-info").popover({
+            html : true,
+            template : '<div class="popover alert alert-info alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+        $(".payout-popover-warning").popover({
+            html : true,
+            template : '<div class="popover alert alert-warning alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+        $(".payout-popover-success").popover({
+            html : true,
+            template : '<div class="popover alert alert-success alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+        $(".payout-popover-danger").popover({
+            html : true,
+            template : '<div class="popover alert alert-danger alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+        $(".msg-popover-danger").popover({
+            html : true,
+            template : '<div class="popover alert alert-danger alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+    });
+
+});        
+
+</script> 
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            $(\'[data-toggle="popover"]\').popover();
+        });
+    ');

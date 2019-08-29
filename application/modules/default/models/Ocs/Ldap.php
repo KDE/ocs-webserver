@@ -80,7 +80,7 @@ class Default_Model_Ocs_Ldap
         $member_data = $this->getMemberData($member_id);
 
         try {
-            $entry = $this->getEntryUser($member_data, $connection);
+            $entry = $this->getLdapUser($member_data);
         } catch (Exception $e) {
             $this->errMessages[] = "Failed.";
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
@@ -94,11 +94,12 @@ class Default_Model_Ocs_Ldap
             return false;
         }
 
+        $email = $this->lowerString($member_data['email_address']);
         $oldUidAttribute = Zend_Ldap_Attribute::getAttribute($entry, 'email');
         Zend_Ldap_Attribute::removeFromAttribute($entry, 'uid', $oldUidAttribute);
         Zend_Ldap_Attribute::removeFromAttribute($entry, 'email', $oldUidAttribute);
         Zend_Ldap_Attribute::setAttribute($entry, 'email', $member_data['email_address']);
-        Zend_Ldap_Attribute::setAttribute($entry, 'uid', $member_data['email_address'], true);
+        Zend_Ldap_Attribute::setAttribute($entry, 'uid', $email, true);
         $dn = $entry['dn'];
         $connection->update($dn, $entry);
         $connection->getLastError($this->errCode, $this->errMessages);
@@ -153,40 +154,88 @@ class Default_Model_Ocs_Ldap
     }
 
     /**
-     * @param array     $member_data
-     * @param Zend_Ldap $ldap_connection
+     * @param array $member_data
      *
      * @return array
      * @throws Default_Model_Ocs_Exception
-     * @throws Zend_Ldap_Exception
+     * @throws Zend_Exception
      */
-    public function getEntryUser($member_data, $ldap_connection)
+    public function getLdapUser($member_data)
     {
         if (empty($member_data)) {
             throw new Default_Model_Ocs_Exception('given member_data empty');
         }
 
-        $filter = "(uidNumber={$member_data['member_id']})";
-        $entries = $ldap_connection->searchEntries($filter, $this->baseDnUser);
+        $entry = array();
 
-        if (count($entries) > 1) {
-            throw new Default_Model_Ocs_Exception('found member_id more than once. member_id: ' . $member_data['member_id']);
+        try {
+            $entry = $this->getLdapUserByMemberId($member_data['member_id']);
+
+            if ($entry) {
+                return $entry;
+            }
+
+            $entry = $this->getLdapUserByUsername($member_data['username']);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage());
         }
 
-        if (count($entries) == 1) {
-            return $entries[0];
-        }
-
-        $username = $member_data['username'];
-        $enc = mb_detect_encoding($username) ? mb_detect_encoding($username) : 'UTF-8';
-        $username = mb_strtolower($username, $enc);
-        $entry = $ldap_connection->getEntry("cn={$username},{$this->baseDnUser}");
-
-        return empty($entry) ? array() : $entry;
+        return $entry;
     }
 
     /**
-     * @param int  $member_id
+     * @param int $member_id
+     * @return array
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Ldap_Exception
+     */
+    public function getLdapUserByMemberId($member_id)
+    {
+        $ldap_connection = $this->getConnectionUser();
+
+        $filter = "(&(uidNumber={$member_id})(objectClass=account))";
+        $entries = $ldap_connection->searchEntries($filter, $this->baseDnUser);
+
+        if (empty($entries)) {
+            return array();
+        }
+
+        if (count($entries) > 1) {
+            throw new Default_Model_Ocs_Exception('found member_id more than once. member_id: ' . $member_id);
+        }
+
+        return $entries[0];
+    }
+
+    /**
+     * @param string $username
+     *
+     * @return mixed
+     * @throws Zend_Ldap_Exception
+     */
+    public function getLdapUserByUsername($username)
+    {
+        $username = $this->lowerString($username);
+        $ldap_connection = $this->getConnectionUser();
+        $entry = $ldap_connection->getEntry("cn={$username},{$this->baseDnUser}");
+
+        return $entry;
+    }
+
+    /**
+     * @param $string
+     * @return string
+     */
+    private function lowerString($string)
+    {
+        $enc = mb_detect_encoding($string) ? mb_detect_encoding($string) : 'UTF-8';
+        $string = mb_strtolower($string, $enc);
+
+        return $string;
+    }
+
+    /**
+     * @param int         $member_id
      *
      * @param string|null $password
      * @return bool
@@ -198,7 +247,7 @@ class Default_Model_Ocs_Ldap
         $connection = $this->getConnectionUser();
         $member_data = $this->getMemberData($member_id);
         try {
-            $entry = $this->getEntryUser($member_data, $connection);
+            $entry = $this->getLdapUser($member_data);
         } catch (Exception $e) {
             $this->errMessages[] = "Failed.";
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
@@ -212,7 +261,8 @@ class Default_Model_Ocs_Ldap
 
             return false;
         }
-        Zend_Ldap_Attribute::removeFromAttribute($entry, 'userPassword', Zend_Ldap_Attribute::getAttribute($entry, 'userPassword'));
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'userPassword',
+            Zend_Ldap_Attribute::getAttribute($entry, 'userPassword'));
         if (isset($password)) {
             $hash = Local_Auth_Adapter_Ocs::getEncryptedLdapPass($password);
         } else {
@@ -238,7 +288,7 @@ class Default_Model_Ocs_Ldap
         $connection = $this->getConnectionUser();
         $member_data = $this->getMemberData($member_id);
         try {
-            $oldEntry = $this->getEntryUser($member_data, $connection);
+            $oldEntry = $this->getLdapUser($member_data);
         } catch (Exception $e) {
             $this->errMessages[] = "Failed.";
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
@@ -279,7 +329,7 @@ class Default_Model_Ocs_Ldap
 
         //Only create, if user do not exisits
         try {
-            $entry = $this->getEntryUser($member_data, $connection);
+            $entry = $this->getLdapUser($member_data);
         } catch (Exception $e) {
             $this->errMessages[] = "Failed.";
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
@@ -296,8 +346,6 @@ class Default_Model_Ocs_Ldap
         $entry = $this->createEntryUser($member_data);
         $dn = $this->getDnUser($member_data['username']);
         $connection->add($dn, $entry);
-        //set avatar
-        $this->updateAvatar($member_id);
         $connection->getLastError($this->errCode, $this->errMessages);
 
         return true;
@@ -311,8 +359,9 @@ class Default_Model_Ocs_Ldap
      */
     private function createEntryUser($member)
     {
-        $username = mb_strtolower($member['username']);
+        $username = $this->lowerString($member['username']);
         $password = '{MD5}' . base64_encode(pack("H*", $member['password']));
+        $mail_address = $this->lowerString($member['email_address']);
         $jpegPhoto = $this->createJpegPhoto($member['member_id'], $member['profile_image_url']);
 
         $entry = array();
@@ -320,7 +369,7 @@ class Default_Model_Ocs_Ldap
         Zend_Ldap_Attribute::setAttribute($entry, 'objectClass', 'account', true);
         Zend_Ldap_Attribute::setAttribute($entry, 'objectClass', 'extensibleObject', true);
         Zend_Ldap_Attribute::setAttribute($entry, 'uid', $username);
-        Zend_Ldap_Attribute::setAttribute($entry, 'uid', $member['email_address'], true);
+        Zend_Ldap_Attribute::setAttribute($entry, 'uid', $mail_address, true);
         Zend_Ldap_Attribute::setAttribute($entry, 'userPassword', $password);
         Zend_Ldap_Attribute::setAttribute($entry, 'cn', $username);
         Zend_Ldap_Attribute::setAttribute($entry, 'email', $member['email_address']);
@@ -357,7 +406,7 @@ class Default_Model_Ocs_Ldap
             $layer_method = imagick::LAYERMETHOD_FLATTEN;
             $im = $im->mergeImageLayers($layer_method);
         } catch (ImagickException $e) {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - error during converting avatar image. ' . $e->getMessage());
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - error during converting avatar image. ' . $e->getMessage() . " ({$member_id};{$profile_image_url})");
 
             return false;
         }
@@ -371,6 +420,8 @@ class Default_Model_Ocs_Ldap
         $im->destroy();
 
         $avatarBase64 = file_get_contents($imgTempPath);
+
+        unlink($imgTempPath);
 
         return $avatarBase64;
     }
@@ -386,62 +437,6 @@ class Default_Model_Ocs_Ldap
         $dn = "cn={$username},{$this->baseDnUser}";
 
         return $dn;
-    }
-
-    /**
-     * @param int $member_id
-     *
-     * @return bool
-     * @throws ImagickException
-     * @throws Zend_Exception
-     * @throws Zend_Ldap_Exception
-     */
-    public function updateAvatar($member_id)
-    {
-
-        $member_data = $this->getMemberData($member_id);
-        $imgTempPath = 'img/data/' . $member_id . "_avatar.jpg";
-        $im = new imagick($member_data['profile_image_url']);
-        $im = $im->flattenImages();
-
-        // convert to jpeg
-        $im->setImageFormat('jpeg');
-        //write image on server
-        $im->writeImage($imgTempPath);
-        $im->clear();
-        $im->destroy();
-
-        $avatarJpeg = $imgTempPath;
-        $avatarBase64 = file_get_contents($avatarJpeg);
-
-        $connection = $this->getConnectionUser();
-
-        try {
-            $entry = $this->getEntryUser($member_data, $connection);
-        } catch (Exception $e) {
-            $this->errMessages[] = "Failed.";
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
-
-            return false;
-        }
-        if (empty($entry)) {
-            $this->errMessages[] = "Failed.";
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ldap entry for member does not exists. Going to create it.');
-
-            return false;
-        }
-
-        Zend_Ldap_Attribute::removeFromAttribute($entry, 'jpegPhoto', Zend_Ldap_Attribute::getAttribute($entry, 'jpegPhoto'));
-
-        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatarBase64);
-
-        $dn = $entry['dn'];
-        $connection->update($dn, $entry);
-        $connection->getLastError($this->errCode, $this->errMessages);
-
-        unlink($imgTempPath);
-
-        return true;
     }
 
     private function updateIdentEntry($member_data, $oldEntry)
@@ -502,6 +497,46 @@ class Default_Model_Ocs_Ldap
     }
 
     /**
+     * @param int    $member_id
+     *
+     * @param string $profile_image_url
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Ldap_Exception
+     */
+    public function updateAvatar($member_id, $profile_image_url)
+    {
+        $jpegPhoto = $this->createJpegPhoto($member_id, $profile_image_url);
+        $connection = $this->getConnectionUser();
+
+        try {
+            $entry = $this->getLdapUserByMemberId($member_id);
+        } catch (Exception $e) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
+
+            return false;
+        }
+        if (empty($entry)) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ldap entry for member does not exists.');
+
+            return false;
+        }
+
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'jpegPhoto',
+            Zend_Ldap_Attribute::getAttribute($entry, 'jpegPhoto'));
+
+        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $jpegPhoto);
+
+        $dn = $entry['dn'];
+        $connection->update($dn, $entry);
+        $connection->getLastError($this->errCode, $this->errMessages);
+
+        return true;
+    }
+
+    /**
      * @param int $member_id
      *
      * @return bool
@@ -516,7 +551,7 @@ class Default_Model_Ocs_Ldap
         $connection = $this->getConnectionUser();
         $member_data = $this->getMemberData($member_id, false);
         try {
-            $entry = $this->getEntryUser($member_data, $connection);
+            $entry = $this->getLdapUser($member_data);
         } catch (Exception $e) {
             $this->errMessages[] = "Failed.";
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
@@ -546,7 +581,7 @@ class Default_Model_Ocs_Ldap
             throw new Default_Model_Ocs_Exception('given username is empty.');
         }
         $connection = $this->getConnectionUser();
-        $username = strtolower($username);
+        $username = $this->lowerString($username);
         if (false === $connection->exists("cn={$username},{$this->baseDnUser}")) {
             $connection->getLastError($this->errCode, $this->errMessages);
 
@@ -579,7 +614,7 @@ class Default_Model_Ocs_Ldap
         $user = null;
 
         try {
-            $user = $this->hasUser($member_data['member_id'], $member_data['username']);
+            $user = $this->getLdapUser($member_data);
         } catch (Exception $e) {
             $this->errCode = 998;
             $this->errMessages[] = $e->getMessage();
@@ -620,6 +655,16 @@ class Default_Model_Ocs_Ldap
     }
 
     /**
+     * @param string $user_name
+     * @param array  $user
+     * @return bool
+     */
+    private function hasChangedUsername($user_name, $user)
+    {
+        return !Zend_Ldap_Attribute::attributeHasValue($user, 'cn', $this->lowerString($user_name));
+    }
+
+    /**
      * @param $member_id
      * @param $username
      *
@@ -645,16 +690,10 @@ class Default_Model_Ocs_Ldap
             return $entries[0];
         }
 
-        $enc = mb_detect_encoding($username) ? mb_detect_encoding($username) : 'UTF-8';
-        $username = mb_strtolower($username, $enc);
+        $username = $this->lowerString($username);
         $entry = $ldap->getEntry("cn={$username},{$this->baseDnUser}");
 
         return empty($entry) ? false : true;
-    }
-
-    private function hasChangedUsername($user_name, $user)
-    {
-        return !Zend_Ldap_Attribute::attributeHasValue($user, 'cn', mb_strtolower($user_name));
     }
 
     /**
@@ -679,7 +718,7 @@ class Default_Model_Ocs_Ldap
         $user = null;
 
         try {
-            $user = $this->hasUser($member_data['member_id'], $member_data['username']);
+            $user = $this->getLdapUser($member_data);
         } catch (Exception $e) {
             $this->errCode = 998;
             $this->errMessages[] = $e->getMessage();
@@ -702,6 +741,7 @@ class Default_Model_Ocs_Ldap
             $connection->getLastError($this->errCode, $this->errMessages);
             $connection->add($dn, $entry);
             $connection->getLastError($this->errCode, $this->errMessages);
+            $this->errMessages[] = "old user deleted : " . $user['dn'];
         } else {
             $connection->update($dn, $entry);
             $connection->getLastError($this->errCode, $this->errMessages);
@@ -738,7 +778,7 @@ class Default_Model_Ocs_Ldap
 
         //Only update, if member exists
         try {
-            $entry = $this->getEntryUserByDN($user_username);
+            $entry = $this->getLdapUserByUsername($user_username);
         } catch (Exception $e) {
             $this->errMessages[] = "Failed.";
             Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . $e->getMessage());
@@ -823,27 +863,13 @@ class Default_Model_Ocs_Ldap
     }
 
     /**
-     * @param string $username
-     *
-     * @return mixed
-     * @throws Zend_Ldap_Exception
-     */
-    public function getEntryUserByDN($username)
-    {
-        $username = strtolower($username);
-        $ldap_connection = $this->getConnectionUser();
-        $entry = $ldap_connection->getEntry("cn={$username},{$this->baseDnUser}");
-
-        return $entry;
-    }
-
-    /**
      * @param string $group_name
      * @param int    $group_id
      * @param        $group_path
      * @param        $user_name
      * @param        $group_access
      *
+     * @return array|bool
      * @throws Zend_Exception
      * @throws Zend_Ldap_Exception
      */

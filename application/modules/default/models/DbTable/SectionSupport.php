@@ -96,12 +96,19 @@ class Default_Model_DbTable_SectionSupport extends Zend_Db_Table_Abstract
     
     public function fetchAllSectionSupportsForMember($section_id, $member_id) {
         $sql = "
-            SELECT section_support.section_support_id, section_support.support_id, section_support.section_id, section_support.amount, section_support.tier, section_support.period, section_support.period_frequency, support.status_id, support.type_id, support.active_time, support.delete_time, support.payment_provider,member.member_id,member.username,
+            SELECT section_support.section_support_id, section_support.support_id, section_support.section_id,support.subscription_id, support.type_id, section_support.amount, section_support.tier, section_support.period, section_support.period_frequency, support.status_id, support.type_id, support.active_time, support.delete_time, support.payment_provider,member.member_id,member.username,
             case 
-            when support.status_id = 2 AND support.type_id = 0 AND (date_format(support.active_time  + interval 1 YEAR, '%Y%m')) >= date_format(NOW(), '%Y%m') then 'active'
+            when support.status_id = 2 AND support.type_id = 0 AND (date_format(support.active_time  + INTERVAL 11 MONTH, '%Y%m')) >= date_format(NOW(), '%Y%m') then 'active'
             when support.status_id = 2 AND support.type_id = 1 then 'active'
             ELSE 'inactive'
-            END AS active_status,(support.active_time  + interval 1 YEAR) AS active_time_one_year
+            END AS active_status
+            ,(support.active_time  + INTERVAL 11 MONTH) AS active_time_one_year
+            ,(support.active_time  + INTERVAL 1 MONTH) AS active_time_one_month
+            ,(SELECT MAX(active_time) FROM support p2 WHERE p2.type_id = 2 and p2.subscription_id = support.subscription_id) AS last_payment_time
+            ,case 
+                when support.type_id = 1 AND section_support.period = 'Y' then (SELECT (MAX(active_time)  + INTERVAL 11 MONTH) FROM support p2 WHERE p2.type_id = 2 and p2.subscription_id = support.subscription_id)
+                when support.type_id = 1 AND section_support.period = 'M' then (SELECT (MAX(active_time)  + INTERVAL 1 MONTH) FROM support p2 WHERE p2.type_id = 2 and p2.subscription_id = support.subscription_id)
+            END AS last_payment_until_time
             FROM section_support 
             JOIN section ON section.section_id = section_support.section_id
             JOIN support ON support.id = section_support.support_id AND support.status_id >= 2

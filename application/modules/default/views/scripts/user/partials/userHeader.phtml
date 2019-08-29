@@ -43,7 +43,14 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
             <?= $this->translate('Payout') ?>
         </a>
     </li>
-    
+    <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') { ?>
+    <li class="header-menu-left-item <?php echo $this->tab == 'payoutsection' ? 'active' : ''; ?>">
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payout2'); ?>">
+            <span class="glyphicon glyphicon-usd"></span>
+            <?= $this->translate('Payout-Section') ?>
+        </a>
+    </li>
+    <?php } ?>
     <li class="header-menu-left-item <?php echo $this->tab == 'payouthistory' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payouthistory'); ?>">                                   
             <span class="payouthistory-icon" aria-hidden="true"></span>
@@ -65,14 +72,12 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
         -->
         <?php }?>
 
-        <?php  if($this->isSupporter($this->member->member_id)){?>
         <li class="header-menu-left-item <?php echo $this->tab == 'funding' ? 'active' : ''; ?>">           
              <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'funding'); ?>">        
                 <span class="glyphicon glyphicon-usd"></span>
                 <?= $this->translate('Funding') ?>
             </a>
         </li>
-        <?php }?>
 
         
     <?php }?>

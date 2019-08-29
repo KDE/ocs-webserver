@@ -116,19 +116,19 @@ if ($countDownloadsOverall > 0) {
                 $supporters = $modelInfo->getNewActiveSupportersForSectionAndMonth($sectionStats['section_id'], $yearmonth);
                 
             ?>
-                <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
+                <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 25px;">
                     
                     <div class="col-md-2 cell-default" style="" id="<?=$section['section_id']?>"><?=$section['name']?></div>
                     <div class="col-md-1 text-right cell-default" style=""><?= $sectionStats['num_supporter'] ?></div>
 
-                    <div class="col-md-1 text-right cell-default" style=""><strong><?= round($sectionStats['sum_support'] + $sectionStats['sum_sponsor'], 2) ?></strong></div>
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?php print($currency->toCurrency($sectionStats['sum_support'] + $sectionStats['sum_sponsor'])); ?></strong></div>
                     <!--<div class="col-md-1 text-right cell-default" style=""><?=$sectionStats['sum_dls']?></div>-->
-                    <div class="col-md-1 text-right cell-default" style=""><strong><?=$sectionStats['sum_amount']?></strong></div>
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?php print($currency->toCurrency($sectionStats['sum_amount']));?></strong></div>
 
 
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <!--<div class="col-md-1 text-right cell-default" style=""><?=$sectionStats['sum_dls_payout']?></div>-->
-                    <div class="col-md-1 text-right cell-default" style=""><?=$sectionStats['sum_amount_payout']?></div>
+                    <div class="col-md-1 text-right cell-default" style=""><?php print($currency->toCurrency($sectionStats['sum_amount_payout']));?></div>
                     <?php endif; ?>
                     
                     <div class="col-md-1 text-right cell-default" style=""><strong><?php 
@@ -138,6 +138,8 @@ if ($countDownloadsOverall > 0) {
                             echo "1.00";
                         }
                     ?></strong></div>
+                    
+                    <?php /*
                     <div class="col-md-1 text-right cell-default" style="">
                         <?php 
                             if($sectionStats['sum_support']>0 && $sectionStats['sum_amount']>0) {
@@ -156,7 +158,9 @@ if ($countDownloadsOverall > 0) {
                         </div>
                         
                     </div>
-                    <div class="co4-md-4 text-left cell-default" style="max-width: 300px;">
+                     * 
+                     */?>
+                    <div class="col-md-4 text-left cell-default">
                         <div style="">
                     <?php 
                     $i=0;
@@ -182,11 +186,11 @@ if ($countDownloadsOverall > 0) {
             <div class='row row-total'>
                 <div class='col-md-2' style=""></div>
                 <div class='col-md-1 text-right' style=""></div>
-                <div class='col-md-1 text-right' style=""><strong><?= round($countIncome,2) ?></strong></div>
-                <div class='col-md-1 text-right' style=""><strong><?= round($countPayout,2) ?></strong></div>
+                <div class='col-md-1 text-right' style=""><strong><?php print($currency->toCurrency($countIncome)); ?></strong></div>
+                <div class='col-md-1 text-right' style=""><strong><?php print($currency->toCurrency($countPayout)); ?></strong></div>
                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                 <!--<div class='col-md-1 text-right' style=""></div>-->
-                <div class='col-md-1 text-right' style=""><?= round($countPayout2,2) ?></div>
+                <div class='col-md-1 text-right' style=""><?php print($currency->toCurrency($countPayout2)); ?></div>
                 <?php endif; ?>
                 <div class='col-md-1 text-right' style=""></div>
                 <div class='col-md-1 text-right' style=""></div>

@@ -1,0 +1,280 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$this->tab = 'payoutsection';
+$this->countDownloadsOverall = 0;
+
+$currentDate = date("Ym",time());
+$currentYear = date("Y",time());
+
+$modelDownload = new Default_Model_StatDownload();
+$downloadYears = $modelDownload->getUserDownloadYears($this->member->member_id);
+#$this->countDownloadsOverall = count($this->downloads);
+?>
+
+
+<main class="user-admin-page">
+    <?php echo $this->render('user/partials/userHeader_top.phtml'); ?>
+    <section class="body-wrap">
+        <section class="wrapper product-page">
+            <!-- PAGE BODY -->
+            <section class="my-products-page">
+                <!-- NAVIGATION -->
+                <?php echo $this->render('user/partials/userHeader.phtml'); ?>
+                <!-- /NAVIGATION -->
+                <div class="my-products-heading" style="border-bottom: none; padding-bottom: 0px;">
+                    <h1 class="page-title left"><?= $this->translate('Payout') ?></h1>
+                <?php
+                    $member = $this->view_member;
+                    if($member->pling_excluded == 1) {
+                        echo "<br><br><br><h1 style='color: red; '>This account has been excluded from receiving plings, due to various misuses.</h1>";
+                    }
+                ?>
+                </div>
+                
+                <!-- year tabs nav -->
+                <div class="pling-nav-tabs" style="padding-bottom: 20px;">
+                    <ul class="nav nav-tabs" id="yeartablist">
+                        <?php
+                            if(count($downloadYears) == 0 ||  $downloadYears[0]['year'] != $currentYear) {
+                                //Current year
+                                echo '<li role="presentation" class="yeartabs">';
+                                echo '    <a style="font-size: 18px;" data-year="'.$currentYear.'" data-toggle="yeartabajax" href="/member/'.$member->member_id.'/sectionsajax?year='.$currentYear.'" data-target="#my-payout-list" id="tab_year_'.$currentYear.'">'.$currentYear.'</a>';
+                                echo '</li>';
+                            }
+
+                            foreach ($downloadYears as $yearobj) {
+                                echo '<li role="presentation" class="yeartabs">';
+                                echo '    <a style="font-size: 18px;" data-year="'.$yearobj['year'].'" data-toggle="yeartabajax" href="/member/'. $member->member_id.'/sectionsajax?year='.$yearobj['year'].'" data-target="#my-payout-list" id="tab_year_'.$yearobj['year'].'">'.$yearobj['year'].'</a>';
+                                echo '</li>';
+                            }
+                        ?>
+                    </ul>
+                </div>
+                <section>
+                <?php
+                    $member = $this->view_member;
+                    if($member->paypal_valid_status > 100) {
+                        $status = $this->paypal_valid_status;
+                        if($status->color == 'red') {
+                            echo '<div class="alert alert-danger" role="alert">'.$status->description.'</div>';
+                        }
+                        if($status->color == 'yellow') {
+                            echo '<div class="alert alert-warning" role="alert">'.$status->description.'</div>';
+                        }
+                        if($status->color == 'blue') {
+                            echo '<div class="alert alert-info" role="alert">'.$status->description.'</div>';
+                        }
+                        if($status->color == 'green') {
+                            echo '<div class="alert alert-success" role="alert">'.$status->description.'</div>';
+                        }
+                    }
+                ?>
+                </section>
+                
+                <?php
+                    if($member->pling_excluded == 0 || (Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin')) {        
+                        echo "<script>";
+                        echo "var yearList = new Array();";
+                        
+                        if(count($downloadYears) == 0 ||  $downloadYears[0]['year'] != $currentYear) {
+                            //Current year
+                            echo "var yearListObj = new Array();";
+                            echo "yearListObj['maxMonth'] = '".$currentDate."';";
+                            echo "yearListObj['sum'] = '0';";
+                            echo "yearList['".$currentYear."'] = yearListObj;";
+                        }
+                        
+                        foreach ($downloadYears as $yearobj) {
+                            echo "var yearListObj = new Array();";
+                            echo "yearListObj['maxMonth'] = '".$yearobj['max_yearmonth']."';";
+                            echo "yearListObj['sum'] = '".$yearobj['sum_amount']."';";
+                            echo "yearList['".$yearobj['year']."'] = yearListObj;";
+                        }
+                        echo "</script>";
+                ?>  
+                <div class="my-products-list" id="my-payout-list">
+                    <div id="plingsyear">
+                        <i class="fa fa-spinner"></i>
+                    </div>
+                </div>
+                <?php
+                    }
+                ?>
+            </section>
+            <!-- /PAGE BODY -->
+        </section>
+    </section>
+</main>
+
+<script>
+$(document).ready(function(){
+    
+    
+    //Load pling for year
+    $('[data-toggle="yeartabajax"]').click(function(e) {
+               
+        var $this = $(this);
+        var year = $this.attr('data-year');
+        var loadurl = $this.attr('href');
+        var targ = $('#plingsyear');
+        
+        $('.yeartabs').removeClass('active');
+        $this.parent().addClass('active');
+        
+        $(targ).html('<i class="fa fa-spinner"></i>');
+
+        $.get(loadurl, function(data) {
+            
+            $('#plingsyear').html(data);
+            $('[data-toggle="popover"]').popover();
+            
+            
+            //Init tabs
+            $('[data-toggle="tabajax"]').click(function(e) {
+                var $this = $(this),
+                    loadurl = $this.attr('href'),
+                    targ = $this.attr('data-target');
+                $(targ).html('<i class="fa fa-spinner"></i>');
+
+                $.get(loadurl, function(data) {
+                    $(targ).html(data);
+                });
+
+                $this.tab('show');
+                
+                return false;
+            });
+            
+            //Load first Tab
+            var month = yearList[year]['maxMonth'];
+            var $this = $('#tab_'+month),
+            loadurl = $this.attr('href'),
+            targ = $this.attr('data-target');
+
+            $.get(loadurl, function(data) {
+                $(targ).html(data);
+            });
+
+            $this.tab('show');
+            
+        });
+
+        $(targ).show();
+        return false;
+    });
+         
+    //Init View on first load     
+    var year = <?= $currentYear ?>;
+    var currentyeartab = $('#tab_year_'+year);
+    $('.yeartabs').removeClass('active');
+    
+    currentyeartab.parent().addClass('active');
+    
+    var loadurl = currentyeartab.attr('href');
+    $.get(loadurl, function(data) {
+        $('#plingsyear').html(data);
+        $('[data-toggle="popover"]').popover();
+        
+        
+        //Init tabs
+        $('[data-toggle="tabajax"]').click(function(e) {
+            var $this = $(this),
+                loadurl = $this.attr('href'),
+                targ = $this.attr('data-target');
+            $(targ).html('<i class="fa fa-spinner"></i>');
+
+            $.get(loadurl, function(data) {
+                $(targ).html(data);
+            });
+
+            $this.tab('show');
+            return false;
+        });
+        
+        
+        var $this = $('#tab_' + yearList[year]['maxMonth']),
+            loadurl = $this.attr('href'),
+            targ = $this.attr('data-target');
+
+        $.get(loadurl, function(data) {
+            $(targ).html(data);
+        });
+
+        $this.tab('show');
+        
+
+        return false;
+    });
+    
+    
+    $('[data-toggle="tabajax"]').click(function(e) {
+               
+        var $this = $(this),
+            loadurl = $this.attr('href'),
+            targ = $this.attr('data-target');
+        $(targ).html('<i class="fa fa-spinner"></i>');
+
+        $.get(loadurl, function(data) {
+            $(targ).html(data);
+        });
+
+        $this.tab('show');
+        return false;
+    });
+            
+});
+
+    $('#payout_info').click(function (event ) {
+        event.preventDefault();
+        $('#le-alert').addClass('in'); // shows alert with Bootstrap CSS3 implem
+    });
+
+    $('.close').click(function () {
+        $(this).parent().removeClass('in'); // hides alert with Bootstrap CSS3 implem
+    });
+    
+    $(function(){
+        // Enables popover
+        $(".payout-popover-info").popover({
+            html : true,
+            template : '<div class="popover alert alert-info alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+        $(".payout-popover-warning").popover({
+            html : true,
+            template : '<div class="popover alert alert-warning alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+        $(".payout-popover-success").popover({
+            html : true,
+            template : '<div class="popover alert alert-success alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+        $(".payout-popover-danger").popover({
+            html : true,
+            template : '<div class="popover alert alert-danger alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+        $(".msg-popover-danger").popover({
+            html : true,
+            template : '<div class="popover alert alert-danger alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+    });
+
+</script> 

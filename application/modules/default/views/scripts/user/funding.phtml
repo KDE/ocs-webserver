@@ -27,7 +27,7 @@ $modelSection = new Default_Model_Section();
 $modelSectionSupport = new Default_Model_DbTable_SectionSupport();
 
 $allSections = $modelSection->fetchAllSections();
-
+$currency = new Zend_Currency('en_US');
 ?>
 <main class="user-admin-page">
     <?php echo $this->render('user/partials/userHeader_top.phtml'); ?>  
@@ -41,36 +41,100 @@ $allSections = $modelSection->fetchAllSections();
              
               <div class="my-products-heading">
                    <h1 class="page-title left"><?= $this->translate('Funding') ?></h1> 
-                   <p>Supporter Level = (S1,S2)</p>
+                   <!--<p>Supporter Level = (S1,S2)</p>-->
                </div>
 
                 <div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0; padding-bottom: 10px;">
                     <div class="row"> 
                         <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Section</strong></div>
-                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Total</strong></div>
+                        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Total</strong></div>
                         <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Status</strong></div>
-                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Amount</strong></div>
+                        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Amount</strong></div>
                         <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Payed Since</strong></div>
                         <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Payed Until</strong></div>
-                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Months</strong></div>
+                        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Months</strong></div>
                         <div class="col-md-3 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Details</strong></div>
                     </div>
                     
                 <?php 
                     foreach ($allSections as $section) { 
                         $isFirst = true;
-                        if($modelSection->isMemberSectionSupporter($section['section_id'], $this->member['member_id'])) {
-                            $supports = $modelSectionSupport->fetchAllSectionSupportsForMember($section['section_id'], $this->member['member_id']);
+                        $supports = $modelSectionSupport->fetchAllSectionSupportsForMember($section['section_id'], $this->member['member_id']);
+                        
+                        if($modelSection->wasMemberSectionSupporter($section['section_id'], $this->member['member_id']) && !empty($supports)) {
+                            
                             foreach ($supports as $support) {
+                                //calc months
+                                $now = new DateTime();
+                                $months = 0;
+                                if($support['period'] == 'Y') {
+                                    
+                                    $d1 = strtotime($support['active_time']);
+                                    $d2 = $now->getTimestamp();
+                                    
+                                    if($support['active_status'] == 'inactive') {
+                                        
+                                        if($support['type_id'] == 1) {
+                                            if(strtotime($support['last_payment_until_time']) < $now->getTimestamp()) {
+                                                $d2 = strtotime($support['last_payment_until_time']);
+                                            }
+                                        } else {
+                                            if(strtotime($support['active_time_one_year']) < $now->getTimestamp()) {
+                                                $d2 = strtotime($support['active_time_one_year']);
+                                            }
+                                        }
+                                        
+                                        
+                                    }
+                                    
+                                    $min_date = min($d1, $d2);
+                                    $max_date = max($d1, $d2);
+                                    $i = 1;
+
+                                    while (($min_date = strtotime("+1 MONTH", $min_date)) <= $max_date) {
+                                        $i++;
+                                    }
+                                    $months = $i; // 8
+                                } else {
+                                    $d1 = strtotime($support['active_time']);
+                                    
+                                    $d2 = $now->getTimestamp();
+                                    
+                                    if(strtotime($support['last_payment_until_time']) < $now->getTimestamp()) {
+                                        $d2 = strtotime($support['last_payment_until_time']);
+                                    }
+                                    
+                                    $min_date = min($d1, $d2);
+                                    $max_date = max($d1, $d2);
+                                    $i = 1;
+
+                                    while (($min_date = strtotime("+1 MONTH", $min_date)) <= $max_date) {
+                                        $i++;
+                                    }
+                                    $months = $i; // 8
+
+                                }
+                                if($months == 0) {
+                                    $months = 1;
+                                }
+                                
+                                
                 ?>
                     
                     <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;<?php if($isFirst) echo "border-top: 1px solid #ddd;margin-top: 15px;padding-top: 5px;" ?>">
+                        <!-- Section -->
                         <div class="col-md-2 cell-default" style="">
                             <?php if($isFirst) { 
                                 echo $section['name']; 
                             } ?>
                         </div>
                         
+                        <!-- total -->
+                        <div class="col-md-1 cell-default text-right" style="">
+                            <?php  print($currency->toCurrency($months * $support['tier'])); ?>
+                        </div>
+                        
+                        <!-- Status -->
                         <div class="col-md-1 cell-default" style="">
                             <?php
                             /*
@@ -81,58 +145,52 @@ $allSections = $modelSection->fetchAllSections();
                             inactive, one-time, red
                              */
                             ?>
-                        </div>
-                        <div class="col-md-1 cell-default" style="">$<?= $support['tier'] ?>/month</div>
-
-                        
-                        <div class="col-md-1 cell-default" style=""><?= $support['active_time'] ?></div>
-                        <div class="col-md-1 cell-default" style="">
-                            <?php 
-                                if($support['period'] == 'Y') {
-                                    
-                                    $d1 = strtotime($support['active_time']);
-                                    $d2 = strtotime();
-                                    
-                                    if($support['active_status'] == 'inactive') {
-                                        $d2 = strtotime($support['active_time_one_year']);
+                            <?php
+                                //One-Time-Support
+                                if($support['type_id'] == 0) {
+                                    if($support['active_status'] == 'active') {
+                                        echo "<span class='label label-warning'>active, one-time</span>";
+                                    } else {
+                                        echo "<span class='label label-danger'>inactive, one-time</span>";
                                     }
-                                    
-                                    $min_date = min($d1, $d2);
-                                    $max_date = max($d1, $d2);
-                                    $i = 0;
-
-                                    while (($min_date = strtotime("+1 MONTH", $min_date)) <= $max_date) {
-                                        $i++;
-                                    }
-                                    echo $i; // 8
                                 } else {
-                                    $d1 = strtotime($support['active_time']);
-                                    $d2 = strtotime();
-                                    
-                                    if($support['active_status'] == 'inactive') {
-                                        $d2 = strtotime($support['active_time_one_month']);
+                                    //Subscription
+                                    if($support['status_id'] == 2) {
+                                        echo "<span class='label label-success'>active, ongoing</span>";
+                                    } else {
+                                        //canceld?
+                                        if(strtotime($support['last_payment_until_time']) > $now->getTimestamp()) {
+                                            echo "<span class='label label-warning'>active, cancelled</span>";
+                                        } else {
+                                            echo "<span class='label label-danger'>inactive, cancelled</span>";
+                                        }
                                     }
-                                    
-                                    $min_date = min($d1, $d2);
-                                    $max_date = max($d1, $d2);
-                                    $i = 0;
-
-                                    while (($min_date = strtotime("+1 MONTH", $min_date)) <= $max_date) {
-                                        $i++;
-                                    }
-                                    echo $i; // 8
-
                                 }
-                                    
                             ?>
                         </div>
+                        
+                        <!-- Amount -->
+                        <div class="col-md-1 cell-default text-right" style=""><?php print($currency->toCurrency($support['tier'])); ?>/month</div>
+
+                        <!-- Since -->
+                        <div class="col-md-1 cell-default" style=""><?= date_format(date_create($support['active_time']),'M Y') ?></div>
+                        
+                        <!-- Until -->
                         <div class="col-md-1 cell-default" style="">
                             <?php
-                                //Months
+                                if($support['type_id'] == 0) {
+                                    echo date_format(date_create($support['active_time_one_year']),'M Y');
+                                } else {
+                                    echo date_format(date_create($support['last_payment_until_time']),'M Y');
+                                }
                             ?>
                         </div>
                         
-                        
+                        <!-- Months -->
+                        <div class="col-md-1 cell-default text-right" style="">
+                            <?= $months ?>
+                        </div>
+                        <!-- Desc -->
                         <div class="col-md-3 cell-default" style="">
                             <?php 
                                 $text = "Your ";
@@ -159,7 +217,7 @@ $allSections = $modelSection->fetchAllSections();
                                         $text .= " to ". $this->printDate($support['delete_time']);
                                     }
                                 }
-                                $text .= ". Transaction-Id: ";
+                                $text .= ". Transaction-Id: ".$support['subscription_id'];
                                 
                                 
                                 echo $text;
@@ -172,6 +230,19 @@ $allSections = $modelSection->fetchAllSections();
                     
                 <?php    
                             }
+                        } else {
+                ?>            
+                     <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;<?php if($isFirst) echo "border-top: 1px solid #ddd;margin-top: 15px;padding-top: 5px;" ?>">
+                        <!-- Section -->
+                        <div class="col-md-2 cell-default" style="">
+                            <?php echo $section['name']; ?>
+                        </div>
+                        <div class="col-md-10 cell-default center" style="text-align: center">
+                            No Data available!
+                        </div>
+                     </div>
+                            
+                <?php            
                         }
                     }
                 ?>

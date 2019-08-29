@@ -964,7 +964,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 }
                 try {
                     $ldap_server = new Default_Model_Ocs_Ldap();
-                    $ldap_server->updateAvatar($this->_memberSettings->member_id);
+                    $ldap_server->updateAvatar($this->_memberSettings->member_id, $this->_memberSettings->profile_image_url);
                     Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL . " - ",
                             $ldap_server->getMessages()));
                 } catch (Exception $e) {

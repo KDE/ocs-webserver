@@ -22,6 +22,10 @@
  * Created: 06.08.2018
  */
 
+/**
+ * Class Backend_CexportController
+ * @deprecated
+ */
 class Backend_CexportController extends Local_Controller_Action_CliAbstract
 {
 

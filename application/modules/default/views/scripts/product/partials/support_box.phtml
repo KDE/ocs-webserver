@@ -43,6 +43,8 @@ if(!$section) {
 }
 $identity = Zend_Auth::getInstance()->getStorage()->read();
 $isSupporter = false;
+
+
 if($identity) { 
     $isSupporter = $modelSection->isMemberSectionSupporter($section['section_id'], $identity->member_id);
 }
@@ -69,17 +71,12 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                 if($isSupporter) {
             ?>
                 <span style="padding-bottom: 10px;font-size: small;">Thank you very much for supporting <?= $section['name'] ?> with $<?= $support['tier'] ?> per month.</span>
-                <!--
-                <div class="supportDiv" style="padding-top: 15px;">
-                    <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Thank you for your support!</a>
-                </div>
-                -->
             <?php
                 } else {
             ?>
             
             <span style="padding-bottom: 10px;font-size: small;">
-                This product is part <?= $section['name'] ?>, which is supported by the following people:
+                <?= $this->project_title ?> is part of <?= $section['name'] ?>, which is supported by the following people:
             </span>        
             <div class="row" style="margin-top: 10px;margin-bottom: 20px;">
             <?php 
@@ -99,7 +96,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
             <form action="<?= $baseurlStore ?>/support-predefined" method="POST">
                 <input type="hidden" name="section_id" value="<?= $section['section_id'] ?>">
                 <div style="">
-                    <span style="text-align: left;font-size: small">Support this and all other products via a monthly donation of</span>
+                    <span style="text-align: left;font-size: small">Support <?= $this->project_title ?> and other <?= $this->project_category_title ?> via a monthly donation of</span>
                     <span style="text-align: left;">  
                         <ul style="list-style: none;">
                             <li><input type="radio" name="amount_predefined" id="amount-1" value="0.99" checked="checked"> $0.99</li>

@@ -31,6 +31,8 @@
         padding-top: 1em;
         padding-bottom: 1em;
         line-height: 30px;
+        margin-left: 0px;
+        margin-right: 0px;
     }
     
     .popover {
@@ -115,113 +117,50 @@ if ($countDownloadsOverall > 0) {
         $sum_total_potential_payout = 0;
         
         ?>
+    
+        <div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0;">
+            <div class="row">
+                <div class="col-md-1" style="min-width: 150px;"></div>
+                <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap; "><strong>Products</strong></div>
+                <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Downloads</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads" data-trigger="hover" data-html="true" data-content="Sum of all downloads of all files (active or archived of this product within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Cat.-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Category-Factor" data-trigger="hover" data-html="true" data-content="The Category-Factor's base is $-cent and depends on the product category.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong style="color: #BBB">Potential Payout</strong></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Pling-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Section-Factor" data-trigger="hover" data-html="true" data-content="This is the factor for this section. The factor per section is not fixed until the month has really ended. For more information please see: https://www.pling.com/funding"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Actual Payout</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout" data-trigger="hover" data-html="true" data-content="This shows the amount that will be paid out to you until May 2019."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+            </div>
+        </div>
+    
         <div class="tab-pane fade <?=$css_active?>" id="<?=$firstProduct['yearmonth']?>">
             <?php
             $css_active = '';
 
             foreach ($allDownloads as $product) { ?>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
-                    <div class="col-md-1 cell-default" style="min-width: 150px;">
+                    <div class="col-md-1 cell-default" style="">
                         <a href="<?= $this->buildProductUrl($product['project_id']) ?>">
                             <img src="<?php echo $helpImage->Image($product['image_small'], array('width' => 80, 'height' => 65)); ?> " height="81" width="101"/>
                         </a>
                     </div>
-                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-md-2 text-left cell-default">
-                    <?php else: ?>
-                    <div class="col-md-3 text-left cell-default">
-                    <?php endif; ?>
-                    
                         <a href="<?= $this->buildProductUrl($product['project_id']) ?>">
                             <span style="line-height: 3em;"><?= $product['title']; ?></span>
                         </a>
-                        <b style="display: block; margin-bottom: 5px; font-size: 10pt; line-height: 0em;"><?=$product['cat_title']?></b>
+                        <b style="display: block; margin-bottom: 5px; font-size: 10pt; line-height: 0em;min-width: 140px;max-width: 180px;"><?=$product['cat_title']?></b>
                     </div>
-                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <?php if($product['num_downloads_nouk']>0) { ?>
-                        <span><?= $product['num_downloads_nouk'] ?></span>
-                        <?php } else { ?>
-                        <span><?= $product['num_downloads'] ?></span>
-                        <?php } ?>
-                    </div>
-                    <?php endif; ?>                    
-
-                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                    <div class="col-md-1 text-right cell-default" style="min-width: 140px;max-width: 180px;">
                         <span><?= $product['num_downloads'] ?></span>
                     </div>
-                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
                         <span><?= $product['dl_pling_factor'] ?></span>
                     </div>
-                        
-                        
-                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
                         <span style="color: #BBB"><?php print($currency->toCurrency($product['num_downloads'] * $product['dl_pling_factor'] / 100)); ?></span>
                     </div>
-                        
-
-                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                        <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                            <span><?= $product['section_payout_factor'] ?></span>
-                        </div>
-                    <?php endif; ?>     
-                        
-                        
-                        
-                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span>
-                        <?php 
-                            $errorMsg = "<ul>";
-                            $showErrMsg = false;
-                            
-                            if($isCurrentMonth) {
-                                if($product['is_license_missing_now'] == 1) {
-                                    $errorMsg .= "<li>Please specify a License</li>";
-                                    $showErrMsg = true;
-                                }
-                                if($product['is_source_missing_now'] == 1) {
-                                    $errorMsg .= "<li>Please specify a link to the online source repository</li>";
-                                    $showErrMsg = true;
-                                }
-                                if($product['is_pling_excluded_now'] == 1) {
-                                    $errorMsg .= "<li>This Product has been excluded from plings</li>";
-                                    $showErrMsg = true;
-                                }
-                                $sum_plings = $product['num_plings_now'];
-                            } else {
-                                if($product['is_license_missing'] == 1) {
-                                    $errorMsg .= "<li>License was not specified</li>";
-                                    $showErrMsg = true;
-                                }
-                                if($product['is_source_missing'] == 1) {
-                                    $errorMsg .= "<li>Link to the online source repository was not specified</li>";
-                                    $showErrMsg = true;
-                                }
-                                if($product['is_pling_excluded'] == 1) {
-                                    $errorMsg .= "<li>This Product has been excluded from plings</li>";
-                                    $showErrMsg = true;
-                                }
-                                $sum_plings = $product['num_plings'];
-                                
-                            } 
-                            $errorMsg .= "</ul>";
-                            
-                            if($showErrMsg) {
-                                echo '<div class="inline msg-popover-danger" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout requirements are not fulfilled" data-trigger="hover" data-html="true" data-content="'.$errorMsg.'"><span style="color: #a94442;" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span></div>';
-                            } else {
-                                
-                                if($product['num_downloads_nouk']>0) {
-                                    print($currency->toCurrency($product['num_downloads_nouk'] * $product['dl_pling_factor'] / 100));
-                                } else {
-                                    print($currency->toCurrency($product['num_downloads'] * $product['dl_pling_factor'] / 100));
-                                }
-                            }
-                        ?>
-                        </span>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span><?= $product['section_payout_factor'] ?></span>
                     </div>
-                    <?php endif; ?>   
-                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
                         <span>
                         <?php 
                             $errorMsg = "<ul>";
@@ -329,22 +268,11 @@ if ($countDownloadsOverall > 0) {
             $sum_total_month_view = number_format($sum_total_month);
             ?>
             <div class='row row-total'>
-                <div class='col-md-1 text-right' style="min-width: 150px;"></div>
-                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                <div class='col-md-2 text-right'></div>
-                <?php else: ?>
-                <div class='col-md-3 text-right'></div>
-                <?php endif; ?>
-                
-                <div class='col-md-4 text-right' style="min-width: 380px;"><?=$sum_total_text?></div>
-                <div class='col-md-1 text-right' style="min-width: 170px;"><strong style="color: #BBB"><?=$sum_total_potential_payout?></strong></div>
-                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                <div class='col-md-1 text-right' style="min-width: 190px;"></div>
-                <?php endif; ?>
-                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?=$sum_total_payout?>**</strong></div>
-                <?php endif; ?>
-                <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?=$sum_total_payout_uk?>**</strong></div>
+                <div class='col-md-2 text-right' style="min-width: 150px;"></div>
+                <div class='col-md-4 text-right' style="max-width: 450px;"><?=$sum_total_text?></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><strong style="color: #BBB"><?=$sum_total_potential_payout?></strong></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><strong><?=$sum_total_payout_uk?>**</strong></div>
             </div>
             
             
@@ -354,25 +282,6 @@ if ($countDownloadsOverall > 0) {
 
             $currentDate = date("Ym",time());
             $viewDate = $firstProduct['yearmonth']."";
-            $paypalWarning = '';
-            if($currentDate == $viewDate) {
-                $member = $this->view_member;
-                if(!isset($member['paypal_mail']) || $member['paypal_mail'] == '') {
-                    $has_paypal = false;
-                    $paypalWarning = 'You have no PayPal account configured. Please go to your settings page <a href="/settings#form-payment-panel">here</a>.';
-                } else {
-                    $has_paypal = true;
-                }
-            } else {
-                $paypalWarning = 'We found no valid Paypal account for this month. That\'s why we could not pay you any money. In order to receive money for the current month, please make sure that a paypal account is registered. Go to your settings page <a href="/settings#form-payment-panel">here</a>.';
-            }
-            if (false == $has_paypal) {
-                echo '<div class="alert alert-danger" role="alert">'.$paypalWarning.'</div>';
-            }
-
-            if (($sum_total_month/100) < 1) {
-                echo '<div class="alert alert-warning" role="alert">We only pay out money if the total sum is over $1.</div>';
-            }
 ?>
             
         </div>
@@ -391,60 +300,9 @@ if ($countDownloadsOverall > 0) {
     
 ?>
 
-<?php /*    
-    <div id="le-alert"  class="alert alert-warning alert-block" role="alert">
-        <p>(**) The Payout is planned to become active on May 2019.</p>
-    </div>
-*/ ?>
-
-    <div id="le-alert"  class="alert alert-warning alert-block" role="alert">
-        <p>(*) Info:</p>
-        <p>This service will become active on May, 1st 2017. All previous months are shown for internal testing only.
-        </p>
-        <p>This service is considered Beta until otherwise announced.</p>
-        <br>
-        <p>For the full Terms of Service, please read here: <a href="/terms/payout">Payout T&C</a></p> 
-        <br><br>
-        <p>**Paypal might deduct general fees and conversion rate from this sum.</p>
-            
-    </div>
 </div>    
     
-<script>
-    $('#payout_info').click(function (event ) {
-        event.preventDefault();
-        $('#le-alert').addClass('in'); // shows alert with Bootstrap CSS3 implem
-    });
 
-    $('.close').click(function () {
-        $(this).parent().removeClass('in'); // hides alert with Bootstrap CSS3 implem
-    });
-    
-    $(function(){
-        // Enables popover
-        $(".payout-popover-info").popover({
-            html : true,
-            template : '<div class="popover alert alert-info alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-        });
-        $(".payout-popover-warning").popover({
-            html : true,
-            template : '<div class="popover alert alert-warning alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-        });
-        $(".payout-popover-success").popover({
-            html : true,
-            template : '<div class="popover alert alert-success alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-        });
-        $(".payout-popover-danger").popover({
-            html : true,
-            template : '<div class="popover alert alert-danger alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-        });
-        $(".msg-popover-danger").popover({
-            html : true,
-            template : '<div class="popover alert alert-danger alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-        });
-    });
-
-</script> 
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
