@@ -96,7 +96,7 @@ class Default_Model_DbTable_SectionSupport extends Zend_Db_Table_Abstract
     
     public function fetchAllSectionSupportsForMember($section_id, $member_id) {
         $sql = "
-            SELECT section_support.section_support_id, section_support.support_id, section_support.section_id,support.subscription_id, support.type_id, section_support.amount, section_support.tier, section_support.period, section_support.period_frequency, support.status_id, support.type_id, support.active_time, support.delete_time, support.payment_provider,member.member_id,member.username,
+            SELECT section_support.section_support_id, section_support.support_id, section_support.section_id,case when support.subscription_id IS NULL then support.payment_transaction_id ELSE support.subscription_id END AS subscription_id, support.type_id, section_support.amount, section_support.tier, section_support.period, section_support.period_frequency, support.status_id, support.type_id, support.active_time, support.delete_time, support.payment_provider,member.member_id,member.username,
             case 
             when support.status_id = 2 AND support.type_id = 0 AND (date_format(support.active_time  + INTERVAL 11 MONTH, '%Y%m')) >= date_format(NOW(), '%Y%m') then 'active'
             when support.status_id = 2 AND support.type_id = 1 then 'active'
