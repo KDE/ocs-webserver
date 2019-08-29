@@ -47,12 +47,12 @@ $currency = new Zend_Currency('en_US');
                 <div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0; padding-bottom: 10px;">
                     <div class="row"> 
                         <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Section</strong></div>
-                        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Total</strong></div>
                         <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Status</strong></div>
                         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Amount</strong></div>
-                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Paied Since</strong></div>
-                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Paied Until</strong></div>
+                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Paid Since</strong></div>
+                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Paid Until</strong></div>
                         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Months</strong></div>
+                        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Total</strong></div>
                         <div class="col-md-3 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Details</strong></div>
                     </div>
                     
@@ -129,11 +129,6 @@ $currency = new Zend_Currency('en_US');
                             } ?>
                         </div>
                         
-                        <!-- total -->
-                        <div class="col-md-1 cell-default text-right" style="">
-                            <?php  print($currency->toCurrency($months * $support['tier'])); ?>
-                        </div>
-                        
                         <!-- Status -->
                         <div class="col-md-1 cell-default" style="">
                             <?php
@@ -190,6 +185,14 @@ $currency = new Zend_Currency('en_US');
                         <div class="col-md-1 cell-default text-right" style="">
                             <?= $months ?>
                         </div>
+                        
+                        <!-- total -->
+                        <div class="col-md-1 cell-default text-right" style="">
+                            <?php  print($currency->toCurrency($months * $support['tier'])); ?>
+                        </div>
+                        
+                        
+                        
                         <!-- Desc -->
                         <div class="col-md-3 cell-default" style="">
                             <?php 
