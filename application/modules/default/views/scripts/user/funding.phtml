@@ -50,8 +50,8 @@ $currency = new Zend_Currency('en_US');
                         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Total</strong></div>
                         <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Status</strong></div>
                         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Amount</strong></div>
-                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Payed Since</strong></div>
-                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Payed Until</strong></div>
+                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Paied Since</strong></div>
+                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Paied Until</strong></div>
                         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Months</strong></div>
                         <div class="col-md-3 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Details</strong></div>
                     </div>
@@ -170,7 +170,7 @@ $currency = new Zend_Currency('en_US');
                         </div>
                         
                         <!-- Amount -->
-                        <div class="col-md-1 cell-default text-right" style=""><?php print($currency->toCurrency($support['tier'])); ?>/month</div>
+                        <div class="col-md-1 cell-default text-right" style=""><?php print($currency->toCurrency($support['tier'])); ?></div>
 
                         <!-- Since -->
                         <div class="col-md-1 cell-default" style=""><?= date_format(date_create($support['active_time']),'M Y') ?></div>
