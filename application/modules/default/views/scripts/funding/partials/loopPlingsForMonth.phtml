@@ -124,12 +124,12 @@ if ($countDownloadsOverall > 0) {
                     <div class="col-md-1 text-right cell-default" style=""><strong><?php print($currency->toCurrency($sectionStats['sum_support'] + $sectionStats['sum_sponsor'])); ?></strong></div>
                     <!--<div class="col-md-1 text-right cell-default" style=""><?=$sectionStats['sum_dls']?></div>-->
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                    <div class="col-md-1 text-right cell-default" style=" min-width: 215px;"><strong><?php print($currency->toCurrency($sectionStats['sum_amount']));?></strong></div>
+                    <div class="col-md-1 text-right cell-default" style=""><?php print($currency->toCurrency($sectionStats['sum_amount']));?></div>
                     <?php endif; ?>
 
 
                     <!--<div class="col-md-1 text-right cell-default" style=""><?=$sectionStats['sum_dls_payout']?></div>-->
-                    <div class="col-md-1 text-right cell-default" style=""><?php print($currency->toCurrency($sectionStats['sum_amount_payout']));?></div>
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?php print($currency->toCurrency($sectionStats['sum_amount_payout']));?></strong></div>
                     
                     <div class="col-md-1 text-right cell-default" style=""><strong><?php 
                         if(($sectionStats['sum_support'] + $sectionStats['sum_sponsor']) < $sectionStats['sum_amount_payout']) {
@@ -188,7 +188,7 @@ if ($countDownloadsOverall > 0) {
                 <div class='col-md-1 text-right' style=""></div>
                 <div class='col-md-1 text-right' style=""><strong><?php print($currency->toCurrency($countIncome)); ?></strong></div>
                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                <div class='col-md-1 text-right' style="min-width: 215px;"><strong><?php print($currency->toCurrency($countPayout)); ?></strong></div>
+                <div class='col-md-1 text-right' style=""><strong><?php print($currency->toCurrency($countPayout)); ?></strong></div>
                 <?php endif; ?>
                 <!--<div class='col-md-1 text-right' style=""></div>-->
                 <div class='col-md-1 text-right' style=""><?php print($currency->toCurrency($countPayout2)); ?></div>
