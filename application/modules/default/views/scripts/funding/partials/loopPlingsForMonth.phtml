@@ -123,17 +123,17 @@ if ($countDownloadsOverall > 0) {
 
                     <div class="col-md-1 text-right cell-default" style=""><strong><?php print($currency->toCurrency($sectionStats['sum_support'] + $sectionStats['sum_sponsor'])); ?></strong></div>
                     <!--<div class="col-md-1 text-right cell-default" style=""><?=$sectionStats['sum_dls']?></div>-->
-                    <div class="col-md-1 text-right cell-default" style=""><strong><?php print($currency->toCurrency($sectionStats['sum_amount']));?></strong></div>
-
-
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                    <!--<div class="col-md-1 text-right cell-default" style=""><?=$sectionStats['sum_dls_payout']?></div>-->
-                    <div class="col-md-1 text-right cell-default" style=""><?php print($currency->toCurrency($sectionStats['sum_amount_payout']));?></div>
+                    <div class="col-md-1 text-right cell-default" style=""><?php print($currency->toCurrency($sectionStats['sum_amount']));?></div>
                     <?php endif; ?>
+
+
+                    <!--<div class="col-md-1 text-right cell-default" style=""><?=$sectionStats['sum_dls_payout']?></div>-->
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?php print($currency->toCurrency($sectionStats['sum_amount_payout']));?></strong></div>
                     
                     <div class="col-md-1 text-right cell-default" style=""><strong><?php 
-                        if(($sectionStats['sum_support'] + $sectionStats['sum_sponsor']) < $sectionStats['sum_amount']) {
-                            echo round(($sectionStats['sum_support'] + $sectionStats['sum_sponsor']) / $sectionStats['sum_amount'], 2);
+                        if(($sectionStats['sum_support'] + $sectionStats['sum_sponsor']) < $sectionStats['sum_amount_payout']) {
+                            echo round(($sectionStats['sum_support'] + $sectionStats['sum_sponsor']) / $sectionStats['sum_amount_payout'], 2);
                         } else {
                             echo "1.00";
                         }
@@ -187,11 +187,12 @@ if ($countDownloadsOverall > 0) {
                 <div class='col-md-2' style=""></div>
                 <div class='col-md-1 text-right' style=""></div>
                 <div class='col-md-1 text-right' style=""><strong><?php print($currency->toCurrency($countIncome)); ?></strong></div>
-                <div class='col-md-1 text-right' style=""><strong><?php print($currency->toCurrency($countPayout)); ?></strong></div>
                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                <!--<div class='col-md-1 text-right' style=""></div>-->
-                <div class='col-md-1 text-right' style=""><?php print($currency->toCurrency($countPayout2)); ?></div>
+                <div class='col-md-1 text-right' style=""><?php print($currency->toCurrency($countPayout)); ?></div>
                 <?php endif; ?>
+                <!--<div class='col-md-1 text-right' style=""></div>-->
+                <div class='col-md-1 text-right' style=""><strong><?php print($currency->toCurrency($countPayout2)); ?></strong></div>
+                
                 <div class='col-md-1 text-right' style=""></div>
                 <div class='col-md-1 text-right' style=""></div>
                 
