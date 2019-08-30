@@ -49,7 +49,7 @@ class Default_Model_DbTable_SectionSupport extends Zend_Db_Table_Abstract
      * @return mixed The primary key value(s), as an associative array if the
      *     key is compound, or a scalar if the key is single-column.
      */
-    public function createNewSectionSupport($support_id, $section_id, $amount,$tier, $period, $period_frequency)
+    public function createNewSectionSupport($support_id, $section_id, $amount, $tier, $period, $period_frequency, $project_id = null, $referer = null)
     {
         $new_row = $this->createRow();
         $new_row->support_id = $support_id;
@@ -59,6 +59,9 @@ class Default_Model_DbTable_SectionSupport extends Zend_Db_Table_Abstract
         $new_row->period = $period;
         $new_row->period_frequency = $period_frequency;
         $new_row->created_at = new Zend_Db_Expr ('Now()');
+        
+        $new_row->project_id = $project_id;
+        $new_row->referer = $referer;
 
         return $new_row->save();
     }

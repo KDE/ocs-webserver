@@ -104,6 +104,17 @@ if($this->amount_predefined == "free") {
         <form class="donation-form" id="new_donation" action="<?= $this->urlPay ?>" accept-charset="UTF-8" data-remote="true" method="post">  
                 <input type="hidden" id="currency-symbol" value="$">
                 <input type="hidden" name="provider" value="paypal" id="provider">
+                <?php 
+                    echo "<input type='hidden' name='section_id' value='".$this->section_id."'>";
+                    echo "<input type='hidden' name='project_id' value='".$this->project_id."'>";
+                    echo "<input type='hidden' name='referer' value='".$this->referer."'>";
+
+                    if($this->amount_predefined == "free") {
+                        echo "<input type='hidden' name='amount_handish' value='". $this->support_amount ."'>";
+                    } else {
+                        echo "<input type='hidden' name='amount_predefined' value='".$this->amount_predefined."'>";
+                    }
+                ?>
         <div class="container-fluid">
             <div class="row">
                 <div class="sidebar-left col-md-2"></div>
@@ -111,24 +122,17 @@ if($this->amount_predefined == "free") {
    
                 <div class="content col-md-8">
                     <h2>Become a Supporter</h2>
-                    <p>Help sustain any of the sections and the creators providing content for it (see <a href="/faq-pling">Pling FAQ</a> and <a href="/funding">Public Funding</a>).</p>
+                    <p>Help sustain any of the sections and the creators providing content for it (see <a href="/faq-pling">Pling FAQ</a><?php /* and <a href="/funding">Public Funding</a>*/?>).</p>
                     </p>
                     
                     <div class="x-donation-widget">
                     
                         
-                        <div class="row disply-flex">
+                        <div class="row disply-flex" style="margin: 0 !important;">
                             <div class="col-lg-12 col-md-12" style="border-top: dotted thin #E7E7E7 !important;padding-top: 35px;">  
                                 
                                 <div class="tabs-footer">
-                                    <?php 
-                                        echo "<input type='hidden' name='section_id' value='".$this->section_id."'>";
-                                        if($this->amount_predefined == "free") {
-                                            echo "<input type='hidden' name='amount_handish' value='". $this->support_amount ."'>";
-                                        } else {
-                                            echo "<input type='hidden' name='amount_predefined' value='".$this->amount_predefined."'>";
-                                        }
-                                    ?>
+                                    
                                     
                                     You support <?= $this->section['name'] ?> with $<span id="sum"><?= $sumPayment ?></span>/Month
                                     - Pay 
