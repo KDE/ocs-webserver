@@ -132,11 +132,11 @@ if ($countDownloadsOverall > 0) {
                     <div class="col-md-1 text-right cell-default" style=""><strong><?php print($currency->toCurrency($sectionStats['sum_amount_payout']));?></strong></div>
                     
                     <div class="col-md-1 text-right cell-default" style=""><strong><?php 
-                        if(($sectionStats['sum_support'] + $sectionStats['sum_sponsor']) < $sectionStats['sum_amount_payout']) {
+                        #if(($sectionStats['sum_support'] + $sectionStats['sum_sponsor']) < $sectionStats['sum_amount_payout']) {
                             echo round(($sectionStats['sum_support'] + $sectionStats['sum_sponsor']) / $sectionStats['sum_amount_payout'], 2);
-                        } else {
-                            echo "1.00";
-                        }
+                        #} else {
+                        #    echo "1.00";
+                        #}
                     ?></strong></div>
                     
                     <?php /*

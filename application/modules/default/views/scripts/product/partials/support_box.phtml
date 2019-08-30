@@ -72,7 +72,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
             ?>
                 <span style="padding-bottom: 10px;font-size: small;">Thank you very much for supporting <?= $section['name'] ?> with $<?= $support['tier'] ?> per month.</span>
             <?php
-                } else {
+                }
             ?>
             
             <span style="padding-bottom: 10px;font-size: small;">
@@ -93,8 +93,9 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
             $config = Zend_Registry::get('config')->settings->client->default;
             $baseurlStore = $config->baseurl_store;
             ?>
-            <form action="<?= $baseurlStore ?>/support-predefined" method="POST">
+            <form action="<?= $baseurlStore ?>/support-predefined" method="POST" id="support_form_predefined">
                 <input type="hidden" name="section_id" value="<?= $section['section_id'] ?>">
+                <input type="hidden" name="project_id" value="<?= $this->project_id ?>">
                 <div style="">
                     <span style="text-align: left;font-size: small">Support <?= $this->project_title ?> and other <?= $this->project_category_title ?> via a monthly donation of</span>
                     <span style="text-align: left;">  
@@ -109,16 +110,9 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                 </div>   
 
                 <div class="supportDiv" >
-                    <button type="submit" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support</button>
+                    <button id="add_support" type="submit" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support</button>
                 </div>
             </form>
-        
-        <?php
-            }
-        ?>
-
-
-            
         </div>
     </div>
 </div>
@@ -129,6 +123,27 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
         $(".custom_amount").click(function(){
             $('#amount-5').prop("checked", true);
         });
+        
+        $("#add_support").click(function(e){
+            e.preventDefault();
+            
+            $radioVal = $('input[name=amount_predefined]:checked', '#support_form_predefined').val()
+            if($radioVal == 'free') {
+                $amount = $(".custom_amount").val();
+                
+                if($amount && $amount.length > 0 && $amount > 10.01) {
+                    $("#support_form_predefined").submit();
+                    return true;
+                } else {
+                    alert('Please enter a free amount > 10.01');
+                    return false;
+                }
+            } else {
+                $("#support_form_predefined").submit();
+                return true;
+            }
+        });
+        
     });
 </script>
 

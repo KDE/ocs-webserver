@@ -139,14 +139,22 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         
         $amount_predefined = (float)$this->getParam('amount_predefined', null);
         $section_id = (float)$this->getParam('section_id', null);
+        $project_id = (float)$this->getParam('project_id', null);
         $support_amount = (float)$this->getParam('support_amount', null);
         
         $sectionsTable = new Default_Model_Section();
         $section = $sectionsTable->fetchSection($section_id);
         
+        $referer = null;
+        if (!empty($_SERVER['HTTP_REFERER'])) {
+            $referer = $_SERVER['HTTP_REFERER'];
+        }
+        
         $this->view->amount_predefined = $amount_predefined;
         $this->view->support_amount = $support_amount;
         $this->view->section_id = $section_id;
+        $this->view->project_id = $project_id;
+        $this->view->referer = urlencode($referer);
         $this->view->section = $section;
     }
     
@@ -343,7 +351,6 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
                     
                     $amount += 0.99;
                     
-                    $data['support_id'] = $sid;
                     $data['section_id'] = $section['section_id'];
                     $data['amount'] = 0.99;
                     $data['tier'] = 0.99;
@@ -353,7 +360,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
                     if(null != $amount_handish) {
                         $isHandish = true;
                         $amount += $amount_handish;
-                        $data['support_id'] = $sid;
+                        
                         $data['section_id'] = $section['section_id'];
                         $data['amount'] = $amount_handish;
                         $data['tier'] = $amount_handish;
@@ -439,6 +446,10 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         //get parameter
         $paymentFrequenz = $this->getParam('paymentFrequenz', 'Y');
         $section_id = $this->getParam('section_id', null);
+        
+        $project_id = $this->getParam('project_id', null);
+        $referer = $this->getParam('referer', null);
+        
         $amount_predefined = (float)$this->getParam('amount_predefined', null);
         $amount_handish  = (float)$this->getParam('amount_handish', null);
 
@@ -509,6 +520,9 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
             , $amount
             , $paymentFrequenz
             , 1
+            , $project_id
+            , urldecode($referer)
+                
         );
     }
 
