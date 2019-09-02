@@ -72,16 +72,16 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
         -->
         <?php }?>
 
-        <li class="header-menu-left-item <?php echo $this->tab == 'funding' ? 'active' : ''; ?>">           
-             <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'funding'); ?>">        
-                <span class="glyphicon glyphicon-usd"></span>
-                <?= $this->translate('Funding') ?>
-            </a>
-        </li>
-
-        
     <?php }?>
 
+    <li class="header-menu-left-item <?php echo $this->tab == 'funding' ? 'active' : ''; ?>">           
+         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'funding'); ?>">        
+            <span class="glyphicon glyphicon-usd"></span>
+            <?= $this->translate('Funding') ?>
+        </a>
+    </li>
+
+        
     
     <li class="<?php echo $this->tab == 'downloadhistory' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'downloadhistory'); ?>">
