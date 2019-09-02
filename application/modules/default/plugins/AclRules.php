@@ -373,7 +373,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         
         // resource default_subscription
         $this->allow(self::ROLENAME_GUEST, 'default_subscription', array('index', 'support2'));
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_subscription', array('index', 'support2', 'pay', 'pay2', 'paymentok', 'paymentcancel'));
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_subscription', array('index', 'supportsection', 'pay', 'paysection', 'paymentok', 'paymentcancel'));
 
         // resource default_report
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_report', array('comment', 'product', 'productfraud', 'productclone'));

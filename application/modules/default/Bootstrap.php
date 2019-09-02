@@ -579,13 +579,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'action'     => 'paypredefined'
         )));
         
-        $router->addRoute('support_new2', new Zend_Controller_Router_Route('/support2', array(
+        $router->addRoute('support_new2', new Zend_Controller_Router_Route('/supportsection', array(
             'module'     => 'default',
             'controller' => 'subscription',
             'action'     => 'support2'
         )));
         
-        $router->addRoute('support_new_pay2', new Zend_Controller_Router_Route('/support/pay2', array(
+        $router->addRoute('support_new_pay2', new Zend_Controller_Router_Route('/support/paysection', array(
             'module'     => 'default',
             'controller' => 'subscription',
             'action'     => 'pay2'

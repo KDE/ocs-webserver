@@ -110,7 +110,7 @@ class Default_Model_DbTable_SectionSupport extends Zend_Db_Table_Abstract
             ,(SELECT MAX(active_time) FROM support p2 WHERE p2.type_id = 2 and p2.subscription_id = support.subscription_id) AS last_payment_time
             ,case 
                 when support.type_id = 1 AND section_support.period = 'Y' then (SELECT (MAX(active_time)  + INTERVAL 11 MONTH) FROM support p2 WHERE p2.type_id = 2 and p2.subscription_id = support.subscription_id)
-                when support.type_id = 1 AND section_support.period = 'M' then (SELECT (MAX(active_time)  + INTERVAL 1 MONTH) FROM support p2 WHERE p2.type_id = 2 and p2.subscription_id = support.subscription_id)
+        	when support.type_id = 1 AND section_support.period = 'M' then (SELECT (STR_TO_DATE(CONCAT(DATE_FORMAT(MAX(active_time) + INTERVAL 1 MONTH,'%Y%m'),'01'),'%Y%m%d') - INTERVAL 1 DAY)  FROM support p2 WHERE p2.type_id = 2 and p2.subscription_id = support.subscription_id)
             END AS last_payment_until_time
             FROM section_support 
             JOIN section ON section.section_id = section_support.section_id
