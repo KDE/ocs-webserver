@@ -245,6 +245,12 @@ $currency = new Zend_Currency('en_US');
                                 
                                 
                                 echo $text;
+                                
+                                
+                                if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' && !empty($support['project_id'])){
+                                    echo "Referer: <a href='".$support['referer']."'>Product ".$support['project_id']."</a>";
+                                }
+                                
                                 $isFirst = false;
 
                             ?>
