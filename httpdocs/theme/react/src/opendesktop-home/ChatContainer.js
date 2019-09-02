@@ -47,36 +47,32 @@ class ChatContainer extends Component {
           let members;
           if(fi.members){
               members = fi.members.slice(0,4).map((m,index) => {
-              let imgAvatar;
-              if(m.avatar_url){
-                imgAvatar = <img src={this.avatarUrl+m.avatar_url.substring(5)+'?width=39&height=39&method=crop'}></img>
-              }
-              return (
-                      <div className="chatUser">
-                        {imgAvatar}
-                        <div className="name">
-                          {m.display_name}
-                        </div>
-                      </div>
-                      )
-            }
+                  let imgAvatar;
+                  if(m.avatar_url){
+                    imgAvatar = <img src={this.avatarUrl+m.avatar_url.substring(5)+'?width=39&height=39&method=crop'}></img>
+                  }
+                  return (
+                          <div className="chatUser">
+                            {imgAvatar}
+                            <div className="name">
+                              {m.display_name}
+                            </div>
+                          </div>
+                          )
+                }
           );
-
-
-            // members = fi.members.map((m,index) => (
-            //   <div>
-            //     {m.display_name}
-            //   </div>
-            // ));
           }
-          return (
+          if(fi.guest_can_join==false)
+          {
+            return (
             <li key={index} className="chatMember">
               <a href={this.roomUrl+fi.room_id} >
-                join our chat {fi.canonical_alias.substring(0,fi.canonical_alias.indexOf(':'))+' ('+fi.num_joined_members+')'}
+                join our chat {(fi.canonical_alias)?fi.canonical_alias.substring(0,fi.canonical_alias.indexOf(':'))+' ('+fi.num_joined_members+')':''}
               </a>
               {members}
             </li>
-          )
+            )
+          }
 
       });
       container = <ul>{feedItems}</ul>;
