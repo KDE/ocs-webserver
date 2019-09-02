@@ -21,6 +21,9 @@
  **/
 
 $isAdmin = $this->isAdmin;
+   
+//if($isAdmin) {
+
 $modelInfo = new Default_Model_Info();
 $modelSection = new Default_Model_Section();
 $modelSectionSupport = new Default_Model_DbTable_SectionSupport();
@@ -161,3 +164,7 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
         
     });
 </script>
+
+<?php
+
+//}
