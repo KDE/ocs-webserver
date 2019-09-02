@@ -59,9 +59,9 @@ $currency = new Zend_Currency('en_US');
                 <?php 
                     foreach ($allSections as $section) { 
                         $isFirst = true;
-                        $supports = $modelSectionSupport->fetchAllSectionSupportsForMember($section['section_id'], $this->member['member_id']);
+                        $supports = $modelSectionSupport->fetchAllSectionSupportsForMember($section['section_id'], $this->view_member->member_id);
                         
-                        if($modelSection->wasMemberSectionSupporter($section['section_id'], $this->member['member_id']) && !empty($supports)) {
+                        if($modelSection->wasMemberSectionSupporter($section['section_id'], $this->view_member->member_id) && !empty($supports)) {
                             
                             foreach ($supports as $support) {
                                 //calc months
