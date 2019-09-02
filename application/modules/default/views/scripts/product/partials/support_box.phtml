@@ -21,9 +21,6 @@
  **/
 
 $isAdmin = $this->isAdmin;
-   
-if($isAdmin) {
-
 $modelInfo = new Default_Model_Info();
 $modelSection = new Default_Model_Section();
 $modelSectionSupport = new Default_Model_DbTable_SectionSupport();
@@ -41,6 +38,7 @@ if($catId && $catId > 0) {
 if(!$section) {
     $section = array('name' => 'Test', 'section_id' => '1');
 }
+
 $identity = Zend_Auth::getInstance()->getStorage()->read();
 $isSupporter = false;
 
@@ -59,6 +57,18 @@ $supporters = $modelInfo->getNewActiveSupportersForSection($section['section_id'
 
 $helpPrintDate = new Default_View_Helper_PrintDate();
 
+$filter = new Local_Filter_Url_Encrypt();
+$thisurl = "/";
+if(isset($_GET['url'])) {
+    $thisurl = $_GET['url'];
+}else
+{
+   $thisurl= Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"];
+}
+
+
+$url_login = "/login/redirect/".$filter->filter($thisurl);
+
 ?>
 
 
@@ -70,7 +80,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
             <?php
                 if($isSupporter) {
             ?>
-                <span style="padding-bottom: 10px;font-size: small;">Thank you very much for supporting <?= $section['name'] ?> with $<?= $support['tier'] ?> per month.</span>
+            <span style="padding-bottom: 10px;font-size: small;">Thank you very much for supporting <?= $section['name'] ?> with $<?= $support['tier'] ?> per month.</span><br>
             <?php
                 }
             ?>
@@ -110,7 +120,12 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                 </div>   
 
                 <div class="supportDiv" >
-                    <button id="add_support" type="submit" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support</button>
+                    <?php if (Zend_Auth::getInstance()->hasIdentity()) {?>
+                    <button id="add_support" type="submit" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support</button>                     
+                    <?php }else{
+                        echo "<a href='".$url_login."'>Please login to support</a>";
+                    }?>
+                    
                 </div>
             </form>
         </div>
@@ -146,7 +161,3 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
         
     });
 </script>
-
-<?php
-
-}
