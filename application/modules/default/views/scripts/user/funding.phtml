@@ -59,6 +59,7 @@ $currency = new Zend_Currency('en_US');
                 <?php 
                     foreach ($allSections as $section) { 
                         $isFirst = true;
+                        var_dump($this->view_member->member_id);
                         $supports = $modelSectionSupport->fetchAllSectionSupportsForMember($section['section_id'], $this->view_member->member_id);
                         
                         if($modelSection->wasMemberSectionSupporter($section['section_id'], $this->view_member->member_id) && !empty($supports)) {
