@@ -91,6 +91,7 @@ class Default_Plugin_AclRules extends Zend_Acl
 
         $this->addResource(new Zend_Acl_Resource ('default_stati'));
         $this->addResource(new Zend_Acl_Resource ('default_tag'));
+        $this->addResource(new Zend_Acl_Resource ('default_section'));
 
         
         $this->addResource(new Zend_Acl_Resource ('backend_categories'));

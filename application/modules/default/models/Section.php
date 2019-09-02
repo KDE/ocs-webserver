@@ -63,6 +63,48 @@ class Default_Model_Section
         return $resultSet;
     }
     
+    public function fetchAllSectionsAndCategories()
+    {
+        $sql = "
+            SELECT 
+            s.section_id
+            ,s.name
+            ,s.description
+            ,c.project_category_id
+            ,pc.title
+            FROM section s
+            JOIN section_category c on s.section_id = c.section_id
+            join project_category pc on c.project_category_id = pc.project_category_id and pc.is_deleted = 0 and pc.is_active = 1
+            WHERE s.is_active = 1
+            order by s.name , pc.title
+        ";
+        $resultSet = $this->getAdapter()->fetchAll($sql);
+        return $resultSet;   
+    }
+
+    public function fetchTopProductsPerSection($section_id)
+    {
+        $sql = "select 
+                p.project_id,
+                p.member_id,
+                p.project_category_id,
+                p.title,
+                p.description,
+                p.created_at,
+                p.changed_at,
+                p.image_small,
+                p.username,
+                p.profile_image_url,
+                p.cat_title
+                from stat_projects p, section s, section_category c
+                where s.section_id = c.section_id and c.project_category_id = p.project_category_id
+                and s.section_id =:section_id
+                order by p.laplace_score desc 
+                limit 20";
+        $resultSet = $this->getAdapter()->fetchAll($sql,array('section_id' => $section_id));
+        return $resultSet;    
+    }
+
     public function fetchFirstSectionForStoreCategories($category_array)
     {
         $sql = "

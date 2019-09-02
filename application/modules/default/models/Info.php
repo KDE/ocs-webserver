@@ -736,7 +736,9 @@ class Default_Model_Info
             $sql .= ' 1=1)';;
         }
         
-        $sql .= ' ORDER BY (round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC, created_at DESC
+        /*$sql .= ' ORDER BY (round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC, created_at DESC
+            ';*/ 
+        $sql .= ' ORDER BY laplace_score DESC, created_at DESC
             ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
