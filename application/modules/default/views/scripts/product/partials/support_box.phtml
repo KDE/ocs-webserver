@@ -123,12 +123,7 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                 </div>   
 
                 <div class="supportDiv" >
-                    <?php if (Zend_Auth::getInstance()->hasIdentity()) {?>
                     <button id="add_support" type="submit" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support</button>                     
-                    <?php }else{
-                        echo "<a href='".$url_login."'>Please login to support</a>";
-                    }?>
-                    
                 </div>
             </form>
         </div>
