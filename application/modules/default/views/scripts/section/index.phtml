@@ -1,0 +1,60 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
+$this->headMeta()->appendProperty('og:url', 'www.opendesktop.org');
+$this->headMeta()->appendProperty('og:type', 'website.');
+$this->headMeta()->appendProperty('og:title', 'opendesktop.org');
+$this->headMeta()->appendProperty('og:site_name','www.opendesktop.org');
+$this->headMeta()->appendProperty('og:description','A community where developers and artists share applications, themes and other content');
+$this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images/system/opendesktop-logo.png');
+
+$model = new Default_Model_Section();
+$results = $model->fetchAllSectionsAndCategories();
+$sections = array();
+$tmpsid = null;
+foreach ($results as $value) {
+	if($tmpsid==null || $tmpsid!= $value['section_id'])
+	{
+		$tmpsid = $value['section_id'];
+		$sections[]=array('section_id' => $tmpsid,'name'=>$value['name'] );
+	}
+}
+
+$response = array(
+		'sections' => $sections,
+		'details' => $results
+    );
+?>
+<link type="text/css" rel="stylesheet" href="/theme/react/assets/css/pling-section.css"/>
+<div class="tooltip_templates" style="display:none">
+      <span id="tooltip_content">
+          <i class="fa fa-spinner"></i>
+      </span>
+</div>
+
+<main class="pling-section">
+      <div id="pling-section-content"></div>
+      <script type="text/javascript">        
+        var data = <?php echo Zend_Json::encode($response)?>;
+      </script>
+      <script src="/theme/react/bundle/pling-section-bundle.js" type="text/javascript"></script>
+</main>
