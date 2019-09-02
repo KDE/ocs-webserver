@@ -59,14 +59,34 @@ $currency = new Zend_Currency('en_US');
                 <?php 
                     foreach ($allSections as $section) { 
                         $isFirst = true;
-                        $supports = $modelSectionSupport->fetchAllSectionSupportsForMember($section['section_id'], $this->member['member_id']);
+                        $supports = $modelSectionSupport->fetchAllSectionSupportsForMember($section['section_id'], $this->view_member->member_id);
                         
-                        if($modelSection->wasMemberSectionSupporter($section['section_id'], $this->member['member_id']) && !empty($supports)) {
+                        if($modelSection->wasMemberSectionSupporter($section['section_id'], $this->view_member->member_id) && !empty($supports)) {
                             
                             foreach ($supports as $support) {
                                 //calc months
                                 $now = new DateTime();
                                 $months = 0;
+                                
+                                $from = strtotime($support['active_time']);
+                                $to = null;
+                                
+                                if($support['type_id'] == 0) {
+                                    $to = strtotime($support['active_time_one_year']);
+                                } else {
+                                    $to = strtotime($support['last_payment_until_time']);
+                                }
+                                $min_date = min($from, $to);
+                                $max_date = max($from, $to);
+                                $i = 1;
+
+                                while (($min_date = strtotime("+1 MONTH", $min_date)) <= $max_date) {
+                                    $i++;
+                                }
+                                $months = $i; // 8
+                                
+                                
+                                /*
                                 if($support['period'] == 'Y') {
                                     
                                     $d1 = strtotime($support['active_time']);
@@ -114,6 +134,7 @@ $currency = new Zend_Currency('en_US');
                                     $months = $i; // 8
 
                                 }
+                                */
                                 if($months == 0) {
                                     $months = 1;
                                 }
@@ -224,6 +245,12 @@ $currency = new Zend_Currency('en_US');
                                 
                                 
                                 echo $text;
+                                
+                                
+                                if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' && !empty($support['project_id'])){
+                                    echo "<br>Referer: <a href='".$support['referer']."'>".$support['referer']."</a>";
+                                }
+                                
                                 $isFirst = false;
 
                             ?>

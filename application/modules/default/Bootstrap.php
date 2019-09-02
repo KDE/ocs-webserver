@@ -561,7 +561,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             )));
 
 
-        $router->addRoute('support_new', new Zend_Controller_Router_Route('/support', array(
+        $router->addRoute('support_new', new Zend_Controller_Router_Route('/supportold2', array(
             'module'     => 'default',
             'controller' => 'subscription',
             'action'     => 'index'
@@ -579,20 +579,20 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'action'     => 'paypredefined'
         )));
         
-        $router->addRoute('support_new2', new Zend_Controller_Router_Route('/support2', array(
+        $router->addRoute('support_new2', new Zend_Controller_Router_Route('/support', array(
             'module'     => 'default',
             'controller' => 'subscription',
             'action'     => 'support2'
         )));
         
-        $router->addRoute('support_new_pay2', new Zend_Controller_Router_Route('/support/pay2', array(
+        $router->addRoute('support_new_pay2', new Zend_Controller_Router_Route('/support/pay', array(
             'module'     => 'default',
             'controller' => 'subscription',
             'action'     => 'pay2'
         )));
 
 
-        $router->addRoute('support_new_pay', new Zend_Controller_Router_Route('/support/pay', array(
+        $router->addRoute('support_new_pay', new Zend_Controller_Router_Route('/support/payold2', array(
             'module'     => 'default',
             'controller' => 'subscription',
             'action'     => 'pay'
