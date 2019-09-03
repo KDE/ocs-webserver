@@ -1,7 +1,14 @@
 export function GenerateGalleryArray(product){
-    let galleryArray = []
-    if (window.galleryPicturesJson) window.galleryPicturesJson.forEach(function(gp,index){ galleryArray.push({url:gp,type:'image'}); });
-    else galleryArray = [{url:product.image_small,type:'image'} ];
+    let galleryArray = [];
+    let noGallery = false, noLogo = false;
+    if (window.galleryPicturesJson){
+        window.galleryPicturesJson.forEach(function(gp,index){ galleryArray.push({url:gp,type:'image'}); });
+        noGallery = true;
+    }
+    else {
+        galleryArray = [{url:product.image_small,type:'image'} ];
+        if (!product.image_small) noLogo = true;
+    }
     if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... galleryArray ];
     if (window.filesJson) {
         window.filesJson.forEach(function(f,index){
