@@ -20,18 +20,88 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-class SectionController extends Zend_Controller_Action
+class SectionController extends Local_Controller_Action_DomainSwitch
 {
 
 
     public function indexAction()
     {
-                
+        $section_id = $this->getParam('id',null);
+        $model = new Default_Model_Section();
+        $helpPrintDate = new Default_View_Helper_PrintDate();
+        $helperImage = new Default_View_Helper_Image();
+        $products=$model->fetchTopProductsPerSection($section_id);
+        foreach ($products as &$p) {
+          $p['image_small'] = $helperImage->Image($p['image_small'], array('width' => 200, 'height' => 200));
+          $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
+        }
+
+        $creators = $model->fetchTopCreatorPerSection($section_id);
+        foreach ($creators as &$p) {
+          $p['profile_image_url'] = $helperImage->Image($p['profile_image_url'], array('width' => 100, 'height' => 100));
+          
+        }
+        if($section_id)
+        {
+            $section = $model->fetchSection($section_id);
+            $this->view->section = $section;
+             $this->view->section_id = $section_id; 
+        }
+        
+        $this->view->products = $products;
+        $this->view->creators = $creators;
     }
 
     public function topAction()
+    {        
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $model = new Default_Model_Section();
+        $helpPrintDate = new Default_View_Helper_PrintDate();
+        $helperImage = new Default_View_Helper_Image();
+        $section_id = $this->getParam('section_id');
+        $products=$model->fetchTopProductsPerSection($section_id);
+    
+        foreach ($products as &$p) {
+          $p['image_small'] = $helperImage->Image($p['image_small'], array('width' => 200, 'height' => 200));
+          $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
+        }
+
+        $creators = $model->fetchTopCreatorPerSection($section_id);
+        foreach ($creators as &$p) {
+          $p['profile_image_url'] = $helperImage->Image($p['profile_image_url'], array('width' => 100, 'height' => 100));
+          
+        }
+        $this->_helper->json(array('status' => 'ok', 'products' => $products,'creators' => $creators));        
+    }
+
+    public function topcatAction()
+    {        
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $model = new Default_Model_Section();
+        $helpPrintDate = new Default_View_Helper_PrintDate();
+        $helperImage = new Default_View_Helper_Image();
+        $cat_id = $this->getParam('cat_id');
+        $products=$model->fetchTopProductsPerCategory($cat_id);
+    
+        foreach ($products as &$p) {
+          $p['image_small'] = $helperImage->Image($p['image_small'], array('width' => 200, 'height' => 200));
+          $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
+        }
+
+        $creators = $model->fetchTopCreatorPerCategory($cat_id);
+        foreach ($creators as &$p) {
+          $p['profile_image_url'] = $helperImage->Image($p['profile_image_url'], array('width' => 100, 'height' => 100));
+          
+        }
+        $this->_helper->json(array('status' => 'ok', 'products' => $products,'creators' => $creators));        
+    }
+
+
+    protected function setLayout()
     {
-        
+        $this->_helper->layout()->setLayout('layout_pling_home');
     }
     
 }

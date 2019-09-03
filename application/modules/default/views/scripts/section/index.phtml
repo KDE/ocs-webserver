@@ -26,7 +26,7 @@ $this->headMeta()->appendProperty('og:title', 'opendesktop.org');
 $this->headMeta()->appendProperty('og:site_name','www.opendesktop.org');
 $this->headMeta()->appendProperty('og:description','A community where developers and artists share applications, themes and other content');
 $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images/system/opendesktop-logo.png');
-
+$baseurlStore = Zend_Registry::get('config')->settings->client->default->baseurl_store;
 $model = new Default_Model_Section();
 $results = $model->fetchAllSectionsAndCategories();
 $sections = array();
@@ -39,9 +39,17 @@ foreach ($results as $value) {
 	}
 }
 
+$products = $this->products;
+$creators = $this->creators;
+
 $response = array(
 		'sections' => $sections,
-		'details' => $results
+		'details' => $results,
+		'baseurlStore' => $baseurlStore,
+		'products' => $products,
+		'creators' => $creators,
+		'section' => ($this->section?$this->section:null),
+		'section_id' => ($this->section_id?$this->section_id:null),
     );
 ?>
 <link type="text/css" rel="stylesheet" href="/theme/react/assets/css/pling-section.css"/>
