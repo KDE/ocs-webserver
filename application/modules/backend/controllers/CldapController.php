@@ -59,7 +59,6 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         return $logger;
     }
 
-
     /**
      * @throws Default_Model_Ocs_Exception
      * @throws Zend_Db_Statement_Exception
@@ -151,29 +150,6 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         return $result;
     }
 
-    private function updateAvatar($members)
-    {
-        $modelOcsLdap = new Default_Model_Ocs_Ldap();
-
-        while ($member = $members->fetch()) {
-            try {
-                $modelOcsLdap->updateAvatar($member['member_id'], $member['profile_image_url']);
-            } catch (Zend_Ldap_Exception $e) {
-                $this->log->info("process " . Zend_Json::encode($member));
-                $this->log->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
-
-                continue;
-            }
-            $messages = $modelOcsLdap->getMessages();
-            if (isset($messages[0]) AND $messages[0] != "Success") {
-                $this->log->info("process " . Zend_Json::encode($member));
-                $this->log->info("messages " . Zend_Json::encode($messages));
-            }
-        }
-
-        return true;
-    }
-
     /**
      * @param Zend_Db_Statement_Interface $members
      *
@@ -189,7 +165,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
 
         while ($member = $members->fetch()) {
             try {
-                $modelOcsLdap->createUserFromArray($member, $force);
+                $ldapUserData = $modelOcsLdap->addUserFromArray($member, $force);
             } catch (Zend_Ldap_Exception $e) {
                 $this->log->info("process " . Zend_Json::encode($member));
                 $this->log->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
@@ -197,6 +173,81 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
                 continue;
             }
             $messages = $modelOcsLdap->getMessages();
+            if (isset($messages[0]) AND $messages[0] != Default_Model_Ocs_Ldap::LDAP_SUCCESS) {
+                $this->log->info("process " . Zend_Json::encode($member));
+                $this->log->info("messages " . Zend_Json::encode($messages));
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param int    $member_id
+     * @param string $status_msg
+     * @param string $response_msg
+     * @param string $ldap_new
+     * @param string $ldap_old
+     *
+     * CREATE TABLE `log_ldap` (
+     * `id` BINARY(16) NOT NULL,
+     * `member_id` int(11) NOT NULL,
+     * `status` varchar(45) NOT NULL,
+     * `response_msg` varchar(255) DEFAULT NULL,
+     * `json_ldap_old` text DEFAULT NULL,
+     * `json_ldap_new` text DEFAULT NULL,
+     * `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     * PRIMARY KEY (`id`),
+     * KEY `idx_member_id` (`member_id`)
+     * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+     *
+     */
+    private function dbLog($member_id, $status_msg, $response_msg, $ldap_new, $ldap_old)
+    {
+        $sql = "INSERT INTO `log_ldap` 
+               (`id`,`member_id`, `status`, `response_msg`, `json_ldap_old`, `json_ldap_new`) 
+               VALUES 
+               (UNHEX(REPLACE(UUID(),'-','')),:memberId, :statusVal, :msgVal, :dbVal, :ldapVal)";
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $db->query($sql,
+            array(
+                'memberId'  => $member_id,
+                'statusVal' => $status_msg,
+                'msgVal'    => $response_msg,
+                'ldapVal'   => $ldap_new,
+                'dbVal'     => $ldap_old
+            ));
+    }
+
+    /**
+     * @param $members
+     *
+     * @return bool
+     */
+    private function updateMembers(array $members)
+    {
+        $model_Ocs_Ldap = new Default_Model_Ocs_Ldap();
+        // create an org unit for backup user data
+        $ou = "member-bkp-" . date("Ymd-Hi");
+        $entry_ou_dn = $this->createBackupTree($model_Ocs_Ldap, $ou);
+
+        while ($member = $members->fetch()) {
+            try {
+                $model_Ocs_Ldap->resetMessages();
+                $ldapUser = $model_Ocs_Ldap->getLdapUserByMemberId($member['member_id']);
+                if (empty($ldapUser)) {
+                    throw new Exception('user not found');
+                }
+
+                $model_Ocs_Ldap->updateUserFromArray($member);
+                $ldapUser = $this->storeBackupEntry($model_Ocs_Ldap, $member, $entry_ou_dn, $ldapUser);
+            } catch (Exception $e) {
+                $this->log->info("process " . json_encode($member));
+                $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+
+                continue;
+            }
+            $messages = $model_Ocs_Ldap->getMessages();
             if (isset($messages[0]) AND $messages[0] != "Success") {
                 $this->log->info("process " . Zend_Json::encode($member));
                 $this->log->info("messages " . Zend_Json::encode($messages));
@@ -207,32 +258,38 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
     }
 
     /**
-     * @param $members
-     *
-     * @return bool
-     * @throws Zend_Exception
+     * @param Default_Model_Ocs_Ldap $modelOcsLdap
+     * @param                        $ou
+     * @return string
      */
-    private function updateMembers($members)
+    private function createBackupTree(Default_Model_Ocs_Ldap $modelOcsLdap, $ou)
     {
-        $modelOcsIdent = new Default_Model_Ocs_Ldap();
+        $entry_ou = $modelOcsLdap->createEntryOrgUnit($ou);
+        $entry_ou_dn = $modelOcsLdap->addOrgUnit($entry_ou, $ou);
+        $this->log->info("name for backup in ldap tree: {$entry_ou_dn}");
 
-        while ($member = $members->fetch()) {
-            try {
-                $modelOcsIdent->updateUserFromArray($member);
-            } catch (Zend_Ldap_Exception $e) {
-                $this->log->info("process " . json_encode($member));
-                $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        return $entry_ou_dn;
+    }
 
-                continue;
-            }
-            $messages = $modelOcsIdent->getMessages();
-            if (isset($messages[0]) AND $messages[0] != "Success") {
-                $this->log->info("process " . Zend_Json::encode($member));
-                $this->log->info("messages " . Zend_Json::encode($messages));
-            }
-        }
+    /**
+     * @param Default_Model_Ocs_Ldap $modelOcsLdap
+     * @param                        $member
+     * @param                        $entry_ou_dn
+     * @param array                  $ldapUser
+     * @return array
+     */
+    private function storeBackupEntry(
+        Default_Model_Ocs_Ldap $modelOcsLdap,
+        array $member,
+        $entry_ou_dn,
+        array $ldapUser
+    ) {
+        // backup old entry
+        $dnBackup = $modelOcsLdap->getDnForUser($member['username'], $entry_ou_dn);
+        unset($ldapUser['dn']);
+        $modelOcsLdap->addEntry($ldapUser, $dnBackup);
 
-        return true;
+        return $ldapUser;
     }
 
     /**
@@ -245,12 +302,17 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
      */
     private function validateMembers($members, $force = false)
     {
-        $modelOcsIdent = new Default_Model_Ocs_Ldap();
+        $model_Ocs_Ldap = new Default_Model_Ocs_Ldap();
+        if ($force) {
+            // create an org unit for backup user data
+            $ou = "member-bkp-" . date("Ymd-Hi");
+            $entry_ou_dn = $this->createBackupTree($model_Ocs_Ldap, $ou);
+        }
 
         while ($member = $members->fetch()) {
-            $modelOcsIdent->resetMessages();
+            $model_Ocs_Ldap->resetMessages();
             try {
-                $ldapEntry = $modelOcsIdent->getLdapUser($member);
+                $ldapEntry = $model_Ocs_Ldap->getLdapUser($member);
                 if (empty($ldapEntry)) {
                     $this->log->info('user not exist (' . $member['member_id'] . ', ' . $member['username'] . ')');
 
@@ -258,18 +320,22 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
                 }
                 $result = $this->validateEntry($member, $ldapEntry);
                 if (isset($result)) {
-                    $this->log->info('member (' . $member['member_id'] . ', ' . $member['username'] . ') unequal: ' . PHP_EOL . implode("<=>", $result)
+                    $this->log->info('member (' . $member['member_id'] . ', ' . $member['username'] . ') unequal: '
+                                     . PHP_EOL
+                                     . implode("<=>", $result)
                                      . ' '
-                                     . $member[$result[0]] . '<=>' . Zend_Ldap_Attribute::getAttribute($ldapEntry, $result[1], 0))
-                    ;
+                                     . $member[$result[0]] . '<=>' . Zend_Ldap_Attribute::getAttribute($ldapEntry,
+                            $result[1], 0));
                     if ($force) {
-                        $modelOcsIdent->createUserFromArray($member, true);
+                        $model_Ocs_Ldap->updateUserFromArray($member);
+                        $ldapUser = $this->storeBackupEntry($model_Ocs_Ldap, $member, $entry_ou_dn, $ldapEntry);
                     }
                 }
             } catch (Zend_Ldap_Exception $e) {
+                $this->log->info("process " . Zend_Json::encode($member));
                 $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
-            $messages = $modelOcsIdent->getMessages();
+            $messages = $model_Ocs_Ldap->getMessages();
             if (false == empty($messages)) {
                 $this->log->info(json_encode($messages));
             }
@@ -278,7 +344,12 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         return true;
     }
 
-    private function validateEntry($member, $ldapEntry)
+    /**
+     * @param array $member
+     * @param array $ldapEntry
+     * @return array|null
+     */
+    private function validateEntry(array $member, array $ldapEntry)
     {
         $enc = mb_detect_encoding($member['username']) ? mb_detect_encoding($member['username']) : 'UTF-8';
         $lower_username = mb_strtolower($member['username'], $enc);
@@ -310,35 +381,54 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
             return array('password', 'userPassword');
         }
 
+        if(false == array_key_exists('jpegphoto', $ldapEntry)) {
+            return array('profile_image_url','jpegPhoto');
+        }
+
         return null;
     }
 
-    private function prepareLogTable()
+    private function updateAvatar($members)
     {
-        $db = Zend_Db_Table::getDefaultAdapter();
-        $db->query('truncate `_ldap_user_validate`;');
-    }
+        $model_Ocs_Ldap = new Default_Model_Ocs_Ldap();
+        // create an org unit for backup user data
+        $ou = "member-bkp-" . date("Ymd-Hi");
+        $entry_ou_dn = $this->createBackupTree($model_Ocs_Ldap, $ou);
 
-    private function dbLog($member_id, $string, $string1, $encode, $encode1)
-    {
-        $sql =
-            "INSERT INTO `_ldap_user_validate` (`member_id`, `status`, `msg`, `json_ldap`, `json_db`) VALUES (:memberId, :statusVal, :msgVal, :ldapVal, :dbVal)";
-        $db = Zend_Db_Table::getDefaultAdapter();
-        $db->query($sql,
-            array(
-                'memberId'  => $member_id,
-                'statusVal' => $string,
-                'msgVal'    => $string1,
-                'ldapVal'   => $encode,
-                'dbVal'     => $encode1
-            ));
+        while ($member = $members->fetch()) {
+            try {
+                $model_Ocs_Ldap->resetMessages();
+                $ldapUser = $model_Ocs_Ldap->getLdapUserByMemberId($member['member_id']);
+                if (empty($ldapUser)) {
+                    throw new Exception('user not found');
+                }
+                $avatar = $model_Ocs_Ldap->createJpegPhoto($member['member_id'], $member['profile_image_url']);
+                if (false === $avatar) {
+                    throw new Exception('update avatar failed');
+                }
+                $ldapUserNew = $model_Ocs_Ldap->updateLdapAttrib($ldapUser, $avatar,
+                    Default_Model_Ocs_Ldap::JPEG_PHOTO);
+                $model_Ocs_Ldap->updateLdapEntry($ldapUserNew);
+                $ldapUser = $this->storeBackupEntry($model_Ocs_Ldap, $member, $entry_ou_dn, $ldapUser);
+            } catch (Exception $e) {
+                $this->log->info("process " . Zend_Json::encode($member));
+                $this->log->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+
+                continue;
+            }
+            $messages = $model_Ocs_Ldap->getMessages();
+            if (isset($messages[0]) AND $messages[0] != Default_Model_Ocs_Ldap::LDAP_SUCCESS) {
+                $this->log->info("process " . Zend_Json::encode($member));
+                $this->log->info("messages " . Zend_Json::encode($messages));
+            }
+        }
+
+        return true;
     }
 
     /**
      * @param Zend_Db_Statement_Interface $members
-     *
      * @param                             $file
-     *
      * @param                             $errorfile
      *
      * @return string
@@ -380,24 +470,13 @@ uid: {$username}
 uid: {$member['email_address']}
 userPassword: {MD5}{$password}
 cn: {$member['username']}
-email: {$member['email_address']}\n" . (empty(trim($member['firstname'])) ? "" : "gn: {$member['firstname']}\n")
-               . (empty(trim($member['lastname'])) ? "" : "sn: {$member['lastname']}\n") . "uidNumber: {$member['member_id']}
+email: {$member['email_address']}\n"
+               . (empty(trim($member['firstname'])) ? "" : "gn: {$member['firstname']}\n")
+               . (empty(trim($member['lastname'])) ? "" : "sn: {$member['lastname']}\n")
+               . "uidNumber: {$member['member_id']}
 gidNumber: {$member['roleId']}
 memberUid: {$member['external_id']}
 ";
     }
-
-    /**
-     * CREATE TABLE `_ldap_user_validate` (
-     * `id` int(11) NOT NULL AUTO_INCREMENT,
-     * `member_id` int(11) NOT NULL,
-     * `status` varchar(45) COLLATE latin1_general_ci NOT NULL,
-     * `msg` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
-     * `json_ldap` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
-     * `json_db` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
-     * PRIMARY KEY (`id`),
-     * KEY `idx_member_id` (`member_id`)
-     * ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
-     */
 
 }
