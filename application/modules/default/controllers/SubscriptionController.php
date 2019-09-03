@@ -145,8 +145,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $sectionsTable = new Default_Model_Section();
         $section = $sectionsTable->fetchSection($section_id);
         
-        $referer = null;
-        if (!empty($_SERVER['HTTP_REFERER'])) {
+        $referer = $this->getParam('referer', null);
+        if (null == $referer && !empty($_SERVER['HTTP_REFERER'])) {
             $referer = $_SERVER['HTTP_REFERER'];
         }
         

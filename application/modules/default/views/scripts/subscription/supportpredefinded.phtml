@@ -31,6 +31,8 @@ if(isset($_GET['url'])) {
    $thisurl= Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"];
 }
 
+$thisurl.= "?referer=".$this->referer."&section_id=".$this->section_id."&project_id=".$this->project_id."&amount_predefined=".$this->amount_predefined."&support_amount=".$this->support_amount;
+
 
 $url_login = "/login/redirect/".$filter->filter($thisurl);
 
@@ -41,6 +43,7 @@ if($this->amount_predefined == "free") {
 } else {
     $sumPayment = $this->amount_predefined;
 }
+
 
 
 
@@ -126,6 +129,12 @@ if($this->amount_predefined == "free") {
                     </p>
                     
                     <div class="x-donation-widget">
+                        
+                        <?php
+                        if($sumPayment == 0) {
+                            echo "Something went wrong. Please go back to the previous page and try again.";
+                        } else {
+                        ?>
                     
                         
                         <div class="row disply-flex" style="margin: 0 !important;">
@@ -167,6 +176,10 @@ if($this->amount_predefined == "free") {
                                     </div>
             
                         </div> <!--end of row-->
+                        
+                        <?php
+                        }
+                        ?>
                         
                     </div> <!--end of tabs-->
                 </div>

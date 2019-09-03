@@ -74,7 +74,31 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
 
 ?>
 
-
+<style>
+    .amount_predefined input {
+        opacity: .95;
+        margin-top: -8px;
+        color: #000;
+        font-size: 18px;
+        width: 50%;
+        margin: 0;
+            margin-top: 0px;
+        margin-top: 0;
+        border: 0;
+            border-bottom-color: currentcolor;
+            border-bottom-style: none;
+            border-bottom-width: 0px;
+        border-bottom: 1px solid #d0d0d0;
+        padding: 0;
+        box-shadow: none;
+        background: none;
+    }
+    
+    .amount_predefined {
+        padding-left: 4px;
+    }
+    
+</style>
 <div class="prod-widget-box prod-user right ">
     <div class="sidebar-content" style="text-align: center;">
         <div class="product-maker-sidebar">
@@ -88,44 +112,49 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                 }
             ?>
             
-            <span style="padding-bottom: 10px;font-size: small;">
-                <?= $this->project_title ?> is part of <?= $section['name'] ?>, which is supported by the following people:
-            </span>        
-            <div class="row" style="margin-top: 10px;margin-bottom: 20px;">
-            <?php 
-                    $i=0;
-                   foreach ($supporters as $user) {                                                      
-                    if($i++>6) break;
-               ?>         
-               <a href="<?php echo $this->buildMemberUrl($user['username']); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>">                   
-                    <img height="25" width="25" src="<?php echo $this->Image($user['profile_image_url'], array('width' => '25', 'height' => '25', 'crop' => 2)); ?>" class="supporterx" />                   
-               </a>
-               <?php } ?>
-            </div>
             <?php
             $config = Zend_Registry::get('config')->settings->client->default;
             $baseurlStore = $config->baseurl_store;
             ?>
-            <form action="<?= $baseurlStore ?>/support-predefined" method="POST" id="support_form_predefined">
-                <input type="hidden" name="section_id" value="<?= $section['section_id'] ?>">
-                <input type="hidden" name="project_id" value="<?= $this->project_id ?>">
-                <div style="">
-                    <span style="text-align: left;font-size: small">Support <?= $this->project_title ?> and other <?= $this->project_category_title ?> via a monthly donation of</span>
-                    <span style="text-align: left;">  
-                        <ul style="list-style: none;">
-                            <li><input type="radio" name="amount_predefined" id="amount-1" value="0.99" checked="checked"> $0.99</li>
-                            <li><input type="radio" name="amount_predefined" id="amount-2" value="2"> $2</li>
-                            <li><input type="radio" name="amount_predefined" id="amount-3" value="5"> $5</li>
-                            <li><input type="radio" name="amount_predefined" id="amount-4" value="10"> $10</li>
-                            <li><input type="radio" name="amount_predefined" id="amount-5" value="free">$<input type="text" min="10.01" step="any" inputmode="numeric" type="number" class="custom_amount" name="support_amount"><div style="font-size: x-small;padding-left: 21px;">Enter a free Amount</div></li>
-                        </ul>
-                    </span>
-                </div>   
+            <div>
+                <form action="<?= $baseurlStore ?>/support-predefined" method="POST" id="support_form_predefined">
+                    <input type="hidden" name="section_id" value="<?= $section['section_id'] ?>">
+                    <input type="hidden" name="project_id" value="<?= $this->project_id ?>">
+                    <div style="">
+                        <span style="text-align: left;font-size: small">Support <?= $this->project_title ?> and other <?= $this->project_category_title ?> via a monthly donation of</span>
+                        <span style="text-align: left;">  
+                            <ul style="list-style: none;">
+                                <li><input type="radio" name="amount_predefined" id="amount-1" value="0.99" checked="checked"> $0.99</li>
+                                <li><input type="radio" name="amount_predefined" id="amount-2" value="2"> $2</li>
+                                <li><input type="radio" name="amount_predefined" id="amount-3" value="5"> $5</li>
+                                <li><input type="radio" name="amount_predefined" id="amount-4" value="10"> $10</li>
+                                <li><input type="radio" name="amount_predefined" id="amount-5" value="free"><span class="amount_predefined">$<input type="text" min="10.01" step="any" inputmode="numeric" type="number" class="custom_amount" name="support_amount"><div style="font-size: x-small;padding-left: 21px;">Enter a free Amount</div></span></li>
+                            </ul>
+                        </span>
+                    </div>   
 
-                <div class="supportDiv" >
-                    <button id="add_support" type="submit" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support</button>                     
+                    <div class="supportDiv" >
+                        <button id="add_support" type="submit" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support</button>                     
+                    </div>
+                </form>
+            </div>
+            <div style="margin-top: 20px;">
+            
+                <span style="padding-bottom: 10px;font-size: small;">
+                    <?= $this->project_title ?> is part of <?= $section['name'] ?>, which is supported by the following people:
+                </span>        
+                <div class="row" style="margin-top: 10px;margin-bottom: 10px;">
+                <?php 
+                        $i=0;
+                       foreach ($supporters as $user) {                                                      
+                        if($i++>6) break;
+                   ?>         
+                   <a href="<?php echo $this->buildMemberUrl($user['username']); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>">                   
+                        <img height="25" width="25" src="<?php echo $this->Image($user['profile_image_url'], array('width' => '25', 'height' => '25', 'crop' => 2)); ?>" class="supporterx" />                   
+                   </a>
+                   <?php } ?>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>

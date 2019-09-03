@@ -75,6 +75,11 @@ $git_url = Zend_Registry::get('config')->settings->server->opencode->host;
             <a href="https://www.opendesktop.org/p/1175480/"><img src="/images/system/ocsstore-download-button.png" /></a>
         </div>
 
+
+        <?php
+            if($this->is_startpage) {
+        ?>
+
         <div  class="supportDiv  withborder" >    
             <span><b><?=$this->countSupporters?></b> people support </span>        
             <span style="display: block">
@@ -95,6 +100,10 @@ $git_url = Zend_Registry::get('config')->settings->server->opencode->host;
                     <a href="/community#supportersPanel">see all</a>
              </span>
         </div>
+
+        <?php
+            }
+        ?>
 
         <div class="supportDiv" >
         <?php 

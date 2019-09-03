@@ -43,6 +43,9 @@ $currency = new Zend_Currency('en_US');
                    <h1 class="page-title left"><?= $this->translate('Funding') ?></h1> 
                    <!--<p>Supporter Level = (S1,S2)</p>-->
                </div>
+                
+                
+                
 
                 <div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0; padding-bottom: 10px;">
                     <div class="row"> 
@@ -57,12 +60,13 @@ $currency = new Zend_Currency('en_US');
                     </div>
                     
                 <?php 
+                    $noData = true;
                     foreach ($allSections as $section) { 
                         $isFirst = true;
                         $supports = $modelSectionSupport->fetchAllSectionSupportsForMember($section['section_id'], $this->view_member->member_id);
                         
                         if($modelSection->wasMemberSectionSupporter($section['section_id'], $this->view_member->member_id) && !empty($supports)) {
-                            
+                            $noData = false;
                             foreach ($supports as $support) {
                                 //calc months
                                 $now = new DateTime();
@@ -261,6 +265,7 @@ $currency = new Zend_Currency('en_US');
                 <?php    
                             }
                         } else {
+                            /*
                 ?>            
                      <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;<?php if($isFirst) echo "border-top: 1px solid #ddd;margin-top: 15px;padding-top: 5px;" ?>">
                         <!-- Section -->
@@ -272,8 +277,21 @@ $currency = new Zend_Currency('en_US');
                         </div>
                      </div>
                             
-                <?php            
-                        }
+                <?php     */       
+                        } 
+                    }
+                ?>
+                    
+                <?php
+                    if($noData) {
+                ?>
+                    <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;<?php if($isFirst) echo "border-top: 1px solid #ddd;margin-top: 15px;padding-top: 5px;" ?>">
+                        <!-- Section -->
+                        <div class="col-md-12 cell-default center" style="text-align: center;font-size: larger;padding-top: 40px;">
+                            <a href="/support">Become a supporter</a>
+                        </div>
+                    </div>
+                <?php
                     }
                 ?>
                     
