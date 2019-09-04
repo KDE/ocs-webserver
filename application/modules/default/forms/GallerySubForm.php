@@ -174,16 +174,17 @@ class Default_Form_GallerySubForm extends Zend_Form_SubForm
                              ->setAttrib('class', 'gallery-picture')
                              ->setAttrib('onchange', 'ProductGallery.previewImage(this);')
                              ->addValidator('Count', true, 5)
-                             //->setMaxFileSize('26MB')
-                             ->addValidator('Size', true, array('max' => '5MB')) //max size of single uploaded file
-                             ->addValidator('FilesSize', true, array('max' => '26MB')) //max size of all uploaded files
+                             ->setMaxFileSize('27262976')
+                             ->addValidator('Size', true, array('max' => '5242880')) //max size of single uploaded file
+                             ->addValidator('FilesSize', true, array('max' => '27262976')) //max size of all uploaded files
                              ->addValidator('Extension', true, $imageTable->getAllowedFileExtension())
                              ->addValidator('MimeType', true, $imageTable->getAllowedMimeTypes())
                              ->setMultiFile($this->getNumberOfUploadGalleryPictures())
                              ->addFilter('Rename',
-                                 array('target'    => IMAGES_UPLOAD_PATH . 'tmp/',
-                                       'overwrite' => true,
-                                       'randomize' => true
+                                 array(
+                                     'target'    => IMAGES_UPLOAD_PATH . 'tmp/',
+                                     'overwrite' => true,
+                                     'randomize' => true
                                  ))
                              ->setIsArray(true);
 
