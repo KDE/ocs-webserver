@@ -23,6 +23,8 @@ export function GenerateGalleryArray(product){
 
                 if (f.type.indexOf("image") > -1 && noGallery === true && noLogo === true) addFileToGallery = true;
 
+                console.log(addFileToGallery);
+
                 if (addFileToGallery === true){
                     let type;
                     if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 ) type = f.type.split('/')[0]
