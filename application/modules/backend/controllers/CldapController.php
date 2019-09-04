@@ -102,6 +102,11 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
 
             return;
         }
+        if ('updatePassword' == $method) {
+            $this->updatePassword($members);
+
+            return;
+        }
     }
 
     /**
@@ -393,7 +398,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         $model_Ocs_Ldap = new Default_Model_Ocs_Ldap();
         // create an org unit for backup user data
         $ou = "member-bkp-" . date("Ymd-Hi");
-        $entry_ou_dn = $this->createBackupTree($model_Ocs_Ldap, $ou);
+        $backupTree = $this->createBackupTree($model_Ocs_Ldap, $ou);
 
         while ($member = $members->fetch()) {
             try {
@@ -406,10 +411,49 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
                 if (false === $avatar) {
                     throw new Exception('update avatar failed');
                 }
-                $ldapUserNew = $model_Ocs_Ldap->updateLdapAttrib($ldapUser, $avatar,
-                    Default_Model_Ocs_Ldap::JPEG_PHOTO);
+                $ldapUserNew = $model_Ocs_Ldap->updateLdapAttrib($ldapUser, $avatar,Default_Model_Ocs_Ldap::JPEG_PHOTO);
                 $model_Ocs_Ldap->updateLdapEntry($ldapUserNew);
-                $ldapUser = $this->storeBackupEntry($model_Ocs_Ldap, $member, $entry_ou_dn, $ldapUser);
+                $ldapUser = $this->storeBackupEntry($model_Ocs_Ldap, $member, $backupTree, $ldapUser);
+            } catch (Exception $e) {
+                $this->log->info("process " . Zend_Json::encode($member));
+                $this->log->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+
+                continue;
+            }
+            $messages = $model_Ocs_Ldap->getMessages();
+            if (isset($messages[0]) AND $messages[0] != Default_Model_Ocs_Ldap::LDAP_SUCCESS) {
+                $this->log->info("process " . Zend_Json::encode($member));
+                $this->log->info("messages " . Zend_Json::encode($messages));
+            }
+        }
+
+        return true;
+    }
+
+    private function updatePassword($members)
+    {
+        $model_Ocs_Ldap = new Default_Model_Ocs_Ldap();
+        // create an org unit for backup user data
+        $ou = "member-bkp-" . date("Ymd-Hi");
+        $backupTree = $this->createBackupTree($model_Ocs_Ldap, $ou);
+
+        while ($member = $members->fetch()) {
+            try {
+                $model_Ocs_Ldap->resetMessages();
+                $ldapUser = $model_Ocs_Ldap->getLdapUserByMemberId($member['member_id']);
+                if (empty($ldapUser)) {
+                    throw new Exception('user not found');
+                }
+                $attribValue = Zend_Ldap_Attribute::getAttribute($ldapUser, Default_Model_Ocs_Ldap::USER_PASSWORD, 0);
+                $passwordFromHash = $model_Ocs_Ldap->createPasswordFromHash($member['password']);
+                if (false === $passwordFromHash) {
+                    throw new Exception('update password failed');
+                }
+                if ($attribValue != $passwordFromHash) {
+                    $ldapUserNew = $model_Ocs_Ldap->updateLdapAttrib($ldapUser, $passwordFromHash,Default_Model_Ocs_Ldap::USER_PASSWORD);
+                    $model_Ocs_Ldap->updateLdapEntry($ldapUserNew);
+                    $ldapUser = $this->storeBackupEntry($model_Ocs_Ldap, $member, $backupTree, $ldapUser);
+                }
             } catch (Exception $e) {
                 $this->log->info("process " . Zend_Json::encode($member));
                 $this->log->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
