@@ -107,7 +107,7 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
             <?php
                 if($isSupporter) {
             ?>
-            <span style="padding-bottom: 10px;font-size: small;">Thank you very much for supporting <?= $section['name'] ?> with $<?= $support['tier'] ?> per month.</span><br>
+            <span style="padding-bottom: 10px;font-size: small;">Thank you very much for supporting <?= $section['name'] ?> with $<?= $support['tier'] ?> per month.</span><br><br>
             <?php
                 }
             ?>
@@ -121,7 +121,10 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
                     <input type="hidden" name="section_id" value="<?= $section['section_id'] ?>">
                     <input type="hidden" name="project_id" value="<?= $this->project_id ?>">
                     <div style="">
-                        <span style="text-align: left;font-size: small">Support <?= $this->project_title ?> and other <?= $this->project_category_title ?> via a monthly donation of</span>
+                        <span style="text-align: left;font-size: small">
+                            Become a Supporter of "<?= $this->project_title ?>" and similar <b><?= $this->project_category_title ?></b> via a monthly donation of
+                        </span>
+                        
                         <span style="text-align: left;">  
                             <ul style="list-style: none;">
                                 <li><input type="radio" name="amount_predefined" id="amount-1" value="0.99" checked="checked"> $0.99</li>
