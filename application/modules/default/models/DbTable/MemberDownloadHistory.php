@@ -63,7 +63,9 @@ class Default_Model_DbTable_MemberDownloadHistory extends Zend_Db_Table_Abstract
             ."
             )  as dls
             from section c
-            where c.is_active = 1";
+            where c.is_active = 1
+            and c.hide = 0
+            order by c.order";
         $result = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
         return $result;
     }
