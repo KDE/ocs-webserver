@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -30,8 +31,8 @@ class Default_Form_Decorator_Gallery extends Zend_Form_Decorator_Abstract
     public function render($content)
     {
         return '<div class="product-gallery">'
-        . $content .
-        '<div class="upload-image-container">
+               . $content .
+               '<div class="upload-image-container">
             <div class="upload-image relative" onclick="$(\'input.gallery-picture:last-child\').click();"></div>
         </div>
     </div>';

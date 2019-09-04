@@ -134,17 +134,25 @@ class DlController extends Local_Controller_Action_DomainSwitch
                         $server_info = $server_info.$key.': '.$value.' ';                        
                     } 
                 }
-                
 
-                $data = array('project_id' => $projectId, 'member_id' => $memberId,'anonymous_cookie'=>$storedInCookie, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size,'downloaded_ip' => $this->getRealIpAddr()
-                             ,'HTTP_X_FORWARDED_FOR' => $_SERVER['HTTP_X_FORWARDED_FOR']
-                             ,'HTTP_X_FORWARDED' =>     $_SERVER['HTTP_X_FORWARDED']
-                             ,'HTTP_CLIENT_IP' =>       $_SERVER['HTTP_CLIENT_IP']
-                             ,'HTTP_FORWARDED_FOR' =>   $_SERVER['HTTP_FORWARDED_FOR']
-                             ,'HTTP_FORWARDED' =>       $_SERVER['HTTP_FORWARDED']
-                             ,'REMOTE_ADDR' =>          $_SERVER['REMOTE_ADDR']                             
-                             ,'server_info' => $server_info
-                            );
+
+                $data = array(
+                    'project_id'           => $projectId,
+                    'member_id'            => $memberId,
+                    'anonymous_cookie'     => $storedInCookie,
+                    'file_id'              => $file_id,
+                    'file_type'            => $file_type,
+                    'file_name'            => $file_name,
+                    'file_size'            => $file_size,
+                    'downloaded_ip'        => $this->getRealIpAddr(),
+                    'HTTP_X_FORWARDED_FOR' => isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : null,
+                    'HTTP_X_FORWARDED'     => isset($_SERVER['HTTP_X_FORWARDED']) ? $_SERVER['HTTP_X_FORWARDED'] : null,
+                    'HTTP_CLIENT_IP'       => isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : null,
+                    'HTTP_FORWARDED_FOR'   => isset($_SERVER['HTTP_FORWARDED_FOR']) ? $_SERVER['HTTP_FORWARDED_FOR'] : null,
+                    'HTTP_FORWARDED'       => isset($_SERVER['HTTP_FORWARDED']) ? $_SERVER['HTTP_FORWARDED'] : null,
+                    'REMOTE_ADDR'          => $_SERVER['REMOTE_ADDR'],
+                    'server_info'          => $server_info
+                );
 
                 $memberDlHistory = new Default_Model_DbTable_MemberDownloadHistory();
                 $memberDlHistory->createRow($data)->save();
@@ -171,7 +179,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
         
 
     }
-    
+
     function getRealIpAddr()
     {
         if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
@@ -188,7 +196,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
         }
         return $ip;
     }
-    
+
     function getReferer()
     {
         $referer = null;
