@@ -6,8 +6,8 @@ class PlingSection extends Component {
   constructor(props){
   	super(props);
   	this.state ={...window.data};
-    this.handleClick = this.handleClick.bind(this);
-    this.loadData = this.loadData.bind(this);
+    //this.handleClick = this.handleClick.bind(this);
+    //this.loadData = this.loadData.bind(this);
     this.onClickCategory = this.onClickCategory.bind(this);
   }
 
@@ -16,28 +16,27 @@ class PlingSection extends Component {
   }
 
 
-  handleClick(section) {
-    this.setState(state => ({
-      isToggleOn: !state.isToggleOn,
-      section:section,
-      loading:true,
-      category:''
-    }));
-    this.loadData(section);
-  }
+  // handleClick(section) {
+  //   this.setState(state => ({
+  //     isToggleOn: !state.isToggleOn,
+  //     section:section,
+  //     loading:true,
+  //     category:''
+  //   }));
+  //   this.loadData(section);
+  // }
 
-  loadData(section){
-    let url = '/section/top?section_id='+section.section_id;
-    fetch(url)
-    .then(response => response.json())
-    .then(data => {
-       this.setState(prevState => ({loading:false, products:data.products, creators:data.creators}))
-     });
-  }
+  // loadData(section){
+  //   let url = '/section/top?section_id='+section.section_id;
+  //   fetch(url)
+  //   .then(response => response.json())
+  //   .then(data => {
+  //      this.setState(prevState => ({loading:false, products:data.products, creators:data.creators}))
+  //    });
+  // }
 
   onClickCategory(category)
   {
-
      let url = '/section/topcat?cat_id='+category.project_category_id;
      fetch(url)
      .then(response => response.json())
@@ -88,7 +87,11 @@ class PlingSection extends Component {
                     </div>
                     <div className="pling-section-detail-right">
                       <a href={this.state.baseurlStore+'/support'} className="btnSupporter">Become a Supporter</a>
-                      <Support baseUrlStore={this.state.baseurlStore} section={this.state.section}/>
+                        { this.state.section &&
+                      <Support baseUrlStore={this.state.baseurlStore} section={this.state.section}
+                              supporters = {this.state.supporters}
+                        />
+                      }
                     </div>
                   </div>
 

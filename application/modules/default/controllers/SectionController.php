@@ -49,8 +49,16 @@ class SectionController extends Local_Controller_Action_DomainSwitch
             $section = $model->fetchSection($section_id);
             $this->view->section = $section;
             $this->view->section_id = $section_id; 
+
+            $supporters = $info->getNewActiveSupportersForSection($section_id,1000);
+        }else{
+            $supporters = $info->getNewActiveSupportersForSectionAll(1000);
+        }
+        foreach ($supporters as &$p) {
+          $p['profile_image_url'] = $helperImage->Image($p['profile_image_url'], array('width' => 100, 'height' => 100));                  
         }
         
+        $this->view->supporters = $supporters;
         $this->view->products = $products;
         $this->view->creators = $creators;
     }

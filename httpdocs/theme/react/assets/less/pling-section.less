@@ -72,6 +72,99 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
           white-space: unset;
           width: 100%;
         }
+
+        .support-container{
+              border-color: rgb(229, 227, 221);
+              border-style: solid;
+              border-width: 1px;
+              border-radius: 4px;
+              box-shadow: none;
+              background-color: rgb(255, 255, 255);
+              overflow: hidden;
+              font-size: small;
+              margin-top: 10px;
+              .tiers{
+                box-sizing: border-box;
+                display: block;
+                transition: all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
+                padding: 1rem;
+                margin: 0rem;
+                border-bottom: 1px solid rgb(229, 227, 221);
+                -moz-box-align: center;
+                align-items: center;
+                place-content: flex-start space-between;
+                box-sizing: border-box;
+                display: flex;
+                flex-flow: row nowrap;
+                -moz-box-pack: justify;
+                transition: all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
+
+                h5{
+                    color: rgb(36, 30, 18);
+                    font-family: aktiv-grotesk, sans-serif;
+                    font-weight: 700 !important;
+                    margin: 0px;
+                    position: relative;
+                    text-transform: uppercase;
+                    transition: all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
+                    font-size: 0.875rem !important;
+                    line-height: 1.5 !important;
+                }
+              }
+            .tier-container{
+              box-sizing: border-box;
+            transition: all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
+            padding: 1rem;
+            margin: 0rem;
+            border-bottom: 1px solid rgb(229, 227, 221);
+              span{
+                display: inline-block;
+              }
+              ul{
+                list-style-type: none;
+                padding:0px;
+                display: inline-block;
+                li{
+                  float: left;
+                  margin:2px;
+                  img{
+                    width: 25px;
+                    height:25px;
+                  }
+                }
+              }
+            .join{
+              display: flex;
+              justify-content: center;
+              input.free-amount{
+                opacity: .95;
+                  margin-top: -8px;
+                  color: #000;
+                  font-size: 18px;
+                  width: 50%;
+                  margin: 0;
+                      margin-top: 0px;
+                  margin-top: 0px;
+                  margin-top: 0;
+                  border: 0;
+                      border-bottom-color: currentcolor;
+                      border-bottom-style: none;
+                      border-bottom-width: 0px;
+                  border-bottom-color: currentcolor;
+                  border-bottom-style: none;
+                  border-bottom-width: 0px;
+                  border-bottom: 1px solid #d0d0d0;
+                  padding: 0;
+                  box-shadow: none;
+                  background: none;
+              }
+              #free-amount-link{
+                    line-height: 40px;
+              }
+            }
+
+        }
+          }
     }
 
     .pling-section-detail-middle

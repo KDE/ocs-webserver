@@ -41,6 +41,7 @@ foreach ($results as $value) {
 
 $products = $this->products;
 $creators = $this->creators;
+$supporters = $this->supporters;
 
 $response = array(
 		'sections' => $sections,
@@ -48,6 +49,7 @@ $response = array(
 		'baseurlStore' => $baseurlStore,
 		'products' => $products,
 		'creators' => $creators,
+		'supporters' => $supporters,
 		'section' => ($this->section?$this->section:null),
 		'section_id' => ($this->section_id?$this->section_id:null),
     );
