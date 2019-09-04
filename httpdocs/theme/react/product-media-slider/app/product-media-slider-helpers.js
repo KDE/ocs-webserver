@@ -14,7 +14,6 @@ export function GenerateGalleryArray(product){
         window.filesJson.forEach(function(f,index){
             if (f.active === "1"){
                 let addFileToGallery = false;
-                console.log('add file to gallery?');
                 if (f.type.indexOf('video') > -1 || 
                     f.type.indexOf('audio') > -1 || 
                     f.type.indexOf('epub') > -1){
@@ -22,8 +21,6 @@ export function GenerateGalleryArray(product){
                 }
 
                 if (f.type.indexOf("image") > -1 && noGallery === true && noLogo === true) addFileToGallery = true;
-
-                console.log(addFileToGallery);
 
                 if (addFileToGallery === true){
                     let type;
