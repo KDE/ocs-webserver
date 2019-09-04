@@ -174,7 +174,7 @@ class Default_Form_GallerySubForm extends Zend_Form_SubForm
                              ->setAttrib('class', 'gallery-picture')
                              ->setAttrib('onchange', 'ProductGallery.previewImage(this);')
                              ->addValidator('Count', true, 5)
-                             ->setMaxFileSize('27262976')
+                             ->setMaxFileSize('29360128') //This setting affects the entire form, so here we also need to add the size of the logo.
                              ->addValidator('Size', true, array('max' => '5242880')) //max size of single uploaded file
                              ->addValidator('FilesSize', true, array('max' => '27262976')) //max size of all uploaded files
                              ->addValidator('Extension', true, $imageTable->getAllowedFileExtension())
