@@ -513,6 +513,7 @@ $this->inlineScript()->appendScript('
                 onStepChanging: function (event, currentIndex, newIndex) {
                     // Allways allow previous action even if the current form is not valid!
                     if (currentIndex > newIndex) {
+                        formElement.find(".body:eq(" + newIndex + ") .bg-danger").removeClass("bg-danger");
                         return true;
                     }
                     // Needed in some cases if the user went back (clean up)
@@ -520,6 +521,7 @@ $this->inlineScript()->appendScript('
                         // To remove error styles
                         formElement.find(".body:eq(" + newIndex + ") label.error").remove();
                         formElement.find(".body:eq(" + newIndex + ") .error").removeClass("error");
+                        formElement.find(".body:eq(" + newIndex + ") .bg-danger").removeClass("bg-danger");
                     }
 
                     if (currentIndex == 0) {
@@ -2106,6 +2108,7 @@ $this->inlineScript()->appendScript('
                       reader.readAsDataURL(file);
                       reader.onload = function (_image) {
 
+                          $('#gallery-error').parent().parent().find('.bg-danger').removeClass('bg-danger');
                           $('#gallery-error').remove();
 
                           $('.product-image').last().append('<div class="absolute icon-check"></div>' +
