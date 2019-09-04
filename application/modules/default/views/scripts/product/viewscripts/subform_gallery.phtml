@@ -19,13 +19,17 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+$css_error = "";
+if ($this->element->getMessages()) {
+    $css_error = " bg-danger";
+}
 ?>
 <div class="form-group">
-    <div class="col-sm-12 margin-top-15">
+    <div class="col-sm-12 margin-top-15<?=$css_error?>">
         <div class="small grey bold-font pull-left margin-right-5">*</div>
         <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">Gallery Pictures (5MB, max. 5 pictures)</label>
     </div>
-    <div class="col-sm-12">
+    <div class="col-sm-12<?=$css_error?>">
         <?php
         echo $this->content;
         ?>
