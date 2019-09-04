@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -44,7 +45,7 @@ class Default_Form_Decorator_GalleryError extends Zend_Form_Decorator_Abstract
 //        return $content . '<div id="'.$element->getName().'-error" class="clear error">' . $view->formErrors($this->getFlattenedMessages($errors)) . '</div>';
         $errorHtml = '';
         foreach ($this->getFlattenedMessages($errors) as $currentError) {
-            $errorHtml .= '<label id="'.$element->getName().'-error" class="clear error" for="'.$element->getName().'" style="width:100%">' . $currentError . '</label>';
+            $errorHtml .= '<label id="' . $element->getName() . '-error" class="clear error" for="' . $element->getName() . '" style="width:100%">' . $currentError . '</label>';
         }
 
         return $content . $errorHtml;
@@ -63,6 +64,7 @@ class Default_Form_Decorator_GalleryError extends Zend_Form_Decorator_Abstract
                 }
             }
         }
+
         return $arr;
     }
 
