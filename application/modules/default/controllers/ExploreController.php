@@ -207,8 +207,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             }
         }
         
-        Zend_Registry::get('logger')->err(__METHOD__ . ' - browseListType : ' . $browseListType);
-        
+
 
         
         if($index)
@@ -284,13 +283,11 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $this->_helper->viewRenderer('index-react');
             $this->view->pageLimit = $pageLimit;
             
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - Show Page : /explore/index-react');
         } else {
             $pageLimit = 10;
             $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);
             $this->view->pageLimit = $pageLimit;
             
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - Show Page : /explore/index');
         }
         if($storeConfig) {
             $this->view->storeabout = $this->getStoreAbout($storeConfig->store_id);
