@@ -26,6 +26,7 @@ class Default_Model_Ocs_Ldap
 {
     const JPEG_PHOTO = 'jpegPhoto';
     const LDAP_SUCCESS = '(Success)';
+    const USER_PASSWORD = 'userPassword';
 
     /** @var string */
     protected $baseDnUser;
@@ -88,6 +89,7 @@ class Default_Model_Ocs_Ldap
      * @param array  $entry
      * @param string $ouName
      * @return string return DN for the new org unit
+     * @throws Zend_Exception
      */
     public function addOrgUnit(array $entry, $ouName)
     {
@@ -102,7 +104,7 @@ class Default_Model_Ocs_Ldap
     public function addEntry(array $entry, $dn)
     {
         $this->getConnectionUser()->add($dn, $entry);
-        $this->messages[] = $this->getConnectionUser()->getLastError();
+        $this->messages[] = __METHOD__ . ' = ' . $this->getConnectionUser()->getLastError();
     }
 
     /**
@@ -300,14 +302,14 @@ class Default_Model_Ocs_Ldap
 
             return false;
         }
-        Zend_Ldap_Attribute::removeFromAttribute($entry, 'userPassword',
-            Zend_Ldap_Attribute::getAttribute($entry, 'userPassword'));
+        Zend_Ldap_Attribute::removeFromAttribute($entry, self::USER_PASSWORD,
+            Zend_Ldap_Attribute::getAttribute($entry, self::USER_PASSWORD));
         if (isset($password)) {
             $hash = Local_Auth_Adapter_Ocs::getEncryptedLdapPass($password);
         } else {
             $hash = '{MD5}' . base64_encode(pack("H*", $member_data['password']));
         }
-        Zend_Ldap_Attribute::setAttribute($entry, 'userPassword', $hash);
+        Zend_Ldap_Attribute::setAttribute($entry, self::USER_PASSWORD, $hash);
 
         $connection->update($entry['dn'], $entry);
         $connection->getLastError($this->errCode, $this->messages);
@@ -361,7 +363,7 @@ class Default_Model_Ocs_Ldap
     private function createEntryForUser(array $member)
     {
         $username = $this->lowerString($member['username']);
-        $password = '{MD5}' . base64_encode(pack("H*", $member['password']));
+        $password = $this->createPasswordFromHash($member['password']);
         $mail_address = $this->lowerString($member['email_address']);
         $jpegPhoto = $this->createJpegPhoto($member['member_id'], $member['profile_image_url']);
 
@@ -371,7 +373,7 @@ class Default_Model_Ocs_Ldap
         Zend_Ldap_Attribute::setAttribute($entry, 'objectClass', 'extensibleObject', true);
         Zend_Ldap_Attribute::setAttribute($entry, 'uid', $username);
         Zend_Ldap_Attribute::setAttribute($entry, 'uid', $mail_address, true);
-        Zend_Ldap_Attribute::setAttribute($entry, 'userPassword', $password);
+        Zend_Ldap_Attribute::setAttribute($entry, self::USER_PASSWORD, $password);
         Zend_Ldap_Attribute::setAttribute($entry, 'cn', $username);
         Zend_Ldap_Attribute::setAttribute($entry, 'email', $member['email_address']);
         Zend_Ldap_Attribute::setAttribute($entry, 'uidNumber', $member['member_id']);
@@ -503,7 +505,7 @@ class Default_Model_Ocs_Ldap
     {
         $dn = $entry['dn'];
         $this->getConnectionUser()->update($dn, $entry);
-        $this->messages[] = $this->getConnectionUser()->getLastError();
+        $this->messages[] = __METHOD__ . ' = ' . $this->getConnectionUser()->getLastError();
     }
 
     /**
@@ -865,6 +867,17 @@ class Default_Model_Ocs_Ldap
     {
         $this->getConnectionUser()->save($dn, $entry);
         $this->messages[] = $this->getConnectionUser()->getLastError();
+    }
+
+    /**
+     * @param string $password_hash
+     * @return string
+     */
+    public function createPasswordFromHash($password_hash)
+    {
+        $password = '{MD5}' . base64_encode(pack("H*", $password_hash));
+
+        return $password;
     }
 
 }
