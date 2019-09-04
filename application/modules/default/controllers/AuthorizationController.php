@@ -778,7 +778,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         }
         try {
             $ldap = new Default_Model_Ocs_Ldap();
-            $ldap->createUserFromArray($record->toArray());
+            $ldap->addUserFromArray($record->toArray());
             Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL . " - ",
                     $ldap->getMessages()));
         } catch (Exception $e) {

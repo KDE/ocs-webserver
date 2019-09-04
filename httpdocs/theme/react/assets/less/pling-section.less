@@ -3,21 +3,272 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
 {
   width: 100%;
   height: 100%;
-  text-align: center;
+  a{
+    cursor: pointer;
+  }
+  h1{
+    text-align: center;
+  }
+  h2{
+    text-decoration: underline;
+  }
   .pling-section-tabs{
     width: 800px;
     display: block;
     margin: 0 auto;
   }
-  ul.pling-section-detail-ul{
-    list-style-type: none;
-    width: 1000px;
+  .pling-section-detail
+  {
+    display: flex;
+    width: 1200px;
     margin: 0 auto;
-    li{
-      float: left;      
-      border: 1px solid #ccc;
-      margin: 5px;
-      padding: 5px;
+    flex-flow: row wrap;
+
+
+    .pling-section-detail-left
+    {
+
+          width: 200px;
+          text-align: right;
+          ul.pling-section-detail-ul{
+            list-style-type: none;
+            padding: 0px;
+            li{
+
+              margin: 5px;
+
+            }
+          }
+
     }
+    .pling-section-detail-right
+    {
+        width: 200px;
+        margin: 5px;
+        .btnSupporter{
+          -moz-box-align: center;
+          align-items: center;
+          backface-visibility: hidden;
+          background-color: #286090;
+          border-radius: 9999px;
+          border: medium none;
+          box-sizing: border-box;
+          color: rgb(255, 255, 255) !important;
+          cursor: pointer;
+          display: inline-flex;
+          font-size: 1.4rem !important;
+          font-weight: 800;
+          height: unset;
+          -moz-box-pack: center;
+          justify-content: center;
+          padding: 0.875rem 1.5rem;
+          position: relative;
+          pointer-events: unset;
+          text-align: center;
+          text-decoration: none;
+          text-transform: none;
+          transition: all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
+          -moz-user-select: none;
+          white-space: unset;
+          width: 100%;
+        }
+    }
+
+    .pling-section-detail-middle
+    {
+        flex: 2 0px;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: center;
+          .panelContainer{
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                  background-image: url(../img/home/back3.jpg);
+                  padding: 8px;
+                  margin: 0px 5px 5px 0;
+                  width:320px;
+                  div.title{
+                    color: #888888;
+                    font-size:11pt;
+                    font-weight: bold;
+                    border-bottom: 1px solid #ccc;
+                    height: 20px;
+                    padding-left: 5px;
+                    margin-bottom: 10px;
+
+                    color: #888888;
+                    font-size: 9pt;
+
+                  }
+
+                  ul, ol {
+                    list-style: none;
+                    padding-left: 5px;
+                    li {
+                      padding: 5px 0px;
+                      .creatorrow{
+                        font-size: small;
+                        figure img {
+                          width: 100px;
+                          height: 100px;
+                          border: 1px solid #dbdbdb;
+                          -webkit-border-radius: 999px;
+                          -moz-border-radius: 999px;
+                          border-radius: 999px;
+                          -webkit-background-clip: padding-box;
+                          -moz-background-clip: padding;
+                          background-clip: padding-box;
+                        }
+
+                        .userinfo{
+                          .userinfo-title{
+                              font-weight: bold;
+                          }
+                          ul.userinfo-detail{
+                            li{
+                              padding:1px 2px;
+                              border: 0px;
+                            }
+                          }
+                        }
+                      }
+                      .productrow
+                      {
+                         padding-bottom: 5px;
+                         padding-top: 5px;
+                         font-size: small;
+
+                         .rating
+                          {
+                                width: 60px;
+                          }
+                          .time
+                          {
+                                font-size: smaller;
+                          }
+                        .cntComments
+                           {
+                              font-size: smaller;
+                              display: block;
+                              padding-top: 5px;
+
+                          }
+                          .defaultProjectAvatar{
+                            width: 50px;
+                            height: 50px;
+                            color: #3B658A;
+                            line-height: 50px;
+                            text-align: center;
+                            background-color: #e8eaf6;
+                          }
+                          .productimg
+                              {
+                                  width:50px;
+                                  height:50px;
+                              }
+                          .product-user{
+                            width: 42px;
+                            height: 42px;
+                            border-radius: 100%;
+                          }
+                          .commenttext{
+                            padding-left: 20px;
+
+                          }
+                          .product-info {
+                              span {
+                                display: block;
+                                float: left;
+                                width: 100%;
+                                line-height: 14px;
+                                height: auto;
+
+                                &.product-info-title {
+                                  color: #444444;
+                                  font-size: 10pt;
+                                  font-weight: bold;
+                                  display: block;
+                                }
+                                &.product-info-date{
+                                  padding-top: 10px;
+                                }
+
+
+                                &.product-info-user {
+                                  color: #666;
+                                }
+                              }
+                            }
+                          .score-info {
+                            text-align: center;
+                            width: 80%;
+                            .score-number {
+                              width: 100%;
+                              text-align: center;
+                              margin-bottom: 0px;
+                              font-size: 8pt;
+                            }
+
+                            .score-bar-container {
+                              width: 100%;
+                              height: 10px;
+                              background: #ccc;
+                              margin-bottom: 5px;
+
+                              .score-bar {
+                                height: 9px;
+                                background-color: #30c830;
+                                border-bottom: 1px solid darken( #30c830,5%);
+                              }
+                            }
+                          }
+                      }
+
+                      .title, .info-row {
+                        display: block;
+                        width: 100%;
+                        color: #777777;
+                      }
+
+                      .title {
+                        color: #444444;
+                        font-size: 10pt;
+                        font-weight: bold;
+                      }
+
+                      .content {
+                        font-size: 13px;
+                        line-height: 1;
+                      }
+
+                      .info-row {
+                        /*overflow: auto;
+                        */
+
+                        span {
+                          /*
+                          float: left;
+                          display: inline-block;
+                            font-size: 12px;
+                          */
+
+                          &.comment-counter {
+                            float: right;
+                          }
+                        }
+                      }
+                    }
+
+                    li + li {
+                      border-top:1px solid #ccc;
+                    }
+                  }
+
+              }
+    }
+
+
+
   }
+
 }

@@ -57,6 +57,8 @@ class Default_Model_Section
             SELECT *
             FROM section
             WHERE is_active = 1
+            and hide = 0
+            ORDER BY order
         ";
         $resultSet = $this->getAdapter()->fetchAll($sql);
 
@@ -74,7 +76,7 @@ class Default_Model_Section
             ,pc.title
             FROM section s
             JOIN section_category c on s.section_id = c.section_id
-            join project_category pc on c.project_category_id = pc.project_category_id and pc.is_deleted = 0 and pc.is_active = 1
+            join project_category pc on c.project_category_id = pc.project_category_id and pc.is_deleted = 0 and pc.is_active = 1 and pc.rgt=pc.lft+1
             WHERE s.is_active = 1
             order by s.name , pc.title
         ";
@@ -82,7 +84,44 @@ class Default_Model_Section
         return $resultSet;   
     }
 
-    public function fetchTopProductsPerSection($section_id)
+    public function fetchTopProductsPerSection($section_id=null)
+    {
+        if($section_id)
+        {
+            $sqlSection = " and s.section_id = ".$section_id;
+        }else
+        {
+            $sqlSection = " ";
+        }
+        $sql = "
+            select 
+            p.project_id,
+            p.member_id,
+            p.project_category_id,
+            p.title,
+            p.description,
+            p.created_at,
+            p.changed_at,
+            p.image_small,
+            p.username,
+            p.profile_image_url,
+            p.cat_title,
+            p.laplace_score,
+            m.probably_payout_amount
+            from stat_projects p,member_dl_plings m, section s, section_category c
+            where p.project_id = m.project_id and s.section_id = c.section_id and c.project_category_id = p.project_category_id
+            ".$sqlSection."
+            and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 2 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+            and m.is_member_pling_excluded=0
+            order by probably_payout_amount desc
+            limit 20
+        ";
+       
+        $resultSet = $this->getAdapter()->fetchAll($sql);
+        return $resultSet;    
+    }
+
+    public function fetchTopProductsPerCategory($cat_id)
     {
         $sql = "select 
                 p.project_id,
@@ -95,13 +134,69 @@ class Default_Model_Section
                 p.image_small,
                 p.username,
                 p.profile_image_url,
-                p.cat_title
-                from stat_projects p, section s, section_category c
-                where s.section_id = c.section_id and c.project_category_id = p.project_category_id
-                and s.section_id =:section_id
+                p.cat_title,
+                p.laplace_score
+                from stat_projects p
+                where p.project_category_id = :cat_id                
                 order by p.laplace_score desc 
                 limit 20";
-        $resultSet = $this->getAdapter()->fetchAll($sql,array('section_id' => $section_id));
+        $resultSet = $this->getAdapter()->fetchAll($sql, array("cat_id"=>$cat_id));
+        return $resultSet;    
+    }
+
+    public function fetchTopCreatorPerSection($section_id=null)
+    {
+        if($section_id)
+        {
+            $sqlSection = " and s.section_id = ".$section_id;
+        }else
+        {
+            $sqlSection = " ";
+        }
+        $sql = "
+            select                 
+                p.username,
+                p.profile_image_url,
+                p.member_id,
+                sum(m.probably_payout_amount) probably_payout_amount
+                from stat_projects p,member_dl_plings m, section s, section_category c
+                where p.project_id = m.project_id and s.section_id = c.section_id and c.project_category_id = p.project_category_id 
+                ".$sqlSection."   
+                and m.yearmonth =  DATE_FORMAT(CURRENT_DATE() - INTERVAL 2 MONTH, '%Y%m') and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+                and m.is_member_pling_excluded=0
+                group by p.username,p.profile_image_url,p.member_id
+                order by probably_payout_amount desc
+                limit 20
+        ";
+        /*$sql = "select 
+                distinct 
+                p.username,
+                p.profile_image_url,
+                p.member_id,
+                m.score
+                from stat_projects p, section s, section_category c,member_score m
+                where s.section_id = c.section_id and c.project_category_id = p.project_category_id and p.member_id = m.member_id
+                ".$sqlSection."      
+                order by m.score desc 
+                limit 20";*/
+        $resultSet = $this->getAdapter()->fetchAll($sql);
+        return $resultSet;    
+    }
+     public function fetchTopCreatorPerCategory($cat_id)
+    {
+        
+        $sql = "select 
+                distinct 
+                p.username,
+                p.profile_image_url,
+                p.member_id,
+                m.score
+                from stat_projects p, member_score m
+                where p.member_id = m.member_id 
+                and p.project_category_id = :cat_id
+                order by m.score desc 
+                limit 20";
+        $resultSet = $this->getAdapter()->fetchAll($sql,array("cat_id"=>$cat_id));
         return $resultSet;    
     }
 
@@ -338,7 +433,7 @@ class Default_Model_Section
         $sql = "
             SELECT *
             FROM section
-            WHERE is_active = 1
+            WHERE is_active = 1 and section_id = :section_id
         ";
         $resultSet = $this->getAdapter()->fetchRow($sql, array('section_id' => $section_id));
 

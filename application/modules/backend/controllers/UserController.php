@@ -218,7 +218,7 @@ class Backend_UserController extends Local_Controller_Action_Backend
             Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $modelOpenCode->getMessages()));
 
             $modelIdent = new Default_Model_Ocs_Ldap();
-            $modelIdent->createUserFromArray($record->toArray(), true);
+            $modelIdent->addUserFromArray($record->toArray(), true);
             Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $modelIdent->getMessages()));
 
             $modelId = new Default_Model_Ocs_OAuth();
