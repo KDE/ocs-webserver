@@ -13,12 +13,17 @@ export function GenerateGalleryArray(product){
     if (window.filesJson) {
         window.filesJson.forEach(function(f,index){
             if (f.active === "1"){
+                let addFileToGallery = false;
                 if (f.type.indexOf('video') > -1 || 
                     f.type.indexOf('audio') > -1 || 
                     f.type.indexOf('epub') > -1 || 
-                    f.type.indexOf("image") > -1 && noGallery === true && noLogo === true /*||
-                    f.type.indexOf('zip') > -1 || f.type.indexOf('x-rar') > -1*/){
-                    
+                    f.type.indexOf("image") > -1 && noGallery === true && noLogo === true){
+                    addFileToGallery = true;
+                }
+
+                if (f.type.indexOf("image") > -1 && noGallery === true && noLogo === true) addFileToGallery = true;
+
+                if (addFileToGallery === true){
                     let type;
                     if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 ) type = f.type.split('/')[0]
                     else if (f.type.indexOf('epub') > -1 ) type = "book";
@@ -49,7 +54,7 @@ export function GenerateGalleryArray(product){
                     }
                     
                     galleryArray = [gItem, ... galleryArray] 
-                }
+                }    
             }
         })
     }
