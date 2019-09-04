@@ -127,7 +127,7 @@ class Default_Model_StatDownload
     public function getUserSectionsForMonth($member_id, $yearmonth)
     {
         $sql = "
-                SELECT yearmonth, section_id, section_name, section_payout_factor, COUNT(project_id) AS count_projects, SUM(num_downloads) AS num_downloads, SUM(probably_payout_amount) AS sum_probably_payout_amount, SUM(real_payout_amount) AS sum_real_payout_amount, MAX(amount) AS payout_amount, MAX(STATUS) AS payout_status, MAX(payment_transaction_id) AS payout_payment_transaction_id, MAX(paypal_mail) AS paypal_mail
+                SELECT yearmonth, section_id, section_name, section_order, section_payout_factor, COUNT(project_id) AS count_projects, SUM(num_downloads) AS num_downloads, SUM(probably_payout_amount) AS sum_probably_payout_amount, SUM(real_payout_amount) AS sum_real_payout_amount, MAX(amount) AS payout_amount, MAX(STATUS) AS payout_status, MAX(payment_transaction_id) AS payout_payment_transaction_id, MAX(paypal_mail) AS paypal_mail
                 FROM (
                     SELECT 
                         `member_dl_plings`.*,
@@ -145,6 +145,7 @@ class Default_Model_StatDownload
                         (SELECT u.num_downloads FROM member_dl_plings_nouk u WHERE u.member_id = `member_dl_plings`.`member_id` and u.project_id = `member_dl_plings`.`project_id` AND u.yearmonth = `member_dl_plings`.yearmonth) AS num_downloads_nouk,
                         (SELECT u.probably_payout_amount FROM member_dl_plings_nouk u WHERE u.member_id = `member_dl_plings`.`member_id` and u.project_id = `member_dl_plings`.`project_id` AND u.yearmonth = `member_dl_plings`.yearmonth) AS probably_payout_amount_nouk
                         ,s.name AS section_name
+                        ,s.`order` AS section_order
                         , case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE probably_payout_amount END AS real_payout_amount
 
                     FROM
@@ -163,7 +164,8 @@ class Default_Model_StatDownload
                         `member_dl_plings`.`member_id` = :member_id 
                         AND `member_dl_plings`.`yearmonth` = :yearmonth
                 ) A
-                GROUP BY yearmonth, section_id, section_name, section_payout_factor                 
+                GROUP BY yearmonth, section_id, section_name, section_payout_factor  
+                ORDER BY section_order 
             ";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'yearmonth' => $yearmonth));
 
