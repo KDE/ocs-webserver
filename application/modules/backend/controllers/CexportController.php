@@ -151,7 +151,7 @@ class Backend_CexportController extends Local_Controller_Action_CliAbstract
     {
         try {
             $modelOcsIdent = new Default_Model_Ocs_Ldap();
-            $modelOcsIdent->createUserFromArray($member);
+            $modelOcsIdent->addUserFromArray($member);
         } catch (Zend_Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }

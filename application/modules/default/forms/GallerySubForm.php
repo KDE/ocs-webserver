@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -95,10 +96,8 @@ class Default_Form_GallerySubForm extends Zend_Form_SubForm
      */
     public function init()
     {
-        $this->addPrefixPath('Default_Form_Decorator', APPLICATION_PATH . '/modules/default/forms/decorators/',
-            Zend_Form::DECORATOR);
-        $this->addElementPrefixPath('Default_Form_Decorator', APPLICATION_PATH . '/modules/default/forms/decorators/',
-            Zend_Form::DECORATOR);
+        $this->addPrefixPath('Default_Form_Decorator', APPLICATION_PATH . '/modules/default/forms/decorators/',Zend_Form::DECORATOR);
+        $this->addElementPrefixPath('Default_Form_Decorator', APPLICATION_PATH . '/modules/default/forms/decorators/',Zend_Form::DECORATOR);
 
         //General setups
         $this->setDisableLoadDefaultDecorators(true);
@@ -110,42 +109,42 @@ class Default_Form_GallerySubForm extends Zend_Form_SubForm
                 array('HtmlTag', array('tag' => 'div', 'class' => 'field relative')),
                 'Label'
             ))
-            ->setDecorators(
-                array(
-                    'FormElements',
-                    'Gallery',
-                    'GalleryError',
-                    array(
-                        'ViewScript',
-                        array(
-                            'viewScript' => 'product/viewscripts/subform_gallery.phtml',
-                            'placement' => false
-                        )
-                    )
-                ))
-            ->setElementsBelongTo('gallery')
-            ->setIsArray(false)
-            ->setElementsBelongTo(null);
+             ->setDecorators(
+                 array(
+                     'FormElements',
+                     'Gallery',
+                     'GalleryError',
+                     array(
+                         'ViewScript',
+                         array(
+                             'viewScript' => 'product/viewscripts/subform_gallery.phtml',
+                             'placement'  => false
+                         )
+                     )
+                 ))
+             ->setElementsBelongTo('gallery')
+             ->setIsArray(false)
+             ->setElementsBelongTo(null);
 
         //SubForm for already uploaded - online - pictures
         $subFormOnline = new Zend_Form_SubForm();
         $subFormOnline->setDisableLoadDefaultDecorators(true)
-            ->setDecorators(array(
-                'FormElements'
-            ));
+                      ->setDecorators(array(
+                          'FormElements'
+                      ));
 
         $i = 0;
         foreach ($this->onlineGalleryPictureSources as $onlineGalleryImageSrc) {
 
             $onlineGalleryPicture = $this->createElement('hidden', '' . $i,
                 array('id' => 'gallery_picture_online_' . $i))
-                ->setDisableLoadDefaultDecorators(true)
-                ->setValue($onlineGalleryImageSrc)
-                ->setDecorators(
-                    array(
-                        'ViewHelper',
-                        array('GalleryPicture', array('type' => 0))
-                    ));
+                                         ->setDisableLoadDefaultDecorators(true)
+                                         ->setValue($onlineGalleryImageSrc)
+                                         ->setDecorators(
+                                             array(
+                                                 'ViewHelper',
+                                                 array('GalleryPicture', array('type' => 0))
+                                             ));
 
             $subFormOnline->addElement($onlineGalleryPicture);
             $i++;
@@ -155,48 +154,44 @@ class Default_Form_GallerySubForm extends Zend_Form_SubForm
         //Sub-Form for pics that should be uploaded
         $subFormUpload = new Zend_Form_SubForm();
         $subFormUpload->setDisableLoadDefaultDecorators(true)
-            ->setDecorators(array(
-                'FormElements'
-            ));
+                      ->setDecorators(array(
+                          'FormElements'
+                      ));
 
 
         $imageTable = new Default_Model_DbTable_Image();
         /** @var Zend_Form_Element_File $uploadGalleryPicture */
         $uploadGalleryPicture = $subFormUpload->createElement('file', 'upload_picture');
-        $uploadGalleryPicture->addPrefixPath('Local_File_Transfer_Adapter', 'Local/File/Transfer/Adapter',
-            Zend_Form_Element_File::TRANSFER_ADAPTER);
+        $uploadGalleryPicture->addPrefixPath('Local_File_Transfer_Adapter', 'Local/File/Transfer/Adapter',Zend_Form_Element_File::TRANSFER_ADAPTER);
         $uploadGalleryPicture->setTransferAdapter('HttpMediaType');
         $uploadGalleryPicture->setDisableLoadDefaultDecorators(true)
-            ->setRequired(false)
-            ->setDecorators(
-                array(
-                    array('File' => new Local_Form_Decorator_File()),
-                    array('GalleryPicture', array('type' => 1))
-                ))
-            ->setAttrib('class', 'gallery-picture')
-            ->setAttrib('onchange', 'ProductGallery.previewImage(this);')
-            ->addValidator('Count', false, 12)
-            ->setMaxFileSize(5097152)
-            ->addValidator('Size', false, 5097152)
-            ->addValidator('FilesSize', false, 5097152)
-            ->addValidator('Extension', false, $imageTable->getAllowedFileExtension())
-//            ->addValidator('ImageSize', false,
-//                array('minwidth' => 100,
-//                    'maxwidth' => 1024,
-//                    'minheight' => 75,
-//                    'maxheight' => 768
-//                ))
-            ->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes())
-            ->setMultiFile($this->getNumberOfUploadGalleryPictures())
-            ->addFilter('Rename',
-                array('target' => IMAGES_UPLOAD_PATH . 'tmp/', 'overwrite' => true, 'randomize' => true))
-            ->setIsArray(true);
+                             ->setRequired(false)
+                             ->setDecorators(
+                                 array(
+                                     array('File' => new Local_Form_Decorator_File()),
+                                     array('GalleryPicture', array('type' => 1))
+                                 ))
+                             ->setAttrib('class', 'gallery-picture')
+                             ->setAttrib('onchange', 'ProductGallery.previewImage(this);')
+                             ->addValidator('Count', true, 5)
+                             //->setMaxFileSize('26MB')
+                             ->addValidator('Size', true, array('max' => '5MB')) //max size of single uploaded file
+                             ->addValidator('FilesSize', true, array('max' => '26MB')) //max size of all uploaded files
+                             ->addValidator('Extension', true, $imageTable->getAllowedFileExtension())
+                             ->addValidator('MimeType', true, $imageTable->getAllowedMimeTypes())
+                             ->setMultiFile($this->getNumberOfUploadGalleryPictures())
+                             ->addFilter('Rename',
+                                 array('target'    => IMAGES_UPLOAD_PATH . 'tmp/',
+                                       'overwrite' => true,
+                                       'randomize' => true
+                                 ))
+                             ->setIsArray(true);
 
         $subFormUpload->addElement($uploadGalleryPicture);
 
         //Adding Subforms to the form
         $this->addSubForm($subFormOnline, 'online_picture')
-            ->addSubForm($subFormUpload, 'upload');
+             ->addSubForm($subFormUpload, 'upload');
     }
 
     public function getNumberOfUploadGalleryPictures()
@@ -225,18 +220,20 @@ class Default_Form_GallerySubForm extends Zend_Form_SubForm
         $valid = parent::isValid($data);
         //Validates, if the number of pictures exceed the specified number
         //Minus one because one of the uploaded elements is always null       
-        
+
         $cntOnlinePicture = 0;
         foreach ($this->online_picture->getElements() as $el) {
-            if($el->getValue()) $cntOnlinePicture++;
-        }        
+            if ($el->getValue()) {
+                $cntOnlinePicture++;
+            }
+        }
         if ($cntOnlinePicture + count($this->upload->upload_picture->getValue()) > $this->getMaxGalleryPics()) {
             $this->markAsError();
             $this->addErrorMessage('projects.edit.gallery.max_number_files_exceeded');
             $valid = false;
         }
-        return $valid;
 
+        return $valid;
     }
 
 }
