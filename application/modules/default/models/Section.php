@@ -58,7 +58,7 @@ class Default_Model_Section
             FROM section
             WHERE is_active = 1
             and hide = 0
-            ORDER BY order
+            ORDER BY section.order
         ";
         $resultSet = $this->getAdapter()->fetchAll($sql);
 
