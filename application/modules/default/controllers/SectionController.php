@@ -34,24 +34,28 @@ class SectionController extends Local_Controller_Action_DomainSwitch
         foreach ($products as &$p) {
           $p['image_small'] = $helperImage->Image($p['image_small'], array('width' => 200, 'height' => 200));
           $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
+          $p['probably_payout_amount'] = number_format($p['probably_payout_amount'], 2, '.', '');
         }
 
         $creators = $model->fetchTopCreatorPerSection($section_id);
+        $info = new Default_Model_Info();
         foreach ($creators as &$p) {
           $p['profile_image_url'] = $helperImage->Image($p['profile_image_url'], array('width' => 100, 'height' => 100));
+          $p['probably_payout_amount'] = number_format($p['probably_payout_amount'], 2, '.', '');
           
         }
         if($section_id)
         {
             $section = $model->fetchSection($section_id);
             $this->view->section = $section;
-             $this->view->section_id = $section_id; 
+            $this->view->section_id = $section_id; 
         }
         
         $this->view->products = $products;
         $this->view->creators = $creators;
     }
 
+    // deprecated...
     public function topAction()
     {        
         $this->_helper->layout->disableLayout();
@@ -63,15 +67,20 @@ class SectionController extends Local_Controller_Action_DomainSwitch
         $products=$model->fetchTopProductsPerSection($section_id);
     
         foreach ($products as &$p) {
+          
           $p['image_small'] = $helperImage->Image($p['image_small'], array('width' => 200, 'height' => 200));
           $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
+            $p['probably_payout_amount'] = number_format($p['probably_payout_amount'], 2, '.', '');
         }
 
         $creators = $model->fetchTopCreatorPerSection($section_id);
+
+        $info = new Default_Model_Info();
+        
         foreach ($creators as &$p) {
           $p['profile_image_url'] = $helperImage->Image($p['profile_image_url'], array('width' => 100, 'height' => 100));
-          
-        }
+          $p['probably_payout_amount'] = number_format($p['probably_payout_amount'], 2, '.', '');
+        } 
         $this->_helper->json(array('status' => 'ok', 'products' => $products,'creators' => $creators));        
     }
 

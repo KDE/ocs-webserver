@@ -58,7 +58,7 @@ class Default_Model_Section
             FROM section
             WHERE is_active = 1
             and hide = 0
-            ORDER BY section.order
+            ORDER BY order
         ";
         $resultSet = $this->getAdapter()->fetchAll($sql);
 
@@ -93,24 +93,30 @@ class Default_Model_Section
         {
             $sqlSection = " ";
         }
-        $sql = "select 
-                p.project_id,
-                p.member_id,
-                p.project_category_id,
-                p.title,
-                p.description,
-                p.created_at,
-                p.changed_at,
-                p.image_small,
-                p.username,
-                p.profile_image_url,
-                p.cat_title,
-                p.laplace_score
-                from stat_projects p, section s, section_category c
-                where s.section_id = c.section_id and c.project_category_id = p.project_category_id
-                ".$sqlSection."
-                order by p.laplace_score desc 
-                limit 20";
+        $sql = "
+            select 
+            p.project_id,
+            p.member_id,
+            p.project_category_id,
+            p.title,
+            p.description,
+            p.created_at,
+            p.changed_at,
+            p.image_small,
+            p.username,
+            p.profile_image_url,
+            p.cat_title,
+            p.laplace_score,
+            m.probably_payout_amount
+            from stat_projects p,member_dl_plings m, section s, section_category c
+            where p.project_id = m.project_id and s.section_id = c.section_id and c.project_category_id = p.project_category_id
+            ".$sqlSection."
+            and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 2 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+            and m.is_member_pling_excluded=0
+            order by probably_payout_amount desc
+            limit 20
+        ";
+       
         $resultSet = $this->getAdapter()->fetchAll($sql);
         return $resultSet;    
     }
@@ -147,7 +153,22 @@ class Default_Model_Section
         {
             $sqlSection = " ";
         }
-        $sql = "select 
+        $sql = "
+            select                 
+                p.username,
+                p.profile_image_url,
+                p.member_id,
+                sum(m.probably_payout_amount) probably_payout_amount
+                from stat_projects p,member_dl_plings m, section s, section_category c
+                where p.project_id = m.project_id and s.section_id = c.section_id and c.project_category_id = p.project_category_id 
+                ".$sqlSection."   
+                and m.yearmonth =  DATE_FORMAT(CURRENT_DATE() - INTERVAL 2 MONTH, '%Y%m') and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+                and m.is_member_pling_excluded=0
+                group by p.username,p.profile_image_url,p.member_id
+                order by probably_payout_amount desc
+                limit 20
+        ";
+        /*$sql = "select 
                 distinct 
                 p.username,
                 p.profile_image_url,
@@ -157,7 +178,7 @@ class Default_Model_Section
                 where s.section_id = c.section_id and c.project_category_id = p.project_category_id and p.member_id = m.member_id
                 ".$sqlSection."      
                 order by m.score desc 
-                limit 20";
+                limit 20";*/
         $resultSet = $this->getAdapter()->fetchAll($sql);
         return $resultSet;    
     }

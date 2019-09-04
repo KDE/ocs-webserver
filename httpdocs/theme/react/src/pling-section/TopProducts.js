@@ -1,5 +1,6 @@
 import React from 'react';
-import Product from '../opendesktop-home/Product';
+//import Product from '../opendesktop-home/Product';
+import Product from './Product';
 class TopProducts extends React.Component {
   constructor(props){
     super(props);
@@ -28,7 +29,7 @@ class TopProducts extends React.Component {
      }
      return (
        <div className="panelContainer">
-         <div className="title">Top 20 Products: {title}</div>
+         <div className="title">Top 20 Products Last Month</div>
          {container}
        </div>
      )

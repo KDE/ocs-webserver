@@ -4,7 +4,7 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
   width: 100%;
   height: 100%;
   a{
-    cursor: pointer; 
+    cursor: pointer;
   }
   h1{
     text-align: center;
@@ -44,6 +44,34 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
     .pling-section-detail-right
     {
         width: 200px;
+        margin: 5px;
+        .btnSupporter{
+          -moz-box-align: center;
+          align-items: center;
+          backface-visibility: hidden;
+          background-color: #286090;
+          border-radius: 9999px;
+          border: medium none;
+          box-sizing: border-box;
+          color: rgb(255, 255, 255) !important;
+          cursor: pointer;
+          display: inline-flex;
+          font-size: 1.4rem !important;
+          font-weight: 800;
+          height: unset;
+          -moz-box-pack: center;
+          justify-content: center;
+          padding: 0.875rem 1.5rem;
+          position: relative;
+          pointer-events: unset;
+          text-align: center;
+          text-decoration: none;
+          text-transform: none;
+          transition: all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
+          -moz-user-select: none;
+          white-space: unset;
+          width: 100%;
+        }
     }
 
     .pling-section-detail-middle
@@ -79,6 +107,7 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
                     li {
                       padding: 5px 0px;
                       .creatorrow{
+                        font-size: small;
                         figure img {
                           width: 100px;
                           height: 100px;
@@ -89,6 +118,18 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
                           -webkit-background-clip: padding-box;
                           -moz-background-clip: padding;
                           background-clip: padding-box;
+                        }
+
+                        .userinfo{
+                          .userinfo-title{
+                              font-weight: bold;
+                          }
+                          ul.userinfo-detail{
+                            li{
+                              padding:1px 2px;
+                              border: 0px;
+                            }
+                          }
                         }
                       }
                       .productrow

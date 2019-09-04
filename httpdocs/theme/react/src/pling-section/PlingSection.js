@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import TopProducts from './TopProducts';
 import TopCreators from './TopCreators';
+import Support from './Support';
 class PlingSection extends Component {
   constructor(props){
   	super(props);
@@ -48,12 +49,13 @@ class PlingSection extends Component {
   render() {
 
     let sectioncontainer, sectiondetail;
+    //onClick={()=>this.handleClick(section)}
     if (this.state.sections){
       const s = this.state.sections.map((section,index) => (
         <li key={section.section_id}
           className={(this.state.section && section.section_id==this.state.section.section_id)?'active':''}
-          onClick={()=>this.handleClick(section)}>
-           <a>{section.name}</a>
+          >
+           <a href={"/section?id="+section.section_id}>{section.name}</a>
         </li>
       ));
      sectioncontainer =  <div className="pling-nav-tabs">
@@ -85,7 +87,8 @@ class PlingSection extends Component {
                           />
                     </div>
                     <div className="pling-section-detail-right">
-
+                      <a href={this.state.baseurlStore+'/support'} className="btnSupporter">Become a Supporter</a>
+                      <Support baseUrlStore={this.state.baseurlStore} section={this.state.section}/>
                     </div>
                   </div>
 
