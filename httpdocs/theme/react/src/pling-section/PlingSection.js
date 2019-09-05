@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import TopProducts from './TopProducts';
 import TopCreators from './TopCreators';
 import Support from './Support';
+import Supporters from './Supporters';
+import Header from './function/Header';
 class PlingSection extends Component {
   constructor(props){
   	super(props);
@@ -9,10 +11,11 @@ class PlingSection extends Component {
     //this.handleClick = this.handleClick.bind(this);
     //this.loadData = this.loadData.bind(this);
     this.onClickCategory = this.onClickCategory.bind(this);
+    this.showDetail = this.showDetail.bind(this);
   }
 
   componentDidMount() {
-
+    this.setState({showContent:'overview'});
   }
 
 
@@ -35,6 +38,9 @@ class PlingSection extends Component {
   //    });
   // }
 
+  showDetail(showContent){
+      this.setState({showContent:showContent});
+  }
   onClickCategory(category)
   {
      let url = '/section/topcat?cat_id='+category.project_category_id;
@@ -70,20 +76,33 @@ class PlingSection extends Component {
       });
     }
 
+    let detailContent;
+    if(this.state.showContent=='supporters')
+    {
+      detailContent = <Supporters baseUrlStore={this.state.baseurlStore} supporters = {this.state.supporters}/>
+    }else {
+      detailContent = (<React.Fragment>
+                  <TopProducts baseUrlStore={this.state.baseurlStore}
+                        products={this.state.products} section={this.state.section} category={this.state.category}/>
+
+                  <TopCreators creators={this.state.creators} section={this.state.section} category={this.state.category}
+                      baseUrlStore={this.state.baseurlStore}
+                      />
+                </React.Fragment>
+                )
+    }
+
     sectiondetail = <div className="pling-section-detail">
                     { this.state.section &&
                       <div className="pling-section-detail-left">
+                        <h2 className={this.state.showContent=='overview'?'focused':''}><a onClick={()=>this.showDetail('overview')}>Overview</a></h2>
+                        <h2 className={this.state.showContent=='supporters'?'focused':''}><a onClick={()=>this.showDetail('supporters')}>Supporters</a></h2>
                         <h2>Categories</h2>
                         <ul className="pling-section-detail-ul">{s}</ul>
                       </div>
                     }
                     <div className="pling-section-detail-middle">
-                      <TopProducts baseUrlStore={this.state.baseurlStore}
-                        products={this.state.products} section={this.state.section} category={this.state.category}/>
-
-                      <TopCreators creators={this.state.creators} section={this.state.section} category={this.state.category}
-                          baseUrlStore={this.state.baseurlStore}
-                          />
+                      {detailContent}
                     </div>
                     <div className="pling-section-detail-right">
                       <a href={this.state.baseurlStore+'/support'} className="btnSupporter">Become a Supporter</a>
@@ -97,7 +116,9 @@ class PlingSection extends Component {
 
     return (
       <React.Fragment>
-       <h1>Section Detail </h1>
+       <Header section={this.state.section} amount={this.state.probably_payout_amount}
+              goal = {this.state.probably_payout_goal}
+         />
        {sectioncontainer}
        {sectiondetail}
       </React.Fragment>

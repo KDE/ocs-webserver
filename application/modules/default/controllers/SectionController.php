@@ -58,9 +58,12 @@ class SectionController extends Local_Controller_Action_DomainSwitch
           $p['profile_image_url'] = $helperImage->Image($p['profile_image_url'], array('width' => 100, 'height' => 100));                  
         }
         
+        $amount = $model->fetchProbablyPayoutLastMonth($section_id);
         $this->view->supporters = $supporters;
         $this->view->products = $products;
         $this->view->creators = $creators;
+        $this->view->probably_payout_amount = number_format($amount, 2, '.', '');
+        $this->view->probably_payout_goal = round($amount+1000,-3);
     }
 
     // deprecated...

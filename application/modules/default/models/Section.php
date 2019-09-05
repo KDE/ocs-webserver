@@ -109,7 +109,8 @@ class Default_Model_Section
             p.laplace_score,
             m.probably_payout_amount
             from stat_projects p,member_dl_plings m, section s, section_category c
-            where p.project_id = m.project_id and s.section_id = c.section_id and c.project_category_id = p.project_category_id
+            where p.project_id = m.project_id and s.section_id = c.section_id and c.project_category_id = p.project_category_id 
+            and m.paypal_mail is not null and m.paypal_mail <> ''
             ".$sqlSection."
             and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 2 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
             and m.is_member_pling_excluded=0
@@ -144,6 +145,28 @@ class Default_Model_Section
         return $resultSet;    
     }
 
+    public function fetchProbablyPayoutLastMonth($section_id)
+    {
+        if($section_id)
+        {
+            $sqlSection = " and s.section_id = ".$section_id;
+        }else
+        {
+            $sqlSection = " ";
+        }
+        $sql = "select  sum(probably_payout_amount) probably_payout_amount
+            from stat_projects p,member_dl_plings m, section s, section_category c
+            where p.project_id = m.project_id and s.section_id = c.section_id and c.project_category_id = p.project_category_id
+           ".$sqlSection."
+            and m.paypal_mail is not null and m.paypal_mail <> ''
+            and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 2 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+            and m.is_member_pling_excluded=0
+            ";
+        $resultSet = $this->getAdapter()->fetchRow($sql);
+        
+        return $resultSet['probably_payout_amount'];
+
+    }
     public function fetchTopCreatorPerSection($section_id=null)
     {
         if($section_id)
@@ -161,6 +184,7 @@ class Default_Model_Section
                 sum(m.probably_payout_amount) probably_payout_amount
                 from stat_projects p,member_dl_plings m, section s, section_category c
                 where p.project_id = m.project_id and s.section_id = c.section_id and c.project_category_id = p.project_category_id 
+                and m.paypal_mail is not null and m.paypal_mail <> ''
                 ".$sqlSection."   
                 and m.yearmonth =  DATE_FORMAT(CURRENT_DATE() - INTERVAL 2 MONTH, '%Y%m') and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
                 and m.is_member_pling_excluded=0

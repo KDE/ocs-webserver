@@ -29,7 +29,7 @@ class TopCreators extends React.Component {
 
      return (
        <div className="panelContainer">
-         <div className="title">Top 20 Creators Last Month</div>
+         <div className="title">Top 20 Creators Last Month Payout</div>
          {container}
        </div>
      )

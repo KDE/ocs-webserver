@@ -14,7 +14,7 @@ class Support extends React.Component {
 
   render(){
 
-    let tiers=[0.99,2,5,10];
+    let tiers=[0.99,2,5,10,20,50];
     const container = tiers.map((t,index) => {
           let c;
           let tmp = t;
@@ -72,11 +72,9 @@ class Support extends React.Component {
              {o}
            <div className="join">
              <div>
-             $<input className="free-amount" onChange={this.onChangeFreeamount.bind(this)}></input><span>Enter a free amount</span>
+             $<input className="free-amount" onChange={this.onChangeFreeamount.bind(this)}></input><span>100 or more</span>
             </div>
-
              <a  href={url} id="free-amount-link" >Join </a>
-
            </div>
          </div>
     )
