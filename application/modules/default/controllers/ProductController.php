@@ -901,7 +901,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             }
             $form->getElement('license_tag_id')->setValue($licenseTag);
 
-            $is_original = $modelTags->isProuductOriginal($projectData->project_id);
+            $is_original = $modelTags->isProductOriginal($projectData->project_id);
             if($is_original){
                 $form->getElement('is_original')->checked= true;                
             }

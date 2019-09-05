@@ -225,11 +225,12 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
     }
 
     /**
-     * @param $members
+     * @param Zend_Db_Statement_Interface $members
      *
      * @return bool
+     * @throws Zend_Db_Statement_Exception
      */
-    private function updateMembers(array $members)
+    private function updateMembers($members)
     {
         $model_Ocs_Ldap = new Default_Model_Ocs_Ldap();
         // create an org unit for backup user data
