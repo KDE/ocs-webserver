@@ -30,7 +30,7 @@ class Default_View_Helper_IsProjectEbook extends Zend_View_Helper_Abstract
     public function isProjectEbook($project_id)
     {      
             $model = new Default_Model_Tags();
-            return $model->isProuductEbook($project_id);                
+            return $model->isProductEbook($project_id);
     }
 
 } 

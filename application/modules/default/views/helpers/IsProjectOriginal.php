@@ -30,7 +30,7 @@ class Default_View_Helper_IsProjectOriginal extends Zend_View_Helper_Abstract
     public function isProjectOriginal($project_id)
     {      
             $model = new Default_Model_Tags();
-            return $model->isProuductOriginal($project_id);                
+            return $model->isProductOriginal($project_id);
     }
 
 } 
