@@ -229,6 +229,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
      *
      * @return bool
      * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
      */
     private function updateMembers($members)
     {
@@ -267,6 +268,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
      * @param Default_Model_Ocs_Ldap $modelOcsLdap
      * @param                        $ou
      * @return string
+     * @throws Zend_Exception
      */
     private function createBackupTree(Default_Model_Ocs_Ldap $modelOcsLdap, $ou)
     {
@@ -279,8 +281,8 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
 
     /**
      * @param Default_Model_Ocs_Ldap $modelOcsLdap
-     * @param                        $member
-     * @param                        $entry_ou_dn
+     * @param array                  $member
+     * @param string                 $entry_ou_dn
      * @param array                  $ldapUser
      * @return array
      */
@@ -291,7 +293,8 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         array $ldapUser
     ) {
         // backup old entry
-        $dnBackup = $modelOcsLdap->getDnForUser($member['username'], $entry_ou_dn);
+        $cn = Zend_Ldap_Attribute::getAttribute($ldapUser, 'cn', 0);
+        $dnBackup = $modelOcsLdap->getDnForUser($cn, $entry_ou_dn, false);
         unset($ldapUser['dn']);
         $modelOcsLdap->addEntry($ldapUser, $dnBackup);
 

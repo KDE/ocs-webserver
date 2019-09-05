@@ -432,15 +432,16 @@ class Default_Model_Ocs_Ldap
     /**
      * @param string      $user_name
      * @param string|null $baseDn
-     *
+     * @param bool        $lowerCase
+
      * @return string
      */
-    public function getDnForUser($user_name, $baseDn = null)
+    public function getDnForUser($user_name, $baseDn = null, $lowerCase = true)
     {
         if (empty($baseDn)) {
             $baseDn = $this->baseDnUser;
         }
-        $username = $this->lowerString($user_name);
+        $username = $lowerCase ? $this->lowerString($user_name) : $user_name;
         $dn = "cn={$username},{$baseDn}";
 
         return $dn;
