@@ -3,7 +3,7 @@ function Header(props){
   return(
     <div className="pling-section-header">
         <div className="header-title">
-          <span>{props.section.name}</span>
+          <span>{props.section ? props.section.name:''}</span>
         </div>
         <div className="score-container">
           <div className="score-bar-container">

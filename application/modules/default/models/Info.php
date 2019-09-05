@@ -1317,7 +1317,7 @@ class Default_Model_Info
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . $section_id . '_' . md5((int)$limit);
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit);
 
         if (false !== ($newSupporters = $cache->load($cacheName))) {
             return $newSupporters;
@@ -1340,7 +1340,7 @@ class Default_Model_Info
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
-        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' => $section_id))->fetchAll();
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql)->fetchAll();
         $cache->save($result, $cacheName, array(), 300);
 
         return $result;
