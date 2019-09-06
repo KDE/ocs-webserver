@@ -173,7 +173,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
                 $ldapUserData = $modelOcsLdap->addUserFromArray($member, $force);
             } catch (Zend_Ldap_Exception $e) {
                 $this->log->info("process " . Zend_Json::encode($member));
-                $this->log->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+                $this->log->err($e->getMessage() . PHP_EOL . mb_split("\n",$e->getTraceAsString())[0]);
 
                 continue;
             }
