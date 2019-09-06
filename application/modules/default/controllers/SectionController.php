@@ -63,7 +63,7 @@ class SectionController extends Local_Controller_Action_DomainSwitch
         $this->view->products = $products;
         $this->view->creators = $creators;
         $this->view->probably_payout_amount = number_format($amount, 2, '.', '');
-        $this->view->probably_payout_goal = round($amount+1000,-3);
+        $this->view->probably_payout_goal = round($amount+500,-3);
     }
 
     // deprecated...
