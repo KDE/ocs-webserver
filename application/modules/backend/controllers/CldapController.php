@@ -336,13 +336,16 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
                                      . $member[$result[0]] . '<=>' . Zend_Ldap_Attribute::getAttribute($ldapEntry,
                             $result[1], 0));
                     if ($force) {
-                        $model_Ocs_Ldap->updateUserFromArray($member);
+                        $update = $model_Ocs_Ldap->createEntryForUser($member);
+                        $update['dn'] = $model_Ocs_Ldap->getDnForUser($member['username']);
+                        $model_Ocs_Ldap->updateLdapEntry($update);
                         $ldapUser = $this->storeBackupEntry($model_Ocs_Ldap, $member, $entry_ou_dn, $ldapEntry);
                     }
                 }
             } catch (Zend_Ldap_Exception $e) {
-                $this->log->info("process " . Zend_Json::encode($member));
-                $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+                $this->log->info($e->getMessage() . PHP_EOL . mb_split("\n",$e->getTraceAsString())[0]);
+                $this->log->info("member: " . Zend_Json::encode($member));
+                $this->log->info("ldap entry: " . print_r($update, true));
             }
             $messages = $model_Ocs_Ldap->getMessages();
             if (false == empty($messages)) {
