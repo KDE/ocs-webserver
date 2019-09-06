@@ -360,7 +360,7 @@ class Default_Model_Ocs_Ldap
      * @return array
      * @throws Zend_Exception
      */
-    private function createEntryForUser(array $member)
+    public function createEntryForUser(array $member)
     {
         $username = $this->lowerString($member['username']);
         $password = $this->createPasswordFromHash($member['password']);
