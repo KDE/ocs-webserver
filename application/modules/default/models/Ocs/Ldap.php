@@ -340,7 +340,7 @@ class Default_Model_Ocs_Ldap
             return false;
         }
         if (false === empty($entry)) {
-            $this->messages[] = "user already exists.";
+            $this->messages[] = __METHOD__ . ' = ' . "user already exists.";
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ldap entry for member does not exists. Going to create it.');
 
             return false;
@@ -575,7 +575,7 @@ class Default_Model_Ocs_Ldap
 
         if (empty($ldapUser)) {
             $connection->add($dn, $entry);
-            $this->messages[] = $connection->getLastError();
+            $this->messages[] = __METHOD__ . ' = ' . $connection->getLastError();
 
             return $entry;
         }
@@ -585,7 +585,7 @@ class Default_Model_Ocs_Ldap
         }
 
         $this->errCode = 999;
-        $this->messages[] = "user already exists.";
+        $this->messages[] = __METHOD__ . ' = ' . "user already exists.";
 
         return false;
     }
