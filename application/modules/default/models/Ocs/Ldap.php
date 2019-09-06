@@ -373,6 +373,7 @@ class Default_Model_Ocs_Ldap
         Zend_Ldap_Attribute::setAttribute($entry, 'objectClass', 'extensibleObject', true);
         Zend_Ldap_Attribute::setAttribute($entry, 'uid', $username);
         Zend_Ldap_Attribute::setAttribute($entry, 'uid', $mail_address, true);
+        Zend_Ldap_Attribute::removeDuplicatesFromAttribute($entry, 'uid');
         Zend_Ldap_Attribute::setAttribute($entry, self::USER_PASSWORD, $password);
         Zend_Ldap_Attribute::setAttribute($entry, 'cn', $username);
         Zend_Ldap_Attribute::setAttribute($entry, 'email', $member['email_address']);
