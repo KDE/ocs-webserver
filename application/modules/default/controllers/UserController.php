@@ -330,7 +330,17 @@ class UserController extends Local_Controller_Action_DomainSwitch
                     }
                 }
             }
+        }else{
+            $userinfo = "Hi, I am <b>" . $username . "</b>";
         }
+
+        $mModel = new Default_Model_Member();
+        $supportSections = $mModel->fetchSupporterSectionInfo($member_id);
+        if($supportSections && $supportSections['sections'])
+        {
+            $userinfo = $userinfo." and I support ".$supportSections['sections']." .";
+        }
+        
 
         return $userinfo;
     }
