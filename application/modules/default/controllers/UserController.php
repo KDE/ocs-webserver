@@ -341,7 +341,10 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $userinfo = $userinfo." and I support ".$supportSections['sections']." .";
         }
         
-
+         if(substr($userinfo, -strlen($userinfo)) <> ".")
+         {
+            $userinfo.=".";
+         }
         return $userinfo;
     }
 
