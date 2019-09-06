@@ -331,14 +331,19 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 }
             }
         }else{
-            $userinfo = "Hi, I am <b>" . $username . "</b>";
+            $userinfo = "Hi, I am <b>" . $username . "</b>.";
         }
 
         $mModel = new Default_Model_Member();
         $supportSections = $mModel->fetchSupporterSectionInfo($member_id);
         if($supportSections && $supportSections['sections'])
         {
-            $userinfo = $userinfo." and I also support ".$supportSections['sections'].".";
+            if ($cnt == 0) {
+                $userinfo = $userinfo." I support ".$supportSections['sections'].".";
+            }else
+            {
+                $userinfo = $userinfo." I also support ".$supportSections['sections'].".";
+            }
         }
         
          if(substr($userinfo, strlen($userinfo)-1) <> ".")
