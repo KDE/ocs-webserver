@@ -65,7 +65,7 @@ class SectionController extends Local_Controller_Action_DomainSwitch
         $this->view->creators = $creators;
         $this->view->probably_payout_amount = number_format($amount, 2, '.', '');
 //        $this->view->probably_payout_goal = round($amount+500,-2);
-        $goal = round( $amount / 500 ) * 500;
+        $goal = ceil( $amount / 500 ) * 500;
 
         $this->view->probably_payout_goal = ($goal ==0 ? 500: $goal);
         
