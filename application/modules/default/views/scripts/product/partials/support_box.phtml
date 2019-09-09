@@ -112,7 +112,7 @@ $baseurlStore = $config->baseurl_store;
             <?php
                 if($isSupporter) {
             ?>
-            <span style="padding-bottom: 10px;font-size: small;">Thank you very much for supporting <?= $section['name'] ?> <?php if($isAdmin){?><a href="<?=$baseurlStore.'/section?id='.$section['section_id']?>"> * </a><?php}?> with $<?= $support['tier'] ?> per month.</span><br><br>
+            <span style="padding-bottom: 10px;font-size: small;">Thank you very much for supporting <?= $section['name'] ?> <a href="<?=$baseurlStore.'/section?id='.$section['section_id']?>"> * </a> with $<?= $support['tier'] ?> per month.</span><br><br>
             <?php
                 }
             ?>
