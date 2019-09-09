@@ -736,7 +736,9 @@ class Default_Model_Info
             $sql .= ' 1=1)';;
         }
         
-        $sql .= ' ORDER BY (round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC, created_at DESC
+        /*$sql .= ' ORDER BY (round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC, created_at DESC
+            ';*/ 
+        $sql .= ' ORDER BY laplace_score DESC, created_at DESC
             ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
@@ -1310,6 +1312,40 @@ class Default_Model_Info
         return $result;
     }
     
+
+    public function getNewActiveSupportersForSectionAll($limit = 20)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit);
+
+        if (false !== ($newSupporters = $cache->load($cacheName))) {
+            return $newSupporters;
+        }
+        
+        $sql = '
+                SELECT  s.*,
+                s.member_id as supporter_id
+                ,s.member_id
+                ,(select username from member m where m.member_id = s.member_id) as username
+                ,(select profile_image_url from member m where m.member_id = s.member_id) as profile_image_url
+                ,MAX(s.active_time) AS active_time_max
+                ,ss.tier AS section_support_tier
+                from section_support_paypements ss
+                JOIN support s ON s.id = ss.support_id
+                WHERE ss.yearmonth = DATE_FORMAT(NOW(), "%Y%m")
+                GROUP BY s.member_id
+                order BY ss.tier DESC, active_time_max desc                                       
+        ';
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql)->fetchAll();
+        $cache->save($result, $cacheName, array(), 300);
+
+        return $result;
+    }
+
     public function getNewActiveSupportersForSection($section_id, $limit = 20)
     {
         /** @var Zend_Cache_Core $cache */

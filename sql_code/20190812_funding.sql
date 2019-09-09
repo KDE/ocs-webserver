@@ -399,7 +399,7 @@ BEGIN
 
     INSERT INTO section_funding_stats 
 
-    SELECT *, case when sum_support < sum_amount then ROUND(sum_support/sum_amount,2) ELSE 1 END AS factor 
+    SELECT *, case when sum_support < sum_amount_payout then ROUND(sum_support/sum_amount_payout,2) ELSE 1 END AS factor 
     FROM (
 
         SELECT p.yearmonth, s.section_id, s.name AS section_name
