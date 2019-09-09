@@ -1,17 +1,28 @@
 export function GenerateGalleryArray(product){
-    let galleryArray = []
-    if (window.galleryPicturesJson) window.galleryPicturesJson.forEach(function(gp,index){ galleryArray.push({url:gp,type:'image'}); });
-    else galleryArray = [{url:product.image_small,type:'image'} ];
+    let galleryArray = [];
+    let noGallery = false, noLogo = false;
+    if (window.galleryPicturesJson){
+        window.galleryPicturesJson.forEach(function(gp,index){ galleryArray.push({url:gp,type:'image'}); });
+        noGallery = true;
+    }
+    else {
+        galleryArray = [{url:product.image_small,type:'image'} ];
+        if (!product.image_small) noLogo = true;
+    }
     if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... galleryArray ];
     if (window.filesJson) {
         window.filesJson.forEach(function(f,index){
             if (f.active === "1"){
+                let addFileToGallery = false;
                 if (f.type.indexOf('video') > -1 || 
                     f.type.indexOf('audio') > -1 || 
-                    f.type.indexOf('epub') > -1 || 
-                    f.type.indexOf("image") > -1 /*||
-                    f.type.indexOf('zip') > -1 || f.type.indexOf('x-rar') > -1*/){
-                    
+                    f.type.indexOf('epub') > -1){
+                    addFileToGallery = true;
+                }
+
+                if (f.type.indexOf("image") > -1 && noGallery === true && noLogo === true) addFileToGallery = true;
+
+                if (addFileToGallery === true){
                     let type;
                     if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 ) type = f.type.split('/')[0]
                     else if (f.type.indexOf('epub') > -1 ) type = "book";
@@ -42,7 +53,7 @@ export function GenerateGalleryArray(product){
                     }
                     
                     galleryArray = [gItem, ... galleryArray] 
-                }
+                }    
             }
         })
     }
