@@ -16,20 +16,20 @@ class TopCreators extends React.Component {
        ));
       container = <ul>{creators}</ul>
      }
-     let title;
-     if(this.props.category){
-       title = this.props.category.title;
-     }else {
-       if(this.props.section){
-         title = this.props.section.name;
-       }else {
-         title = 'All';
-       }
-     }
+     let title = 'Top 20 Creators Last Month Payout';
+     // if(this.props.category){
+     //   title = title + ':' +this.props.category.title;
+     // }else {
+     //   // if(this.props.section){
+     //   //   title = this.props.section.name;
+     //   // }else {
+     //   //   title = 'All';
+     //   // }
+     // }
 
      return (
        <div className="panelContainer">
-         <div className="title">Top 20 Creators Last Month Payout</div>
+         <div className="title">{title}</div>
          {container}
        </div>
      )

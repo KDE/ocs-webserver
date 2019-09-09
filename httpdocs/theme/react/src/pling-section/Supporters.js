@@ -13,6 +13,7 @@ class Supporters extends React.Component {
             return (
               <li key={index}>
                 <a href={this.props.baseUrlStore+'/u/'+s.username}><img src={s.profile_image_url}></img></a>
+                <div className="username">{s.username}</div>
               </li>
             )
        }

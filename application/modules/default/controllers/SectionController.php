@@ -44,12 +44,13 @@ class SectionController extends Local_Controller_Action_DomainSwitch
           $p['probably_payout_amount'] = number_format($p['probably_payout_amount'], 2, '.', '');
           
         }
+
+        $section = null;        
         if($section_id)
         {
             $section = $model->fetchSection($section_id);
             $this->view->section = $section;
             $this->view->section_id = $section_id; 
-
             $supporters = $info->getNewActiveSupportersForSection($section_id,1000);
         }else{
             $supporters = $info->getNewActiveSupportersForSectionAll(1000);
@@ -63,7 +64,17 @@ class SectionController extends Local_Controller_Action_DomainSwitch
         $this->view->products = $products;
         $this->view->creators = $creators;
         $this->view->probably_payout_amount = number_format($amount, 2, '.', '');
-        $this->view->probably_payout_goal = round($amount+500,-3);
+//        $this->view->probably_payout_goal = round($amount+500,-2);
+        $goal = round( $amount / 500 ) * 500;
+
+        $this->view->probably_payout_goal = ($goal ==0 ? 500: $goal);
+        
+
+        $title = 'Section';
+        if($section){
+            $title = 'Section '.$section['name'];
+        }
+        $this->view->headTitle($title . ' - ' . $this->getHeadTitle(), 'SET');
     }
 
     // deprecated...
@@ -108,14 +119,16 @@ class SectionController extends Local_Controller_Action_DomainSwitch
         foreach ($products as &$p) {
           $p['image_small'] = $helperImage->Image($p['image_small'], array('width' => 200, 'height' => 200));
           $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
+           $p['probably_payout_amount'] = number_format($p['probably_payout_amount'], 2, '.', '');
         }
 
         $creators = $model->fetchTopCreatorPerCategory($cat_id);
         foreach ($creators as &$p) {
           $p['profile_image_url'] = $helperImage->Image($p['profile_image_url'], array('width' => 100, 'height' => 100));
+             $p['probably_payout_amount'] = number_format($p['probably_payout_amount'], 2, '.', '');
           
         }
-        $this->_helper->json(array('status' => 'ok', 'products' => $products,'creators' => $creators));        
+        $this->_helper->json(array('status' => 'ok', 'cat_id'=>$cat_id,'products' => $products,'creators' => $creators));        
     }
 
 

@@ -136,10 +136,15 @@ class Default_Model_Section
                 p.username,
                 p.profile_image_url,
                 p.cat_title,
-                p.laplace_score
-                from stat_projects p
-                where p.project_category_id = :cat_id                
-                order by p.laplace_score desc 
+                p.laplace_score,
+                m.probably_payout_amount
+                from stat_projects p,member_dl_plings m
+                where  p.project_id = m.project_id
+                     and m.paypal_mail is not null and m.paypal_mail <> ''
+                      and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 2 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+                        and m.is_member_pling_excluded=0           
+                            and p.project_category_id = :cat_id    
+                order by m.probably_payout_amount desc 
                 limit 20";
         $resultSet = $this->getAdapter()->fetchAll($sql, array("cat_id"=>$cat_id));
         return $resultSet;    
@@ -192,33 +197,26 @@ class Default_Model_Section
                 order by probably_payout_amount desc
                 limit 20
         ";
-        /*$sql = "select 
-                distinct 
-                p.username,
-                p.profile_image_url,
-                p.member_id,
-                m.score
-                from stat_projects p, section s, section_category c,member_score m
-                where s.section_id = c.section_id and c.project_category_id = p.project_category_id and p.member_id = m.member_id
-                ".$sqlSection."      
-                order by m.score desc 
-                limit 20";*/
+        
         $resultSet = $this->getAdapter()->fetchAll($sql);
         return $resultSet;    
     }
      public function fetchTopCreatorPerCategory($cat_id)
     {
         
-        $sql = "select 
-                distinct 
+        $sql = "select              
                 p.username,
                 p.profile_image_url,
                 p.member_id,
-                m.score
-                from stat_projects p, member_score m
-                where p.member_id = m.member_id 
+                sum(m.probably_payout_amount) probably_payout_amount
+                from stat_projects p, member_dl_plings m
+                where p.member_id = m.member_id and p.project_id = m.project_id
+                and m.paypal_mail is not null and m.paypal_mail <> ''
+                 and m.yearmonth =  DATE_FORMAT(CURRENT_DATE() - INTERVAL 2 MONTH, '%Y%m') and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+                and m.is_member_pling_excluded=0
                 and p.project_category_id = :cat_id
-                order by m.score desc 
+                group by p.username,p.profile_image_url,p.member_id
+                order by probably_payout_amount desc 
                 limit 20";
         $resultSet = $this->getAdapter()->fetchAll($sql,array("cat_id"=>$cat_id));
         return $resultSet;    

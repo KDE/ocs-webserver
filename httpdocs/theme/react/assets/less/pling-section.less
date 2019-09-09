@@ -52,12 +52,20 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
       list-style: none;
       padding: 0;
       &>li{
-        margin: 2px;
+        margin: 3px;
         display: inline-block;
         float: left;
         img{
           width: 100px;
           height: 100px;
+        }
+        .username{
+          background-color: #282C34;
+          color: #fff;
+          text-align: center;
+          font-size: small;
+          padding:3px;
+          max-width: 100px;
         }
       }
     }
@@ -103,8 +111,7 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
           border-radius: 9999px;
           border: medium none;
           box-sizing: border-box;
-          color: rgb(255, 255, 255) !important;
-          cursor: pointer;
+          color: rgb(255, 255, 255) !important;        
           display: inline-flex;
           font-size: 1.4rem !important;
           font-weight: 800;

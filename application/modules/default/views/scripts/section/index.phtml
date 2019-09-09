@@ -26,6 +26,7 @@ $this->headMeta()->appendProperty('og:title', 'opendesktop.org');
 $this->headMeta()->appendProperty('og:site_name','www.opendesktop.org');
 $this->headMeta()->appendProperty('og:description','A community where developers and artists share applications, themes and other content');
 $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images/system/opendesktop-logo.png');
+
 $baseurlStore = Zend_Registry::get('config')->settings->client->default->baseurl_store;
 $model = new Default_Model_Section();
 $results = $model->fetchAllSectionsAndCategories();

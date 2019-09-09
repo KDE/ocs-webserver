@@ -7,15 +7,11 @@ import Header from './function/Header';
 class PlingSection extends Component {
   constructor(props){
   	super(props);
-  	this.state ={...window.data};
+  	this.state ={...window.data,showContent:'overview'};
     //this.handleClick = this.handleClick.bind(this);
-    //this.loadData = this.loadData.bind(this);
+    this.loadData = this.loadData.bind(this);
     this.onClickCategory = this.onClickCategory.bind(this);
     this.showDetail = this.showDetail.bind(this);
-  }
-
-  componentDidMount() {
-    this.setState({showContent:'overview'});
   }
 
 
@@ -29,17 +25,23 @@ class PlingSection extends Component {
   //   this.loadData(section);
   // }
 
-  // loadData(section){
-  //   let url = '/section/top?section_id='+section.section_id;
-  //   fetch(url)
-  //   .then(response => response.json())
-  //   .then(data => {
-  //      this.setState(prevState => ({loading:false, products:data.products, creators:data.creators}))
-  //    });
-  // }
+  loadData(section){
+    let url = '/section/top?section_id='+section.section_id;
+    fetch(url)
+    .then(response => response.json())
+    .then(data => {
+       this.setState(prevState => ({loading:false, products:data.products, creators:data.creators}))
+     });
+  }
 
   showDetail(showContent){
-      this.setState({showContent:showContent});
+      this.setState(state => ({
+        showContent: showContent
+      }));
+      if(showContent=='overview'){ this.loadData(this.state.section);}
+
+      console.log("showDetail:"+showContent);
+
   }
   onClickCategory(category)
   {
@@ -47,7 +49,7 @@ class PlingSection extends Component {
      fetch(url)
      .then(response => response.json())
      .then(data => {
-        this.setState(prevState => ({loading:false, products:data.products, creators:data.creators,category:category}))
+        this.setState(prevState => ({loading:false,showContent: 'overview',products:data.products, creators:data.creators,category:category}))
       });
   }
 
@@ -71,8 +73,14 @@ class PlingSection extends Component {
     let s;
     if (this.state.details && this.state.section){
        s = this.state.details.map((detail,index) => {
-          if(detail.section_id==this.state.section.section_id)
-          return <li><a onClick={() => this.onClickCategory(detail)}>{detail.title}</a></li>
+         if(this.state.showContent =='categories') // ignore section show all categories
+         {
+           return <li><a onClick={() => this.onClickCategory(detail)}>{detail.title}</a></li>
+         }else
+         {
+            if(detail.section_id==this.state.section.section_id)
+            return <li><a onClick={() => this.onClickCategory(detail)}>{detail.title}</a></li>
+          }
       });
     }
 
@@ -97,7 +105,7 @@ class PlingSection extends Component {
                       <div className="pling-section-detail-left">
                         <h2 className={this.state.showContent=='overview'?'focused':''}><a onClick={()=>this.showDetail('overview')}>Overview</a></h2>
                         <h2 className={this.state.showContent=='supporters'?'focused':''}><a onClick={()=>this.showDetail('supporters')}>Supporters</a></h2>
-                        <h2>Categories</h2>
+                        <h2 className={this.state.showContent=='categories'?'focused':''}><a onClick={()=>this.showDetail('categories')}>Categories</a></h2>
                         <ul className="pling-section-detail-ul">{s}</ul>
                       </div>
                     }
@@ -105,7 +113,7 @@ class PlingSection extends Component {
                       {detailContent}
                     </div>
                     <div className="pling-section-detail-right">
-                      <a href={this.state.baseurlStore+'/support'} className="btnSupporter">Become a Supporter</a>
+                      <div className="btnSupporter">Become a Supporter</div>
                         { this.state.section &&
                       <Support baseUrlStore={this.state.baseurlStore} section={this.state.section}
                               supporters = {this.state.supporters}

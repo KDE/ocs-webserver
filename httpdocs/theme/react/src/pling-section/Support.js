@@ -33,8 +33,7 @@ class Support extends React.Component {
 
           return (
               <div className="tier-container">
-                <span>the following people chose ${t} tier to support this section:</span>
-                {c}
+                <span>{x.length+ ' Supporters'}</span>
               <div className="join">
               <a href={url}>Join ${t} Tier</a>
               </div>
@@ -49,8 +48,7 @@ class Support extends React.Component {
     });
     let othertiers;
     let o;
-    if(result.length>0)
-    {
+
       const x = result.map((s,index) => {
               return (
                 <li key={index}>
@@ -60,16 +58,16 @@ class Support extends React.Component {
          }
        );
        o = <ul>{x}</ul>
-    }
+
     let url = this.props.baseUrlStore+'/support-predefined?section_id='+this.props.section.section_id;
        url = url+'&amount_predefined='+this.state.typed;
 
     othertiers = (
          <div className="tier-container">
            { o &&
-             <span>the following people chose other tier to support this section:</span>
+             <span>{x.length} Supporters chose other tier to support this section:</span>
             }
-             {o}
+
            <div className="join">
              <div>
              $<input className="free-amount" onChange={this.onChangeFreeamount.bind(this)}></input><span>100 or more</span>
