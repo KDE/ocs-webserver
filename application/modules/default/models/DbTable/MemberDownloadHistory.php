@@ -43,7 +43,7 @@ class Default_Model_DbTable_MemberDownloadHistory extends Zend_Db_Table_Abstract
 
     public function getAnonymousDLSection($cookie, $member_id=null)
     {
-      $sql_filter = '';
+       $sql_filter = '';
        if($member_id)
        {
          $sql_filter = " and h.member_id =".$member_id;
@@ -51,24 +51,36 @@ class Default_Model_DbTable_MemberDownloadHistory extends Zend_Db_Table_Abstract
        {
         $sql_filter = " and h.anonymous_cookie ='".$cookie."'";
        }
-       $sql = "select
-            c.section_id,
-            c.name,
-            c.description,
-            (select count(1) from member_download_history h , project p, section_category s
-            where h.project_id = p.project_id
-            and p.project_category_id = s.project_category_id
-            and s.section_id = c.section_id
-            ".$sql_filter
-            ."
-            )  as dls
-            from section c
-            where c.is_active = 1
-            and c.hide = 0
-            order by c.order";
+       $sql = "select c.section_id,count(1) as dls
+              from member_download_history h , project p, section_category s, section c
+              where h.project_id = p.project_id
+              and s.section_id = c.section_id
+              and p.project_category_id = s.project_category_id       
+              ".$sql_filter." 
+              group by c.section_id";
         $result = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
-        return $result;
+
+
+        $sm =  new Default_Model_Section();
+        $sections = $sm->fetchAllSections();
+        foreach ($sections as &$s) {
+          $o = null;
+          foreach ($result as $r ) {
+            if($r['section_id'] == $s['section_id']){
+              $o = $r;              
+              break;
+            }
+          }
+
+          if($o) {
+            $s['dls'] = $o['dls'];
+          }else{
+            $s['dls'] = 0;
+          }          
+        }        
+        return $sections;
     }
+    
     public function getDownloadhistory($member_id){
             $sql = "
                       select
