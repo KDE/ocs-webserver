@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import MobileSiteHeader from './MobileSiteHeader';
 import SiteHeaderSearchForm from './SiteHeaderSearchForm';
-import Header from '../pling-section/function/Header';
+import Header from '../pling-section/Header';
 class SiteHeader extends Component {
   constructor(props){
   	super(props);

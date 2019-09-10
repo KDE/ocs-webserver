@@ -124,7 +124,7 @@ if($this->cat_id>0)
     $j_section['amount_factor'] = $j_section['amount']*$sectionStats['factor'];    
     $goal = ceil( $j_section['amount'] / 500 ) * 500;
 
-    $j_section['amount'] = '('.number_format($j_section['amount'], 2, '.', '').')';
+    $j_section['amount'] = number_format($j_section['amount'], 2, '.', '');
     $j_section['amount_factor'] = number_format($j_section['amount_factor'], 2, '.', '');
     $j_section['goal'] =  ($goal ==0 ? 500: $goal);
 }

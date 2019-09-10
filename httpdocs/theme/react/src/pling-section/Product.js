@@ -10,7 +10,7 @@ class Product extends React.Component {
             </div>
             <div className="score-bar-container">
               <div className={"score-bar"} style={{"width":this.props.product.laplace_score/10 + "%"}}></div>
-              <span>${this.props.product.probably_payout_amount_factor} {this.props.product.probably_payout_amount}</span>
+              <span>${this.props.product.probably_payout_amount_factor} {this.props.isAdmin?"($"+this.props.product.probably_payout_amount+")":""}</span>
             </div>
           </div>
         );
