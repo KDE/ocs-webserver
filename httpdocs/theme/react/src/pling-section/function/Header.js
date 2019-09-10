@@ -8,7 +8,7 @@ function Header(props){
         <div className="score-container">
           <span>Goal:</span>
           <div className="score-bar-container">
-            <div className={"score-bar"} style={{"width": (props.amount/props.goal*100)+ "%"}}>{props.amount_factor} {props.amount}</div>
+            <div className={"score-bar"} style={{"width": (props.amount_factor/props.goal*100)+ "%"}}>{props.amount_factor} {props.amount}</div>
           </div>
           <span>{ props.goal}</span>
 

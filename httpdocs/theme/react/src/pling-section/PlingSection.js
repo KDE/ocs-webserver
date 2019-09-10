@@ -122,7 +122,7 @@ class PlingSection extends Component {
 
     return (
       <React.Fragment>
-       <Header section={this.state.section} amount={this.state.probably_payout_amount}
+       <Header section={this.state.section} amount={this.state.probably_payout_amount} amount_factor={this.state.probably_payout_amount_factor}
               goal = {this.state.probably_payout_goal}
          />
        {sectioncontainer}
