@@ -65,14 +65,16 @@ class Support extends React.Component {
     othertiers = (
          <div className="tier-container">
            { o &&
-             <span>{x.length} Supporters chose other tier to support this section:</span>
+             <span>{x.length} Supporters </span>
             }
 
            <div className="join">
              <div>
              $<input className="free-amount" onChange={this.onChangeFreeamount.bind(this)}></input><span>100 or more</span>
             </div>
-             <a  href={url} id="free-amount-link" >Join </a>
+            <div>
+              <a  href={url} id="free-amount-link" >Join </a>
+            </div>
            </div>
          </div>
     )

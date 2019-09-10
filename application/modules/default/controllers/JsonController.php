@@ -23,6 +23,11 @@
 class JsonController extends Zend_Controller_Action
 {
 
+    const chat_access_token = 'MDAyMmxvY2F0aW9uIGNoYXQub3BlbmRlc2t0b3Aub3JnCjAwMTNpZGVudGlmaWVyIGtleQowMDEwY2lkIGdlbiA9IDEKMDAzM2NpZCB1c2VyX2lkID0gQG1hZ2dpZWRvbmc6Y2hhdC5vcGVuZGVza3RvcC5vcmcKMDAxNmNpZCB0eXBlID0gYWNjZXNzCjAwMjFjaWQgbm9uY2UgPSBnMSxnRUA2c3AuKyxtYSx4CjAwMmZzaWduYXR1cmUgc3LtmFDiz7wU0TVOdGS7EbEg0wnXVKwXxNqkqe5qpCAK';
+    const chat_avatarUrl= 'https://chat.opendesktop.org/_matrix/media/v1/thumbnail';
+    const chat_roomPublicUrl='https://chat.opendesktop.org/_matrix/client/unstable/publicRooms';
+    const chat_roomsUrl= 'https://chat.opendesktop.org/_matrix/client/unstable/rooms/';
+    const chat_roomUrl='https://chat.opendesktop.org/#/room/';
 
 	protected $_format = 'json';
 	public function init()
@@ -79,6 +84,46 @@ class JsonController extends Zend_Controller_Action
 
     	header('Content-Type: application/json; charset=UTF-8');
     	echo json_encode($response);
+    }
+
+
+    public function chatAction()
+    {
+
+        $this->_initResponseHeader();
+        $config = Zend_Registry::get('config')->settings->client->default;
+        $access_token = $config->riot_access_token;
+        $urlRooms = JsonController::chat_roomPublicUrl.'?access_token='.$access_token;
+         
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $urlRooms);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        $results = json_decode($data);
+        // https://chat.opendesktop.org/_matrix/client/unstable/publicRooms?access_token=
+
+        $rooms = array();
+        foreach ( $results->chunk as &$room) {
+            if($room->guest_can_join) continue;
+            $urlMembers = JsonController::chat_roomsUrl.$room->room_id.'/joined_members?access_token='.$access_token;
+            //https://chat.opendesktop.org/_matrix/client/unstable/rooms/!LNQABMgCYqWKSysjJK%3Achat.opendesktop.org/joined_members?access_token=
+            $k = curl_init();
+            curl_setopt($k, CURLOPT_AUTOREFERER, true);
+            curl_setopt($k, CURLOPT_HEADER, 0);
+            curl_setopt($k, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($k, CURLOPT_URL, $urlMembers);
+            curl_setopt($k, CURLOPT_FOLLOWLOCATION, true);
+            $t = curl_exec($k);
+            curl_close($k);
+            $r = json_decode($t);
+            $room->members = $r->joined;
+            $rooms[] = $room;
+        }
+        $this->_sendResponse($rooms, $this->_format);
     }
 
 	public function forumAction()
