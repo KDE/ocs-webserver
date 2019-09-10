@@ -378,6 +378,22 @@ class Default_Model_Section
         return $resultSet;
     }
     
+    /**
+     * @param int $yearmonth
+     *
+     * @return array
+     */
+    public function fetchSectionStatsLastMonth($section_id)
+    {
+        $sql = "SELECT * FROM section_funding_stats p
+                WHERE p.yearmonth = DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')
+                AND p.section_id = :section_id";
+        
+        $resultSet = $this->getAdapter()->fetchRow($sql, array('section_id' => $section_id));
+
+        return $resultSet;
+    }
+    
     
     /**
      * @param int $yearmonth
