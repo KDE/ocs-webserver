@@ -35,7 +35,7 @@ class SectionController extends Local_Controller_Action_DomainSwitch
         $model = new Default_Model_Section();
         $helpPrintDate = new Default_View_Helper_PrintDate();
         $helperImage = new Default_View_Helper_Image();
-        $sectionStats = $model->fetchSectionStats("DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')", $section_id);
+        $sectionStats = $model->fetchSectionStatsLastMonth($section_id);
         $products=$model->fetchTopProductsPerSection($section_id);
         foreach ($products as &$p) {
           $p['image_small'] = $helperImage->Image($p['image_small'], array('width' => 200, 'height' => 200));
