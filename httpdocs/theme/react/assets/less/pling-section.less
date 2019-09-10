@@ -31,19 +31,27 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
      span{
       /*line-height: 300px;*/
      }
-     .score-bar-container {
-       width: 300px;
-       height: 20px;
-       background: #ccc;
-       margin-bottom: 5px;
-       display: inline-block;
-       font-size: small;
-
-       .score-bar {
+     .score-container
+     {
+       &>span{
+        font-size: small;
+        font-weight: bold;
+        padding:5px;
+        }
+       .score-bar-container {
+         width: 300px;
          height: 20px;
-         background-color: #286090;
-         border-bottom: 0px solid darken( #286090,5%);
-         color:#fff;
+         background: #ccc;
+         margin-bottom: 5px;
+         display: inline-block;
+         font-size: small;
+
+         .score-bar {
+           height: 20px;
+           background-color: #286090;
+           border-bottom: 0px solid darken( #286090,5%);
+           color:#fff;
+         }
        }
      }
   }
@@ -71,7 +79,7 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
     }
   }
   .pling-section-tabs{
-    width: 800px;
+    width: 1000px;
     display: block;
     margin: 0 auto;
   }
@@ -111,7 +119,7 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
           border-radius: 9999px;
           border: medium none;
           box-sizing: border-box;
-          color: rgb(255, 255, 255) !important;        
+          color: rgb(255, 255, 255) !important;
           display: inline-flex;
           font-size: 1.4rem !important;
           font-weight: 800;
@@ -174,6 +182,7 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
             padding: 1rem;
             margin: 0rem;
             border-bottom: 1px solid rgb(229, 227, 221);
+            text-align: center;
               span{
                 display: inline-block;
               }
@@ -193,12 +202,13 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
             .join{
               display: flex;
               justify-content: center;
+              flex-flow: column;
               input.free-amount{
                 opacity: .95;
                   margin-top: -8px;
                   color: #000;
                   font-size: 18px;
-                  width: 50%;
+                  width: 40px;
                   margin: 0;
                       margin-top: 0px;
                   margin-top: 0px;
@@ -215,9 +225,7 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
                   box-shadow: none;
                   background: none;
               }
-              #free-amount-link{
-                    line-height: 40px;
-              }
+
             }
 
         }
@@ -364,6 +372,7 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
                               height: 10px;
                               background: #ccc;
                               margin-bottom: 5px;
+
 
                               .score-bar {
                                 height: 9px;
