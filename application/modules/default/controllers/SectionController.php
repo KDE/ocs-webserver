@@ -45,7 +45,11 @@ class SectionController extends Local_Controller_Action_DomainSwitch
           } else {
             $p['probably_payout_amount'] = '';  
           }
-          $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount']*$sectionStats['factor'], 2, '.', '');
+          if($sectionStats['factor']) {
+            $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount']*$sectionStats['factor'], 2, '.', '');
+          } else {
+            $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount'], 2, '.', '');
+          }
           $p['section_factor'] = $sectionStats['factor'];
         }
 
@@ -58,7 +62,12 @@ class SectionController extends Local_Controller_Action_DomainSwitch
           } else {
             $p['probably_payout_amount'] = '';
           }
-          $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount']*$sectionStats['factor'], 2, '.', '');
+          
+          if($sectionStats['factor']) {
+            $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount']*$sectionStats['factor'], 2, '.', '');
+          } else {
+            $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount'], 2, '.', '');
+          }
           $p['section_factor'] = $sectionStats['factor'];
         }
 
