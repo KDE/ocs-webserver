@@ -1,5 +1,4 @@
 import React from 'react';
-//import Product from '../opendesktop-home/Product';
 import Product from './Product';
 class TopProducts extends React.Component {
   constructor(props){

@@ -31,19 +31,27 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
      span{
       /*line-height: 300px;*/
      }
-     .score-bar-container {
-       width: 300px;
-       height: 20px;
-       background: #ccc;
-       margin-bottom: 5px;
-       display: inline-block;
-       font-size: small;
-
-       .score-bar {
+     .score-container
+     {
+       &>span{
+        font-size: small;
+        font-weight: bold;
+        padding:5px;
+        }
+       .score-bar-container {
+         width: 300px;
          height: 20px;
-         background-color: #286090;
-         border-bottom: 0px solid darken( #286090,5%);
-         color:#fff;
+         background: #ccc;
+         margin-bottom: 5px;
+         display: inline-block;
+         font-size: small;
+
+         .score-bar {
+           height: 20px;
+           background-color: #286090;
+           border-bottom: 0px solid darken( #286090,5%);
+           color:#fff;
+         }
        }
      }
   }
@@ -217,7 +225,7 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
                   box-shadow: none;
                   background: none;
               }
-              
+
             }
 
         }
@@ -364,6 +372,7 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
                               height: 10px;
                               background: #ccc;
                               margin-bottom: 5px;
+
 
                               .score-bar {
                                 height: 9px;
