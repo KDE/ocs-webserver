@@ -45,7 +45,7 @@ class SectionController extends Local_Controller_Action_DomainSwitch
           } else {
             $p['probably_payout_amount'] = '';  
           }
-          if($sectionStats['factor']) {
+          if($sectionStats['factor'] != null) {
             $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount']*$sectionStats['factor'], 2, '.', '');
           } else {
             $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount'], 2, '.', '');
@@ -63,7 +63,7 @@ class SectionController extends Local_Controller_Action_DomainSwitch
             $p['probably_payout_amount'] = '';
           }
           
-          if($sectionStats['factor']) {
+          if($sectionStats['factor'] != null) {
             $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount']*$sectionStats['factor'], 2, '.', '');
           } else {
             $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount'], 2, '.', '');
@@ -88,7 +88,7 @@ class SectionController extends Local_Controller_Action_DomainSwitch
         $amount = $model->fetchProbablyPayoutLastMonth($section_id);
         
         $amount_factor = $amount;
-        if($sectionStats['factor']) {
+        if($sectionStats['factor'] != null) {
             $amount_factor = $amount * $sectionStats['factor'];
         }
         $this->view->supporters = $supporters;
