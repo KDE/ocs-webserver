@@ -36,13 +36,21 @@ if ($auth->hasIdentity()) {
     $ltat = $sess->openid;
 }
 
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+$isAdmin = false;
+if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+    $isAdmin = true;
+}
+
 $jsonmember = null;
 if($member && !empty($member->username)){
     $jsonmember=array(
         'member_id' => $member->member_id,
         'username' => $member->username,
         'avatar' => $member->avatar,
-        'profile_image_url' => $member->profile_image_url
+        'profile_image_url' => $member->profile_image_url,
+        'isAdmin' => $isAdmin
     );
 }
 
@@ -99,6 +107,27 @@ $tabs_left += $cat_title_length*10;
 //$helperUserRole = new Backend_View_Helper_UserRole();
 //$userRoleName = $helperUserRole->userRole();
 //$forum_url_postfix = Zend_Auth::getInstance()->hasIdentity() ? '/session/sso' : '';
+
+
+$j_section = null;
+if($this->cat_id>0)
+{
+    $sm = new Default_Model_Section();    
+    $s = $sm->fetchSectionForCategory($this->cat_id);
+
+    $sectionStats = $sm->fetchSectionStats("DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')", $s['section_id']);
+
+    $j_section = array();
+    $j_section['section_id'] = $s['section_id'];
+    $j_section['name'] = $s['name'];
+    $j_section['amount'] = $sm->fetchProbablyPayoutLastMonth($s['section_id']);
+    $j_section['amount_factor'] = $j_section['amount']*$sectionStats['factor'];    
+    $goal = ceil( $j_section['amount'] / 500 ) * 500;
+
+    $j_section['amount'] = '('.number_format($j_section['amount'], 2, '.', '').')';
+    $j_section['amount_factor'] = number_format($j_section['amount_factor'], 2, '.', '');
+    $j_section['goal'] =  ($goal ==0 ? 500: $goal);
+}
 
 
 echo $this->render('partials/header/metaheader.phtml');
@@ -460,7 +489,7 @@ echo $this->render('partials/header/metaheader.phtml');
     
     var json_loginurl = <?php echo Zend_Json::encode($url_login); ?>;  
     var json_logouturl = <?php echo Zend_Json::encode($url_logout); ?>;
-    
+    var json_section = <?php echo  Zend_Json::encode($j_section); ?>;
     var json_store_for_tree = <?php echo $json_tree; ?>;
     
 </script>
@@ -468,7 +497,8 @@ echo $this->render('partials/header/metaheader.phtml');
 <section id="site-header-container"></section>
 <script type="text/javascript" src="/theme/react/lib/react/react.production.min.js"></script>
 <script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.production.min.js"></script>
-<script src="/theme/react/header.js" type="text/javascript"></script>
+
+<script src="/theme/react/bundle/header-bundle.js" type="text/javascript"></script>
 
 <?php $this->inlineScript()->appendScript(
     '$(document).ready(function(){
