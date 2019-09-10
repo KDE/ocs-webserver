@@ -40,8 +40,6 @@ class PlingSection extends Component {
       }));
       if(showContent=='overview'){ this.loadData(this.state.section);}
 
-      console.log("showDetail:"+showContent);
-
   }
   onClickCategory(category)
   {
