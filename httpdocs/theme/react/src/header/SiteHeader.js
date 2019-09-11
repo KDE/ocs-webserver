@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import MobileSiteHeader from './MobileSiteHeader';
 import SiteHeaderSearchForm from './SiteHeaderSearchForm';
-import Header from '../pling-section/Header';
+import Support from './Support';
 class SiteHeader extends Component {
   constructor(props){
   	super(props);
@@ -78,9 +78,9 @@ class SiteHeader extends Component {
       {
         PlingDisplay =
             <div id="siter-header-pling">
-            <Header section={this.state.section} amount={this.state.section.amount}
+            <Support section={this.state.section} amount={this.state.section.amount}
                  goal = {this.state.section.goal} amount_factor={this.state.section.amount_factor}
-                 isAdmin = {this.state.user.isAdmin}
+                 isAdmin = {this.state.user.isAdmin} 
             />
             </div>
       }

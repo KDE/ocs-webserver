@@ -2,13 +2,54 @@
 
 #site-header-container {
   font-family: Arial,sans-serif;
-  overflow: hidden;
+
 }
 
 #site-header {
   padding: 0 80px;
   font-size: 14px;
   background-color: #ccc;
+
+  .dropdown-menu {
+    position: absolute;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    background-color: white;
+
+    &.dropdown-menu-right {
+      right: 0;
+      left: auto;
+    }
+
+    li {
+      padding: 0;
+    }
+
+    li>a:hover,
+    .active>a,
+    .active>a:hover {
+        color: #222;
+        text-decoration: none;
+        background-color: #eee;
+    }
+
+
+  }
 
   ul {
     list-style-type: none;
@@ -75,7 +116,7 @@
       vertical-align: middle;
 
       .pling-section-header{
-           width: 300px;
+           width: 400px;
            display: flex;
            justify-content: center;
            flex-flow: column nowrap;
@@ -86,6 +127,45 @@
            span{
             /*line-height: 300px;*/
            }
+
+           .supporter-container{
+             position: relative;
+             cursor: pointer;
+             z-index: 1000;
+
+              &.open {
+
+                 .dropdown-menu {
+                     display: block;
+                    left: 120px;
+                 }
+               }
+
+              .user-pling-section-container
+              {
+
+                   display: flex;
+                   flex-direction: column;
+
+                   width: 100%;
+                   .title{
+                     text-align: center;
+                     border-bottom: 1px solid #ccc;
+                     padding:5px;
+                   }
+                  .section{
+                    padding: 5px;
+                    display: flex;
+                      .section-name{
+                      flex: 1;
+                      }
+                      .section-value{
+
+                      }
+                  }
+              }
+           }
+
            .score-container
            {
              &>span{
