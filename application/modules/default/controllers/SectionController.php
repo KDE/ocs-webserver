@@ -49,11 +49,14 @@ class SectionController extends Local_Controller_Action_DomainSwitch
               $amount = (double)$p['probably_payout_amount'];
               $factor = (double)$sectionStats['factor'];
               $amount = $amount * $factor;
-            $p['probably_payout_amount_factor'] = number_format($amount, 2, '.', '');
+            //$p['probably_payout_amount_factor'] = number_format($amount, 2, '.', '');
+            $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount'], 2, '.', '');
+            $p['section_factor'] = $factor;
           } else {
             $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount'], 2, '.', '');
+            $p['section_factor'] = null;
           }
-          $p['section_factor'] = $sectionStats['factor'];
+          
         }
 
         $creators = $model->fetchTopCreatorPerSection($section_id);
@@ -70,11 +73,14 @@ class SectionController extends Local_Controller_Action_DomainSwitch
               $amount = (double)$p['probably_payout_amount'];
               $factor = (double)$sectionStats['factor'];
               $amount = $amount * $factor;
-            $p['probably_payout_amount_factor'] = number_format($amount, 2, '.', '');
+            //$p['probably_payout_amount_factor'] = number_format($amount, 2, '.', '');
+            $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount'], 2, '.', '');
+            $p['section_factor'] = $factor;
           } else {
             $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount'], 2, '.', '');
+            $p['section_factor'] = null;
           }
-          $p['section_factor'] = $sectionStats['factor'];
+          
         }
 
         $section = null;        

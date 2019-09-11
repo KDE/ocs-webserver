@@ -3,7 +3,7 @@ import TopProducts from './TopProducts';
 import TopCreators from './TopCreators';
 import Support from './Support';
 import Supporters from './Supporters';
-import Header from './Header';
+import Header from './function/Header';
 class PlingSection extends Component {
   constructor(props){
   	super(props);
@@ -88,10 +88,10 @@ class PlingSection extends Component {
       detailContent = <Supporters baseUrlStore={this.state.baseurlStore} supporters = {this.state.supporters}/>
     }else {
       detailContent = (<React.Fragment>
-                  <TopProducts isAdmin={this.state.isAdmin} baseUrlStore={this.state.baseurlStore}
+                  <TopProducts baseUrlStore={this.state.baseurlStore}
                         products={this.state.products} section={this.state.section} category={this.state.category}/>
 
-                  <TopCreators isAdmin={this.state.isAdmin} creators={this.state.creators} section={this.state.section} category={this.state.category}
+                  <TopCreators creators={this.state.creators} section={this.state.section} category={this.state.category}
                       baseUrlStore={this.state.baseurlStore}
                       />
                 </React.Fragment>
@@ -122,7 +122,7 @@ class PlingSection extends Component {
 
     return (
       <React.Fragment>
-       <Header section={this.state.section} isAdmin={this.state.isAdmin} amount={this.state.probably_payout_amount} amount_factor={this.state.probably_payout_amount_factor}
+       <Header section={this.state.section} amount={this.state.probably_payout_amount} amount_factor={this.state.probably_payout_amount_factor}
               goal = {this.state.probably_payout_goal}
          />
        {sectioncontainer}
