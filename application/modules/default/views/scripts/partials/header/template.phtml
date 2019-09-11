@@ -122,12 +122,36 @@ if($this->cat_id>0)
     $j_section['amount'] = $sm->fetchProbablyPayoutLastMonth($s['section_id']);
     $j_section['amount_factor'] = $j_section['amount']*$sectionStats['factor'];    
 
-
-
     $goal = ceil( $j_section['amount'] / 500 ) * 500;
     $j_section['amount'] = number_format($j_section['amount'], 2, '.', '');
     $j_section['amount_factor'] = number_format($j_section['amount_factor'], 2, '.', '');
     $j_section['goal'] =  ($goal ==0 ? 500: $goal);
+
+    $info = new Default_Model_Info();
+    $supporters = $info->getNewActiveSupportersForSection($s['section_id']);
+    $supporterMonths = $info->getSectionSupportersActiveMonths($s['section_id']);
+    $sp = array();
+    foreach ($supporters as $s) {
+        $t = array();
+        $t['username'] = $s['username'];
+        $t['profile_image_url'] = $helperImage->Image($s['profile_image_url'], array('width' => 100, 'height' => 100));   
+        foreach ($supporterMonths as $m) {
+                 if($m['member_id'] == $s['member_id'])
+                 {
+                    $t['active_months'] = $m['active_months'];
+                    break;
+                 }
+             }     
+        $sp[] = $t;
+    }
+
+    function custom_sort($a,$b) {
+          return $a['active_months']<$b['active_months'];
+     }
+     usort($sp, "custom_sort");
+
+    $j_section['supporters'] = $sp;
+
 }
 
 

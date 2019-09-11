@@ -150,6 +150,7 @@ class Default_Model_Section
         return $resultSet;    
     }
 
+    
     public function fetchProbablyPayoutLastMonth($section_id)
     {
         if($section_id)
