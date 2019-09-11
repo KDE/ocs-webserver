@@ -40,22 +40,23 @@ class SectionController extends Local_Controller_Action_DomainSwitch
         foreach ($products as &$p) {
           $p['image_small'] = $helperImage->Image($p['image_small'], array('width' => 200, 'height' => 200));
           $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
-          if($isAdmin) {
-            $p['probably_payout_amount'] = '($' . number_format($p['probably_payout_amount'], 2, '.', '') . ')';
-          } else {
-            $p['probably_payout_amount'] = '';  
-          }
           if($sectionStats['factor'] != null) {
               $amount = $p['probably_payout_amount'];
               $factor = $sectionStats['factor'];
               $amountF = $amount * $factor;
-            //$p['probably_payout_amount_factor'] = number_format($amount, 2, '.', '');
-            $p['probably_payout_amount_factor'] = $amount;
+            $p['probably_payout_amount_factor'] = $amountF;
             $p['section_factor'] = $factor;
           } else {
             $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount'], 2, '.', '');
             $p['section_factor'] = null;
           }
+          
+          if($isAdmin) {
+            $p['probably_payout_amount'] = '($' . number_format($p['probably_payout_amount'], 2, '.', '') . ')';
+          } else {
+            $p['probably_payout_amount'] = '';  
+          }
+          
           
         }
 
@@ -63,11 +64,6 @@ class SectionController extends Local_Controller_Action_DomainSwitch
         $info = new Default_Model_Info();
         foreach ($creators as &$p) {
           $p['profile_image_url'] = $helperImage->Image($p['profile_image_url'], array('width' => 100, 'height' => 100));
-          if($isAdmin) {
-            $p['probably_payout_amount'] = '($'.number_format($p['probably_payout_amount'], 2, '.', '').')';
-          } else {
-            $p['probably_payout_amount'] = '';
-          }
           
           if($sectionStats['factor'] != null) {
               $amount = (double)$p['probably_payout_amount'];
@@ -80,6 +76,14 @@ class SectionController extends Local_Controller_Action_DomainSwitch
             $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount'], 2, '.', '');
             $p['section_factor'] = null;
           }
+
+          
+          if($isAdmin) {
+            $p['probably_payout_amount'] = '($'.number_format($p['probably_payout_amount'], 2, '.', '').')';
+          } else {
+            $p['probably_payout_amount'] = '';
+          }
+          
           
         }
 
