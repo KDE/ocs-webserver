@@ -1793,6 +1793,23 @@ class Default_Model_Info
         return $result[0]['cnt'];
     }
     
+    
+    public function getCountSupportedMonthsForSectionAndMember($section_id, $member_id)
+    {        
+        $sql = "
+                SELECT COUNT(1) AS num_months FROM
+                (
+                SELECT s.member_id, p.yearmonth FROM section_support_paypements p
+                JOIN support s ON s.id = p.support_id
+                WHERE member_id = :member_id
+                AND p.section_id = :section_id
+                GROUP BY s.member_id, p.yearmonth
+                ) A
+        ";
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'section_id' =>$section_id))->fetchAll();
+        return $result[0]['cnt'];
+    }
+    
     public function getSumSupporting()
     {        
         $sql = "
