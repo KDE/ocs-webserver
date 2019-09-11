@@ -11,7 +11,7 @@ class TopCreators extends React.Component {
      if (this.props.creators){
        const creators = this.props.creators.map((creator,index) => (
          <li key={index}>
-           <Creator creator={creator} baseUrlStore={this.props.baseUrlStore}/>
+           <Creator creator={creator} baseUrlStore={this.props.baseUrlStore} isAdmin={this.props.isAdmin}/>
          </li>
        ));
       container = <ul>{creators}</ul>

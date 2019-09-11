@@ -11,7 +11,7 @@ class TopProducts extends React.Component {
      if (this.props.products){
        const products = this.props.products.map((product,index) => (
          <li key={index}>
-         <Product product={product} baseUrlStore={this.props.baseUrlStore}/>
+         <Product product={product} baseUrlStore={this.props.baseUrlStore} isAdmin={this.props.isAdmin}/>
          </li>
        ));
       container = <ul>{products}</ul>
