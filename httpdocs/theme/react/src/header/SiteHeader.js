@@ -80,6 +80,7 @@ class SiteHeader extends Component {
             <div id="siter-header-pling">
             <Header section={this.state.section} amount={this.state.section.amount}
                  goal = {this.state.section.goal} amount_factor={this.state.section.amount_factor}
+                 isAdmin = {this.state.user.isAdmin}
             />
             </div>
       }
