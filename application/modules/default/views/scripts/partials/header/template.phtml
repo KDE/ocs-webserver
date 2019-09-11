@@ -115,15 +115,16 @@ if($this->cat_id>0)
     $sm = new Default_Model_Section();    
     $s = $sm->fetchSectionForCategory($this->cat_id);
 
-    $sectionStats = $sm->fetchSectionStats("DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')", $s['section_id']);
-
+    $sectionStats = $sm->fetchSectionStatsLastMonth($s['section_id']);    
     $j_section = array();
     $j_section['section_id'] = $s['section_id'];
     $j_section['name'] = $s['name'];
     $j_section['amount'] = $sm->fetchProbablyPayoutLastMonth($s['section_id']);
     $j_section['amount_factor'] = $j_section['amount']*$sectionStats['factor'];    
-    $goal = ceil( $j_section['amount'] / 500 ) * 500;
 
+
+
+    $goal = ceil( $j_section['amount'] / 500 ) * 500;
     $j_section['amount'] = number_format($j_section['amount'], 2, '.', '');
     $j_section['amount_factor'] = number_format($j_section['amount_factor'], 2, '.', '');
     $j_section['goal'] =  ($goal ==0 ? 500: $goal);
