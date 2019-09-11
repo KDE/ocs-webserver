@@ -27,7 +27,7 @@ class Support extends React.Component {
              left = limits[index-1];
           }
           right=limits[index];
-          const result = this.props.supporters.filter(s => (s.section_support_tier > left && s.section_support_tier < right ));
+          const result = this.props.supporters.filter(s => (s.section_support_tier >= left && s.section_support_tier <right ));
           // const x = result.map((s,index) => {
           //         return (
           //           <li key={index}>
