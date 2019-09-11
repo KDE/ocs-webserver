@@ -40,32 +40,41 @@ class SectionController extends Local_Controller_Action_DomainSwitch
         foreach ($products as &$p) {
           $p['image_small'] = $helperImage->Image($p['image_small'], array('width' => 200, 'height' => 200));
           $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
-          
-          $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount']*($sectionStats['factor']?$sectionStats['factor']:1), 2, '.', '');
-
-          $p['section_factor'] = $sectionStats['factor'];
-
           if($isAdmin) {
-            $p['probably_payout_amount'] =  number_format($p['probably_payout_amount'], 2, '.', '') ;
-          }else{
-            $p['probably_payout_amount'] = -1;
-          }           
+            $p['probably_payout_amount'] = '($' . number_format($p['probably_payout_amount'], 2, '.', '') . ')';
+          } else {
+            $p['probably_payout_amount'] = '';  
+          }
+          if($sectionStats['factor'] != null) {
+              $amount = (double)$p['probably_payout_amount'];
+              $factor = (double)$sectionStats['factor'];
+              $amount = $amount * $factor;
+            $p['probably_payout_amount_factor'] = number_format($amount, 2, '.', '');
+          } else {
+            $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount'], 2, '.', '');
+          }
+          $p['section_factor'] = $sectionStats['factor'];
         }
 
         $creators = $model->fetchTopCreatorPerSection($section_id);
         $info = new Default_Model_Info();
         foreach ($creators as &$p) {
           $p['profile_image_url'] = $helperImage->Image($p['profile_image_url'], array('width' => 100, 'height' => 100));
-          
-          $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount']*($sectionStats['factor']?$sectionStats['factor']:1), 2, '.', '');
-
-          $p['section_factor'] = $sectionStats['factor'];
-
           if($isAdmin) {
-            $p['probably_payout_amount'] = number_format($p['probably_payout_amount'], 2, '.', '');
-          }else{
-            $p['probably_payout_amount'] = -1;
+            $p['probably_payout_amount'] = '($'.number_format($p['probably_payout_amount'], 2, '.', '').')';
+          } else {
+            $p['probably_payout_amount'] = '';
           }
+          
+          if($sectionStats['factor'] != null) {
+              $amount = (double)$p['probably_payout_amount'];
+              $factor = (double)$sectionStats['factor'];
+              $amount = $amount * $factor;
+            $p['probably_payout_amount_factor'] = number_format($amount, 2, '.', '');
+          } else {
+            $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount'], 2, '.', '');
+          }
+          $p['section_factor'] = $sectionStats['factor'];
         }
 
         $section = null;        
@@ -92,13 +101,16 @@ class SectionController extends Local_Controller_Action_DomainSwitch
         $this->view->products = $products;
         $this->view->creators = $creators;
         if($isAdmin) {
-            $this->view->probably_payout_amount = number_format($amount, 2, '.', '');
-        }else{
-            $this->view->probably_payout_amount = -1;
-        } 
+            $this->view->probably_payout_amount = '('.number_format($amount, 2, '.', '').')';
+        } else {
+            $this->view->probably_payout_amount = '';
+        }
         $this->view->probably_payout_amount_factor = number_format($amount_factor, 2, '.', '');
+//        $this->view->probably_payout_goal = round($amount+500,-2);
         $goal = ceil( $amount_factor / 500 ) * 500;
-        $this->view->probably_payout_goal = ($goal ==0 ? 500: $goal);        
+
+        $this->view->probably_payout_goal = ($goal ==0 ? 500: $goal);
+        
 
         $title = 'Section';
         if($section){
