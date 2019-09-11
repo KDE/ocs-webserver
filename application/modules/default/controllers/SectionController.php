@@ -46,11 +46,11 @@ class SectionController extends Local_Controller_Action_DomainSwitch
             $p['probably_payout_amount'] = '';  
           }
           if($sectionStats['factor'] != null) {
-              $amount = (double)$p['probably_payout_amount'];
-              $factor = (double)$sectionStats['factor'];
-              $amount = $amount * $factor;
+              $amount = $p['probably_payout_amount'];
+              $factor = $sectionStats['factor'];
+              $amountF = $amount * $factor;
             //$p['probably_payout_amount_factor'] = number_format($amount, 2, '.', '');
-            $p['probably_payout_amount_factor'] = number_format(120.00, 2, '.', '');
+            $p['probably_payout_amount_factor'] = number_format($amountF, 2, '.', '');
             $p['section_factor'] = $factor;
           } else {
             $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount'], 2, '.', '');
