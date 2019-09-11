@@ -15,25 +15,34 @@ class Support extends React.Component {
   render(){
 
     let tiers=[0.99,2,5,10,20,50];
+    let limits = [2,5,10,20,50,100]
     const container = tiers.map((t,index) => {
           let c;
           let tmp = t;
-          const result = this.props.supporters.filter(s => s.section_support_tier==tmp);
-          const x = result.map((s,index) => {
-                  return (
-                    <li key={index}>
-                      <a href={this.props.baseUrlStore+'/u/'+s.username}><img src={s.profile_image_url}></img></a>
-                    </li>
-                  )
-             }
-           );
-           c = <ul>{x}</ul>
-           let url = this.props.baseUrlStore+'/support-predefined?section_id='+this.props.section.section_id;
-           url = url+'&amount_predefined='+tmp;
+          let left, right;
+          if(index==0)
+          {
+             left = 0;
+          }else {
+             left = limits[index-1];
+          }
+          right=limits[index];
+          const result = this.props.supporters.filter(s => (s.section_support_tier > left && s.section_support_tier < right ));
+          // const x = result.map((s,index) => {
+          //         return (
+          //           <li key={index}>
+          //             <a href={this.props.baseUrlStore+'/u/'+s.username}><img src={s.profile_image_url}></img></a>
+          //           </li>
+          //         )
+          //    }
+          //  );
+          //  c = <ul>{x}</ul>
+          //  let url = this.props.baseUrlStore+'/support-predefined?section_id='+this.props.section.section_id;
+          //  url = url+'&amount_predefined='+tmp;
 
           return (
               <div className="tier-container">
-                <span>{x.length+ ' Supporters'}</span>
+                <span>{result.length+ ' Supporters'}</span>
               <div className="join">
               <a href={url}>Join ${t} Tier</a>
               </div>
