@@ -1,5 +1,5 @@
 @import "elements.less";
- 
+
 #site-header-container {
   font-family: Arial,sans-serif;
   overflow: hidden;
@@ -57,6 +57,7 @@
         }
       }
     }
+
     #site-header-right {
       float: right;
       height: 100%;
@@ -67,6 +68,50 @@
         width: 100%;
         padding-right: 5px;
         display: table;
+
+    #siter-header-pling
+    {
+      display: table-cell;
+      vertical-align: middle;
+
+      .pling-section-header{
+           width: 300px;
+           display: flex;
+           justify-content: center;
+           flex-flow: column nowrap;
+
+           & > div{
+             text-align: center;
+           }
+           span{
+            /*line-height: 300px;*/
+           }
+           .score-container
+           {
+             &>span{
+              font-size: small;
+              font-weight: bold;
+              padding:5px;
+              }
+             .score-bar-container {
+               width: 200px;
+               height: 20px;
+               background: #ccc;
+               margin-bottom: 5px;
+               display: inline-block;
+               font-size: small;
+                white-space: nowrap;
+               .score-bar {
+                 height: 20px;
+                 background-color: #286090;
+                 border-bottom: 0px solid darken( #286090,5%);
+                 color:#fff;
+               }
+             }
+           }
+        }
+    }
+
 
       }
 

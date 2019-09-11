@@ -43,9 +43,12 @@ class Support extends React.Component {
     );
 
     let result = this.props.supporters;
-    tiers.forEach(function(element) {
-       result = result.filter(s => s.section_support_tier!=element);
-    });
+    // tiers.forEach(function(element) {
+    //    result = result.filter(s => s.section_support_tier!=element);
+    // });
+
+    result = result.filter(s => s.section_support_tier>=100);
+
     let othertiers;
     let o;
 

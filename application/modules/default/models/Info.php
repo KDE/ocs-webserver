@@ -1334,7 +1334,7 @@ class Default_Model_Info
                 from section_support_paypements ss
                 JOIN support s ON s.id = ss.support_id
                 WHERE ss.yearmonth = DATE_FORMAT(NOW(), "%Y%m")
-                GROUP BY s.member_id
+                GROUP BY s.member_id,ss.tier
                 order BY ss.tier DESC, active_time_max desc                                       
         ';
         if (isset($limit)) {
@@ -1368,7 +1368,7 @@ class Default_Model_Info
                 JOIN support s ON s.id = ss.support_id
                 WHERE ss.section_id = :section_id
                 AND ss.yearmonth = DATE_FORMAT(NOW(), "%Y%m")
-                GROUP BY s.member_id
+                GROUP BY s.member_id,ss.tier
                 order BY ss.tier DESC, active_time_max desc                                       
         ';
         if (isset($limit)) {
