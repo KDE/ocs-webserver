@@ -961,7 +961,11 @@ $this->inlineScript()->appendScript('
                                     tableString = '';
                                     tableString += '<tr data-ppload-file-id="' + this.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
                                     tableString += '<td>' + downloadLink + '</td>';
-                                    tableString += '<td>' + this.md5sum + '</td>';
+                                    if(this.md5sum != 'NULL') {
+                                        tableString += '<td>' + this.md5sum + '</td>';
+                                    } else {
+                                        tableString += '<td></td>';
+                                    }
                                     tableString += '<td>' + version + '</td>';
                                     tableString += '<td>' + inputFileDescription + '</td>';
                                     
