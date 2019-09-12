@@ -1359,7 +1359,8 @@ class Default_Model_Info
                 WHERE p.section_id = :section_id
                 GROUP BY s.member_id, p.yearmonth
                 ) A
-                GROUP BY member_id";
+                GROUP BY member_id
+                ORDER BY COUNT(1) desc";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' => $section_id))->fetchAll();
         $cache->save($result, $cacheName, array(), 300);
