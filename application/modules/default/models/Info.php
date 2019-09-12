@@ -1346,6 +1346,22 @@ class Default_Model_Info
         return $result;
     }
 
+    public function getSectionSupportersActiveMonths($section_id)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . $section_id ;
+
+        $sql = "SELECT s.member_id, count(p.yearmonth) active_months FROM section_support_paypements p
+                JOIN support s ON s.id = p.support_id
+                WHERE p.section_id = :section_id
+                GROUP BY s.member_id";
+
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' => $section_id))->fetchAll();
+        $cache->save($result, $cacheName, array(), 300);
+        return $result;
+    }
+
     public function getNewActiveSupportersForSection($section_id, $limit = 20)
     {
         /** @var Zend_Cache_Core $cache */
