@@ -1,5 +1,6 @@
 import React from 'react';
-
+import SiteHeaderSearchForm from './SiteHeaderSearchForm';
+import Support from './Support';
 class MobileSiteHeader extends React.Component {
   constructor(props){
   	super(props);
@@ -36,6 +37,21 @@ class MobileSiteHeader extends React.Component {
       </a>
     );
 
+    let PlingDisplay;
+    if(this.props.section && this.props.user)
+    {
+      if(this.props.user.isAdmin)
+      {
+        PlingDisplay =
+            <div id="siter-header-pling">
+            <Support section={this.props.section} amount={this.props.section.amount}
+                 goal = {this.props.section.goal} amount_factor={this.props.section.amount_factor}
+                 isAdmin = {this.props.user.isAdmin}
+            />
+            </div>
+      }
+    }
+
     let mobileMenuDisplay;
     if (this.state.status === "switch"){
       mobileMenuDisplay = (
@@ -48,6 +64,7 @@ class MobileSiteHeader extends React.Component {
             <span className="glyphicon glyphicon-option-horizontal"></span>
           </a>
           */}
+          { PlingDisplay }
         </div>
       );
     } else if (this.state.status === "user"){
@@ -74,6 +91,8 @@ class MobileSiteHeader extends React.Component {
               searchBaseUrl={this.props.searchBaseUrl}
               store={this.props.store}
             />
+
+
           </div>
           {closeMenuElementDisplay}
         </div>
