@@ -43,18 +43,20 @@ class Support extends Component {
           <div className="header-title">
             <span>{this.props.section ? this.props.section.name:''}</span>
           </div>
-          <div className="score-container">
-            <span>Goal:</span>
-            <div className="score-bar-container">
-              <div className={"score-bar"} style={{"width":(this.props.amount_factor/this.props.goal)*100 + "%"}}>
-                {this.props.amount_factor+(this.props.isAdmin?'('+this.props.amount+')':'')}
+          <div className="header-body">
+            <div className="score-container">
+              <span>Goal:</span>
+              <div className="score-bar-container">
+                <div className={"score-bar"} style={{"width":(this.props.amount_factor/this.props.goal)*100 + "%"}}>
+                  {this.props.amount_factor+(this.props.isAdmin?'('+this.props.amount+')':'')}
+                </div>
               </div>
+              <span>{ this.props.goal}</span>
             </div>
-            <span>{ this.props.goal}</span>
-          </div>
-          <div className={'supporter-container '+this.state.dropdownClass }>
-            <a className="header-supporters" onClick={this.handleClick} > Supporters &#8964; </a>
-            {supporters}
+            <div className={'supporter-container '+this.state.dropdownClass }>
+              <a className="header-supporters" onClick={this.handleClick} > Supporters &#8964; </a>
+              {supporters}
+            </div>
           </div>
       </div>
     )
