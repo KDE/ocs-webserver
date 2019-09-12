@@ -1352,7 +1352,7 @@ class Default_Model_Info
         $cache = Zend_Registry::get('cache');
         $cacheName = __FUNCTION__ . '_' . $section_id ;
 
-        $sql = "SELECT COUNT(1) AS num_months, member_id FROM
+        $sql = "SELECT COUNT(1) AS active_months, member_id FROM
                 (
                 SELECT s.member_id, p.yearmonth FROM section_support_paypements p
                 JOIN support s ON s.id = p.support_id
