@@ -792,6 +792,7 @@ $this->inlineScript()->appendScript('
                                 var tableHeader = '';
                                 tableHeader += '<tr>';
                                 tableHeader +=  '    <th><?= $this->translate('Filename') ?></th>';
+                                tableHeader +=  '    <th><?= $this->translate('MD5SUM') ?></th>';
                                 tableHeader +=  '    <th><?= $this->translate('Version') ?></th>';
                                 tableHeader +=  '    <th><?= $this->translate('Description') ?></th>';
 
@@ -960,6 +961,7 @@ $this->inlineScript()->appendScript('
                                     tableString = '';
                                     tableString += '<tr data-ppload-file-id="' + this.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
                                     tableString += '<td>' + downloadLink + '</td>';
+                                    tableString += '<td>' + this.md5sum + '</td>';
                                     tableString += '<td>' + version + '</td>';
                                     tableString += '<td>' + inputFileDescription + '</td>';
                                     
