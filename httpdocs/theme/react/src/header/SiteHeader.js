@@ -80,7 +80,7 @@ class SiteHeader extends Component {
             <div id="siter-header-pling">
             <Support section={this.state.section} amount={this.state.section.amount}
                  goal = {this.state.section.goal} amount_factor={this.state.section.amount_factor}
-                 isAdmin = {this.state.user.isAdmin} 
+                 isAdmin = {this.state.user.isAdmin}
             />
             </div>
       }
@@ -125,6 +125,7 @@ class SiteHeader extends Component {
           serverUrl={this.state.serverUrl}
           store={this.state.store}
           redirectString={this.state.redirectString}
+          section={this.state.section}
         />
       )
     }
