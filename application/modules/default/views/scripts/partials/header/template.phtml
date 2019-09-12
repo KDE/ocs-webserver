@@ -128,7 +128,7 @@ if($this->cat_id>0)
     $j_section['goal'] =  ($goal ==0 ? 500: $goal);
 
     $info = new Default_Model_Info();
-    $supporters = $info->getNewActiveSupportersForSection($s['section_id']);
+    $supporters = $info->getNewActiveSupportersForSection($s['section_id'],1000);
     $supporterMonths = $info->getSectionSupportersActiveMonths($s['section_id']);
     $sp = array();
     foreach ($supporters as $s) {
