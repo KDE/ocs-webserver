@@ -1352,10 +1352,14 @@ class Default_Model_Info
         $cache = Zend_Registry::get('cache');
         $cacheName = __FUNCTION__ . '_' . $section_id ;
 
-        $sql = "SELECT s.member_id, count(p.yearmonth) active_months FROM section_support_paypements p
+        $sql = "SELECT COUNT(1) AS num_months, member_id FROM
+                (
+                SELECT s.member_id, p.yearmonth FROM section_support_paypements p
                 JOIN support s ON s.id = p.support_id
                 WHERE p.section_id = :section_id
-                GROUP BY s.member_id";
+                GROUP BY s.member_id, p.yearmonth
+                ) A
+                GROUP BY member_id";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' => $section_id))->fetchAll();
         $cache->save($result, $cacheName, array(), 300);
@@ -1824,22 +1828,6 @@ class Default_Model_Info
         ";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'section_id' =>$section_id))->fetchRow();
         return $result['num_months'];
-    }
-    
-    public function getCountSupportedMonthsForSection($section_id)
-    {        
-        $sql = "
-                SELECT COUNT(1) AS num_months, member_id FROM
-                (
-                SELECT s.member_id, p.yearmonth FROM section_support_paypements p
-                JOIN support s ON s.id = p.support_id
-                WHERE p.section_id = :section_id
-                GROUP BY s.member_id, p.yearmonth
-                ) A
-                GROUP BY member_id
-        ";
-        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' =>$section_id))->fetchAll();
-        return $result;
     }
     
     public function getSumSupporting()
