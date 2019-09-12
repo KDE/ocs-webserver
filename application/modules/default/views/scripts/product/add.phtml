@@ -392,7 +392,7 @@ $this->inlineScript()->appendScript('
 
                                                 <p data-file-upload-msg=""><?= $this->translate('Drop file(s) here') ?>:</p>
 
-                                                <div data-file-upload="" dropzone class="datafiledroparea">
+                                                <div data-file-upload="" dropzone class="datafiledroparea" style="overflow: auto !important;">
                                                     <table class="table" data-ppload-files="">
                                                         <thead>
                                                         </thead>
@@ -792,6 +792,7 @@ $this->inlineScript()->appendScript('
                                 var tableHeader = '';
                                 tableHeader += '<tr>';
                                 tableHeader +=  '    <th><?= $this->translate('Filename') ?></th>';
+                                tableHeader +=  '    <th><?= $this->translate('MD5SUM') ?></th>';
                                 tableHeader +=  '    <th><?= $this->translate('Version') ?></th>';
                                 tableHeader +=  '    <th><?= $this->translate('Description') ?></th>';
 
@@ -960,6 +961,11 @@ $this->inlineScript()->appendScript('
                                     tableString = '';
                                     tableString += '<tr data-ppload-file-id="' + this.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
                                     tableString += '<td>' + downloadLink + '</td>';
+                                    if(this.md5sum != 'NULL') {
+                                        tableString += '<td>' + this.md5sum + '</td>';
+                                    } else {
+                                        tableString += '<td></td>'; 
+                                    }
                                     tableString += '<td>' + version + '</td>';
                                     tableString += '<td>' + inputFileDescription + '</td>';
                                     
@@ -1203,6 +1209,11 @@ $this->inlineScript()->appendScript('
                             tableString += '<tr data-ppload-file-id="' + data.file.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
                             tableString += '<td><a href="' + pploadApiUri + 'files/download/';
                             tableString += 'id/' + data.file.id + '/' + data.file.name + '">' + data.file.name + '</a></td>';
+                            if(data.file.md5sum != 'NULL') {
+                                tableString += '<td>' + data.file.md5sum + '</td>';
+                            } else {
+                                tableString += '<td></td>'; 
+                            }
                             tableString += '<td>' + version + '</td>';
                             tableString += '<td><input data-ppload-file-description="" class="form-control input-sm"';
                             tableString += ' type="text" maxlength="140" placeholder="File description"';
