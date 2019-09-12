@@ -26,7 +26,7 @@ class PlingSection extends Component {
   // }
 
   loadData(section){
-    let url = '/section/top?section_id='+section.section_id;
+    let url = '/section/top?id='+section.section_id;
     fetch(url)
     .then(response => response.json())
     .then(data => {
@@ -39,7 +39,6 @@ class PlingSection extends Component {
         showContent: showContent
       }));
       if(showContent=='overview'){ this.loadData(this.state.section);}
-
   }
   onClickCategory(category)
   {
@@ -71,14 +70,8 @@ class PlingSection extends Component {
     let s;
     if (this.state.details && this.state.section){
        s = this.state.details.map((detail,index) => {
-         if(this.state.showContent =='categories') // ignore section show all categories
-         {
-           return <li><a onClick={() => this.onClickCategory(detail)}>{detail.title}</a></li>
-         }else
-         {
             if(detail.section_id==this.state.section.section_id)
             return <li><a onClick={() => this.onClickCategory(detail)}>{detail.title}</a></li>
-          }
       });
     }
 
@@ -103,7 +96,7 @@ class PlingSection extends Component {
                       <div className="pling-section-detail-left">
                         <h2 className={this.state.showContent=='overview'?'focused':''}><a onClick={()=>this.showDetail('overview')}>Overview</a></h2>
                         <h2 className={this.state.showContent=='supporters'?'focused':''}><a onClick={()=>this.showDetail('supporters')}>Supporters</a></h2>
-                        <h2 className={this.state.showContent=='categories'?'focused':''}><a onClick={()=>this.showDetail('categories')}>Categories</a></h2>
+                        <h2 className={this.state.showContent=='categories'?'focused':''}><a onClick={()=>this.showDetail('overview')}>Categories</a></h2>
                         <ul className="pling-section-detail-ul">{s}</ul>
                       </div>
                     }

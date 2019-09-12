@@ -32,6 +32,89 @@ class SectionController extends Local_Controller_Action_DomainSwitch
         }
         
         $section_id = $this->getParam('id',null);
+
+        $products = self::fetchProducts($section_id, $isAdmin);
+        $creators = self::fetchCreators($section_id, $isAdmin);
+        $supporters = self::fetchSupporters($section_id);
+
+        $model = new Default_Model_Section();
+        $section = null;        
+        if($section_id)
+        {
+            $section = $model->fetchSection($section_id);
+            $this->view->section = $section;
+            $this->view->section_id = $section_id;            
+        }
+        
+        $amount = $model->fetchProbablyPayoutLastMonth($section_id);        
+        $amount_factor = $amount;
+        if($sectionStats['factor'] != null) {
+            $amount_factor = $amount * $sectionStats['factor'];
+        }
+
+        $this->view->supporters = $supporters;
+        $this->view->products = $products;
+        $this->view->creators = $creators;
+        if($isAdmin) {
+            $this->view->probably_payout_amount = number_format($amount, 2, '.', '');
+        }else{
+            $this->view->probably_payout_amount = -1;
+        } 
+        $this->view->probably_payout_amount_factor = number_format($amount_factor, 2, '.', '');
+        $goal = ceil( $amount_factor / 500 ) * 500;
+        $this->view->probably_payout_goal = ($goal ==0 ? 500: $goal);        
+
+        $title = 'Section';
+        if($section){
+            $title = 'Section '.$section['name'];
+        }
+        $this->view->headTitle($title . ' - ' . $this->getHeadTitle(), 'SET');
+    }
+
+
+    public function topAction()
+    {        
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $isAdmin = false;
+        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+            $isAdmin = true;
+        }
+        $section_id = $this->getParam('id',null);
+        $products = self::fetchProducts($section_id, $isAdmin);
+        $creators = self::fetchCreators($section_id, $isAdmin);
+        $this->_helper->json(array('status' => 'ok', 'products' => $products,'creators' => $creators));        
+    }
+
+    public function fetchCreators($section_id,$isAdmin)
+    {
+        $model = new Default_Model_Section();
+        $helpPrintDate = new Default_View_Helper_PrintDate();
+        $helperImage = new Default_View_Helper_Image();
+        $sectionStats = $model->fetchSectionStatsLastMonth($section_id);
+
+        $creators = $model->fetchTopCreatorPerSection($section_id);
+        
+        foreach ($creators as &$p) {
+          $p['profile_image_url'] = $helperImage->Image($p['profile_image_url'], array('width' => 100, 'height' => 100));
+          
+          $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount']*($sectionStats['factor']?$sectionStats['factor']:1), 2, '.', '');
+
+          $p['section_factor'] = $sectionStats['factor'];
+
+          if($isAdmin) {
+            $p['probably_payout_amount'] = number_format($p['probably_payout_amount'], 2, '.', '');
+          }else{
+            $p['probably_payout_amount'] = -1;
+          }
+        }
+
+        return $creators;
+
+    }
+
+    public function fetchProducts($section_id, $isAdmin)
+    {
         $model = new Default_Model_Section();
         $helpPrintDate = new Default_View_Helper_PrintDate();
         $helperImage = new Default_View_Helper_Image();
@@ -52,88 +135,27 @@ class SectionController extends Local_Controller_Action_DomainSwitch
           }           
         }
 
-        $creators = $model->fetchTopCreatorPerSection($section_id);
+        return $products;
+    }
+
+    public function fetchSupporters($section_id)
+    {
+
         $info = new Default_Model_Info();
-        foreach ($creators as &$p) {
-          $p['profile_image_url'] = $helperImage->Image($p['profile_image_url'], array('width' => 100, 'height' => 100));
-          
-          $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount']*($sectionStats['factor']?$sectionStats['factor']:1), 2, '.', '');
-
-          $p['section_factor'] = $sectionStats['factor'];
-
-          if($isAdmin) {
-            $p['probably_payout_amount'] = number_format($p['probably_payout_amount'], 2, '.', '');
-          }else{
-            $p['probably_payout_amount'] = -1;
-          }
-        }
-
-        $section = null;        
+        $helperImage = new Default_View_Helper_Image();    
         if($section_id)
-        {
-            $section = $model->fetchSection($section_id);
-            $this->view->section = $section;
-            $this->view->section_id = $section_id; 
+        {                    
             $supporters = $info->getNewActiveSupportersForSection($section_id,1000);
         }else{
             $supporters = $info->getNewActiveSupportersForSectionAll(1000);
         }
+
         foreach ($supporters as &$p) {
           $p['profile_image_url'] = $helperImage->Image($p['profile_image_url'], array('width' => 100, 'height' => 100));                  
         }
+
+        return $supporters;
         
-        $amount = $model->fetchProbablyPayoutLastMonth($section_id);
-        
-        $amount_factor = $amount;
-        if($sectionStats['factor'] != null) {
-            $amount_factor = $amount * $sectionStats['factor'];
-        }
-        $this->view->supporters = $supporters;
-        $this->view->products = $products;
-        $this->view->creators = $creators;
-        if($isAdmin) {
-            $this->view->probably_payout_amount = number_format($amount, 2, '.', '');
-        }else{
-            $this->view->probably_payout_amount = -1;
-        } 
-        $this->view->probably_payout_amount_factor = number_format($amount_factor, 2, '.', '');
-        $goal = ceil( $amount_factor / 500 ) * 500;
-        $this->view->probably_payout_goal = ($goal ==0 ? 500: $goal);        
-
-        $title = 'Section';
-        if($section){
-            $title = 'Section '.$section['name'];
-        }
-        $this->view->headTitle($title . ' - ' . $this->getHeadTitle(), 'SET');
-    }
-
-    // deprecated...
-    public function topAction()
-    {        
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-        $model = new Default_Model_Section();
-        $helpPrintDate = new Default_View_Helper_PrintDate();
-        $helperImage = new Default_View_Helper_Image();
-        $section_id = $this->getParam('section_id');
-        $products=$model->fetchTopProductsPerSection($section_id);
-    
-        foreach ($products as &$p) {
-          
-          $p['image_small'] = $helperImage->Image($p['image_small'], array('width' => 200, 'height' => 200));
-          $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
-            $p['probably_payout_amount'] = number_format($p['probably_payout_amount'], 2, '.', '');
-        }
-
-        $creators = $model->fetchTopCreatorPerSection($section_id);
-
-        $info = new Default_Model_Info();
-        
-        foreach ($creators as &$p) {
-          $p['profile_image_url'] = $helperImage->Image($p['profile_image_url'], array('width' => 100, 'height' => 100));
-          $p['probably_payout_amount'] = number_format($p['probably_payout_amount'], 2, '.', '');
-        } 
-        $this->_helper->json(array('status' => 'ok', 'products' => $products,'creators' => $creators));        
     }
 
     public function topcatAction()
@@ -144,18 +166,41 @@ class SectionController extends Local_Controller_Action_DomainSwitch
         $helpPrintDate = new Default_View_Helper_PrintDate();
         $helperImage = new Default_View_Helper_Image();
         $cat_id = $this->getParam('cat_id');
-        $products=$model->fetchTopProductsPerCategory($cat_id);
-    
+        $products=$model->fetchTopProductsPerCategory($cat_id);        
+        $section = $model->fetchSectionForCategory($cat_id);
+        $sectionStats = $model->fetchSectionStatsLastMonth($section['section_id']);
+        $isAdmin = false;
+        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+            $isAdmin = true;
+        }
+
         foreach ($products as &$p) {
           $p['image_small'] = $helperImage->Image($p['image_small'], array('width' => 200, 'height' => 200));
           $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
-           $p['probably_payout_amount'] = number_format($p['probably_payout_amount'], 2, '.', '');
+           
+            $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount']*($sectionStats['factor']?$sectionStats['factor']:1), 2, '.', '');
+
+          $p['section_factor'] = $sectionStats['factor'];
+
+          if($isAdmin) {
+            $p['probably_payout_amount'] =  number_format($p['probably_payout_amount'], 2, '.', '') ;
+          }else{
+            $p['probably_payout_amount'] = -1;
+          }           
         }
 
         $creators = $model->fetchTopCreatorPerCategory($cat_id);
         foreach ($creators as &$p) {
           $p['profile_image_url'] = $helperImage->Image($p['profile_image_url'], array('width' => 100, 'height' => 100));
-             $p['probably_payout_amount'] = number_format($p['probably_payout_amount'], 2, '.', '');
+          $p['probably_payout_amount_factor'] = number_format($p['probably_payout_amount']*($sectionStats['factor']?$sectionStats['factor']:1), 2, '.', '');
+
+          $p['section_factor'] = $sectionStats['factor'];
+
+          if($isAdmin) {
+            $p['probably_payout_amount'] = number_format($p['probably_payout_amount'], 2, '.', '');
+          }else{
+            $p['probably_payout_amount'] = -1;
+          }
           
         }
         $this->_helper->json(array('status' => 'ok', 'cat_id'=>$cat_id,'products' => $products,'creators' => $creators));        
