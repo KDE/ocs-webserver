@@ -19,18 +19,29 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+
+$productUrl;
+if($this->product['project_category_id']=='567')
+{
+    $helpCollectionUrl = new Default_View_Helper_BuildCollectionUrl();
+    $productUrl = $helpCollectionUrl->buildProductUrl($this->product['project_id'],'');
+}else
+{
+    $productUrl = $this->buildProductUrl($this->product['project_id'],'');
+}
+
 ?>
 <div class="productrow"><div class="row">            
  <div class="col-lg-2 col-md-3 col-sm-4 col-xs-4">    
         <div class="text-center">
-            <a href="<?=$this->buildProductUrl($this->product['project_id'],'')?>"  class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->product['member_id']?>" >
+            <a href="<?=$productUrl?>"  class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->product['member_id']?>" >
                 <img class="productimg" src="<?=$this->Image($this->product['image_small'], array('width' => 80, 'height' => 80))?>" />
             </a>
             
         </div>
  </div>
  <div class="col-lg-7 col-md-6 col-sm-4 col-xs-4">
-        <a href="<?=$this->buildProductUrl($this->product['project_id'],'')?>"   class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->product['member_id']?>"><?=$this->product['title']?>
+        <a href="<?=$productUrl?>"   class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->product['member_id']?>"><?=$this->product['title']?>
             <span class="version"><?=Default_Model_HtmlPurify::purify($this->product['version'])?>
             </span>
         </a>
