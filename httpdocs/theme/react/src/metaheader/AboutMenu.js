@@ -44,7 +44,9 @@ class AboutMenu extends React.Component {
         <a className="about-menu-link-item"> About &#8964; </a>
         <ul className="dropdown-menu dropdown-menu-right">
           <AboutMenuItems baseUrl={this.props.baseUrl}
-                          isAdmin={this.props.isAdmin}/>
+                          isAdmin={this.props.isAdmin}
+                          blogUrl={this.props.blogUrl}
+                          />
         </ul>
       </li>
     )
