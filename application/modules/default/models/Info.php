@@ -1352,20 +1352,22 @@ class Default_Model_Info
         $cache = Zend_Registry::get('cache');
         $cacheName = __FUNCTION__ . '_' . $section_id ;
 
-        $sql = "SELECT COUNT(1) AS active_months, member_id FROM
+        $sql = "SELECT COUNT(1) AS active_months, member_id,sum(tier) sum_support FROM
                 (
-                SELECT s.member_id, p.yearmonth FROM section_support_paypements p
+                SELECT s.member_id, p.yearmonth , sum(p.tier) tier FROM section_support_paypements p
                 JOIN support s ON s.id = p.support_id
                 WHERE p.section_id = :section_id
                 GROUP BY s.member_id, p.yearmonth
                 ) A
                 GROUP BY member_id
-                ORDER BY COUNT(1) desc";
+                ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' => $section_id))->fetchAll();
         $cache->save($result, $cacheName, array(), 300);
         return $result;
     }
+
+   
 
     public function getNewActiveSupportersForSection($section_id, $limit = 20)
     {
