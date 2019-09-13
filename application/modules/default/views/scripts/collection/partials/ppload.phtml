@@ -80,6 +80,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                              <thead>
                              <tr>
                                  <th><?= $this->translate('File (click to download)'); ?></th>
+                                 <th><?= $this->translate('MD5SUM'); ?></th>
                                  <th><?= $this->translate('Version'); ?></th>
                                  <th><?= $this->translate('Description'); ?></th>
 
@@ -319,6 +320,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                         var tableString = "";
                                         tableString += '<tr data-ppload-file-id="' + this.id + '"' + greyText + '>';
                                         tableString += '<td>' + downloadLink + '</td>';
+                                        tableString += '<td>' + this.md5sum + '</td>';
                                         tableString += '<td>' + version + '</td>';
                                         tableString += '<td>' + fileDescription + '</td>';
 

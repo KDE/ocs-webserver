@@ -408,7 +408,7 @@ $this->tab = 'products';
                                 var tableString = '';
                                 tableString += '<tr data-ppload-file-id="' + this.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
                                 tableString += '<td>' + downloadLink + '</td>';
-                                if(this.md5sum != 'NULL') {
+                                if(this.md5sum != 'NULL' && this.md5sum != 'null' && this.md5sum != null) {
                                     tableString += '<td>' + this.md5sum + '</td>';
                                 } else {
                                     tableString += '<td></td>'; 
@@ -660,7 +660,7 @@ $this->tab = 'products';
                             tableString += '<tr data-ppload-file-id="' + data.file.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
                             tableString += '<td><a href="' + pploadApiUri + 'files/download/';
                             tableString += 'id/' + data.file.id + '/' + data.file.name + '">' + data.file.name + '</a></td>';
-                            if(data.file.md5sum != 'NULL') {
+                            if(data.file.md5sum != 'NULL' && data.file.md5sum != 'null' && data.file.md5sum != null) {
                                 tableString += '<td>' + data.file.md5sum + '</td>';
                             } else {
                                 tableString += '<td></td>'; 
