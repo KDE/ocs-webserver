@@ -567,6 +567,11 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                     var tableString = "";
                                     tableString += '<tr data-ppload-file-id="' + this.id + '"' + greyText + '>';
                                     tableString += '<td>' + downloadLink + '</td>';
+                                    if(this.md5sum != 'NULL' && this.md5sum != 'null' && this.md5sum != null) {
+                                        tableString += '<td>' + this.md5sum + '</td>';
+                                    } else {
+                                        tableString += '<td></td>'; 
+                                    }
                                     tableString += '<td>' + version + '</td>';
                                     tableString += '<td>' + fileDescription + '</td>';
 
@@ -685,6 +690,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                                 if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName
                                                 ) { 
                                         ?>
+                                             + '<th style="text-align: right"></th>'
                                              + '<th style="text-align: right">' + downloaded_count_total + '</th>'
                                              + '<th style="text-align: right">' + downloaded_count_total_live + '</th>'
                                              + '<th style="text-align: right">' + downloaded_count_total_uk + '</th>'
