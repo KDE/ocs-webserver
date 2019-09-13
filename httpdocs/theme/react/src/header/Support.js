@@ -47,12 +47,14 @@ class Support extends Component {
         if(this.state.selected=="amount")
         {
           content = this.props.section.supporters.sort((a, b) => Number(a.sum_support) < Number(b.sum_support)).map((mg,i) => (
-                  <div className="section"><div className="section-name">{mg.username}:</div><div className="section-value"> {mg.sum_support}</div></div>
+                  <div className="section"><div className="section-name"><a href={"/u/"+mg.username}><img src={mg.profile_image_url}></img></a><span>{mg.username}</span></div>
+                  <div className="section-value"> ${mg.sum_support}</div></div>
                   ))
         }else{
           // default show month panel
           content = this.props.section.supporters.sort((a, b) => Number(a.active_months) < Number(b.active_months)).map((mg,i) => (
-                  <div className="section"><div className="section-name">{mg.username}:</div><div className="section-value"> {mg.active_months+' months'}</div></div>
+                  <div className="section"><div className="section-name"><a href={"/u/"+mg.username}><img src={mg.profile_image_url}></img></a><span>{mg.username}</span></div>
+                  <div className="section-value"> {mg.active_months+' months'}</div></div>
                   ))
         }
 

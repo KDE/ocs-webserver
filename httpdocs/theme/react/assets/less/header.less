@@ -175,6 +175,24 @@
                     display: flex;
                       .section-name{
                       flex: 1;
+                      position: relative;
+                       img{
+                         width: 100px;
+                          height: 100px;
+                       }
+                       span{
+                         display: inline-block;
+                         position: absolute;
+                         left: 0;
+                         bottom: 0;
+                         background: transparent;
+                             background-image: none;
+                         background-color: #fff;
+                         width: 100px;
+                         text-align: center;
+                         background-image: linear-gradient(to bottom, white 0%, black 50%);
+                         color: #fff;
+                       }
                       }
                       .section-value{
 
@@ -650,7 +668,7 @@
                  cursor: pointer;
                  z-index: 1000;
                  .pling-section-tabs{
-                   
+
                    display: block;
                    margin: 0 auto;
                  }
@@ -677,31 +695,38 @@
                         }
                    }
 
-                  .user-pling-section-container
-                  {
-
-                       display: flex;
-                       flex-direction: column;
-                       max-height: 400px;
-                        overflow-y: scroll;
-
-                       width: 100%;
-                       .title{
-                         text-align: center;
-                         border-bottom: 1px solid #ccc;
-                         padding:5px;
-                       }
-                      .section{
-                        padding: 5px;
-                        display: flex;
-                          .section-name{
-                          flex: 1;
-                          }
-                          .section-value{
-
-                          }
-                      }
-                  }
+                  // .user-pling-section-container
+                  // {
+                  //
+                  //      display: flex;
+                  //      flex-direction: column;
+                  //      max-height: 400px;
+                  //       overflow-y: scroll;
+                  //
+                  //      width: 100%;
+                  //      .title{
+                  //        text-align: center;
+                  //        border-bottom: 1px solid #ccc;
+                  //        padding:5px;
+                  //      }
+                  //     .section{
+                  //       padding: 5px;
+                  //       display: flex;
+                  //         .section-name{
+                  //         flex: 1;
+                  //          img{
+                  //            width: 50px;
+                  //            height: 50px;
+                  //          }
+                  //          span{
+                  //            display: inline-block;
+                  //          }
+                  //         }
+                  //         .section-value{
+                  //
+                  //         }
+                  //     }
+                  // }
                }
 
               .header-body{
