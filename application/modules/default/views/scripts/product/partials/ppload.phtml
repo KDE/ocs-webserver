@@ -336,12 +336,12 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
 
                                         var tableString = "";
                                         tableString += '<tr data-ppload-file-id="' + this.id + '"' + greyText + '>';
+                                        tableString += '<td>' + downloadLink + '</td>';
                                         if(this.md5sum != 'NULL' && this.md5sum != 'null' && this.md5sum != null) {
                                             tableString += '<td>' + this.md5sum + '</td>';
                                         } else {
                                             tableString += '<td></td>'; 
                                         }
-                                        tableString += '<td>' + downloadLink + '</td>';
                                         tableString += '<td>' + version + '</td>';
                                         tableString += '<td>' + fileDescription + '</td>';
 
