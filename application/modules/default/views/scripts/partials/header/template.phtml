@@ -146,16 +146,12 @@ if($this->cat_id>0)
                      if($m['member_id'] == $s['member_id'])
                      {
                         $t['active_months'] = $m['active_months'];
+                        $t['sum_support'] = $m['sum_support'];
                         break;
                      }
                  }     
             $sp[] = $t;
-        }
-
-        function custom_sort($a,$b) {
-              return $a['active_months']<$b['active_months'];
-         }
-         usort($sp, "custom_sort");
+        }        
 
         $j_section['supporters'] = $sp;
     }
