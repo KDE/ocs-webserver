@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 class Support extends Component {
   constructor(props){
   	super(props);
-    this.state = {};
+    this.state = {selected:'month'};
     this.handleClick = this.handleClick.bind(this);
+    this.tabSwitch = this.tabSwitch.bind(this);
   }
 
   handleClick(){
@@ -14,26 +15,53 @@ class Support extends Component {
       dropdownClass = "open";
     }
     this.setState({dropdownClass:dropdownClass});
+  }
 
+  tabSwitch(selected)
+  {
+    this.setState({selected:selected});
   }
 
   render(){
-
-
-
       let supporters;
       if(this.props.section.supporters)
       {
+        const sectioncontainer =  <div className="pling-nav-tabs">
+                                  <ul className="nav nav-tabs pling-section-tabs">
+                                    <li key={'month'}
+                                      className={(this.state.selected=="month")?'active':''}
+                                      onClick={()=>this.tabSwitch('month')}
+                                      >
+                                       <a>Months</a>
+                                    </li>
+                                    <li key={'amount'}
+                                      className={(this.state.selected=="amount")?'active':''}
+                                      onClick={()=>this.tabSwitch('amount')}
+                                      >
+                                       <a>Amount</a>
+                                    </li>
+                                  </ul>
+                                  </div>
+
+        let content;
+        if(this.state.selected=="amount")
+        {
+          content = this.props.section.supporters.sort((a, b) => Number(a.sum_support) < Number(b.sum_support)).map((mg,i) => (
+                  <div className="section"><div className="section-name">{mg.username}:</div><div className="section-value"> {mg.sum_support}</div></div>
+                  ))
+        }else{
+          // default show month panel
+          content = this.props.section.supporters.sort((a, b) => Number(a.active_months) < Number(b.active_months)).map((mg,i) => (
+                  <div className="section"><div className="section-name">{mg.username}:</div><div className="section-value"> {mg.active_months+' months'}</div></div>
+                  ))
+        }
+
         const t = (
                         <div className="user-pling-section-container">
-                        <div className="title">Supporters this month</div>
-
-                        { this.props.section.supporters.map((mg,i) => (
-                            <div className="section"><div className="section-name">{mg.username}:</div><div className="section-value"> {mg.active_months+' months'}</div></div>
-                          ))
-                        }
+                        {sectioncontainer}
+                        { content }
                         </div>
-                      )
+                  )
 
         supporters = <ul className="dropdown-menu dropdown-menu-right">{t}</ul>
       }
