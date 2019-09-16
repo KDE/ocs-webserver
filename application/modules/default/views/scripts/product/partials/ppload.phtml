@@ -630,6 +630,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                         tableString += '<td>' +mnt.format('YYYY-MM-DD') + '</td>';
                                         tableString += '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>';
                                         tableString += '<td style="text-align: right; "></td>';
+                                        tableString += '<td style="text-align: right; "></td>';
                                         if(this.md5sum != 'NULL' && this.md5sum != 'null' && this.md5sum != null) {
                                             short = this.md5sum.substring(0, 4) + '...' + this.md5sum.substring(this.md5sum.length-4, this.md5sum.length);
                                             tableString += '<td><div class="md5sum-text" id="md5sum-'+this.id+'" data-defaultText="' + this.md5sum + '" data-defaultTextLong="' + this.md5sum + '">' + short + '</div></td>';
@@ -646,6 +647,22 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                                 $("#data-link" + this.id).attr('target','_blank');
                                             $("#data-link" + this.id).html($("#data-link" + this.id).html() + externalIcon );
                                          }
+                                         
+                                         
+                                         $md5sum = $('#md5sum-'+this.id);
+                                        
+                                        $md5sum.hover(
+                                            function() {
+                                                var $this = $(this); // caching $(this)
+                                                $this.data('defaultText', $this.text());
+                                                $longText = $this.attr('data-defaultTextLong');
+                                                $this.text($longText);
+                                            },
+                                            function() {
+                                                var $this = $(this); // caching $(this)
+                                                $this.text($this.data('defaultText'));
+                                            }
+                                        );
 
 
 
@@ -732,11 +749,12 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                             }
                                         ?>
 
-                                         + '<th></th>'
+                                        + '<th></th>'
                                         + '<th style="text-align: right">' + fileSizeSum.toFixed(2) + ' MB</th>'
                                          //+ '<th style="text-align: right">' + humanFileSize(fileSizeSum) + '</th>'
-                                         + '<th></th>'
-                                           + '<th></th>'
+                                        + '<th></th>'
+                                        + '<th></th>'
+                                        + '<th></th>'
                                          + '</tr>'
                                      );
                                  }
