@@ -136,7 +136,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
                 
         foreach ($results as &$value) {
             $value['created_at'] = $printDateSince->printDateSince($value['created_at']);    
-            $value['size'] = $filesize->humanFilesize($value['size']);         
+            $value['size'] = $filesize->humanFilesize($value['size']);               
         }
 
         $jTableResult = array();
