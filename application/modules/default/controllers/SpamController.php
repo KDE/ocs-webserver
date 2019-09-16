@@ -44,6 +44,17 @@ class SpamController extends Local_Controller_Action_DomainSwitch
     	$this->view->headTitle('Spam - Comments','SET');
     	
     }
+     public function productAction()
+    {   
+        $this->view->headTitle('Spam - Products','SET');
+        
+    }
+
+    public function paypalAction()
+    {   
+        $this->view->headTitle('Spam - Paypal','SET');
+    }
+
 
     public function deletecommentAction()
     {
@@ -75,7 +86,136 @@ class SpamController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json($jTableResult);
     }
 
-    
+    public function paypallistAction()
+    {
+        $startIndex = (int)$this->getParam('jtStartIndex');
+        $pageSize = (int)$this->getParam('jtPageSize');
+        $sorting = $this->getParam('jtSorting');     
+
+        if(!isset($sorting))
+        {
+            $sorting = ' paypal_mail ';
+        }        
+
+        $sql = "
+                    select a.*
+                    , 
+                    (       select sum(d.probably_payout_amount) amount
+                            from member_dl_plings d
+                            where d.member_id in (a.ids)
+                            and d.yearmonth= DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')
+                            and d.is_pling_excluded = 0 
+                            and d.is_license_missing = 0 ) as amount
+                    from
+                    (
+                        select paypal_mail, GROUP_CONCAT(member_id) ids, GROUP_CONCAT(username) names
+                        , count(1) cnt 
+                        , is_deleted            
+                        from member m
+                        where  m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
+                        group by paypal_mail, is_deleted    
+                    ) a
+                    where  cnt > 1
+                   
+                    
+                ";
+        $sql .= ' order by ' . $sorting;
+        $sql .= ' limit ' . $pageSize;
+        $sql .= ' offset ' . $startIndex;
+        
+        $results = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);                        
+
+        $sqlall = "  select count(1) cnt from
+                    (
+                       select paypal_mail, GROUP_CONCAT(member_id) ids, GROUP_CONCAT(username) names
+                        , count(1) cnt , is_deleted
+                        from member m
+                        where  m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
+                        group by paypal_mail, is_deleted
+                        
+                    ) a
+                    where  cnt > 1";         
+
+        $reportsAll = Zend_Db_Table::getDefaultAdapter()->fetchRow($sqlall);
+
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+        $jTableResult['Records'] = $results;        
+        $jTableResult['TotalRecordCount'] = $reportsAll['cnt'];
+        $this->_helper->json($jTableResult);
+
+    }
+
+    public function productfilesAction()
+    {
+        $startIndex = (int)$this->getParam('jtStartIndex');
+        $pageSize = (int)$this->getParam('jtPageSize');
+        $sorting = $this->getParam('jtSorting');     
+
+        if(!isset($sorting))
+        {
+            $sorting = ' created_at desc';
+        }        
+
+        $sql = "
+                select pp.project_id,pp.status,pp.member_id, pp.created_at, cntfiles,size, m.username, m.paypal_mail,m.created_at as member_since, c.title cat_title
+                    ,(select sum(probably_payout_amount) amount
+                    from member_dl_plings 
+                    where member_id=pp.member_id
+                    and yearmonth= DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')
+                    and is_pling_excluded = 0 
+                    and is_license_missing = 0
+                    ) as earn,
+                    m.is_deleted 
+                    from
+                    (
+                        select 
+                        p.project_id,
+                        p.created_at,
+                        p.changed_at,
+                        p.member_id,    
+                        p.status,
+                        p.project_category_id,
+                        count(1) cntfiles,
+                        sum(size) size
+                        from 
+                        pling.project p,
+                        ppload.ppload_files f
+                        where p.ppload_collection_id = f.collection_id
+                        group by p.project_id
+                        order by p.created_at desc, cntfiles desc
+                    )
+                    pp 
+                    ,member m
+                    ,project_category c
+                    where pp.member_id = m.member_id
+                    and pp.project_category_id = c.project_category_id
+                    and cntfiles > 10
+        ";
+        $sql .= ' order by ' . $sorting;
+        $sql .= ' limit ' . $pageSize;
+        $sql .= ' offset ' . $startIndex;
+        $printDateSince = new Default_View_Helper_PrintDateSince();
+        $filesize = new Default_View_Helper_HumanFilesize();
+        $results = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+                
+        foreach ($results as &$value) {
+            $value['created_at'] = $printDateSince->printDateSince($value['created_at']);    
+            $value['size'] = $filesize->humanFilesize($value['size']);  
+            if($value['earn'] && $value['earn']>0)
+            {
+                 $value['earn'] = number_format($value['earn'] , 2, '.', '');
+            }             
+        }
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+        $jTableResult['Records'] = $results;        
+        $jTableResult['TotalRecordCount'] = 1000;
+        $this->_helper->json($jTableResult);
+
+    }
     public function commentslistAction()
     {
     	
