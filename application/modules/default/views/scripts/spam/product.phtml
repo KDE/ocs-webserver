@@ -192,11 +192,8 @@
                     width: '10%',                    
                     create: false,
                     edit: false,
-                    display:function(data){  
-                        if(data.record.earn)
-                        {
-                            return data.record.earn.toFixed(2);  
-                        }
+                    display:function(data){                          
+                        return data.record.earn;
                     }
                   
                 },

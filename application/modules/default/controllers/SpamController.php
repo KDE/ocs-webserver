@@ -202,7 +202,11 @@ class SpamController extends Local_Controller_Action_DomainSwitch
                 
         foreach ($results as &$value) {
             $value['created_at'] = $printDateSince->printDateSince($value['created_at']);    
-            $value['size'] = $filesize->humanFilesize($value['size']);               
+            $value['size'] = $filesize->humanFilesize($value['size']);  
+            if($value['earn'] && $value['earn']>0)
+            {
+                 $value['earn'] = number_format($value['earn'] , 2, '.', '');
+            }             
         }
 
         $jTableResult = array();
