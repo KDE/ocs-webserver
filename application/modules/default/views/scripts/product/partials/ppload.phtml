@@ -30,6 +30,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
         vertical-align: top !important;
     }
     
+    
 </style>
 
   <!-- ppload -->
@@ -110,10 +111,10 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                   <th style="text-align: right;white-space:nowrap"><?= $this->translate('OCS-Install'); ?>
                                      <a href="#modal-installation-instructions" role="button" data-toggle="modal"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
                                  </th>
+                                 <th style="min-width: 250px;"><?= $this->translate('MD5SUM'); ?></th>
                                  <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                                  <th>Compatible</th>
                                  <?php endif; ?>
-                                 <th><?= $this->translate('MD5SUM'); ?></th>
 
                              </tr>
                              </thead>
@@ -382,14 +383,15 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                         tableString += '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>';
                                         tableString += '<td style="text-align: right; ">' + downloadButton+ '</td>';
                                         tableString += '<td style="text-align: right; ">' + installButton + '</td>';
-                                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                                        tableString += '<td style="text-align: center; "><input type="checkbox" id="data-checkbox-compatible-'+this.id+'" data-is-compatible="" ></td>';
-                                        <?php endif; ?>
                                         if(this.md5sum != 'NULL' && this.md5sum != 'null' && this.md5sum != null) {
-                                            tableString += '<td>' + this.md5sum + '</td>';
+                                            short = this.md5sum.substring(0, 4) + '...' + this.md5sum.substring(this.md5sum.length-4, this.md5sum.length);
+                                            tableString += '<td><div class="md5sum-text" id="md5sum-'+this.id+'" data-defaultText="' + this.md5sum + '" data-defaultTextLong="' + this.md5sum + '">' + short + '</div></td>';
                                         } else {
                                             tableString += '<td></td>'; 
                                         }
+                                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                        tableString += '<td style="text-align: center; "><input type="checkbox" id="data-checkbox-compatible-'+this.id+'" data-is-compatible="" ></td>';
+                                        <?php endif; ?>
                                             
                                         tableString += '</tr>';
                                         $pploadCollection.find('table[data-ppload-files] tbody').append(tableString);
@@ -485,6 +487,21 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                             $isCompatible = this.checked;
                                             updateOcsCompatible($fileId, $isCompatible);
                                         });
+                                        
+                                        $md5sum = $('#md5sum-'+this.id);
+                                        
+                                        $md5sum.hover(
+                                            function() {
+                                                var $this = $(this); // caching $(this)
+                                                $this.data('defaultText', $this.text());
+                                                $longText = $this.attr('data-defaultTextLong');
+                                                $this.text($longText);
+                                            },
+                                            function() {
+                                                var $this = $(this); // caching $(this)
+                                                $this.text($this.data('defaultText'));
+                                            }
+                                        );
 
 
                                         //fileSizeSum += parseInt(this.size);
@@ -613,12 +630,13 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                         tableString += '<td>' +mnt.format('YYYY-MM-DD') + '</td>';
                                         tableString += '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>';
                                         tableString += '<td style="text-align: right; "></td>';
-                                        tableString += '<td style="text-align: right; "></td>';
                                         if(this.md5sum != 'NULL' && this.md5sum != 'null' && this.md5sum != null) {
-                                            tableString += '<td>' + this.md5sum + '</td>';
+                                            short = this.md5sum.substring(0, 4) + '...' + this.md5sum.substring(this.md5sum.length-4, this.md5sum.length);
+                                            tableString += '<td><div class="md5sum-text" id="md5sum-'+this.id+'" data-defaultText="' + this.md5sum + '" data-defaultTextLong="' + this.md5sum + '">' + short + '</div></td>';
                                         } else {
                                             tableString += '<td></td>'; 
                                         }
+                                        tableString += '<td style="text-align: right; "></td>';
 
                                         tableString += '</tr>';
                                         $pploadCollection.find('table[data-ppload-files] tbody').append(tableString);
