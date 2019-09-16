@@ -100,7 +100,8 @@ class SpamController extends Local_Controller_Action_DomainSwitch
                     and yearmonth= DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')
                     and is_pling_excluded = 0 
                     and is_license_missing = 0
-                    ) as earn
+                    ) as earn,
+                    m.is_deleted 
                     from
                     (
                         select 

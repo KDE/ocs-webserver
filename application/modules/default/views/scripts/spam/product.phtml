@@ -175,7 +175,14 @@
                     edit: false,                    
                     display:function(data){                        
                         var html = '<a href="/u/'+data.record.username+'" target="_blank" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+data.record.member_id+'" >';
-                        html=html+data.record.username+'</a>';
+
+                        if(data.record.is_deleted==1)
+                        {
+                            html += '<span style="color:red">'+data.record.username+'</span></a>';
+                        }else{
+                            html=html+data.record.username+'</a>';    
+                        }
+                        
                        
                          return html;
                     }
