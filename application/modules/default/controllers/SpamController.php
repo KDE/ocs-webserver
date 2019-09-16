@@ -159,7 +159,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
         }        
 
         $sql = "
-                select pp.project_id,pp.status,pp.member_id, pp.created_at, cntfiles,size, m.username, m.paypal_mail,m.created_at as member_since, c.title cat_title
+                select pp.project_id,pp.status,pp.member_id, pp.created_at, cntfiles,size, m.username, m.paypal_mail,m.created_at as member_since, c.title cat_title,c.lft, c.rgt
                     ,(select sum(probably_payout_amount) amount
                     from member_dl_plings 
                     where member_id=pp.member_id
@@ -190,7 +190,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
                     ,member m
                     ,project_category c
                     where pp.member_id = m.member_id
-                    and pp.project_category_id = c.project_category_id
+                    and pp.project_category_id = c.project_category_id and m.is_deleted=0 and m.is_active = 1
                     and cntfiles > 10
         ";
         $sql .= ' order by ' . $sorting;
@@ -200,6 +200,10 @@ class SpamController extends Local_Controller_Action_DomainSwitch
         $filesize = new Default_View_Helper_HumanFilesize();
         $results = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
                 
+        $tmpsql = "select lft, rgt from project_category where project_category_id=295";
+        $wal =Zend_Db_Table::getDefaultAdapter()->fetchRow($tmpsql);            
+        $lft = $wal['lft'];
+        $rgt = $wal['rgt'];
         foreach ($results as &$value) {
             $value['created_at'] = $printDateSince->printDateSince($value['created_at']);    
             $value['size'] = $filesize->humanFilesize($value['size']);  
@@ -207,6 +211,12 @@ class SpamController extends Local_Controller_Action_DomainSwitch
             {
                  $value['earn'] = number_format($value['earn'] , 2, '.', '');
             }             
+            if($value['lft'] >= $lft && $value['rgt'] <= $rgt)
+            {
+                $value['is_wallpaper'] = 1;
+            }else{
+                $value['is_wallpaper'] = 0;
+            }
         }
 
         $jTableResult = array();

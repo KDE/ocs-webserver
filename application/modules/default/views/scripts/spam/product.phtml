@@ -117,9 +117,10 @@
                 TooltipUser.setup("tooltipuser","right");        
             },
             rowInserted: function (event, data) {
-               if (data.record.cntComments==1) {                   
+               if (data.record.is_wallpaper==1) {                   
                     data.row.css("background", "#F7F7E1");                   
                }
+
             },
             fields: {
                 project_id: {
@@ -129,8 +130,7 @@
                     edit: false,
                     list: true
                 }, 
-                cat_title: {
-                    
+                cat_title: {                    
                     title: 'category',
                     create: false,
                     edit: false,
@@ -144,7 +144,7 @@
                     display:function(data){      
                              if(data.record.status!=100)
                              {
-                                return 'unpublished';
+                                return '<span style="color:red">unpublished</span>';
                              }                                                     
                             return '';
                         }
