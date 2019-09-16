@@ -26,6 +26,12 @@ function AdminlLinksContainer(props)
             </a>
           </li>
 
+          <li id="product-files-link-item">
+            <a href={props.baseUrlStore+"/spam/product"} >
+              <span>New Products with min.10 files</span>
+            </a>
+          </li>
+
           <li id="piwik-link-item">
             <a href={"https://piwik.opendesktop.org"} >
               <span>Piwik</span>
