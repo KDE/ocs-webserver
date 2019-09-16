@@ -161,6 +161,7 @@ class Default_Model_Section
         {
             $sqlSection = " ";
         }
+        /*
         $sql = "select  sum(probably_payout_amount) probably_payout_amount
             from member_dl_plings m, section s, section_category c
             where  s.section_id = c.section_id and c.project_category_id = m.project_category_id
@@ -170,6 +171,11 @@ class Default_Model_Section
             and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
             and m.is_member_pling_excluded=0
             ";
+        */
+        $sql = "SELECT s.sum_amount_payout AS probably_payout_amount FROM section_funding_stats s
+                WHERE s.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')
+               ".$sqlSection."
+                ";
         $resultSet = $this->getAdapter()->fetchRow($sql);
         
         return $resultSet['probably_payout_amount'];
@@ -186,18 +192,19 @@ class Default_Model_Section
         }
         $sql = "
             select                 
-                p.username,
-                p.profile_image_url,
-                p.member_id,
+                me.username,
+                me.profile_image_url,
+                m.member_id,
                 sum(m.probably_payout_amount) probably_payout_amount
-                from stat_projects p,member_dl_plings m, section s, section_category c
-                where p.project_id = m.project_id and s.section_id = c.section_id and c.project_category_id = p.project_category_id 
+                from member_dl_plings m, section s, section_category c, member me
+                where s.section_id = c.section_id and c.project_category_id = m.project_category_id AND me.member_id = m.member_id
                 and m.paypal_mail is not null and m.paypal_mail <> ''
                 and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
-                ".$sqlSection."   
-                and m.yearmonth =  DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m') and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+                ".$sqlSection."  
+                and m.yearmonth =  DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m') 
+					 and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
                 and m.is_member_pling_excluded=0
-                group by p.username,p.profile_image_url,p.member_id
+                group by me.username,me.profile_image_url,m.member_id
                 order by probably_payout_amount desc
                 limit 20
         ";
