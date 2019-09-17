@@ -83,17 +83,11 @@ $printCurrentMonth = new DateTime($currentDate.'01');
 $printMonth = new DateTime($yearmonth.'01');
 $printDate = $printMonth->format('M Y');
 
-echo "MemberId: " . $this->member->member_id;
-echo " - Yearmonth: " . $yearmonth;
-echo " - Section: " . $section_id;
-
 if(null != $section_id) {
     $allDownloads = $modelDownload->getUserDownloadsAndViewsForMonthAndSection($this->member->member_id, $yearmonth, $section_id);
 } else {
     $allDownloads = $modelDownload->getUserDownloadsAndViewsForMonth($this->member->member_id, $yearmonth);
 }
-
-var_dump($allDownloads);
 
 $countDownloadsOverall = count($allDownloads);
 
