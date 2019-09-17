@@ -27,7 +27,7 @@ $currentDate = date("Ym",time());
 $currentYear = date("Y",time());
 
 $modelDownload = new Default_Model_StatDownload();
-$downloadYears = $modelDownload->getUserDownloadYears($this->member->member_id);
+$downloadYears = $modelDownload->getUserDownloadsAndViewsYears($this->member->member_id);
 #$this->countDownloadsOverall = count($this->downloads);
 ?>
 

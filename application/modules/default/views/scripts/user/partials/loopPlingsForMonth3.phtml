@@ -83,17 +83,11 @@ $printCurrentMonth = new DateTime($currentDate.'01');
 $printMonth = new DateTime($yearmonth.'01');
 $printDate = $printMonth->format('M Y');
 
-echo "MemberId: " . $this->member->member_id;
-echo " - Yearmonth: " . $yearmonth;
-echo " - Section: " . $section_id;
-
 if(null != $section_id) {
     $allDownloads = $modelDownload->getUserDownloadsAndViewsForMonthAndSection($this->member->member_id, $yearmonth, $section_id);
 } else {
     $allDownloads = $modelDownload->getUserDownloadsAndViewsForMonth($this->member->member_id, $yearmonth);
 }
-
-var_dump($allDownloads);
 
 $countDownloadsOverall = count($allDownloads);
 
@@ -145,7 +139,7 @@ if ($countDownloadsOverall > 0) {
                         <span><?= $product['num_views_micropayout'] ?></span>
                     </div>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span><?= $product['dl_pling_factor'] ?></span>
+                        <span><?= $product['category_pling_factor'] ?></span>
                     </div>
                         
                         
@@ -205,12 +199,12 @@ if ($countDownloadsOverall > 0) {
                             //$payout_sum = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
                             $payout_sum = 0;
                             $payout_sum_uk = 0;
-                            $payout_sum_new = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
+                            $payout_sum_new = ($product['amount_downloads_micropayout'] + $product['amount_views_micropayout']);
                             
                             $show_payout_new_sum = $payout_sum_new;
                             $show_payout_sum = $payout_sum;
                             
-                            $payout_sum_uk = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
+                            $payout_sum_uk = ($product['amount_downloads_micropayout'] + $product['amount_views_micropayout']);
 
                             if($sum_plings && $sum_plings < $payout_sum) {
                                 $show_payout_new_sum = $sum_plings;
@@ -227,7 +221,7 @@ if ($countDownloadsOverall > 0) {
                 </div>
                 <?php
                 
-                $sum_total_month_potential_payout += ($product['num_downloads'] * $product['dl_pling_factor'] / 100);
+                $sum_total_month_potential_payout += ($product['amount_downloads_micropayout'] + $product['amount_views_micropayout']);
                 $sum_total_potential_payout = $currency->toCurrency($sum_total_month_potential_payout);
                 
                 if(!$showErrMsg) {       
@@ -253,22 +247,11 @@ if ($countDownloadsOverall > 0) {
             $sum_total_month_view = number_format($sum_total_month);
             ?>
             <div class='row row-total'>
-                <div class='col-md-1 text-right' style="min-width: 150px;"></div>
-                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                <div class='col-md-2 text-right'></div>
-                <?php else: ?>
-                <div class='col-md-3 text-right'></div>
-                <?php endif; ?>
-                
-                <div class='col-md-4 text-right' style="min-width: 380px;"><?=$sum_total_text?></div>
-                <div class='col-md-1 text-right' style="min-width: 170px;"><strong style="color: #BBB"><?=$sum_total_potential_payout?></strong></div>
-                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                <div class='col-md-1 text-right' style="min-width: 190px;"></div>
-                <?php endif; ?>
-                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?=$sum_total_payout?>**</strong></div>
-                <?php endif; ?>
-                <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?=$sum_total_payout_uk?>**</strong></div>
+                <div class="col-md-1" style="min-width: 150px;"></div>
+                <div class="col-md-3 text-left text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"></div>
+                <div class="col-md-3 text-right nowrap" style="white-space: nowrap; min-width: 570px;"><?=$sum_total_text?></div>
+                <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong style="color: #BBB"><?=$sum_total_potential_payout?></strong></div>
+                <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong><?=$sum_total_payout_uk?>**</strong></div>
             </div>
             
             

@@ -73,7 +73,7 @@ $css_active = 'active';
 $printCurrentMonth = new DateTime($currentDate.'01');
 
 $modelDownload = new Default_Model_StatDownload();
-$downloadMonths = $modelDownload->getUserDownloadMonths($this->member->member_id, $currentYear);
+$downloadMonths = $modelDownload->getUserDownloadsAndViewsMonths($this->member->member_id, $currentYear);
 $countDownloadsOverall = count($downloadMonths);
 $minDate = null;
 
