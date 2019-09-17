@@ -77,7 +77,7 @@ class Default_Model_StatDownload
     {
         $sql = "
                 SELECT 
-                    `micro_payout`.*,
+                    `micro_payout`.`yearmonth`,`micro_payout`.`project_id`,`micro_payout`.`project_category_id`,`micro_payout`.`category_pling_factor`,`project_category`.`title`, `project`.`title`,`micro_payout`.`paypal_mail`,
                     CASE WHEN (SELECT count(1) AS `sum_plings` FROM `project_plings` `pp` WHERE `pp`.`project_id` = `micro_payout`.`project_id` AND `pp`.`is_deleted` = 0 AND `is_active` = 1 GROUP BY `pp`.`project_id`) > 0 THEN (SELECT count(1) AS `sum_plings` FROM `project_plings` `pp` WHERE `pp`.`project_id` = `micro_payout`.`project_id` AND `pp`.`is_deleted` = 0 AND `is_active` = 1 GROUP BY `pp`.`project_id`) + 1 ELSE 1 END AS `num_plings_now`,
                     `project`.`title`,
                     `project`.`image_small`,
@@ -128,13 +128,15 @@ class Default_Model_StatDownload
                 LEFT JOIN section s ON s.section_id = sc.section_id
                 WHERE
                     `micro_payout`.`member_id` = :member_id
-                    AND `micro_payout`.`yearmonth` = :yearmonth ";
+                    AND `micro_payout`.`yearmonth` = :yearmonth
+                ";
         
         if(null != $section_id) {
             $sql .=  " AND `micro_payout`.`section_id` = ".$section_id;
         }
         
-        $sql .=  " ORDER BY `micro_payout`.`yearmonth` DESC, `project_category`.`title`, `project`.`title`
+        $sql .=  " GROUP BY `micro_payout`.`yearmonth`, `micro_payout`.`project_id`
+                   ORDER BY `micro_payout`.`yearmonth` DESC, `project_category`.`title`, `project`.`title`
             ";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'yearmonth' => $yearmonth));
 
@@ -287,6 +289,37 @@ class Default_Model_StatDownload
         }
     }
     
+    
+    public function getUserDownloadsAndViewsMonths($member_id, $year)
+    {
+        $sql = "
+                SELECT 
+                    DISTINCT `micro_payout`.`yearmonth`, `member_payout`.payment_transaction_id, `member_payout`.`status`
+                FROM
+                    `micro_payout`
+                STRAIGHT_JOIN
+                    `project` ON `project`.`project_id` = `micro_payout`.`project_id`
+                STRAIGHT_JOIN 
+                    `project_category` ON `project_category`.`project_category_id` = `micro_payout`.`project_category_id`
+                LEFT JOIN
+                    `member_payout` ON `member_payout`.`member_id` = `micro_payout`.`member_id`
+                    AND `member_payout`.`yearmonth` = `micro_payout`.`yearmonth`
+                LEFT JOIN `tag_object` ON `tag_object`.`tag_type_id` = 1 AND `tag_object`.`tag_group_id` = 7 AND `tag_object`.`is_deleted` = 0 AND `tag_object`.`tag_object_id` = `project`.`project_id`
+                WHERE
+                    `micro_payout`.`member_id` = :member_id
+                AND SUBSTR(`micro_payout`.`yearmonth`,1,4) = :year 
+                ORDER BY `micro_payout`.`yearmonth` DESC
+            ";
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'year' => $year));
+
+        if ($result->rowCount() > 0) {
+            return $result->fetchAll();
+        } else {
+            return array();
+
+        }
+    }
+    
     public function getUserDownloadYears($member_id)
     {
         $sql = "
@@ -309,6 +342,40 @@ class Default_Model_StatDownload
                     `member_dl_plings`.`member_id` = :member_id
                 GROUP BY SUBSTR(`member_dl_plings`.`yearmonth`,1,4)
                 ORDER BY SUBSTR(`member_dl_plings`.`yearmonth`,1,4) DESC
+            ";
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id));
+
+        if ($result->rowCount() > 0) {
+            return $result->fetchAll();
+        } else {
+            return array();
+
+        }
+    }
+    
+    
+    public function getUserDownloadsAndViewsYears($member_id)
+    {
+        $sql = "
+                SELECT 
+
+                    SUBSTR(`micro_payout`.`yearmonth`,1,4) as year,
+                    MAX(`micro_payout`.`yearmonth`) as max_yearmonth,
+                    SUM(`member_payout`.amount) as sum_amount
+                FROM
+                    `micro_payout`
+                STRAIGHT_JOIN
+                    `project` ON `project`.`project_id` = `micro_payout`.`project_id`
+                STRAIGHT_JOIN 
+                    `project_category` ON `project_category`.`project_category_id` = `micro_payout`.`project_category_id`
+                LEFT JOIN
+	                 `member_payout` ON `member_payout`.`member_id` = `micro_payout`.`member_id`
+	                  AND `member_payout`.`yearmonth` = `micro_payout`.`yearmonth`
+                LEFT JOIN `tag_object` ON `tag_object`.`tag_type_id` = 1 AND `tag_object`.`tag_group_id` = 7 AND `tag_object`.`is_deleted` = 0 AND `tag_object`.`tag_object_id` = `project`.`project_id`
+                WHERE
+                    `micro_payout`.`member_id` = :member_id
+                GROUP BY SUBSTR(`micro_payout`.`yearmonth`,1,4)
+                ORDER BY SUBSTR(`micro_payout`.`yearmonth`,1,4) DESC
             ";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id));
 
