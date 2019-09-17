@@ -77,8 +77,8 @@ class Default_Model_StatDownload
     {
         $sql = "
                 SELECT 
-                    `member_dl_plings`.*,
-                    CASE WHEN (SELECT count(1) AS `sum_plings` FROM `project_plings` `pp` WHERE `pp`.`project_id` = `member_dl_plings`.`project_id` AND `pp`.`is_deleted` = 0 AND `is_active` = 1 GROUP BY `pp`.`project_id`) > 0 THEN (SELECT count(1) AS `sum_plings` FROM `project_plings` `pp` WHERE `pp`.`project_id` = `member_dl_plings`.`project_id` AND `pp`.`is_deleted` = 0 AND `is_active` = 1 GROUP BY `pp`.`project_id`) + 1 ELSE 1 END AS `num_plings_now`,
+                    `micro_payout`.*,
+                    CASE WHEN (SELECT count(1) AS `sum_plings` FROM `project_plings` `pp` WHERE `pp`.`project_id` = `micro_payout`.`project_id` AND `pp`.`is_deleted` = 0 AND `is_active` = 1 GROUP BY `pp`.`project_id`) > 0 THEN (SELECT count(1) AS `sum_plings` FROM `project_plings` `pp` WHERE `pp`.`project_id` = `micro_payout`.`project_id` AND `pp`.`is_deleted` = 0 AND `is_active` = 1 GROUP BY `pp`.`project_id`) + 1 ELSE 1 END AS `num_plings_now`,
                     `project`.`title`,
                     `project`.`image_small`,
                     `project_category`.`title` AS `cat_title`,
@@ -90,51 +90,51 @@ class Default_Model_StatDownload
                     CASE WHEN ((`project_category`.`source_required` = 1 AND `project`.`source_url` IS NOT NULL AND LENGTH(`project`.`source_url`) > 0) OR  (`project_category`.`source_required` = 0)) THEN 0 ELSE 1 END AS `is_source_missing_now`,
                     `project`.`pling_excluded` AS `is_pling_excluded_now`,
                     (SELECT SUM(u.num_plings) FROM micro_payout u 
-							WHERE u.member_id = `member_dl_plings`.`member_id` 
-							and u.project_id = `member_dl_plings`.`project_id`
-							AND u.yearmonth = `member_dl_plings`.yearmonth
+							WHERE u.member_id = `micro_payout`.`member_id` 
+							and u.project_id = `micro_payout`.`project_id`
+							AND u.yearmonth = `micro_payout`.yearmonth
 							AND u.`type` = 0
 							GROUP BY u.yearmonth, u.project_id, u.member_id) AS num_downloads_micropayout,
                     (SELECT SUM(u.amount_plings) FROM micro_payout u 
-							WHERE u.member_id = `member_dl_plings`.`member_id` 
-							AND u.project_id = `member_dl_plings`.`project_id`
-							AND u.yearmonth = `member_dl_plings`.yearmonth
+							WHERE u.member_id = `micro_payout`.`member_id` 
+							AND u.project_id = `micro_payout`.`project_id`
+							AND u.yearmonth = `micro_payout`.yearmonth
 							AND u.`type` = 0
 							GROUP BY u.yearmonth, u.project_id, u.member_id) AS amount_downloads_micropayout,
                     (SELECT SUM(u.num_plings) FROM micro_payout u 
-							WHERE u.member_id = `member_dl_plings`.`member_id` 
-							and u.project_id = `member_dl_plings`.`project_id`
-							AND u.yearmonth = `member_dl_plings`.yearmonth
+							WHERE u.member_id = `micro_payout`.`member_id` 
+							and u.project_id = `micro_payout`.`project_id`
+							AND u.yearmonth = `micro_payout`.yearmonth
 							AND u.`type` = 1
 							GROUP BY u.yearmonth, u.project_id, u.member_id) AS num_views_micropayout,
                     (SELECT SUM(u.amount_plings) FROM micro_payout u 
-							WHERE u.member_id = `member_dl_plings`.`member_id` 
-							AND u.project_id = `member_dl_plings`.`project_id`
-							AND u.yearmonth = `member_dl_plings`.yearmonth
+							WHERE u.member_id = `micro_payout`.`member_id` 
+							AND u.project_id = `micro_payout`.`project_id`
+							AND u.yearmonth = `micro_payout`.yearmonth
 							AND u.`type` = 1
 							GROUP BY u.yearmonth, u.project_id, u.member_id) AS amount_views_micropayout,
-                    sc.section_id,s.name AS section_name,`member_dl_plings`.section_payout_factor
+                    sc.section_id,s.name AS section_name
                 FROM
-                    `member_dl_plings`
+                    `micro_payout`
                 STRAIGHT_JOIN
-                    `project` ON `project`.`project_id` = `member_dl_plings`.`project_id`
+                    `project` ON `project`.`project_id` = `micro_payout`.`project_id`
                 STRAIGHT_JOIN 
-                    `project_category` ON `project_category`.`project_category_id` = `member_dl_plings`.`project_category_id`
+                    `project_category` ON `project_category`.`project_category_id` = `micro_payout`.`project_category_id`
                 LEFT JOIN
-                    `member_payout` ON `member_payout`.`member_id` = `member_dl_plings`.`member_id`
-                        AND `member_payout`.`yearmonth` = `member_dl_plings`.`yearmonth`
+                    `member_payout` ON `member_payout`.`member_id` = `micro_payout`.`member_id`
+                        AND `member_payout`.`yearmonth` = `micro_payout`.`yearmonth`
                 LEFT JOIN `tag_object` ON `tag_object`.`tag_type_id` = 1 AND `tag_object`.`tag_group_id` = 7 AND `tag_object`.`is_deleted` = 0 AND `tag_object`.`tag_object_id` = `project`.`project_id`
-                LEFT JOIN section_category sc ON sc.project_category_id = `member_dl_plings`.`project_category_id`
+                LEFT JOIN section_category sc ON sc.project_category_id = `micro_payout`.`project_category_id`
                 LEFT JOIN section s ON s.section_id = sc.section_id
                 WHERE
-                    `member_dl_plings`.`member_id` = :member_id
-                    AND `member_dl_plings`.`yearmonth` = :yearmonth ";
+                    `micro_payout`.`member_id` = :member_id
+                    AND `micro_payout`.`yearmonth` = :yearmonth ";
         
         if(null != $section_id) {
-            $sql .=  " AND `member_dl_plings`.`section_id` = ".$section_id;
+            $sql .=  " AND `micro_payout`.`section_id` = ".$section_id;
         }
         
-        $sql .=  " ORDER BY `member_dl_plings`.`yearmonth` DESC, `project_category`.`title`, `project`.`title`
+        $sql .=  " ORDER BY `micro_payout`.`yearmonth` DESC, `project_category`.`title`, `project`.`title`
             ";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'yearmonth' => $yearmonth));
 
