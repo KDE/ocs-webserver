@@ -1,0 +1,377 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+?>
+<style>
+    .cell-default {
+        line-height: 4em;
+        vertical-align: middle;
+    }
+    .row-total {
+        border-top: #1595ee solid thin;
+        padding-top: 1em;
+        padding-bottom: 1em;
+        line-height: 30px;
+    }
+    
+    .popover {
+        min-width:350px;
+    }
+    
+    .popover-title { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+    
+    .popover-content { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+</style>
+<ul class="nav nav-tabs margin-bottom-10">
+<?php
+    
+$isCurrentMonth = false;
+$modelDownload = new Default_Model_StatDownload();
+$yearmonth = null;
+
+if(isset($this->yearmonth)) {
+    $yearmonth = $this->yearmonth;
+}
+
+$section_id = null;
+
+if(isset($this->section_id) && $this->section_id != '') {
+    $section_id = $this->section_id;
+}
+
+?>
+
+<div class="tab-content">
+<?php
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helpImage = new Default_View_Helper_Image();
+$css_active = ' in active';
+$has_paypal = false;
+$currency = new Zend_Currency('en_US');
+
+$currentDate = date("Ym",time());
+$printCurrentMonth = new DateTime($currentDate.'01');
+
+$printMonth = new DateTime($yearmonth.'01');
+$printDate = $printMonth->format('M Y');
+
+echo "MemberId: " . $this->member->member_id;
+echo " - Yearmonth: " . $yearmonth;
+echo " - Section: " . $section_id;
+
+if(null != $section_id) {
+    $allDownloads = $modelDownload->getUserDownloadsAndViewsForMonthAndSection($this->member->member_id, $yearmonth, $section_id);
+} else {
+    $allDownloads = $modelDownload->getUserDownloadsAndViewsForMonth($this->member->member_id, $yearmonth);
+}
+
+var_dump($allDownloads);
+
+$countDownloadsOverall = count($allDownloads);
+
+if ($countDownloadsOverall > 0) {
+    $firstProduct = $allDownloads[0];
+    if ($firstProduct) {
+        $printMonth = new DateTime($firstProduct['yearmonth'].'01');
+        $printCurrentMonth = new DateTime($currentDate.'01');
+        
+        if($printMonth == $printCurrentMonth) {
+            $isCurrentMonth = true;
+        } else {
+            $isCurrentMonth = false;
+        }
+        $sum_total_month_score = 0;
+        $sum_total_month = 0;
+        $sum_total_month_uk = 0;
+        $sum_total_month_new = 0;
+        $sum_total_text = '';
+        $sum_total_payout = 0;
+        $sum_total_payout_uk = 0;
+        $sum_total_payout_new = 0;
+        
+        $sum_total_month_potential_payout = 0;
+        $sum_total_potential_payout = 0;
+        
+        ?>
+        <div class="tab-pane fade <?=$css_active?>" id="<?=$firstProduct['yearmonth']?>">
+            <?php
+            $css_active = '';
+
+            foreach ($allDownloads as $product) { ?>
+                <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
+                    <div class="col-md-1 cell-default" style="min-width: 150px;">
+                        <a href="<?= $this->buildProductUrl($product['project_id']) ?>">
+                            <img src="<?php echo $helpImage->Image($product['image_small'], array('width' => 80, 'height' => 65)); ?> " height="81" width="101"/>
+                        </a>
+                    </div>
+                    <div class="col-md-3 text-left cell-default">
+                        <a href="<?= $this->buildProductUrl($product['project_id']) ?>">
+                            <span style="line-height: 3em;"><?= $product['title']; ?></span>
+                        </a>
+                        <b style="display: block; margin-bottom: 5px; font-size: 10pt; line-height: 0em;"><?=$product['cat_title']?></b>
+                    </div>
+                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                        <span><?= $product['num_downloads_micropayout'] ?></span>
+                    </div>
+                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                        <span><?= $product['num_views_micropayout'] ?></span>
+                    </div>
+                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                        <span><?= $product['dl_pling_factor'] ?></span>
+                    </div>
+                        
+                        
+                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                        <span style="color: #BBB"><?php print($currency->toCurrency($product['amount_downloads_micropayout'] + $product['amount_views_micropayout'])); ?></span>
+                    </div>
+                        
+                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                        <span>
+                        <?php 
+                            $errorMsg = "<ul>";
+                            $showErrMsg = false;
+                            
+                            if($isCurrentMonth) {
+                                if($product['is_license_missing_now'] == 1) {
+                                    $errorMsg .= "<li>Please specify a License</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_source_missing_now'] == 1) {
+                                    $errorMsg .= "<li>Please specify a link to the online source repository</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_pling_excluded_now'] == 1) {
+                                    $errorMsg .= "<li>This Product has been excluded from plings</li>";
+                                    $showErrMsg = true;
+                                }
+                                $sum_plings = $product['num_plings_now'];
+                            } else {
+                                if($product['is_license_missing'] == 1) {
+                                    $errorMsg .= "<li>License was not specified</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_source_missing'] == 1) {
+                                    $errorMsg .= "<li>Link to the online source repository was not specified</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_pling_excluded'] == 1) {
+                                    $errorMsg .= "<li>This Product has been excluded from plings</li>";
+                                    $showErrMsg = true;
+                                }
+                                $sum_plings = $product['num_plings'];
+                                
+                            } 
+                            $errorMsg .= "</ul>";
+                            
+                            if($showErrMsg) {
+                                echo '<div class="inline msg-popover-danger" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout requirements are not fulfilled" data-trigger="hover" data-html="true" data-content="'.$errorMsg.'"><span style="color: #a94442;" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span></div>';
+                            } else {
+                                 print($currency->toCurrency($product['amount_downloads_micropayout'] + $product['amount_views_micropayout']));
+                            }
+                        ?>
+                        </span>
+                        
+                    </div>
+                    
+                    <?php if(!$showErrMsg) {
+                            //$payout_sum = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
+                            $payout_sum = 0;
+                            $payout_sum_uk = 0;
+                            $payout_sum_new = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
+                            
+                            $show_payout_new_sum = $payout_sum_new;
+                            $show_payout_sum = $payout_sum;
+                            
+                            $payout_sum_uk = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
+
+                            if($sum_plings && $sum_plings < $payout_sum) {
+                                $show_payout_new_sum = $sum_plings;
+                                $payout_sum_new = $sum_plings;
+                            } 
+                            if($sum_plings && $sum_plings>0) {
+                               $show_payout_new_sum = $show_payout_new_sum ;
+
+                            } else {
+                                $show_payout_new_sum = $payout_sum_new;
+                            }
+                    ?>
+                    <?php } ?>
+                </div>
+                <?php
+                
+                $sum_total_month_potential_payout += ($product['num_downloads'] * $product['dl_pling_factor'] / 100);
+                $sum_total_potential_payout = $currency->toCurrency($sum_total_month_potential_payout);
+                
+                if(!$showErrMsg) {       
+                    $sum_total_month += $payout_sum;
+                    $sum_total_month_uk += $payout_sum_uk;
+                    $sum_total_payout = $currency->toCurrency($sum_total_month);
+                    $sum_total_payout_uk = $currency->toCurrency($sum_total_month_uk);
+                    $sum_total_month_new += $show_payout_new_sum;
+                    $sum_total_payout_new = $currency->toCurrency($sum_total_month_new);
+                }
+                
+                $sum_total_text = 'Possible payout for this month (<span style="font-size: smaller;">*</span>):';
+                
+                $payout_success = false;
+                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
+                    $payout_success = true;
+                    $sum_total_payout_success = $currency->toCurrency($product['amount']);
+                    $sum_total_text_success = 'Actually successfully paid amount: ';
+                }
+                $has_paypal = $product['paypal_mail'] ? true : false;
+            }
+
+            $sum_total_month_view = number_format($sum_total_month);
+            ?>
+            <div class='row row-total'>
+                <div class='col-md-1 text-right' style="min-width: 150px;"></div>
+                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                <div class='col-md-2 text-right'></div>
+                <?php else: ?>
+                <div class='col-md-3 text-right'></div>
+                <?php endif; ?>
+                
+                <div class='col-md-4 text-right' style="min-width: 380px;"><?=$sum_total_text?></div>
+                <div class='col-md-1 text-right' style="min-width: 170px;"><strong style="color: #BBB"><?=$sum_total_potential_payout?></strong></div>
+                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                <div class='col-md-1 text-right' style="min-width: 190px;"></div>
+                <?php endif; ?>
+                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?=$sum_total_payout?>**</strong></div>
+                <?php endif; ?>
+                <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?=$sum_total_payout_uk?>**</strong></div>
+            </div>
+            
+            
+            
+            <?php 
+
+
+            $currentDate = date("Ym",time());
+            $viewDate = $firstProduct['yearmonth']."";
+            $paypalWarning = '';
+            if($currentDate == $viewDate) {
+                $member = $this->view_member;
+                if(!isset($member['paypal_mail']) || $member['paypal_mail'] == '') {
+                    $has_paypal = false;
+                    $paypalWarning = 'You have no PayPal account configured. Please go to your settings page <a href="/settings#form-payment-panel">here</a>.';
+                } else {
+                    $has_paypal = true;
+                }
+            } else {
+                $paypalWarning = 'We found no valid Paypal account for this month. That\'s why we could not pay you any money. In order to receive money for the current month, please make sure that a paypal account is registered. Go to your settings page <a href="/settings#form-payment-panel">here</a>.';
+            }
+            if (false == $has_paypal) {
+                echo '<div class="alert alert-danger" role="alert">'.$paypalWarning.'</div>';
+            }
+
+            if (($sum_total_month/100) < 1) {
+                echo '<div class="alert alert-warning" role="alert">We only pay out money if the total sum is over $1.</div>';
+            }
+?>
+            
+        </div>
+<?php
+    }
+} else {
+    
+    echo '<div class="tab-pane fade in active" id="'.$printDate.'">';
+    echo '    <div style="text-align: center;" class="row margin-bottom-12"><div class="col-md-8 cell-default">No Data</div></div>';
+    echo '    <div class="row row-total">';
+    echo '        <div class="col-md-1 text-right" style="min-width: 150px;"></div><div class="col-md-4 text-right"></div><div class="col-md-3 text-right" style="min-width: 570px;">Possible payout for this month (<span style="font-size: smaller;">*</span>):</div><div class="col-md-1 text-right" style="min-width: 190px;"><strong>$0.00</strong></div>';
+    echo '    </div>';
+    echo '</div>';
+}
+    
+    
+?>
+
+<?php /*    
+    <div id="le-alert"  class="alert alert-warning alert-block" role="alert">
+        <p>(**) The Payout is planned to become active on May 2019.</p>
+    </div>
+*/ ?>
+
+    <div id="le-alert"  class="alert alert-warning alert-block" role="alert">
+        <p>(*) Info:</p>
+        <p>This service will become active on May, 1st 2017. All previous months are shown for internal testing only.
+        </p>
+        <p>This service is considered Beta until otherwise announced.</p>
+        <br>
+        <p>For the full Terms of Service, please read here: <a href="/terms/payout">Payout T&C</a></p> 
+        <br><br>
+        <p>**Paypal might deduct general fees and conversion rate from this sum.</p>
+            
+    </div>
+</div>    
+    
+<script>
+    $('#payout_info').click(function (event ) {
+        event.preventDefault();
+        $('#le-alert').addClass('in'); // shows alert with Bootstrap CSS3 implem
+    });
+
+    $('.close').click(function () {
+        $(this).parent().removeClass('in'); // hides alert with Bootstrap CSS3 implem
+    });
+    
+    $(function(){
+        // Enables popover
+        $(".payout-popover-info").popover({
+            html : true,
+            template : '<div class="popover alert alert-info alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+        $(".payout-popover-warning").popover({
+            html : true,
+            template : '<div class="popover alert alert-warning alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+        $(".payout-popover-success").popover({
+            html : true,
+            template : '<div class="popover alert alert-success alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+        $(".payout-popover-danger").popover({
+            html : true,
+            template : '<div class="popover alert alert-danger alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+        $(".msg-popover-danger").popover({
+            html : true,
+            template : '<div class="popover alert alert-danger alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+    });
+
+</script> 
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            $(\'[data-toggle="popover"]\').popover();
+        });
+    ');
