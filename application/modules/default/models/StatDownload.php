@@ -279,7 +279,13 @@ class Default_Model_StatDownload
                 SELECT yearmonth, section_id, section_name, section_order, section_payout_factor, COUNT(project_id) AS count_projects, SUM(credits_plings) AS num_credits_plings, SUM(credits_section) AS num_credits_section, SUM(credits_plings)/100 AS sum_amount_credits_plings, SUM(credits_section)/100 AS sum_amount_credits_section, SUM(real_payout_amount) AS sum_real_payout_amount, MAX(amount) AS payout_amount, MAX(STATUS) AS payout_status, MAX(payment_transaction_id) AS payout_payment_transaction_id, MAX(paypal_mail) AS paypal_mail
                 FROM (
                     SELECT 
-                        `micro_payout`.*,
+                        SUM(credits_plings) as credits_plings,
+                        SUM(credits_section) AS credits_section,
+                        `micro_payout`.yearmonth,
+                        `micro_payout`.section_id,
+                        `micro_payout`.section_payout_factor,
+                        `micro_payout`.project_id,
+                        `micro_payout`.paypal_mail,
                         `project`.`title`,
                         `project`.`image_small`,
                         `project_category`.`title` AS `cat_title`,
@@ -309,6 +315,7 @@ class Default_Model_StatDownload
                     WHERE
                         `micro_payout`.`member_id` = :member_id 
                         AND `micro_payout`.`yearmonth` = :yearmonth
+                    GROUP BY `micro_payout`.`project_id`
                 ) A
                 GROUP BY yearmonth, section_id, section_name, section_payout_factor  
                 ORDER BY section_order 
