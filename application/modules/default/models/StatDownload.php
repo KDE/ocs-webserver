@@ -120,7 +120,13 @@ class Default_Model_StatDownload
 							AND u.yearmonth = `micro_payout`.yearmonth
 							GROUP BY u.yearmonth, u.project_id, u.member_id) AS amount_plings_micropayout,
 							
-                    (SELECT SUM(u.credits_section)/100 FROM micro_payout u 
+						  (SELECT SUM(u.credits_plings) FROM micro_payout u 
+							WHERE u.member_id = `micro_payout`.`member_id` 
+							AND u.project_id = `micro_payout`.`project_id`
+							AND u.yearmonth = `micro_payout`.yearmonth
+							GROUP BY u.yearmonth, u.project_id, u.member_id) AS num_plings_micropayout,
+                                                        
+                                                  (SELECT SUM(u.credits_section)/100 FROM micro_payout u 
 							WHERE u.member_id = `micro_payout`.`member_id` 
 							AND u.project_id = `micro_payout`.`project_id`
 							AND u.yearmonth = `micro_payout`.yearmonth

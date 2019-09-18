@@ -124,7 +124,8 @@ if ($countDownloadsOverall > 0) {
                 <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap; "><strong>Products</strong></div>
                 <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Download-Credits</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Download-Credits" data-trigger="hover" data-html="true" data-content="Sum of all download-credits of all files (active or archived of this product within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
                 <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Mediaview-Credits</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Mediaview-Credits" data-trigger="hover" data-html="true" data-content="Sum of all mediaview-credits of all files (active or archived of this product within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Credits</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Category-Factor" data-trigger="hover" data-html="true" data-content="The Category-Factor's base is $-cent and depends on the product category.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Credits</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Credits" data-trigger="hover" data-html="true" data-content="The Credits base is $-cent and depends on the product category.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Sum-Credits</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Sum Credits" data-trigger="hover" data-html="true" data-content=""><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                 <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong style="color: #BBB">Potential Payout (A)</strong></div>
                 <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Actual Payout (A)</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout" data-trigger="hover" data-html="true" data-content="This shows the amount that will be paid out to you until May 2019."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
@@ -157,6 +158,53 @@ if ($countDownloadsOverall > 0) {
                     </div>
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
                         <span><?= $product['category_pling_factor'] ?></span>
+                    </div>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span>
+                        <?php 
+                            $errorMsg = "<ul>";
+                            $showErrMsg = false;
+                            
+                            if($isCurrentMonth) {
+                                if($product['is_license_missing_now'] == 1) {
+                                    $errorMsg .= "<li>Please specify a License</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_source_missing_now'] == 1) {
+                                    $errorMsg .= "<li>Please specify a link to the online source repository</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_pling_excluded_now'] == 1) {
+                                    $errorMsg .= "<li>This Product has been excluded from plings</li>";
+                                    $showErrMsg = true;
+                                }
+                                $sum_plings = $product['num_plings_now'];
+                            } else {
+                                if($product['is_license_missing'] == 1) {
+                                    $errorMsg .= "<li>License was not specified</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_source_missing'] == 1) {
+                                    $errorMsg .= "<li>Link to the online source repository was not specified</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_pling_excluded'] == 1) {
+                                    $errorMsg .= "<li>This Product has been excluded from plings</li>";
+                                    $showErrMsg = true;
+                                }
+                                
+                                
+                            } 
+                            $errorMsg .= "</ul>";
+                            
+                            if($showErrMsg) {
+                                echo '<div class="inline msg-popover-danger" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout requirements are not fulfilled" data-trigger="hover" data-html="true" data-content="'.$errorMsg.'"><span style="color: #a94442;" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span></div>';
+                            } else {
+                                 print($product['num_plings_micropayout']);
+                            }
+                        ?>
+                        </span>
+                        
                     </div>
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
