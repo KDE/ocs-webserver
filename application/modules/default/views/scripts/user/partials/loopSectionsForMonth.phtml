@@ -120,11 +120,13 @@ if ($countDownloadsOverall > 0) {
                         <span><?= $section['count_projects'] ?></span>
                     </div>
                     
-                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
                         <span><?= round($section['num_credits_plings'],0) ?></span>
                     </div>
-                    <?php endif; ?>
+                    
+                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                        <span><?php print($currency->toCurrency($section['sum_amount_credits_plings'])); ?></span>
+                    </div>
                     
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
