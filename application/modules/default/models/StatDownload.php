@@ -324,8 +324,8 @@ class Default_Model_StatDownload
                     LEFT JOIN section_category sc ON sc.project_category_id = `project`.`project_category_id`
                     LEFT JOIN section s ON s.section_id = sc.section_id
                     WHERE
-                        `micro_payout`.`member_id` = 240113#:member_id 
-                        AND `micro_payout`.`yearmonth` = 201909#:yearmonth
+                        `micro_payout`.`member_id` = :member_id 
+                        AND `micro_payout`.`yearmonth` = :yearmonth
                     GROUP BY `micro_payout`.`project_id`
                         
                 ) A
