@@ -282,7 +282,11 @@ class Default_Model_StatDownload
     public function getUserSectionsForDownloadAndViewsForMonth($member_id, $yearmonth)
     {
         $sql = "
-                SELECT yearmonth, section_id, section_name, section_order, section_payout_factor, COUNT(project_id) AS count_projects, SUM(credits_plings) AS num_credits_plings, SUM(credits_section) AS num_credits_section, SUM(credits_plings)/100 AS sum_amount_credits_plings, SUM(credits_section)/100 AS sum_amount_credits_section, SUM(real_payout_amount) AS sum_real_payout_amount, MAX(amount) AS payout_amount, MAX(STATUS) AS payout_status, MAX(payment_transaction_id) AS payout_payment_transaction_id, MAX(paypal_mail) AS paypal_mail
+                SELECT yearmonth, section_id, section_name, section_order, section_payout_factor, COUNT(project_id) AS count_projects, SUM(credits_plings) AS num_credits_plings, SUM(credits_section) AS num_credits_section, SUM(credits_plings)/100 AS sum_amount_credits_plings, SUM(credits_section)/100 AS sum_amount_credits_section
+                    , SUM(real_credits_plings) AS num_real_credits_plings
+                    , SUM(real_credits_section) AS num_real_credits_section
+
+                    , MAX(amount) AS payout_amount, MAX(STATUS) AS payout_status, MAX(payment_transaction_id) AS payout_payment_transaction_id, MAX(paypal_mail) AS paypal_mail
                 FROM (
                     SELECT 
                         SUM(credits_plings) as credits_plings,
@@ -304,7 +308,8 @@ class Default_Model_StatDownload
                         `project`.`pling_excluded` AS `is_pling_excluded_now`,
                         s.name AS section_name,
                         s.`order` AS section_order,
-                        case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_plings END AS real_payout_amount
+                        SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_plings END) AS real_credits_plings,
+                        SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_section END) AS real_credits_section
 
                     FROM
                         `micro_payout`
@@ -319,9 +324,10 @@ class Default_Model_StatDownload
                     LEFT JOIN section_category sc ON sc.project_category_id = `project`.`project_category_id`
                     LEFT JOIN section s ON s.section_id = sc.section_id
                     WHERE
-                        `micro_payout`.`member_id` = :member_id 
-                        AND `micro_payout`.`yearmonth` = :yearmonth
+                        `micro_payout`.`member_id` = 240113#:member_id 
+                        AND `micro_payout`.`yearmonth` = 201909#:yearmonth
                     GROUP BY `micro_payout`.`project_id`
+                        
                 ) A
                 GROUP BY yearmonth, section_id, section_name, section_payout_factor  
                 ORDER BY section_order 

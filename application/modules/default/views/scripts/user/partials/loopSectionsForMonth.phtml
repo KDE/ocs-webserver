@@ -121,11 +121,11 @@ if ($countDownloadsOverall > 0) {
                     </div>
                     
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span><?= round($section['num_credits_plings'],0) ?></span>
+                        <span><?= round($section['num_real_credits_plings'],0) ?></span>
                     </div>
                     
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span><?php print($currency->toCurrency($section['sum_amount_credits_plings'])); ?></span>
+                        <span><?php print($currency->toCurrency($section['num_real_credits_plings']/100)); ?></span>
                     </div>
                     
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
@@ -138,7 +138,7 @@ if ($countDownloadsOverall > 0) {
                         <span><?php print($section['section_payout_factor']); ?></span>
                     </div>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span><?php print($currency->toCurrency($section['sum_amount_credits_section'])); ?></span>
+                        <span><?php print($currency->toCurrency($section['num_real_credits_section'])); ?></span>
                     </div>
                 </div>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;padding-left: 80px;font-size: small;">
@@ -153,9 +153,9 @@ if ($countDownloadsOverall > 0) {
             
                 <?php
                 
-                $payout_sum = $section['sum_amount_credits_section'];
+                $payout_sum = $section['num_real_credits_section']/100;
                 
-                $sum_total_month_potential_payout += ($section['sum_amount_credits_plings']);
+                $sum_total_month_potential_payout += ($section['num_real_credits_plings']/100);
                 $sum_total_potential_payout = $currency->toCurrency($sum_total_month_potential_payout);
                 
                 $sum_total_month += $payout_sum;
