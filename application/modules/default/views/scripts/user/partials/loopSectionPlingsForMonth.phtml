@@ -86,9 +86,9 @@ $printMonth = new DateTime($yearmonth.'01');
 $printDate = $printMonth->format('M Y');
 
 if(null != $section_id) {
-    $allDownloads = $modelDownload->getUserDownloadsForMonthAndSection($this->member->member_id, $yearmonth, $section_id);
+    $allDownloads = $modelDownload->getUserDownloadsAndViewsForMonthAndSection($this->member->member_id, $yearmonth, $section_id);
 } else {
-    $allDownloads = $modelDownload->getUserDownloadsForMonth($this->member->member_id, $yearmonth);
+    $allDownloads = $modelDownload->getUserDownloadsAndViewsForMonth($this->member->member_id, $yearmonth);
 }
 
 $countDownloadsOverall = count($allDownloads);
@@ -122,8 +122,9 @@ if ($countDownloadsOverall > 0) {
             <div class="row">
                 <div class="col-md-1" style="min-width: 150px;"></div>
                 <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap; "><strong>Products</strong></div>
-                <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Downloads</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads" data-trigger="hover" data-html="true" data-content="Sum of all downloads of all files (active or archived of this product within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Cat.-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Category-Factor" data-trigger="hover" data-html="true" data-content="The Category-Factor's base is $-cent and depends on the product category.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Download-Credits</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Download-Credits" data-trigger="hover" data-html="true" data-content="Sum of all download-credits of all files (active or archived of this product within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Mediaview-Credits</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Mediaview-Credits" data-trigger="hover" data-html="true" data-content="Sum of all mediaview-credits of all files (active or archived of this product within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <!--<div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Cat.-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Category-Factor" data-trigger="hover" data-html="true" data-content="The Category-Factor's base is $-cent and depends on the product category.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>-->
                 <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong style="color: #BBB">Potential Payout</strong></div>
                 <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Pling-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Section-Factor" data-trigger="hover" data-html="true" data-content="This is the factor for this section. The factor per section is not fixed until the month has really ended. For more information please see: https://www.pling.com/funding"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
                 <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Actual Payout</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout" data-trigger="hover" data-html="true" data-content="This shows the amount that will be paid out to you until May 2019."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
@@ -147,14 +148,19 @@ if ($countDownloadsOverall > 0) {
                         </a>
                         <b style="display: block; margin-bottom: 5px; font-size: 10pt; line-height: 0em;min-width: 140px;max-width: 180px;"><?=$product['cat_title']?></b>
                     </div>
-                    <div class="col-md-1 text-right cell-default" style="min-width: 140px;max-width: 180px;">
-                        <span><?= $product['num_downloads'] ?></span>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span><?= $product['num_downloads_micropayout'] ?></span>
                     </div>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span><?= $product['num_views_micropayout'] ?></span>
+                    </div>
+                    <!--
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
                         <span><?= $product['dl_pling_factor'] ?></span>
                     </div>
+                    -->
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
-                        <span style="color: #BBB"><?php print($currency->toCurrency($product['num_downloads'] * $product['dl_pling_factor'] / 100)); ?></span>
+                        <span style="color: #BBB"><?php print($currency->toCurrency($product['amount_plings_micropayout'])); ?></span>
                     </div>
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
                         <span><?= $product['section_payout_factor'] ?></span>
@@ -201,7 +207,7 @@ if ($countDownloadsOverall > 0) {
                             if($showErrMsg) {
                                 echo '<div class="inline msg-popover-danger" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout requirements are not fulfilled" data-trigger="hover" data-html="true" data-content="'.$errorMsg.'"><span style="color: #a94442;" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span></div>';
                             } else {
-                                 print($currency->toCurrency($product['num_downloads'] * $product['dl_pling_factor'] * $product['section_payout_factor'] / 100));
+                                 print($currency->toCurrency($product['amount_section_micropayout']));
                             }
                         ?>
                         </span>
@@ -209,49 +215,18 @@ if ($countDownloadsOverall > 0) {
                     </div>
                     
                     <?php if(!$showErrMsg) {
-                            //$payout_sum = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
                             $payout_sum_uk = 0;
-                            $payout_sum_new = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
-                            
-                            $show_payout_new_sum = $payout_sum_new;
-                            
-                            
-                            if($product['num_downloads_nouk']>0) {
-                                $payout_sum = $product['num_downloads_nouk'] * $product['dl_pling_factor'] / 100;
-                            } else {
-                                $payout_sum = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
-                            }
-                            $show_payout_sum = $payout_sum;
-                            
-                            $payout_sum_uk = $product['num_downloads'] * $product['dl_pling_factor'] * $product['section_payout_factor'] / 100;
-
-                            if($sum_plings && $sum_plings < $payout_sum) {
-                                $show_payout_new_sum = $sum_plings;
-                                $payout_sum_new = $sum_plings;
-                            } 
-                            if($sum_plings && $sum_plings>0) {
-                               $show_payout_new_sum = $show_payout_new_sum ;
-
-                            } else {
-                                $show_payout_new_sum = $payout_sum_new;
-                            }
+                            $payout_sum_uk = $product['amount_plings_micropayout'];
                     ?>
                     <?php } ?>
                 </div>
                 <?php
-                $sum_total_month_score += ($product['num_downloads'] * $product['dl_pling_factor'] / 100) * $product['laplace_score'];
-                $sum_total_payout_score = $currency->toCurrency($sum_total_month_score);
-                
-                $sum_total_month_potential_payout += ($product['num_downloads'] * $product['dl_pling_factor'] / 100);
+                $sum_total_month_potential_payout += $product['amount_plings_micropayout'];
                 $sum_total_potential_payout = $currency->toCurrency($sum_total_month_potential_payout);
                 
                 if(!$showErrMsg) {       
-                    $sum_total_month += $payout_sum;
                     $sum_total_month_uk += $payout_sum_uk;
-                    $sum_total_payout = $currency->toCurrency($sum_total_month);
                     $sum_total_payout_uk = $currency->toCurrency($sum_total_month_uk);
-                    $sum_total_month_new += $show_payout_new_sum;
-                    $sum_total_payout_new = $currency->toCurrency($sum_total_month_new);
                 }
                 
                 $sum_total_text = 'Possible payout for this month (<span style="font-size: smaller;">*</span>):';
@@ -265,7 +240,6 @@ if ($countDownloadsOverall > 0) {
                 $has_paypal = $product['paypal_mail'] ? true : false;
             }
 
-            $sum_total_month_view = number_format($sum_total_month);
             ?>
             <div class='row row-total'>
                 <div class='col-md-2 text-right' style="min-width: 150px;"></div>
