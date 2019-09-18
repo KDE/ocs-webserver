@@ -122,7 +122,7 @@ if ($countDownloadsOverall > 0) {
                     
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span><?= $section['num_credits_plings'] ?></span>
+                        <span><?= round($section['num_credits_plings'],0) ?></span>
                     </div>
                     <?php endif; ?>
                     
