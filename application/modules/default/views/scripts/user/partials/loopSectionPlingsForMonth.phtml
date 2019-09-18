@@ -113,6 +113,8 @@ if ($countDownloadsOverall > 0) {
         $sum_total_payout_uk = 0;
         $sum_total_payout_new = 0;
         
+        $sum_total_credits = 0;
+        
         $sum_total_month_potential_payout = 0;
         $sum_total_potential_payout = 0;
         
@@ -201,6 +203,7 @@ if ($countDownloadsOverall > 0) {
                                 echo '<div class="inline msg-popover-danger" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout requirements are not fulfilled" data-trigger="hover" data-html="true" data-content="'.$errorMsg.'"><span style="color: #a94442;" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span></div>';
                             } else {
                                  print(round($product['num_plings_micropayout'],0));
+                                 $sum_total_credits += round($product['num_plings_micropayout'],0);
                             }
                         ?>
                         </span>
@@ -286,11 +289,16 @@ if ($countDownloadsOverall > 0) {
 
             ?>
             <div class='row row-total'>
-                <div class='col-md-2 text-right' style="min-width: 150px;"></div>
-                <div class='col-md-4 text-right' style="max-width: 450px;"><?=$sum_total_text?></div>
-                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><strong style="color: #BBB"><?=$sum_total_potential_payout?></strong></div>
+                <div class="col-md-1" style="min-width: 150px;"></div>
                 <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"></div>
-                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><strong><?=$sum_total_payout_uk?>**</strong></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><?=$sum_total_text?></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><strong><?=$sum_total_credits?></strong></div>
+                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><strong style="color: #BBB"><?=$sum_total_potential_payout?></strong></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><strong><?=$sum_total_payout_uk?></strong></div>
+                <?php endif;?>
             </div>
             
             
