@@ -110,7 +110,15 @@ if ($countDownloadsOverall > 0) {
             <?php
             $css_active = '';
 
-            foreach ($allDownloads as $section) { ?>
+            foreach ($allDownloads as $section) { 
+                $section_payout_factor = $section['section_payout_factor'];
+                $num_real_credits_section = $section['num_real_credits_plings'];
+                if($isCurrentMonth) {
+                    $section_payout_factor = $section['now_section_payout_factor'];
+                    $num_real_credits_section = $section['num_real_credits_plings']*$section_payout_factor;
+                }
+                
+                ?>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
                     <div class="col-md-2 text-left cell-default">
                         <a href="/member/<?= $this->member->member_id ?>/sectionplingsmonthajax?yearmonth=<?= $section['yearmonth'] ?>&section_id=<?= $section['section_id'] ?>" data-toggle="sectiondetailajax" data-target="#pling-tab-content-<?= $section['yearmonth'] ?>-<?= $section['section_id'] ?>" id="sec_<?= $section['yearmonth'] ?>"><?= $section['section_name'] ?></a>
@@ -135,10 +143,11 @@ if ($countDownloadsOverall > 0) {
                     <?php endif; ?>
                     
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span><?php print($section['section_payout_factor']); ?></span>
+                        <span><?php print($section_payout_factor); ?></span>
                     </div>
+                    
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span><?php print($currency->toCurrency($section['num_real_credits_section']/100)); ?></span>
+                        <span><?php print($currency->toCurrency($num_real_credits_section/100)); ?></span>
                     </div>
                 </div>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;padding-left: 80px;font-size: small;">

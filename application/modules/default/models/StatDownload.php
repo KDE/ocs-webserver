@@ -285,7 +285,7 @@ class Default_Model_StatDownload
                 SELECT yearmonth, section_id, section_name, section_order, section_payout_factor, COUNT(project_id) AS count_projects, SUM(credits_plings) AS num_credits_plings, SUM(credits_section) AS num_credits_section, SUM(credits_plings)/100 AS sum_amount_credits_plings, SUM(credits_section)/100 AS sum_amount_credits_section
                     , SUM(real_credits_plings) AS num_real_credits_plings
                     , SUM(real_credits_section) AS num_real_credits_section
-
+                    ,(SELECT round(sfs.sum_support/(sfs.sum_amount_payout * 31 / DATE_FORMAT(NOW(),'%d')),2) AS factor  FROM section_funding_stats sfs WHERE sfs.yearmonth = A.yearmonth AND sfs.section_id = A.section_id) AS now_section_payout_factor
                     , MAX(amount) AS payout_amount, MAX(STATUS) AS payout_status, MAX(payment_transaction_id) AS payout_payment_transaction_id, MAX(paypal_mail) AS paypal_mail
                 FROM (
                     SELECT 
