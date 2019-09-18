@@ -79,7 +79,7 @@ $printCurrentMonth = new DateTime($currentDate.'01');
 $printMonth = new DateTime($yearmonth.'01');
 $printDate = $printMonth->format('M Y');
 
-$allDownloads = $modelDownload->getUserSectionsForMonth($this->member->member_id, $yearmonth);
+$allDownloads = $modelDownload->getUserSectionsForDownloadAndViewsForMonth($this->member->member_id, $yearmonth);
 $countDownloadsOverall = count($allDownloads);
 
 if ($countDownloadsOverall > 0) {
@@ -122,13 +122,13 @@ if ($countDownloadsOverall > 0) {
                     
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span><?= $section['num_downloads'] ?></span>
+                        <span><?= $section['num_credits_plings'] ?></span>
                     </div>
                     <?php endif; ?>
                     
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span><?php print($currency->toCurrency($section['sum_probably_payout_amount'])); ?></span>
+                        <span><?php print($currency->toCurrency($section['sum_amount_credits_plings'])); ?></span>
                     </div>
                     <?php endif; ?>
                     
@@ -136,7 +136,7 @@ if ($countDownloadsOverall > 0) {
                         <span><?php print($section['section_payout_factor']); ?></span>
                     </div>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span><?php print($currency->toCurrency($section['sum_real_payout_amount']*$section['section_payout_factor'])); ?></span>
+                        <span><?php print($currency->toCurrency($section['sum_amount_credits_section'])); ?></span>
                     </div>
                 </div>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;padding-left: 80px;font-size: small;">
@@ -151,9 +151,9 @@ if ($countDownloadsOverall > 0) {
             
                 <?php
                 
-                $payout_sum = $section['sum_real_payout_amount']*$section['section_payout_factor'];
+                $payout_sum = $section['sum_amount_credits_section'];
                 
-                $sum_total_month_potential_payout += ($section['sum_probably_payout_amount']);
+                $sum_total_month_potential_payout += ($section['sum_amount_credits_plings']);
                 $sum_total_potential_payout = $currency->toCurrency($sum_total_month_potential_payout);
                 
                 $sum_total_month += $payout_sum;
