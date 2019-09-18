@@ -139,7 +139,16 @@ if ($countDownloadsOverall > 0) {
             <?php
             $css_active = '';
 
-            foreach ($allDownloads as $product) { ?>
+            foreach ($allDownloads as $product) { 
+                $section_factor = $product['section_payout_factor'];
+                $actual_payout_sum = $product['amount_section_micropayout'];
+                
+                if($isCurrentMonth) {
+                    $section_factor = $product['now_section_payout_factor'];
+                    $actual_payout_sum = $product['num_plings_micropayout']*$section_factor;
+                }
+                
+                ?>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
                     <div class="col-md-1 cell-default" style="">
                         <a href="<?= $this->buildProductUrl($product['project_id']) ?>">
@@ -254,7 +263,7 @@ if ($countDownloadsOverall > 0) {
                             if($showErrMsg) {
                                 echo '<div class="inline msg-popover-danger" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout requirements are not fulfilled" data-trigger="hover" data-html="true" data-content="'.$errorMsg.'"><span style="color: #a94442;" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span></div>';
                             } else {
-                                 print($currency->toCurrency($product['amount_section_micropayout']));
+                                 print($currency->toCurrency($actual_payout_sum/100));
                             }
                         ?>
                         </span>
@@ -263,7 +272,7 @@ if ($countDownloadsOverall > 0) {
                     <?php endif;?>
                     <?php if(!$showErrMsg) {
                             $payout_sum_uk = 0;
-                            $payout_sum_uk = $product['amount_section_micropayout'];
+                            $payout_sum_uk = $actual_payout_sum/100;
                     ?>
                     <?php } ?>
                 </div>

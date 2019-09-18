@@ -90,48 +90,49 @@ class Default_Model_StatDownload
                     CASE WHEN ((`project_category`.`source_required` = 1 AND `project`.`source_url` IS NOT NULL AND LENGTH(`project`.`source_url`) > 0) OR  (`project_category`.`source_required` = 0)) THEN 0 ELSE 1 END AS `is_source_missing_now`,
                     `project`.`pling_excluded` AS `is_pling_excluded_now`,
                     (SELECT SUM(u.num_plings) FROM micro_payout u 
-							WHERE u.member_id = `micro_payout`.`member_id` 
-							and u.project_id = `micro_payout`.`project_id`
-							AND u.yearmonth = `micro_payout`.yearmonth
-							AND u.`type` = 0
-							GROUP BY u.yearmonth, u.project_id, u.member_id) AS num_downloads_micropayout,
+                    WHERE u.member_id = `micro_payout`.`member_id` 
+                    and u.project_id = `micro_payout`.`project_id`
+                    AND u.yearmonth = `micro_payout`.yearmonth
+                    AND u.`type` = 0
+                    GROUP BY u.yearmonth, u.project_id, u.member_id) AS num_downloads_micropayout,
                     (SELECT SUM(u.credits_plings)/100 FROM micro_payout u 
-							WHERE u.member_id = `micro_payout`.`member_id` 
-							AND u.project_id = `micro_payout`.`project_id`
-							AND u.yearmonth = `micro_payout`.yearmonth
-							AND u.`type` = 0
-							GROUP BY u.yearmonth, u.project_id, u.member_id) AS amount_downloads_micropayout,
+                    WHERE u.member_id = `micro_payout`.`member_id` 
+                    AND u.project_id = `micro_payout`.`project_id`
+                    AND u.yearmonth = `micro_payout`.yearmonth
+                    AND u.`type` = 0
+                    GROUP BY u.yearmonth, u.project_id, u.member_id) AS amount_downloads_micropayout,
                     (SELECT SUM(u.num_plings) FROM micro_payout u 
-							WHERE u.member_id = `micro_payout`.`member_id` 
-							and u.project_id = `micro_payout`.`project_id`
-							AND u.yearmonth = `micro_payout`.yearmonth
-							AND u.`type` = 1
-							GROUP BY u.yearmonth, u.project_id, u.member_id) AS num_views_micropayout,
+                    WHERE u.member_id = `micro_payout`.`member_id` 
+                    and u.project_id = `micro_payout`.`project_id`
+                    AND u.yearmonth = `micro_payout`.yearmonth
+                    AND u.`type` = 1
+                    GROUP BY u.yearmonth, u.project_id, u.member_id) AS num_views_micropayout,
                     (SELECT SUM(u.credits_plings)/100 FROM micro_payout u 
-							WHERE u.member_id = `micro_payout`.`member_id` 
-							AND u.project_id = `micro_payout`.`project_id`
-							AND u.yearmonth = `micro_payout`.yearmonth
-							AND u.`type` = 1
-							GROUP BY u.yearmonth, u.project_id, u.member_id) AS amount_views_micropayout,
+                    WHERE u.member_id = `micro_payout`.`member_id` 
+                    AND u.project_id = `micro_payout`.`project_id`
+                    AND u.yearmonth = `micro_payout`.yearmonth
+                    AND u.`type` = 1
+                    GROUP BY u.yearmonth, u.project_id, u.member_id) AS amount_views_micropayout,
 							
-						  (SELECT SUM(u.credits_plings)/100 FROM micro_payout u 
-							WHERE u.member_id = `micro_payout`.`member_id` 
-							AND u.project_id = `micro_payout`.`project_id`
-							AND u.yearmonth = `micro_payout`.yearmonth
-							GROUP BY u.yearmonth, u.project_id, u.member_id) AS amount_plings_micropayout,
+                    (SELECT SUM(u.credits_plings)/100 FROM micro_payout u 
+                          WHERE u.member_id = `micro_payout`.`member_id` 
+                          AND u.project_id = `micro_payout`.`project_id`
+                          AND u.yearmonth = `micro_payout`.yearmonth
+                          GROUP BY u.yearmonth, u.project_id, u.member_id) AS amount_plings_micropayout,
+
+                    (SELECT SUM(u.credits_plings) FROM micro_payout u 
+                          WHERE u.member_id = `micro_payout`.`member_id` 
+                          AND u.project_id = `micro_payout`.`project_id`
+                          AND u.yearmonth = `micro_payout`.yearmonth
+                          GROUP BY u.yearmonth, u.project_id, u.member_id) AS num_plings_micropayout,
+
+                    (SELECT SUM(u.credits_section)/100 FROM micro_payout u 
+                          WHERE u.member_id = `micro_payout`.`member_id` 
+                          AND u.project_id = `micro_payout`.`project_id`
+                          AND u.yearmonth = `micro_payout`.yearmonth
+                          GROUP BY u.yearmonth, u.project_id, u.member_id) AS amount_section_micropayout,
 							
-						  (SELECT SUM(u.credits_plings) FROM micro_payout u 
-							WHERE u.member_id = `micro_payout`.`member_id` 
-							AND u.project_id = `micro_payout`.`project_id`
-							AND u.yearmonth = `micro_payout`.yearmonth
-							GROUP BY u.yearmonth, u.project_id, u.member_id) AS num_plings_micropayout,
-                                                        
-                                                  (SELECT SUM(u.credits_section)/100 FROM micro_payout u 
-							WHERE u.member_id = `micro_payout`.`member_id` 
-							AND u.project_id = `micro_payout`.`project_id`
-							AND u.yearmonth = `micro_payout`.yearmonth
-							GROUP BY u.yearmonth, u.project_id, u.member_id) AS amount_section_micropayout,
-							
+                    (SELECT round(sfs.sum_support/DATE_FORMAT(NOW() + INTERVAL 1 MONTH - INTERVAL DATE_FORMAT(NOW(),'%d') DAY,'%d')*DATE_FORMAT(NOW(),'%d') /sfs.sum_amount_payout,2) AS factor  FROM section_funding_stats sfs WHERE sfs.yearmonth = `micro_payout`.yearmonth AND sfs.section_id = `micro_payout`.section_id) AS now_section_payout_factor,
 							
                     `micro_payout`.section_id, `micro_payout`.section_payout_factor
                     
@@ -285,7 +286,7 @@ class Default_Model_StatDownload
                 SELECT yearmonth, section_id, section_name, section_order, section_payout_factor, COUNT(project_id) AS count_projects, SUM(credits_plings) AS num_credits_plings, SUM(credits_section) AS num_credits_section, SUM(credits_plings)/100 AS sum_amount_credits_plings, SUM(credits_section)/100 AS sum_amount_credits_section
                     , SUM(real_credits_plings) AS num_real_credits_plings
                     , SUM(real_credits_section) AS num_real_credits_section
-                    ,(SELECT round(sfs.sum_support/(sfs.sum_amount_payout * 31 / DATE_FORMAT(NOW(),'%d')),2) AS factor  FROM section_funding_stats sfs WHERE sfs.yearmonth = A.yearmonth AND sfs.section_id = A.section_id) AS now_section_payout_factor
+                    ,(SELECT round(sfs.sum_support/DATE_FORMAT(NOW() + INTERVAL 1 MONTH - INTERVAL DATE_FORMAT(NOW(),'%d') DAY,'%d')*DATE_FORMAT(NOW(),'%d') /sfs.sum_amount_payout,2) AS factor  FROM section_funding_stats sfs WHERE sfs.yearmonth = A.yearmonth AND sfs.section_id = A.section_id) AS now_section_payout_factor
                     , MAX(amount) AS payout_amount, MAX(STATUS) AS payout_status, MAX(payment_transaction_id) AS payout_payment_transaction_id, MAX(paypal_mail) AS paypal_mail
                 FROM (
                     SELECT 
