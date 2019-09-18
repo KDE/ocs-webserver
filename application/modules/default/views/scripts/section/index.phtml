@@ -26,6 +26,16 @@ $this->headMeta()->appendProperty('og:title', 'opendesktop.org');
 $this->headMeta()->appendProperty('og:site_name','www.opendesktop.org');
 $this->headMeta()->appendProperty('og:description','A community where developers and artists share applications, themes and other content');
 $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images/system/opendesktop-logo.png');
+
+
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+$isAdmin = false;
+if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+    $isAdmin = true;
+}
+
+
 $baseurlStore = Zend_Registry::get('config')->settings->client->default->baseurl_store;
 $model = new Default_Model_Section();
 $results = $model->fetchAllSectionsAndCategories();
@@ -41,15 +51,22 @@ foreach ($results as $value) {
 
 $products = $this->products;
 $creators = $this->creators;
+$supporters = $this->supporters;
 
 $response = array(
+	 	'isAdmin' => $isAdmin,
 		'sections' => $sections,
 		'details' => $results,
 		'baseurlStore' => $baseurlStore,
 		'products' => $products,
 		'creators' => $creators,
+		'supporters' => $supporters,
 		'section' => ($this->section?$this->section:null),
 		'section_id' => ($this->section_id?$this->section_id:null),
+		'probably_payout_amount' => $this->probably_payout_amount,
+		'probably_payout_goal' => $this->probably_payout_goal,
+		'probably_payout_amount_factor' => $this->probably_payout_amount_factor
+
     );
 ?>
 <link type="text/css" rel="stylesheet" href="/theme/react/assets/css/pling-section.css"/>

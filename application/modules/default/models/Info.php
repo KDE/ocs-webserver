@@ -1317,7 +1317,7 @@ class Default_Model_Info
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . $section_id . '_' . md5((int)$limit);
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit);
 
         if (false !== ($newSupporters = $cache->load($cacheName))) {
             return $newSupporters;
@@ -1334,17 +1334,40 @@ class Default_Model_Info
                 from section_support_paypements ss
                 JOIN support s ON s.id = ss.support_id
                 WHERE ss.yearmonth = DATE_FORMAT(NOW(), "%Y%m")
-                GROUP BY s.member_id
+                GROUP BY s.member_id,ss.tier
                 order BY ss.tier DESC, active_time_max desc                                       
         ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
-        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' => $section_id))->fetchAll();
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql)->fetchAll();
         $cache->save($result, $cacheName, array(), 300);
 
         return $result;
     }
+
+    public function getSectionSupportersActiveMonths($section_id)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . $section_id ;
+
+        $sql = "SELECT COUNT(1) AS active_months, member_id,sum(tier) sum_support FROM
+                (
+                SELECT s.member_id, p.yearmonth , sum(p.tier) tier FROM section_support_paypements p
+                JOIN support s ON s.id = p.support_id
+                WHERE p.section_id = :section_id
+                GROUP BY s.member_id, p.yearmonth
+                ) A
+                GROUP BY member_id
+                ";
+
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' => $section_id))->fetchAll();
+        $cache->save($result, $cacheName, array(), 300);
+        return $result;
+    }
+
+   
 
     public function getNewActiveSupportersForSection($section_id, $limit = 20)
     {
@@ -1368,7 +1391,7 @@ class Default_Model_Info
                 JOIN support s ON s.id = ss.support_id
                 WHERE ss.section_id = :section_id
                 AND ss.yearmonth = DATE_FORMAT(NOW(), "%Y%m")
-                GROUP BY s.member_id
+                GROUP BY s.member_id,ss.tier
                 order BY ss.tier DESC, active_time_max desc                                       
         ';
         if (isset($limit)) {
@@ -1791,6 +1814,23 @@ class Default_Model_Info
         ";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' =>$section_id))->fetchAll();
         return $result[0]['cnt'];
+    }
+    
+    
+    public function getCountSupportedMonthsForSectionAndMember($section_id, $member_id)
+    {        
+        $sql = "
+                SELECT COUNT(1) AS num_months FROM
+                (
+                SELECT s.member_id, p.yearmonth FROM section_support_paypements p
+                JOIN support s ON s.id = p.support_id
+                WHERE member_id = :member_id
+                AND p.section_id = :section_id
+                GROUP BY s.member_id, p.yearmonth
+                ) A
+        ";
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'section_id' =>$section_id))->fetchRow();
+        return $result['num_months'];
     }
     
     public function getSumSupporting()

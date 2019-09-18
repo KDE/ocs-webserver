@@ -1,5 +1,4 @@
 import React from 'react';
-//import Product from '../opendesktop-home/Product';
 import Product from './Product';
 class TopProducts extends React.Component {
   constructor(props){
@@ -12,7 +11,7 @@ class TopProducts extends React.Component {
      if (this.props.products){
        const products = this.props.products.map((product,index) => (
          <li key={index}>
-         <Product product={product} baseUrlStore={this.props.baseUrlStore}/>
+         <Product product={product} baseUrlStore={this.props.baseUrlStore} isAdmin={this.props.isAdmin}/>
          </li>
        ));
       container = <ul>{products}</ul>
@@ -29,7 +28,7 @@ class TopProducts extends React.Component {
      }
      return (
        <div className="panelContainer">
-         <div className="title">Top 20 Products Last Month</div>
+         <div className="title">Top 20 Products Last Month Payout</div>
          {container}
        </div>
      )

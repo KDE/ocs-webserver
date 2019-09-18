@@ -1092,6 +1092,18 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         return $result;
     }
 
+    public function fetchSupporterSectionInfo($member_id)
+    {
+        $sql = "select GROUP_CONCAT(distinct c.name) sections from 
+                section_support s, support t , section c
+                where s.support_id = t.id and s.section_id = c.section_id
+                and  t.member_id = :member_id and t.status_id=2
+                and s.is_active = 1
+                order by c.order";
+        $result = $this->getAdapter()->fetchRow($sql, array('member_id' => $member_id));        
+        return $result;
+    }
+
     public function fetchLastActiveTime($member_id)
     {
         $sql_page_views =

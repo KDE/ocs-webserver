@@ -256,6 +256,7 @@ $this->tab = 'products';
                                         var tableHeader = '';
                                         tableHeader += '<tr>';
                                         tableHeader +=  '    <th><?= $this->translate('Filename') ?></th>';
+                                        tableHeader +=  '    <th><?= $this->translate('MD5SUM') ?></th>';
                                         tableHeader +=  '    <th><?= $this->translate('Version') ?></th>';
                                         tableHeader +=  '    <th><?= $this->translate('Description') ?></th>';
 
@@ -407,6 +408,11 @@ $this->tab = 'products';
                                 var tableString = '';
                                 tableString += '<tr data-ppload-file-id="' + this.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
                                 tableString += '<td>' + downloadLink + '</td>';
+                                if(this.md5sum != 'NULL' && this.md5sum != 'null' && this.md5sum != null) {
+                                    tableString += '<td>' + this.md5sum + '</td>';
+                                } else {
+                                    tableString += '<td></td>'; 
+                                }
                                 tableString += '<td>' + version + '</td>';
                                 tableString += '<td>' + inputFileDescription + '</td>';
 
@@ -654,6 +660,11 @@ $this->tab = 'products';
                             tableString += '<tr data-ppload-file-id="' + data.file.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
                             tableString += '<td><a href="' + pploadApiUri + 'files/download/';
                             tableString += 'id/' + data.file.id + '/' + data.file.name + '">' + data.file.name + '</a></td>';
+                            if(data.file.md5sum != 'NULL' && data.file.md5sum != 'null' && data.file.md5sum != null) {
+                                tableString += '<td>' + data.file.md5sum + '</td>';
+                            } else {
+                                tableString += '<td></td>'; 
+                            }
                             tableString += '<td>' + version + '</td>';
                             tableString += '<td><input data-ppload-file-description="" class="form-control input-sm"';
                             tableString += ' type="text" maxlength="140" placeholder="File description"';

@@ -11,7 +11,7 @@ function Creator(props){
       </div>
       <div className="col-lg-8 userinfo">
         <div className="userinfo-title">{props.creator.username}</div>
-        <span>${props.creator.probably_payout_amount}</span>
+        <span>${props.creator.probably_payout_amount_factor} {props.isAdmin?"($"+props.creator.probably_payout_amount+")":""}</span>
         {/*
         <ul className="userinfo-detail">
         <li>{props.creator.userinfo.cntProjects} products </li>

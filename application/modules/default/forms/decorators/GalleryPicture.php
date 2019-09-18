@@ -3,7 +3,7 @@
 /**
  *  ocs-webserver
  *
- *  Copyright 2016 by pling GmbH. 
+ *  Copyright 2016 by pling GmbH.
  *
  *    This file is part of ocs-webserver.
  *
@@ -45,9 +45,10 @@ class Default_Form_Decorator_GalleryPicture extends Zend_Form_Decorator_Abstract
             $check_divs = '<div class="absolute icon-check" style="display: block;"></div>
             <div class="absolute icon-cross" style="display: none;"></div><img src="' . $this->getElement()->getView()->Image($value, array('width' => '110', 'height' => '77')) . '" />';
         }
+
         return '<div class="product-image relative">'
-        . $content . $check_divs .
-        '</div>';
+               . $content . $check_divs .
+               '</div>';
     }
 
     /**

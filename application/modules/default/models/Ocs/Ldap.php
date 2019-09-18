@@ -340,7 +340,7 @@ class Default_Model_Ocs_Ldap
             return false;
         }
         if (false === empty($entry)) {
-            $this->messages[] = "user already exists.";
+            $this->messages[] = __METHOD__ . ' = ' . "user already exists.";
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ldap entry for member does not exists. Going to create it.');
 
             return false;
@@ -360,7 +360,7 @@ class Default_Model_Ocs_Ldap
      * @return array
      * @throws Zend_Exception
      */
-    private function createEntryForUser(array $member)
+    public function createEntryForUser(array $member)
     {
         $username = $this->lowerString($member['username']);
         $password = $this->createPasswordFromHash($member['password']);
@@ -373,6 +373,7 @@ class Default_Model_Ocs_Ldap
         Zend_Ldap_Attribute::setAttribute($entry, 'objectClass', 'extensibleObject', true);
         Zend_Ldap_Attribute::setAttribute($entry, 'uid', $username);
         Zend_Ldap_Attribute::setAttribute($entry, 'uid', $mail_address, true);
+        Zend_Ldap_Attribute::removeDuplicatesFromAttribute($entry, 'uid');
         Zend_Ldap_Attribute::setAttribute($entry, self::USER_PASSWORD, $password);
         Zend_Ldap_Attribute::setAttribute($entry, 'cn', $username);
         Zend_Ldap_Attribute::setAttribute($entry, 'email', $member['email_address']);
@@ -432,15 +433,16 @@ class Default_Model_Ocs_Ldap
     /**
      * @param string      $user_name
      * @param string|null $baseDn
-     *
+     * @param bool        $lowerCase
+
      * @return string
      */
-    public function getDnForUser($user_name, $baseDn = null)
+    public function getDnForUser($user_name, $baseDn = null, $lowerCase = true)
     {
         if (empty($baseDn)) {
             $baseDn = $this->baseDnUser;
         }
-        $username = $this->lowerString($user_name);
+        $username = $lowerCase ? $this->lowerString($user_name) : $user_name;
         $dn = "cn={$username},{$baseDn}";
 
         return $dn;
@@ -573,7 +575,7 @@ class Default_Model_Ocs_Ldap
 
         if (empty($ldapUser)) {
             $connection->add($dn, $entry);
-            $this->messages[] = $connection->getLastError();
+            $this->messages[] = __METHOD__ . ' = ' . $connection->getLastError();
 
             return $entry;
         }
@@ -583,7 +585,7 @@ class Default_Model_Ocs_Ldap
         }
 
         $this->errCode = 999;
-        $this->messages[] = "user already exists.";
+        $this->messages[] = __METHOD__ . ' = ' . "user already exists.";
 
         return false;
     }

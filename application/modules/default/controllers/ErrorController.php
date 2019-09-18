@@ -80,10 +80,28 @@ Still no luck? Search for whatever is missing, or take a look around the rest of
             $this->view->request = $errors->request;
         }
 
+        $errorLog = Zend_Registry::get('logger');
+
         $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'undefined';
         $storeHost = Zend_Registry::isRegistered('store_host') ? Zend_Registry::get('store_host') : 'undefined';
 
-        $errorLog = Zend_Registry::get('logger');
+        if ($errors->exception->getCode() == 404) {
+            $errorInfo = array(
+                'REQUEST_URI'  => $_SERVER['REQUEST_URI'],
+                'MESSAGES'     => $errors->exception->getMessage(),
+                'HOST'         => $_SERVER['HTTP_HOST'],
+                'STORE_HOST'   => Zend_Registry::isRegistered('store_host') ? Zend_Registry::get('store_host') : 'undefined',
+                'USER_AGENT'   => isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'undefined',
+                'ENVIRONMENT'  => APPLICATION_ENV,
+                'REMOTE_ADDR'  => $_SERVER['REMOTE_ADDR'],
+                'FORWARDED_IP' => isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : 'undefined',
+
+            );
+            $errorLog->err(__METHOD__ . ' - ' . json_encode($errorInfo));
+
+            return;
+        }
+
         $errorMsg = '' . PHP_EOL;
         $errorMsg .= 'MESSAGE::     ' . $errors->exception->getMessage() . PHP_EOL;
         $errorMsg .= 'HOST::        ' . $_SERVER['HTTP_HOST'] . PHP_EOL;
@@ -102,7 +120,7 @@ Still no luck? Search for whatever is missing, or take a look around the rest of
         } else {
             $errorMsg .= 'TRACE_STRING::' . $errors->exception->getTraceAsString() . PHP_EOL;
         }
-        $errorLog->err(__METHOD__ . ' - ' . $errorMsg . ' ---------- ' . PHP_EOL);
+        $errorLog->err(__METHOD__ . ' - ' . $errorMsg . PHP_EOL);
     }
 
     public function privilegesAction()
@@ -134,8 +152,7 @@ Still no luck? Search for whatever is missing, or take a look around the rest of
         $this->getResponse()
              ->clearHeaders(array('Expires', 'Pragma', 'Cache-Control'))
              ->setHeader('Pragma', 'no-cache', true)
-             ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true)
-        ;
+             ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true);
     }
 
 }

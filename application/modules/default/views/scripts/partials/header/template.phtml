@@ -36,13 +36,21 @@ if ($auth->hasIdentity()) {
     $ltat = $sess->openid;
 }
 
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+$isAdmin = false;
+if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+    $isAdmin = true;
+}
+
 $jsonmember = null;
 if($member && !empty($member->username)){
     $jsonmember=array(
         'member_id' => $member->member_id,
         'username' => $member->username,
         'avatar' => $member->avatar,
-        'profile_image_url' => $member->profile_image_url
+        'profile_image_url' => $member->profile_image_url,
+        'isAdmin' => $isAdmin
     );
 }
 
@@ -101,6 +109,56 @@ $tabs_left += $cat_title_length*10;
 //$forum_url_postfix = Zend_Auth::getInstance()->hasIdentity() ? '/session/sso' : '';
 
 
+$j_section = null;
+if($this->cat_id>0)
+{
+    $sm = new Default_Model_Section();    
+    $s = $sm->fetchSectionForCategory($this->cat_id);
+    if($s && $s['section_id'])
+    {
+        $sectionStats = $sm->fetchSectionStatsLastMonth($s['section_id']);    
+        $j_section = array();
+        $j_section['section_id'] = $s['section_id'];
+        $j_section['name'] = $s['name'];
+        $j_section['amount'] = $sm->fetchProbablyPayoutLastMonth($s['section_id']);
+        $j_section['amount_factor'] = $j_section['amount']*$sectionStats['factor'];    
+
+        $goal = ceil( $j_section['amount_factor'] / 500 ) * 500;
+        $j_section['amount'] = number_format($j_section['amount'], 2, '.', '');
+        $j_section['amount_factor'] = number_format($j_section['amount_factor'], 2, '.', '');
+        $j_section['goal'] =  ($goal ==0 ? 500: $goal);
+
+        $info = new Default_Model_Info();
+        $supporters = $info->getNewActiveSupportersForSection($s['section_id'],1000);
+        $supporterMonths = $info->getSectionSupportersActiveMonths($s['section_id']);
+
+        $supporters_unique = array();
+        foreach ($supporters as $s) {
+            $supporters_unique[$s['member_id']] = $s;
+        }
+
+        $sp = array();
+        foreach ($supporters_unique as $s) {
+            $t = array();
+            $t['username'] = $s['username'];
+            $t['profile_image_url'] = $helperImage->Image($s['profile_image_url'], array('width' => 100, 'height' => 100));   
+            foreach ($supporterMonths as $m) {
+                     if($m['member_id'] == $s['member_id'])
+                     {
+                        $t['active_months'] = $m['active_months'];
+                        $t['sum_support'] = $m['sum_support'];
+                        break;
+                     }
+                 }     
+            $sp[] = $t;
+        }        
+
+        $j_section['supporters'] = $sp;
+    }
+
+}
+
+
 echo $this->render('partials/header/metaheader.phtml');
 
 ?>
@@ -132,55 +190,6 @@ echo $this->render('partials/header/metaheader.phtml');
             overflow: hidden;
         }
 
-        header ul li:active,
-        #site-header ul li:active {
-            background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0 !important;
-        }
-        header ul li:hover,
-        #site-header ul li:hover {
-            background: <?=$this->template['header-nav-tabs']['background-color-hover']?> none repeat scroll 0 0 !important;
-        }
-
-        header ul li ul li:active,
-        #site-header ul li ul li:active {
-            background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0 !important;
-        }
-
-        header ul li ul li:hover,
-        #site-header ul li ul li:hover {
-            background: <?=$this->template['header-nav-tabs']['background-color-hover']?> none repeat scroll 0 0 !important;
-        }
-        header ul li:active > a,
-        #site-header ul li:active > a {
-            color: <?=$this->template['header-nav-tabs']['link']['color-active']?> !important;
-        }
-        header ul li:hover > a,
-        #site-header ul li:hover > a {
-            color: <?=$this->template['header-nav-tabs']['link']['color-hover']?> !important;
-        }
-        header ul li ul li:hover a,
-        #site-header ul li ul li:hover > a {
-            color: <?=$this->template['header-nav-tabs']['link']['color-hover']?> !important;
-        }
-
-        ul.menu-nav-tabs li {
-            background-color: <?=$this->template['header-nav-tabs']['background-color']?>;
-            border-color: <?=$this->template['header-nav-tabs']['border-color']?>;
-            border-image: none;
-            border-radius: <?=$this->template['header-nav-tabs']['border-radius']?>;
-            border-style: <?=$this->template['header-nav-tabs']['border-style']?>;
-            border-width: <?=$this->template['header-nav-tabs']['border-with']?>;
-            height: <?=$this->template['header-nav-tabs']['height']?>;
-            line-height: 24px;
-            margin-right: <?=$this->template['header-nav-tabs']['margin-right']?>;
-        }
-
-
-        ul.menu-nav-tabs li.active {
-            background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0;
-        }
-        
-        
         
         
         
@@ -325,112 +334,6 @@ echo $this->render('partials/header/metaheader.phtml');
         }
     </style>
 
-<?php /*    <header id="page_header" xmlns="http://www.w3.org/1999/html">
-        <div class="container header" style="position: relative;">
-
-            <?php if (false === $auth->hasIdentity() && empty($member->username)) {
-                $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
-                $redirectString = '/redirect/' . $helperEncryptUrl->EncryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"]);
-                ?>
-
-                <ul class="menu-nav-tabs absolute-right" style="position: absolute;bottom: 0px;">
-                    <li role="presentation"
-                        class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
-                        <a href="<?=$serverUrl?>/register" rel="nofollow">Register</a></li>
-                    <li role="presentation"
-                        class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'login') ? 'active' : '') ?>">
-                        <a href="<?=$serverUrl?>/login<?php echo strpos($_SERVER["REQUEST_URI"], 'login') ? '' : $redirectString ?>" rel="nofollow">Login</a>
-                    </li>
-                </ul>
-            <?php } ?>
-
-            <section id="first-container" class="container">
-              <section class="wrapper">
-                    <section>
-                        <?php
-                            $storeUrl = $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name;
-                            if (strpos($storeUrl, 'http') === false) {
-                                // It starts not with 'http'
-                                $storeUrl = 'https://' . $storeUrl;
-                            }
-                        ?>
-                        <figure class="logo-header">
-                           <a href="<?php echo $storeUrl ?>">
-                                <img width="<?= $this->template['header-logo']['width'] ?>" border="0"
-                                     src="<?= $this->template['header-logo']['image-src'] ?>">
-                            </a>
-                        </figure>
-                        <nav id="nav-top">
-                            <div class="pull-left col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                            </div>
-
-                            <div class="pull-right col-lg-7 col-md-7 col-sm-7 col-xs-7">
-                                <?php if ($auth->hasIdentity() && !empty($member->username)) { ?>
-                                    <img src="/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
-                                    <img src="<?= $url_gitlab ?>/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
-                                    <img src="<?= $url_forum ?>:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
-                                    <img src="<?=$http_scheme?>://<?= $url_openid ?>/login/setsession?ltat=<?= $ltat ?>"  height="0" width="0" />
-
-                                    <ul class="menu pull-right">
-                                        <li class="link relative profile-menu-container">
-                                            <a rel="profile-menu" class="menu-trigger">
-                                                <div class="absolute header-profile-image">
-                                                            <img
-                                                            src="<?= $helperImage->Image($member->profile_image_url,
-                                                                array('width' => 30, 'height' => 30)) ?>"/>
-
-                                                </div>
-                                                <span><?= $member->username ?></span>
-                                            </a>
-                                            <ul class="profile-menu menu-dropdown">
-                                                <div class="dropdown-header"></div>
-                                                <li class="link first">
-                                                    <a href="/product/add/"><?= $this->translate('Add Product') ?></a>
-                                                </li>
-                                                <li class="link">
-                                                    <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->username, 'products') ?>"><?= $this->translate('Products') ?></a>
-                                                </li>
-                                                <li class="link">
-                                                    <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->username, 'plings') ?>"><?= $this->translate('Plings') ?></a>
-                                                </li>
-                                                <li class="link">
-                                                    <a href="/settings/"><?= $this->translate('Settings') ?></a>
-                                                </li>
-                                                <li class="link">
-                                                    <a href="<?=$serverUrl?>/logout/"><?= $this->translate('Logout') ?></a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                <?php } else { ?>
-                                <?php } ?>
-                                <form id="search" class="pull-right" action="/search">
-                                    <input type="text" name="projectSearchText" class="content-search">
-
-                                    <div class="icon-search-input absolute cursor-hand"
-                                         onclick="$('#search').submit()"></div>
-                                </form>
-                            </div>
-                        </nav>
-                    </section>
-              </section>
-            </section>
-
-            <?php if($is_show_title==1): ?>
-            <section id="second-container" class="container">
-                <section class="wrapper">
-                    <span class="header_cat_link" id="header_cat_link">
-                       <?php /* <a href="/browse/cat/<?= isset($this->cat_id) ? $this->cat_id : 'all' ?>/order/latest"> *//*?>
-                        <a href="http://<?php echo $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name ?>">
-                            <?=$store_name?>
-                        </a>
-                    </span>
-                </section>
-            </section>
-        <?php endif; ?>
-        </div>
-    </header>
-  */?>
 
 <script type="text/javascript">
     var json_hasIdentity = <?php  if( $auth->hasIdentity() ) { echo '1' ;} else { echo '0';} ?>;
@@ -460,7 +363,7 @@ echo $this->render('partials/header/metaheader.phtml');
     
     var json_loginurl = <?php echo Zend_Json::encode($url_login); ?>;  
     var json_logouturl = <?php echo Zend_Json::encode($url_logout); ?>;
-    
+    var json_section = <?php echo  Zend_Json::encode($j_section); ?>;
     var json_store_for_tree = <?php echo $json_tree; ?>;
     
 </script>
@@ -468,7 +371,8 @@ echo $this->render('partials/header/metaheader.phtml');
 <section id="site-header-container"></section>
 <script type="text/javascript" src="/theme/react/lib/react/react.production.min.js"></script>
 <script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.production.min.js"></script>
-<script src="/theme/react/header.js" type="text/javascript"></script>
+
+<script src="/theme/react/bundle/header-bundle.js" type="text/javascript"></script>
 
 <?php $this->inlineScript()->appendScript(
     '$(document).ready(function(){
