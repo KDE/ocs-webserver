@@ -241,7 +241,6 @@ if ($countDownloadsOverall > 0) {
                                     $errorMsg .= "<li>This Product has been excluded from plings</li>";
                                     $showErrMsg = true;
                                 }
-                                $sum_plings = $product['num_plings_now'];
                             } else {
                                 if($product['is_license_missing'] == 1) {
                                     $errorMsg .= "<li>License was not specified</li>";
@@ -255,15 +254,13 @@ if ($countDownloadsOverall > 0) {
                                     $errorMsg .= "<li>This Product has been excluded from plings</li>";
                                     $showErrMsg = true;
                                 }
-                                $sum_plings = $product['num_plings'];
-                                
                             } 
                             $errorMsg .= "</ul>";
                             
                             if($showErrMsg) {
                                 echo '<div class="inline msg-popover-danger" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout requirements are not fulfilled" data-trigger="hover" data-html="true" data-content="'.$errorMsg.'"><span style="color: #a94442;" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span></div>';
                             } else {
-                                 print($currency->toCurrency($actual_payout_sum/100));
+                                 print($currency->toCurrency($actual_payout_sum));
                             }
                         ?>
                         </span>
@@ -272,7 +269,7 @@ if ($countDownloadsOverall > 0) {
                     <?php endif;?>
                     <?php if(!$showErrMsg) {
                             $payout_sum_uk = 0;
-                            $payout_sum_uk = $actual_payout_sum/100;
+                            $payout_sum_uk = $actual_payout_sum;
                     ?>
                     <?php } ?>
                 </div>
