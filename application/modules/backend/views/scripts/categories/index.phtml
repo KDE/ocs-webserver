@@ -91,9 +91,15 @@
             </div>
         </div>
         <div class="jtable-input-field-container">
-            <div class="jtable-input-label">Pling Factor</div>
+            <div class="jtable-input-label">Download Factor</div>
             <div class="jtable-input jtable-text-input">
                 <input id="subcat-dl_pling_factor" name="dl_pling_factor" type="text" value="1">
+            </div>
+        </div>
+        <div class="jtable-input-field-container">
+            <div class="jtable-input-label">Mediaview Factor</div>
+            <div class="jtable-input jtable-text-input">
+                <input id="subcat-mv_pling_factor" name="mv_pling_factor" type="text" value="1">
             </div>
         </div>
         <div class="jtable-input-field-container">
@@ -251,6 +257,7 @@
                             "xdg_type": $("#subcat-xdg").val(),
                             "name_legacy": $("#subcat-legacy").val(),
                             "dl_pling_factor": $("#subcat-dl_pling_factor").val(),
+                            "mv_pling_factor": $("#subcat-mv_pling_factor").val(),
                             "show_description": $("#subcat-show_description").val(),
                             "source_required": $("#subcat-source_required").val(),
                             "is_active": $("#subcat-status").val(),
@@ -441,7 +448,15 @@
                     width: '10%'
                 },
                 dl_pling_factor: {
-                    title: 'Pling Factor',
+                    title: 'DL Factor',
+                    type: 'input',
+                    defaultValue: '1',
+                    create: true,
+                    edit: true,
+                    width: '8%'
+                },
+                mv_pling_factor: {
+                    title: 'MV Factor',
                     type: 'input',
                     defaultValue: '1',
                     create: true,
