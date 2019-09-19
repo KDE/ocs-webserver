@@ -78,6 +78,9 @@ class Default_Model_StatDownload
         $sql = "
                 SELECT 
                     `micro_payout`.`yearmonth`,`micro_payout`.`project_id`,`micro_payout`.`project_category_id`,`micro_payout`.`category_pling_factor`,`project_category`.`title`, `project`.`title`,`micro_payout`.`paypal_mail`,
+                    `micro_payout`.is_license_missing,
+                    `micro_payout`.is_source_missing,
+                    `micro_payout`.is_pling_excluded,                    
                     CASE WHEN (SELECT count(1) AS `sum_plings` FROM `project_plings` `pp` WHERE `pp`.`project_id` = `micro_payout`.`project_id` AND `pp`.`is_deleted` = 0 AND `is_active` = 1 GROUP BY `pp`.`project_id`) > 0 THEN (SELECT count(1) AS `sum_plings` FROM `project_plings` `pp` WHERE `pp`.`project_id` = `micro_payout`.`project_id` AND `pp`.`is_deleted` = 0 AND `is_active` = 1 GROUP BY `pp`.`project_id`) + 1 ELSE 1 END AS `num_plings_now`,
                     `project`.`title`,
                     `project`.`image_small`,
