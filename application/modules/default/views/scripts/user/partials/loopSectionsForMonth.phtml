@@ -97,8 +97,10 @@ if ($countDownloadsOverall > 0) {
         $sum_total_month = 0;
         $sum_total_month_uk = 0;
         $sum_total_month_new = 0;
+        $sum_total_month_max = 0;
         $sum_total_text = '';
         $sum_total_payout = 0;
+        $sum_total_payout_max = 0;
         $sum_total_payout_uk = 0;
         $sum_total_payout_new = 0;
         
@@ -163,12 +165,16 @@ if ($countDownloadsOverall > 0) {
                 <?php
                 
                 $payout_sum = $num_real_credits_section/100;
+                $payout_sum_max = $section['sum_amount_credits_plings'];
                 
                 $sum_total_month_potential_payout += ($section['num_real_credits_plings']/100);
                 $sum_total_potential_payout = $currency->toCurrency($sum_total_month_potential_payout);
                 
                 $sum_total_month += $payout_sum;
                 $sum_total_payout = $currency->toCurrency($sum_total_month);
+                
+                $sum_total_month_max += $payout_sum_max;
+                $sum_total_payout_max = $currency->toCurrency($sum_total_month_max);
                 
                 $sum_total_text = 'Possible payout for this month (<span style="font-size: smaller;">*</span>):';
                 
@@ -186,7 +192,9 @@ if ($countDownloadsOverall > 0) {
             <div class='row row-total'>
                 <div class='col-md-3 text-right' style="min-width: 700px;"><?=$sum_total_text?></div>
                 <div class='col-md-1 text-right' style="min-width: 170px;"><strong style="color: #BBB"><?=$sum_total_potential_payout?></strong></div>
-                <div class='col-md-1 text-right' style="min-width: 190px;"></div>
+                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                <div class='col-md-1 text-right' style="min-width: 190px;"><strong style="color: #BBB"><?=$sum_total_payout_max?></strong></div>
+                <?php endif; ?>
                 <div class='col-md-1 text-right' style="min-width: 190px;"></div>
                 <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?=$sum_total_payout?>**</strong></div>
             </div>
