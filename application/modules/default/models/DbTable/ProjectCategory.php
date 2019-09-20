@@ -428,6 +428,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
                 `pc`.`orderPos`,
                 `pc`.`xdg_type`,
                 `pc`.`dl_pling_factor`,
+                `pc`.`mv_pling_factor`,
                 `pc`.`show_description`,
                 `pc`.`source_required`,
                 `blt`.`name` as `browse_list_type_name`,

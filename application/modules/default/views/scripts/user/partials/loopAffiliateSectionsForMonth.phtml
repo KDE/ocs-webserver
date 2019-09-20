@@ -79,7 +79,7 @@ $printCurrentMonth = new DateTime($currentDate.'01');
 $printMonth = new DateTime($yearmonth.'01');
 $printDate = $printMonth->format('M Y');
 
-$allDownloads = $modelDownload->getUserSectionsForDownloadAndViewsForMonth($this->member->member_id, $yearmonth);
+$allDownloads = $modelDownload->getUserAfiliateSectionsForMonth($this->member->member_id, $yearmonth);
 $countDownloadsOverall = count($allDownloads);
 
 if ($countDownloadsOverall > 0) {
@@ -93,19 +93,8 @@ if ($countDownloadsOverall > 0) {
         } else {
             $isCurrentMonth = false;
         }
-        $sum_total_month_score = 0;
-        $sum_total_month = 0;
-        $sum_total_month_uk = 0;
-        $sum_total_month_new = 0;
-        $sum_total_month_max = 0;
         $sum_total_text = '';
         $sum_total_payout = 0;
-        $sum_total_payout_max = 0;
-        $sum_total_payout_uk = 0;
-        $sum_total_payout_new = 0;
-        
-        $sum_total_month_potential_payout = 0;
-        $sum_total_potential_payout = 0;
         
         ?>
         <div class="tab-pane fade <?=$css_active?>" id="<?=$firstProduct['yearmonth']?>">
@@ -113,43 +102,25 @@ if ($countDownloadsOverall > 0) {
             $css_active = '';
 
             foreach ($allDownloads as $section) { 
-                $section_payout_factor = $section['section_payout_factor'];
-                $num_real_credits_section = $section['num_real_credits_plings'];
-                
-                if($isCurrentMonth) {
-                    $section_payout_factor = $section['now_section_payout_factor'];
-                    $num_real_credits_section = $section['num_real_credits_plings']*$section_payout_factor;
-                }
-                
+                $sum_total_payout += $section['sum_donations']*$section['affiliate_percent'];
                 ?>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
                     <div class="col-md-2 text-left cell-default">
-                        <a href="/member/<?= $this->member->member_id ?>/sectionplingsmonthajax?yearmonth=<?= $section['yearmonth'] ?>&section_id=<?= $section['section_id'] ?>" data-toggle="sectiondetailajax" data-target="#pling-tab-content-<?= $section['yearmonth'] ?>-<?= $section['section_id'] ?>" id="sec_<?= $section['yearmonth'] ?>"><?= $section['section_name'] ?></a>
-                    </div>
-
-                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span><?= $section['count_projects'] ?></span>
-                    </div>
-                    <?php /*
-                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span><?= round($section['num_real_credits_plings'],0) ?></span>
-                    </div>
-                    */ ?>
-                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span><?php print($currency->toCurrency($section['num_real_credits_plings']/100)); ?></span>
+                        <a href="/member/<?= $this->member->member_id ?>/sectionaffiliatesmonthdetailajax?yearmonth=<?= $section['yearmonth'] ?>&section_id=<?= $section['section_id'] ?>" data-toggle="sectiondetailajax" data-target="#pling-tab-content-<?= $section['yearmonth'] ?>-<?= $section['section_id'] ?>" id="sec_<?= $section['yearmonth'] ?>"><?= $section['section_name'] ?></a>
                     </div>
                     
-                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span><?php print($currency->toCurrency($section['sum_amount_credits_plings'])); ?></span>
+                        <span><?= $section['count_supporters'] ?></span>
                     </div>
-                    <?php endif; ?>
+                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                        <span><?php print($currency->toCurrency($section['sum_donations'])); ?></span>
+                    </div>
                     
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span><?php print($section_payout_factor); ?></span>
+                        <span><?php print($section['affiliate_percent']); ?></span>
                     </div>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span><?php print($currency->toCurrency($num_real_credits_section/100)); ?></span>
+                        <span><?php print($currency->toCurrency($section['sum_donations']*$section['affiliate_percent'])); ?></span>
                     </div>
                 </div>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;padding-left: 80px;font-size: small;">
@@ -164,39 +135,17 @@ if ($countDownloadsOverall > 0) {
             
                 <?php
                 
-                $payout_sum = $num_real_credits_section/100;
-                $payout_sum_max = $section['sum_amount_credits_plings'];
-                
-                $sum_total_month_potential_payout += ($section['num_real_credits_plings']/100);
-                $sum_total_potential_payout = $currency->toCurrency($sum_total_month_potential_payout);
-                
-                $sum_total_month += $payout_sum;
-                $sum_total_payout = $currency->toCurrency($sum_total_month);
-                
-                $sum_total_month_max += $payout_sum_max;
-                $sum_total_payout_max = $currency->toCurrency($sum_total_month_max);
                 
                 $sum_total_text = 'Possible payout for this month (<span style="font-size: smaller;">*</span>):';
                 
-                $payout_success = false;
-                if ($section['payout_status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
-                    $payout_success = true;
-                    $sum_total_payout_success = $currency->toCurrency($section['payout_amount']);
-                    $sum_total_text_success = 'Actually successfully paid amount: ';
-                }
-                $has_paypal = $section['paypal_mail'] ? true : false;
             }
 
-            $sum_total_month_view = number_format($sum_total_month);
             ?>
             <div class='row row-total'>
                 <div class='col-md-2 text-right' style="min-width: 503px;"><?=$sum_total_text?></div>
-                <div class='col-md-1 text-right' style="min-width: 170px;"><strong style="color: #BBB"><?=$sum_total_potential_payout?></strong></div>
-                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                <div class='col-md-1 text-right' style="min-width: 190px;"><strong style="color: #BBB"><?=$sum_total_payout_max?></strong></div>
-                <?php endif; ?>
                 <div class='col-md-1 text-right' style="min-width: 190px;"></div>
-                <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?=$sum_total_payout?>**</strong></div>
+                <div class='col-md-1 text-right' style="min-width: 190px;"></div>
+                <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?php print($currency->toCurrency($sum_total_payout)); ?>**</strong></div>
             </div>
             
             
@@ -222,7 +171,7 @@ if ($countDownloadsOverall > 0) {
                 echo '<div class="alert alert-danger" role="alert">'.$paypalWarning.'</div>';
             }
 
-            if (($sum_total_month/100) < 1) {
+            if (($sum_total_payout) < 1) {
                 echo '<div class="alert alert-warning" role="alert">We only pay out money if the total sum is over $1.</div>';
             }
 ?>

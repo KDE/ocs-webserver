@@ -57,6 +57,9 @@ $currency = new Zend_Currency('en_US');
                         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Months</strong></div>
                         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Total</strong></div>
                         <div class="col-md-3 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Details</strong></div>
+                        <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' && !empty($support['project_id'])){ ?>
+                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Affiliate of</strong></div>
+                        <?php } ?>
                     </div>
                     
                 <?php 
@@ -260,6 +263,14 @@ $currency = new Zend_Currency('en_US');
                             ?>
                         
                         </div>
+                        
+                        <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' && !empty($support['project_id'])){ ?>
+                        <div class="col-md-1 cell-default" style="">
+                            <a href="<?= $this->buildMemberUrl($support['affiliate_member_id']) ?>">
+                                <span style="line-height: 3em;"><?= $support['affiliate_username']; ?></span>
+                            </a>
+                        </div>
+                        <?php } ?>
                     </div>
                     
                 <?php    

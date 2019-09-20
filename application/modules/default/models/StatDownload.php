@@ -172,6 +172,49 @@ class Default_Model_StatDownload
     }
     
     
+    public function getUserAffiliatesForMonth($member_id, $yearmonth)
+    {
+        return $this->getUserAffiliatesForMonthAndSection($member_id, $yearmonth, null);
+    }
+    
+    public function getUserAffiliatesForMonthAndSection($member_id, $yearmonth, $section_id = null)
+    {
+        $sql = "
+                SELECT 
+                    		yearmonth, se.section_id, se.name AS section_name, se.`order` AS section_order, su.member_id AS supporter_member_id, m.username AS supporter_username
+                    		,SUM(p.tier) AS sum_donations
+                    		,(SELECT percent FROM affiliate_config WHERE p.yearmonth >= active_from  AND p.yearmonth <= active_until) AS affiliate_percent
+                    from section_support_paypements p
+						  JOIN section_support s ON s.section_support_id = p.section_support_id
+						  JOIN support su ON su.id = s.support_id
+						  JOIN project pr ON pr.project_id = s.project_id
+						  LEFT JOIN section_category sc ON sc.project_category_id = pr.`project_category_id`
+                    LEFT JOIN section se ON se.section_id = sc.section_id
+                    JOIN member m ON m.member_id = su.member_id
+                    WHERE
+                        pr.member_id = :member_id 
+                        AND p.`yearmonth` = :yearmonth
+                    
+                ";
+        
+        if(null != $section_id) {
+            $sql .=  " AND se.`section_id` = ".$section_id;
+        }
+        
+        $sql .=  "  GROUP BY su.member_id
+                    ORDER BY su.active_time desc
+            ";
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'yearmonth' => $yearmonth));
+
+        if ($result->rowCount() > 0) {
+            return $result->fetchAll();
+        } else {
+            return array();
+
+        }
+    }
+    
+    
     public function getUserDownloadsForMonth($member_id, $yearmonth)
     {
         return $this->getUserDownloadsForMonthAndSection($member_id, $yearmonth, null);
@@ -346,6 +389,42 @@ class Default_Model_StatDownload
         }
     }
     
+    
+    public function getUserAfiliateSectionsForMonth($member_id, $yearmonth)
+    {
+        $sql = "
+                SELECT yearmonth, section_id, section_name, section_order, COUNT(supporter_member_id) AS count_supporters, SUM(sum_donations) AS sum_donations, 
+                    (SELECT percent FROM affiliate_config WHERE A.yearmonth >= active_from  AND A.yearmonth <= active_until) AS affiliate_percent
+		FROM (
+                    SELECT 
+                    		yearmonth, se.section_id, se.name AS section_name, se.`order` AS section_order, su.member_id AS supporter_member_id, m.username AS supporter_username
+                    		,SUM(p.tier) AS sum_donations
+                    from section_support_paypements p
+						  JOIN section_support s ON s.section_support_id = p.section_support_id
+						  JOIN support su ON su.id = s.support_id
+						  JOIN project pr ON pr.project_id = s.project_id
+						  LEFT JOIN section_category sc ON sc.project_category_id = pr.`project_category_id`
+                    LEFT JOIN section se ON se.section_id = sc.section_id
+                    JOIN member m ON m.member_id = su.member_id
+                    WHERE
+                        pr.member_id = :member_id 
+                        AND p.`yearmonth` = :yearmonth
+                    GROUP BY su.member_id
+                        
+                ) A
+                GROUP BY yearmonth, section_id, section_name
+                ORDER BY section_order 
+            ";
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'yearmonth' => $yearmonth));
+
+        if ($result->rowCount() > 0) {
+            return $result->fetchAll();
+        } else {
+            return array();
+
+        }
+    }
+    
     public function getUserDownloadMonths($member_id, $year)
     {
         $sql = "
@@ -396,6 +475,30 @@ class Default_Model_StatDownload
                     `micro_payout`.`member_id` = :member_id
                 AND SUBSTR(`micro_payout`.`yearmonth`,1,4) = :year 
                 ORDER BY `micro_payout`.`yearmonth` DESC
+            ";
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'year' => $year));
+
+        if ($result->rowCount() > 0) {
+            return $result->fetchAll();
+        } else {
+            return array();
+
+        }
+    }
+    
+    
+    public function getUserAffiliatesMonths($member_id, $year)
+    {
+        $sql = "
+                SELECT 
+                  DISTINCT p.yearmonth
+	        from section_support_paypements p
+		JOIN section_support s ON s.section_support_id = p.section_support_id
+		JOIN project pr ON pr.project_id = s.project_id
+                WHERE
+                    pr.member_id = :member_id
+                AND SUBSTR(p.yearmonth,1,4) = :year 
+                ORDER BY p.yearmonth DESC
             ";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'year' => $year));
 
@@ -463,6 +566,32 @@ class Default_Model_StatDownload
                     `micro_payout`.`member_id` = :member_id
                 GROUP BY SUBSTR(`micro_payout`.`yearmonth`,1,4)
                 ORDER BY SUBSTR(`micro_payout`.`yearmonth`,1,4) DESC
+            ";
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id));
+
+        if ($result->rowCount() > 0) {
+            return $result->fetchAll();
+        } else {
+            return array();
+
+        }
+    }
+    
+    
+    public function getUserAffiliatesYears($member_id)
+    {
+        $sql = "
+                SELECT 
+                    SUBSTR(p.yearmonth,1,4) as year,
+                    MAX(p.yearmonth) as max_yearmonth,
+                    SUM(p.tier) as sum_amount
+                from section_support_paypements p
+                JOIN section_support s ON s.section_support_id = p.section_support_id
+                JOIN project pr ON pr.project_id = s.project_id
+                WHERE s.project_id IS NOT NULL
+                AND pr.member_id = :member_id
+                GROUP BY SUBSTR(p.yearmonth,1,4)
+                ORDER BY SUBSTR(p.yearmonth,1,4) DESC
             ";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id));
 

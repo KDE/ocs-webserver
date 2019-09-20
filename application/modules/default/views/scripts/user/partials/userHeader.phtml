@@ -50,6 +50,12 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
             <?= $this->translate('Payout-Section') ?>
         </a>
     </li>
+    <li class="header-menu-left-item <?php echo $this->tab == 'affiliates' ? 'active' : ''; ?>">
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'affiliates'); ?>">
+            <span class="glyphicon glyphicon-usd"></span>
+            <?= $this->translate('Affiliates') ?>
+        </a>
+    </li>
     <?php } ?>
     <li class="header-menu-left-item <?php echo $this->tab == 'payouthistory' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payouthistory'); ?>">                                   
