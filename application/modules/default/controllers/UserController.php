@@ -873,6 +873,78 @@ class UserController extends Local_Controller_Action_DomainSwitch
     }
     
     
+    public function sectionaffiliatesmonthajaxAction()
+    {
+        $this->_helper->layout->disableLayout();
+
+        $tableMember = new Default_Model_Member();
+        $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+
+        $paypalValidStatusTable = new Default_Model_DbTable_PaypalValidStatus();
+        $paypalValidStatus = $paypalValidStatusTable->find($this->view->view_member->paypal_valid_status)->current();
+        $this->view->paypal_valid_status = $paypalValidStatus;
+
+        //backdoor for admins
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+        }
+
+        $yearmonth = null;
+        if ($this->hasParam('yearmonth')) {
+            $yearmonth = $this->getParam('yearmonth');
+        }
+        $section_id = null;
+        if ($this->hasParam('section_id')) {
+            $section_id = $this->getParam('section_id');
+        }
+        
+        $this->view->yearmonth = $yearmonth;
+        $this->view->section_id = $section_id;
+
+        $this->_helper->viewRenderer('/sectionaffiliatesmonthajax');
+    }
+    
+    
+    public function sectionaffiliatesmonthdetailajaxAction()
+    {
+        $this->_helper->layout->disableLayout();
+
+        $tableMember = new Default_Model_Member();
+        $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+
+        $paypalValidStatusTable = new Default_Model_DbTable_PaypalValidStatus();
+        $paypalValidStatus = $paypalValidStatusTable->find($this->view->view_member->paypal_valid_status)->current();
+        $this->view->paypal_valid_status = $paypalValidStatus;
+
+        //backdoor for admins
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+        }
+
+        $yearmonth = null;
+        if ($this->hasParam('yearmonth')) {
+            $yearmonth = $this->getParam('yearmonth');
+        }
+        $section_id = null;
+        if ($this->hasParam('section_id')) {
+            $section_id = $this->getParam('section_id');
+        }
+        
+        $this->view->yearmonth = $yearmonth;
+        $this->view->section_id = $section_id;
+
+        $this->_helper->viewRenderer('/sectionaffiliatesmonthdetailajax');
+    }
+    
+    
     public function sectionsajaxAction()
     {
         $this->_helper->layout->disableLayout();
@@ -900,6 +972,36 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $this->view->year = $year;
 
         $this->_helper->viewRenderer('/sectionsajax');
+    }
+    
+    
+    public function affiliatesajaxAction()
+    {
+        $this->_helper->layout->disableLayout();
+
+        $tableMember = new Default_Model_Member();
+        $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+
+        $paypalValidStatusTable = new Default_Model_DbTable_PaypalValidStatus();
+        $paypalValidStatus = $paypalValidStatusTable->find($this->view->view_member->paypal_valid_status)->current();
+        $this->view->paypal_valid_status = $paypalValidStatus;
+
+        //backdoor for admins
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+        }
+
+        $year = null;
+        if ($this->hasParam('year')) {
+            $year = $this->getParam('year');
+        }
+        $this->view->year = $year;
+
+        $this->_helper->viewRenderer('/affiliatesajax');
     }
 
     public function sectionsmonthajaxAction()
@@ -1052,6 +1154,27 @@ class UserController extends Local_Controller_Action_DomainSwitch
     
     
     public function payout2Action()
+    {
+
+        $tableMember = new Default_Model_Member();
+        $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+
+        $paypalValidStatusTable = new Default_Model_DbTable_PaypalValidStatus();
+        $paypalValidStatus = $paypalValidStatusTable->find($this->view->view_member->paypal_valid_status)->current();
+        $this->view->paypal_valid_status = $paypalValidStatus;
+
+        //backdoor for admins
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+        }
+    }
+    
+    
+    public function affiliatesAction()
     {
 
         $tableMember = new Default_Model_Member();
