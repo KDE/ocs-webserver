@@ -156,6 +156,7 @@ class SectionController extends Local_Controller_Action_DomainSwitch
             
             $s[] = array('profile_image_url' => $helperImage->Image($p['profile_image_url'], array('width' => 100, 'height' => 100)),
                 'member_id' => $p['member_id'],
+                'username' => $p['username'],
                 'section_support_tier' => $p['section_support_tier']
         );
 
