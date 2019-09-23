@@ -25,6 +25,7 @@ class ContentController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
+        $this->view->noheader = true;
         $config = Zend_Registry::get('config');
         $static_config = $config->settings->static;
 

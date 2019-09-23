@@ -611,7 +611,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                         <li><a href="#ratings-panel2" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>   
 
                          <?php if(count($this->likes)>0){ ?>
-                            <li><a href="#likes-panel" data-toggle="tab">Favs <?php echo '('.count($this->likes).')';  ?></a></li>
+                            <li><a href="#likes-panel" data-toggle="tab">Fans <?php echo '('.count($this->likes).')';  ?></a></li>
                         <?php } ?>
                         <?php if(count($this->projectplings)>0){ ?>
                             <li><a href="#plings-panel" data-toggle="tab">Plings <?php echo '('.count($this->projectplings).')';  ?></a></li>
@@ -622,7 +622,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
 
                     <!-- PANELS -->
 
-                    <div class="tab-content row collection-panels">
+                    <div class="tab-content row collection-panels" id="product-panels">
 
                         <!-- ABOUT -->
                         <?php /*

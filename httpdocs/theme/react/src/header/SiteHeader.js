@@ -85,11 +85,11 @@ class SiteHeader extends Component {
             </div>
       }
     }
-
+ //style={{"paddingLeft":this.state.template['header-logo']['width']}}
     let HeaderDisplay;
     if (this.state.device !== "tablet"){
       HeaderDisplay = (
-        <section id="site-header-wrapper" style={{"paddingLeft":this.state.template['header-logo']['width']}}>
+        <section id="site-header-wrapper" >
           <div id="siter-header-left">
             <div id="site-header-logo-container" style={this.state.template['header-logo']}>
               <a href={logoLink}>
@@ -98,8 +98,7 @@ class SiteHeader extends Component {
             </div>
             {siteHeaderStoreNameDisplay}
           </div>
-
-
+          
           <div id="site-header-right">
             <div id="site-header-right-top" className={siteHeaderTopRightCssClass}>
               <SiteHeaderSearchForm

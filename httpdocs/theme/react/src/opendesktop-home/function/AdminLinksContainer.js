@@ -32,6 +32,18 @@ function AdminlLinksContainer(props)
             </a>
           </li>
 
+          <li id="backend-link-item">
+            <a href={props.baseUrlStore+"/backend"} >
+              <span>Backend</span>
+            </a>
+          </li>
+
+          <li id="stati-link-item">
+            <a href={props.baseUrlStore+"/statistics"} >
+              <span>Statistics</span>
+            </a>
+          </li>
+
           <li id="piwik-link-item">
             <a href={"https://piwik.opendesktop.org"} >
               <span>Piwik</span>

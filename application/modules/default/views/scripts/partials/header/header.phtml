@@ -154,13 +154,10 @@ if($this->cat_id>0)
         }        
 
         $j_section['supporters'] = $sp;
-      
+        $j_section['supportersX'] = $supporters;
     }
 
 }
-
-
-echo $this->render('partials/header/metaheader.phtml');
 
 ?>
 
@@ -370,15 +367,4 @@ echo $this->render('partials/header/metaheader.phtml');
 </script>
 <link href="/theme/react/assets/css/header.css" type="text/css" rel="stylesheet" />
 <section id="site-header-container"></section>
-<script type="text/javascript" src="/theme/react/lib/react/react.production.min.js"></script>
-<script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.production.min.js"></script>
 <script src="/theme/react/bundle/header-bundle.js" type="text/javascript"></script>
-
-<?php $this->inlineScript()->appendScript(
-    '$(document).ready(function(){
-        MenuHover.setup();
-        Popuppanel.setup();
-        LoginContainer.update();
-        PlingsRedirect.setup();
-    });'
-);

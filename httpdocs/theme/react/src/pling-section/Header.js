@@ -3,9 +3,27 @@ class Header extends Component {
   constructor(props){
   	super(props);
   }
-
   render(){
-
+  
+    function compare(el,idx,array) {
+      for (let i = 0; i < array.length; i++) {
+        if (array[i].member_id == el.member_id)
+        {
+           if(idx==i){
+             return el;
+           }else
+           {
+             break;
+           }
+        }
+      }
+    }
+    const s = this.props.supporters.filter(compare).length;
+    let goal = Math.ceil((s/100))*100;
+    if(goal==0)
+    {
+      goal = 100;
+    }
     return(
       <div className="pling-section-header">
           <div className="header-title">
@@ -14,11 +32,11 @@ class Header extends Component {
           <div className="score-container">
             <span>Goal:</span>
             <div className="score-bar-container">
-              <div className={"score-bar"} style={{"width":(this.props.amount_factor/this.props.goal)*100 + "%"}}>
-                {this.props.amount_factor+(this.props.isAdmin?'('+this.props.amount+')':'')}
+              <div className={"score-bar"} style={{"width":(s/goal)*100 + "%"}}>
+                {s}
               </div>
             </div>
-            <span>{ this.props.goal}</span>
+            <span>{goal}</span>
 
           </div>
       </div>
