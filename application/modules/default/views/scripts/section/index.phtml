@@ -38,16 +38,8 @@ if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
 
 $baseurlStore = Zend_Registry::get('config')->settings->client->default->baseurl_store;
 $model = new Default_Model_Section();
-$results = $model->fetchAllSectionsAndCategories();
-$sections = array();
-$tmpsid = null;
-foreach ($results as $value) {
-	if($tmpsid==null || $tmpsid!= $value['section_id'])
-	{
-		$tmpsid = $value['section_id'];
-		$sections[]=array('section_id' => $tmpsid,'name'=>$value['name'] );
-	}
-}
+$categorisWithPayout = $model->fetchCategoriesWithPayout();
+$sections = $model->fetchAllSections();
 
 $products = $this->products;
 $creators = $this->creators;
@@ -55,8 +47,8 @@ $supporters = $this->supporters;
 
 $response = array(
 	 	'isAdmin' => $isAdmin,
-		'sections' => $sections,
-		'details' => $results,
+		'sections' => $sections,		
+		'details' => $categorisWithPayout,
 		'baseurlStore' => $baseurlStore,
 		'products' => $products,
 		'creators' => $creators,

@@ -54,7 +54,7 @@ class Default_Model_Section
     public function fetchAllSections()
     {
         $sql = "
-            SELECT *
+            SELECT section_id,name,description
             FROM section
             WHERE is_active = 1
             and hide = 0
@@ -82,6 +82,21 @@ class Default_Model_Section
         ";
         $resultSet = $this->getAdapter()->fetchAll($sql);
         return $resultSet;   
+    }
+
+    public function fetchCategoriesWithPayout()
+    {
+        $sql = " select c.section_id,m.project_category_id,sum(probably_payout_amount) amount, pc.title
+                from member_dl_plings m
+                JOIN section_category c on c.project_category_id = m.project_category_id           
+                join project_category pc on m.project_category_id = pc.project_category_id 
+                where m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$')            
+                and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+                and m.is_member_pling_excluded=0
+                group by project_category_id
+                ";
+         $resultSet = $this->getAdapter()->fetchAll($sql);
+        return $resultSet;    
     }
 
     public function fetchTopProductsPerSection($section_id=null)
