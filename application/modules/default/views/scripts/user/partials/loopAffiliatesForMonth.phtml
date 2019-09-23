@@ -79,11 +79,11 @@ $printCurrentMonth = new DateTime($currentDate.'01');
 $printMonth = new DateTime($yearmonth.'01');
 $printDate = $printMonth->format('M Y');
 
-$allDownloads = $modelDownload->getUserAfiliateSectionsForMonth($this->member->member_id, $yearmonth);
-$countDownloadsOverall = count($allDownloads);
+$allAffiliates = $modelDownload->getUserAfiliatesForMonth($this->member->member_id, $yearmonth);
+$countDownloadsOverall = count($allAffiliates);
 
 if ($countDownloadsOverall > 0) {
-    $firstProduct = $allDownloads[0];
+    $firstProduct = $allAffiliates[0];
     if ($firstProduct) {
         $printMonth = new DateTime($firstProduct['yearmonth'].'01');
         $printCurrentMonth = new DateTime($currentDate.'01');
@@ -101,12 +101,12 @@ if ($countDownloadsOverall > 0) {
             <?php
             $css_active = '';
 
-            foreach ($allDownloads as $section) { 
+            foreach ($allAffiliates as $section) { 
                 $sum_total_payout += $section['sum_donations']*$section['affiliate_percent'];
                 ?>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
                     <div class="col-md-2 text-left cell-default">
-                        <a href="/member/<?= $this->member->member_id ?>/sectionaffiliatesmonthdetailajax?yearmonth=<?= $section['yearmonth'] ?>&section_id=<?= $section['section_id'] ?>" data-toggle="sectiondetailajax" data-target="#pling-tab-content-<?= $section['yearmonth'] ?>-<?= $section['section_id'] ?>" id="sec_<?= $section['yearmonth'] ?>"><?= $section['section_name'] ?></a>
+                        <a href="/member/<?= $this->member->member_id ?>/sectionaffiliatesmonthdetailajax?yearmonth=<?= $section['yearmonth'] ?>" data-toggle="sectiondetailajax" data-target="#affiliate-content-<?= $section['yearmonth'] ?>" id="sec_<?= $section['yearmonth'] ?>">Show/Hide</a>
                     </div>
                     
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
@@ -126,7 +126,7 @@ if ($countDownloadsOverall > 0) {
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;padding-left: 80px;font-size: small;">
                     <div class="col-md-1 text-right cell-default"></div>
                     <div class="col-md-11 text-right cell-default">
-                        <div id="pling-tab-content-<?= $section['yearmonth'] ?>-<?= $section['section_id'] ?>" class="hidden"></div>
+                        <div id="affiliate-content-<?= $section['yearmonth'] ?>" class="hidden"></div>
                     </div>
                     
                 </div>
