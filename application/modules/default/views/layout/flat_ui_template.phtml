@@ -72,8 +72,10 @@
    
 </head>
 <body id="od-body">
-
-<?php echo $this->render('partials/header/template.phtml'); ?>
+<?php echo $this->render('partials/header/metaheader.phtml');?>
+<?php
+    if(!$this->noheader) echo $this->render('partials/header/header.phtml');
+ ?>
 <?php echo $this->render('partials/flashMessage.phtml'); ?>
 <?php echo $this->layout()->content; ?>
 <?php echo $this->render('partials/footer/template.phtml'); ?>

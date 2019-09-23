@@ -24,6 +24,7 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 {
     public function indexAction()
     {
+        $this->view->noheader = true;
         /** @var Default_Model_ConfigStore $storeConfig */
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         
@@ -440,7 +441,7 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         {
              $this->_helper->layout()->setLayout($storeConfig->layout_home);
         }else{
-            $this->_helper->layout()->setLayout('home_template');
+            $this->_helper->layout()->setLayout('flat_ui_template');
         }        
     }
     
