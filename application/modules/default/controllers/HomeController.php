@@ -441,7 +441,7 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         {
              $this->_helper->layout()->setLayout($storeConfig->layout_home);
         }else{
-            $this->_helper->layout()->setLayout('flat_ui_template');
+            $this->_helper->layout()->setLayout('home_template');
         }        
     }
     
