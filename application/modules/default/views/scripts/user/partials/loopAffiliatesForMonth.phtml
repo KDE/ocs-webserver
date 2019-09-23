@@ -79,7 +79,7 @@ $printCurrentMonth = new DateTime($currentDate.'01');
 $printMonth = new DateTime($yearmonth.'01');
 $printDate = $printMonth->format('M Y');
 
-$allAffiliates = $modelDownload->getUserAfiliatesForMonth($this->member->member_id, $yearmonth);
+$allAffiliates = $modelDownload->getUserAffiliatesForMonth($this->member->member_id, $yearmonth);
 $countDownloadsOverall = count($allAffiliates);
 
 if ($countDownloadsOverall > 0) {

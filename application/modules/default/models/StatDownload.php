@@ -390,7 +390,7 @@ class Default_Model_StatDownload
     }
     
     
-    public function getUserAfiliateSectionsForMonth($member_id, $yearmonth)
+    public function getUserAffiliateSectionsForMonth($member_id, $yearmonth)
     {
         $sql = "
                 SELECT yearmonth, section_id, section_name, section_order, COUNT(supporter_member_id) AS count_supporters, SUM(sum_donations) AS sum_donations, 
@@ -425,39 +425,7 @@ class Default_Model_StatDownload
         }
     }
     
-    public function getUserAfiliatesForMonth($member_id, $yearmonth)
-    {
-        $sql = "
-                SELECT yearmonth, COUNT(supporter_member_id) AS count_supporters, SUM(sum_donations) AS sum_donations, 
-                    (SELECT percent FROM affiliate_config WHERE A.yearmonth >= active_from  AND A.yearmonth <= active_until) AS affiliate_percent
-		FROM (
-                    SELECT 
-                    		yearmonth, se.section_id, se.name AS section_name, se.`order` AS section_order, su.member_id AS supporter_member_id, m.username AS supporter_username
-                    		,SUM(p.tier) AS sum_donations
-                    from section_support_paypements p
-						  JOIN section_support s ON s.section_support_id = p.section_support_id
-						  JOIN support su ON su.id = s.support_id
-						  JOIN project pr ON pr.project_id = s.project_id
-						  LEFT JOIN section_category sc ON sc.project_category_id = pr.`project_category_id`
-                    LEFT JOIN section se ON se.section_id = sc.section_id
-                    JOIN member m ON m.member_id = su.member_id
-                    WHERE
-                        pr.member_id = :member_id 
-                        AND p.`yearmonth` = :yearmonth
-                    GROUP BY su.member_id
-                        
-                ) A
-                GROUP BY yearmonth
-            ";
-        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'yearmonth' => $yearmonth));
 
-        if ($result->rowCount() > 0) {
-            return $result->fetchAll();
-        } else {
-            return array();
-
-        }
-    }
     
     public function getUserDownloadMonths($member_id, $year)
     {

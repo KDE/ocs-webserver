@@ -95,7 +95,7 @@ $printDate = $printMonth->format('M Y');
 
 <?php
 
-$allAffiliates = $modelDownload->getUserAfiliatesForMonth($this->member->member_id, $yearmonth);
+$allAffiliates = $modelDownload->getUserAffiliatesForMonth($this->member->member_id, $yearmonth);
 $countDownloadsOverall = count($allAffiliates);
 
 if ($countDownloadsOverall > 0) {
