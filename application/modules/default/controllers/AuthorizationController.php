@@ -324,6 +324,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
      */
     public function loginAction()
     {
+        $this->view->noheader = true;
         //TODO: check redirect for a local valid url.
         $this->view->redirect = $this->getParam('redirect');
 

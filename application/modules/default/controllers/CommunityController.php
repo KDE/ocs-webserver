@@ -34,6 +34,7 @@ class CommunityController extends Local_Controller_Action_DomainSwitch
         // } else {
         //     $this->view->categories = $modelCategories->fetchMainCatIdsOrdered();
         // }        
+        $this->view->noheader = true;
     }
 
     public function indexreactAction()
