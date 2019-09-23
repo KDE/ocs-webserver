@@ -29,7 +29,7 @@ class Support extends Component {
           dropdownClass = "open";
         }
       }else{
-        dropdownClass = "open";      
+        dropdownClass = "open";
       }
     }
     this.setState({dropdownClass:dropdownClass});
@@ -65,13 +65,15 @@ class Support extends Component {
         if(this.state.selected=="amount")
         {
           content = this.props.section.supporters.sort((a, b) => Number(a.sum_support) < Number(b.sum_support)).map((mg,i) => (
-                  <div className="section"><div className="section-name"><a href={"/u/"+mg.username}><img src={mg.profile_image_url}></img></a><span>{mg.username}</span></div>
+                  <div className="section"><div className="section-name"><a href={"/u/"+mg.username}><img src={mg.profile_image_url}></img></a>
+                  <span><a href={"/u/"+mg.username}>{mg.username}</a></span></div>
                   <div className="section-value"> ${mg.sum_support}</div></div>
                   ))
         }else{
           // default show month panel
           content = this.props.section.supporters.sort((a, b) => Number(a.active_months) < Number(b.active_months)).map((mg,i) => (
-                  <div className="section"><div className="section-name"><a href={"/u/"+mg.username}><img src={mg.profile_image_url}></img></a><span>{mg.username}</span></div>
+                  <div className="section"><div className="section-name"><a href={"/u/"+mg.username}><img src={mg.profile_image_url}></img></a>
+                  <span><a href={"/u/"+mg.username}>{mg.username}</a></span></div>
                   <div className="section-value"> {mg.active_months+' months'}</div></div>
                   ))
         }
@@ -86,6 +88,13 @@ class Support extends Component {
         supporters = <ul className="dropdown-menu dropdown-menu-right">{t}</ul>
       }
 
+      const s = this.props.section.supporters.length;
+      let goal = Math.ceil((s/100))*100;
+      if(goal==0)
+      {
+        goal = 100;
+      }
+
     return(
       <div className="pling-section-header">
           <div className="header-title">
@@ -95,11 +104,11 @@ class Support extends Component {
             <div className="score-container">
               <span>Goal:</span>
               <div className="score-bar-container">
-                <div className={"score-bar"} style={{"width":(this.props.amount_factor/this.props.goal)*100 + "%"}}>
-                  {this.props.amount_factor+(this.props.isAdmin?'('+this.props.amount+')':'')}
+                <div className={"score-bar"} style={{"width":(s/goal)*100 + "%"}}>
+                  {s}
                 </div>
               </div>
-              <span>{ this.props.goal}</span>
+              <span>{goal}</span>
             </div>
             <div ref={node => this.node = node} className={'supporter-container '+this.state.dropdownClass }>
               <a className="header-supporters" > Supporters &#8964; </a>

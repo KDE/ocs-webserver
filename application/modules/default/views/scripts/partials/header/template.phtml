@@ -154,6 +154,7 @@ if($this->cat_id>0)
         }        
 
         $j_section['supporters'] = $sp;
+      
     }
 
 }
@@ -371,7 +372,6 @@ echo $this->render('partials/header/metaheader.phtml');
 <section id="site-header-container"></section>
 <script type="text/javascript" src="/theme/react/lib/react/react.production.min.js"></script>
 <script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.production.min.js"></script>
-
 <script src="/theme/react/bundle/header-bundle.js" type="text/javascript"></script>
 
 <?php $this->inlineScript()->appendScript(

@@ -115,8 +115,8 @@ class PlingSection extends Component {
 
     return (
       <React.Fragment>
-       <Header section={this.state.section} isAdmin={this.state.isAdmin} amount={this.state.probably_payout_amount} amount_factor={this.state.probably_payout_amount_factor}
-              goal = {this.state.probably_payout_goal}
+       <Header section={this.state.section} isAdmin={this.state.isAdmin}
+               supporters = {this.state.supporters}
          />
        {sectioncontainer}
        {sectiondetail}

@@ -9,7 +9,21 @@ class Supporters extends React.Component {
 
   render(){
 
-    const x = this.props.supporters.map((s,index) => {
+    function compare(el,idx,array) {
+      for (let i = 0; i < array.length; i++) {
+        if (array[i].member_id == el.member_id)
+        {
+           if(idx==i){
+             return el;
+           }else
+           {
+             break;
+           }
+        }
+      }
+    }
+
+    const x = this.props.supporters.filter(compare).map((s,index) => {
             return (
               <li key={index}>
                 <a href={this.props.baseUrlStore+'/u/'+s.username}><img src={s.profile_image_url}></img></a>
