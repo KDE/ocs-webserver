@@ -98,7 +98,7 @@ class SiteHeader extends Component {
             </div>
             {siteHeaderStoreNameDisplay}
           </div>
-          
+
           <div id="site-header-right">
             <div id="site-header-right-top" className={siteHeaderTopRightCssClass}>
               <SiteHeaderSearchForm
