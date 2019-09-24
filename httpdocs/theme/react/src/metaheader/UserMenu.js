@@ -75,7 +75,7 @@ class UserMenu extends React.Component {
     if (this.props.device === "large"){
 
 
-      const aboutMenu = <AboutMenu blogUrl={this.props.blogUrl}
+      const aboutMenu = <AboutMenu blogUrl={this.props.baseUrlStore}
                                   isExternal={this.props.isExternal}
                                   baseUrl={this.props.baseUrl}
                                   isAdmin={this.props.isAdmin}
@@ -99,7 +99,7 @@ class UserMenu extends React.Component {
     } else {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu right" id="user-menu">
-        
+
           {anonymousMenu}
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
