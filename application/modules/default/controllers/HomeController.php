@@ -24,7 +24,7 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 {
     public function indexAction()
     {
-        $this->view->noheader = true;
+        
         /** @var Default_Model_ConfigStore $storeConfig */
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         
