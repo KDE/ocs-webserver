@@ -206,7 +206,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $stat['cntPlingsHeGave'] = $tblPling->countPlingsHeGave($this->_memberId);
             $stat['cntPlingsHeGot'] = $tblPling->countPlingsHeGot($this->_memberId);
 
-            $donationinfo = $tableMember->fetchSupporterDonationInfo($this->_memberId);
+            $donationinfo = $tableMember->fetchSupporterDonationInfo($this->_memberId);            
+
             if ($donationinfo) {
                 $stat['donationIssupporter'] = $donationinfo['issupporter'];
                 $stat['donationMax'] = $donationinfo['active_time_max'];
