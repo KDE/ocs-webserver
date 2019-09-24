@@ -116,6 +116,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         parent::init();
         $this->_auth = Zend_Auth::getInstance();
         $this->view->payment_options = $this::$SUPPORT_OPTIONS;
+        $this->view->noheader = true;
     }
 
     public function indexAction()
@@ -128,6 +129,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $sectionsTable = new Default_Model_Section();
         $sections = $sectionsTable->fetchAllSections();
         $this->view->sections = $sections;
+
         
     }
     
