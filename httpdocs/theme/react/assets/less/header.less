@@ -111,19 +111,21 @@
     #site-header-right {
       float: right;
       height: 100%;
+      width: 100%;
 
       #site-header-right-top {
         /*height: 40px;*/
         height: 100%;
         width: 100%;
         padding-right: 5px;
-        display: table;
+        display: flex;
+        justify-content: center;
 
     #siter-header-pling
     {
-      display: table-cell;
-      vertical-align: middle;
-
+      position: absolute;
+      right: 0;
+      width: 400px;
       .pling-section-header{
            width: 400px;
            display: flex;
@@ -251,10 +253,11 @@
 
       #site-header-search-form {
       /*  float: left;*/
-        width: 100%;
+
         max-width: 16em;
-        display: table-cell;
+        display: block;
         vertical-align: middle;
+        margin: 0 auto;
         #search-form {
           margin: 6.5px 0;
         }
@@ -664,6 +667,8 @@
         {
           display: table-cell;
           vertical-align: middle;
+
+
 
           .pling-section-header{
                width: 300px;
