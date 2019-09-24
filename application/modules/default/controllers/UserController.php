@@ -1240,6 +1240,32 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     }
 
+    public function payouthistory2Action()
+    {
+
+        $tableMember = new Default_Model_Member();
+        $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+
+        //backdoor for admins
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+            if ($this->_memberId != $this->_authMember->member_id) {
+                throw new Zend_Controller_Action_Exception('no authorization found');
+            }
+        }
+
+        $model = new Default_Model_StatDownload();
+        $resultSet = $model->getPayoutHistory2($this->view->member->member_id);
+
+        $this->view->payouthistory2 = $resultSet;
+
+
+    }
+
 
     public function _payouthistoryAction()
     {

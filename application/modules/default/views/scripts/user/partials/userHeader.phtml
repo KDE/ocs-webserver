@@ -56,6 +56,9 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
             <?= $this->translate('Affiliates') ?>
         </a>
     </li>
+
+    
+
     <?php } ?>
     <li class="header-menu-left-item <?php echo $this->tab == 'payouthistory' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payouthistory'); ?>">                                   
@@ -63,6 +66,15 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
             <?= $this->translate('Payout-History') ?>
         </a>
     </li>
+    <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') { ?>
+     <li class="header-menu-left-item <?php echo $this->tab == 'payouthistory2' ? 'active' : ''; ?>">
+            <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payouthistory2'); ?>">                                   
+                <span class="payouthistory-icon" aria-hidden="true"></span>
+                <?= $this->translate('Payout-History2') ?>
+            </a>
+        </li>
+    <?php } ?>
+    
     <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin'){
         $identity = Zend_Auth::getInstance()->getStorage()->read();
     ?>
