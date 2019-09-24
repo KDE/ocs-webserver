@@ -77,7 +77,8 @@ class UserMenu extends React.Component {
 
       const aboutMenu = <AboutMenu blogUrl={this.props.blogUrl}
                                   isExternal={this.props.isExternal}
-                                  baseUrl={this.props.baseUrlStore}
+                                  baseUrl={this.props.baseUrl}
+                                  baseUrlStore = {this.props.baseUrlStore}
                                   isAdmin={this.props.isAdmin}
                                   />
 
