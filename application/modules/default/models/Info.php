@@ -1367,6 +1367,38 @@ class Default_Model_Info
         return $result;
     }
 
+    public function getNewActiveSupportersForSectionUnique($section_id, $limit = 1000)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . $section_id . '_' . md5((int)$limit);
+
+        if (false !== ($newSupporters = $cache->load($cacheName))) {
+            return $newSupporters;
+        }
+        
+        $sql = '
+                SELECT  
+                s.member_id
+                ,m.username
+                ,m.profile_image_url
+                ,sum(ss.tier) AS sum_support
+                from section_support_paypements ss
+                JOIN support s ON s.id = ss.support_id
+                join member m on m.member_id = s.member_id
+                WHERE ss.section_id = :section_id
+                AND ss.yearmonth = DATE_FORMAT(NOW(), "%Y%m")
+                GROUP BY s.member_id
+                order BY ss.tier DESC                                  
+        ';
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' => $section_id))->fetchAll();
+        $cache->save($result, $cacheName, array(), 300);
+
+        return $result;
+    }
    
 
     public function getNewActiveSupportersForSection($section_id, $limit = 20)
