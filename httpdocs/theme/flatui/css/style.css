@@ -1056,10 +1056,12 @@ span.packagetypeos
     bottom: 0px;
     background: #EE6E09;
     text-align: center;
-    border-radius: 15px 15px 15px 15px;
+    /*border-radius: 15px 15px 15px 15px;*/
     color: #fff;
-    padding: 2px 5px;
+    /*padding: 2px 5px;*/
     font-size: 9px;
+    border-radius: 999px;
+    padding:2px;
 }
 .comments-list .mod-badge-1{
     text-align: center;
