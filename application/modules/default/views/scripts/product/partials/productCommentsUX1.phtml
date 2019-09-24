@@ -122,7 +122,7 @@ if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
                        
                        <?php 
                         $modelSectionSupport = new Default_Model_SectionSupport();
-                        $isAffiliate = $modelSectionSupport->isMemberAffiliateForProject($this->product->project_id, $comment['member_id']);
+                        $isAffiliate = $modelSectionSupport->isMemberAffiliateForMember($this->product->member_id, $comment['member_id']);
                         if($isAffiliate && $isAdmin){
                        ?>
                        <span class="creator-badge-<?=($elementComment['level']>1?2:1)?>" >A</span> 

@@ -67,9 +67,43 @@ class Default_Model_SectionSupport extends Default_Model_DbTable_SectionSupport
                 inner join member m on s.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
                 WHERE  f.project_id = :project_id 
                 AND m.member_id = :member_id
-                AND s.status_id = 2
-                order by s.active_time desc";
+                AND s.status_id = 2";
         $r = $this->getAdapter()->fetchRow($sql_object, array('project_id' => $project_id, 'member_id' => $member_id));
+        if ($r) {
+            $isAffiliate = true;
+        }   
+        
+        $cache->save($isAffiliate, $cacheName);
+        
+        return $isAffiliate;
+    }
+    
+    
+    public function isMemberAffiliateForMember($member_id, $affiliate_member_id)
+    {            
+            
+        $cacheName = __FUNCTION__ . md5(serialize($member_id) .''. serialize($affiliate_member_id));
+        $cache = Zend_Registry::get('cache');
+
+        $result = $cache->load($cacheName);
+
+        if ($result) {
+            return $result;
+        }
+        
+        $isAffiliate = false;
+        
+        $sql_object =
+            "SELECT 1
+                FROM section_support f
+                INNER JOIN project p ON p.project_id = f.project_id
+                INNER JOIN support s ON s.id = f.support_id
+                inner join member m on s.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
+                INNER JOIN member m2 on p.member_id = m2.member_id AND m2.is_active=1 AND m2.is_deleted=0 
+                WHERE  p.member_id = :affiliate_member_id
+                AND m.member_id = :member_id
+                AND s.status_id = 2";
+        $r = $this->getAdapter()->fetchRow($sql_object, array('affiliate_member_id' => $affiliate_member_id, 'member_id' => $member_id));
         if ($r) {
             $isAffiliate = true;
         }   
