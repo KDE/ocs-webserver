@@ -176,17 +176,17 @@ class ReportController extends Zend_Controller_Action
 
         if (APPLICATION_ENV != 'searchbotenv') {
 
-                    $project_id = (int)$this->getParam('p');
+                    $project_clone = (int)$this->getParam('p');
                     $text = $this->getParam('t');
-                    $project_clone = $this->getParam('pc');
+                    $project_id = $this->getParam('pc');
                   
-                    if($project_clone)
+                    if($project_id)
                     {
-                        $text = $text . ' '.$project_clone;
+                        $text = $text . ' '.$project_id;
                     }
-                    if(!is_numeric($project_clone))
+                    if(!is_numeric($project_id))
                     {
-                        $project_clone = 0;
+                        $project_id = 0;
                     }
                     if (Zend_Auth::getInstance()->hasIdentity()) {
                         $reported_by = (int)Zend_Auth::getInstance()->getStorage()->read()->member_id;

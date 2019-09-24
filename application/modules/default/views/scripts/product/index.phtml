@@ -94,9 +94,6 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
 $projectplings = new Default_Model_ProjectPlings();
 $this->projectplings = $projectplings->fetchPlingsForProject($this->product->project_id);
 
-$projectsupport = new Default_Model_SectionSupport();
-$this->projectaffiliates = $projectsupport->fetchAffiliatesForProject($this->product->project_id);
-
 $tagmodel = new Default_Model_Tags();
 
 $helperUserRole = new Backend_View_Helper_UserRole();
@@ -219,14 +216,14 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                                <span class="modal-title">If you know another product that is based on <b><?=$this->product->title?></b>, please fill in the ID:</span>
+                                <span class="modal-title">If you know another product which is original of <b><?=$this->product->title?></b>, please fill in the ID:</span>
                 </div>
                 <form id="product-report-clone" class="full-width partialjsonclone" action="/report/productclone/"
                       data-projectid="<?= $this->product->project_id ?>" data-target="#report-product-clone-<?= $this->product->project_id ?>-message">
                     <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
                     <div id="report-product-clone-<?= $this->product->project_id ?>-message" class="message" style="padding: 20px">
                         <div>
-                            <label class="form-label">ID of the Clone on opendesktop:  </label><br/>
+                            <label class="form-label">ID of the Original on opendesktop:  </label><br/>
                             <input name="pc" id="clonePId"/><br/><br/>
 
                             <label class="form-label">Additional message: </label>
@@ -593,12 +590,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                         <?php if(count($this->projectplings)>0){ ?>
                             <li><a href="#plings-panel" data-toggle="tab">Plings <?php echo '('.count($this->projectplings).')';  ?></a></li>
                         <?php } ?>
-                            
-                        <?php if($isAdmin){ ?>
-                            <li><a href="#affiliates-panel" data-toggle="tab">Affiliates <?php if($this->projectaffiliates > 0) echo '('.count($this->projectaffiliates).')';  ?></a></li>
-                        <?php } ?>
-                            
-                        <?php if(count($this->likes)>0){ ?>
+                         <?php if(count($this->likes)>0){ ?>
                             <li><a href="#likes-panel" data-toggle="tab">Fans <?php echo '('.count($this->likes).')';  ?></a></li>
                         <?php } ?>
 
@@ -791,21 +783,6 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                         </div>
                         <?php } ?>
 
-                        <!-- affiliates panel -->
-                        <?php  if ($isAdmin) { ?>
-                        <div class="tab-pane" id="affiliates-panel">
-                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                            <article>
-                                <div id="productAffiliatesContainer">
-                                <?php
-                                       echo $this->render('product/partials/productAffiliates.phtml');
-                                  ?>
-                                  </div>
-                            </article>
-                            </div>
-                        </div>
-                        <?php } ?>
-
                         <div class="tab-pane" id="files-panel">
                             <div class="col-lg-12">
                                 <?php
@@ -968,11 +945,11 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                 <?php if (Zend_Auth::getInstance()->hasIdentity()) {      ?>
                                        <a data-toggle="modal" data-target="#report-product-clone-<?= $this->product->project_id ?>" role="button"
                                           href="#report-product-clone-<?= $this->product->project_id ?>">
-                                            report a clone of this product
+                                            mark this product as clone
                                        </a>
                                    <?php }else{ ?>
                                             <a data-toggle="modal" data-target="#like-product-modal" role="button">
-                                               report a clone of this product
+                                           mark this product as clone
                                             </a>
                                    <?php } ?>
 
