@@ -94,6 +94,9 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
 $projectplings = new Default_Model_ProjectPlings();
 $this->projectplings = $projectplings->fetchPlingsForProject($this->product->project_id);
 
+$projectsupport = new Default_Model_SectionSupport();
+$this->projectaffiliates = $projectsupport->fetchAffiliatesForProject($this->product->project_id);
+
 $tagmodel = new Default_Model_Tags();
 
 $helperUserRole = new Backend_View_Helper_UserRole();
@@ -590,6 +593,11 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                         <?php if(count($this->projectplings)>0){ ?>
                             <li><a href="#plings-panel" data-toggle="tab">Plings <?php echo '('.count($this->projectplings).')';  ?></a></li>
                         <?php } ?>
+                            
+                        <?php if($isAdmin){ ?>
+                            <li><a href="#affiliates-panel" data-toggle="tab">Affiliates <?php if($this->projectaffiliates > 0) echo '('.count($this->projectaffiliates).')';  ?></a></li>
+                        <?php } ?>
+                            
                          <?php if(count($this->likes)>0){ ?>
                             <li><a href="#likes-panel" data-toggle="tab">Fans <?php echo '('.count($this->likes).')';  ?></a></li>
                         <?php } ?>
@@ -783,6 +791,21 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                         </div>
                         <?php } ?>
 
+                        <!-- affiliates panel -->
+                        <?php  if ($isAdmin) { ?>
+                        <div class="tab-pane" id="affiliates-panel">
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                            <article>
+                                <div id="productAffiliatesContainer">
+                                <?php
+                                       echo $this->render('product/partials/productAffiliates.phtml');
+                                  ?>
+                                  </div>
+                            </article>
+                            </div>
+                        </div>
+                        <?php } ?>
+
                         <div class="tab-pane" id="files-panel">
                             <div class="col-lg-12">
                                 <?php
@@ -839,9 +862,10 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                             <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->username); ?>"
                                                title="<?= $this->product->username ?>"  class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->member_id?>">
                                                <?php
-                                                    if($this->isSupporter($this->product->member_id)) {
+                                                  $isSupporter = $this->isSupporter($this->product->member_id);
+                                                    if($isSupporter) {
                                                 ?>
-                                                    <span class="supporter-badge" >S</span>
+                                                    <span class="supporter-badge" >S<?=$isSupporter?></span>
                                                 <?php } ?>
                                                 <img src="<?= $helpImage->Image($this->product->profile_image_url,
                                                     array('width' => 80, 'height' => 80)) ?>"

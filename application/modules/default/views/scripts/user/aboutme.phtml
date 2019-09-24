@@ -60,6 +60,8 @@ $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 
 $memberProfile = $helperImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2));
 
+$isSupporterHelper = new Default_View_Helper_IsSupporter();
+$isSupporterSection = $isSupporterHelper->isSupporter($this->member->member_id);
 
 ?>
 <style type="text/css">
@@ -96,7 +98,8 @@ div#preloaded-images {
                         <article class="well" style="width: 100%;">
                             <div class="about-title">
                                 <figure class="relative inline profile-image-container">
-                                    <?php if( $isSupporter || $isSubscriber ) { ?><span class="supporter-badge">S</span>
+                                    <?php if( $isSupporter || $isSubscriber ) { ?>
+                                        <span class="supporter-badge">S<?=$isSupporterSection?></span>
                                     <?php }?>
                                     <img src="<?php echo $memberProfile ; ?>"
                                          alt="profile-image"

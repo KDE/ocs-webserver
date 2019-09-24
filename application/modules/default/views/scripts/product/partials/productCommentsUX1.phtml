@@ -32,6 +32,13 @@ $helperImage = new Default_View_Helper_Image();
 $identity = Zend_Auth::getInstance()->getStorage()->read();
 $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountPerPage();
 
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+$isAdmin = false;
+if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+    $isAdmin = true;
+}
+
 //$captcha = new Zend_Captcha_Image(array(
 //    'name' => 'foo',
 //    'wordLen' => 6,
@@ -110,8 +117,17 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                        <?php                       
                         if($comment['issupporter']){
                        ?>
-                       <span class="supporter-badge-<?=($elementComment['level']>1?2:1)?>" >S</span> 
+                       <span class="supporter-badge-<?=($elementComment['level']>1?2:1)?>" >S<?=$comment['issupporter']?></span> 
                        <?php }?>
+                       
+                       <?php 
+                        $modelSectionSupport = new Default_Model_SectionSupport();
+                        $isAffiliate = $modelSectionSupport->isMemberAffiliateForMember($this->product->member_id, $comment['member_id']);
+                        if($isAffiliate && $isAdmin && $this->product->member_id != $comment['member_id']){
+                       ?>
+                       <span class="creator-badge-<?=($elementComment['level']>1?2:1)?>" >A</span> 
+                       <?php }?>
+                       
 
                         <img src="<?= $helperImage->Image($comment['profile_image_url'], array('width' => 60, 'height' => 60)) ?>" class="img<?= $elementComment['level']?>">
                                                

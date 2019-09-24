@@ -83,6 +83,7 @@ $printCurrentMonth = new DateTime($currentDate.'01');
 $printMonth = new DateTime($yearmonth.'01');
 $printDate = $printMonth->format('M Y');
 
+
 if(null != $section_id) {
     $allDownloads = $modelDownload->getUserDownloadsForMonthAndSection($this->member->member_id, $yearmonth, $section_id);
 } else {
@@ -262,7 +263,7 @@ if ($countDownloadsOverall > 0) {
                             if($showErrMsg) {
                                 echo '<div class="inline msg-popover-danger" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout requirements are not fulfilled" data-trigger="hover" data-html="true" data-content="'.$errorMsg.'"><span style="color: #a94442;" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span></div>';
                             } else {
-                                 print($currency->toCurrency($product['num_downloads'] * $product['dl_pling_factor'] * $product['section_payout_factor'] / 100));
+                                 print($currency->toCurrency($product['num_downloads'] * $product['dl_pling_factor'] / 100));
                             }
                         ?>
                         </span>
@@ -284,7 +285,7 @@ if ($countDownloadsOverall > 0) {
                             }
                             $show_payout_sum = $payout_sum;
                             
-                            $payout_sum_uk = $product['num_downloads'] * $product['dl_pling_factor'] * $product['section_payout_factor'] / 100;
+                            $payout_sum_uk = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
 
                             if($sum_plings && $sum_plings < $payout_sum) {
                                 $show_payout_new_sum = $sum_plings;

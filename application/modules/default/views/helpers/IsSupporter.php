@@ -29,16 +29,22 @@ class Default_View_Helper_IsSupporter extends Zend_View_Helper_Abstract
     	$cache = Zend_Registry::get('cache');
     	$cacheName = __FUNCTION__ . '_' . md5($member_id);
 
-	if (false !== ($issupporter = $cache->load($cacheName))) {
-	        return $issupporter;
-	}
+    	if (false !== ($issupporter = $cache->load($cacheName))) {
+    	        return $issupporter;
+    	}
 
-        	$tableMembers = new Default_Model_Member();
-        	$row = $tableMembers->fetchSupporterDonationInfo($member_id);
-
-        	$cache->save($row['issupporter'], $cacheName, array(), 3600);
-
-        	return $row['issupporter'];
+    	$tableMembers = new Default_Model_Member();
+    	//$row = $tableMembers->fetchSupporterDonationInfo($member_id);
+        $row = $tableMembers->fetchSupporterSectionInfo($member_id);
+        if($row==null)
+        {
+            $cache->save(false, $cacheName, array(), 3600);
+            return false;
+        }else{                
+            $sections=explode(",", $row['sections']);
+            $cache->save(sizeof($sections), $cacheName, array(), 3600);
+            return sizeof($sections);
+        }        	        	
     }
 
 } 

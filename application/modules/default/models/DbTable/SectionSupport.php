@@ -99,7 +99,7 @@ class Default_Model_DbTable_SectionSupport extends Zend_Db_Table_Abstract
     
     public function fetchAllSectionSupportsForMember($section_id, $member_id) {
         $sql = "
-            SELECT section_support.section_support_id, section_support.support_id, section_support.section_id, section_support.project_id, section_support.referer ,case when support.subscription_id IS NULL then support.payment_transaction_id ELSE support.subscription_id END AS subscription_id, support.type_id, section_support.amount, section_support.tier, section_support.period, section_support.period_frequency, support.status_id, support.type_id, support.active_time, support.delete_time, support.payment_provider,member.member_id,member.username,
+            SELECT section_support.section_support_id, section_support.support_id, section_support.section_id, section_support.project_id, m2.member_id AS affiliate_member_id, m2.username AS affiliate_username, section_support.referer ,case when support.subscription_id IS NULL then support.payment_transaction_id ELSE support.subscription_id END AS subscription_id, support.type_id, section_support.amount, section_support.tier, section_support.period, section_support.period_frequency, support.status_id, support.type_id, support.active_time, support.delete_time, support.payment_provider,member.member_id,member.username,
             case 
             when support.status_id = 2 AND support.type_id = 0 AND (date_format(support.active_time  + INTERVAL 11 MONTH, '%Y%m')) >= date_format(NOW(), '%Y%m') then 'active'
             when support.status_id = 2 AND support.type_id = 1 then 'active'
@@ -116,6 +116,8 @@ class Default_Model_DbTable_SectionSupport extends Zend_Db_Table_Abstract
             JOIN section ON section.section_id = section_support.section_id
             JOIN support ON support.id = section_support.support_id AND support.status_id >= 2
             JOIN member ON member.member_id = support.member_id
+            left JOIN project ON project.project_id = section_support.project_id
+            left JOIN member m2 ON m2.member_id = project.member_id
             WHERE section_support.is_active = 1
             AND section.section_id = :section_id
             AND support.member_id = :member_id

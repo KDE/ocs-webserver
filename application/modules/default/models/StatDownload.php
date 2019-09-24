@@ -193,8 +193,8 @@ class Default_Model_StatDownload
                     JOIN member m ON m.member_id = su.member_id
                     WHERE
                         pr.member_id = :member_id 
-                        AND p.`yearmonth` = :yearmonth
-                    
+                        AND p.`yearmonth` = :yearmonth 
+                   
                 ";
         
         if(null != $section_id) {
@@ -390,7 +390,7 @@ class Default_Model_StatDownload
     }
     
     
-    public function getUserAfiliateSectionsForMonth($member_id, $yearmonth)
+    public function getUserAffiliateSectionsForMonth($member_id, $yearmonth)
     {
         $sql = "
                 SELECT yearmonth, section_id, section_name, section_order, COUNT(supporter_member_id) AS count_supporters, SUM(sum_donations) AS sum_donations, 
@@ -424,6 +424,8 @@ class Default_Model_StatDownload
 
         }
     }
+    
+
     
     public function getUserDownloadMonths($member_id, $year)
     {
@@ -460,8 +462,15 @@ class Default_Model_StatDownload
     {
         $sql = "
                 SELECT 
+                    DISTINCT `yearmonth`, payment_transaction_id, `status`
+                FROM
+                
+                (
+                
+                SELECT 
                     DISTINCT `micro_payout`.`yearmonth`, `member_payout`.payment_transaction_id, `member_payout`.`status`
                 FROM
+                
                     `micro_payout`
                 STRAIGHT_JOIN
                     `project` ON `project`.`project_id` = `micro_payout`.`project_id`
@@ -474,7 +483,21 @@ class Default_Model_StatDownload
                 WHERE
                     `micro_payout`.`member_id` = :member_id
                 AND SUBSTR(`micro_payout`.`yearmonth`,1,4) = :year 
-                ORDER BY `micro_payout`.`yearmonth` DESC
+                
+                UNION ALL 
+                
+                SELECT 
+                  DISTINCT p.yearmonth, null as payment_transaction_id, NULL AS `status`
+				        from section_support_paypements p
+					 JOIN section_support s ON s.section_support_id = p.section_support_id
+					 JOIN project pr ON pr.project_id = s.project_id
+                WHERE
+                    pr.member_id = :member_id
+                AND SUBSTR(p.yearmonth,1,4) = :year 
+                
+                ) A
+                
+                ORDER BY `yearmonth` DESC
             ";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'year' => $year));
 
@@ -581,17 +604,42 @@ class Default_Model_StatDownload
     public function getUserAffiliatesYears($member_id)
     {
         $sql = "
-                SELECT 
-                    SUBSTR(p.yearmonth,1,4) as year,
-                    MAX(p.yearmonth) as max_yearmonth,
-                    SUM(p.tier) as sum_amount
-                from section_support_paypements p
-                JOIN section_support s ON s.section_support_id = p.section_support_id
-                JOIN project pr ON pr.project_id = s.project_id
-                WHERE s.project_id IS NOT NULL
-                AND pr.member_id = :member_id
-                GROUP BY SUBSTR(p.yearmonth,1,4)
-                ORDER BY SUBSTR(p.yearmonth,1,4) DESC
+                 SELECT YEAR,max(max_yearmonth) AS max_yearmonth, max(sum_amount) AS sum_amount FROM (
+                    SELECT 
+
+                                       SUBSTR(`micro_payout`.`yearmonth`,1,4) as year,
+                                       MAX(`micro_payout`.`yearmonth`) as max_yearmonth,
+                                       SUM(`member_payout`.amount) as sum_amount
+                                   FROM
+                                       `micro_payout`
+                                   STRAIGHT_JOIN
+                                       `project` ON `project`.`project_id` = `micro_payout`.`project_id`
+                                   STRAIGHT_JOIN 
+                                       `project_category` ON `project_category`.`project_category_id` = `micro_payout`.`project_category_id`
+                                   LEFT JOIN
+                                            `member_payout` ON `member_payout`.`member_id` = `micro_payout`.`member_id`
+                                             AND `member_payout`.`yearmonth` = `micro_payout`.`yearmonth`
+                                   LEFT JOIN `tag_object` ON `tag_object`.`tag_type_id` = 1 AND `tag_object`.`tag_group_id` = 7 AND `tag_object`.`is_deleted` = 0 AND `tag_object`.`tag_object_id` = `project`.`project_id`
+                                   WHERE
+                                       `micro_payout`.`member_id` = 339133#:member_id
+                                   GROUP BY SUBSTR(`micro_payout`.`yearmonth`,1,4)
+
+
+                   UNION ALL 
+                   SELECT 
+                                       SUBSTR(p.yearmonth,1,4) as year,
+                                       null as max_yearmonth,
+                                       null as sum_amount
+                                   from section_support_paypements p
+                                   JOIN section_support s ON s.section_support_id = p.section_support_id
+                                   JOIN project pr ON pr.project_id = s.project_id
+                                   WHERE s.project_id IS NOT NULL
+                                   AND pr.member_id = 339133#:member_id
+                                   GROUP BY SUBSTR(p.yearmonth,1,4)
+                   ) A              
+                   GROUP BY year  
+                   ORDER BY year DESC
+ 
             ";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id));
 
@@ -635,6 +683,62 @@ class Default_Model_StatDownload
                 order by yearmonth
         ";
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('member_id' => $member_id));
+        return $resultSet;
+    }
+    
+    public function getPayoutHistory2($member_id) {
+        
+        $cacheName = __FUNCTION__ . md5(serialize($member_id));
+        $cache = Zend_Registry::get('cache');
+
+        $result = $cache->load($cacheName);
+
+        if ($result) {
+            return $result;
+        }
+        
+        
+        $sql = "SELECT A2.yearmonth,TRUNCATE(SUM(sum_payout),2) AS amount, cnt
+                FROM (
+                    SELECT yearmonth, section_id
+                        ,case when yearmonth = DATE_FORMAT(NOW(),'%Y%m') then sum(real_credits_plings)*now_section_payout_factor/100 ELSE sum(real_credits_plings)*section_payout_factor/100 END AS sum_payout
+                        ,(select count(1) from member_payout p where p.yearmonth=A.yearmonth and p.member_id = A.member_id) cnt
+                    FROM (
+                    
+                        SELECT 
+                            SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_plings END) AS real_credits_plings,
+                            `micro_payout`.yearmonth,
+                            `micro_payout`.section_id,
+                            `member_payout`.member_id,
+                            `micro_payout`.section_payout_factor,
+                            (SELECT round(sfs.sum_support/DATE_FORMAT(NOW() + INTERVAL 1 MONTH - INTERVAL DATE_FORMAT(NOW(),'%d') DAY,'%d')*DATE_FORMAT(NOW(),'%d') /sfs.sum_amount_payout,2) AS factor  FROM section_funding_stats sfs WHERE sfs.yearmonth = `micro_payout`.yearmonth AND sfs.section_id = `micro_payout`.section_id) AS now_section_payout_factor
+                            FROM
+                                `micro_payout`
+                            STRAIGHT_JOIN
+                                `project` ON `project`.`project_id` = `micro_payout`.`project_id`
+                            STRAIGHT_JOIN 
+                                `project_category` ON `project_category`.`project_category_id` = `project`.`project_category_id`
+                            LEFT JOIN
+                                `member_payout` ON `member_payout`.`member_id` = `project`.`member_id`
+                                    AND `member_payout`.`yearmonth` = `micro_payout`.`yearmonth`
+                            LEFT JOIN `tag_object` ON `tag_object`.`tag_type_id` = 1 AND `tag_object`.`tag_group_id` = 7 AND `tag_object`.`is_deleted` = 0 AND `tag_object`.`tag_object_id` = `project`.`project_id`
+                            LEFT JOIN section_category sc ON sc.project_category_id = `project`.`project_category_id`
+                            LEFT JOIN section s ON s.section_id = sc.section_id
+                            WHERE `micro_payout`.`member_id` = :member_id 
+                            AND `micro_payout`.yearmonth > 201704
+                            GROUP BY `micro_payout`.yearmonth, `micro_payout`.`project_id`
+                        ) A
+                        GROUP BY yearmonth,section_id
+                        
+                ) A2
+                
+                GROUP BY yearmonth
+                order by yearmonth";
+        
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('member_id' => $member_id));
+        
+        $cache->save($resultSet, $cacheName);
+        
         return $resultSet;
     }
 
