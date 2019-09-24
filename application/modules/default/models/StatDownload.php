@@ -193,8 +193,8 @@ class Default_Model_StatDownload
                     JOIN member m ON m.member_id = su.member_id
                     WHERE
                         pr.member_id = :member_id 
-                        AND p.`yearmonth` = :yearmonth
-                    
+                        AND p.`yearmonth` = :yearmonth 
+                   
                 ";
         
         if(null != $section_id) {
