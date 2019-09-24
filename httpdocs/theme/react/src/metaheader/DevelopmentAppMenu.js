@@ -85,10 +85,6 @@ class DevelopmentAppMenu extends React.Component {
       badgeNot = (<span className="badge-notification">{this.state.notification_count}</span>);
     }
 
-    let productItemBaseLink = "";
-    if (window.location.host.endsWith('cc') || window.location.host.endsWith('org') || window.location.host.endsWith('com')){
-      productItemBaseLink = "https://" + window.location.host;
-    }
 
     let personalMenuDisplay=(
         <React.Fragment>
@@ -97,7 +93,7 @@ class DevelopmentAppMenu extends React.Component {
           <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/collection/add"} label="Add Collection" />
           <MyButton id="addproduct-link-item" url={this.props.baseUrlStore+"/projects/new"} label="Add Project" />
             */}
-          <MyButton id="listproduct-link-item" url={productItemBaseLink + "/u/" + this.props.user.username + "/products"} label="Products" />
+          <MyButton id="listproduct-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/products"} label="Products" />
           {/*
             <MyButton id="listproduct-link-item" url={this.props.baseUrlStore + "/u/" + this.props.user.username + "/collections"} label="Collections" />
             */}
