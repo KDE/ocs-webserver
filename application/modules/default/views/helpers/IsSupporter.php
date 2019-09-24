@@ -36,7 +36,7 @@ class Default_View_Helper_IsSupporter extends Zend_View_Helper_Abstract
     	$tableMembers = new Default_Model_Member();
     	//$row = $tableMembers->fetchSupporterDonationInfo($member_id);
         $row = $tableMembers->fetchSupporterSectionInfo($member_id);
-        if($row==null)
+        if($row==null || !isset($row['sections']))
         {
             $cache->save(false, $cacheName, array(), 3600);
             return false;
