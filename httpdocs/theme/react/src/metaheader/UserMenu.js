@@ -75,9 +75,9 @@ class UserMenu extends React.Component {
     if (this.props.device === "large"){
 
 
-      const aboutMenu = <AboutMenu blogUrl={this.props.baseUrlStore}
+      const aboutMenu = <AboutMenu blogUrl={this.props.blogUrl}
                                   isExternal={this.props.isExternal}
-                                  baseUrl={this.props.baseUrl}
+                                  baseUrl={this.props.baseUrlStore}
                                   isAdmin={this.props.isAdmin}
                                   />
 
