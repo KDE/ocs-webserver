@@ -62,6 +62,7 @@ $memberProfile = $helperImage->Image($this->member->profile_image_url,array('wid
 
 $isSupporterHelper = new Default_View_Helper_IsSupporter();
 $isSupporterSection = $isSupporterHelper->isSupporter($this->member->member_id);
+
 ?>
 <style type="text/css">
 /* ADD THIS TO CSS */
@@ -98,7 +99,7 @@ div#preloaded-images {
                             <div class="about-title">
                                 <figure class="relative inline profile-image-container">
                                     <?php if( $isSupporter || $isSubscriber ) { ?>
-                                        <span class="supporter-badge">S<?=$isSupporter?></span>
+                                        <span class="supporter-badge">S<?=$isSupporterSection?></span>
                                     <?php }?>
                                     <img src="<?php echo $memberProfile ; ?>"
                                          alt="profile-image"
