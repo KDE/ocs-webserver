@@ -687,6 +687,17 @@ class Default_Model_StatDownload
     }
     
     public function getPayoutHistory2($member_id) {
+        
+        $cacheName = __FUNCTION__ . md5(serialize($member_id));
+        $cache = Zend_Registry::get('cache');
+
+        $result = $cache->load($cacheName);
+
+        if ($result) {
+            return $result;
+        }
+        
+        
         $sql = "SELECT A2.yearmonth,TRUNCATE(SUM(sum_payout),2) AS amount, cnt
                 FROM (
                     SELECT yearmonth, section_id
@@ -725,6 +736,9 @@ class Default_Model_StatDownload
                 order by yearmonth";
         
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('member_id' => $member_id));
+        
+        $cache->save($resultSet, $cacheName);
+        
         return $resultSet;
     }
 
