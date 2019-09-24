@@ -26,22 +26,56 @@ class Default_Model_SectionSupport extends Default_Model_DbTable_SectionSupport
      public function fetchAffiliatesForProject($project_id)
     {            
             
-            $sql = "
-                        SELECT 
-                        f.project_id
-                        ,m.member_id
-                        ,s.active_time
-                        ,m.profile_image_url
-                        ,m.created_at as member_created_at
-                        ,m.username
-                        FROM section_support f
-                        INNER JOIN support s ON s.id = f.support_id
-                        inner join member m on s.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
-                        WHERE  f.project_id = :project_id 
-			AND s.status_id = 2
-                        order by s.active_time desc
-             ";
-            $resultSet = $this->_db->fetchAll($sql, array('project_id' => $project_id));
-            return $resultSet;     
+        $sql = "
+                    SELECT 
+                    f.project_id
+                    ,m.member_id
+                    ,s.active_time
+                    ,m.profile_image_url
+                    ,m.created_at as member_created_at
+                    ,m.username
+                    FROM section_support f
+                    INNER JOIN support s ON s.id = f.support_id
+                    inner join member m on s.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
+                    WHERE  f.project_id = :project_id 
+                    AND s.status_id = 2
+                    order by s.active_time desc
+         ";
+        $resultSet = $this->_db->fetchAll($sql, array('project_id' => $project_id));
+        return $resultSet;     
+    }
+    
+    
+    public function isMemberAffiliateForProject($project_id, $member_id)
+    {            
+            
+        $cacheName = __FUNCTION__ . md5(serialize($project_id) .''. serialize($member_id));
+        $cache = Zend_Registry::get('cache');
+
+        $result = $cache->load($cacheName);
+
+        if ($result) {
+            return $result;
+        }
+        
+        $isAffiliate = false;
+        
+        $sql_object =
+            "SELECT 1
+                FROM section_support f
+                INNER JOIN support s ON s.id = f.support_id
+                inner join member m on s.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
+                WHERE  f.project_id = :project_id 
+                AND m.member_id = :member_id
+                AND s.status_id = 2
+                order by s.active_time desc";
+        $r = $this->getAdapter()->fetchRow($sql_object, array('project_id' => $project_id, 'member_id' => $member_id));
+        if ($r) {
+            $isAffiliate = true;
+        }   
+        
+        $cache->save($isAffiliate, $cacheName);
+        
+        return $isAffiliate;
     }
 } 

@@ -112,6 +112,14 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                        ?>
                        <span class="supporter-badge-<?=($elementComment['level']>1?2:1)?>" >S</span> 
                        <?php }?>
+                       
+                       <?php 
+                        $modelSectionSupport = new Default_Model_SectionSupport();
+                        $isAffiliate = $modelSectionSupport->isMemberAffiliateForProject($this->product->project_id, $comment['member_id']);
+                        if($isAffiliate){
+                       ?>
+                       <span class="creator-badge-<?=($elementComment['level']>1?2:1)?>" >A</span> 
+                       <?php }?>
 
                         <img src="<?= $helperImage->Image($comment['profile_image_url'], array('width' => 60, 'height' => 60)) ?>" class="img<?= $elementComment['level']?>">
                                                
