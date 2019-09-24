@@ -76,8 +76,7 @@ class DevelopmentAppMenu extends React.Component {
 
   render(){
 
-    console.log('config object');
-    console.log(window.config);
+    
 
     let badgeNot;
     if(this.state.notification)

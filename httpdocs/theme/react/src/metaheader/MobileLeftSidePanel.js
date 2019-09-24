@@ -46,7 +46,8 @@ class MobileLeftSidePanel extends React.Component {
             <li>
               <a className="groupname"><b>Community</b></a>
               <ul>
-                <CommunityMenuItems baseUrl={this.props.baseUrlStore}
+                <CommunityMenuItems baseUrl={this.props.baseUrl}
+                                    baseUrlStore = {this.props.baseUrlStore}
                                     forumUrl = {this.props.forumUrl}  />
               </ul>
             </li>
