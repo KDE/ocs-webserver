@@ -117,7 +117,7 @@ if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
                        <?php                       
                         if($comment['issupporter']){
                        ?>
-                       <span class="supporter-badge-<?=($elementComment['level']>1?2:1)?>" >S</span> 
+                       <span class="supporter-badge-<?=($elementComment['level']>1?2:1)?>" >S<?=$comment['issupporter']?></span> 
                        <?php }?>
                        
                        <?php 

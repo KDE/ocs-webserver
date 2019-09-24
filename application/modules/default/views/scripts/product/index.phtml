@@ -862,9 +862,10 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                             <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->username); ?>"
                                                title="<?= $this->product->username ?>"  class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->member_id?>">
                                                <?php
-                                                    if($this->isSupporter($this->product->member_id)) {
+                                                  $isSupporter = $this->isSupporter($this->product->member_id);
+                                                    if($isSupporter) {
                                                 ?>
-                                                    <span class="supporter-badge" >S</span>
+                                                    <span class="supporter-badge" >S<?=$isSupporter?></span>
                                                 <?php } ?>
                                                 <img src="<?= $helpImage->Image($this->product->profile_image_url,
                                                     array('width' => 80, 'height' => 80)) ?>"
