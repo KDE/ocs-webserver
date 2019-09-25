@@ -171,7 +171,10 @@ if ($countDownloadsOverall > 0) {
     echo '<div class="tab-pane fade in active" id="'.$printDate.'">';
     echo '    <div style="text-align: center;" class="row margin-bottom-12"><div class="col-md-8 cell-default">No Data</div></div>';
     echo '    <div class="row row-total">';
-    echo '        <div class="col-md-1 text-right" style="min-width: 150px;"></div><div class="col-md-4 text-right"></div><div class="col-md-3 text-right" style="min-width: 570px;">Possible payout for this month (<span style="font-size: smaller;">*</span>):</div><div class="col-md-1 text-right" style="min-width: 190px;"><strong>$0.00</strong></div>';
+    echo '    <div class="col-md-2 text-right" style="min-width: 503px;">Possible payout for this month (<span style="font-size: smaller;">*</span>):</div>'
+                . '<div class="col-md-1 text-right" style="min-width: 190px;"></div>'
+                . '<div class="col-md-1 text-right" style="min-width: 190px;"></div>'
+                . '<div class="col-md-1 text-right" style="min-width: 190px;"><strong>$0.00</strong></div>';
     echo '    </div>';
     echo '</div>';
 }
