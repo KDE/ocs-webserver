@@ -403,7 +403,8 @@ class Default_Model_StatDownload
                 and m.yearmonth =  :yearmonth
                 #and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0
                 and m.is_member_pling_excluded=0
-                group by m.section_id";
+                group by m.section_id
+                ORDER BY s.`order`";
         
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'yearmonth' => $yearmonth));
 
