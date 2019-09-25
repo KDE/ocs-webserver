@@ -149,6 +149,11 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
             recordsLoaded: function (event, data) {
                 TooltipUser.setup("tooltipuser","right");        
             },          
+            rowInserted: function (event, data) {
+               if (data.record.cntOther==0) {                   
+                    data.row.css("background", "#FF4500");                   
+               }
+            },
             actions: {
                 listAction: '/newproducts/list'                
             },
