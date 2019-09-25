@@ -21,34 +21,36 @@ class ChatContainer extends Component {
     let container, members;
     if (this.state.items){
       const feedItems = this.state.items.map((fi,index) => {
-          let mb=Object.values(fi.members);
-          if(mb.length>0){
-              members = mb.slice(0,4).map((m,index) => {
-                  let imgAvatar;
-                  if(m.avatar_url){
-                    imgAvatar = <img src={this.avatarUrl+m.avatar_url.substring(5)+'?width=39&height=39&method=crop'}></img>
-                  }
-                  return (
-                          <div className="chatUser">
-                            {imgAvatar}
-                            <div className="name">
-                              {m.display_name}
+          if(fi.members){
+            let mb=Object.values(fi.members);
+            if(mb.length>0){
+                members = mb.slice(0,4).map((m,index) => {
+                    let imgAvatar;
+                    if(m.avatar_url){
+                      imgAvatar = <img src={this.avatarUrl+m.avatar_url.substring(5)+'?width=39&height=39&method=crop'}></img>
+                    }
+                    return (
+                            <div className="chatUser">
+                              {imgAvatar}
+                              <div className="name">
+                                {m.display_name}
+                              </div>
                             </div>
-                          </div>
-                          )
-                        }
-                );
-          }
-          if(fi.guest_can_join==false)
-          {
-            return (
-            <li key={index} className="chatMember">
-              <a href={this.roomUrl+fi.room_id} >
-                join our chat {(fi.canonical_alias)?fi.canonical_alias.substring(0,fi.canonical_alias.indexOf(':'))+' ('+fi.num_joined_members+')':''}
-              </a>
-              {members}
-            </li>
-            )
+                            )
+                          }
+                  );
+            }
+            if(fi.guest_can_join==false)
+            {
+              return (
+              <li key={index} className="chatMember">
+                <a href={this.roomUrl+fi.room_id} >
+                  join our chat {(fi.canonical_alias)?fi.canonical_alias.substring(0,fi.canonical_alias.indexOf(':'))+' ('+fi.num_joined_members+')':''}
+                </a>
+                {members}
+              </li>
+              )
+            }
           }
 
       });
