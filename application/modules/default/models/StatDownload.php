@@ -328,6 +328,8 @@ class Default_Model_StatDownload
     
     public function getUserSectionsForDownloadAndViewsForMonth($member_id, $yearmonth)
     {
+        
+        /*
         $sql = "
                 SELECT yearmonth, section_id, section_name, section_order, section_payout_factor, COUNT(project_id) AS count_projects, SUM(credits_plings) AS num_credits_plings, SUM(credits_section) AS num_credits_section, SUM(credits_plings)/100 AS sum_amount_credits_plings, SUM(credits_section)/100 AS sum_amount_credits_section
                     , SUM(real_credits_plings) AS num_real_credits_plings
@@ -379,6 +381,30 @@ class Default_Model_StatDownload
                 GROUP BY yearmonth, section_id, section_name, section_payout_factor  
                 ORDER BY section_order 
             ";
+         * 
+         */
+        
+        $sql = "select
+                        m.yearmonth, m.section_id, s.name AS section_name, s.order as section_order, m.section_payout_factor,COUNT(project_id) AS count_projects, SUM(credits_plings) AS num_credits_plings, SUM(credits_section) AS num_credits_section, SUM(credits_plings)/100 AS sum_amount_credits_plings, SUM(credits_section)/100 AS sum_amount_credits_section,
+                        SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_plings END) AS real_credits_plings,
+                        SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_section END) AS real_credits_section
+                        ,(SELECT round(sfs.sum_support/DATE_FORMAT(NOW() + INTERVAL 1 MONTH - INTERVAL DATE_FORMAT(NOW(),'%d') DAY,'%d')*DATE_FORMAT(NOW(),'%d') /sfs.sum_amount_payout,2) AS factor  FROM section_funding_stats sfs WHERE sfs.yearmonth = m.yearmonth AND sfs.section_id = m.section_id) AS now_section_payout_factor
+                        , MAX(amount) AS payout_amount, MAX(STATUS) AS payout_status, MAX(payment_transaction_id) AS payout_payment_transaction_id, MAX(`member_payout`.paypal_mail) AS paypal_mail
+                from micro_payout m
+                LEFT JOIN section s ON s.section_id = m.section_id
+                LEFT JOIN
+                `member_payout` ON `member_payout`.`member_id` = m.`member_id`
+                 AND `member_payout`.`yearmonth` = m.`yearmonth`
+                 where m.section_id
+                #and m.paypal_mail is not null and m.paypal_mail <> ''
+                #and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$')
+                #and s.section_id = 1
+                AND m.member_id = :member_id
+                and m.yearmonth =  :yearmonth
+                #and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0
+                and m.is_member_pling_excluded=0
+                group by m.section_id";
+        
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'yearmonth' => $yearmonth));
 
         if ($result->rowCount() > 0) {
