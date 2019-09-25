@@ -32,6 +32,12 @@ function AdminlLinksContainer(props)
             </a>
           </li>
 
+          <li id="same-paypal-link-item">
+            <a href={props.baseUrlStore+"/samepaypal"} >
+              <span>Same paypal check</span>
+            </a>
+          </li>
+
           <li id="backend-link-item">
             <a href={props.baseUrlStore+"/backend"} >
               <span>Backend</span>
