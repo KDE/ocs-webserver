@@ -86,9 +86,8 @@ class Default_Model_Section
 
     public function fetchCategoriesWithPayout()
     {
-        $sql = " select c.section_id,m.project_category_id,sum(probably_payout_amount) amount, pc.title
-                from member_dl_plings m
-                JOIN section_category c on c.project_category_id = m.project_category_id           
+        $sql = " select m.section_id,m.project_category_id,SUM(m.credits_section)/100 amount, pc.title
+                from micro_payout m
                 join project_category pc on m.project_category_id = pc.project_category_id 
                 where m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$')            
                 and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
@@ -103,7 +102,7 @@ class Default_Model_Section
     {
         if($section_id)
         {
-            $sqlSection = " and s.section_id = ".$section_id;
+            $sqlSection = " and m.section_id = ".$section_id;
         }else
         {
             $sqlSection = " ";
@@ -122,14 +121,15 @@ class Default_Model_Section
             p.profile_image_url,
             p.cat_title,
             p.laplace_score,
-            m.probably_payout_amount
-            from stat_projects p,member_dl_plings m, section s, section_category c
-            where p.project_id = m.project_id and s.section_id = c.section_id and c.project_category_id = p.project_category_id 
+            sum(m.credits_section)/100 AS probably_payout_amount
+            from stat_projects p,micro_payout m
+            where p.project_id = m.project_id
             and m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
             ".$sqlSection."
             and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
             and m.is_member_pling_excluded=0
-            order by probably_payout_amount desc
+            GROUP BY m.project_id
+            order by m.credits_section desc
             limit 20
         ";
        
@@ -152,15 +152,16 @@ class Default_Model_Section
                 p.profile_image_url,
                 p.cat_title,
                 p.laplace_score,
-                m.probably_payout_amount
-                from stat_projects p,member_dl_plings m
+                sum(m.credits_section)/100 AS probably_payout_amount
+                from stat_projects p,micro_payout m
                 where  p.project_id = m.project_id
                      and m.paypal_mail is not null and m.paypal_mail <> ''
                      and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
                       and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
                         and m.is_member_pling_excluded=0           
-                            and p.project_category_id = :cat_id    
-                order by m.probably_payout_amount desc 
+                            and p.project_category_id = :cat_id 
+					 GROUP BY m.project_id   
+                order by sum(m.credits_plings) desc 
                 limit 20";
         $resultSet = $this->getAdapter()->fetchAll($sql, array("cat_id"=>$cat_id));
         return $resultSet;    
@@ -210,8 +211,8 @@ class Default_Model_Section
                 me.username,
                 me.profile_image_url,
                 m.member_id,
-                sum(m.probably_payout_amount) probably_payout_amount
-                from member_dl_plings m, section s, section_category c, member me
+                sum(m.credits_section)/100 probably_payout_amount
+                from micro_payout m, section s, section_category c, member me
                 where s.section_id = c.section_id and c.project_category_id = m.project_category_id AND me.member_id = m.member_id
                 and m.paypal_mail is not null and m.paypal_mail <> ''
                 and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
@@ -220,7 +221,7 @@ class Default_Model_Section
 					 and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
                 and m.is_member_pling_excluded=0
                 group by me.username,me.profile_image_url,m.member_id
-                order by probably_payout_amount desc
+                order by sum(m.credits_section) desc
                 limit 20
         ";
         
@@ -234,8 +235,8 @@ class Default_Model_Section
                 p.username,
                 p.profile_image_url,
                 p.member_id,
-                sum(m.probably_payout_amount) probably_payout_amount
-                from stat_projects p, member_dl_plings m
+                SUM(m.credits_section)/100 probably_payout_amount
+                from stat_projects p, micro_payout m
                 where p.member_id = m.member_id and p.project_id = m.project_id
                 and m.paypal_mail is not null and m.paypal_mail <> ''
                 and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
@@ -243,7 +244,7 @@ class Default_Model_Section
                 and m.is_member_pling_excluded=0
                 and p.project_category_id = :cat_id
                 group by p.username,p.profile_image_url,p.member_id
-                order by probably_payout_amount desc 
+                order by SUM(m.credits_section) desc 
                 limit 20";
         $resultSet = $this->getAdapter()->fetchAll($sql,array("cat_id"=>$cat_id));
         return $resultSet;    
@@ -333,46 +334,13 @@ class Default_Model_Section
      */
     public function fetchAllSectionStats($yearmonth = null, $isForAdmin = false)
     {
-        $sql = "SELECT p.yearmonth, s.section_id, s.name AS section_name
-                ,(SELECT ROUND(SUM(ss.tier),2) AS sum_support FROM section_support ss
-                    JOIN support su2 ON su2.id = ss.support_id
-                    WHERE s.section_id = ss.section_id
-                    AND ss.is_active = 1
-                    AND su2.status_id = 2
-                    AND su2.type_id = 1
-                    AND DATE_FORMAT(su2.active_time, '%Y%m') <= :yearmonth 
-                    GROUP BY ss.section_id
-                ) AS sum_support
-                ,(SELECT SUM(sp.amount * (ssp.percent_of_sponsoring/100)) AS sum_sponsor FROM sponsor sp
-                LEFT JOIN section_sponsor ssp ON ssp.sponsor_id = sp.sponsor_id
-                WHERE sp.is_active = 1
-                AND ssp.section_id = s.section_id) AS sum_sponsor
-                , SUM(p.num_downloads) AS sum_dls
-                , ROUND(SUM(p.probably_payout_amount),2) AS sum_amount
-                , p3.num_downloads AS sum_dls_payout, p3.amount AS sum_amount_payout
-                FROM member_dl_plings p
-                LEFT JOIN section_category sc ON sc.project_category_id = p.project_category_id
-                LEFT JOIN section s ON s.section_id = sc.section_id
-                LEFT JOIN (
-                        SELECT yearmonth, section_id, SUM(num_downloads) AS num_downloads, SUM(amount) AS amount FROM (
-                                SELECT m.yearmonth, `m`.`member_id`,`m`.`paypal_mail`, s.section_id, sum(`m`.`num_downloads`) AS `num_downloads`,round(sum(`m`.`probably_payout_amount`),2) AS `amount` 
-                                from `member_dl_plings` `m` 
-                                LEFT JOIN section_category sc ON sc.project_category_id = m.project_category_id
-                                LEFT JOIN section s ON s.section_id = sc.section_id
-                                where ((`m`.`yearmonth` = :yearmonth) 
-                                and (length(`m`.`paypal_mail`) > 0) and (`m`.`paypal_mail` regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') and (`m`.`is_license_missing` = 0) and (`m`.`is_source_missing` = 0) and (`m`.`is_pling_excluded` = 0) and (`m`.`is_member_pling_excluded` = 0)) 
-                                group by m.yearmonth, `m`.`member_id`,`m`.`paypal_mail`, s.section_id
-                                HAVING sum(`m`.`probably_payout_amount`) >= 1
-                        ) A GROUP BY yearmonth, section_id
-                ) p3 ON p3.yearmonth = p.yearmonth AND p3.section_id = s.section_id
-                WHERE p.yearmonth = :yearmonth
-                AND sc.section_id IS NOT null ";
+        $sql = "SELECT * FROM section_funding_stats p
+                WHERE p.yearmonth = :yearmonth";
         
         if(!$isForAdmin) {
             $sql .= " AND p.yearmonth >= DATE_FORMAT((NOW() - INTERVAL 1 MONTH),'%Y%m')";
         }
         
-        $sql .= " GROUP BY s.section_id";
         if(empty($yearmonth)) {
             $yearmonth = "DATE_FORMAT(NOW(),'%Y%m')";
         }
