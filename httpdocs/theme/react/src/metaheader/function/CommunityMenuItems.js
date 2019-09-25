@@ -5,7 +5,7 @@ function CommunityMenuItems(props)
     <React.Fragment>
     <li><a href={props.baseUrl + "/community"}>Members</a></li>
     <li><a href={props.forumUrl}>Discussion</a></li>
-    <li><a href={props.baseUrl + "/support"}>Become a Supporter</a></li>
+    <li><a href={props.baseUrlStore + "/support"}>Become a Supporter</a></li>
     </React.Fragment>
   );
 }

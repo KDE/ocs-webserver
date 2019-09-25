@@ -42,6 +42,7 @@ class DomainsMenu extends React.Component {
               forumUrl={this.props.forumUrl}
               user={this.props.user}
               baseUrl={this.props.baseUrl}
+              baseUrlStore={this.props.baseUrlStore}
             />
 
 

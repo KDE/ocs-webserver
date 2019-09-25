@@ -7,7 +7,7 @@ function AboutMenuItems(props)
       { props.isAdmin &&
         <li><a className="popuppanel"  href={props.baseUrl+"/plings"}>Plings (admin only)</a></li>
       }
-      <li><a  href={props.baseUrl +"/faq-pling"}>FAQ Pling</a></li>
+      <li><a  href={props.baseUrlStore +"/faq-pling"}>FAQ Pling</a></li>
       <li><a  href={props.baseUrl +"/faq-opencode"}>FAQ Opencode</a></li>
       <li><a  href={props.baseUrl +"/ocs-api"}>API</a></li>
       <li><a  href={props.baseUrl +"/about"}>About</a></li>
