@@ -32,4 +32,19 @@ class LoginController extends Local_Controller_Action_DomainSwitch
 
     }
 
+    public function fpAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $fingerprint = stripslashes(trim($this->getParam('fp')));
+
+        Zend_Registry::set('client_fp', $fingerprint);
+
+        $namespace = new Zend_Session_Namespace();
+        $namespace->client_fp = $fingerprint;
+
+        $this->_helper->json(array('status' => 'ok'));
+    }
+
 }
