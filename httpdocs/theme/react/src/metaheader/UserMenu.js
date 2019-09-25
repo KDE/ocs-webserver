@@ -3,7 +3,7 @@ import UserLoginMenuContainer from './UserLoginMenuContainer';
 import DevelopmentAppMenu from './DevelopmentAppMenu';
 import SearchMenuContainer from './SearchMenuContainer';
 import AboutMenu from './AboutMenu';
-import AnonymousMenu from './AnonymousMenu';
+//import AnonymousMenu from './AnonymousMenu';
 
 class UserMenu extends React.Component {
   constructor(props){
@@ -15,7 +15,7 @@ class UserMenu extends React.Component {
     let searchMenuDisplay,anonymousMenu;
     if (this.props.user && this.props.isAdmin ){
       searchMenuDisplay = <SearchMenuContainer baseUrl={this.props.baseUrl}/>
-      anonymousMenu= <AnonymousMenu baseUrl={this.props.baseUrlStore} baseUrlStore={this.props.baseUrlStore} user={this.props.user}/>
+      //anonymousMenu= <AnonymousMenu baseUrl={this.props.baseUrlStore} baseUrlStore={this.props.baseUrlStore} user={this.props.user}/>
     }
 
     let userDropdownDisplay, developmentAppMenuDisplay;
@@ -91,7 +91,7 @@ class UserMenu extends React.Component {
           {aboutMenu}
           {chatItem}
           {searchMenuDisplay}
-          {anonymousMenu}
+
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
 
@@ -101,7 +101,7 @@ class UserMenu extends React.Component {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu right" id="user-menu">
 
-          {anonymousMenu}
+
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
 
