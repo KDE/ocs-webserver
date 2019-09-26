@@ -88,27 +88,23 @@ class Support extends Component {
         supporters = <ul className="dropdown-menu dropdown-menu-right">{t}</ul>
       }
 
-      const s = this.props.section.supporters.length;
+      const s =this.props.section.supporters.length;
       let goal = Math.ceil((s/100))*100;
       if(goal==0)
       {
         goal = 100;
       }
-
+      const labeltext = 'Goal:'+s+'/'+goal;
     return(
       <div className="pling-section-header">
-          <div className="header-title">
-            <span>{this.props.section ? this.props.section.name:''}</span>
-          </div>
           <div className="header-body">
             <div className="score-container">
-              <span>Goal:</span>
+              <span>{this.props.section ? this.props.section.name:''}</span>
               <div className="score-bar-container">
                 <div className={"score-bar"} style={{"width":(s/goal)*100 + "%"}}>
-                  {s}
+                  {labeltext}
                 </div>
               </div>
-              <span>{goal}</span>
             </div>
             <div ref={node => this.node = node} className={'supporter-container '+this.state.dropdownClass }>
               <a className="header-supporters" > Supporters &#8964; </a>
