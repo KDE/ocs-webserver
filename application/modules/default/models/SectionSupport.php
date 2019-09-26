@@ -177,7 +177,7 @@ class Default_Model_SectionSupport extends Default_Model_DbTable_SectionSupport
                     WHERE  p.member_id = :member_id 
                     AND s.status_id = 2
                     order by s.active_time DESC";
-        $r = $this->getAdapter()->fetchRow($sql_object, array('member_id' => $member_id));
+        $r = $this->getAdapter()->fetchAll($sql_object, array('member_id' => $member_id));
         $cache->save($r, $cacheName);
         
         return $r;
