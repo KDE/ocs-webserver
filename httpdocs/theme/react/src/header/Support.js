@@ -96,7 +96,7 @@ class Support extends Component {
       }
       const labeltext = 'Goal:'+s+'/'+goal;
     return(
-      <div className="pling-section-header">
+      <div className={"pling-section-header "+ this.props.headerStyle}>
           <div className="header-body">
             <div className="score-container">
               <span>{this.props.section ? this.props.section.name:''}</span>
