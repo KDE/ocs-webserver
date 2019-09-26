@@ -911,10 +911,10 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                         
                         <?php if($isAdmin) {?>
                         <!-- Affiliates -->
-                        <div class="prod-widget-box right ">
+                        <div class="prod-widget-box right " style="float: right;">
                                 <div class="projectdtailHeart">
                                     <div id="container-affiliate<?=$this->product->project_id?>" class="container-pling" >
-                                        <div class="plingbartext"><span class="plingnum"> <?php if($this->projectaffiliates > 0) echo ''.count($this->projectaffiliates).''; ?> Affiliates</span> </div>
+                                        <div class="plingbartext"><span class="plingnum"> <?= count($this->projectaffiliates) ?> Affiliates</span> </div>
                                     </div>
                                 </div>
                         </div>
