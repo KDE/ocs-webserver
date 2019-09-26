@@ -178,12 +178,8 @@ class Default_Model_SectionSupport extends Default_Model_DbTable_SectionSupport
                     AND s.status_id = 2
                     order by s.active_time DESC";
         $r = $this->getAdapter()->fetchRow($sql_object, array('member_id' => $member_id));
-        if ($r) {
-            $isAffiliate = true;
-        }   
+        $cache->save($r, $cacheName);
         
-        $cache->save($isAffiliate, $cacheName);
-        
-        return $isAffiliate;
+        return $r;
     }
 } 
