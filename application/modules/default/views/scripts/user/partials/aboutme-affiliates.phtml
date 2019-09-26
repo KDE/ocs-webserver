@@ -19,10 +19,11 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
+var_dump($this->affiliates);
 ?>
 <div class="newusers">
      <?php 
+        if(count($this->affiliates) > 0) {
             foreach ($this->affiliates as $user) {                                  
         ?>
             <div class="user " >
@@ -35,7 +36,10 @@
                     </a>
                 </div>
             </div>
-    <?php } ?>
+    <?php 
+            }
+    
+        } ?>
     <div class="clearboth"></div> 
 </div>
 
