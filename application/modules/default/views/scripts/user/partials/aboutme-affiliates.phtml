@@ -33,6 +33,7 @@
                         </figure>
                         <h3 class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><?php echo Default_Model_HtmlPurify::purify($user['username']); ?></h3>                                                   
                     </a>
+                    <span class="small"><?= $this->printDate($user['active_time'])?></span>
                 </div>
             </div>
     <?php 

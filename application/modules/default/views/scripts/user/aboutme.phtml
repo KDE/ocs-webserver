@@ -160,6 +160,15 @@ div#preloaded-images {
                                     <div class="row">
                                        Got <span class="cnt"> <?=$this->stat['cntPlingsHeGot']?> </span><img  src="/images/system/pling-btn-active.png" style="width:20px; height:20px" />
                                     </div>
+                                    
+                                    
+                                    <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') { ?>                          
+                                    <div class="row">
+                                       Got <span class="cnt"> <?= count($this->affiliates) ?> Affiliates
+                                    </div>
+                                    <?php } ?>
+                                    
+                                    
 
 
                                     <div class="row">
