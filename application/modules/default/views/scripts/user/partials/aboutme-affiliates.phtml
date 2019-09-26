@@ -20,13 +20,10 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-    $modelSectionSupport = new Default_Model_SectionSupport();
-    $affiliates = $modelSectionSupport->fetchAffiliatesForMember($this->member->member_id);
-
 ?>
 <div class="newusers">
      <?php 
-            foreach ($affiliates as $user) {                                  
+            foreach ($this->affiliates as $user) {                                  
         ?>
             <div class="user " >
                 <div class="u-wrap">                

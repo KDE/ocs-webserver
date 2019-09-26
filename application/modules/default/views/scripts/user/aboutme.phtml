@@ -66,6 +66,8 @@ $isSupporterSection = $isSupporterHelper->isSupporter($this->member->member_id);
 $modelSectionSupport = new Default_Model_SectionSupport();
 $affiliates = $modelSectionSupport->fetchAffiliatesForMember($this->member->member_id);
 
+$this->affiliates = $affiliates;
+
 ?>
 <style type="text/css">
 /* ADD THIS TO CSS */
