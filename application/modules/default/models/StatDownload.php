@@ -757,6 +757,22 @@ class Default_Model_StatDownload
                         ) A
                         GROUP BY yearmonth,section_id
                         
+                        
+                        UNION ALL 
+                        
+                        SELECT 
+                                p2.yearmonth, s2.section_id
+                                ,round(SUM(p2.tier)*(SELECT percent FROM affiliate_config WHERE p2.yearmonth >= active_from  AND p2.yearmonth <= active_until),2) AS sum_payout
+                                ,0 AS cnt
+                        from section_support_paypements p2
+                        JOIN section_support s2 ON s2.section_support_id = p2.section_support_id
+                        JOIN support su2 ON su2.id = s2.support_id
+                        JOIN project pr2 ON pr2.project_id = s2.project_id
+                        JOIN member m2 ON m2.member_id = su2.member_id
+                        WHERE
+                           pr2.member_id = :member_id 
+                        
+                        
                 ) A2
                 
                 GROUP BY yearmonth
