@@ -228,6 +228,7 @@
             display: flex;
             .supporter-container {
               padding-top: 6px;
+              padding-left:5px;
             }
            .score-container
            {
@@ -260,16 +261,17 @@
 
           &.header-supporter-dark
           {
+            .header-body .score-container
+            {
+              >span >a{
+                color: #fff;
+              }
+            }
              span{
                color: #fff;
              }
 
-             .header-body .score-container .score-bar-container{
-               background-color: #ccc;
-               .score-bar{
-                 color:#1E2881;
-               }
-             }
+            
              a.header-supporters{
                color:#fff;
              }
