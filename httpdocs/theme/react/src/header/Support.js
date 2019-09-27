@@ -113,7 +113,7 @@ class Support extends Component {
       <div className={"pling-section-header "+ this.props.headerStyle}>
           <div className="header-body">
             <div className="score-container">
-              <span>{this.props.section ? this.props.section.name:''}</span>
+              <span><a href={"/section?id="+this.props.section.section_id}>{this.props.section ? this.props.section.name:''}</a></span>
               <div className="score-bar-container">
                 <div className={"score-bar"} style={barStyle}>
                   {labeltext}
