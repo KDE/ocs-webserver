@@ -226,13 +226,18 @@
 
           .header-body{
             display: flex;
+            .supporter-container {
+              padding-top: 6px;
+            }
            .score-container
            {
+             padding-top: 5px;
              &>span{
               font-size: small;
               font-weight: bold;
               padding:5px;
               }
+
              .score-bar-container {
                width: 200px;
                height: 20px;
@@ -243,6 +248,7 @@
                 white-space: nowrap;
                .score-bar {
                  height: 20px;
+                 line-height: 20px;
                  background-color: #286090;
                  border-bottom: 0px solid darken( #286090,5%);
                  color:#fff;
@@ -284,7 +290,9 @@
         display: flex;
         align-items: center;
         #search-form {
-          margin: 6.5px 0;
+          /*margin: 6.5px 0;*/
+          margin:0;
+          padding:0;
         }
       }
 
@@ -708,79 +716,11 @@
                 /*line-height: 300px;*/
                }
 
-               // .supporter-container{
-               //   position: relative;
-               //   cursor: pointer;
-               //   z-index: 1000;
-               //   .pling-section-tabs{
-               //
-               //     display: block;
-               //     margin: 0 auto;
-               //   }
-               //    // &.open {
-               //    //
-               //    //    .dropdown-menu {
-               //    //        display: block;
-               //    //
-               //    //       left: -140px;
-               //    //       width: 300px;
-               //    //
-               //    //    }
-               //    //    .dropdown-menu::before {
-               //    //           content: "";
-               //    //           position: absolute;
-               //    //           left:50%;
-               //    //           top: -8px;
-               //    //           width: 0;
-               //    //           height: 0;
-               //    //           border-style: solid;
-               //    //           border-width: 0 8.5px 8.5px;
-               //    //           border-color: transparent transparent #b7bcc4 transparent;
-               //    //               border-bottom-color: rgb(183, 188, 196);
-               //    //           border-bottom-color: #fff;
-               //    //           border-style: dashed dashed solid;
-               //    //           z-index: 1;
-               //    //       }
-               //    //  }
-               //
-               //    // .user-pling-section-container
-               //    // {
-               //    //
-               //    //      display: flex;
-               //    //      flex-direction: column;
-               //    //      max-height: 400px;
-               //    //       overflow-y: scroll;
-               //    //
-               //    //      width: 100%;
-               //    //      .title{
-               //    //        text-align: center;
-               //    //        border-bottom: 1px solid #ccc;
-               //    //        padding:5px;
-               //    //      }
-               //    //     .section{
-               //    //       padding: 5px;
-               //    //       display: flex;
-               //    //         .section-name{
-               //    //         flex: 1;
-               //    //          img{
-               //    //            width: 50px;
-               //    //            height: 50px;
-               //    //          }
-               //    //          span{
-               //    //            display: inline-block;
-               //    //          }
-               //    //         }
-               //    //         .section-value{
-               //    //
-               //    //         }
-               //    //     }
-               //    // }
-               // }
-
               .header-body{
                 display: flex;
                .score-container
                {
+                 padding-top:5px;
                  &>span{
                   font-size: small;
                   font-weight: bold;
@@ -796,6 +736,7 @@
                     white-space: nowrap;
                    .score-bar {
                      height: 20px;
+                     line-height: 20px;
                      background-color: #286090;
                      border-bottom: 0px solid darken( #286090,5%);
                      color:#fff;
