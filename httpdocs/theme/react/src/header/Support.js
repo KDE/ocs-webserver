@@ -94,7 +94,7 @@ class Support extends Component {
       {
         goal = 50;
       }
-      const labeltext = 'Goal:'+s+'/'+goal;
+      const labeltext = ' Goal: '+s+' / '+goal;
       let  barStyle;
       barStyle= {
         width: (s/goal)*100 + "%",
