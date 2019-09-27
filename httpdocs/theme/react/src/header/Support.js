@@ -96,19 +96,10 @@ class Support extends Component {
       }
       const labeltext = 'Goal:'+s+'/'+goal;
       let  barStyle;
-      if(Math.round((s*100)/goal)>=30)
-      {
-          barStyle= {
-            width: (s/goal)*100 + "%",
-            color: "#fff"
-          };
-      }else{
-          barStyle= {
-            width: (s/goal)*100 + "%",
-            color: "#1E2881"
-          };
-      }
-
+      barStyle= {
+        width: (s/goal)*100 + "%",
+      };
+      //color: "#1E2881"
     return(
       <div className={"pling-section-header "+ this.props.headerStyle}>
           <div className="header-body">
