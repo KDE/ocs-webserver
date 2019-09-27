@@ -648,11 +648,12 @@ var Opendownloadfile= (function () {
                 var link_type = $(this).attr('data-link_type');
                 var is_external = $(this).attr('data-is-external-link');
                 var external_link = null;
-                var popupHeight = '350';
+                var popupHeight = '450';
+                
                 if(is_external == 'true') {
                     external_link = $(this).attr('data-external_link');
                     popupHeight = '500';
-                }
+                }                
                 
                 $.fancybox({
                     'hideOnContentClick': true,

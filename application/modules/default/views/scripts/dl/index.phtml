@@ -60,7 +60,23 @@
             background-color: #0088d7;
             color: #ffffff;
         }
-
+        
+        .supporter-section .user figure {
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .supporter-section .user figure img {
+            width: 60px;
+            border: 1px solid #dbdbdb;
+            -webkit-border-radius: 999px;
+            -moz-border-radius: 999px;
+            border-radius: 999px;
+            -webkit-background-clip: padding-box;
+            -moz-background-clip: padding;
+            background-clip: padding-box;
+        }
         
     </style>
     
@@ -81,7 +97,7 @@
     
 </head>
 
-<body style="height: 350px; background-color: #f8f9fa;">
+<body style="height: 370px; background-color: #f8f9fa;">
     
     <?php
     
@@ -177,10 +193,17 @@
                         
                     </div>
 
-                    <div class="supporter-section">
+                    <div class="supporter-section" style="<?= ($isExternal?'margin-top: 80px;':'75px') ?>">
                         <span>
-                            This download is supported by <?=$this->supporter['username']?> 
-                            <img style="width: 50px; height:50px" src="<?= $this->Image($this->supporter['profile_image_url'], array('width' => 50, 'height' => 50)) ?>" />
+                            This download is supported by 
+                            <div class="user">
+                                <a href="<?php echo $this->buildMemberUrl($this->supporter['username']); ?>" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->supporter['member_id']?>">
+                                    <figure >
+                                        <img width="" src="<?php echo $this->Image($this->supporter['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
+                                    </figure>
+                                    <p><?php echo Default_Model_HtmlPurify::purify($this->supporter['username']); ?></p>                                                   
+                                </a>
+                            </div>
                         </span>
                     </div>
                     
