@@ -135,7 +135,7 @@
                     <h1 class="empty-title"><?= $this->project_title ?></h1>
                     
                     
-                    <div class="empty-action" style="height: 100px;">
+                    <div class="empty-action" style="height: 50px;">
                         
                         <?php
                         if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
@@ -175,6 +175,14 @@
                         </form>   
                         
                         
+                    </div>
+
+                    <div class="supporter-section">
+                        <span>
+                            Thanks to <?=$this->supporter['username']?> 
+                            <img style="width: 50px; height:50px" src="<?= $this->Image($this->supporter['profile_image_url'], array('width' => 50, 'height' => 50)) ?>" />
+                              make this download possible !
+                        </span>
                     </div>
                     
                     
