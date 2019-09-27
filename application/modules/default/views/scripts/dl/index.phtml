@@ -179,9 +179,8 @@
 
                     <div class="supporter-section">
                         <span>
-                            Thanks to <?=$this->supporter['username']?> 
+                            This download is supported by <?=$this->supporter['username']?> 
                             <img style="width: 50px; height:50px" src="<?= $this->Image($this->supporter['profile_image_url'], array('width' => 50, 'height' => 50)) ?>" />
-                              make this download possible !
                         </span>
                     </div>
                     
@@ -201,15 +200,9 @@
                                     $config = Zend_Registry::get('config')->settings->client->default;
                                     $baseurlStore = $config->baseurl_store;
                                     $identity = Zend_Auth::getInstance()->getIdentity();
-                                    if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
                             ?>
                         <p style="font-size: 18px; position: absolute; bottom: 0px; width: 100%; left: 0%;">
                             To help <b><?= $this->project_owner ?></b> and other creators become a <a href="<?= $baseurlStore ?>/support" target="_TOP" style="color: #0088d7;text-decoration: underline;">Supporter</a>.
-                            <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
-                        <p style="font-size: 18px; position: absolute; bottom: 0px; width: 100%; left: 0%;">
-                            Thank you for your support!
-                            <?php   }?>                            
-                            
                         </p>
                     </div>
                 </section>
