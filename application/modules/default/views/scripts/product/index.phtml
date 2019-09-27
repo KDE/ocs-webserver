@@ -907,7 +907,18 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                     </div>
                                 </div>
                         </div>
-
+                        
+                        
+                        <?php if($isAdmin) {?>
+                        <!-- Affiliates -->
+                        <div class="prod-widget-box right "  style="height: 42px;">
+                                <div class="projectdtailHeart">
+                                    <div id="container-affiliate<?=$this->product->project_id?>" class="container-pling"  style="float: right;">
+                                        <div class="plingbartext"><span class="plingnum"> <?= count($this->projectaffiliates) ?> Affiliate<?= count($this->projectaffiliates) == 0?'s':'' ?><?= count($this->projectaffiliates) > 1?'s':'' ?></span> </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <?php } ?>
                         
                         <!-- Support Box -->
                         <?php

@@ -9,7 +9,7 @@
   padding: 0 80px;
   font-size: 14px;
   background-color: #ccc;
-
+  padding-right:0px;
   .dropdown-menu {
     position: absolute;
     z-index: 1000;
@@ -125,12 +125,12 @@
     {
       position: absolute;
       right: 0;
-      width: 400px;
+      height: 100%;
+      padding-top: 5px;
+
       .pling-section-header{
-           width: 400px;
+
            display: flex;
-           justify-content: center;
-           flex-flow: column nowrap;
 
            & > div{
              text-align: center;
@@ -142,20 +142,22 @@
            .supporter-container{
              position: relative;
              a{
-              cursor: pointer;
+                cursor: pointer;
+                font-size: small;
+                font-weight: bold;
              }
              z-index: 1000;
               &.open {
 
                  .dropdown-menu {
                      display: block;
-                     left: -140px;
+                     left: auto;
                       width: 300px;
                  }
                  .dropdown-menu::before {
                         content: "";
                         position: absolute;
-                        left:50%;
+                        right:30px;
                         top: -8px;
                         width: 0;
                         height: 0;
@@ -190,8 +192,8 @@
                       flex: 1;
                       position: relative;
                        img{
-                         width: 60px;
-                         height: 60px;
+                         width: 100px;
+                         height: 100px;
                        }
 
 
@@ -200,7 +202,7 @@
                          position: absolute;
                          left: 0;
                          bottom: 0;
-                         width: 60px;
+                         width: 100px;
                          height: 15px;
                          font-size: small;
                          text-align: center;
@@ -246,6 +248,23 @@
            }
           }
 
+
+          &.header-supporter-dark
+          {
+             span{
+               color: #fff;
+             }
+
+             .header-body .score-container .score-bar-container{
+               background-color: #f1f1f1;
+               .score-bar{
+                 color:#1E2881;
+               }
+             }
+             a.header-supporters{
+               color:#fff;
+             }
+          }
         }
     }
 

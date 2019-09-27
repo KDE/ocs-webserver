@@ -560,6 +560,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'action'     => 'paymentcancel'
             )));
 
+        $router->addRoute('samepaypal', new Zend_Controller_Router_Route('/samepaypal', array(
+            'module'     => 'default',
+            'controller' => 'spam',
+            'action'     => 'paypal'
+        )));
 
         $router->addRoute('support_new', new Zend_Controller_Router_Route('/supportold2', array(
             'module'     => 'default',

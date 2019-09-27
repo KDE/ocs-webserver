@@ -147,4 +147,39 @@ class Default_Model_SectionSupport extends Default_Model_DbTable_SectionSupport
         
         return $isAffiliate;
     }
+    
+    
+    public function fetchAffiliatesForMember($member_id)
+    {            
+            
+        $cacheName = __FUNCTION__ . md5(serialize($member_id));
+        $cache = Zend_Registry::get('cache');
+
+        $result = $cache->load($cacheName);
+
+        if ($result) {
+            return $result;
+        }
+        
+        $isAffiliate = false;
+        
+        $sql_object =
+            "SELECT DISTINCT 
+                    p.member_id
+                    ,s.active_time
+                    ,m.profile_image_url
+                    ,m.created_at as member_created_at
+                    ,m.username
+                    FROM section_support f
+                    INNER JOIN support s ON s.id = f.support_id
+                    INNER JOIN project p ON p.project_id = f.project_id
+                    inner join member m on s.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
+                    WHERE  p.member_id = :member_id 
+                    AND s.status_id = 2
+                    order by s.active_time DESC";
+        $r = $this->getAdapter()->fetchAll($sql_object, array('member_id' => $member_id));
+        $cache->save($r, $cacheName);
+        
+        return $r;
+    }
 } 

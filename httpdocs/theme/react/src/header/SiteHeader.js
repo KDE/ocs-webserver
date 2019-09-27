@@ -71,7 +71,7 @@ class SiteHeader extends Component {
         </div>
       );
     }
-    let PlingDisplay;
+    let PlingDisplay;  //header-supporter-style -> header-supporter-dark
     if(this.state.section && this.state.user)
     {
       if(this.state.user.isAdmin)
@@ -80,7 +80,7 @@ class SiteHeader extends Component {
             <div id="siter-header-pling">
             <Support section={this.state.section} amount={this.state.section.amount}
                  goal = {this.state.section.goal} amount_factor={this.state.section.amount_factor}
-                 isAdmin = {this.state.user.isAdmin}
+                 isAdmin = {this.state.user.isAdmin} headerStyle={this.state.template['header-supporter-style']}
             />
             </div>
       }
