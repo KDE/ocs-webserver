@@ -100,12 +100,12 @@ class Support extends Component {
       {
           barStyle= {
             width: (s/goal)*100 + "%",
-            color: "#fff"
+            color: "#f1f1f1"
           };
       }else{
           barStyle= {
             width: (s/goal)*100 + "%",
-            color: "#1E2881"
+            color: "#f1f1f1"
           };
       }
 
