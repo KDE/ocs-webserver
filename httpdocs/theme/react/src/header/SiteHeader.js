@@ -64,7 +64,7 @@ class SiteHeader extends Component {
     let siteHeaderStoreNameDisplay;
     if (this.state.is_show_title === "1"){
       siteHeaderStoreNameDisplay = (
-        <div id="site-header-store-name-container">
+        <div id="site-header-store-name-container" style={{"margin-left":"80px"}}>
           <a href={logoLink}>
             {this.state.store.name}
           </a>
@@ -85,13 +85,15 @@ class SiteHeader extends Component {
             </div>
       }
     }
- 
+
     let HeaderDisplay;
     if (this.state.device !== "tablet"){
+      let logoStyle = this.state.template['header-logo'];
+      logoStyle.left="80px";      
       HeaderDisplay = (
-        <section id="site-header-wrapper" style={{"paddingLeft":this.state.template['header-logo']['width']}} >
-          <div id="siter-header-left">
-            <div id="site-header-logo-container" style={this.state.template['header-logo']}>
+        <section id="site-header-wrapper" >
+          <div id="siter-header-left" style={{"paddingLeft":this.state.template['header-logo']['width']}}>
+            <div id="site-header-logo-container" style={logoStyle}>
               <a href={logoLink}>
                 <img src={this.state.template['header-logo']['image-src']}/>
               </a>

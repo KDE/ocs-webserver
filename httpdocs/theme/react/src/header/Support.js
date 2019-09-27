@@ -59,6 +59,7 @@ class Support extends Component {
                                        <a className="cls-tab-amount">Amount</a>
                                     </li>
                                   </ul>
+                                    <a href="/support" role="button" className="btn btn-primary">Become a Supporter</a>
                                   </div>
 
         let content;
