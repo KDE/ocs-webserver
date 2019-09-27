@@ -193,11 +193,11 @@
                         
                     </div>
 
-                    <div class="supporter-section" style="<?= ($isExternal?'margin-top: 80px;':'75px') ?>">
+                    <div class="supporter-section" style="<?= ($isExternal?'margin-top: 80px;':'75px') ?>"> 
                         <span>
                             This download is supported by 
                             <div class="user">
-                                <a href="<?php echo $this->buildMemberUrl($this->supporter['username']); ?>" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->supporter['member_id']?>">
+                                <a target="_NEW" href="<?php echo $this->buildMemberUrl($this->supporter['username']); ?>" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->supporter['member_id']?>">
                                     <figure >
                                         <img width="" src="<?php echo $this->Image($this->supporter['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
                                     </figure>
