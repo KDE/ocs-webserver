@@ -126,14 +126,14 @@
       position: absolute;
       right: 0;
       height: 100%;
-      padding-top: 5px;
+
       display: flex;
       align-items: center;
 
       .pling-section-header{
 
            display: flex;
-
+           height: 25px;
            & > div{
              text-align: center;
            }
@@ -201,6 +201,7 @@
 
 
                        span{
+                         line-height: 16px;
                          display: inline-block;
                          position: absolute;
                          left: 0;
@@ -227,12 +228,12 @@
           .header-body{
             display: flex;
             .supporter-container {
-              padding-top: 6px;
+              line-height: 25px;
               padding-left:5px;
             }
            .score-container
            {
-             padding-top: 5px;
+             line-height: 25px;
              &>span{
               font-size: small;
               font-weight: bold;
@@ -271,7 +272,13 @@
                color: #fff;
              }
 
-            
+             .header-body .score-container .score-bar-container{
+                background-color: #f1f1f1;
+               .score-bar{
+                 color:#1E2881;
+                 background-color: #CCCCCC;
+               }
+             }
              a.header-supporters{
                color:#fff;
              }
