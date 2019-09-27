@@ -725,9 +725,9 @@ class Default_Model_StatDownload
         }
         
         
-        $sql = "SELECT yearmonth, member_id
-                ,case when yearmonth = DATE_FORMAT(NOW(),'%Y%m') then round(num_plings*now_section_payout_factor/100,2) ELSE amount END AS amount
-                ,num_downloads FROM (
+        $sql = "SELECT yearmonth, case when yearmonth = DATE_FORMAT(NOW(),'%Y%m') then round(num_plings*now_section_payout_factor/100,2) ELSE amount END AS amount
+                ,(select count(1) from member_payout p where p.yearmonth=A.yearmonth and p.member_id = A.member_id) cnt
+                FROM (
                 select
                                 m.yearmonth, m.member_id, round(SUM(credits_section)/100,2) AS amount,SUM(credits_plings) AS num_plings, SUM(m.num_plings) AS num_downloads
                                 ,(SELECT round(sfs.sum_support/DATE_FORMAT(NOW() + INTERVAL 1 MONTH - INTERVAL DATE_FORMAT(NOW(),'%d') DAY,'%d')*DATE_FORMAT(NOW(),'%d') /sfs.sum_amount_payout,2) AS factor  FROM section_funding_stats sfs WHERE sfs.yearmonth = m.yearmonth AND sfs.section_id = m.section_id) AS now_section_payout_factor
@@ -736,6 +736,7 @@ class Default_Model_StatDownload
                         (length(`m`.`paypal_mail`) > 0) and (`m`.`paypal_mail` regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$')
                         and (`m`.`is_license_missing` = 0) and (`m`.`is_source_missing` = 0) and (`m`.`is_pling_excluded` = 0) and (`m`.`is_member_pling_excluded` = 0)
                         AND m.member_id = :member_id
+                        AND m.yearmonth > 201704
                         group by m.yearmonth, m.member_id
 
 
