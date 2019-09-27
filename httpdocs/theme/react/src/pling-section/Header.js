@@ -4,7 +4,7 @@ class Header extends Component {
   	super(props);
   }
   render(){
-  
+
     function compare(el,idx,array) {
       for (let i = 0; i < array.length; i++) {
         if (array[i].member_id == el.member_id)
@@ -19,10 +19,10 @@ class Header extends Component {
       }
     }
     const s = this.props.supporters.filter(compare).length;
-    let goal = Math.ceil((s/100))*100;
+    let goal = Math.ceil((s/50))*50;
     if(goal==0)
     {
-      goal = 100;
+      goal = 50;
     }
     return(
       <div className="pling-section-header">

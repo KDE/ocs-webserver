@@ -89,10 +89,10 @@ class Support extends Component {
       }
 
       const s =this.props.section.supporters.length;
-      let goal = Math.ceil((s/100))*100;
+      let goal = Math.ceil((s/50))*50;
       if(goal==0)
       {
-        goal = 100;
+        goal = 50;
       }
       const labeltext = 'Goal:'+s+'/'+goal;
       let  barStyle;
