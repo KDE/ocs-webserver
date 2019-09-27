@@ -59,6 +59,7 @@ class Support extends Component {
                                        <a className="cls-tab-amount">Amount</a>
                                     </li>
                                   </ul>
+                                    <a href="/support" role="button" className="btn btn-primary">Become a Supporter</a>
                                   </div>
 
         let content;
@@ -94,17 +95,17 @@ class Support extends Component {
       {
         goal = 50;
       }
-      const labeltext = 'Goal:'+s+'/'+goal;
+      const labeltext = ' Goal: '+s+' / '+goal;
       let  barStyle;
       barStyle= {
         width: (s/goal)*100 + "%",
       };
       //color: "#1E2881"
     return(
-      <div className={"pling-section-header "}>
+      <div className={"pling-section-header "+this.props.headerStyle}>
           <div className="header-body">
             <div className="score-container">
-              <span><a href={"/section?id="+this.props.section.section_id}>{this.props.section ? this.props.section.name:''}</a></span>
+              <span>{this.props.section ? this.props.section.name:''}</span>
               <div className="score-bar-container">
                 <div className={"score-bar"} style={barStyle}>
                   {labeltext}
