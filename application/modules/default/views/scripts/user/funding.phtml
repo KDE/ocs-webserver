@@ -266,9 +266,7 @@ $currency = new Zend_Currency('en_US');
                         
                         <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin'){ ?>
                         <div class="col-md-1 cell-default" style="">
-                            <a href="<?= $this->buildMemberUrl($support['affiliate_username']) ?>">
-                                <span style="line-height: 3em;"><?= $support['affiliate_username']; ?></span>
-                            </a>
+                            <a href="<?= $this->buildMemberUrl($support['affiliate_username']) ?>"><?= $support['affiliate_username']; ?></a>
                         </div>
                         <?php } ?>
                     </div>
