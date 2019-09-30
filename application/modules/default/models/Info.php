@@ -1399,6 +1399,51 @@ class Default_Model_Info
 
         return $result;
     }
+
+    public function getRandomSupporterForSection($section_id)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . $section_id;
+
+        $supporters = $cache->load($cacheName);
+        if (!$supporters) {
+            $sql = '
+                    select section_id, member_id, weight 
+                    from v_supporter_view_queue 
+                    order by weight desc                        
+            ';        
+            $supporters = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' => $section_id))->fetchAll();            
+            $cache->save($supporters, $cacheName, array(), 300);
+        }
+            
+        $sumWeight =0;
+        foreach ($supporters as $s) {
+            $sumWeight=$sumWeight+$s['weight'];
+        }
+        // select Random [1.. sumWeight];
+        $randomWeight = rand(1,$sumWeight);
+        $sumWeight =0;
+        $member_id=null;
+        foreach ($supporters as $s) {
+           $sumWeight=$sumWeight+$s['weight'];
+           if($sumWeight >= $randomWeight)
+           {
+                $member_id = $s['member_id'];
+                break;
+           }
+        }
+        if($member_id)
+        {
+            $sql = "select member_id,username,profile_image_url from member where member_id=:member_id";
+            
+            $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql,array('member_id' => $member_id));
+            return $result;
+        }
+
+
+        return null;
+    }
    
 
     public function getNewActiveSupportersForSection($section_id, $limit = 20)
