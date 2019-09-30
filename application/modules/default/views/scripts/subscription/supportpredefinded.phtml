@@ -340,7 +340,7 @@ if($this->amount_predefined == "free") {
                     return false;
                 }
             } else {
-                alert($("#new_donation"));
+                document.getElementById('new_donation').submit();
                 $("#new_donation").submit();
                 return true;
             }
