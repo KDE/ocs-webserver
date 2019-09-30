@@ -657,7 +657,7 @@ var Opendownloadfile= (function () {
                 
                 $.fancybox({
                     'hideOnContentClick': true,
-                    'autoScale': true,
+                    'autoScale': false,
                     'scrolling' : 'no',
                     'cyclic': 'true',
                     'transitionIn': 'elastic',
@@ -666,7 +666,8 @@ var Opendownloadfile= (function () {
                     'width':'600',
                     'height':popupHeight,
                     'iframe': {'scrolling': 'no'},
-                    'autoSize':false,
+                    'fitToView'   : false,
+                    'autoSize'    : false,
                     'id': 'opendownloadfilepopup',
                     helpers: {
                         overlay: {
