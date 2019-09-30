@@ -451,6 +451,20 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         
         $project_id = $this->getParam('project_id', null);
         $referer = $this->getParam('referer', null);
+        $project = null;
+        
+        $creator_id = null;
+        $project_category_id = null;
+        
+        if(null != $project_id) {
+            $projectTable = new Default_Model_Project();
+            $project = $projectTable->fetchProductInfo($project_id);
+            if($project) {
+                $creator_id = $project->project_member_id;
+                $project_category_id = $project->project_category_id;
+            }
+
+        }
         
         $amount_predefined = (float)$this->getParam('amount_predefined', null);
         $amount_handish  = (float)$this->getParam('amount_handish', null);
@@ -523,6 +537,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
             , $paymentFrequenz
             , 1
             , $project_id
+            , $creator_id
+            , $project_category_id
             , urldecode($referer)
                 
         );
