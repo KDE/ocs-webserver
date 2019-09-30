@@ -60,7 +60,23 @@
             background-color: #0088d7;
             color: #ffffff;
         }
-
+        
+        .supporter-section .user figure {
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .supporter-section .user figure img {
+            width: 60px;
+            border: 1px solid #dbdbdb;
+            -webkit-border-radius: 999px;
+            -moz-border-radius: 999px;
+            border-radius: 999px;
+            -webkit-background-clip: padding-box;
+            -moz-background-clip: padding;
+            background-clip: padding-box;
+        }
         
     </style>
     
@@ -81,7 +97,7 @@
     
 </head>
 
-<body style="height: 350px; background-color: #f8f9fa;">
+<body style="height: 370px; background-color: #f8f9fa;">
     
     <?php
     
@@ -135,7 +151,7 @@
                     <h1 class="empty-title"><?= $this->project_title ?></h1>
                     
                     
-                    <div class="empty-action" style="height: 100px;">
+                    <div class="empty-action" style="height: 50px;">
                         
                         <?php
                         if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
@@ -176,6 +192,20 @@
                         
                         
                     </div>
+
+                    <div class="supporter-section" style="<?= ($isExternal?'margin-top: 100px;':'margin-top: 70px') ?>"> 
+                        <span>
+                            This download is supported by 
+                            <div class="user">
+                                <a target="_NEW" href="<?php echo $this->buildMemberUrl($this->supporter['username']); ?>" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->supporter['member_id']?>">
+                                    <figure >
+                                        <img width="" src="<?php echo $this->Image($this->supporter['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
+                                    </figure>
+                                    <p><?php echo Default_Model_HtmlPurify::purify($this->supporter['username']); ?></p>                                                   
+                                </a>
+                            </div>
+                        </span>
+                    </div>
                     
                     
                     <div class="empty-action" style="height: 100px;">
@@ -193,14 +223,13 @@
                                     $config = Zend_Registry::get('config')->settings->client->default;
                                     $baseurlStore = $config->baseurl_store;
                                     $identity = Zend_Auth::getInstance()->getIdentity();
-                                    if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
                             ?>
                         <p style="font-size: 18px; position: absolute; bottom: 0px; width: 100%; left: 0%;">
-                            To help <b><?= $this->project_owner ?></b> and other creators become a <a href="<?= $baseurlStore ?>/support" target="_TOP" style="color: #0088d7;text-decoration: underline;">Supporter</a>.
-                            <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
-                        <p style="font-size: 18px; position: absolute; bottom: 0px; width: 100%; left: 0%;">
-                            Thank you for your support!
-                            <?php   }?>                            
+                        <form action="<?= $baseurlStore ?>/support-predefined" method="POST" id="support_form_predefined" name="support_form_predefined" target="_parent">
+                            <input type="hidden" name="section_id" value="<?= $this->section_id ?>">
+                            <input type="hidden" name="project_id" value="<?= $this->project_id ?>">
+                            Become a <a onclick="support_form_predefined.submit();" target="_NEW" style="color: #0088d7;text-decoration: underline; cursor: pointer;">Supporter</a>.
+                        </form>
                             
                         </p>
                     </div>
