@@ -396,12 +396,8 @@ class Default_Model_StatDownload
                 `member_payout` ON `member_payout`.`member_id` = m.`member_id`
                  AND `member_payout`.`yearmonth` = m.`yearmonth`
                  where m.section_id
-                #and m.paypal_mail is not null and m.paypal_mail <> ''
-                #and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$')
-                #and s.section_id = 1
                 AND m.member_id = :member_id
                 and m.yearmonth =  :yearmonth
-                #and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0
                 and m.is_member_pling_excluded=0
                 group by m.section_id
                 ORDER BY s.`order`";
@@ -648,7 +644,7 @@ class Default_Model_StatDownload
                                              AND `member_payout`.`yearmonth` = `micro_payout`.`yearmonth`
                                    LEFT JOIN `tag_object` ON `tag_object`.`tag_type_id` = 1 AND `tag_object`.`tag_group_id` = 7 AND `tag_object`.`is_deleted` = 0 AND `tag_object`.`tag_object_id` = `project`.`project_id`
                                    WHERE
-                                       `micro_payout`.`member_id` = 339133#:member_id
+                                       `micro_payout`.`member_id` = :member_id
                                    GROUP BY SUBSTR(`micro_payout`.`yearmonth`,1,4)
 
 
@@ -661,7 +657,7 @@ class Default_Model_StatDownload
                                    JOIN section_support s ON s.section_support_id = p.section_support_id
                                    JOIN project pr ON pr.project_id = s.project_id
                                    WHERE s.project_id IS NOT NULL
-                                   AND pr.member_id = 339133#:member_id
+                                   AND pr.member_id = :member_id
                                    GROUP BY SUBSTR(p.yearmonth,1,4)
                    ) A              
                    GROUP BY year  
