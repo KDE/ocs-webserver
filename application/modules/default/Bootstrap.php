@@ -726,13 +726,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'action'     => 'index'
         )));
         
-        $router->addRoute('user_payout_old', new Zend_Controller_Router_Route('/member/:member_id/payout-old/*', array(
+        $router->addRoute('user_payout_old', new Zend_Controller_Router_Route('/member/:member_id/payout-old', array(
             'module'     => 'default',
             'controller' => 'user',
             'action'     => 'payout'
         )));
         
-        $router->addRoute('user_payout_section', new Zend_Controller_Router_Route('/member/:member_id/payout/*', array(
+        $router->addRoute('user_payout_section', new Zend_Controller_Router_Route('/member/:member_id/payout', array(
             'module'     => 'default',
             'controller' => 'user',
             'action'     => 'payout2'
