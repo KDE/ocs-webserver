@@ -49,6 +49,8 @@ class DlController extends Local_Controller_Action_DomainSwitch
         $section = $sModel->fetchSectionForCategory($productInfo->project_category_id);
         $info = new Default_Model_Info();
         $supporter = $info->getRandomSupporterForSection($section['section_id']);
+        
+        $this->view->section_id = $section['section_id'];
 
         $this->view->link_type = $linkType;
         $this->view->file_name = $file_name;
@@ -56,6 +58,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
         $this->view->file_size_human = $this->humanFileSize($file_size);
         $this->view->project_title = $productInfo->title;
         $this->view->project_owner = $productInfo->username;
+        $this->view->project_id = $projectId;
         $this->view->is_external = $isExternal;
         $this->view->external_link = $externalLink;
         $this->view->supporter = $supporter;

@@ -225,7 +225,12 @@
                                     $identity = Zend_Auth::getInstance()->getIdentity();
                             ?>
                         <p style="font-size: 18px; position: absolute; bottom: 0px; width: 100%; left: 0%;">
-                            To help <b><?= $this->project_owner ?></b> and other creators become a <a href="<?= $baseurlStore ?>/support" target="_TOP" style="color: #0088d7;text-decoration: underline;">Supporter</a>.
+                        <form action="<?= $baseurlStore ?>/support-predefined" method="POST" id="support_form_predefined" name="support_form_predefined" target="_parent">
+                            <input type="hidden" name="section_id" value="<?= $this->section_id ?>">
+                            <input type="hidden" name="project_id" value="<?= $this->project_id ?>">
+                            To help <b><?= $this->project_owner ?></b> and other creators become a <a onclick="support_form_predefined.submit();" target="_NEW" style="color: #0088d7;text-decoration: underline; cursor: pointer;">Supporter</a>.
+                        </form>
+                            
                         </p>
                     </div>
                 </section>
