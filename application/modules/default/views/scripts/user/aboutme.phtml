@@ -128,7 +128,9 @@ div#preloaded-images {
                                 <span class="text"><?php echo $textCountryCity ?></span>
                                <?php endif; ?>
 
-
+                                <div class="btnSupportMe">
+                                    <a class="btn btn-primary active" role="button" href="/support?creator_id=<?= $this->member->member_id ?>"> Support me </a>
+                                </div>
                             </div>
                             <div class="about-footer">
 
@@ -162,14 +164,9 @@ div#preloaded-images {
                                     </div>
                                     
                                     
-                                    <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') { ?>                          
                                     <div class="row">
                                         Has <span class="cnt"><?= count($this->affiliates) ?></span> Affiliates
                                     </div>
-                                    <?php } ?>
-                                    
-                                    
-
 
                                     <div class="row">
                                        Fan of <span class="cnt"> <?=$this->stat['cntLikesHeGave']?> </span>Products
@@ -380,13 +377,11 @@ div#preloaded-images {
                             </li>
                           <?php } ?>
                             
-                          <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') { ?>                          
                             <li>
                                 <a href="#user-affiliates" data-toggle="tab" role="tab"  aria-controls="user-affiliates">
                                     Affiliates (<?=count($affiliates)?>)
                                 </a>
                             </li>
-                          <?php } ?>
 
                           <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' && $this->stat['cntDuplicateSourceurl']>0) { ?>                          
                             <li>
@@ -469,14 +464,11 @@ div#preloaded-images {
                             <?php } ?>
                             
                             
-                            <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') { ?>
                             <div  role="tabpanel" class="tab-pane " id="user-affiliates">
                                     <div class="my-fav-list">
                                         <?php echo $this->render('user/partials/aboutme-affiliates.phtml'); ?>
                                   </div>
                             </div>
-                            <?php } ?>
-                            
 
                             <?php if( Zend_Auth::getInstance()->hasIdentity() AND  Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' && $this->stat['cntDuplicateSourceurl']>0) { ?>
                             <div  role="tabpanel" class="tab-pane " id="user-duplicates">
