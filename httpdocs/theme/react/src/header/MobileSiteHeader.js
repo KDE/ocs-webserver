@@ -40,11 +40,10 @@ class MobileSiteHeader extends React.Component {
     let PlingDisplay;
     if(this.props.section )
     {
-
         PlingDisplay =
             <div id="siter-header-pling">
             <Support section={this.props.section}
-              headerStyle={this.props.template['header-supporter-style']}
+              headerStyle={this.props.template['header']['header-supporter-style']}
             />
             </div>
     }
