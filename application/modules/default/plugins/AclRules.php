@@ -414,7 +414,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'downloadhistory',
             'likes', 
             'funding',
-            'sectionsajax'
+            'sectionsajax',
+            'sectionsmonthajax',
         ));
         
         //$this->allow(self::ROLENAME_GUEST, 'default_funding', array(
