@@ -50,14 +50,13 @@ if($this->amount_predefined == "free") {
 ?>
 <link href="/theme/flatui/css/support.css" rel="stylesheet">
 
-
 <style>
-    .amount input {
+    #support_amount {
         opacity: .95;
         margin-top: -8px;
         color: #000;
-        font-size: 24px;
-        width: 50%;
+        font-size: 18px;
+        width: 15%;
         margin: 0;
             margin-top: 0px;
         margin-top: 0;
@@ -68,8 +67,13 @@ if($this->amount_predefined == "free") {
         border-bottom: 1px solid #d0d0d0;
         padding: 0;
         box-shadow: none;
-        background-color: #fff;
+        background: none;
     }
+    
+    .amount_predefined {
+        padding-left: 4px;
+    }
+    
     
     .unit-wrapper {
         position: absolute;
