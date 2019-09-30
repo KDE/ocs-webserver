@@ -726,7 +726,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'action'     => 'index'
         )));
         
-        $router->addRoute('user_payout_old', new Zend_Controller_Router_Route('/member/:member_id/payout-old', array(
+        $router->addRoute('user_payout_old', new Zend_Controller_Router_Route('/member/:member_id/payoutold', array(
             'module'     => 'default',
             'controller' => 'user',
             'action'     => 'payout'
@@ -741,7 +741,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         
         
         
-        $router->addRoute('user_payout_old2', new Zend_Controller_Router_Route('/u/:user_name/payout-old', array(
+        $router->addRoute('user_payout_old2', new Zend_Controller_Router_Route('/u/:user_name/payoutold', array(
             'module'     => 'default',
             'controller' => 'user',
             'action'     => 'payout'
