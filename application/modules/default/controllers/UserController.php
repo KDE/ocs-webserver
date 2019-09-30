@@ -1133,7 +1133,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     }
 
-    public function payoutAction()
+    public function payoutoldAction()
     {
 
         $tableMember = new Default_Model_Member();
@@ -1154,7 +1154,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
     }
     
     
-    public function payout2Action()
+    public function payoutAction()
     {
 
         $tableMember = new Default_Model_Member();

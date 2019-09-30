@@ -726,34 +726,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'action'     => 'index'
         )));
         
-        $router->addRoute('user_payout_old', new Zend_Controller_Router_Route('/member/:member_id/payoutold', array(
-            'module'     => 'default',
-            'controller' => 'user',
-            'action'     => 'payout'
-        )));
-        
-        $router->addRoute('user_payout_section', new Zend_Controller_Router_Route('/member/:member_id/payout', array(
-            'module'     => 'default',
-            'controller' => 'user',
-            'action'     => 'payout2'
-        )));
-        
-        
-        
-        
-        $router->addRoute('user_payout_old2', new Zend_Controller_Router_Route('/u/:user_name/payoutold', array(
-            'module'     => 'default',
-            'controller' => 'user',
-            'action'     => 'payout'
-        )));
-        
-        $router->addRoute('user_payout_section2', new Zend_Controller_Router_Route('/u/:user_name/payout', array(
-            'module'     => 'default',
-            'controller' => 'user',
-            'action'     => 'payout2'
-        )));
-        
-        
         
         
         $router->addRoute('user_avatar', new Zend_Controller_Router_Route('/member/avatar/:emailhash/:size', array(
