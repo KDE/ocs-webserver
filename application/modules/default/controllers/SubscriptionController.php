@@ -336,6 +336,8 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $amount = 0;
         
         $paymentFrequenz = $this->getParam('paymentFrequenz', 'Y');
+        $creator_id = $this->getParam('creator_id', null);
+        $this->view->creator_id = $creator_id;
         
         //get parameter for every section
         $supportArray = array();
@@ -431,6 +433,10 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
                 ,$support['tier']
                 ,$support['period']
                 ,$support['period_frequency']
+                ,null
+                ,$creator_id
+                ,null
+                ,null
             );
         }
     }
