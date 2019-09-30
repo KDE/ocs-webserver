@@ -73,11 +73,11 @@ class SiteHeader extends Component {
     }
     let PlingDisplay;
     if(this.state.section)
-    {      
+    {
         PlingDisplay =
             <div id="siter-header-pling">
             <Support section={this.state.section}
-                    headerStyle={this.state.template['header-supporter-style']}
+                    headerStyle={this.state.template['header']['header-supporter-style']}
             />
             </div>
     }
