@@ -34,11 +34,11 @@ class Default_Model_SectionSupport extends Default_Model_DbTable_SectionSupport
                     ,m.profile_image_url
                     ,m.created_at as member_created_at
                     ,m.username
-                    FROM section_support f
+                    FROM section_support_paypements p
+                    INNER JOIN section_support f ON f.section_support_id = p.section_support_id
                     INNER JOIN support s ON s.id = f.support_id
                     inner join member m on s.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
                     WHERE  f.project_id = :project_id 
-                    AND s.status_id = 2
                     order by s.active_time desc
          ";
         $resultSet = $this->_db->fetchAll($sql, array('project_id' => $project_id));
@@ -62,12 +62,12 @@ class Default_Model_SectionSupport extends Default_Model_DbTable_SectionSupport
         
         $sql_object =
             "SELECT 1
-                FROM section_support f
-                INNER JOIN support s ON s.id = f.support_id
-                inner join member m on s.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
+                FROM section_support_paypements p
+                    INNER JOIN section_support f ON f.section_support_id = p.section_support_id
+                    INNER JOIN support s ON s.id = f.support_id
+                    inner join member m on s.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
                 WHERE  f.project_id = :project_id 
-                AND m.member_id = :member_id
-                AND s.status_id = 2";
+                AND m.member_id = :member_id";
         $r = $this->getAdapter()->fetchRow($sql_object, array('project_id' => $project_id, 'member_id' => $member_id));
         if ($r) {
             $isAffiliate = true;
@@ -95,14 +95,15 @@ class Default_Model_SectionSupport extends Default_Model_DbTable_SectionSupport
         
         $sql_object =
             "SELECT 1
-                FROM section_support f
+                FROM section_support_paypements pm
+                INNER JOIN section_support f ON f.section_support_id = pm.section_support_id
                 INNER JOIN project p ON p.project_id = f.project_id
                 INNER JOIN support s ON s.id = f.support_id
                 inner join member m on s.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
                 INNER JOIN member m2 on p.member_id = m2.member_id AND m2.is_active=1 AND m2.is_deleted=0 
                 WHERE  p.member_id = :member_id
                 AND m.member_id = :affiliate_member_id
-                AND s.status_id = 2";
+";
         $r = $this->getAdapter()->fetchRow($sql_object, array('affiliate_member_id' => $affiliate_member_id, 'member_id' => $member_id));
         if ($r) {
             $isAffiliate = true;
