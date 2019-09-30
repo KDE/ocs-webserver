@@ -36,6 +36,8 @@ $url_login = "/login/redirect/".$filter->filter($thisurl);
 
 $sections = $this->sections;
 
+$creator_id = $this->creator_id;
+
 ?>
 <link href="/theme/flatui/css/support.css" rel="stylesheet">
 
@@ -96,6 +98,7 @@ $sections = $this->sections;
         <form class="donation-form" id="new_donation" action="<?= $this->urlPay ?>" accept-charset="UTF-8" data-remote="true" method="post">  
                 <input type="hidden" id="currency-symbol" value="$">
                 <input type="hidden" name="provider" value="paypal" id="provider">
+                <input type="hidden" name="creator_id" value="<?= $creator_id ?>" id="creator_id">
         <div class="container-fluid">
             <div class="row">
                 <div class="sidebar-left col-md-2"></div>

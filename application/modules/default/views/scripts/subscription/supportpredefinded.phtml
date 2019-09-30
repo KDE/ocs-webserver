@@ -50,14 +50,13 @@ if($this->amount_predefined == "free") {
 ?>
 <link href="/theme/flatui/css/support.css" rel="stylesheet">
 
-
 <style>
-    .amount input {
+    #support_amount {
         opacity: .95;
         margin-top: -8px;
         color: #000;
-        font-size: 24px;
-        width: 50%;
+        font-size: 18px;
+        width: 15%;
         margin: 0;
             margin-top: 0px;
         margin-top: 0;
@@ -68,8 +67,13 @@ if($this->amount_predefined == "free") {
         border-bottom: 1px solid #d0d0d0;
         padding: 0;
         box-shadow: none;
-        background-color: #fff;
+        background: none;
     }
+    
+    .amount_predefined {
+        padding-left: 4px;
+    }
+    
     
     .unit-wrapper {
         position: absolute;
@@ -104,7 +108,7 @@ if($this->amount_predefined == "free") {
 
 <main>
     <section class="wrapper" id="products-wrapper">
-        <form class="donation-form" id="new_donation" action="<?= $this->urlPay ?>" accept-charset="UTF-8" data-remote="true" method="post">  
+        <form class="donation-form" id="new_donation" name="new_donation" action="<?= $this->urlPay ?>" accept-charset="UTF-8" data-remote="true" method="post">  
                 <input type="hidden" id="currency-symbol" value="$">
                 <input type="hidden" name="provider" value="paypal" id="provider">
                 <?php 
@@ -129,16 +133,40 @@ if($this->amount_predefined == "free") {
                     </p>
                     
                     <div class="x-donation-widget">
-                        
+                        <div class="row disply-flex" style="margin: 0 !important;">
+                            
                         <?php
                         if($sumPayment == 0) {
-                            echo "Something went wrong. Please go back to the previous page and try again.";
-                        } else {
+                            //echo "Something went wrong. Please go back to the previous page and try again.";
+                        ?>    
+                            <div class="col-lg-4 col-md-4" style="border-top: dotted thin #E7E7E7 !important;padding-top: 35px;"></div>
+                            <div class="col-lg-8 col-md-8" style="border-top: dotted thin #E7E7E7 !important;padding-top: 35px;">
+                                <span style="text-align: left;font-size: medium">
+                                    Please choose an amount:
+                                </span>
+                            </div>
+                            <div class="col-lg-4 col-md-4" style="border-top: dotted thin #E7E7E7 !important;padding-top: 5px;"></div>
+                            <div class="col-lg-8 col-md-8" style="border-top: dotted thin #E7E7E7 !important;padding-top: 5px;">
+                                <div class="tabs-footer">
+                                    
+                                    <span style="text-align: left;">  
+                                        <ul style="list-style: none;">
+                                            <li><input type="radio" name="amount_predefined" class="amount_predefined" id="amount-1" value="0.99" checked="checked"> $0.99</li>
+                                            <li><input type="radio" name="amount_predefined" class="amount_predefined" id="amount-2" value="2"> $2</li>
+                                            <li><input type="radio" name="amount_predefined" class="amount_predefined" id="amount-3" value="5"> $5</li>
+                                            <li><input type="radio" name="amount_predefined" class="amount_predefined" id="amount-4" value="10"> $10</li>
+                                            <li><input type="radio" name="amount_predefined" class="amount_predefined custom_amount_item" id="amount-5" value="free"><span class="amount_predefined">$<input type="text" min="10.01" step="any" inputmode="numeric" type="number" class="custom_amount" name="support_amount" id="support_amount"><div style="font-size: x-small;padding-left: 21px;">Enter a free Amount</div></span></li>
+                                        </ul>
+                                    </span>
+                                </div>
+                            </div>
+                                
+                        <?php    
+                        }
                         ?>
                     
                         
-                        <div class="row disply-flex" style="margin: 0 !important;">
-                            <div class="col-lg-12 col-md-12" style="border-top: dotted thin #E7E7E7 !important;padding-top: 35px;">  
+                            <div class="col-lg-12 col-md-12" style="border-top: dotted thin #E7E7E7 !important;padding-top: 35px;">
                                 
                                 <div class="tabs-footer">
                                     
@@ -150,7 +178,13 @@ if($this->amount_predefined == "free") {
                                         <option value="M">Monthly</option>
                                     </select>
                                     <div>
-                                        <span class="extrasmall" style="font-size: x-small;"><?=$this->calcDonationTextBoth($sumPayment)?></span>
+                                        <span class="extrasmall" style="font-size: x-small;">
+                                            <?php if($sumPayment == 0) { ?> 
+                                            <p id="desc_1"></p>
+                                            <?php } else { ?>
+                                            <?=$this->calcDonationTextBoth($sumPayment)?>
+                                            <?php } ?>
+                                        </span>
                                     </div>
 
                                     
@@ -176,11 +210,6 @@ if($this->amount_predefined == "free") {
                                     </div>
             
                         </div> <!--end of row-->
-                        
-                        <?php
-                        }
-                        ?>
-                        
                     </div> <!--end of tabs-->
                 </div>
             </div>
@@ -193,5 +222,136 @@ if($this->amount_predefined == "free") {
 </main>
 
 <script>
-    
+    <?php if($sumPayment == 0) { ?> 
+    $(document).ready(function(){
+        $checkedBoxes = [];
+        
+        calSum();
+        
+        $(".custom_amount").click(function(){
+            $('#amount-5').prop("checked", true);
+        });
+
+        $("input[name='amount_predefined']").change(function(){
+            calSum();
+        });
+        
+        $("#support_amount").change(function(){
+            calSum();
+        });
+        
+        function calSum() {
+            $obj = null;
+            $sum = $("#sum");
+            $sumNum = 0;
+
+            $("input[type=radio]:checked").each(function() {
+                
+                if($(this).hasClass('custom_amount_item')) {
+                   $input = $('#support_amount');
+                   
+                   if($input.val() != '') {
+                       $num = parseFloat($input.val());
+                       $sumNum = $num;
+                   }
+                } else {
+                   $sumNum = parseFloat($(this).val());
+                }
+            });
+            
+            if($sumNum>0) { 
+            
+                $monthNum = calForMonth($sumNum);
+                $yearNum = calForYear($sumNum);
+
+                $('#desc_1').text("(Pay $" + $monthNum + " per Month, "+calFees($sumNum)+" or Pay $" + $yearNum + " per Year, "+calFees($sumNum*12)+")");
+
+
+                $sumNum = Math.round($sumNum * 100 )/100;
+                $sumNum = $sumNum.toFixed(2);
+
+                $sum.text($sumNum);
+                $('#submit').prop('disabled', false);
+                $('#submit').removeClass('disabled');
+                
+            } else {
+                $sum.text('0.00');
+                $('#desc_1').text("");
+                $('#submit').prop('disabled', true);
+                
+                $('#submit').addClass('disabled');
+            }
+            
+        }
+        
+        
+        function calForMonth(num) {
+        
+            paypal_fix = 0.3;
+            paypal_var = 0.029;
+            tax = 0.19;
+
+            v = (num + paypal_fix)/( 1- ( ( paypal_var) + (tax/(1+tax)) ));
+            v = Math.round(v * 100 )/100;
+            v = v.toFixed(2);
+            return v;
+        }
+        
+        function calForYear(num) {
+            num = num * 12;
+            paypal_fix = 0.3;
+            paypal_var = 0.029;
+            tax = 0.19;
+
+            v = (num + paypal_fix)/( 1- ( ( paypal_var) + (tax/(1+tax)) ));
+            v = Math.round(v * 100 )/100;
+            v = v.toFixed(2);
+            return v;
+        }
+        
+        
+        function calFees(num) {
+            paypal_fix = 0.3;
+            paypal_var = 0.029;
+            tax = 0.19;
+            
+            v = (num + paypal_fix)/( 1- ( ( paypal_var/(1+paypal_var)) + (tax/(1+tax)) ));		
+            paypal = paypal_fix+v*paypal_var;
+            total = num + paypal;
+            t=total*tax;
+            g = total+t;
+                
+            r = 'incl. $' + (Math.round(t * 100 )/100).toFixed(2) + ' Tax and $'+(Math.round(paypal * 100 )/100).toFixed(2)+' PayPal Fees';
+            return r;
+        }
+        
+        /*
+        $("#submit").click(function(e){
+            e.preventDefault();
+            $sumNum = 0;
+            $("input[type=radio]:checked").each(function() {
+                $sumNum = $(this).val();
+            });
+            
+            if($sumNum == 'free') {
+                $amount = $('#support_amount').val();
+                
+                if($amount && $amount.length > 0 && $amount > 10.01) {
+                    $("#new_donation").submit();
+                    return true;
+                } else {
+                    alert('Please enter a free amount > 10.01');
+                    return false;
+                }
+            } else {
+                $( "#new_donation" ).submit();
+                return true;
+            }
+        });
+        */
+    });    
+        
+    <?php 
+    }
+    ?>
 </script>
