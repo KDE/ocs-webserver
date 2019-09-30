@@ -726,7 +726,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'action'     => 'index'
         )));
         
-        $router->addRoute('user_payout2', new Zend_Controller_Router_Route('/member/:member_id/payoutsection/*', array(
+        $router->addRoute('user_payout_old', new Zend_Controller_Router_Route('/member/:member_id/payout-old/*', array(
+            'module'     => 'default',
+            'controller' => 'user',
+            'action'     => 'payout'
+        )));
+        
+        $router->addRoute('user_payout_section', new Zend_Controller_Router_Route('/member/:member_id/payout/*', array(
             'module'     => 'default',
             'controller' => 'user',
             'action'     => 'payout2'
@@ -744,13 +750,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'action'     => 'index'
         )));
         
-        $router->addRoute('user_payout2', new Zend_Controller_Router_Route('/u/:user_name/payoutsection/', array(
-            'module'     => 'default',
-            'controller' => 'user',
-            'action'     => 'payout2'
-        )));
-
-
         $router->addRoute('user_recification', new Zend_Controller_Router_Route('/r/:action/*', array(
             'module'     => 'default',
             'controller' => 'rectification',
