@@ -451,9 +451,11 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         
         $project_id = $this->getParam('project_id', null);
         $referer = $this->getParam('referer', null);
+        
+        $creator_id = $this->getParam('creator_id', null);
+        
         $project = null;
         
-        $creator_id = null;
         $project_category_id = null;
         
         if(null != $project_id) {
