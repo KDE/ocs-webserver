@@ -59,7 +59,7 @@ class Support extends Component {
                                        <a className="cls-tab-amount">Amount</a>
                                     </li>
                                   </ul>
-                                    <a href="/support" role="button" className="btn btn-primary">Become a Supporter</a>
+                                    <a href="/support" role="button" className="btn btn-primary active">Become a Supporter</a>
                                   </div>
 
         let content;
@@ -100,7 +100,6 @@ class Support extends Component {
       barStyle= {
         width: (s/goal)*100 + "%",
       };
-      //color: "#1E2881"
     return(
       <div className={"pling-section-header "+this.props.headerStyle}>
           <div className="header-body">

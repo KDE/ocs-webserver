@@ -38,18 +38,15 @@ class MobileSiteHeader extends React.Component {
     );
 
     let PlingDisplay;
-    if(this.props.section && this.props.user)
+    if(this.props.section )
     {
-      if(this.props.user.isAdmin)
-      {
+
         PlingDisplay =
             <div id="siter-header-pling">
-            <Support section={this.props.section} amount={this.props.section.amount}
-                 goal = {this.props.section.goal} amount_factor={this.props.section.amount_factor}
-                 isAdmin = {this.props.user.isAdmin}
+            <Support section={this.props.section}
+              headerStyle={this.props.template['header-supporter-style']}
             />
             </div>
-      }
     }
 
     let mobileMenuDisplay;
@@ -91,8 +88,6 @@ class MobileSiteHeader extends React.Component {
               searchBaseUrl={this.props.searchBaseUrl}
               store={this.props.store}
             />
-
-
           </div>
           {closeMenuElementDisplay}
         </div>

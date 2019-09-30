@@ -71,25 +71,21 @@ class SiteHeader extends Component {
         </div>
       );
     }
-    let PlingDisplay;  //header-supporter-style -> header-supporter-dark
-    if(this.state.section && this.state.user)
-    {
-      if(this.state.user.isAdmin)
-      {
+    let PlingDisplay;
+    if(this.state.section)
+    {      
         PlingDisplay =
             <div id="siter-header-pling">
-            <Support section={this.state.section} amount={this.state.section.amount}
-                 goal = {this.state.section.goal} amount_factor={this.state.section.amount_factor}
-                 isAdmin = {this.state.user.isAdmin} headerStyle={this.state.template['header-supporter-style']}
+            <Support section={this.state.section}
+                    headerStyle={this.state.template['header-supporter-style']}
             />
             </div>
-      }
     }
 
     let HeaderDisplay;
     if (this.state.device !== "tablet"){
       let logoStyle = this.state.template['header-logo'];
-      logoStyle.left="80px";      
+      logoStyle.left="80px";
       HeaderDisplay = (
         <section id="site-header-wrapper" >
           <div id="siter-header-left" style={{"paddingLeft":this.state.template['header-logo']['width']}}>
