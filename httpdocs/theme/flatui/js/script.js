@@ -648,16 +648,15 @@ var Opendownloadfile= (function () {
                 var link_type = $(this).attr('data-link_type');
                 var is_external = $(this).attr('data-is-external-link');
                 var external_link = null;
-                var popupHeight = '450';
-                
+                var popupHeight = '350';
                 if(is_external == 'true') {
                     external_link = $(this).attr('data-external_link');
                     popupHeight = '500';
-                }                
+                }
                 
                 $.fancybox({
                     'hideOnContentClick': true,
-                    'autoScale': false,
+                    'autoScale': true,
                     'scrolling' : 'no',
                     'cyclic': 'true',
                     'transitionIn': 'elastic',
@@ -666,8 +665,7 @@ var Opendownloadfile= (function () {
                     'width':'600',
                     'height':popupHeight,
                     'iframe': {'scrolling': 'no'},
-                    'fitToView'   : false,
-                    'autoSize'    : false,
+                    'autoSize':false,
                     'id': 'opendownloadfilepopup',
                     helpers: {
                         overlay: {
