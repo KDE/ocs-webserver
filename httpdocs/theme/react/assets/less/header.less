@@ -6,7 +6,7 @@
 }
 
 #site-header {
-  padding: 0 80px;
+  /*padding: 0 80px;*/
   font-size: 14px;
   background-color: #ccc;
   padding-right:0px;
@@ -126,14 +126,14 @@
       position: absolute;
       right: 0;
       height: 100%;
-      padding-top: 5px;
+
       display: flex;
       align-items: center;
 
       .pling-section-header{
 
            display: flex;
-
+           height: 25px;
            & > div{
              text-align: center;
            }
@@ -148,13 +148,17 @@
                 font-size: small;
                 font-weight: bold;
              }
+             a.header-supporters
+             {
+               color:#4e4e4e;
+             }
              z-index: 1000;
               &.open {
 
                  .dropdown-menu {
                      display: block;
                      left: auto;
-                      width: 300px;
+                      width: 350px;
                  }
                  .dropdown-menu::before {
                         content: "";
@@ -182,6 +186,10 @@
                     overflow-y: auto;
 
                    width: 100%;
+                   .pling-nav-tabs
+                   {
+                      display: flex;
+                   }
                    .title{
                      text-align: center;
                      border-bottom: 1px solid #ccc;
@@ -201,6 +209,7 @@
 
 
                        span{
+                         line-height: 16px;
                          display: inline-block;
                          position: absolute;
                          left: 0;
@@ -218,7 +227,8 @@
 
                       }
                       .section-value{
-
+                        display: flex;
+                        align-items: center;
                       }
                   }
               }
@@ -227,11 +237,16 @@
           .header-body{
             display: flex;
             .supporter-container {
-              padding-top: 6px;
+              line-height: 25px;
+              padding-left:5px;
+              a.header-supporters
+              {
+                color:#4e4e4e;
+              }
             }
            .score-container
            {
-             padding-top: 5px;
+             line-height: 25px;
              &>span{
               font-size: small;
               font-weight: bold;
@@ -241,7 +256,7 @@
              .score-bar-container {
                width: 200px;
                height: 20px;
-               background: #ccc;
+               background: #f1f1f1;
                margin-bottom: 5px;
                display: inline-block;
                font-size: small;
@@ -249,9 +264,11 @@
                .score-bar {
                  height: 20px;
                  line-height: 20px;
-                 background-color: #286090;
+                 background-color: #ccc;
                  border-bottom: 0px solid darken( #286090,5%);
-                 color:#fff;
+                 color:#4e4e4e;
+                 text-align: left;
+                 padding-left: 3px;
                }
              }
            }
@@ -260,19 +277,20 @@
 
           &.header-supporter-dark
           {
-             span{
-               color: #fff;
-             }
+            .header-body .score-container
+            {
+              >span {
+                color: #fff;
+              }
 
-             .header-body .score-container .score-bar-container{
-               background-color: #f1f1f1;
-               .score-bar{
-                 color:#1E2881;
-               }
-             }
-             a.header-supporters{
-               color:#fff;
-             }
+            }
+            .header-body .supporter-container{
+              a.header-supporters{
+                color:#fff;
+              }
+            }
+
+
           }
         }
     }
@@ -720,16 +738,18 @@
                 display: flex;
                .score-container
                {
+
                  padding-top:5px;
                  &>span{
                   font-size: small;
                   font-weight: bold;
                   padding:5px;
+
                   }
                  .score-bar-container {
                    width: 100px;
                    height: 20px;
-                   background: #ccc;
+                   background: #f1f1f1;
                    margin-bottom: 5px;
                    display: inline-block;
                    font-size: small;
@@ -737,9 +757,11 @@
                    .score-bar {
                      height: 20px;
                      line-height: 20px;
-                     background-color: #286090;
+                     background-color: #CCCCCC;
                      border-bottom: 0px solid darken( #286090,5%);
-                     color:#fff;
+                     color:#4e4e4e;
+                     text-align: left;
+                     padding-left: 3px;
                    }
                  }
                }
