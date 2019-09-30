@@ -1215,7 +1215,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
     }
 
-    public function payouthistoryAction()
+    public function payouthistoryoldAction()
     {
 
         $tableMember = new Default_Model_Member();
@@ -1241,7 +1241,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     }
 
-    public function payouthistory2Action()
+    public function payouthistoryAction()
     {
 
         $tableMember = new Default_Model_Member();

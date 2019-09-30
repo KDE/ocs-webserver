@@ -61,21 +61,20 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
     <?php } ?>
 
     
-
+    <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') { ?>
     <li class="header-menu-left-item <?php echo $this->tab == 'payouthistory' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payouthistory'); ?>">                                   
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payouthistoryold'); ?>">                                   
             <span class="payouthistory-icon" aria-hidden="true"></span>
-            <?= $this->translate('Payout-History') ?>
+            <?= $this->translate('Payout-History-Old') ?>
         </a>
     </li>
-    <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') { ?>
+    <?php } ?>
      <li class="header-menu-left-item <?php echo $this->tab == 'payouthistory2' ? 'active' : ''; ?>">
-            <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payouthistory2'); ?>">                                   
+            <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payouthistory'); ?>">                                   
                 <span class="payouthistory-icon" aria-hidden="true"></span>
-                <?= $this->translate('Payout-History2') ?>
+                <?= $this->translate('Payout-History') ?>
             </a>
         </li>
-    <?php } ?>
     
     <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin'){
         $identity = Zend_Auth::getInstance()->getStorage()->read();
