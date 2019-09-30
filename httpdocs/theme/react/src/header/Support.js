@@ -99,8 +99,7 @@ class Support extends Component {
       let  barStyle;
       barStyle= {
         width: (s/goal)*100 + "%",
-      };
-      //color: "#1E2881"
+      };      
     return(
       <div className={"pling-section-header "+this.props.headerStyle}>
           <div className="header-body">
