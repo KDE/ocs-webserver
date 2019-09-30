@@ -413,7 +413,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'plingsmonthajax',
             'downloadhistory',
             'likes', 
-            'funding'
+            'funding',
+            'sectionsajax'
         ));
         
         //$this->allow(self::ROLENAME_GUEST, 'default_funding', array(

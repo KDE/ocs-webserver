@@ -37,29 +37,31 @@ if($this->tab=='add' || $this->tab=='products' || $this->tab=='addcollection' ||
             </a>           
     </li>       
 
+    <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') { ?>
     <li class="header-menu-left-item <?php echo $this->tab == 'payout' ? 'active' : ''; ?>">
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payoutold'); ?>">
+            <span class="glyphicon glyphicon-usd"></span>
+            <?= $this->translate('Payout-Old') ?>
+        </a>
+    </li>
+    <?php } ?>
+    <li class="header-menu-left-item <?php echo $this->tab == 'payoutsection' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payout'); ?>">
             <span class="glyphicon glyphicon-usd"></span>
             <?= $this->translate('Payout') ?>
         </a>
     </li>
     <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') { ?>
-    <li class="header-menu-left-item <?php echo $this->tab == 'payoutsection' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payout2'); ?>">
-            <span class="glyphicon glyphicon-usd"></span>
-            <?= $this->translate('Payout-Section') ?>
-        </a>
-    </li>
     <li class="header-menu-left-item <?php echo $this->tab == 'affiliates' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'affiliates'); ?>">
             <span class="glyphicon glyphicon-usd"></span>
             <?= $this->translate('Affiliates') ?>
         </a>
     </li>
+    <?php } ?>
 
     
 
-    <?php } ?>
     <li class="header-menu-left-item <?php echo $this->tab == 'payouthistory' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'payouthistory'); ?>">                                   
             <span class="payouthistory-icon" aria-hidden="true"></span>

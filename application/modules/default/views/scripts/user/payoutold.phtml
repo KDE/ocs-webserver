@@ -20,14 +20,14 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$this->tab = 'payoutsection';
+$this->tab = 'payout';
 $this->countDownloadsOverall = 0;
 
 $currentDate = date("Ym",time());
 $currentYear = date("Y",time());
 
 $modelDownload = new Default_Model_StatDownload();
-$downloadYears = $modelDownload->getUserDownloadsAndViewsYears($this->member->member_id);
+$downloadYears = $modelDownload->getUserDownloadYears($this->member->member_id);
 #$this->countDownloadsOverall = count($this->downloads);
 ?>
 
@@ -58,13 +58,13 @@ $downloadYears = $modelDownload->getUserDownloadsAndViewsYears($this->member->me
                             if(count($downloadYears) == 0 ||  $downloadYears[0]['year'] != $currentYear) {
                                 //Current year
                                 echo '<li role="presentation" class="yeartabs">';
-                                echo '    <a style="font-size: 18px;" data-year="'.$currentYear.'" data-toggle="yeartabajax" href="/member/'.$member->member_id.'/sectionsajax?year='.$currentYear.'" data-target="#my-payout-list" id="tab_year_'.$currentYear.'">'.$currentYear.'</a>';
+                                echo '    <a style="font-size: 18px;" data-year="'.$currentYear.'" data-toggle="yeartabajax" href="/member/'.$member->member_id.'/plingsajax?year='.$currentYear.'" data-target="#my-payout-list" id="tab_year_'.$currentYear.'">'.$currentYear.'</a>';
                                 echo '</li>';
                             }
 
                             foreach ($downloadYears as $yearobj) {
                                 echo '<li role="presentation" class="yeartabs">';
-                                echo '    <a style="font-size: 18px;" data-year="'.$yearobj['year'].'" data-toggle="yeartabajax" href="/member/'. $member->member_id.'/sectionsajax?year='.$yearobj['year'].'" data-target="#my-payout-list" id="tab_year_'.$yearobj['year'].'">'.$yearobj['year'].'</a>';
+                                echo '    <a style="font-size: 18px;" data-year="'.$yearobj['year'].'" data-toggle="yeartabajax" href="/member/'. $member->member_id.'/plingsajax?year='.$yearobj['year'].'" data-target="#my-payout-list" id="tab_year_'.$yearobj['year'].'">'.$yearobj['year'].'</a>';
                                 echo '</li>';
                             }
                         ?>
@@ -161,7 +161,6 @@ $(document).ready(function(){
                 });
 
                 $this.tab('show');
-                
                 return false;
             });
             
