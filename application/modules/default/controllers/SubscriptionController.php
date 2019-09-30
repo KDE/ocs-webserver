@@ -166,6 +166,7 @@ class SubscriptionController extends Local_Controller_Action_DomainSwitch
         $this->view->headTitle('Become a supporter - ' . $this->getHeadTitle(), 'SET');
         $httpHost = $this->getRequest()->getHttpHost();
         $this->view->urlPay =  '/support/pay';
+        $this->view->creator_id = $creator_id;
         
         $sectionsTable = new Default_Model_Section();
         $sections = $sectionsTable->fetchAllSections();
