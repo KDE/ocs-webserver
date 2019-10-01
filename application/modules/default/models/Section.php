@@ -121,7 +121,7 @@ class Default_Model_Section
             p.profile_image_url,
             p.cat_title,
             p.laplace_score,
-            sum(m.credits_section)/100 AS probably_payout_amount
+            sum(m.credits_plings)/100 AS probably_payout_amount
             from stat_projects p,micro_payout m
             where p.project_id = m.project_id
             and m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
@@ -152,7 +152,7 @@ class Default_Model_Section
                 p.profile_image_url,
                 p.cat_title,
                 p.laplace_score,
-                sum(m.credits_section)/100 AS probably_payout_amount
+                sum(m.credits_plings)/100 AS probably_payout_amount
                 from stat_projects p,micro_payout m
                 where  p.project_id = m.project_id
                      and m.paypal_mail is not null and m.paypal_mail <> ''
@@ -211,7 +211,7 @@ class Default_Model_Section
                 me.username,
                 me.profile_image_url,
                 m.member_id,
-                sum(m.credits_section)/100 probably_payout_amount
+                sum(m.credits_plings)/100 probably_payout_amount
                 from micro_payout m, section s, section_category c, member me
                 where s.section_id = c.section_id and c.project_category_id = m.project_category_id AND me.member_id = m.member_id
                 and m.paypal_mail is not null and m.paypal_mail <> ''
@@ -235,7 +235,7 @@ class Default_Model_Section
                 p.username,
                 p.profile_image_url,
                 p.member_id,
-                SUM(m.credits_section)/100 probably_payout_amount
+                SUM(m.credits_plings)/100 probably_payout_amount
                 from stat_projects p, micro_payout m
                 where p.member_id = m.member_id and p.project_id = m.project_id
                 and m.paypal_mail is not null and m.paypal_mail <> ''
