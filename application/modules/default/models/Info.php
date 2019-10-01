@@ -1411,6 +1411,7 @@ class Default_Model_Info
             $sql = '
                     select section_id, member_id, weight 
                     from v_supporter_view_queue 
+                    where section_id = :section_id
                     order by weight desc                        
             ';        
             $supporters = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' => $section_id))->fetchAll();            
