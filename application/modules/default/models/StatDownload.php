@@ -389,7 +389,7 @@ class Default_Model_StatDownload
                         SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_plings END) AS num_real_credits_plings,
                         SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_section END) AS num_real_credits_section
                         ,(SELECT round(sfs.sum_support/DATE_FORMAT(NOW() + INTERVAL 1 MONTH - INTERVAL DATE_FORMAT(NOW(),'%d') DAY,'%d')*DATE_FORMAT(NOW(),'%d') /sfs.sum_amount_payout,2) AS factor  FROM section_funding_stats sfs WHERE sfs.yearmonth = m.yearmonth AND sfs.section_id = m.section_id) AS now_section_payout_factor
-                        , MAX(amount) AS payout_amount, MAX(STATUS) AS payout_status, MAX(payment_transaction_id) AS payout_payment_transaction_id, MAX(`member_payout`.paypal_mail) AS paypal_mail
+                        , MAX(amount) AS payout_amount, MAX(STATUS) AS payout_status, MAX(payment_transaction_id) AS payout_payment_transaction_id, MAX(m.paypal_mail) AS paypal_mail
                 from micro_payout m
                 LEFT JOIN section s ON s.section_id = m.section_id
                 LEFT JOIN
