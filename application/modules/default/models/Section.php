@@ -152,7 +152,7 @@ class Default_Model_Section
                 p.profile_image_url,
                 p.cat_title,
                 p.laplace_score,
-                sum(m.credits_section)/100 AS probably_payout_amount
+                sum(m.credits_plings)/100 AS probably_payout_amount
                 from stat_projects p,micro_payout m
                 where  p.project_id = m.project_id
                      and m.paypal_mail is not null and m.paypal_mail <> ''
