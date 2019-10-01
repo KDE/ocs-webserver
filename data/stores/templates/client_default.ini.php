@@ -41,7 +41,8 @@ return array(
         'background-image' => 'none',
         'background-color' => '#e2e2e2',
         'color'            => '#0A0A0A',
-        'height'           => '90px'
+        'height'           => '90px',
+        'header-supporter-style' =>'header-supporter-dark'
     ),
 
     'header-logo' => array(
