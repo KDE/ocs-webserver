@@ -110,7 +110,7 @@ if ($countDownloadsOverall > 0) {
             $isCurrentMonth = false;
         }
         $sum_total_text = '';
-        $sum_total_payout = 0;
+        $sum_total_payout_affiliate = 0;
         
         ?>
         <div class="tab-pane fade <?=$css_active?>" id="<?=$firstProduct['yearmonth']?>">
@@ -118,7 +118,7 @@ if ($countDownloadsOverall > 0) {
             $css_active = '';
 
             foreach ($allAffiliates as $section) { 
-                $sum_total_payout += $section['sum_donations']*$section['affiliate_percent'];
+                $sum_total_payout_affiliate += $section['sum_donations']*$section['affiliate_percent'];
                 ?>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
                     <div class="col-md-2 text-left cell-default">
@@ -161,7 +161,7 @@ if ($countDownloadsOverall > 0) {
                 <div class='col-md-2 text-right' style="min-width: 503px;"><?=$sum_total_text?></div>
                 <div class='col-md-1 text-right' style="min-width: 190px;"></div>
                 <div class='col-md-1 text-right' style="min-width: 190px;"></div>
-                <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?php print($currency->toCurrency($sum_total_payout)); ?>**</strong></div>
+                <div class='col-md-1 text-right' style="min-width: 190px;"><strong><?php print($currency->toCurrency($sum_total_payout_affiliate)); ?>**</strong></div>
             </div>
         </div>
 <?php
@@ -346,13 +346,15 @@ if ($countDownloadsOverall > 0) {
                     $has_paypal = true;
                 }
             } else {
-                $paypalWarning = 'We found no valid Paypal account for this month. That\'s why we could not pay you any money. In order to receive money for the current month, please make sure that a paypal account is registered. Go to your settings page <a href="/settings#form-payment-panel">here</a>.';
+                if(false == $has_paypal) {
+                    $paypalWarning = $section['paypal_mail'] . ' - We found no valid Paypal account for this month. That\'s why we could not pay you any money. In order to receive money for the current month, please make sure that a paypal account is registered. Go to your settings page <a href="/settings#form-payment-panel">here</a>.';
+                }
             }
             if (false == $has_paypal) {
                 echo '<div class="alert alert-danger" role="alert">'.$paypalWarning.'</div>';
             }
 
-            if (($sum_total_month/100) < 1) {
+            if (($sum_total_month+$sum_total_payout_affiliate) < 1) {
                 echo '<div class="alert alert-warning" role="alert">We only pay out money if the total sum is over $1.</div>';
             }
 ?>
