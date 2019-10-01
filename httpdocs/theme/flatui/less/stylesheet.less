@@ -2270,50 +2270,7 @@ ul.meta-nav-top
             font-size: 10pt;
           }
         }
-        #likes-panel{
-            .u-wrap{
-              float: left;
-              padding: 0.3em;
-              border: 0.35em solid #dee0e0;
-              border-radius: 5px;
-              height: 14em;
-              margin-bottom: 1em;
-              background: white;
-              width: 115px;
-              height: 200px;
-              margin-right: 10px;
-              -webkit-transition: all 0.2s ease-out;
-              -moz-transition: all 0.2s ease-out;
-              -ms-transition: all 0.2s ease-out;
-              -o-transition: all 0.2s ease-out;
-              figure img{
-                width: 100%;
-                border: 1px solid #dbdbdb;
-                -webkit-border-radius: 999px;
-                -moz-border-radius: 999px;
-                border-radius: 999px;
-                -webkit-background-clip: padding-box;
-                -moz-background-clip: padding;
-                background-clip: padding-box;
-              }
-              h3{
-                font-size: 13px;
-                font-weight: bold;
-                word-wrap: break-word;
-                line-height: 20px;
-                height: 20px;
-                padding: 0;
-                margin: 0;
-               }
-              span.small {
-                font-size: 13px;
-                text-align: right;
-                color: #444;
-                margin-top: 50px;
-                float: right;
-              }
-            }
-        }
+        
     }
 
 
@@ -3355,7 +3312,7 @@ span.page-views {
             border-bottom: 1px solid #e1e1e1;
             float: left;
             width: 100%;
-
+            position:relative;
             figure {
               width: 6.9em;
               height: 6.9em;
@@ -3373,7 +3330,14 @@ span.page-views {
                 height: 100%;
                 .border_radius(999px);
               }
+
             }
+            .btnSupportMe
+              {
+                position:absolute;
+                right: 0;
+                top:0;
+              }
 
             .supporter-badge{
                 position: absolute;
@@ -6619,50 +6583,47 @@ main#plings-page{
   }
 }
 
- #plings-panel {
-       .u-wrap {
-          float: left;
-          padding: .3em;
-          border: .35em solid #dee0e0;
-          border-radius: 5px;
-          height: 14em;
-          margin-bottom: 1em;
-          background: #fff;
-          width: 115px;
-          height: 200px;
-          margin-right: 10px;
-          -webkit-transition: all .2s ease-out;
-          -moz-transition: all .2s ease-out;
-          -ms-transition: all .2s ease-out;
-          -o-transition: all .2s ease-out;
-          position: relative;
-
-          figure img {
-              width: 100%;
-              border: 1px solid #dbdbdb;
-              -webkit-border-radius: 999px;
-              -moz-border-radius: 999px;
-              border-radius: 999px;
-              -webkit-background-clip: padding-box;
-              -moz-background-clip: padding;
-              background-clip: padding-box;
-          }
-
-          h3 {
-              font-size: 13px;
-              font-weight: 700;
-              word-wrap: break-word;
-              line-height: 20px;
-              height: 20px;
-              padding: 0;
-              margin: 0;
-          }
-           span.small {
-                      position: absolute;
-                      bottom: 5px;
-                      left:5px;
+ #plings-panel,#likes-panel{
+       .u-wrap{
+              float: left;
+              padding: 0.3em;
+              border: 0.35em solid #dee0e0;
+              border-radius: 5px;
+              height: 14em;
+              margin-bottom: 1em;
+              background: white;
+              width: 115px;
+              height: 200px;
+              margin-right: 10px;
+              -webkit-transition: all 0.2s ease-out;
+              -moz-transition: all 0.2s ease-out;
+              -ms-transition: all 0.2s ease-out;
+              -o-transition: all 0.2s ease-out;
+              position:relative;
+              text-align: center;
+              font-size: small;
+              img{
+                width: 100%;
+                border: 1px solid #dbdbdb;
+                -webkit-border-radius: 999px;
+                -moz-border-radius: 999px;
+                border-radius: 999px;
+                -webkit-background-clip: padding-box;
+                -moz-background-clip: padding;
+                background-clip: padding-box;
               }
-      }
+              div.username{
+                max-width: 100px;
+                overflow: hidden;
+                padding:5px;
+              }
+              div.bottom-title{
+                position: absolute; 
+                right: 2px; 
+                bottom: 0;
+              }
+              
+            }
 
  }
 
