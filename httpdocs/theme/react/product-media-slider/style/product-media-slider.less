@@ -64,6 +64,7 @@ video:focus {
         background-position: center center;
         background-color: white;
         border: 2px solid black;
+        display: none !important;
     }
 
     #slider-container {
@@ -95,14 +96,17 @@ video:focus {
                 }
 
                 .video-react-control-bar {
+                  font-size: 8px;
                   display: -webkit-box;
                   display: -webkit-flex;
                   display: -ms-flexbox;
                   display: flex !important;
                   visibility: visible;
                   opacity: 1;
-                  height: 4em;
+                  height: 6em;
+                  padding-top: 2em;
                   background-color: rgba(0, 0, 0, 0.7);
+                  .gradient(transparent,#000000,transparent);
                 }
 
                 .video-react-control {
@@ -116,6 +120,17 @@ video:focus {
                 .video-react-duration {
                   line-height: 2.7em;
                   font-size: 1.5em;
+                }
+
+                .video-react-current-time {
+                  padding-right:0;
+
+                  &::after {
+                    content: "/";
+                    position: absolute;
+                    top: 0;
+                    right: -0.7em;
+                  }
                 }
 
                 .video-react-volume-bar.video-react-slider-vertical {
@@ -158,6 +173,25 @@ video:focus {
                     }
                 }
 
+                .video-react-volume-bar.video-react-slider-horizontal {
+                  width: 7em;
+                  height: 4em;
+                  margin: 0;
+                  background-color: transparent;
+
+                  .video-react-volume-level {
+                    height: 0.4em;
+                    top: 1.65em;
+                    left: 0.5em;
+                  }
+                }
+
+                .video-react-volume-menu-button-horizontal {
+                  &::before {
+                    width:1.5em;
+                  }
+                }
+                
                 .video-react-volume-menu-button-vertical:hover .video-react-menu-content {
                   height: 12em;
                   width: 2.9em;
@@ -169,6 +203,17 @@ video:focus {
                 }
 
                 .video-react-progress-control.video-react-control{
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  height: 2em;
+                  width: 100%;
+                  padding: 0 1em;
+
+                  .video-react-mouse-display {
+                    background-color: transparent !important;
+                  }
+
                     .video-react-progress-holder {
                         height: 100%;
                         padding: 13px 0;
@@ -186,23 +231,38 @@ video:focus {
                     display: none !important;
                   }
                 }
+
+                .video-react-fullscreen-control {
+                  position: absolute;
+                  right: 0em;
+                }
+
             }
 
             .cinema-mode-button {
-                line-height: 30px;
-                display: inline-block;
-                color: white;
-                font-size: 10px;
-                text-transform: uppercase;
-                cursor: pointer;
+              line-height: 3em;
+              display: inline-block;
+              color: white;
+              font-size: inherit;
+              text-transform: uppercase;
+              cursor: pointer;
+              position: absolute;
+              right: 4em;
 
                 span {
                   display: block;
-                  width: 20px;
-                  height: 12px;
-                  border: 2px solid white;
-                  margin: 13px 8px;
+                  width: 2.5em;
+                  height: 1.4em;
+                  border: 2px solid #e8e8e8;
+                  margin: 1.2em;
                 }
+            }
+
+            .next-slide-video {
+              font-size: 1.8em;
+              color: white;
+              margin: 0.5em;
+              cursor: pointer;
             }
 
             &.hide {

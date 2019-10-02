@@ -197,6 +197,7 @@ function ProductMediaSlider(){
       onSetSliderHeight={height => setSliderHeight(height)}
       onUpdateDimensions={updateDimensions}
       onFullScreenToggle={hanleFullScreenToggle}
+      onNextSlideClick={goNext}
     />
   ));
 
@@ -346,6 +347,7 @@ function SlideItem(props){
         playVideo={props.currentSlide === props.slideIndex}
         onUpdateDimensions={props.onUpdateDimensions}
         onFullScreenToggle={props.onFullScreenToggle}
+        onNextSlideClick={props.onNextSlideClick}
       />
     )
   }
