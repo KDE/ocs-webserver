@@ -1414,7 +1414,19 @@ class Default_Model_Info
                     where section_id = :section_id
                     order by weight desc                        
             ';        
-            $supporters = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' => $section_id))->fetchAll();            
+            $supporters = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' => $section_id))->fetchAll();      
+            
+            //If there is no real supporter, show pling user
+            if(!$supporters || count($supporters) == 0) {
+                $sql = '
+                    select section_id, member_id, weight 
+                    from v_supporter_view_queue_all 
+                    where section_id = :section_id
+                    order by weight desc                        
+                ';        
+                $supporters = Zend_Db_Table::getDefaultAdapter()->query($sql, array('section_id' => $section_id))->fetchAll(); 
+            }
+            
             $cache->save($supporters, $cacheName, array(), 300);
         }
             

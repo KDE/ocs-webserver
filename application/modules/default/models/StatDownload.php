@@ -807,6 +807,7 @@ class Default_Model_StatDownload
                         JOIN member m2 ON m2.member_id = su2.member_id
                         WHERE
                            pr2.member_id = :member_id 
+                        GROUP BY p2.yearmonth, s2.section_id
                         
                         
                 ) A2
