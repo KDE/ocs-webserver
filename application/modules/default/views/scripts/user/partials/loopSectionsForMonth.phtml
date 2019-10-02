@@ -152,7 +152,7 @@ if ($countDownloadsOverall > 0) {
                 <?php
                 
                 
-                $sum_total_text = 'Possible affiliates payout for this month (<span style="font-size: smaller;">*</span>):';
+                $sum_total_text = 'Possible Affiliates payout for this month (<span style="font-size: smaller;">*</span>):';
                 
             }
 
@@ -171,7 +171,7 @@ if ($countDownloadsOverall > 0) {
     echo '<div class="tab-pane fade in active" id="'.$printDate.'">';
     echo '    <div style="text-align: center;" class="row margin-bottom-12"><div class="col-md-8 cell-default">No Data</div></div>';
     echo '    <div class="row row-total">';
-    echo '    <div class="col-md-2 text-right" style="min-width: 503px;">Possible payout for this month (<span style="font-size: smaller;">*</span>):</div>'
+    echo '    <div class="col-md-2 text-right" style="min-width: 503px;">Possible Affiliates payout for this month (<span style="font-size: smaller;">*</span>):</div>'
                 . '<div class="col-md-1 text-right" style="min-width: 190px;"></div>'
                 . '<div class="col-md-1 text-right" style="min-width: 190px;"></div>'
                 . '<div class="col-md-1 text-right" style="min-width: 190px;"><strong>$0.00</strong></div>';
@@ -306,7 +306,7 @@ if ($countDownloadsOverall > 0) {
                 $sum_total_month_max += $payout_sum_max;
                 $sum_total_payout_max = $currency->toCurrency($sum_total_month_max);
                 
-                $sum_total_text = 'Possible download/mediaview payout for this month (<span style="font-size: smaller;">*</span>):';
+                $sum_total_text = 'Possible Downloads/Mediaviews payout for this month (<span style="font-size: smaller;">*</span>):';
                 
                 $payout_success = false;
                 if ($section['payout_status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
@@ -367,7 +367,7 @@ if ($countDownloadsOverall > 0) {
     echo '<div class="tab-pane fade in active" id="'.$printDate.'">';
     echo '    <div style="text-align: center;" class="row margin-bottom-12"><div class="col-md-8 cell-default">No Data</div></div>';
     echo '    <div class="row row-total">';
-    echo '        <div class="col-md-1 text-right" style="min-width: 150px;"></div><div class="col-md-4 text-right"></div><div class="col-md-3 text-right" style="min-width: 570px;">Possible payout for this month (<span style="font-size: smaller;">*</span>):</div><div class="col-md-1 text-right" style="min-width: 190px;"><strong>$0.00</strong></div>';
+    echo '        <div class="col-md-1 text-right" style="min-width: 150px;"></div><div class="col-md-4 text-right"></div><div class="col-md-3 text-right" style="min-width: 570px;">Possible Downloads/Mediaviews payout for this month (<span style="font-size: smaller;">*</span>):</div><div class="col-md-1 text-right" style="min-width: 190px;"><strong>$0.00</strong></div>';
     echo '    </div>';
     echo '</div>';
 }
