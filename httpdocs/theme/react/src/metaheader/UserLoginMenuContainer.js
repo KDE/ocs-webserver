@@ -72,20 +72,23 @@ class UserLoginMenuContainer extends React.Component {
                   <ul>
                     <li id="user-details-username"><b>{this.props.user.username}</b></li>
                     <li id="user-details-email">{this.props.user.mail}</li>
-                  
-
                   </ul>
                 </div>
               </div>
             </li>
-
-
 
             <li className="user-settings-item">
              <span className="user-settings-item-title">Metaheader theme light</span>
                <SwitchItem onSwitchStyle={this.props.onSwitchStyle}
                         onSwitchStyleChecked={this.props.onSwitchStyleChecked}/>
               <span className="user-settings-item-title">dark</span>
+            </li>
+            <li id="user-info-payout" className="buttons">
+                <ul className="payout">
+                  <li><a className="btn btn-default btn-metaheader" href={this.props.baseUrlStore+'/u/'+this.props.user.username+'/payout'}>My Payout</a></li>
+                  <li><a className="btn btn-default btn-metaheader" href={this.props.baseUrlStore+'/u/'+this.props.user.username+'/funding'}>My Funding</a></li>
+                </ul>
+
             </li>
             <li className="buttons">
               <a href={this.props.baseUrl + "/settings/"} className="btn btn-default btn-metaheader"><span>Settings</span></a>
