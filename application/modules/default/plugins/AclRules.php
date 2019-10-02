@@ -417,6 +417,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'sectionsajax',
             'sectionsmonthajax',
             'sectionplingsmonthajax',
+            'sectionaffiliatesmonthdetailajax',
         ));
         
         //$this->allow(self::ROLENAME_GUEST, 'default_funding', array(
