@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$this->tab = 'payouthistory2';
+$this->tab = 'payouthistory';
 $this->countDownloadsOverall = 0;
 
 ?>
@@ -175,7 +175,7 @@ $this->countDownloadsOverall = 0;
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="/theme/flatui/js/lib/multiline_payout.js"></script>
 <script type="text/javascript">
-    var dataset = <?php echo Zend_Json::encode($this->payouthistory2);?>;
+    var dataset = <?php echo Zend_Json::encode($this->payouthistory);?>;
     $(document).ready(function () {
             !(function (d3) {               
                  var parseTime = d3.timeParse("%Y%m");

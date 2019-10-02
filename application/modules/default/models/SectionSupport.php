@@ -39,6 +39,7 @@ class Default_Model_SectionSupport extends Default_Model_DbTable_SectionSupport
                     INNER JOIN support s ON s.id = f.support_id
                     inner join member m on s.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
                     WHERE  f.project_id = :project_id 
+                    AND p.yearmonth = date_format((now()),'%Y%m')
                     order by s.active_time desc
          ";
         $resultSet = $this->_db->fetchAll($sql, array('project_id' => $project_id));
@@ -67,6 +68,7 @@ class Default_Model_SectionSupport extends Default_Model_DbTable_SectionSupport
                     INNER JOIN support s ON s.id = f.support_id
                     inner join member m on s.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
                 WHERE  f.project_id = :project_id 
+                AND p.yearmonth = date_format((now()),'%Y%m')
                 AND m.member_id = :member_id";
         $r = $this->getAdapter()->fetchRow($sql_object, array('project_id' => $project_id, 'member_id' => $member_id));
         if ($r) {
@@ -103,6 +105,7 @@ class Default_Model_SectionSupport extends Default_Model_DbTable_SectionSupport
                 INNER JOIN member m2 on p.member_id = m2.member_id AND m2.is_active=1 AND m2.is_deleted=0 
                 WHERE  p.member_id = :member_id
                 AND m.member_id = :affiliate_member_id
+                AND pm.yearmonth = date_format((now()),'%Y%m')
 ";
         $r = $this->getAdapter()->fetchRow($sql_object, array('affiliate_member_id' => $affiliate_member_id, 'member_id' => $member_id));
         if ($r) {

@@ -121,7 +121,7 @@ class Default_Model_Section
             p.profile_image_url,
             p.cat_title,
             p.laplace_score,
-            sum(m.credits_section)/100 AS probably_payout_amount
+            sum(m.credits_plings)/100 AS probably_payout_amount
             from stat_projects p,micro_payout m
             where p.project_id = m.project_id
             and m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
@@ -129,7 +129,7 @@ class Default_Model_Section
             and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
             and m.is_member_pling_excluded=0
             GROUP BY m.project_id
-            order by m.credits_section desc
+            order by sum(m.credits_plings) desc
             limit 20
         ";
        
@@ -152,7 +152,7 @@ class Default_Model_Section
                 p.profile_image_url,
                 p.cat_title,
                 p.laplace_score,
-                sum(m.credits_section)/100 AS probably_payout_amount
+                sum(m.credits_plings)/100 AS probably_payout_amount
                 from stat_projects p,micro_payout m
                 where  p.project_id = m.project_id
                      and m.paypal_mail is not null and m.paypal_mail <> ''
@@ -211,7 +211,7 @@ class Default_Model_Section
                 me.username,
                 me.profile_image_url,
                 m.member_id,
-                sum(m.credits_section)/100 probably_payout_amount
+                sum(m.credits_plings)/100 probably_payout_amount
                 from micro_payout m, section s, section_category c, member me
                 where s.section_id = c.section_id and c.project_category_id = m.project_category_id AND me.member_id = m.member_id
                 and m.paypal_mail is not null and m.paypal_mail <> ''
@@ -221,7 +221,7 @@ class Default_Model_Section
 					 and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
                 and m.is_member_pling_excluded=0
                 group by me.username,me.profile_image_url,m.member_id
-                order by sum(m.credits_section) desc
+                order by sum(m.credits_plings) desc
                 limit 20
         ";
         
@@ -235,7 +235,7 @@ class Default_Model_Section
                 p.username,
                 p.profile_image_url,
                 p.member_id,
-                SUM(m.credits_section)/100 probably_payout_amount
+                SUM(m.credits_plings)/100 probably_payout_amount
                 from stat_projects p, micro_payout m
                 where p.member_id = m.member_id and p.project_id = m.project_id
                 and m.paypal_mail is not null and m.paypal_mail <> ''
@@ -244,7 +244,7 @@ class Default_Model_Section
                 and m.is_member_pling_excluded=0
                 and p.project_category_id = :cat_id
                 group by p.username,p.profile_image_url,p.member_id
-                order by SUM(m.credits_section) desc 
+                order by sum(m.credits_plings) desc 
                 limit 20";
         $resultSet = $this->getAdapter()->fetchAll($sql,array("cat_id"=>$cat_id));
         return $resultSet;    
