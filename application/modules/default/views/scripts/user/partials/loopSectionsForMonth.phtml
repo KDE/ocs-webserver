@@ -87,7 +87,7 @@ $printDate = $printMonth->format('M Y');
         <div class="row">
             <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Status</strong></div>
             <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Affiliates</strong></div>
-            <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Sum Doantions</strong></div>
+            <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Sum Dontions</strong></div>
             <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Percentage </strong></div>
             <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Sum Payout</strong></div>
         </div>
@@ -152,7 +152,7 @@ if ($countDownloadsOverall > 0) {
                 <?php
                 
                 
-                $sum_total_text = 'Possible payout for this month (<span style="font-size: smaller;">*</span>):';
+                $sum_total_text = 'Possible affiliates payout for this month (<span style="font-size: smaller;">*</span>):';
                 
             }
 
@@ -306,7 +306,7 @@ if ($countDownloadsOverall > 0) {
                 $sum_total_month_max += $payout_sum_max;
                 $sum_total_payout_max = $currency->toCurrency($sum_total_month_max);
                 
-                $sum_total_text = 'Possible payout for this month (<span style="font-size: smaller;">*</span>):';
+                $sum_total_text = 'Possible download/mediaview payout for this month (<span style="font-size: smaller;">*</span>):';
                 
                 $payout_success = false;
                 if ($section['payout_status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
