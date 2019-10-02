@@ -123,7 +123,7 @@ if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
                        <?php 
                         $modelSectionSupport = new Default_Model_SectionSupport();
                         $isAffiliate = $modelSectionSupport->isMemberAffiliateForMember($this->product->member_id, $comment['member_id']);
-                        if($isAffiliate && $isAdmin && $this->product->member_id != $comment['member_id']){
+                        if($isAffiliate && $this->product->member_id != $comment['member_id']){
                        ?>
                        <span class="creator-badge-<?=($elementComment['level']>1?2:1)?>" >A</span> 
                        <?php }?>
@@ -131,7 +131,7 @@ if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
                        
                        <?php 
                         $wasAffiliate = $modelSectionSupport->wasMemberAffiliateForMember($this->product->member_id, $comment['member_id']);
-                        if($wasAffiliate && $isAdmin && $this->product->member_id != $comment['member_id']){
+                        if($wasAffiliate && $this->product->member_id != $comment['member_id']){
                        ?>
                        <span class="creator-badge-<?=($elementComment['level']>1?2:1)?>" style="background: gray !important;">A</span> 
                        <?php }?>
