@@ -129,7 +129,7 @@ class Default_Model_Section
             and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
             and m.is_member_pling_excluded=0
             GROUP BY m.project_id
-            order by m.credits_section desc
+            order by sum(m.credits_plings) desc
             limit 20
         ";
        
@@ -221,7 +221,7 @@ class Default_Model_Section
 					 and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
                 and m.is_member_pling_excluded=0
                 group by me.username,me.profile_image_url,m.member_id
-                order by sum(m.credits_section) desc
+                order by sum(m.credits_plings) desc
                 limit 20
         ";
         
@@ -244,7 +244,7 @@ class Default_Model_Section
                 and m.is_member_pling_excluded=0
                 and p.project_category_id = :cat_id
                 group by p.username,p.profile_image_url,p.member_id
-                order by SUM(m.credits_section) desc 
+                order by sum(m.credits_plings) desc 
                 limit 20";
         $resultSet = $this->getAdapter()->fetchAll($sql,array("cat_id"=>$cat_id));
         return $resultSet;    
