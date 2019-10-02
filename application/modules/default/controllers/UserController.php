@@ -89,10 +89,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
         $userRoleName = $helperUserRole->userRole();
         if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
-            $datetime = new DateTime();
-            $datetime->sub(new DateInterval('P1M'));
-            $month = $datetime->format('Ym');
-            $amount = $earnModel->getMonthEarn($this->_memberId, $month);
+            $amount = $earnModel->getLastMonthEarn($this->_memberId);
             if ($amount && $amount['amount']) {
                 $this->view->earnInfo = ' Last month I earned $' . number_format($amount['amount'], 2, '.', '') . '.';
             } else {
