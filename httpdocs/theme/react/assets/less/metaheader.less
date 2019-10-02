@@ -1594,9 +1594,23 @@
             right: 9px;
           }
 
-          #user-info-menu-item {
+          #user-info-menu-item , #user-info-payout{
             width: 100%;
             border-bottom: 1px solid #ccc;
+            &>ul.payout{
+                list-style: none;
+                padding:5px;
+                padding-left: 20px;
+                li{
+                  float: none;
+                  padding: 10px 20px;
+                  background-color: #f5f5f5;
+                  width: 100%;
+                  a{
+                    float: none;
+                  }
+                }
+            }
           }
 
 
