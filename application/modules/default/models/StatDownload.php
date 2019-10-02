@@ -689,6 +689,46 @@ class Default_Model_StatDownload
         
         
     }
+    
+    
+    public function getLastMonthEarn($member_id)
+    {
+        $sql = "SELECT TRUNCATE(SUM(sum_payout),2) AS amount
+                FROM (
+                        SELECT 
+                            `micro_payout`.yearmonth,
+                            SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_section END)/100 AS sum_payout
+                            FROM
+                                `micro_payout`
+                            WHERE `micro_payout`.`member_id` = :member_id 
+                            AND `micro_payout`.yearmonth = DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')
+                            GROUP BY `micro_payout`.yearmonth
+                        
+                        UNION ALL 
+                        
+                        SELECT 
+                                p2.yearmonth
+                                ,round(SUM(p2.tier)*(SELECT percent FROM affiliate_config WHERE p2.yearmonth >= active_from  AND p2.yearmonth <= active_until),2) AS sum_payout
+                        from section_support_paypements p2
+                        JOIN section_support s2 ON s2.section_support_id = p2.section_support_id
+                        JOIN support su2 ON su2.id = s2.support_id
+                        JOIN project pr2 ON pr2.project_id = s2.project_id
+                        JOIN member m2 ON m2.member_id = su2.member_id
+                        WHERE
+                           pr2.member_id = :member_id 
+                           AND p2.yearmonth = DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')
+                        
+                        
+                ) A2
+                GROUP BY yearmonth";
+ 
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('member_id' => $member_id));
+        return array_pop($resultSet);    
+       
+        
+        
+    }
+
 
 
     public function getPayoutHistory($member_id)
