@@ -100,8 +100,7 @@ class UserMenu extends React.Component {
     } else {
       userMenuContainerDisplay = (
         <ul className="metaheader-menu right" id="user-menu">
-
-        
+          { this.props.device === "mid" && chatItem }
           {developmentAppMenuDisplay}
           {userDropdownDisplay}
 
