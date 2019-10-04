@@ -128,9 +128,11 @@ div#preloaded-images {
                                 <span class="text"><?php echo $textCountryCity ?></span>
                                <?php endif; ?>
 
+                               <?php if($this->member->paypal_mail){?>
                                 <div class="btnSupportMe">
                                     <a class="btn btn-primary active" role="button" href="/support?creator_id=<?= $this->member->member_id ?>"> Support me </a>
                                 </div>
+                                <?php }?>
                             </div>
                             <div class="about-footer">
 

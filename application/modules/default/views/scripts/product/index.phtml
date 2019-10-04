@@ -84,6 +84,8 @@ $this->ratings = $tableProjectRatings->fetchRating($this->product->project_id);
  //    if($p['rating_active']==1) $cntRatingsActive =$cntRatingsActive+1;
  // }
 
+
+
 if (Zend_Auth::getInstance()->hasIdentity()){
     $this->ratingOfUser = $tableProjectRatings->getProjectRateForUser($this->product->project_id,$identity->member_id);
 }
@@ -116,8 +118,6 @@ $this->isowner = $isowner;
 
 $filesTable = new Default_Model_DbTable_PploadFiles();
 $countFiles = $filesTable->fetchFilesCntForProject($this->product->ppload_collection_id);
-
-
 $pics= $tableProject->getGalleryPictureSources($this->product->project_id);
 
 if(sizeof($pics)==0)
@@ -130,6 +130,8 @@ foreach ($pics as $p) {
 }
 
 $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
+
+
 ?>
     <link href="/theme/react/assets/css/get-it.css" type="text/css" rel="stylesheet"/>
 
@@ -916,18 +918,21 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                         
                         <!-- Support Box -->
                         <?php
-                            echo $this->partial(
-                                '/product/partials/support_box.phtml',
-                                array(
-                                    "authMember"  => $identity,
-                                    "project_id" => $this->product->project_id,
-                                    "project_title" => $this->product->title,
-                                    "ppload_collection_id" => $this->product->ppload_collection_id,
-                                    "project_category_id" => $this->product->project_category_id,
-                                    "project_category_title" => $this->product->cat_title,
-                                    "isAdmin" => $isAdmin
-                                )
-                            );
+                            if($this->product->paypal_mail)
+                            {
+                                echo $this->partial(
+                                    '/product/partials/support_box.phtml',
+                                    array(
+                                        "authMember"  => $identity,
+                                        "project_id" => $this->product->project_id,
+                                        "project_title" => $this->product->title,
+                                        "ppload_collection_id" => $this->product->ppload_collection_id,
+                                        "project_category_id" => $this->product->project_category_id,
+                                        "project_category_title" => $this->product->cat_title,
+                                        "isAdmin" => $isAdmin
+                                    )
+                                );
+                            }
                         ?>
 
                         <?php /* echo $this->render('partials/sidebarRating.phtml');  */ ?>
