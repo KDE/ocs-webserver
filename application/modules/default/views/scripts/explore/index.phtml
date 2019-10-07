@@ -197,7 +197,7 @@ if($this->inputFilterOriginal ==1)
                   </li>
                 <?php }?>
                   <li style="float: right">
-                      <input type="checkbox" name="filter_browse_original" value="1" id="filter_browse_original" <?=$checkedOriginal?> >  Original
+                      
 
 
                   <?php //Insert flexible tag-group-filter
@@ -311,8 +311,7 @@ $time_start = microtime(true);
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
             TooltipUser.setup("tooltipuserleft","left");
-            TooltipUser.setup("tooltipuser","right");
-            FilterBrowseOriginalFn.setup();
+            TooltipUser.setup("tooltipuser","right");            
             FilterBrowseTagGroupFn.setup();
         });
     ');

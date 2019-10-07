@@ -262,72 +262,20 @@ class UserController extends Local_Controller_Action_DomainSwitch
         if ($cnt > 0) {
             $userinfo = "Hi, I am <b>" . $username . "</b> and I create ";
             if ($cnt == 1) {
-                $userinfo = $userinfo . ' <b>' . $userProjectCategories[0]['category1'] . '</b>';
-                $userinfo = $userinfo . '.';
-                /* if($isAdmin)
-                 {
-                     $userinfo = $userinfo.' ('.$userProjectCategories[0]['cnt'].').';
-                 }else{
-                     $userinfo = $userinfo.'.';
-                 }*/
-            } else {
-                if ($cnt == 2) {
-                    $userinfo = $userinfo . ' <b>' . $userProjectCategories[0]['category1'] . '</b>';
-                    /*if($isAdmin)
-                    {
-                    $userinfo = $userinfo.' ('.$userProjectCategories[0]['cnt'].')';
-                    }*/
-                    $userinfo = $userinfo . ' and <b>' . $userProjectCategories[1]['category1'] . '</b>';
-                    /*if($isAdmin)
-                    {
-                        $userinfo = $userinfo.'('.$userProjectCategories[1]['cnt'].').';
-                    }else{
-                        $userinfo = $userinfo.'.';
-                    }*/
-                    $userinfo = $userinfo . '.';
-                } else {
-                    if ($cnt == 3) {
-                        $userinfo = $userinfo . ' <b>' . $userProjectCategories[0]['category1'] . '</b>';
-                        /*if($isAdmin)
-                        {
-                            $userinfo = $userinfo.' ('.$userProjectCategories[0]['cnt'].')';
-                        }*/
-                        $userinfo = $userinfo . ',<b> ' . $userProjectCategories[1]['category1'] . '</b>';
-                        /* if($isAdmin)
-                         {
-                             $userinfo = $userinfo.' ('.$userProjectCategories[1]['cnt'].')';
-                         }*/
-                        $userinfo = $userinfo . ' and <b>' . $userProjectCategories[2]['category1'] . '</b>';
-                        /*if($isAdmin)
-                        {
-                            $userinfo = $userinfo.' ('.$userProjectCategories[2]['cnt'].').';
-                        }*/
-                        /*else{
-                            $userinfo = $userinfo.'.';
-                        }*/
-                        $userinfo = $userinfo . '.';
-                    } else {
-                        if ($cnt > 3) {
-                            $userinfo = $userinfo . ' <b>' . $userProjectCategories[0]['category1'] . '</b>';
-                            /*if($isAdmin)
-                            {
-                            $userinfo = $userinfo.' ('.$userProjectCategories[0]['cnt'].')';
-                            }*/
-                            $userinfo = $userinfo . ', <b>' . $userProjectCategories[1]['category1'] . '</b>';
-                            /*if($isAdmin)
-                            {
-                            $userinfo = $userinfo.' ('.$userProjectCategories[1]['cnt'].')';
-                            }*/
-                            $userinfo = $userinfo . ', <b>' . $userProjectCategories[2]['category1'] . '</b>';
-                            /*if($isAdmin)
-                            {
-                            $userinfo = $userinfo.' ('.$userProjectCategories[2]['cnt'].')';
-                            }*/
-                            $userinfo = $userinfo . ' and more.';
-                        }
-                    }
-                }
-            }
+                $userinfo = $userinfo . ' <b>' . $userProjectCategories[0]['category1'] . '</b>.';                
+            }elseif($cnt == 2) {                
+                $userinfo = $userinfo . ' <b>' . $userProjectCategories[0]['category1'] . '</b>'
+                            . ' and <b>' . $userProjectCategories[1]['category1'] . '</b>.';                           
+            }elseif($cnt == 3) {                     
+                $userinfo = $userinfo . ' <b>' . $userProjectCategories[0]['category1'] . '</b>'                        
+                            . ', <b>' . $userProjectCategories[1]['category1'] . '</b>'
+                            . ' and <b>' . $userProjectCategories[2]['category1'] . '</b>.';                        
+            }else{                        
+                $userinfo = $userinfo . ' <b>' . $userProjectCategories[0]['category1'] . '</b>'
+                            . ', <b>' . $userProjectCategories[1]['category1'] . '</b>'
+                            . ', <b>' . $userProjectCategories[2]['category1'] . '</b>'
+                            . ' and more.';                        
+            }         
         }else{
             $userinfo = "Hi, I am <b>" . $username . "</b>.";
         }
@@ -336,13 +284,17 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $supportSections = $mModel->fetchSupporterSectionInfo($member_id);
         if($supportSections && $supportSections['sections'])
         {
-            if ($cnt == 0) {
-                $userinfo = $userinfo." I support ".$supportSections['sections'].".";
-            }else
-            {
-                $userinfo = $userinfo." I also support ".$supportSections['sections'].".";
+            $userinfo = $userinfo." I ".($cnt==0?" ":" also ")."support";
+            $sections = explode(",", $supportSections['sections']);
+            foreach ($sections as $s) {
+                $userinfo.=" <b>".$s."</b>, ";
             }
+            
+            $userinfo = trim($userinfo);
+            $userinfo = substr($userinfo, 0, -1);
         }
+
+
         
          if(substr($userinfo, strlen($userinfo)-1) <> ".")
          {

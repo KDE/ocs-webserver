@@ -87,7 +87,7 @@ $printDate = $printMonth->format('M Y');
         <div class="row">
             <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Status</strong></div>
             <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Affiliates</strong></div>
-            <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Sum Doantions</strong></div>
+            <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Sum Donations</strong></div>
             <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Percentage </strong></div>
             <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Sum Payout</strong></div>
         </div>
@@ -152,7 +152,7 @@ if ($countDownloadsOverall > 0) {
                 <?php
                 
                 
-                $sum_total_text = 'Possible payout for this month (<span style="font-size: smaller;">*</span>):';
+                $sum_total_text = 'Possible Affiliates payout for this month (<span style="font-size: smaller;">*</span>):';
                 
             }
 
@@ -171,7 +171,7 @@ if ($countDownloadsOverall > 0) {
     echo '<div class="tab-pane fade in active" id="'.$printDate.'">';
     echo '    <div style="text-align: center;" class="row margin-bottom-12"><div class="col-md-8 cell-default">No Data</div></div>';
     echo '    <div class="row row-total">';
-    echo '    <div class="col-md-2 text-right" style="min-width: 503px;">Possible payout for this month (<span style="font-size: smaller;">*</span>):</div>'
+    echo '    <div class="col-md-2 text-right" style="min-width: 503px;">Possible Affiliates payout for this month (<span style="font-size: smaller;">*</span>):</div>'
                 . '<div class="col-md-1 text-right" style="min-width: 190px;"></div>'
                 . '<div class="col-md-1 text-right" style="min-width: 190px;"></div>'
                 . '<div class="col-md-1 text-right" style="min-width: 190px;"><strong>$0.00</strong></div>';
@@ -190,14 +190,14 @@ if ($countDownloadsOverall > 0) {
     <div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0;">
         <div class="row">
             <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Section</strong></div>
-            <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Products</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Products" data-trigger="hover" data-html="true" data-content="Number of products within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+            <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Products</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Products" data-trigger="hover" data-html="true" data-content="Number of products this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
             <?php /*<div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Total Credits</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Total Credits" data-trigger="hover" data-html="true" data-content="Sum of all credits of all files (active or archived of this product within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>*/ ?>
-            <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong style="color: #BBB">Products Sum</strong></div>
+            <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong style="color: #BBB">Products Sum</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Products Sum" data-trigger="hover" data-html="true" data-content="Amount of all credits in US $."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
             <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
             <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong style="color: #BBB">Max Payout (A)</strong></div>
             <?php endif; ?>
-            <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Section-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Section-Factor" data-trigger="hover" data-html="true" data-content="The Section-Factor's depends on the product section and the funding of this section.<br>A factor of '1' means:<br>The Ratio between funding and payout is equal.<br>A factor < 1 means:<br>The section is underfunded.<br>A factor > 1 means:<br>The section is overfunded.<br>Until the month is complete this value shows an estimate."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-            <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Potential Payout</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Section-Factor" data-trigger="hover" data-html="true" data-content="When the month is complete the potential payout shows the most likely payout amount."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+            <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Section-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Section-Factor" data-trigger="hover" data-html="true" data-content="The Section-Factor depends on the funding. <br>A factor of '1' means:<br>Funding and payout are equal.<br>A factor < 1 means:<br>The section is underfunded.<br>A factor > 1 means:<br>The section is overfunded.<br>Until the month is complete this value shows an estimate."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+            <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap; min-width: 190px;"><strong>Potential Payout</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Potential Payout" data-trigger="hover" data-html="true" data-content="Sum based on Section-Factor."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
 
         </div>
     </div>
@@ -306,7 +306,7 @@ if ($countDownloadsOverall > 0) {
                 $sum_total_month_max += $payout_sum_max;
                 $sum_total_payout_max = $currency->toCurrency($sum_total_month_max);
                 
-                $sum_total_text = 'Possible payout for this month (<span style="font-size: smaller;">*</span>):';
+                $sum_total_text = 'Possible Downloads/Mediaviews payout for this month (<span style="font-size: smaller;">*</span>):';
                 
                 $payout_success = false;
                 if ($section['payout_status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
@@ -367,7 +367,7 @@ if ($countDownloadsOverall > 0) {
     echo '<div class="tab-pane fade in active" id="'.$printDate.'">';
     echo '    <div style="text-align: center;" class="row margin-bottom-12"><div class="col-md-8 cell-default">No Data</div></div>';
     echo '    <div class="row row-total">';
-    echo '        <div class="col-md-1 text-right" style="min-width: 150px;"></div><div class="col-md-4 text-right"></div><div class="col-md-3 text-right" style="min-width: 570px;">Possible payout for this month (<span style="font-size: smaller;">*</span>):</div><div class="col-md-1 text-right" style="min-width: 190px;"><strong>$0.00</strong></div>';
+    echo '        <div class="col-md-1 text-right" style="min-width: 150px;"></div><div class="col-md-4 text-right"></div><div class="col-md-3 text-right" style="min-width: 570px;">Possible Downloads/Mediaviews payout for this month (<span style="font-size: smaller;">*</span>):</div><div class="col-md-1 text-right" style="min-width: 190px;"><strong>$0.00</strong></div>';
     echo '    </div>';
     echo '</div>';
 }
@@ -396,6 +396,8 @@ if ($countDownloadsOverall > 0) {
     
 <script>
 $(document).ready(function(){ 
+    
+    $('[data-toggle="popover"]').popover();
     
     $('[data-toggle="sectiondetailajax"]').click(function(e) {
         var $this = $(this),
