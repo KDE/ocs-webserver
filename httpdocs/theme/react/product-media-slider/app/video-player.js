@@ -110,7 +110,6 @@ class VideoPlayerWrapper extends React.Component {
                         <BigPlayButton position="center" />
                         <LoadingSpinner />
                         <ControlBar className="custom-video-player">
-                            <a className="next-slide-video" onClick={this.props.onNextSlideClick} order={4.1}><span className="glyphicon glyphicon-step-forward"></span></a>
                             <VolumeMenuButton order={4.2} />
                             <CurrentTimeDisplay order={4.3} />
                             <DurationDisplay order={7.1} />

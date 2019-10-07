@@ -209,6 +209,12 @@ video:focus {
   position: absolute;
   right: 0em;
 }
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-play-progress {
+  background-color: #ff0000;
+}
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-play-progress::before {
+  color: #ff0000;
+}
 #media-slider .swiper-wrapper .react-player-container .cinema-mode-button {
   line-height: 3em;
   display: inline-block;
