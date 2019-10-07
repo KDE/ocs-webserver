@@ -166,9 +166,13 @@ video:focus {
   background-color: transparent;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-bar.video-react-slider-horizontal .video-react-volume-level {
-  height: 0.4em;
+  height: 0.5em;
   top: 1.65em;
   left: 0.5em;
+}
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-bar.video-react-slider-horizontal .video-react-volume-level::before {
+  font-size: 1.2em;
+  top: -0.2em;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-menu-button-horizontal::before {
   width: 1.5em;
@@ -192,10 +196,20 @@ video:focus {
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-progress-control.video-react-control .video-react-mouse-display {
   background-color: transparent !important;
 }
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-progress-control.video-react-control .video-react-mouse-display::after {
+  font-size: 0.8em;
+}
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-progress-control.video-react-control .video-react-progress-holder {
   height: 100%;
   padding: 13px 0;
   background: none;
+  margin: 0;
+}
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-progress-control.video-react-control .video-react-progress-holder .video-react-play-progress::before {
+  visibility: hidden;
+}
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-progress-control.video-react-control .video-react-progress-holder:hover .video-react-play-progress::before {
+  visibility: visible !important;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-progress-control.video-react-control .video-react-slider-bar,
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-progress-control.video-react-control .video-react-load-progress {

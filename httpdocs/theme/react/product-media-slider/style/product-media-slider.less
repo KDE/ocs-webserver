@@ -180,9 +180,14 @@ video:focus {
                   background-color: transparent;
 
                   .video-react-volume-level {
-                    height: 0.4em;
+                    height: 0.5em;
                     top: 1.65em;
                     left: 0.5em;
+
+                    &::before {
+                      font-size:1.2em;
+                      top:-0.2em;
+                    }
                   }
                 }
 
@@ -212,12 +217,31 @@ video:focus {
 
                   .video-react-mouse-display {
                     background-color: transparent !important;
+
+                    &::after {
+                      font-size:0.8em;
+                    }
                   }
 
                     .video-react-progress-holder {
                         height: 100%;
                         padding: 13px 0;
                         background: none;
+                        margin: 0;
+
+                        .video-react-play-progress {
+                          &::before {
+                            visibility: hidden;
+                          }
+                        }
+
+                        &:hover {
+                          .video-react-play-progress {
+                            &::before {
+                              visibility: visible !important;
+                            }
+                          }
+                        }
                     }
                     .video-react-slider-bar,
                     .video-react-load-progress {
