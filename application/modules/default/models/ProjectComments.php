@@ -103,7 +103,8 @@ class Default_Model_ProjectComments
                         and  t.member_id = comments.comment_member_id   and t.status_id=2
                         and s.is_active = 1
                     ) as issupporter
-                    ,(select score from project_rating where project_rating.comment_id = comments.comment_id ) as rating               
+                    ,(select score from project_rating where project_rating.comment_id = comments.comment_id ) as rating     
+                    ,(select score from project_rating r where r.project_id =:project_id and rating_active = 1 and r.member_id = comments.comment_member_id) as rating_member          
                     ,member.roleid
                     FROM comments 
                     STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id                                 
@@ -124,7 +125,8 @@ class Default_Model_ProjectComments
                         and  t.member_id = comments.comment_member_id   and t.status_id=2
                         and s.is_active = 1
                     ) as issupporter
-               ,(select score from project_rating where project_rating.comment_id = comments.comment_id ) as rating    
+               ,(select score from project_rating where project_rating.comment_id = comments.comment_id ) as rating  
+               ,(select score from project_rating r where r.project_id =:project_id and rating_active = 1 and r.member_id = comments.comment_member_id) as rating_member    
                ,member.roleid     
                 FROM comments 
                 STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id                 
@@ -137,6 +139,9 @@ class Default_Model_ProjectComments
                 'project_id'    => $project_id
             ))
         ;
+
+
+
         $rowset = array_merge($rowset, $rowset2);
 
         /* create array with comment_id as key */
