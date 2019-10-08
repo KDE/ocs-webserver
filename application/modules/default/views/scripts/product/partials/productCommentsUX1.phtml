@@ -258,7 +258,7 @@ if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
 </div>
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){                      
-            AjaxForm.setup("form.product-add-comment", "div#product-discussion");
-            ProductDetailCommentTooltip.setup();
+            AjaxForm.setup("form.product-add-comment", "div#product-discussion");                
+            generateTooltipster($(".comments-list").find(".tooltipuser"),"right");
         });
     ');
