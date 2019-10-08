@@ -255,6 +255,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'loadinstallinstruction',
             'gettaggroupsforcatajax',
             'getfilesajax',
+            'getfiletagsajax',
             'startvideoajax',
             'stopvideoajax',
             'loadfirstfilejson'
