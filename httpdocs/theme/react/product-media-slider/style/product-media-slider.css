@@ -100,6 +100,8 @@ video:focus {
   opacity: 1;
   height: 6em;
   padding-top: 2em;
+  padding-right: 1em;
+  padding-left: 1em;
   background-color: rgba(0, 0, 0, 0.7);
   background: transparent;
   background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #000000), color-stop(1, transparent));
@@ -221,7 +223,7 @@ video:focus {
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-fullscreen-control {
   position: absolute;
-  right: 0em;
+  right: 1em;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-play-progress {
   background-color: #ff0000;
@@ -237,7 +239,7 @@ video:focus {
   text-transform: uppercase;
   cursor: pointer;
   position: absolute;
-  right: 4em;
+  right: 5em;
 }
 #media-slider .swiper-wrapper .react-player-container .cinema-mode-button span {
   display: block;
