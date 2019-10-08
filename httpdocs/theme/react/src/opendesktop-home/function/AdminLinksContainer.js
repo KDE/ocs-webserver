@@ -38,6 +38,17 @@ function AdminlLinksContainer(props)
             </a>
           </li>
 
+          <li id="unpublished-link-item">
+            <a href={props.baseUrlStore+"/spam/unpublishedproduct"} >
+              <span>List of unpublished products</span>
+            </a>
+          </li>
+          <li id="list-newproduct-link-item">
+            <a href={props.baseUrlStore+"/spam/newproduct"} >
+              <span>List of new products (published or unpublished) less than 2 months </span>
+            </a>
+          </li>
+
           <li id="backend-link-item">
             <a href={props.baseUrlStore+"/backend"} >
               <span>Backend</span>
