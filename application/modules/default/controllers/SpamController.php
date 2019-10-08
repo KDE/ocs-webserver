@@ -50,6 +50,16 @@ class SpamController extends Local_Controller_Action_DomainSwitch
         
     }
 
+    public function newproductAction()
+    {   
+        $this->view->headTitle('Spam - new products < 2 months','SET');
+        
+    }
+    public function unpublishedproductAction()
+    {
+        $this->view->headTitle('Spam - Unpublished Products','SET');
+    }
+
     public function paypalAction()
     {   
         $this->view->headTitle('Spam - Paypal','SET');
@@ -147,6 +157,159 @@ class SpamController extends Local_Controller_Action_DomainSwitch
 
     }
 
+    public function newproductlistAction()
+    {   
+        $filter['filter_section'] = $this->getParam('filter_section');
+
+        $startIndex = (int)$this->getParam('jtStartIndex');
+        $pageSize = (int)$this->getParam('jtPageSize');
+        $sorting = $this->getParam('jtSorting');     
+
+        if(!isset($sorting))
+        {
+            $sorting = ' earn desc, created_at desc';
+        }        
+
+        $sql = "
+                select ss.section_id, ss.name as section_name, pp.project_id,pp.status,pp.member_id, pp.created_at, m.username, m.paypal_mail,m.created_at as member_since, c.title cat_title,c.lft, c.rgt
+                ,(select sum(probably_payout_amount) amount
+                from member_dl_plings pl
+                where pl.project_id=pp.project_id
+                and pl.member_id = pp.member_id
+                and pl.yearmonth= DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')
+                and pl.is_pling_excluded = 0 
+                and pl.is_license_missing = 0
+                ) as earn                    
+                from
+                project pp                    
+                ,member m
+                ,project_category c
+                ,section_category s
+                ,section ss
+                where pp.member_id = m.member_id 
+                and pp.project_category_id = c.project_category_id and m.is_deleted=0 and m.is_active = 1
+                and s.project_category_id = c.project_category_id
+                and s.section_id = ss.section_id
+                and pp.created_at > (CURRENT_DATE() - INTERVAL 2 MONTH)                                            
+                                        
+        ";
+        if($filter['filter_section'])
+        {
+            $sql.=" and ss.section_id = ".$filter['filter_section'];
+        }
+        $sql .= ' order by ' . $sorting;
+        $sql .= ' limit ' . $pageSize;
+        $sql .= ' offset ' . $startIndex;
+        $printDateSince = new Default_View_Helper_PrintDateSince();
+        $filesize = new Default_View_Helper_HumanFilesize();
+        $results = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+                
+        $tmpsql = "select lft, rgt from project_category where project_category_id=295";
+        $wal =Zend_Db_Table::getDefaultAdapter()->fetchRow($tmpsql);            
+        $lft = $wal['lft'];
+        $rgt = $wal['rgt'];
+        foreach ($results as &$value) {
+            $value['created_at'] = $printDateSince->printDateSince($value['created_at']);                
+            if($value['earn'] && $value['earn']>0)
+            {
+                 $value['earn'] = number_format($value['earn'] , 2, '.', '');
+            }             
+            if($value['lft'] >= $lft && $value['rgt'] <= $rgt)
+            {
+                $value['is_wallpaper'] = 1;
+            }else{
+                $value['is_wallpaper'] = 0;
+            }
+        }
+
+        $sqlTotal = "select count(1) as cnt
+                from
+                project pp                    
+                ,member m
+                ,project_category c
+                ,section_category s
+                ,section ss
+                where pp.member_id = m.member_id 
+                and pp.project_category_id = c.project_category_id and m.is_deleted=0 and m.is_active = 1
+                and s.project_category_id = c.project_category_id
+                and s.section_id = ss.section_id
+                and pp.created_at > (CURRENT_DATE() - INTERVAL 2 MONTH)   ";
+
+        if($filter['filter_section'])
+        {
+            $sqlTotal.=" and ss.section_id = ".$filter['filter_section'];
+        }
+        $resultsCnt = Zend_Db_Table::getDefaultAdapter()->fetchRow($sqlTotal);
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+        $jTableResult['Records'] = $results;        
+        $jTableResult['TotalRecordCount'] = $resultsCnt['cnt'];
+        $this->_helper->json($jTableResult);
+
+    }
+
+
+    public function unpublishedproductlistAction()
+    {
+        $startIndex = (int)$this->getParam('jtStartIndex');
+        $pageSize = (int)$this->getParam('jtPageSize');
+        $sorting = $this->getParam('jtSorting');     
+
+        if(!isset($sorting))
+        {
+            $sorting = ' created_at desc';
+        }        
+
+        $sql = "
+                select pp.project_id,pp.status,pp.member_id, pp.created_at, m.username, m.paypal_mail,m.created_at as member_since, c.title cat_title,c.lft, c.rgt
+                    ,(select sum(probably_payout_amount) amount
+                    from member_dl_plings 
+                    where member_id=pp.member_id
+                    and yearmonth= DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')
+                    and is_pling_excluded = 0 
+                    and is_license_missing = 0
+                    ) as earn                    
+                    from
+                    project pp                    
+                    ,member m
+                    ,project_category c
+                    where pp.status <> 100 and pp.member_id = m.member_id
+                    and pp.project_category_id = c.project_category_id and m.is_deleted=0 and m.is_active = 1
+                                        
+        ";
+        $sql .= ' order by ' . $sorting;
+        $sql .= ' limit ' . $pageSize;
+        $sql .= ' offset ' . $startIndex;
+        $printDateSince = new Default_View_Helper_PrintDateSince();
+        $filesize = new Default_View_Helper_HumanFilesize();
+        $results = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+                
+        $tmpsql = "select lft, rgt from project_category where project_category_id=295";
+        $wal =Zend_Db_Table::getDefaultAdapter()->fetchRow($tmpsql);            
+        $lft = $wal['lft'];
+        $rgt = $wal['rgt'];
+        foreach ($results as &$value) {
+            $value['created_at'] = $printDateSince->printDateSince($value['created_at']);                
+            if($value['earn'] && $value['earn']>0)
+            {
+                 $value['earn'] = number_format($value['earn'] , 2, '.', '');
+            }             
+            if($value['lft'] >= $lft && $value['rgt'] <= $rgt)
+            {
+                $value['is_wallpaper'] = 1;
+            }else{
+                $value['is_wallpaper'] = 0;
+            }
+        }
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+        $jTableResult['Records'] = $results;        
+        $jTableResult['TotalRecordCount'] = 1000;
+        $this->_helper->json($jTableResult);
+
+    }
+
     public function productfilesAction()
     {
         $startIndex = (int)$this->getParam('jtStartIndex');
@@ -180,7 +343,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
                         count(1) cntfiles,
                         sum(size) size
                         from 
-                        pling.project p,
+                        project p,
                         ppload.ppload_files f
                         where p.ppload_collection_id = f.collection_id
                         group by p.project_id

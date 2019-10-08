@@ -1,0 +1,208 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+
+<style type="text/css">
+        
+
+        div.jtable-main-container table.jtable tbody > tr > td{
+            vertical-align: top;
+            border-left:0px;
+            border-right:0px;
+            font-size: small;
+        }
+        div.jtable-main-container table.jtable{
+            border: 0px;
+        }
+        div.jtable-main-container table.jtable th{
+            border: 0px;
+            background: none;
+            font-weight: bold;
+        }
+        
+        #TableContainer
+        {
+            padding: 20px;
+        }
+        #titleheader{
+            padding-left: 20px;
+            padding-top: 100px;
+        }
+
+        a.btn-xs
+        {
+            line-height: 12px;
+            padding: 3px 5px;
+            border-radius: 2px;
+            margin: 2px;
+            float: right;
+        }
+        
+
+        div.jtable-main-container table.jtable .tooltipuser{
+            color: #2673b0;
+            cursor: pointer;
+        }
+
+        div.jtable-main-container img.avatar{
+                width: 50px;
+                border: 1px solid #dbdbdb;
+                -webkit-border-radius: 999px;
+                -moz-border-radius: 999px;
+                border-radius: 999px;
+                -webkit-background-clip: padding-box;
+                -moz-background-clip: padding;
+                background-clip: padding-box;
+                display: block;
+        }
+       
+       a.removeuser{
+        display: block;
+       }
+
+       .aligncenter
+       {
+        text-align: center;
+       }
+
+
+</style>
+
+<link href="/theme/backend/lib/jquery-ui/themes/smoothness/jquery-ui.min.css" rel="stylesheet">
+<link href="/theme/backend/lib/jtable/themes/jqueryui/jtable_jqueryui.min.css" rel="stylesheet">
+<script src="/theme/backend/lib/jquery-ui/jquery-ui.min.js"></script>
+<script src="/theme/backend/lib/jtable/jquery.jtable.min.js"></script>
+
+<div class="messages">
+
+</div>
+<div class="tooltip_templates" style="display:none">
+      <span id="tooltip_content">
+          <i class="fa fa-spinner"></i>
+      </span>
+  </div>
+<div id="titleheader"> <h1>List of unpublished products </h1></div>
+<div id="TableContainer"></div>
+<div id="dialog-form" title="Object Details"></div>
+<div id="dialog-confirm" title="Confirm"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: false,            
+            actions: {
+                listAction: '/spam/unpublishedproductlist',                                       
+            },
+            recordsLoaded: function (event, data) {
+                TooltipUser.setup("tooltipuser","right");        
+            },
+            rowInserted: function (event, data) {
+               if (data.record.is_wallpaper==1) {                   
+                    data.row.css("background", "#F7F7E1");                   
+               }
+
+            },
+            fields: {
+                project_id: {
+                    key: true,
+                    title: 'project id',
+                    create: false,
+                    edit: false,
+                    list: true
+                }, 
+                cat_title: {                    
+                    title: 'category',
+                    create: false,
+                    edit: false,
+                    list: true
+                }, 
+                                              
+                
+                created_at: {
+                    title: 'created',
+                    width: '10%',                  
+                    create: false,
+                    edit: false
+                },
+                member_id: {
+                    title: 'by',
+                    width: '5%',
+                    edit: false,                    
+                    display:function(data){                        
+                        var html = '<a href="/u/'+data.record.username+'" target="_blank" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+data.record.member_id+'" >';
+
+                        if(data.record.is_deleted==1)
+                        {
+                            html += '<span style="color:red">'+data.record.username+'</span></a>';
+                        }else{
+                            html=html+data.record.username+'</a>';    
+                        }
+                        
+                       
+                         return html;
+                    }
+                },                
+                earn: {
+                    title: 'last month earn',
+                    width: '10%',                    
+                    create: false,
+                    edit: false,
+                    display:function(data){                          
+                        return data.record.earn;
+                    }
+                  
+                },
+                paypal_mail: {
+                    title: 'paypal',
+                    width: '10%',                    
+                    create: false,
+                    edit: false,
+                  
+                }
+                
+            }
+        });
+
+        //$('#TableContainer').jtable('load');
+        $('#TableContainer').jtable('load', {},function(){
+              //TooltipUser.setup("tooltipuser","right");        
+            });
+
+        $("#dialog-form").dialog({
+            autoOpen: false,
+            //height: 350,
+            width: 600,
+            modal: true,
+            buttons: {
+                Close: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+       
+
+
+
+    });
+</script>
