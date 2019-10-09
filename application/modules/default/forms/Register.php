@@ -45,7 +45,6 @@ class Default_Form_Register extends Zend_Form
         $userEmptyCheck = new Zend_Validate_NotEmpty();
         $userEmptyCheck->setMessage('RegisterFormUsernameErr', Zend_Validate_NotEmpty::IS_EMPTY);
         $userNameLength = new Zend_Validate_StringLength(array('min' => 4, 'max' => 20));
-        $groupNameExists = new Local_Validate_GroupnameExistsInOpenCode();
 
         $fname = $this->createElement('text', 'username')
                       ->setDecorators(array('ViewHelper', 'Errors'))
@@ -56,9 +55,14 @@ class Default_Form_Register extends Zend_Form
                       ->addValidator($userNameLength, true)
                       ->addValidator($usernameValidChars, true)
                       ->addValidator($userExistCheck, true)
-                      ->addValidator($groupNameExists, true)
                       ->setAttrib('placeholder', 'Username (4 chars minimum)')
                       ->setAttrib('class', 'form-control');
+
+        $opencode = Zend_Registry::get('config')->settings->server->opencode;
+        if ($opencode->host) {
+            $groupNameExists = new Local_Validate_GroupnameExistsInOpenCode();
+            $fname->addValidator($groupNameExists, true);
+        }
 
         $mailValidCheck = new Zend_Validate_EmailAddress();
         $mailValidCheck->setMessage('RegisterFormEmailErrNotValid', Zend_Validate_EmailAddress::INVALID)

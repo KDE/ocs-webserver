@@ -1,4 +1,7 @@
-slirconfig.class.php
-cache/*
-slir-error-log
-data/*
+# Ignore everything in this directory
+*
+# Except this file
+!.gitignore
+!cache/.gitignore
+!data/tmp/.gitignore
+!data/.gitignore

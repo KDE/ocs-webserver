@@ -50,8 +50,11 @@ class Default_View_Helper_Image extends Zend_View_Helper_Abstract
             return $this->createImageUri($filename, $options);
         }
 
-        $httpScheme = 'https';
-        $uri = $this->replaceScheme($filename, $httpScheme);
+        $uri = $filename;
+        if (false === $this->isLocalhost($filename)) {
+            $httpScheme = 'https';
+            $uri = $this->replaceScheme($filename, $httpScheme);
+        }
 
         if (empty($options)) {
 
@@ -144,6 +147,23 @@ class Default_View_Helper_Image extends Zend_View_Helper_Abstract
         $uri = preg_replace("/\d\d\dx\d\d\d/", $dimension, $filename);
 
         return $uri;
+    }
+
+    /**
+     * @param string $filename
+     * @return bool
+     */
+    private function isLocalhost($filename)
+    {
+        $host = parse_url($filename, PHP_URL_HOST);
+
+        $whitelist = array('127.0.0.1', '::1', 'localhost');
+
+        if (in_array($host, $whitelist)) {
+            return true;
+        }
+
+        return false;
     }
 
 }

@@ -237,6 +237,10 @@ class Ppload_Api
 
     protected function _request($method, $uri = '', array $params = null)
     {
+        if (empty($this->_config['apiUri'])) {
+            return false;
+        }
+
         $timeout = 60;
         $postFields = array(
             'method' => $method,

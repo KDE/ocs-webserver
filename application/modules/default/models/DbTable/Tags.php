@@ -138,10 +138,10 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     {
         return $this->fetchForGroupForSelect(Default_Model_DbTable_Tags::TAG_GROUP_PACKAGETYPE);
     }
-    
-    
+
+
     /**
-     * @return array
+     * @return int
      */
     public function fetchGhnsExcludedTagId()
     {
@@ -153,20 +153,24 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
         // }
         // return null;
     }
-    
-    
-    
+
+
     /**
      * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Statement_Exception
      */
     public function fetchLicenseTagsForSelect()
     {
         return $this->fetchForGroupForSelect(Default_Model_DbTable_Tags::TAG_GROUP_LICENSE);
     }
-    
+
     /**
      * @param int|array $groupId
+     * @param bool      $withGroup
      * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Statement_Exception
      */
     public function fetchForGroupForSelect($groupId, $withGroup = false)
     {
@@ -182,9 +186,10 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
             }
 
             $sql = "
-                SELECT t.*,case when tg.group_display_name IS NULL OR LENGTH(tg.group_display_name) = 0 then tg.group_name ELSE tg.group_display_name END AS group_name  FROM tag t
-                JOIN tag_group_item g on g.tag_id = t.tag_id
-                JOIN tag_group tg ON tg.group_id = g.tag_group_id
+                SELECT t.*,case when tg.group_display_name IS NULL OR LENGTH(tg.group_display_name) = 0 then tg.group_name ELSE tg.group_display_name END AS group_name  
+                FROM tag AS t
+                JOIN tag_group_item AS g on g.tag_id = t.tag_id
+                JOIN tag_group AS tg ON tg.group_id = g.tag_group_id
                 WHERE g.tag_group_id IN ($inQuery)
                 and is_active = 1
                 ORDER BY t.tag_fullname
@@ -192,22 +197,23 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
 
             $tagsList = $this->_db->query($sql, $groupId)->fetchAll();
 
-            if($withGroup) {
-                $tags['header'] = $tagsList[0]['group_name']; 
+            if ($withGroup) {
+                $tags['header'] = $tagsList[0]['group_name'];
             }
-            
+
             foreach ($tagsList as $tag) {
-                $tags[$tag['tag_id']] = $tag['tag_fullname']; 
+                $tags[$tag['tag_id']] = $tag['tag_fullname'];
             }
-            
+
             if (count($tags) == 0) {
                 $tags = array();
             }
             $cache->save($tags, $cacheName, array(), 3600);
         }
+
         return $tags;
     }
-    
+
     /**
      * @return array
      */

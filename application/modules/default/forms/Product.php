@@ -473,20 +473,20 @@ class Default_Form_Product extends Zend_Form
             $memberTable = new Default_Model_Member();
             $member = $memberTable->fetchMemberData($this->member_id);
             $gitlab_user_id = null;
-            if(!empty($member->gitlab_user_id)) {
+            if (!empty($member->gitlab_user_id)) {
                 //get gitlab user id from db
                 $gitlab_user_id = $member->gitlab_user_id;
             } else {
                 //get gitlab user id from gitlab API and save in DB
                 $gitUser = $gitlab->getUserWithName($member->username);
-                
+
                 if ($gitUser && null != $gitUser) {
                     $gitlab_user_id = $gitUser['id'];
                     $memberTableExternal = new Default_Model_DbTable_MemberExternalId();
                     $memberTableExternal->updateGitlabUserId($this->member_id, $gitlab_user_id);
                 }
             }
-            
+
             if ($gitlab_user_id && null != $gitlab_user_id) {
                 try {
                     //now get his projects
@@ -503,15 +503,14 @@ class Default_Form_Product extends Zend_Form
         }
 
         return $element->setFilters(array('StringTrim'))->setMultiOptions($optionArray)->setDecorators(array(
+            array(
+                'ViewScript',
                 array(
-                    'ViewScript',
-                    array(
-                        'viewScript' => 'product/viewscripts/input_gitlab_project_id.phtml',
-                        'placement'  => false
-                    )
+                    'viewScript' => 'product/viewscripts/input_gitlab_project_id.phtml',
+                    'placement'  => false
                 )
-            ))
-            ;
+            )
+        ));
     }
 
     private function getShowGitlabProjectIssues()

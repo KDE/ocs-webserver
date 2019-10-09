@@ -30,11 +30,12 @@ class Default_Model_Ocs_HttpTransport_OAuthServer
 
     /**
      *
-     * @param Zend_Db_Adapter_Abstract|null $dbAdapter
-     * @param null                          $tableName
-     * @param Zend_Config                   $config
+     * @param Zend_Config $config
      *
+     * @throws Zend_Cache_Exception
      * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Uri_Exception
      */
     public function __construct(Zend_Config $config)
     {
@@ -45,7 +46,7 @@ class Default_Model_Ocs_HttpTransport_OAuthServer
 
         $this->_cache = $this->initCache();
         $uri = $this->_config->host;
-        $this->httpClient = new Zend_Http_Client($uri, array('keepalive' => true, 'strictredirects' => true, 'timeout' => 120));
+        $this->httpClient = new Zend_Http_Client($uri,array('keepalive' => true, 'strictredirects' => true, 'timeout' => 120));
         $this->httpClient->setCookieJar();
     }
 
@@ -121,7 +122,7 @@ class Default_Model_Ocs_HttpTransport_OAuthServer
 
         if ($response->getStatus() != 200) {
             throw new Zend_Exception('push user data failed. OCS ID server send message: ' . $response->getBody() . PHP_EOL
-                . $jsonUserData . PHP_EOL);
+                                     . $jsonUserData . PHP_EOL);
         }
 
         $this->messages[] = $response->getBody();
@@ -145,8 +146,7 @@ class Default_Model_Ocs_HttpTransport_OAuthServer
             $this->_cache->save($token, $cache_name, array(), false);
         }
         Zend_Registry::get('logger')->debug(__METHOD__ . " - microtime:" . microtime(true) . " expire_at: "
-            . print_r($token->expire_at, true))
-        ;
+                                            . print_r($token->expire_at, true));
         if (isset($token) AND (microtime(true) > $token->expire_at)) {
             $token = $this->requestHttRefreshToken($token->refresh_token);
             $token->expire_at = microtime(true) + $token->expires_in;
