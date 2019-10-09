@@ -144,7 +144,7 @@ video:focus {
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-bar.video-react-slider-vertical .video-react-volume-level::before {
   position: absolute;
-  font-size: 1.4em;
+  font-size: 1.6em;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-bar.video-react-slider-vertical .video-react-volume-level::before {
   top: -0.2em;
@@ -173,8 +173,9 @@ video:focus {
   left: 0.5em;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-bar.video-react-slider-horizontal .video-react-volume-level::before {
-  font-size: 1.2em;
-  top: -0.2em;
+  font-size: 1.6em;
+  top: -0.3em;
+  right: -0.4em;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-menu-button-horizontal::before {
   width: 1.5em;
