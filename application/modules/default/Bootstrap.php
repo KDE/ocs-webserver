@@ -1018,11 +1018,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'action'     => 'projectdetail'
             )));
 
-        $router->addRoute('clones', new Zend_Controller_Router_Route('/clones', array(
+        $router->addRoute('clones', new Zend_Controller_Router_Route('/clones/*', array(
             'module'     => 'default',
             'controller' => 'credits',
             'action'     => 'index'
         )));
+
+
 
         $cache->save($router, 'ProjectRouter', array('router'), 14400);
 
