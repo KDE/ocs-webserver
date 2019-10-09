@@ -29,22 +29,32 @@ class Default_Model_Spam
 
     /**
      * naive approach for spam detection
-     * @todo: define a list of stop words
-     *
      * @param array $project_data
      *
      * @return bool
+     * @todo: define a list of stop words
+     *
      */
     public static function hasSpamMarkers($project_data)
     {
-        $sql = "SELECT spam_key_word FROM spam_keywords WHERE spam_key_is_active = 1 AND spam_key_is_deleted = 0";
+        try {
+            $active = (boolean)Zend_Registry::get('config')->settings->spam->filter->active;
+        } catch (Zend_Exception $e) {
+            $active = false;
+        }
+
+        if (false === $active) {
+            return false;
+        }
+
+        $sql = "SELECT `spam_key_word` FROM `spam_keywords` WHERE `spam_key_is_active` = 1 AND `spam_key_is_deleted` = 0";
         $keywords = Zend_Db_Table::getDefaultAdapter()->fetchCol($sql);
 
         $needles = implode('|', $keywords);
 
         $haystack = implode(" ", array($project_data['title'], $project_data['description']));
 
-        if(preg_match("/({$needles})/i", $haystack)){
+        if (preg_match("/({$needles})/i", $haystack)) {
             return true;
         }
 
@@ -67,7 +77,5 @@ class Default_Model_Spam
             return array();
         }
     }
-
-    
 
 }

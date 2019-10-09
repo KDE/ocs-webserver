@@ -56,6 +56,10 @@ class Default_Model_Ocs_Gitlab
     protected function getHttpClient($uri)
     {
         try {
+            if (empty($uri)) {
+                return new Zend_Http_Client(null, array('keepalive' => true, 'strictredirects' => true));
+            }
+
             return new Zend_Http_Client($uri, array('keepalive' => true, 'strictredirects' => true));
         } catch (Zend_Exception $e) {
             throw new Default_Model_Ocs_Gitlab_Exception('Can not create http client for uri: ' . $uri, 0, $e);
@@ -68,8 +72,6 @@ class Default_Model_Ocs_Gitlab
      * @return bool
      * @throws Default_Model_Ocs_Exception
      * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
      */
     public function unblockUserProjects($member_data)
     {
@@ -178,10 +180,7 @@ class Default_Model_Ocs_Gitlab
      * @param $username
      *
      * @return array|false
-     * @throws Default_Model_Ocs_Exception
      * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
      */
     public function getUser($extern_uid, $username)
     {
@@ -213,77 +212,103 @@ class Default_Model_Ocs_Gitlab
      * @param string $extern_uid
      *
      * @return array
-     * @throws Default_Model_Ocs_Exception
      * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
      */
     public function getUserByExternUid($extern_uid)
     {
         $uri = $this->config->host . "/api/v4/users?extern_uid={$extern_uid}&provider=" . $this->config->provider_name;
-        $this->httpClient->setUri($uri);
-        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
-        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
-        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
-        $this->httpClient->setMethod(Zend_Http_Client::GET);
-
-        $response = $this->httpClient->request();
-
-        $body = Zend_Json::decode($response->getRawBody());
+        $body = $this->httpRequest($uri, $extern_uid);
 
         if (count($body) == 0) {
             return array();
         }
 
-        if (array_key_exists("message", $body)) {
-            $result_code = substr(trim($body["message"]), 0, 3);
-            if ((int)$result_code >= 300) {
-                throw new Default_Model_Ocs_Exception($body["message"]);
-            }
-        }
-
-        Zend_Registry::get('logger')->debug(__METHOD__ . " - body: " . $response->getRawBody());
+        Zend_Registry::get('logger')->debug(__METHOD__ . " - body: " . $body);
 
         return $body[0];
+    }
+
+    /**
+     * @param string     $uri
+     * @param string     $uid
+     * @param string     $method
+     * @param array|null $post_param
+     *
+     * @return bool|array
+     */
+    protected function httpRequest($uri, $uid, $method = Zend_Http_Client::GET, $post_param = null)
+    {
+        $body = array();
+        try {
+            $this->httpClient->setUri($uri);
+        } catch (Zend_Http_Client_Exception $e) {
+            $this->messages[] = 'Request failed.(' . $uri . ') setUri error message: ' . $e->getMessage();
+
+            return false;
+        } catch (Zend_Uri_Exception $e) {
+            $this->messages[] = 'Request failed.(' . $uri . ') setUri error message: ' . $e->getMessage();
+
+            return false;
+        }
+        $this->httpClient->resetParameters();
+        try {
+            $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+            $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+            $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+            $this->httpClient->setMethod($method);
+        } catch (Zend_Http_Client_Exception $e) {
+            $this->messages[] = 'Request failed.(' . $uri . ') setHeaders error message: ' . $e->getMessage();
+
+            return false;
+        }
+        if (isset($post_param)) {
+            $this->httpClient->setParameterPost($post_param);
+        }
+
+        try {
+            $response = $this->httpClient->request();
+        } catch (Zend_Http_Client_Exception $e) {
+            $this->messages[] = 'Request failed.(' . $uri . ') request error message: ' . $e->getMessage();
+
+            return false;
+        }
+        if ($response->getStatus() < 200 OR $response->getStatus() >= 500) {
+            $this->messages[] = 'Request failed.(' . $uri . ') OCS Forum server send message: ' . $response->getBody();
+
+            return false;
+        }
+
+        try {
+            $body = Zend_Json::decode($response->getBody());
+        } catch (Zend_Json_Exception $e) {
+            $this->messages[] = 'Request failed.(' . $uri . ') Zend_Json::decode error message: ' . $e->getMessage();
+        }
+
+        if ($body && is_array($body) && array_key_exists("message", $body)) {
+            $this->messages[] = "id: {$uid} ($uri) - " . Zend_Json::encode($body["message"]);
+        }
+
+        return $body;
     }
 
     /**
      * @param $username
      *
      * @return array
-     * @throws Default_Model_Ocs_Exception
      * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
      */
     public function getUserByDN($username)
     {
         $user_id = $this->buildUserDn($username);
-
-        $this->httpClient->resetParameters();
         $uri = $this->config->host . "/api/v4/users?extern_uid={$user_id}&provider=ldapmain";
-        $this->httpClient->setUri($uri);
-        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
-        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
-        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
-        $this->httpClient->setMethod(Zend_Http_Client::GET);
 
-        $response = $this->httpClient->request();
-
-        $body = Zend_Json::decode($response->getRawBody());
+        $body = $this->httpRequest($uri, $username);
 
         if (count($body) == 0) {
             return array();
         }
 
-        if (array_key_exists("message", $body)) {
-            $result_code = substr(trim($body["message"]), 0, 3);
-            if ((int)$result_code >= 300) {
-                throw new Default_Model_Ocs_Exception($body["message"]);
-            }
-        }
-
-        Zend_Registry::get('logger')->debug(__METHOD__ . " - body: " . $response->getRawBody());
+        Zend_Registry::get('logger')->debug(__METHOD__ . " - body: " . $body);
 
         return $body[0];
     }
@@ -307,77 +332,28 @@ class Default_Model_Ocs_Gitlab
      * @param string $username
      *
      * @return array
-     * @throws Default_Model_Ocs_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
+     * @throws Zend_Exception
      */
     public function getUserWithName($username)
     {
-        $this->httpClient->resetParameters();
         $uri = $this->config->host . "/api/v4/users?username=" . $username;
-        $this->httpClient->setUri($uri);
-        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
-        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
-        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
-        $this->httpClient->setMethod(Zend_Http_Client::GET);
-
-        $response = $this->httpClient->request();
-
-        $body = Zend_Json::decode($response->getRawBody());
+        $body = $this->httpRequest($uri, $username);
 
         if (count($body) == 0) {
             return array();
         }
 
-        if (array_key_exists("message", $body)) {
-            $result_code = substr(trim($body["message"]), 0, 3);
-            if ((int)$result_code >= 300) {
-                throw new Default_Model_Ocs_Exception($body["message"]);
-            }
-        }
+        Zend_Registry::get('logger')->debug(__METHOD__ . " - body: " . $body);
 
         return $body[0];
     }
 
     /**
-     * @param string     $uri
-     * @param string     $uid
-     * @param string     $method
-     * @param array|null $post_param
-     *
-     * @return bool|array
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
-     * @throws Zend_Uri_Exception
+     * @param array $member_data
+     * @return bool
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
      */
-    protected function httpRequest($uri, $uid, $method = Zend_Http_Client::GET, $post_param = null)
-    {
-        $this->httpClient->resetParameters();
-        $this->httpClient->setUri($uri);
-        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
-        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
-        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
-        $this->httpClient->setMethod($method);
-        if (isset($post_param)) {
-            $this->httpClient->setParameterPost($post_param);
-        }
-
-        $response = $this->httpClient->request();
-        if ($response->getStatus() < 200 OR $response->getStatus() >= 500) {
-            $this->messages[] = 'Request failed.(' . $uri . ') OCS Forum server send message: ' . $response->getBody();
-
-            return false;
-        }
-
-        $body = Zend_Json::decode($response->getBody());
-
-        if ($body && is_array($body) && array_key_exists("message", $body)) {
-            $this->messages[] = "id: {$uid} ($uri) - " . Zend_Json::encode($body["message"]);
-        }
-
-        return $body;
-    }
-
     public function blockUserProjects($member_data)
     {
         if (is_int($member_data)) {
@@ -444,8 +420,6 @@ class Default_Model_Ocs_Gitlab
      * @return bool
      * @throws Default_Model_Ocs_Exception
      * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
      */
     public function blockUser($member_data)
     {
@@ -495,8 +469,6 @@ class Default_Model_Ocs_Gitlab
      * @return bool
      * @throws Default_Model_Ocs_Exception
      * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
      */
     public function unblockUser($member_data)
     {
@@ -540,14 +512,11 @@ class Default_Model_Ocs_Gitlab
     }
 
     /**
-     * @param $member_data
-     * @param $oldUsername
+     * @param int|array $member_data
+     * @param string    $oldUsername
      *
      * @return array|bool|null
-     * @throws Default_Model_Ocs_Exception
      * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
      */
     public function updateUserFromArray($member_data, $oldUsername)
     {
@@ -652,8 +621,8 @@ class Default_Model_Ocs_Gitlab
      */
     private function httpUserUpdate($data, $id)
     {
-        $this->httpClient->resetParameters();
         $uri = $this->config->host . '/api/v4/users/' . $id;
+        $this->httpClient->resetParameters();
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -689,8 +658,8 @@ class Default_Model_Ocs_Gitlab
      */
     public function getUserByEmail($email)
     {
-        $this->httpClient->resetParameters();
         $uri = $this->config->host . "/api/v4/users?search={$email}";
+        $this->httpClient->resetParameters();
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -776,14 +745,11 @@ class Default_Model_Ocs_Gitlab
     }
 
     /**
-     * @param      $member_data
-     *
-     * @param bool $force
+     * @param array $member_data
+     * @param bool  $force
      *
      * @return array|bool
      * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
      */
     public function createUserFromArray($member_data, $force = false)
     {
@@ -839,7 +805,7 @@ class Default_Model_Ocs_Gitlab
     }
 
     /**
-     * @param $data
+     * @param array $data
      *
      * @return bool
      * @throws Default_Model_Ocs_Exception
@@ -849,8 +815,8 @@ class Default_Model_Ocs_Gitlab
      */
     private function httpUserCreate($data)
     {
-        $this->httpClient->resetParameters();
         $uri = $this->config->host . '/api/v4/users';
+        $this->httpClient->resetParameters();
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -879,10 +845,10 @@ class Default_Model_Ocs_Gitlab
      * @param int $member_id
      *
      * @return bool
+     * @throws Default_Model_Ocs_Exception
      * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Http_Exception
-     * @throws Zend_Json_Exception
      */
     public function deleteUser($member_id)
     {
@@ -913,8 +879,8 @@ class Default_Model_Ocs_Gitlab
      */
     private function httpUserDelete($id)
     {
-        $this->httpClient->resetParameters();
         $uri = $this->config->host . '/api/v4/users/' . $id;
+        $this->httpClient->resetParameters();
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -957,8 +923,8 @@ class Default_Model_Ocs_Gitlab
      */
     public function userExists($username)
     {
-        $this->httpClient->resetParameters();
         $uri = $this->config->host . '/api/v4/users?username=' . $username;
+        $this->httpClient->resetParameters();
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -1002,9 +968,8 @@ class Default_Model_Ocs_Gitlab
      * @param int $member_id
      *
      * @return array|bool
+     * @throws Default_Model_Ocs_Exception
      * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
      */
     public function createUser($member_id)
     {
@@ -1045,14 +1010,14 @@ class Default_Model_Ocs_Gitlab
      * @param string $name
      *
      * @return bool
-     * @throws Zend_Exception
+     * @throws Default_Model_Ocs_Exception
      * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
+     * @throws Zend_Uri_Exception
      */
     public function groupExists($name)
     {
-        $this->httpClient->resetParameters();
         $uri = $this->config->host . '/api/v4/groups?search=' . $name;
+        $this->httpClient->resetParameters();
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -1064,7 +1029,7 @@ class Default_Model_Ocs_Gitlab
         try {
             $body = Zend_Json::decode($response->getRawBody());
         } catch (Zend_Json_Exception $e) {
-            throw new Default_Model_Ocs_Exception($e,0, $e);
+            throw new Default_Model_Ocs_Exception($e, 0, $e);
         } catch (Zend_Http_Client_Exception $e) {
             // Gitlab send empty response when group not found, this cause an Exception in http client
             // we cannot distinguish between a real error and a successful empty response
@@ -1099,7 +1064,6 @@ class Default_Model_Ocs_Gitlab
      * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Http_Exception
-     * @throws Zend_Json_Exception
      */
     public function updateMail($member_id)
     {
@@ -1130,11 +1094,12 @@ class Default_Model_Ocs_Gitlab
      * @throws Default_Model_Ocs_Exception
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Json_Exception
+     * @throws Zend_Uri_Exception
      */
     public function getUsers()
     {
-        $this->httpClient->resetParameters();
         $uri = $this->config->host . "/api/v4/users";
+        $this->httpClient->resetParameters();
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -1166,11 +1131,12 @@ class Default_Model_Ocs_Gitlab
      * @throws Default_Model_Ocs_Exception
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Json_Exception
+     * @throws Zend_Uri_Exception
      */
     public function getUserWithId($id)
     {
-        $this->httpClient->resetParameters();
         $uri = $this->config->host . "/api/v4/users/" . $id;
+        $this->httpClient->resetParameters();
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -1203,6 +1169,7 @@ class Default_Model_Ocs_Gitlab
      *
      * @return array|false|mixed
      * @throws Zend_Http_Client_Exception
+     * @throws Zend_Uri_Exception
      */
     public function getProjects($page = 1, $limit = 5, $order_by = 'created_at', $sort = 'desc')
     {
@@ -1258,11 +1225,12 @@ class Default_Model_Ocs_Gitlab
      * @throws Default_Model_Ocs_Exception
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Json_Exception
+     * @throws Zend_Uri_Exception
      */
     public function getProject($id)
     {
-        $this->httpClient->resetParameters();
         $uri = $this->config->host . "/api/v4/projects/" . $id . "/";
+        $this->httpClient->resetParameters();
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -1301,11 +1269,12 @@ class Default_Model_Ocs_Gitlab
      * @throws Default_Model_Ocs_Exception
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Json_Exception
+     * @throws Zend_Uri_Exception
      */
     public function getProjectIssues($id, $state = 'opened', $page = 1, $limit = 5)
     {
-        $this->httpClient->resetParameters();
         $uri = $this->config->host . '/api/v4/projects/' . $id . '/issues?state=' . $state . '&page=' . $page . '&per_page=' . $limit;
+        $this->httpClient->resetParameters();
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -1339,11 +1308,12 @@ class Default_Model_Ocs_Gitlab
      * @throws Default_Model_Ocs_Exception
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Json_Exception
+     * @throws Zend_Uri_Exception
      */
     public function getUserProjects($user_id, $page = 1, $limit = 50)
     {
-        $this->httpClient->resetParameters();
         $uri = $this->config->host . '/api/v4/users/' . $user_id . '/projects?visibility=public&page=' . $page . '&per_page=' . $limit;
+        $this->httpClient->resetParameters();
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);

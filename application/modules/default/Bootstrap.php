@@ -287,12 +287,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         defined('VIDEOS_UPLOAD_PATH') || define('VIDEOS_UPLOAD_PATH', $videoConfig->upload->path);
         defined('VIDEOS_MEDIA_SERVER') || define('VIDEOS_MEDIA_SERVER', $videoConfig->media->server);
 
-        // ppload
-        $pploadConfig = $appConfig->third_party->ppload;
-        defined('PPLOAD_API_URI') || define('PPLOAD_API_URI', $pploadConfig->api_uri);
-        defined('PPLOAD_CLIENT_ID') || define('PPLOAD_CLIENT_ID', $pploadConfig->client_id);
-        defined('PPLOAD_SECRET') || define('PPLOAD_SECRET', $pploadConfig->secret);
-        defined('PPLOAD_DOWNLOAD_SECRET') || define('PPLOAD_DOWNLOAD_SECRET', $pploadConfig->download_secret);
+        // fileserver
+        $configFileserver = $appConfig->settings->server->files;
+        defined('PPLOAD_API_URI') || define('PPLOAD_API_URI', $configFileserver->api->uri);
+        defined('PPLOAD_CLIENT_ID') || define('PPLOAD_CLIENT_ID', $configFileserver->api->client_id);
+        defined('PPLOAD_SECRET') || define('PPLOAD_SECRET', $configFileserver->api->client_secret);
+        defined('PPLOAD_HOST') || define('PPLOAD_HOST', $configFileserver->host);
+        defined('PPLOAD_DOWNLOAD_SECRET') || define('PPLOAD_DOWNLOAD_SECRET', $configFileserver->download_secret);
     }
 
     /**
