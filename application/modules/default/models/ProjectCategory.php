@@ -84,7 +84,7 @@ class Default_Model_ProjectCategory
             }
 
             list($rows, $tree) = $this->buildTreeForView($rows);
-            $cache->save($tree, $cache_id, array(), 600);
+            $cache->save($tree, $cache_id, array(), 120);
         }
 
         return $tree;

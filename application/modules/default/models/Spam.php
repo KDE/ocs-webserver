@@ -38,7 +38,7 @@ class Default_Model_Spam
     public static function hasSpamMarkers($project_data)
     {
         try {
-            $active = (boolean)Zend_Registry::get('config')->settings->spam->filter->active;
+            $active = (boolean)Zend_Registry::get('config')->settings->spam_filter->active;
         } catch (Zend_Exception $e) {
             $active = false;
         }
