@@ -354,36 +354,3 @@ if ($countDownloadsOverall > 0) {
 ?>
 
 </div>    
-    
-<script>
-    
-    $('[data-toggle="creditdetailajax"]').click(function(e) {
-        var $this = $(this),
-            loadurl = $this.attr('href'),
-            targ = $this.attr('data-target');
-        
-        if($(targ).hasClass('hidden')) {
-            $(targ).html('<i class="fa fa-spinner"></i>');
-            $(targ).removeClass('hidden');
-            $(targ).addClass('shown');
-
-            $.get(loadurl, function(data) {
-                $(targ).html(data);
-            });
-        } else {
-            $(targ).removeClass('shown');
-            $(targ).addClass('hidden');
-        }
-            
-
-        return false;
-    });
-    
-    
-</script>
-
-<?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){
-            $(\'[data-toggle="popover"]\').popover();
-        });
-    ');

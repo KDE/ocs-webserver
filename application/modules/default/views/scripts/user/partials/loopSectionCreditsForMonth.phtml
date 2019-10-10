@@ -246,16 +246,12 @@ if ($countDownloadsOverall > 0) {
 ?>
 
 </div>    
-    
-<script>
+ <script>
     
     $('[data-toggle="creditdetailajax"]').click(function(e) {
         var $this = $(this),
             loadurl = $this.attr('href'),
             targ = $this.attr('data-target');
-            
-        alert('Target: ' + $(targ));
-        alert('Show: ' + $(targ).hasClass('hidden'));
         
         if($(targ).hasClass('hidden')) {
             $(targ).html('<i class="fa fa-spinner"></i>');
