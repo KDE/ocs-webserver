@@ -158,7 +158,7 @@ if ($countDownloadsOverall > 0) {
                     </div>
                     <div class="col-md-2 text-left cell-default">
                         <?php if(Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) { ?>
-                        <a href="/member/<?= $this->member->member_id ?>/sectioncreditsmonthajax?yearmonth=<?= $product['yearmonth'] ?>&project_id=<?= $product['project_id'] ?>" data-toggle="creditdetailajax" data-target="#credit-tab-content-<?= $product['yearmonth'] ?>-<?= $product['project_id'] ?>" id="sec_<?= $product['yearmonth'] ?>-<?= $product['project_id'] ?>">
+                        <a href="/member/<?= $this->member->member_id ?>/sectioncreditsmonthajax?yearmonth=<?= $product['yearmonth'] ?>&section_id=<?= $product['section_id'] ?>&project_id=<?= $product['project_id'] ?>" data-toggle="creditdetailajax" data-target="#credit-tab-content-<?= $product['yearmonth'] ?>-<?= $product['project_id'] ?>" id="sec_<?= $product['yearmonth'] ?>-<?= $product['project_id'] ?>">
                             <span style="line-height: 3em;"><?= $product['title']; ?></span>
                         </a>
                         <?php } else { ?>
