@@ -102,30 +102,7 @@ $isOriginal = $modelTag->isProductOriginal($project_id);
 $countDownloadsOverall = count($allDownloads);
 
 if ($countDownloadsOverall > 0) {
-    $firstProduct = $allDownloads[0];
-    if ($firstProduct) {
-        $printMonth = new DateTime($firstProduct['yearmonth'].'01');
-        $printCurrentMonth = new DateTime($currentDate.'01');
-        
-        if($printMonth == $printCurrentMonth) {
-            $isCurrentMonth = true;
-        } else {
-            $isCurrentMonth = false;
-        }
-        $sum_total_month_score = 0;
-        $sum_total_month = 0;
-        $sum_total_month_uk = 0;
-        $sum_total_month_new = 0;
-        $sum_total_text = 'Sum credits';
-        $sum_total_payout = 0;
-        $sum_total_payout_uk = 0;
-        $sum_total_payout_new = 0;
-        
         $sum_total_credits = 0;
-        
-        $sum_total_month_potential_payout = 0;
-        $sum_total_potential_payout = 0;
-        
         ?>
     
         <div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0;">
@@ -231,7 +208,6 @@ if ($countDownloadsOverall > 0) {
             
         </div>
 <?php
-    }
 } else {
     
     echo '<div class="tab-pane fade in active" id="'.$printDate.'">';
