@@ -573,8 +573,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             if ($this->_request->isXmlHttpRequest()) {
                 $viewRegisterForm = $this->view->render('authorization/partials/registerForm.phtml');
                 $this->_helper->json(array('status' => 'ok', 'message' => $viewRegisterForm));
-
-                return;
             }
 
             return;
@@ -587,12 +585,15 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $formRegisterValues['username'] = Default_Model_HtmlPurify::purify($formRegisterValues['username']);
         $formRegisterValues['mail'] = strtolower($formRegisterValues['mail']);
 
-        $newUserData = $this->createNewUser($formRegisterValues);
+        $doubleOptIn = (boolean)Zend_Registry::get('config')->settings->double_opt_in->active;
+        $newUserData = $this->createNewUser($formRegisterValues, $doubleOptIn);
 
         Default_Model_ActivityLog::logActivity($newUserData['main_project_id'], null, $newUserData['member_id'],
             Default_Model_ActivityLog::MEMBER_JOINED, array());
 
-        $this->sendConfirmationMail($formRegisterValues, $newUserData['verificationVal']);
+        if ($doubleOptIn) {
+            $this->sendConfirmationMail($formRegisterValues, $newUserData['verificationVal']);
+        }
 
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - member_id: ' . $newUserData['member_id'] . ' - Link for verification: '
                                             . 'http://' . $this->getServerName() . '/verification/' . $newUserData['verificationVal']);
@@ -612,8 +613,13 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
      * @return array
      * @throws Exception
      */
-    protected function createNewUser($userData)
+    protected function createNewUser($userData, $doubleOptIn = true)
     {
+        if (false === $doubleOptIn) {
+            $userData['mail_checked'] = 1;
+            $userData['is_active'] = 1;
+            $userData['is_deleted'] = 0;
+        }
         $userTable = new Default_Model_Member();
         $userData = $userTable->createNewUser($userData);
 
