@@ -858,7 +858,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $this->view->yearmonth = $yearmonth;
         $this->view->section_id = $section_id;
         $this->view->project_id = $project_id;
-
+        
         $this->_helper->viewRenderer('/sectioncreditsmonthajax');
     }
     
