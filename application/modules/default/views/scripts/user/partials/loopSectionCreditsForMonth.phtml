@@ -154,16 +154,17 @@ if ($countDownloadsOverall > 0) {
                         <span><?= $product['category_pling_factor'] ?></span>
                     </div>
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
-                        <span><?php $isOriginal==true?'1.0':'0.5'; ?></span>
+                        <span><?php echo ($isOriginal==true?'1.0':'0.5'); ?></span>
                     </div>
 
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
                         <span>
                         <?php 
                             $sum_credits = 0;
-                            if($product['yearmonth'] >= 201910) {
-                                $sum_credits = $product['num_downloads_micropayout']*$product['category_pling_factor'];
-                                if(!$isOriginal) {
+                            $sum_credits = $product['num_downloads_micropayout']*$product['category_pling_factor'];
+                            if((int)$product['yearmonth'] >= 201910) {
+
+                                if($isOriginal==false) {
                                     $sum_credits = $sum_credits * 0.5;
                                 } 
                             }
@@ -187,16 +188,17 @@ if ($countDownloadsOverall > 0) {
                         <span><?= $product['category_pling_factor'] ?></span>
                     </div>
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
-                        <span><?php $isOriginal==1?1.0:0.5; ?></span>
+                        <span><?php echo ($isOriginal==true?'1.0':'0.5'); ?></span>
                     </div>
 
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
                         <span>
                         <?php 
                             $sum_credits = 0;
-                            if($product['yearmonth'] >= 201910) {
-                                $sum_credits = $product['num_views_micropayout']*$product['category_pling_factor'];
-                                if(!$isOriginal) {
+                            $sum_credits = $product['num_views_micropayout']*$product['category_pling_factor'];
+                            if((int)$product['yearmonth'] >= 201910) {
+
+                                if($isOriginal==false) {
                                     $sum_credits = $sum_credits * 0.5;
                                 } 
                             }
