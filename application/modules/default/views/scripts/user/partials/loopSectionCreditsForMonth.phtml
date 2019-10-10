@@ -130,8 +130,8 @@ if ($countDownloadsOverall > 0) {
     
         <div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0;">
             <div class="row">
-                <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap; "><strong>Download/Mediaview</strong></div>
-                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Sum Downloads/Mediaviews</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads-Credits" data-trigger="hover" data-html="true" data-content="Sum of all valid Download-Credits of any product (active or archived) within this month mulitplied by its Pling-Factor (see <a href='/faq-pling'>Pling-FAQ).</a>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap; "><strong>Type</strong></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Sum</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads-Credits" data-trigger="hover" data-html="true" data-content="Sum of all valid Download-Credits of any product (active or archived) within this month mulitplied by its Pling-Factor (see <a href='/faq-pling'>Pling-FAQ).</a>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
                 <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Credit-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Credit-Factor" data-trigger="hover" data-html="true" data-content="The Credit-Factor's base is $-cent and depends on the product category.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
                 <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Original-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Original-Factor" data-trigger="hover" data-html="true" data-content=""><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
                 <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Sum Credits</strong></div>
@@ -154,7 +154,7 @@ if ($countDownloadsOverall > 0) {
                         <span><?= $product['category_pling_factor'] ?></span>
                     </div>
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
-                        <span><?php $isOriginal==1?1.0:0.5; ?></span>
+                        <span><?php $isOriginal==true?'1.0':'0.5'; ?></span>
                     </div>
 
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
