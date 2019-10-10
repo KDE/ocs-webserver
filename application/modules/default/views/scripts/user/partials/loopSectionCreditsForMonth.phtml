@@ -189,7 +189,7 @@ if ($countDownloadsOverall > 0) {
                         <span>
                         <?php 
                             $sum_credits = 0;
-                            $sum_credits = $product['num_downloads_micropayout']*$product['category_pling_factor'];
+                            $sum_credits = $product['num_views_micropayout']*$product['category_pling_factor'];
                             if((int)$product['yearmonth'] >= 201910) {
 
                                 if($isOriginal==false) {
