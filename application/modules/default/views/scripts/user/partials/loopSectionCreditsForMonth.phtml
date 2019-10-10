@@ -1,0 +1,389 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+?>
+<style>
+    .cell-default {
+        line-height: 4em;
+        vertical-align: middle;
+    }
+    .row-total {
+        border-top: #1595ee solid thin;
+        padding-top: 1em;
+        padding-bottom: 1em;
+        line-height: 30px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    
+    .popover {
+        min-width:350px;
+    }
+    
+    .popover-title { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+    
+    .popover-content { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+</style>
+<ul class="nav nav-tabs margin-bottom-10">
+<?php
+    
+$isCurrentMonth = false;
+$modelDownload = new Default_Model_StatDownload();
+$yearmonth = null;
+
+if(isset($this->yearmonth)) {
+    $yearmonth = $this->yearmonth;
+}
+
+$section_id = null;
+
+if(isset($this->section_id)) {
+    $section_id = $this->section_id;
+}
+
+?>
+
+<div class="tab-content">
+<?php
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helpImage = new Default_View_Helper_Image();
+$css_active = ' in active';
+$has_paypal = false;
+$currency = new Zend_Currency('en_US');
+
+$currentDate = date("Ym",time());
+$printCurrentMonth = new DateTime($currentDate.'01');
+
+$printMonth = new DateTime($yearmonth.'01');
+$printDate = $printMonth->format('M Y');
+
+
+if(null != $section_id) {
+    $allDownloads = $modelDownload->getUserDownloadsAndViewsForMonthAndSection($this->member->member_id, $yearmonth, $section_id);
+} else {
+    $allDownloads = $modelDownload->getUserDownloadsAndViewsForMonth($this->member->member_id, $yearmonth);
+}
+
+$countDownloadsOverall = count($allDownloads);
+
+if ($countDownloadsOverall > 0) {
+    $firstProduct = $allDownloads[0];
+    if ($firstProduct) {
+        $printMonth = new DateTime($firstProduct['yearmonth'].'01');
+        $printCurrentMonth = new DateTime($currentDate.'01');
+        
+        if($printMonth == $printCurrentMonth) {
+            $isCurrentMonth = true;
+        } else {
+            $isCurrentMonth = false;
+        }
+        $sum_total_month_score = 0;
+        $sum_total_month = 0;
+        $sum_total_month_uk = 0;
+        $sum_total_month_new = 0;
+        $sum_total_text = '';
+        $sum_total_payout = 0;
+        $sum_total_payout_uk = 0;
+        $sum_total_payout_new = 0;
+        
+        $sum_total_credits = 0;
+        
+        $sum_total_month_potential_payout = 0;
+        $sum_total_potential_payout = 0;
+        
+        ?>
+    
+        <div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0;">
+            <div class="row">
+                <div class="col-md-1" style="min-width: 150px;"></div>
+                <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap; "><strong>Products</strong></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Download-Credits</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads-Credits" data-trigger="hover" data-html="true" data-content="Sum of all valid Download-Credits of any product (active or archived) within this month mulitplied by its Pling-Factor (see <a href='/faq-pling'>Pling-FAQ).</a>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Mediaview-Credits</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Mediaview-Credits" data-trigger="hover" data-html="true" data-content="Sum of all valid Mediaview-Credits of any product (active or archived) within this month mulitplied by its Pling-Factor (see <a href='/faq-pling'>Pling-FAQ)."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <?php /*<div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Credit-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Credit-Factor" data-trigger="hover" data-html="true" data-content="The Credit-Factor's base is $-cent and depends on the product category.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>*/?>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Sum Credits</strong></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Sum Payout</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Sum Payout" data-trigger="hover" data-html="true" data-content="Amount of all credits in US $."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong style="color: #BBB">Max Payout (A)</strong></div>
+                <?php endif;?>
+            </div>
+        </div>
+    
+        <div class="tab-pane fade <?=$css_active?>" id="affiliate_<?=$firstProduct['yearmonth']?>">
+            <?php
+            $css_active = '';
+
+            foreach ($allDownloads as $product) { 
+                $section_factor = $product['section_payout_factor'];
+                $actual_payout_sum = $product['amount_section_micropayout'];
+                
+                #if($isCurrentMonth) {
+                #    $section_factor = $product['now_section_payout_factor'];
+                #    $actual_payout_sum = $product['num_plings_micropayout']*$section_factor/100;
+                #}
+                
+                ?>
+                <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
+                    <div class="col-md-1 cell-default" style="">
+                        <a href="<?= $this->buildProductUrl($product['project_id']) ?>">
+                            <img src="<?php echo $helpImage->Image($product['image_small'], array('width' => 80, 'height' => 65)); ?> " height="81" width="101"/>
+                        </a>
+                    </div>
+                    <div class="col-md-2 text-left cell-default">
+                        <?php if(Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) { ?>
+                        <a href="/member/<?= $this->member->member_id ?>/sectioncreditsmonthajax?yearmonth=<?= $product['yearmonth'] ?>&project_id=<?= $product['project_id'] ?>" data-toggle="creditdetailajax" data-target="#credit-tab-content-<?= $product['yearmonth'] ?>-<?= $product['project_id'] ?>" id="sec_<?= $product['yearmonth'] ?>-<?= $product['project_id'] ?>">
+                            <span style="line-height: 3em;"><?= $product['title']; ?></span>
+                        </a>
+                        <?php } else { ?>
+                        <a href="<?= $this->buildProductUrl($product['project_id']) ?>">
+                            <span style="line-height: 3em;"><?= $product['title']; ?></span>
+                        </a>
+                        <?php } ?>
+                        <b style="display: block; margin-bottom: 5px; font-size: 10pt; line-height: 0em;min-width: 140px;max-width: 180px;"><?=$product['cat_title']?></b>
+                    </div>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span><?= round($product['num_downloads_micropayout']*$product['category_pling_factor'],0) ?></span>
+                    </div>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span><?= round($product['num_views_micropayout']*$product['category_pling_factor'],0) ?></span>
+                    </div>
+                    <?php /*
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span><?= $product['category_pling_factor'] ?></span>
+                    </div>
+                     * 
+                     */?>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span>
+                        <?php 
+                            $errorMsg = "<ul>";
+                            $showErrMsg = false;
+                            
+                            if($isCurrentMonth) {
+                                if($product['is_license_missing_now'] == 1) {
+                                    $errorMsg .= "<li>Please specify a License</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_source_missing_now'] == 1) {
+                                    $errorMsg .= "<li>Please specify a link to the online source repository</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_pling_excluded_now'] == 1) {
+                                    $errorMsg .= "<li>This Product has been excluded from plings</li>";
+                                    $showErrMsg = true;
+                                }
+                                $sum_plings = $product['num_plings_now'];
+                            } else {
+                                if($product['is_license_missing'] == 1) {
+                                    $errorMsg .= "<li>License was not specified</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_source_missing'] == 1) {
+                                    $errorMsg .= "<li>Link to the online source repository was not specified</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_pling_excluded'] == 1) {
+                                    $errorMsg .= "<li>This Product has been excluded from plings</li>";
+                                    $showErrMsg = true;
+                                }
+                                
+                                
+                            } 
+                            $errorMsg .= "</ul>";
+                            
+                            if($showErrMsg) {
+                                echo '<div class="inline msg-popover-danger" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout requirements are not fulfilled" data-trigger="hover" data-html="true" data-content="'.$errorMsg.'"><span style="color: #a94442;" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span></div>';
+                            } else {
+                                 print(round($product['num_plings_micropayout'],0));
+                                 $sum_total_credits += round($product['num_plings_micropayout'],0);
+                            }
+                        ?>
+                        </span>
+                        
+                    </div>
+                    
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span>
+                        <?php 
+                            $errorMsg = "<ul>";
+                            $showErrMsg = false;
+                            
+                            if($isCurrentMonth) {
+                                if($product['is_license_missing_now'] == 1) {
+                                    $errorMsg .= "<li>Please specify a License</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_source_missing_now'] == 1) {
+                                    $errorMsg .= "<li>Please specify a link to the online source repository</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_pling_excluded_now'] == 1) {
+                                    $errorMsg .= "<li>This Product has been excluded from plings</li>";
+                                    $showErrMsg = true;
+                                }
+                            } else {
+                                if($product['is_license_missing'] == 1) {
+                                    $errorMsg .= "<li>License was not specified</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_source_missing'] == 1) {
+                                    $errorMsg .= "<li>Link to the online source repository was not specified</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_pling_excluded'] == 1) {
+                                    $errorMsg .= "<li>This Product has been excluded from plings</li>";
+                                    $showErrMsg = true;
+                                }
+                            } 
+                            $errorMsg .= "</ul>";
+                            
+                            if($showErrMsg) {
+                                echo '<div class="inline msg-popover-danger" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout requirements are not fulfilled" data-trigger="hover" data-html="true" data-content="'.$errorMsg.'"><span style="color: #a94442;" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span></div>';
+                            } else {
+                                 print($currency->toCurrency($product['num_plings_micropayout']/100));
+                            }
+                        ?>
+                        </span>
+                        
+                    </div>
+                    
+                    
+                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span style="color: #BBB"><?php print($currency->toCurrency($product['amount_plings_micropayout'])); ?></span>
+                    </div>
+                    <?php endif;?>
+                    <?php if(!$showErrMsg) {
+                            $payout_sum_uk = 0;
+                            $payout_sum_uk = $product['num_plings_micropayout']/100;
+                    ?>
+                    <?php } ?>
+                </div>
+            
+                <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;padding-left: 80px;font-size: small;">
+                    <div class="col-md-1 text-right cell-default"></div>
+                    <div class="col-md-11 text-right cell-default">
+                        <div id="credit-tab-content-<?= $product['yearmonth'] ?>-<?= $product['project_id'] ?>" class="hidden"></div>
+                    </div>
+                    
+                </div>
+            
+                <?php
+                $sum_total_month_potential_payout += $product['amount_plings_micropayout'];
+                $sum_total_potential_payout = $currency->toCurrency($sum_total_month_potential_payout);
+                
+                if(!$showErrMsg) {       
+                    $sum_total_month_uk += $payout_sum_uk;
+                    $sum_total_payout_uk = $currency->toCurrency($sum_total_month_uk);
+                }
+                
+                $sum_total_text = 'Summaries:';
+                
+                $payout_success = false;
+                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
+                    $payout_success = true;
+                    $sum_total_payout_success = $currency->toCurrency($product['amount']);
+                    $sum_total_text_success = 'Actually successfully paid amount: ';
+                }
+                $has_paypal = $product['paypal_mail'] ? true : false;
+            }
+
+            ?>
+            <div class='row row-total'>
+                <div class="col-md-1" style="min-width: 150px;"></div>
+                <div class='col-md-2 text-right'></div>
+                <?php /*<div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"></div> */ ?>
+                <div class='col-md-4 text-right' style="min-width: 340px;max-width: 340px;"><?=$sum_total_text?></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><strong><?=$sum_total_credits?></strong></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><strong><?=$sum_total_payout_uk?></strong></div>
+                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><strong style="color: #BBB"><?=$sum_total_potential_payout?></strong></div>
+                <?php endif;?>
+            </div>
+            
+            
+            
+            <?php 
+
+
+            $currentDate = date("Ym",time());
+            $viewDate = $firstProduct['yearmonth']."";
+?>
+            
+        </div>
+<?php
+    }
+} else {
+    
+    echo '<div class="tab-pane fade in active" id="'.$printDate.'">';
+    echo '    <div style="text-align: center;" class="row margin-bottom-12"><div class="col-md-8 cell-default">No Data</div></div>';
+    echo '    <div class="row row-total">';
+    echo '        <div class="col-md-1 text-right" style="min-width: 150px;"></div><div class="col-md-4 text-right"></div><div class="col-md-3 text-right" style="min-width: 570px;">Possible payout for this month (<span style="font-size: smaller;">*</span>):</div><div class="col-md-1 text-right" style="min-width: 190px;"><strong>$0.00</strong></div>';
+    echo '    </div>';
+    echo '</div>';
+}
+    
+    
+?>
+
+</div>    
+    
+<script>
+    
+    $('[data-toggle="creditdetailajax"]').click(function(e) {
+        var $this = $(this),
+            loadurl = $this.attr('href'),
+            targ = $this.attr('data-target');
+        
+        if($(targ).hasClass('hidden')) {
+            $(targ).html('<i class="fa fa-spinner"></i>');
+            $(targ).removeClass('hidden');
+            $(targ).addClass('shown');
+
+            $.get(loadurl, function(data) {
+                $(targ).html(data);
+            });
+        } else {
+            $(targ).removeClass('shown');
+            $(targ).addClass('hidden');
+        }
+            
+
+        return false;
+    });
+    
+    
+</script>
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            $(\'[data-toggle="popover"]\').popover();
+        });
+    ');

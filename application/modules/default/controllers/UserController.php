@@ -822,6 +822,46 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $this->_helper->viewRenderer('/sectionplingsmonthajax');
     }
     
+    public function sectioncreditsmonthajaxAction()
+    {
+        $this->_helper->layout->disableLayout();
+
+        $tableMember = new Default_Model_Member();
+        $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+
+        $paypalValidStatusTable = new Default_Model_DbTable_PaypalValidStatus();
+        $paypalValidStatus = $paypalValidStatusTable->find($this->view->view_member->paypal_valid_status)->current();
+        $this->view->paypal_valid_status = $paypalValidStatus;
+
+        //backdoor for admins
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+        }
+
+        $yearmonth = null;
+        if ($this->hasParam('yearmonth')) {
+            $yearmonth = $this->getParam('yearmonth');
+        }
+        $section_id = null;
+        if ($this->hasParam('section_id')) {
+            $section_id = $this->getParam('section_id');
+        }
+        $project_id = null;
+        if ($this->hasParam('project_id')) {
+            $project_id = $this->getParam('project_id');
+        }
+        
+        $this->view->yearmonth = $yearmonth;
+        $this->view->section_id = $section_id;
+        $this->view->project_id = $project_id;
+
+        $this->_helper->viewRenderer('/sectioncreditsmonthajax');
+    }
+    
     
     public function sectionaffiliatesmonthajaxAction()
     {
