@@ -125,11 +125,11 @@ if ($countDownloadsOverall > 0) {
             <div class="row">
                 <div class="col-md-1" style="min-width: 150px;"></div>
                 <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap; "><strong>Products</strong></div>
-                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Download-Credits</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads-Credits" data-trigger="hover" data-html="true" data-content="Sum of all valid Download-Credits of any product (active or archived) within this month mulitplied by its Credit-Factor (see <a href='/faq-pling'>Pling-FAQ).</a>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Mediaview-Credits</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Mediaview-Credits" data-trigger="hover" data-html="true" data-content="Sum of all valid Mediaview-Credits of any product (active or archived) within this month mulitplied by its Credit-Factor (see <a href='/faq-pling'>Pling-FAQ)."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Download-Credits</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads-Credits" data-trigger="hover" data-html="true" data-content="Sum of all valid Download-Credits of any product (active or archived) within this month mulitplied by its Pling-Factor (see <a href='/faq-pling'>Pling-FAQ).</a>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Mediaview-Credits</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Mediaview-Credits" data-trigger="hover" data-html="true" data-content="Sum of all valid Mediaview-Credits of any product (active or archived) within this month mulitplied by its Pling-Factor (see <a href='/faq-pling'>Pling-FAQ)."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
                 <?php /*<div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Credit-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Credit-Factor" data-trigger="hover" data-html="true" data-content="The Credit-Factor's base is $-cent and depends on the product category.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>*/?>
                 <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Sum Credits</strong></div>
-                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Sum Payout</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Sum Payout" data-trigger="hover" data-html="true" data-content="This shows the amount of all credits in US."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Sum Payout</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Sum Payout" data-trigger="hover" data-html="true" data-content="Amount of all credits in US $."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                 <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong style="color: #BBB">Max Payout (A)</strong></div>
                 <?php endif;?>
@@ -157,9 +157,15 @@ if ($countDownloadsOverall > 0) {
                         </a>
                     </div>
                     <div class="col-md-2 text-left cell-default">
+                        <?php if(Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) { ?>
+                        <a href="/member/<?= $this->member->member_id ?>/sectioncreditsmonthajax?yearmonth=<?= $product['yearmonth'] ?>&section_id=<?= $product['section_id'] ?>&project_id=<?= $product['project_id'] ?>" data-toggle="creditdetailajax" data-target="#credit-tab-content-<?= $product['yearmonth'] ?>-<?= $product['project_id'] ?>" id="sec_<?= $product['yearmonth'] ?>-<?= $product['project_id'] ?>">
+                            <span style="line-height: 3em;"><?= $product['title']; ?></span>
+                        </a>
+                        <?php } else { ?>
                         <a href="<?= $this->buildProductUrl($product['project_id']) ?>">
                             <span style="line-height: 3em;"><?= $product['title']; ?></span>
                         </a>
+                        <?php } ?>
                         <b style="display: block; margin-bottom: 5px; font-size: 10pt; line-height: 0em;min-width: 140px;max-width: 180px;"><?=$product['cat_title']?></b>
                     </div>
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
@@ -273,7 +279,6 @@ if ($countDownloadsOverall > 0) {
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
                         <span style="color: #BBB"><?php print($currency->toCurrency($product['amount_plings_micropayout'])); ?></span>
                     </div>
-                    
                     <?php endif;?>
                     <?php if(!$showErrMsg) {
                             $payout_sum_uk = 0;
@@ -281,6 +286,15 @@ if ($countDownloadsOverall > 0) {
                     ?>
                     <?php } ?>
                 </div>
+            
+                <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;padding-left: 80px;font-size: small;">
+                    <div class="col-md-1 text-right cell-default"></div>
+                    <div class="col-md-11 text-right cell-default">
+                        <div id="credit-tab-content-<?= $product['yearmonth'] ?>-<?= $product['project_id'] ?>" class="hidden"></div>
+                    </div>
+                    
+                </div>
+            
                 <?php
                 $sum_total_month_potential_payout += $product['amount_plings_micropayout'];
                 $sum_total_potential_payout = $currency->toCurrency($sum_total_month_potential_payout);
@@ -340,11 +354,31 @@ if ($countDownloadsOverall > 0) {
 ?>
 
 </div>    
+
+<script>
+$(document).ready(function(){     
+    $('[data-toggle="creditdetailajax"]').click(function(e) {
+        var $this = $(this),
+            loadurl = $this.attr('href'),
+            targ = $this.attr('data-target');
+        
+        if($(targ).hasClass('hidden')) {
+            $(targ).html('<i class="fa fa-spinner"></i>');
+            $(targ).removeClass('hidden');
+            $(targ).addClass('shown');
+
+            $.get(loadurl, function(data) {
+                $(targ).html(data);
+            });
+        } else {
+            $(targ).removeClass('shown');
+            $(targ).addClass('hidden');
+        }
+            
+
+        return false;
+    });
     
-
-
-<?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){
-            $(\'[data-toggle="popover"]\').popover();
-        });
-    ');
+});         
+</script>
+    

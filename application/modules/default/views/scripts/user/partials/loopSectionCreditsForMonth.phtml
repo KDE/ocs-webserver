@@ -1,0 +1,241 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+?>
+<style>
+    .cell-default {
+        line-height: 4em;
+        vertical-align: middle;
+    }
+    .row-total {
+        border-top: #1595ee solid thin;
+        padding-top: 1em;
+        padding-bottom: 1em;
+        line-height: 30px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    
+    .popover {
+        min-width:350px;
+    }
+    
+    .popover-title { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+    
+    .popover-content { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+</style>
+<ul class="nav nav-tabs margin-bottom-10">
+<?php
+    
+$isCurrentMonth = false;
+$modelDownload = new Default_Model_StatDownload();
+$yearmonth = null;
+
+if(isset($this->yearmonth)) {
+    $yearmonth = $this->yearmonth;
+}
+
+$section_id = null;
+
+if(isset($this->section_id)) {
+    $section_id = $this->section_id;
+}
+
+$project_id = null;
+
+if(isset($this->project_id)) {
+    $project_id = $this->project_id;
+}
+
+?>
+
+<div class="tab-content">
+<?php
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helpImage = new Default_View_Helper_Image();
+$css_active = ' in active';
+$has_paypal = false;
+$currency = new Zend_Currency('en_US');
+
+$currentDate = date("Ym",time());
+$printCurrentMonth = new DateTime($currentDate.'01');
+
+$printMonth = new DateTime($yearmonth.'01');
+$printDate = $printMonth->format('M Y');
+
+
+$allDownloads = $modelDownload->getUserDownloadsAndViewsForProject($this->member->member_id, $yearmonth, $section_id, $project_id);
+
+$modelProj = new Default_Model_Project();
+$isNoClone = $modelProj->isProjectClone($project_id) == false;
+
+
+
+$countDownloadsOverall = count($allDownloads);
+
+if ($countDownloadsOverall > 0) {
+        $sum_total_credits = 0;
+        ?>
+    
+        <div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0;">
+            <div class="row">
+                <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap; "><strong>Type</strong></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Sum</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads-Credits" data-trigger="hover" data-html="true" data-content="Sum of all valid Download-Credits of any product (active or archived) within this month mulitplied by its Pling-Factor (see <a href='/faq-pling'>Pling-FAQ).</a>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Credit-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Credit-Factor" data-trigger="hover" data-html="true" data-content="The Credit-Factor's base is $-cent and depends on the product category.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Clone-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Clone-Factor" data-trigger="hover" data-html="true" data-content="If this product is a clone, the factor is 0.5, if not the factor is 1.0"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Sum Credits</strong></div>
+            </div>
+        </div>
+    
+        <div class="tab-pane fade <?=$css_active?>" id="affiliate_<?=$firstProduct['yearmonth']?>">
+            <?php
+            $css_active = '';
+
+            foreach ($allDownloads as $product) { ?>
+                <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
+                    <div class="col-md-2 text-left cell-default">
+                        Downloads
+                    </div>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span><?= round($product['num_downloads_micropayout'],0) ?></span>
+                    </div>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span><?= $product['category_pling_factor'] ?></span>
+                    </div>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span>
+                            <?php 
+                            if((int)$product['yearmonth'] >= 201910) {
+                                echo ($isNoClone==true?'1.0':'0.5'); 
+                            } else {
+                                echo ('1.0'); 
+                            }
+                            
+                            ?>
+                        </span>
+                    </div>
+
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span>
+                        <?php 
+                            $sum_credits = 0;
+                            $sum_credits = $product['num_downloads_micropayout']*$product['category_pling_factor'];
+                            if((int)$product['yearmonth'] >= 201910) {
+
+                                if($isNoClone==false) {
+                                    $sum_credits = $sum_credits * 0.5;
+                                } 
+                            }
+                            print(round($sum_credits,2));
+                            $sum_total_credits += round($sum_credits,2);
+                        ?>
+                        </span>
+                        
+                    </div>
+                </div>
+
+
+                <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
+                    <div class="col-md-2 text-left cell-default">
+                        Mediaviews
+                    </div>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span><?= round($product['num_views_micropayout'],0) ?></span>
+                    </div>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span><?= $product['category_pling_factor'] ?></span>
+                    </div>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span>
+                            <?php 
+                            if((int)$product['yearmonth'] >= 201910) {
+                                echo ($isNoClone==true?'1.0':'0.5'); 
+                            } else {
+                                echo ('1.0'); 
+                            }
+                            
+                            ?>
+                        </span>
+                    </div>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span>
+                        <?php 
+                            $sum_credits = 0;
+                            $sum_credits = $product['num_views_micropayout']*$product['category_pling_factor'];
+                            if((int)$product['yearmonth'] >= 201910) {
+
+                                if($isNoClone==false) {
+                                    $sum_credits = $sum_credits * 0.5;
+                                } 
+                            }
+                            print(round($sum_credits,2));
+                            $sum_total_credits += round($sum_credits,2);
+                        ?>
+                        </span>
+                    </div>
+                </div>
+            
+            <?php } ?>
+            
+            <div class='row row-total'>
+                <div class='col-md-2 text-right'></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><?=$sum_total_text?></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><strong><?=$sum_total_credits?></strong></div>
+            </div>
+            
+            
+            
+            <?php 
+
+
+            $currentDate = date("Ym",time());
+            $viewDate = $firstProduct['yearmonth']."";
+?>
+            
+        </div>
+<?php
+} else {
+    
+    echo '<div class="tab-pane fade in active" id="'.$printDate.'">';
+    echo '    <div style="text-align: center;" class="row margin-bottom-12"><div class="col-md-8 cell-default">No Data</div></div>';
+    echo '    <div class="row row-total">';
+    echo '        <div class="col-md-1 text-right" style="min-width: 150px;"></div><div class="col-md-4 text-right"></div><div class="col-md-3 text-right" style="min-width: 570px;">Possible payout for this month (<span style="font-size: smaller;">*</span>):</div><div class="col-md-1 text-right" style="min-width: 190px;"><strong>$0.00</strong></div>';
+    echo '    </div>';
+    echo '</div>';
+}
+    
+    
+?>
+
+</div>    
+ 
