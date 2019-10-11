@@ -480,7 +480,7 @@ class Default_Model_StatDownload
          */
         
         $sql = "select
-                        m.yearmonth, m.section_id, s.name AS section_name, s.order as section_order, m.section_payout_factor,COUNT(project_id) AS count_projects, SUM(credits_plings) AS num_credits_plings, SUM(credits_section) AS num_credits_section, SUM(credits_plings)/100 AS sum_amount_credits_plings, SUM(credits_section)/100 AS sum_amount_credits_section,
+                        m.yearmonth, m.section_id, s.name AS section_name, s.order as section_order, m.section_payout_factor,COUNT(DISTINCT project_id) AS count_projects, SUM(credits_plings) AS num_credits_plings, SUM(credits_section) AS num_credits_section, SUM(credits_plings)/100 AS sum_amount_credits_plings, SUM(credits_section)/100 AS sum_amount_credits_section,
                         SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_plings END) AS num_real_credits_plings,
                         SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_section END) AS num_real_credits_section
                         ,(SELECT round(sfs.sum_support/DATE_FORMAT(NOW() + INTERVAL 1 MONTH - INTERVAL DATE_FORMAT(NOW(),'%d') DAY,'%d')*DATE_FORMAT(NOW(),'%d') /sfs.sum_amount_payout,2) AS factor  FROM section_funding_stats sfs WHERE sfs.yearmonth = m.yearmonth AND sfs.section_id = m.section_id) AS now_section_payout_factor
@@ -490,8 +490,7 @@ class Default_Model_StatDownload
                 LEFT JOIN
                 `member_payout` ON `member_payout`.`member_id` = m.`member_id`
                  AND `member_payout`.`yearmonth` = m.`yearmonth`
-                 where m.section_id
-                AND m.member_id = :member_id
+                 where AND m.member_id = :member_id
                 and m.yearmonth =  :yearmonth
                 and m.is_member_pling_excluded=0
                 group by m.section_id
