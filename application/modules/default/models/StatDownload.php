@@ -490,7 +490,7 @@ class Default_Model_StatDownload
                 LEFT JOIN
                 `member_payout` ON `member_payout`.`member_id` = m.`member_id`
                  AND `member_payout`.`yearmonth` = m.`yearmonth`
-                 where AND m.member_id = :member_id
+                 where m.member_id = :member_id
                 and m.yearmonth =  :yearmonth
                 and m.is_member_pling_excluded=0
                 group by m.section_id
