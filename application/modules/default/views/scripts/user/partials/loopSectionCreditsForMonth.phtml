@@ -94,8 +94,8 @@ $printDate = $printMonth->format('M Y');
 
 $allDownloads = $modelDownload->getUserDownloadsAndViewsForProject($this->member->member_id, $yearmonth, $section_id, $project_id);
 
-$modelTag = new Default_Model_Tags();
-$isOriginal = $modelTag->isProductOriginal($project_id);
+$modelProj = new Default_Model_Project();
+$isClone = $modelProj->isProjectClone($project_id);
 
 
 
@@ -110,7 +110,7 @@ if ($countDownloadsOverall > 0) {
                 <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap; "><strong>Type</strong></div>
                 <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Sum</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads-Credits" data-trigger="hover" data-html="true" data-content="Sum of all valid Download-Credits of any product (active or archived) within this month mulitplied by its Pling-Factor (see <a href='/faq-pling'>Pling-FAQ).</a>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
                 <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Credit-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Credit-Factor" data-trigger="hover" data-html="true" data-content="The Credit-Factor's base is $-cent and depends on the product category.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Original-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Original-Factor" data-trigger="hover" data-html="true" data-content=""><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Clone-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Clone-Factor" data-trigger="hover" data-html="true" data-content="If this product is a clone, the factor is 0.5, if not the factor is 1.0"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
                 <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Sum Credits</strong></div>
             </div>
         </div>
@@ -134,7 +134,7 @@ if ($countDownloadsOverall > 0) {
                         <span>
                             <?php 
                             if((int)$product['yearmonth'] >= 201910) {
-                                echo ($isOriginal==true?'1.0':'0.5'); 
+                                echo ($isClone==true?'1.0':'0.5'); 
                             } else {
                                 echo ('1.0'); 
                             }
@@ -150,12 +150,12 @@ if ($countDownloadsOverall > 0) {
                             $sum_credits = $product['num_downloads_micropayout']*$product['category_pling_factor'];
                             if((int)$product['yearmonth'] >= 201910) {
 
-                                if($isOriginal==false) {
+                                if($isClone==false) {
                                     $sum_credits = $sum_credits * 0.5;
                                 } 
                             }
-                            print(round($sum_credits,0));
-                            $sum_total_credits += round($sum_credits,0);
+                            print(round($sum_credits,2));
+                            $sum_total_credits += round($sum_credits,2);
                         ?>
                         </span>
                         
@@ -177,7 +177,7 @@ if ($countDownloadsOverall > 0) {
                         <span>
                             <?php 
                             if((int)$product['yearmonth'] >= 201910) {
-                                echo ($isOriginal==true?'1.0':'0.5'); 
+                                echo ($isClone==true?'1.0':'0.5'); 
                             } else {
                                 echo ('1.0'); 
                             }
@@ -192,12 +192,12 @@ if ($countDownloadsOverall > 0) {
                             $sum_credits = $product['num_views_micropayout']*$product['category_pling_factor'];
                             if((int)$product['yearmonth'] >= 201910) {
 
-                                if($isOriginal==false) {
+                                if($isClone==false) {
                                     $sum_credits = $sum_credits * 0.5;
                                 } 
                             }
-                            print(round($sum_credits,0));
-                            $sum_total_credits += round($sum_credits,0);
+                            print(round($sum_credits,2));
+                            $sum_total_credits += round($sum_credits,2);
                         ?>
                         </span>
                     </div>
