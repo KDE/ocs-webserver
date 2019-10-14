@@ -937,6 +937,27 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             return false;
         }
     }
+    
+    /**
+     * @param int $project_id
+     *
+     * @return bool
+     */
+    public function isProjectClone($project_id)
+    {
+        $sql_object =
+            "SELECT c.project_clone_id FROM project_clone c
+                WHERE c.is_valid = 1
+                AND c.is_deleted = 0
+                AND c.project_id_parent IS NOT NULL
+                AND c.project_id = :project_id";
+        $r = $this->getAdapter()->fetchRow($sql_object, array('project_id' => $project_id));
+        if ($r) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 
     /**
@@ -1188,7 +1209,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $statement = $this->generateCategoryFilter($statement, $inputFilterParams);
         $statement = $this->generateOrderFilter($statement, $inputFilterParams);
         $statement = $this->generateTagFilter($statement, $inputFilterParams);
-        $statement = $this->generateOriginalFilter($statement, $inputFilterParams);
+        // $statement = $this->generateOriginalFilter($statement, $inputFilterParams);
         $statement = $this->generateReportedSpamFilter($statement);
 
         $statement->limit($limit, $offset);
@@ -1313,7 +1334,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      *
      * @return Zend_Db_Select
      */
-    protected function generateOriginalFilter(Zend_Db_Select $statement, $filterArrayValue)
+    /*protected function generateOriginalFilter(Zend_Db_Select $statement, $filterArrayValue)
     {
         if (false == isset($filterArrayValue[self::FILTER_NAME_ORIGINAL])) {
             return $statement;
@@ -1328,7 +1349,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
 
         return $statement;
-    }
+    }*/
 
     /**
      * @param Zend_Db_Select $statement
