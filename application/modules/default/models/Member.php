@@ -626,9 +626,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (false == isset($userData['password'])) {
             throw new Exception(__METHOD__ . ' - user password is not set.');
         }
-        $userData['password'] =
-            Local_Auth_Adapter_Ocs::getEncryptedPassword($userData['password'],
-                Default_Model_DbTable_Member::SOURCE_LOCAL);
+        $userData['password'] = Local_Auth_Adapter_Ocs::getEncryptedPassword($userData['password'],Default_Model_DbTable_Member::SOURCE_LOCAL);
         if (false == isset($userData['roleId'])) {
             $userData['roleId'] = self::ROLE_ID_DEFAULT;
         }
@@ -723,10 +721,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     /**
      * @param array $newUser
-     * @param bool  $isVerified
-     *
      * @return Zend_Db_Table_Row_Abstract
-     * @throws Exception
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Db_Table_Exception
+     * @throws Zend_Exception
      */
     private function createPrimaryMailAddress($newUser)
     {
