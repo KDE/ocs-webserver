@@ -717,7 +717,7 @@ body.video-react-full-window .video-react-fullscreen {
 .video-react .video-react-progress-holder .video-react-load-progress div {
   position: absolute;
   display: block;
-  height: 0.3em;
+  height: 0.4em;
   margin: 0;
   padding: 0;
   width: 0;
