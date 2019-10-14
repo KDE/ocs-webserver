@@ -498,6 +498,7 @@ class Default_Model_StatDownload
                 LEFT JOIN
                 `member_payout` ON `member_payout`.`member_id` = m.`member_id`
                  AND `member_payout`.`yearmonth` = m.`yearmonth`
+                LEFT JOIN tag_object ON tag_id = 2451 and tag_object_id=m.project_id and tag_group_id=11 and tag_type_id = 1 and is_deleted = 0
                  where m.member_id = :member_id
                 and m.yearmonth =  :yearmonth
                 group by m.section_id
