@@ -73,6 +73,10 @@ if(isset($this->section_id)) {
 $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
 
+$modelTag = new Default_Model_Tags();
+
+$origialFactor = 0;
+
 $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 $helpImage = new Default_View_Helper_Image();
 $css_active = ' in active';
@@ -108,13 +112,16 @@ if ($countDownloadsOverall > 0) {
         $sum_total_month_score = 0;
         $sum_total_month = 0;
         $sum_total_month_uk = 0;
+        $sum_total_month_uk_org = 0;
         $sum_total_month_new = 0;
         $sum_total_text = '';
         $sum_total_payout = 0;
         $sum_total_payout_uk = 0;
+        $sum_total_payout_uk_org = 0;
         $sum_total_payout_new = 0;
         
         $sum_total_credits = 0;
+        $sum_total_credits_org = 0;
         
         $sum_total_month_potential_payout = 0;
         $sum_total_potential_payout = 0;
@@ -144,6 +151,14 @@ if ($countDownloadsOverall > 0) {
                 $section_factor = $product['section_payout_factor'];
                 $actual_payout_sum = $product['amount_section_micropayout'];
                 
+                
+                $isOriginal = $modelTag->isProductOriginal($product['project_id']);
+                $origialFactor = 0.5;
+                if($isOriginal) {
+                    $origialFactor = 1.0;
+                }
+
+                
                 #if($isCurrentMonth) {
                 #    $section_factor = $product['now_section_payout_factor'];
                 #    $actual_payout_sum = $product['num_plings_micropayout']*$section_factor/100;
@@ -169,10 +184,18 @@ if ($countDownloadsOverall > 0) {
                         <b style="display: block; margin-bottom: 5px; font-size: 10pt; line-height: 0em;min-width: 140px;max-width: 180px;"><?=$product['cat_title']?></b>
                     </div>
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
-                        <span><?= round($product['num_downloads_micropayout']*$product['category_pling_factor'],0) ?></span>
+                        <span><?= round($product['num_downloads_micropayout']*$product['category_pling_factor'],0) ?>
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                            (<?= round($product['num_downloads_micropayout']*$product['category_pling_factor']*$origialFactor,2) ?>)
+                        <?php endif; ?>
+                        </span>
                     </div>
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
-                        <span><?= round($product['num_views_micropayout']*$product['category_pling_factor'],0) ?></span>
+                        <span><?= round($product['num_views_micropayout']*$product['category_pling_factor'],0) ?>
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                            (<?= round($product['num_views_micropayout']*$product['category_pling_factor']*$origialFactor,2) ?>)
+                        <?php endif; ?>
+                        </span>
                     </div>
                     <?php /*
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
@@ -222,7 +245,15 @@ if ($countDownloadsOverall > 0) {
                                 echo '<div class="inline msg-popover-danger" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout requirements are not fulfilled" data-trigger="hover" data-html="true" data-content="'.$errorMsg.'"><span style="color: #a94442;" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span></div>';
                             } else {
                                  print(round($product['num_plings_micropayout'],0));
+                                 
+                                 if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+                                     print(' ('.round($product['num_plings_micropayout']*$origialFactor,2).')');
+                                     $sum_total_credits_org += round($product['num_plings_micropayout']*$origialFactor,2);
+                                 }
                                  $sum_total_credits += round($product['num_plings_micropayout'],0);
+                                 
+                                 
+                                 
                             }
                         ?>
                         </span>
@@ -268,6 +299,10 @@ if ($countDownloadsOverall > 0) {
                                 echo '<div class="inline msg-popover-danger" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout requirements are not fulfilled" data-trigger="hover" data-html="true" data-content="'.$errorMsg.'"><span style="color: #a94442;" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span></div>';
                             } else {
                                  print($currency->toCurrency($product['num_plings_micropayout']/100));
+                                 
+                                 if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+                                     print(' ('.round($product['num_plings_micropayout']*$origialFactor/100,2).')');
+                                 }
                             }
                         ?>
                         </span>
@@ -277,12 +312,20 @@ if ($countDownloadsOverall > 0) {
                     
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
-                        <span style="color: #BBB"><?php print($currency->toCurrency($product['amount_plings_micropayout'])); ?></span>
+                        <span style="color: #BBB"><?php print($currency->toCurrency($product['amount_plings_micropayout'])); ?> (<?php print($currency->toCurrency($product['amount_plings_micropayout']*$origialFactor)); ?>)
+                        
+                        </span>
                     </div>
                     <?php endif;?>
                     <?php if(!$showErrMsg) {
                             $payout_sum_uk = 0;
                             $payout_sum_uk = $product['num_plings_micropayout']/100;
+                            
+                            $payout_sum_uk_org = 0;
+                            if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+                                $payout_sum_uk_org = $product['num_plings_micropayout']*$origialFactor/100;
+                            }
+                            
                     ?>
                     <?php } ?>
                 </div>
@@ -302,6 +345,9 @@ if ($countDownloadsOverall > 0) {
                 if(!$showErrMsg) {       
                     $sum_total_month_uk += $payout_sum_uk;
                     $sum_total_payout_uk = $currency->toCurrency($sum_total_month_uk);
+                    
+                    $sum_total_month_uk_org += $payout_sum_uk_org;
+                    $sum_total_payout_uk_org = $currency->toCurrency($sum_total_month_uk_org);
                 }
                 
                 $sum_total_text = 'Summaries:';
@@ -317,12 +363,24 @@ if ($countDownloadsOverall > 0) {
 
             ?>
             <div class='row row-total'>
-                <div class="col-md-1" style="min-width: 150px;"></div>
+                <div class="col-md-1"></div>
                 <div class='col-md-2 text-right'></div>
                 <?php /*<div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"></div> */ ?>
-                <div class='col-md-4 text-right' style="min-width: 340px;max-width: 340px;"><?=$sum_total_text?></div>
-                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><strong><?=$sum_total_credits?></strong></div>
-                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><strong><?=$sum_total_payout_uk?></strong></div>
+                <div class='col-md-4 text-right' style="min-width: 340px;max-width: 340px;margin-right: 13px;"><?=$sum_total_text?></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;">
+                    <strong><?=$sum_total_credits?>
+                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                    (<?=$sum_total_credits_org?>)
+                    <?php endif;?>
+                    </strong>
+                </div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;">
+                    <strong><?=$sum_total_payout_uk?>
+                    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                    (<?=$sum_total_payout_uk_org?>)
+                    <?php endif;?>
+                    </strong>
+                </div>
                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                 <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><strong style="color: #BBB"><?=$sum_total_potential_payout?></strong></div>
                 <?php endif;?>

@@ -480,9 +480,17 @@ class Default_Model_StatDownload
          */
         
         $sql = "select
-                        m.yearmonth, m.section_id, s.name AS section_name, s.order as section_order, m.section_payout_factor,COUNT(DISTINCT project_id) AS count_projects, SUM(credits_plings) AS num_credits_plings, SUM(credits_section) AS num_credits_section, SUM(credits_plings)/100 AS sum_amount_credits_plings, SUM(credits_section)/100 AS sum_amount_credits_section,
+                        m.yearmonth, m.section_id, s.name AS section_name, s.order as section_order, m.section_payout_factor
+                        ,COUNT(DISTINCT project_id) AS count_projects
+                        , SUM(credits_plings) AS num_credits_plings
+                        , SUM(credits_section) AS num_credits_section
+                        ,case when tag_object.tag_item_id IS NOT NULL then SUM(credits_plings) ELSE SUM(credits_plings)*0.5 END AS num_credits_plings_org
+			,case when tag_object.tag_item_id IS NOT NULL then SUM(credits_section) ELSE SUM(credits_section)*0.5 END AS num_credits_section_org
+                        , SUM(credits_plings)/100 AS sum_amount_credits_plings
+                        , SUM(credits_section)/100 AS sum_amount_credits_section,
                         SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_plings END) AS num_real_credits_plings,
-                        SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_section END) AS num_real_credits_section
+                        SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_section END) AS num_real_credits_section,
+                        case when tag_object.tag_item_id IS NOT NULL then SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_plings END) ELSE SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_plings END)*0.5 END AS num_real_credits_plings_org
                         ,(SELECT round(sfs.sum_support/DATE_FORMAT(NOW() + INTERVAL 1 MONTH - INTERVAL DATE_FORMAT(NOW(),'%d') DAY,'%d')*DATE_FORMAT(NOW(),'%d') /sfs.sum_amount_payout,2) AS factor  FROM section_funding_stats sfs WHERE sfs.yearmonth = m.yearmonth AND sfs.section_id = m.section_id) AS now_section_payout_factor
                         , MAX(amount) AS payout_amount, MAX(STATUS) AS payout_status, MAX(payment_transaction_id) AS payout_payment_transaction_id, MAX(m.paypal_mail) AS paypal_mail
                 from micro_payout m
@@ -490,9 +498,9 @@ class Default_Model_StatDownload
                 LEFT JOIN
                 `member_payout` ON `member_payout`.`member_id` = m.`member_id`
                  AND `member_payout`.`yearmonth` = m.`yearmonth`
+                LEFT JOIN tag_object ON tag_id = 2451 and tag_object_id=m.project_id and tag_group_id=11 and tag_type_id = 1 and is_deleted = 0
                  where m.member_id = :member_id
                 and m.yearmonth =  :yearmonth
-                and m.is_member_pling_excluded=0
                 group by m.section_id
                 ORDER BY s.`order`";
         
