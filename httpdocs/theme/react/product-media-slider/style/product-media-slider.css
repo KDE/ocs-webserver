@@ -95,7 +95,7 @@ video:focus {
   box-shadow: none;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-control-bar {
-  font-size: 7pt;
+  font-size: 6pt;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -172,8 +172,8 @@ video:focus {
   background-color: transparent;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-bar.video-react-slider-horizontal .video-react-volume-level {
-  height: 0.5em;
-  top: 1.65em;
+  height: 0.4em;
+  top: 1.75em;
   left: 0.5em;
 }
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-volume-bar.video-react-slider-horizontal .video-react-volume-level::before {

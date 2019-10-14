@@ -723,6 +723,7 @@ body.video-react-full-window .video-react-fullscreen {
   width: 0;
   left: 0;
   top: 0;
+  opacity: 0.9;
 }
 
 .video-react .video-react-play-progress {
