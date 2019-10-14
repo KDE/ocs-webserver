@@ -39,7 +39,7 @@ class Default_Model_StatDownload
                     `member_payout`.`status`,
                     `member_payout`.`payment_transaction_id`,
                     CASE WHEN `tag_object`.`tag_item_id` IS NULL THEN 1 ELSE 0 END AS `is_license_missing_now`,
-                    CASE WHEN ((`project_category`.`source_required` = 1 AND `project`.`source_url` IS NOT NULL AND LENGTH(`project`.`source_url`) > 0) OR  (`project_category`.`source_required` = 0)) THEN 0 ELSE 1 END AS `is_source_missing_now`,
+                    CASE WHEN ((`project_category`.`source_required` = 1 AND ((`project`.`source_url` IS NOT NULL AND LENGTH(`project`.`source_url`) > 0) OR `project`.gitlab_project_id IS NOT NULL)) OR  (`project_category`.`source_required` = 0)) THEN 0 ELSE 1 END AS `is_source_missing_now`,
                     `project`.`pling_excluded` AS `is_pling_excluded_now`
                 FROM
                     `member_dl_plings`
@@ -90,7 +90,7 @@ class Default_Model_StatDownload
                     `member_payout`.`status`,
                     `member_payout`.`payment_transaction_id`,
                     CASE WHEN `tag_object`.`tag_item_id` IS NULL THEN 1 ELSE 0 END AS `is_license_missing_now`,
-                    CASE WHEN ((`project_category`.`source_required` = 1 AND `project`.`source_url` IS NOT NULL AND LENGTH(`project`.`source_url`) > 0) OR  (`project_category`.`source_required` = 0)) THEN 0 ELSE 1 END AS `is_source_missing_now`,
+                    CASE WHEN ((`project_category`.`source_required` = 1 AND ((`project`.`source_url` IS NOT NULL AND LENGTH(`project`.`source_url`) > 0) OR `project`.gitlab_project_id IS NOT NULL)) OR  (`project_category`.`source_required` = 0)) THEN 0 ELSE 1 END AS `is_source_missing_now`,
                     `project`.`pling_excluded` AS `is_pling_excluded_now`,
                     (SELECT SUM(u.num_plings) FROM micro_payout u 
                     WHERE u.member_id = `micro_payout`.`member_id` 
@@ -189,7 +189,7 @@ class Default_Model_StatDownload
                     `member_payout`.`status`,
                     `member_payout`.`payment_transaction_id`,
                     CASE WHEN `tag_object`.`tag_item_id` IS NULL THEN 1 ELSE 0 END AS `is_license_missing_now`,
-                    CASE WHEN ((`project_category`.`source_required` = 1 AND `project`.`source_url` IS NOT NULL AND LENGTH(`project`.`source_url`) > 0) OR  (`project_category`.`source_required` = 0)) THEN 0 ELSE 1 END AS `is_source_missing_now`,
+                    CASE WHEN ((`project_category`.`source_required` = 1 AND ((`project`.`source_url` IS NOT NULL AND LENGTH(`project`.`source_url`) > 0) OR `project`.gitlab_project_id IS NOT NULL)) OR  (`project_category`.`source_required` = 0)) THEN 0 ELSE 1 END AS `is_source_missing_now`,
                     `project`.`pling_excluded` AS `is_pling_excluded_now`,
                     (SELECT SUM(u.num_plings) FROM micro_payout u 
                     WHERE u.member_id = `micro_payout`.`member_id` 
@@ -330,7 +330,7 @@ class Default_Model_StatDownload
                     `member_payout`.`status`,
                     `member_payout`.`payment_transaction_id`,
                     CASE WHEN `tag_object`.`tag_item_id` IS NULL THEN 1 ELSE 0 END AS `is_license_missing_now`,
-                    CASE WHEN ((`project_category`.`source_required` = 1 AND `project`.`source_url` IS NOT NULL AND LENGTH(`project`.`source_url`) > 0) OR  (`project_category`.`source_required` = 0)) THEN 0 ELSE 1 END AS `is_source_missing_now`,
+                    CASE WHEN ((`project_category`.`source_required` = 1 AND ((`project`.`source_url` IS NOT NULL AND LENGTH(`project`.`source_url`) > 0) OR `project`.gitlab_project_id IS NOT NULL)) OR  (`project_category`.`source_required` = 0)) THEN 0 ELSE 1 END AS `is_source_missing_now`,
                     `project`.`pling_excluded` AS `is_pling_excluded_now`,
                     (SELECT u.num_downloads FROM member_dl_plings_nouk u WHERE u.member_id = `member_dl_plings`.`member_id` and u.project_id = `member_dl_plings`.`project_id` AND u.yearmonth = `member_dl_plings`.yearmonth) AS num_downloads_nouk,
                     (SELECT u.probably_payout_amount FROM member_dl_plings_nouk u WHERE u.member_id = `member_dl_plings`.`member_id` and u.project_id = `member_dl_plings`.`project_id` AND u.yearmonth = `member_dl_plings`.yearmonth) AS probably_payout_amount_nouk
@@ -383,7 +383,7 @@ class Default_Model_StatDownload
                         `member_payout`.`status`,
                         `member_payout`.`payment_transaction_id`,
                         CASE WHEN `tag_object`.`tag_item_id` IS NULL THEN 1 ELSE 0 END AS `is_license_missing_now`,
-                        CASE WHEN ((`project_category`.`source_required` = 1 AND `project`.`source_url` IS NOT NULL AND LENGTH(`project`.`source_url`) > 0) OR  (`project_category`.`source_required` = 0)) THEN 0 ELSE 1 END AS `is_source_missing_now`,
+                        CASE WHEN ((`project_category`.`source_required` = 1 AND ((`project`.`source_url` IS NOT NULL AND LENGTH(`project`.`source_url`) > 0) OR `project`.gitlab_project_id IS NOT NULL)) OR  (`project_category`.`source_required` = 0)) THEN 0 ELSE 1 END AS `is_source_missing_now`,
                         `project`.`pling_excluded` AS `is_pling_excluded_now`,
                         (SELECT u.num_downloads FROM member_dl_plings_nouk u WHERE u.member_id = `member_dl_plings`.`member_id` and u.project_id = `member_dl_plings`.`project_id` AND u.yearmonth = `member_dl_plings`.yearmonth) AS num_downloads_nouk,
                         (SELECT u.probably_payout_amount FROM member_dl_plings_nouk u WHERE u.member_id = `member_dl_plings`.`member_id` and u.project_id = `member_dl_plings`.`project_id` AND u.yearmonth = `member_dl_plings`.yearmonth) AS probably_payout_amount_nouk
