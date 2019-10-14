@@ -238,6 +238,9 @@ if ($countDownloadsOverall > 0) {
         $sum_total_month_potential_payout = 0;
         $sum_total_potential_payout = 0;
         
+        $sum_total_month_potential_payout_org = 0;
+        $sum_total_potential_payout_org = 0;
+        
         
         $css_active = ' in active';
         ?>
@@ -268,15 +271,15 @@ if ($countDownloadsOverall > 0) {
                         <span><?= round($section['num_real_credits_plings'],0) ?></span>
                     </div>
                     */ ?>
+                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
+                        <span><?php print($currency->toCurrency($section['num_real_credits_plings']/100)); ?></span>
+                    </div>
+                    
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
                         <span><?php print($currency->toCurrency($section['num_real_credits_plings_org']/100)); ?></span>
                     </div>
                     <?php endif; ?>
-                    <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
-                        <span><?php print($currency->toCurrency($section['num_real_credits_plings']/100)); ?></span>
-                    </div>
-                    
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-md-1 text-right cell-default" style="min-width: 190px;">
                         <span><?php print($currency->toCurrency($section['sum_amount_credits_plings'])); ?></span>
@@ -308,6 +311,9 @@ if ($countDownloadsOverall > 0) {
                 $sum_total_month_potential_payout += ($section['num_real_credits_plings']/100);
                 $sum_total_potential_payout = $currency->toCurrency($sum_total_month_potential_payout);
                 
+                $sum_total_month_potential_payout_org += ($section['num_real_credits_plings_org']/100);
+                $sum_total_potential_payout_org = $currency->toCurrency($sum_total_month_potential_payout_org);
+                
                 $sum_total_month += $payout_sum;
                 $sum_total_payout = $currency->toCurrency($sum_total_month);
                 
@@ -331,6 +337,7 @@ if ($countDownloadsOverall > 0) {
                 <div class='col-md-2 text-right' style="min-width: 503px;"><?=$sum_total_text?></div>
                 <div class='col-md-1 text-right' style="min-width: 170px;"><strong style="color: #BBB"><?=$sum_total_potential_payout?></strong></div>
                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                <div class='col-md-1 text-right' style="min-width: 190px;"><strong style="color: #BBB"><?=$sum_total_potential_payout_org?></strong></div>
                 <div class='col-md-1 text-right' style="min-width: 190px;"><strong style="color: #BBB"><?=$sum_total_payout_max?></strong></div>
                 <?php endif; ?>
                 <div class='col-md-1 text-right' style="min-width: 190px;"></div>
