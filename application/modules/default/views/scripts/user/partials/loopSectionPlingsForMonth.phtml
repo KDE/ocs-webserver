@@ -186,14 +186,14 @@ if ($countDownloadsOverall > 0) {
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
                         <span><?= round($product['num_downloads_micropayout']*$product['category_pling_factor'],0) ?>
                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                            (<?= round($product['num_downloads_micropayout']*$product['category_pling_factor']*$origialFactor,0) ?>)
+                            (<?= round($product['num_downloads_micropayout']*$product['category_pling_factor']*$origialFactor,2) ?>)
                         <?php endif; ?>
                         </span>
                     </div>
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
                         <span><?= round($product['num_views_micropayout']*$product['category_pling_factor'],0) ?>
                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                            (<?= round($product['num_views_micropayout']*$product['category_pling_factor']*$origialFactor,0) ?>)
+                            (<?= round($product['num_views_micropayout']*$product['category_pling_factor']*$origialFactor,2) ?>)
                         <?php endif; ?>
                         </span>
                     </div>
@@ -247,8 +247,8 @@ if ($countDownloadsOverall > 0) {
                                  print(round($product['num_plings_micropayout'],0));
                                  
                                  if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
-                                     print(' ('.round($product['num_plings_micropayout']*$origialFactor,0).')');
-                                     $sum_total_credits_org += round($product['num_plings_micropayout']*$origialFactor,0);
+                                     print(' ('.round($product['num_plings_micropayout']*$origialFactor,2).')');
+                                     $sum_total_credits_org += round($product['num_plings_micropayout']*$origialFactor,2);
                                  }
                                  $sum_total_credits += round($product['num_plings_micropayout'],0);
                                  
@@ -301,7 +301,7 @@ if ($countDownloadsOverall > 0) {
                                  print($currency->toCurrency($product['num_plings_micropayout']/100));
                                  
                                  if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
-                                     print(' ('.round($product['num_plings_micropayout']*$origialFactor/100,0).')');
+                                     print(' ('.round($product['num_plings_micropayout']*$origialFactor/100,2).')');
                                  }
                             }
                         ?>
