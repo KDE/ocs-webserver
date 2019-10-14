@@ -219,6 +219,9 @@ video:focus {
   top: 50%;
   margin-top: -0.15em;
 }
+#media-slider .swiper-wrapper .react-player-container .video-react .video-react-progress-control.video-react-control .video-react-load-progress div {
+  background: #eaeaeaba;
+}
 #media-slider .swiper-wrapper .react-player-container .video-react .video-react-play-progress.video-react-slider-bar::after {
   display: none !important;
 }
