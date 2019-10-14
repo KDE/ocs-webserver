@@ -154,7 +154,7 @@ if ($countDownloadsOverall > 0) {
                 
                 $isOriginal = $modelTag->isProductOriginal($product['project_id']);
                 $origialFactor = 0.5;
-                if(!$isOriginal) {
+                if($isOriginal) {
                     $origialFactor = 1.0;
                 }
 
