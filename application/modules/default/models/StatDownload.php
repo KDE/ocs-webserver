@@ -492,7 +492,6 @@ class Default_Model_StatDownload
                  AND `member_payout`.`yearmonth` = m.`yearmonth`
                  where m.member_id = :member_id
                 and m.yearmonth =  :yearmonth
-                #and m.is_member_pling_excluded=0
                 group by m.section_id
                 ORDER BY s.`order`";
         
