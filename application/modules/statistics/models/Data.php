@@ -49,6 +49,53 @@ class Statistics_Model_Data
         $this->_db = $adapter;
     }
 
+    public function getPayoutgroupbyamountProduct()
+    {
+       $sql="select gm as x
+            , count(1) as y
+            from
+            (
+            select 
+            m.project_id,
+            round(sum(m.credits_plings)/100,2) AS probably_payout_amount,
+            floor(round(sum(m.credits_plings/100))/10)*10 gm
+            from micro_payout m
+            where m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$')            
+            and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+            and m.is_member_pling_excluded=0
+            GROUP BY m.project_id
+            ) t
+            group by gm
+            order by gm asc
+            ";
+          $result = $this->_db->fetchAll($sql);          
+          return $result;  
+    }
+
+
+    public function getPayoutgroupbyamountMember()
+    {
+       $sql="select gm as x
+            , count(1) as y
+            from
+            (
+              select 
+              m.member_id,
+              round(sum(m.credits_plings)/100,2) AS probably_payout_amount,
+              floor(sum(m.credits_plings/100)/10)*10 gm
+              from micro_payout m
+              where m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$')            
+              and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+              and m.is_member_pling_excluded=0
+              GROUP BY m.member_id
+            ) t
+            group by gm
+            order by gm asc
+            ";
+          $result = $this->_db->fetchAll($sql);
+          return $result;  
+    }
+
     public function getNewmemberstats(){
           $sql = "SELECT DATE(`created_at`) as memberdate , count(*) as daycount FROM dwh.ods_member_v  group by  memberdate    order by memberdate desc limit 30";
           $result = $this->_db->fetchAll($sql);

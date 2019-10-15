@@ -25,6 +25,8 @@ $helperBuildBaseUrl = new Default_View_Helper_BuildBaseUrlStore();
 
 <div class="pling-nav-tabs">
     <ul class="nav nav-tabs ">
+
+        
         <li class="<?php echo $this->tab == 'new-members-projects' ? 'active' : ''; ?>">
             <a class="newuserprojectTab" href="<?=$helperBuildBaseUrl->buildBaseUrlStore('statistics/new-members-projects')?>" >New Members & Projects </a></li>
 
@@ -45,7 +47,9 @@ $helperBuildBaseUrl = new Default_View_Helper_BuildBaseUrlStore();
         <li class="<?php echo $this->tab == 'payout-month-diff' ? 'active' : ''; ?>"><a class="payoutMonthDiffTab" href="<?=$helperBuildBaseUrl->buildBaseUrlStore('statistics/payout-month-diff')?>" >Payout Month Diff</a></li>
 
         <li class="<?php echo $this->tab == 'payout-categories' ? 'active' : ''; ?>"><a class="payoutCategoryMonthlyTab" href="<?=$helperBuildBaseUrl->buildBaseUrlStore('statistics/payout-categories')?>" >Payout Categories</a></li>
+    
+        <li class="<?php echo $this->tab == 'payout-category-monthly' ? 'active' : ''; ?>"><a class="payoutCategoryTab" href="<?=$helperBuildBaseUrl->buildBaseUrlStore('statistics/payout-category-monthly')?>" >Payout Category monthly</a></li>    
 
-        <li class="<?php echo $this->tab == 'payout-category-monthly' ? 'active' : ''; ?>"><a class="payoutCategoryTab" href="<?=$helperBuildBaseUrl->buildBaseUrlStore('statistics/payout-category-monthly')?>" >Payout Category monthly</a></li>              
+        <li class="<?php echo $this->tab == 'payout-groupby-amount' ? 'active' : ''; ?>"><a class="payoutGroupbyAmountTab" href="<?=$helperBuildBaseUrl->buildBaseUrlStore('statistics/payout-groupby-amount')?>" >Payout Groupby amount last month</a></li>             
     </ul>
 </div>

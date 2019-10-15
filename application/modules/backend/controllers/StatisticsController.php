@@ -42,7 +42,8 @@ class Backend_StatisticsController extends Local_Controller_Action_Backend
     public function payoutNewloserAction(){}
     public function payoutMonthDiffAction(){}
     public function payoutCategoriesAction(){}
-    public function payoutCategoryMonthlyAction(){}
+    public function payoutCategoryMonthlyAction(){}    
+    public function payoutGroupbyAmountAction(){}
     
 
     protected function setLayout()
