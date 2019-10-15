@@ -61,7 +61,7 @@ class Statistics_Model_Data
             floor(round(sum(m.credits_plings/100))/10)*10 gm
             from micro_payout m
             where m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$')            
-            and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 4 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+            and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
             and m.is_member_pling_excluded=0
             GROUP BY m.project_id
             ) t
@@ -85,7 +85,7 @@ class Statistics_Model_Data
               floor(sum(m.credits_plings/100)/10)*10 gm
               from micro_payout m
               where m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$')            
-              and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 4 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+              and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
               and m.is_member_pling_excluded=0
               GROUP BY m.member_id
             ) t
