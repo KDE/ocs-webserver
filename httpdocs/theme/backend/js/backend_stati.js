@@ -194,13 +194,22 @@ $(document).ready(function () {
         $.getScript("/theme/flatui/js/stati/memberPayout.js");
     });
 
+    // payoutGroupbyAmountTab
+    $(".payoutGroupbyAmountTab").click(function () {
+        $.getScript("/theme/flatui/js/stati/payoutGroupbyAmount.js");
+    });
+
+
     // payout Category Monthly tab begin
     $('#payoutCategoryMonthlyTab').prepend(createMonthFilter('selectmonthCategoryMonthly'));
-    $(".payoutCategoryMonthlyTab").click(function () {
+
+    var loadPayoutCategoryMonthly = function(){        
         $.getScript("/theme/flatui/js/stati/payoutCategoryMonthly.js");
-    });
+    };
+
+    $("a.payoutCategoryMonthlyTab").click(loadPayoutCategoryMonthly);
     $('#selectmonthCategoryMonthly').change(function () {
-        $('.payoutCategoryMonthlyTab').trigger('click');
+        $('.payoutCategoryMonthlyTab').trigger('click');        
     });
     // payout Category Monthly tab end
 
