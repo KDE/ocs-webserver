@@ -78,6 +78,14 @@ class Backend_IndexController extends Local_Controller_Action_Backend
         $this->sendJson($modelData->getPayoutgroupbyamountProduct());
     }
 
+    public function getpayoutgroupbyamountmemberAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $modelData = new Statistics_Model_Data(Zend_Registry::get('config')->resources->toArray());
+                
+        $this->sendJson($modelData->getPayoutgroupbyamountMember());
+    }
+
     public function getnewprojectstatsAction()
     {
         $this->_helper->layout->disableLayout();
