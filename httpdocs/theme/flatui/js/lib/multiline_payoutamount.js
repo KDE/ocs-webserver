@@ -215,7 +215,8 @@ function makeLineChartPayoutGroupAmount(dataset, xName, yObjs, axisLables) {
             }
 
             focus.select(".focus.line").attr("transform", "translate(" + chartObj.xScale(chartObj.xFunct(d)) + ")").attr("y1", minY);
-            focus.select(".focus.year").text("Yearmonth: " + chartObj.xFormatter(chartObj.xFunct(d)));
+            var txt = "$ "+chartObj.xFormatter(chartObj.xFunct(d)) + '-> '+ (parseInt(chartObj.xFormatter(chartObj.xFunct(d)))+10);
+            focus.select(".focus.year").text(txt);
         }
 
     };
