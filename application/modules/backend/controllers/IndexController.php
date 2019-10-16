@@ -101,7 +101,7 @@ class Backend_IndexController extends Local_Controller_Action_Backend
         $modelData = new Statistics_Model_Data(Zend_Registry::get('config')->settings->dwh->toArray());
         $data = $modelData->getPayout($yyyymm);
         $m = new Default_Model_DbTable_ProjectPlings();
-        $plings = $m->getAllPlingList();
+        $plings = $m->getAllPlingListReceived();
         foreach ($data as &$d) {
             $d['plings'] = 0;
             foreach ($plings as $p) {

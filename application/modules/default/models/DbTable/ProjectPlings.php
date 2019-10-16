@@ -113,16 +113,31 @@ class Default_Model_DbTable_ProjectPlings extends Zend_Db_Table_Abstract
         return $resultRow['count'];
     }
 
-    public function getAllPlingList()
+    public function getAllPlingListReceived()
     {
         $sql = "
-            select f.member_id
+            select p.member_id
             ,m.username
             ,count(1) as plings
-            from project_plings f, member m  
-            where f.member_id = m.member_id and f.is_deleted = 0 and f.is_active = 1
-            group by member_id
+            from project_plings f, project p,  member m
+            where f.project_id = p.project_id 
+            and p.member_id = m.member_id and f.is_deleted = 0 and f.is_active = 1
+            group by p.member_id
             order by plings desc
+        ";
+        return  $this->_db->fetchAll($sql);
+    }
+
+    public function getAllPlingListGiveout()
+    {
+        $sql = "
+                select f.member_id
+                ,m.username
+                ,count(1) as plings
+                from project_plings f, member m
+                where f.member_id = m.member_id and f.is_deleted = 0 and f.is_active = 1
+                group by f.member_id
+                order by plings desc        
         ";
         return  $this->_db->fetchAll($sql);
     }
