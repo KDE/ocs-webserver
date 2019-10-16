@@ -23,6 +23,20 @@
 
 $this->tab = 'payout-member';
 echo $this->render('statistics/headerTabs.phtml');
+
+$m = new Default_Model_DbTable_ProjectPlings();
+$plings = $m->getAllPlingListReceived();
+$plingsGiven = $m->getAllPlingListGiveout();
+foreach ($plings as &$p) {
+        $p['plingsGive'] = '';
+        foreach ($plingsGiven as $t) {
+                if($t['member_id'] ==$p['member_id'])
+                {
+                        $p['plingsGive'] = $t['plings'];
+                        break;
+                }
+        }
+}
 ?>
 <style>
         .rowContainer
@@ -32,7 +46,7 @@ echo $this->render('statistics/headerTabs.phtml');
         }
         .memberPlingList
         {
-                width: 250px;
+                width: 450px;
                 margin-left:20px;
         }
         .memberPlingList ul{
@@ -45,7 +59,7 @@ echo $this->render('statistics/headerTabs.phtml');
                 font-weight: bold;
         }
         .memberPlingList ul li span.title{
-                width: 100px;
+                width: 150px;
                 display: inline-block;
         }
         .memberPlingList ul li span.value{
@@ -61,13 +75,11 @@ echo $this->render('statistics/headerTabs.phtml');
                 <div class="rowContainer">
                 <div id="pie" style="clear:left;padding:50px; display:block;  "></div>
                 <div class="memberPlingList">
-                        <?php
-                                $m = new Default_Model_DbTable_ProjectPlings();
-                                $plings = $m->getAllPlingList();
-                                echo "<ul><li><span class='title header'>Username</span><span class='value header'>Plings got</span></li>";
+                        <?php                                
+                                echo "<ul><li><span class='title header'>Username</span><span class='value header'>Plings Received</span><span class='value header'>Plings Give out</span></li>";
                                 foreach ($plings as $p) {
-                                        echo '<li><span class="title">'.$p['username'].'</span><span class="value">'.$p['plings']
-                                        .'</span></li>';
+                                        echo '<li><span class="title">'.$p['username'].'_'.$p['member_id'].'</span><span class="value">'.$p['plings']
+                                        .'</span><span class="value">'.$p['plingsGive'].'</span></li>';
                                 }
                                 echo "</ul>";
                         ?>
