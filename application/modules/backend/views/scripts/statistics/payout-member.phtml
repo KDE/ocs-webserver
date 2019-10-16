@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -21,23 +22,65 @@
  **/
 
 $this->tab = 'payout-member';
-echo $this->render('statistics/headerTabs.phtml'); 
+echo $this->render('statistics/headerTabs.phtml');
 ?>
+<style>
+        .rowContainer
+        {
+                display: flex;
+                clear: both;
+        }
+        .memberPlingList
+        {
+                width: 250px;
+                margin-left:20px;
+        }
+        .memberPlingList ul{
+                list-style: none;                
+        }
+        .memberPlingList ul li {
+                border-bottom: 1px solid #ccc;
+        }
+        .memberPlingList ul li span.header{
+                font-weight: bold;
+        }
+        .memberPlingList ul li span.title{
+                width: 100px;
+                display: inline-block;
+        }
+        .memberPlingList ul li span.value{
+                width: 100px;
+                display: inline-block;
+                text-align: right;
+        }
+</style>
 <h3>Statistics: Payout Member</h3>
 <div id="payoutTab" class="tab-pane">
-            <div style="width: 1500px; display: block;float: left">
-                    <div id="payoutyear" style="display: block; float: left; padding-right: 20px" class="d3linepath"></div>         
-                        <div id="pie" style="clear:left;padding:50px; display:block;  "></div>             
-
-            </div>
-
-            <div>    
-             <div style="display: block; float: left; clear:left" id="detailContainer"></div>                                                 
-            </div>                                    
+        <div style="width: 1500px; display: block;float: left">
+                <div id="payoutyear" style="display: block; float: left; padding-right: 20px" class="d3linepath"></div>
+                <div class="rowContainer">
+                <div id="pie" style="clear:left;padding:50px; display:block;  "></div>
+                <div class="memberPlingList">
+                        <?php
+                                $m = new Default_Model_DbTable_ProjectPlings();
+                                $plings = $m->getAllPlingList();
+                                echo "<ul><li><span class='title header'>Username</span><span class='value header'>Plings got</span></li>";
+                                foreach ($plings as $p) {
+                                        echo '<li><span class="title">'.$p['username'].'</span><span class="value">'.$p['plings']
+                                        .'</span></li>';
+                                }
+                                echo "</ul>";
+                        ?>
+                </div>
+                </div>
         </div>
+        <div>
+                <div style="display: block; float: left; clear:left" id="detailContainer"></div>
+        </div>
+</div>
 <script type="text/javascript">
-	$(document).ready(function () {		
-        $.getScript("/theme/flatui/js/stati/payoutyear.js");
-        $.getScript("/theme/flatui/js/stati/memberPayout.js");
-	});
+        $(document).ready(function() {
+                $.getScript("/theme/flatui/js/stati/payoutyear.js");
+                $.getScript("/theme/flatui/js/stati/memberPayout.js");
+        });
 </script>
