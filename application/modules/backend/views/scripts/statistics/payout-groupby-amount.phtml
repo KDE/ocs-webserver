@@ -62,7 +62,8 @@ $member = $modelData->getPayoutgroupbyamountMember();
 			<?php 
 			echo '<li><span class="tier">$</span><span class="cnt"> # </li>';
 			foreach ($products as $p) {
-				echo '<li><span class="tier">'.$p['x'].'->'.($p['x']+10).'</span><span class="cnt">'.$p['y'].'</li>';
+				$tmp = $p['x'] ==0?1:$p['x'];
+				echo '<li><span class="tier">'.$tmp.'->'.($p['x']+10).'</span><span class="cnt">'.$p['y'].'</li>';
 			} ?>
 		</ul>
 	</div>   
@@ -74,7 +75,8 @@ $member = $modelData->getPayoutgroupbyamountMember();
 			
 			echo '<li><span class="tier">$</span><span class="cnt"> # </li>';
 			foreach ($member as $p) {
-				echo '<li><span class="tier">'.$p['x'].'->'.($p['x']+10).'</span><span class="cnt">'.$p['y'].'</li>';
+				$tmp = $p['x'] ==0?1:$p['x'];
+				echo '<li><span class="tier">'.$tmp.'->'.($p['x']+10).'</span><span class="cnt">'.$p['y'].'</li>';
 			} ?>
 		</ul>
 	</div>   
