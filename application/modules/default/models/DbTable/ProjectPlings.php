@@ -123,7 +123,8 @@ class Default_Model_DbTable_ProjectPlings extends Zend_Db_Table_Abstract
             where f.project_id = p.project_id 
             and p.member_id = m.member_id and f.is_deleted = 0 and f.is_active = 1
             group by p.member_id
-            order by plings desc
+            order by plings desc,m.username asc
+            
         ";
         return  $this->_db->fetchAll($sql);
     }
@@ -137,7 +138,7 @@ class Default_Model_DbTable_ProjectPlings extends Zend_Db_Table_Abstract
                 from project_plings f, member m
                 where f.member_id = m.member_id and f.is_deleted = 0 and f.is_active = 1
                 group by f.member_id
-                order by plings desc        
+                order by plings desc ,m.username asc    
         ";
         return  $this->_db->fetchAll($sql);
     }
