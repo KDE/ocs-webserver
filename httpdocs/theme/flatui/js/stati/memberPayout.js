@@ -15,9 +15,8 @@
     }
      
     // format the data
-    data.forEach(function(d) {
-        //d.label = d.member_id+'['+d.amount+']';
-        d.label = d.username+'['+d.amount+']';
+    data.forEach(function(d) {        
+        d.label = d.username+'['+d.amount+']'+'_plings['+d.plings+']';
         d.value = +d.amount;
         d.member = +d.member_id;
         d.username = d.username;            

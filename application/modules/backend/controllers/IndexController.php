@@ -99,7 +99,20 @@ class Backend_IndexController extends Local_Controller_Action_Backend
         $this->_helper->layout->disableLayout();
         $yyyymm = $this->getParam('yyyymm', '201708');
         $modelData = new Statistics_Model_Data(Zend_Registry::get('config')->settings->dwh->toArray());
-        $this->sendJson($modelData->getPayout($yyyymm));
+        $data = $modelData->getPayout($yyyymm);
+        $m = new Default_Model_DbTable_ProjectPlings();
+        $plings = $m->getAllPlingList();
+        foreach ($data as &$d) {
+            $d['plings'] = 0;
+            foreach ($plings as $p) {
+                if($p['member_id'] == $d['member_id'])
+                {
+                    $d['plings'] = $p['plings'];
+                    break;
+                }
+            }
+        }
+        $this->sendJson($data);
     }
 
     public function getdownloadsdailyAction()
