@@ -141,8 +141,32 @@ class MetaHeader extends React.Component {
 
     return (
       <nav id="metaheader-nav" className="metaheader">
-        <div style={{"display":"block"}} className={metamenuCls}>        
-          <SearchForum searchBaseUrl={this.state.baseUrlStore+'search/projectSearchText/'}/>          
+        <div style={{"display":"block"}} className={metamenuCls}>
+          {domainsMenuDisplay}
+
+          <UserMenu
+            device={this.state.device}
+            user={this.state.user}
+            baseUrl={this.state.baseUrl}
+            baseUrlStore={this.state.baseUrlStore}
+            blogUrl={this.state.blogUrl}
+            forumUrl={this.state.forumUrl}
+            loginUrl={this.state.loginUrl}
+            logoutUrl={this.state.logoutUrl}
+            gitlabUrl={this.state.gitlabUrl}
+            myopendesktopUrl={this.state.myopendesktopUrl}
+            cloudopendesktopUrl={this.state.cloudopendesktopUrl}
+            musicopendesktopUrl={this.state.musicopendesktopUrl}
+            docsopendesktopUrl={this.state.docsopendesktopUrl}
+            isAdmin={this.state.isAdmin}
+            onSwitchStyle={this.onSwitchStyle}
+            onSwitchStyleChecked={paraChecked}
+            isExternal={this.state.isExternal}
+            riotUrl={this.state.riotUrl}
+          />
+          <SearchForum searchBaseUrl={this.state.baseUrlStore+'/search/projectSearchText/'}/>
+          
+
         </div>
       </nav>
     )
