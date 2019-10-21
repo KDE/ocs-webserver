@@ -587,7 +587,7 @@ class Default_Model_StatDownload
     {
         $sql = "
                 SELECT 
-                    DISTINCT `yearmonth`, payment_transaction_id, `status`
+                    `yearmonth`, max(payment_transaction_id) AS payment_transaction_id, MAX(`status`) AS `status`
                 FROM
                 
                 (
@@ -621,7 +621,7 @@ class Default_Model_StatDownload
                 AND SUBSTR(p.yearmonth,1,4) = :year 
                 
                 ) A
-                
+                GROUP BY `yearmonth`
                 ORDER BY `yearmonth` DESC
             ";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'year' => $year));
