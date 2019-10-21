@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 
 const SearchForum = (props) => {
-    const [searchText, setSearchText] = useState('');
+    // const [searchText, setSearchText] = useState('');
+    let searchText = "hello";
+
     const onSearchTextChange = e => {
         setSearchText(e.target.value);
     }
@@ -9,6 +11,7 @@ const SearchForum = (props) => {
         e.preventDefault();
         window.location.href = props.searchBaseUrl + searchText;
     }
+
 
     return (
         <div id="site-header-search-form">
