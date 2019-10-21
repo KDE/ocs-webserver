@@ -1,0 +1,27 @@
+{
+  "name": "hooks-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "*",
+    "@babel/polyfill": "*",
+    "@babel/preset-env": "*",
+    "@babel/preset-react": "*",
+    "babel-loader": "*",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
+    "webpack": "*",
+    "webpack-cli": "*"
+  },
+  "dependencies": {
+    "react-device-detect": "^1.6.2"
+  }
+}
