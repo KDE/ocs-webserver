@@ -96,67 +96,146 @@
       margin-top: -2px;
       margin-right: 5px;
     }
-    #whereami{
+    
+    #site-header-search-form{
       margin: 0 auto;
       height: 34px;
-      width: 150px;
+      width: 21em;
       text-align: center;
-      a{
-        display: inline-block;
+      max-width: 21em;      
+        display: flex;
+        align-items: center;
+        position: relative;
+      .react-autosuggest__input
+      {
+        padding-left: 5px;
       }
-      .icon {
-        height: 34px;
-        width: 34px;
-        background-size: 34px;
-        background-position: center center;
-        background-repeat: no-repeat;
-        float: left;
-      }
-      .opendesktop{
-        height: 30px;
+      .react-autosuggest__inputContainer .react-autosuggest__icon{
+        top: 0px;
+        left: auto;
+        right: 0px;
         width: 30px;
-        background-size: 25px;
-        background-image: url('../img/logo-opendesktop.png');
-        background-position: left 3px top 4px;
-      }
-      .pling{
-        height: 50px;
-        width: 50px;
-        background-size: 50px;
-        background-image: url('../img/logo-pling.png');
-        background-position: left 0px top 5px;
-      }
-      .opencode{
         height: 30px;
-        width: 30px;
-        background-size: 22px;
-        background-position: left 5px top 5px;
-        background-image: url('../img/logo-opencode.png');
       }
-      .cloudopendesktop{
-        height: 30px;
-        width: 30px;
-        background-size: 22px;
-        background-position: left 5px top 5px;
-        background-image: url('../img/logo-cloudopendesktop.png');
+      .suggestionsContainer
+      {
+        display: flex;
+        .description{
+          display: flex;
+          margin-left: 10px;
+          flex-flow: column;
+          text-align: left;
+          span.small{
+            font-size: small;
+          }
+        }
       }
-      .chat{
-        height: 30px;
-        width: 30px;
-        background-size: 25px;
-        background-position: left 5px top 5px;
-        background-image: url('../img/chat.png');
+      &.open {
+        .dropdown-menu {
+          display: block;
+        }
       }
-
-      span {
-        float: left;
-        line-height: 34px;
-        padding-left: 4px;
-        text-align: center;
-        display: block;
-        color:rgba(0,0,0,0.87);
+      .autocompletion{
+        left:15px;
+        top:28px;
       }
+        #search-form {
+          height: 25px;
+          padding: 0;
+          margin: 6.5px 15px;
+          line-height: 25px;
+          position: relative;
+  
+          input[type="text"]{
+            width: 100%;
+            min-width: 16em;
+            height: 25px;
+            padding: 0;
+            border: 1px solid #fff;
+            margin-bottom: -1px;
+            padding-right: 30px;
+            text-indent: 5px;
+            color: #6a7686;
+            float: left;
+            border-radius: 6px;
+            box-shadow: none;
+  
+          }
+  
+          > a {
+            top: 2px;
+            right: 0;
+            display: block;
+            width: 25px;
+            height: 25px;
+            background-image: url(/theme/flatui/img/icon-search-input-2.png);
+            background-position: center center;
+            position: absolute;
+            cursor: pointer;
+          }
+        }
     }
+    // #whereami{
+    //   margin: 0 auto;
+    //   height: 34px;
+    //   width: 150px;
+    //   text-align: center;
+    //   a{
+    //     display: inline-block;
+    //   }
+    //   .icon {
+    //     height: 34px;
+    //     width: 34px;
+    //     background-size: 34px;
+    //     background-position: center center;
+    //     background-repeat: no-repeat;
+    //     float: left;
+    //   }
+    //   .opendesktop{
+    //     height: 30px;
+    //     width: 30px;
+    //     background-size: 25px;
+    //     background-image: url('../img/logo-opendesktop.png');
+    //     background-position: left 3px top 4px;
+    //   }
+    //   .pling{
+    //     height: 50px;
+    //     width: 50px;
+    //     background-size: 50px;
+    //     background-image: url('../img/logo-pling.png');
+    //     background-position: left 0px top 5px;
+    //   }
+    //   .opencode{
+    //     height: 30px;
+    //     width: 30px;
+    //     background-size: 22px;
+    //     background-position: left 5px top 5px;
+    //     background-image: url('../img/logo-opencode.png');
+    //   }
+    //   .cloudopendesktop{
+    //     height: 30px;
+    //     width: 30px;
+    //     background-size: 22px;
+    //     background-position: left 5px top 5px;
+    //     background-image: url('../img/logo-cloudopendesktop.png');
+    //   }
+    //   .chat{
+    //     height: 30px;
+    //     width: 30px;
+    //     background-size: 25px;
+    //     background-position: left 5px top 5px;
+    //     background-image: url('../img/chat.png');
+    //   }
+
+    //   span {
+    //     float: left;
+    //     line-height: 34px;
+    //     padding-left: 4px;
+    //     text-align: center;
+    //     display: block;
+    //     color:rgba(0,0,0,0.87);
+    //   }
+    // }
 
     #user-menu-container {
       float: right;
@@ -288,7 +367,7 @@
 
       &#domains-menu {
         margin-left: 10px;
-
+        position: absolute;
         > li {
           padding-left: 0;
 
@@ -500,6 +579,8 @@
       &#user-menu {
         margin-right: 10px;
         float: right;
+        position: absolute;
+        right: 0;
         > li {
 
           &#user-login-container {
@@ -2203,7 +2284,7 @@
 .react-autosuggest__input {
   width: 280px;
   height: 30px;
-  padding: 10px 25px !important;
+  padding: 10px 25px ;
   font-family: Helvetica, sans-serif;
   font-weight: 300;
   font-size: 16px;

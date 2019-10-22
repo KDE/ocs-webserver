@@ -4,7 +4,7 @@ import React from 'react';
 import MobileLeftMenu from './MobileLeftMenu';
 import DomainsMenu from './DomainsMenu';
 import UserMenu from './UserMenu';
-import SearchForum from "./SearchForum";
+import SearchForm from "./SearchForm";
 
 class MetaHeader extends React.Component {
   constructor(props){
@@ -13,8 +13,6 @@ class MetaHeader extends React.Component {
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.onSwitchStyle = this.onSwitchStyle.bind(this);
-
-    //this.getUser = this.getUser.bind(this);
   }
 
 
@@ -39,6 +37,8 @@ class MetaHeader extends React.Component {
     window.addEventListener("orientationchange",this.updateDimensions);
   }
 
+  
+  
   // change metamenu class
   onSwitchStyle(evt){
      let url = 'https://www.opendesktop.org/membersetting/setsettings/itemid/1/itemvalue/';
@@ -63,16 +63,6 @@ class MetaHeader extends React.Component {
       });
   }
 
-  getUser(){
-    const decodedCookie = decodeURIComponent(document.cookie);
-    let ocs_data = decodedCookie.split('ocs_data=')[1];
-    if (ocs_data){
-      if (ocs_data.indexOf(';') > -1){ ocs_data = ocs_data.split(';')[0]; }
-      const user = JSON.parse(ocs_data);
-      this.setState({user:user});
-    }
-  }
-
   updateDimensions(){
     const width = window.innerWidth;
     let device;
@@ -85,7 +75,6 @@ class MetaHeader extends React.Component {
     }
     this.setState({device:device});
   }
-
   render(){
 
     let domainsMenuDisplay;
@@ -130,6 +119,7 @@ class MetaHeader extends React.Component {
           onSwitchStyleChecked={paraChecked}
           isExternal={this.state.isExternal}
           riotUrl={this.state.riotUrl}
+          target={this.state.target}
         />
       )
     }
@@ -138,39 +128,39 @@ class MetaHeader extends React.Component {
     if(this.state.metamenuTheme){
         paraChecked=true;
     }
-
     return (
       <nav id="metaheader-nav" className="metaheader">
-        <div style={{"display":"block"}} className={metamenuCls}>
-          {domainsMenuDisplay}
+      <div style={{"display":"block"}} className={metamenuCls}>
+        {domainsMenuDisplay}
 
-          <UserMenu
-            device={this.state.device}
-            user={this.state.user}
-            baseUrl={this.state.baseUrl}
-            baseUrlStore={this.state.baseUrlStore}
-            blogUrl={this.state.blogUrl}
-            forumUrl={this.state.forumUrl}
-            loginUrl={this.state.loginUrl}
-            logoutUrl={this.state.logoutUrl}
-            gitlabUrl={this.state.gitlabUrl}
-            myopendesktopUrl={this.state.myopendesktopUrl}
-            cloudopendesktopUrl={this.state.cloudopendesktopUrl}
-            musicopendesktopUrl={this.state.musicopendesktopUrl}
-            docsopendesktopUrl={this.state.docsopendesktopUrl}
-            isAdmin={this.state.isAdmin}
-            onSwitchStyle={this.onSwitchStyle}
-            onSwitchStyleChecked={paraChecked}
-            isExternal={this.state.isExternal}
-            riotUrl={this.state.riotUrl}
-          />
-          <SearchForum searchBaseUrl={this.state.baseUrlStore+'/search/projectSearchText/'}/>
-          
+        <UserMenu
+          device={this.state.device}
+          user={this.state.user}
+          baseUrl={this.state.baseUrl}
+          baseUrlStore={this.state.baseUrlStore}
+          blogUrl={this.state.blogUrl}
+          forumUrl={this.state.forumUrl}
+          loginUrl={this.state.loginUrl}
+          logoutUrl={this.state.logoutUrl}
+          gitlabUrl={this.state.gitlabUrl}
+          myopendesktopUrl={this.state.myopendesktopUrl}
+          cloudopendesktopUrl={this.state.cloudopendesktopUrl}
+          musicopendesktopUrl={this.state.musicopendesktopUrl}
+          docsopendesktopUrl={this.state.docsopendesktopUrl}
+          isAdmin={this.state.isAdmin}
+          onSwitchStyle={this.onSwitchStyle}
+          onSwitchStyleChecked={paraChecked}
+          isExternal={this.state.isExternal}
+          riotUrl={this.state.riotUrl}
+        />
+      <SearchForm searchBaseUrl={this.state.baseUrlStore+'/search/projectSearchText/'} 
+              baseUrlStore={this.state.baseUrlStore}
+      />
 
-        </div>
-      </nav>
+      </div>
+    </nav>
     )
   }
 }
 
-export default MetaHeader;
+export default MetaHeader
