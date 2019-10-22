@@ -1,20 +1,34 @@
 import React, { useState } from 'react';
 import Autosuggest from 'react-autosuggest';
 
-
 function renderSuggestion(suggestion) {
   return (
-    <div className="suggestionsContainer">     
-      <div>
-        <img src={suggestion.image_small} style={{width:'50px',height:'50px'}}></img>      
-      </div> 
+    <div className="suggestionsContainer">           
       <div className="description">
-        <span>{suggestion.title}</span>        
-        <span className="small">{' by '+suggestion.username}</span>
+        <span>{suggestion.type}</span>
+        {suggestion.type=='project' ? (
+          <span>{suggestion.title}<span className="small">{' by '+suggestion.username}</span></span>                  
+        ) : (
+          <span>{suggestion.username}</span>                
+        )}               
       </div>            
     </div>    
   );
 }
+
+// function renderSuggestion(suggestion) {
+//   return (
+//     <div className="suggestionsContainer">     
+//       <div>
+//         <img src={suggestion.image_small} style={{width:'50px',height:'50px'}}></img>      
+//       </div> 
+//       <div className="description">
+//         <span>{suggestion.title}</span>        
+//         <span className="small">{' by '+suggestion.username}</span>
+//       </div>            
+//     </div>    
+//   );
+// }
 
 const renderInputComponent = inputProps => (
   <div className="react-autosuggest__inputContainer">
@@ -33,43 +47,18 @@ const SearchForm = (props) => {
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [selected, setSelected] = useState();
-  
-  // const onSearchTextChange = e => {
-  //   setSearchText(e.target.value);
-  //   console.log('setonSearchTextChange...');
-  //   if (e.target.value && e.target.value.length >=3) {      
-  //     setIsloading(true);
-  //     setIsShow(true);            
-  //     let url = props.baseUrlStore+'/membersetting/searchproducts/p/'+searchText;
-  //     console.log(url);
-  //     fetch(url,{
-  //       mode: 'cors',
-  //       credentials: 'include'
-  //       })
-  //     .then(response => response.json())
-  //     .then(data => {          
-  //       setProducts(data);        
-  //       setIsloading(false);
-  //     });
-  //   } else {
-  //     setIsShow(false);
-  //   }
-
-  // }
 
   const onSearchFormSubmit = e => {
     e.preventDefault();
-    if(selected)
+    if(!selected)
     {
-      console.log(selected);
+      window.location.href = props.searchBaseUrl + value;
     }
-    window.location.href = props.searchBaseUrl + value;
   }
 
 
   const getSuggestionValue = suggestion => {  
-    setSelected(suggestion);
-    console.log(selected);
+    setSelected(suggestion);    
     return suggestion.title;
   }
 
@@ -77,7 +66,7 @@ const SearchForm = (props) => {
     const inputLength = value.length;
     if(inputLength<3) return;
     setIsLoading(true);      
-     let url = props.baseUrlStore+'/membersetting/searchproducts/p/'+value;
+     let url = props.baseUrlStore+'/json/search/p/'+value;
      fetch(url,{
                 mode: 'cors',
                 credentials: 'include'
@@ -121,8 +110,8 @@ const SearchForm = (props) => {
 
   const onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method })=>{
     // this.getUserInfo(suggestion.member_id);    
-    setSelected(suggestion);
-    window.location.href = props.baseUrlStore + '/p/'+suggestion.member_id;    
+    setSelected(suggestion);    
+    window.location.href = props.baseUrlStore + '/p/'+suggestion.project_id;    
   }
 
 

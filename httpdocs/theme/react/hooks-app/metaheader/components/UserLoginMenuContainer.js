@@ -93,8 +93,8 @@ class UserLoginMenuContainer extends React.Component {
 
             <li id="user-info-payout" className="buttons">
                 <ul className="payout">
-                  <li><a href={this.props.baseUrlStore + "/u/" + this.props.user.username + "/products"}>My Products</a></li>
-                  <li><a href={this.props.gitlabUrl+"/dashboard/projects"}>My Projects</a></li>
+                  <li><a href={this.props.baseUrlStore + "/u/" + this.props.user.username + "/products"}>Products</a></li>
+                  <li><a href={this.props.gitlabUrl+"/dashboard/projects"}>Projects</a></li>
                   <li><a href={this.state.gitlabLink}>Issues</a></li>
                 </ul>
             </li>

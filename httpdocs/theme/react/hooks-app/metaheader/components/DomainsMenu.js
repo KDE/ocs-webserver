@@ -34,11 +34,12 @@ class DomainsMenu extends React.Component {
         case 'opendesktop':
           dT =(
             <>
-              <li className="active">
-                <a id="opendesktop-logo" href={this.props.baseUrl}>
+              <li className="active">              
+                <a id="opendesktop-logo" href={this.props.baseUrl} >
                   <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
                   openDesktop.org :
                 </a>
+                
               </li>
               <li><a href={this.props.baseUrlStore}>Pling</a></li>
               <li><a href={this.props.gitlabUrl + "/explore/projects"}>Opencode</a></li>
@@ -78,14 +79,14 @@ class DomainsMenu extends React.Component {
         default:
             dT =(
               <>
-                <li className="active">
-                  <a id="opendesktop-logo" href={this.props.baseUrl}>
-                    <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
-                    openDesktop.org : 
-                  </a>
-                  <a href={this.props.target.link}>
-                    <span className="target">{this.props.target.logoLabel}</span>
-                  </a>
+                <li className="active">                 
+                    <a id="opendesktop-logo" href={this.props.baseUrl} style={{'border-top-right-radius':'0px','border-bottom-right-radius':'0px' }}>
+                      <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
+                      openDesktop.org : 
+                    </a>
+                    <a href={this.props.target.link} style={{'border-top-left-radius':'0px','border-bottom-left-radius':'0px' }}>
+                      <span className="target">{this.props.target.logoLabel}</span>
+                    </a>                  
                 </li>
                 <li><a href={this.props.baseUrlStore}>Pling</a></li>
                 <li><a href={this.props.gitlabUrl + "/explore/projects"}>Opencode</a></li>

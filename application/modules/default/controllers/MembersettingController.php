@@ -225,39 +225,7 @@ class MembersettingController extends Zend_Controller_Action
         $this->_sendResponse($results, $this->_format);
     }
 
-    public function searchproductsAction()
-    {
-        $this->_initResponseHeader();
-        $projectSearchText = $this->getParam('p');
-        $param = array('q' => $projectSearchText,'store'=>null,'page' => 1
-            , 'count' => 10);
-        $viewHelperImage = new Default_View_Helper_Image();
-        $modelSearch = new Default_Model_Solr();   
-        try {
-            $result = $modelSearch->search($param);
-            $products = $result['hits'];                      
-            $ps=array();
-            foreach ($products as $p) {
-                $img = $viewHelperImage->Image($p->image_small, array(
-                    'width'  => 50,
-                    'height' => 50
-                ));
-                $ps[] =array('description'=>$p->description
-                    ,'title' =>$p->title
-                    ,'project_id' =>$p->project_id
-                    ,'member_id'=>$p->member_id
-                    ,'username' => $p->username
-                    ,'laplace_score' =>$p->laplace_score
-                    ,'score' =>$p->score
-                    ,'image_small' =>$img);
-            }
-            $this->_sendResponse($ps, $this->_format);
-            
-        } catch (Exception $e) {
-            $this->_sendResponse(null, $this->_format);
-        }    
-    }
-
+   
     public function userinfoAction()
     {
         $this->_initResponseHeader();

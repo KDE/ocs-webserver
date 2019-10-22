@@ -372,11 +372,13 @@
         position: absolute;
         > li {
           padding-left: 0;
-
+          
           > a {
-            margin: 0 10px 0 5px;
+            /*margin: 0 10px 0 5px;*/
             cursor: pointer;
-
+            margin:0;
+          
+            
             &#opendesktop-logo , &#pling-logo, &#gitlab-logo{
               position: relative;
               padding-left: 25px;
@@ -410,6 +412,7 @@
               }
             }
           }
+        
 
           &::after {
             content: "•";
@@ -713,6 +716,7 @@
         .dropdown-menu {
           display: block;
           right: -6px;
+          
         }
 
         #background-overlay {
@@ -1686,6 +1690,7 @@
 
     #user-login-menu-container {
       .user-dropdown {
+        
         .dropdown-toggle {
           img {
             height: 26px;
@@ -1695,6 +1700,7 @@
           }
         }
         .dropdown-menu {
+          width: 285px;
           &::before {
             right: 9px;
           }
@@ -1708,12 +1714,13 @@
                 margin: 0;
                 li{
                   float: none;
-                  padding: 2px 3px;
+                  padding: 3px 5px;
                   /*background-color: #f5f5f5;*/
                   width: 100%;
                   a{
                     float: none;
-                    color:#6a7686;
+                    color:#3D3D3E;
+                    font-weight: normal;
                     &:hover{
                       background: none;
                     }
@@ -2342,8 +2349,8 @@
   border: 1px solid #aaa;
   background-color: #fff;
   font-family: Helvetica, sans-serif;
-  font-weight: 300;
-  font-size: 16px;
+  /*font-weight:300;*/
+  font-size: 12px;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
   z-index: 2;
@@ -2361,7 +2368,7 @@
 
 .react-autosuggest__suggestion {
   cursor: pointer;
-  padding: 10px 20px;
+  /*padding: 10px 20px;*/
 }
 
 .react-autosuggest__suggestion--highlighted {
