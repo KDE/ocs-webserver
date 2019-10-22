@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import Autosuggest from 'react-autosuggest';
 
-function getSuggestionValue(suggestion) {
-  return suggestion.title;
-}
 
 function renderSuggestion(suggestion) {
   return (
@@ -59,11 +56,22 @@ const SearchForm = (props) => {
   //   }
 
   // }
+
   const onSearchFormSubmit = e => {
     e.preventDefault();
+    if(selected)
+    {
+      console.log(selected);
+    }
     window.location.href = props.searchBaseUrl + value;
   }
 
+
+  const getSuggestionValue = suggestion => {  
+    setSelected(suggestion);
+    console.log(selected);
+    return suggestion.title;
+  }
 
   const loadSuggestions = value=> {
     const inputLength = value.length;
@@ -114,12 +122,12 @@ const SearchForm = (props) => {
   const onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method })=>{
     // this.getUserInfo(suggestion.member_id);    
     setSelected(suggestion);
-    window.location.href = props.baseUrlStore + '/p/'+suggestion.member_id;
+    window.location.href = props.baseUrlStore + '/p/'+suggestion.member_id;    
   }
 
 
   const inputProps = {
-    placeholder: "Type to search min.3 chars",
+    placeholder: "",
     value,
     onChange: onHandleChange,
     onSubmit:onSearchFormSubmit,

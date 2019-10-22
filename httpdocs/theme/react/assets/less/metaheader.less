@@ -100,9 +100,9 @@
     #site-header-search-form{
       margin: 0 auto;
       height: 34px;
-      width: 21em;
+      width: 230px;
       text-align: center;
-      max-width: 21em;      
+      /*max-width:250px;      */
         display: flex;
         align-items: center;
         position: relative;
@@ -142,11 +142,12 @@
         #search-form {
           height: 25px;          
           padding: 0;
-          margin: 6.5px 15px;
+          /*margin: 6.5px 15px;*/
           line-height: 25px;
           position: relative;
   
           input[type="text"]{
+            background: #f1f1f1;
             width: 100%;
             min-height: 25px;
             min-width: 16em;
@@ -379,9 +380,7 @@
             &#opendesktop-logo , &#pling-logo, &#gitlab-logo{
               position: relative;
               padding-left: 25px;
-              .target{
-                text-transform: uppercase;
-              }
+              
               img {
                 position: absolute;
                 top: 5px;
@@ -389,9 +388,11 @@
               }
             }
             &#pling-logo {  
-              width:70px;
-              height:27px;
-              display: block;            
+              &>span{
+                width: 32px;
+                display: inline-block;
+              }
+                    
               img {
                 top:2px;
                 width:50px;
@@ -785,7 +786,7 @@
       .dropdown-menu {
         border-radius: 0;
         padding: 0;
-        width: 320px;
+        width: 320px;        
         top: 40px;
         bottom: auto !important;
         background: #fff;
@@ -1703,15 +1704,18 @@
             border-bottom: 1px solid #ccc;
             &>ul.payout{
                 list-style: none;
-                padding:5px;
-                padding-left: 20px;
+                padding:0;
+                margin: 0;
                 li{
                   float: none;
-                  padding: 10px 20px;
-                  background-color: #f5f5f5;
+                  padding: 2px 3px;
+                  /*background-color: #f5f5f5;*/
                   width: 100%;
                   a{
                     float: none;
+                    &:hover{
+                      background: none;
+                    }
                   }
                 }
             }
@@ -2303,7 +2307,7 @@
 .react-autosuggest__container {
   position: relative;
 }
-
+/*
 .react-autosuggest__input {
   width: 280px;
   height: 30px;
@@ -2314,6 +2318,7 @@
   border: 1px solid #aaa;
   border-radius: 4px;
 }
+*/
 
 .react-autosuggest__input--focused {
   outline: none;

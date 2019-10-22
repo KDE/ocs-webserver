@@ -4,9 +4,9 @@ import MyButton from './function/MyButton';
 class DevelopmentAppMenu extends React.Component {
   constructor(props){
     super(props);
-    this.state = {
-      gitlabLink:this.props.gitlabUrl+"/dashboard/issues?assignee_id="
+    this.state = {      
     };
+    // gitlabLink:this.props.gitlabUrl+"/dashboard/issues?assignee_id="
     this.handleClick = this.handleClick.bind(this);
     this.loadNotification = this.loadNotification.bind(this);
   }
@@ -22,17 +22,17 @@ class DevelopmentAppMenu extends React.Component {
 
   componentDidMount() {
     this.loadNotification();
-    const self = this;
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState === 4 && this.status === 200) {
-        const res = JSON.parse(this.response);
-        const gitlabLink = self.state.gitlabLink + res[0].id;
-        self.setState({gitlabLink:gitlabLink,loading:false});
-      }
-    };
-    xhttp.open("GET", this.props.gitlabUrl+"/api/v4/users?username="+this.props.user.username, true);
-    xhttp.send();
+    // const self = this;
+    // const xhttp = new XMLHttpRequest();
+    // xhttp.onreadystatechange = function() {
+    //   if (this.readyState === 4 && this.status === 200) {
+    //     const res = JSON.parse(this.response);
+    //     const gitlabLink = self.state.gitlabLink + res[0].id;
+    //     self.setState({gitlabLink:gitlabLink,loading:false});
+    //   }
+    // };
+    // xhttp.open("GET", this.props.gitlabUrl+"/api/v4/users?username="+this.props.user.username, true);
+    // xhttp.send();
   }
 
   handleClick(e){
@@ -116,7 +116,7 @@ class DevelopmentAppMenu extends React.Component {
           <li id="messages-link-item">
               <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
                 <div className="icon"></div>
-                <span>PMs</span>
+                <span>PM</span>
                   {badgeNot}
               </a>
           </li>
@@ -130,7 +130,7 @@ class DevelopmentAppMenu extends React.Component {
 
         </React.Fragment>
         );
-
+    //<li className="section-seperator"></li>
     return (
       <li ref={node => this.node = node} id="development-app-menu-container">
         <div className={"user-dropdown " + this.state.dropdownClass}>
@@ -140,9 +140,7 @@ class DevelopmentAppMenu extends React.Component {
             <span className="th-icon"></span>
             {badgeNot}
           </button>
-          <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
-              {personalMenuDisplay}
-            <li className="section-seperator"></li>
+          <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">                          
               {contextMenuDisplay}
 
           </ul>

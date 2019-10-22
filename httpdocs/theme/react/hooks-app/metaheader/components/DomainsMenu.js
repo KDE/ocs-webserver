@@ -37,7 +37,7 @@ class DomainsMenu extends React.Component {
               <li className="active">
                 <a id="opendesktop-logo" href={this.props.baseUrl}>
                   <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
-                  openDesktop.org
+                  openDesktop.org :
                 </a>
               </li>
               <li><a href={this.props.baseUrlStore}>Pling</a></li>
@@ -48,9 +48,10 @@ class DomainsMenu extends React.Component {
           case 'pling':
             dT =(
               <>
-                <li  className="active">
+                <li>
                   <a id="pling-logo" href={this.props.baseUrlStore}>
-                    <img src={this.props.baseUrlStore + "/theme/react/assets/img/logo-pling.png"} className="logo" />                    
+                    <span><img src={this.props.baseUrlStore + "/theme/react/assets/img/logo-pling.png"} className="logo" />
+                  </span>                    
                   </a>
                 </li>
                 <li><a href={this.props.baseUrl}>openDesktop.org</a></li>
@@ -61,7 +62,7 @@ class DomainsMenu extends React.Component {
           case 'gitlab':
             dT =(
               <>
-                <li  className="active">
+                <li >
                   <a id="gitlab-logo" href={this.props.gitlabUrl + "/explore/projects"}>
                     <img src={this.props.baseUrl + "/theme/react/assets/img/logo-opencode.png"} className="logo" />
                     Opencode 
@@ -80,7 +81,10 @@ class DomainsMenu extends React.Component {
                 <li className="active">
                   <a id="opendesktop-logo" href={this.props.baseUrl}>
                     <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
-                    openDesktop.org : <span className="target">{this.props.target.target}</span>
+                    openDesktop.org : 
+                  </a>
+                  <a href={this.props.target.link}>
+                    <span className="target">{this.props.target.logoLabel}</span>
                   </a>
                 </li>
                 <li><a href={this.props.baseUrlStore}>Pling</a></li>
