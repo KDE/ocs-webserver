@@ -3,9 +3,9 @@ import Autosuggest from 'react-autosuggest';
 
 function renderSuggestion(suggestion) {
   return (
-    <div className="suggestionsContainer">           
+    <div className={suggestion.type+' suggestionsContainer'}>           
       <div className="description">
-        <span>{suggestion.type}</span>
+        <span>{suggestion.type=='user' ?<img style={{width:'20px',height:'20px'}} src='https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-128.png' alt="USER"></img> :''}</span>
         {suggestion.type=='project' ? (
           <span>{suggestion.title}<span className="small">{' by '+suggestion.username}</span></span>                  
         ) : (
@@ -53,13 +53,33 @@ const SearchForm = (props) => {
     if(!selected)
     {
       window.location.href = props.searchBaseUrl + value;
+    }else{
+      console.log("onSearchFormSubmit");
+      console.log(selected);
+             
+      if(selected.type=='project')
+      {
+        console.log(props.baseUrlStore + '/p/'+selected.project_id);
+        window.location.href = props.baseUrlStore + '/p/'+selected.project_id;    
+      }else
+      {
+        console.log(props.baseUrlStore + '/u/'+selected.username);
+        window.location.href = props.baseUrlStore + '/u/'+selected.username;    
+      }      
     }
   }
 
 
   const getSuggestionValue = suggestion => {  
     setSelected(suggestion);    
-    return suggestion.title;
+    if(suggestion.type=='project')
+    {
+      return suggestion.title;
+    }else
+    {
+      return suggestion.username;
+    }
+    
   }
 
   const loadSuggestions = value=> {
@@ -110,8 +130,8 @@ const SearchForm = (props) => {
 
   const onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method })=>{
     // this.getUserInfo(suggestion.member_id);    
-    setSelected(suggestion);    
-    window.location.href = props.baseUrlStore + '/p/'+suggestion.project_id;    
+    setSelected(suggestion);        
+    
   }
 
 

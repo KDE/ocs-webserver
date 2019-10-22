@@ -240,8 +240,7 @@ class JsonController extends Zend_Controller_Action
                     'width'  => 50,
                     'height' => 50
                 ));
-                $ps[] =array('type'=>'project'
-                    ,'description'=>$p->description
+                $ps[] =array('type'=>'project'                    
                     ,'title' =>$p->title
                     ,'project_id' =>$p->project_id
                     ,'member_id'=>$p->member_id
@@ -264,7 +263,7 @@ class JsonController extends Zend_Controller_Action
                 ,'avatar' =>$avatar
                 );
             }
-            
+
             $this->_sendResponse($ps, $this->_format);
             
         } catch (Exception $e) {

@@ -116,20 +116,22 @@
         right: 0px;
         width: 30px;
         height: 30px;
-      }
+      }      
       .suggestionsContainer
       {
-        display: flex;
+         display: block;
+        
         .description{
           display: flex;
-          margin-left: 10px;
-          flex-flow: column;
+          margin-left: 10px;          
           text-align: left;
           span.small{
             font-size: small;
           }
-        }
+        }      
       }
+      
+      
       &.open {
         .dropdown-menu {
           display: block;
@@ -1139,9 +1141,7 @@
                             width: auto;
                             margin-right: 5px;
                           }
-                          .comment-item-votes {
-
-                          }
+                          
                         }
                       }
                     }
@@ -1677,9 +1677,7 @@
                       .section-name{
                       flex: 1;
                       }
-                      .section-value{
-
-                      }
+                      
                   }
               }
            }
@@ -2346,7 +2344,7 @@
   display: block;
   position: absolute;
   top: 29px;
-  width: 280px;
+  width: 350px;
   border: 1px solid #aaa;
   background-color: #fff;
   font-family: Helvetica, sans-serif;
