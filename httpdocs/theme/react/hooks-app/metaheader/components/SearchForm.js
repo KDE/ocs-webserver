@@ -21,7 +21,9 @@ function renderSuggestion(suggestion) {
 
 const renderInputComponent = inputProps => (
   <div className="react-autosuggest__inputContainer">
-    <a onClick={inputProps.onSubmit}><img className="react-autosuggest__icon" src="/theme/flatui/img/icon-search-input-2.png" /></a>
+    <a onClick={inputProps.onSubmit}>
+      <img className="react-autosuggest__icon" src={inputProps.baseUrlStore+"/theme/flatui/img/icon-search-input-2.png"} />
+    </a>
     <input {...inputProps} />
   </div>
 );
@@ -119,8 +121,8 @@ const SearchForm = (props) => {
     placeholder: "Type to search min.3 chars",
     value,
     onChange: onHandleChange,
-    onSubmit:onSearchFormSubmit
-
+    onSubmit:onSearchFormSubmit,
+    baseUrlStore: props.baseUrlStore
   };
 
   return (
