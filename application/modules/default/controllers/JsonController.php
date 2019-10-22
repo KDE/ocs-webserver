@@ -260,7 +260,7 @@ class JsonController extends Zend_Controller_Action
                 $ps[] =array('type'=>'user'
                 ,'username'=>$value['username']
                 ,'member_id'=>$value['member_id']
-                ,'avatar' =>$avatar
+                ,'image_small' =>$avatar
                 );
             }
 

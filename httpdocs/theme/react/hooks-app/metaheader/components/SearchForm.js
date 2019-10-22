@@ -3,16 +3,22 @@ import Autosuggest from 'react-autosuggest';
 
 function renderSuggestion(suggestion) {
   return (
-    <div className={suggestion.type+' suggestionsContainer'}>           
+    <div className={suggestion.type + ' suggestionsContainer'}>
+      <div>
+      {suggestion.type == 'user' ? <img style={{ width: '50px', height: '50px', borderRadius:'999px' }} src={suggestion.image_small} ></img> : <img style={{ width: '50px', height: '50px' }} src={suggestion.image_small} ></img>}
+      </div>
+      
       <div className="description">
-        <span>{suggestion.type=='user' ?<img style={{width:'20px',height:'20px'}} src='https://www.pling.com/theme/react/assets/img/user.png' alt="USER"></img> :''}</span>
-        {suggestion.type=='project' ? (
-          <span>{suggestion.title}<span className="small">{' by '+suggestion.username}</span></span>                  
+        {suggestion.type == 'project' ? (
+          <>
+          <span>{suggestion.title}</span>
+          <span className="small">{' by ' + suggestion.username}</span>
+          </>
         ) : (
-          <span>{suggestion.username}</span>                
-        )}               
-      </div>            
-    </div>    
+            <span>{suggestion.username}</span>
+          )}
+      </div>
+    </div>
   );
 }
 
@@ -33,7 +39,7 @@ function renderSuggestion(suggestion) {
 const renderInputComponent = inputProps => (
   <div className="react-autosuggest__inputContainer">
     <a onClick={inputProps.onSubmit}>
-      <img className="react-autosuggest__icon" src={inputProps.baseUrlStore+"/theme/flatui/img/icon-search-input-2.png"} />
+      <img className="react-autosuggest__icon" src={inputProps.baseUrlStore + "/theme/flatui/img/icon-search-input-2.png"} />
     </a>
     <input {...inputProps} />
   </div>
@@ -41,8 +47,7 @@ const renderInputComponent = inputProps => (
 
 const SearchForm = (props) => {
   const [searchText, setSearchText] = useState('');
-  const [isShow, setIsShow] = useState(false);
-  const [products, setProducts] = useState([]);
+  const [isShow, setIsShow] = useState(false);  
   const [isLoading, setIsLoading] = useState(false);
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
@@ -50,68 +55,63 @@ const SearchForm = (props) => {
 
   const onSearchFormSubmit = e => {
     e.preventDefault();
-    if(!selected)
-    {
+    if (!selected) {
       window.location.href = props.searchBaseUrl + value;
-    }else{
+    } else {
       console.log("onSearchFormSubmit");
       console.log(selected);
-             
-      if(selected.type=='project')
-      {
-        console.log(props.baseUrlStore + '/p/'+selected.project_id);
-        window.location.href = props.baseUrlStore + '/p/'+selected.project_id;    
-      }else
-      {
-        console.log(props.baseUrlStore + '/u/'+selected.username);
-        window.location.href = props.baseUrlStore + '/u/'+selected.username;    
-      }      
+
+      if (selected.type == 'project') {
+        console.log(props.baseUrlStore + '/p/' + selected.project_id);
+        window.location.href = props.baseUrlStore + '/p/' + selected.project_id;
+      } else {
+        console.log(props.baseUrlStore + '/u/' + selected.username);
+        window.location.href = props.baseUrlStore + '/u/' + selected.username;
+      }
     }
   }
 
 
-  const getSuggestionValue = suggestion => {  
-    setSelected(suggestion);    
-    if(suggestion.type=='project')
-    {
+  const getSuggestionValue = suggestion => {
+    setSelected(suggestion);
+    if (suggestion.type == 'project') {
       return suggestion.title;
-    }else
-    {
+    } else {
       return suggestion.username;
     }
-    
+
   }
 
-  const loadSuggestions = value=> {
+  const loadSuggestions = value => {
     const inputLength = value.length;
-    if(inputLength<3) return;
-    setIsLoading(true);      
-     let url = props.baseUrlStore+'/json/search/p/'+value;
-     fetch(url,{
-                mode: 'cors',
-                credentials: 'include'
-                })
+    if (inputLength < 3) return;
+    setIsLoading(true);
+    let url = props.baseUrlStore + '/json/search/p/' + value;
+    fetch(url, {
+      mode: 'cors',
+      credentials: 'include'
+    })
       .then(response => response.json())
-      .then(data => {       
-          setSuggestions(data);
-          setIsLoading(false);                  
+      .then(data => {
+        setSuggestions(data);
+        setIsLoading(false);
       });
   }
 
-  const onHandleChange = (event, { newValue, method })=>{
-    setValue(newValue);    
+  const onHandleChange = (event, { newValue, method }) => {
+    setValue(newValue);
   }
 
-  const shouldRenderSuggestions = value =>{    
+  const shouldRenderSuggestions = value => {
     return value.trim().length > 2;
   }
 
-  const onSuggestionsFetchRequested=({ value })=>{
+  const onSuggestionsFetchRequested = ({ value }) => {
     loadSuggestions(value);
   }
 
-  const onSuggestionsClearRequested=()=>{
-    setSuggestions([]);    
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([]);
   }
 
   // getUserInfo(member_id){
@@ -128,10 +128,17 @@ const SearchForm = (props) => {
   //     });
   // }
 
-  const onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method })=>{
+  const onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {
     // this.getUserInfo(suggestion.member_id);    
-    setSelected(suggestion);        
-    
+    //setSelected(suggestion);
+    if (suggestion.type == 'project') {
+      console.log(props.baseUrlStore + '/p/' + suggestion.project_id);
+      window.location.href = props.baseUrlStore + '/p/' + suggestion.project_id;
+    } else {
+      console.log(props.baseUrlStore + '/u/' + suggestion.username);
+      window.location.href = props.baseUrlStore + '/u/' + suggestion.username;
+    }
+
   }
 
 
@@ -139,31 +146,31 @@ const SearchForm = (props) => {
     placeholder: "",
     value,
     onChange: onHandleChange,
-    onSubmit:onSearchFormSubmit,
+    onSubmit: onSearchFormSubmit,
     baseUrlStore: props.baseUrlStore
   };
 
   return (
     <div id="site-header-search-form" className={isShow ? 'open' : ''}>
       <form id="search-form" onSubmit={onSearchFormSubmit}>
-      <div className="autosuggest">
+        <div className="autosuggest">
           <Autosuggest
-          suggestions={suggestions}
-          onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-          onSuggestionsClearRequested={onSuggestionsClearRequested}
-          shouldRenderSuggestions={shouldRenderSuggestions}
-          onSuggestionSelected ={onSuggestionSelected}
-          getSuggestionValue={getSuggestionValue}
-          renderSuggestion={renderSuggestion}
-          inputProps={inputProps}
-          renderInputComponent={renderInputComponent}
-          
+            suggestions={suggestions}
+            onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+            onSuggestionsClearRequested={onSuggestionsClearRequested}
+            shouldRenderSuggestions={shouldRenderSuggestions}
+            onSuggestionSelected={onSuggestionSelected}
+            getSuggestionValue={getSuggestionValue}
+            renderSuggestion={renderSuggestion}
+            inputProps={inputProps}
+            renderInputComponent={renderInputComponent}
+
           />
 
           <div className="react-autosuggest_status">
             {status}
           </div>
-      </div>   
+        </div>
       </form>
     </div>
   )
