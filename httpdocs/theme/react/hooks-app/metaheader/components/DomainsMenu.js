@@ -80,11 +80,11 @@ class DomainsMenu extends React.Component {
             dT =(
               <>
                 <li className="active">                 
-                    <a id="opendesktop-logo" href={this.props.baseUrl} style={{'border-top-right-radius':'0px','border-bottom-right-radius':'0px' }}>
+                    <a id="opendesktop-logo" href={this.props.baseUrl} style={{'margin':0,'border-top-right-radius':'0px','border-bottom-right-radius':'0px' }}>
                       <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
                       openDesktop.org : 
                     </a>
-                    <a href={this.props.target.link} style={{'border-top-left-radius':'0px','border-bottom-left-radius':'0px' }}>
+                    <a href={this.props.target.link} style={{'margin':0,'border-top-left-radius':'0px','border-bottom-left-radius':'0px' }}>
                       <span className="target">{this.props.target.logoLabel}</span>
                     </a>                  
                 </li>
