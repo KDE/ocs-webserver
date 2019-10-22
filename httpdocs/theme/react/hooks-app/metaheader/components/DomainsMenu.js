@@ -37,7 +37,7 @@ class DomainsMenu extends React.Component {
               <li className="active">
                 <a id="opendesktop-logo" href={this.props.baseUrl}>
                   <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
-                  openDesktop.org 
+                  openDesktop.org
                 </a>
               </li>
               <li><a href={this.props.baseUrlStore}>Pling</a></li>
@@ -80,7 +80,7 @@ class DomainsMenu extends React.Component {
                 <li className="active">
                   <a id="opendesktop-logo" href={this.props.baseUrl}>
                     <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
-                    openDesktop.org : {this.props.target.target}
+                    openDesktop.org : <span className="target">{this.props.target.target}</span>
                   </a>
                 </li>
                 <li><a href={this.props.baseUrlStore}>Pling</a></li>
