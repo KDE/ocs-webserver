@@ -48,7 +48,7 @@ class DomainsMenu extends React.Component {
           case 'pling':
             dT =(
               <>
-                <li className="active">
+                <li id="opendesktop-logo" className="active">
                   <a href={this.props.baseUrlStore}>
                     <img src={this.props.baseUrlStore + "/theme/react/assets/img/logo-pling.png"} className="logo" />
                     Pling :
@@ -62,7 +62,7 @@ class DomainsMenu extends React.Component {
           case 'gitlab':
             dT =(
               <>
-                <li className="active">
+                <li id="opendesktop-logo" className="active">
                   <a href={this.props.gitlabUrl + "/explore/projects"}>
                     <img src={this.props.gitlabUrl + "/theme/react/assets/img/logo-opencode.png"} className="logo" />
                     Opencode :
