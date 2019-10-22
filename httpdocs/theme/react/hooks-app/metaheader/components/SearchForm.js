@@ -5,7 +5,7 @@ function renderSuggestion(suggestion) {
   return (
     <div className={suggestion.type+' suggestionsContainer'}>           
       <div className="description">
-        <span>{suggestion.type=='user' ?<img style={{width:'20px',height:'20px'}} src='https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-128.png' alt="USER"></img> :''}</span>
+        <span>{suggestion.type=='user' ?<img style={{width:'20px',height:'20px'}} src='https://www.pling.com/theme/react/assets/img/user.png' alt="USER"></img> :''}</span>
         {suggestion.type=='project' ? (
           <span>{suggestion.title}<span className="small">{' by '+suggestion.username}</span></span>                  
         ) : (
