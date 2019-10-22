@@ -116,17 +116,11 @@ class DevelopmentAppMenu extends React.Component {
           <li id="messages-link-item">
               <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
                 <div className="icon"></div>
-                <span>Messages</span>
+                <span>PMs</span>
                   {badgeNot}
               </a>
           </li>
-            {this.props.isAdmin  &&
-              <React.Fragment>
-                <MyButton id="docs-link-item"
-                        url={this.props.docsopendesktopUrl}
-                        label="Docs"/>
-              </React.Fragment>
-            }
+            
           <MyButton id="music-link-item"
                         url={this.props.musicopendesktopUrl}
                         label="Music" />

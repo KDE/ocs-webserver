@@ -114,6 +114,7 @@ const SearchForm = (props) => {
   const onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method })=>{
     // this.getUserInfo(suggestion.member_id);    
     setSelected(suggestion);
+    window.location.href = props.baseUrlStore + '/p/'+suggestion.member_id;
   }
 
 
