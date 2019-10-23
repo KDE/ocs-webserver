@@ -865,7 +865,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
           select m.member_id,m.username,profile_image_url 
           from member m 
           where m.is_active=1 and m.is_deleted = 0 and m.username like "' . $username . '%"
-          limit 20
+          limit 10
       ';
         $result = $this->getAdapter()->fetchAll($sql);
 
