@@ -54,6 +54,9 @@ $url_musicopendesktop = Zend_Registry::get('config')->settings->client->default-
 $url_mastodon = Zend_Registry::get('config')->settings->client->default->url_mastodon;
 $url_docsopendesktop = Zend_Registry::get('config')->settings->client->default->url_docsopendesktop;
 
+
+ 
+
 $filter = new Local_Filter_Url_Encrypt();
 $url_login;
 $url_logout;
@@ -134,6 +137,7 @@ if (Zend_Auth::getInstance()->hasIdentity()){
 $sname = Zend_Registry::get('store_host');
 $json_menu = $this->fetchMetaheaderMenuJson();
 
+
 $response = array(
     "isAdmin" => $isAdmin,
     "isExternal" => $is_external,
@@ -155,7 +159,8 @@ $response = array(
     "logoutUrl" => $url_logout,
     "sName" => $sname,
     "metamenuTheme" => $metamenuTheme,
-    "target" => $targetObject
+    "target" => $targetObject,
+    "store" => ($storeConfig?$storeConfig->name:null)
 );
 
 ?>

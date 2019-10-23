@@ -152,7 +152,7 @@ class MetaHeader extends React.Component {
             riotUrl={this.state.riotUrl}
           />
           <SearchForm searchBaseUrl={this.state.searchbaseurl}
-            baseUrlStore={this.state.baseUrlStore} 
+            baseUrlStore={this.state.baseUrlStore} store={this.state.store}
           />
 
         </div>

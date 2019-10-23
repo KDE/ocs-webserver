@@ -54,6 +54,9 @@ const SearchForm = (props) => {
     if (inputLength < 3) return;
     setIsLoading(true);
     let url = props.baseUrlStore + '/json/search/p/' + value;
+    if(props.store){
+      url += '/s/'+props.store
+    }
     fetch(url, {
       mode: 'cors',
       credentials: 'include'

@@ -192,7 +192,8 @@ $response = array(
     "logoutUrl" => $url_logout,
     "sName" => $sname,
     "metamenuTheme" => $metamenuTheme,
-    "target" => $targetObject
+    "target" => $targetObject,
+    "store" => ($storeConfig?$storeConfig->name:null)
 );
 
 echo Zend_Json::encode($response);
