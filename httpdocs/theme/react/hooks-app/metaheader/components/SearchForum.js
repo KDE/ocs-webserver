@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 
 const SearchForum = (props) => {
-    // const [searchText, setSearchText] = useState('');
-    let searchText = "hello";
+    const [searchText, setSearchText] = useState('');
 
     const onSearchTextChange = e => {
         setSearchText(e.target.value);
