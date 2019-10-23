@@ -49,6 +49,7 @@ header('Content-Type: application/json; charset=UTF-8', true);
 //Change from opendesktop to pling
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 $baseurlStore = Zend_Registry::get('config')->settings->client->default->baseurl_store;
+$searchbaseurl = $this->buildSearchBaseUrl();
 $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
 $url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
@@ -177,6 +178,7 @@ $response = array(
     "user" => $user,
     "baseUrl" => $baseurl,
     "baseUrlStore" => $baseurlStore,
+    "searchbaseurl" => $searchbaseurl,
     "blogUrl" => $url_blog,
     "forumUrl" => $url_forum,
     "mastodonUrl" => $url_mastodon,

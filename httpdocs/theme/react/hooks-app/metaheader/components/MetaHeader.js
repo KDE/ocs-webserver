@@ -151,9 +151,8 @@ class MetaHeader extends React.Component {
             isExternal={this.state.isExternal}
             riotUrl={this.state.riotUrl}
           />
-
-          <SearchForm searchBaseUrl={this.state.baseUrlStore + '/search/projectSearchText/'}
-            baseUrlStore={this.state.baseUrlStore}
+          <SearchForm searchBaseUrl={this.state.searchbaseurl}
+            baseUrlStore={this.state.baseUrlStore} 
           />
 
         </div>
