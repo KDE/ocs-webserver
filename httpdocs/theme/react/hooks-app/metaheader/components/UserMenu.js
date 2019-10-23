@@ -3,7 +3,7 @@ import UserLoginMenuContainer from './UserLoginMenuContainer';
 import DevelopmentAppMenu from './DevelopmentAppMenu';
 import SearchMenuContainer from './SearchMenuContainer';
 import AboutMenu from './AboutMenu';
-
+import DiscussionBoardsDropDownMenu from './DiscussionBoardsDropDownMenu';
 
 class UserMenu extends React.Component {
   constructor(props){
@@ -87,7 +87,12 @@ class UserMenu extends React.Component {
 
       userMenuContainerDisplay = (
         <ul className="metaheader-menu right" id="user-menu">
-
+          <DiscussionBoardsDropDownMenu
+              forumUrl={this.props.forumUrl}
+              user={this.props.user}
+              baseUrl={this.props.baseUrl}
+              baseUrlStore={this.props.baseUrlStore}
+            />
           {aboutMenu}
           {chatItem}
           {searchMenuDisplay}

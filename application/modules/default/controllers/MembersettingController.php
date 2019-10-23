@@ -225,6 +225,7 @@ class MembersettingController extends Zend_Controller_Action
         $this->_sendResponse($results, $this->_format);
     }
 
+   
     public function userinfoAction()
     {
         $this->_initResponseHeader();

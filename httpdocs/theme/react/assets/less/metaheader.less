@@ -96,67 +96,151 @@
       margin-top: -2px;
       margin-right: 5px;
     }
-    #whereami{
+    
+    #site-header-search-form{
       margin: 0 auto;
       height: 34px;
-      width: 150px;
+      width: 230px;
       text-align: center;
-      a{
-        display: inline-block;
+      /*max-width:250px;      */
+        display: flex;
+        align-items: center;
+        position: relative;
+      .react-autosuggest__input
+      {
+        padding-left: 5px;
       }
-      .icon {
-        height: 34px;
-        width: 34px;
-        background-size: 34px;
-        background-position: center center;
-        background-repeat: no-repeat;
-        float: left;
-      }
-      .opendesktop{
-        height: 30px;
+      .react-autosuggest__inputContainer .react-autosuggest__icon{
+        top: 0px;
+        left: auto;
+        right: 0px;
         width: 30px;
-        background-size: 25px;
-        background-image: url('../img/logo-opendesktop.png');
-        background-position: left 3px top 4px;
-      }
-      .pling{
-        height: 50px;
-        width: 50px;
-        background-size: 50px;
-        background-image: url('../img/logo-pling.png');
-        background-position: left 0px top 5px;
-      }
-      .opencode{
         height: 30px;
-        width: 30px;
-        background-size: 22px;
-        background-position: left 5px top 5px;
-        background-image: url('../img/logo-opencode.png');
+      }      
+      .suggestionsContainer
+      {
+         display: flex;
+         padding: 3px 5px;
+        .description{
+          display: flex;
+          margin-left: 10px;          
+          text-align: left;
+          flex-flow: column;
+          span.small{
+            font-size: small;
+          }
+        }      
       }
-      .cloudopendesktop{
-        height: 30px;
-        width: 30px;
-        background-size: 22px;
-        background-position: left 5px top 5px;
-        background-image: url('../img/logo-cloudopendesktop.png');
+      
+      
+      &.open {
+        .dropdown-menu {
+          display: block;
+        }
       }
-      .chat{
-        height: 30px;
-        width: 30px;
-        background-size: 25px;
-        background-position: left 5px top 5px;
-        background-image: url('../img/chat.png');
+      .autocompletion{
+        left:15px;
+        top:28px;
       }
-
-      span {
-        float: left;
-        line-height: 34px;
-        padding-left: 4px;
-        text-align: center;
-        display: block;
-        color:rgba(0,0,0,0.87);
-      }
+        #search-form {
+          height: 25px;          
+          padding: 0;
+          /*margin: 6.5px 15px;*/
+          line-height: 25px;
+          position: relative;
+          margin:0px;
+          input[type="text"]{
+            background: #f1f1f1;
+            width: 100%;
+            min-height: 25px;
+            min-width: 16em;
+            height: 25px;
+            padding: 0;
+            border: 1px solid #fff;
+            margin-bottom: -1px;
+            padding-right: 30px;
+            text-indent: 5px;
+            color: #6a7686;
+            float: left;
+            border-radius: 6px;
+            box-shadow: none;
+  
+          }
+  
+          > a {
+            top: 2px;
+            right: 0;
+            display: block;
+            width: 25px;
+            height: 25px;
+            background-image: url(/theme/flatui/img/icon-search-input-2.png);
+            background-position: center center;
+            position: absolute;
+            cursor: pointer;
+          }
+        }
     }
+    // #whereami{
+    //   margin: 0 auto;
+    //   height: 34px;
+    //   width: 150px;
+    //   text-align: center;
+    //   a{
+    //     display: inline-block;
+    //   }
+    //   .icon {
+    //     height: 34px;
+    //     width: 34px;
+    //     background-size: 34px;
+    //     background-position: center center;
+    //     background-repeat: no-repeat;
+    //     float: left;
+    //   }
+    //   .opendesktop{
+    //     height: 30px;
+    //     width: 30px;
+    //     background-size: 25px;
+    //     background-image: url('../img/logo-opendesktop.png');
+    //     background-position: left 3px top 4px;
+    //   }
+    //   .pling{
+    //     height: 50px;
+    //     width: 50px;
+    //     background-size: 50px;
+    //     background-image: url('../img/logo-pling.png');
+    //     background-position: left 0px top 5px;
+    //   }
+    //   .opencode{
+    //     height: 30px;
+    //     width: 30px;
+    //     background-size: 22px;
+    //     background-position: left 5px top 5px;
+    //     background-image: url('../img/logo-opencode.png');
+    //   }
+    //   .cloudopendesktop{
+    //     height: 30px;
+    //     width: 30px;
+    //     background-size: 22px;
+    //     background-position: left 5px top 5px;
+    //     background-image: url('../img/logo-cloudopendesktop.png');
+    //   }
+    //   .chat{
+    //     height: 30px;
+    //     width: 30px;
+    //     background-size: 25px;
+    //     background-position: left 5px top 5px;
+    //     background-image: url('../img/chat.png');
+    //   }
+
+    //   span {
+    //     float: left;
+    //     line-height: 34px;
+    //     padding-left: 4px;
+    //     text-align: center;
+    //     display: block;
+    //     color:rgba(0,0,0,0.87);
+    //   }
+    // }
 
     #user-menu-container {
       float: right;
@@ -288,25 +372,50 @@
 
       &#domains-menu {
         margin-left: 10px;
-
+        position: absolute;
         > li {
           padding-left: 0;
-
+          
           > a {
             margin: 0 10px 0 5px;
             cursor: pointer;
-
-            &#opendesktop-logo {
+            
+          
+            
+            &#opendesktop-logo , &#pling-logo, &#gitlab-logo{
               position: relative;
               padding-left: 25px;
-
+              
               img {
                 position: absolute;
                 top: 5px;
                 left: 5px;
               }
             }
+            &#pling-logo {  
+              &>span{
+                width: 32px;
+                display: inline-block;
+              }
+                    
+              img {
+                top:2px;
+                width:50px;
+                height:25px
+              }
+            }
+            &#gitlab-logo {  
+              color:#24292E;
+              background: #eee;
+              padding-left: 35px;
+              img {
+                top:2px;
+                width:23px;
+                height:23px
+              }
+            }
           }
+        
 
           &::after {
             content: "•";
@@ -500,6 +609,8 @@
       &#user-menu {
         margin-right: 10px;
         float: right;
+        position: absolute;
+        right: 0;
         > li {
 
           &#user-login-container {
@@ -608,6 +719,7 @@
         .dropdown-menu {
           display: block;
           right: -6px;
+          
         }
 
         #background-overlay {
@@ -681,7 +793,7 @@
       .dropdown-menu {
         border-radius: 0;
         padding: 0;
-        width: 320px;
+        width: 320px;        
         top: 40px;
         bottom: auto !important;
         background: #fff;
@@ -1030,9 +1142,7 @@
                             width: auto;
                             margin-right: 5px;
                           }
-                          .comment-item-votes {
-
-                          }
+                          
                         }
                       }
                     }
@@ -1363,7 +1473,7 @@
                                   position: relative;
                                   a {
                                     .icon {
-                                      background-image: url(../img/messages.png);
+                                      background-image: url(../img/pms.png);
                                       background-size: 45px;
                                     }
                                   }
@@ -1568,9 +1678,7 @@
                       .section-name{
                       flex: 1;
                       }
-                      .section-value{
-
-                      }
+                      
                   }
               }
            }
@@ -1581,6 +1689,7 @@
 
     #user-login-menu-container {
       .user-dropdown {
+        
         .dropdown-toggle {
           img {
             height: 26px;
@@ -1590,6 +1699,7 @@
           }
         }
         .dropdown-menu {
+          width: 285px;
           &::before {
             right: 9px;
           }
@@ -1599,15 +1709,21 @@
             border-bottom: 1px solid #ccc;
             &>ul.payout{
                 list-style: none;
-                padding:5px;
-                padding-left: 20px;
+                padding:0;
+                margin: 0;
                 li{
                   float: none;
-                  padding: 10px 20px;
-                  background-color: #f5f5f5;
+                  padding: 3px 5px;
+                  /*background-color: #f5f5f5;*/
                   width: 100%;
                   a{
+                    padding:0px;
                     float: none;
+                    color:#3D3D3E;
+                    font-weight: normal;
+                    &:hover{
+                      background: none;
+                    }
                   }
                 }
             }
@@ -2199,17 +2315,18 @@
 .react-autosuggest__container {
   position: relative;
 }
-
+/*
 .react-autosuggest__input {
   width: 280px;
   height: 30px;
-  padding: 10px 25px !important;
+  padding: 10px 25px ;
   font-family: Helvetica, sans-serif;
   font-weight: 300;
   font-size: 16px;
   border: 1px solid #aaa;
   border-radius: 4px;
 }
+*/
 
 .react-autosuggest__input--focused {
   outline: none;
@@ -2228,12 +2345,12 @@
   display: block;
   position: absolute;
   top: 29px;
-  width: 280px;
+  width: 350px;
   border: 1px solid #aaa;
   background-color: #fff;
   font-family: Helvetica, sans-serif;
-  font-weight: 300;
-  font-size: 16px;
+  /*font-weight:300;*/
+  font-size: 12px;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
   z-index: 2;
@@ -2251,7 +2368,7 @@
 
 .react-autosuggest__suggestion {
   cursor: pointer;
-  padding: 10px 20px;
+  /*padding: 10px 20px;*/
 }
 
 .react-autosuggest__suggestion--highlighted {

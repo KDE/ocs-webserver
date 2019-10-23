@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -24,13 +25,13 @@ class JsonController extends Zend_Controller_Action
 {
 
     const chat_access_token = 'MDAyMmxvY2F0aW9uIGNoYXQub3BlbmRlc2t0b3Aub3JnCjAwMTNpZGVudGlmaWVyIGtleQowMDEwY2lkIGdlbiA9IDEKMDAzM2NpZCB1c2VyX2lkID0gQG1hZ2dpZWRvbmc6Y2hhdC5vcGVuZGVza3RvcC5vcmcKMDAxNmNpZCB0eXBlID0gYWNjZXNzCjAwMjFjaWQgbm9uY2UgPSBnMSxnRUA2c3AuKyxtYSx4CjAwMmZzaWduYXR1cmUgc3LtmFDiz7wU0TVOdGS7EbEg0wnXVKwXxNqkqe5qpCAK';
-    const chat_avatarUrl= 'https://chat.opendesktop.org/_matrix/media/v1/thumbnail';
-    const chat_roomPublicUrl='https://chat.opendesktop.org/_matrix/client/unstable/publicRooms';
-    const chat_roomsUrl= 'https://chat.opendesktop.org/_matrix/client/unstable/rooms/';
-    const chat_roomUrl='https://chat.opendesktop.org/#/room/';
+    const chat_avatarUrl = 'https://chat.opendesktop.org/_matrix/media/v1/thumbnail';
+    const chat_roomPublicUrl = 'https://chat.opendesktop.org/_matrix/client/unstable/publicRooms';
+    const chat_roomsUrl = 'https://chat.opendesktop.org/_matrix/client/unstable/rooms/';
+    const chat_roomUrl = 'https://chat.opendesktop.org/#/room/';
 
-	protected $_format = 'json';
-	public function init()
+    protected $_format = 'json';
+    public function init()
     {
         parent::init();
         $this->initView();
@@ -61,7 +62,7 @@ class JsonController extends Zend_Controller_Action
 
         if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
             header('Access-Control-Allow-Methods: ' . implode(', ', array_unique([
-                'OPTIONS', 'HEAD', 'GET', 'POST','PUT',
+                'OPTIONS', 'HEAD', 'GET', 'POST', 'PUT',
                 strtoupper($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])
             ])), true);
         }
@@ -76,14 +77,13 @@ class JsonController extends Zend_Controller_Action
         }
 
         header('Content-Type: application/json; charset=UTF-8', true);
-
     }
 
     protected function _sendResponse($response, $format = 'json', $xmlRootTag = 'ocs')
     {
 
-    	header('Content-Type: application/json; charset=UTF-8');
-    	echo json_encode($response);
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode($response);
     }
 
 
@@ -93,8 +93,8 @@ class JsonController extends Zend_Controller_Action
         $this->_initResponseHeader();
         $config = Zend_Registry::get('config')->settings->client->default;
         $access_token = $config->riot_access_token;
-        $urlRooms = JsonController::chat_roomPublicUrl.'?access_token='.$access_token;
-         
+        $urlRooms = JsonController::chat_roomPublicUrl . '?access_token=' . $access_token;
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
         curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -107,9 +107,9 @@ class JsonController extends Zend_Controller_Action
         // https://chat.opendesktop.org/_matrix/client/unstable/publicRooms?access_token=
 
         $rooms = array();
-        foreach ( $results->chunk as &$room) {
-            if($room->guest_can_join) continue;
-            $urlMembers = JsonController::chat_roomsUrl.$room->room_id.'/joined_members?access_token='.$access_token;
+        foreach ($results->chunk as &$room) {
+            if ($room->guest_can_join) continue;
+            $urlMembers = JsonController::chat_roomsUrl . $room->room_id . '/joined_members?access_token=' . $access_token;
             //https://chat.opendesktop.org/_matrix/client/unstable/rooms/!LNQABMgCYqWKSysjJK%3Achat.opendesktop.org/joined_members?access_token=
             $k = curl_init();
             curl_setopt($k, CURLOPT_AUTOREFERER, true);
@@ -126,55 +126,13 @@ class JsonController extends Zend_Controller_Action
         $this->_sendResponse($rooms, $this->_format);
     }
 
-	public function forumAction()
-	{
-
-		$this->_initResponseHeader();
-
-    	$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
-    	$url=$url_forum.'/latest.json';
-    	$ch = curl_init();
-        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        $data = curl_exec($ch);
-        curl_close($ch);
-        $results = json_decode($data);
-        $timeago = new Default_View_Helper_PrintDateSince();
-        foreach ( $results->topic_list->topics as &$t) {
-
-                $strTime = str_replace('T',' ',substr($t->last_posted_at, 0, 19));
-
-                //$t->timeago = $timeago->printDateSince($strTime);
-
-                $fromFormat='Y-m-d H:i:s';
-                $date = DateTime::createFromFormat($fromFormat, $strTime);
-                // forum/latest.json last_posted_at is 5 hours later as server somehow.. quick workaround
-                $date->sub(new DateInterval('PT4H10M'));
-                $t->timeago = $timeago->printDateSince($date->format('Y-m-d h:s:m'));
-                //$t->timeago =  $date->format('Y-m-d H:i:s');
-                $r='Reply';
-                $counts = $t->posts_count -1;
-                 if($counts==0){
-                    $r = 'Replies';
-                 }else if($counts==1){
-                    $r = 'Reply';
-                 }else{
-                    $r = 'Replies';
-                 }
-                $t->replyMsg = $counts.' '.$r;
-        }
-    	$this->_sendResponse($results, $this->_format);
-	}
-
-    public function gitlabnewprojectsAction()
+    public function forumAction()
     {
 
         $this->_initResponseHeader();
-        $url_git = Zend_Registry::get('config')->settings->server->opencode->host;
-        $url=$url_git.'/api/v4/projects?order_by=created_at&sort=desc&visibility=public&page=1&per_page=5';
+
+        $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
+        $url = $url_forum . '/latest.json';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
         curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -185,9 +143,51 @@ class JsonController extends Zend_Controller_Action
         curl_close($ch);
         $results = json_decode($data);
         $timeago = new Default_View_Helper_PrintDateSince();
-        foreach ( $results as &$t) {
-                $tmp = str_replace('T',' ',substr($t->created_at, 0, 19));
-                $t->timeago = $timeago->printDateSince($tmp);
+        foreach ($results->topic_list->topics as &$t) {
+
+            $strTime = str_replace('T', ' ', substr($t->last_posted_at, 0, 19));
+
+            //$t->timeago = $timeago->printDateSince($strTime);
+
+            $fromFormat = 'Y-m-d H:i:s';
+            $date = DateTime::createFromFormat($fromFormat, $strTime);
+            // forum/latest.json last_posted_at is 5 hours later as server somehow.. quick workaround
+            $date->sub(new DateInterval('PT4H10M'));
+            $t->timeago = $timeago->printDateSince($date->format('Y-m-d h:s:m'));
+            //$t->timeago =  $date->format('Y-m-d H:i:s');
+            $r = 'Reply';
+            $counts = $t->posts_count - 1;
+            if ($counts == 0) {
+                $r = 'Replies';
+            } else if ($counts == 1) {
+                $r = 'Reply';
+            } else {
+                $r = 'Replies';
+            }
+            $t->replyMsg = $counts . ' ' . $r;
+        }
+        $this->_sendResponse($results, $this->_format);
+    }
+
+    public function gitlabnewprojectsAction()
+    {
+
+        $this->_initResponseHeader();
+        $url_git = Zend_Registry::get('config')->settings->server->opencode->host;
+        $url = $url_git . '/api/v4/projects?order_by=created_at&sort=desc&visibility=public&page=1&per_page=5';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        $results = json_decode($data);
+        $timeago = new Default_View_Helper_PrintDateSince();
+        foreach ($results as &$t) {
+            $tmp = str_replace('T', ' ', substr($t->created_at, 0, 19));
+            $t->timeago = $timeago->printDateSince($tmp);
         }
         $this->_sendResponse($results, $this->_format);
     }
@@ -197,7 +197,7 @@ class JsonController extends Zend_Controller_Action
 
         $this->_initResponseHeader();
         $url_git = Zend_Registry::get('config')->settings->server->opencode->host;
-        $url=$url_git.'/api/v4/users?username='.$this->getParam('username');
+        $url = $url_git . '/api/v4/users?username=' . $this->getParam('username');
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
         curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -216,50 +216,97 @@ class JsonController extends Zend_Controller_Action
         $this->_initResponseHeader();
         $catid = $this->getParam('id');
         $results = array();
-        if($catid)
-        {
+        if ($catid) {
             $m = new Default_Model_Tags();
             $results = $m->getTagsPerCategory($catid);
         }
         $this->_sendResponse($results, $this->_format);
     }
 
-		  public function anonymousdlAction()
-      {
-          $this->_initResponseHeader();
-          $identity = Zend_Auth::getInstance()->getStorage()->read();
+    public function searchAction()
+    {  
+        $this->_initResponseHeader();
+        $projectSearchText = $this->getParam('p');
+        $param = array('q' => $projectSearchText,'store'=>null,'page' => 1
+            , 'count' => 10);
+        $viewHelperImage = new Default_View_Helper_Image();
+        $modelSearch = new Default_Model_Solr();   
+        try {
+            $result = $modelSearch->search($param);
+            $products = $result['hits'];                      
+            $ps=array();
+            foreach ($products as $p) {
+                $img = $viewHelperImage->Image($p->image_small, array(
+                    'width'  => 50,
+                    'height' => 50
+                ));
+                $ps[] =array('type'=>'project'                    
+                    ,'title' =>$p->title
+                    ,'project_id' =>$p->project_id
+                    ,'member_id'=>$p->member_id
+                    ,'username' => $p->username
+                    ,'laplace_score' =>$p->laplace_score
+                    ,'score' =>$p->score
+                    ,'image_small' =>$img);
+            }
 
-          $config = Zend_Registry::get('config');
-          $cookieName = $config->settings->session->auth->anonymous;
-          $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;				
-					if($storedInCookie)
-          {
-               $model = new Default_Model_DbTable_MemberDownloadHistory();
-							 if($identity && $identity->member_id)
-		 					 {
-								$dlsection = $model->getAnonymousDLSection($storedInCookie,$identity->member_id);
-							}else{
-								$dlsection = $model->getAnonymousDLSection($storedInCookie);
-							}
-							 $dls=0;
-							 foreach ($dlsection as $value) {
-							 	 $dls = $dls+$value['dls'];
-							 }
-               //$dls = $model->countDownloadsAnonymous($storedInCookie);
-                  $response = array(
-                  'status'     => 'ok',
-									'section' => $dlsection,
-                  'dls'    => $dls
-                  );
-                  $this->_sendResponse($response, $this->_format);
-                  return;
-          }
-          $response = array(
-              'status'     => 'ok',
-              'dls'    => 0
-              );
-          $this->_sendResponse($response, $this->_format);
-      }
+            $model = new Default_Model_Member();
+            $results = $model->findActiveMemberByName($projectSearchText);
+            $helperImage = new Default_View_Helper_Image();
+            foreach ($results as $value) {
+                $avatar = $helperImage->image($value['profile_image_url'],
+                    array('width' => 100, 'height' => 100, 'crop' => 2));
+                
+                $ps[] =array('type'=>'user'
+                ,'username'=>$value['username']
+                ,'member_id'=>$value['member_id']
+                ,'image_small' =>$avatar
+                );
+            }
+
+            $this->_sendResponse($ps, $this->_format);
+            
+        } catch (Exception $e) {
+            $this->_sendResponse(null, $this->_format);
+        }    
+
+        
+    }
+
+    public function anonymousdlAction()
+    {
+        $this->_initResponseHeader();
+        $identity = Zend_Auth::getInstance()->getStorage()->read();
+
+        $config = Zend_Registry::get('config');
+        $cookieName = $config->settings->session->auth->anonymous;
+        $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
+        if ($storedInCookie) {
+            $model = new Default_Model_DbTable_MemberDownloadHistory();
+            if ($identity && $identity->member_id) {
+                $dlsection = $model->getAnonymousDLSection($storedInCookie, $identity->member_id);
+            } else {
+                $dlsection = $model->getAnonymousDLSection($storedInCookie);
+            }
+            $dls = 0;
+            foreach ($dlsection as $value) {
+                $dls = $dls + $value['dls'];
+            }
+            //$dls = $model->countDownloadsAnonymous($storedInCookie);
+            $response = array(
+                'status'     => 'ok',
+                'section' => $dlsection,
+                'dls'    => $dls
+            );
+            $this->_sendResponse($response, $this->_format);
+            return;
+        }
+        $response = array(
+            'status'     => 'ok',
+            'dls'    => 0
+        );
+        $this->_sendResponse($response, $this->_format);
+    }
 
 
 }

@@ -4,7 +4,10 @@ import SwitchItem from './function/SwitchItem';
 class UserLoginMenuContainer extends React.Component {
   constructor(props){
     super(props);
-    this.state = {};
+    //this.state = {};
+    this.state = {
+      gitlabLink:this.props.gitlabUrl+"/dashboard/issues?assignee_id="
+    };
     this.handleClick = this.handleClick.bind(this);
 
 
@@ -18,10 +21,21 @@ class UserLoginMenuContainer extends React.Component {
     document.removeEventListener('click',this.handleClick, false);
   }
 
-  componentDidMount(){
-
-
-   }
+  componentDidMount() {
+    
+    const self = this;
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState === 4 && this.status === 200) {
+        const res = JSON.parse(this.response);
+        const gitlabLink = self.state.gitlabLink + res[0].id;
+        self.setState({gitlabLink:gitlabLink,loading:false});
+      }
+    };
+    xhttp.open("GET", this.props.gitlabUrl+"/api/v4/users?username="+this.props.user.username, true);
+    xhttp.send();
+  }
+  
 
   handleClick(e){
     let dropdownClass = "";
@@ -77,19 +91,28 @@ class UserLoginMenuContainer extends React.Component {
               </div>
             </li>
 
+            <li id="user-info-payout" className="buttons">
+                <ul className="payout">
+                  <li><a href={this.props.baseUrlStore + "/u/" + this.props.user.username + "/products"}>Products</a></li>
+                  <li><a href={this.props.gitlabUrl+"/dashboard/projects"}>Projects</a></li>
+                  <li><a href={this.state.gitlabLink}>Issues</a></li>
+                </ul>
+            </li>
+
+            <li id="user-info-payout" className="buttons">
+                <ul className="payout">
+                  <li><a href={this.props.baseUrlStore+'/u/'+this.props.user.username+'/payout'}>My Payout</a></li>
+                  <li><a href={this.props.baseUrlStore+'/u/'+this.props.user.username+'/funding'}>My Funding</a></li>
+                </ul>
+            </li>
+
             <li className="user-settings-item">
-             <span className="user-settings-item-title">Metaheader theme light</span>
+             <span className="user-settings-item-title">Metaheader</span>
                <SwitchItem onSwitchStyle={this.props.onSwitchStyle}
                         onSwitchStyleChecked={this.props.onSwitchStyleChecked}/>
               <span className="user-settings-item-title">dark</span>
             </li>
-            <li id="user-info-payout" className="buttons">
-                <ul className="payout">
-                  <li><a className="btn btn-default btn-metaheader" href={this.props.baseUrlStore+'/u/'+this.props.user.username+'/payout'}>My Payout</a></li>
-                  <li><a className="btn btn-default btn-metaheader" href={this.props.baseUrlStore+'/u/'+this.props.user.username+'/funding'}>My Funding</a></li>
-                </ul>
-
-            </li>
+            
             <li className="buttons">
               <a href={this.props.baseUrl + "/settings/"} className="btn btn-default btn-metaheader"><span>Settings</span></a>
               <a href={this.props.baseUrl + "/settings/profile"} className="btn btn-default btn-metaheader"><span>Profile</span></a>
