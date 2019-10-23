@@ -91,7 +91,7 @@ class UserLoginMenuContainer extends React.Component {
               </div>
             </li>
 
-            <li id="user-info-payout" className="buttons">
+            <li id="user-menu" className="buttons user-info-payout">
                 <ul className="payout">
                   <li><a href={this.props.baseUrlStore + "/u/" + this.props.user.username + "/products"}>Products</a></li>
                   <li><a href={this.props.gitlabUrl+"/dashboard/projects"}>Projects</a></li>
@@ -99,7 +99,7 @@ class UserLoginMenuContainer extends React.Component {
                 </ul>
             </li>
 
-            <li id="user-info-payout" className="buttons">
+            <li id="user-info-payout" className="buttons user-info-payout">
                 <ul className="payout">
                   <li><a href={this.props.baseUrlStore+'/u/'+this.props.user.username+'/payout'}>My Payout</a></li>
                   <li><a href={this.props.baseUrlStore+'/u/'+this.props.user.username+'/funding'}>My Funding</a></li>

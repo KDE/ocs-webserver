@@ -49,7 +49,7 @@ class DomainsMenu extends React.Component {
           case 'pling':
             dT =(
               <>
-                <li>
+                <li className="active">
                   <a id="pling-logo" href={this.props.baseUrlStore}>
                     <span><img src={this.props.baseUrlStore + "/theme/react/assets/img/logo-pling.png"} className="logo" />
                   </span>                    
@@ -84,8 +84,8 @@ class DomainsMenu extends React.Component {
                       <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
                       openDesktop.org : 
                     </a>
-                    <a href={this.props.target.link} style={{'margin':0,'border-top-left-radius':'0px','border-bottom-left-radius':'0px' }}>
-                      <span className="target">{this.props.target.logoLabel}</span>
+                    <a href={this.props.target.link} style={{'margin':0,'border-top-left-radius':'0px','border-bottom-left-radius':'0px' , 'margin-right': '15px', 'padding-left':'0px'}}>
+                      <span className="target">{ this.props.target.logoLabel }</span>
                     </a>                  
                 </li>
                 <li><a href={this.props.baseUrlStore}>Pling</a></li>
