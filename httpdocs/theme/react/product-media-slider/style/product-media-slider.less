@@ -91,20 +91,25 @@ video:focus {
                 font-family: inherit;
                 overflow: hidden;
 
+                .video-react-big-play-button {
+                  border: 0.06666em solid transparent !important;
+                  background-color: rgb(255, 0, 0) !important;
+                }
+
                 .video-react-slider:focus {
                     box-shadow: none;
                 }
 
                 .video-react-control-bar {
-                  font-size: 8px;
+                  font-size: 6pt;
                   display: -webkit-box;
                   display: -webkit-flex;
                   display: -ms-flexbox;
                   display: flex !important;
                   visibility: visible;
                   opacity: 1;
-                  height: 6em;
-                  padding-top: 2em;
+                  height: 5em;
+                  padding-top: 1em;
                   padding-right:1em;
                   padding-left:1em;
                   background-color: rgba(0, 0, 0, 0.7);
@@ -151,7 +156,7 @@ video:focus {
 
                         &::before {
                           position: absolute;
-                          font-size: 1.4em;
+                          font-size: 1.6em;
                         }
                     }
 
@@ -182,13 +187,14 @@ video:focus {
                   background-color: transparent;
 
                   .video-react-volume-level {
-                    height: 0.5em;
-                    top: 1.65em;
+                    height: 0.4em;
+                    top: 1.75em;
                     left: 0.5em;
 
                     &::before {
-                      font-size:1.2em;
-                      top:-0.2em;
+                      font-size:1.6em;
+                      top:-4px;
+                      right:-0.4em;
                     }
                   }
                 }
@@ -196,6 +202,8 @@ video:focus {
                 .video-react-volume-menu-button-horizontal {
                   &::before {
                     width:1.5em;
+                    font-size: 2.6em;
+                    margin-top: 0.1em;
                   }
                 }
                 
@@ -211,9 +219,9 @@ video:focus {
 
                 .video-react-progress-control.video-react-control{
                   position: absolute;
-                  top: 0;
+                  top: 4px;
                   left: 0;
-                  height: 2em;
+                  height: 1em;
                   width: 100%;
                   padding: 0 1em;
 
@@ -227,7 +235,7 @@ video:focus {
 
                     .video-react-progress-holder {
                         height: 100%;
-                        padding: 13px 0;
+                        padding: 13px 0 0 0;
                         background: none;
                         margin: 0;
 
@@ -249,6 +257,13 @@ video:focus {
                     .video-react-load-progress {
                         top: 50%;
                         margin-top: -0.15em;  
+                    }
+
+                    .video-react-load-progress {
+                      width:100% !important;
+                      div {
+                        background: #eaeaeaba;
+                      }
                     }
                 }
 
