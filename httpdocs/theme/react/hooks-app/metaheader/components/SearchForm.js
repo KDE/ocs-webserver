@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Autosuggest from 'react-autosuggest';
-
+// import useFetch from '../../util/src/hooks/useFetch';
 function renderSuggestion(suggestion) {
   return (
     <div className={suggestion.type + ' suggestionsContainer'}>
@@ -12,7 +12,7 @@ function renderSuggestion(suggestion) {
         {suggestion.type == 'project' ? (
           <>
           <span>{suggestion.title}</span>
-          <span className="small">{' by ' + suggestion.username}</span>
+          <span style={{'font-size':'11px','color':'#ccc'}}>{' by ' + suggestion.username}</span>
           </>
         ) : (
             <span>{suggestion.username}</span>
@@ -21,20 +21,6 @@ function renderSuggestion(suggestion) {
     </div>
   );
 }
-
-// function renderSuggestion(suggestion) {
-//   return (
-//     <div className="suggestionsContainer">     
-//       <div>
-//         <img src={suggestion.image_small} style={{width:'50px',height:'50px'}}></img>      
-//       </div> 
-//       <div className="description">
-//         <span>{suggestion.title}</span>        
-//         <span className="small">{' by '+suggestion.username}</span>
-//       </div>            
-//     </div>    
-//   );
-// }
 
 const renderInputComponent = inputProps => (
   <div className="react-autosuggest__inputContainer">
@@ -53,14 +39,39 @@ const SearchForm = (props) => {
   const [suggestions, setSuggestions] = useState([]);
   const [selected, setSelected] = useState();
 
+  //const [ data, loading, setUrl ] = useFetch();   
+ 
+  const loadSuggestions = value => {    
+    
+    // const inputLength = value.length;
+    // if (inputLength < 3) return;    
+    // const getUrl = text => `${props.baseUrlStore+'/json/search/p/'}${text}`;
+    // setUrl(getUrl(value));
+    
+    // setIsLoading(loading);
+    // setSuggestions(data);
+    const inputLength = value.length;
+    if (inputLength < 3) return;
+    setIsLoading(true);
+    let url = props.baseUrlStore + '/json/search/p/' + value;
+    fetch(url, {
+      mode: 'cors',
+      credentials: 'include'
+    })
+      .then(response => response.json())
+      .then(data => {
+        setSuggestions(data);
+        setIsLoading(false);
+      });
+
+  }
+
+
   const onSearchFormSubmit = e => {
     e.preventDefault();
     if (!selected) {
       window.location.href = props.searchBaseUrl + value;
     } else {
-      console.log("onSearchFormSubmit");
-      console.log(selected);
-
       if (selected.type == 'project') {
         console.log(props.baseUrlStore + '/p/' + selected.project_id);
         window.location.href = props.baseUrlStore + '/p/' + selected.project_id;
@@ -82,22 +93,7 @@ const SearchForm = (props) => {
 
   }
 
-  const loadSuggestions = value => {
-    const inputLength = value.length;
-    if (inputLength < 3) return;
-    setIsLoading(true);
-    let url = props.baseUrlStore + '/json/search/p/' + value;
-    fetch(url, {
-      mode: 'cors',
-      credentials: 'include'
-    })
-      .then(response => response.json())
-      .then(data => {
-        setSuggestions(data);
-        setIsLoading(false);
-      });
-  }
-
+  
   const onHandleChange = (event, { newValue, method }) => {
     setValue(newValue);
   }
@@ -114,33 +110,24 @@ const SearchForm = (props) => {
     setSuggestions([]);
   }
 
-  // getUserInfo(member_id){
-  //   let url = `${this.props.baseUrl}/membersetting/userinfo?member_id=${member_id}`;
-  //    fetch(url,{
-  //               mode: 'cors',
-  //               credentials: 'include'
-  //               })
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       this.setState({userinfo:data},function(){
-  //             //  this.getUserOdComments(member_id);
-  //          });
-  //     });
-  // }
-
   const onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {
-    // this.getUserInfo(suggestion.member_id);    
     //setSelected(suggestion);
-    if (suggestion.type == 'project') {
-      console.log(props.baseUrlStore + '/p/' + suggestion.project_id);
+    if (suggestion.type == 'project') {      
       window.location.href = props.baseUrlStore + '/p/' + suggestion.project_id;
-    } else {
-      console.log(props.baseUrlStore + '/u/' + suggestion.username);
+    } else {      
       window.location.href = props.baseUrlStore + '/u/' + suggestion.username;
     }
-
   }
 
+  const renderSectionTitle = section =>{
+    return (
+      <strong>{section.title}</strong>
+    );
+  }
+
+  const getSectionSuggestions = section => {
+    return section.values;
+  }
 
   const inputProps = {
     placeholder: "",
@@ -155,6 +142,7 @@ const SearchForm = (props) => {
       <form id="search-form" onSubmit={onSearchFormSubmit}>
         <div className="autosuggest">
           <Autosuggest
+            multiSection={true}
             suggestions={suggestions}
             onSuggestionsFetchRequested={onSuggestionsFetchRequested}
             onSuggestionsClearRequested={onSuggestionsClearRequested}
@@ -164,6 +152,8 @@ const SearchForm = (props) => {
             renderSuggestion={renderSuggestion}
             inputProps={inputProps}
             renderInputComponent={renderInputComponent}
+            renderSectionTitle={renderSectionTitle}
+            getSectionSuggestions={getSectionSuggestions}
 
           />
 

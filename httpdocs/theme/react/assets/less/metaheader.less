@@ -126,6 +126,9 @@
           margin-left: 10px;          
           text-align: left;
           flex-flow: column;
+          span{
+            line-height: 20px;
+          }
           span.small{
             font-size: small;
           }
@@ -2345,7 +2348,7 @@
   display: block;
   position: absolute;
   top: 29px;
-  width: 350px;
+  width: 450px;
   border: 1px solid #aaa;
   background-color: #fff;
   font-family: Helvetica, sans-serif;
@@ -2359,11 +2362,21 @@
   }
 }
 
+.react-autosuggest__suggestions-container--open
+{
+  display: flex;  
+}
+.react-autosuggest__section-container
+{
+  width: 50%; 
+}
+
 .react-autosuggest__suggestions-list {
   margin: 0;
   padding: 0;
   list-style-type: none;
 
+  
 }
 
 .react-autosuggest__suggestion {

@@ -223,6 +223,56 @@ class JsonController extends Zend_Controller_Action
         $this->_sendResponse($results, $this->_format);
     }
 
+    // public function searchAction()
+    // {  
+    //     $this->_initResponseHeader();
+    //     $projectSearchText = $this->getParam('p');
+    //     $param = array('q' => $projectSearchText,'store'=>null,'page' => 1
+    //         , 'count' => 10);
+    //     $viewHelperImage = new Default_View_Helper_Image();
+    //     $modelSearch = new Default_Model_Solr();   
+    //     try {
+    //         $result = $modelSearch->search($param);
+    //         $products = $result['hits'];                      
+    //         $ps=array();
+    //         foreach ($products as $p) {
+    //             $img = $viewHelperImage->Image($p->image_small, array(
+    //                 'width'  => 50,
+    //                 'height' => 50
+    //             ));
+    //             $ps[] =array('type'=>'project'                    
+    //                 ,'title' =>$p->title
+    //                 ,'project_id' =>$p->project_id
+    //                 ,'member_id'=>$p->member_id
+    //                 ,'username' => $p->username
+    //                 ,'laplace_score' =>$p->laplace_score
+    //                 ,'score' =>$p->score
+    //                 ,'image_small' =>$img);
+    //         }
+
+    //         $model = new Default_Model_Member();
+    //         $results = $model->findActiveMemberByName($projectSearchText);
+    //         $helperImage = new Default_View_Helper_Image();
+    //         foreach ($results as $value) {
+    //             $avatar = $helperImage->image($value['profile_image_url'],
+    //                 array('width' => 100, 'height' => 100, 'crop' => 2));
+                
+    //             $ps[] =array('type'=>'user'
+    //             ,'username'=>$value['username']
+    //             ,'member_id'=>$value['member_id']
+    //             ,'image_small' =>$avatar
+    //             );
+    //         }
+
+    //         $this->_sendResponse($ps, $this->_format);
+            
+    //     } catch (Exception $e) {
+    //         $this->_sendResponse(null, $this->_format);
+    //     }    
+
+        
+    // }
+
     public function searchAction()
     {  
         $this->_initResponseHeader();
@@ -253,24 +303,27 @@ class JsonController extends Zend_Controller_Action
             $model = new Default_Model_Member();
             $results = $model->findActiveMemberByName($projectSearchText);
             $helperImage = new Default_View_Helper_Image();
+            $ps_user=array();
             foreach ($results as $value) {
                 $avatar = $helperImage->image($value['profile_image_url'],
                     array('width' => 100, 'height' => 100, 'crop' => 2));
                 
-                $ps[] =array('type'=>'user'
+                $ps_user[] =array('type'=>'user'
                 ,'username'=>$value['username']
                 ,'member_id'=>$value['member_id']
                 ,'image_small' =>$avatar
                 );
             }
 
-            $this->_sendResponse($ps, $this->_format);
+            $searchresult=array();
+            $searchresult[] = array('title' =>'Products','values' =>$ps);
+            $searchresult[] = array('title' =>'Users','values' =>$ps_user);
+
+            $this->_sendResponse($searchresult, $this->_format);
             
         } catch (Exception $e) {
             $this->_sendResponse(null, $this->_format);
-        }    
-
-        
+        }            
     }
 
     public function anonymousdlAction()

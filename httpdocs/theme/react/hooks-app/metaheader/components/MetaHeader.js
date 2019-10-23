@@ -7,9 +7,9 @@ import UserMenu from './UserMenu';
 import SearchForm from "./SearchForm";
 
 class MetaHeader extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state = {...this.props.config};
+    this.state = { ...this.props.config };
     this.initMetaHeader = this.initMetaHeader.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.onSwitchStyle = this.onSwitchStyle.bind(this);
@@ -20,65 +20,63 @@ class MetaHeader extends React.Component {
     this.updateDimensions();
   }
 
-   componentDidMount() {
+  componentDidMount() {
 
     this.initMetaHeader();
 
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions);
-    window.removeEventListener("orientationchange",this.updateDimensions);
+    window.removeEventListener("orientationchange", this.updateDimensions);
 
   }
 
-  initMetaHeader(){
+  initMetaHeader() {
     window.addEventListener("resize", this.updateDimensions);
-    window.addEventListener("orientationchange",this.updateDimensions);
+    window.addEventListener("orientationchange", this.updateDimensions);
   }
 
-  
-  
+
+
   // change metamenu class
-  onSwitchStyle(evt){
-     let url = 'https://www.opendesktop.org/membersetting/setsettings/itemid/1/itemvalue/';
-     if(this.state.isExternal)
-     {
-       if (this.props.hostname.endsWith('cc') || this.props.hostname.endsWith('local')) {
-         url = 'https://www.opendesktop.cc/membersetting/setsettings/itemid/1/itemvalue/';
-       }
-     }else
-     {
-       url = '/membersetting/setsettings/itemid/1/itemvalue/';
-     }
-     url = url +(evt.target.checked?'1':'0');
-     const isChecked = evt.target.checked;
-     fetch(url,{
-                mode: 'cors',
-                credentials: 'include'
-                })
+  onSwitchStyle(evt) {
+    let url = 'https://www.opendesktop.org/membersetting/setsettings/itemid/1/itemvalue/';
+    if (this.state.isExternal) {
+      if (this.props.hostname.endsWith('cc') || this.props.hostname.endsWith('local')) {
+        url = 'https://www.opendesktop.cc/membersetting/setsettings/itemid/1/itemvalue/';
+      }
+    } else {
+      url = '/membersetting/setsettings/itemid/1/itemvalue/';
+    }
+    url = url + (evt.target.checked ? '1' : '0');
+    const isChecked = evt.target.checked;
+    fetch(url, {
+      mode: 'cors',
+      credentials: 'include'
+    })
       .then(response => response.json())
       .then(data => {
-          this.setState({metamenuTheme:`${isChecked?'metamenu-theme-dark':''}`});
+        this.setState({ metamenuTheme: `${isChecked ? 'metamenu-theme-dark' : ''}` });
       });
   }
 
-  updateDimensions(){
+  updateDimensions() {
     const width = window.innerWidth;
     let device;
-    if (width >= 1015){
+    if (width >= 1015) {
       device = "large";
-    } else if (width < 1015 && width >= 730){
+    } else if (width < 1015 && width >= 730) {
       device = "mid";
-    } else if (width < 730){
+    } else if (width < 730) {
       device = "tablet";
     }
-    this.setState({device:device});
+    this.setState({ device: device });
   }
-  render(){
+  render() {
 
     let domainsMenuDisplay;
-    if (this.state.device === "tablet"){
+    if (this.state.device === "tablet") {
       domainsMenuDisplay = (
         <MobileLeftMenu
           device={this.state.device}
@@ -125,40 +123,41 @@ class MetaHeader extends React.Component {
     }
     const metamenuCls = `metamenu ${this.state.metamenuTheme}`;
     let paraChecked = false;
-    if(this.state.metamenuTheme){
-        paraChecked=true;
+    if (this.state.metamenuTheme) {
+      paraChecked = true;
     }
     return (
       <nav id="metaheader-nav" className="metaheader">
-      <div style={{"display":"block"}} className={metamenuCls}>
-        {domainsMenuDisplay}
+        <div style={{ "display": "block" }} className={metamenuCls}>
+          {domainsMenuDisplay}
 
-        <UserMenu
-          device={this.state.device}
-          user={this.state.user}
-          baseUrl={this.state.baseUrl}
-          baseUrlStore={this.state.baseUrlStore}
-          blogUrl={this.state.blogUrl}
-          forumUrl={this.state.forumUrl}
-          loginUrl={this.state.loginUrl}
-          logoutUrl={this.state.logoutUrl}
-          gitlabUrl={this.state.gitlabUrl}
-          myopendesktopUrl={this.state.myopendesktopUrl}
-          cloudopendesktopUrl={this.state.cloudopendesktopUrl}
-          musicopendesktopUrl={this.state.musicopendesktopUrl}
-          docsopendesktopUrl={this.state.docsopendesktopUrl}
-          isAdmin={this.state.isAdmin}
-          onSwitchStyle={this.onSwitchStyle}
-          onSwitchStyleChecked={paraChecked}
-          isExternal={this.state.isExternal}
-          riotUrl={this.state.riotUrl}
-        />
-      <SearchForm searchBaseUrl={this.state.baseUrlStore+'/search/projectSearchText/'} 
-              baseUrlStore={this.state.baseUrlStore}
-      />
+          <UserMenu
+            device={this.state.device}
+            user={this.state.user}
+            baseUrl={this.state.baseUrl}
+            baseUrlStore={this.state.baseUrlStore}
+            blogUrl={this.state.blogUrl}
+            forumUrl={this.state.forumUrl}
+            loginUrl={this.state.loginUrl}
+            logoutUrl={this.state.logoutUrl}
+            gitlabUrl={this.state.gitlabUrl}
+            myopendesktopUrl={this.state.myopendesktopUrl}
+            cloudopendesktopUrl={this.state.cloudopendesktopUrl}
+            musicopendesktopUrl={this.state.musicopendesktopUrl}
+            docsopendesktopUrl={this.state.docsopendesktopUrl}
+            isAdmin={this.state.isAdmin}
+            onSwitchStyle={this.onSwitchStyle}
+            onSwitchStyleChecked={paraChecked}
+            isExternal={this.state.isExternal}
+            riotUrl={this.state.riotUrl}
+          />
 
-      </div>
-    </nav>
+          <SearchForm searchBaseUrl={this.state.baseUrlStore + '/search/projectSearchText/'}
+            baseUrlStore={this.state.baseUrlStore}
+          />
+
+        </div>
+      </nav>
     )
   }
 }
