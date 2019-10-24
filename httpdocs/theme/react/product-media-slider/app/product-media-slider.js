@@ -353,6 +353,7 @@ function SlideItem(props){
     )
   }
   else if (props.slide.type === "audio"){
+    console.log(slide);
     slideContentDisplay = (
       <MusicPlayerWrapper 
         height={props.sliderHeight}
