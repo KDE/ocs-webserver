@@ -4,7 +4,9 @@ import {isMobile} from 'react-device-detect';
 
 function MusicPlayerWrapper(props){
 
-  const [ showPlaylist, setShowPlaylist ] = useState(isMobile ? false : true);
+  console.log(isMobile);
+  ;
+  const [ showPlaylist, setShowPlaylist ] = useState(isMobile ? false : window.outerWidth > 600 ? true : false);
   let initialPLayedAudioArray = []
   props.slide.items.forEach(function(i,index){
     let pl = 0;
@@ -72,8 +74,6 @@ function MusicPlayerWrapper(props){
       });
     }
   }
-
-  console.log(props.slide.items);
 
   const options = {
       //audio lists model
