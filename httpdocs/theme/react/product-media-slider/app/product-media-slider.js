@@ -14,8 +14,7 @@ function ProductMediaSlider(){
 
   const [ product, setProduct ] = useState(window.product);
   let galleryArray = GenerateGalleryArray(product);
-  const galleryHasMultipleAudioFiles = CheckForMultipleAudioFiles(galleryArray);
-  if (galleryHasMultipleAudioFiles) galleryArray = GroupAudioFilesInGallery(galleryArray);
+  galleryArray = GroupAudioFilesInGallery(galleryArray);
   const [ gallery, setGallery ] = useState(galleryArray);
   const [ disableGallery, setDisableGallery ] = useState(gallery.length > 1 ? false : true)
   const parentContainerElement = document.getElementById('product-title-div');
@@ -352,6 +351,7 @@ function SlideItem(props){
     )
   }
   else if (props.slide.type === "audio"){
+
     slideContentDisplay = (
       <MusicPlayerWrapper 
         height={props.sliderHeight}
