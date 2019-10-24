@@ -91,7 +91,7 @@ function MusicPlayerWrapper(props){
 
   const options = {
       //audio lists model
-      audioLists: props.slide.items,
+      audioLists: audioListsArray,
       audioListsPanelVisible:true,
       //default play index of the audio player  [type `number` default `0`]
       defaultPlayIndex: 0,
