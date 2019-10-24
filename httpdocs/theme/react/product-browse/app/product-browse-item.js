@@ -242,7 +242,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
             //Extensible custom content       [type 'Array' default '[]' ]
             extendsContent: [],
             //default volume of the audio player [type `Number` default `100` range `0-100`]
-            defaultVolume: 30,
+            defaultVolume: 15,
             //playModeText show time [type `Number(ms)` default `700`]
             playModeShowTime: 600,
             //Whether to try playing the next audio when the current audio playback fails [type `Boolean` default `true`]
