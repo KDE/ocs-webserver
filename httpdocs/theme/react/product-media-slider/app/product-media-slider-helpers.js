@@ -13,6 +13,7 @@ export function GenerateGalleryArray(product){
     if (window.filesJson) {
         window.filesJson.forEach(function(f,index){
             if (f.active === "1"){
+                console.log(f.type);
                 let addFileToGallery = false;
                 if (f.type.indexOf('video') > -1 || 
                     f.type.indexOf('audio') > -1 || 
@@ -24,7 +25,6 @@ export function GenerateGalleryArray(product){
                 if (f.type.indexOf("image") > -1 && noGallery === true && noLogo === true) addFileToGallery = true;
 
                 if (addFileToGallery === true){
-                    console.log(f.type);
                     let type;
                     if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 || f.type.indexOf('ogg') > -1 ) type = f.type.split('/')[0]
                     else if (f.type.indexOf('epub') > -1 ) type = "book";
