@@ -14,6 +14,7 @@ function ProductMediaSlider(){
 
   const [ product, setProduct ] = useState(window.product);
   let galleryArray = GenerateGalleryArray(product);
+  console.log(galleryArray);
   const galleryHasMultipleAudioFiles = CheckForMultipleAudioFiles(galleryArray);
   if (galleryHasMultipleAudioFiles) galleryArray = GroupAudioFilesInGallery(galleryArray);
   const [ gallery, setGallery ] = useState(galleryArray);
