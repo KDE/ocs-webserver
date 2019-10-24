@@ -218,12 +218,26 @@ function MusicPlayerWrapper(props){
   };
 
   let musicPlayerWrapperCssClass = "desktop ";
+  let sponsorDetailsDisplay;
   if (isMobile) musicPlayerWrapperCssClass = "mobile ";
-  if (showPlaylist) musicPlayerWrapperCssClass += " show-playlist";
+  if (showPlaylist) {
+    musicPlayerWrapperCssClass += " show-playlist";
+    console.log(window);
+    sponsorDetailsDisplay = (
+      <div id="music-sponsor-display">
+        <span>This music is sponsored by</span>
+        <span className="sponsor-avatar">
+          <img src={window.config.user.avatar}/>
+          <span>{window.config.user.username}</span>
+        </span>
+      </div>
+    )
+  }
 
   return (
       <div id="music-player-wrapper" className={musicPlayerWrapperCssClass}>
         <ReactJkMusicPlayer {...options} />
+        {sponsorDetailsDisplay}
       </div>
   )
 }

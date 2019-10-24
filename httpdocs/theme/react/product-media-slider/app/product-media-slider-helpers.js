@@ -15,8 +15,7 @@ export function GenerateGalleryArray(product){
             if (f.active === "1"){
                 let addFileToGallery = false;
                 if (f.type.indexOf('video') > -1 || 
-                    f.type.indexOf('audio') > -1 || 
-                    f.type.indexOf('application') > -1 ||
+                    f.type.indexOf('audio') > -1 ||
                     f.type.indexOf('ogg') > -1 ||
                     f.type.indexOf('epub') > -1){
                     addFileToGallery = true;
@@ -90,6 +89,7 @@ export function GroupAudioFilesInGallery(galleryArray){
             newGalleryArray.push(gi);
         }
     });
+    if (newGalleryArray.length > 0) newGalleryArray = galleryArray;
     return newGalleryArray;
 }
 
