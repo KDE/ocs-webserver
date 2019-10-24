@@ -778,19 +778,23 @@ video:focus {
   color: white;
   background-color: #454951;
   padding: 10px;
-  text-align: left;
+  text-align: center;
+  font-size: 12px;
 }
 #music-player-wrapper #music-sponsor-display span {
   display: block;
   float: left;
   width: 100%;
 }
-#music-player-wrapper #music-sponsor-display span + span {
+#music-player-wrapper #music-sponsor-display span {
   text-align: center;
 }
-#music-player-wrapper #music-sponsor-display span + span img {
+#music-player-wrapper #music-sponsor-display span img {
   border-radius: 100%;
   border: 2px solid #c1c1c1;
+  width: 30px;
+  height: 30px;
+  margin-top: 3px;
 }
 #comics-reader-wrapper {
   height: 100%;
