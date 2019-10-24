@@ -187,7 +187,20 @@ class Default_Model_Solr
         //     $params['fq'] = array_merge($params['fq'], array('package_names:' . $tag['tag_name']));   
         // }
 
-        $currentStoreConfig = Zend_Registry::get('store_config');  
+        // $currentStoreConfig = Zend_Registry::get('store_config');  
+
+        if(isset($op['store']))
+        {
+            $storename = $op['store'];
+            $storemodel = new Default_Model_DbTable_ConfigStore(); 
+            $store = $storemodel->fetchDomainObjectsByName($storename);
+            $currentStoreConfig = new Default_Model_ConfigStore($store['host']);
+        }
+        else
+        {
+            $currentStoreConfig = Zend_Registry::get('store_config');                                  
+        }  
+
         $params['fq'] = array('stores:(' . $currentStoreConfig->store_id . ')');        
         $csmodel  = new Default_Model_ConfigStoreTags();
         $packageFilter = $csmodel->getPackageTagsForStore($currentStoreConfig->store_id);       

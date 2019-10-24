@@ -43,6 +43,7 @@
 //Change from opendesktop to pling
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 $baseurlStore = Zend_Registry::get('config')->settings->client->default->baseurl_store;
+$searchbaseurl = $this->buildSearchBaseUrl();
 $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
 $url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
@@ -53,6 +54,9 @@ $url_musicopendesktop = Zend_Registry::get('config')->settings->client->default-
 $url_mastodon = Zend_Registry::get('config')->settings->client->default->url_mastodon;
 $url_docsopendesktop = Zend_Registry::get('config')->settings->client->default->url_docsopendesktop;
 
+
+ 
+
 $filter = new Local_Filter_Url_Encrypt();
 $url_login;
 $url_logout;
@@ -60,9 +64,9 @@ $url_logout;
 // intern metaheader diff opendesktop/pling
 $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
 $target = 'pling';
-if($storeConfig->config_id_name=='opendesktop')
+if($storeConfig->config_id_name=='opendesktop' or $storeConfig->config_id_name=='kde-store')
 {
-  $target = 'opendesktop';
+  $target = $storeConfig->config_id_name;
 }
 
 if(isset($_GET['target'])) {
@@ -75,7 +79,12 @@ if($target=="pling")
   $targetObject['logo'] = "pling";
   $targetObject['logoLabel'] = "";
   $targetObject['link'] = $baseurlStore;
-}else{
+}else if($target=="kde-store")
+{
+  $targetObject['logo'] = "kdeStore";
+  $targetObject['logoLabel'] = "store.kde.org";
+  $targetObject['link'] = 'store.kde.org';
+}else {
   $targetObject['logo'] = "opendesktop";
   $targetObject['logoLabel'] = "OpenDesktop";
   $targetObject['link'] = $baseurl;
@@ -133,6 +142,7 @@ if (Zend_Auth::getInstance()->hasIdentity()){
 $sname = Zend_Registry::get('store_host');
 $json_menu = $this->fetchMetaheaderMenuJson();
 
+
 $response = array(
     "isAdmin" => $isAdmin,
     "isExternal" => $is_external,
@@ -140,6 +150,7 @@ $response = array(
     "user" => $user,
     "baseUrl" => $baseurl,
     "baseUrlStore" => $baseurlStore,
+    "searchbaseurl" => $searchbaseurl,
     "blogUrl" => $url_blog,
     "forumUrl" => $url_forum,
     "mastodonUrl" => $url_mastodon,
@@ -153,7 +164,8 @@ $response = array(
     "logoutUrl" => $url_logout,
     "sName" => $sname,
     "metamenuTheme" => $metamenuTheme,
-    "target" => $targetObject
+    "target" => $targetObject,
+    "store" => ($storeConfig?$storeConfig->name:null)
 );
 
 ?>

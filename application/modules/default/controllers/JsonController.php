@@ -277,7 +277,19 @@ class JsonController extends Zend_Controller_Action
     {  
         $this->_initResponseHeader();
         $projectSearchText = $this->getParam('p');
-        $param = array('q' => $projectSearchText,'store'=>null,'page' => 1
+        $store = null;
+        if($this->hasParam('s')){
+            $store = $this->getParam('s');
+        }
+
+        // $storemodel = new Default_Model_DbTable_ConfigStore(); 
+        // $s = $storemodel->fetchDomainObjectsByName($store);
+        
+        // $currentStoreConfig = new Default_Model_ConfigStore($s['host']);
+        // var_dump($currentStoreConfig);        
+        // die;
+        
+        $param = array('q' => $projectSearchText,'store'=>$store,'page' => 1
             , 'count' => 10);
         $viewHelperImage = new Default_View_Helper_Image();
         $modelSearch = new Default_Model_Solr();   
