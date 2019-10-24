@@ -16,6 +16,7 @@ export function GenerateGalleryArray(product){
                 let addFileToGallery = false;
                 if (f.type.indexOf('video') > -1 || 
                     f.type.indexOf('audio') > -1 || 
+                    f.type.indexOf('ogg') > -1 ||
                     f.type.indexOf('epub') > -1){
                     addFileToGallery = true;
                 }
@@ -23,11 +24,11 @@ export function GenerateGalleryArray(product){
                 if (f.type.indexOf("image") > -1 && noGallery === true && noLogo === true) addFileToGallery = true;
 
                 if (addFileToGallery === true){
-                    console.log(f.type);
                     let type;
-                    if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 || f.type.indexOf('ogg') > -1 ) type = f.type.split('/')[0]
+                    if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 ) type = f.type.split('/')[0]
                     else if (f.type.indexOf('epub') > -1 ) type = "book";
                     else if (f.type.indexOf('image') > -1) type = "image";
+                    else if (f.type.indexOf('ogg') > -1) type = "audio";
                     // else if (f.name.indexOf('.cbr') > -1 || f.name.indexOf('.cbz') > -1) type = "comics";
                     
                     let url_preview, url_thumb;
@@ -46,7 +47,7 @@ export function GenerateGalleryArray(product){
                         url_preview:url_preview
                     }
                     
-                    if (f.type.indexOf('audio') > -1){
+                    if (f.type.indexOf('audio') > -1 || type === 'audio'){
                         gItem.name = gItem.title;
                         gItem.cover = window.galleryPicturesJson[0];
                         gItem.musicSrc = gItem.url;

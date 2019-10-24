@@ -217,6 +217,8 @@ function MusicPlayerWrapper(props){
       }
   };
 
+  console.log(options);
+
   let musicPlayerWrapperCssClass = "desktop ";
   if (isMobile) musicPlayerWrapperCssClass = "mobile ";
   if (showPlaylist) musicPlayerWrapperCssClass += " show-playlist";
