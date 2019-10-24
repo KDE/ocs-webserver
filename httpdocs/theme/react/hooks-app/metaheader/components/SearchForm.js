@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 import Autosuggest from 'react-autosuggest';
-// import useFetch from '../../util/src/hooks/useFetch';
 function renderSuggestion(suggestion) {
   return (
     <div className={suggestion.type + ' suggestionsContainer'}>
       <div>
-      {suggestion.type == 'user' ? <img style={{ width: '50px', height: '50px', borderRadius:'999px' }} src={suggestion.image_small} ></img> : <img style={{ width: '50px', height: '50px' }} src={suggestion.image_small} ></img>}
+        {suggestion.type == 'user' ? <img style={{ width: '50px', height: '50px', borderRadius: '999px' }} src={suggestion.image_small} ></img> : <img style={{ width: '50px', height: '50px' }} src={suggestion.image_small} ></img>}
       </div>
-      
+
       <div className="description">
         {suggestion.type == 'project' ? (
           <>
-          <span>{suggestion.title}</span>
-          <span style={{'font-size':'11px','color':'#ccc'}}>{' by ' + suggestion.username}</span>
+            <span>{suggestion.title}</span>
+            <span style={{ 'font-size': '11px', 'color': '#ccc' }}>{' by ' + suggestion.username}</span>
           </>
         ) : (
             <span>{suggestion.username}</span>
@@ -33,39 +32,30 @@ const renderInputComponent = inputProps => (
 
 const SearchForm = (props) => {
   const [searchText, setSearchText] = useState('');
-  const [isShow, setIsShow] = useState(false);  
+  const [isShow, setIsShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [selected, setSelected] = useState();
 
-  //const [ data, loading, setUrl ] = useFetch();   
- 
-  const loadSuggestions = value => {    
-    
-    // const inputLength = value.length;
-    // if (inputLength < 3) return;    
-    // const getUrl = text => `${props.baseUrlStore+'/json/search/p/'}${text}`;
-    // setUrl(getUrl(value));
-    
-    // setIsLoading(loading);
-    // setSuggestions(data);
+
+  const loadSuggestions = value => {
     const inputLength = value.length;
     if (inputLength < 3) return;
     setIsLoading(true);
     let url = props.baseUrlStore + '/json/search/p/' + value;
-    if(props.store){
-      url += '/s/'+props.store
+    if (props.store) {
+      url += '/s/' + props.store
     }
     fetch(url, {
       mode: 'cors',
       credentials: 'include'
     })
-      .then(response => response.json())
-      .then(data => {
-        setSuggestions(data);
-        setIsLoading(false);
-      });
+    .then(response => response.json())
+    .then(data => {
+      setSuggestions(data);
+      setIsLoading(false);
+    });
 
   }
 
@@ -96,7 +86,7 @@ const SearchForm = (props) => {
 
   }
 
-  
+
   const onHandleChange = (event, { newValue, method }) => {
     setValue(newValue);
   }
@@ -113,16 +103,15 @@ const SearchForm = (props) => {
     setSuggestions([]);
   }
 
-  const onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {
-    //setSelected(suggestion);
-    if (suggestion.type == 'project') {      
+  const onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {    
+    if (suggestion.type == 'project') {
       window.location.href = props.baseUrlStore + '/p/' + suggestion.project_id;
-    } else {      
+    } else {
       window.location.href = props.baseUrlStore + '/u/' + suggestion.username;
     }
   }
 
-  const renderSectionTitle = section =>{
+  const renderSectionTitle = section => {
     return (
       <strong>{section.title}</strong>
     );

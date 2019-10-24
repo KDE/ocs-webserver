@@ -1,15 +1,16 @@
 {
-  "name": "hooks-app",
+  "name": "hooks-metaheader",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Pling / Metaheader Hooks",
+  "author": "DFN",
+  "license": "UNLICENSED",
+  "homepage": "https://my.opendesktop.org/",
+  "repository": "https://github.com/opendesktop/opendesktop-my",
+  "main": "public/main.js",
   "scripts": {
     "build": "webpack --mode production",
     "watch": "webpack --mode development --watch"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@babel/core": "*",
     "@babel/polyfill": "*",
@@ -22,6 +23,7 @@
     "webpack-cli": "*"
   },
   "dependencies": {
+    "react-autosuggest": "^9.4.3",
     "react-device-detect": "^1.6.2"
   }
 }

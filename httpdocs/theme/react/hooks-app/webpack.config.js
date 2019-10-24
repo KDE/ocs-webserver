@@ -1,7 +1,9 @@
 module.exports = {
   entry: {
           'metaheader':'./metaheader/entry-metaheader.js',
-          'metaheader-local':'./metaheader/entry-metaheader-local.js',         
+          'metaheader-local':'./metaheader/entry-metaheader-local.js',  
+          'home-main-container':'./opendesktop-home/entry-home-main-container.js',
+          //'header':'./header/entry-header.js',       
          },
   output: {
      path: `${__dirname}/../bundle`,

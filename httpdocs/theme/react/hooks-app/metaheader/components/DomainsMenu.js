@@ -60,6 +60,21 @@ class DomainsMenu extends React.Component {
               </>
             );
             break;
+          case 'kdeStore':
+            dT =(
+              <>
+                <li className="active">
+                  <a id="kdeStore-logo" href={this.props.target.link}>
+                    <img src={this.props.baseUrlStore + "/images_sys/store_kde/logo.png"} className="logo" />
+                    { this.props.target.logoLabel }
+                  </a>
+                </li>
+                <li><a href={this.props.baseUrlStore}>Pling</a></li>
+                <li><a href={this.props.baseUrl}>openDesktop.org</a></li>
+                <li><a href={this.props.gitlabUrl + "/explore/projects"}>Opencode</a></li>
+              </>
+            );
+            break;
           case 'gitlab':
             dT =(
               <>
