@@ -4,7 +4,9 @@ import {isMobile} from 'react-device-detect';
 
 function MusicPlayerWrapper(props){
 
-  const [ showPlaylist, setShowPlaylist ] = useState(isMobile === true ? false : window.outerWidth > 600 ? true : false);
+  console.log(isMobile)
+  const [ showPlaylist, setShowPlaylist ] = useState(isMobile === true ? false : true);
+  console.log(showPlaylist);
   let initialPLayedAudioArray = []
   props.slide.items.forEach(function(i,index){
     let pl = 0;
@@ -72,11 +74,11 @@ function MusicPlayerWrapper(props){
       });
     }
   }
-
+  console.log(showPlaylist);
   const options = {
       //audio lists model
       audioLists: props.slide.items,
-      audioListsPanelVisible:true,
+      audioListsPanelVisible:showPlaylist,
       //default play index of the audio player  [type `number` default `0`]
       defaultPlayIndex: 0,
       //if you want dynamic change current play audio you can change it [type `number` default `0`]
@@ -214,11 +216,11 @@ function MusicPlayerWrapper(props){
         console.log("audio lyric change:", lineNum, currentLyric);
       }
   };
-
+  console.log(options.audioListsPanelVisible);
   let musicPlayerWrapperCssClass = "desktop ";
   let sponsorDetailsDisplay;
-  if (isMobile) musicPlayerWrapperCssClass = "mobile ";
-  if (showPlaylist) {
+  if (isMobile === true) musicPlayerWrapperCssClass = "mobile ";
+  if (showPlaylist === true) {
     musicPlayerWrapperCssClass += " show-playlist";
     console.log(window);
     if (window.product && !isMobile){
