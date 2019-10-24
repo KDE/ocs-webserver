@@ -5,27 +5,17 @@ import {isMobile} from 'react-device-detect';
 function MusicPlayerWrapper(props){
 
   const [ showPlaylist, setShowPlaylist ] = useState(isMobile ? false : true);
-  let initialPLayedAudioArray = [];
-  if (props.slide.items){
-    props.slide.items.forEach(function(i,index){
-      let pl = 0;
-      if (index === 0) pl = -1;
-      const pa = {
-        ...i,
-        played:pl,
-        stopped:0
-      }
-      initialPLayedAudioArray.push(pa);
-    })
-  } else {
+  let initialPLayedAudioArray = []
+  props.slide.items.forEach(function(i,index){
+    let pl = 0;
+    if (index === 0) pl = -1;
     const pa = {
-      ...props.slide,
-      played:-1,
+      ...i,
+      played:pl,
       stopped:0
     }
     initialPLayedAudioArray.push(pa);
-  }
-
+  })
   const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
 
   function onReportAudioPlay(audioInfo){
@@ -85,13 +75,9 @@ function MusicPlayerWrapper(props){
 
   console.log(props.slide.items);
 
-  let audioListsArray;
-  if (props.slide.items) audioListsArray = props.slide.items;
-  else audioListsArray = props.slide;
-
   const options = {
       //audio lists model
-      audioLists: audioListsArray,
+      audioLists: props.slide.items,
       audioListsPanelVisible:true,
       //default play index of the audio player  [type `number` default `0`]
       defaultPlayIndex: 0,
