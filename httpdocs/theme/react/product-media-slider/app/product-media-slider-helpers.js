@@ -89,8 +89,12 @@ export function GroupAudioFilesInGallery(galleryArray){
             newGalleryArray.push(gi);
         }
     });
-    if (newGalleryArray.items) newGalleryArray = galleryArray;
-    return newGalleryArray;
+    let a;
+    if (newGalleryArray.items && newGalleryArray.items.length > 0){
+        a = newGalleryArray
+    } else a = galleryArray;
+    console.log(a);
+    return a;
 }
 
 export function generatePagesArray(pages,displayType){

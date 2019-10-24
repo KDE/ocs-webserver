@@ -780,6 +780,18 @@ video:focus {
   padding: 10px;
   text-align: left;
 }
+#music-player-wrapper #music-sponsor-display span {
+  display: block;
+  float: left;
+  width: 100%;
+}
+#music-player-wrapper #music-sponsor-display span + span {
+  text-align: center;
+}
+#music-player-wrapper #music-sponsor-display span + span img {
+  border-radius: 100%;
+  border: 2px solid #c1c1c1;
+}
 #comics-reader-wrapper {
   height: 100%;
   position: relative;

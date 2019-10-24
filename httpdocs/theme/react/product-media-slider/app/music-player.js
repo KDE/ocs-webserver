@@ -228,7 +228,6 @@ function MusicPlayerWrapper(props){
         <span>This music is sponsored by</span>
         <span className="sponsor-avatar">
           <img src={window.config.user.avatar}/>
-          <span>{window.config.user.username}</span>
         </span>
       </div>
     )
