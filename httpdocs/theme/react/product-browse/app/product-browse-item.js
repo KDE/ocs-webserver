@@ -21,15 +21,12 @@ export function ProductBrowseItem(props){
         $.ajax({
             url: ajaxUrl
         }).done(function(res) {
-            console.log(res);
             let newProductFiles = [];
             res.forEach(function(f,index){
-                console.log(f);
                 if ( f.type.split('/')[0] === "audio" ||  f.type.split('/')[1] === "ogg"){
                     let nf = f;
                     nf.musicSrc = f.url.replace(/%2F/g,'/').replace(/%3A/g,':');
                     nf.cover = imgUrl;
-                    console.log(nf);
                     newProductFiles.push(nf);
                 }
             });
