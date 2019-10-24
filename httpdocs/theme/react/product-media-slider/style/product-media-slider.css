@@ -482,7 +482,7 @@ video:focus {
   position: relative;
   margin: 10px auto;
   background: white url('ajax-loader.gif') center center no-repeat;
-  top: calc(-350vh);
+  top: calc(50vh - 400px);
 }
 #book-reader-wrapper #viewer.spreads .epub-view > iframe {
   background: white;
@@ -517,7 +517,7 @@ video:focus {
     left: 50%;
     margin-left: -1px;
     top: 5%;
-    opacity: .15;
+    opacity: 0.15;
     box-shadow: -2px 0 15px #000000;
     content: "";
   }
@@ -767,6 +767,34 @@ video:focus {
 #music-player-wrapper .react-jinke-music-player-mobile .react-jinke-music-player-mobile-cover {
   width: 145px;
   height: 145px;
+}
+#music-player-wrapper #music-sponsor-display {
+  position: absolute;
+  width: 50%;
+  bottom: 0;
+  left: 50%;
+  height: 65px;
+  z-index: 1000;
+  color: white;
+  background-color: #454951;
+  padding: 10px;
+  text-align: center;
+  font-size: 12px;
+}
+#music-player-wrapper #music-sponsor-display span {
+  display: block;
+  float: left;
+  width: 100%;
+}
+#music-player-wrapper #music-sponsor-display span {
+  text-align: center;
+}
+#music-player-wrapper #music-sponsor-display span img {
+  border-radius: 100%;
+  border: 2px solid #c1c1c1;
+  width: 30px;
+  height: 30px;
+  margin-top: 3px;
 }
 #comics-reader-wrapper {
   height: 100%;
