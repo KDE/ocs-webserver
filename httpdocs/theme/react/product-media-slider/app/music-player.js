@@ -85,6 +85,10 @@ function MusicPlayerWrapper(props){
 
   console.log(props.slide.items);
 
+  let audioListsArray;
+  if (props.slide.items) audioListsArray = props.slide.items;
+  else audioListsArray = props.slide;
+
   const options = {
       //audio lists model
       audioLists: props.slide.items,
