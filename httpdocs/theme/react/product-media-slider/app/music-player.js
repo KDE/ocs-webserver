@@ -223,12 +223,12 @@ function MusicPlayerWrapper(props){
   if (showPlaylist) {
     musicPlayerWrapperCssClass += " show-playlist";
     console.log(window);
-    if (window.config && window.config.user && !isMobile){
+    if (window.product && !isMobile){
       sponsorDetailsDisplay = (
         <div id="music-sponsor-display">
           <span>This music is sponsored by</span>
           <span className="sponsor-avatar">
-            <img src={window.config.user.avatar}/>
+            <img src={window.product.user.profile_image_url}/>
           </span>
         </div>
       )
