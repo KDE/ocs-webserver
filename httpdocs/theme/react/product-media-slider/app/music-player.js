@@ -5,17 +5,27 @@ import {isMobile} from 'react-device-detect';
 function MusicPlayerWrapper(props){
 
   const [ showPlaylist, setShowPlaylist ] = useState(isMobile ? false : true);
-  let initialPLayedAudioArray = []
-  props.slide.items.forEach(function(i,index){
-    let pl = 0;
-    if (index === 0) pl = -1;
+  let initialPLayedAudioArray = [];
+  if (props.slide.items){
+    props.slide.items.forEach(function(i,index){
+      let pl = 0;
+      if (index === 0) pl = -1;
+      const pa = {
+        ...i,
+        played:pl,
+        stopped:0
+      }
+      initialPLayedAudioArray.push(pa);
+    })
+  } else {
     const pa = {
-      ...i,
-      played:pl,
+      ...props.slide,
+      played:-1,
       stopped:0
     }
     initialPLayedAudioArray.push(pa);
-  })
+  }
+
   const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
 
   function onReportAudioPlay(audioInfo){
@@ -216,8 +226,6 @@ function MusicPlayerWrapper(props){
         console.log("audio lyric change:", lineNum, currentLyric);
       }
   };
-
-  console.log(options);
 
   let musicPlayerWrapperCssClass = "desktop ";
   if (isMobile) musicPlayerWrapperCssClass = "mobile ";
