@@ -13,7 +13,6 @@ export function GenerateGalleryArray(product){
     if (window.filesJson) {
         window.filesJson.forEach(function(f,index){
             if (f.active === "1"){
-                console.log(f.type);
                 let addFileToGallery = false;
                 if (f.type.indexOf('video') > -1 || 
                     f.type.indexOf('audio') > -1 || 
@@ -48,7 +47,7 @@ export function GenerateGalleryArray(product){
                         url_preview:url_preview
                     }
                     
-                    if (f.type.indexOf('audio') > -1){
+                    if (f.type.indexOf('audio') > -1 || type === 'audio'){
                         gItem.name = gItem.title;
                         gItem.cover = window.galleryPicturesJson[0];
                         gItem.musicSrc = gItem.url;
