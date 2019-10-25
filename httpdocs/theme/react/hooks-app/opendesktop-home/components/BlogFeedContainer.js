@@ -1,49 +1,43 @@
-import React, { Component } from 'react';
-class BlogFeedContainer extends React.Component {
-  constructor(props){
-  	super(props);
-  	this.state = {};
-  }
+import React, { useState, useEffect } from 'react';
+import Axios from 'axios';
 
-  componentDidMount() {
-    const self = this;
-    var json_url = '/json/forum';
-    //$.ajax("https://forum.opendesktop.org/latest.json").then(function (result) {
-    $.ajax(json_url).then(function (result) {
-      let topics = result.topic_list.topics;
-      topics.sort(function(a,b){
-        return new Date(b.last_posted_at) - new Date(a.last_posted_at);
-      });
-      topics = topics.slice(0,5);
-      self.setState({items:topics});
-    });
-  }
+const BlogFeedContainer = (props) => {
 
-  render(){
-    let feedItemsContainer;
-    if (this.state.items){
+  const [items, setItems] = useState([]);
 
-      const feedItems = this.state.items.map((fi,index) => (
-        <li key={index}>
-          <a className="title" href={this.props.urlCommunity+"/t/" + fi.id}>
-            <span>{fi.title}</span>
-          </a>
-          <span className="info-row">
-            <span className="date">{fi.timeago}</span>
-            <span className="comment-counter">{fi.replyMsg}</span>
-          </span>
-        </li>
-      ));
+  useEffect(() => {
+    Axios.get(`/json/forum`)
+      .then(result => {
+        let topics = result.data.topic_list.topics;
+        topics.sort(function (a, b) {
+          return new Date(b.last_posted_at) - new Date(a.last_posted_at);
+        });
+        topics = topics.slice(0, 5);
+        setItems(topics);
+      })
+  }, []);
 
-      feedItemsContainer = <ul>{feedItems}</ul>;
-    }
-    return (
-      <div className="panelContainer">
-        <div className="title"><a href={this.props.urlCommunity}>Forum</a></div>
-        {feedItemsContainer}
-      </div>
-    )
-  }
+  return (
+    <div className="panelContainer">
+      <div className="title"><a href={props.urlCommunity}>Forum</a></div>
+      <ul>
+        {items.map((fi, index) => (
+          <li key={index}>
+            <a className="title" href={props.urlCommunity + "/t/" + fi.id}>
+              <span>{fi.title}</span>
+            </a>
+            <span className="info-row">
+              <span className="date">{fi.timeago}</span>
+              <span className="comment-counter">{fi.replyMsg}</span>
+            </span>
+          </li>
+        )
+        )}
+      </ul>
+    </div>
+  )
 }
 
-export default BlogFeedContainer;
+export default BlogFeedContainer
+
+
