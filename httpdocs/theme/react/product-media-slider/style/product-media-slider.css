@@ -668,6 +668,18 @@ video:focus {
   stroke: #777;
   fill: #777;
 }
+#music-player-wrapper {
+  /*&.mobile {
+    .audio-lists-panel {
+      display: none !important;
+    }
+    &.show-playlist {
+      .audio-lists-panel {
+        display: block !important;
+      }
+    }
+  }*/
+}
 #music-player-wrapper .progress-bar {
   margin: -3px 20px 0 20px;
 }
