@@ -8,8 +8,6 @@ class DomainsMenu extends React.Component {
     };
   }
 
-
-
   render() {
 
     let moreMenuItemDisplay, adminsDropDownMenuDisplay, myOpendesktopMenuDisplay;
@@ -27,19 +25,19 @@ class DomainsMenu extends React.Component {
         />
       )
     }
-
+    
     let dT;
+    const cls =(this.props.onSwitchStyleChecked?'':'active');
     if (this.props.target) {
       switch (this.props.target.target) {
         case 'opendesktop':
           dT =(
             <>
-              <li className="active">              
+              <li className={cls}>              
                 <a id="opendesktop-logo" href={this.props.baseUrl} >
                   <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
                   openDesktop.org :
-                </a>
-                
+                </a>                  
               </li>
               <li><a href={this.props.baseUrlStore}>Pling</a></li>
               <li><a href={this.props.gitlabUrl + "/explore/projects"}>Opencode</a></li>
@@ -49,21 +47,21 @@ class DomainsMenu extends React.Component {
           case 'pling':
             dT =(
               <>
-                <li className="active">
+                <li className={cls}>
                   <a id="pling-logo" href={this.props.baseUrlStore}>
                     <span><img src={this.props.baseUrlStore + "/theme/react/assets/img/logo-pling.png"} className="logo" />
                   </span>                    
-                  </a>
+                  </a>                  
                 </li>
                 <li><a href={this.props.baseUrl}>openDesktop.org</a></li>
                 <li><a href={this.props.gitlabUrl + "/explore/projects"}>Opencode</a></li>
               </>
             );
             break;
-          case 'kdeStore':
+          case 'kde-store':
             dT =(
               <>
-                <li className="active">
+                <li className={cls}>
                   <a id="kdeStore-logo" href={this.props.target.link}>
                     <img src={this.props.baseUrlStore + "/images_sys/store_kde/logo.png"} className="logo" />
                     { this.props.target.logoLabel }
@@ -78,7 +76,7 @@ class DomainsMenu extends React.Component {
           case 'gitlab':
             dT =(
               <>
-                <li >
+                <li className={cls}>
                   <a id="gitlab-logo" href={this.props.gitlabUrl + "/explore/projects"}>
                     <img src={this.props.baseUrl + "/theme/react/assets/img/logo-opencode.png"} className="logo" />
                     Opencode 
@@ -94,7 +92,7 @@ class DomainsMenu extends React.Component {
         default:
             dT =(
               <>
-                <li className="active">                 
+                <li className={cls}>                 
                     <a id="opendesktop-logo" href={this.props.baseUrl} style={{'margin':0,'border-top-right-radius':'0px','border-bottom-right-radius':'0px' }}>
                       <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
                       openDesktop.org : 
@@ -112,7 +110,7 @@ class DomainsMenu extends React.Component {
     }else{
       dT =(
         <>
-          <li className="active">
+          <li className={cls}>
             <a id="opendesktop-logo" href={this.props.baseUrl}>
               <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
               openDesktop.org 
