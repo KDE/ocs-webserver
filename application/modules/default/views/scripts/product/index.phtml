@@ -804,7 +804,68 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                             </div>
                         </div>
 
-                        <div class="tab-pane" id="files-panel">
+                        <div class="tab-pane" id="files-panel">                            
+                            <div class="row">
+                            <form id="form-download-torrent">
+                            <label for="torrentId">Download from a magnet link: </label>
+                            <input name="torrentId" placeholder="magnet:" 
+                             value="https://torrent.opendesktop.cc/api/files/downloadtorrent?id=1568302531&lt=torrent">
+                            <button type="submit">Download</button>
+                            </form>
+                            
+                            <div class="log"></div>
+                            <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
+                            <script>
+                                var client = new WebTorrent()
+                                client.on('error', function (err) {
+                                    console.error('ERROR: ' + err.message)                                    
+                                })
+
+                                document.querySelector('#form-download-torrent').addEventListener('submit', function (e) {
+                                    e.preventDefault() // Prevent page refresh
+
+                                    var torrentId = document.querySelector('form input[name=torrentId]').value;
+                                    log('Adding ' + torrentId)
+                                    client.add(torrentId, onTorrent);
+                                })
+
+                                function onTorrent (torrent) {
+                                    log('Got torrent metadata!')
+                                    log(
+                                    'Torrent info hash: ' + torrent.infoHash + ' ' +
+                                    '<a href="' + torrent.magnetURI + '" target="_blank">[Magnet URI]</a> ' +
+                                    '<a href="' + torrent.torrentFileBlobURL + '" target="_blank" download="' + torrent.name + '.torrent">[Download .torrent]</a>'
+                                    )
+
+                                    // Print out progress every 5 seconds
+                                    var interval = setInterval(function () {
+                                    log('Progress: ' + (torrent.progress * 100).toFixed(1) + '%')
+                                    }, 5000)
+
+                                    torrent.on('done', function () {
+                                    log('Progress: 100%')
+                                    clearInterval(interval)
+                                    })
+
+                                    // Render all files into to the page
+                                    torrent.files.forEach(function (file) {
+                                    file.appendTo('.log')
+                                    log('(Blob URLs only work if the file is loaded from a server. "http//localhost" works. "file://" does not.)')
+                                    file.getBlobURL(function (err, url) {
+                                        if (err) return log(err.message)
+                                        log('File done.')
+                                        log('<a href="' + url + '">Download full file: ' + file.name + '</a>')
+                                    })
+                                    })
+                                }
+
+                                function log (str) {
+                                    var p = document.createElement('p')
+                                    p.innerHTML = str
+                                    document.querySelector('.log').appendChild(p)
+                                }
+                                </script>
+                            </div>
                             <div class="col-lg-12">
                                 <?php
                                         echo $this->render('product/partials/ppload.phtml');
