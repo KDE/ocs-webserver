@@ -669,16 +669,20 @@ video:focus {
   fill: #777;
 }
 #music-player-wrapper {
-  /*&.mobile {
-    .audio-lists-panel {
-      display: none !important;
-    }
-    &.show-playlist {
-      .audio-lists-panel {
-        display: block !important;
-      }
-    }
-  }*/
+  position: relative;
+}
+#music-player-wrapper.mobile .audio-lists-panel {
+  height: 100%;
+  padding-bottom: 60px;
+}
+#music-player-wrapper.mobile .audio-lists-panel .audio-lists-panel-content {
+  width: 100% !important;
+  height: calc(100% - 56px);
+  transform-origin: bottom center;
+}
+#music-player-wrapper.mobile #music-sponsor-display {
+  width: 100%;
+  left: 0;
 }
 #music-player-wrapper .progress-bar {
   margin: -3px 20px 0 20px;
@@ -759,6 +763,7 @@ video:focus {
   right: 0;
   width: 50%;
   height: 100%;
+  padding-bottom: 60px;
   display: none !important;
 }
 #music-player-wrapper.desktop.show-playlist .music-player-panel {
@@ -789,9 +794,9 @@ video:focus {
   z-index: 1000;
   color: white;
   background-color: #454951;
-  padding: 10px;
+  padding: 5px;
   text-align: center;
-  font-size: 12px;
+  font-size: 10px;
 }
 #music-player-wrapper #music-sponsor-display span {
   display: block;
@@ -807,6 +812,7 @@ video:focus {
   width: 30px;
   height: 30px;
   margin-top: 3px;
+  cursor: pointer;
 }
 #comics-reader-wrapper {
   height: 100%;
