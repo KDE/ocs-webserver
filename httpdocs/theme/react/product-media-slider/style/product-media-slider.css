@@ -668,6 +668,9 @@ video:focus {
   stroke: #777;
   fill: #777;
 }
+#music-player-wrapper {
+  position: relative;
+}
 #music-player-wrapper.mobile .audio-lists-panel {
   height: 100%;
   padding-bottom: 60px;
