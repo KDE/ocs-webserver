@@ -4,9 +4,7 @@ import {isMobile} from 'react-device-detect';
 
 function MusicPlayerWrapper(props){
 
-  console.log(isMobile)
   const [ showPlaylist, setShowPlaylist ] = useState(isMobile === true ? false : true);
-  console.log(showPlaylist);
   let initialPLayedAudioArray = []
   props.slide.items.forEach(function(i,index){
     let pl = 0;
@@ -33,11 +31,11 @@ function MusicPlayerWrapper(props){
       ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
     ];
     setPlayedAudioArray(newPLayedAudioArray);
-    // console.log('played - ' + playedAudioArray[audioItemIndex].played)
+
     if (playedAudioArray[audioItemIndex].played === 0){
       const audioStartUrl = 'startvideoajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
       $.ajax({url: audioStartUrl}).done(function(res) { 
-        console.log(res);
+
         const newAudioItem = {
           ...audioItem,
           mediaViewId:res.MediaViewId,
@@ -74,7 +72,7 @@ function MusicPlayerWrapper(props){
       });
     }
   }
-  console.log(showPlaylist);
+
   const options = {
       //audio lists model
       audioLists: props.slide.items,
@@ -216,19 +214,24 @@ function MusicPlayerWrapper(props){
         console.log("audio lyric change:", lineNum, currentLyric);
       }
   };
-  console.log(options.audioListsPanelVisible);
+
   let musicPlayerWrapperCssClass = "desktop ";
   let sponsorDetailsDisplay;
   if (isMobile === true) musicPlayerWrapperCssClass = "mobile ";
   if (showPlaylist === true) {
     musicPlayerWrapperCssClass += " show-playlist";
-    console.log(window);
-    if (window.product && !isMobile){
+    if (window.product){
+      console.log(window.product);
       sponsorDetailsDisplay = (
         <div id="music-sponsor-display">
           <span>This music is sponsored by</span>
           <span className="sponsor-avatar">
-            <img src={window.product.profile_image_url}/>
+            <a href={"/u/" + window.product.username}>
+              <img src={window.product.profile_image_url}/>
+            </a>
+          </span>
+          <span>
+            {window.product.username}
           </span>
         </div>
       )

@@ -16,9 +16,7 @@ function ProductMediaSlider(){
   let galleryArray = GenerateGalleryArray(product);
   const audioFileIndex = galleryArray.findIndex(gf => gf.type === "audio");
   if (audioFileIndex > -1) galleryArray = GroupAudioFilesInGallery(galleryArray);
-  console.log(galleryArray);
   const [ gallery, setGallery ] = useState(galleryArray);
-  console.log(gallery);
   const [ disableGallery, setDisableGallery ] = useState(gallery.length > 1 ? false : true)
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
