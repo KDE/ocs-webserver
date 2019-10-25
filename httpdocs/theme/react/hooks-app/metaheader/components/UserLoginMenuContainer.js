@@ -93,16 +93,22 @@ class UserLoginMenuContainer extends React.Component {
 
             <li id="user-menu" className="buttons user-info-payout">
                 <ul className="payout">
-                  <li><a href={this.props.baseUrlStore + "/u/" + this.props.user.username + "/products"}>Products</a></li>
-                  <li><a href={this.props.gitlabUrl+"/dashboard/projects"}>Projects</a></li>
-                  <li><a href={this.state.gitlabLink}>Issues</a></li>
+                  <li><a href={this.props.baseUrlStore + "/u/" + this.props.user.username + "/products"}><div className="icon"></div>Products</a></li>
+                  <li><a href={this.props.gitlabUrl+"/dashboard/projects"}><div className="icon"></div>Projects</a></li>
+                  <li><a href={this.state.gitlabLink}><div className="icon"></div>Issues</a></li>
+                </ul>
+            </li>
+
+            <li id="user-menu-products" className="buttons user-info-payout">
+                <ul className="payout">
+                  <li><a href={this.props.baseUrlStore+"/product/add"}><div className="icon iconAdd"></div>Add Product</a></li>                  
                 </ul>
             </li>
 
             <li id="user-info-payout" className="buttons user-info-payout">
                 <ul className="payout">
-                  <li><a href={this.props.baseUrlStore+'/u/'+this.props.user.username+'/payout'}>My Payout</a></li>
-                  <li><a href={this.props.baseUrlStore+'/u/'+this.props.user.username+'/funding'}>My Funding</a></li>
+                  <li><a href={this.props.baseUrlStore+'/u/'+this.props.user.username+'/payout'}><div className="icon"></div>My Payout</a></li>
+                  <li><a href={this.props.baseUrlStore+'/u/'+this.props.user.username+'/funding'}><div className="icon"></div>My Funding</a></li>
                 </ul>
             </li>
 
