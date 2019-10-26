@@ -1,7 +1,6 @@
 export function GenerateGalleryArray(product){
     let galleryArray = [];
     let noGallery = false, noLogo = false;
-    console.log(window.galleryPicturesJson);
     if (window.galleryPicturesJson){
         window.galleryPicturesJson.forEach(function(gp,index){ galleryArray.push({url:gp,type:'image'}); });
         noGallery = true;
