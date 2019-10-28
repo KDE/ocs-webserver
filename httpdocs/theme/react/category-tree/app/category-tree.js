@@ -49,7 +49,7 @@ function CategoryTree(){
     const [ currentViewedCategories, setCurrentViewedCategories ] = useState(initialCurrentViewedCategories);
 
     let initialCurrentCategoryLevel = initialCurrentViewedCategories.length;
-    if (isShowRealDomainAsUrl && showStoreListingsFirst) initialCurrentCategoryLevel = -1;
+    // if (isShowRealDomainAsUrl && showStoreListingsFirst) initialCurrentCategoryLevel = -1;
     const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(initialCurrentCategoryLevel);
 
     const [ searchPhrase, setSearchPhrase ] = useState();
@@ -254,23 +254,25 @@ function CategoryPanelsContainer(props){
     /* STATE */
  
     const rootListingPanel = {categoryId:0,categories:props.categoryTree}
-    
     const storeListingPanel = {categoryId:-1,categories:[...window.json_store_for_tree]}
     let initialRootCategoryPanels = [rootListingPanel];
-    if (isShowRealDomainAsUrl  === 1) initialRootCategoryPanels = [storeListingPanel,rootListingPanel];
+    // if (isShowRealDomainAsUrl  === 1) initialRootCategoryPanels = [storeListingPanel,rootListingPanel];
     let initialPanelsValue = initialRootCategoryPanels;
     if (props.currentViewedCategories.length > 0) initialPanelsValue = initialRootCategoryPanels.concat(props.currentViewedCategories);
     const [ panels, setPanels ] = useState(initialPanelsValue);
-    
+    console.log('panels:');
+    console.log(panels);
     const [ containerWidth, setContainerWidth ] = useState(document.getElementById('category-tree-container').offsetWidth);
     const [ sliderWidth, setSliderWidth ] = useState(containerWidth * panels.length);
     const [ sliderHeight, setSliderHeight ] = useState();
-
-    let currentCategoryLevel = props.currentCategoryLevel + 1;
+    console.log('slider width:');
+    console.log(sliderWidth);
+    let currentCategoryLevel = props.currentCategoryLevel;
     if (window.location.href === "https://www.pling.com/" || window.location.href === "https://www.pling.cc/") currentCategoryLevel = 0;
     let initialSliderPosition = currentCategoryLevel * containerWidth;
     const [ sliderPosition, setSliderPosition ] = useState(initialSliderPosition);
-
+    console.log('slider position:');
+    console.log(sliderPosition);
     let initialShowBackButtonValue = true;
     if (sliderPosition === 0) initialShowBackButtonValue = false;
     const [ showBackButton, setShowBackButton ] = useState(initialShowBackButtonValue);
@@ -324,7 +326,7 @@ function CategoryPanelsContainer(props){
         const newSliderWidth = containerWidth * trimedPanelsArray.length;
         setSliderWidth(newSliderWidth);*/
 
-        let currentCategoryLevel = props.currentCategoryLevel + 1;
+        let currentCategoryLevel = props.currentCategoryLevel;
         let newSliderPosition = currentCategoryLevel * containerWidth;
         if (window.location.href === "https://www.pling.com/" || window.location.href === "https://www.pling.cc/"){
             if (props.searchMode !== true) newSliderPosition = 0;
