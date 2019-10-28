@@ -49,7 +49,7 @@ function CategoryTree(){
     const [ currentViewedCategories, setCurrentViewedCategories ] = useState(initialCurrentViewedCategories);
 
     let initialCurrentCategoryLevel = initialCurrentViewedCategories.length;
-    if (isShowRealDomainAsUrl && showStoreListingsFirst) initialCurrentCategoryLevel = -1;
+    // if (isShowRealDomainAsUrl && showStoreListingsFirst) initialCurrentCategoryLevel = -1;
     const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(initialCurrentCategoryLevel);
 
     const [ searchPhrase, setSearchPhrase ] = useState();
@@ -225,7 +225,7 @@ function CategoryTreeHeader(props){
     } else backButtonDisplay = <a id="back-button" className="disabled"><span className="glyphicon glyphicon-chevron-left"></span></a>;
 
     let sNameDisplay;
-    if (props.showBreadCrumbs === true){
+    //if (props.showBreadCrumbs === true){
         if (categories.length === 0){
             if (props.storeInfo){
                 let storeName = window.config.sName, storeHref = window.config.sName;
@@ -234,7 +234,7 @@ function CategoryTreeHeader(props){
                 sNameDisplay = <a href={storeHref}>{storeName}</a>
             }
         }    
-    }
+    //}
 
     let forwadButtonDisplay;
     if (props.showForwardButton === true) forwadButtonDisplay = <a id="forward-button" onClick={props.onGoForwardClick}><span className="glyphicon glyphicon-chevron-right"></span></a>
@@ -254,23 +254,19 @@ function CategoryPanelsContainer(props){
     /* STATE */
  
     const rootListingPanel = {categoryId:0,categories:props.categoryTree}
-    
     const storeListingPanel = {categoryId:-1,categories:[...window.json_store_for_tree]}
     let initialRootCategoryPanels = [rootListingPanel];
-    if (isShowRealDomainAsUrl  === 1) initialRootCategoryPanels = [storeListingPanel,rootListingPanel];
+    // if (isShowRealDomainAsUrl  === 1) initialRootCategoryPanels = [storeListingPanel,rootListingPanel];
     let initialPanelsValue = initialRootCategoryPanels;
     if (props.currentViewedCategories.length > 0) initialPanelsValue = initialRootCategoryPanels.concat(props.currentViewedCategories);
     const [ panels, setPanels ] = useState(initialPanelsValue);
-    
     const [ containerWidth, setContainerWidth ] = useState(document.getElementById('category-tree-container').offsetWidth);
     const [ sliderWidth, setSliderWidth ] = useState(containerWidth * panels.length);
     const [ sliderHeight, setSliderHeight ] = useState();
-
-    let currentCategoryLevel = props.currentCategoryLevel + 1;
+    let currentCategoryLevel = props.currentCategoryLevel;
     if (window.location.href === "https://www.pling.com/" || window.location.href === "https://www.pling.cc/") currentCategoryLevel = 0;
     let initialSliderPosition = currentCategoryLevel * containerWidth;
     const [ sliderPosition, setSliderPosition ] = useState(initialSliderPosition);
-
     let initialShowBackButtonValue = true;
     if (sliderPosition === 0) initialShowBackButtonValue = false;
     const [ showBackButton, setShowBackButton ] = useState(initialShowBackButtonValue);
@@ -324,7 +320,7 @@ function CategoryPanelsContainer(props){
         const newSliderWidth = containerWidth * trimedPanelsArray.length;
         setSliderWidth(newSliderWidth);*/
 
-        let currentCategoryLevel = props.currentCategoryLevel + 1;
+        let currentCategoryLevel = props.currentCategoryLevel;
         let newSliderPosition = currentCategoryLevel * containerWidth;
         if (window.location.href === "https://www.pling.com/" || window.location.href === "https://www.pling.cc/"){
             if (props.searchMode !== true) newSliderPosition = 0;
@@ -428,9 +424,9 @@ function CategoryPanel(props){
 
     function adjustSliderHeight(panelHeight){
         let currentCategoryLevel = props.currentCategoryLevel
-        if (isShowRealDomainAsUrl){
+        /*if (isShowRealDomainAsUrl){
             if (window.location.href !== "https://www.pling.com/" && window.location.href !== "https://www.pling.cc/") currentCategoryLevel = props.currentCategoryLevel + 1;
-        }
+        }*/
         if (currentCategoryLevel === props.level) props.onSetSliderHeight(panelHeight);
     }
 
