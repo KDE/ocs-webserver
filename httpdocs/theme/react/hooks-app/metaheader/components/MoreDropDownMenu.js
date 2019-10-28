@@ -38,11 +38,6 @@ class MoreDropDownMenu extends React.Component {
     aboutopencodeItem = (<li><a id="faq" href={this.props.baseUrl +"/faq-opencode"}>FAQ Opencode</a></li>);
     aboutLinkItem = (<li><a id="about" href={this.props.baseUrl +"/about"}>About</a></li>);
     apiLinkItem = (<li><a  href={this.props.baseUrl +"/ocs-api"}>API</a></li>);
-    // if (this.props.isExternal === false){
-    //   apiLinkItem = (<li><a className="popuppanel" id="api" href={"/partials/ocsapicontent.phtml"}>API</a></li>);
-    // } else {
-    //   apiLinkItem = (<li><a className="popuppanel" target="_blank" id="api" href={this.props.baseUrl + "/#api"}>API</a></li>);
-    // }
     if (this.props.isAdmin ){
       faqLinkItem = (<li><a className="popuppanel" id="faq" href={"/plings"}>Plings (admin only)</a></li>);
     }
@@ -50,9 +45,11 @@ class MoreDropDownMenu extends React.Component {
     return(
       <li ref={node => this.node = node} id="more-dropdown-menu" className={this.state.dropdownClass}>
         <a className="more-menu-link-item">More</a>
-        <ul className="dropdown-menu">
-        {/*<li><a href={this.props.baseUrl + "/support"}>Supporter</a></li>*/}  
-          <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
+        <ul className="dropdown-menu">   
+            <li><a href={this.props.baseUrl + "/community"}>Members</a></li>
+            <li><a href={this.props.forumUrl}>Discussion</a></li>
+            <li><a href={this.props.baseUrlStore + "/support"}>Become a Supporter</a></li>
+            <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
             {faqLinkItem}
             {apiLinkItem}
             {aboutPlingItem}

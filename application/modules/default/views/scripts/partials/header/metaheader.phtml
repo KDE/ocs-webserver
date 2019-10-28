@@ -54,9 +54,6 @@ $url_musicopendesktop = Zend_Registry::get('config')->settings->client->default-
 $url_mastodon = Zend_Registry::get('config')->settings->client->default->url_mastodon;
 $url_docsopendesktop = Zend_Registry::get('config')->settings->client->default->url_docsopendesktop;
 
-
- 
-
 $filter = new Local_Filter_Url_Encrypt();
 $url_login;
 $url_logout;
@@ -165,7 +162,8 @@ $response = array(
     "sName" => $sname,
     "metamenuTheme" => $metamenuTheme,
     "target" => $targetObject,
-    "store" => ($storeConfig?$storeConfig->name:null)
+    "store" => ($storeConfig?$storeConfig->name:null),
+    "storeConfig" => array("config_id_name"=>$storeConfig->config_id_name,"name" =>$storeConfig->name),
 );
 
 ?>

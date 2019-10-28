@@ -114,10 +114,13 @@ class MetaHeader extends React.Component {
           docsopendesktopUrl={this.state.docsopendesktopUrl}
           isAdmin={this.state.isAdmin}
           onSwitchStyle={this.onSwitchStyle}
-          onSwitchStyleChecked={paraChecked}
+          onSwitchStyleChecked={this.state.metamenuTheme?true:false}
           isExternal={this.state.isExternal}
           riotUrl={this.state.riotUrl}
           target={this.state.target}
+          searchBaseUrl={this.state.searchbaseurl}
+          store={this.state.store}
+          storeConfig = {this.state.storeConfig}
         />
       )
     }
