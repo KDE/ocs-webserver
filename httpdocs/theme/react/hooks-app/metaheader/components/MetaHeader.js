@@ -120,6 +120,7 @@ class MetaHeader extends React.Component {
           target={this.state.target}
           searchBaseUrl={this.state.searchbaseurl}
           store={this.state.store}
+          storeConfig = {this.state.storeConfig}
         />
       )
     }

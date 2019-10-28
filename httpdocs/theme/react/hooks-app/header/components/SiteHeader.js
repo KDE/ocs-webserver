@@ -95,10 +95,15 @@ class SiteHeader extends Component {
             </div>
             {siteHeaderStoreNameDisplay}
           </div>
+          
 
           <div id="site-header-right">
             <div id="site-header-right-top" className={siteHeaderTopRightCssClass}>
-              
+                { this.state.user &&
+                <div className="btnAddProduct" >
+                  <span><a>Add Product</a></span>
+                  </div>
+                }
                 { PlingDisplay }
             </div>
 

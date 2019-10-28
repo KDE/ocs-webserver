@@ -19,8 +19,7 @@ class AboutMenu extends React.Component {
 
 
   handleClick(e){
-    let dropdownClass = "";
-
+    let dropdownClass = "";   
     if (this.node.contains(e.target)){
 
       if(e.target.className === "about-menu-link-item" || "th-icon"===e.target.className)

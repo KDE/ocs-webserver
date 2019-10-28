@@ -1,3 +1,4 @@
+// out: ../css/header.css, sourcemap: true, compress: true
 @import "elements.less";
 
 #site-header-container {
@@ -6,7 +7,7 @@
 }
 
 #site-header {
-  /*padding: 0 80px;*/
+  /*padding: 0 80px;*/ 
   font-size: 14px;
   background-color: #ccc;
   padding-right:0px;
@@ -40,14 +41,8 @@
       padding: 0;
     }
 
-    // li>a:hover,
-    // .active>a,
-    // .active>a:hover {
-    //     color: #222;
-    //     text-decoration: none;
-    //     background-color: #eee;
-    // }
-
+    
+ 
 
   }
 
@@ -296,6 +291,31 @@
         display: flex;
         justify-content: center;
 
+        .btnAddProduct{
+          width:100px;
+          display:flex;
+          align-items:flex-end;
+          margin:0 auto;
+          >span >a{
+            border: 0;
+            border-bottom-color: currentcolor;
+            border-bottom-style: none;
+            border-bottom-width: 0px;
+            position: relative;
+            color: #777;
+            font-size: 13px;
+            transition: color 0s;
+            bottom: 2px;
+            border-bottom-width: 2px;
+            border-bottom-style: solid;
+            border-bottom-color: transparent;
+            background-color: transparent;
+            cursor: pointer;
+            color: #2673b0;
+            border-bottom-color: #2673b0;
+            font-weight: 700;
+          }
+        }
 
 
       }
