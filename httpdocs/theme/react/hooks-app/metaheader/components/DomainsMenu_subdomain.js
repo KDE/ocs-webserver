@@ -35,7 +35,7 @@ const DomainsMenu_subdomain = (props) => {
          {props.domains.filter(domain=>domain.is_show_in_menu==1)
                        .sort((a, b) => a.name > b.name)
                        .map((domain, index)=><li key={index}>
-                           <a href={domain.is_show_real_domain_as_url==1?domain.host:props.baseUrlStore+'/s/'+domain.name}>{domain.name}</a></li>)}        
+                           <a href={domain.is_show_real_domain_as_url==1?'https://'+domain.host:props.baseUrlStore+'/s/'+domain.name}>{domain.name}</a></li>)}        
         </ul>
       </div>
     )
