@@ -29,7 +29,7 @@ class DomainsMenu extends React.Component {
     }
         
     let dT;    
-    const cls =(this.props.onSwitchStyleChecked?'':'active');
+    const cls =(this.props.onSwitchStyleChecked?'active':'active');
 
     let subStore;
     if(this.props.target && this.props.target.target=='pling')
