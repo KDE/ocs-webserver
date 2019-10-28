@@ -225,7 +225,7 @@ function CategoryTreeHeader(props){
     } else backButtonDisplay = <a id="back-button" className="disabled"><span className="glyphicon glyphicon-chevron-left"></span></a>;
 
     let sNameDisplay;
-    if (props.showBreadCrumbs === true){
+    //if (props.showBreadCrumbs === true){
         if (categories.length === 0){
             if (props.storeInfo){
                 let storeName = window.config.sName, storeHref = window.config.sName;
@@ -234,7 +234,7 @@ function CategoryTreeHeader(props){
                 sNameDisplay = <a href={storeHref}>{storeName}</a>
             }
         }    
-    }
+    //}
 
     let forwadButtonDisplay;
     if (props.showForwardButton === true) forwadButtonDisplay = <a id="forward-button" onClick={props.onGoForwardClick}><span className="glyphicon glyphicon-chevron-right"></span></a>
