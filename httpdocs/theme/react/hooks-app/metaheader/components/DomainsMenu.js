@@ -29,10 +29,10 @@ class DomainsMenu extends React.Component {
     }
         
     let dT;    
-    const cls =(this.props.onSwitchStyleChecked?'active':'active');
+    const cls =(this.props.onSwitchStyleChecked?'dark':'active');
 
     let subStore;
-    if(this.props.target && this.props.target.target=='pling')
+    if(this.props.target && this.props.target.target=='opendesktop')
     {
       // substore
       subStore = <DomainsMenu_subdomain domains={this.props.domains} 
@@ -49,9 +49,9 @@ class DomainsMenu extends React.Component {
               <li className={cls}>              
                 <a id="opendesktop-logo" href={this.props.baseUrl} >
                   <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
-                  openDesktop.org 
+                  openDesktop.org :
                 </a>   
-                                             
+                {subStore}                         
               </li>
               
               <li><a href={this.props.baseUrlStore}>Pling</a></li>
