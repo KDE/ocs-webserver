@@ -260,19 +260,13 @@ function CategoryPanelsContainer(props){
     let initialPanelsValue = initialRootCategoryPanels;
     if (props.currentViewedCategories.length > 0) initialPanelsValue = initialRootCategoryPanels.concat(props.currentViewedCategories);
     const [ panels, setPanels ] = useState(initialPanelsValue);
-    console.log('panels:');
-    console.log(panels);
     const [ containerWidth, setContainerWidth ] = useState(document.getElementById('category-tree-container').offsetWidth);
     const [ sliderWidth, setSliderWidth ] = useState(containerWidth * panels.length);
     const [ sliderHeight, setSliderHeight ] = useState();
-    console.log('slider width:');
-    console.log(sliderWidth);
     let currentCategoryLevel = props.currentCategoryLevel;
     if (window.location.href === "https://www.pling.com/" || window.location.href === "https://www.pling.cc/") currentCategoryLevel = 0;
     let initialSliderPosition = currentCategoryLevel * containerWidth;
     const [ sliderPosition, setSliderPosition ] = useState(initialSliderPosition);
-    console.log('slider position:');
-    console.log(sliderPosition);
     let initialShowBackButtonValue = true;
     if (sliderPosition === 0) initialShowBackButtonValue = false;
     const [ showBackButton, setShowBackButton ] = useState(initialShowBackButtonValue);
@@ -430,9 +424,9 @@ function CategoryPanel(props){
 
     function adjustSliderHeight(panelHeight){
         let currentCategoryLevel = props.currentCategoryLevel
-        if (isShowRealDomainAsUrl){
+        /*if (isShowRealDomainAsUrl){
             if (window.location.href !== "https://www.pling.com/" && window.location.href !== "https://www.pling.cc/") currentCategoryLevel = props.currentCategoryLevel + 1;
-        }
+        }*/
         if (currentCategoryLevel === props.level) props.onSetSliderHeight(panelHeight);
     }
 
