@@ -29,11 +29,12 @@ class DomainsMenu extends React.Component {
     }
         
     let dT;    
-    const cls =(this.props.onSwitchStyleChecked?'dark':'active');
+    let cls =(this.props.onSwitchStyleChecked?'dark':'active');
 
     let subStore;
     if(this.props.target && this.props.target.target=='pling')
     {
+      cls = cls + ' '+this.props.target.target;
       // substore
       subStore = <DomainsMenu_subdomain domains={this.props.domains} 
                                         baseUrlStore={this.props.baseUrlStore}
