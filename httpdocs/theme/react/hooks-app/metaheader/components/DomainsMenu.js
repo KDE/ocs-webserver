@@ -32,7 +32,7 @@ class DomainsMenu extends React.Component {
     let cls =(this.props.onSwitchStyleChecked?'dark':'active');
     if(this.props.target)
     {
-      if(this.props.target.target=='gitlab' && cls!='dark')
+      if(this.props.target.target=='gitlab' )
       {        
         if(cls!='dark'){
           cls = 'active';
