@@ -127,9 +127,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         }
 
         $this->view->cat_id = $inputCatId;
+        $this->view->showAddProduct = 1;
         
-        
-
         $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
 
         $filter = array();
