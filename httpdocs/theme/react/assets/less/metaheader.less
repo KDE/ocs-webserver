@@ -394,7 +394,7 @@
             display: inline-block;
             .domains-menu-link-item{
              
-              padding-right:15px;
+              padding-right:10px;
               
             }
             &.open {
@@ -434,7 +434,7 @@
             
           
             
-            &#opendesktop-logo , &#pling-logo, &#gitlab-logo, &#kdeStore-logo{
+            &#opendesktop-logo, &#opendesktop-logo-single , &#pling-logo, &#gitlab-logo, &#kdeStore-logo{
               position: relative;
               padding-left: 25px;
               margin-right:10px;
@@ -443,6 +443,9 @@
                 top: 5px;
                 left: 5px;
               }
+            }
+            &#opendesktop-logo{
+              margin-right: 0px;
             }
             &#pling-logo {  
               &>span{
@@ -2491,13 +2494,14 @@
     border-radius: 5px;
     line-height: 30px;
     margin-top: 2px;
-    a{
+    >a{
       &:hover{
         background-color: #2185D0;
         color:#E7F3F8 ;
       }
     }
   }
+
 
 
   

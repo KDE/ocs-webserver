@@ -29,11 +29,23 @@ class DomainsMenu extends React.Component {
     }
         
     let dT;    
-    const cls =(this.props.onSwitchStyleChecked?'dark':'active');
+    let cls =(this.props.onSwitchStyleChecked?'dark':'active');
+    if(this.props.target)
+    {
+      if(this.props.target.target=='gitlab' )
+      {        
+        if(cls!='dark'){
+          cls = 'active';
+        }else{
+          cls = 'gitlab';
+        }        
+      }    
+    }
 
     let subStore;
     if(this.props.target && this.props.target.target=='pling')
     {
+    
       // substore
       subStore = <DomainsMenu_subdomain domains={this.props.domains} 
                                         baseUrlStore={this.props.baseUrlStore}
@@ -47,7 +59,7 @@ class DomainsMenu extends React.Component {
           dT =(
             <>
               <li className={cls}>              
-                <a id="opendesktop-logo" href={this.props.baseUrl} >
+                <a id="opendesktop-logo-single" href={this.props.baseUrl} >
                   <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
                   openDesktop.org 
                 </a>   
@@ -109,11 +121,11 @@ class DomainsMenu extends React.Component {
             dT =(
               <>
                 <li className={cls}>                 
-                    <a id="opendesktop-logo" href={this.props.baseUrl} style={{'margin':0,'border-top-right-radius':'0px','border-bottom-right-radius':'0px' }}>
+                    <a id="opendesktop-logo" href={this.props.baseUrl} >
                       <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
                       openDesktop.org : 
                     </a>
-                    <a href={this.props.target.link} style={{'margin':0,'border-top-left-radius':'0px','border-bottom-left-radius':'0px' , 'margin-right': '15px', 'padding-left':'0px'}}>
+                    <a href={this.props.target.link} >
                       <span className="target">{ this.props.target.logoLabel }</span>
                     </a>                  
                 </li>
