@@ -32,7 +32,10 @@ class DomainsMenu extends React.Component {
     let cls =(this.props.onSwitchStyleChecked?'dark':'active');
     if(this.props.target)
     {
-        cls = cls + ' '+this.props.target.target;
+      if(this.props.target.target=='gitlab')
+      {
+        cls = 'gitlab';
+      }        
     }
 
     let subStore;
