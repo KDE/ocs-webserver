@@ -20,7 +20,7 @@
     "@webcomponents/custom-elements": "*",
     "babel-loader": "*",
     "babel-plugin-transform-es2015-arrow-functions": "^6.22.0",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "react": "*",
     "react-autosuggest": "^9.4.3",
     "react-dom": "*",
