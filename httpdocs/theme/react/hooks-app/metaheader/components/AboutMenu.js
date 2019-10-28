@@ -13,12 +13,11 @@ class AboutMenu extends React.Component {
   }
 
   componentWillUnmount() {
+   
     document.removeEventListener('click',this.handleClick, false);
   }
 
-
-
-  handleClick(e){
+  handleClick(e){    
     let dropdownClass = "";   
     if (this.node.contains(e.target)){
 

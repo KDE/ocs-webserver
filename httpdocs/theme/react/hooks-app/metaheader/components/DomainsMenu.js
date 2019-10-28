@@ -42,16 +42,7 @@ class DomainsMenu extends React.Component {
       }    
     }
 
-    let subStore;
-    if(this.props.target && this.props.target.target=='pling')
-    {
-    
-      // substore
-      subStore = <DomainsMenu_subdomain domains={this.props.domains} 
-                                        baseUrlStore={this.props.baseUrlStore}
-                                        storeConfig ={this.props.storeConfig}
-                                        />
-    }
+   
 
     if (this.props.target) {
       switch (this.props.target.target) {
@@ -61,9 +52,12 @@ class DomainsMenu extends React.Component {
               <li className={cls}>              
                 <a id="opendesktop-logo-single" href={this.props.baseUrl} >
                   <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
-                  openDesktop.org 
+                  openDesktop.org : 
                 </a>   
-                                
+                <DomainsMenu_subdomain domains={this.props.domains} 
+                                        baseUrlStore={this.props.baseUrlStore}
+                                        storeConfig ={this.props.storeConfig}
+                                        />           
               </li>
               
               <li><a href={this.props.baseUrlStore}>Pling</a></li>
@@ -79,7 +73,10 @@ class DomainsMenu extends React.Component {
                     <span><img src={this.props.baseUrlStore + "/theme/react/assets/img/logo-pling.png"} className="logo" />
                   </span> :                    
                   </a>  
-                  {subStore}                    
+                  <DomainsMenu_subdomain domains={this.props.domains} 
+                                        baseUrlStore={this.props.baseUrlStore}
+                                        storeConfig ={this.props.storeConfig}
+                                        />                   
                 </li>
                 <li><a href={this.props.baseUrl}>openDesktop.org</a></li>
                 <li><a href={this.props.gitlabUrl + "/explore/projects"}>Opencode</a></li>

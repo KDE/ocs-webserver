@@ -1,19 +1,19 @@
-import React , {useEffect, useState,useRef}from 'react'
+import React , {useEffect, useState, useRef}from 'react'
 
 const DomainsMenu_subdomain = (props) => {
 
-    const [dropdownClass, setDropdownClass] = useState('');
-    const [state, setState] = useState('test');
-    const toggleEl = useRef(null);
+    const [dropdownClass, setDropdownClass] = useState('test');    
+    const toggleEl = useRef(null);    
 
-    useEffect(() => {
+    useEffect(() => {        
         document.addEventListener('mousedown',handleClick, false);
         return () => {
+            
             document.removeEventListener('mousedown',handleClick, false);
         };
-    }, [])
+    },[dropdownClass])
 
-    const handleClick= e => {                       
+    const handleClick= e => {          
         let cls = "";
         if (toggleEl.current.contains(e.target)){                 
           if (dropdownClass === "open"){              
@@ -25,8 +25,8 @@ const DomainsMenu_subdomain = (props) => {
           } else {
             cls = "open";
           }
-        }
-        setDropdownClass(cls);
+        }        
+        setDropdownClass(cls);              
       }
     return (
        <div ref={toggleEl} id="domains-dropdown-menu" className={dropdownClass}>
