@@ -23,6 +23,7 @@ class DomainsMenu extends React.Component {
           gitlabUrl={this.props.gitlabUrl}
           isExternal={this.props.isExternal}
           baseUrlStore={this.props.baseUrlStore}
+          forumUrl = {this.props.forumUrl}
         />
       )
     }
