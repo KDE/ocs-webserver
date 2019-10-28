@@ -20,6 +20,8 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+ 
+
 //$this->os = Zend_Registry::get('application_os');
 $this->tab = 'add';
 $helperImage = new Default_View_Helper_Image();
@@ -30,6 +32,10 @@ $helpBaseUrl = new Default_View_Helper_BuildBaseUrl();
 $modelCategory = new Default_Model_DbTable_ProjectCategory();
 $valueCatId = $this->form->project_category_id->getValue();
 //$valueCatId = 55;
+if($this->catId)
+{
+    $valueCatId = $this->catId;
+}
 $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
 
 $categoryAncestors = $modelCategory->fetchAncestorsAsId($valueCatId);

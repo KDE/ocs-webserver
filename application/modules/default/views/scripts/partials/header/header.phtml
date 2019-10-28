@@ -61,7 +61,7 @@ $serverUrl = $this->serverUrl();
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 //$baseurl = $helperBuildBaseUrl->buildBaserUrl();
 // $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl_meta;
-
+$baseurlStore = Zend_Registry::get('config')->settings->client->default->baseurl_store;
 $searchbaseurl = $this->buildSearchBaseUrl();
 $sname = Zend_Registry::get('store_host');
 $store_config = Zend_Registry::get('store_config');
@@ -347,6 +347,8 @@ if($this->cat_id>0)
     var json_template = <?php echo Zend_Json::encode($this->template); ?>;
     var json_serverUrl = <?php echo Zend_Json::encode($serverUrl); ?>;
     var json_baseurl = <?php echo  Zend_Json::encode($baseurl);?>;
+    var json_baseurlStore = <?php echo  Zend_Json::encode($baseurlStore);?>;
+  
     var json_searchbaseurl = <?php echo  Zend_Json::encode($searchbaseurl);?>;    
     var json_sname =  <?php echo  Zend_Json::encode($sname);?>;
     var json_store_order =  <?php echo  Zend_Json::encode($store_order);?>;
@@ -363,6 +365,7 @@ if($this->cat_id>0)
     var json_section = <?php echo  Zend_Json::encode($j_section); ?>;
     var json_store_for_tree = <?php echo $json_tree; ?>;
     var json_isShowAddProduct = <?php echo $this->showAddProduct ? '1': '0'; ?>;
+    
     
     
 </script>
