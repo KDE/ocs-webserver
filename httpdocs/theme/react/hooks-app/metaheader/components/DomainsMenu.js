@@ -50,7 +50,7 @@ class DomainsMenu extends React.Component {
                   <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
                   openDesktop.org :
                 </a>   
-                                                            
+                                                  
               </li>
               
               <li><a href={this.props.baseUrlStore}>Pling</a></li>
