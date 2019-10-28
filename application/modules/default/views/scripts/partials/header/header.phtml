@@ -30,6 +30,7 @@ $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
 $phash = null;
 $ltat = null;
+
 if ($auth->hasIdentity()) {
     $sess = new Zend_Session_Namespace('ocs_meta');
     $phash = $sess->phash;
@@ -60,7 +61,7 @@ $serverUrl = $this->serverUrl();
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 //$baseurl = $helperBuildBaseUrl->buildBaserUrl();
 // $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl_meta;
-
+$baseurlStore = Zend_Registry::get('config')->settings->client->default->baseurl_store;
 $searchbaseurl = $this->buildSearchBaseUrl();
 $sname = Zend_Registry::get('store_host');
 $store_config = Zend_Registry::get('store_config');
@@ -95,6 +96,7 @@ $url_login = "/logint?redirect=".$filter->filter($thisurl);
 
 $cat_title = $helperFetchCategory->catTitle($this->cat_id);
 $category_id = $this->cat_id;
+
 $category_id_parent = $helperFetchCatParent->getCatParentId(array('project_category_id' =>  $category_id));
 $cat_title_length = strlen($cat_title);
 //check logo-width:
@@ -345,6 +347,8 @@ if($this->cat_id>0)
     var json_template = <?php echo Zend_Json::encode($this->template); ?>;
     var json_serverUrl = <?php echo Zend_Json::encode($serverUrl); ?>;
     var json_baseurl = <?php echo  Zend_Json::encode($baseurl);?>;
+    var json_baseurlStore = <?php echo  Zend_Json::encode($baseurlStore);?>;
+  
     var json_searchbaseurl = <?php echo  Zend_Json::encode($searchbaseurl);?>;    
     var json_sname =  <?php echo  Zend_Json::encode($sname);?>;
     var json_store_order =  <?php echo  Zend_Json::encode($store_order);?>;
@@ -355,12 +359,14 @@ if($this->cat_id>0)
     var json_cat_id =  <?php echo  Zend_Json::encode($category_id);?>;
     var json_logoWidth = <?php echo  Zend_Json::encode($logoWidth);?>;
     var json_cat_title_left = <?php echo  Zend_Json::encode($cat_title_left);?>;
-    var json_tabs_left = <?php echo  Zend_Json::encode($tabs_left);?>;
-    
+    var json_tabs_left = <?php echo  Zend_Json::encode($tabs_left);?>;    
     var json_loginurl = <?php echo Zend_Json::encode($url_login); ?>;  
     var json_logouturl = <?php echo Zend_Json::encode($url_logout); ?>;
     var json_section = <?php echo  Zend_Json::encode($j_section); ?>;
     var json_store_for_tree = <?php echo $json_tree; ?>;
+    var json_isShowAddProduct = <?php echo $this->showAddProduct && $category_id>0 ? '1': '0'; ?>;
+    
+    
     
 </script>
 <link href="/theme/react/assets/css/header.css" type="text/css" rel="stylesheet" />

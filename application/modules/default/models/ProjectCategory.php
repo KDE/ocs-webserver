@@ -84,7 +84,7 @@ class Default_Model_ProjectCategory
             }
 
             list($rows, $tree) = $this->buildTreeForView($rows);
-            $cache->save($tree, $cache_id, array(), 600);
+            $cache->save($tree, $cache_id, array(), 120);
         }
 
         return $tree;
@@ -113,9 +113,9 @@ class Default_Model_ProjectCategory
 
         $result = $statement->fetchAll();
 
-        if (count($result) == 0) {
-            throw new Zend_Exception('no categories could be found for store id: ' . $store_id);
-        }
+//        if (count($result) == 0) {
+//            throw new Zend_Exception('no categories could be found for store id: ' . $store_id);
+//        }
 
         return $result;
     }

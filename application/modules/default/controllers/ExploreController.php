@@ -109,11 +109,10 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
     public function indexAction()
     {
         // Filter-Parameter
-        $inputFilterOriginal = $this->getParam('filteroriginal', $this->getFilterOriginalFromCookie());
+        /*$inputFilterOriginal = $this->getParam('filteroriginal', $this->getFilterOriginalFromCookie());
         $this->storeFilterOriginalInCookie($inputFilterOriginal);
-
         $this->view->inputFilterOriginal = $inputFilterOriginal;
-
+*/
         $inputCatId = (int)$this->getParam('cat', null);
         if ($inputCatId) {
 //            $this->view->isFilterCat = true;
@@ -128,15 +127,15 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         }
 
         $this->view->cat_id = $inputCatId;
+        $this->view->showAddProduct = 1;
         
-        
-
         $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
 
         $filter = array();
         $filter['category'] = $inputCatId ? $inputCatId : $storeCatIds;
         $filter['order'] = preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('ord', self::DEFAULT_ORDER));
-        $filter['original'] = $inputFilterOriginal == 1 ? self::TAG_ISORIGINAL : null;
+        // removed filter original 20191007
+        //$filter['original'] = $inputFilterOriginal == 1 ? self::TAG_ISORIGINAL : null;
         
         $filter['tag'] = Zend_Registry::isRegistered('config_store_tags') ?  Zend_Registry::get('config_store_tags') : null;
         if (APPLICATION_ENV == "development") {
@@ -497,7 +496,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         }        
     }
 
-    private function storeFilterOriginalInCookie($inputFilterOriginal)
+   /* private function storeFilterOriginalInCookie($inputFilterOriginal)
     {
         $storedInCookie = $this->getFilterOriginalFromCookie();
 
@@ -518,7 +517,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
 
         return $storedInCookie;
-    }
+    }*/
     
     
     private function storeFilterTagInCookie($group, $tag)

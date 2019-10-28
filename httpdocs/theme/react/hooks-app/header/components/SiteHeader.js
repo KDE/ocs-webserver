@@ -26,7 +26,10 @@ class SiteHeader extends Component {
       template:window.json_template,
       status:"",
       section:window.json_section,
-      url_logout:window.json_logouturl
+      url_logout:window.json_logouturl,
+      cat_id:window.json_cat_id,
+      isShowAddProject: window.json_isShowAddProduct,
+      baseurlStore:window.json_baseurlStore,
     };
     this.updateDimensions = this.updateDimensions.bind(this);
   }
@@ -95,10 +98,15 @@ class SiteHeader extends Component {
             </div>
             {siteHeaderStoreNameDisplay}
           </div>
+          
 
           <div id="site-header-right">
             <div id="site-header-right-top" className={siteHeaderTopRightCssClass}>
-              
+                { this.state.user && this.state.isShowAddProject=='1' &&
+                <div className="btnAddProduct" >
+                  <span><a href={this.state.baseurlStore+'/product/add/'+this.state.cat_id}>Add Product</a></span>
+                  </div>
+                }
                 { PlingDisplay }
             </div>
 

@@ -32,6 +32,9 @@ class Default_Model_Ocs_Forum
 
     /**
      * @inheritDoc
+     * @param array|null $config
+     * @throws Default_Model_Ocs_Gitlab_Exception
+     * @throws Zend_Exception
      */
     public function __construct($config = null)
     {
@@ -41,7 +44,25 @@ class Default_Model_Ocs_Forum
             $this->config = Zend_Registry::get('config')->settings->server->forum;
         }
         $uri = $this->config->host;
-        $this->httpClient = new Zend_Http_Client($uri, array('keepalive' => true, 'strictredirects' => true));
+        $this->httpClient = $this->getHttpClient($uri);
+    }
+
+    /**
+     * @param $uri
+     * @return Zend_Http_Client
+     * @throws Default_Model_Ocs_Gitlab_Exception
+     */
+    protected function getHttpClient($uri)
+    {
+        try {
+            if (empty($uri)) {
+                return new Zend_Http_Client(null, array('keepalive' => true, 'strictredirects' => true));
+            }
+
+            return new Zend_Http_Client($uri, array('keepalive' => true, 'strictredirects' => true));
+        } catch (Zend_Exception $e) {
+            throw new Default_Model_Ocs_Gitlab_Exception('Can not create http client for uri: ' . $uri, 0, $e);
+        }
     }
 
     /**
@@ -50,9 +71,6 @@ class Default_Model_Ocs_Forum
      * @param bool  $force
      *
      * @return array|bool
-     * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
      */
     public function createUserFromArray($member_data, $force = false)
     {
@@ -126,8 +144,10 @@ class Default_Model_Ocs_Forum
         $paramEmail = '';
         if (isset($user['email_address'])) {
             $paramEmail = $user['email_address'];
-        } else if (isset($user['mail'])) {
-            $paramEmail = $user['mail'];
+        } else {
+            if (isset($user['mail'])) {
+                $paramEmail = $user['mail'];
+            }
         }
 
         $data = array(
@@ -149,9 +169,7 @@ class Default_Model_Ocs_Forum
      * @param $username
      *
      * @return array|null
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Http_Exception
-     * @throws Zend_Json_Exception
+     * @throws Zend_Exception
      */
     private function getUser($extern_uid, $username)
     {
@@ -172,43 +190,11 @@ class Default_Model_Ocs_Forum
      * @param string $extern_uid
      *
      * @return bool|array
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Http_Exception
-     * @throws Zend_Json_Exception
+     * @throws Zend_Exception
      */
     public function getUserByExternUid($extern_uid)
     {
         $uri = $this->config->host . "/u/by-external/{$extern_uid}.json";
-        $method = Zend_Http_Client::GET;
-        $uid = 'external_id';
-
-        $user = $this->httpRequest($uri, $uid, $method);
-
-        if (false === $user) {
-            return false;
-        }
-
-        return $user;
-    }
-
-    /**
-     * @param string $member_id
-     *
-     * @return bool|array
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Http_Exception
-     * @throws Zend_Json_Exception
-     */
-    public function getUserNotifications($member_id)
-    {
-        $member_data = $this->getMemberData($member_id);
-        $forum_member = $this->getUser($member_data['external_id'], $member_data['username']);
-        if (empty($forum_member)) {
-            return false;
-        }
-        $username = $forum_member['user']['username'];
-
-        $uri = $this->config->host . "/notifications.json?username=".$username;
         $method = Zend_Http_Client::GET;
         $uid = 'external_id';
 
@@ -229,9 +215,6 @@ class Default_Model_Ocs_Forum
      *
      * @return bool|array
      * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Http_Exception
-     * @throws Zend_Json_Exception
      */
     protected function httpRequest($uri, $uid, $method = Zend_Http_Client::GET, $post_param = null)
     {
@@ -239,16 +222,32 @@ class Default_Model_Ocs_Forum
         $this->rateLimitWaitSeconds = 0;
 
         $this->httpClient->resetParameters();
-        $this->httpClient->setUri($uri);
+        try {
+            $this->httpClient->setUri($uri);
+            $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+            $this->httpClient->setMethod($method);
+        } catch (Zend_Http_Client_Exception $e) {
+            $this->messages[] = 'Request failed.(' . $uri . ') httpClient error message: ' . $e->getMessage();
+
+            return false;
+        } catch (Zend_Uri_Exception $e) {
+            $this->messages[] = 'Request failed.(' . $uri . ') httpClient error message: ' . $e->getMessage();
+
+            return false;
+        }
         $this->httpClient->setParameterGet('api_key', $this->config->private_token);
         $this->httpClient->setParameterGet('api_username', $this->config->user_sudo);
-        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
-        $this->httpClient->setMethod($method);
         if (isset($post_param)) {
             $this->httpClient->setParameterPost($post_param);
         }
 
-        $response = $this->httpClient->request();
+        try {
+            $response = $this->httpClient->request();
+        } catch (Zend_Http_Client_Exception $e) {
+            $this->messages[] = 'Request failed.(' . $uri . ') httpClient error message: ' . $e->getMessage();
+
+            return false;
+        }
         if ($response->getStatus() < 200 OR $response->getStatus() >= 500) {
             $this->messages[] = 'Request failed.(' . $uri . ') OCS Forum server send message: ' . $response->getBody();
 
@@ -269,7 +268,13 @@ class Default_Model_Ocs_Forum
 
             return false;
         }
-        $body = Zend_Json::decode($body);
+        try {
+            $body = Zend_Json::decode($body);
+        } catch (Zend_Json_Exception $e) {
+            $this->messages[] = 'Request failed.(' . $uri . ') Zend_Json::decode error message: ' . $e->getMessage();
+
+            return false;
+        }
 
         if (empty($body)) {
             return array('message' => 'empty body received');
@@ -302,9 +307,7 @@ class Default_Model_Ocs_Forum
      * @param string $username
      *
      * @return bool|array
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Http_Exception
-     * @throws Zend_Json_Exception
+     * @throws Zend_Exception
      */
     public function getUserByUsername($username)
     {
@@ -323,62 +326,24 @@ class Default_Model_Ocs_Forum
     }
 
     /**
-     * @param string $email
+     * @param string $member_id
      *
      * @return bool|array
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Http_Exception
-     * @throws Zend_Json_Exception
-     */
-    public function getUserByEmail($email)
-    {
-        $uri = $this->config->host . "/admin/users/list/all.json?email={$email}";
-        $method = Zend_Http_Client::GET;
-
-        $user = $this->httpRequest($uri, $email, $method);
-
-        if (false === $user) {
-            return false;
-        }
-
-        return $user[0];
-    }
-
-    /**
-     * @return array|null
-     */
-    public function getMessages()
-    {
-        return $this->messages;
-    }
-
-    /**
-     * @param $member_id
-     *
-     * @return bool
      * @throws Default_Model_Ocs_Exception
      * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
      */
-    public function deleteUser($member_id)
+    public function getUserNotifications($member_id)
     {
-        if (empty($member_id)) {
-            return false;
-        }
-
-        $member_data = $this->getMemberData($member_id, false);
-        if (empty($member_data)) {
-            return false;
-        }
-
+        $member_data = $this->getMemberData($member_id);
         $forum_member = $this->getUser($member_data['external_id'], $member_data['username']);
         if (empty($forum_member)) {
             return false;
         }
-        $uri = $this->config->host . '/admin/users/' . $forum_member['user']['id'] . '.json';
-        $method = Zend_Http_Client::DELETE;
-        $uid = $member_id;
+        $username = $forum_member['user']['username'];
+
+        $uri = $this->config->host . "/notifications.json?username=" . $username;
+        $method = Zend_Http_Client::GET;
+        $uid = 'external_id';
 
         $user = $this->httpRequest($uri, $uid, $method);
 
@@ -418,6 +383,69 @@ class Default_Model_Ocs_Forum
         }
 
         return $result;
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return bool|array
+     * @throws Zend_Exception
+     */
+    public function getUserByEmail($email)
+    {
+        $uri = $this->config->host . "/admin/users/list/all.json?email={$email}";
+        $method = Zend_Http_Client::GET;
+
+        $user = $this->httpRequest($uri, $email, $method);
+
+        if (false === $user) {
+            return false;
+        }
+
+        return $user[0];
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+
+    /**
+     * @param $member_id
+     *
+     * @return bool
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     */
+    public function deleteUser($member_id)
+    {
+        if (empty($member_id)) {
+            return false;
+        }
+
+        $member_data = $this->getMemberData($member_id, false);
+        if (empty($member_data)) {
+            return false;
+        }
+
+        $forum_member = $this->getUser($member_data['external_id'], $member_data['username']);
+        if (empty($forum_member)) {
+            return false;
+        }
+        $uri = $this->config->host . '/admin/users/' . $forum_member['user']['id'] . '.json';
+        $method = Zend_Http_Client::DELETE;
+        $uid = $member_id;
+
+        $user = $this->httpRequest($uri, $uid, $method);
+
+        if (false === $user) {
+            return false;
+        }
+
+        return $user;
     }
 
     /**
@@ -514,10 +542,7 @@ class Default_Model_Ocs_Forum
      * @param $oldUsername
      *
      * @return array|bool|null
-     * @throws Default_Model_Ocs_Exception
      * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
      */
     public function updateUserFromArray($member_data, $oldUsername)
     {
@@ -558,9 +583,7 @@ class Default_Model_Ocs_Forum
      * @param array $member_data
      *
      * @return array|bool
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Http_Exception
-     * @throws Zend_Json_Exception
+     * @throws Zend_Exception
      */
     public function deleteUserWithArray($member_data)
     {
@@ -591,8 +614,6 @@ class Default_Model_Ocs_Forum
      * @return array|bool
      * @throws Default_Model_Ocs_Exception
      * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
      */
     public function blockUser($member_data)
     {
@@ -655,63 +676,32 @@ class Default_Model_Ocs_Forum
         }
 
         $memberLog = new Default_Model_MemberDeactivationLog();
-        if(array_key_exists('posts', $posts) && is_array($posts['posts'])) {
-            foreach ($posts['posts'] as $id=>$item) {
+        if (array_key_exists('posts', $posts) && is_array($posts['posts'])) {
+            foreach ($posts['posts'] as $id => $item) {
                 $result = $this->deletePostFromUser($id);
                 if (false === $result) {
                     continue;
                 }
                 $this->messages[] = 'Forum user post deleted: ' . json_encode($id);
-                $memberLog->addLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_POST, $id);
+                $memberLog->addLog($member_data['member_id'],
+                    Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_POST, $id);
             }
         }
 
         //handle topics
-        if(array_key_exists('topics', $posts) && is_array($posts['topics'])) {
-            foreach ($posts['topics'] as $id=>$topic) {
+        if (array_key_exists('topics', $posts) && is_array($posts['topics'])) {
+            foreach ($posts['topics'] as $id => $topic) {
                 $result = $this->deleteTopicFromUser($id);
                 if (false === $result) {
                     continue;
                 }
                 $this->messages[] = 'Forum user topic deleted: ' . json_encode($id);
-                $memberLog->addLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_TOPIC, $id);
+                $memberLog->addLog($member_data['member_id'],
+                    Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_TOPIC, $id);
             }
         }
 
         return true;
-    }
-
-    public function silenceUser($member_data)
-    {
-        if (is_int($member_data)) {
-            $member_data = $this->getMemberData($member_data, false);
-        }
-
-        if (empty($member_data)) {
-            return false;
-        }
-
-        $forum_member = $this->getUser($member_data['external_id'], $member_data['username']);
-        if (empty($forum_member)) {
-            return false;
-        }
-
-        $uri = $this->config->host . '/admin/users/' . $forum_member['user']['id'] . '/silence';
-        $method = Zend_Http_Client::PUT;
-        $uid = $member_data['member_id'];
-        $suspend_until = new DateTime();
-        $suspend_until->add(new DateInterval('PT5M'));
-        $data = array(
-            'silenced_till' => $suspend_until->format(DateTime::ATOM),
-            "reason"        => "probably a spam user",
-            "post_action"   => "delete"
-        );
-
-        $user = $this->httpRequest($uri, $uid, $method, $data);
-
-        $this->messages[] = 'Forum user silenced: ' . json_encode($user);
-
-        return $user;
     }
 
     public function getPostsFromUser($member_data)
@@ -781,28 +771,6 @@ class Default_Model_Ocs_Forum
         return $result;
     }
 
-    public function undeletePostFromUser($post_id)
-    {
-        if (empty($post_id)) {
-            return false;
-        }
-
-        $uri = $this->config->host . '/posts/' . $post_id . '/recover';
-        $method = Zend_Http_Client::PUT;
-        $uid = $post_id;
-
-        try {
-            $result = $this->httpRequest($uri, $uid, $method);
-        } catch (Zend_Exception $e) {
-            $this->httpClient->getAdapter()->close();
-            $this->messages[] = "Fail " . $e->getMessage();
-
-            return false;
-        }
-
-        return $result;
-    }
-
     /**
      * @param int $topic_id
      *
@@ -830,31 +798,37 @@ class Default_Model_Ocs_Forum
         return $result;
     }
 
-    /**
-     * @param int $topic_id
-     *
-     * @return array|bool
-     */
-    public function undeleteTopicFromUser($topic_id)
+    public function silenceUser($member_data)
     {
-        if (empty($topic_id)) {
+        if (is_int($member_data)) {
+            $member_data = $this->getMemberData($member_data, false);
+        }
+
+        if (empty($member_data)) {
             return false;
         }
 
-        $uri = $this->config->host . '/t/' . $topic_id . '/recover';
+        $forum_member = $this->getUser($member_data['external_id'], $member_data['username']);
+        if (empty($forum_member)) {
+            return false;
+        }
+
+        $uri = $this->config->host . '/admin/users/' . $forum_member['user']['id'] . '/silence';
         $method = Zend_Http_Client::PUT;
-        $uid = $topic_id;
+        $uid = $member_data['member_id'];
+        $suspend_until = new DateTime();
+        $suspend_until->add(new DateInterval('PT5M'));
+        $data = array(
+            'silenced_till' => $suspend_until->format(DateTime::ATOM),
+            "reason"        => "probably a spam user",
+            "post_action"   => "delete"
+        );
 
-        try {
-            $result = $this->httpRequest($uri, $uid, $method);
-        } catch (Zend_Exception $e) {
-            $this->httpClient->getAdapter()->close();
-            $this->messages[] = "Fail " . $e->getMessage();
+        $user = $this->httpRequest($uri, $uid, $method, $data);
 
-            return false;
-        }
+        $this->messages[] = 'Forum user silenced: ' . json_encode($user);
 
-        return $result;
+        return $user;
     }
 
     public function unblockUser($member_data)
@@ -921,7 +895,8 @@ class Default_Model_Ocs_Forum
                 continue;
             }
             $this->messages[] = 'Forum user topic undeleted: ' . json_encode($deleted_post['object_id']);
-            $memberLog->deleteLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_TOPIC, $deleted_post['object_id']);
+            $memberLog->deleteLog($member_data['member_id'],
+                Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_TOPIC, $deleted_post['object_id']);
         }
         foreach ($deletedPosts['posts'] as $deleted_post) {
             $result = $this->undeletePostFromUser($deleted_post['object_id']);
@@ -929,9 +904,60 @@ class Default_Model_Ocs_Forum
                 continue;
             }
             $this->messages[] = 'Forum user post undeleted: ' . json_encode($deleted_post['object_id']);
-            $memberLog->deleteLog($member_data['member_id'], Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_POST, $deleted_post['object_id']);
+            $memberLog->deleteLog($member_data['member_id'],
+                Default_Model_MemberDeactivationLog::OBJ_TYPE_DISCOURSE_POST, $deleted_post['object_id']);
         }
+
         return true;
+    }
+
+    /**
+     * @param int $topic_id
+     *
+     * @return array|bool
+     */
+    public function undeleteTopicFromUser($topic_id)
+    {
+        if (empty($topic_id)) {
+            return false;
+        }
+
+        $uri = $this->config->host . '/t/' . $topic_id . '/recover';
+        $method = Zend_Http_Client::PUT;
+        $uid = $topic_id;
+
+        try {
+            $result = $this->httpRequest($uri, $uid, $method);
+        } catch (Zend_Exception $e) {
+            $this->httpClient->getAdapter()->close();
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+
+        return $result;
+    }
+
+    public function undeletePostFromUser($post_id)
+    {
+        if (empty($post_id)) {
+            return false;
+        }
+
+        $uri = $this->config->host . '/posts/' . $post_id . '/recover';
+        $method = Zend_Http_Client::PUT;
+        $uid = $post_id;
+
+        try {
+            $result = $this->httpRequest($uri, $uid, $method);
+        } catch (Zend_Exception $e) {
+            $this->httpClient->getAdapter()->close();
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+
+        return $result;
     }
 
     /**

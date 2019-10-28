@@ -20,6 +20,8 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+ 
+
 //$this->os = Zend_Registry::get('application_os');
 $this->tab = 'add';
 $helperImage = new Default_View_Helper_Image();
@@ -30,6 +32,10 @@ $helpBaseUrl = new Default_View_Helper_BuildBaseUrl();
 $modelCategory = new Default_Model_DbTable_ProjectCategory();
 $valueCatId = $this->form->project_category_id->getValue();
 //$valueCatId = 55;
+if($this->catId)
+{
+    $valueCatId = $this->catId;
+}
 $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
 
 $categoryAncestors = $modelCategory->fetchAncestorsAsId($valueCatId);
@@ -261,7 +267,7 @@ $this->inlineScript()->appendScript('
 
                                 <div class="form-group">
                                 <div class="col-sm-12 margin-top-15">
-                                 <?= $this->form->is_original ?>  Check this box, if this is your own original work and not based on something else      
+                                 <?= $this->form->is_original ?>  Check this box, if this is your own original work and not based on something else. If based on some other work you need to change 60%-70% to mark as an original.   
                                 </div>
                                 </div>                               
                                 
@@ -387,8 +393,8 @@ $this->inlineScript()->appendScript('
                                                 <!-- <h3 id="modal-ppload-label"><?= $this->translate('Add your Files') ?></h3> -->
                                             </div>
                                             <div class="modal-body">
-                                                <input type="file" style="display: none;" data-file-upload="" multiple>
-                                                <input type="file" style="display: none;" data-file-upload-update="" data-ppload-file-id="">
+                                                <input type="file" style="display: none;" data-file-upload="" multiple accept="">
+                                                <input type="file" style="display: none;" data-file-upload-update="" data-ppload-file-id="" accept="">
 
                                                 <p data-file-upload-msg=""><?= $this->translate('Drop file(s) here') ?>:</p>
 
@@ -770,6 +776,13 @@ $this->inlineScript()->appendScript('
                     }
                     
                     var catId = $('#project_category_id').val();
+                    
+                    //Is this a Video? Then allow only Videos and srt
+                    /*for (var item in ProductForm.cat_id_path) {
+                        if(item == 586) {
+                            alert('Video');
+                        }
+                    }*/
                     
                     //get cat-tag-groups
                     var tagGroups = null;

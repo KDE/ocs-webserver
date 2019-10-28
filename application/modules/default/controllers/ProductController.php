@@ -601,6 +601,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->member = $this->_authMember;
         $this->view->mode = 'add';
         
+        if($this->getParam('catId')){
+            $this->view->catId = $this->getParam('catId');
+        }
         $form = new Default_Form_Product(array('member_id' => $this->view->member->member_id));
         $this->view->form = $form;
         
@@ -2810,8 +2813,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     }
 
     public function searchAction()
-    {
+    {                
         // Filter-Parameter
+        $params = $this->getAllParams();
         $filterInput =
             new Zend_Filter_Input(
                 array(
@@ -2854,9 +2858,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     ),
                     'arch'                 => array(new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
                         'allowEmpty' => true)
-                ), $this->getAllParams());
+                ), $params);
 
-
+        
+        
 
         if ($filterInput->hasInvalid()) {
             $this->_helper->flashMessenger->addMessage('<p class="text-error">There was an error. Please check your input and try again.</p>');
@@ -2875,8 +2880,65 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->arch = $filterInput->getEscaped('arch');
         $this->view->lic = $filterInput->getEscaped('lic');
         $this->view->store = $this->getParam('domain_store_id');
+
+        if(isset($params['isJson']))
+        {
+            $this->_helper->layout()->disableLayout();
+            $filterScore = $this->view->ls ? 'laplace_score:['.$this->view->ls.' TO '.($this->view->ls+9).']':null;
+            $filterCat = $this->view->pci ? 'project_category_id:('.$this->view->pci.')' : null;
+            $filterTags = $this->view->t ? 'tags:('.$this->view->t.')' : null;
+            $filterPkg = $this->view->pkg ? 'package_names:('.$this->view->pkg.')' : null;
+            $filterArch = $this->view->arch ? 'arch_names:('.$this->view->arch.')' : null;
+            $filterLic = $this->view->lic ? 'license_names:('.$this->view->lic.')' : null;
+            // $param = array('q' => $this->view->searchText ,'store'=>$this->view->store,'page' => $this->view->page
+            // , 'count' => 10, 'qf' => $this->view->searchField, 'fq' => array($filterCat, $filterScore, $filterTags,$filterPkg,$filterArch,$filterLic));
+            
+            $param = array('q' => 'test','store'=>null,'page' => 1
+            , 'count' => 10);
+            $viewHelperImage = new Default_View_Helper_Image();
+        
+            $modelSearch = new Default_Model_Solr();
+            try {
+                $result = $modelSearch->search($param);
+                $products = $result['hits'];          
+                
+                // var_dump($products);
+                // die;
+                $ps=array();
+                foreach ($products as $p) {
+                    $img = $viewHelperImage->Image($p->image_small, array(
+                        'width'  => 50,
+                        'height' => 50
+                    ));
+                    $ps[] =array('description'=>$p->description
+                        ,'title' =>$p->title
+                        ,'project_id' =>$p->project_id
+                        ,'member_id'=>$p->member_id
+                        ,'username' => $p->username
+                        ,'laplace_score' =>$p->laplace_score
+                        ,'score' =>$p->score
+                        ,'image_small' =>$img);
+                }
+                
+                $this->_helper->json(array(
+                    'status' => 'ok',
+                    'products' => $ps,
+                    'q' =>$param
+                ));
+            } catch (Exception $e) {
+                $this->_helper->json(array(
+                    'status' => 'err',
+                    'msg' => 'Not Found! Try again.'
+                ));
+            }            
+                
+        }
+
+        
     }
 
+    
+    
     /**
      * @param $memberId
      *

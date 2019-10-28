@@ -644,6 +644,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'action'     => 'add'
         )));
 
+        $router->addRoute('product_add_extend', new Zend_Controller_Router_Route('/product/add/:catId', array(
+            'module'     => 'default',
+            'controller' => 'product',
+            'action'     => 'add'
+        )));
+
         $router->addRoute('search', new Zend_Controller_Router_Route('/search/*', array(
             'module'     => 'default',
             'controller' => 'product',

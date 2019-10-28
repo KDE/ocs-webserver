@@ -901,11 +901,10 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             $form = $this->formProfilePicture();
 
             $formFilename = $form->getElement('profile_picture_upload')->getFileName();
+            Zend_Registry::get('logger')->info(__METHOD__ . ' :: form input:' . print_r($formFilename, true));
             if (is_array($formFilename)) {
-                Zend_Registry::get('logger')->info(__METHOD__ . ' :: form input:' . print_r($formFilename, true));
                 $filename = $formFilename['profile_picture_upload'];
             } else {
-                Zend_Registry::get('logger')->info(__METHOD__ . ' :: form input:' . print_r($formFilename, true));
                 $filename = $formFilename;
             }
             $profilePictureTitleFilename = pathinfo($filename);
@@ -923,8 +922,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             }
             if ($form->isValid($_POST)) {
 
-                $tmpProfilePictureTitle =
-                    IMAGES_UPLOAD_PATH . 'tmp/' . Local_Tools_UUID::generateUUID() . '_' . $profilePictureTitleFilename['basename'];
+                $tmpProfilePictureTitle = IMAGES_UPLOAD_PATH . 'tmp/' . Local_Tools_UUID::generateUUID() . '_' . $profilePictureTitleFilename['basename'];
                 $form->getElement('profile_picture_upload')
                      ->addFilter('Rename', array('target' => $tmpProfilePictureTitle, 'overwrite' => true));
 
@@ -970,13 +968,13 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 } catch (Exception $e) {
                     Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
                 }
-
-                $this->view->save = 1;
-                $this->view->pictureform = $form;
-
                 // ppload
                 // Update profile information
                 $this->_updatePploadProfile();
+
+
+                $this->view->save = 1;
+                $this->view->pictureform = $form;
 
                 $this->renderScript('settings/partials/picture.phtml');
             } else {

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import RssNewsContainer from './RssNewsContainer';
-import BlogFeedContainer from './BlogFeedContainer';
 import CommentsContainer from './CommentsContainer';
 import RatingContainer from './RatingContainer';
 import ProductsContainer from './ProductsContainer';
@@ -10,6 +9,7 @@ import ProductsGitContainer from './ProductsGitContainer';
 import Introduction from './Introduction';
 import PersonalLinksContainer from '../function/PersonalLinksContainer';
 import AdminLinksContainer from '../function/AdminLinksContainer';
+import BlogFeedContainer from './BlogFeedContainer';
 class HomeMainContainer extends Component {
   constructor(props){
   	super(props);

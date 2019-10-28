@@ -325,9 +325,8 @@ class Default_Model_Ocs_OAuth
      * @param $member_id
      *
      * @return bool
-     * @throws Zend_Cache_Exception
-     * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Db_Statement_Exception
      */
     public function deleteUser($member_id)
     {
