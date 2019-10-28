@@ -102,11 +102,7 @@ class SiteHeader extends Component {
 
           <div id="site-header-right">
             <div id="site-header-right-top" className={siteHeaderTopRightCssClass}>
-                { this.state.user && this.state.isShowAddProject=='1' &&
-                <div className="btnAddProduct" >
-                  <span><a href={this.state.baseurlStore+'/product/add/'+this.state.cat_id}>Add Product</a></span>
-                  </div>
-                }
+               
                 { PlingDisplay }
             </div>
 
