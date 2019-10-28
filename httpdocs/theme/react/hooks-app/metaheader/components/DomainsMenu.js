@@ -65,7 +65,7 @@ class DomainsMenu extends React.Component {
                 <li className={cls}>
                   <a id="pling-logo" href={this.props.baseUrlStore}>
                     <span><img src={this.props.baseUrlStore + "/theme/react/assets/img/logo-pling.png"} className="logo" />
-                  </span>                    
+                  </span> :                    
                   </a>  
                   {subStore}                    
                 </li>
