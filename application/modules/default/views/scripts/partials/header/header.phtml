@@ -364,7 +364,7 @@ if($this->cat_id>0)
     var json_logouturl = <?php echo Zend_Json::encode($url_logout); ?>;
     var json_section = <?php echo  Zend_Json::encode($j_section); ?>;
     var json_store_for_tree = <?php echo $json_tree; ?>;
-    var json_isShowAddProduct = <?php echo $this->showAddProduct ? '1': '0'; ?>;
+    var json_isShowAddProduct = <?php echo $this->showAddProduct && $category_id>0 ? '1': '0'; ?>;
     
     
     
