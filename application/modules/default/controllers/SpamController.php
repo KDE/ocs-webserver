@@ -64,6 +64,10 @@ class SpamController extends Local_Controller_Action_DomainSwitch
     {   
         $this->view->headTitle('Spam - Paypal','SET');
     }
+    public function mdsumAction()
+    {   
+        $this->view->headTitle('Md5sum - Duplicated','SET');
+    }
 
 
     public function deletecommentAction()
@@ -145,6 +149,56 @@ class SpamController extends Local_Controller_Action_DomainSwitch
                         
                     ) a
                     where  cnt > 1";         
+
+        $reportsAll = Zend_Db_Table::getDefaultAdapter()->fetchRow($sqlall);
+
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+        $jTableResult['Records'] = $results;        
+        $jTableResult['TotalRecordCount'] = $reportsAll['cnt'];
+        $this->_helper->json($jTableResult);
+
+    }
+
+    public function mdsumlistAction()
+    {
+        $startIndex = (int)$this->getParam('jtStartIndex');
+        $pageSize = (int)$this->getParam('jtPageSize');
+        $sorting = $this->getParam('jtSorting');     
+
+        if(!isset($sorting))
+        {
+            $sorting = ' cnt desc ';
+        }        
+
+        $sql = "
+                select f.owner_id as member_id,m.username, f.md5sum, COUNT(1) cnt, GROUP_CONCAT(p.project_id) as projects
+                from  ppload.ppload_files f
+                join project p on f.collection_id = p.ppload_collection_id
+                join member m on f.owner_id = m.member_id
+                where f.md5sum is not null
+                group by f.md5sum 
+                having count(1)>2
+                                    
+                ";
+        $sql .= ' order by ' . $sorting;
+        $sql .= ' limit ' . $pageSize;
+        $sql .= ' offset ' . $startIndex;
+        
+        $results = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);                        
+
+        $sqlall = " select count(1) cnt from
+                    (
+                        select f.owner_id as member_id,m.username, f.md5sum, COUNT(1) cnt, GROUP_CONCAT(p.project_id)
+                        from  ppload.ppload_files f
+                        join project p on f.collection_id = p.ppload_collection_id
+                        join member m on f.owner_id = m.member_id
+                        where f.md5sum is not null
+                        group by f.md5sum 
+                        having count(1)>2                        
+                    ) a
+                  ";         
 
         $reportsAll = Zend_Db_Table::getDefaultAdapter()->fetchRow($sqlall);
 
