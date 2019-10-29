@@ -978,7 +978,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         
         $modelTags->processTagProductOriginal($this->_projectId,$values['is_original']);
         
-        $modelTags->processTagProductOriginalOrModification($this->_projectId,$values['is_original_or_modification']);
+        $modelTags->processTagProductOriginalOrModification($this->_projectId,$values['is_original_or_modification[]']);
 
         if($values['tagsuser']) {
             $modelTags->processTagsUser($this->_projectId,implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);
