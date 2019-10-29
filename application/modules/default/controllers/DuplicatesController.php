@@ -107,19 +107,13 @@ class DuplicatesController extends Local_Controller_Action_DomainSwitch
             $this->_helper->json($jTableResult);
         }else if($filter_type=='3')
         {
-            $sql = "
-            SELECT
-            `source_url`
-            ,count(1) AS `cnt`,
-            GROUP_CONCAT(`p`.`project_id` ORDER BY `p`.`created_at`) `pids`
-            FROM `stat_projects_source_url` `p`    
+            $sql ="
+                SELECT left(source_url, POSITION('".$filter_source_url."' IN source_url)) as source_url
+                , count(1) AS `cnt`, GROUP_CONCAT(`p`.`project_id` ORDER BY `p`.`created_at`) `pids` 
+                FROM `stat_projects_source_url` `p` 
+                where source_url like '%".$filter_source_url."%' 
+                GROUP BY left(source_url, POSITION('".$filter_source_url."' IN source_url))            
             ";
-            if($filter_source_url)
-            {
-                $sql.=" where source_url like '%".$filter_source_url."%'";
-            }
-            $sql .=" GROUP BY `source_url`               
-                ";
             
             $sqlTotal = "select count(1) as cnt from (".$sql.") as t";
 
