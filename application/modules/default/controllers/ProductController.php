@@ -978,7 +978,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         
         $modelTags->processTagProductOriginal($this->_projectId,$values['is_original']);
         
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - Edit Product - Value is_original_or_modification: ' . print_r($values['is_original_or_modification[]'], true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - Edit Product - Values: ' . print_r($values, true));
         
         $modelTags->processTagProductOriginalOrModification($this->_projectId,$values['is_original_or_modification[]']);
 
