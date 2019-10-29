@@ -693,7 +693,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $modelTags->processTagProductOriginal($newProject->project_id, $values['is_original']);
             }
         } else {
-            $modelTags->processTagProductOriginalOrModification($newProject->_projectId,$values['is_original_or_modification'][0]);
+            $modelTags->processTagProductOriginalOrModification($newProject->project_id,$values['is_original_or_modification'][0]);
         }
 
         
