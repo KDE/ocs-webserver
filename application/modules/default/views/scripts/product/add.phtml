@@ -29,6 +29,13 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helpProductUrl = new Default_View_Helper_BuildProductUrl();
 $helpBaseUrl = new Default_View_Helper_BuildBaseUrl();
 
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+$isAdmin = false;
+if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+    $isAdmin = true;
+}
+
 $modelCategory = new Default_Model_DbTable_ProjectCategory();
 $valueCatId = $this->form->project_category_id->getValue();
 //$valueCatId = 55;
@@ -268,6 +275,12 @@ $this->inlineScript()->appendScript('
                                 <div class="form-group">
                                 <div class="col-sm-12 margin-top-15">
                                  <?= $this->form->is_original ?>  Check this box, if this is your own original work and not based on something else. If based on some other work you need to change 60%-70% to mark as an original.   
+                                 
+                                 <?php if($isAdmin) {
+                                     echo $this->form->is_original_or_modification . " Select Original, if this is your own original work and not based on something else. If based on some other work you need to change 60%-70% to mark as an original. Select Modification, if you changed at least 5-10%.";
+                                 }
+                                 ?>
+                                 
                                 </div>
                                 </div>                               
                                 
