@@ -95,6 +95,8 @@ $printDate = $printMonth->format('M Y');
 
 <?php
 
+$sum_total_payout_affiliate = 0;
+
 $allAffiliates = $modelDownload->getUserAffiliatesForMonth($this->member->member_id, $yearmonth);
 $countDownloadsOverall = count($allAffiliates);
 

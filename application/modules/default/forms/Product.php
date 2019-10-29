@@ -73,6 +73,7 @@ class Default_Form_Product extends Zend_Form
              ->addElement($this->getCancelElement())
              ->addElement($this->getLicenseIdElement())
              ->addElement($this->getIsOriginal())
+             ->addElement($this->getIsOriginalOrModification())
              ->addElement($this->getIsGitlab())
              ->addElement($this->getGitlabProjectId())
              ->addElement($this->getShowGitlabProjectIssues())
@@ -445,6 +446,19 @@ class Default_Form_Product extends Zend_Form
                 'checked_value'      => 1,
                 'unchecked_value'    => 0
             ));
+    }
+    
+    private function getIsOriginalOrModification()
+    {
+        $element = new Zend_Form_Element_Select('is_original_or_modification', array('multiple' => false));
+        $element->setIsArray(true);
+        
+        $option = array();
+        $option[0] = "";
+        $option[1] = "Original";
+        $option[2] = "Modification";
+
+        return $element->setFilters(array('StringTrim'))->setMultiOptions($option);
     }
 
     private function getIsGitlab()
