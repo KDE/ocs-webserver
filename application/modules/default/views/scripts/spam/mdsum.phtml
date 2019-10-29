@@ -131,11 +131,7 @@
                         return '<a href="/u/'+data.record.username+'" target="_blank" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+data.record.member_id+'" >'+data.record.username+'</a>';                                                   
                         }
                 }, 
-                 
-                md5sum: {
-                    title: 'md5sum',                   
-                    edit: false,                                     
-                },    
+                                   
                 projects: {
                     title: 'Projects',                    
                     edit: false,
@@ -157,7 +153,11 @@
                     display:function(data){                                                           
                             return data.record.cnt;
                         }
-                } ,    
+                } ,  
+                md5sum: {
+                    title: 'md5sum',                   
+                    edit: false,                                     
+                },   
                                                    
                 
             }
