@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState ,useContext} from 'react';
 import Autosuggest from 'react-autosuggest';
+import {MetaheaderContext} from '../contexts/MetaheaderContext';
+
 function renderSuggestion(suggestion) {
   return (
     <div className={suggestion.type + ' suggestionsContainer'}>
@@ -30,7 +32,8 @@ const renderInputComponent = inputProps => (
   </div>
 );
 
-const SearchForm = (props) => {
+const SearchForm = () => {
+  const {state} = useContext(MetaheaderContext);
   const [searchText, setSearchText] = useState('');
   const [isShow, setIsShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,9 +46,9 @@ const SearchForm = (props) => {
     const inputLength = value.length;
     if (inputLength < 3) return;
     setIsLoading(true);
-    let url = props.baseUrlStore + '/json/search/p/' + value;
-    if (props.store) {
-      url += '/s/' + props.store
+    let url = state.baseUrlStore + '/json/search/p/' + value;
+    if (state.store) {
+      url += '/s/' + state.store
     }
     fetch(url, {
       mode: 'cors',
@@ -63,14 +66,14 @@ const SearchForm = (props) => {
   const onSearchFormSubmit = e => {
     e.preventDefault();
     if (!selected) {
-      window.location.href = props.searchBaseUrl + value;
+      window.location.href = state.searchbaseurl + value;
     } else {
       if (selected.type == 'project') {
-        console.log(props.baseUrlStore + '/p/' + selected.project_id);
-        window.location.href = props.baseUrlStore + '/p/' + selected.project_id;
+        console.log(state.baseUrlStore + '/p/' + selected.project_id);
+        window.location.href = state.baseUrlStore + '/p/' + selected.project_id;
       } else {
-        console.log(props.baseUrlStore + '/u/' + selected.username);
-        window.location.href = props.baseUrlStore + '/u/' + selected.username;
+        console.log(state.baseUrlStore + '/u/' + selected.username);
+        window.location.href = state.baseUrlStore + '/u/' + selected.username;
       }
     }
   }
@@ -105,9 +108,9 @@ const SearchForm = (props) => {
 
   const onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {    
     if (suggestion.type == 'project') {
-      window.location.href = props.baseUrlStore + '/p/' + suggestion.project_id;
+      window.location.href = state.baseUrlStore + '/p/' + suggestion.project_id;
     } else {
-      window.location.href = props.baseUrlStore + '/u/' + suggestion.username;
+      window.location.href = state.baseUrlStore + '/u/' + suggestion.username;
     }
   }
 
@@ -126,7 +129,7 @@ const SearchForm = (props) => {
     value,
     onChange: onHandleChange,
     onSubmit: onSearchFormSubmit,
-    baseUrlStore: props.baseUrlStore
+    baseUrlStore: state.baseUrlStore
   };
 
   return (
