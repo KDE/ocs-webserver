@@ -854,6 +854,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $modelMember = new Default_Model_Member();
             $member = $modelMember->fetchMember($projectData->member_id, false);
         }
+        
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        $isAdmin = false;
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $isAdmin = true;
+        }
 
 
         //set ppload-collection-id in view
@@ -904,10 +911,21 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             }
             $form->getElement('license_tag_id')->setValue($licenseTag);
 
-            $is_original = $modelTags->isProductOriginal($projectData->project_id);
-            if($is_original){
-                $form->getElement('is_original')->checked= true;                
+            if(!$isAdmin) {
+                $is_original = $modelTags->isProductOriginal($projectData->project_id);
+                if($is_original){
+                    $form->getElement('is_original')->checked= true;                
+                }
+            } else {
+                $is_original = $modelTags->isProductOriginal($projectData->project_id);
+                $is_modification = $modelTags->isProductModification($projectData->project_id);
+                if($is_original){
+                    $form->getElement('is_original_or_modification')->setValue(1);                
+                } else if($is_modification){
+                    $form->getElement('is_original_or_modification')->setValue(2);                
+                }
             }
+            
  
             $this->view->form = $form;
 
@@ -976,12 +994,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //$projectData->changed_at = new Zend_Db_Expr('NOW()');
         $projectData->save();
         
-        $helperUserRole = new Backend_View_Helper_UserRole();
-        $userRoleName = $helperUserRole->userRole();
-        $isAdmin = false;
-        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
-            $isAdmin = true;
-        }
+        
         
         if(!$isAdmin) {
             $modelTags->processTagProductOriginal($this->_projectId,$values['is_original']);
