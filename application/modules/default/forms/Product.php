@@ -451,7 +451,10 @@ class Default_Form_Product extends Zend_Form
     private function getIsOriginalOrModification()
     {
         $element = new Zend_Form_Element_Select('is_original_or_modification', array('multiple' => false));
-        $element->setIsArray(true)->setName("is_original_or_modification")->setLabel(' Product Original or Modification ')->setAttrib('class', 'form-control product_select_original');
+        $element->setIsArray(true)->setName("is_original_or_modification")
+                ->setLabel(' Product Original or Modification ')
+                ->setAttrib('class', 'form-control product_select_original')
+                ->setAttrib('style', 'width: 175px;margin-bottom: 10px;');
         
         
         $option = array();
