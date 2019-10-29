@@ -38,6 +38,12 @@ function AdminlLinksContainer(props)
             </a>
           </li>
 
+          <li id="same-paypal-link-item">
+            <a href={props.baseUrlStore+"/spam/mdsum"} >
+              <span>File uploaded md5sum duplicated</span>
+            </a>
+          </li>
+
           <li id="unpublished-link-item">
             <a href={props.baseUrlStore+"/spam/unpublishedproduct"} >
               <span>List of unpublished products</span>
