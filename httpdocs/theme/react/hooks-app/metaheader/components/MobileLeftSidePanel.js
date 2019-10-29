@@ -1,72 +1,42 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import AboutMenuItems from './function/AboutMenuItems';
 import CommunityMenuItems from './function/CommunityMenuItems';
-class MobileLeftSidePanel extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {};
-  }
-
-  componentDidMount() {
-    // let menuGroups = [];
-    // this.props.domains.forEach(function(domain,index){
-    //   if (menuGroups.indexOf(domain.menugroup) === -1){
-    //     menuGroups.push(domain.menugroup);
-    //   }
-    // });
-    // this.setState({menuGroups:menuGroups});
-  }
-
-  render(){
-    // let panelMenuGroupsDisplay;
-    // if (this.state.menuGroups){
-    //   panelMenuGroupsDisplay = this.state.menuGroups.map((mg,i) => (
-    //     <DomainsMenuGroup
-    //       key={i}
-    //       domains={this.props.domains}
-    //       menuGroup={mg}
-    //       sName={this.props.sName}
-    //     />
-    //   ));
-    // }
-
-
-    return (
-      <div id="left-side-panel">
+import {MetaheaderContext} from '../contexts/MetaheaderContext';
+const MobileLeftSidePanel = () => {
+  const {state} = useContext(MetaheaderContext);
+  
+  return (
+    <div id="left-side-panel">
         <div id="panel-header">
-          <a href={this.props.baseUrl}>
-            <img src={this.props.baseUrl + "/images/system/opendesktop-logo.png"} className="logo"/>
+          <a href={state.baseUrl}>
+            <img src={state.baseUrl + "/images/system/opendesktop-logo.png"} className="logo"/>
             openDesktop.org
           </a>
         </div>
         <div id="panel-menu">
           <ul>
-            <li><a href={this.props.baseUrlStore}>Pling</a></li>
-            <li><a href={this.props.gitlabUrl}>Opencode</a></li>
+            <li><a href={state.baseUrlStore}>Pling</a></li>
+            <li><a href={state.gitlabUrl}>Opencode</a></li>
             <li>
               <a className="groupname"><b>Community</b></a>
               <ul>
-                <CommunityMenuItems baseUrl={this.props.baseUrl}
-                                    baseUrlStore = {this.props.baseUrlStore}
-                                    forumUrl = {this.props.forumUrl}  />
+                <CommunityMenuItems />
               </ul>
             </li>
 
             <li>
               <a className="groupname"><b>About</b></a>
               <ul>
-                <AboutMenuItems baseUrl={this.props.baseUrl}
-                                baseUrlStore = {this.props.baseUrlStore}
-                                isAdmin={this.props.isAdmin}/>
+                <AboutMenuItems />
               </ul>
             </li>
 
-            <li><a href={this.props.riotUrl}>Chat</a></li>
+            <li><a href={state.riotUrl}>Chat</a></li>
           </ul>
         </div>
       </div>
-    )
-  }
+  )
 }
 
-export default MobileLeftSidePanel;
+export default MobileLeftSidePanel
+
