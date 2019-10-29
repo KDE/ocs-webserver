@@ -384,6 +384,7 @@
       &#domains-menu {
         margin-left: 10px;
         position: absolute;
+        
         > li {
           padding-left: 0;
           
@@ -478,10 +479,23 @@
 
           }
         
-
+          
           &::after {
             content: "•";
             color: #E2E2E2;
+          }
+
+          &:nth-child(2) {
+            &::before {
+              content: "\00a0\00a0\00a0\00a0•";
+              color: #E2E2E2;
+            }
+          }
+          &:first-of-type {
+
+            &::after {
+              content: "";
+            }
           }
 
           &:last-of-type {
