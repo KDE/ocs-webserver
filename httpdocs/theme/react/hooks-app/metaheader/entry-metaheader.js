@@ -74,7 +74,7 @@ customElements.define('opendesktop-metaheader', class extends HTMLElement {
     let config = await initConfig(this.getAttribute('config-target'),window.location.href); // wait till the promise resolves (*)
 
 
-    ReactDOM.render(<MetaHeader config={config} hostname={window.location.hostname}/>, metaheaderElement);
+    ReactDOM.render(<MetaHeader config={config} />, metaheaderElement);
 
 
     // Component must be capsule within Shadow DOM, and don't hack

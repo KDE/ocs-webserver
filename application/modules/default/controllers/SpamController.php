@@ -196,7 +196,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
                         join member m on f.owner_id = m.member_id
                         where f.md5sum is not null
                         group by f.md5sum 
-                        having count(1)>1                        
+                        having count(1)>2                        
                     ) a
                   ";         
 

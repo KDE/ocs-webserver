@@ -1,11 +1,14 @@
-import React from 'react';
-function CommunityMenuItems(props)
+import React,{useContext} from 'react';
+import {MetaheaderContext} from '../../contexts/MetaheaderContext';
+function CommunityMenuItems()
 {
+  const {state} = useContext(MetaheaderContext);
+  
   return (
     <React.Fragment>
-    <li><a href={props.baseUrl + "/community"}>Members</a></li>
-    <li><a href={props.forumUrl}>Discussion</a></li>
-    <li><a href={props.baseUrlStore + "/support"}>Become a Supporter</a></li>
+    <li><a href={state.baseUrl + "/community"}>Members</a></li>
+    <li><a href={state.forumUrl}>Discussion</a></li>
+    <li><a href={state.baseUrlStore + "/support"}>Become a Supporter</a></li>
     </React.Fragment>
   );
 }

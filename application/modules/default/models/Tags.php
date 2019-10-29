@@ -40,7 +40,7 @@ class Default_Model_Tags
 
     const TAG_PRODUCT_ORIGINAL_GROUPID = 11;
     const TAG_PRODUCT_ORIGINAL_ID = 2451;
-
+   
     const TAG_PRODUCT_EBOOK_GROUPID = 14;
     const TAG_PRODUCT_EBOOK_AUTHOR_GROUPID = 15;
     const TAG_PRODUCT_EBOOK_EDITOR_GROUPID = 16;
@@ -458,6 +458,25 @@ class Default_Model_Tags
             return false;
         }
     }
+    
+    public function isProductModification($project_id)
+    {
+        $tag_modification_id = Zend_Registry::get('config')->settings->client->default->tag_modification_id;
+        
+        $sql_object = "select tag_item_id  from tag_object WHERE tag_id = :tag_id and tag_object_id=:tag_object_id and tag_group_id=:tag_group_id  
+                                    and tag_type_id = :tag_type_id and is_deleted = 0";
+        $r = $this->getAdapter()->fetchRow($sql_object, array(
+            'tag_id'        => $tag_modification_id,
+            'tag_object_id' => $project_id,
+            'tag_group_id'  => self::TAG_PRODUCT_ORIGINAL_GROUPID,
+            'tag_type_id'   => self::TAG_TYPE_PROJECT
+        ));
+        if ($r) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public function isProductEbook($project_id)
     {
@@ -513,6 +532,63 @@ class Default_Model_Tags
         }
 
     }
+    
+    /**
+     * @param int $object_id
+     * @param int $original (null, 1 or 2)
+     */
+    public function processTagProductOriginalOrModification($object_id, $original)
+    {
+        $tag_original_id = Zend_Registry::get('config')->settings->client->default->tag_original_id;
+        $tag_modification_id = Zend_Registry::get('config')->settings->client->default->tag_modification_id;
+        
+        $sql_object = "select tag_item_id  from tag_object WHERE tag_object_id=:tag_object_id and tag_group_id=:tag_group_id  
+                                and tag_type_id = :tag_type_id and is_deleted = 0";
+        $r = $this->getAdapter()->fetchAll($sql_object, array(
+            'tag_object_id' => $object_id,
+            'tag_group_id'  => self::TAG_PRODUCT_ORIGINAL_GROUPID,
+            'tag_type_id'   => self::TAG_TYPE_PROJECT
+        ));
+
+        if ($original == '1' || $original == '2') {
+            if ($r) {
+                //delte all old tags
+                foreach ($r as $tag) {
+                    $sql = "UPDATE tag_object set tag_changed = NOW() , is_deleted = 1  WHERE tag_item_id = :tagItemId";
+                    $this->getAdapter()->query($sql, array('tagItemId' => $tag['tag_item_id']));
+                }
+            }
+            
+            $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_group_id)";
+            if ($original == '1') {
+                $this->getAdapter()->query($sql, array(
+                    'tag_id'        => $tag_original_id,
+                    'tag_type_id'   => self::TAG_TYPE_PROJECT,
+                    'tag_object_id' => $object_id,
+                    'tag_group_id'  => self::TAG_PRODUCT_ORIGINAL_GROUPID
+                ));
+            } else {
+                $this->getAdapter()->query($sql, array(
+                    'tag_id'        => $tag_modification_id,
+                    'tag_type_id'   => self::TAG_TYPE_PROJECT,
+                    'tag_object_id' => $object_id,
+                    'tag_group_id'  => self::TAG_PRODUCT_ORIGINAL_GROUPID
+                ));
+            }
+            
+
+        } else {
+
+            if ($r) {
+                foreach ($r as $tag) {
+                    $sql = "UPDATE tag_object set tag_changed = NOW() , is_deleted = 1  WHERE tag_item_id = :tagItemId";
+                    $this->getAdapter()->query($sql, array('tagItemId' => $tag['tag_item_id']));
+                }
+            }
+        }
+
+    }
+    
 
     /**
      * @param int $object_id

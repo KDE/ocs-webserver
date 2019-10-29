@@ -1,50 +1,46 @@
-import React from 'react';
+import React , {useEffect, useState, useRef,useContext} from 'react'
 import CommunityMenuItems from './function/CommunityMenuItems';
-class DiscussionBoardsDropDownMenu extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {notification: false ,notification_count:0};
-    this.handleClick = this.handleClick.bind(this);
-  }
+import {MetaheaderContext} from '../contexts/MetaheaderContext';
 
-  componentWillMount() {
-    document.addEventListener('mousedown',this.handleClick, false);
-  }
+const DiscussionBoardsDropDownMenu = () => {
+  const {state} = useContext(MetaheaderContext);
+  const [dropdownClass, setDropdownClass] = useState('');    
+  const toggleEl = useRef(null);  
+  useEffect(() => {        
+    document.addEventListener('mousedown',handleClick, false);
+    return () => {
+        
+        document.removeEventListener('mousedown',handleClick, false);
+    };
+  },[dropdownClass])
 
-  componentWillUnmount() {
-    document.removeEventListener('mousedown',this.handleClick, false);
-  }
-
-  handleClick(e){
-    let dropdownClass = "";
-    if (this.node.contains(e.target)){
-      if (this.state.dropdownClass === "open"){
-        if (e.target.className === "discussion-menu-link-item"){
-          dropdownClass = "";
-        } else {
-          dropdownClass = "open";
-        }
-      } else {
-        dropdownClass = "open";
+  const handleClick= e => {          
+        let cls = "";
+        if (toggleEl.current.contains(e.target)){                 
+          if (dropdownClass === "open"){              
+            if (e.target.className === "discussion-menu-link-item"){
+                cls = "";
+            } else {
+                cls = "open";
+            }
+          } else {
+            cls = "open";
+          }
+        }        
+        setDropdownClass(cls);              
       }
-    }
-    this.setState({dropdownClass:dropdownClass});
-  }
-
-  render(){
-
-    return (
-      <li ref={node => this.node = node}  id="discussion-boards" className={this.state.dropdownClass}>
+  return (
+      <li ref={toggleEl}  id="discussion-boards" className={dropdownClass}>
         <a className="discussion-menu-link-item">Community &#8964;</a>
         <ul className="discussion-menu dropdown-menu dropdown-menu-right">
-          <CommunityMenuItems baseUrl={this.props.baseUrl}
-                              baseUrlStore = {this.props.baseUrlStore}
-                              forumUrl = {this.props.forumUrl}  />
+          <CommunityMenuItems baseUrl={state.baseUrl}
+                              baseUrlStore = {state.baseUrlStore}
+                              forumUrl = {state.forumUrl}  />
         </ul>
       </li>
-    );
-  }
-
+  )
 }
 
-export default DiscussionBoardsDropDownMenu;
+export default DiscussionBoardsDropDownMenu
+
+

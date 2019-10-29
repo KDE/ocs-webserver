@@ -152,11 +152,23 @@ if ($countDownloadsOverall > 0) {
                 $actual_payout_sum = $product['amount_section_micropayout'];
                 
                 
+                
+                
                 $isOriginal = $modelTag->isProductOriginal($product['project_id']);
-                $origialFactor = 0.5;
-                if($isOriginal) {
+                $isModification = $modelTag->isProductModification($product['project_id']);
+                $origialFactor = 0.1;
+                
+                if((int)$product['yearmonth'] <= 201909) {
                     $origialFactor = 1.0;
+                } else {
+                    if($isOriginal) {
+                        $origialFactor = 1.0;
+                    } else if($isModification) {
+                        $origialFactor = 0.25;
+                    }
+                    
                 }
+                
 
                 
                 #if($isCurrentMonth) {
@@ -366,7 +378,7 @@ if ($countDownloadsOverall > 0) {
                 <div class="col-md-1"></div>
                 <div class='col-md-2 text-right'></div>
                 <?php /*<div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"></div> */ ?>
-                <div class='col-md-4 text-right' style="min-width: 340px;max-width: 340px;margin-right: 13px;"><?=$sum_total_text?></div>
+                <div class='col-md-4 text-right' style="min-width: 340px;max-width: 340px;margin-right: 13px;">Summaries:</div>
                 <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;">
                     <strong><?=$sum_total_credits?>
                     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
