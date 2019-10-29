@@ -995,12 +995,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $projectData->save();
         
         
-        
         if(!$isAdmin) {
             $modelTags->processTagProductOriginal($this->_projectId,$values['is_original']);
         } else {
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - Edit Product - Values: ' . print_r($values, true));
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - Edit Product - Values is_original_or_modification: ' . print_r($values['is_original_or_modification'][0], true));
             $modelTags->processTagProductOriginalOrModification($this->_projectId,$values['is_original_or_modification'][0]);
         }
         
