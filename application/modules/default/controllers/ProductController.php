@@ -976,11 +976,21 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //$projectData->changed_at = new Zend_Db_Expr('NOW()');
         $projectData->save();
         
-        $modelTags->processTagProductOriginal($this->_projectId,$values['is_original']);
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        $isAdmin = false;
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $isAdmin = true;
+        }
         
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - Edit Product - Values: ' . print_r($values, true));
+        if(!$isAdmin) {
+            $modelTags->processTagProductOriginal($this->_projectId,$values['is_original']);
+        } else {
+            if(!isset($values['is_original_or_modification[]'])) {
+                $modelTags->processTagProductOriginalOrModification($this->_projectId,$values['is_original_or_modification[]'][0]);
+            }
+        }
         
-        $modelTags->processTagProductOriginalOrModification($this->_projectId,$values['is_original_or_modification[]']);
 
         if($values['tagsuser']) {
             $modelTags->processTagsUser($this->_projectId,implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);
