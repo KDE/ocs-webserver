@@ -610,6 +610,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if ($this->_request->isGet()) {
             return;
         }
+        
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        $isAdmin = false;
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $isAdmin = true;
+        }
+        
 
         if (isset($_POST['cancel'])) { // user cancel function
             $this->redirect('/member/' . $this->_authMember->member_id . '/news/');
