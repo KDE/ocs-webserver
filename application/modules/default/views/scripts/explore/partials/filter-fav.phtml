@@ -1,0 +1,114 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$modelCategory = new Default_Model_ProjectCategory();
+$this->categories = $modelCategory->fetchTreeForView();
+$jsonTree = json_encode($this->categories);
+
+?>
+<style type="text/css">
+
+    #category-tree input[type="text"] { width:calc(100% - 55px) !important; }
+
+    .naviblock {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 12px;
+        border: none;
+        width: 100%;
+        color: #2673b0;
+    }
+
+    .navilink {
+        color: #2673b0;
+        margin: 0;
+        padding: 3px 0 0 10px;
+    }
+
+    .navilink span.title:hover {
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    ul.naviblock a:hover {
+        background-color: <?=$this->navBackgroundColorActive?> !important;
+        color: <?=$this->navColorActive?> !important;
+    }
+
+    ul.naviblock a {
+        display: block;
+        width: 100%;
+    }
+
+    li.navilink.parentactive.parent a {
+        color: <?=$this->navBackgroundColorActive?>;
+    }
+
+    ul.naviblock a.active.child {
+        background-color: <?=$this->navBackgroundColorActive?>;
+        color: <?=$this->navColorActive?>;
+    }
+
+    li.navilink.active.parent a.active.parent,
+    #category-tree-container #category-tree ul li.active > a,
+    #category-tree-container #category-tree ul li a:hover,
+    #category-tree #category-tree-header a {
+        background-color: <?=$this->navBackgroundColorActive?> !important;
+        color: <?=$this->navColorActive?> !important;
+    }
+
+    li.navilink span.cat-title {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 75%;
+        vertical-align: middle;
+        padding-left: 3px;
+    }
+
+    li.navilink span.product-counter {
+        display: inline-block;
+        vertical-align: middle;
+        text-align: end;
+        width: 20%;
+    }
+</style>
+<link rel="stylesheet" href="/theme/react/assets/css/cat-tree.css"/>
+
+<div id="category-tree-container"></div>
+<script type="application/javascript">
+    var catTree = <?= $jsonTree ?>;
+    <?php
+    $catIdExists = isset($this->cat_id) ? $this->cat_id : "null";
+    echo "var categoryId = {$catIdExists};";
+    
+    $store_config = Zend_Registry::get('store_config');
+    $is_show_real_domain_as_url = $store_config->is_show_real_domain_as_url;
+    echo "var is_show_real_domain_as_url = $is_show_real_domain_as_url;";
+    ?>
+</script>
+<script type="application/javascript" src="/theme/react/category-tree/category-tree.js"></script>
+

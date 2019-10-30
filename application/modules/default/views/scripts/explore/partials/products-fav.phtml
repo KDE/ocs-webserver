@@ -1,0 +1,138 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperPrintDate = new Default_View_Helper_PrintDate();
+
+
+//Check if this is a collection
+$collCatId = Zend_Registry::get('config')->settings->client->default->collection_cat_id;
+
+
+$helperImage = new Default_View_Helper_Image();
+
+foreach ($this->products as $this->product) {
+    $updateTime = $helperPrintDate->printDate($this->product->project_changed_at);
+    $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+    if($collCatId == $this->product->project_category_id) {
+        $helperBuildProductUrl = new Default_View_Helper_BuildCollectionUrl();
+    }
+?>
+<div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 explore-product-imgcolumn">
+        <figure>
+            <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product->project_id, ''); ?>">
+                <div class="text-center imageContainer_">
+                <img src="<?php echo $helperImage->Image($this->product->image_small, array('width' => 167, 'height' => 167, 'crop' => 0)); ?>" class="explore-product-image"/>
+                </div>
+            </a>
+        </figure>
+    </div>
+    <div class="explore-product-details col-lg-7 col-md-7 col-sm-7 col-xs-7">
+        <h3>
+        	<?php
+              	$version = Default_Model_HtmlPurify::purify($this->product->version);
+              	$product_title = Default_Model_HtmlPurify::purify($this->product->title);
+
+           	?>
+            <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product->project_id, ''); ?>"><?= $product_title ?>
+            <span class="version"><?= $version ?> </span></a>
+        </h3>
+
+       <div class="title">
+        <b><?php echo $this->product->cat_title?></b>
+        <b class="username small">by <a  href="<?php echo $this->buildMemberUrl($this->product->username)?>"
+                    class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->member_id?>">
+          <?php echo $this->product->username?></a></b>
+        </div>
+
+        <?php if ($this->dataCategory->show_description==1){
+                    $desc = $this->truncate(Default_Model_HtmlPurify::purify(Default_Model_BBCode::renderHtml($this->product->description)), 300);
+            ?>
+        <div class="description" style=""><?php echo $desc?></div>
+        <?php }?>
+
+        <div class="packagetypes" >
+         <?php
+         if (false === empty($this->product->package_names)) {
+             $list_packages = explode(',', $this->product->package_names);
+             $resultString = '';
+             foreach ($list_packages as $item) {
+                 $resultString = $resultString . ' <span class="packagetypeos" > ' . stripslashes($item) . '</span>';
+             }
+             echo $resultString;
+         }
+         ?>
+        </div>
+
+        <div class="productInfo">
+       <?php
+                
+                $count_comments = $this->product->count_comments;
+                echo ($count_comments>0 ? '<span class="cntComments">'.$count_comments.' comment':'').($count_comments>1?'s':'').($count_comments>0?'</span>':'') ;
+                ?>
+        </div>
+    </div>
+    <div class="explore-product-plings col-lg-2 col-md-2 col-sm-2 col-xs-2">
+        <!-- RATING -->
+
+         <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                      if($this->product->laplace_score)
+                      {
+                        echo 'Score_old : '.$this->product->laplace_score_old.'%';
+                        echo '/Score_test : '.number_format($this->product->laplace_score_test/100,1);
+
+                      }
+
+                  }?>
+
+        <?php
+        $this->widgetRating = new stdClass();
+        $this->widgetRating->project_id = $this->product->project_id;
+        $this->widgetRating->laplace_score = $this->product->laplace_score;
+        $this->widgetRating->count_likes = $this->product->count_likes;
+        $this->widgetRating->count_dislikes = $this->product->count_dislikes;        
+        // it is a trial
+        include APPLICATION_PATH . '/modules/default/views/scripts/partials/widgetRating.phtml';
+        //echo $this->render('partials/widgetRating.phtml'); ?>
+        <!-- /RATING -->
+        
+        <?php if($this->product->count_plings && $this->product->count_plings>0){
+                 echo '<div class="plinged">Plings: '.$this->product->count_plings.'</div>';    
+              }
+          ?>
+
+        
+        <div class="progress">
+            <div class="bar no-goal">
+            </div>
+        </div>
+
+        <div class="collected">
+             <span><?php echo $updateTime ?></span>
+        </div>
+
+    </div>
+</div><!-- END .explore-product -->
+<?php
+    $this->rownum++;
+}

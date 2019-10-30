@@ -216,8 +216,11 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             }
         }
         
-
-
+        // my favourite list filter & list layout
+        if($isShowOnlyFavs == 1 && null != $this->_authMember) {
+            $index=7;
+            $browseListType =  'myfav';
+        }
         
         if($index)
         {
