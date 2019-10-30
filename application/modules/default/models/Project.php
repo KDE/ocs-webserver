@@ -28,6 +28,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     const FILTER_NAME_CATEGORY = 'category';
     const FILTER_NAME_TAG = 'tag';
     const FILTER_NAME_ORIGINAL = 'original';
+    const FILTER_NAME_FAVORITE = 'favorite';
     const FILTER_NAME_MEMBER = 'member';
     const FILTER_NAME_ORDER = 'order';
     const FILTER_NAME_LOCATION = 'location';
@@ -1210,6 +1211,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $statement = $this->generateOrderFilter($statement, $inputFilterParams);
         $statement = $this->generateTagFilter($statement, $inputFilterParams);
         // $statement = $this->generateOriginalFilter($statement, $inputFilterParams);
+        $statement = $this->generateFavoriteFilter($statement, $inputFilterParams);
         $statement = $this->generateReportedSpamFilter($statement);
 
         $statement->limit($limit, $offset);
@@ -1350,6 +1352,28 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         return $statement;
     }*/
+    
+    /**
+     * @param Zend_Db_Select $statement
+     * @param array          $filterArrayValue
+     *
+     * @return Zend_Db_Select
+     */
+    protected function generateFavoriteFilter(Zend_Db_Select $statement, $filterArrayValue)
+    {
+        if (false == isset($filterArrayValue[self::FILTER_NAME_FAVORITE])) {
+            return $statement;
+        }
+
+        $filterMemberId = $filterArrayValue[self::FILTER_NAME_FAVORITE];
+
+        if ( null != $filterMemberId) {
+            $statement->where('project_follower.mmeber_id = ?', $filterMemberId);
+            $statement->setIntegrityCheck(false)->join('project_follower', 'project.project_id = project_follower.project_id', array('project_follower_id'));
+        }
+
+        return $statement;
+    }
 
     /**
      * @param Zend_Db_Select $statement

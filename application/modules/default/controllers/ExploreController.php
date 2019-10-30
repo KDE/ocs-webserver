@@ -113,6 +113,10 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $this->storeFilterOriginalInCookie($inputFilterOriginal);
         $this->view->inputFilterOriginal = $inputFilterOriginal;
 */
+        
+        $isShowOnlyFavs = (int)$this->getParam('fav', 0);
+        
+        
         $inputCatId = (int)$this->getParam('cat', null);
         if ($inputCatId) {
 //            $this->view->isFilterCat = true;
@@ -136,6 +140,12 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $filter['order'] = preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('ord', self::DEFAULT_ORDER));
         // removed filter original 20191007
         //$filter['original'] = $inputFilterOriginal == 1 ? self::TAG_ISORIGINAL : null;
+        
+        if($isShowOnlyFavs == 1) {
+            if(null != $this->_authMember) {
+                $filter['favorite'] = $this->_authMember->member_id;
+            }
+        }
         
         $filter['tag'] = Zend_Registry::isRegistered('config_store_tags') ?  Zend_Registry::get('config_store_tags') : null;
         if (APPLICATION_ENV == "development") {
