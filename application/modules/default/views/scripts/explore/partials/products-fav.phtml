@@ -40,11 +40,11 @@ foreach ($this->products as $this->product) {
     
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 explore-product-imgcolumn">
         <figure>
-            <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product->project_id, ''); ?>">
+            
                 <div class="text-center imageContainer_">
                 <img src="<?php echo $helperImage->Image($this->product->image_small, array('width' => 167, 'height' => 167, 'crop' => 0)); ?>" class="explore-product-image"/>
                 </div>
-            </a>
+           
         </figure>
     </div>
     <div class="explore-product-details col-lg-7 col-md-7 col-sm-7 col-xs-7">
@@ -54,8 +54,8 @@ foreach ($this->products as $this->product) {
               	$product_title = Default_Model_HtmlPurify::purify($this->product->title);
 
            	?>
-            <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product->project_id, ''); ?>"><?= $product_title ?>
-            <span class="version"><?= $version ?> </span></a>
+            <?= $product_title ?>
+            <span class="version"><?= $version ?> </span>
         </h3>
 
        <div class="title">
