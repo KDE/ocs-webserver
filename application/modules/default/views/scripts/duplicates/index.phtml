@@ -93,31 +93,18 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 <h1>
     Duplicates Project Source   
 </h1>
-    <?php /*
-     <form style="margin-top: 20px; margin-bottom: 20px">
-       
-            Member :
-            <?php
-                  $md = new  Default_Model_ProjectModeration();
-                   $mlist =  $md->getMembers(); 
-                            
-                ?>
-                <select name = "filter_member_id" id="filter_member_id" >
-                    <?php
-                        echo '<option value=""></option>';
-                        foreach ($mlist as $m) {
-                            echo '<option value="'.$m['member_id'].'"">'.$m['username'].'</option>';        
-                        }
-                    ?>
-                </select>
-          
-         
-                <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
-               
-          
-        </form>
-    */?>
     
+     <form style="margin-top: 20px; margin-bottom: 20px">       
+            Source_url Filter  :
+            <select name="filter_type" id="filter_type" >
+                <option value="1">Show ALL Duplicates</option>
+                <option value="2">filter source_url from Duplicates</option>
+                <option value="3">filter source_url like '/in/photolist'</option>
+            </select>
+            <input name="filter_source_url" id="filter_source_url"/>                
+            <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>                         
+    </form>
+        
     <div id="TableContainer"></div>    
     </section>
 
@@ -142,6 +129,9 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
             }
         });
 
+        $('#filter_type').on('change',function(){
+            $('#filter_source_url').val('');        
+        })
 
         $('#TableContainer').jtable({
             jqueryuiTheme: true,
@@ -181,56 +171,7 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
                             return html;
                         }
                     }
-                                 /*
-                    cnt: {
-                        title: 'Cnt',                         
-                        create: false,
-                        edit: false,
-                        list: true,    
-                        width:'15%',                    
-                        display: function (data) {
-                            if (data.record.image_small) {
-                                var html =   ' <a href="/p/' + data.record.project_id + '/" target="_blank"><img  class="pimage" src='+data.record.image_small+' /></a><div class="ptitle">'+data.record.title+'</div>' ;
-                                var red = 200;
-                                var blue = 200;
-                                var d = 200;
-                                var green =200;
-                                var sc = data.record.laplace_score;
-                                if(sc == 0) sc = 50;
-                               
-
-                                if(sc>50) {
-                                    red=(d-((sc-50)*4)).toString(16);
-                                    green=(d).toString(16);
-                                    blue=(d-((sc-50)*4)).toString(16);
-                                }else if(sc<51) {
-                                    red=(d).toString(16);
-                                    green=(d-((50-sc)*4)).toString(16);
-                                    blue=(d-((50-sc)*4)).toString(16);
-                                }
-                                
-                                
-                                var color = red+green+blue;                                            
-                                 var t= '<div class="rating" >'+
-                                        '<div class="rating-text">'+
-                                        '<small class="center-block text-center">Score '+data.record.laplace_score+'%'+
-                                        '</small>'+
-                                    '</div>'+
-                                    '<div class="progress" style="margin-bottom: 0;height:12px;background-color: transparent; box-shadow: none; padding:2px;">'+
-                                        '<div class="progress-bar" style="background-color: #'+color+';width: '+data.record.laplace_score+'%;">'+                                            
-                                        '</div>'+
-                                        '<div class="progress-bar" style="background-color:#eeeeee;width: '+(100 -data.record.laplace_score)+'%;">'+                                          
-                                        '</div>'+
-                                    '</div>'+
-                                '</div>';
-                                html = html+t;
-                              
-                                return html;
-                            }
-                        }
-                    },
-                    */
-
+                             
                     
             }
         });
@@ -239,27 +180,6 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
             event.preventDefault();
             event.stopImmediatePropagation();
 
-            if (!confirm('This will toggle the active option for this product. Do you wish to proceed?')) {
-                return;
-            }
-
-            var elementRecord = $(this).data("record");
-
-            jQuery.ajax({
-                data: {'project_id': elementRecord},
-                url: '/backend/project/togglestatus/',
-                type: 'post',
-                error: function () {
-                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
-                    return false;
-                },
-                success: function (results) {
-                    $('#TableContainer').jtable('reload');
-                    return false;
-                }
-            });
-
-            return false;
         });
 
      
@@ -267,7 +187,8 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
         $('#LoadRecordsButton').click(function (e) {
             e.preventDefault();
             $('#TableContainer').jtable('load', {
-                filter_member_id: $('#filter_member_id').val(),              
+                filter_source_url: $('#filter_source_url').val(),
+                filter_type: $('#filter_type').val(),             
             },function(){
               TooltipUser.setup("tooltipuser","right");        
             });
