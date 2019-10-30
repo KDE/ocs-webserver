@@ -1368,7 +1368,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $filterMemberId = $filterArrayValue[self::FILTER_NAME_FAVORITE];
 
         if ( null != $filterMemberId) {
-            $statement->where('project_follower.mmeber_id = ?', $filterMemberId);
+            $statement->where('project_follower.member_id = ?', $filterMemberId);
             $statement->setIntegrityCheck(false)->join('project_follower', 'project.project_id = project_follower.project_id', array('project_follower_id'));
         }
 
