@@ -68,6 +68,9 @@ if($this->inputFilterOriginal ==1)
 ?>
 
 <style>
+  .purple{
+    color:#8e44ad;
+  }
 
   @media (max-width:720px){
 
@@ -259,10 +262,12 @@ $time_start = microtime(true);
 </div>
 </main>
 
+
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
             TooltipUser.setup("tooltipuserleft","left");
             TooltipUser.setup("tooltipuser","right");            
-            FilterBrowseTagGroupFn.setup();
+            FilterBrowseTagGroupFn.setup();    
+            PartialsButton.setup();        
         });
     ');

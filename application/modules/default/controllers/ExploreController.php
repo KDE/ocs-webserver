@@ -145,6 +145,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             if(null != $this->_authMember) {
                 $filter['favorite'] = $this->_authMember->member_id;
             }
+            $this->view->authMember = $this->_authMember;
         }
         
         $filter['tag'] = Zend_Registry::isRegistered('config_store_tags') ?  Zend_Registry::get('config_store_tags') : null;

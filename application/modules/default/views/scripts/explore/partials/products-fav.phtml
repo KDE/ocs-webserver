@@ -130,6 +130,17 @@ foreach ($this->products as $this->product) {
         <div class="collected">
              <span><?php echo $updateTime ?></span>
         </div>
+        <div id="container-follow<?=$this->product->project_id?>">	
+            <?php 
+                echo $this->partial(
+                    '/product/follow.phtml',
+                    array(
+                        "authMember"  => $this->authMember,
+                        "project_id" => $this->product->project_id
+                    )
+                );
+            ?>            
+        </div>
 
     </div>
 </div><!-- END .explore-product -->
