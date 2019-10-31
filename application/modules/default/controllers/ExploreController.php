@@ -108,6 +108,9 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
      */
     public function indexAction()
     {
+
+
+
         // Filter-Parameter
         /*$inputFilterOriginal = $this->getParam('filteroriginal', $this->getFilterOriginalFromCookie());
         $this->storeFilterOriginalInCookie($inputFilterOriginal);
@@ -140,12 +143,22 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $filter['order'] = preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('ord', self::DEFAULT_ORDER));
         // removed filter original 20191007
         //$filter['original'] = $inputFilterOriginal == 1 ? self::TAG_ISORIGINAL : null;
-        
+
+       
         if($isShowOnlyFavs == 1) {
-            if(null != $this->_authMember) {
+            if($this->_authMember->member_id)
+            {
                 $filter['favorite'] = $this->_authMember->member_id;
+                $this->view->authMember = $this->_authMember;                                   
+            }else{
+                $this->redirect('/browse');
             }
+        }else
+        {            
+            $isShowOnlyFavs = 0;            
         }
+
+       
         
         $filter['tag'] = Zend_Registry::isRegistered('config_store_tags') ?  Zend_Registry::get('config_store_tags') : null;
         if (APPLICATION_ENV == "development") {
@@ -217,10 +230,12 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         }
         
         // my favourite list filter & list layout
-        if($isShowOnlyFavs == 1 && null != $this->_authMember) {
+        if($isShowOnlyFavs == 1) {
             $index=7;
             $browseListType =  'myfav';
         }
+
+        
         
         if($index)
         {

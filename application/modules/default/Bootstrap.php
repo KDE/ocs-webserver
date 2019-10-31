@@ -484,6 +484,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'action'     => 'index'
         )));
 
+        $router->addRoute('browse_favourites', new Zend_Controller_Router_Route('/my-favourites/*', array(
+            'module'     => 'default',
+            'controller' => 'explore',
+            'action'     => 'index',
+            'fav'        => '1'
+        )));
+
         $router->addRoute('button_render', new Zend_Controller_Router_Route('/button/:project_id/:size/', array(
             'module'     => 'default',
             'controller' => 'button',
