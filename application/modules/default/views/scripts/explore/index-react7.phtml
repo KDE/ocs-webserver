@@ -65,6 +65,7 @@ if($this->inputFilterOriginal ==1)
    $checkedOriginal = '';
 }
 
+$this->filter_mode = 'filter_favourites';
 ?>
 
 <style>
@@ -167,7 +168,7 @@ if($this->inputFilterOriginal ==1)
     <span class="glyphicon  togglesidebar" id="btnTogglesidebar" ></span>
     <div class="GridFlex">
       <div class="GridFlex-cell sidebar-left" >
-          <?php  $time_start = microtime(true);echo $this->render('explore/partials/filter-fav.phtml'); $time_elapsed = microtime(true) - $time_start; ?>
+          <?php  $time_start = microtime(true);echo $this->render('explore/partials/filter.phtml'); $time_elapsed = microtime(true) - $time_start; ?>
           <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
              echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
           }?>

@@ -21,7 +21,12 @@
  **/
 
 $modelCategory = new Default_Model_ProjectCategory();
-$this->categories = $modelCategory->fetchTreeForView();
+if($this->filter_mode=='filter_favourites')
+{
+    $this->categories = $modelCategory->fetchTreeForViewForProjectFavourites();
+}else{
+    $this->categories = $modelCategory->fetchTreeForView();
+}
 $jsonTree = json_encode($this->categories);
 $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
@@ -108,6 +113,7 @@ $userRoleName = $helperUserRole->userRole();
     $store_config = Zend_Registry::get('store_config');
     $is_show_real_domain_as_url = $store_config->is_show_real_domain_as_url;
     echo "var is_show_real_domain_as_url = $is_show_real_domain_as_url;";
+    echo "var cat_tree_filter = '$this->filter_mode'";
     ?>
 </script>
 <script type="application/javascript" src="/theme/react/category-tree/category-tree.js"></script>

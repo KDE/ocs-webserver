@@ -27,6 +27,8 @@ function CategoryTree(){
 
     const [ categoryTree, setCategoryTree ] = useState(initialCatTree);    
     const [ categoryId, SetCategoryId ] = useState(window.categoryId);
+    const [ cat_tree_filter, setCat_tree_filter ] = useState(window.cat_tree_filter);
+    
     const [ selectedCategory, setSelectedCategory ] = useState(GetSelectedCategory(categoryTree,categoryId));
 
     let initialCurrentViewedCategories = []
@@ -168,6 +170,7 @@ function CategoryTree(){
                 onHeaderNavigationItemClick={(cvc) => onHeaderNavigationItemClick(cvc)}
                 onGoBackClick={goBack}
                 onGoForwardClick={goForward}
+                cat_tree_filter={cat_tree_filter}
             />
             <CategoryPanelsContainer
                 categoryTree={categoryTree}
@@ -182,6 +185,7 @@ function CategoryTree(){
                 onSetShowBreadCrumbs={(val) => setShowBreadCrumbs(val)}
                 onSetShowBackButton={(val) => setShowBackButton(val)}
                 onSetShowForwardButton={(val) => setShowForwardButton(val)}
+                cat_tree_filter={cat_tree_filter}
             />
             {tagCloudDisplay}
         </div>
@@ -208,8 +212,12 @@ function CategoryTreeHeader(props){
     if (categories.length > 0){
         categoryTreeHeaderNavigationDisplay = categories.map((cvc,index) =>{
             if (categories.length === index + 1){
-                let catLink;
+                let catLink;                                
                 if (cvc.title !== "Search") catLink = getUrlContext(window.location.href) + ( cvc.id === "00" ? "/browse/" : "/browse/cat/"+cvc.id+"/order/latest/")
+                if(props.cat_tree_filter=='filter_favourites')
+                {
+                    catLink+='fav/1';
+                }
                 return (
                     <a key={index} href={catLink} onClick={() => onHeaderNavigationItemClick(cvc,index)}>
                         {cvc.title}
@@ -396,6 +404,7 @@ function CategoryPanelsContainer(props){
             searchPhrase={props.searchPhrase}
             onSetSliderHeight={(height) => onSetSliderHeight(height)}
             onCategorySelect={(c,catLink) => onCategorySelect(c,catLink)}
+            cat_tree_filter={props.cat_tree_filter}
         />
     ))
 
@@ -462,6 +471,7 @@ function CategoryPanel(props){
                             onCategoryClick={(c,catLink) => props.onCategorySelect(c,catLink)}
                             searchMode={props.searchMode}
                             searchPhrase={props.searchPhrase}
+                            cat_tree_filter={props.cat_tree_filter}
                         />
                     )
                 }
@@ -516,6 +526,10 @@ function CategoryMenuItem(props){
 
     if (catTitle === "ALL" && props.parentCategory === -1) catLink += "/browse/";
 
+    if(props.cat_tree_filter=='filter_favourites')
+    {
+        catLink+='fav/1';
+    }
     const categoryMenuItemDisplay = (
         <a href={catLink} onClick={() => onCategoryClick(c,catLink)}>
             <span className="cat-title">{catTitle}</span>
