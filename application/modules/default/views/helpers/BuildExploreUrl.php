@@ -43,6 +43,17 @@ class Default_View_Helper_BuildExploreUrl
         if (isset($options['order'])) {
             $order = $options['order'];
         }
+        
+        if(isset($options['fav']))
+        {
+            if($params==null){
+                $params=array();
+                $params['fav'] = 1;
+            }else{
+                $params['fav'] = 1;
+            }
+        }
+
         return $this->buildExploreUrl($category, $filter, $order, $params, $withHost);
     }
 
@@ -80,11 +91,12 @@ class Default_View_Helper_BuildExploreUrl
             unset($params['page']);
         }
 
-        $url_param = '';
-        if (is_array($params)) {
+        $url_param = '';       
+        if (is_array($params)) {            
             array_walk($params, create_function('&$i,$k', '$i="$k/$i/";'));
-            $url_param = implode('/', $params);
+            $url_param = implode('/', $params);                      
         }
+
 
         $paramCategory = '';
         if (($categoryId != '') AND (false === is_array($categoryId))) {

@@ -65,9 +65,14 @@ if($this->inputFilterOriginal ==1)
    $checkedOriginal = '';
 }
 
+$this->filter_mode = 'filter_favourites';
+$this->filters['fav']='1';
 ?>
 
 <style>
+  .purple{
+    color:#8e44ad;
+  }
 
   @media (max-width:720px){
 
@@ -164,17 +169,47 @@ if($this->inputFilterOriginal ==1)
     <span class="glyphicon  togglesidebar" id="btnTogglesidebar" ></span>
     <div class="GridFlex">
       <div class="GridFlex-cell sidebar-left" >
-          <?php  $time_start = microtime(true);echo $this->render('explore/partials/filter-fav.phtml'); $time_elapsed = microtime(true) - $time_start; ?>
+          <?php  $time_start = microtime(true);echo $this->render('explore/partials/filter.phtml'); $time_elapsed = microtime(true) - $time_start; ?>
           <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
              echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
           }?>
       </div>
       <div class="GridFlex-cell content">
-        <div id="product-browse-container"></div>
+        <section class="explore-products" id="explore-products">
+
+            <div class="pling-nav-tabs">
+              <ul class="nav nav-tabs pling-nav-tabs" id="sort">
+                  <li class="active">
+                      <a><div id="fav_icon"></div><span><?= $this->translate('My Favourites') ?></span></a>
+                  </li>                 
+              </ul>
+            </div>
+
+              <div class="product-list">
+                  <?php
+                  if (count($this->products) == 0) {
+                      echo '<div class="empty">No Favourites.</div>';
+                  } else {
+                       $time_start = microtime(true);
+                       echo $this->render('explore/partials/products-fav.phtml');
+                       $time_elapsed = microtime(true) - $time_start;
+                  }
+                  ?>
+                  <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                      echo '<div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+                      echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
+                      echo '</div>';
+                  }?>
+              </div>
+
+
+              <section class="explore-footer">
+                  <?php echo $this->paginationControl($this->products, 'Sliding',
+                      'explore/partials/paginationControl.phtml',
+                      array('params' => $this->filters, 'dom_target' => 'section.explore-products')); ?>
+              </section>
+          </section>
       </div>
-
-      <link href="/theme/react/assets/css/product-browse.css" rel="stylesheet" type="text/css"/>
-
 
 <?php
 $time_start = microtime(true);
@@ -229,30 +264,12 @@ $time_start = microtime(true);
 </div>
 </main>
 
-<script type="text/javascript">
-  var categories = <?php echo $this->categoriesJson ?>;
-  var catId = <?php echo $this->cat_idJson ?>;
-  var filters = <?php echo $this->filtersJson ?>;
-  var products = <?php echo $this->productsJson ?>;
-  var topProducts = <?php echo $this->topprodsJson ?>;
-  var comments = <?php echo $this->commentsJson ?>;
-  var supporters = <?php echo json_encode($this->supporters) ?>;
-  var pagination = {
-    totalcount:<?php echo $this->totalcount ?>,
-    page:<?php echo $this->page ?>,
-    pagelimit:<?php echo $this->pageLimit ?>
-  }
-  var view = "explore";
-  
-  var browseListType = "<?php echo $this->browseListType ?>";
-
-</script>
-<script type="text/javascript" src="/theme/react/product-browse/product-browse.js"></script>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
             TooltipUser.setup("tooltipuserleft","left");
             TooltipUser.setup("tooltipuser","right");            
-            FilterBrowseTagGroupFn.setup();
+            FilterBrowseTagGroupFn.setup();    
+            PartialsButton.setup();        
         });
     ');
