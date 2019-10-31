@@ -236,9 +236,13 @@ function CategoryTreeHeader(props){
     //if (props.showBreadCrumbs === true){
         if (categories.length === 0){
             if (props.storeInfo){
-                let storeName = window.config.sName, storeHref = window.config.sName;
+                let storeName = window.config.sName, storeHref = window.config.sName;                               
                 if (props.storeInfo.name.length > 0) storeName = props.storeInfo.name;
                 if (props.storeInfo.menuhref.length > 0) storeHref = props.storeInfo.menuhref;
+                if(props.cat_tree_filter=='filter_favourites')
+                {
+                    storeHref= storeHref+'/my-favourites';
+                }                 
                 sNameDisplay = <a href={storeHref}>{storeName}</a>
             }
         }    
