@@ -79,7 +79,7 @@ const UserLoginMenuContainer = (props) => {
             <li id="user-menu-products" className="buttons user-info-payout">
                 <ul className="payout">
                   <li><a href={state.baseUrlStore+"/product/add"}><div className="icon iconAdd"></div>Add Product</a></li>  
-                  <li><a href={state.baseUrlStore+"/browse/fav/1"}><div className="icon iconFav"></div>My Favourites</a></li>                    
+                  <li><a href={state.baseUrlStore+"/my-favourites"}><div className="icon iconFav"></div>My Favourites</a></li>                    
                 </ul>
             </li>
 
