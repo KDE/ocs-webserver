@@ -170,41 +170,11 @@ if($this->inputFilterOriginal ==1)
           }?>
       </div>
       <div class="GridFlex-cell content">
-        <section class="explore-products" id="explore-products">
-
-            <div class="pling-nav-tabs">
-              <ul class="nav nav-tabs pling-nav-tabs" id="sort">
-                  <li class="active">
-                      <a><span><?= $this->translate('My Favourites') ?></span></a>
-                  </li>                 
-              </ul>
-            </div>
-
-              <div class="product-list">
-                  <?php
-                  if (count($this->products) == 0) {
-                      echo '<div class="empty">No Favourites.</div>';
-                  } else {
-                       $time_start = microtime(true);
-                       echo $this->render('explore/partials/products-fav.phtml');
-                       $time_elapsed = microtime(true) - $time_start;
-                  }
-                  ?>
-                  <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
-                      echo '<div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12">';
-                      echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
-                      echo '</div>';
-                  }?>
-              </div>
-
-
-              <section class="explore-footer">
-                  <?php echo $this->paginationControl($this->products, 'Sliding',
-                      'explore/partials/paginationControl.phtml',
-                      array('params' => $this->filters, 'dom_target' => 'section.explore-products')); ?>
-              </section>
-          </section>
+        <div id="product-browse-container"></div>
       </div>
+
+      <link href="/theme/react/assets/css/product-browse.css" rel="stylesheet" type="text/css"/>
+
 
 <?php
 $time_start = microtime(true);
@@ -258,6 +228,26 @@ $time_start = microtime(true);
     </span>
 </div>
 </main>
+
+<script type="text/javascript">
+  var categories = <?php echo $this->categoriesJson ?>;
+  var catId = <?php echo $this->cat_idJson ?>;
+  var filters = <?php echo $this->filtersJson ?>;
+  var products = <?php echo $this->productsJson ?>;
+  var topProducts = <?php echo $this->topprodsJson ?>;
+  var comments = <?php echo $this->commentsJson ?>;
+  var supporters = <?php echo json_encode($this->supporters) ?>;
+  var pagination = {
+    totalcount:<?php echo $this->totalcount ?>,
+    page:<?php echo $this->page ?>,
+    pagelimit:<?php echo $this->pageLimit ?>
+  }
+  var view = "explore";
+  
+  var browseListType = "<?php echo $this->browseListType ?>";
+
+</script>
+<script type="text/javascript" src="/theme/react/product-browse/product-browse.js"></script>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){

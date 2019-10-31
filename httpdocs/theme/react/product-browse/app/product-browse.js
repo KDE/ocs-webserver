@@ -51,10 +51,20 @@ function ProductBrowseFilterContainer(){
 
 function ProductBrowseItemList(props){
 
+    console.log(window.catId);
+    console.log(window.filters);
+    console.log(window.products);
+
+    if (window.location.search === "?index=7") {
+        window.browseListType === "favorites";
+        browseListType = "favorites";
+    }
+
     const [ containerWidth, setContainerWidth ] = useState($('#product-browse-container').width() + 14);
     const [ itemsInRow, setItemsInRow ] = useState(getNumberOfItemsPerRow(browseListType,isMobile,containerWidth));
     const [ itemWidth, setItemWidth ] = useState(getItemWidth(browseListType,containerWidth,itemsInRow));
     const [ imgHeight, setImgHeight ] = useState(getImageHeight(browseListType,itemWidth));
+    console.log(imgHeight);
 
     React.useEffect(() => {
         window.addEventListener("resize", function(event){ updateDimensions() });
@@ -77,6 +87,7 @@ function ProductBrowseItemList(props){
         productsRowsDisplay = chunkArray(products,itemsInRow).map((ac,index) => (
             <ProductBrowseItemsRow
                 key={index} 
+                rowIndex={index}
                 products={ac}
                 itemWidth={itemWidth}
                 imgHeight={imgHeight}
@@ -100,6 +111,7 @@ function ProductBrowseItemsRow(props){
         <ProductBrowseItem
             key={index} 
             index={index}
+            rowIndex={props.rowIndex}
             product={p}
             itemWidth={props.itemWidth}
             imgHeight={props.imgHeight}

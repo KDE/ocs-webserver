@@ -5,9 +5,10 @@ export function getNumberOfItemsPerRow(browseListType,isMobile,containerWidth){
         if (browseListType === "music") itemsPerRow = getAdujustItemsPerRow(7,containerWidth,160 + 14)
         else if (browseListType === "comics") itemsPerRow = getAdujustItemsPerRow(7,containerWidth,160 + 14)
         else if (browseListType === "phone-pictures") itemsPerRow = getAdujustItemsPerRow(5,containerWidth,210)
+        else if (browseListType === "favorites" ) itemsPerRow = getAdujustItemsPerRow(1,containerWidth,containerWidth - 1);
         else itemsPerRow = getAdujustItemsPerRow(3,containerWidth,250 + 14)
     }
-    itemsPerRow;
+    console.log(itemsPerRow);
     return itemsPerRow;
 }
 
@@ -57,7 +58,7 @@ export function getItemWidth(browseListType,containerWidth,itemsInRow){
 }
 
 export function getImageHeight(browseListType,itemWidth){
-    
+    console.log(browseListType);
     let itemHeightDivider, imgHeight;
 
     itemWidth = itemWidth - 14;
@@ -72,11 +73,14 @@ export function getImageHeight(browseListType,itemWidth){
     else if (browseListType === "comics"){
         imgHeight = 220;
     }
+    else if (browseListType === "favorites"){
+        imgHeight = 167;
+    }
     else {
         itemHeightDivider = 1.85;
         imgHeight = itemWidth / itemHeightDivider;
     }
-
+    console.log(imgHeight);
     return imgHeight;
 }
 

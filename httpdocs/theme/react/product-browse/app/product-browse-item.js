@@ -10,6 +10,13 @@ export function ProductBrowseItem(props){
     const [ productFiles, setProductFiles ] = useState();
     const [ imgUrl, setImgUrl ] = useState(getImageUrl(p,props.itemWidth,props.imgHeight));
 
+    console.log(props.index);
+
+    if (window.location.search === "?index=7") {
+        window.browseListType === "favorites";
+        browseListType = "favorites";
+    }
+
     React.useEffect(() => {
         if (browseListType === "music" && productFilesFetched === false) onMusicProductLoad()
     },[])
@@ -54,7 +61,6 @@ export function ProductBrowseItem(props){
         });
     }
 
-
     const productBrowseItemLikesDislpay = (
         <div className="likes-counter">
             <div className="hearts-container">
@@ -67,7 +73,9 @@ export function ProductBrowseItem(props){
 
     let itemInfoDisplay,
         musicItemInfoDisplay, 
-        musicPlayerDisplay;
+        musicPlayerDisplay,
+        showIndex,
+        itemInfoHeight;
     
     if (browseListType === "picture") {
         itemInfoDisplay = (
@@ -122,16 +130,58 @@ export function ProductBrowseItem(props){
                 </div>
             </div>
         )
+    }    
+    else if (browseListType === "favorites"){
+        console.log(p);
+        itemInfoHeight = props.imgHeight;
+        showIndex = true;
+        itemInfoDisplay = (
+            <div className="product-browse-item-info">
+                <div className="info-container">
+                    <h2>{p.title}</h2>
+                    <span>{p.cat_title}</span>
+                    <span>by <b>{p.username}</b></span>
+                </div>
+                <div className="score-container">
+                    <div className="explore-product-plings">
+                        <div className="rating">
+                            <div className="rating-text">
+                                <small className="center-block text-center">
+                                   Score {p.laplace_score / 10}%
+                                </small>
+                            </div>
+                            <div className="progress">
+                                <div className="progress-bar" style={{"backgroundColor":"#c8c8c8","width":(p.laplace_score / 10) + "%"}}>
+                                </div>
+                                <div className="progress-bar" style={{"backgroundColor":"#eeeeee","opacity":"0.5","width":( 100 - (p.laplace_score / 10)) + "%"}}>           
+                                </div>
+                            </div>
+                        </div>
+                        <div className="collected">
+                            <span>{p.created_at}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    let indexDisplay;
+    if (showIndex === true){
+        indexDisplay = (
+            <span className="index">{props.rowIndex + 1}</span>
+        )
     }
 
     let itemLink = json_serverUrl;
     itemLink = json_store_name === "ALL" ? "/" : "/s/" + json_store_name + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
     itemLink += "/" + p.project_id;
-
+    
     return (
         <div className={"product-browse-item " + browseListType} id={"product-" + p.project_id} style={{"width":props.itemWidth}}>
             <div className="wrapper">
+                {indexDisplay}
                 {musicPlayerDisplay}
                 <a href={itemLink} className="product-browse-item-wrapper">
                     <div className="product-browse-image">
