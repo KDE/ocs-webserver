@@ -104,19 +104,19 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
 
     <div class="row">
-        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">media views 24h </span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">mediaviews 24h </span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countMediaViewsToday ?></span>
     </div>
     
     <div class="row">
-        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">media views total </span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">mediaviews total </span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countMediaViewsAlltime ?></span>
     </div>
 
     <?php endif; ?>    
     
     <div class="row">
-        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">page views 24h </span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">pageviews 24h </span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countPageviewsToday ?></span>
     </div>
 
@@ -124,7 +124,7 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
 
     <div class="row">
-        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">page views total </span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">pageviews total </span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countPageviewsTotal ?></span>
     </div>
 
