@@ -176,7 +176,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
                 select f.owner_id as member_id,m.username, f.md5sum, COUNT(1) cnt, GROUP_CONCAT(p.project_id) as projects
                 from  ppload.ppload_files f
                 join project p on f.collection_id = p.ppload_collection_id
-                join member m on f.owner_id = m.member_id
+                join member m on f.owner_id = m.member_id and m.is_deleted=0 and m.is_active = 1
                 where f.md5sum is not null
                 group by f.md5sum 
                 having count(1)>1
