@@ -423,8 +423,6 @@ class Default_Model_StatDownload
     
     public function getUserSectionsForDownloadAndViewsForMonth($member_id, $yearmonth)
     {
-        $tag_original_id = Zend_Registry::get('config')->settings->client->default->tag_original_id;
-        $tag_modification_id = Zend_Registry::get('config')->settings->client->default->tag_modification_id;
         /*
         $sql = "
                 SELECT yearmonth, section_id, section_name, section_order, section_payout_factor, COUNT(project_id) AS count_projects, SUM(credits_plings) AS num_credits_plings, SUM(credits_section) AS num_credits_section, SUM(credits_plings)/100 AS sum_amount_credits_plings, SUM(credits_section)/100 AS sum_amount_credits_section
@@ -485,44 +483,13 @@ class Default_Model_StatDownload
                         ,COUNT(DISTINCT project_id) AS count_projects
                         , SUM(credits_plings) AS num_credits_plings
                         , SUM(credits_section) AS num_credits_section
-                        ,case 
-                                when tag_original.tag_item_id IS NOT NULL  OR m.yearmonth < 201910
-                                then SUM(credits_plings) 
-                                ELSE 
-                                        case 
-                                                when tag_modification.tag_item_id IS NOT NULL 
-                                                then SUM(credits_plings)*0.25 
-                                                else SUM(credits_plings)*0.1
-                                        END 
-                        END AS num_credits_plings_org
-                        ,case 
-                                when tag_original.tag_item_id IS NOT NULL OR m.yearmonth < 201910 
-                                then SUM(credits_section) 
-                                ELSE 
-                                        case 
-                                        when tag_original.tag_item_id IS NOT NULL 
-                                        then SUM(credits_section)*0.25
-                                        ELSE
-                                                SUM(credits_section)*0.1
-                                        END  
-                        END AS num_credits_section_org
+                        , SUM(credits_org) AS num_credits_plings_org
+                        , SUM(credits_org*section_payout_factor) AS num_credits_section_org
                         , SUM(credits_plings)/100 AS sum_amount_credits_plings
                         , SUM(credits_section)/100 AS sum_amount_credits_section,
                         SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_plings END) AS num_real_credits_plings,
                         SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_section END) AS num_real_credits_section,
-                        case 
-                            when tag_original.tag_item_id IS NOT NULL OR m.yearmonth < 201910 
-                                    then SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_plings END) 
-                            ELSE 
-
-                                    case 
-                                    when tag_original.tag_item_id IS NOT NULL 
-                                            then SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_plings END)*0.25 
-                                    ELSE
-                                            SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_plings END)*0.1
-                                    END  
-                    END AS num_real_credits_plings_org
-								
+                        SUM(case when is_license_missing = 1 OR is_source_missing = 1 OR is_pling_excluded = 1 then 0 ELSE credits_org END) AS num_real_credits_plings_org
                         ,(SELECT round(sfs.sum_support/DATE_FORMAT(NOW() + INTERVAL 1 MONTH - INTERVAL DATE_FORMAT(NOW(),'%d') DAY,'%d')*DATE_FORMAT(NOW(),'%d') /sfs.sum_amount_payout,2) AS factor  FROM section_funding_stats sfs WHERE sfs.yearmonth = m.yearmonth AND sfs.section_id = m.section_id) AS now_section_payout_factor
                         , MAX(amount) AS payout_amount, MAX(STATUS) AS payout_status, MAX(payment_transaction_id) AS payout_payment_transaction_id, MAX(m.paypal_mail) AS paypal_mail
                 from micro_payout m
@@ -530,14 +497,12 @@ class Default_Model_StatDownload
                 LEFT JOIN
                 `member_payout` ON `member_payout`.`member_id` = m.`member_id`
                  AND `member_payout`.`yearmonth` = m.`yearmonth`
-                LEFT JOIN tag_object tag_original ON tag_original.tag_id = :tag_original_id and tag_original.tag_object_id=m.project_id and tag_original.tag_group_id=11 and tag_original.tag_type_id = 1 and tag_original.is_deleted = 0
-                LEFT JOIN tag_object tag_modification ON tag_modification.tag_id = :tag_modification and tag_modification.tag_object_id=m.project_id and tag_modification.tag_group_id=11 and tag_modification.tag_type_id = 1 and tag_modification.is_deleted = 0
                 where m.member_id = :member_id
                 and m.yearmonth =  :yearmonth
                 group by m.section_id
                 ORDER BY s.`order`";
         
-        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'yearmonth' => $yearmonth, 'tag_original_id' => $tag_original_id, 'tag_modification' => $tag_modification_id));
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id, 'yearmonth' => $yearmonth));
 
         if ($result->rowCount() > 0) {
             return $result->fetchAll();
