@@ -1,0 +1,72 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
+$this->headMeta()->appendProperty('og:url', 'www.opendesktop.org');
+$this->headMeta()->appendProperty('og:type', 'website.');
+$this->headMeta()->appendProperty('og:title', 'opendesktop.org');
+$this->headMeta()->appendProperty('og:site_name','www.opendesktop.org');
+$this->headMeta()->appendProperty('og:description','A community where developers and artists share applications, themes and other content');
+$this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images/system/opendesktop-logo.png');
+
+
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+$isAdmin = false;
+if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+    $isAdmin = true;
+}
+
+
+$baseurlStore = Zend_Registry::get('config')->settings->client->default->baseurl_store;
+$model = new Default_Model_Section();
+$categorisWithPayout = $model->fetchCategoriesWithPlinged();
+$sections = $model->fetchAllSections();
+
+$products = $this->products;
+$creators = $this->creators;
+$supporters = $this->supporters;
+
+$response = array(
+	 	'isAdmin' => $isAdmin,
+		'sections' => $sections,		
+		'details' => $categorisWithPayout,
+		'baseurlStore' => $baseurlStore,
+		'products' => $products,
+		'creators' => $creators,
+		'supporters' => $supporters,
+		'section' => ($this->section?$this->section:null),			
+    );
+?>
+<link type="text/css" rel="stylesheet" href="/theme/react/assets/css/pling-section.css"/>
+<div class="tooltip_templates" style="display:none">
+      <span id="tooltip_content">
+          <i class="fa fa-spinner"></i>
+      </span>
+</div>
+
+<main class="pling-section">
+      <div id="pling-section-content"></div>
+      <script type="text/javascript">        
+        var data = <?php echo Zend_Json::encode($response)?>;
+      </script>
+      <script src="/theme/react/bundle/app-supporters-bundle.js" type="text/javascript"></script>
+</main>
