@@ -97,13 +97,6 @@ $allDownloads = $modelDownload->getUserDownloadsAndViewsForProject($this->member
 $modelProj = new Default_Model_Project();
 $isNoClone = $modelProj->isProjectClone($project_id) == false;
 
-$modelTag = new Default_Model_Tags();
-$isOriginal = $modelTag->isProductOriginal($project_id);
-$isModification = $modelTag->isProductModification($project_id);
-
-$origialFactor = 0.1;
-
-
 $countDownloadsOverall = count($allDownloads);
 
 if ($countDownloadsOverall > 0) {
