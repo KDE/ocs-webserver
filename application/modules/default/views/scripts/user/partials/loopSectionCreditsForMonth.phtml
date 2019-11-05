@@ -125,16 +125,8 @@ if ($countDownloadsOverall > 0) {
             $css_active = '';
 
             foreach ($allDownloads as $product) { 
-                if((int)$product['yearmonth'] <= 201909) {
-                    $origialFactor = 1.0;
-                } else {
-                    if($isOriginal) {
-                        $origialFactor = 1.0;
-                    } else if($isModification) {
-                        $origialFactor = 0.25;
-                    }
-
-                }?>
+                $origialFactor = $product['org_factor'];
+            ?>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
                     <div class="col-md-2 text-left cell-default">
                         Downloads
@@ -148,12 +140,7 @@ if ($countDownloadsOverall > 0) {
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
                         <span>
                             <?php 
-                            if((int)$product['yearmonth'] >= 201910) {
-                                echo $origialFactor;
-                            } else {
-                                echo ('1.0'); 
-                            }
-                            
+                            echo $origialFactor;
                             ?>
                         </span>
                     </div>
@@ -163,9 +150,7 @@ if ($countDownloadsOverall > 0) {
                         <?php 
                             $sum_credits = 0;
                             $sum_credits = $product['num_downloads_micropayout']*$product['category_pling_factor'];
-                            if((int)$product['yearmonth'] >= 201910) {
-                                $sum_credits = $sum_credits * $origialFactor;
-                            }
+                            $sum_credits = $sum_credits * $origialFactor;
                             print(round($sum_credits,2));
                             $sum_total_credits += round($sum_credits,2);
                         ?>
@@ -188,12 +173,7 @@ if ($countDownloadsOverall > 0) {
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
                         <span>
                             <?php 
-                            if((int)$product['yearmonth'] >= 201910) {
-                                echo $origialFactor;
-                            } else {
-                                echo ('1.0'); 
-                            }
-                            
+                            echo $origialFactor;
                             ?>
                         </span>
                     </div>
@@ -202,9 +182,7 @@ if ($countDownloadsOverall > 0) {
                         <?php 
                             $sum_credits = 0;
                             $sum_credits = $product['num_views_micropayout']*$product['category_pling_factor'];
-                            if((int)$product['yearmonth'] >= 201910) {
-                                $sum_credits = $sum_credits * $origialFactor;
-                            }
+                            $sum_credits = $sum_credits * $origialFactor;
                             print(round($sum_credits,2));
                             $sum_total_credits += round($sum_credits,2);
                         ?>
