@@ -97,13 +97,6 @@ $allDownloads = $modelDownload->getUserDownloadsAndViewsForProject($this->member
 $modelProj = new Default_Model_Project();
 $isNoClone = $modelProj->isProjectClone($project_id) == false;
 
-$modelTag = new Default_Model_Tags();
-$isOriginal = $modelTag->isProductOriginal($project_id);
-$isModification = $modelTag->isProductModification($project_id);
-
-$origialFactor = 0.1;
-
-
 $countDownloadsOverall = count($allDownloads);
 
 if ($countDownloadsOverall > 0) {
@@ -114,8 +107,8 @@ if ($countDownloadsOverall > 0) {
             <div class="row">
                 <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap; "><strong>Type</strong></div>
                 <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Sum</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Sum Downloads/Mediaviews" data-trigger="hover" data-html="true" data-content="Sum of all valid Downloads and Mediaviews of any product (active or archived) within this month.</a>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Credit-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Credit-Factor" data-trigger="hover" data-html="true" data-content="The Credit-Factor's base is $-cent and depends on the product category.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Original-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Original-Factor" data-trigger="hover" data-html="true" data-content="If this product is a Original, the factor is 1.0, if not the factor is 0.5"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Category-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Category-Factor" data-trigger="hover" data-html="true" data-content="The Category-Factor's base is $-cent and depends on the product category.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Original-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Original-Factor" data-trigger="hover" data-html="true" data-content="If this product is a Original the factor is 1.0, if this product is a Modification the factor is 0.25, the default factor is 0.1"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
                 <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Sum Credits</strong></div>
             </div>
         </div>
@@ -125,16 +118,8 @@ if ($countDownloadsOverall > 0) {
             $css_active = '';
 
             foreach ($allDownloads as $product) { 
-                if((int)$product['yearmonth'] <= 201909) {
-                    $origialFactor = 1.0;
-                } else {
-                    if($isOriginal) {
-                        $origialFactor = 1.0;
-                    } else if($isModification) {
-                        $origialFactor = 0.25;
-                    }
-
-                }?>
+                $origialFactor = $product['org_factor'];
+            ?>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
                     <div class="col-md-2 text-left cell-default">
                         Downloads
@@ -148,12 +133,7 @@ if ($countDownloadsOverall > 0) {
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
                         <span>
                             <?php 
-                            if((int)$product['yearmonth'] >= 201910) {
-                                echo $origialFactor;
-                            } else {
-                                echo ('1.0'); 
-                            }
-                            
+                            echo $origialFactor;
                             ?>
                         </span>
                     </div>
@@ -163,9 +143,7 @@ if ($countDownloadsOverall > 0) {
                         <?php 
                             $sum_credits = 0;
                             $sum_credits = $product['num_downloads_micropayout']*$product['category_pling_factor'];
-                            if((int)$product['yearmonth'] >= 201910) {
-                                $sum_credits = $sum_credits * $origialFactor;
-                            }
+                            $sum_credits = $sum_credits * $origialFactor;
                             print(round($sum_credits,2));
                             $sum_total_credits += round($sum_credits,2);
                         ?>
@@ -188,12 +166,7 @@ if ($countDownloadsOverall > 0) {
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
                         <span>
                             <?php 
-                            if((int)$product['yearmonth'] >= 201910) {
-                                echo $origialFactor;
-                            } else {
-                                echo ('1.0'); 
-                            }
-                            
+                            echo $origialFactor;
                             ?>
                         </span>
                     </div>
@@ -202,9 +175,7 @@ if ($countDownloadsOverall > 0) {
                         <?php 
                             $sum_credits = 0;
                             $sum_credits = $product['num_views_micropayout']*$product['category_pling_factor'];
-                            if((int)$product['yearmonth'] >= 201910) {
-                                $sum_credits = $sum_credits * $origialFactor;
-                            }
+                            $sum_credits = $sum_credits * $origialFactor;
                             print(round($sum_credits,2));
                             $sum_total_credits += round($sum_credits,2);
                         ?>
