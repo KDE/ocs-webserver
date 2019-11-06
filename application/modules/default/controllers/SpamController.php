@@ -195,7 +195,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
         $results = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);                        
 
         $sqlall = " select 
-                        count(1) 
+                        count(1) as cnt
                         from 
                         (
                             select f.owner_id as member_id,m.username, f.md5sum, COUNT(1) cnt, GROUP_CONCAT(distinct p.project_id) as projects
