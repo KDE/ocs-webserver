@@ -192,6 +192,21 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 {
   padding-bottom: 20px;
 }
+
+.blockContainer{
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-image: url(/theme/react/assets/img/home/back3.jpg);
+  padding: 8px;
+  margin: 0 5px 5px 0;
+  width: 100%;
+  height: 100%;
+
+}
+.blockContainer .header{
+  display: flex;
+  justify-content: center;
+}
 </style>
 
 
@@ -224,68 +239,43 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
         </div>
 
 
-
-        <div class="row" id="productgroup1">
-        <?php
-                    echo $this->partial('/home/partials/product_group.phtml', array(
-                            "title"  => "Comics",
-                            "products" => $this->productsComics,
-                            "catIDs" =>"39"
-                        )
-                    );  
-                    
-                    echo $this->partial('/home/partials/product_group.phtml', array(
-                            "title"  => "Music,Videos",
-                            "products" => $this->productsVideos,
-                            "catIDs" =>"518,586"
-                        )
-                    );
-
-                         
-        ?>
-        </div>
-
-
-        <div class="row blockpadding">
-        <?php
-
+        <div class="row blockpadding disply-flex" >
+         <?php
                   echo $this->partial('/home/partials/product_group.phtml', array(
-                          "title"  => "Artwork",
-                          "products" => $this->productsArtwork,
-                          "catIDs" =>"158"
+                          "title"  => "Applications",
+                          "products" => $this->productsApps,
+                          "catIDs" =>"233"
                       )
-                  );   
+                  );
 
-                    echo $this->partial('/home/partials/product_group.phtml', array(
-                            "title"  => "Collections/Rankings",
-                            "products" => $this->productsCollections,
-                            "catIDs" =>"567"
-                        )
-                    );
-
-                         
-        ?>
+                     echo $this->partial('/home/partials/product_group.phtml', array(
+                             "title"  => "App Add-Ons",
+                             "products" => $this->productsAddons,
+                             "catIDs" =>"152"
+                         )
+                     );                    
+         ?>
         </div>
 
-        <div class="row blockpadding">
+        <div class="row blockpadding disply-flex">
         <?php
-                    echo $this->partial('/home/partials/product_group.phtml', array(
-                            "title"  => "GTK/Gnome",
-                            "products" => $this->productsThemesGTK,
-                            "catIDs" =>"366"
-                        )
-                    );
 
-                    echo $this->partial('/home/partials/product_group.phtml', array(
-                            "title"  => "KDE Plasma",
-                            "products" => $this->productsThemesPlasma,
-                            "catIDs" =>"365"
-                        )
-                    );
+            echo $this->partial('/home/partials/product_group.phtml', array(
+              "title"  => "KDE Plasma",
+              "products" => $this->productsThemesPlasma,
+              "catIDs" =>"365"
+              )
+            );
+            echo $this->partial('/home/partials/product_group.phtml', array(
+                    "title"  => "GTK/Gnome",
+                    "products" => $this->productsThemesGTK,
+                    "catIDs" =>"366"
+                )
+            );
         ?>
         </div>
 
-        <div class="row blockpadding">
+        <div class="row blockpadding disply-flex">
         <?php
                     echo $this->partial('/home/partials/product_group.phtml', array(
                             "title"  => "Window Managers",
@@ -303,25 +293,48 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
         ?>
         </div>
 
-        <div class="row blockpadding" >
-         <?php
-                     echo $this->partial('/home/partials/product_group.phtml', array(
-                             "title"  => "App Add-Ons",
-                             "products" => $this->productsAddons,
-                             "catIDs" =>"152"
-                         )
-                     );
+        <div class="row blockpadding disply-flex">
+        <?php
+                echo $this->partial('/home/partials/product_group.phtml', array(
+                        "title"  => "Phone ",
+                        "products" => $this->productsPhone,
+                        "catIDs" =>"491"
+                    )
+                );
 
-                     echo $this->partial('/home/partials/product_group.phtml', array(
-                             "title"  => "Applications",
-                             "products" => $this->productsApps,
-                             "catIDs" =>"233"
-                         )
-                     );
 
-         ?>
+                    echo $this->partial('/home/partials/product_group.phtml', array(
+                            "title"  => "Distros",
+                            "products" => $this->productsDistors,
+                            "catIDs" =>"404"
+
+                        )
+                    );
+        ?>
+        </div>   
+
+        <div class="row blockpadding disply-flex">
+          <?php
+                  echo $this->partial('/home/partials/product_group.phtml', array(
+                          "title"  => "Collections/Rankings",
+                          "products" => $this->productsCollections,
+                          "catIDs" =>"567"
+                      )
+                  );
+
+                  echo $this->partial('/home/partials/product_group.phtml', array(
+                          "title"  => "Artwork",
+                          "products" => $this->productsArtwork,
+                          "catIDs" =>"158"
+                      )
+                  );   
+
+
+                         
+        ?>
         </div>
-        <div class="row blockpadding">
+        
+        <div class="row blockpadding disply-flex">
         <?php
                 echo $this->partial('/home/partials/product_group.phtml', array(
                         "title"  => "Wallpapers ",
@@ -341,25 +354,28 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
         ?>
         </div> 
 
-        <div class="row blockpadding">
-        <?php
-                echo $this->partial('/home/partials/product_group.phtml', array(
-                        "title"  => "Phone ",
-                        "products" => $this->productsPhone,
-                        "catIDs" =>"491"
-                    )
-                );
 
-
+        <div class="row disply-flex" id="productgroup1">
+          <?php
                     echo $this->partial('/home/partials/product_group.phtml', array(
-                            "title"  => "Distros",
-                            "products" => $this->productsDistors,
-                            "catIDs" =>"404"
-
+                            "title"  => "Music,Videos",
+                            "products" => $this->productsVideos,
+                            "catIDs" =>"518,586"
                         )
                     );
+                    echo $this->partial('/home/partials/product_group.phtml', array(
+                            "title"  => "Comics",
+                            "products" => $this->productsComics,
+                            "catIDs" =>"39"
+                        )
+                    );  
+                    
+
+                         
         ?>
-        </div>                            
+        </div>
+
+                                 
       </div>
     </div>
     <div class="GridFlex-cell sidebar-right">
