@@ -445,6 +445,25 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         //If the user is a hive user, we have to update his password
         $this->changePasswordIfNeeded($userId, $values['password']);
 
+        //log login
+        if ( isset( $_SERVER ) ) {
+        $agent = $_SERVER['HTTP_USER_AGENT'];
+        }
+        else {
+            global $HTTP_SERVER_VARS;
+            if ( isset( $HTTP_SERVER_VARS ) ) {
+                $agent = $HTTP_SERVER_VARS['HTTP_USER_AGENT'];
+            }
+            else {
+                global $HTTP_USER_AGENT;
+                $agent = $HTTP_USER_AGENT;
+            }
+        }
+        $fingerprint = Zend_Registry::get('client_fp');
+    
+        $loginHistory = new Default_Model_LoginHistory();
+        $loginHistory->log($userId, $agent, $fingerprint);
+        
         //$modelToken = new Default_Model_SingleSignOnToken();
         //$data = array(
         //    'remember_me' => $values['remember_me'],
