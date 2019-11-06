@@ -93,10 +93,11 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
                               '/webos/i'              =>  'Mobile'
                         );
 
-        foreach ($os_array as $regex => $value)
-            if (preg_match($regex, $user_agent))
+        foreach ($os_array as $regex => $value) {
+            if (preg_match($regex, $user_agent)) {
                 $os_platform = $value;
-
+            }
+        }
         return $os_platform;
     }
 
@@ -117,10 +118,11 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
                                 '/mobile/i'    => 'Handheld Browser'
                          );
 
-        foreach ($browser_array as $regex => $value)
-            if (preg_match($regex, $user_agent))
+        foreach ($browser_array as $regex => $value) {
+            if (preg_match($regex, $user_agent)) {
                 $browser = $value;
-
+            }
+        }
         return $browser;
     }
 
