@@ -453,6 +453,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             $ip = $ip[0];
         }
         
+        $agent = null;
         if ( isset( $_SERVER ) ) {
         $agent = $_SERVER['HTTP_USER_AGENT'];
         }
