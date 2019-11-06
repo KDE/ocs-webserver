@@ -461,9 +461,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         }
         
         $fingerprint = null;
-        if(null !== Zend_Registry::get('client_fp')) {
-            $fingerprint = Zend_Registry::get('client_fp');
-        }
     
         $loginHistory = new Default_Model_LoginHistory();
         $loginHistory->log($userId, $agent, $fingerprint);
