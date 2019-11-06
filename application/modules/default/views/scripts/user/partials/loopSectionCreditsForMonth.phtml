@@ -72,6 +72,12 @@ if(isset($this->project_id)) {
     $project_id = $this->project_id;
 }
 
+$modelTag = new Default_Model_Tags();
+$isOriginal = $modelTag->isProductOriginal($project_id);
+$isModification = $modelTag->isProductModification($project_id);
+
+$origialFactor = 0.1;
+
 ?>
 
 <div class="tab-content">
@@ -118,7 +124,18 @@ if ($countDownloadsOverall > 0) {
             $css_active = '';
 
             foreach ($allDownloads as $product) { 
-                $origialFactor = $product['org_factor'];
+                //$origialFactor = $product['org_factor'];
+                
+                if((int)$product['yearmonth'] >= 201910) {
+                    $origialFactor = 1.0;
+                } else {
+                    if($isOriginal) {
+                        $origialFactor = 1.0;
+                    } else if($isModification) {
+                        $origialFactor = 0.25;
+                    }
+
+                }
             ?>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
                     <div class="col-md-2 text-left cell-default">
