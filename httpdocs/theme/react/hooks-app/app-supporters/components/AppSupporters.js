@@ -72,7 +72,7 @@ const AppSupporters = () => {
   if (details && section) {
     categories = details.map((detail, index) => {
       if (detail.section_id == section.section_id)
-        return <li key={index}><a onClick={() => onClickCategory(detail)}>{detail.title}</a></li>
+        return <li key={index} ><a onClick={() => onClickCategory(detail)}>{detail.title}</a></li>
     });
   }
 
@@ -99,7 +99,7 @@ const AppSupporters = () => {
       <div className="pling-section-detail-left">
         <h2 className={showContent == 'overview' ? 'focused' : ''}><a onClick={() => showDetail('overview')}>Plings</a></h2>
         <h2 className={showContent == 'supporters' ? 'focused' : ''}><a onClick={() => showDetail('supporters')}>Supporters</a></h2>
-        <h2 className={showContent == 'overview-category' ? 'focused' : ''}><a onClick={() => showDetail('overview-category')}>Categories</a></h2>
+        <h2 className={showContent == 'overview-category' || showContent == 'overview-category-subcat'  ? 'focused' : ''}><a onClick={() => showDetail('overview-category')}>Categories</a></h2>
         <ul className="pling-section-detail-ul">{categories}</ul>
         <h2 className={showContent == 'recentplings' ? 'focused' : ''}><a onClick={() => showDetail('recentplings')}>Recent Plings</a></h2>
       </div>
