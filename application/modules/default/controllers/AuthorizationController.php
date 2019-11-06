@@ -461,7 +461,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         }
         
         $fingerprint = null;
-        if(isset(Zend_Registry::get('client_fp'))) {
+        if(null !== Zend_Registry::get('client_fp')) {
             $fingerprint = Zend_Registry::get('client_fp');
         }
     
