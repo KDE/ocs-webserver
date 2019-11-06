@@ -126,7 +126,7 @@ if ($countDownloadsOverall > 0) {
             foreach ($allDownloads as $product) { 
                 //$origialFactor = $product['org_factor'];
                 
-                if((int)$product['yearmonth'] >= 201910) {
+                if((int)$product['yearmonth'] <= 201909) {
                     $origialFactor = 1.0;
                 } else {
                     if($isOriginal) {
