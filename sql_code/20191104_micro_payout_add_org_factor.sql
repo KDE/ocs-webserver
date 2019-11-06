@@ -27,7 +27,7 @@ SELECT
      then 1.0
      ELSE 
        case 
-          when tag_original.tag_item_id IS NOT NULL 
+          when tag_modification.tag_item_id IS NOT NULL 
           then 0.25
        ELSE
 			0.1
@@ -38,7 +38,7 @@ SELECT
      then count(`d`.`id`) * `c`.`dl_pling_factor`
      ELSE 
        case 
-          when tag_original.tag_item_id IS NOT NULL 
+          when tag_modification.tag_item_id IS NOT NULL 
           then count(`d`.`id`) * `c`.`dl_pling_factor`*0.25
        ELSE
 			count(`d`.`id`) * `c`.`dl_pling_factor`*0.1
@@ -95,7 +95,7 @@ SELECT
      then 1.0
      ELSE 
        case 
-          when tag_original.tag_item_id IS NOT NULL 
+          when tag_modification.tag_item_id IS NOT NULL 
           then 0.25
        ELSE
 			0.1
@@ -106,7 +106,7 @@ SELECT
      then count(`d`.`id`) * `c`.`dl_pling_factor`
      ELSE 
        case 
-          when tag_original.tag_item_id IS NOT NULL 
+          when tag_modification.tag_item_id IS NOT NULL 
           then count(`d`.`id`) * `c`.`dl_pling_factor`*0.25
        ELSE
 			count(`d`.`id`) * `c`.`dl_pling_factor`*0.1
@@ -164,7 +164,7 @@ SELECT
      then 1.0
      ELSE 
        case 
-          when tag_original.tag_item_id IS NOT NULL 
+          when tag_modification.tag_item_id IS NOT NULL 
           then 0.25
        ELSE
 			0.1
@@ -175,7 +175,7 @@ SELECT
      then count(`mv`.media_view_id) * `c`.`mv_pling_factor`
      ELSE 
        case 
-          when tag_original.tag_item_id IS NOT NULL 
+          when tag_modification.tag_item_id IS NOT NULL 
           then count(`mv`.media_view_id) * `c`.`mv_pling_factor`*0.25
        ELSE
 			count(`mv`.media_view_id) * `c`.`mv_pling_factor`*0.1
@@ -228,7 +228,7 @@ SELECT
      then 1.0
      ELSE 
        case 
-          when tag_original.tag_item_id IS NOT NULL 
+          when tag_modification.tag_item_id IS NOT NULL 
           then 0.25
        ELSE
 			0.1
@@ -239,7 +239,7 @@ SELECT
      then count(`mv`.media_view_id) * `c`.`mv_pling_factor`
      ELSE 
        case 
-          when tag_original.tag_item_id IS NOT NULL 
+          when tag_modification.tag_item_id IS NOT NULL 
           then count(`mv`.media_view_id) * `c`.`mv_pling_factor`*0.25
        ELSE
 			count(`mv`.media_view_id) * `c`.`mv_pling_factor`*0.1
@@ -270,6 +270,7 @@ LEFT JOIN tag_object tag_modification ON tag_modification.tag_id = 6600 and tag_
 WHERE (`mv`.start_timestamp >= concat(left((now() - interval 1 month),7),'-01 00:00:00')) and (`mv`.start_timestamp <= concat(left(now(),7),'-01 00:00:00'))
 GROUP BY DATE_FORMAT(mv.start_timestamp,'%Y%m'),pr.member_id, mv.project_id,`p`.`project_category_id`,p.ppload_collection_id,`mv`.`file_id`
 ;
+
 
 
 UPDATE micro_payout m
