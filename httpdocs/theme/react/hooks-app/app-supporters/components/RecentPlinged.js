@@ -1,6 +1,7 @@
 import React from 'react'
 import RecentPlingedProduct from './RecentPlingedProduct';
 const RecentPlinged = (props) => {
+    
     return (
          
          <div id="recentplinged-list">       

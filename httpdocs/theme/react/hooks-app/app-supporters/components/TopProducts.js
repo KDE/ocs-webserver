@@ -6,7 +6,7 @@ const TopProducts = (props) => {
          <div className="title">Most Plinged Products</div>
          <ul>{props.products.map((product,index) => (
                 <li key={index}>
-                <Product product={product} baseUrlStore={props.baseUrlStore} isAdmin={props.isAdmin}/>
+                <Product product={product} baseUrlStore={props.baseUrlStore} />
                 </li>
               ))}</ul>
        </div>
