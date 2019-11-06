@@ -477,10 +477,19 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->view->download_hash = $hash;
         $this->view->download_timestamp = $timestamp;
+        
+        
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        $isAdmin = false;
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $isAdmin = true;
+        }
+        
 
         $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
         $helperIsProjectActive = new Default_View_Helper_IsProjectActive();
-        if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status))
+        if (!$isAdmin AND (false === $helperIsProjectActive->isProjectActive($this->view->product->project_status))
             AND (false === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
         ) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
