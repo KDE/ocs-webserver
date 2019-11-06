@@ -37,9 +37,9 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
         $newEntry = array(
             'member_id'     => $memberId,
             'ip'    => $ip,
-            'ip_inet'     => inet_pton($ip),
-            'browser'    => $this->getBrowser($user_agent),
-            'os'  => $this->getOS($user_agent),
+            'ip_inet'     => null!=$ip?inet_pton($ip):null,
+            'browser'    => null!=$user_agent?$this->getBrowser($user_agent):null,
+            'os'  => null!=$user_agent?$this->getOS($user_agent):null,
             'architecture'   => null,
             'fingerprint'    => $fingerprint
         );
