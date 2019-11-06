@@ -861,10 +861,11 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      */
     public function findActiveMemberByName($username)
     {
+        $username = strtolower($username);
         $sql = '
           select m.member_id,m.username,profile_image_url 
           from member m 
-          where m.is_active=1 and m.is_deleted = 0 and m.username like "' . $username . '%"
+          where m.is_active=1 and m.is_deleted = 0 and LOWER(m.username) like "' . $username . '%"
           limit 10
       ';
         $result = $this->getAdapter()->fetchAll($sql);
