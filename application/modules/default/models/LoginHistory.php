@@ -32,7 +32,7 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
      *
      * @throws Zend_Exception
      */
-    public static function log($memberId, $ip = null, $user_agent, $fingerprint = null)
+    public static function log($memberId, $ip = null, $user_agent = null, $fingerprint = null)
     {
         $newEntry = array(
             'member_id'     => $memberId,
