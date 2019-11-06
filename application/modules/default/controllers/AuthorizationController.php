@@ -455,17 +455,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         
         $agent = null;
         if ( isset( $_SERVER ) ) {
-        $agent = $_SERVER['HTTP_USER_AGENT'];
-        }
-        else {
-            global $HTTP_SERVER_VARS;
-            if ( isset( $HTTP_SERVER_VARS ) ) {
-                $agent = $HTTP_SERVER_VARS['HTTP_USER_AGENT'];
-            }
-            else {
-                global $HTTP_USER_AGENT;
-                $agent = $HTTP_USER_AGENT;
-            }
+            $agent = $_SERVER['HTTP_USER_AGENT'];
         }
         
         $fingerprint = null;
