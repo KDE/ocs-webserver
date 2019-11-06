@@ -109,7 +109,7 @@
         $('#TableContainer').jtable({
             jqueryuiTheme: true,
             paging: true,
-            sorting: false,            
+            sorting:true,
             actions: {
                 listAction: '/spam/unpublishedproductlist',                                       
             },
@@ -128,8 +128,15 @@
                     title: 'project id',
                     create: false,
                     edit: false,
-                    list: true
+                    list: true,
+                    display:function(data){     
+                        return '<a href="/p/'+data.record.project_id+'">'+data.record.project_id+'</a>';
+                    }
                 }, 
+                title:{
+                    title:'title',
+                    list:true
+                },
                 cat_title: {                    
                     title: 'category',
                     create: false,
@@ -167,6 +174,7 @@
                     width: '10%',                    
                     create: false,
                     edit: false,
+                    sorting:true,
                     display:function(data){                          
                         return data.record.earn;
                     }
