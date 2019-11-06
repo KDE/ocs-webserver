@@ -462,7 +462,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
     
         $loginHistory = new Default_Model_LoginHistory();
         //$loginHistory->log($userId, $ip, $agent, $fingerprint);
-        $loginHistory->log($userId, $ip, $agent);
+        $loginHistory->log($userId, $ip);
         
         //$modelToken = new Default_Model_SingleSignOnToken();
         //$data = array(
