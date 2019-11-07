@@ -34,8 +34,8 @@ $imageHelper = new Default_View_Helper_Image();
 
 <script language="javascript">
  function test(data) {
-     var obj = JSON.parse(data);
-     console.log('ip: ' + obj.address);
+     console.log('ip: ' + data);
+     console.log('ip: ' + data['address']);
  }
  
 </script>
