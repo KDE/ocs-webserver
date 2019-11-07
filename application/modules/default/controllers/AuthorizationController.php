@@ -461,10 +461,15 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             Zend_Registry::get('logger')->info(__METHOD__ . ' - USER_AGENT: ' . print_r($agent, true));
 
             $fingerprint = null;
+            
+            $session = new Zend_Session_Namespace();
+            $fp = $session->client_fp;
+            if (!empty($fp)) {
+                $fingerprint = $fp;
+            }
 
             $loginHistory = new Default_Model_LoginHistory();
-            //$loginHistory->log($userId, $ip, $agent, $fingerprint);
-            $loginHistory->log($userId, $ip, $agent);
+            $loginHistory->log($userId, $ip, $agent, $fingerprint);
         } catch (Exception $exc) {
         }
 

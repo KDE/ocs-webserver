@@ -135,6 +135,18 @@ $imageHelper = new Default_View_Helper_Image();
     })();
 </script>
 
+
+<?php
+$session = new Zend_Session_Namespace();
+$fp = $session->client_fp;
+if (empty($fp)) : ?>
+    <script src="/tools/fpjs2/fp2.js" ></script>
+    <script type="text/javascript">
+        var options={};window.requestIdleCallback?requestIdleCallback(function(){Fingerprint2.get(options,function(a){var b=a.map(function(a){return a.value}),c=Fingerprint2.x64hash128(b.join(""),31);$.post("/l/fp",{fp:c})})}):setTimeout(function(){Fingerprint2.get(options,function(a){var b=a.map(function(a){return a.value}),c=Fingerprint2.x64hash128(b.join(""),31);$.post("/l/fp",{fp:c})})},500);
+    </script>
+<?php endif; ?>
+
+
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
             PartialJsonLogin.setup();
