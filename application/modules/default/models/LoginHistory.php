@@ -106,6 +106,8 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
 
         $browser        = "Unknown Browser";
         
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - Browser: ' . print_r($browser, true));
+        
         if(null == $user_agent) {
             return $browser;
         }
