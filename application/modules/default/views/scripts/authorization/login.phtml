@@ -29,22 +29,18 @@ $imageHelper = new Default_View_Helper_Image();
 
 
 $url = 'https://v4.ipv6-test.com/api/myip.php';
-//Use file_get_contents to GET the URL in question.
-$contents = file_get_contents($url);
-//If $contents is not a boolean FALSE value.
+$curl_handle=curl_init();
+curl_setopt($curl_handle, CURLOPT_URL,$url);
+curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
+curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($curl_handle, CURLOPT_USERAGENT, 'Your application name');
+$contents = curl_exec($curl_handle);
+curl_close($curl_handle);
 if($contents !== false){
     //Print out the contents.
     echo '<script>console.log('. $contents . ');</script>';
 }
 
-$url = 'https://v6.ipv6-test.com/api/myip.php';
-//Use file_get_contents to GET the URL in question.
-$contents = file_get_contents($url);
-//If $contents is not a boolean FALSE value.
-if($contents !== false){
-    //Print out the contents.
-    echo '<script>console.log('. $contents . ');</script>';
-}
 
 ?>
   <link href="/theme/flatui/css/bootstrap/social-buttons.css" rel="stylesheet" type="text/css">
