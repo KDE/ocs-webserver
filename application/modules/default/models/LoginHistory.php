@@ -39,7 +39,7 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
             'member_id'     => $memberId,
             'ip'    => $ip,
             'ip_inet'     => null!=$ip?inet_pton($ip):null,
-            'browser'    => $this::getBrowser($user_agent),
+            'browser'    => Default_Model_LoginHistory::getBrowser($user_agent),
             //'os'  => null!=$user_agent?$this->getOS($user_agent):null,
             'os' => null,
             'architecture'   => null,
