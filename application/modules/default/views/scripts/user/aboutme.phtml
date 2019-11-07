@@ -388,7 +388,7 @@ div#preloaded-images {
                           <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' && $this->stat['cntDuplicateSourceurl']>0) { ?>                          
                             <li>
                                 <a class="aboutmetab" data-href="/u/<?php echo $this->member->username;?>/duplicates"  href="#user-duplicates" data-toggle="tab" role="tab"  aria-controls="user-duplicates">
-                                    Duplicates (A)
+                                    Duplicates (<?=$this->stat['cntDuplicateSourceurl']?>)
                                 </a>
                             </li>                           
                           <?php } ?>
