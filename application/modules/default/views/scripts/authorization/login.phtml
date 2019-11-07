@@ -51,19 +51,18 @@ function test(data) {
 <?php
 $session = new Zend_Session_Namespace();
 $client_ipv6 = $session->client_ipv6;
-//if (empty($client_ipv6)) { 
+if (empty($client_ipv6)) { 
 ?>
     <script src="https://ipv6.test-ipv6.ams.vr.org/ip/?callback=test" type="text/javascript"></script>
 <?php 
 
-//} 
+} 
 $client_ipv4 = $session->client_ipv4;
-
-//if (empty($client_ipv4)) { 
+if (empty($client_ipv4)) { 
 ?>
     <script src="https://ipv4.test-ipv6.ams.vr.org/ip/?callback=test" type="text/javascript"></script>
 <?php 
-//} 
+} 
 ?>
 
 
