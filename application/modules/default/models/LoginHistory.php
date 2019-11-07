@@ -64,7 +64,7 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
         }
     }
     
-    private function getOS($user_agent) { 
+    function getOS($user_agent) { 
 
         $os_platform  = "Unknown OS Platform";
 
@@ -102,7 +102,7 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
         return $os_platform;
     }
 
-    private function getBrowser($user_agent) {
+    function getBrowser($user_agent) {
 
         $browser        = "Unknown Browser";
         
