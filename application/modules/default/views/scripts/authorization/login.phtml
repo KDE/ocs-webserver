@@ -146,7 +146,11 @@ $imageHelper = new Default_View_Helper_Image();
                     },
                     success: function (data, textStatus) {
                         console.log("Success getting IP: " + data.address);
+                    },
+                    complete: function (jqXHR, textStatus ) {
+                        console.log("Status: " + textStatus);
                     }
+                }
                 });
                 
                 jQuery.ajax({
@@ -157,6 +161,9 @@ $imageHelper = new Default_View_Helper_Image();
                     },
                     success: function (data, textStatus) {
                         console.log("Success getting IP: " + data.address);
+                    },
+                    complete: function (jqXHR, textStatus ) {
+                        console.log("Status: " + textStatus);
                     }
                 });
             }
