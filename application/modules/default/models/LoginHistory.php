@@ -40,10 +40,10 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
             'ip'    => $ip,
             'ip_inet'     => null!=$ip?inet_pton($ip):null,
             'browser'    => Default_Model_LoginHistory::getBrowser($user_agent),
-            //'os'  => null!=$user_agent?$this->getOS($user_agent):null,
-            'os' => null,
+            'os'             => Default_Model_LoginHistory::getOS($user_agent),
             'architecture'   => null,
-            'fingerprint'    => $fingerprint
+            'fingerprint'    => $fingerprint,
+            'user_agent'     => $user_agent
         );
 
         $sql = "
@@ -54,7 +54,8 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
                 `browser` = :browser,
                 `os` = :os,
                 `architecture` = :architecture,
-                `fingerprint` = :fingerprint
+                `fingerprint` = :fingerprint,
+                `user_agent` = :user_agent,
                 ;
         ";
 
@@ -68,6 +69,11 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
     public static function getOS($user_agent) { 
 
         $os_platform  = "Unknown OS Platform";
+        
+        if(null == $user_agent) {
+            return $os_platform;
+        }
+
 
         $os_array     = array(
                               '/windows nt 10/i'      =>  'Windows 10',
@@ -106,12 +112,6 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
     public static function getBrowser($user_agent) {
 
         $browser        = "Unknown Browser";
-        
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - Browser: ' . print_r($browser, true));
-        
-        if(null == $user_agent) {
-            return $browser;
-        }
 
         $browser_array = array(
                                 '/msie/i'      => 'Internet Explorer',
@@ -131,8 +131,6 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
                 $browser = $value;
             }
         }
-        
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - Browser: ' . print_r($browser, true));
         
         return $browser;
     }

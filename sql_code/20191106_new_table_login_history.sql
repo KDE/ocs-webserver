@@ -12,4 +12,5 @@ CREATE TABLE `login_history` (
 )
 ENGINE=InnoDB
 ;
-
+ALTER TABLE `login_history`
+	ADD COLUMN `user_agent` VARCHAR(255) NULL DEFAULT NULL AFTER `fingerprint`;
