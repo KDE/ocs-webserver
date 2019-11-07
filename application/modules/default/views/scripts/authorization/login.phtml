@@ -26,11 +26,47 @@ $url_param_redirect = isset($this->redirect) ? 'redirect/'.$this->redirect : nul
 $this->headMeta()->setName('robots', 'noindex, nofollow');
 $imageHelper = new Default_View_Helper_Image();
 
-header('Access-Control-Allow-Origin: https://v4.ipv6-test.com', false);
-header('Access-Control-Allow-Origin: https://v6.ipv6-test.com', false);
-header('Access-Control-Allow-Origin: ipv6-test.com', false);
+  $regs="";
+  $ip = $_SERVER[REMOTE_ADDR];
 
 ?>
+
+    
+    
+<script language="javascript">
+function test(data) {
+    console.log('ip: ' + data['ip']);
+    $(document).ready(function(){
+        $.ajax({
+            type: "POST",
+            url: "/l/ip",
+            data: {'ip': data['ip'], 'type': data['type']}
+        });
+    });
+
+}
+ 
+</script>
+
+<?php
+$session = new Zend_Session_Namespace();
+$client_ipv6 = $session->client_ipv6;
+if (empty($client_ipv6)) { 
+?>
+    <script src="https://ipv6.test-ipv6.ams.vr.org/ip/?callback=test" type="text/javascript"></script>
+<?php 
+
+} 
+$client_ipv4 = $session->client_ipv4;
+if (empty($client_ipv4)) { 
+?>
+    <script src="https://ipv4.test-ipv6.ams.vr.org/ip/?callback=test" type="text/javascript"></script>
+<?php 
+} 
+?>
+
+
+
   <link href="/theme/flatui/css/bootstrap/social-buttons.css" rel="stylesheet" type="text/css">
   <style>
     .btn-github {
@@ -138,40 +174,6 @@ header('Access-Control-Allow-Origin: ipv6-test.com', false);
         }
     })();
     
-    
-    var CheckIP = (function () {
-        return {
-            setup: function () {
-                jQuery.ajax({
-                    url: 'https://v4.ipv6-test.com/api/myip.php?json',
-                    dataType: "json",
-                    error: function () {
-                        console.log("Error getting IP");
-                    },
-                    success: function (data, textStatus) {
-                        console.log("Success getting IP: " + data.address);
-                    },
-                    complete: function (jqXHR, textStatus ) {
-                        console.log("Status: " + textStatus);
-                    }
-                });
-                
-                jQuery.ajax({
-                    url: 'https://v6.ipv6-test.com/api/myip.php?json',
-                    dataType: "json",
-                    error: function () {
-                        console.log("Error getting IP");
-                    },
-                    success: function (data, textStatus) {
-                        console.log("Success getting IP: " + data.address);
-                    },
-                    complete: function (jqXHR, textStatus ) {
-                        console.log("Status: " + textStatus);
-                    }
-                });
-            }
-        }
-    })();
 </script>
 
 
@@ -189,6 +191,5 @@ if (empty($fp)) : ?>
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
             PartialJsonLogin.setup();
-            CheckIP.setup();
         });
     ');
