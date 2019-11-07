@@ -31,14 +31,11 @@ $imageHelper = new Default_View_Helper_Image();
 
 ?>
 
-<script src="https://myip-ipv6.domain.de" type="text/javascript"></script>
-<script src="https://myip-ipv4.domain.de" type="text/javascript"></script>
+<script src="https://ipv6.test-ipv6.ams.vr.org/ip/?callback=test" type="text/javascript"></script>
 <script language="javascript">
- ip4 = ipv4(); 
- ip6 = ipv6();  
- 
- console.log('ip4: ' + ip4);
- console.log('ip6: ' + ip6);
+ function test(data) {
+     console.log('data: ' + data);
+ }
  
 </script>
 
