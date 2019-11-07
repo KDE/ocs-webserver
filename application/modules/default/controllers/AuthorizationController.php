@@ -479,6 +479,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             if (!empty($client_ipv6)) {
                 $ipv6 = $client_ipv6;
             }
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - IPv4: ' . print_r($ipv4, true));
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - IPv6: ' . print_r($ipv6, true));
 
             $loginHistory = new Default_Model_LoginHistory();
             $loginHistory->log($userId, $ip, $ipv4, $ipv6, $agent, $fingerprint);
