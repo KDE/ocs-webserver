@@ -142,10 +142,10 @@ $imageHelper = new Default_View_Helper_Image();
                     url: 'https://v4.ipv6-test.com/api/myip.php?json',
                     dataType: "json",
                     error: function () {
-                        document.console.log("Error getting IP");
+                        console.log("Error getting IP");
                     },
                     success: function (data, textStatus) {
-                        document.console.log("Success getting IP: " + data.address);
+                        console.log("Success getting IP: " + data.address);
                     }
                 });
                 
@@ -153,10 +153,10 @@ $imageHelper = new Default_View_Helper_Image();
                     url: 'https://v6.ipv6-test.com/api/myip.php?json',
                     dataType: "json",
                     error: function () {
-                        document.console.log("Error getting IP");
+                        console.log("Error getting IP");
                     },
                     success: function (data, textStatus) {
-                        document.console.log("Success getting IP: " + data.address);
+                        console.log("Success getting IP: " + data.address);
                     }
                 });
             }
