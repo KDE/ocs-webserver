@@ -457,6 +457,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             if ( isset( $_SERVER ) ) {
                 $agent = $_SERVER['HTTP_USER_AGENT'];
             }
+            
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - USER_AGENT: ' . print_r($agent, true));
 
             $fingerprint = null;
 
