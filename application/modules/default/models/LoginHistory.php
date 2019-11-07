@@ -39,7 +39,8 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
             'ip'    => $ip,
             'ip_inet'     => null!=$ip?inet_pton($ip):null,
             'browser'    => null!=$user_agent?$this->getBrowser($user_agent):null,
-            'os'  => null!=$user_agent?$this->getOS($user_agent):null,
+            //'os'  => null!=$user_agent?$this->getOS($user_agent):null,
+            'os' => null,
             'architecture'   => null,
             'fingerprint'    => $fingerprint
         );
@@ -123,6 +124,9 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
                 $browser = $value;
             }
         }
+        
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - Browser: ' . print_r($browser, true));
+        
         return $browser;
     }
 
