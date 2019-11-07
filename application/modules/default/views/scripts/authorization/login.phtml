@@ -33,16 +33,21 @@ $imageHelper = new Default_View_Helper_Image();
 
 
 <script language="javascript">
- function testv4(data) {
-     console.log('ipv4: ' + data['ip']);
- }
- function testv6(data) {
-     console.log('ipv6: ' + data['ip']);
- }
+function test(data) {
+    console.log('ip: ' + data['ip']);
+    $(document).ready(function(){
+        $.ajax({
+            type: "POST",
+            url: "/login/ip",
+            data: {'ip': data['ip'], 'type': data['type']}
+        });
+    });
+
+}
  
 </script>
-<script src="https://ipv6.test-ipv6.ams.vr.org/ip/?callback=testv6" type="text/javascript"></script>
-<script src="https://ipv4.test-ipv6.ams.vr.org/ip/?callback=testv4" type="text/javascript"></script>
+<script src="https://ipv6.test-ipv6.ams.vr.org/ip/?callback=test" type="text/javascript"></script>
+<script src="https://ipv4.test-ipv6.ams.vr.org/ip/?callback=test" type="text/javascript"></script>
 
 
   <link href="/theme/flatui/css/bootstrap/social-buttons.css" rel="stylesheet" type="text/css">
