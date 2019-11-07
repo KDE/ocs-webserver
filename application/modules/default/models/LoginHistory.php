@@ -55,7 +55,7 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
                 `os` = :os,
                 `architecture` = :architecture,
                 `fingerprint` = :fingerprint,
-                `user_agent` = :user_agent,
+                `user_agent` = :user_agent
                 ;
         ";
 
