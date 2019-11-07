@@ -34,11 +34,12 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
      */
     public static function log($memberId, $ip = null, $user_agent = null, $fingerprint = null)
     {
+        
         $newEntry = array(
             'member_id'     => $memberId,
             'ip'    => $ip,
             'ip_inet'     => null!=$ip?inet_pton($ip):null,
-            'browser'    => $this->getBrowser($user_agent),
+            'browser'    => $this::getBrowser($user_agent),
             //'os'  => null!=$user_agent?$this->getOS($user_agent):null,
             'os' => null,
             'architecture'   => null,
@@ -64,7 +65,7 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
         }
     }
     
-    function getOS($user_agent) { 
+    public static function getOS($user_agent) { 
 
         $os_platform  = "Unknown OS Platform";
 
@@ -102,7 +103,7 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
         return $os_platform;
     }
 
-    function getBrowser($user_agent) {
+    public static function getBrowser($user_agent) {
 
         $browser        = "Unknown Browser";
         
