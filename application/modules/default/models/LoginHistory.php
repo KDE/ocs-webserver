@@ -32,18 +32,22 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
      *
      * @throws Zend_Exception
      */
-    public static function log($memberId, $ip = null, $user_agent = null, $fingerprint = null)
+    public static function log($memberId, $ip = null, $ipv4 = null, $ipv6 = null, $user_agent = null, $fingerprint = null)
     {
         
         $newEntry = array(
             'member_id'     => $memberId,
-            'ip'    => $ip,
-            'ip_inet'     => null!=$ip?inet_pton($ip):null,
-            'browser'    => Default_Model_LoginHistory::getBrowser($user_agent),
-            'os'             => Default_Model_LoginHistory::getOS($user_agent),
-            'architecture'   => null,
-            'fingerprint'    => $fingerprint,
-            'user_agent'     => $user_agent
+            'ip'            => $ip,
+            'ip_inet'       => null!=$ip?inet_pton($ip):null,
+            'ipv4'          => $ipv4,
+            'ipv4_inet'     => null!=$ipv4?inet_pton($ipv4):null,
+            'ipv6'          => $ipv6,
+            'ipv6_inet'     => null!=$ipv6?inet_pton($ipv6):null,
+            'browser'       => Default_Model_LoginHistory::getBrowser($user_agent),
+            'os'            => Default_Model_LoginHistory::getOS($user_agent),
+            'architecture'  => null,
+            'fingerprint'   => $fingerprint,
+            'user_agent'    => $user_agent
         );
 
         $sql = "
@@ -51,6 +55,10 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
             SET `member_id` = :member_id, 
                 `ip` = :ip, 
                 `ip_inet` = :ip_inet, 
+                `ipv4` = :ipv4, 
+                `ipv4_inet` = :ipv4_inet, 
+                `ipv6` = :ipv6, 
+                `ipv6_inet` = :ipv6_inet, 
                 `browser` = :browser,
                 `os` = :os,
                 `architecture` = :architecture,

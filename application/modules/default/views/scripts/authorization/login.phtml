@@ -31,14 +31,25 @@ $imageHelper = new Default_View_Helper_Image();
 
 ?>
 
-
+<?php
+$session = new Zend_Session_Namespace();
+$client_ipv6 = $session->client_ipv6;
+if (empty($client_ipv6)) { ?>
+    <script src="https://ipv6.test-ipv6.ams.vr.org/ip/?callback=test" type="text/javascript"></script>
+<?php } 
+$client_ipv4 = $session->client_ipv4;
+if (empty($client_ipv4)) { ?>
+    <script src="https://ipv4.test-ipv6.ams.vr.org/ip/?callback=test" type="text/javascript"></script>
+<?php } ?>
+    
+    
 <script language="javascript">
 function test(data) {
     console.log('ip: ' + data['ip']);
     $(document).ready(function(){
         $.ajax({
             type: "POST",
-            url: "/login/ip",
+            url: "/l/ip",
             data: {'ip': data['ip'], 'type': data['type']}
         });
     });
@@ -46,7 +57,7 @@ function test(data) {
 }
  
 </script>
-<script src="https://ipv6.test-ipv6.ams.vr.org/ip/?callback=test" type="text/javascript"></script>
+
 <script src="https://ipv4.test-ipv6.ams.vr.org/ip/?callback=test" type="text/javascript"></script>
 
 
