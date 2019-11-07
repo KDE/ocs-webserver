@@ -34,14 +34,16 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
      */
     public static function log($memberId, $ip = null, $user_agent = null, $fingerprint = null)
     {
+        
         $newEntry = array(
             'member_id'     => $memberId,
             'ip'    => $ip,
             'ip_inet'     => null!=$ip?inet_pton($ip):null,
-            'browser'    => null!=$user_agent?$this->getBrowser($user_agent):null,
-            'os'  => null!=$user_agent?$this->getOS($user_agent):null,
+            'browser'    => Default_Model_LoginHistory::getBrowser($user_agent),
+            'os'             => Default_Model_LoginHistory::getOS($user_agent),
             'architecture'   => null,
-            'fingerprint'    => $fingerprint
+            'fingerprint'    => $fingerprint,
+            'user_agent'     => $user_agent
         );
 
         $sql = "
@@ -52,7 +54,8 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
                 `browser` = :browser,
                 `os` = :os,
                 `architecture` = :architecture,
-                `fingerprint` = :fingerprint
+                `fingerprint` = :fingerprint,
+                `user_agent` = :user_agent
                 ;
         ";
 
@@ -63,9 +66,14 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
         }
     }
     
-    private function getOS($user_agent) { 
+    public static function getOS($user_agent) { 
 
         $os_platform  = "Unknown OS Platform";
+        
+        if(null == $user_agent) {
+            return $os_platform;
+        }
+
 
         $os_array     = array(
                               '/windows nt 10/i'      =>  'Windows 10',
@@ -101,7 +109,7 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
         return $os_platform;
     }
 
-    private function getBrowser($user_agent) {
+    public static function getBrowser($user_agent) {
 
         $browser        = "Unknown Browser";
 
@@ -123,6 +131,7 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
                 $browser = $value;
             }
         }
+        
         return $browser;
     }
 
