@@ -474,9 +474,18 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             $client_ipv4 = $session->client_ipv4;
             if (!empty($client_ipv4)) {
                 $ipv4 = $client_ipv4;
+            } else if(Zend_Registry::isRegistered('client_ipv4')) {
+                $client_ipv4 = Zend_Registry::get('client_ipv4');
+                $session->client_ipv4 = $client_ipv4;
+                $ipv4 = $client_ipv4;
             }
+
             $client_ipv6 = $session->client_ipv6;
             if (!empty($client_ipv6)) {
+                $ipv6 = $client_ipv6;
+            } else if(Zend_Registry::isRegistered('client_ipv6')) {
+                $client_ipv6 = Zend_Registry::get('client_ipv6');
+                $session->client_ipv6 = $client_ipv6;
                 $ipv6 = $client_ipv6;
             }
             $loginHistory = new Default_Model_LoginHistory();
