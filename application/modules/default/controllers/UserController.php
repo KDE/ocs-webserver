@@ -322,6 +322,24 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     }
 
+    public function unpublishedAction()
+    {
+        $tableProject = new Default_Model_Project();
+        $pageLimit = 1000;
+        $projectpage = 1;
+        $total_records = 1000;
+        $this->view->pageLimit = $pageLimit;
+        $this->view->projectpage = $projectpage;
+        $this->view->total_records = $total_records;
+
+        $this->view->userProducts =
+            $tableProject->getUnpublishedProjectsForMember($this->_memberId, $pageLimit,
+                ($projectpage - 1) * $pageLimit);
+
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer('partials/aboutmeProducts');
+    }
+
     /**
      * to get an avatar picture you can call
      * /member/avatar/:emailhash/:size

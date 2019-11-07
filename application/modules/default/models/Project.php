@@ -28,6 +28,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     const FILTER_NAME_CATEGORY = 'category';
     const FILTER_NAME_TAG = 'tag';
     const FILTER_NAME_ORIGINAL = 'original';
+    const FILTER_NAME_FAVORITE = 'favorite';
     const FILTER_NAME_MEMBER = 'member';
     const FILTER_NAME_ORDER = 'order';
     const FILTER_NAME_LOCATION = 'location';
@@ -1210,6 +1211,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $statement = $this->generateOrderFilter($statement, $inputFilterParams);
         $statement = $this->generateTagFilter($statement, $inputFilterParams);
         // $statement = $this->generateOriginalFilter($statement, $inputFilterParams);
+        $statement = $this->generateFavoriteFilter($statement, $inputFilterParams);
         $statement = $this->generateReportedSpamFilter($statement);
 
         $statement->limit($limit, $offset);
@@ -1350,6 +1352,28 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         return $statement;
     }*/
+    
+    /**
+     * @param Zend_Db_Select $statement
+     * @param array          $filterArrayValue
+     *
+     * @return Zend_Db_Select
+     */
+    protected function generateFavoriteFilter(Zend_Db_Select $statement, $filterArrayValue)
+    {
+        if (false == isset($filterArrayValue[self::FILTER_NAME_FAVORITE])) {
+            return $statement;
+        }
+
+        $filterMemberId = $filterArrayValue[self::FILTER_NAME_FAVORITE];
+
+        if ( null != $filterMemberId) {
+            $statement->where('project_follower.member_id = ?', $filterMemberId);
+            $statement->setIntegrityCheck(false)->join('project_follower', 'project.project_id = project_follower.project_id', array('project_follower_id'));
+        }
+
+        return $statement;
+    }
 
     /**
      * @param Zend_Db_Select $statement
@@ -1577,6 +1601,52 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                             AND `p`.`member_id` = :member_id
                             ORDER BY cntCategory desc,catTitle asc, `p`.`changed_at` DESC
                             ) t where t.cntDuplicates >1
+
+        ";
+
+        if (isset($limit)) {
+            $sql = $sql . ' limit ' . $limit;
+        }
+
+        if (isset($offset)) {
+            $sql = $sql . ' offset ' . $offset;
+        }
+
+        $result = $this->_db->fetchAll($sql, array('member_id' => $member_id));
+        if ($result) {
+            return $this->generateRowClass($result);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getUnpublishedProjectsForMember($member_id, $limit = null, $offset = null)
+    {
+        // for member me page
+        $sql = "
+                        SELECT
+                        `p`.`project_id`,
+                        `p`.`title`,
+                        `p`.`created_at`  AS `project_created_at`,
+                        `p`.`changed_at` AS `project_changed_at`,
+                        `pr`.`likes` AS count_likes,
+                        `pr`.`dislikes`AS count_dislikes,
+                        IFNULL(pr.score_with_pling, 500) AS laplace_score,
+                        `p`.`member_id`,
+                        `cat`.`title` AS `catTitle`,
+                        `p`.`project_category_id`,
+                        `p`.`image_small`,
+                        (SELECT count(1) FROM `project_plings` `l` WHERE `p`.`project_id` = `l`.`project_id` AND `l`.`is_deleted` = 0 AND `l`.`is_active` = 1 ) `countplings`
+                        FROM `project` `p`
+                        join project_category cat on p.project_category_id = cat.project_category_id
+                        LEFT join  stat_rating_project AS pr  ON p.project_id = pr.project_id
+                        WHERE `p`.`status` = 40
+                        and `p`.`type_id` = 1
+                        AND `p`.`member_id` = :member_id 
+                        ORDER BY catTitle asc, `p`.`changed_at` DESC
 
         ";
 
