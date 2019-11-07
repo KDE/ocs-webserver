@@ -26,6 +26,9 @@ $url_param_redirect = isset($this->redirect) ? 'redirect/'.$this->redirect : nul
 $this->headMeta()->setName('robots', 'noindex, nofollow');
 $imageHelper = new Default_View_Helper_Image();
 
+header('Access-Control-Allow-Origin: https://v4.ipv6-test.com', false);
+header('Access-Control-Allow-Origin: https://v6.ipv6-test.com', false);
+
 ?>
   <link href="/theme/flatui/css/bootstrap/social-buttons.css" rel="stylesheet" type="text/css">
   <style>
