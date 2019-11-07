@@ -38,7 +38,7 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
             'member_id'     => $memberId,
             'ip'    => $ip,
             'ip_inet'     => null!=$ip?inet_pton($ip):null,
-            'browser'    => null!=$user_agent?$this->getBrowser($user_agent):null,
+            'browser'    => $this->getBrowser($user_agent),
             //'os'  => null!=$user_agent?$this->getOS($user_agent):null,
             'os' => null,
             'architecture'   => null,
@@ -105,6 +105,10 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
     private function getBrowser($user_agent) {
 
         $browser        = "Unknown Browser";
+        
+        if(null == $user_agent) {
+            return $browser;
+        }
 
         $browser_array = array(
                                 '/msie/i'      => 'Internet Explorer',
