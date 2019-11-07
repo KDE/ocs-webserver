@@ -38,7 +38,7 @@ $contents = curl_exec($curl_handle);
 curl_close($curl_handle);
 if($contents !== false){
     //Print out the contents.
-    echo '<script>console.log('. $contents . ');</script>';
+    echo '<script>console.log(\''. $contents . '\'");</script>';
 }
 
 
