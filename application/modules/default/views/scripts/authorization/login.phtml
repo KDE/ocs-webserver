@@ -139,7 +139,7 @@ $imageHelper = new Default_View_Helper_Image();
         return {
             setup: function () {
                 jQuery.ajax({
-                    url: 'http://v4.ipv6-test.com/api/myip.php?json',
+                    url: 'https://v4.ipv6-test.com/api/myip.php?json',
                     dataType: "json",
                     error: function () {
                         document.console.log("Error getting IP");
@@ -150,7 +150,7 @@ $imageHelper = new Default_View_Helper_Image();
                 });
                 
                 jQuery.ajax({
-                    url: 'http://v6.ipv6-test.com/api/myip.php?json',
+                    url: 'https://v6.ipv6-test.com/api/myip.php?json',
                     dataType: "json",
                     error: function () {
                         document.console.log("Error getting IP");
