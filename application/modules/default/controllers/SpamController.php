@@ -173,14 +173,20 @@ class SpamController extends Local_Controller_Action_DomainSwitch
         }        
 
         $sql = "
-                select f.owner_id as member_id,m.username, f.md5sum, COUNT(1) cnt, GROUP_CONCAT(p.project_id) as projects
-                from  ppload.ppload_files f
-                join project p on f.collection_id = p.ppload_collection_id
-                join member m on f.owner_id = m.member_id and m.is_deleted=0 and m.is_active = 1
-                where f.md5sum is not null
-                group by f.md5sum 
-                having count(1)>1
-                                    
+                    select 
+                    * 
+                    from 
+                    (
+                        select f.owner_id as member_id,m.username, f.md5sum, COUNT(1) cnt, GROUP_CONCAT(distinct p.project_id) as projects
+                        , count(distinct p.project_id) cntProjects
+                        from  ppload.ppload_files f
+                        join project p on f.collection_id = p.ppload_collection_id
+                        join member m on f.owner_id = m.member_id and m.is_deleted=0 and m.is_active = 1
+                        where f.md5sum is not null
+                        group by f.md5sum 
+                        having count(1)>1
+                    ) t
+                    where cntProjects>1                                    
                 ";
         $sql .= ' order by ' . $sorting;
         $sql .= ' limit ' . $pageSize;
@@ -188,16 +194,20 @@ class SpamController extends Local_Controller_Action_DomainSwitch
         
         $results = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);                        
 
-        $sqlall = " select count(1) cnt from
-                    (
-                        select f.owner_id as member_id,m.username, f.md5sum, COUNT(1) cnt, GROUP_CONCAT(p.project_id)
-                        from  ppload.ppload_files f
-                        join project p on f.collection_id = p.ppload_collection_id
-                        join member m on f.owner_id = m.member_id
-                        where f.md5sum is not null
-                        group by f.md5sum 
-                        having count(1)>2                        
-                    ) a
+        $sqlall = " select 
+                        count(1) as cnt
+                        from 
+                        (
+                            select f.owner_id as member_id,m.username, f.md5sum, COUNT(1) cnt, GROUP_CONCAT(distinct p.project_id) as projects
+                            , count(distinct p.project_id) cntProjects
+                            from  ppload.ppload_files f
+                            join project p on f.collection_id = p.ppload_collection_id
+                            join member m on f.owner_id = m.member_id and m.is_deleted=0 and m.is_active = 1
+                            where f.md5sum is not null
+                            group by f.md5sum 
+                            having count(1)>1
+                        ) t
+                        where cntProjects>1
                   ";         
 
         $reportsAll = Zend_Db_Table::getDefaultAdapter()->fetchRow($sqlall);
