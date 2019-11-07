@@ -26,9 +26,25 @@ $url_param_redirect = isset($this->redirect) ? 'redirect/'.$this->redirect : nul
 $this->headMeta()->setName('robots', 'noindex, nofollow');
 $imageHelper = new Default_View_Helper_Image();
 
-header('Access-Control-Allow-Origin: https://v4.ipv6-test.com', false);
-header('Access-Control-Allow-Origin: https://v6.ipv6-test.com', false);
-header('Access-Control-Allow-Origin: ipv6-test.com', false);
+
+
+$url = 'https://v4.ipv6-test.com/api/myip.php';
+//Use file_get_contents to GET the URL in question.
+$contents = file_get_contents($url);
+//If $contents is not a boolean FALSE value.
+if($contents !== false){
+    //Print out the contents.
+    echo '<script>console.log('. $contents . ');</script>';
+}
+
+$url = 'https://v6.ipv6-test.com/api/myip.php';
+//Use file_get_contents to GET the URL in question.
+$contents = file_get_contents($url);
+//If $contents is not a boolean FALSE value.
+if($contents !== false){
+    //Print out the contents.
+    echo '<script>console.log('. $contents . ');</script>';
+}
 
 ?>
   <link href="/theme/flatui/css/bootstrap/social-buttons.css" rel="stylesheet" type="text/css">
@@ -138,40 +154,6 @@ header('Access-Control-Allow-Origin: ipv6-test.com', false);
         }
     })();
     
-    
-    var CheckIP = (function () {
-        return {
-            setup: function () {
-                jQuery.ajax({
-                    url: 'https://v4.ipv6-test.com/api/myip.php?json',
-                    dataType: "json",
-                    error: function () {
-                        console.log("Error getting IP");
-                    },
-                    success: function (data, textStatus) {
-                        console.log("Success getting IP: " + data.address);
-                    },
-                    complete: function (jqXHR, textStatus ) {
-                        console.log("Status: " + textStatus);
-                    }
-                });
-                
-                jQuery.ajax({
-                    url: 'https://v6.ipv6-test.com/api/myip.php?json',
-                    dataType: "json",
-                    error: function () {
-                        console.log("Error getting IP");
-                    },
-                    success: function (data, textStatus) {
-                        console.log("Success getting IP: " + data.address);
-                    },
-                    complete: function (jqXHR, textStatus ) {
-                        console.log("Status: " + textStatus);
-                    }
-                });
-            }
-        }
-    })();
 </script>
 
 
@@ -189,6 +171,5 @@ if (empty($fp)) : ?>
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
             PartialJsonLogin.setup();
-            CheckIP.setup();
         });
     ');
