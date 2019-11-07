@@ -39,11 +39,7 @@ $imageHelper = new Default_View_Helper_Image();
     
 <script language="javascript">
     
-    myip = localIpUrl('public','ipv4');
-    console.log(myip);
-    
 function test(data) {
-    console.log('ip: ' + data['ip']);
     $(document).ready(function(){
         $.ajax({
             type: "POST",
