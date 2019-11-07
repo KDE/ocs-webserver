@@ -388,7 +388,15 @@ div#preloaded-images {
                           <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' && $this->stat['cntDuplicateSourceurl']>0) { ?>                          
                             <li>
                                 <a class="aboutmetab" data-href="/u/<?php echo $this->member->username;?>/duplicates"  href="#user-duplicates" data-toggle="tab" role="tab"  aria-controls="user-duplicates">
-                                    Duplicates (<?=$this->stat['cntDuplicateSourceurl']?>)
+                                    Duplicates (A)
+                                </a>
+                            </li>                           
+                          <?php } ?>
+
+                          <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') { ?>                                                     
+                            <li>
+                                <a class="aboutmetab" data-href="/u/<?php echo $this->member->username;?>/unpublished"  href="#user-unpublished" data-toggle="tab" role="tab"  aria-controls="user-unpublished">
+                                    Unpublished (A)
                                 </a>
                             </li>
                           <?php } ?>
@@ -475,6 +483,10 @@ div#preloaded-images {
                             <?php if( Zend_Auth::getInstance()->hasIdentity() AND  Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' && $this->stat['cntDuplicateSourceurl']>0) { ?>
                             <div  role="tabpanel" class="tab-pane " id="user-duplicates">
                                  
+                            </div>                          
+                            <?php } ?>
+                            <?php if( Zend_Auth::getInstance()->hasIdentity() AND  Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' ) { ?>
+                            <div  role="tabpanel" class="tab-pane " id="user-unpublished">                                 
                             </div>                          
                             <?php } ?>
 
