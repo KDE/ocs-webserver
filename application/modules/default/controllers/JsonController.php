@@ -309,6 +309,7 @@ class JsonController extends Zend_Controller_Action
                     ,'username' => $p->username
                     ,'laplace_score' =>$p->laplace_score
                     ,'score' =>$p->score
+                    ,'cat_title' =>$p->cat_title
                     ,'image_small' =>$img);
             }
 
