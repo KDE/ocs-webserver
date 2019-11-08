@@ -45,7 +45,7 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
             'ipv6_inet'     => null!=$ipv6?inet_pton($ipv6):null,
             'browser'       => Default_Model_LoginHistory::getBrowser($user_agent),
             'os'            => Default_Model_LoginHistory::getOS($user_agent),
-            'architecture'  => null,
+            'architecture'  => Default_Model_LoginHistory::getArchitecture($user_agent),
             'fingerprint'   => $fingerprint,
             'user_agent'    => $user_agent
         );
@@ -107,6 +107,32 @@ class Default_Model_LoginHistory extends Default_Model_DbTable_LoginHistory
                               '/android/i'            =>  'Android',
                               '/blackberry/i'         =>  'BlackBerry',
                               '/webos/i'              =>  'Mobile'
+                        );
+
+        foreach ($os_array as $regex => $value) {
+            if (preg_match($regex, $user_agent)) {
+                $os_platform = $value;
+            }
+        }
+        return $os_platform;
+    }
+    
+    public static function getArchitecture($user_agent) { 
+
+        $os_platform  = "Unknown";
+        
+        if(null == $user_agent) {
+            return $os_platform;
+        }
+
+
+        $os_array     = array(
+                              '/x64/i'      =>  'x86_64',
+                              '/x86_64/i'     =>  'x86_64',
+                              '/x32/i'     =>  'x86_32',
+                              '/x86_32/i'     =>  'x86_32',
+                              '/iPhone/i'     =>  'iPhone',
+                              '/Android/i'     =>  'ARM'
                         );
 
         foreach ($os_array as $regex => $value) {

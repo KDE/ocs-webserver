@@ -47,26 +47,4 @@ class LoginController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json(array('status' => 'ok'));
     }
     
-    public function ipAction()
-    {
-        $this->_helper->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
-        $ip = stripslashes(trim($this->getParam('ip')));
-        $ip_type = stripslashes(trim($this->getParam('type')));
-
-        if(null != $ip_type && $ip_type == 'ipv6') {
-            Zend_Registry::set('client_ipv6', $ip);
-            $namespace = new Zend_Session_Namespace();
-            $namespace->client_ipv6 = $ip;
-        }
-        if(null != $ip_type && $ip_type == 'ipv4') {
-            Zend_Registry::set('client_ipv4', $ip);
-            $namespace = new Zend_Session_Namespace();
-            $namespace->client_ipv4 = $ip;
-        }
-
-        $this->_helper->json(array('status' => 'ok'));
-    }
-
 }
