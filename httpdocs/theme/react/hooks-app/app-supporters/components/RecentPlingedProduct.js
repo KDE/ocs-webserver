@@ -13,9 +13,9 @@ const RecentPlingedProduct = (props) => {
             <figure>
                 <img src={props.product.profile_image_url}></img>
             </figure>                                      
-          </a>
-          <h3>{props.product.username}</h3>       
-        
+          </a>              
+          <h3>by {props.product.username}</h3>
+          <h3 style={{color:'#ccc'}}>{props.product.catTitle}</h3>
      
           <span className="small"><img style={{width:'15px',height:'15px', float:'left'}} src={props.baseUrlStore+'/images/system/pling-btn-active.png'}></img>
                             {props.product.sum_plings}

@@ -14,7 +14,7 @@ const Product = (props) => {
         <div className="col-lg-7">
           <div className="product-info">
             <span className="product-info-title"><a href={projectUrl} >{props.product.title}</a></span>
-            <span className="product-info-category">{props.product.cat_title}</span>
+            <span className="product-info-category" style={{color:'#ccc'}}>{props.product.catTitle}</span>
             <span className="product-info-date">{props.product.updated_at}</span>
           </div>
         </div>
