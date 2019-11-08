@@ -55,12 +55,11 @@ class LoginController extends Local_Controller_Action_DomainSwitch
         $ip = stripslashes(trim($this->getParam('ip')));
         $ip_type = stripslashes(trim($this->getParam('type')));
 
-        if(null != $ip_type && $ip_type == 'ipv6') {
+        if($ip_type == 'ipv6') {
             Zend_Registry::set('client_ipv6', $ip);
             $namespace = new Zend_Session_Namespace();
             $namespace->client_ipv6 = $ip;
-        }
-        if(null != $ip_type && $ip_type == 'ipv4') {
+        } else if($ip_type == 'ipv4') {
             Zend_Registry::set('client_ipv4', $ip);
             $namespace = new Zend_Session_Namespace();
             $namespace->client_ipv4 = $ip;

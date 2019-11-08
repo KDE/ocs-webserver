@@ -40,6 +40,8 @@ function test(data) {
             url: "/l/ip",
             data: {'ip': data['ip'], 'type': 'ipv4'}
         });
+        
+        $('ipv4').val(data['ip']);
     });
 
 }
@@ -51,6 +53,7 @@ function test6(data) {
             url: "/l/ip",
             data: {'ip': data['ip'], 'type': 'ipv6'}
         });
+        $('ipv6').val(data['ip']);
     });
 
 }

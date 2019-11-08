@@ -471,6 +471,13 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             $ipv4 = null;
             $ipv6 = null;
             
+            if($this->hasParam('ipv4')) {
+                $ipv4 = $this->getParam('ipv4');
+            }
+            if($this->hasParam('ipv6')) {
+                $ipv6 = $this->getParam('ipv6');
+            }
+            /*
             $client_ipv4 = $session->client_ipv4;
             if (!empty($client_ipv4)) {
                 $ipv4 = $client_ipv4;
@@ -488,6 +495,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
                 $session->client_ipv6 = $client_ipv6;
                 $ipv6 = $client_ipv6;
             }
+             */
             $loginHistory = new Default_Model_LoginHistory();
             $loginHistory->log($userId, $ip, $ipv4, $ipv6, $agent, $fingerprint);
         } catch (Exception $exc) {
