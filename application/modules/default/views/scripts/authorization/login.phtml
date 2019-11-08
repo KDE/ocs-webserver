@@ -61,22 +61,22 @@ function test6(data) {
 </script>
 
 <?php
-$session = new Zend_Session_Namespace();
-$client_ipv6 = $session->client_ipv6;
-if (empty($client_ipv6)) { 
+//$session = new Zend_Session_Namespace();
+//$client_ipv6 = $session->client_ipv6;
+//if (empty($client_ipv6)) { 
 ?>
     <!--<script src="https://ipv6.test-ipv6.ams.vr.org/ip/?callback=test" type="text/javascript"></script>-->
     <script type="application/javascript" src="https://api6.ipify.org?format=jsonp&callback=test6"></script>
 <?php 
 
-} 
-$client_ipv4 = $session->client_ipv4;
-if (empty($client_ipv4)) { 
+//} 
+//$client_ipv4 = $session->client_ipv4;
+//if (empty($client_ipv4)) { 
 ?>
     <!--<script src="https://ipv4.test-ipv6.ams.vr.org/ip/?callback=test" type="text/javascript"></script>-->
     <script type="application/javascript" src="https://api.ipify.org?format=jsonp&callback=test"></script>
 <?php 
-} 
+//} 
 ?>
 
 
