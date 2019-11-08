@@ -13,7 +13,9 @@ function renderSuggestion(suggestion) {
         {suggestion.type == 'project' ? (
           <>
             <span>{suggestion.title}</span>
-            <span style={{ 'font-size': '11px', 'color': '#ccc' }}>{' by ' + suggestion.username}</span>
+            <span style={{ 'font-size': '11px', 'color': '#ccc','line-height':'15px' }}>{' by ' + suggestion.username}</span>
+            <span style={{ 'font-size': '11px', 'color': '#ccc','line-height':'15px' }}>{suggestion.cat_title}</span>
+            
           </>
         ) : (
             <span>{suggestion.username}</span>
