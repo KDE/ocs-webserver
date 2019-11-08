@@ -131,8 +131,8 @@
           data-load-state="#login"
     >
         
-        <input type="hidden" name="ipv4" id="ipv4">
-        <input type="hidden" name="ipv6" id="ipv6">
+        <input type="hidden" name="ipv4" id="ipv4" value="">
+        <input type="hidden" name="ipv6" id="ipv6" value="">
         
         <?=Default_Model_CsrfProtection::getFormCsrf('login_csrf'); ?>
         <?= $this->formLogin->redirect ?>
