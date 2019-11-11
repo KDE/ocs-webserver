@@ -109,7 +109,7 @@
         $('#TableContainer').jtable({
             jqueryuiTheme: true,
             paging: true,
-            sorting:true,
+            sorting: false,            
             actions: {
                 listAction: '/spam/unpublishedproductlist',                                       
             },
@@ -130,7 +130,7 @@
                     edit: false,
                     list: true,
                     display:function(data){     
-                        return '<a href="/p/'+data.record.project_id+'">'+data.record.project_id+'</a>';
+                        return '<a style="color: #23527c;" target="_blank" href="/p/'+data.record.project_id+'">'+data.record.project_id+'</a>';
                     }
                 }, 
                 title:{
@@ -168,13 +168,16 @@
                        
                          return html;
                     }
-                },                
+                },      
+                probably_payout_amount :{
+                    title:'Product last month earn',
+                    list:true
+                },
                 earn: {
                     title: 'last month earn',
                     width: '10%',                    
                     create: false,
                     edit: false,
-                    sorting:true,
                     display:function(data){                          
                         return data.record.earn;
                     }

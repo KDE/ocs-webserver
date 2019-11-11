@@ -325,20 +325,26 @@ class SpamController extends Local_Controller_Action_DomainSwitch
         }        
 
         $sql = "
-                select pp.project_id,pp.status,pp.member_id, pp.created_at, m.username, m.paypal_mail,m.created_at as member_since, c.title cat_title,c.lft, c.rgt
+                    select pp.project_id,pp.title,pp.status,pp.member_id, pp.created_at, m.username, m.paypal_mail,m.created_at as member_since, c.title cat_title,c.lft, c.rgt
                     ,(select sum(probably_payout_amount) amount
                     from member_dl_plings 
                     where member_id=pp.member_id
                     and yearmonth= DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')
                     and is_pling_excluded = 0 
                     and is_license_missing = 0
-                    ) as earn                    
-                    from
-                    project pp                    
-                    ,member m
-                    ,project_category c
-                    where pp.status = 40 and pp.member_id = m.member_id
-                    and pp.project_category_id = c.project_category_id and m.is_deleted=0 and m.is_active = 1
+                    ) as earn ,
+                    (
+                        select  sum(m.credits_plings)/100 AS probably_payout_amount from micro_payout m
+                        where m.project_id=pp.project_id 
+                        and m.paypal_mail is not null 
+                        and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
+                        and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')
+                    ) as probably_payout_amount
+                    from project pp                    
+                    join member m on pp.member_id = m.member_id and m.is_deleted=0 and m.is_active = 1
+                    join project_category c on pp.project_category_id = c.project_category_id        
+                    where pp.status = 40 
+                    
                                         
         ";
         $sql .= ' order by ' . $sorting;
