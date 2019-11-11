@@ -325,7 +325,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
         }        
 
         $sql = "
-                select pp.project_id,pp.title,pp.status,pp.member_id, pp.created_at, m.username, m.paypal_mail,m.created_at as member_since, c.title cat_title,c.lft, c.rgt
+                select pp.project_id,pp.status,pp.member_id, pp.created_at, m.username, m.paypal_mail,m.created_at as member_since, c.title cat_title,c.lft, c.rgt
                     ,(select sum(probably_payout_amount) amount
                     from member_dl_plings 
                     where member_id=pp.member_id
@@ -337,7 +337,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
                     project pp                    
                     ,member m
                     ,project_category c
-                    where pp.status <> 100 and pp.status <> 30 and pp.member_id = m.member_id
+                    where pp.status = 40 and pp.member_id = m.member_id
                     and pp.project_category_id = c.project_category_id and m.is_deleted=0 and m.is_active = 1
                                         
         ";
