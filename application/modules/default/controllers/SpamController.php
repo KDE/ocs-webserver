@@ -337,7 +337,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
                     project pp                    
                     ,member m
                     ,project_category c
-                    where pp.status <> 100 and pp.member_id = m.member_id
+                    where pp.status = 40 and pp.member_id = m.member_id
                     and pp.project_category_id = c.project_category_id and m.is_deleted=0 and m.is_active = 1
                                         
         ";
