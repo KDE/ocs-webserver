@@ -697,15 +697,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $modelTags->processTagsUser($newProject->project_id, null, Default_Model_Tags::TAG_TYPE_PROJECT);
         }
         
-        if(!$isAdmin) {
-            if ($values['is_original']) {
-                $modelTags->processTagProductOriginal($newProject->project_id, $values['is_original']);
-            }
-        } else {
-            $modelTags->processTagProductOriginalOrModification($newProject->project_id,$values['is_original_or_modification'][0]);
-        }
-
-        
+        $modelTags->processTagProductOriginalOrModification($newProject->project_id,$values['is_original_or_modification'][0]); 
 
         //set license, if needed
         $licenseTag = $form->getElement('license_tag_id')->getValue();
@@ -934,21 +926,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             }
             $form->getElement('license_tag_id')->setValue($licenseTag);
 
-            if(!$isAdmin) {
-                $is_original = $modelTags->isProductOriginal($projectData->project_id);
-                if($is_original){
-                    $form->getElement('is_original')->checked= true;                
-                }
-            } else {
-                $is_original = $modelTags->isProductOriginal($projectData->project_id);
-                $is_modification = $modelTags->isProductModification($projectData->project_id);
-                if($is_original){
-                    $form->getElement('is_original_or_modification')->setValue(1);                
-                } else if($is_modification){
-                    $form->getElement('is_original_or_modification')->setValue(2);                
-                }
+            $is_original = $modelTags->isProductOriginal($projectData->project_id);
+            $is_modification = $modelTags->isProductModification($projectData->project_id);
+            if($is_original){
+                $form->getElement('is_original_or_modification')->setValue(1);                
+            } else if($is_modification){
+                $form->getElement('is_original_or_modification')->setValue(2);                
             }
-            
  
             $this->view->form = $form;
 
@@ -1017,14 +1001,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //$projectData->changed_at = new Zend_Db_Expr('NOW()');
         $projectData->save();
         
-        
-        if(!$isAdmin) {
-            $modelTags->processTagProductOriginal($this->_projectId,$values['is_original']);
-        } else {
-            $modelTags->processTagProductOriginalOrModification($this->_projectId,$values['is_original_or_modification'][0]);
-        }
-        
-        
+        $modelTags->processTagProductOriginalOrModification($this->_projectId,$values['is_original_or_modification'][0]);
 
         if($values['tagsuser']) {
             $modelTags->processTagsUser($this->_projectId,implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);
