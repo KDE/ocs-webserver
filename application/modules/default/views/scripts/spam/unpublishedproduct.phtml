@@ -128,8 +128,15 @@
                     title: 'project id',
                     create: false,
                     edit: false,
-                    list: true
+                    list: true,
+                    display:function(data){     
+                        return '<a style="color: #23527c;" target="_blank" href="/p/'+data.record.project_id+'">'+data.record.project_id+'</a>';
+                    }
                 }, 
+                title:{
+                    title:'title',
+                    list:true
+                },
                 cat_title: {                    
                     title: 'category',
                     create: false,
@@ -137,7 +144,12 @@
                     list: true
                 }, 
                                               
-                
+                unpublished_time: {
+                    title: 'unpublished_time',
+                    width: '10%',                  
+                    create: false,
+                    edit: false
+                },
                 created_at: {
                     title: 'created',
                     width: '10%',                  
@@ -161,9 +173,13 @@
                        
                          return html;
                     }
-                },                
+                },      
+                probably_payout_amount :{
+                    title:'Product last month earn',
+                    list:true
+                },
                 earn: {
-                    title: 'last month earn',
+                    title: 'Member last month earn',
                     width: '10%',                    
                     create: false,
                     edit: false,

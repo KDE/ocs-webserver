@@ -396,7 +396,7 @@ div#preloaded-images {
                           <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') { ?>                                                     
                             <li>
                                 <a class="aboutmetab" data-href="/u/<?php echo $this->member->username;?>/unpublished"  href="#user-unpublished" data-toggle="tab" role="tab"  aria-controls="user-unpublished">
-                                    Unpublished (A)
+                                    Unpublished (A:<?=$this->stat['cntUnpublished']?>)
                                 </a>
                             </li>
                           <?php } ?>
