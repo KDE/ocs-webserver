@@ -372,10 +372,14 @@ class SpamController extends Local_Controller_Action_DomainSwitch
             }
         }
 
+        $sqltotal = "select count(1) as cnt from
+                        project pp                                         
+                    where pp.status = 40 ";
+        $resultsCnt = Zend_Db_Table::getDefaultAdapter()->fetchRow($sqltotal);
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
         $jTableResult['Records'] = $results;        
-        $jTableResult['TotalRecordCount'] = 1000;
+        $jTableResult['TotalRecordCount'] = $resultsCnt['cnt'];
         $this->_helper->json($jTableResult);
 
     }
