@@ -321,7 +321,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
 
         if(!isset($sorting))
         {
-            $sorting = ' created_at desc';
+            $sorting = ' unpublished_time desc';
         }        
 
         $sql = "
@@ -333,7 +333,8 @@ class SpamController extends Local_Controller_Action_DomainSwitch
                     and is_pling_excluded = 0 
                     and is_license_missing = 0
                     ) as earn ,
-                    (
+                    (SELECT max(time) FROM pling.activity_log l where l.activity_type_id = 9 and project_id = pp.project_id) as unpublished_time
+                    ,(
                         select  sum(m.credits_plings)/100 AS probably_payout_amount from micro_payout m
                         where m.project_id=pp.project_id 
                         and m.paypal_mail is not null 
@@ -359,7 +360,8 @@ class SpamController extends Local_Controller_Action_DomainSwitch
         $lft = $wal['lft'];
         $rgt = $wal['rgt'];
         foreach ($results as &$value) {
-            $value['created_at'] = $printDateSince->printDateSince($value['created_at']);                
+            $value['created_at'] = $printDateSince->printDateSince($value['created_at']);   
+            $value['unpublished_time'] = $printDateSince->printDateSince($value['unpublished_time']);              
             if($value['earn'] && $value['earn']>0)
             {
                  $value['earn'] = number_format($value['earn'] , 2, '.', '');
