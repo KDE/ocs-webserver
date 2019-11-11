@@ -1620,6 +1620,28 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
     }
 
+     /**
+     * @return array
+     */
+    public function getUnpublishedProjectsForMemberCnt($member_id)
+    {
+        // for member me page
+        $sql = "
+                        SELECT
+                        count(1) as cnt
+                        FROM `project` `p`                        
+                        WHERE `p`.`status` = 40
+                        and `p`.`type_id` = 1
+                        AND `p`.`member_id` = :member_id                        
+        ";
+        $result = $this->_db->fetchRow($sql, array('member_id' => $member_id));
+        if ($result) {
+            return $result['cnt'];
+        } else {
+            return 0;
+        }
+    }
+
     /**
      * @return array
      */
