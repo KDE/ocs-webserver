@@ -169,7 +169,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
 
         if(!isset($sorting))
         {
-            $sorting = ' cnt desc ';
+            $sorting = ' changed_at desc ';
         }        
 
         $sql = "
@@ -179,6 +179,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
                     (
                         select f.owner_id as member_id,m.username, f.md5sum, COUNT(1) cnt, GROUP_CONCAT(distinct p.project_id) as projects
                         , count(distinct p.project_id) cntProjects
+                        ,max(p.changed_at) as changed_at
                         from  ppload.ppload_files f
                         join project p on f.collection_id = p.ppload_collection_id
                         join member m on f.owner_id = m.member_id and m.is_deleted=0 and m.is_active = 1
