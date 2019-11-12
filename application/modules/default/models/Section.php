@@ -90,7 +90,7 @@ class Default_Model_Section
                 from micro_payout m
                 join project_category pc on m.project_category_id = pc.project_category_id 
                 where m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$')            
-                and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 3 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+                and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
                 and m.is_member_pling_excluded=0
                 group by project_category_id
                 ";
@@ -109,7 +109,7 @@ class Default_Model_Section
                     select distinct su2.member_id
                     from section_support_paypements ss
                     JOIN support su2 ON su2.id = ss.support_id
-                    where yearmonth = DATE_FORMAT(NOW()- INTERVAL 3 MONTH,'%Y%m')
+                    where yearmonth = DATE_FORMAT(NOW()- INTERVAL 1 MONTH,'%Y%m')
                 ) ss on pl.member_id = ss.member_id
                 where pl.is_deleted = 0 and pl.is_active = 1
                 group by p.project_category_id
@@ -183,7 +183,7 @@ class Default_Model_Section
             where p.project_id = m.project_id
             and m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
             ".$sqlSection."
-            and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 3 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+            and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
             and m.is_member_pling_excluded=0
             GROUP BY m.project_id
             order by sum(m.credits_plings) desc
@@ -233,7 +233,7 @@ class Default_Model_Section
                     select distinct su2.member_id
                     from section_support_paypements ss
                     JOIN support su2 ON su2.id = ss.support_id
-                    where yearmonth = DATE_FORMAT(NOW()- INTERVAL 3 MONTH,'%Y%m')
+                    where yearmonth = DATE_FORMAT(NOW()- INTERVAL 1 MONTH,'%Y%m')
                 ) ss on pl.member_id = ss.member_id
                 where pl.is_deleted = 0 and pl.is_active = 1" .$sqlSection."
                 group by pl.project_id
@@ -272,7 +272,7 @@ class Default_Model_Section
                     select distinct su2.member_id
                     from section_support_paypements ss
                     JOIN support su2 ON su2.id = ss.support_id
-                    where yearmonth = DATE_FORMAT(NOW()- INTERVAL 3 MONTH,'%Y%m')
+                    where yearmonth = DATE_FORMAT(NOW()- INTERVAL 1 MONTH,'%Y%m')
                 ) ss on pl.member_id = ss.member_id
                 where pl.is_deleted = 0 and pl.is_active = 1 and p.project_category_id=:cat_id
                 group by pl.project_id
@@ -303,7 +303,7 @@ class Default_Model_Section
                 where  p.project_id = m.project_id
                      and m.paypal_mail is not null and m.paypal_mail <> ''
                      and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
-                      and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 3 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+                      and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
                         and m.is_member_pling_excluded=0           
                             and p.project_category_id = :cat_id 
 					 GROUP BY m.project_id   
@@ -330,12 +330,12 @@ class Default_Model_Section
            ".$sqlSection."
             and m.paypal_mail is not null and m.paypal_mail <> ''
             and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
-            and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 3 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+            and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
             and m.is_member_pling_excluded=0
             ";
         */
         $sql = "SELECT s.sum_amount_payout AS probably_payout_amount FROM section_funding_stats s
-                WHERE s.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 3 MONTH, '%Y%m')
+                WHERE s.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')
                ".$sqlSection."
                 ";
         $resultSet = $this->getAdapter()->fetchRow($sql);
@@ -367,7 +367,7 @@ class Default_Model_Section
 			select distinct su2.member_id
 			from section_support_paypements ss
 			JOIN support su2 ON su2.id = ss.support_id
-			where yearmonth = DATE_FORMAT(NOW() - INTERVAL 3 MONTH,'%Y%m')
+			where yearmonth = DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')
 		) ss on pl.member_id = ss.member_id
         where p.status = 100
         and pl.is_deleted = 0 and pl.is_active = 1 ".$sqlSection."  
@@ -399,7 +399,7 @@ class Default_Model_Section
                 and m.paypal_mail is not null and m.paypal_mail <> ''
                 and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
                 ".$sqlSection."  
-                and m.yearmonth =  DATE_FORMAT(CURRENT_DATE() - INTERVAL 3 MONTH, '%Y%m') 
+                and m.yearmonth =  DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m') 
 					 and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
                 and m.is_member_pling_excluded=0
                 group by me.username,me.profile_image_url,m.member_id
@@ -427,7 +427,7 @@ class Default_Model_Section
                         select distinct su2.member_id
                         from section_support_paypements ss
                         JOIN support su2 ON su2.id = ss.support_id
-                        where yearmonth = DATE_FORMAT(NOW() - INTERVAL 3 MONTH,'%Y%m')
+                        where yearmonth = DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')
                     ) ss on pl.member_id = ss.member_id
                     where p.status = 100 and p.project_category_id=:cat_id
                     and pl.is_deleted = 0 and pl.is_active = 1  
@@ -450,7 +450,7 @@ class Default_Model_Section
                 where p.member_id = m.member_id and p.project_id = m.project_id
                 and m.paypal_mail is not null and m.paypal_mail <> ''
                 and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
-                 and m.yearmonth =  DATE_FORMAT(CURRENT_DATE() - INTERVAL 3 MONTH, '%Y%m') and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+                 and m.yearmonth =  DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m') and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
                 and m.is_member_pling_excluded=0
                 and p.project_category_id = :cat_id
                 group by p.username,p.profile_image_url,p.member_id
@@ -548,7 +548,7 @@ class Default_Model_Section
                 WHERE p.yearmonth = :yearmonth";
         
         if(!$isForAdmin) {
-            $sql .= " AND p.yearmonth >= DATE_FORMAT((NOW() - INTERVAL 3 MONTH),'%Y%m')";
+            $sql .= " AND p.yearmonth >= DATE_FORMAT((NOW() - INTERVAL 1 MONTH),'%Y%m')";
         }
         
         if(empty($yearmonth)) {
@@ -572,7 +572,7 @@ class Default_Model_Section
                 AND p.section_id = :section_id";
         
         if(!$isForAdmin) {
-            $sql .= " AND p.yearmonth >= DATE_FORMAT((NOW() - INTERVAL 3 MONTH),'%Y%m')";
+            $sql .= " AND p.yearmonth >= DATE_FORMAT((NOW()),'%Y%m')";
         }
         
         if(empty($yearmonth)) {
@@ -591,7 +591,7 @@ class Default_Model_Section
     public function fetchSectionStatsLastMonth($section_id)
     {
         $sql = "SELECT * FROM section_funding_stats p
-                WHERE p.yearmonth = DATE_FORMAT(NOW() - INTERVAL 3 MONTH,'%Y%m')
+                WHERE p.yearmonth = DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')
                 AND p.section_id = :section_id";
         
         $resultSet = $this->getAdapter()->fetchRow($sql, array('section_id' => $section_id));
@@ -620,7 +620,7 @@ class Default_Model_Section
 					AND p.section_id = :section_id ";
         
         if(!$isForAdmin) {
-            $sql .= " AND p.yearmonth >= DATE_FORMAT((NOW() - INTERVAL 3 MONTH),'%Y%m')";
+            $sql .= " AND p.yearmonth >= DATE_FORMAT((NOW() - INTERVAL 1 MONTH),'%Y%m')";
         }
         
         $sql .= " GROUP BY p.yearmonth, p.section_id";
@@ -683,7 +683,7 @@ class Default_Model_Section
                 SUBSTR(`member_dl_plings`.`yearmonth`,1,4) = :year ";
                 
         if(!$isForAdmin) {
-            $sql .= " AND `member_dl_plings`.`yearmonth` >= DATE_FORMAT((NOW() - INTERVAL 3 MONTH),'%Y%m')";
+            $sql .= " AND `member_dl_plings`.`yearmonth` >= DATE_FORMAT((NOW() - INTERVAL 1 MONTH),'%Y%m')";
         }
 
         $sql .= " ORDER BY `member_dl_plings`.`yearmonth` DESC";
