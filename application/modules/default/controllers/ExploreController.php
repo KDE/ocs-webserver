@@ -241,7 +241,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         {
             // only switch view via index=2 parameter
             $pageLimit = 50;
-            if($index==7) $pageLimit = 5;
+            if($index==7) $pageLimit = 10;
             $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);
             $this->view->productsJson = Zend_Json::encode($requestedElements['elements']);
             $this->view->filtersJson = Zend_Json::encode($filter);
