@@ -108,11 +108,18 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
      */
     public function indexAction()
     {
+
+
+
         // Filter-Parameter
         /*$inputFilterOriginal = $this->getParam('filteroriginal', $this->getFilterOriginalFromCookie());
         $this->storeFilterOriginalInCookie($inputFilterOriginal);
         $this->view->inputFilterOriginal = $inputFilterOriginal;
 */
+        
+        $isShowOnlyFavs = (int)$this->getParam('fav', 0);
+        
+        
         $inputCatId = (int)$this->getParam('cat', null);
         if ($inputCatId) {
 //            $this->view->isFilterCat = true;
@@ -136,6 +143,22 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $filter['order'] = preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('ord', self::DEFAULT_ORDER));
         // removed filter original 20191007
         //$filter['original'] = $inputFilterOriginal == 1 ? self::TAG_ISORIGINAL : null;
+
+       
+        if($isShowOnlyFavs == 1) {
+            if($this->_authMember->member_id)
+            {
+                $filter['favorite'] = $this->_authMember->member_id;
+                $this->view->authMember = $this->_authMember;                                   
+            }else{
+                $this->redirect('/browse');
+            }
+        }else
+        {            
+            $isShowOnlyFavs = 0;            
+        }
+
+       
         
         $filter['tag'] = Zend_Registry::isRegistered('config_store_tags') ?  Zend_Registry::get('config_store_tags') : null;
         if (APPLICATION_ENV == "development") {
@@ -206,13 +229,19 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             }
         }
         
+        // my favourite list filter & list layout
+        if($isShowOnlyFavs == 1) {
+            $index=7;
+            $browseListType =  'myfav';
+        }
 
-
+        
         
         if($index)
         {
             // only switch view via index=2 parameter
             $pageLimit = 50;
+            if($index==7) $pageLimit = 10;
             $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);
             $this->view->productsJson = Zend_Json::encode($requestedElements['elements']);
             $this->view->filtersJson = Zend_Json::encode($filter);

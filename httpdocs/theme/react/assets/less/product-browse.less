@@ -17,6 +17,16 @@
         .product-browse-item-row {
             width: 100%;
             float: left;
+
+            &.favorites-row {
+                padding: 10px 0;
+                font-size: 12px;
+                border-top: 1px solid #ccc;
+
+                &:first-of-type {
+                    border-top: 0;
+                }
+            }
         }
 
         .product-browse-item {
@@ -246,6 +256,67 @@
                         font-size: 13px;
                         line-height: 14px;
                         font-weight: 400;
+                    }
+                }
+            }
+
+            &.favorites {
+                margin-bottom: 0;
+                
+                &:first-of-type {
+                    border-top: 0;
+                }
+
+                span.index {
+                    width: 8.33333333%;
+                    display: block;
+                    float: left;
+                    text-align: center;
+                }
+                .product-browse-item-wrapper {
+                    width: 91.6666667%;
+                    display: block;
+                    float: left;
+
+                    .product-browse-image {
+                        width:15%;
+                        overflow: hidden;
+                        float: left;
+
+                        img {
+                            max-width: 100%;
+                            height: auto;
+                        }
+                    }
+
+                    .product-browse-item-info {
+                        width: 85%;
+                        float: left;
+                        padding-left:15px;
+
+                        .info-container {
+                            width: 75%;
+                            float: left;
+
+                            span {
+                                width: auto;
+                                margin-right:10px;
+                            }
+                        }
+
+                        .score-container {
+                            float: left;
+                            width:25%;
+
+                            .rating {
+                                width:50%;
+                                margin-bottom: 10px;
+
+                                .rating-text {
+                                    margin-bottom: 5px;
+                                }
+                            }
+                        }
                     }
                 }
             }

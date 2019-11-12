@@ -17,6 +17,18 @@ function MusicPlayerWrapper(props){
     initialPLayedAudioArray.push(pa);
   })
   const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
+  const [ randomSupporter, setRandomSupporter ] = useState();
+
+  React.useEffect(() => {
+    getRandomMusicsupporter();
+  },[])
+
+  function getRandomMusicsupporter(){
+    const suffix = window.location.host.endsWith('cc') ? 'cc' :  window.location.host.endsWith('cc') ||  window.location.host.endsWith('org') ? 'com' : 'cc';
+    $.ajax({url: "https://www.pling."+suffix+"/json/fetchrandomsupporter/s/3"}).done(function(res) { 
+      setRandomSupporter(res.supporter)
+    });    
+  }
 
   function onReportAudioPlay(audioInfo){
     const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
@@ -220,18 +232,17 @@ function MusicPlayerWrapper(props){
   if (isMobile === true) musicPlayerWrapperCssClass = "mobile ";
   if (showPlaylist === true) {
     musicPlayerWrapperCssClass += " show-playlist";
-    if (window.product){
-      console.log(window.product);
+    if (randomSupporter){
       sponsorDetailsDisplay = (
         <div id="music-sponsor-display">
           <span>This music is sponsored by</span>
           <span className="sponsor-avatar">
-            <a href={"/u/" + window.product.username}>
-              <img src={window.product.profile_image_url}/>
+            <a href={"/u/" + randomSupporter.username}>
+              <img src={randomSupporter.profile_image_url}/>
             </a>
           </span>
           <span>
-            {window.product.username}
+            {randomSupporter.username}
           </span>
         </div>
       )

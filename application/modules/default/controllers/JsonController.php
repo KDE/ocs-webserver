@@ -309,6 +309,7 @@ class JsonController extends Zend_Controller_Action
                     ,'username' => $p->username
                     ,'laplace_score' =>$p->laplace_score
                     ,'score' =>$p->score
+                    ,'cat_title' =>$p->cat_title
                     ,'image_small' =>$img);
             }
 
@@ -369,6 +370,19 @@ class JsonController extends Zend_Controller_Action
         $response = array(
             'status'     => 'ok',
             'dls'    => 0
+        );
+        $this->_sendResponse($response, $this->_format);
+    }
+
+    public function fetchrandomsupporterAction()
+    {
+        $this->_initResponseHeader();
+        $section_id = $this->getParam('s');
+        $info = new Default_Model_Info();
+        $s = $info->getRandomSupporterForSection($section_id);        
+        $response = array(
+            'status'     => 'ok',
+            'supporter'    => $s
         );
         $this->_sendResponse($response, $this->_format);
     }
