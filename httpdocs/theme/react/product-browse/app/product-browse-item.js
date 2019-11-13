@@ -218,6 +218,8 @@ function ProductBrowseItemPreviewMusicPlayer(props){
 
 
     function onReportAudioPlay(audioInfo){
+        console.log(audioInfo);
+        console.log(playedAudioArray);
         const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
         const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
         const newAudioItem = {
