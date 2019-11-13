@@ -200,8 +200,8 @@ function ProductBrowseItemPreviewMusicPlayer(props){
     const [ productFiles, setProductFiles ] = useState(props.productFiles)
     const [ showAudioControls, setShowAudioControls ] = useState(false);
     const [ playIndex, setPlayIndex ] = useState();
+    let initialPLayedAudioArray = [];
     if (productFiles){
-        let initialPLayedAudioArray = []
         productFiles.forEach(function(i,index){
           let pl = 0;
           if (index === 0) pl = -1;
@@ -212,8 +212,8 @@ function ProductBrowseItemPreviewMusicPlayer(props){
           }
           initialPLayedAudioArray.push(pa);
         })
-        const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
     }
+    const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
 
 
 
