@@ -45,11 +45,8 @@ function MusicPlayerWrapper(props){
     setPlayedAudioArray(newPLayedAudioArray);
 
     if (playedAudioArray[audioItemIndex].played === 0){
-      console.log(window);
-      const audioStartUrl = 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
-      console.log(audioStartUrl);
+      const audioStartUrl = window.location.href + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
       $.ajax({url: audioStartUrl}).done(function(res) { 
-
         const newAudioItem = {
           ...audioItem,
           mediaViewId:res.MediaViewId,
@@ -80,7 +77,7 @@ function MusicPlayerWrapper(props){
     setPlayedAudioArray(newPLayedAudioArray);
     // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
     if  (playedAudioArray[audioItemIndex].stopped === 0){
-      const audioStopUrl = "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+      const audioStopUrl =  window.location.href + "/stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
       $.ajax({url: audioStopUrl}).done(function(res) { 
         console.log(res);
       });
