@@ -232,7 +232,8 @@ function ProductBrowseItemPreviewMusicPlayer(props){
         setPlayedAudioArray(newPLayedAudioArray);
     
         if (playedAudioArray[audioItemIndex].played === 0){
-          const audioStartUrl = window.location.href + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+          const audioStartUrl = window.location.href + "/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+          console.log(audioStartUrl)
           $.ajax({url: audioStartUrl}).done(function(res) { 
             console.log(res);
             const newAudioItem = {
@@ -251,25 +252,25 @@ function ProductBrowseItemPreviewMusicPlayer(props){
     }
     
     function onReportAudioStop(audioInfo){
-    const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
-    const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
-    const newAudioItem = {
-        ...audioItem,
-        stopped:audioItem.stopped + 1
-    }
-    const newPLayedAudioArray = [
-        ...playedAudioArray.slice(0,audioItemIndex),
-        newAudioItem,
-        ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
-    ];
-    setPlayedAudioArray(newPLayedAudioArray);
-    // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
-    if  (playedAudioArray[audioItemIndex].stopped === 0){
-        const audioStopUrl =  window.location.href + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
-        $.ajax({url: audioStopUrl}).done(function(res) { 
-        console.log(res);
-        });
-    }
+        const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
+        const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
+        const newAudioItem = {
+            ...audioItem,
+            stopped:audioItem.stopped + 1
+        }
+        const newPLayedAudioArray = [
+            ...playedAudioArray.slice(0,audioItemIndex),
+            newAudioItem,
+            ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+        ];
+        setPlayedAudioArray(newPLayedAudioArray);
+        // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
+        if  (playedAudioArray[audioItemIndex].stopped === 0){
+            const audioStopUrl = window.location.href + "/" + props.projectId + "/" + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+            $.ajax({url: audioStopUrl}).done(function(res) { 
+            console.log(res);
+            });
+        }
     }
 
     let musicPlayerDisplay;
