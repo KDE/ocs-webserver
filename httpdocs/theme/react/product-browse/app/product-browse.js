@@ -51,9 +51,6 @@ function ProductBrowseFilterContainer(){
 
 function ProductBrowseItemList(props){
 
-    console.log(window.catId);
-    console.log(window.filters);
-    console.log(window.products);
 
     if (window.location.search === "?index=7") {
         window.browseListType === "favorites";
@@ -64,8 +61,8 @@ function ProductBrowseItemList(props){
     const [ itemsInRow, setItemsInRow ] = useState(getNumberOfItemsPerRow(browseListType,isMobile,containerWidth));
     const [ itemWidth, setItemWidth ] = useState(getItemWidth(browseListType,containerWidth,itemsInRow));
     const [ imgHeight, setImgHeight ] = useState(getImageHeight(browseListType,itemWidth));
-    console.log(imgHeight);
 
+    
     React.useEffect(() => {
         window.addEventListener("resize", function(event){ updateDimensions() });
         window.addEventListener("orientationchange",  function(event){ updateDimensions() });
