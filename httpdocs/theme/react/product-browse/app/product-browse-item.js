@@ -5,13 +5,11 @@ import { getImageUrl } from './product-browse-helpers';
 export function ProductBrowseItem(props){
 
     const p = props.product;
-    console.log(props.product);
 
     const [ productFilesFetched, setProductFilesFetched ] = useState(false);
     const [ productFiles, setProductFiles ] = useState();
     const [ imgUrl, setImgUrl ] = useState(getImageUrl(p,props.itemWidth,props.imgHeight));
 
-    console.log(props.index);
 
     if (window.location.search === "?index=7") {
         window.browseListType === "favorites";
@@ -133,7 +131,7 @@ export function ProductBrowseItem(props){
         )
     }    
     else if (browseListType === "favorites"){
-        console.log(p);
+
         itemInfoHeight = props.imgHeight;
         showIndex = true;
         itemInfoDisplay = (
@@ -199,7 +197,7 @@ export function ProductBrowseItem(props){
 function ProductBrowseItemPreviewMusicPlayer(props){
 
     const [ productFiles, setProductFiles ] = useState(props.productFiles)
-    console.log(productFiles);
+
     const [ showAudioControls, setShowAudioControls ] = useState(false);
     const [ playIndex, setPlayIndex ] = useState();
     let initialPLayedAudioArray = [];
@@ -220,8 +218,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
 
 
     function onReportAudioPlay(audioInfo){
-        console.log(audioInfo);
-        console.log(playedAudioArray);
+
         const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
         const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
         const newAudioItem = {
@@ -236,7 +233,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
         setPlayedAudioArray(newPLayedAudioArray);
     
         if (playedAudioArray[audioItemIndex].played === 0){
-          const audioStartUrl = window.location.href + "/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+          const audioStartUrl = window.location.href + "/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.id+'&type_id=2';
           console.log(audioStartUrl)
           $.ajax({url: audioStartUrl}).done(function(res) { 
             console.log(res);
