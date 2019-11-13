@@ -47,6 +47,7 @@ function MusicPlayerWrapper(props){
     if (playedAudioArray[audioItemIndex].played === 0){
       const audioStartUrl = window.location.href + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
       $.ajax({url: audioStartUrl}).done(function(res) { 
+        console.log(res);
         const newAudioItem = {
           ...audioItem,
           mediaViewId:res.MediaViewId,
