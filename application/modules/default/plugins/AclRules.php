@@ -260,6 +260,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'getfiletagsajax',
             'startvideoajax',
             'stopvideoajax',
+            'startmediaviewajax',
+            'stopmediaviewajax',
             'loadfirstfilejson'
         ));
         
