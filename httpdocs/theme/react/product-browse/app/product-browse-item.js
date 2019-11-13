@@ -5,6 +5,7 @@ import { getImageUrl } from './product-browse-helpers';
 export function ProductBrowseItem(props){
 
     const p = props.product;
+    console.log(props.product);
 
     const [ productFilesFetched, setProductFilesFetched ] = useState(false);
     const [ productFiles, setProductFiles ] = useState();
@@ -198,6 +199,7 @@ export function ProductBrowseItem(props){
 function ProductBrowseItemPreviewMusicPlayer(props){
 
     const [ productFiles, setProductFiles ] = useState(props.productFiles)
+    console.log(productFiles);
     const [ showAudioControls, setShowAudioControls ] = useState(false);
     const [ playIndex, setPlayIndex ] = useState();
     let initialPLayedAudioArray = [];
