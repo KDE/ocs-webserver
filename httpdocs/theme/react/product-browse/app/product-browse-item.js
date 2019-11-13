@@ -233,7 +233,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
         setPlayedAudioArray(newPLayedAudioArray);
     
         if (playedAudioArray[audioItemIndex].played === 0){
-          const audioStartUrl = window.location.href + "/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.id+'&type_id=2';
+          const audioStartUrl = window.location.href + "/p/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.id+'&type_id=2';
           console.log(audioStartUrl)
           $.ajax({url: audioStartUrl}).done(function(res) { 
             console.log(res);
@@ -267,7 +267,8 @@ function ProductBrowseItemPreviewMusicPlayer(props){
         setPlayedAudioArray(newPLayedAudioArray);
         // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
         if  (playedAudioArray[audioItemIndex].stopped === 0){
-            const audioStopUrl = window.location.href + "/" + props.projectId + "/" + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+            console.log(playedAudioArray);
+            const audioStopUrl = window.location.href + "/p/" + props.projectId + "/" + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
             $.ajax({url: audioStopUrl}).done(function(res) { 
             console.log(res);
             });
