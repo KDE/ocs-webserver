@@ -267,6 +267,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
         setPlayedAudioArray(newPLayedAudioArray);
         // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
         if  (playedAudioArray[audioItemIndex].stopped === 0){
+            console.log(playedAudioArray);
             const audioStopUrl = window.location.href + "/" + props.projectId + "/" + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
             $.ajax({url: audioStopUrl}).done(function(res) { 
             console.log(res);
