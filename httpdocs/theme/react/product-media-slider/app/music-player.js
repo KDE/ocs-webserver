@@ -24,7 +24,7 @@ function MusicPlayerWrapper(props){
   },[])
 
   function getRandomMusicsupporter(){
-    const suffix = window.location.host.endsWith('cc') ? 'cc' :  window.location.host.endsWith('cc') ||  window.location.host.endsWith('org') ? 'com' : 'cc';
+    const suffix = window.location.host.endsWith('cc') ? 'cc' :  window.location.host.endsWith('com') ||  window.location.host.endsWith('org') ? 'com' : 'cc';
     $.ajax({url: "https://www.pling."+suffix+"/json/fetchrandomsupporter/s/3"}).done(function(res) { 
       setRandomSupporter(res.supporter)
     });    
@@ -45,7 +45,8 @@ function MusicPlayerWrapper(props){
     setPlayedAudioArray(newPLayedAudioArray);
 
     if (playedAudioArray[audioItemIndex].played === 0){
-      const audioStartUrl = 'startvideoajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+      const audioStartUrl = 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+      console.log(audioStartUrl);
       $.ajax({url: audioStartUrl}).done(function(res) { 
 
         const newAudioItem = {
@@ -78,7 +79,7 @@ function MusicPlayerWrapper(props){
     setPlayedAudioArray(newPLayedAudioArray);
     // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
     if  (playedAudioArray[audioItemIndex].stopped === 0){
-      const audioStopUrl = "stopvideoajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+      const audioStopUrl = "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
       $.ajax({url: audioStopUrl}).done(function(res) { 
         console.log(res);
       });
