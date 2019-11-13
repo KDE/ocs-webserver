@@ -477,10 +477,19 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->view->download_hash = $hash;
         $this->view->download_timestamp = $timestamp;
+        
+        
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        $isAdmin = false;
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $isAdmin = true;
+        }
+        
 
         $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
         $helperIsProjectActive = new Default_View_Helper_IsProjectActive();
-        if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status))
+        if (!$isAdmin AND (false === $helperIsProjectActive->isProjectActive($this->view->product->project_status))
             AND (false === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
         ) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
@@ -688,15 +697,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $modelTags->processTagsUser($newProject->project_id, null, Default_Model_Tags::TAG_TYPE_PROJECT);
         }
         
-        if(!$isAdmin) {
-            if ($values['is_original']) {
-                $modelTags->processTagProductOriginal($newProject->project_id, $values['is_original']);
-            }
-        } else {
-            $modelTags->processTagProductOriginalOrModification($newProject->project_id,$values['is_original_or_modification'][0]);
-        }
-
-        
+        $modelTags->processTagProductOriginalOrModification($newProject->project_id,$values['is_original_or_modification'][0]); 
 
         //set license, if needed
         $licenseTag = $form->getElement('license_tag_id')->getValue();
@@ -925,21 +926,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             }
             $form->getElement('license_tag_id')->setValue($licenseTag);
 
-            if(!$isAdmin) {
-                $is_original = $modelTags->isProductOriginal($projectData->project_id);
-                if($is_original){
-                    $form->getElement('is_original')->checked= true;                
-                }
-            } else {
-                $is_original = $modelTags->isProductOriginal($projectData->project_id);
-                $is_modification = $modelTags->isProductModification($projectData->project_id);
-                if($is_original){
-                    $form->getElement('is_original_or_modification')->setValue(1);                
-                } else if($is_modification){
-                    $form->getElement('is_original_or_modification')->setValue(2);                
-                }
+            $is_original = $modelTags->isProductOriginal($projectData->project_id);
+            $is_modification = $modelTags->isProductModification($projectData->project_id);
+            if($is_original){
+                $form->getElement('is_original_or_modification')->setValue(1);                
+            } else if($is_modification){
+                $form->getElement('is_original_or_modification')->setValue(2);                
             }
-            
  
             $this->view->form = $form;
 
@@ -1008,14 +1001,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //$projectData->changed_at = new Zend_Db_Expr('NOW()');
         $projectData->save();
         
-        
-        if(!$isAdmin) {
-            $modelTags->processTagProductOriginal($this->_projectId,$values['is_original']);
-        } else {
-            $modelTags->processTagProductOriginalOrModification($this->_projectId,$values['is_original_or_modification'][0]);
-        }
-        
-        
+        $modelTags->processTagProductOriginalOrModification($this->_projectId,$values['is_original_or_modification'][0]);
 
         if($values['tagsuser']) {
             $modelTags->processTagsUser($this->_projectId,implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);
@@ -3099,6 +3085,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         return $gitProjectIssues;
     }
     
+    public function startmediaviewajaxAction() {
+        return $this->startvideoajaxAction();
+    }
 
     public function startvideoajaxAction() {
         $this->_helper->layout()->disableLayout();
@@ -3144,6 +3133,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->json(array('status' => 'error'));
     }
+    
+    public function stopmediaviewajaxAction() {
+        return $this->stopvideoajaxAction();
+    }
+
     
     public function stopvideoajaxAction() {
         $this->_helper->layout()->disableLayout();

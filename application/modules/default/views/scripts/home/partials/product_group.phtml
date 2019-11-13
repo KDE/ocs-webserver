@@ -23,23 +23,27 @@
 $ids = explode(",", $this->catIDs);
 $titles = explode(",", $this->title);
 ?>
-<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">      
-<span>  
-<?php
-$i = 0;
-$t = '';
-foreach ($ids as $catid) {
-    if($i>0) $t=$t.', ';
-    $t =$t. '<a href="/browse/cat/'.$catid.'">'.$titles[$i++].'</a>';        
-}
-echo $t;
-?>	
-</span>
-<div class="prod-widget-box new-products" >
-<?php                                    
-foreach ($this->products as $this->product) {
-    echo $this->render('home/partials/product_plingcom.phtml');                                       
-}           
-?>
+<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">  
+<div class="blockContainer">    
+    <div class="header">
+<span class="title">
+    <?php
+    $i = 0;
+    $t = '';
+    foreach ($ids as $catid) {
+        if($i>0) $t=$t.', ';
+        $t =$t. '<a href="/browse/cat/'.$catid.'">'.$titles[$i++].'</a>';        
+    }
+    echo $t;
+    ?>	
+    </span>
+    </div>    
+    <div class="prod-widget-box new-products" >
+    <?php                                    
+    foreach ($this->products as $this->product) {
+        echo $this->render('home/partials/product_plingcom.phtml');                                       
+    }           
+    ?>
+    </div>
 </div>                                                                                                                                          
 </div>

@@ -6,8 +6,8 @@ function CommunityMenuItems()
   
   return (
     <React.Fragment>
-    <li><a href={state.baseUrl + "/community"}>Members</a></li>
     <li><a href={state.forumUrl}>Discussion</a></li>
+    <li><a href={state.baseUrlStore + "/supporters"}>Supporters</a></li>    
     <li><a href={state.baseUrlStore + "/support"}>Become a Supporter</a></li>
     </React.Fragment>
   );

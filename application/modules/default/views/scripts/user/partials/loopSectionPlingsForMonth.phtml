@@ -150,31 +150,7 @@ if ($countDownloadsOverall > 0) {
             foreach ($allDownloads as $product) { 
                 $section_factor = $product['section_payout_factor'];
                 $actual_payout_sum = $product['amount_section_micropayout'];
-                
-                
-                
-                
-                $isOriginal = $modelTag->isProductOriginal($product['project_id']);
-                $isModification = $modelTag->isProductModification($product['project_id']);
-                $origialFactor = 0.1;
-                
-                if((int)$product['yearmonth'] <= 201909) {
-                    $origialFactor = 1.0;
-                } else {
-                    if($isOriginal) {
-                        $origialFactor = 1.0;
-                    } else if($isModification) {
-                        $origialFactor = 0.25;
-                    }
-                    
-                }
-                
-
-                
-                #if($isCurrentMonth) {
-                #    $section_factor = $product['now_section_payout_factor'];
-                #    $actual_payout_sum = $product['num_plings_micropayout']*$section_factor/100;
-                #}
+                $origialFactor = $product['org_factor'];
                 
                 ?>
                 <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">

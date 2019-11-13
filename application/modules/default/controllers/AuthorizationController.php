@@ -445,6 +445,45 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         //If the user is a hive user, we have to update his password
         $this->changePasswordIfNeeded($userId, $values['password']);
 
+        //log login
+        try {
+            $ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']) : $_SERVER['REMOTE_ADDR'];
+
+            if (is_array($ip)) {
+                $ip = $ip[0];
+            }
+
+            $agent = null;
+            if ( isset( $_SERVER ) ) {
+                $agent = $_SERVER['HTTP_USER_AGENT'];
+            }
+            
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - USER_AGENT: ' . print_r($agent, true));
+
+            $fingerprint = null;
+            
+            $session = new Zend_Session_Namespace();
+            $fp = $session->client_fp;
+            if (!empty($fp)) {
+                $fingerprint = $fp;
+            }
+            
+            $ipv4 = null;
+            $ipv6 = null;
+            
+            if($this->hasParam('ipv4')) {
+                $ipv4 = $this->getParam('ipv4');
+            }
+            if($this->hasParam('ipv6')) {
+                $ipv6 = $this->getParam('ipv6');
+            }
+            $loginHistory = new Default_Model_LoginHistory();
+            $loginHistory->log($userId, $ip, $ipv4, $ipv6, $agent, $fingerprint);
+        } catch (Exception $exc) {
+        }
+
+        
+        
         //$modelToken = new Default_Model_SingleSignOnToken();
         //$data = array(
         //    'remember_me' => $values['remember_me'],

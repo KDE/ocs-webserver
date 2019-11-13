@@ -1,4 +1,4 @@
-out: ../css/pling-section.css, sourcemap: true, compress: true
+// out: ../css/pling-section.css, sourcemap: true, compress: true
 #pling-section-content
 {
   width: 100%;
@@ -28,9 +28,7 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
      & > div{
        text-align: center;
      }
-     span{
-      /*line-height: 300px;*/
-     }
+    
      .score-container
      {
        &>span{
@@ -79,7 +77,7 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
     }
   }
   .pling-section-tabs{
-    width: 1000px;
+    
     display: block;
     margin: 0 auto;
   }
@@ -422,6 +420,81 @@ out: ../css/pling-section.css, sourcemap: true, compress: true
                       border-top:1px solid #ccc;
                     }
                   }
+
+                 
+              }
+        
+              #recentplinged-list{
+                .product-wrap{
+                  float: left;
+                  width: 100%;
+                  padding: 0.3em;
+                  border: 0.35em solid #dee0e0;
+                  border-radius: 5px;
+                  height: 14em;
+                  margin-bottom: 1em;
+                  background: white;
+                  width: 115px;
+                  height: 200px;
+                  margin-right: 10px;
+                  -webkit-transition: all 0.2s ease-out;
+                  -moz-transition: all 0.2s ease-out;
+                  -ms-transition: all 0.2s ease-out;
+                  -o-transition: all 0.2s ease-out;
+                  position: relative;
+                  text-align: center;
+                  position: relative;
+                  padding-top:50px;
+                  figure {
+                    
+                    padding: .25em;
+                    border: 1px solid #dbdbdb;
+                    background: #f6f6f6;
+                    border-radius:999px;
+                    width:50px;
+                    img{
+                            width:40px;
+                            height: 40px;
+                            border: 1px solid #dbdbdb;
+                            -webkit-border-radius: 999px;
+                            -moz-border-radius: 999px;
+                            border-radius: 999px;
+                            -webkit-background-clip: padding-box;
+                            -moz-background-clip: padding;
+                            background-clip: padding-box;
+
+                       }
+                  }
+                  h3{
+                    font-size: 13px;
+                    font-weight: normal;
+                    word-wrap: break-word;
+                    line-height: 15px;                    
+                    padding: 0;
+                    margin: 0;
+                   }
+                  span.small {
+                    font-size: 13px;
+                    color: #444;
+                    position: absolute;
+                    bottom: 5px;
+                    right: 5px;
+                  }
+                   div.projecttitle{
+                      font-size: 11px;
+                  }
+                 
+                  span.rank {
+                      font-size: 14px;
+                      position: absolute;
+                      bottom: 5px;
+                      left: 5px;
+                      color: #444;
+                      font-weight: bold;
+                  }
+
+
+                }
 
               }
     }

@@ -92,6 +92,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_stati'));
         $this->addResource(new Zend_Acl_Resource ('default_tag'));
         $this->addResource(new Zend_Acl_Resource ('default_section'));
+        $this->addResource(new Zend_Acl_Resource ('default_supporters'));
 
         
         $this->addResource(new Zend_Acl_Resource ('backend_categories'));
@@ -180,6 +181,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_password',
             'default_verify',
             'default_login',
+            'default_supporters',
             'default_collection'
         ));
 
@@ -258,6 +260,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'getfiletagsajax',
             'startvideoajax',
             'stopvideoajax',
+            'startmediaviewajax',
+            'stopmediaviewajax',
             'loadfirstfilejson'
         ));
         

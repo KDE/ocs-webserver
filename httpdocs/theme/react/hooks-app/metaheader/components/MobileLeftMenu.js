@@ -37,7 +37,7 @@ const MobileLeftMenu = (props) => {
   }
 
   return (
-     <div ref={toggleEl}  id="metaheader-left-mobile" className={overlayClass}>
+     <div ref={toggleEl}  id="metaheader-left-mobile" className={overlayClass} style={{'position':'absolute'}}>
         <a className="menu-toggle" id="menu-toggle-item"></a>
         <div id="left-side-overlay">
           <MobileLeftSidePanel />

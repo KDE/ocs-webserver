@@ -26,7 +26,32 @@ $url_param_redirect = isset($this->redirect) ? 'redirect/'.$this->redirect : nul
 $this->headMeta()->setName('robots', 'noindex, nofollow');
 $imageHelper = new Default_View_Helper_Image();
 
+  $regs="";
+  $ip = $_SERVER[REMOTE_ADDR];
+
 ?>
+
+<script language="javascript">
+    
+function test(data) {
+    $(document).ready(function(){
+        $('#ipv4').val(data['ip']);
+    });
+
+}
+
+function test6(data) {
+    $(document).ready(function(){
+        $('#ipv6').val(data['ip']);
+    });
+
+}
+ 
+</script>
+
+<script type="application/javascript" src="https://ipify6.pling.com?format=jsonp&callback=test6"></script>
+<script type="application/javascript" src="https://ipify4.pling.com?format=jsonp&callback=test"></script>
+
   <link href="/theme/flatui/css/bootstrap/social-buttons.css" rel="stylesheet" type="text/css">
   <style>
     .btn-github {
@@ -133,7 +158,20 @@ $imageHelper = new Default_View_Helper_Image();
             }
         }
     })();
+    
 </script>
+
+
+<?php
+$session = new Zend_Session_Namespace();
+$fp = $session->client_fp;
+if (empty($fp)) : ?>
+    <script src="/tools/fpjs2/fp2.js" ></script>
+    <script type="text/javascript">
+        var options={};window.requestIdleCallback?requestIdleCallback(function(){Fingerprint2.get(options,function(a){var b=a.map(function(a){return a.value}),c=Fingerprint2.x64hash128(b.join(""),31);$.post("/l/fp",{fp:c})})}):setTimeout(function(){Fingerprint2.get(options,function(a){var b=a.map(function(a){return a.value}),c=Fingerprint2.x64hash128(b.join(""),31);$.post("/l/fp",{fp:c})})},500);
+    </script>
+<?php endif; ?>
+
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){

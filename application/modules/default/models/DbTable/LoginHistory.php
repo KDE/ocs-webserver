@@ -19,32 +19,11 @@
  *
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Created: 30.11.2018
- */
-class LoginController extends Local_Controller_Action_DomainSwitch
+ **/
+class Default_Model_DbTable_LoginHistory extends Zend_Db_Table_Abstract
 {
 
-    public function setthemeAction()
-    {
-        $this->_helper->layout()->disableLayout();
-        //$this->_helper->viewRenderer->setNoRender(true);
+    protected $_name = "login_history";
+    protected $_rowClass = 'Default_Model_DbRow_LoginHistory';
 
-    }
-
-    public function fpAction()
-    {
-        $this->_helper->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
-        $fingerprint = stripslashes(trim($this->getParam('fp')));
-
-        Zend_Registry::set('client_fp', $fingerprint);
-
-        $namespace = new Zend_Session_Namespace();
-        $namespace->client_fp = $fingerprint;
-
-        $this->_helper->json(array('status' => 'ok'));
-    }
-    
 }

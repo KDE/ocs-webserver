@@ -169,18 +169,25 @@ class SpamController extends Local_Controller_Action_DomainSwitch
 
         if(!isset($sorting))
         {
-            $sorting = ' cnt desc ';
+            $sorting = ' changed_at desc ';
         }        
 
         $sql = "
-                select f.owner_id as member_id,m.username, f.md5sum, COUNT(1) cnt, GROUP_CONCAT(p.project_id) as projects
-                from  ppload.ppload_files f
-                join project p on f.collection_id = p.ppload_collection_id
-                join member m on f.owner_id = m.member_id
-                where f.md5sum is not null
-                group by f.md5sum 
-                having count(1)>1
-                                    
+                    select 
+                    * 
+                    from 
+                    (
+                        select f.owner_id as member_id,m.username, f.md5sum, COUNT(1) cnt, GROUP_CONCAT(distinct p.project_id) as projects
+                        , count(distinct p.project_id) cntProjects
+                        ,max(p.changed_at) as changed_at
+                        from  ppload.ppload_files f
+                        join project p on f.collection_id = p.ppload_collection_id
+                        join member m on f.owner_id = m.member_id and m.is_deleted=0 and m.is_active = 1
+                        where f.md5sum is not null
+                        group by f.md5sum 
+                        having count(1)>1
+                    ) t
+                    where cntProjects>1                                    
                 ";
         $sql .= ' order by ' . $sorting;
         $sql .= ' limit ' . $pageSize;
@@ -188,16 +195,20 @@ class SpamController extends Local_Controller_Action_DomainSwitch
         
         $results = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);                        
 
-        $sqlall = " select count(1) cnt from
-                    (
-                        select f.owner_id as member_id,m.username, f.md5sum, COUNT(1) cnt, GROUP_CONCAT(p.project_id)
-                        from  ppload.ppload_files f
-                        join project p on f.collection_id = p.ppload_collection_id
-                        join member m on f.owner_id = m.member_id
-                        where f.md5sum is not null
-                        group by f.md5sum 
-                        having count(1)>2                        
-                    ) a
+        $sqlall = " select 
+                        count(1) as cnt
+                        from 
+                        (
+                            select f.owner_id as member_id,m.username, f.md5sum, COUNT(1) cnt, GROUP_CONCAT(distinct p.project_id) as projects
+                            , count(distinct p.project_id) cntProjects
+                            from  ppload.ppload_files f
+                            join project p on f.collection_id = p.ppload_collection_id
+                            join member m on f.owner_id = m.member_id and m.is_deleted=0 and m.is_active = 1
+                            where f.md5sum is not null
+                            group by f.md5sum 
+                            having count(1)>1
+                        ) t
+                        where cntProjects>1
                   ";         
 
         $reportsAll = Zend_Db_Table::getDefaultAdapter()->fetchRow($sqlall);
@@ -311,24 +322,31 @@ class SpamController extends Local_Controller_Action_DomainSwitch
 
         if(!isset($sorting))
         {
-            $sorting = ' created_at desc';
+            $sorting = ' unpublished_time desc';
         }        
 
         $sql = "
-                select pp.project_id,pp.status,pp.member_id, pp.created_at, m.username, m.paypal_mail,m.created_at as member_since, c.title cat_title,c.lft, c.rgt
+                    select pp.project_id,pp.title,pp.status,pp.member_id, pp.created_at, m.username, m.paypal_mail,m.created_at as member_since, c.title cat_title,c.lft, c.rgt
                     ,(select sum(probably_payout_amount) amount
                     from member_dl_plings 
                     where member_id=pp.member_id
                     and yearmonth= DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')
                     and is_pling_excluded = 0 
                     and is_license_missing = 0
-                    ) as earn                    
-                    from
-                    project pp                    
-                    ,member m
-                    ,project_category c
-                    where pp.status <> 100 and pp.member_id = m.member_id
-                    and pp.project_category_id = c.project_category_id and m.is_deleted=0 and m.is_active = 1
+                    ) as earn ,
+                    (SELECT max(time) FROM pling.activity_log l where l.activity_type_id = 9 and project_id = pp.project_id) as unpublished_time
+                    ,(
+                        select  sum(m.credits_plings)/100 AS probably_payout_amount from micro_payout m
+                        where m.project_id=pp.project_id 
+                        and m.paypal_mail is not null 
+                        and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
+                        and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')
+                    ) as probably_payout_amount
+                    from project pp                    
+                    join member m on pp.member_id = m.member_id and m.is_deleted=0 and m.is_active = 1
+                    join project_category c on pp.project_category_id = c.project_category_id        
+                    where pp.status = 40 
+                    
                                         
         ";
         $sql .= ' order by ' . $sorting;
@@ -343,7 +361,8 @@ class SpamController extends Local_Controller_Action_DomainSwitch
         $lft = $wal['lft'];
         $rgt = $wal['rgt'];
         foreach ($results as &$value) {
-            $value['created_at'] = $printDateSince->printDateSince($value['created_at']);                
+            $value['created_at'] = $printDateSince->printDateSince($value['created_at']);   
+            $value['unpublished_time'] = $printDateSince->printDateSince($value['unpublished_time']);              
             if($value['earn'] && $value['earn']>0)
             {
                  $value['earn'] = number_format($value['earn'] , 2, '.', '');
@@ -356,10 +375,14 @@ class SpamController extends Local_Controller_Action_DomainSwitch
             }
         }
 
+        $sqltotal = "select count(1) as cnt from
+                        project pp                                         
+                    where pp.status = 40 ";
+        $resultsCnt = Zend_Db_Table::getDefaultAdapter()->fetchRow($sqltotal);
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
         $jTableResult['Records'] = $results;        
-        $jTableResult['TotalRecordCount'] = 1000;
+        $jTableResult['TotalRecordCount'] = $resultsCnt['cnt'];
         $this->_helper->json($jTableResult);
 
     }

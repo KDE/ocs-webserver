@@ -278,11 +278,8 @@ $this->inlineScript()->appendScript('
                                  <?= $this->form->is_original ?>  Check this box, if this is your own original work and not based on something else. If based on some other work you need to change 60%-70% to mark as an original.   
                                  */?>
                                     
-                                 <?php if($isAdmin) {
-                                     echo $this->form->is_original_or_modification . " Select Original, if this is your own original work and not based on something else. If based on some other work you need to change 60%-70% to mark as an original. Select Modification, if you changed at least 5-10%.";
-                                 } else {
-                                     echo $this->form->is_original . " Check this box, if this is your own original work and not based on something else. If based on some other work you need to change 60%-70% to mark as an original.";
-                                 }
+                                 <?php 
+                                     echo $this->form->is_original_or_modification . " Select Original, if this is your own original work and not based on something else. If based on some other work you need to change 60%-70% to mark as an original. Select Modification, if you changed at least 5-10%. If you changed < 5%, leave blank.";
                                  ?>
                                  
                                 </div>
