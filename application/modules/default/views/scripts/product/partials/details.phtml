@@ -51,6 +51,14 @@ if(sizeof($countPageviews)==2) $countPageviewsTotal = $countPageviews[1]['count_
 $today = (new DateTime())->modify('-1 day');
 $filterDownloadToday = $today->format("Y-m-d H:i:s");
 ?>
+<style>
+    .font-italic{
+        font-style: italic;
+    }
+    .font-italic span{
+        font-style: italic;
+    }
+</style>
 <div class="prod-widget-box right details">
     <span class="title"> Details </span>
 
@@ -78,7 +86,7 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
     <?php } ?>
 
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-        <div class="row">
+        <div class="row font-italic">
             <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">major updated</span>
             <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->printDate($this->product->project_major_updated_at) ?></span>
         </div>
@@ -90,7 +98,7 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
     </div>
 
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-    <div class="row">
+    <div class="row font-italic">
         <span class=" col-lg-6 col-md-6 col-sm-6 col-xs-6">downloads 24h old</span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <div id="downloadscntdb"><?= $countDownloadsToday ?></div></span>
     </div>
@@ -103,12 +111,12 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
     
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
 
-    <div class="row">
+    <div class="row font-italic">
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">mediaviews 24h </span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countMediaViewsToday ?></span>
     </div>
     
-    <div class="row">
+    <div class="row font-italic">
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">mediaviews total </span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countMediaViewsAlltime ?></span>
     </div>
@@ -123,17 +131,17 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
     
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
 
-    <div class="row">
+    <div class="row font-italic">
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">pageviews total </span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countPageviewsTotal ?></span>
     </div>
 
-    <div class="row">
+    <div class="row font-italic">
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">spam reports</span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->fetchReportsSpamCnt($this->product->project_id) ?></span>
     </div>
 
-    <div class="row">
+    <div class="row font-italic">
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">misuse reports</span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->fetchReportsMisuseCnt($this->product->project_id)?></span>
     </div>
@@ -176,24 +184,24 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
 
 
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-        <span class="page-views">
+        <span class="page-views font-italic">
             <a target="_NEW" href="http://cp1.hive01.com/content/show.php?content=<?= $this->product->project_source_pk ?>">link to hive</a>
         </span>
-        <span class="page-views">
+        <span class="page-views font-italic">
             <a id="delete-this" href="/backend/project/delete?project_id=<?= $this->product->project_id ?>">delete product</a>
         </span>
 
         <div style="clear: both" class="small">(remember the cache) after you change some value below and refresh the page you may encounter some differences to your changes</div>
-        <span class="page-views ">
+        <span class="page-views font-italic">
             <input type="checkbox" id="spam-checked-checkbox" <?php echo $this->product->spam_checked == 1 ? ' checked=\'checked\' ' : ''; ?> />  spam checked
         </span>
-        <span class="page-views ">
+        <span class="page-views font-italic">
           <input type="checkbox" id="feature-this-checkbox" <?php echo $this->product->featured == 1 ? ' checked=\'checked\' ' : ''; ?> />  featured
         </span>
-        <span class="page-views " style="color: red;">
+        <span class="page-views font-italic" style="color: red;">
             <input type="checkbox" id="ghns_excluded-this-checkbox" <?php echo $isGhnsExcluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  ghns-excluded
         </span>
-        <span class="page-views" style="color: red;">
+        <span class="page-views font-italic" style="color: red;">
             <input type="checkbox" id="pling-excluded-checkbox" <?php echo $this->product->pling_excluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  pling-excluded
         </span>
 
