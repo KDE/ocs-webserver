@@ -83,8 +83,8 @@ const AppSupporters = () => {
     detailContent = <RecentPlinged products={recentplings} baseUrlStore={state.baseurlStore}/>
   }else if (showContent == 'overview-category-subcat') {
     detailContent = <>
-      <TopProducts products={productsCategory} baseUrlStore={state.baseurlStore}/>
-      <TopCreators creators={creatorsCategory} baseUrlStore={state.baseurlStore}/>
+    <TopCreators creators={creatorsCategory} baseUrlStore={state.baseurlStore}/>
+      <TopProducts products={productsCategory} baseUrlStore={state.baseurlStore}/>      
     </>
   } else {
     // overview or category all on click
