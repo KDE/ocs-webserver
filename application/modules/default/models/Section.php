@@ -237,7 +237,7 @@ class Default_Model_Section
                 ) ss on pl.member_id = ss.member_id
                 where pl.is_deleted = 0 and pl.is_active = 1" .$sqlSection."
                 group by pl.project_id
-                order by sum_plings desc 
+                order by sum_plings desc ,sum_plings_all desc
                 limit 20        
         ";
        
