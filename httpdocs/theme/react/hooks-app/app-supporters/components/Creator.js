@@ -11,7 +11,8 @@ function Creator(props){
       </div>
       <div className="col-lg-8 userinfo">
         <div className="userinfo-title">{props.creator.username}</div> 
-        <span><img style={{width:'15px',height:'15px', float:'left'}} src={props.baseUrlStore+'/images/system/pling-btn-active.png'}></img>{props.creator.cnt}[{props.creator.sum_plings_all}]</span>      
+        <span><img style={{width:'15px',height:'15px', float:'left'}} src={props.baseUrlStore+'/images/system/pling-btn-active.png'}></img>
+        {props.creator.cnt}{' ('+props.creator.sum_plings_all+')'}</span>      
       </div>
     </div>
   )

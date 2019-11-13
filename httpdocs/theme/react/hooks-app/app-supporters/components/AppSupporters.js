@@ -89,17 +89,16 @@ const AppSupporters = () => {
   } else {
     // overview or category all on click
     detailContent = <>
-      <TopProducts products={products} baseUrlStore={state.baseurlStore}/>
       <TopCreators creators={creators} baseUrlStore={state.baseurlStore}/>
+      <TopProducts products={products} baseUrlStore={state.baseurlStore}/>      
     </>
   }
 
   sectiondetail = <div className="pling-section-detail">
     {section &&
-      <div className="pling-section-detail-left">
-        <h2 className={showContent == 'overview' ? 'focused' : ''}><a onClick={() => showDetail('overview')}>Plings</a></h2>
+      <div className="pling-section-detail-left">        
         <h2 className={showContent == 'supporters' ? 'focused' : ''}><a onClick={() => showDetail('supporters')}>Supporters</a></h2>
-        <h2 className={showContent == 'overview-category' || showContent == 'overview-category-subcat'  ? 'focused' : ''}><a onClick={() => showDetail('overview-category')}>Categories</a></h2>
+        <h2 className={showContent == 'overview-category' || showContent == 'overview-category-subcat'  ? 'focused' : ''}><a onClick={() => showDetail('overview-category')}>Creators</a></h2>
         <ul className="pling-section-detail-ul">{categories}</ul>
         <h2 className={showContent == 'recentplings' ? 'focused' : ''}><a onClick={() => showDetail('recentplings')}>Recent Plings</a></h2>
       </div>
