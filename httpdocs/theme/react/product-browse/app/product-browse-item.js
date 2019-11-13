@@ -200,6 +200,77 @@ function ProductBrowseItemPreviewMusicPlayer(props){
     const [ productFiles, setProductFiles ] = useState(props.productFiles)
     const [ showAudioControls, setShowAudioControls ] = useState(false);
     const [ playIndex, setPlayIndex ] = useState();
+    if (productFiles){
+        let initialPLayedAudioArray = []
+        productFiles.forEach(function(i,index){
+          let pl = 0;
+          if (index === 0) pl = -1;
+          const pa = {
+            ...i,
+            played:pl,
+            stopped:0
+          }
+          initialPLayedAudioArray.push(pa);
+        })
+        const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
+    }
+
+
+
+    function onReportAudioPlay(audioInfo){
+        const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
+        const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
+        const newAudioItem = {
+          ...audioItem,
+          played:audioItem.played + 1
+        }
+        const newPLayedAudioArray = [
+          ...playedAudioArray.slice(0,audioItemIndex),
+          newAudioItem,
+          ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+        ];
+        setPlayedAudioArray(newPLayedAudioArray);
+    
+        if (playedAudioArray[audioItemIndex].played === 0){
+          const audioStartUrl = window.location.href + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+          $.ajax({url: audioStartUrl}).done(function(res) { 
+            console.log(res);
+            const newAudioItem = {
+              ...audioItem,
+              mediaViewId:res.MediaViewId,
+              played:audioItem.played + 1
+            }
+            const newPLayedAudioArray = [
+              ...playedAudioArray.slice(0,audioItemIndex),
+              newAudioItem,
+              ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+            ];
+            setPlayedAudioArray(newPLayedAudioArray);
+          });
+        }    
+    }
+    
+    function onReportAudioStop(audioInfo){
+    const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
+    const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
+    const newAudioItem = {
+        ...audioItem,
+        stopped:audioItem.stopped + 1
+    }
+    const newPLayedAudioArray = [
+        ...playedAudioArray.slice(0,audioItemIndex),
+        newAudioItem,
+        ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+    ];
+    setPlayedAudioArray(newPLayedAudioArray);
+    // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
+    if  (playedAudioArray[audioItemIndex].stopped === 0){
+        const audioStopUrl =  window.location.href + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+        $.ajax({url: audioStopUrl}).done(function(res) { 
+        console.log(res);
+        });
+    }
+    }
 
     let musicPlayerDisplay;
 
@@ -292,7 +363,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
             //Extensible custom content       [type 'Array' default '[]' ]
             extendsContent: [],
             //default volume of the audio player [type `Number` default `100` range `0-100`]
-            defaultVolume: 15,
+            defaultVolume: 50,
             //playModeText show time [type `Number(ms)` default `700`]
             playModeShowTime: 600,
             //Whether to try playing the next audio when the current audio playback fails [type `Boolean` default `true`]
@@ -305,11 +376,13 @@ function ProductBrowseItemPreviewMusicPlayer(props){
                 setShowAudioControls(true);
                 const currentIndex = productFiles.findIndex(f => audioInfo.name === f.title);
                 setPlayIndex(currentIndex + 1);
+                onReportAudioPlay(audioInfo);
             },
             //audio pause handle
             onAudioPause(audioInfo) { 
               console.log("audio pause"); 
               setShowAudioControls(false)
+              onReportAudioStop(audioInfo)
             },
             //When the user has moved/jumped to a new location in audio
             onAudioSeeked(audioInfo) { console.log("audio seeked", audioInfo); },

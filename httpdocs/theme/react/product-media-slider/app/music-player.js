@@ -45,7 +45,7 @@ function MusicPlayerWrapper(props){
     setPlayedAudioArray(newPLayedAudioArray);
 
     if (playedAudioArray[audioItemIndex].played === 0){
-      const audioStartUrl = window.location.href + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+      const audioStartUrl = window.location.href + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
       $.ajax({url: audioStartUrl}).done(function(res) { 
         console.log(res);
         const newAudioItem = {
@@ -78,7 +78,7 @@ function MusicPlayerWrapper(props){
     setPlayedAudioArray(newPLayedAudioArray);
     // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
     if  (playedAudioArray[audioItemIndex].stopped === 0){
-      const audioStopUrl =  window.location.href + "/stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+      const audioStopUrl =  window.location.href + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
       $.ajax({url: audioStopUrl}).done(function(res) { 
         console.log(res);
       });
@@ -235,7 +235,7 @@ function MusicPlayerWrapper(props){
     if (randomSupporter){
       sponsorDetailsDisplay = (
         <div id="music-sponsor-display">
-          <span>This music is sponsored by</span>
+          <span>made possible by supporters like</span>
           <span className="sponsor-avatar">
             <a href={"/u/" + randomSupporter.username}>
               <img src={randomSupporter.profile_image_url}/>
