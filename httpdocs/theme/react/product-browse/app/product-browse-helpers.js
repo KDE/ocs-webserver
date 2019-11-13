@@ -88,9 +88,9 @@ export function getImageUrl(p,itemWidth,imgHeight){
     let imgUrl = "";
     if (p.image_small && p.image_small.indexOf('https://') > -1 || p.image_small && p.image_small.indexOf('http://') > -1 ) imgUrl = p.image_small;
     else {
-        imgUrl = "https://cn.opendesktop.";
-        imgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
+        imgUrl = json_server_images;
         imgUrl += "/cache/" + Math.ceil(itemWidth * 2) + "x" + Math.ceil(imgHeight * 2) + "/img/" + p.image_small;    
+        console.log(imgUrl);
     }
     return imgUrl;
 }
