@@ -19,6 +19,15 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+var OcsStorage = {
+    set: function(key, value) {
+        localStorage[key] = JSON.stringify(value);
+    },
+    get: function(key) {
+        return localStorage[key] ? JSON.parse(localStorage[key]) : null;
+    }
+};
+
 var newProductPage = (function () {
 
     return {
