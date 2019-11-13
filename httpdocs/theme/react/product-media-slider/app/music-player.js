@@ -45,7 +45,7 @@ function MusicPlayerWrapper(props){
     setPlayedAudioArray(newPLayedAudioArray);
 
     if (playedAudioArray[audioItemIndex].played === 0){
-      const audioStartUrl = window.location.href + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+      const audioStartUrl = window.location.href + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
       console.log(audioStartUrl);
       $.ajax({url: audioStartUrl}).done(function(res) { 
         console.log(res);
@@ -79,7 +79,7 @@ function MusicPlayerWrapper(props){
     setPlayedAudioArray(newPLayedAudioArray);
     // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
     if  (playedAudioArray[audioItemIndex].stopped === 0){
-      const audioStopUrl =  window.location.href + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+      const audioStopUrl =  window.location.href + "/stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
       console.log(audioStopUrl);
       $.ajax({url: audioStopUrl}).done(function(res) { 
         console.log(res);
