@@ -88,11 +88,9 @@ const DomainsMenu = (props) => {
           );
           break;
         case 'forum':
-            const url = window.location.href;
-            let logoLabel=  state.target.logoLabel;
-            if(url.indexOf('messages')>0){
-              logoLable='Messages';
-            }
+            
+            let logoLabel =  window.location.href.indexOf('messages')>0 ? 'Messages' : state.target.logoLabel;
+            
             dT =(
               <>
                 <li className={cls}>                 
