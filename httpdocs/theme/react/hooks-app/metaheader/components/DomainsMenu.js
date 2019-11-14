@@ -87,7 +87,29 @@ const DomainsMenu = (props) => {
             </>
           );
           break;
-      default:
+        case 'forum':
+            const url = window.location.href;
+            let logoLabel=  state.target.logoLabel;
+            if(url.indexOf('messages')>0){
+              logoLable='Messages';
+            }
+            dT =(
+              <>
+                <li className={cls}>                 
+                    <a id="opendesktop-logo" href={state.baseUrl} >
+                      <img src={state.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
+                      openDesktop.org : 
+                    </a>
+                    <a href={state.target.link} >
+                      <span className="target">{logoLabel}</span>
+                    </a>                  
+                </li>
+                <li><a href={state.baseUrlStore}>Pling</a></li>
+                <li><a href={state.gitlabUrl + "/explore/projects"}>Opencode</a></li>
+              </>
+            );
+            break;
+      default:          
           dT =(
             <>
               <li className={cls}>                 
