@@ -6,6 +6,8 @@ export function ProductBrowseItem(props){
 
     const p = props.product;
 
+    console.log(browseListType);
+
     const [ productFilesFetched, setProductFilesFetched ] = useState(false);
     const [ productFiles, setProductFiles ] = useState();
     const [ imgUrl, setImgUrl ] = useState(getImageUrl(p,props.itemWidth,props.imgHeight));
@@ -84,7 +86,16 @@ export function ProductBrowseItem(props){
                 <span>by <b>{p.username}</b></span>
             </div>
         )
-    } else if (browseListType === "phone-pictures"){
+    } else if (browseListType === "apps") {
+        itemInfoDisplay = (
+            <div className="product-browse-item-info">
+                <h2>{p.title}</h2>
+                <span>{p.cat_title}</span>
+                <span>by <b>{p.username}</b></span>
+            </div>
+        )
+    }
+    else if (browseListType === "phone-pictures"){
         itemInfoDisplay = (
             <div className="product-browse-item-info">
                 <h2>{p.title}</h2>
