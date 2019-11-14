@@ -1,0 +1,254 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$modelCategory = new Default_Model_DbTable_ProjectCategory();
+$this->dataCategory = $modelCategory->findSingleRow($this->cat_id);
+$store_config = Zend_Registry::get('store_config');
+$host = $store_config->host;
+$og_server = $this->serverUrl(true);
+$catTitle = '';
+if($this->dataCategory['project_category_id'])
+{
+  $catTitle = $this->dataCategory['title'];
+}
+if($this->filters['order'] == 'latest'){
+  $og_title = 'Browse '.$catTitle.' Latest | '.$host;
+}else if($this->filters['order'] == 'top'){
+  $og_title = 'Browse '.$catTitle.' Top | '.$host;
+}else{
+  $og_title='Browse '.$catTitle.' | '.$host;
+}
+$og_description = $og_title .'| A community for free and open source software and libre content';
+$this->templateConfigData = Zend_Registry::get('store_template');
+$og_image = 'https://' . $_SERVER['HTTP_HOST'] .$this->templateConfigData['logo'];
+$this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
+$this->headMeta()->appendProperty('og:type', 'website');
+$this->headMeta()->appendProperty('og:url', $og_server);
+$this->headMeta()->appendProperty('og:title', $og_title);
+$this->headMeta()->appendProperty('og:site_name',$host);
+$this->headMeta()->appendProperty('og:description',$og_description);
+$this->headMeta()->appendProperty('og:image',$og_image);
+
+
+$helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
+$modelInfo = new Default_Model_Info();
+
+$this->countSupporters = $modelInfo->getCountAllSupporters();
+$this->supporters = $modelInfo->getNewActiveSupporters(7);
+$this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
+
+
+if($this->inputFilterOriginal ==1)
+{
+    $checkedOriginal = ' checked';
+}else
+{
+   $checkedOriginal = '';
+}
+
+?>
+
+<style>
+
+  @media (max-width:720px){
+
+    body > .panel.panel-default.pull-left {
+      max-width: 100%;
+      overflow-y: hidden;
+    }
+
+    #explore-content .GridFlex .content {
+      padding-right: 15px;
+      min-width: 400px;
+    }
+
+    #explore-content .GridFlex .sidebar-right {
+      width: 400px;
+      flex: none !important;
+      margin: 0 auto;
+    }
+
+    #explore-content .GridFlex .content .explore-products {
+      padding: 0 !important;
+    }
+
+    .explore-products .product-list .explore-product {
+      position: relative;
+      padding-left: 20px;
+      padding-right: 50px;
+    }
+
+    .explore-products .product-list .explore-product > .col-xs-1 {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 0;
+    }
+
+    .explore-products .product-list .explore-product .explore-product-imgcolumn {
+      width: 20%;
+    }
+
+    .explore-products .product-list .explore-product .explore-product-details {
+      width: 80%;
+    }
+
+    .explore-products .product-list .explore-product .explore-product-plings {
+      position: absolute;
+      top: 10px;
+      right: 0;
+      width: 50px;
+    }
+
+    .explore-products .product-list .explore-product .explore-product-plings .rating {
+      width: 100%;
+    }
+
+    .pling-nav-tabs ul.nav-tabs>li:last-child {
+      float: right;
+      padding: 10px;
+      font-size: 12px;
+    }
+
+    #explore-content .sidebar-right-info .prod-widget-box {
+      width: 100%;
+    }
+
+  }
+
+  @media (max-width:611px){
+    #explore-content .GridFlex .content {
+      padding-right: 0;
+      min-width: 100%;
+    }
+
+    #explore-content .GridFlex .sidebar-left {
+      flex: none !important;
+      width: 100%;
+    }
+
+    #explore-content .GridFlex .sidebar-right {
+      flex: none !important;
+      width: 100%;
+      padding: 0;
+    }
+  }
+
+  .filter_browse_tag_group {
+      margin-right: 5px;
+  }
+
+</style>
+<link href="/theme/react/product-browse/style/music-player.css" rel="stylesheet" type="text/css"/>
+<link href="/theme/react/assets/css/product-browse.css" rel="stylesheet" type="text/css"/>
+<main id="explore-content">
+    <section class="wrapper" id="products-wrapper">
+    <span class="glyphicon  togglesidebar" id="btnTogglesidebar" ></span>
+    <div class="GridFlex">
+      <div class="GridFlex-cell sidebar-left" >
+          <?php  $time_start = microtime(true);echo $this->render('explore/partials/filter.phtml'); $time_elapsed = microtime(true) - $time_start; ?>
+          <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+             echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
+          }?>
+      </div>
+      <div class="GridFlex-cell content">
+        <div id="product-browse-container"></div>
+      </div>
+        <?php
+        $time_start = microtime(true);
+            $this->comments = $modelInfo->getLatestComments(5, $this->cat_id, $this->tags);
+            //$donations = $modelInfo->getLatestPlings(5, $this->cat_id);
+            $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id, $this->tags);
+            $asidehide = '';
+            if(!$this->catabout && count($this->comments)==0  && count($topprods)==0 )
+            {
+                $asidehide = 'hide';
+            }
+            $this->show_git = false;
+        ?>
+        <div class="GridFlex-cell sidebar-right">
+            <aside  id="explore-sidebar <?=$asidehide?>" >
+              <?php
+                  echo $this->render('/home/partials/common_rightsidebar.phtml');
+              ?>
+
+              <div  class="row sidebar-right-info" >
+                <?php
+                if (count($topprods) > 0) {
+                    ?>
+                    <span class="commentTitle"> Popularity <span class="small light"> (based on plings, downloads, etc.)</span></span>
+
+                    <div class="prod-widget-box right bgwhite" id="mostdownloaded">
+                        <?php
+                        $this->rownum = 1;
+                        foreach ($topprods as $this->product) {
+                            echo $this->render('explore/partials/productTop.phtml');
+                            $this->rownum++;
+                        }
+                        ?>
+                    </div>
+                <?php } ?>
+
+              </div>
+          </aside>
+            <?php
+            $time_elapsed = microtime(true) - $time_start;
+            if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
+            }?>
+        </div>
+      </div>
+      </section>
+
+      <div class="tooltip_templates" style="display: none">
+      <span id="tooltip_content">
+          <i class="fa fa-spinner"></i>
+      </span>
+  </div>
+</main>
+<script type="text/javascript">
+  var categories = <?php echo $this->categoriesJson ?>;
+  var catId = <?php echo $this->cat_idJson ?>;
+  var filters = <?php echo $this->filtersJson ?>;
+  var products = <?php echo $this->productsJson ?>;
+  var files = <?php echo $this->filesJson ?>;
+  var topProducts = <?php echo $this->topprodsJson ?>;
+  var comments = <?php echo $this->commentsJson ?>;
+  var supporters = <?php echo json_encode($this->supporters) ?>;
+  var pagination = {
+    totalcount:<?php echo $this->totalcount ?>,
+    page:<?php echo $this->page ?>,
+    pagelimit:<?php echo $this->pageLimit ?>
+  }
+  var view = "explore";
+  
+  var browseListType = "<?php echo $this->browseListType ?>";
+
+</script>
+<script type="text/javascript" src="/theme/react/product-browse/product-browse.js"></script>
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            TooltipUser.setup("tooltipuserleft","left");
+            TooltipUser.setup("tooltipuser","right");
+            FilterBrowseOriginalFn.setup();
+            FilterBrowseTagGroupFn.setup();
+        });
+    ');

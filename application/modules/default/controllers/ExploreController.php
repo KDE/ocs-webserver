@@ -201,6 +201,12 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             if($index == 4) {
                 $browseListType = 'phone-pictures';
             }
+            if($index == 8) {
+                $browseListType = 'apps';
+            }
+            if($index == 9) {
+                $browseListType = 'icons';
+            }
             
         }
         
