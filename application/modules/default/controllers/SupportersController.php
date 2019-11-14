@@ -26,7 +26,7 @@ class SupportersController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {                
-        $section_id = $this->getParam('id',null);
+        $section_id = $this->getParam('id',2);
         $products = self::fetchProducts($section_id);
         $creators = self::fetchCreators($section_id);
         $supporters = self::fetchSupporters($section_id);
