@@ -166,4 +166,25 @@ class Default_View_Helper_Image extends Zend_View_Helper_Abstract
         return false;
     }
 
+    public function getDataURI($image, $mime = '') {
+        return 'data: '.(function_exists('mime_content_type') ? mime_content_type($image) : $mime).';base64,'.base64_encode(file_get_contents($image));
+    }
+
+    public function getImageDataFromUrl($filename, $options)
+    {
+        $url = $this->Image($filename, $options);
+        $urlParts = pathinfo($url);
+        $extension = $urlParts['extension'];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $base64 = 'data:image/' . $extension . ';base64,' . base64_encode($response);
+
+        return $base64;
+    }
+
 }
