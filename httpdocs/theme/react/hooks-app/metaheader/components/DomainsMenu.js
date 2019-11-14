@@ -89,7 +89,7 @@ const DomainsMenu = (props) => {
           break;
         case 'forum':
             
-            let logoLabel =  window.location.href.indexOf('messages')>0 ? 'Messages' : state.target.logoLabel;
+            let logoLabel =  window.location.href.indexOf('messages')>0 ? 'PM' : state.target.logoLabel;
             
             dT =(
               <>
@@ -98,7 +98,7 @@ const DomainsMenu = (props) => {
                       <img src={state.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
                       openDesktop.org : 
                     </a>
-                    <a href={state.target.link} >
+                    <a href={state.target.link} style={{paddingLeft:'0px',marginLeft:'0px'}} >
                       <span className="target">{logoLabel}</span>
                     </a>                  
                 </li>
@@ -115,7 +115,7 @@ const DomainsMenu = (props) => {
                     <img src={state.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
                     openDesktop.org : 
                   </a>
-                  <a href={state.target.link} >
+                  <a href={state.target.link} style={{paddingLeft:'0px',marginLeft:'0px'}}>
                     <span className="target">{ state.target.logoLabel }</span>
                   </a>                  
               </li>
