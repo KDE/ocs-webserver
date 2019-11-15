@@ -211,7 +211,7 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
     /**
      * @return string comma seperated ids
      */
-    function fetchAncestersIds($project_id,$level=3){
+    function fetchAncestersIds($project_id,$level=5){
         
         $parentIds = self::fetchParentIds($project_id);
         $ids='';
