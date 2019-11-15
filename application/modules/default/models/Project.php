@@ -1959,7 +1959,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function fetchProjects($ids)
     {
-        $sql = "SELECT * FROM stat_projects WHERE project_id in (" . $ids . ")";
+        $sql = "SELECT * FROM stat_projects WHERE project_id in (" . $ids . ") order by title";
         $resultSet = $this->_db->fetchAll($sql);
 
         return $this->generateRowSet($resultSet);
@@ -1989,5 +1989,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
       }
       return true;
     }
+
+    
 
 }
