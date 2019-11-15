@@ -591,9 +591,22 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $pc = new Default_Model_ProjectClone();
         $cntRelatedProducts=0;
         $ancesters = $pc->fetchAncestersIds($this->_projectId);
-        $siblings = $pc->fetchSiblings($this->_projectId);
-        $parents = $pc->fetchParentIds($this->_projectId);
+        //$siblings = $pc->fetchSiblings($this->_projectId);
+        //$parents = $pc->fetchParentIds($this->_projectId);
+        if($ancesters && strlen($ancesters)>0){ 
+            $parents = $pc->fetchParentLevelRelatives($this->_projectId);
+        }else{
+            $parents = null;
+        }
+        if($parents && strlen($parents)>0)
+        {
+            $siblings = $pc->fetchSiblingsLevelRelatives($parents, $this->_projectId);        
+        }else
+        {
+            $siblings = null;
+        }        
         $childrens =  $pc->fetchChildrensIds($this->_projectId);
+
         $this->view->related_ancesters = null;
         $this->view->related_siblings = null;
         $this->view->related_parents = null;
