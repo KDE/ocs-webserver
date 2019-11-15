@@ -188,7 +188,8 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
      */
     function fetchParentIds($project_id){
         $sql = "
-        select GROUP_CONCAT(project_id_parent) as ids from project_clone c where c.project_id = :project_id
+        select GROUP_CONCAT(distinct project_id_parent) as ids from project_clone c where c.project_id = :project_id
+        and c.project_id_parent >0
         ";
         $resultSet = $this->_db->fetchRow($sql, array('project_id' => $project_id));
         return $resultSet['ids'];
