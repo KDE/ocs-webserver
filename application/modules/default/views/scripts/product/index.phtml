@@ -557,26 +557,11 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                     <!-- TABS -->
                     <div id="product-tabs" class="pling-nav-tabs">
                         <ul class="nav nav-tabs ">
-                            <li class="active"><a href="#about-panel" data-toggle="tab">Product</a></li>
-                            <?php /*
-                            <?php if (null != ($this->product->embed_code)) { ?>
-                                <li>
-                                    <a href="#media-panel" data-toggle="tab">
-                                        <?php if (null != ($this->product->embed_code)) { ?>
-                                            Media
-                                        <?php }
-                                        ?>
-                                    </a>
-                                </li>
-                            <?php } ?>
-                            */?>
-
+                            <li class="active"><a href="#about-panel" data-toggle="tab">Product</a></li>                         
                             <li><a href="#files-panel" data-toggle="tab">Files <span id="files-counter-db"><?= (!empty($countFiles)?'('.$countFiles.')':'') ?></span></a></li>
                         <?php if(count($this->updates)>0){ ?>
                             <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php echo '('.count($this->updates).')';  ?></a></li>
                         <?php } ?>
-
-
 
                         <?php if($this->product->show_gitlab_project_issues){
                                 //$cntGitIssues = count($this->gitlab_project_issues);
@@ -601,6 +586,10 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                          <?php if(count($this->likes)>0){ ?>
                             <li><a href="#likes-panel" data-toggle="tab">Fans <?php echo '('.count($this->likes).')';  ?></a></li>
                         <?php } ?>
+
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
+                        <li><a href="#related-panel" data-toggle="tab">Related Products<?=' ('.$this->cntRelatedProducts.')'?></a></li>
+                       <?php } ?>
 
                         </ul>
                     </div>
@@ -760,6 +749,20 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                             </div>
                         </div>
 
+                         <!-- related products -->
+
+                         <div class="tab-pane" id="related-panel">
+                            <div class="col-lg-12">
+                            <article>
+                                <div id="productRatingContainer2">
+                                <?php
+                                       echo $this->render('product/partials/productRelated.phtml');
+                                  ?>
+                                  </div>
+                            </article>
+                            </div>
+                        </div>
+
 
                         <!-- likes panel -->
                         <?php  if (count($this->likes) > 0) { ?>
@@ -905,7 +908,8 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                     <span class="caret"></span></button>
                                     <ul class="dropdown-menu hide" id="dropdown_installs" style="min-width: 270px; top:50px">
                                     </ul>
-                                    <span style="display: absolute; bottom:0">*Needs <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a> to install things</span>
+                                    <span style="display: absolute; bottom:0">
+                                    *Needs <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">pling-store</a> or <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> to install things</span>
                                 </div>
 
 

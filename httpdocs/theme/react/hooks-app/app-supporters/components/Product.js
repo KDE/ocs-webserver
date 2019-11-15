@@ -11,20 +11,18 @@ const Product = (props) => {
           </figure>
         </a>
       </div>
-      <div className="col-lg-7">
+      <div className="col-lg-6">
         <div className="product-info">
           <span className="product-info-title"><a href={projectUrl} >{props.product.title}</a></span>
           <span className="product-info-category" style={{ color: '#ccc' }}>{props.product.catTitle}</span>
 
         </div>
       </div>
-      <div className="col-lg-3">
+      <div className="col-lg-4">
 
-
-        <span><img style={{ width: '15px', height: '15px', float: 'left' }} src={props.baseUrlStore + '/images/system/pling-btn-active.png'}></img>
+      <img style={{ width: '15px', height: '15px', float: 'left',marginRight:'2px' }} src={props.baseUrlStore + '/images/system/pling-btn-active.png'}></img>
           {props.product.sum_plings}
-          {props.product.sum_plings_all ? ' (' + props.product.sum_plings_all + ') ' : ''}</span>
-
+          <span className="colorGrey">{props.product.sum_plings_all ? ' (' + props.product.sum_plings_all + ') ' : ''}</span>
 
       </div>
     </div>

@@ -14,7 +14,7 @@ SET @member_table = 'member';
 SET @backup_table = concat("member_bak_",DATE_FORMAT(NOW(),'%Y%m%d'));
 
 -- backup original member data we going to change
-SET @sql = CONCAT("CREATE TABLE ",@backup_table," as select member_id, avatar, avatar_type_id, profile_image_url, profile_image_url_bg, profile_img_src from ",@member_table);
+SET @sql = CONCAT("CREATE TABLE ",@backup_table," as select member_id, avatar, avatar_type_id, profile_image_url, profile_image_url_bg, profile_img_src from member");
 PREPARE stmt from @sql;
 EXECUTE stmt;
 
@@ -45,10 +45,6 @@ PREPARE stmt from @sql;
 EXECUTE stmt;
 
 SET @sql = CONCAT("UPDATE ",@member_table," SET profile_image_url_bg = REPLACE(profile_image_url_bg, 'https://cn.pling.com', '",@host,"') WHERE profile_image_url_bg LIKE 'https://cn.pling.com%'");
-PREPARE stmt from @sql;
-EXECUTE stmt;
-
-SET @sql = CONCAT("UPDATE ",@member_table," SET profile_image_url_bg = REPLACE(profile_image_url_bg, 'https://cn.opendesktop.org', '",@host,"') WHERE profile_image_url_bg LIKE 'https://cn.opendesktop.org%'");
 PREPARE stmt from @sql;
 EXECUTE stmt;
 

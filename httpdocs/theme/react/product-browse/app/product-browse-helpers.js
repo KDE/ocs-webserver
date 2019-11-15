@@ -3,12 +3,12 @@ export function getNumberOfItemsPerRow(browseListType,isMobile,containerWidth){
     if (isMobile) itemsPerRow = 2;
     else {
         if (browseListType === "music") itemsPerRow = getAdujustItemsPerRow(7,containerWidth,160 + 14)
+        else if (browseListType === "apps") itemsPerRow = getAdujustItemsPerRow(7,containerWidth,160 + 14)
         else if (browseListType === "comics") itemsPerRow = getAdujustItemsPerRow(7,containerWidth,160 + 14)
         else if (browseListType === "phone-pictures") itemsPerRow = getAdujustItemsPerRow(5,containerWidth,210)
         else if (browseListType === "favorites" ) itemsPerRow = getAdujustItemsPerRow(1,containerWidth,containerWidth - 1);
         else itemsPerRow = getAdujustItemsPerRow(3,containerWidth,250 + 14)
     }
-    console.log(itemsPerRow);
     return itemsPerRow;
 }
 
@@ -52,19 +52,23 @@ export function chunkArray(myArray, chunk_size){
 export function getItemWidth(browseListType,containerWidth,itemsInRow){
     let itemWidth;
     if (browseListType === "music") itemWidth = 160 + 14;
+    else if (browseListType === "apps") itemWidth = 160 + 14;
     else if (browseListType === "comics") itemWidth = 160 + 14;
     else itemWidth = containerWidth / itemsInRow;
     return itemWidth;
 }
 
 export function getImageHeight(browseListType,itemWidth){
-    console.log(browseListType);
+
     let itemHeightDivider, imgHeight;
 
     itemWidth = itemWidth - 14;
 
     if (browseListType === "music"){
        imgHeight = 155;
+    } 
+    else if (browseListType === "apps"){
+        imgHeight = 155;
     } 
     else if (browseListType === "phone-pictures"){
         itemHeightDivider = .5;
@@ -80,7 +84,6 @@ export function getImageHeight(browseListType,itemWidth){
         itemHeightDivider = 1.85;
         imgHeight = itemWidth / itemHeightDivider;
     }
-    console.log(imgHeight);
     return imgHeight;
 }
 
@@ -90,7 +93,6 @@ export function getImageUrl(p,itemWidth,imgHeight){
     else {
         imgUrl = json_server_images;
         imgUrl += "/cache/" + Math.ceil(itemWidth * 2) + "x" + Math.ceil(imgHeight * 2) + "/img/" + p.image_small;    
-        console.log(imgUrl);
     }
     return imgUrl;
 }
