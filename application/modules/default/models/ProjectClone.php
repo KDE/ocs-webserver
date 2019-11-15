@@ -172,4 +172,62 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
           return $this->generateRowSet($resultSet);            
     }
 
+    /**
+     * @return string comma seperated ids
+     */
+    function fetchChildrensIds($project_id){
+        $sql = "
+        select GROUP_CONCAT(project_id) as ids from project_clone c where c.project_id_parent = :project_id
+        ";
+        $resultSet = $this->_db->fetchRow($sql, array('project_id' => $project_id));
+        return $resultSet['ids'];
+    }
+
+    /**
+     * @return string comma seperated ids
+     */
+    function fetchParentIds($project_id){
+        $sql = "
+        select GROUP_CONCAT(project_id_parent) as ids from project_clone c where c.project_id = :project_id
+        ";
+        $resultSet = $this->_db->fetchRow($sql, array('project_id' => $project_id));
+        return $resultSet['ids'];
+    }
+
+    /**
+     * @return string siblings project ids without itself
+     */
+    function fetchSiblings($project_id){
+            $sql = "
+                select GROUP_CONCAT(distinct project_id) as ids from project_clone c where c.project_id_parent in (
+                        select project_id_parent from project_clone c where c.project_id = :project_id
+                ) and c.project_id <> :project_id
+            ";
+            $resultSet = $this->_db->fetchRow($sql, array('project_id' => $project_id));     
+            return $resultSet['ids'];
+    }
+
+    /**
+     * @return string comma seperated ids
+     */
+    function fetchAncestersIds($project_id,$level=3){
+        
+        $parentIds = self::fetchParentIds($project_id);
+        $ids='';
+        while ($level>0 && strlen($parentIds)>0) {
+              $sql = "select GROUP_CONCAT(distinct project_id_parent) as ids from project_clone c where c.project_id in(".$parentIds.")";
+              $resultSet = $this->_db->fetchRow($sql);     
+              if($resultSet['ids'])
+              {
+                      $ids.=','.$resultSet['ids'];
+              }
+              else{
+                      break;
+              }
+              $parentIds = $resultSet['ids'];              
+              $level--;
+        }    
+        if(substr($ids, 0, 1)==','){ $ids=substr($ids,1);};    
+        return $ids;
+    }
 } 
