@@ -588,7 +588,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                         <?php } ?>
 
                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
-                        <li><a href="#related-panel" data-toggle="tab">Related Products<?=' ('.$this->cntRelatedProducts.')'?></a></li>
+                        <li><a href="#related-panel" data-toggle="tab" style="font-style:italic">Relationships<?=' ('.$this->cntRelatedProducts.')'?></a></li>
                        <?php } ?>
 
                         </ul>

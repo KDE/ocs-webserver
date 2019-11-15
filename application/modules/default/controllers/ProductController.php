@@ -598,21 +598,25 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->related_siblings = null;
         $this->view->related_parents = null;
         $this->view->related_children = null;
-        if($ancesters && strlen($ancesters)>0){
-            $this->view->related_ancesters = $modelProduct->fetchProjects($ancesters);
-            $cntRelatedProducts+= sizeof($this->view->related_ancesters);
+        if($ancesters && strlen($ancesters)>0){            
+            $pts = $modelProduct->fetchProjects($ancesters);
+            $this->view->related_ancesters = sizeof($pts)==0?null:$pts;
+            $cntRelatedProducts+= sizeof($pts);
         }
         if($siblings && strlen($siblings)>0){
-            $this->view->related_siblings = $modelProduct->fetchProjects($siblings);
-            $cntRelatedProducts+= sizeof($this->view->related_siblings);
+            $pts = $modelProduct->fetchProjects($siblings);
+            $this->view->related_siblings = sizeof($pts)==0?null:$pts;
+            $cntRelatedProducts+= sizeof($pts);
         }
         if($parents && strlen($parents)>0){
-            $this->view->related_parents = $modelProduct->fetchProjects($parents);
-            $cntRelatedProducts+= sizeof($this->view->related_parents);
+            $pts = $modelProduct->fetchProjects($parents);
+            $this->view->related_parents = sizeof($pts)==0?null:$pts;
+            $cntRelatedProducts+= sizeof($pts);
         }
         if($childrens && strlen($childrens)>0){
-            $this->view->related_children = $modelProduct->fetchProjects($childrens);
-            $cntRelatedProducts+= sizeof($this->view->related_children);
+            $pts = $modelProduct->fetchProjects($childrens);
+            $this->view->related_children = sizeof($pts)==0?null:$pts;
+            $cntRelatedProducts+= sizeof($pts);
         }
         $this->view->cntRelatedProducts = $cntRelatedProducts;
        
