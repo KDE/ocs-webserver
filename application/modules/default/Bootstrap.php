@@ -915,6 +915,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'page'       => 'privacy'
         )));
 
+        $router->addRoute('static_imprint', new Zend_Controller_Router_Route_Static('/imprint', array(
+            'module'     => 'default',
+            'controller' => 'content',
+            'action'     => 'index',
+            'page'       => 'imprint'
+        )));
+
         $router->addRoute('static_contact', new Zend_Controller_Router_Route_Static('/contact', array(
             'module'     => 'default',
             'controller' => 'content',
