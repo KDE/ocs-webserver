@@ -160,15 +160,9 @@ if ($countDownloadsOverall > 0) {
                         </a>
                     </div>
                     <div class="col-md-2 text-left cell-default">
-                        <?php if(Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) { ?>
                         <a href="/member/<?= $this->member->member_id ?>/sectioncreditsmonthajax?yearmonth=<?= $product['yearmonth'] ?>&section_id=<?= $product['section_id'] ?>&project_id=<?= $product['project_id'] ?>" data-toggle="creditdetailajax" data-target="#credit-tab-content-<?= $product['yearmonth'] ?>-<?= $product['project_id'] ?>" id="sec_<?= $product['yearmonth'] ?>-<?= $product['project_id'] ?>">
                             <span style="line-height: 3em;"><?= $product['title']; ?></span>
                         </a>
-                        <?php } else { ?>
-                        <a href="<?= $this->buildProductUrl($product['project_id']) ?>">
-                            <span style="line-height: 3em;"><?= $product['title']; ?></span>
-                        </a>
-                        <?php } ?>
                         <b style="display: block; margin-bottom: 5px; font-size: 10pt; line-height: 0em;min-width: 140px;max-width: 180px;"><?=$product['cat_title']?></b>
                     </div>
                     <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
