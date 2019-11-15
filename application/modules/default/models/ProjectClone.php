@@ -186,6 +186,17 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
     /**
      * @return string comma seperated ids
      */
+    function fetchChildrensChildrenIds($ids){
+        $sql = "
+        select GROUP_CONCAT(project_id) as ids from project_clone c where c.project_id_parent in (".$ids.") and is_valid=1
+        ";
+        $resultSet = $this->_db->fetchRow($sql);
+        return $resultSet['ids'];
+    }
+
+    /**
+     * @return string comma seperated ids
+     */
     function fetchParentIds($project_id){
         $sql = "
         select GROUP_CONCAT(distinct project_id_parent) as ids from project_clone c where c.project_id = :project_id and c.is_valid=1

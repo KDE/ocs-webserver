@@ -90,3 +90,27 @@ $this->userProducts=$this->related_children;
 echo $this->render('product/partials/productRelatedProducts.phtml'); ?>
 </div>
 <?php }?>
+
+
+<?php
+if($this->related_children2){
+?>
+<div class="col-lg-12 title" > Children 2</div>
+<div class="col-lg-12">
+<?php 
+$this->userProducts=$this->related_children2;
+echo $this->render('product/partials/productRelatedProducts.phtml'); ?>
+</div>
+<?php }?>
+
+
+<?php
+if($this->related_children3){
+?>
+<div class="col-lg-12 title" > Children 3</div>
+<div class="col-lg-12">
+<?php 
+$this->userProducts=$this->related_children3;
+echo $this->render('product/partials/productRelatedProducts.phtml'); ?>
+</div>
+<?php }?>
