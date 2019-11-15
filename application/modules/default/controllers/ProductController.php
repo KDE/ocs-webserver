@@ -596,7 +596,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if($ancesters && strlen($ancesters)>0){ 
             $parents = $pc->fetchParentLevelRelatives($this->_projectId);
         }else{
-            $parents = null;
+            $parents = $pc->fetchParentIds($this->_projectId);
         }
         if($parents && strlen($parents)>0)
         {
