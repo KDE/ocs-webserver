@@ -330,8 +330,37 @@
             z-index: 10;
 
             .player {
-                padding: 15px;
-                background-color:black;
+                top: -44px;
+                position: absolute;
+                width:100%;
+                left: 0;
+
+                .audio-player-controls, .track-counter {
+                    padding: 5px;
+                    height: 40px;
+                    background-color: rgba(0,0,0,0.5);
+                }
+
+                .audio-player-controls {
+                    float: left;
+                    .transition();
+
+                    svg {
+                        font-size: 28px;
+                        color:white;
+                        .transition();
+
+                        &:hover {
+                            color: #31c27c;
+                        }
+                    }
+                }
+
+                .track-counter {
+                    float: right;
+                    color: white;
+                    line-height: 30px;
+                }
             }
 
             .music-player-counter {

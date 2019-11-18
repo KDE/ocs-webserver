@@ -519,16 +519,44 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
     function onPlayClick(){
         const playerElement = document.getElementById("product-browse-music-player-"+props.projectId).getElementsByTagName('audio');
         const currentSrc = productFiles[playIndex].musicSrc;
-        playerElement.src = currentSrc;
-        console.log(playerElement);
-        playerElement.play();
-        setIsPlaying(false);
+        playerElement[0].src = currentSrc;
+        playerElement[0].play();
+        setShowAudioControls(true);
+        setIsPlaying(true);
     }
 
     function onPauseClick(){
         const playerElement = document.getElementById("product-browse-music-player-"+props.projectId).getElementsByTagName('audio');
-        playerElement.pause();
-        setIsPlaying(true);
+        playerElement[0].pause();
+        setShowAudioControls(false);
+        setIsPlaying(false);
+    }
+
+    function onPrevTrackPlayClick(){
+        let prevTrackIndex;
+        if (playIndex === 0){
+            prevTrackIndex = productFiles.length - 1;
+        } else {
+            prevTrackIndex = playIndex - 1;
+        }
+        setPlayIndex(prevTrackIndex);
+        const playerElement = document.getElementById("product-browse-music-player-"+props.projectId).getElementsByTagName('audio');
+        playerElement[0].src = '';
+        onPlayClick();
+    }
+
+    function onNextTrackPlayClick(){
+        let prevTrackIndex;
+        if (playIndex + 1 === productFiles.length){
+            prevTrackIndex = 0;
+        } else {
+            prevTrackIndex = playIndex + 1;
+        }
+
+        setPlayIndex(prevTrackIndex);
+        const playerElement = document.getElementById("product-browse-music-player-"+props.projectId).getElementsByTagName('audio');
+        playerElement[0].src = '';
+        onPlayClick();        
     }
 
     function onReportAudioPlay(audioInfo){
@@ -592,30 +620,59 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
     let musicPlayerDisplay;
     if (productFiles) {
 
-        let controlsDisplay;
-        if (isPlaying === true){
-            controlsDisplay = (
-                <div className="audio-player-controls">
-                    <a onClick={() => onPauseClick()}>pause</a>
-                </div>
-            )
-        } else {
-            controlsDisplay = (
-                <div className="audio-player-controls">
-                    <a onClick={() => onPlayClick()}>play</a>
-                </div>                
-            )
+        const playButtonElement = (
+            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" className="react-jinke-music-player-play-icon" style={{"vertical-align":"middle"}}>
+                <g><path d="m20.1 2.9q4.7 0 8.6 2.3t6.3 6.2 2.3 8.6-2.3 8.6-6.3 6.2-8.6 2.3-8.6-2.3-6.2-6.2-2.3-8.6 2.3-8.6 6.2-6.2 8.6-2.3z m8.6 18.3q0.7-0.4 0.7-1.2t-0.7-1.2l-12.1-7.2q-0.7-0.4-1.5 0-0.7 0.4-0.7 1.3v14.2q0 0.9 0.7 1.3 0.4 0.2 0.8 0.2 0.3 0 0.7-0.2z"></path></g>
+            </svg>
+        )
+
+        const pauseButtonElement = (
+            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" className="react-jinke-music-player-pause-icon" style={{"vertical-align":"middle"}}>
+                <g><path d="m18.7 26.4v-12.8q0-0.3-0.2-0.5t-0.5-0.2h-5.7q-0.3 0-0.5 0.2t-0.2 0.5v12.8q0 0.3 0.2 0.5t0.5 0.2h5.7q0.3 0 0.5-0.2t0.2-0.5z m10 0v-12.8q0-0.3-0.2-0.5t-0.5-0.2h-5.7q-0.3 0-0.5 0.2t-0.2 0.5v12.8q0 0.3 0.2 0.5t0.5 0.2h5.7q0.3 0 0.5-0.2t0.2-0.5z m8.6-6.4q0 4.7-2.3 8.6t-6.3 6.2-8.6 2.3-8.6-2.3-6.2-6.2-2.3-8.6 2.3-8.6 6.2-6.2 8.6-2.3 8.6 2.3 6.3 6.2 2.3 8.6z"></path></g>
+            </svg>
+        )
+
+        const prevButtonElement = (
+            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style={{"vertical-align":"middle"}}>
+                <g><path d="m15.9 20l14.1-10v20z m-5.9-10h3.4v20h-3.4v-20z"></path></g>
+            </svg>
+        )
+
+        const nextButtonElement = (
+            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style={{"vertical-align":"middle"}}>
+                <g><path d="m26.6 10h3.4v20h-3.4v-20z m-16.6 20v-20l14.1 10z"></path></g>
+            </svg>
+        )
+
+        let prevDisplay, nextDisplay;
+        if (productFiles.length > 1 && showAudioControls){
+            prevDisplay = <a onClick={() => onPrevTrackPlayClick()}>{prevButtonElement}</a>
+            nextDisplay = <a onClick={() => onNextTrackPlayClick()}>{nextButtonElement}</a>
         }
 
-        const sources = productFiles.map((s,index) => (
-            <source key={index} src={s.musicSrc} data-track-index={index + 1}/>
-        ))
+        let playButtonDisplay;
+        if (isPlaying === true) playButtonDisplay = <a onClick={() => onPauseClick()}>{pauseButtonElement}</a>
+        else playButtonDisplay = <a onClick={() => onPlayClick()}>{playButtonElement}</a>
+
+        let trackCounterDisplay;
+        if (showAudioControls === true){
+            trackCounterDisplay = (
+                <div className="track-counter">
+                    {playIndex + 1}/{productFiles.length}
+                </div>
+            )
+        }
         
         musicPlayerDisplay = (
             <div className="player" id={"product-browse-music-player-" + props.projectId}>
-                  <audio>{sources}</audio>
+                  <audio></audio>
                   <div className="player-interface">
-                      {controlsDisplay}
+                    <div className="audio-player-controls">
+                        {prevDisplay}
+                        {playButtonDisplay}
+                        {nextDisplay}
+                    </div>
+                    {trackCounterDisplay}
                   </div>
             </div>
         )
