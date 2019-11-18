@@ -390,7 +390,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
                 setShowAudioControls(true);
                 const currentIndex = productFiles.findIndex(f => audioInfo.name === f.title);
                 setPlayIndex(currentIndex + 1);
-                $('.play-btn[title="Click to play"]').trigger("click");
+                $('#music-player-'+props.projectId).find('.play-btn[title="Click to play"]').trigger("click");
                 onReportAudioPlay(audioInfo);
             },
             //audio pause handle
