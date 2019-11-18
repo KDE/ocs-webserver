@@ -518,8 +518,10 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
 
     function onPlayClick(){
         const playerElement = document.getElementById("product-browse-music-player-"+props.projectId).getElementsByTagName('audio');
-        const currentSrc = productFiles[playIndex].musicSrc;
-        playerElement[0].src = currentSrc;
+        if (!playerElement[0].src) {
+            const currentSrc = productFiles[playIndex].musicSrc;
+            playerElement[0].src = currentSrc;
+        }
         playerElement[0].play();
         setShowAudioControls(true);
         setIsPlaying(true);
