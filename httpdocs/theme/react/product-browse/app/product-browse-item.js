@@ -528,6 +528,7 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
     function onPauseClick(){
         const playerElement = document.getElementById("product-browse-music-player-"+props.projectId).getElementsByTagName('audio');
         playerElement[0].pause();
+        console.log(playerElement);
         setShowAudioControls(false);
         setIsPlaying(false);
     }
