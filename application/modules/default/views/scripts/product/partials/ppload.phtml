@@ -732,7 +732,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                              + '<th style="text-align: right">' + downloaded_count_total + '</th>'
                                              //+ '<th style="text-align: right">' + downloaded_count_total_live + '</th>'
                                              + '<th style="text-align: right">' + downloaded_count_total_uk + '</th>'
-                                             + '<th style="text-align: right"></th>'
+                                             //+ '<th style="text-align: right"></th>'
                                         <?php 
                              
                                                 } else if ($this->product->member_id==$idt->member_id
@@ -740,11 +740,11 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                         ?>
                                              + '<th style="text-align: right">' + downloaded_count_total_uk + '</th>'
                                         <?php   } else { ?>
-                                             + '<th style="text-align: right;test1"></th>'
+                                             + '<th style="text-align: right;"></th>'
                                         <?php 
                                                 } 
                                             } else { ?>
-                                             + '<th style="text-align: right;test2"></th>'
+                                             + '<th style="text-align: right;"></th>'
                                         <?php   
                                             }
                                         ?>
