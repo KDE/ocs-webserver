@@ -472,6 +472,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
         $startIndex = (int)$this->getParam('jtStartIndex');
         $pageSize = (int)$this->getParam('jtPageSize');
         $sorting = $this->getParam('jtSorting');     
+        $filter_year = $this->getParam('filter_year', date("Y"));     
 
         if(!isset($sorting))
         {
@@ -486,7 +487,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
                 comment_text,
                 comment_created_at,
                 (select count(1) from reports_comment r where c.comment_id = r.comment_id ) cntreport,
-                (select GROUP_CONCAT(reported_by) from reports_comment r where c.comment_id = r.comment_id ) as reportedby,
+                (select GROUP_CONCAT(distinct reported_by) from reports_comment r where c.comment_id = r.comment_id ) as reportedby,
                   (
                   SELECT count(1) AS count FROM comments c2
                   where c2.comment_target_id <> 0 and c2.comment_member_id = c.comment_member_id and c2.comment_active = 1 
@@ -500,13 +501,14 @@ class SpamController extends Local_Controller_Action_DomainSwitch
                 join member m on c.comment_member_id = m.member_id and m.is_active = 1 and m.is_deleted = 0
                 where c.comment_type=0
                 and c.comment_active = 1 
+                and DATE_FORMAT(c.comment_created_at, '%Y') = :filter_year
         	";   
         
         $sql .= ' order by ' . $sorting;
         $sql .= ' limit ' . $pageSize;
         $sql .= ' offset ' . $startIndex;
         $printDateSince = new Default_View_Helper_PrintDateSince();
-        $comments = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+        $comments = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('filter_year' =>$filter_year));
         $helperImage = new Default_View_Helper_Image();
         foreach ($comments as &$value) {
             $value['member_since'] = $printDateSince->printDateSince($value['member_since']);
@@ -514,18 +516,19 @@ class SpamController extends Local_Controller_Action_DomainSwitch
             $value['avatar'] = $helperImage->Image($value['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); 
         }
 		
-		// $sqlall = "	select count(*) 
-		// 			from comments c 
-		// 			where c.comment_type=0
-		// 			and c.comment_active = 1";         
+		$sqlall = "	select count(1) 
+                    from comments c 
+                    join member m on c.comment_member_id = m.member_id and m.is_active = 1 and m.is_deleted = 0
+					where c.comment_type=0
+					and c.comment_active = 1 and DATE_FORMAT(c.comment_created_at, '%Y') = :filter_year";         
 
-        //$reportsAll = Zend_Db_Table::getDefaultAdapter()->fetchRow($sqlall);
+        $reportsAll = Zend_Db_Table::getDefaultAdapter()->fetchRow($sqlall,array('filter_year' =>$filter_year));
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
         $jTableResult['Records'] = $comments;
-        // $jTableResult['TotalRecordCount'] = array_pop($reportsAll);
-        $jTableResult['TotalRecordCount'] = 1000;
+        $jTableResult['TotalRecordCount'] = array_pop($reportsAll);
+        //$jTableResult['TotalRecordCount'] = 1000;
         $this->_helper->json($jTableResult);
     }
 
