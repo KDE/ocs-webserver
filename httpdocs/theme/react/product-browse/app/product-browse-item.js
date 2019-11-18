@@ -501,7 +501,7 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
     console.log(productFiles);
     const [ showAudioControls, setShowAudioControls ] = useState(false);
     console.log(showAudioControls);
-    const [ playIndex, setPlayIndex ] = useState();
+    const [ playIndex, setPlayIndex ] = useState(0);
     let initialPLayedAudioArray = [];
     if (productFiles){
         productFiles.forEach(function(i,index){
@@ -519,6 +519,12 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
     const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
     console.log(playedAudioArray);
     const [ isPlaying, setIsPlaying ] = useState(false);
+
+    function onPlayClick(){
+        const currentSrc = productFiles[playIndex].musicSrc;
+        const audio = new Audio(currentSrc);
+        audio.play();
+    }
 
     function onReportAudioPlay(audioInfo){
 
@@ -601,12 +607,10 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
         ))
         
         musicPlayerDisplay = (
-            <div id="product-browse-music-player">
-                  <audio controls preload="none" tabindex="0">
-                    {sources}
-                  </audio>
+            <div className="player" id={"product-browse-music-player-" + props.projectId}>
+                  <audio>{sources}</audio>
                   <div className="player-interface">
-                      
+                      {controlsDisplay}
                   </div>
             </div>
         )
