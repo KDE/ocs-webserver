@@ -498,9 +498,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
 function ProductBrowseItemPreviewMusicPlayerTwo(props){
 
     const [ productFiles, setProductFiles ] = useState(props.productFiles)
-    console.log(productFiles);
     const [ showAudioControls, setShowAudioControls ] = useState(false);
-    console.log(showAudioControls);
     const [ playIndex, setPlayIndex ] = useState(0);
     let initialPLayedAudioArray = [];
     if (productFiles){
@@ -515,15 +513,22 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
           initialPLayedAudioArray.push(pa);
         })
     }
-    console.log(initialPLayedAudioArray);
     const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
-    console.log(playedAudioArray);
     const [ isPlaying, setIsPlaying ] = useState(false);
 
     function onPlayClick(){
+        const playerElement = document.getElementById("product-browse-music-player-"+props.projectId).getElementsByTagName('audio');
         const currentSrc = productFiles[playIndex].musicSrc;
-        const audio = new Audio(currentSrc);
-        audio.play();
+        playerElement.src = currentSrc;
+        console.log(playerElement);
+        playerElement.play();
+        setIsPlaying(false);
+    }
+
+    function onPauseClick(){
+        const playerElement = document.getElementById("product-browse-music-player-"+props.projectId).getElementsByTagName('audio');
+        playerElement.pause();
+        setIsPlaying(true);
     }
 
     function onReportAudioPlay(audioInfo){
