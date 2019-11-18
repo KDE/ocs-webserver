@@ -422,6 +422,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'sectionsajax',
             'sectionsmonthajax',
             'sectionplingsmonthajax',
+            'sectioncreditsmonthajax',
             'sectionaffiliatesmonthdetailajax',
         ));
         

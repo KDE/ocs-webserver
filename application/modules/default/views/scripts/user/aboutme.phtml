@@ -42,6 +42,8 @@ $this->headMeta()->appendProperty('og:image',
 
 
 $helperFetchMainCategories = new Default_View_Helper_FetchMainCategories();
+$helperLastLogin = new Default_View_Helper_FetchLastLoginData();
+$lastLoginData = $helperLastLogin->fetchLastLoginData($this->member->member_id);
 $helperRatingWidget = new Default_View_Helper_PrintRatingWidget();
 $categories = $helperFetchMainCategories->fetchMainCategories();
 $helperAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
@@ -529,6 +531,18 @@ div#preloaded-images {
                                     echo '<br/><span>Member id: '.$this->member->member_id.' </span>';
                                     echo '<br/><span>Email address: '.$this->member->mail.' </span>';
                                     echo '<br/><span>Paypal address: '.$this->member->paypal_mail.' </span>';
+                                    
+                                    var_dump($lastLoginData);
+                                    
+                                    if(null != $lastLoginData['ip']) {
+                                        echo '<br/><span>Last IP: '.$lastLoginData['ip'].' </span>';
+                                    }
+                                    if(null != $lastLoginData['ipv4']) {
+                                        echo '<br/><span>Last IPv4: '.$lastLoginData['ipv4'].' </span>';
+                                    }
+                                    if(null != $lastLoginData['ipv6']) {
+                                        echo '<br/><span>Last IPv6: '.$lastLoginData['ipv6'].' </span>';
+                                    }
 
                                 ?>
                             </div>

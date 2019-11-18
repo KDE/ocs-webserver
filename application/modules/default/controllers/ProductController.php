@@ -276,16 +276,17 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
                 if ($userRoleName == Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN) {
                     //$file['downloaded_count_live'] = $this->getFileDownloadCount($collection_id, $file['id']);
-                    $counterToday = $file['count_dl_today'];
-                    $counterAll = $file['count_dl_all'];
-                    $counter = 0;
-                    if(!empty($counterToday)) {
-                        $counter = $counterToday;
-                    }
-                    if(!empty($counterAll)) {
-                        $counter = $counter + $counterAll;
-                    }
-                    $file['downloaded_count_live'] = $counter;
+                    //$counterToday = $file['count_dl_today'];
+                    //$counterAll = $file['count_dl_all'];
+                    
+                    //$counter = 0;
+                    //if(!empty($counterToday)) {
+                    //    $counter = $counterToday;
+                    //}
+                    //if(!empty($counterAll)) {
+                    //    $counter = $counter + $counterAll;
+                    //}
+                    //$file['downloaded_count_live'] = $counter;
                 } else {
                     unset($file['count_dl_all']);
                     unset($file['count_dl_all_nouk']);
@@ -587,6 +588,35 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             }
         }
         
+        // products related
+        $pc = new Default_Model_ProjectClone();
+        $cntRelatedProducts=0;
+        $ancesters = $pc->fetchAncestersIds($this->_projectId);
+        $siblings = $pc->fetchSiblings($this->_projectId);
+        $parents = $pc->fetchParentIds($this->_projectId);
+        $childrens =  $pc->fetchChildrensIds($this->_projectId);
+        $this->view->related_ancesters = null;
+        $this->view->related_siblings = null;
+        $this->view->related_parents = null;
+        $this->view->related_children = null;
+        if($ancesters && strlen($ancesters)>0){
+            $this->view->related_ancesters = $modelProduct->fetchProjects($ancesters);
+            $cntRelatedProducts+= sizeof($this->view->related_ancesters);
+        }
+        if($siblings && strlen($siblings)>0){
+            $this->view->related_siblings = $modelProduct->fetchProjects($siblings);
+            $cntRelatedProducts+= sizeof($this->view->related_siblings);
+        }
+        if($parents && strlen($parents)>0){
+            $this->view->related_parents = $modelProduct->fetchProjects($parents);
+            $cntRelatedProducts+= sizeof($this->view->related_parents);
+        }
+        if($childrens && strlen($childrens)>0){
+            $this->view->related_children = $modelProduct->fetchProjects($childrens);
+            $cntRelatedProducts+= sizeof($this->view->related_children);
+        }
+        $this->view->cntRelatedProducts = $cntRelatedProducts;
+       
 
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;              
         if($storeConfig->layout_pagedetail && $storeConfig->isRenderReact()){ 

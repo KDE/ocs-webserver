@@ -100,7 +100,19 @@
           <i class="fa fa-spinner"></i>
       </span>
   </div>
-<div id="titleheader"> <h1>Table of lastest 1000 comments </h1></div>
+<div id="titleheader"> <h1>Table of comments </h1></div>
+
+<div id="filter" style="padding:10px 20px;">
+    Pick year: <select id="filter_year" name="filter_year">         
+    <?php 
+    $currentyear = date("Y");
+    $startyear = 2001;
+    for ($i = $currentyear; $i >= 2001; $i--) {
+        echo '<option>'.$i.'</option>';
+    }    
+    ?>     
+    </select>
+</div>
 <div id="TableContainer"></div>
 <div id="dialog-form" title="Object Details"></div>
 <div id="dialog-confirm" title="Confirm"></div>
@@ -201,6 +213,7 @@
                             if(reportedby)
                             {
                                 var array = reportedby.split(',');      
+                                if(array.length>5){ array = array.slice(0, 5);}
                                 $(array).each(function( index, element ) {                          
                                     html = html+'<a  class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+element+'" >'+element+'</a><br/>';  
                                 });                                  
@@ -376,5 +389,13 @@
             return false;
         });
 
+
+         //Re-load records when user click 'load records' button.
+         $('#filter_year').on('change',function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_year: $('#filter_year').val(),                
+            });
+        });
     });
 </script>
