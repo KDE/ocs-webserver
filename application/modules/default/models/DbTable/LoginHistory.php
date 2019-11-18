@@ -63,13 +63,11 @@ class Default_Model_DbTable_LoginHistory extends Zend_Db_Table_Abstract
             ';
             $data = $this->_db->query($sql, $memberId)->fetchAll();
             if (count($data) == 0) {
-                $data = array();
+                return array();
             } else {
-                $data = $data[0];
+                return $data[0];
             }
             //$cache->save($data, $cacheName, array(), 3600);
         }
-
-        return $data;
     }
 }
