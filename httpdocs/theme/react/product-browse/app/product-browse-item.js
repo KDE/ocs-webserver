@@ -390,7 +390,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
                 setShowAudioControls(true);
                 const currentIndex = productFiles.findIndex(f => audioInfo.name === f.title);
                 setPlayIndex(currentIndex + 1);
-                const playBtnElement = document.getElementById('music-player-'+props.projectId).querySelectorAll('span[title=Click to play]');
+                const playBtnElement = document.getElementById('music-player-'+props.projectId).querySelector('span[title="Click to play"]');
                 // desktop
                 playBtnElement.click();
                 // mobile
