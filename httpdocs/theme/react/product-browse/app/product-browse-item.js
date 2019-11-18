@@ -517,12 +517,13 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
     const [ isPlaying, setIsPlaying ] = useState(false);
     const [ isPaused, setIsPaused ] = useState(false);
 
-    function onPlayClick(){
+    function onPlayClick(pIndex){
         const playerElement = document.getElementById("product-browse-music-player-"+props.projectId).getElementsByTagName('audio');
         if (isPaused === false) {
-            const currentSrc = productFiles[playIndex].musicSrc;
+            const currentSrc = productFiles[pIndex].musicSrc;
             playerElement[0].src = currentSrc;
         }
+        console.log(pIndex);
         playerElement[0].play();
         setShowAudioControls(true);
         setIsPlaying(true);
@@ -545,21 +546,18 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
             prevTrackIndex = playIndex - 1;
         }
         setPlayIndex(prevTrackIndex);
-        onPlayClick();
+        onPlayClick(prevTrackIndex);
     }
 
     function onNextTrackPlayClick(){
-        let prevTrackIndex;
+        let nextTrackIndex;
         if (playIndex + 1 === productFiles.length){
-            prevTrackIndex = 0;
+            nextTrackIndex = 0;
         } else {
-            prevTrackIndex = playIndex + 1;
+            nextTrackIndex = playIndex + 1;
         }
-
-        setPlayIndex(prevTrackIndex);
-        const playerElement = document.getElementById("product-browse-music-player-"+props.projectId).getElementsByTagName('audio');
-        playerElement[0].src = '';
-        onPlayClick();        
+        setPlayIndex(nextTrackIndex);
+        onPlayClick(nextTrackIndex);
     }
 
     function onReportAudioPlay(audioInfo){
@@ -655,7 +653,7 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
 
         let playButtonDisplay;
         if (isPlaying === true) playButtonDisplay = <a onClick={() => onPauseClick()}>{pauseButtonElement}</a>
-        else playButtonDisplay = <a onClick={() => onPlayClick()}>{playButtonElement}</a>
+        else playButtonDisplay = <a onClick={() => onPlayClick(playIndex)}>{playButtonElement}</a>
 
         let trackCounterDisplay;
         if (showAudioControls === true){
