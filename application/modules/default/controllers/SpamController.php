@@ -487,7 +487,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
                 comment_text,
                 comment_created_at,
                 (select count(1) from reports_comment r where c.comment_id = r.comment_id ) cntreport,
-                (select GROUP_CONCAT(distinct reported_by) from reports_comment r where c.comment_id = r.comment_id ) as reportedby,
+                (select GROUP_CONCAT(distinct reported_by) from reports_comment r where c.comment_id = r.comment_id order by created_at desc ) as reportedby,
                   (
                   SELECT count(1) AS count FROM comments c2
                   where c2.comment_target_id <> 0 and c2.comment_member_id = c.comment_member_id and c2.comment_active = 1 
