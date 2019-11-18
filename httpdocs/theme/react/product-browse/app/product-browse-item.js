@@ -119,7 +119,7 @@ export function ProductBrowseItem(props){
         );
         if (productFiles && productFiles.length > 0){
                 musicPlayerDisplay = (
-                    <ProductBrowseItemPreviewMusicPlayer
+                    <ProductBrowseItemPreviewMusicPlayerTwo
                         productFiles={productFiles} 
                         projectId={p.project_id} 
                         imgHeight={props.imgHeight}
