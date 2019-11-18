@@ -26,4 +26,35 @@ class Default_Model_DbTable_LoginHistory extends Zend_Db_Table_Abstract
     protected $_name = "login_history";
     protected $_rowClass = 'Default_Model_DbRow_LoginHistory';
 
+    
+    /**
+     * @param int|array $memberId
+     *
+     * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Statement_Exception
+     */
+    public function fetchLastLoginData($memberId)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = $this->cache;
+        $cacheName = __FUNCTION__ . '_' . md5($memberId);
+
+        if (false === ($data = $cache->load($cacheName))) {
+            $sql = '
+            SELECT node.*
+            FROM login_history AS node
+            WHERE node.member_id = '.$memberId.'
+            ORDER BY node.id DESC
+            LIMIT 1
+            ';
+            $data = $this->_db->query($sql, $memberId)->fetchAll();
+            if (count($data) == 0) {
+                $data = array();
+            }
+            $cache->save($data, $cacheName, array(), 3600);
+        }
+
+        return $data;
+    }
 }
