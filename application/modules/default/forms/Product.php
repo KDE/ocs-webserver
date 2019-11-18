@@ -489,7 +489,7 @@ class Default_Form_Product extends Zend_Form
         if ($this->member_id) {
 
             $memberTable = new Default_Model_Member();
-            $member = $memberTable->fetchMemberData($this->member_id);
+            $member = $memberTable->fetchMember($this->member_id);
             $gitlab_user_id = null;
             if (!empty($member->gitlab_user_id)) {
                 //get gitlab user id from db
