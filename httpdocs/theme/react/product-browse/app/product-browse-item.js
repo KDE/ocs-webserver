@@ -6,8 +6,6 @@ export function ProductBrowseItem(props){
 
     const p = props.product;
 
-    console.log(browseListType);
-
     const [ productFilesFetched, setProductFilesFetched ] = useState(false);
     const [ productFiles, setProductFiles ] = useState();
     const [ imgUrl, setImgUrl ] = useState(getImageUrl(p,props.itemWidth,props.imgHeight));
@@ -22,7 +20,6 @@ export function ProductBrowseItem(props){
         if (browseListType === "music" && productFilesFetched === false) onMusicProductLoad()
     },[])
 
-        
     function onMusicProductLoad(){
         setProductFilesFetched(true);
         const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
@@ -120,13 +117,23 @@ export function ProductBrowseItem(props){
             </div>            
         );
         if (productFiles && productFiles.length > 0){
-            musicPlayerDisplay = (
-                <ProductBrowseItemPreviewMusicPlayer 
-                    productFiles={productFiles} 
-                    projectId={p.project_id} 
-                    imgHeight={props.imgHeight}
-                />
-            )
+            if (window.location.search === "?index=2"){
+                musicPlayerDisplay = (
+                    <ProductBrowseItemPreviewMusicPlayerTwo 
+                        productFiles={productFiles} 
+                        projectId={p.project_id} 
+                        imgHeight={props.imgHeight}
+                    />
+                )
+            } else {
+                musicPlayerDisplay = (
+                    <ProductBrowseItemPreviewMusicPlayer
+                        productFiles={productFiles} 
+                        projectId={p.project_id} 
+                        imgHeight={props.imgHeight}
+                    />
+                )
+            }
         }
     }
     else if (browseListType === "videos"){
@@ -231,7 +238,6 @@ function ProductBrowseItemPreviewMusicPlayer(props){
         $('.product-browse-item-preview-music-player').disableSelection();
     },[])
 
-
     function onReportAudioPlay(audioInfo){
 
         const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
@@ -249,7 +255,6 @@ function ProductBrowseItemPreviewMusicPlayer(props){
     
         if (playedAudioArray[audioItemIndex].played === 0){
           const audioStartUrl = window.location.href + "/p/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.id+'&type_id=2';
-          console.log(audioStartUrl)
           $.ajax({url: audioStartUrl}).done(function(res) { 
             console.log(res);
             const newAudioItem = {
@@ -282,7 +287,6 @@ function ProductBrowseItemPreviewMusicPlayer(props){
         setPlayedAudioArray(newPLayedAudioArray);
         // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
         if  (playedAudioArray[audioItemIndex].stopped === 0){
-            console.log(playedAudioArray);
             const audioStopUrl = window.location.href + "/p/" + props.projectId + "/" + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
             $.ajax({url: audioStopUrl}).done(function(res) { 
             console.log(res);
@@ -475,6 +479,135 @@ function ProductBrowseItemPreviewMusicPlayer(props){
             <div>
                 <ReactJkMusicPlayer {...options} />
                 <span className="music-player-counter">{playIndex}/{productFiles.length}</span>
+            </div>
+        )
+    }
+
+    let showControlsCssClass = "";
+    if (showAudioControls === true) {
+        showControlsCssClass = "show-controls"
+    }
+
+    return (
+        <div className={"product-browse-item-preview-music-player " + showControlsCssClass} id={"music-player-"+props.projectId}>
+            {musicPlayerDisplay}
+        </div>
+    )
+}
+
+function ProductBrowseItemPreviewMusicPlayerTwo(props){
+
+    const [ productFiles, setProductFiles ] = useState(props.productFiles)
+    console.log(productFiles);
+    const [ showAudioControls, setShowAudioControls ] = useState(false);
+    console.log(showAudioControls);
+    const [ playIndex, setPlayIndex ] = useState();
+    let initialPLayedAudioArray = [];
+    if (productFiles){
+        productFiles.forEach(function(i,index){
+          let pl = 0;
+          if (index === 0) pl = -1;
+          const pa = {
+            ...i,
+            played:pl,
+            stopped:0
+          }
+          initialPLayedAudioArray.push(pa);
+        })
+    }
+    console.log(initialPLayedAudioArray);
+    const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
+    console.log(playedAudioArray);
+    const [ isPlaying, setIsPlaying ] = useState(false);
+
+    function onReportAudioPlay(audioInfo){
+
+        const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
+        const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
+        const newAudioItem = {
+          ...audioItem,
+          played:audioItem.played + 1
+        }
+        const newPLayedAudioArray = [
+          ...playedAudioArray.slice(0,audioItemIndex),
+          newAudioItem,
+          ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+        ];
+        setPlayedAudioArray(newPLayedAudioArray);
+    
+        if (playedAudioArray[audioItemIndex].played === 0){
+          const audioStartUrl = window.location.href + "/p/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.id+'&type_id=2';
+          console.log(audioStartUrl)
+          $.ajax({url: audioStartUrl}).done(function(res) { 
+            console.log(res);
+            const newAudioItem = {
+              ...audioItem,
+              mediaViewId:res.MediaViewId,
+              played:audioItem.played + 1
+            }
+            const newPLayedAudioArray = [
+              ...playedAudioArray.slice(0,audioItemIndex),
+              newAudioItem,
+              ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+            ];
+            setPlayedAudioArray(newPLayedAudioArray);
+          });
+        }    
+    }
+    
+    function onReportAudioStop(audioInfo){
+        const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
+        const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
+        const newAudioItem = {
+            ...audioItem,
+            stopped:audioItem.stopped + 1
+        }
+        const newPLayedAudioArray = [
+            ...playedAudioArray.slice(0,audioItemIndex),
+            newAudioItem,
+            ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+        ];
+        setPlayedAudioArray(newPLayedAudioArray);
+        // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
+        if  (playedAudioArray[audioItemIndex].stopped === 0){
+            console.log(playedAudioArray);
+            const audioStopUrl = window.location.href + "/p/" + props.projectId + "/" + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+            $.ajax({url: audioStopUrl}).done(function(res) { 
+            console.log(res);
+            });
+        }
+    }
+
+    let musicPlayerDisplay;
+    if (productFiles) {
+
+        let controlsDisplay;
+        if (isPlaying === true){
+            controlsDisplay = (
+                <div className="audio-player-controls">
+                    <a onClick={() => onPauseClick()}>pause</a>
+                </div>
+            )
+        } else {
+            controlsDisplay = (
+                <div className="audio-player-controls">
+                    <a onClick={() => onPlayClick()}>play</a>
+                </div>                
+            )
+        }
+
+        const sources = productFiles.map((s,index) => (
+            <source key={index} src={s.musicSrc} data-track-index={index + 1}/>
+        ))
+        
+        musicPlayerDisplay = (
+            <div id="product-browse-music-player">
+                  <audio controls preload="none" tabindex="0">
+                    {sources}
+                  </audio>
+                  <div className="player-interface">
+                      
+                  </div>
             </div>
         )
     }
