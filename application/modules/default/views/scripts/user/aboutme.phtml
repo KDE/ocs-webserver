@@ -532,16 +532,16 @@ div#preloaded-images {
                                     echo '<br/><span>Email address: '.$this->member->mail.' </span>';
                                     echo '<br/><span>Paypal address: '.$this->member->paypal_mail.' </span>';
                                     
-                                    var_dump($lastLoginData);
+                                    var_dump($lastLoginData[0]);
                                     
-                                    if(null != $lastLoginData['ip']) {
-                                        echo '<br/><span>Last IP: '.$lastLoginData['ip'].' </span>';
+                                    if(null != $lastLoginData[0]['ip']) {
+                                        echo '<br/><span>Last IP: '.$lastLoginData[0]['ip'].' </span>';
                                     }
-                                    if(null != $lastLoginData['ipv4']) {
-                                        echo '<br/><span>Last IPv4: '.$lastLoginData['ipv4'].' </span>';
+                                    if(null != $lastLoginData[0]['ipv4']) {
+                                        echo '<br/><span>Last IPv4: '.$lastLoginData[0]['ipv4'].' </span>';
                                     }
-                                    if(null != $lastLoginData['ipv6']) {
-                                        echo '<br/><span>Last IPv6: '.$lastLoginData['ipv6'].' </span>';
+                                    if(null != $lastLoginData[0]['ipv6']) {
+                                        echo '<br/><span>Last IPv6: '.$lastLoginData[0]['ipv6'].' </span>';
                                     }
 
                                 ?>
