@@ -53,21 +53,21 @@ class Default_Model_DbTable_LoginHistory extends Zend_Db_Table_Abstract
         
         $data = null;
 
-        if (false === ($data = $cache->load($cacheName))) {
+        //if (false === ($data = $cache->load($cacheName))) {
             $sql = '
             SELECT node.*
             FROM login_history AS node
             WHERE node.member_id = '.$memberId.'
             ORDER BY node.id DESC
-            LIMIT 1
+            LIMIT 10
             ';
             $data = $this->_db->query($sql)->fetchAll();
             if (count($data) == 0) {
                 return array();
             } else {
-                return $data[0];
+                return $data;
             }
             //$cache->save($data, $cacheName, array(), 3600);
-        }
+        //}
     }
 }
