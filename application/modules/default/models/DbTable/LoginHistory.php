@@ -61,7 +61,7 @@ class Default_Model_DbTable_LoginHistory extends Zend_Db_Table_Abstract
             ORDER BY node.id DESC
             LIMIT 1
             ';
-            $data = $this->_db->query($sql, $memberId)->fetchAll();
+            $data = $this->_db->query($sql)->fetchAll();
             if (count($data) == 0) {
                 return array();
             } else {
