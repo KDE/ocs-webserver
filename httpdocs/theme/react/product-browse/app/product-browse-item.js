@@ -567,8 +567,8 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
 
     function onReportAudioPlay(src){
 
-        const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
-        const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
+        const audioItem = playedAudioArray.find((i => i.musicSrc === src));
+        const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === src));
         const newAudioItem = {
           ...audioItem,
           played:audioItem.played + 1
@@ -601,8 +601,8 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
     }
     
     function onReportAudioStop(src){
-        const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
-        const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
+        const audioItem = playedAudioArray.find((i => i.musicSrc === src));
+        const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === src));
         const newAudioItem = {
             ...audioItem,
             stopped:audioItem.stopped + 1
@@ -618,7 +618,7 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
             console.log(playedAudioArray);
             const audioStopUrl = window.location.href + "/p/" + props.projectId + "/" + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
             $.ajax({url: audioStopUrl}).done(function(res) { 
-            console.log(res);
+                console.log(res);
             });
         }
     }
