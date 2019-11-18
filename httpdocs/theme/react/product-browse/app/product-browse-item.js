@@ -505,11 +505,9 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
     let initialPLayedAudioArray = [];
     if (productFiles){
         productFiles.forEach(function(i,index){
-          let pl = 0;
-          if (index === 0) pl = -1;
           const pa = {
             ...i,
-            played:pl,
+            played:0,
             stopped:0
           }
           initialPLayedAudioArray.push(pa);
@@ -526,7 +524,6 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
             currentSrc = productFiles[pIndex].musicSrc;
             playerElement[0].src = currentSrc;
         }
-        console.log(pIndex);
         playerElement[0].play();
         setShowAudioControls(true);
         setIsPlaying(true);
@@ -566,7 +563,7 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
     }
 
     function onReportAudioPlay(src){
-
+        console.log(src);
         const audioItem = playedAudioArray.find((i => i.musicSrc === src));
         const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === src));
         const newAudioItem = {
@@ -579,7 +576,7 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
           ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
         ];
         setPlayedAudioArray(newPLayedAudioArray);
-    
+        console.log(playedAudioArray);
         if (playedAudioArray[audioItemIndex].played === 0){
           const audioStartUrl = window.location.href + "/p/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.id+'&type_id=2';
           console.log(audioStartUrl)
@@ -601,6 +598,7 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
     }
     
     function onReportAudioStop(src){
+        console.log(src);
         const audioItem = playedAudioArray.find((i => i.musicSrc === src));
         const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === src));
         const newAudioItem = {
