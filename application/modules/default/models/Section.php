@@ -196,7 +196,6 @@ class Default_Model_Section
 
 
 
-
     public function fetchTopPlingedProductsPerSection($section_id=null)
     {
         if($section_id)
@@ -206,6 +205,15 @@ class Default_Model_Section
         {
             $sqlSection = " ";
         }
+
+        // ignore if supporter still active 
+        // inner join (
+        //     select distinct su2.member_id
+        //     from section_support_paypements ss
+        //     JOIN support su2 ON su2.id = ss.support_id
+        //     where yearmonth = DATE_FORMAT(NOW()- INTERVAL 1 MONTH,'%Y%m')
+        // ) ss on pl.member_id = ss.member_id
+
         $sql = "
                 select pl.project_id
                 ,count(1) as sum_plings 
@@ -229,12 +237,7 @@ class Default_Model_Section
                 from project_plings pl
                 inner join stat_projects p on pl.project_id = p.project_id and p.status = 100
                 inner join section_category m on p.project_category_id = m.project_category_id
-                inner join (
-                    select distinct su2.member_id
-                    from section_support_paypements ss
-                    JOIN support su2 ON su2.id = ss.support_id
-                    where yearmonth = DATE_FORMAT(NOW()- INTERVAL 1 MONTH,'%Y%m')
-                ) ss on pl.member_id = ss.member_id
+                
                 where pl.is_deleted = 0 and pl.is_active = 1" .$sqlSection."
                 group by pl.project_id
                 order by sum_plings desc ,sum_plings_all desc
@@ -245,6 +248,15 @@ class Default_Model_Section
         return $resultSet;    
     }
 
+    /**
+     *  ignore if supporter still active 
+     * inner join (
+                    select distinct su2.member_id
+                    from section_support_paypements ss
+                    JOIN support su2 ON su2.id = ss.support_id
+                    where yearmonth = DATE_FORMAT(NOW()- INTERVAL 1 MONTH,'%Y%m')
+                ) ss on pl.member_id = ss.member_id
+     */
     public function fetchTopPlingedProductsPerCategory($cat_id)
     {
         $sql = "select pl.project_id
@@ -267,13 +279,7 @@ class Default_Model_Section
                 ,p.changed_at
                 ,p.created_at
                 from project_plings pl
-                inner join stat_projects p on pl.project_id = p.project_id and p.status = 100                
-                inner join (
-                    select distinct su2.member_id
-                    from section_support_paypements ss
-                    JOIN support su2 ON su2.id = ss.support_id
-                    where yearmonth = DATE_FORMAT(NOW()- INTERVAL 1 MONTH,'%Y%m')
-                ) ss on pl.member_id = ss.member_id
+                inner join stat_projects p on pl.project_id = p.project_id and p.status = 100                                
                 where pl.is_deleted = 0 and pl.is_active = 1 and p.project_category_id=:cat_id
                 group by pl.project_id
                 order by sum_plings desc 
@@ -353,6 +359,15 @@ class Default_Model_Section
         {
             $sqlSection = " ";
         }
+
+        /**
+         * inner join (
+			select distinct su2.member_id
+			from section_support_paypements ss
+			JOIN support su2 ON su2.id = ss.support_id
+			where yearmonth = DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')
+		) ss on pl.member_id = ss.member_id
+         */
         $sql = "select p.member_id,
         count(1) as cnt,
         (select count(1) from project_plings pls , stat_projects ppp where pls.project_id=ppp.project_id and pls.is_deleted=0 and ppp.member_id=p.member_id) as sum_plings_all,
@@ -363,12 +378,7 @@ class Default_Model_Section
         join project_plings pl on p.project_id = pl.project_id
         join member m on p.member_id = m.member_id
         inner join section_category mm on p.project_category_id = mm.project_category_id
-        inner join (
-			select distinct su2.member_id
-			from section_support_paypements ss
-			JOIN support su2 ON su2.id = ss.support_id
-			where yearmonth = DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')
-		) ss on pl.member_id = ss.member_id
+        
         where p.status = 100
         and pl.is_deleted = 0 and pl.is_active = 1 ".$sqlSection."  
         group by p.member_id
