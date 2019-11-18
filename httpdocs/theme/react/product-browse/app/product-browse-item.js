@@ -118,15 +118,6 @@ export function ProductBrowseItem(props){
             </div>            
         );
         if (productFiles && productFiles.length > 0){
-            if (window.location.search === "?index=2"){
-                musicPlayerDisplay = (
-                    <ProductBrowseItemPreviewMusicPlayerTwo 
-                        productFiles={productFiles} 
-                        projectId={p.project_id} 
-                        imgHeight={props.imgHeight}
-                    />
-                )
-            } else {
                 musicPlayerDisplay = (
                     <ProductBrowseItemPreviewMusicPlayer
                         productFiles={productFiles} 
@@ -134,7 +125,6 @@ export function ProductBrowseItem(props){
                         imgHeight={props.imgHeight}
                     />
                 )
-            }
         }
     }
     else if (browseListType === "videos"){
