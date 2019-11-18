@@ -241,6 +241,7 @@ function ProductBrowseItemPreviewMusicPlayer(props){
 
     function onReportAudioPlay(audioInfo){
 
+        console.log(audioInfo);
         const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
         const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
         const newAudioItem = {
@@ -520,8 +521,9 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
 
     function onPlayClick(pIndex){
         const playerElement = document.getElementById("product-browse-music-player-"+props.projectId).getElementsByTagName('audio');
+        let currentSrc;
         if (isPaused === false) {
-            const currentSrc = productFiles[pIndex].musicSrc;
+            currentSrc = productFiles[pIndex].musicSrc;
             playerElement[0].src = currentSrc;
         }
         console.log(pIndex);
@@ -529,6 +531,7 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
         setShowAudioControls(true);
         setIsPlaying(true);
         setIsPaused(false);
+        onReportAudioPlay(currentSrc);
     }
 
     function onPauseClick(){
@@ -536,7 +539,8 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
         playerElement[0].pause();
         setShowAudioControls(false);
         setIsPlaying(false);
-        setIsPaused(true)
+        setIsPaused(true);
+        onReportAudioStop(productFiles[playIndex].musicSrc)
     }
 
     function onPrevTrackPlayClick(){
@@ -561,7 +565,7 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
         onPlayClick(nextTrackIndex);
     }
 
-    function onReportAudioPlay(audioInfo){
+    function onReportAudioPlay(src){
 
         const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
         const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
@@ -596,7 +600,7 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
         }    
     }
     
-    function onReportAudioStop(audioInfo){
+    function onReportAudioStop(src){
         const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
         const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
         const newAudioItem = {
