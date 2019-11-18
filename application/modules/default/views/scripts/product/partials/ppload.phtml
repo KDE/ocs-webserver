@@ -96,24 +96,24 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                  
                                  
                                  <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                                  <th style="text-align: right"><?= $this->translate('Downloads Old'); ?></th>
+                                  <th style="text-align: right;font-style: italic;"><?= $this->translate('Downloads Old'); ?></th>
                                  <?php endif; ?>
-                                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                                  <th style="text-align: right"><?= $this->translate('Downloads NoUK'); ?></th>
-                                 <?php endif; ?>
+                                 <?php /*if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                  <th style="text-align: right;font-style: italic;"><?= $this->translate('Downloads NoUK'); ?></th>
+                                 <?php endif; */?>
                                   <th style="text-align: right"><?= $this->translate('Downloads'); ?></th>
                                  
-                                 <th><?= $this->translate('Date'); ?></th>
+                                  <th><?= $this->translate('Date'); ?></th>
 
-                                 <th style="text-align: right"><?= $this->translate('Filesize'); ?></th>
+                                  <th style="text-align: right"><?= $this->translate('Filesize'); ?></th>
 
-                                 <th style="text-align: right">DL</th>
+                                  <th style="text-align: right">DL</th>
                                   <th style="text-align: right;white-space:nowrap"><?= $this->translate('OCS-Install'); ?>
                                      <a href="#modal-installation-instructions" role="button" data-toggle="modal"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
-                                 </th>
-                                 <th style="min-width: 250px;"><?= $this->translate('MD5SUM'); ?></th>
+                                  </th>
+                                  <th style="min-width: 250px;"><?= $this->translate('MD5SUM'); ?></th>
                                  <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                                 <th>Compatible</th>
+                                  <th style="font-style: italic;">Compatible</th>
                                  <?php endif; ?>
 
                              </tr>
@@ -375,9 +375,9 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                                         tableString += '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + count_downloads + '</td>';
                                         <?php endif; ?>
-                                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                        <?php /* if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                                         tableString += '<td style="text-align: right"><span id="download_counter_live_' + this.id + '">' + count_downloads_live + '</td>';
-                                        <?php endif; ?>
+                                        <?php endif; */?>
                                         tableString += '<td style="text-align: right"><span id="download_counter_uk_' + this.id + '">' + count_downloads_uk + '</td>';
                                         tableString += '<td>' +mnt.format('YYYY-MM-DD') + '</td>';
                                         tableString += '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>';
@@ -623,9 +623,9 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                                         tableString += '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + count_downloads + '</td>';
                                         <?php endif; ?>
-                                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                        <?php /* if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                                         tableString += '<td style="text-align: right"><span id="download_counter_live_' + this.id + '">' + count_downloads_live + '</td>';
-                                        <?php endif; ?>
+                                        <?php endif; */?>
                                         tableString += '<td style="text-align: right"><span id="download_counter_uk_' + this.id + '">' + count_downloads_uk + '</td>';
                                         tableString += '<td>' +mnt.format('YYYY-MM-DD') + '</td>';
                                         tableString += '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>';
