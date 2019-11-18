@@ -227,6 +227,10 @@ function ProductBrowseItemPreviewMusicPlayer(props){
     const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
 
 
+    React.useEffect(() => {
+        $('.product-browse-item-preview-music-player').disableSelection();
+    },[])
+
 
     function onReportAudioPlay(audioInfo){
 
@@ -390,7 +394,21 @@ function ProductBrowseItemPreviewMusicPlayer(props){
                 setShowAudioControls(true);
                 const currentIndex = productFiles.findIndex(f => audioInfo.name === f.title);
                 setPlayIndex(currentIndex + 1);
-                $('.play-btn[title="Click to play"]').trigger("click");
+                const playBtnElement = document.getElementById('music-player-'+props.projectId).querySelector('span[title="Click to play"]');
+
+                if (window.matchMedia("(max-width: 768px)").matches) {
+                        // createEvent(), event.initEvent() are Depricated see Ref: [enter link description here][1]
+                        // var event = document.createEvent("Event"); 
+                        // event.initEvent("touchstart", false, true);
+                        // event.initEvent("touchend", false, true);
+                        // So the solution is:
+                        var event1 = new Event('touchstart');
+                        var event2 = new Event('touchend'); 
+                        playBtnElement.dispatchEvent(event1); 
+                        playBtnElement.dispatchEvent(event2);
+                } else {
+                    playBtnElement.click();
+                }
                 onReportAudioPlay(audioInfo);
             },
             //audio pause handle
