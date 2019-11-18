@@ -50,6 +50,8 @@ class Default_Model_DbTable_LoginHistory extends Zend_Db_Table_Abstract
         /** @var Zend_Cache_Core $cache */
         $cache = $this->cache;
         $cacheName = __FUNCTION__ . '_' . md5($memberId);
+        
+        $data = null;
 
         if (false === ($data = $cache->load($cacheName))) {
             $sql = '
@@ -63,7 +65,7 @@ class Default_Model_DbTable_LoginHistory extends Zend_Db_Table_Abstract
             if (count($data) == 0) {
                 $data = array();
             }
-            $cache->save($data, $cacheName, array(), 3600);
+            //$cache->save($data, $cacheName, array(), 3600);
         }
 
         return $data;

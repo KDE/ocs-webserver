@@ -531,8 +531,14 @@ div#preloaded-images {
                                     echo '<br/><span>Member id: '.$this->member->member_id.' </span>';
                                     echo '<br/><span>Email address: '.$this->member->mail.' </span>';
                                     echo '<br/><span>Paypal address: '.$this->member->paypal_mail.' </span>';
+                                    
+                                    var_dump($lastLoginData);
+                                    
                                     if(null != $lastLoginData['ip']) {
-                                        echo '<br/><span>Last IPv4: '.$lastLoginData['ip'].' </span>';
+                                        echo '<br/><span>Last IP: '.$lastLoginData['ip'].' </span>';
+                                    }
+                                    if(null != $lastLoginData['ipv4']) {
+                                        echo '<br/><span>Last IPv4: '.$lastLoginData['ipv4'].' </span>';
                                     }
                                     if(null != $lastLoginData['ipv6']) {
                                         echo '<br/><span>Last IPv6: '.$lastLoginData['ipv6'].' </span>';
