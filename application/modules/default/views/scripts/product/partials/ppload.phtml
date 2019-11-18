@@ -390,7 +390,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                             tableString += '<td></td>'; 
                                         }
                                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                                        tableString += '<td style="text-align: center; "><input type="checkbox" id="data-checkbox-compatible-'+this.id+'" data-is-compatible="" ></td>';
+                                        tableString += '<td style="text-align: center; "><input type="checkbox" id="data-checkbox-compatible-'+this.id+'" data-is-compatible="'+this.ocs_compatible+'" ></td>';
                                         <?php endif; ?>
                                             
                                         tableString += '</tr>';
