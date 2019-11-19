@@ -1016,5 +1016,9 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $authModel = new Default_Model_Authorization();
         $authModel->updateUserLastOnline('member_id', $identity);
     }
+    
+    private function logLogin() {
+        
+    }
 
 }
