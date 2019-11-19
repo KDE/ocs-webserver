@@ -180,14 +180,11 @@ export function ProductBrowseItem(props){
             <span className="index">{props.rowIndex + 1}</span>
         )
     }
-
+    console.log(is_show_real_domain_as_url);
     let itemLink = json_serverUrl;
-    itemLink = json_store_name === "www.pling.com" ? "/" : "/s/" + json_store_name + "/";
+    itemLink = is_show_real_domain_as_url === true ? "/" : "/s/" + json_store_name + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
     itemLink += "/" + p.project_id;
-    console.log(itemLink);
-    console.log(json_sname);
-    console.log(json_store_name);
     
     return (
         <div className={"product-browse-item " + browseListType} id={"product-" + p.project_id} style={{"width":props.itemWidth}}>
