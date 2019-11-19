@@ -69,7 +69,7 @@ export function ProductBrowseItem(props){
             ({p.count_follower}) Likes
         </div>
     )
-
+        
     let itemInfoDisplay,
         musicItemInfoDisplay, 
         musicPlayerDisplay,
@@ -643,13 +643,13 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
 
         let prevDisplay, nextDisplay;
         if (productFiles.length > 1 && showAudioControls){
-            prevDisplay = <button role="button" aria-label="previous" onClick={() => onPrevTrackPlayClick()}>{prevButtonElement}</button>
-            nextDisplay = <button role="button" aria-label="next"  onClick={() => onNextTrackPlayClick()}>{nextButtonElement}</button>
+            prevDisplay = <a role="button" aria-label="previous" onClick={() => onPrevTrackPlayClick()}>{prevButtonElement}</a>
+            nextDisplay = <a role="button" aria-label="next"  onClick={() => onNextTrackPlayClick()}>{nextButtonElement}</a>
         }
 
         let playButtonDisplay;
-        if (isPlaying === true) playButtonDisplay = <button role="button" aria-label="pause" onClick={() => onPauseClick()}>{pauseButtonElement}</button>
-        else playButtonDisplay = <button role="button" aria-label="play" onClick={() => onPlayClick(playIndex)}>{playButtonElement}</button>
+        if (isPlaying === true) playButtonDisplay = <a role="button" aria-label="pause" onClick={() => onPauseClick()}>{pauseButtonElement}</a>
+        else playButtonDisplay = <a role="button" aria-label="play" onClick={() => onPlayClick(playIndex)}>{playButtonElement}</a>
 
         let trackCounterDisplay;
         if (showAudioControls === true){
