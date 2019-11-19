@@ -182,7 +182,7 @@ export function ProductBrowseItem(props){
     }
     console.log(is_show_real_domain_as_url);
     let itemLink = json_serverUrl;
-    itemLink = is_show_real_domain_as_url === true ? "/" : "/s/" + json_store_name + "/";
+    itemLink = is_show_real_domain_as_url === 0 ? "/" : "/s/" + json_store_name + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
     itemLink += "/" + p.project_id;
     
