@@ -194,6 +194,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 $stat['cntCollections'] = 0;
             }
 
+            $stat['cntOrinalProducts'] = $tableProject->getOriginalProjectsForMemberCnt($this->_memberId);
             $stat['cntComments'] = $paginationComments->getTotalItemCount();
             $tblFollower = new Default_Model_DbTable_ProjectFollower();
             $stat['cntLikesHeGave'] = $tblFollower->countLikesHeGave($this->_memberId);
@@ -326,8 +327,9 @@ class UserController extends Local_Controller_Action_DomainSwitch
     public function unpublishedAction()
     {
         $tableProject = new Default_Model_Project();
+                
+        $projectpage = $this->getParam('projectpage', 1);
         $pageLimit = 1000;
-        $projectpage = 1;
         $total_records = 1000;
         $this->view->pageLimit = $pageLimit;
         $this->view->projectpage = $projectpage;
@@ -338,6 +340,33 @@ class UserController extends Local_Controller_Action_DomainSwitch
                 ($projectpage - 1) * $pageLimit);
 
         $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer('partials/aboutmeProducts');
+    }
+
+    public function showoriginalAction()
+    {
+        $tableProject = new Default_Model_Project();
+        $projectpage = $this->getParam('projectpage', 1);
+        $pageLimit = 100;        
+        $total_records = $tableProject->getOriginalProjectsForMemberCnt($this->_memberId);
+        $this->view->pageLimit = $pageLimit;
+        $this->view->projectpage = $projectpage;
+        $this->view->total_records = $total_records;
+        if($projectpage>1)
+        {
+            $lastproject = $tableProject->getOriginalProjectsForMember($this->_memberId, 1,
+                    (($projectpage - 1) * $pageLimit - 1));
+
+            foreach ($lastproject as $value) {
+                $this->view->lastcatid = $value['project_category_id'];
+            }
+        }
+
+        $this->view->userProducts =
+            $tableProject->getOriginalProjectsForMember($this->_memberId, $pageLimit,
+                ($projectpage - 1) * $pageLimit);
+
+        $this->_helper->layout->disableLayout();        
         $this->_helper->viewRenderer('partials/aboutmeProducts');
     }
 
