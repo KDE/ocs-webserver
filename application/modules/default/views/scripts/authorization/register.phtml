@@ -26,6 +26,29 @@ $buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 $this->headMeta()->setName('robots', 'noindex, nofollow');
 ?>
+
+<script language="javascript">
+    
+function test(data) {
+    $(document).ready(function(){
+        $('#ipv4').val(data['ip']);
+    });
+
+}
+
+function test6(data) {
+    $(document).ready(function(){
+        $('#ipv6').val(data['ip']);
+    });
+
+}
+ 
+</script>
+
+<script type="application/javascript" src="https://ipify6.pling.com?format=jsonp&callback=test6"></script>
+<script type="application/javascript" src="https://ipify4.pling.com?format=jsonp&callback=test"></script>
+
+
 	<!-- new code -->
     <main id="reg-page">
 

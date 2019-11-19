@@ -40,6 +40,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     const TAG_LICENCE_GID = 7;
     const TAG_TYPE_ID = 1;
 
+    const TAG_ISORIGINAL = 'original-product';
+
     /**
      * @param int $status
      * @param int $id
@@ -1620,6 +1622,58 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
     }
 
+    /**
+     * @return cnt
+     */
+    public function getOriginalProjectsForMemberCnt($member_id)
+    {        
+        $sql = "
+            SELECT
+            count(1) as cnt
+            FROM stat_projects p
+            inner join tag_object t on tag_id = 2451  and tag_group_id=11 and tag_type_id = 1 and is_deleted = 0
+            and t.tag_object_id = p.project_id
+            WHERE member_id = :member_id             
+        ";
+        $result = $this->_db->fetchRow($sql, array('member_id' => $member_id));
+        if ($result) {
+            return $result['cnt'];
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * @return cnt
+     */
+    public function getOriginalProjectsForMember($member_id, $limit=null, $offset=null)
+    {        
+        $sql = "
+            SELECT
+            *
+            FROM stat_projects p
+            inner join tag_object t on tag_id = 2451  and tag_group_id=11 and tag_type_id = 1 and is_deleted = 0
+            and t.tag_object_id = p.project_id
+            WHERE member_id = :member_id                       
+        ";
+
+        if (isset($limit)) {
+            $sql = $sql . ' limit ' . $limit;
+        }
+
+        if (isset($offset)) {
+            $sql = $sql . ' offset ' . $offset;
+        }
+
+        $result = $this->_db->fetchAll($sql, array('member_id' => $member_id));
+        if ($result) {
+            return $this->generateRowClass($result);
+        } else {
+            return null;
+        }
+     
+    }
+
      /**
      * @return array
      */
@@ -1959,7 +2013,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function fetchProjects($ids)
     {
-        $sql = "SELECT * FROM stat_projects WHERE project_id in (" . $ids . ")";
+        $sql = "SELECT * FROM stat_projects WHERE project_id in (" . $ids . ") order by project_id";
         $resultSet = $this->_db->fetchAll($sql);
 
         return $this->generateRowSet($resultSet);
@@ -1989,5 +2043,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
       }
       return true;
     }
+
+    
 
 }

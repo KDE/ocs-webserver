@@ -19,15 +19,6 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-var OcsStorage = {
-    set: function(key, value) {
-        localStorage[key] = JSON.stringify(value);
-    },
-    get: function(key) {
-        return localStorage[key] ? JSON.parse(localStorage[key]) : null;
-    }
-};
-
 var newProductPage = (function () {
 
     return {
@@ -1927,8 +1918,13 @@ var AboutMeMyProjectsPaging = (function () {
                     let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';
                     let nextpage = $('button#btnshowmoreproducts').attr('data-page');
                     $('button#btnshowmoreproducts').remove();
+                
                     $url = window.location.href;
-                    target = '#my-products-list';
+                    target = $('.about-me-details').find('li.active').find('a').attr('href');  
+                    if(target=='#user-original-products'){
+                        $url = $url+'showoriginal'
+                    }
+                    //target = '#my-products-list';
                     let container = $('<div></div>').append(indicator).load($url,{projectpage:nextpage},function (response, status, xhr) {
                             if (status == "error") {
                                 if (xhr.status == 401) {
@@ -1946,7 +1942,7 @@ var AboutMeMyProjectsPaging = (function () {
                                 }
                             }
                         });
-                    $('#my-products-list').append(container);
+                        $(target).append(container);
             }
         });
 
@@ -1962,8 +1958,14 @@ var AboutMeMyProjectsPagingButton = (function () {
         $('body').on('click', 'button#btnshowmoreproducts', function (event) {
                 let nextpage = $(this).attr('data-page');
                 $(this).remove();
+                         
                 $url = window.location.href;
-                target = '#my-products-list';
+                //target = '#my-products-list';
+                target = $('.about-me-details').find('li.active').find('a').attr('href');  
+                           
+                if(target=='#user-original-products'){
+                    $url = $url+'showoriginal'
+                }
                 let container = $('<div></div>').append(indicator).load($url,{projectpage:nextpage},function (response, status, xhr) {
                         if (status == "error") {
                             if (xhr.status == 401) {
@@ -1981,7 +1983,7 @@ var AboutMeMyProjectsPagingButton = (function () {
                             }
                         }
                     });
-                $('#my-products-list').append(container);
+                $(target).append(container);
         });
 
 
