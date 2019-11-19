@@ -89,6 +89,9 @@ main#reg-page section#register-wrap {
           data-target="#register-box"
           data-load-state="#<?= $this->formRegister->login->getId() ?>"
     >
+        <input type="hidden" name="ipv4" id="ipv4" value="">
+        <input type="hidden" name="ipv6" id="ipv6" value="">
+        
         <?= $this->formRegister->csrfRegister ?>
         <div class="form-group has-feedback"><?= $this->formRegister->username ?>
             <ul class="errors" style="visibility: hidden;"><li></li></ul>
