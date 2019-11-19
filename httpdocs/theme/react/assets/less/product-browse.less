@@ -333,6 +333,7 @@
                 padding: 0;
                 background-color: transparent;
                 border: 0;
+                outline: none !important;
             }
 
             .player {
@@ -350,6 +351,10 @@
                 .audio-player-controls {
                     float: left;
                     .transition();
+
+                    span {
+                        cursor: pointer;
+                    }
 
                     svg {
                         font-size: 28px;
