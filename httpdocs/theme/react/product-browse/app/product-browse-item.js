@@ -182,10 +182,13 @@ export function ProductBrowseItem(props){
     }
 
     let itemLink = json_serverUrl;
-    itemLink = json_store_name === "ALL" ? "/" : "/s/" + json_store_name + "/";
+    itemLink = json_sname != "www.pling.com" ? "/" : "/s/" + json_store_name + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
     itemLink += "/" + p.project_id;
-    
+    console.log(itemLink);
+    console.log(json_sname);
+    console.log(json_store_name);
+
     return (
         <div className={"product-browse-item " + browseListType} id={"product-" + p.project_id} style={{"width":props.itemWidth}}>
             <div className="wrapper">
@@ -640,13 +643,13 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
 
         let prevDisplay, nextDisplay;
         if (productFiles.length > 1 && showAudioControls){
-            prevDisplay = <a onClick={() => onPrevTrackPlayClick()}>{prevButtonElement}</a>
-            nextDisplay = <a onClick={() => onNextTrackPlayClick()}>{nextButtonElement}</a>
+            prevDisplay = <button role="button" aria-label="previous" onClick={() => onPrevTrackPlayClick()}>{prevButtonElement}</button>
+            nextDisplay = <button role="button" aria-label="next"  onClick={() => onNextTrackPlayClick()}>{nextButtonElement}</button>
         }
 
         let playButtonDisplay;
-        if (isPlaying === true) playButtonDisplay = <a onClick={() => onPauseClick()}>{pauseButtonElement}</a>
-        else playButtonDisplay = <a onClick={() => onPlayClick(playIndex)}>{playButtonElement}</a>
+        if (isPlaying === true) playButtonDisplay = <button role="button" aria-label="pause" onClick={() => onPauseClick()}>{pauseButtonElement}</button>
+        else playButtonDisplay = <button role="button" aria-label="play" onClick={() => onPlayClick(playIndex)}>{playButtonElement}</button>
 
         let trackCounterDisplay;
         if (showAudioControls === true){
