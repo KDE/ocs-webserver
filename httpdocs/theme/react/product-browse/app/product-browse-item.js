@@ -66,7 +66,7 @@ export function ProductBrowseItem(props){
                 <span className="glyphicon glyphicon-heart"></span>
                 <span className="glyphicon glyphicon-heart-empty"></span>
             </div>
-            ({p.count_likes - p.count_dislikes}) Likes
+            ({p.count_follower}) Likes
         </div>
     )
 
