@@ -458,8 +458,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
                 $agent = $_SERVER['HTTP_USER_AGENT'];
             }
             
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - USER_AGENT: ' . print_r($agent, true));
-
             $fingerprint = null;
             
             $session = new Zend_Session_Namespace();
@@ -637,6 +635,46 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - member_id: ' . $newUserData['member_id'] . ' - Link for verification: '
                                             . 'http://' . $this->getServerName() . '/verification/' . $newUserData['verificationVal']);
 
+        
+        
+        
+        //log login
+        try {
+            $ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']) : $_SERVER['REMOTE_ADDR'];
+
+            if (is_array($ip)) {
+                $ip = $ip[0];
+            }
+
+            $agent = null;
+            if ( isset( $_SERVER ) ) {
+                $agent = $_SERVER['HTTP_USER_AGENT'];
+            }
+            
+            $fingerprint = null;
+            
+            $session = new Zend_Session_Namespace();
+            $fp = $session->client_fp;
+            if (!empty($fp)) {
+                $fingerprint = $fp;
+            }
+            
+            $ipv4 = null;
+            $ipv6 = null;
+            
+            if($this->hasParam('ipv4')) {
+                $ipv4 = $this->getParam('ipv4');
+            }
+            if($this->hasParam('ipv6')) {
+                $ipv6 = $this->getParam('ipv6');
+            }
+            $loginHistory = new Default_Model_LoginHistory();
+            $loginHistory->log($newUserData['member_id'], $ip, $ipv4, $ipv6, $agent, $fingerprint);
+        } catch (Exception $exc) {
+        }
+        
+        
+        
         if ($this->_request->isXmlHttpRequest()) {
             $viewRegisterForm = $this->view->render('authorization/partials/registerSuccess.phtml');
             $this->_helper->json(array('status' => 'ok', 'message' => $viewRegisterForm));
@@ -977,6 +1015,10 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
     {
         $authModel = new Default_Model_Authorization();
         $authModel->updateUserLastOnline('member_id', $identity);
+    }
+    
+    private function logLogin() {
+        
     }
 
 }
