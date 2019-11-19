@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ReactJkMusicPlayer from "react-jinke-music-player";
+import { isMobile   } from 'react-device-detect';
 import { getImageUrl } from './product-browse-helpers';
 
 export function ProductBrowseItem(props){
@@ -20,7 +21,6 @@ export function ProductBrowseItem(props){
         if (browseListType === "music" && productFilesFetched === false) onMusicProductLoad()
     },[])
 
-        
     function onMusicProductLoad(){
         setProductFilesFetched(true);
         const ajaxUrl = window.location.origin + "/p/"+p.project_id+"/loadfilesjson";
@@ -66,10 +66,10 @@ export function ProductBrowseItem(props){
                 <span className="glyphicon glyphicon-heart"></span>
                 <span className="glyphicon glyphicon-heart-empty"></span>
             </div>
-            ({p.count_likes - p.count_dislikes}) Likes
+            ({p.count_follower}) Likes
         </div>
     )
-
+        
     let itemInfoDisplay,
         musicItemInfoDisplay, 
         musicPlayerDisplay,
@@ -84,7 +84,16 @@ export function ProductBrowseItem(props){
                 <span>by <b>{p.username}</b></span>
             </div>
         )
-    } else if (browseListType === "phone-pictures"){
+    } else if (browseListType === "apps") {
+        itemInfoDisplay = (
+            <div className="product-browse-item-info">
+                <h2>{p.title}</h2>
+                <span>{p.cat_title}</span>
+                <span>by <b>{p.username}</b></span>
+            </div>
+        )
+    }
+    else if (browseListType === "phone-pictures"){
         itemInfoDisplay = (
             <div className="product-browse-item-info">
                 <h2>{p.title}</h2>
@@ -109,13 +118,13 @@ export function ProductBrowseItem(props){
             </div>            
         );
         if (productFiles && productFiles.length > 0){
-            musicPlayerDisplay = (
-                <ProductBrowseItemPreviewMusicPlayer 
-                    productFiles={productFiles} 
-                    projectId={p.project_id} 
-                    imgHeight={props.imgHeight}
-                />
-            )
+                musicPlayerDisplay = (
+                    <ProductBrowseItemPreviewMusicPlayerTwo
+                        productFiles={productFiles} 
+                        projectId={p.project_id} 
+                        imgHeight={props.imgHeight}
+                    />
+                )
         }
     }
     else if (browseListType === "videos"){
@@ -171,9 +180,9 @@ export function ProductBrowseItem(props){
             <span className="index">{props.rowIndex + 1}</span>
         )
     }
-
+    console.log(is_show_real_domain_as_url);
     let itemLink = json_serverUrl;
-    itemLink = json_store_name === "ALL" ? "/" : "/s/" + json_store_name + "/";
+    itemLink = is_show_real_domain_as_url === 1 ? "/" : "/s/" + json_store_name + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
     itemLink += "/" + p.project_id;
     
@@ -216,9 +225,13 @@ function ProductBrowseItemPreviewMusicPlayer(props){
     const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
 
 
+    React.useEffect(() => {
+        $('.product-browse-item-preview-music-player').disableSelection();
+    },[])
 
     function onReportAudioPlay(audioInfo){
 
+        console.log(audioInfo);
         const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
         const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
         const newAudioItem = {
@@ -234,7 +247,6 @@ function ProductBrowseItemPreviewMusicPlayer(props){
     
         if (playedAudioArray[audioItemIndex].played === 0){
           const audioStartUrl = window.location.href + "/p/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.id+'&type_id=2';
-          console.log(audioStartUrl)
           $.ajax({url: audioStartUrl}).done(function(res) { 
             console.log(res);
             const newAudioItem = {
@@ -267,7 +279,6 @@ function ProductBrowseItemPreviewMusicPlayer(props){
         setPlayedAudioArray(newPLayedAudioArray);
         // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
         if  (playedAudioArray[audioItemIndex].stopped === 0){
-            console.log(playedAudioArray);
             const audioStopUrl = window.location.href + "/p/" + props.projectId + "/" + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
             $.ajax({url: audioStopUrl}).done(function(res) { 
             console.log(res);
@@ -379,6 +390,21 @@ function ProductBrowseItemPreviewMusicPlayer(props){
                 setShowAudioControls(true);
                 const currentIndex = productFiles.findIndex(f => audioInfo.name === f.title);
                 setPlayIndex(currentIndex + 1);
+                const playBtnElement = document.getElementById('music-player-'+props.projectId).querySelector('span[title="Click to play"]');
+
+                if (window.matchMedia("(max-width: 768px)").matches) {
+                        // createEvent(), event.initEvent() are Depricated see Ref: [enter link description here][1]
+                        // var event = document.createEvent("Event"); 
+                        // event.initEvent("touchstart", false, true);
+                        // event.initEvent("touchend", false, true);
+                        // So the solution is:
+                        var event1 = new Event('touchstart');
+                        var event2 = new Event('touchend'); 
+                        playBtnElement.dispatchEvent(event1); 
+                        playBtnElement.dispatchEvent(event2);
+                } else {
+                    playBtnElement.click();
+                }
                 onReportAudioPlay(audioInfo);
             },
             //audio pause handle
@@ -456,6 +482,204 @@ function ProductBrowseItemPreviewMusicPlayer(props){
 
     return (
         <div className={"product-browse-item-preview-music-player " + showControlsCssClass} id={"music-player-"+props.projectId}>
+            {musicPlayerDisplay}
+        </div>
+    )
+}
+
+function ProductBrowseItemPreviewMusicPlayerTwo(props){
+
+    const [ productFiles, setProductFiles ] = useState(props.productFiles)
+    const [ showAudioControls, setShowAudioControls ] = useState(false);
+    const [ playIndex, setPlayIndex ] = useState(0);
+    let initialPLayedAudioArray = [];
+    if (productFiles){
+        productFiles.forEach(function(i,index){
+          const pa = {
+            ...i,
+            played:0,
+            stopped:0
+          }
+          initialPLayedAudioArray.push(pa);
+        })
+    }
+    const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
+    const [ isPlaying, setIsPlaying ] = useState(false);
+    const [ isPaused, setIsPaused ] = useState(false);
+
+    function onPlayClick(pIndex){
+        const playerElement = document.getElementById("product-browse-music-player-"+props.projectId).getElementsByTagName('audio');
+        let currentSrc;
+        if (isPaused === false) {
+            currentSrc = productFiles[pIndex].musicSrc;
+            playerElement[0].src = currentSrc;
+        }
+        playerElement[0].play();
+        setShowAudioControls(true);
+        setIsPlaying(true);
+        setIsPaused(false);
+        onReportAudioPlay(currentSrc);
+    }
+
+    function onPauseClick(){
+        const playerElement = document.getElementById("product-browse-music-player-"+props.projectId).getElementsByTagName('audio');
+        playerElement[0].pause();
+        setShowAudioControls(false);
+        setIsPlaying(false);
+        setIsPaused(true);
+        onReportAudioStop(productFiles[playIndex].musicSrc)
+    }
+
+    function onPrevTrackPlayClick(){
+        let prevTrackIndex;
+        if (playIndex === 0){
+            prevTrackIndex = productFiles.length - 1;
+        } else {
+            prevTrackIndex = playIndex - 1;
+        }
+        setPlayIndex(prevTrackIndex);
+        onPlayClick(prevTrackIndex);
+    }
+
+    function onNextTrackPlayClick(){
+        let nextTrackIndex;
+        if (playIndex + 1 === productFiles.length){
+            nextTrackIndex = 0;
+        } else {
+            nextTrackIndex = playIndex + 1;
+        }
+        setPlayIndex(nextTrackIndex);
+        onPlayClick(nextTrackIndex);
+    }
+
+    function onReportAudioPlay(src){
+        console.log(src);
+        const audioItem = playedAudioArray.find((i => i.musicSrc === src));
+        const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === src));
+        const newAudioItem = {
+          ...audioItem,
+          played:audioItem.played + 1
+        }
+        const newPLayedAudioArray = [
+          ...playedAudioArray.slice(0,audioItemIndex),
+          newAudioItem,
+          ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+        ];
+        setPlayedAudioArray(newPLayedAudioArray);
+        console.log(playedAudioArray);
+        if (playedAudioArray[audioItemIndex].played === 0){
+          const audioStartUrl = window.location.href + "/p/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.id+'&type_id=2';
+          console.log(audioStartUrl)
+          $.ajax({url: audioStartUrl}).done(function(res) { 
+            console.log(res);
+            const newAudioItem = {
+              ...audioItem,
+              mediaViewId:res.MediaViewId,
+              played:audioItem.played + 1
+            }
+            const newPLayedAudioArray = [
+              ...playedAudioArray.slice(0,audioItemIndex),
+              newAudioItem,
+              ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+            ];
+            setPlayedAudioArray(newPLayedAudioArray);
+          });
+        }    
+    }
+    
+    function onReportAudioStop(src){
+        console.log(src);
+        const audioItem = playedAudioArray.find((i => i.musicSrc === src));
+        const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === src));
+        const newAudioItem = {
+            ...audioItem,
+            stopped:audioItem.stopped + 1
+        }
+        const newPLayedAudioArray = [
+            ...playedAudioArray.slice(0,audioItemIndex),
+            newAudioItem,
+            ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+        ];
+        setPlayedAudioArray(newPLayedAudioArray);
+        // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
+        if  (playedAudioArray[audioItemIndex].stopped === 0){
+            console.log(playedAudioArray);
+            const audioStopUrl = window.location.href + "/p/" + props.projectId + "/" + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+            $.ajax({url: audioStopUrl}).done(function(res) { 
+                console.log(res);
+            });
+        }
+    }
+
+    let musicPlayerDisplay;
+    if (productFiles) {
+
+        const playButtonElement = (
+            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" className="play-icon">
+                <g><path d="m20.1 2.9q4.7 0 8.6 2.3t6.3 6.2 2.3 8.6-2.3 8.6-6.3 6.2-8.6 2.3-8.6-2.3-6.2-6.2-2.3-8.6 2.3-8.6 6.2-6.2 8.6-2.3z m8.6 18.3q0.7-0.4 0.7-1.2t-0.7-1.2l-12.1-7.2q-0.7-0.4-1.5 0-0.7 0.4-0.7 1.3v14.2q0 0.9 0.7 1.3 0.4 0.2 0.8 0.2 0.3 0 0.7-0.2z"></path></g>
+            </svg>
+        )
+
+        const pauseButtonElement = (
+            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" className="pause-icon">
+                <g><path d="m18.7 26.4v-12.8q0-0.3-0.2-0.5t-0.5-0.2h-5.7q-0.3 0-0.5 0.2t-0.2 0.5v12.8q0 0.3 0.2 0.5t0.5 0.2h5.7q0.3 0 0.5-0.2t0.2-0.5z m10 0v-12.8q0-0.3-0.2-0.5t-0.5-0.2h-5.7q-0.3 0-0.5 0.2t-0.2 0.5v12.8q0 0.3 0.2 0.5t0.5 0.2h5.7q0.3 0 0.5-0.2t0.2-0.5z m8.6-6.4q0 4.7-2.3 8.6t-6.3 6.2-8.6 2.3-8.6-2.3-6.2-6.2-2.3-8.6 2.3-8.6 6.2-6.2 8.6-2.3 8.6 2.3 6.3 6.2 2.3 8.6z"></path></g>
+            </svg>
+        )
+
+        const prevButtonElement = (
+            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" className="prev-icon">
+                <g><path d="m15.9 20l14.1-10v20z m-5.9-10h3.4v20h-3.4v-20z"></path></g>
+            </svg>
+        )
+
+        const nextButtonElement = (
+            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" className="next-icon">
+                <g><path d="m26.6 10h3.4v20h-3.4v-20z m-16.6 20v-20l14.1 10z"></path></g>
+            </svg>
+        )
+
+        let prevDisplay, nextDisplay;
+        if (productFiles.length > 1 && showAudioControls){
+            prevDisplay = <span  onClick={() => onPrevTrackPlayClick()}>{prevButtonElement}</span>
+            nextDisplay = <span   onClick={() => onNextTrackPlayClick()}>{nextButtonElement}</span>
+        }
+
+        let playButtonDisplay;
+        if (isPlaying === true) playButtonDisplay = <span  onClick={() => onPauseClick()}>{pauseButtonElement}</span>
+        else playButtonDisplay = <span  onClick={() => onPlayClick(playIndex)}>{playButtonElement}</span>
+
+        let trackCounterDisplay;
+        if (showAudioControls === true){
+            trackCounterDisplay = (
+                <div className="track-counter">
+                    {playIndex + 1}/{productFiles.length}
+                </div>
+            )
+        }
+        
+        musicPlayerDisplay = (
+            <div className="player" id={"product-browse-music-player-" + props.projectId}>
+                  <audio></audio>
+                  <div className="player-interface">
+                    <div className="audio-player-controls">
+                        {prevDisplay}
+                        {playButtonDisplay}
+                        {nextDisplay}
+                    </div>
+                    {trackCounterDisplay}
+                  </div>
+            </div>
+        )
+    }
+
+    let showControlsCssClass = "";
+    if (showAudioControls === true) showControlsCssClass = " show-controls"
+
+    let isMobileCssClass = "";
+    if (isMobile === true) isMobileCssClass = " mobile";
+
+    return (
+        <div className={"product-browse-item-preview-music-player" + showControlsCssClass + isMobileCssClass} id={"music-player-"+props.projectId}>
             {musicPlayerDisplay}
         </div>
     )
