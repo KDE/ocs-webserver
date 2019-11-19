@@ -1,6 +1,8 @@
 <meta charset="utf-8" />
 
 <?php
+
+
     $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
     $helperImage = new Default_View_Helper_Image();
     $helperPrintDate = new Default_View_Helper_PrintDate();
@@ -16,7 +18,12 @@
             $catid= $product['project_category_id'];
             if($catid!=$cat_last)
             {
-                 $title = $product['catTitle'];
+                if(isset($product['catTitle'])){
+                    $title = $product['catTitle'];
+                }else{
+                    $title = $product['cat_title'];
+                }
+                
                 
                echo '<div class="catgroupseperator">'.$title.'</div>';
             }
@@ -30,7 +37,7 @@
                     </figure>
                     <div class="u-content">
                         <h3><?php echo $product['title']; ?></h3>
-                        <span class="productCategory"> <?php echo $product['catTitle']; ?> </span>
+                        <span class="productCategory"> <?php echo $title; ?> </span>
 
                         <span class="productCategory" style="width: 100%; float: left;">
                             <?= $helperPrintDate->printDate($product['project_changed_at']) ?>
@@ -39,7 +46,7 @@
                 </a>
                 
                 <?php
-                if($product['countplings'] >0)
+                if(isset($product['countplings']) &&  $product['countplings'] >0)
                 {
                 ?>
                 <div class="countplings"> <span class="num"><?=$product['countplings']?></span> <img src="/images/system/pling-btn-active.png"/> </div>
