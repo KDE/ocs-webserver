@@ -643,13 +643,13 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
 
         let prevDisplay, nextDisplay;
         if (productFiles.length > 1 && showAudioControls){
-            prevDisplay = <button type="button" onClick={() => onPrevTrackPlayClick()}>{prevButtonElement}</button>
-            nextDisplay = <button type="button"  onClick={() => onNextTrackPlayClick()}>{nextButtonElement}</button>
+            prevDisplay = <span  onClick={() => onPrevTrackPlayClick()}>{prevButtonElement}</span>
+            nextDisplay = <span   onClick={() => onNextTrackPlayClick()}>{nextButtonElement}</span>
         }
 
         let playButtonDisplay;
-        if (isPlaying === true) playButtonDisplay = <button type="button" onClick={() => onPauseClick()}>{pauseButtonElement}</button>
-        else playButtonDisplay = <button type="button" onClick={() => onPlayClick(playIndex)}>{playButtonElement}</button>
+        if (isPlaying === true) playButtonDisplay = <span  onClick={() => onPauseClick()}>{pauseButtonElement}</span>
+        else playButtonDisplay = <span  onClick={() => onPlayClick(playIndex)}>{playButtonElement}</span>
 
         let trackCounterDisplay;
         if (showAudioControls === true){
