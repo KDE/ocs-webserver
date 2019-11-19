@@ -182,13 +182,13 @@ export function ProductBrowseItem(props){
     }
 
     let itemLink = json_serverUrl;
-    itemLink = json_sname != "www.pling.com" ? "/" : "/s/" + json_store_name + "/";
+    itemLink = json_store_name === "www.pling.com" ? "/" : "/s/" + json_store_name + "/";
     itemLink += p.type_id === "3" ? "c" : "p";
     itemLink += "/" + p.project_id;
     console.log(itemLink);
     console.log(json_sname);
     console.log(json_store_name);
-
+    
     return (
         <div className={"product-browse-item " + browseListType} id={"product-" + p.project_id} style={{"width":props.itemWidth}}>
             <div className="wrapper">
