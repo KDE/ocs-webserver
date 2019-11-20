@@ -18,7 +18,7 @@ export function ProductBrowseItem(props){
     }
 
     React.useEffect(() => {
-        if (browseListType === "music" && productFilesFetched === false) onMusicProductLoad()
+        if (browseListType === "music"  && productFilesFetched === false ||browseListType ===  "music-test" && productFilesFetched === false) onMusicProductLoad()
     },[])
 
     function onMusicProductLoad(){
@@ -108,7 +108,7 @@ export function ProductBrowseItem(props){
             </div>
         )
     }
-    else if (browseListType === "music"){
+    else if (browseListType === "music" || browseListType === "music-test"){
         musicItemInfoDisplay = (
             <div className="product-browse-music-item-info">
                 <h2>{p.title}</h2>
