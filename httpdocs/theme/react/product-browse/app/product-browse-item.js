@@ -180,7 +180,8 @@ export function ProductBrowseItem(props){
             <span className="index">{props.rowIndex + 1}</span>
         )
     }
-    console.log(is_show_real_domain_as_url);
+    console.log(is_show_real_domain_as_url); 
+    
     let itemLink = json_serverUrl;
     itemLink = is_show_real_domain_as_url === 1 ? "/" : "/s/" + json_store_name + "/";
     itemLink += p.type_id === "3" ? "c" : "p";

@@ -2,7 +2,7 @@ export function getNumberOfItemsPerRow(browseListType,isMobile,containerWidth){
     let itemsPerRow;
     if (isMobile) itemsPerRow = 2;
     else {
-        if (browseListType === "music") itemsPerRow = getAdujustItemsPerRow(7,containerWidth,160 + 14)
+        if (browseListType === "music" || browseListType === "music-test") itemsPerRow = getAdujustItemsPerRow(7,containerWidth,160 + 14)
         else if (browseListType === "apps") itemsPerRow = getAdujustItemsPerRow(7,containerWidth,160 + 14)
         else if (browseListType === "comics") itemsPerRow = getAdujustItemsPerRow(7,containerWidth,160 + 14)
         else if (browseListType === "phone-pictures") itemsPerRow = getAdujustItemsPerRow(5,containerWidth,210)
@@ -51,7 +51,7 @@ export function chunkArray(myArray, chunk_size){
 
 export function getItemWidth(browseListType,containerWidth,itemsInRow){
     let itemWidth;
-    if (browseListType === "music") itemWidth = 160 + 14;
+    if (browseListType === "music" || browseListType === "music-test") itemWidth = 160 + 14;
     else if (browseListType === "apps") itemWidth = 160 + 14;
     else if (browseListType === "comics") itemWidth = 160 + 14;
     else itemWidth = containerWidth / itemsInRow;
@@ -64,7 +64,7 @@ export function getImageHeight(browseListType,itemWidth){
 
     itemWidth = itemWidth - 14;
 
-    if (browseListType === "music"){
+    if (browseListType === "music" || browseListType === "music-test"){
        imgHeight = 155;
     } 
     else if (browseListType === "apps"){
