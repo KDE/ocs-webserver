@@ -55,6 +55,12 @@ function AdminlLinksContainer(props)
             </a>
           </li>
 
+          <li id="list-newproduct-link-item">
+            <a href={props.baseUrlStore+"/misuse"} >
+              <span>List of Misuse-Reports</span>
+            </a>
+          </li>
+
           <li id="backend-link-item">
             <a href={props.baseUrlStore+"/backend"} >
               <span>Backend</span>
