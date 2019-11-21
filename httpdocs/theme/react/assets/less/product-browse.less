@@ -251,6 +251,14 @@
             }
 
             &.music, &.music-test {
+                
+                * {
+                    user-select: none;
+                    -moz-user-select: none;
+                    -webkit-user-select: none;
+                    -ms-user-select: none;
+                }
+
                 .product-browse-music-item-info {
                     h2, span {
                         font-size: 13px;
