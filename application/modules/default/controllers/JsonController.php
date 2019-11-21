@@ -339,6 +339,48 @@ class JsonController extends Zend_Controller_Action
         }            
     }
 
+
+    public function searchpAction()
+    {  
+        $this->_initResponseHeader();
+        $projectSearchText = $this->getParam('p');
+        $projectSearchCategory = $this->getParam('c');
+        $store = null;
+        if($this->hasParam('s')){
+            $store = $this->getParam('s');
+        }                
+        $filterCat = 'project_category_id:('.$projectSearchCategory.')';
+        $param = array('q' => $projectSearchText,'store'=>$store,'page' => 1
+            , 'count' => 10,'fq' => array($filterCat));
+        $viewHelperImage = new Default_View_Helper_Image();
+        $modelSearch = new Default_Model_Solr();   
+        try {
+            $result = $modelSearch->search($param);
+            $products = $result['hits'];                      
+            $ps=array();
+            foreach ($products as $p) {
+                $img = $viewHelperImage->Image($p->image_small, array(
+                    'width'  => 50,
+                    'height' => 50
+                ));
+                $ps[] =array('type'=>'project'                    
+                    ,'title' =>$p->title
+                    ,'project_id' =>$p->project_id
+                    ,'member_id'=>$p->member_id
+                    ,'username' => $p->username
+                    ,'laplace_score' =>$p->laplace_score
+                    ,'score' =>$p->score
+                    ,'cat_title' =>$p->cat_title
+                    ,'image_small' =>$img);
+            }
+           
+            $this->_sendResponse($ps, $this->_format);
+            
+        } catch (Exception $e) {
+            $this->_sendResponse(null, $this->_format);
+        }            
+    }
+
     public function anonymousdlAction()
     {
         $this->_initResponseHeader();

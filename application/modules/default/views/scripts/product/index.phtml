@@ -105,7 +105,10 @@ $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
 
 $this->userRoleName = $userRoleName;
- $productJson = Zend_Json::encode(Default_Model_Collection::cleanProductInfoForJson($this->product->toArray()));
+
+$productTmp =$this->product->toArray();
+$productTmp['image_small_absolute']=$helpImage->Image($this->product->image_small, array('width' => 400, 'height' => 400));
+ $productJson = Zend_Json::encode(Default_Model_Collection::cleanProductInfoForJson($productTmp));
  $filesJson = $this->filesJson;
 $helperCatXdgType = new Default_View_Helper_CatXdgType();
 $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->project_category_id));
@@ -132,9 +135,11 @@ foreach ($pics as $p) {
 $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 
 
+
 ?>
     <link href="/theme/react/assets/css/get-it.css" type="text/css" rel="stylesheet"/>
 
+    
     <!-- PRODUCT MEDIA SLIDER CSS -->
 
     <link href="/theme/react/lib/swiper/swiper.min.css" type="text/css" rel="stylesheet" >
@@ -588,7 +593,9 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                         <?php } ?>
 
                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
-                        <li><a href="#related-panel" data-toggle="tab">Related Products<?=' ('.$this->cntRelatedProducts.')'?></a></li>
+                        <li><a href="#related-panel" data-toggle="tab">Relationship<?=' ('.$this->cntRelatedProducts.')'?></a></li>
+
+                        <li><a href="#related-panel2" data-toggle="tab">Relationship 2<?=' ('.$this->cntRelatedProducts.')'?></a></li>
                        <?php } ?>
 
                         </ul>
@@ -752,13 +759,25 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                          <!-- related products -->
 
                          <div class="tab-pane" id="related-panel">
-                            <div class="col-lg-12">
+                            <div class="col-lg-12">                            
                             <article>
                                 <div id="productRatingContainer2">
                                 <?php
                                        echo $this->render('product/partials/productRelated.phtml');
                                   ?>
-                                  </div>
+                                </div>                                
+                            </article>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="related-panel2">
+                            <div class="col-lg-12">                            
+                            <article>
+                                <div id="productRatingContainer2">
+                                <?php
+                                       echo $this->render('product/partials/productRelated2.phtml');
+                                  ?>
+                                </div>                                
                             </article>
                             </div>
                         </div>
@@ -1044,7 +1063,9 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                        <div>
                            <div class="prod-widget-box right">
                                 <div style="float: right">
-
+                                <?php if ($isAdmin) {      ?>
+                                    <div id="add-project-relationship"></div>                   
+                                <?php }?>             
                                 <?php if (Zend_Auth::getInstance()->hasIdentity()) {      ?>
                                        <a data-toggle="modal" data-target="#report-product-clone-<?= $this->product->project_id ?>" role="button"
                                           href="#report-product-clone-<?= $this->product->project_id ?>">
@@ -1200,6 +1221,11 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 <script type="text/javascript" src="/theme/react/product-media-slider/product-media-slider.js?<?= APPLICATION_VERSION ?>"></script>
 
 <!-- /PRODUCT MEDIA SLIDER JS -->
+
+
+<script src="/theme/react/bundle/app-product-relationship-bundle.js?<?= APPLICATION_VERSION ?>"></script>
+
+
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){

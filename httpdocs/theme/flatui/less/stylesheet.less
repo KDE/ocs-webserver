@@ -161,9 +161,7 @@ body {
      #metaheader #metaheader-nav #user-context-menu-container .user-dropdown .th-icon {
        margin-top: -5px;
      }
-     #metaheader #metaheader-nav #user-login-menu-container .user-dropdown .dropdown-toggle img {
-       // margin-top: -7px;
-     }
+    
    }
 
    &.docked {
@@ -6721,3 +6719,35 @@ main#plings-page{
     border: 1px solid #2185D0;
   }
 }
+
+#productRelationshipPanel{
+  .react-autosuggest__inputContainer{
+    padding-bottom: 10px;
+  }
+  .react-autosuggest__suggestions-container--open
+  {
+    width: 200px;
+  }
+  .react-autosuggest__input
+  {
+    width:200px;
+    padding-left: 20px
+  }
+  .suggestionsContainer
+      {
+         display: flex;
+         padding: 3px 5px;
+        .description{
+          display: flex;
+          margin-left: 10px;          
+          text-align: left;
+          flex-flow: column;
+          span{
+            line-height: 20px;
+          }
+          span.small{
+            font-size: small;
+          }
+        }      
+      }
+} 
