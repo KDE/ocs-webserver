@@ -85,16 +85,8 @@ class Backend_Commands_CreateTorrent implements Local_Queue_CommandInterface
 
             if(!empty($result) && $result != 'Error') {
                 //Done, set has_torrent in table ppload_files
-                $files = new Default_Model_DbTable_PploadFiles();
-                $data = array();
-                $data['has_torrent'] = 1;
-                $files->update($data, 'id = '.$file->id);
             } else {
                 $log->debug("Error on Creating Torrent! Result: ".$result);
-                $files = new Default_Model_DbTable_PploadFiles();
-                $data = array();
-                $data['has_torrent'] = 0;
-                $files->update($data, 'id = '.$file->id);
                 return false;
             }
         } else {
