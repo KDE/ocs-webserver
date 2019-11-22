@@ -22,7 +22,16 @@
  **/
 class Backend_Commands_CreateTorrent implements Local_Queue_CommandInterface
 {
-
+    /**
+     * Configuration for HTTP-Client
+     *
+     * @var array
+     */
+    protected $_config = array(
+        'maxredirects' => 0,
+        'timeout'      => 21600
+    );
+    
     protected $file;
     
     /**
