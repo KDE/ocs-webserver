@@ -109,7 +109,7 @@ class Backend_Commands_CreateTorrent implements Local_Queue_CommandInterface
         $httpClient = $this->getHttpClient();
         
         $config = Zend_Registry::get('config');
-        $torrenturl = $config->torrent->media->createurl . "?file_id=".$fileId;
+        $torrenturl = $config->torrent->media->createurl . "?id=".$fileId;
         
         $uri = $this->generateUri($torrenturl);
 
