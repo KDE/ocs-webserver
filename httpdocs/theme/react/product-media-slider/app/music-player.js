@@ -87,6 +87,7 @@ function MusicPlayerWrapper(props){
     }
   }
 
+
   const options = {
       //audio lists model
       audioLists: props.slide.items,
@@ -166,7 +167,7 @@ function MusicPlayerWrapper(props){
       //download button display of the audio player panel   [type `Boolean` default `true`]
       showDownload: false,
       //loop button display of the audio player panel   [type `Boolean` default `true`]
-      showPlayMode: true,
+      showPlayMode: false,
       //theme toggle switch  display of the audio player panel   [type `Boolean` default `true`]
       showThemeSwitch: true,
       //lyric display of the audio player panel   [type `Boolean` default `false`]
@@ -174,7 +175,7 @@ function MusicPlayerWrapper(props){
       //Extensible custom content       [type 'Array' default '[]' ]
       extendsContent: [],
       //default volume of the audio player [type `Number` default `100` range `0-100`]
-      defaultVolume: 100,
+      defaultVolume: 50,
       //playModeText show time [type `Number(ms)` default `700`]
       playModeShowTime: 600,
       //Whether to try playing the next audio when the current audio playback fails [type `Boolean` default `true`]
