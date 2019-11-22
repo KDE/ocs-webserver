@@ -132,6 +132,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
                         from member m
                         where  m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
                         group by paypal_mail   
+                        order by m.created_at desc
                     ) a
                     where  cnt > 1 and cnt>sum_is_deleted
                     
