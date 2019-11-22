@@ -10,6 +10,8 @@ import Introduction from './Introduction';
 import PersonalLinksContainer from '../function/PersonalLinksContainer';
 import AdminLinksContainer from '../function/AdminLinksContainer';
 import BlogFeedContainer from './BlogFeedContainer';
+import WatchlistContainer from '../function/WatchlistContainer';
+import StatisticsContainer from '../function/StatisticsContainer';
 class HomeMainContainer extends Component {
   constructor(props){
   	super(props);
@@ -49,18 +51,30 @@ class HomeMainContainer extends Component {
                     />
                 </div>
             </div>
-            <div className="middle">                
+            <div className="middle"> 
+                     
                 <CommentsContainer title="Last 10 comments received" baseUrlStore={this.state.baseUrlStore} comments={this.state.comments}/>
                 <RatingContainer title="Last 10 ratings received" baseUrlStore={this.state.baseUrlStore} votes={this.state.votes}/>
                 { this.state.spams.length>0 && 
                 <MySpamContainer title="Spam" baseUrlStore={this.state.baseUrlStore} spams={this.state.spams}/>
                 }
                   { this.state.user.isAdmin &&
+                  <>
                     <div className="panelContainer">
-                      <div className="title">Special links (Admin only)</div>
+                      <div className="title">Watchlist(Admin only)</div>
+                      <WatchlistContainer  user={this.state.user} baseUrlStore={this.state.baseUrlStore}/>
+                    </div>
+                    <div className="panelContainer">
+                      <div className="title">Admin(Admin only)</div>
                       <AdminLinksContainer  user={this.state.user} baseUrlStore={this.state.baseUrlStore}/>
                     </div>
+                    <div className="panelContainer">
+                      <div className="title">Statistics(Admin only)</div>
+                      <StatisticsContainer  user={this.state.user} baseUrlStore={this.state.baseUrlStore}/>
+                    </div>
+                  </>
                   }
+               
             </div>
           </div>
           )
