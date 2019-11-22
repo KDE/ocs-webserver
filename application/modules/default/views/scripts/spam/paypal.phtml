@@ -145,14 +145,26 @@
 
                         var names = data.record.names.split(',');    
                         var ids = data.record.ids.split(',');    
+                        var d = data.record.is_deleted.split(',');                            
                         var html = '';
-                        names.forEach(function callback(name , index ) {                                                     
-                            html=html+'<a href="/u/'+name+'" target="_blank" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+ids[index]+'" >'+name+', <a>';
+                        names.forEach(function callback(name , index ) {                               
+                            sname=name;
+                            if(d[index]==1)                                
+                            {
+                                sname='<span style="color:red">'+name+'</span>';
+                            }           
+                            html=html+'<a href="/u/'+name+'" target="_blank" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+ids[index]+'" >'+sname+', <a>';
                         });
                                                                        
                         return html;
                     }                    
-                } ,    
+                } ,                    
+                created_at: {
+                    title: 'lastest created_at',
+                    width: '15%', 
+                    edit: false
+                    
+                } ,       
                  amount: {
                     title: 'last month earn',
                     width: '15%', 
