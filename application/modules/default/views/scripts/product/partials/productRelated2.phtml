@@ -1,0 +1,26 @@
+<style>
+    div.title{
+        font-weight:bold;border-bottom:1px solid #ccc; padding:5px; margin-bottom:5px;
+    }
+</style>
+
+<?php 
+
+    function findRoots($roots,$level) {
+        
+    }
+
+    $pc = new Default_Model_ProjectClone();
+    $parents = $pc->fetchParentIds($this->product->project_id);
+    $roots=[];
+    $maxLevel = 10;
+    if($parents && strlen($parents)>0)
+    {
+        $roots = explode(',', $parents);
+        foreach ($roots as $r) {
+            
+        }
+    }
+    
+?>
+test

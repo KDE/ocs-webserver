@@ -112,25 +112,31 @@ class SpamController extends Local_Controller_Action_DomainSwitch
         }        
 
         $sql = "
-                    select a.*
-                    , 
-                    (       select sum(d.probably_payout_amount) amount
-                            from member_dl_plings d
+                    select a.*, 
+                    (       select sum(d.credits_plings)/100  amount
+                            from micro_payout d
                             where d.member_id in (a.ids)
                             and d.yearmonth= DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')
                             and d.is_pling_excluded = 0 
-                            and d.is_license_missing = 0 ) as amount
+                            and d.is_license_missing = 0
+                            and d.is_member_pling_excluded = 0
+                            and d.is_source_missing = 0
+                            ) as amount
                     from
                     (
                         select paypal_mail, GROUP_CONCAT(member_id) ids, GROUP_CONCAT(username) names
                         , count(1) cnt 
-                        , is_deleted            
+                        , GROUP_CONCAT(m.is_deleted) is_deleted    
+                        ,max(m.created_at) as created_at    
+                        ,sum(m.is_deleted) as sum_is_deleted
                         from member m
                         where  m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
-                        group by paypal_mail, is_deleted    
+                        group by paypal_mail   
+                        order by m.created_at desc
                     ) a
-                    where  cnt > 1
-                   
+                    where  cnt > 1 and cnt>sum_is_deleted
+                    
+        
                     
                 ";
         $sql .= ' order by ' . $sorting;
@@ -141,14 +147,16 @@ class SpamController extends Local_Controller_Action_DomainSwitch
 
         $sqlall = "  select count(1) cnt from
                     (
-                       select paypal_mail, GROUP_CONCAT(member_id) ids, GROUP_CONCAT(username) names
-                        , count(1) cnt , is_deleted
+                        select paypal_mail, GROUP_CONCAT(member_id) ids, GROUP_CONCAT(username) names
+                        , count(1) cnt 
+                        , GROUP_CONCAT(m.is_deleted) is_deleted    
+                        ,max(m.created_at) as created_at    
+                        ,sum(m.is_deleted) as sum_is_deleted
                         from member m
                         where  m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
-                        group by paypal_mail, is_deleted
-                        
+                        group by paypal_mail  
                     ) a
-                    where  cnt > 1";         
+                    where  cnt > 1 and cnt>sum_is_deleted";         
 
         $reportsAll = Zend_Db_Table::getDefaultAdapter()->fetchRow($sqlall);
 
