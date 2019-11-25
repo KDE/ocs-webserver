@@ -938,7 +938,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         // OCS API
         //20191120 OCS-API is disabled for webservers, only api.pling.com or api.kde-look.org allowed, see ticket #1494
-        /*
+        //20191125 erst mal wieder drin
+        
         $router->addRoute('ocs_providers_xml', new Zend_Controller_Router_Route('/ocs/providers.xml', array(
             'module'     => 'default',
             'controller' => 'ocsv1',
@@ -1010,7 +1011,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'controller' => 'ocsv1',
                 'action'     => 'vote'
             )));
-        */
+        
 
         
         // embed

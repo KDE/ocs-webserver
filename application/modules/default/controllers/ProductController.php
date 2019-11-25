@@ -2547,6 +2547,23 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         'status' => 'ok',
                         'file'   => $fileResponse->file
                     ));
+                    
+                    
+                    //If this file has a torrent file, delete it
+                    if(!empty($fileResponse->file->has_torrent) && $fileResponse->file->has_torrent == 1) {
+                        $queue = Local_Queue_Factory::getQueue();
+                        $command = new Backend_Commands_DeleteTorrent($fileResponse->file);
+                        $queue->send(serialize($command));
+                    }
+                    
+                    //If this file is bigger than XXX MB (see application.ini), then create a webtorrent file
+                    $config = Zend_Registry::get('config');
+                    $minFileSize = $config->torrent->media->min_filesize;
+                    if(!empty($fileResponse->file->size) && $fileResponse->file->size >= $minFileSize) {
+                        $queue = Local_Queue_Factory::getQueue();
+                        $command = new Backend_Commands_CreateTorrent($fileResponse->file);
+                        $queue->send(serialize($command));
+                    }
 
                     return;
                 } else {
@@ -2708,6 +2725,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 ) {
 
                     $this->_helper->json(array('status' => 'ok'));
+                    
+                    //If this file has a torrent file, delete it
+                    if(!empty($fileResponse->file->has_torrent) && $fileResponse->file->has_torrent == 1) {
+                        $queue = Local_Queue_Factory::getQueue();
+                        $command = new Backend_Commands_DeleteTorrent($fileResponse->file);
+                        $queue->send(serialize($command));
+                    }
+                    
 
                     return;
                 } else {

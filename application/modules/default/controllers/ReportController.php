@@ -171,12 +171,12 @@ class ReportController extends Zend_Controller_Action
     public function productcloneAction()
     {   
         $report_type = 1;
-
+        
         $this->_helper->layout()->disableLayout();
-
+        $params = $this->getAllParams();
         if (APPLICATION_ENV != 'searchbotenv') {
 
-                    $project_clone = (int)$this->getParam('p');
+                    $project_clone = $this->getParam('p');
                     $text = $this->getParam('t');
                     $project_id = $this->getParam('pc');
                   
@@ -200,7 +200,7 @@ class ReportController extends Zend_Controller_Action
             'message' => '<p>Thank you. The credits have been submitted.</p><p>It can take some time to appear while we verify it.</p><div class="modal-footer">
                                             <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
                                         </div>',
-            'data'    => array()
+            'data'    => $params
         ));
     }
 
