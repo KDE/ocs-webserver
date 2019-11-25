@@ -34,8 +34,10 @@ const SearchProductInput = (props) => {
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [selected, setSelected] = useState({});
-  const [project_id, setProject_id] = useState('');
+  
   const [projectCategoryId, setProjectCategoryId] = useState(props.product.project_category_id);
+
+
   const loadSuggestions = value => {
     const inputLength = value.length;
     if (inputLength < 3) return;
@@ -65,7 +67,8 @@ const SearchProductInput = (props) => {
 
   const getSuggestionValue = suggestion => {
     setSelected(suggestion);
-    setProject_id(suggestion.project_id);
+    //setProject_id(suggestion.project_id);
+    props.setProjectId(suggestion.project_id);
     return suggestion.title;
   }
 
@@ -88,12 +91,13 @@ const SearchProductInput = (props) => {
 
   const onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {    
     setSelected(suggestion);
-    setProject_id(suggestion.project_id);
+    //setProject_id(suggestion.project_id);
+    props.setProjectId(suggestion.project_id);
   }
 
  
   const inputProps = {
-    placeholder: "",
+    placeholder: "Search...",
     value,
     onChange: onHandleChange,
     onSubmit: onSearchFormSubmit,
@@ -104,26 +108,31 @@ const SearchProductInput = (props) => {
 
         <div className="autosuggest">
            <div className="row">
-             <div className="col-lg-12">
-             
-              <Autosuggest               
-                suggestions={suggestions}
-                onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                onSuggestionsClearRequested={onSuggestionsClearRequested}
-                shouldRenderSuggestions={shouldRenderSuggestions}
-                onSuggestionSelected={onSuggestionSelected}
-                getSuggestionValue={getSuggestionValue}
-                renderSuggestion={renderSuggestion}
-                inputProps={inputProps}
-                renderInputComponent={renderInputComponent}                            
-              />          
+             <div className="col-lg-12"><h6>ID of the Original on opendesktop:</h6> </div>
+             <div className="col-lg-12">               
+              <div style={{display:'flex'}}>
+                  <div>
+                  <input required name="project_id" id="project_id" value={props.project_id} style={{width:'100px',marginRight:'10px'}}></input>
+                  </div>
+                  <div>
+                  <Autosuggest               
+                      suggestions={suggestions}
+                      onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                      onSuggestionsClearRequested={onSuggestionsClearRequested}
+                      shouldRenderSuggestions={shouldRenderSuggestions}
+                      onSuggestionSelected={onSuggestionSelected}
+                      getSuggestionValue={getSuggestionValue}
+                      renderSuggestion={renderSuggestion}
+                      inputProps={inputProps}
+                      renderInputComponent={renderInputComponent}                            
+                    />
+                  </div>                
+              </div>   
+                        
               </div>
           </div>
-          <div className="row">
-            <div className="col-lg-12">Project ID:</div>
-            <div className="col-lg-12">
-              <input name="project_id" id="project_id" value={project_id}></input>
-             </div>
+          
+          <div className="row">            
              <div className="col-lg-12">
               {selected && selected.project_id &&
               <div className='suggestionsContainer'>
@@ -141,7 +150,8 @@ const SearchProductInput = (props) => {
               }
              </div>
           </div>
-
+          
+         
         
         </div>
      
