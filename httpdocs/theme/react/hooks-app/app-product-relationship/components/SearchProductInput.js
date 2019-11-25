@@ -61,9 +61,15 @@ const SearchProductInput = (props) => {
 
   const onSearchFormSubmit = e => {
     e.preventDefault();
-    
+    e.stopPropagation();    
   }
-
+  // const onKeyDown = event => {
+  //   switch (event.keyCode) {
+  //     case KeyCodes.ENTER: {
+  //       event.preventDefault();
+  //     }    
+  //   }
+  // };
 
   const getSuggestionValue = suggestion => {
     setSelected(suggestion);
@@ -93,6 +99,9 @@ const SearchProductInput = (props) => {
     setSelected(suggestion);
     //setProject_id(suggestion.project_id);
     props.setProjectId(suggestion.project_id);
+    if (method === 'enter') {
+      event.preventDefault();
+    }
   }
 
  
@@ -101,7 +110,7 @@ const SearchProductInput = (props) => {
     value,
     onChange: onHandleChange,
     onSubmit: onSearchFormSubmit,
-    baseUrlStore: props.baseUrlStore
+    baseUrlStore: props.baseUrlStore,    
   };
 
   return (
