@@ -97,9 +97,11 @@ function ProductTagGroupFilterContainer(){
 }
 
 function TagGroupDropDownMenu(props){
-
+    console.log(json_serverUrl);    
+    
     function onSelectTag(e){
-        const ajaxUrl = json_serverUrl + "/explore/savetaggroupfilter?group_id="+props.tagGroupId+"&tag_id="+e.target.value;
+        const serverUrl = json_serverUrl.split('://')[1];
+        const ajaxUrl = "https://"+ serverUrl + "/explore/savetaggroupfilter?group_id="+props.tagGroupId+"&tag_id="+e.target.value;
         $.ajax({url: ajaxUrl}).done(function(res) { 
             window.location.reload();
         });
