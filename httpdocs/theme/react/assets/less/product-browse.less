@@ -1,6 +1,26 @@
 // out: ../css/product-browse.css, sourcemap: true, compress: true
 @import "elements.less";
 
+#product-browse {
+    position: relative;
+
+    #product-tag-filter-container {
+        position: absolute;
+        right: 0px;
+        top: 10px;
+
+        .product-tag-group-dropdown {
+            width: 135px;
+            margin-right: 5px;
+            float: left;
+
+            select {
+                width:100%;
+            }
+        }
+    }
+}
+
 #product-browse-container {
 
     #product-browse-item-list {
@@ -250,12 +270,29 @@
                 }
             }
 
-            &.music {
+            &.music, &.music-test {
+                
+                * {
+                    user-select: none;
+                    -moz-user-select: none;
+                    -webkit-user-select: none;
+                    -ms-user-select: none;
+                }
+
                 .product-browse-music-item-info {
                     h2, span {
                         font-size: 13px;
                         line-height: 14px;
                         font-weight: 400;
+                    }
+                }
+            }
+
+            &.music-test {
+                height: 150px;
+                .wrapper {
+                    a.product-browse-item-wrapper {
+                        display: none;
                     }
                 }
             }
@@ -327,6 +364,98 @@
             position: absolute;
             top: 44px;
             left: 0;
+            z-index: 10;
+
+            button {
+                padding: 0;
+                background-color: transparent;
+                border: 0;
+                outline: none !important;
+            }
+
+            .player {
+                top: -44px;
+                position: absolute;
+                width:100%;
+                left: 0;
+
+                .audio-player-controls, .track-counter {
+                    padding: 5px;
+                    height: 40px;
+                    background-color: rgba(0,0,0,0.5);
+                }
+
+                .audio-player-controls {
+                    float: left;
+                    .transition();
+
+                    span {
+                        cursor: pointer;
+                    }
+
+                    svg {
+                        font-size: 28px;
+                        color:white;
+                        .transition();
+                        vertical-align: middle;
+
+                        &:hover {
+                            color: #31c27c;
+                        }
+                    }
+                }
+
+                .track-counter {
+                    float: right;
+                    color: white;
+                    line-height: 30px;
+                }
+            }
+
+            &.mobile {
+                .player {
+                    .player-interface {
+                        .audio-player-controls {
+                            width:100%;
+                            height:100px;
+
+                            .play-icon,
+                            .pause-icon {
+                                font-size: 60px;
+                                top: 20px;
+                                position: absolute;
+                                left: 50%;
+                                margin-left: -30px;
+                            }
+
+                            .prev-icon {
+                                font-size: 50px;
+                                position: absolute;
+                                top: 25px;
+                                left: 0;
+                            }
+
+                            .next-icon {
+                                font-size: 50px;
+                                position: absolute;
+                                top: 25px;
+                                right: 0;
+                            }
+                        }
+                        .track-counter {
+                            position: absolute;
+                            left: 50%;
+                            bottom: 0;
+                            height: 27px;
+                            background: 0;
+                            margin-left: -25px;
+                            padding: 0;
+                            width: 50px;
+                            text-align: center;
+                        }
+                    }
+                }
+            }
 
             .music-player-counter {
                 position: absolute;

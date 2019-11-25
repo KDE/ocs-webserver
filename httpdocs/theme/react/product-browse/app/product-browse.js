@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import {isMobile} from 'react-device-detect';
 import {ProductBrowseItem} from './product-browse-item';
-import {getNumberOfItemsPerRow, getImageHeight, chunkArray, getItemWidth} from './product-browse-helpers';
+import {getNumberOfItemsPerRow, getImageHeight, chunkArray, getItemWidth, ConvertObjectToArray} from './product-browse-helpers';
 
 function ProductBrowse(){
-    
     return (
         <div id="product-browse">
+            <ProductTagGroupFilterContainer/>
             <ProductBrowseFilterContainer/>
             <ProductBrowseItemList />
         </div>
@@ -20,11 +20,6 @@ function ProductBrowseFilterContainer(){
     filtersBaseUrl += json_store_name === "ALL" ? "/" : "/s/" + json_store_name + "/";
     filtersBaseUrl += "browse/";
     if (typeof filters.category === 'number') filtersBaseUrl += "cat/" + filters.category + "/";
-
-    function onOriginalCheckboxClick(){
-        let val = filters.original !== null ? 0 : 1;
-        window.location.href = filtersBaseUrl + "filteroriginal/" + val;
-    }
 
     return (
         <div id="product-browse-top-menu">
@@ -39,12 +34,85 @@ function ProductBrowseFilterContainer(){
                     <li className={filters.order === "plinged" ? "active" : ""}>
                         <a href={filtersBaseUrl + "ord/plinged/" + window.location.search}>Plinged</a>
                     </li>
-                    <li style={{"float":"right","paddingTop":"10px"}}>
-                        <input onChange={onOriginalCheckboxClick} defaultChecked={filters.original} type="checkbox"/>
-                        <label>Original</label>
-                    </li>
                 </ul>
             </div>
+        </div>
+    )
+}
+
+function ProductTagGroupFilterContainer(){
+ 
+    const [ tagGroups, setTagGroups ] = useState([]);
+    const [ tagGroupIds, setTagGroupIds ] = useState([]);
+    const [ selectedTags, setSelectedTags ] = useState([]);
+
+    React.useState(() => {
+        renderTagGroups();
+    },[])
+
+    function renderTagGroups(){
+        console.log(tag_group_filter);
+        for ( var i in tag_group_filter){
+            const newTagGroupIds = tagGroupIds;
+            newTagGroupIds.push(i); 
+            setTagGroupIds(newTagGroupIds);
+            const tagGroup = tag_group_filter[i];
+            for (var ii in tagGroup){
+                if (ii === "selected_tag"){
+                    const newSelectedTags = selectedTags;
+                    newSelectedTags.push(tagGroup[ii]);
+                    setSelectedTags(newSelectedTags);
+                } else {
+                    const newArray = ConvertObjectToArray(tagGroup[ii],ii);
+                    let newTagGroupsArray = tagGroups;
+                    newTagGroupsArray.push(newArray);
+                    setTagGroups(newTagGroupsArray);
+                }
+            }
+        }
+    }
+
+    let tagGroupsDropdownDisplay;
+    if (tagGroups.length > 0){
+        tagGroupsDropdownDisplay = tagGroups.map((tagGroup,index) => (
+            <TagGroupDropDownMenu 
+                key={index}
+                tagGroup={tagGroup}
+                tagGroupId={tagGroupIds[index]}
+                selectedTag={selectedTags[index]}
+            />
+        ));
+    }
+
+    return (
+        <div id="product-tag-filter-container" style={{"width":140 * tagGroups.length + 1}}>
+            {tagGroupsDropdownDisplay}
+        </div>
+    )
+}
+
+function TagGroupDropDownMenu(props){
+
+    console.log(props);
+
+    function onSelectTag(e){
+        const serverUrl = json_serverUrl.split('://')[1];
+        const ajaxUrl = "https://"+ serverUrl + "/explore/savetaggroupfilter?group_id="+props.tagGroupId+"&tag_id="+e.target.value;
+        $.ajax({url: ajaxUrl}).done(function(res) { 
+            window.location.reload();
+        });
+    }
+
+    const tagsDisplay = props.tagGroup.map((tag,index) => (
+        <option key={index} selected={tag.id === props.selectedTag} value={tag.id}>{tag.tag}</option>
+    ));
+
+    return (
+        <div className="product-tag-group-dropdown">
+            <select onChange={e => onSelectTag(e)}>
+                <option></option>
+                {tagsDisplay}
+            </select>
         </div>
     )
 }
@@ -136,7 +204,7 @@ function ProductBrowsePagination(){
     for (var i = minPage; i < maxPage; i++){ paginationArray.push(i + 1); }
     
     let pageLinkBase = json_serverUrl;
-    pageLinkBase += json_store_name === "ALL" ? "/" : "/s/" + json_store_name + "/";
+    pageLinkBase += is_show_real_domain_as_url === 1 ? "/" : "/s/" + json_store_name + "/";
     pageLinkBase += "browse/page/";
 
     let pageLinkSuffix = "/" 
