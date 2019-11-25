@@ -121,7 +121,22 @@ $userRoleName = $helperUserRole->userRole();
     $tagGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
 
     if(!empty($tagGroupFilter)) {
-        echo "var tag_group_filter = " . json_encode($tagGroupFilter) . ";";
+        $tagGroupArray = array();
+        
+        foreach ($tagGroupFilter as $tagGroup ) {
+            $tags = $tagGroupHelper->fetchList($tagGroup);
+            $select = $this->tag_group_filter[$tagGroup];
+            
+            foreach (array_keys($tags) as $tag_id) {
+                if($select == $tag_id) {
+                    $tags[$tag_id]['selected'] = 1;
+                } else {
+                    $tags[$tag_id]['selected'] = 0;
+                }
+            }
+            $tagGroupArray[$tagGroup] = $tags;
+        }
+        echo "var tag_group_filter = " . json_encode($tagGroupArray) . ";";
     }
     
     
