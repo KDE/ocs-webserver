@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import {isMobile} from 'react-device-detect';
 import {ProductBrowseItem} from './product-browse-item';
-import {getNumberOfItemsPerRow, getImageHeight, chunkArray, getItemWidth} from './product-browse-helpers';
+import {getNumberOfItemsPerRow, getImageHeight, chunkArray, getItemWidth, ConvertObjectToArray} from './product-browse-helpers';
 
 function ProductBrowse(){
-    console.log(tag_group_filter)
     return (
         <div id="product-browse">
+            <ProductTagGroupFilterContainer/>
             <ProductBrowseFilterContainer/>
             <ProductBrowseItemList />
         </div>
@@ -45,6 +45,75 @@ function ProductBrowseFilterContainer(){
                     </li>
                 </ul>
             </div>
+        </div>
+    )
+}
+
+function ProductTagGroupFilterContainer(){
+ 
+    const [ tagGroups, setTagGroups ] = useState([]);
+    const [ tagGroupId, setTagGroupId ] = useState();
+    const [ selectedTag, setSelectedTag ] = useState();
+
+    React.useState(() => {
+        renderTagGroups();
+    },[])
+
+    function renderTagGroups(){
+        console.log(tag_group_filter);
+        for ( var i in tag_group_filter){
+            setTagGroupId(i);
+            const tagGroup = tag_group_filter[i];
+            for (var ii in tagGroup){
+                if (ii === "selected_tag"){
+                    setSelectedTag(tagGroup[ii]);
+                } else {
+                    const newArray = ConvertObjectToArray(tagGroup[ii],ii);
+                    let newTagGroupsArray = tagGroups;
+                    if (newTagGroupsArray.length === 0) tagGroups.push(newArray);
+                    setTagGroups(newTagGroupsArray);
+                }
+            }
+        }
+    }
+
+    let tagGroupsDropdownDisplay;
+    if (tagGroups.length > 0){
+        tagGroupsDropdownDisplay = tagGroups.map((tagGroup,index) => (
+            <TagGroupDropDownMenu 
+                key={index}
+                tagGroup={tagGroup}
+                tagGroupId={tagGroupId}
+                selectedTag={selectedTag}
+            />
+        ));
+    }
+
+    return (
+        <div id="product-tag-filter-container">
+            {tagGroupsDropdownDisplay}
+        </div>
+    )
+}
+
+function TagGroupDropDownMenu(props){
+
+    function onSelectTag(e){
+        const ajaxUrl = json_serverUrl + "/explore/savetaggroupfilter?group_id="+props.tagGroupId+"&tag_id="+e.target.value;
+        $.ajax({url: ajaxUrl}).done(function(res) { 
+            window.location.reload();
+        });
+    }
+
+    const tagsDisplay = props.tagGroup.map((tag,index) => (
+        <option key={index} selected={tag.id === props.selectedTag} value={tag.id}>{tag.tag}</option>
+    ));
+
+    return (
+        <div className="product-tag-group-dropdown">
+            <select onChange={e => onSelectTag(e)}>
+                {tagsDisplay}
+            </select>
         </div>
     )
 }
