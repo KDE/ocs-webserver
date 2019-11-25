@@ -79,7 +79,7 @@ function ProductTagGroupFilterContainer(){
                 key={index}
                 tagGroup={tagGroup}
                 tagGroupId={tagGroupIds[index]}
-                selectedTags={selectedTags}
+                selectedTag={selectedTags[index]}
             />
         ));
     }
@@ -91,7 +91,10 @@ function ProductTagGroupFilterContainer(){
     )
 }
 
-function TagGroupDropDownMenu(props){    
+function TagGroupDropDownMenu(props){
+
+    console.log(props);
+
     function onSelectTag(e){
         const serverUrl = json_serverUrl.split('://')[1];
         const ajaxUrl = "https://"+ serverUrl + "/explore/savetaggroupfilter?group_id="+props.tagGroupId+"&tag_id="+e.target.value;
@@ -100,16 +103,8 @@ function TagGroupDropDownMenu(props){
         });
     }
 
-    function checkIfTagIsSelected(tagId){
-        let isSelected = false;
-        props.selectedTags.forEach(function(st,index){
-            if (tagId === st) isSelected = true;
-        });
-        return isSelected;
-    }
-
     const tagsDisplay = props.tagGroup.map((tag,index) => (
-        <option key={index} selected={() => checkIfTagIsSelected(tag.id)} value={tag.id}>{tag.tag}</option>
+        <option key={index} selected={tag.id === props.selectedTag} value={tag.id}>{tag.tag}</option>
     ));
 
     return (
