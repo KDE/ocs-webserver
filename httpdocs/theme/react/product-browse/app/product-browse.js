@@ -51,7 +51,7 @@ function ProductTagGroupFilterContainer(){
     },[])
 
     function renderTagGroups(){
-        console.log(tag_group_filter);
+
         for ( var i in tag_group_filter){
             const newTagGroupIds = tagGroupIds;
             newTagGroupIds.push(i); 
@@ -210,7 +210,6 @@ function ProductBrowsePagination(){
     let pageLinkSuffix = "/" 
     if (typeof filters.category === 'number') pageLinkSuffix += "cat/" + filters.category + "/";
     pageLinkSuffix += "ord/" + filters.order + "/";
-    if (filters.original !== null) pageLinkSuffix += "filteroriginal/" + filters.original + window.location.search;
 
     let previousButtonDisplay;
     if (currentPage > 1) previousButtonDisplay = <li><a href={pageLinkBase + (currentPage - 1) + pageLinkSuffix}><span className="glyphicon glyphicon-chevron-left"></span> Previous</a></li>
