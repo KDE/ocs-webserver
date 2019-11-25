@@ -63,7 +63,9 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
             if($storeConfig->is_show_real_domain_as_url == true) {
                 $baseurl = "{$host}";
             } else {
-                $baseurl = "{$host}{$storeId}";
+                //otherwiese send to baseurl_member
+                //$baseurl = "{$host}{$storeId}";
+                $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl_member;
             }
         }
         
