@@ -121,7 +121,7 @@ $userRoleName = $helperUserRole->userRole();
     $tagGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
 
     if(!empty($tagGroupFilter)) {
-        echo "var tag_group_filter = " . $tagGroupFilter;
+        echo "var tag_group_filter = " . json_encode($tagGroupFilter) . ";";
     }
     
     
