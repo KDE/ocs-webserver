@@ -115,8 +115,6 @@ $userRoleName = $helperUserRole->userRole();
     echo "var is_show_real_domain_as_url = $is_show_real_domain_as_url;";
     echo "var cat_tree_filter = '$this->filter_mode';";
     
-    
-    
     $tagGroupFilter  = Zend_Registry::isRegistered('config_store_taggroups') ? Zend_Registry::get('config_store_taggroups') : null;
     $tagGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
 
@@ -130,6 +128,8 @@ $userRoleName = $helperUserRole->userRole();
             $tagGroupArray[$tagGroup]['selected_tag'] = $select;
         }
         echo "var tag_group_filter = " . json_encode($tagGroupArray) . ";";
+    } else {
+        echo "var tag_group_filter = null;";
     }
     
     
