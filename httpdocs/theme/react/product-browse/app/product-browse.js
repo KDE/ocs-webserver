@@ -43,20 +43,25 @@ function ProductBrowseFilterContainer(){
 function ProductTagGroupFilterContainer(){
  
     const [ tagGroups, setTagGroups ] = useState([]);
-    const [ tagGroupId, setTagGroupId ] = useState();
-    const [ selectedTag, setSelectedTag ] = useState();
+    const [ tagGroupIds, setTagGroupIds ] = useState([]);
+    const [ selectedTags, setSelectedTags ] = useState([]);
 
     React.useState(() => {
         renderTagGroups();
     },[])
 
     function renderTagGroups(){
+        console.log(tag_group_filter);
         for ( var i in tag_group_filter){
-            setTagGroupId(i);
+            const newTagGroupIds = tagGroupIds;
+            newTagGroupIds.push(i); 
+            setTagGroupIds(newTagGroupIds);
             const tagGroup = tag_group_filter[i];
             for (var ii in tagGroup){
                 if (ii === "selected_tag"){
-                    setSelectedTag(tagGroup[ii]);
+                    const newSelectedTags = selectedTags;
+                    newSelectedTags.push(tagGroup[ii]);
+                    setSelectedTags(newSelectedTags);
                 } else {
                     const newArray = ConvertObjectToArray(tagGroup[ii],ii);
                     let newTagGroupsArray = tagGroups;
@@ -73,8 +78,8 @@ function ProductTagGroupFilterContainer(){
             <TagGroupDropDownMenu 
                 key={index}
                 tagGroup={tagGroup}
-                tagGroupId={tagGroupId}
-                selectedTag={selectedTag}
+                tagGroupId={tagGroupIds[index]}
+                selectedTags={selectedTags}
             />
         ));
     }
@@ -95,8 +100,16 @@ function TagGroupDropDownMenu(props){
         });
     }
 
+    function checkIfTagIsSelected(tagId){
+        let isSelected = false;
+        props.selectedTags.forEach(function(st,index){
+            if (tagId === st) isSelected = true;
+        });
+        return isSelected;
+    }
+
     const tagsDisplay = props.tagGroup.map((tag,index) => (
-        <option key={index} selected={tag.id === props.selectedTag} value={tag.id}>{tag.tag}</option>
+        <option key={index} selected={() => checkIfTagIsSelected(tag.id)} value={tag.id}>{tag.tag}</option>
     ));
 
     return (
