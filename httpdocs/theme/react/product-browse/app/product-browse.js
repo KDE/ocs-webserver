@@ -5,7 +5,7 @@ import {ProductBrowseItem} from './product-browse-item';
 import {getNumberOfItemsPerRow, getImageHeight, chunkArray, getItemWidth} from './product-browse-helpers';
 
 function ProductBrowse(){
-    
+    console.log(tag_group_filter)
     return (
         <div id="product-browse">
             <ProductBrowseFilterContainer/>
@@ -136,7 +136,7 @@ function ProductBrowsePagination(){
     for (var i = minPage; i < maxPage; i++){ paginationArray.push(i + 1); }
     
     let pageLinkBase = json_serverUrl;
-    pageLinkBase += json_store_name === "ALL" ? "/" : "/s/" + json_store_name + "/";
+    pageLinkBase += is_show_real_domain_as_url === 1 ? "/" : "/s/" + json_store_name + "/";
     pageLinkBase += "browse/page/";
 
     let pageLinkSuffix = "/" 
