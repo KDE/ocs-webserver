@@ -2543,12 +2543,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 if (isset($fileResponse->status)
                     && $fileResponse->status == 'success'
                 ) {
-                    $this->_helper->json(array(
-                        'status' => 'ok',
-                        'file'   => $fileResponse->file
-                    ));
-                    
-                    
                     //If this file has a torrent file, delete it
                     if(!empty($fileResponse->file->has_torrent) && $fileResponse->file->has_torrent == 1) {
                         $queue = Local_Queue_Factory::getQueue();
@@ -2564,6 +2558,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         $command = new Backend_Commands_CreateTorrent($fileResponse->file);
                         $queue->send(serialize($command));
                     }
+                    
+                    
+                    $this->_helper->json(array(
+                        'status' => 'ok',
+                        'file'   => $fileResponse->file
+                    ));
 
                     return;
                 } else {
@@ -2724,8 +2724,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     && $fileResponse->status == 'success'
                 ) {
 
-                    $this->_helper->json(array('status' => 'ok'));
-                    
                     //If this file has a torrent file, delete it
                     if(!empty($fileResponse->file->has_torrent) && $fileResponse->file->has_torrent == 1) {
                         $queue = Local_Queue_Factory::getQueue();
@@ -2733,6 +2731,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         $queue->send(serialize($command));
                     }
                     
+                    
+                    $this->_helper->json(array('status' => 'ok'));
 
                     return;
                 } else {
