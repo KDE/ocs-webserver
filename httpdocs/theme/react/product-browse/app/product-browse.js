@@ -54,15 +54,13 @@ function ProductTagGroupFilterContainer(){
         for ( var i in tag_group_filter){
             setTagGroupId(i);
             const tagGroup = tag_group_filter[i];
-            console.log(tagGroup);
             for (var ii in tagGroup){
                 if (ii === "selected_tag"){
                     setSelectedTag(tagGroup[ii]);
                 } else {
                     const newArray = ConvertObjectToArray(tagGroup[ii],ii);
-                    console.log(newArray);
                     let newTagGroupsArray = tagGroups;
-                    if (newTagGroupsArray.length === 0) tagGroups.push(newArray);
+                    newTagGroupsArray.push(newArray);
                     setTagGroups(newTagGroupsArray);
                 }
             }
@@ -82,15 +80,13 @@ function ProductTagGroupFilterContainer(){
     }
 
     return (
-        <div id="product-tag-filter-container">
+        <div id="product-tag-filter-container" style={{"width":140 * tagGroups.length + 1}}>
             {tagGroupsDropdownDisplay}
         </div>
     )
 }
 
-function TagGroupDropDownMenu(props){
-    console.log(json_serverUrl);    
-    
+function TagGroupDropDownMenu(props){    
     function onSelectTag(e){
         const serverUrl = json_serverUrl.split('://')[1];
         const ajaxUrl = "https://"+ serverUrl + "/explore/savetaggroupfilter?group_id="+props.tagGroupId+"&tag_id="+e.target.value;
@@ -106,7 +102,7 @@ function TagGroupDropDownMenu(props){
     return (
         <div className="product-tag-group-dropdown">
             <select onChange={e => onSelectTag(e)}>
-                <option>Select</option>
+                <option></option>
                 {tagsDisplay}
             </select>
         </div>
