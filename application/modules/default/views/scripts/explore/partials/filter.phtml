@@ -114,6 +114,18 @@ $userRoleName = $helperUserRole->userRole();
     $is_show_real_domain_as_url = $store_config->is_show_real_domain_as_url;
     echo "var is_show_real_domain_as_url = $is_show_real_domain_as_url;";
     echo "var cat_tree_filter = '$this->filter_mode'";
+    
+    
+    
+    $tagGroupFilter  = Zend_Registry::isRegistered('config_store_taggroups') ? Zend_Registry::get('config_store_taggroups') : null;
+    $tagGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
+
+    if(!empty($tagGroupFilter)) {
+        echo "var tag_group_filter = " . $tagGroupFilter;
+    }
+    
+    
+    
     ?>
 </script>
 <script type="application/javascript" src="/theme/react/category-tree/category-tree.js"></script>
