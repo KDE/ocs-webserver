@@ -9,11 +9,11 @@ const ProductRelationship = () => {
 
     const [succeed, setSucceed] = useState(false);
    
-
+   
     const handleSubmit =(event)=>{
       event.preventDefault();
+     
       const url = window.config.baseUrlStore+'/report/productclone/';   
-
       const params = new URLSearchParams();
       params.append('pc', project_id);
       params.append('p', product.project_id);

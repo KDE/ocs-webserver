@@ -96,3 +96,15 @@ export function getImageUrl(p,itemWidth,imgHeight){
     }
     return imgUrl;
 }
+
+export function ConvertObjectToArray(object,key){
+    let newArray = [];
+    for (var i in object){
+        const newObject = {
+            tag:object[i],
+            id:i
+        }
+        newArray.push(newObject);
+    }
+    return newArray;
+}
