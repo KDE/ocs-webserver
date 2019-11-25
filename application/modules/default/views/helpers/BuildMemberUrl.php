@@ -59,8 +59,12 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
         if(null != $storeConfig && $storeConfig->stay_in_context == false) {
             $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl_member;
         } else {
-            
-            $baseurl = "{$host}{$storeId}";
+            //20191125 but if the url is a real domain, then we do not need the /s/STORE_NAME
+            if($storeConfig->is_show_real_domain_as_url == true) {
+                $baseurl = "{$host}";
+            } else {
+                $baseurl = "{$host}{$storeId}";
+            }
         }
         
 
