@@ -126,15 +126,8 @@ $userRoleName = $helperUserRole->userRole();
         foreach ($tagGroupFilter as $tagGroup ) {
             $tags = $tagGroupHelper->fetchList($tagGroup);
             $select = $this->tag_group_filter[$tagGroup];
-            
-            foreach (array_keys($tags) as $tag_id) {
-                if($select == $tag_id) {
-                    $tags[$tag_id]['selected'] = 1;
-                } else {
-                    $tags[$tag_id]['selected'] = 0;
-                }
-            }
-            $tagGroupArray[$tagGroup] = $tags;
+            $tagGroupArray[$tagGroup]['tags'] = $tags;
+            $tagGroupArray[$tagGroup]['selected_tag'] = $select;
         }
         echo "var tag_group_filter = " . json_encode($tagGroupArray) . ";";
     }
