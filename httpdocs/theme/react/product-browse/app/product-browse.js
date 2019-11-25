@@ -21,11 +21,6 @@ function ProductBrowseFilterContainer(){
     filtersBaseUrl += "browse/";
     if (typeof filters.category === 'number') filtersBaseUrl += "cat/" + filters.category + "/";
 
-    function onOriginalCheckboxClick(){
-        let val = filters.original !== null ? 0 : 1;
-        window.location.href = filtersBaseUrl + "filteroriginal/" + val;
-    }
-
     return (
         <div id="product-browse-top-menu">
             <div className="pling-nav-tabs">
@@ -38,10 +33,6 @@ function ProductBrowseFilterContainer(){
                     </li>
                     <li className={filters.order === "plinged" ? "active" : ""}>
                         <a href={filtersBaseUrl + "ord/plinged/" + window.location.search}>Plinged</a>
-                    </li>
-                    <li style={{"float":"right","paddingTop":"10px"}}>
-                        <input onChange={onOriginalCheckboxClick} defaultChecked={filters.original} type="checkbox"/>
-                        <label>Original</label>
                     </li>
                 </ul>
             </div>
@@ -60,15 +51,16 @@ function ProductTagGroupFilterContainer(){
     },[])
 
     function renderTagGroups(){
-        console.log(tag_group_filter);
         for ( var i in tag_group_filter){
             setTagGroupId(i);
             const tagGroup = tag_group_filter[i];
+            console.log(tagGroup);
             for (var ii in tagGroup){
                 if (ii === "selected_tag"){
                     setSelectedTag(tagGroup[ii]);
                 } else {
                     const newArray = ConvertObjectToArray(tagGroup[ii],ii);
+                    console.log(newArray);
                     let newTagGroupsArray = tagGroups;
                     if (newTagGroupsArray.length === 0) tagGroups.push(newArray);
                     setTagGroups(newTagGroupsArray);
@@ -114,6 +106,7 @@ function TagGroupDropDownMenu(props){
     return (
         <div className="product-tag-group-dropdown">
             <select onChange={e => onSelectTag(e)}>
+                <option>Select</option>
                 {tagsDisplay}
             </select>
         </div>
