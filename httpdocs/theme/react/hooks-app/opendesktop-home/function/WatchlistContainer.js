@@ -4,7 +4,7 @@ function WatchlistContainer(props)
   return (
         <ul id="admin-links-container">
           <li id="product-moderation-link-item">
-            <a href={props.baseUrlStore+"/productmoderation/"} >
+            <a href={props.baseUrlStore+"/moderation/productmoderation/"} >
               <span>Product moderation</span>
             </a>
           </li>
