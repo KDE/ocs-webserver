@@ -225,6 +225,14 @@
                         
                             
                             
+                        <?php 
+                            echo $hasTorrent;
+                            if($hasTorrent == true) {
+                                echo "Torrent Download:";
+                            } else {
+                                echo "Normal Download:";
+                            }
+                        ?>
                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && $hasTorrent == true) {                      
                         
                             $config = Zend_Registry::get('config');
