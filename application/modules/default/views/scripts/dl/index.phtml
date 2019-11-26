@@ -93,6 +93,10 @@
             return { width : e[ a+'Width' ] , height : e[ a+'Height' ] }
         }
     </script>   
+    
+    
+    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && $hasTorrent == true) { ?>
+    
     <script src="/theme/flatui/js/lib/webtorrent.min.js"></script>
     <script>
         var client = new WebTorrent()
@@ -150,11 +154,15 @@
         }
     </script>
     
+    <?php } ?>    
+    
 </head>
 
 <body style="height: 370px; background-color: #f8f9fa;">
     
     <?php
+    $helperUserRole = new Backend_View_Helper_UserRole();
+    $userRoleName = $helperUserRole->userRole();
     
     $fileName = $this->file_name;
     $lastIndex = strripos($fileName, '.');
@@ -171,8 +179,6 @@
     $isExternal = ($this->is_external == "true");
     
     $hasTorrent = ($this->has_torrent == "true" || $this->has_torrent == "1");
-    
-    var_dump($hasTorrent);
     
     $link = "";
     
@@ -225,14 +231,6 @@
                         
                             
                             
-                        <?php 
-                            echo $hasTorrent;
-                            if($hasTorrent == true) {
-                                echo "Torrent Download:";
-                            } else {
-                                echo "Normal Download:";
-                            }
-                        ?>
                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && $hasTorrent == true) {                      
                         
                             $config = Zend_Registry::get('config');
