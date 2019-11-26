@@ -1577,9 +1577,9 @@ var PartialFormsAjaxMemberBg = (function () {
 
 var AjaxForm = (function () {
     return {
-        setup: function (idElement, idTargetElement) {
+        setup: function (elForm, idTargetElement) {
             var target = $(idTargetElement);
-            $('body').on("submit", 'form.product-add-comment', function (event) {
+            $('body').on("submit", elForm, function (event) {
                 event.preventDefault();
                 event.stopImmediatePropagation();
                 $(this).find('button').attr("disabled", "disabled");
@@ -1620,6 +1620,7 @@ var AjaxForm = (function () {
         }
     }
 })();
+
 
 
 var WidgetModalAjax = (function () {

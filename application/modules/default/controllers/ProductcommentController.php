@@ -62,13 +62,18 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $data['comment_target_id'] = (int)$this->getParam('p');
         $data['comment_parent_id'] = (int)$this->getParam('i');
         $data['comment_member_id'] = (int)$this->_authMember->member_id;
+        if($this->getParam('t'))
+        {
+            $data['comment_type'] =(int)$this->getParam('t');
+        }
+        
         $data['comment_text'] = Default_Model_HtmlPurify::purify($this->getParam('msg'));
         $tableReplies = new Default_Model_ProjectComments();
         $result = $tableReplies->save($data);
         $status = count($result->toArray()) > 0 ? 'ok' : 'error';
         $message = '';
 
-        $this->view->comments = $this->loadComments((int)$this->getParam('page'), (int)$this->getParam('p'));
+        $this->view->comments = $this->loadComments((int)$this->getParam('page'), (int)$this->getParam('p'),$this->getParam('t'));
         $this->view->product = $this->loadProductInfo((int)$this->getParam('p'));
         $this->view->member_id = (int)$this->_authMember->member_id;
 
@@ -81,7 +86,14 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $this->sendNotificationToParent($this->view->product, $data['comment_text'], $data['comment_parent_id']);
 
         if ($this->_request->isXmlHttpRequest()) {
-            $requestResult = $this->view->render('product/partials/productCommentsUX1.phtml');
+            
+            if($this->getParam('t') && (int)$this->getParam('t')==30)
+            {
+                $requestResult = $this->view->render('product/partials/productCommentsUX2.phtml');
+            }else
+            {
+                $requestResult = $this->view->render('product/partials/productCommentsUX1.phtml');
+            }            
             $this->_helper->json(array('status' => $status, 'message' => $message, 'data' => $requestResult));
         } else {
             $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
@@ -90,10 +102,10 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         }
     }
 
-    private function loadComments($page_offset, $project_id)
+    private function loadComments($page_offset, $project_id,$comment_type)
     {
         $modelComments = new Default_Model_ProjectComments();
-        $paginationComments = $modelComments->getCommentTreeForProject($project_id);
+        $paginationComments = $modelComments->getCommentTreeForProject($project_id,$comment_type);
         $paginationComments->setItemCountPerPage(25);
         $paginationComments->setCurrentPageNumber($page_offset);
 
