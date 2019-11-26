@@ -154,15 +154,7 @@ if($isExternal) {
             })
 
             function onTorrent (torrent) {
-                /*
-                log('Got torrent metadata!')
-                log(
-                'Torrent info hash: ' + torrent.infoHash + ' ' +
-                '<a href="' + torrent.magnetURI + '" target="_blank">[Magnet URI]</a> ' +
-                '<a href="' + torrent.torrentFileBlobURL + '" target="_blank" download="' + torrent.name + '.torrent">[Download .torrent]</a>'
-                )
-                */
-
+                console.log('onTorrent...');
                 // // Print out progress every 5 seconds
                 var interval = setInterval(function () {
                 log('Progress: ' + (torrent.progress * 100).toFixed(1) + '%')
@@ -192,6 +184,7 @@ if($isExternal) {
                 //p.innerHTML = str
                 //document.querySelector('.log').appendChild(p)
                 $('.log').innerHTML = str;
+                console.log(str);
             }
         });
     </script>
