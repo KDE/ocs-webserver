@@ -161,6 +161,7 @@ if($isExternal) {
                 var lastVal = 0;
                 
                 $('#torrent_form_div').hide();
+                $('#form-download-torrent').show();
                 
                 var interval = setInterval(function () {
                     rounds += 1;
@@ -172,9 +173,8 @@ if($isExternal) {
                     
                     log('Progress: ' + (torrent.progress * 100).toFixed(1) + '%');
                     
-                    $form = $('#form-download-torrent');
-                    var $uploadProgressBar = $form.find('progress[data-file-download-progress]');
-                    var $uploadProgress = $form.find('span[data-file-upload-progress]');
+                    var $uploadProgressBar = $('#data-file-upload-progress');
+                    var $uploadProgress = $('#data-file-upload-progress-text');
                     $uploadProgress.attr('data-file-upload-time', new Date().getTime());
                     
                     var progress = parseInt(torrent.progress / torrent.progress * 10000) / 100;
@@ -292,10 +292,10 @@ if($isExternal) {
                                 <?php } ?>
                             </form>
                         </div>
-                        <div class="log" id="dl_status">
+                        <div class="log" id="dl_status" style="visibility: hidden;">
                             <progress max="100" value="0" data-file-upload-progress=""></progress>
                             <br>
-                            <span
+                            <span id="data-file-upload-progress-text"
                              data-file-upload-progress=""
                              data-file-upload-loaded="0"
                              data-file-upload-time="0"></span>
