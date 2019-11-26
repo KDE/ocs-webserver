@@ -172,8 +172,6 @@
     
     $hasTorrent = ($this->has_torrent == "true" || $this->has_torrent == "1");
     
-    var_dump($this->has_torrent);
-    
     $link = "";
     
     if($isExternal) {
@@ -232,9 +230,9 @@
                         
                         ?>
 
-                            <form id="form-download-torrent">
+                            <form id="form-download-torrent" name="form-download-torrent">
                                 <input type="hidden" name="torrentId" value="<?= $torrenturl ?>">
-                                
+                                Torrent-Download: 
                                 <?php if($this->link_type == 'download') { ?>
                                 <button type="submit" value="Continue Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download (<?= $this->file_size_human ?>)</button>
                                 <?php } else { ?>
