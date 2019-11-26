@@ -134,7 +134,7 @@ if($isExternal) {
                 console.error('ERROR: ' + err.message)                                    
             })
 
-
+            $('#dl_status').hide();
 
             $('#form-download-torrent').on('submit', function (e) {
                 e.preventDefault() // Prevent page refresh
@@ -282,8 +282,8 @@ if($isExternal) {
                                 <?php } ?>
                             </form>
                         </div>
-                        <div class="log" id="dl_status" style="visibility: hidden;">
-                            <progress max="100" value="0" data-file-upload-progress=""></progress>
+                        <div class="log" id="dl_status">
+                            <progress id="data-file-upload-progress" max="100" value="0" data-file-upload-progress=""></progress>
                             <br>
                             <span id="data-file-upload-progress-text"
                              data-file-upload-progress=""
