@@ -23,7 +23,9 @@
 if (false === isset($this->params)) {
     $this->params = array();
 }
-$serverUrl = $this->serverUrl().'/';
+//$serverUrl = $this->serverUrl().'/';
+$serverUrl = Zend_Registry::get('config')->settings->client->default->baseurl_store;
+$serverUrl = $serverUrl.'/';
 $project_id = $this->params['project_id'];
 
 ?>
