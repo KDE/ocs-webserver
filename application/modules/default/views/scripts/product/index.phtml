@@ -84,7 +84,8 @@ $this->ratings = $tableProjectRatings->fetchRating($this->product->project_id);
  //    if($p['rating_active']==1) $cntRatingsActive =$cntRatingsActive+1;
  // }
 
-
+$commentModel = new Default_Model_ProjectComments();
+$cntModeration = $commentModel->fetchCommentsWithTypeProjectCount(30,$this->product->project_id);
 
 if (Zend_Auth::getInstance()->hasIdentity()){
     $this->ratingOfUser = $tableProjectRatings->getProjectRateForUser($this->product->project_id,$identity->member_id);
@@ -595,7 +596,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName || $isowner){  ?>
                         <li><a href="#related-panel" data-toggle="tab">Relationship<?=' ('.$this->cntRelatedProducts.')'?></a></li>
 
-                        <li><a href="#tab-moderation" data-toggle="tab">Moderation</a></li>
+                        <li><a href="#tab-moderation" data-toggle="tab">Moderation<?=' ('.$cntModeration.')'?></a></li>
                         
                        <?php } ?>
 

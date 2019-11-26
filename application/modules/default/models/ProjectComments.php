@@ -510,4 +510,19 @@ class Default_Model_ProjectComments
         $result = $this->_dataTable->getAdapter()->fetchRow($sql, array('comment_type' => $comment_type));
         return $result['cnt'];
     }
+
+    public function fetchCommentsWithTypeProjectCount($comment_type,$project_id)    
+    {
+        $sql="SELECT 
+        count(1) as cnt
+        FROM comments           
+        JOIN project ON comments.comment_target_id = project.project_id         
+        WHERE comments.comment_active = 1
+        AND project.status = 100
+        And project.project_id = :project_id
+        and comments.comment_type=:comment_type
+        ";        
+        $result = $this->_dataTable->getAdapter()->fetchRow($sql, array('comment_type' => $comment_type,'project_id'=>$project_id));
+        return $result['cnt'];
+    }
 }
