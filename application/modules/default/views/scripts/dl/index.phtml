@@ -103,11 +103,17 @@
         client.on('error', function (err) {
             console.error('ERROR: ' + err.message)                                    
         })
+        
+        
 
-        $('#form-download-torrent').addEventListener('submit', function (e) {
+        $('#form-download-torrent').on('submit', function (e) {
             e.preventDefault() // Prevent page refresh
+            
+            console.log('Start Torrent DL');
 
             var torrentId = $('form input[name=torrentId]').value;
+            
+            console.log('ID: ' + $('form input[name=torrentId]').value);
             //log('Adding ' + torrentId)
             client.add(torrentId, onTorrent);
         })
