@@ -27,7 +27,7 @@ if (false === isset($this->params)) {
 $serverUrl = Zend_Registry::get('config')->settings->client->default->baseurl_store;
 $serverUrl = $serverUrl.'/';
 $project_id = $this->params['project_id'];
-
+$target = $this->dom_target;
 ?>
 <span class="glyphicon glyphicon-refresh spinning" style="display: none"></span> 
 <ul class="pagination pagination-sm" style="margin: 0;padding:0;">
@@ -57,10 +57,10 @@ $project_id = $this->params['project_id'];
     $(document).ready(function () {
         $('body').off('click', 'ul.pagination a.paginationPartial').on('click', 'ul.pagination a.paginationPartial',function(event) {
                 event.preventDefault();
-                var target = '<?=$this->dom_target?>';            
+                var target = 'div#'+$(this).closest(".comment-containers" ).attr('id');                                     
                 var url = $(this).attr("href") + ' ' + target + ' > *';   
                 $('html, body').scrollTop($(target).offset().top);    
-                $('.glyphicon.glyphicon-refresh.spinning').show();
+                $(target).find('.glyphicon.glyphicon-refresh.spinning').show();
                 $(target).load(url, function (response, status, xhr) {
                     if (status == "error") {
                         $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');

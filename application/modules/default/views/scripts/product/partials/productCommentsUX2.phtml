@@ -57,7 +57,7 @@ if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
                     <small class="pull-right">
                         <div class="row" style="margin:0;padding: 0;text-align: right;"><?=$this->comments->getTotalItemCount()?> comments</div>
                         <?php if ($pageCount > 1) echo $this->paginationControl($this->comments, 'Sliding', '/partials/paginationControlComment.phtml',
-                            array('params' => array('project_id'=>$this->product->project_id), 'dom_target' => 'div#product-discussion')); ?></small>
+                            array('params' => array('project_id'=>$this->product->project_id), 'dom_target' => 'div#product-comment-moderation')); ?></small>
                     Comments
                 </h3>
                 <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>

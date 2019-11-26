@@ -650,7 +650,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 
 
                                     <!-- comments -->
-                                    <div id="product-discussion">
+                                    <div id="product-discussion" class="comment-containers">
                                         <?php
                                         $modelComments = new Default_Model_ProjectComments();
                                         $offset = $this->paramPageId;
@@ -774,7 +774,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                         <div class="tab-pane" id="tab-moderation">
                             <div class="col-lg-12">                            
                              <!-- comments -->
-                                <div id="product-comment-moderation">
+                                <div id="product-comment-moderation" class="comment-containers">
                                         <?php
                                         $modelComments = new Default_Model_ProjectComments();
                                         $offset = $this->paramPageId;
