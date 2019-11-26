@@ -92,7 +92,7 @@ class Default_Model_ProjectComments
      *
      * @return Zend_Paginator
      */
-    public function getCommentTreeForProjectList($project_id)
+    public function getCommentTreeForProjectList($project_id,$type=null)
     {
 
         $sql = "
@@ -111,9 +111,10 @@ class Default_Model_ProjectComments
                 WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id = 0 
                 ORDER BY comment_created_at DESC
                 ";
+        if($type==null) $type=Default_Model_DbTable_Comments::COMMENT_TYPE_PRODUCT;
         $rowset = $this->_dataTable->getAdapter()->fetchAll($sql, array(
                 'status_active' => 1,
-                'type_id'       => Default_Model_DbTable_Comments::COMMENT_TYPE_PRODUCT,
+                'type_id'       => $type,
                 'project_id'    => $project_id
             ))
         ;
@@ -135,7 +136,7 @@ class Default_Model_ProjectComments
                 ";
         $rowset2 = $this->_dataTable->getAdapter()->fetchAll($sql, array(
                 'status_active' => 1,
-                'type_id'       => Default_Model_DbTable_Comments::COMMENT_TYPE_PRODUCT,
+                'type_id'       => $type,
                 'project_id'    => $project_id
             ))
         ;
@@ -164,10 +165,10 @@ class Default_Model_ProjectComments
      *
      * @return Zend_Paginator
      */
-    public function getCommentTreeForProject($project_id)
+    public function getCommentTreeForProject($project_id,$type=0)
     {
 
-        $list = $this->getCommentTreeForProjectList($project_id);
+        $list = $this->getCommentTreeForProjectList($project_id,$type);
 
         return new Zend_Paginator(new Zend_Paginator_Adapter_Array($list));
     }
@@ -463,4 +464,50 @@ class Default_Model_ProjectComments
         return $returnValue;
     }
 
+    /**
+     * @return array 
+     */
+    public function fetchCommentsWithType($comment_type,$sorting='comment_created_at desc', $pageSize=10, $offset=0)
+    {
+        $sql="SELECT 
+        comment_id
+        ,comment_text
+        , member.member_id
+        ,member.profile_image_url
+        ,comment_created_at
+        ,member.username            
+        ,p.title
+        ,p.project_id
+        ,p.image_small
+        ,p.cat_title
+        ,p.username as product_username
+        FROM comments           
+        JOIN stat_projects p ON comments.comment_target_id = p.project_id 
+        join member ON comments.comment_member_id = member.member_id
+        WHERE comments.comment_active = 1                
+        and comments.comment_type=:comment_type       
+        
+        ";
+        $sql .= ' order by ' . $sorting;
+        $sql .= ' limit ' . $pageSize;
+        $sql .= ' offset ' . $offset;
+
+        $result = $this->_dataTable->getAdapter()->fetchAll($sql, array('comment_type' => $comment_type));
+        return $result;
+
+    }
+
+    public function fetchCommentsWithTypeCount($comment_type)    
+    {
+        $sql="SELECT 
+        count(1) as cnt
+        FROM comments           
+        JOIN project ON comments.comment_target_id = project.project_id         
+        WHERE comments.comment_active = 1
+        AND project.status = 100
+        and comments.comment_type=:comment_type
+        ";        
+        $result = $this->_dataTable->getAdapter()->fetchRow($sql, array('comment_type' => $comment_type));
+        return $result['cnt'];
+    }
 }
