@@ -168,6 +168,10 @@ if($isExternal) {
                     }
                     
                     log('Progress: ' + (torrent.progress * 100).toFixed(1) + '%');
+                    $( "#progressbar" ).progressbar({
+                        value: torrent.progress * 100
+                    });
+                    
                     lastVal = torrent.progress * 100;
                     
                     
@@ -193,7 +197,7 @@ if($isExternal) {
                         document.body.appendChild(a);
                         a.style = "display: none";
                         a.href = url;
-                        a.download = fileName;
+                        a.download = file.name;
                         a.click();
                         window.URL.revokeObjectURL(url);
                     })
@@ -258,7 +262,7 @@ if($isExternal) {
                             
                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && $hasTorrent == true) {                      
                         ?>
-
+                        <div id="torrent_form_div">
                             <form id="form-download-torrent" name="form-download-torrent">
                                 Torrent-Download: 
                                 <?php if($this->link_type == 'download') { ?>
@@ -268,8 +272,10 @@ if($isExternal) {
                                 <p style="margin: 0;">*Install things with <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a>.</p>
                                 <?php } ?>
                             </form>
-
-                            <div class="log"></div>
+                        </div>
+                        <div class="log" id="dl_status" style="height: 11px; width: 100px; border: solid 1px black;">
+                            <div id="progressbar"></div> 
+                        </div>
 
                         <?php } else { ?>    
                             <form id="Form1" name="Form1" action="" method="POST">
