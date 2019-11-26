@@ -131,7 +131,11 @@ if($isExternal) {
        
             var client = new WebTorrent()
             client.on('error', function (err) {
-                console.error('ERROR: ' + err.message)                                    
+                console.error('ERROR: ' + err.message);
+                $('#form-download-torrent').hide();
+                $('#Form1').show();
+                $('#Form1').submit();
+                
             })
 
             $('#dl_status').hide();
