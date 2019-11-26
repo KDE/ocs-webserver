@@ -141,11 +141,11 @@ if($isExternal) {
 
                 console.log('Start Torrent DL');
 
-                var torrentId = $('form input[name=torrentId]').value;
+                var torrentUrl = $('#torrentUrl').value;
 
-                console.log('ID: ' + $('form input[name=torrentId]').value);
+                console.log('ID: ' + torrentUrl);
                 //log('Adding ' + torrentId)
-                client.add(torrentId, onTorrent);
+                client.add(torrentUrl, onTorrent);
             })
 
             function onTorrent (torrent) {
@@ -244,7 +244,7 @@ if($isExternal) {
                         ?>
 
                             <form id="form-download-torrent" name="form-download-torrent">
-                                <input type="hidden" name="torrentId" value="<?= $torrenturl ?>">
+                                <input type="hidden" name="torrentUrl" id="torrentUrl" value="<?= $torrenturl ?>">
                                 Torrent-Download: 
                                 <?php if($this->link_type == 'download') { ?>
                                 <button type="submit" value="Continue Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download (<?= $this->file_size_human ?>)</button>
