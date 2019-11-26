@@ -104,10 +104,10 @@
             console.error('ERROR: ' + err.message)                                    
         })
 
-        document.querySelector('#form-download-torrent').addEventListener('submit', function (e) {
+        $('#form-download-torrent').addEventListener('submit', function (e) {
             e.preventDefault() // Prevent page refresh
 
-            var torrentId = document.querySelector('form input[name=torrentId]').value;
+            var torrentId = $('form input[name=torrentId]').value;
             //log('Adding ' + torrentId)
             client.add(torrentId, onTorrent);
         })
@@ -150,7 +150,7 @@
             //var p = document.createElement('p')
             //p.innerHTML = str
             //document.querySelector('.log').appendChild(p)
-            document.querySelector('.log').innerHTML = str;
+            $('.log').innerHTML = str;
         }
     </script>
     
