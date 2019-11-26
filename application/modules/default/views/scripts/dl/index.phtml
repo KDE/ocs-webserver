@@ -172,6 +172,8 @@
     
     $hasTorrent = ($this->has_torrent == "true" || $this->has_torrent == "1");
     
+    var_dump($hasTorrent);
+    
     $link = "";
     
     if($isExternal) {
@@ -223,7 +225,7 @@
                         
                             
                             
-                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && $hasTorrent) {                      
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && $hasTorrent == true) {                      
                         
                             $config = Zend_Registry::get('config');
                             $torrenturl = $config->torrent->media->downloadurl . "?id=".$fileId."&lt=torrent";
