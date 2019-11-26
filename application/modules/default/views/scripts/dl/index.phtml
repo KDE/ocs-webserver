@@ -350,6 +350,7 @@
 </html>
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
+            console.log(\'Init JS\');
             $(\'#form-download-torrent\').on(\'submit\', function (e) {
                 e.preventDefault() // Prevent page refresh
 
