@@ -170,7 +170,7 @@
     
     $isExternal = ($this->is_external == "true");
     
-    $hasTorrent = ($this->has_torrent == "true");
+    $hasTorrent = ($this->has_torrent == "true" || $this->has_torrent == "1");
     
     $link = "";
     
@@ -220,7 +220,7 @@
 
                         } else {
                         ?>
-                        <form id="Form1" name="Form1" action="" method="POST">
+                        
                             
                             
                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && $hasTorrent) {                      
@@ -244,17 +244,17 @@
                             <div class="log"></div>
 
                         <?php } else { ?>    
-
+                            <form id="Form1" name="Form1" action="" method="POST">
                             <?php if($isExternal && $this->link_type == 'download') {?>
                                <button type="submit" value="External Link" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Follow Link (<?= $this->file_size_human ?>) <i class="fa fa-external-link"></i></button>   
                             <?php } else if($isExternal && $this->link_type == 'install') { ?>
-                            <button type="submit" value="Continue Installation" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Install (<?= $this->file_size_human ?>)</button>
-                            <p style="margin: 0;">*Install things with <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a>.</p>
+                                <button type="submit" value="Continue Installation" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Install (<?= $this->file_size_human ?>)</button>
+                                <p style="margin: 0;">*Install things with <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a>.</p>
                             <?php } else if($this->link_type == 'download') { ?>
-                            <button type="submit" value="Continue Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download (<?= $this->file_size_human ?>)</button>
+                                <button type="submit" value="Continue Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download (<?= $this->file_size_human ?>)</button>
                             <?php } else { ?>
-                            <button type="submit" value="Continue Installation" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Install (<?= $this->file_size_human ?>)</button>
-                            <p style="margin: 0;">*Install things with <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a>.</p>
+                                <button type="submit" value="Continue Installation" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Install (<?= $this->file_size_human ?>)</button>
+                                <p style="margin: 0;">*Install things with <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a>.</p>
                             <?php } ?>
 
                             <?php
@@ -271,7 +271,7 @@
                         }
                          ?>
 
-                        </form>   
+                            </form>   
                         
                         
                     </div>
