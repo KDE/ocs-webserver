@@ -190,6 +190,7 @@ if($isExternal) {
                     //log('Progress: 100%');
                     log('Progress: 100%');
                     clearInterval(interval);
+                    $('#dl_status').hide();
                 })
 
                 // Render all files into to the page
@@ -209,6 +210,8 @@ if($isExternal) {
                         a.download = file.name;
                         a.click();
                         window.URL.revokeObjectURL(url);
+                        
+                        parent.jQuery.fancybox.close();
                     })
                 })
             }
