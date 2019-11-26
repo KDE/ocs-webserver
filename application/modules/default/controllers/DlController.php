@@ -65,6 +65,8 @@ class DlController extends Local_Controller_Action_DomainSwitch
         $this->view->external_link = $externalLink;
         $this->view->supporter = $supporter;
         $this->view->has_torrent = ($hasTorrent=="1");
+        $this->view->file_id = $file_id;
+        
         $memberId = $this->_authMember->member_id;
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') { 

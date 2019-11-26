@@ -141,9 +141,14 @@ if($isExternal) {
 
                 console.log('Start Torrent DL');
 
-                var torrentUrl = $('#torrentUrl').value;
+                <?php
+                $config = Zend_Registry::get('config');
+                $torrenturl = $config->torrent->media->downloadurl . "?id=".$this->file_id."&lt=torrent";
+                ?>
 
-                console.log('ID: ' + torrentUrl);
+                var torrentUrl = '<?= $torrenturl ?>';
+
+                console.log('Url: ' + torrentUrl);
                 //log('Adding ' + torrentId)
                 client.add(torrentUrl, onTorrent);
             })
@@ -237,14 +242,9 @@ if($isExternal) {
                             
                             
                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && $hasTorrent == true) {                      
-                        
-                            $config = Zend_Registry::get('config');
-                            $torrenturl = $config->torrent->media->downloadurl . "?id=".$fileId."&lt=torrent";
-                        
                         ?>
 
                             <form id="form-download-torrent" name="form-download-torrent">
-                                <input type="hidden" name="torrentUrl" id="torrentUrl" value="<?= $torrenturl ?>">
                                 Torrent-Download: 
                                 <?php if($this->link_type == 'download') { ?>
                                 <button type="submit" value="Continue Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download (<?= $this->file_size_human ?>)</button>
