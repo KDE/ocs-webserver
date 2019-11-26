@@ -30,9 +30,10 @@ const MetaHeaderComponent = (props) => {
     let device;
     if (width >= 1015) {
       device = "large";
-    } else if (width < 1015 && width >= 730) {
-      device = "mid";
-    } else if (width < 730) {
+      // } else if (width < 1015 && width >= 730) {
+      //  device = "mid";
+      // } else if (width < 730) {
+    } else {
       device = "tablet";
     }
     
