@@ -19,6 +19,32 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+
+
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+   
+$fileName = $this->file_name;
+$lastIndex = strripos($fileName, '.');
+$fileExt = "";
+if(!empty($lastIndex)) {
+    $fileExt = substr($fileName, $lastIndex+1);
+}
+$fileExt = strtoupper($fileExt);
+$isAppimage = false;
+if($fileExt == 'APPIMAGE') {
+    $isAppimage = true;
+}
+
+$isExternal = ($this->is_external == "true");
+
+$hasTorrent = ($this->has_torrent == "true" || $this->has_torrent == "1");
+
+$link = "";
+
+if($isExternal) {
+    $link = $this->external_link;
+}    
 ?>
 <!DOCTYPE html>
 <html>
@@ -170,38 +196,6 @@
 </head>
 
 <body style="height: 370px; background-color: #f8f9fa;">
-    
-    <?php
-    $helperUserRole = new Backend_View_Helper_UserRole();
-    $userRoleName = $helperUserRole->userRole();
-    
-    $fileName = $this->file_name;
-    $lastIndex = strripos($fileName, '.');
-    $fileExt = "";
-    if(!empty($lastIndex)) {
-        $fileExt = substr($fileName, $lastIndex+1);
-    }
-    $fileExt = strtoupper($fileExt);
-    $isAppimage = false;
-    if($fileExt == 'APPIMAGE') {
-        $isAppimage = true;
-    }
-    
-    $isExternal = ($this->is_external == "true");
-    
-    $hasTorrent = ($this->has_torrent == "true" || $this->has_torrent == "1");
-    
-    $link = "";
-    
-    if($isExternal) {
-        $link = $this->external_link;
-    }
-    
-    ?>
-    
-    
-    
-    
     <main id="ads-page">
         
         <div class="columns" style="background-color: #f8f9fa;">
@@ -348,21 +342,4 @@
     
     </script>
 </html>
-<?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){
-            console.log(\'Init JS\');
-            $(\'#form-download-torrent\').on(\'submit\', function (e) {
-                e.preventDefault() // Prevent page refresh
-
-                console.log(\'Start Torrent DL\');
-
-                var torrentId = $(\'form input[name=torrentId]\').value;
-
-                console.log(\'ID: \' + torrentId);
-                client.add(torrentId, onTorrent);
-            })
-        });
-    ');
-
-
 
