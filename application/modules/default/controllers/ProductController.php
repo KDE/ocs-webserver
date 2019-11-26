@@ -2543,12 +2543,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 if (isset($fileResponse->status)
                     && $fileResponse->status == 'success'
                 ) {
+                    /*
                     //If this file has a torrent file, delete it
                     if(!empty($fileResponse->file->has_torrent) && $fileResponse->file->has_torrent == 1) {
                         $queue = Local_Queue_Factory::getQueue();
                         $command = new Backend_Commands_DeleteTorrent($fileResponse->file);
                         $queue->send(serialize($command));
                     }
+                    */
                     
                     //If this file is bigger than XXX MB (see application.ini), then create a webtorrent file
                     $config = Zend_Registry::get('config');
@@ -2724,13 +2726,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     && $fileResponse->status == 'success'
                 ) {
 
+                    /*
                     //If this file has a torrent file, delete it
                     if(!empty($fileResponse->file->has_torrent) && $fileResponse->file->has_torrent == 1) {
                         $queue = Local_Queue_Factory::getQueue();
                         $command = new Backend_Commands_DeleteTorrent($fileResponse->file);
                         $queue->send(serialize($command));
                     }
-                    
+                    */
                     
                     $this->_helper->json(array('status' => 'ok'));
 
