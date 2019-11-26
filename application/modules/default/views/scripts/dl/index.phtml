@@ -93,7 +93,62 @@
             return { width : e[ a+'Width' ] , height : e[ a+'Height' ] }
         }
     </script>   
-    
+    <script src="/theme/flatui/js/lib/webtorrent.min.js"></script>
+    <script>
+        var client = new WebTorrent()
+        client.on('error', function (err) {
+            console.error('ERROR: ' + err.message)                                    
+        })
+
+        document.querySelector('#form-download-torrent').addEventListener('submit', function (e) {
+            e.preventDefault() // Prevent page refresh
+
+            var torrentId = document.querySelector('form input[name=torrentId]').value;
+            //log('Adding ' + torrentId)
+            client.add(torrentId, onTorrent);
+        })
+
+        function onTorrent (torrent) {
+            /*
+            log('Got torrent metadata!')
+            log(
+            'Torrent info hash: ' + torrent.infoHash + ' ' +
+            '<a href="' + torrent.magnetURI + '" target="_blank">[Magnet URI]</a> ' +
+            '<a href="' + torrent.torrentFileBlobURL + '" target="_blank" download="' + torrent.name + '.torrent">[Download .torrent]</a>'
+            )
+            */
+           
+            // // Print out progress every 5 seconds
+            var interval = setInterval(function () {
+            log('Progress: ' + (torrent.progress * 100).toFixed(1) + '%')
+            }, 1000)
+
+            torrent.on('done', function () {
+                //log('Progress: 100%');
+                log('Progress: 100%');
+                clearInterval(interval);
+            })
+
+            // Render all files into to the page
+            torrent.files.forEach(function (file) {
+                //file.appendTo('.log')
+                //log('(Blob URLs only work if the file is loaded from a server. "http//localhost" works. "file://" does not.)')
+                file.getBlobURL(function (err, url) {
+                    if (err) return log(err.message);
+                    //log('File done.')
+                    //log('<a href="' + url + '">Download full file: ' + file.name + '</a>');
+                    window.location.assign(url);
+                })
+            })
+        }
+
+        function log (str) {
+            //var p = document.createElement('p')
+            //p.innerHTML = str
+            //document.querySelector('.log').appendChild(p)
+            document.querySelector('.log').innerHTML = str;
+        }
+    </script>
     
 </head>
 
@@ -115,6 +170,8 @@
     
     $isExternal = ($this->is_external == "true");
     
+    $hasTorrent = ($this->has_torrent == "true");
+    
     $link = "";
     
     if($isExternal) {
@@ -122,6 +179,9 @@
     }
     
     ?>
+    
+    
+    
     
     <main id="ads-page">
         
@@ -160,29 +220,53 @@
 
                         } else {
                         ?>
-                        <form id="Form1" name="Form1" action="" method="POST">    
+                        <form id="Form1" name="Form1" action="" method="POST">
+                            
+                            
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && $hasTorrent) {                      
+                        
+                            $config = Zend_Registry::get('config');
+                            $torrenturl = $config->torrent->media->downloadurl . "?id=".$fileId."&lt=torrent";
+                        
+                        ?>
 
-                         <?php if($isExternal && $this->link_type == 'download') {?>
-                            <button type="submit" value="External Link" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Follow Link (<?= $this->file_size_human ?>) <i class="fa fa-external-link"></i></button>   
-                         <?php } else if($isExternal && $this->link_type == 'install') { ?>
-                         <button type="submit" value="Continue Installation" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Install (<?= $this->file_size_human ?>)</button>
-                         <p style="margin: 0;">*Install things with <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a>.</p>
-                         <?php } else if($this->link_type == 'download') { ?>
-                         <button type="submit" value="Continue Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download (<?= $this->file_size_human ?>)</button>
-                         <?php } else { ?>
-                         <button type="submit" value="Continue Installation" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Install (<?= $this->file_size_human ?>)</button>
-                         <p style="margin: 0;">*Install things with <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a>.</p>
-                         <?php } ?>
-                         
-                         <?php
-                         if($isExternal) {
-                             echo("<p style='margin: 0;'>".$link."</p>");
-                         }
-                         if($isAppimage) {
-                             echo("<p style='margin: 0;'>For Appimages we recommend <a href='https://www.opendesktop.org/p/1228228' target='_NEW' style='color: #0088d7;text-decoration: underline;'>AppImageLauncher</a> for system integration</p>");
-                         }
-                         ?>
-                         
+                            <form id="form-download-torrent">
+                                <input type="hidden" name="torrentId" value="<?= $torrenturl ?>">
+                                
+                                <?php if($this->link_type == 'download') { ?>
+                                <button type="submit" value="Continue Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download (<?= $this->file_size_human ?>)</button>
+                                <?php } else { ?>
+                                <button type="submit" value="Continue Installation" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Install (<?= $this->file_size_human ?>)</button>
+                                <p style="margin: 0;">*Install things with <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a>.</p>
+                                <?php } ?>
+                            </form>
+
+                            <div class="log"></div>
+
+                        </div>
+                        <?php } else { ?>    
+
+                            <?php if($isExternal && $this->link_type == 'download') {?>
+                               <button type="submit" value="External Link" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Follow Link (<?= $this->file_size_human ?>) <i class="fa fa-external-link"></i></button>   
+                            <?php } else if($isExternal && $this->link_type == 'install') { ?>
+                            <button type="submit" value="Continue Installation" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Install (<?= $this->file_size_human ?>)</button>
+                            <p style="margin: 0;">*Install things with <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a>.</p>
+                            <?php } else if($this->link_type == 'download') { ?>
+                            <button type="submit" value="Continue Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download (<?= $this->file_size_human ?>)</button>
+                            <?php } else { ?>
+                            <button type="submit" value="Continue Installation" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Install (<?= $this->file_size_human ?>)</button>
+                            <p style="margin: 0;">*Install things with <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a>.</p>
+                            <?php } ?>
+
+                            <?php
+                            if($isExternal) {
+                                echo("<p style='margin: 0;'>".$link."</p>");
+                            }
+                            if($isAppimage) {
+                                echo("<p style='margin: 0;'>For Appimages we recommend <a href='https://www.opendesktop.org/p/1228228' target='_NEW' style='color: #0088d7;text-decoration: underline;'>AppImageLauncher</a> for system integration</p>");
+                            }
+                            ?>
+                        <?php } ?>  
                          
                          <?php
                         }

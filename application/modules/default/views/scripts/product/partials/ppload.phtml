@@ -272,7 +272,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
 
                                     //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
                                     var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size;
-                                    var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '" class="opendownloadfile" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>" data-link_type="download" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'">' + this.name + '</a>';
+                                    var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '" class="opendownloadfile" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-has_torrent="' + this.has_torrent + '" data-project_id="<?= $this->product->project_id ?>" data-link_type="download" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'">' + this.name + '</a>';
 
                                     /*
                                     var fileNameBtnLink = this.name;
@@ -308,7 +308,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
 
                                      if ( ocsUrl) {
                                             if(this.active && this.ocs_compatible == 1){
-                                                installButton = '<a href="' + downloadUrl + '" class="opendownloadfile btn btn-native btn-min-width" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>"  data-link_type="install" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'">Install</a>';
+                                                installButton = '<a href="' + downloadUrl + '" class="opendownloadfile btn btn-native btn-min-width" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-has_torrent="' + this.has_torrent + '" data-project_id="<?= $this->product->project_id ?>"  data-link_type="install" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'">Install</a>';
                                                 installLink = downloadUrl;
                                                 installLinkFilename = shortFilename(this.name);
 
@@ -326,7 +326,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                     }
 
                                     var downloadButton = '';
-                                    downloadButton = '<a href="'+downloadUrl+'" data-username="'+username+'" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>"  data-link_type="download" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'" class="btn btn-native btn-min-width opendownloadfile" ><img src="/images/system/download.svg" alt="download" style="width:20px; height:20px"></a>' ;
+                                    downloadButton = '<a href="'+downloadUrl+'" data-username="'+username+'" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-has_torrent="' + this.has_torrent + '" data-project_id="<?= $this->product->project_id ?>"  data-link_type="download" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'" class="btn btn-native btn-min-width opendownloadfile" ><img src="/images/system/download.svg" alt="download" style="width:20px; height:20px"></a>' ;
                                     
 
                                     if(this.version==null) {version = '';} else{version = this.version;}
@@ -400,7 +400,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                         ?>
                                         var username = '<?= $this->product->username?>';
                                         $('#dropdown_downloads').append(
-                                            '<li><a data-username="' + username + '" href="' + downloadBtnLink + '" style="white-space: normal; color: #23527c;" class="opendownloadfile" id="data-link-dl' + this.id + '" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>" data-link_type="download" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'"><span id="download-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + downloadLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
+                                            '<li><a data-username="' + username + '" href="' + downloadBtnLink + '" style="white-space: normal; color: #23527c;" class="opendownloadfile" id="data-link-dl' + this.id + '" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-has_torrent="' + this.has_torrent + '" data-project_id="<?= $this->product->project_id ?>" data-link_type="download" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'"><span id="download-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + downloadLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
                                         );
                                         $('#dropdown_downloads').addClass("active");
                                         $('#dropdown_downloads').removeClass('hide');
@@ -419,7 +419,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                             $('#project_btn_grp_install').removeClass("hide");
 
                                             $('#dropdown_installs').append(
-                                                '<li><a href="' + downloadBtnLink + '" style="white-space: normal; color: #23527c;" class="opendownloadfile" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>" data-link_type="install" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'"><span id="install-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + installLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
+                                                '<li><a href="' + downloadBtnLink + '" style="white-space: normal; color: #23527c;" class="opendownloadfile" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-has_torrent="' + this.has_torrent + '" data-project_id="<?= $this->product->project_id ?>" data-link_type="install" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'"><span id="install-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + installLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
 
                                             );
                                         }
@@ -566,7 +566,7 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
                                     var userid = '<?= $this->product->member_id?>';
                                     var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/download/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
                                     //var downloadLink = '<a class="inactiverows" style="color: #ccc; display:none;" href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
-                                    var downloadLink = '<a class="inactiverows opendownloadfile" style="color: #ccc; display:none;" href="' + downloadUrl + '" id="data-link' + this.id + '" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->product->project_id ?>"  data-link_type="download" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'">' + this.name + '</a>';
+                                    var downloadLink = '<a class="inactiverows opendownloadfile" style="color: #ccc; display:none;" href="' + downloadUrl + '" id="data-link' + this.id + '" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-has_torrent="' + this.has_torrent + '" data-project_id="<?= $this->product->project_id ?>"  data-link_type="download" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'">' + this.name + '</a>';
 
 
                                     var fileDescription = '';
