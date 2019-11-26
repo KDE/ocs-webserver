@@ -177,7 +177,7 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
      */
     function fetchChildrensIds($project_id){
         $sql = "
-        select GROUP_CONCAT(project_id) as ids from project_clone c where c.project_id_parent = :project_id
+        select GROUP_CONCAT(project_id) as ids from project_clone c where c.project_id_parent = :project_id and is_valid=1
         ";
         $resultSet = $this->_db->fetchRow($sql, array('project_id' => $project_id));
         return $resultSet['ids'];
@@ -186,9 +186,21 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
     /**
      * @return string comma seperated ids
      */
+    function fetchChildrensChildrenIds($ids){
+        $sql = "
+        select GROUP_CONCAT(project_id) as ids from project_clone c where c.project_id_parent in (".$ids.") and is_valid=1
+        ";
+        $resultSet = $this->_db->fetchRow($sql);
+        return $resultSet['ids'];
+    }
+
+    /**
+     * @return string comma seperated ids
+     */
     function fetchParentIds($project_id){
         $sql = "
-        select GROUP_CONCAT(project_id_parent) as ids from project_clone c where c.project_id = :project_id
+        select GROUP_CONCAT(distinct project_id_parent) as ids from project_clone c where c.project_id = :project_id and c.is_valid=1 and c.is_deleted=0
+        and c.project_id_parent >0
         ";
         $resultSet = $this->_db->fetchRow($sql, array('project_id' => $project_id));
         return $resultSet['ids'];
@@ -200,8 +212,8 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
     function fetchSiblings($project_id){
             $sql = "
                 select GROUP_CONCAT(distinct project_id) as ids from project_clone c where c.project_id_parent in (
-                        select project_id_parent from project_clone c where c.project_id = :project_id
-                ) and c.project_id <> :project_id
+                        select project_id_parent from project_clone c where c.project_id = :project_id and  c.is_valid=1
+                ) and c.project_id <> :project_id and c.is_valid=1
             ";
             $resultSet = $this->_db->fetchRow($sql, array('project_id' => $project_id));     
             return $resultSet['ids'];
@@ -210,12 +222,12 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
     /**
      * @return string comma seperated ids
      */
-    function fetchAncestersIds($project_id,$level=3){
+    function fetchAncestersIds($project_id,$level=5){
         
         $parentIds = self::fetchParentIds($project_id);
-        $ids='';
+        $ids='';        
         while ($level>0 && strlen($parentIds)>0) {
-              $sql = "select GROUP_CONCAT(distinct project_id_parent) as ids from project_clone c where c.project_id in(".$parentIds.")";
+              $sql = "select GROUP_CONCAT(distinct project_id_parent) as ids from project_clone c where c.project_id in(".$parentIds.") and c.is_valid=1 and c.project_id_parent>0";
               $resultSet = $this->_db->fetchRow($sql);     
               if($resultSet['ids'])
               {
@@ -229,5 +241,35 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
         }    
         if(substr($ids, 0, 1)==','){ $ids=substr($ids,1);};    
         return $ids;
+    }
+
+    function fetchParentLevelRelatives($project_id){
+        $ancesters = self::fetchAncestersIds($project_id);
+        $sql = "
+                select GROUP_CONCAT(project_id) as ids from project_clone c where c.project_id_parent in (".$ancesters.") and is_valid=1
+        ";
+        $resultSet = $this->_db->fetchRow($sql);
+        return $resultSet['ids'];
+    }
+    function fetchSiblingsLevelRelatives($parentids,$project_id){        
+        $sql = "
+                select GROUP_CONCAT(project_id) as ids from project_clone c where c.project_id_parent in (".$parentids.") and is_valid=1
+                        and c.project_id <> :project_id
+        ";
+        $resultSet = $this->_db->fetchRow($sql,array('project_id' =>$project_id));
+        return $resultSet['ids'];
+    }
+
+    function fetchParentsLevel($ids)
+    {
+        $sql = "select GROUP_CONCAT(distinct project_id_parent) as ids from project_clone c where c.project_id in(".$ids.") and c.is_valid=1 and c.project_id_parent>0 and c.is_deleted=0";
+        $resultSet = $this->_db->fetchRow($sql);     
+        return $resultSet['ids'];
+    }
+    function fetchChildrensLevel($ids)
+    {
+        $sql = "select GROUP_CONCAT(distinct project_id) as ids from project_clone c where c.project_id_parent in(".$ids.") and c.is_valid=1 and c.project_id_parent>0 and c.is_deleted=0";
+        $resultSet = $this->_db->fetchRow($sql);   
+        return $resultSet['ids'];  
     }
 } 
