@@ -163,7 +163,8 @@ if($isExternal) {
                     rounds += 1;
                     
                     if(rounds > maxRounds && lastVal == (torrent.progress * 100)) {
-                        break;
+                        clearInterval(interval);
+                        return false;
                     }
                     
                     log('Progress: ' + (torrent.progress * 100).toFixed(1) + '%');
