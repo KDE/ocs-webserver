@@ -40,6 +40,8 @@ class DlController extends Local_Controller_Action_DomainSwitch
         $isExternal = $this->getParam('is_external');
         $externalLink = $this->getParam('external_link');
         
+        $hasTorrent = $this->getParam('has_torrent');
+        
         $modelProduct = new Default_Model_Project();
         $productInfo = $modelProduct->fetchProductInfo($projectId);
         
@@ -62,6 +64,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
         $this->view->is_external = $isExternal;
         $this->view->external_link = $externalLink;
         $this->view->supporter = $supporter;
+        $this->view->has_torrent = ($hasTorrent=="1");
         $memberId = $this->_authMember->member_id;
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
