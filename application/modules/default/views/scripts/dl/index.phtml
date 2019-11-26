@@ -135,6 +135,7 @@ if($isExternal) {
             })
 
             $('#dl_status').hide();
+            $('#Form1').hide();
 
             $('#form-download-torrent').on('submit', function (e) {
                 e.preventDefault() // Prevent page refresh
@@ -168,6 +169,8 @@ if($isExternal) {
                     
                     if(rounds > maxRounds && lastVal == (torrent.progress * 100)) {
                         clearInterval(interval);
+                        $('#Form1').show();
+                        $('#Form1').submit();
                         return false;
                     }
                     
@@ -198,7 +201,11 @@ if($isExternal) {
                     //file.appendTo('.log')
                     //log('(Blob URLs only work if the file is loaded from a server. "http//localhost" works. "file://" does not.)')
                     file.getBlobURL(function (err, url) {
-                        if (err) return log(err.message);
+                        if (err) {
+                            $('#Form1').show();
+                            $('#Form1').submit();
+                            return log(err.message);
+                        }
                         //log('File done.')
                         //log('<a href="' + url + '">Download full file: ' + file.name + '</a>');
                         //window.location.assign(url);
@@ -276,7 +283,6 @@ if($isExternal) {
                         ?>
                         <div id="torrent_form_div">
                             <form id="form-download-torrent" name="form-download-torrent">
-                                Torrent-Download: 
                                 <?php if($this->link_type == 'download') { ?>
                                 <button type="submit" value="Continue Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download (<?= $this->file_size_human ?>)</button>
                                 <?php } else { ?>
@@ -294,6 +300,9 @@ if($isExternal) {
                              data-file-upload-loaded="0"
                              data-file-upload-time="0"></span>
                         </div>
+                        <form id="Form1" name="Form1" action="" method="POST">
+                            <button type="submit" value="Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download</button>
+                        </form>
 
                         <?php } else { ?>    
                             <form id="Form1" name="Form1" action="" method="POST">
