@@ -348,6 +348,20 @@
     
     </script>
 </html>
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            $(\'#form-download-torrent\').on(\'submit\', function (e) {
+                e.preventDefault() // Prevent page refresh
+
+                console.log(\'Start Torrent DL\');
+
+                var torrentId = $(\'form input[name=torrentId]\').value;
+
+                console.log(\'ID: \' + torrentId);
+                client.add(torrentId, onTorrent);
+            })
+        });
+    ');
 
 
 
