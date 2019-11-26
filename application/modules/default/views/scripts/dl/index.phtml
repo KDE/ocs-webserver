@@ -156,8 +156,20 @@ if($isExternal) {
             function onTorrent (torrent) {
                 console.log('onTorrent...');
                 // // Print out progress every 5 seconds
+                var rounds = 0;
+                var maxRounds = 10;
+                var lastVal = 0;
                 var interval = setInterval(function () {
-                log('Progress: ' + (torrent.progress * 100).toFixed(1) + '%')
+                    rounds += 1;
+                    
+                    if(rounds > maxRounds && lastVal == (torrent.progress * 100)) {
+                        break;
+                    }
+                    
+                    log('Progress: ' + (torrent.progress * 100).toFixed(1) + '%');
+                    lastVal = torrent.progress * 100;
+                    
+                    
                 }, 1000)
 
                 torrent.on('done', function () {
