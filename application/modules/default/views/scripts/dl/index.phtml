@@ -128,6 +128,7 @@ if($isExternal) {
         
         function startDirectDownload() {
             $('#form-download-torrent').hide();
+            $('dl_status').hide();
             $('#Form1').show();
             $('#Form1').submit();
         }
@@ -344,7 +345,7 @@ if($isExternal) {
                             <br>
                             <span id="dl_info_downloaded_mb">0</span> of <?= $this->file_size_human ?> | <span id="dl_info_downloaded_percent">0</span>%
                             <br>
-                            Peers: <span id="dl_info_peers">0</span> | <span id="dl_info_downloaded_speed">0</span>MB/s
+                            Peers: <span id="dl_info_peers">0</span> | <span id="dl_info_downloaded_speed">0</span>/s
                             <br>
                             <a href="#" onclick="startDirectDownload()">Start direct download</a>
                         </div>
