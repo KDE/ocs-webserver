@@ -148,7 +148,7 @@ if($isExternal) {
             }
             
             function humanSize(bytes) {
-                size = round(bytes / 1048576, 2);
+                size = (bytes / 1048576).toFixed(2)
                 if(size == 0.0)
                 {
                    return '0.01 MB';
