@@ -171,12 +171,14 @@ if($isExternal) {
                 var interval = setInterval(function () {
                     rounds += 1;
                     
+                    /*
                     if(rounds > maxRounds && lastVal == (torrent.progress * 100)) {
                         clearInterval(interval);
                         $('#Form1').show();
                         $('#Form1').submit();
                         return false;
                     }
+                    */
                     
                     log('Progress: ' + (torrent.progress * 100).toFixed(1) + '%');
                     
