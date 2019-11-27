@@ -334,13 +334,11 @@ if($isExternal) {
                         </div>
                         <div class="log" id="dl_status">
                             <p>Download-Progress:</p>
-                            <progress id="data-file-download-progress" max="100" value="0" data-file-upload-progress=""></progress>
+                            <progress id="data-file-download-progress" max="100" value="0" data-file-upload-progress=""></progress><span id="dl_info_status" style="color: red;"></span>
                             <br>
                             <span id="dl_info_downloaded_mb">0</span> of <?= $this->file_size_human ?> | <span id="dl_info_downloaded_percent">0</span>%
                             <br>
                             Peers: <span id="dl_info_peers">0</span> | <span id="dl_info_downloaded_speed">0</span>MB/s
-                            <br>
-                            <span id="dl_info_status" style="color: red;"></span>
                             <br>
                             <a href="javascript:startDirectDownload()">Start direct download</a>
                         </div>
