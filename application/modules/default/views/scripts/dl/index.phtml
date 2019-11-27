@@ -140,6 +140,12 @@ if($isExternal) {
 
             $('#dl_status').hide();
             $('#Form1').hide();
+            
+            function startDirectDownload() {
+                $('#form-download-torrent').hide();
+                $('#Form1').show();
+                $('#Form1').submit();
+            }
 
             $('#form-download-torrent').on('submit', function (e) {
                 e.preventDefault() // Prevent page refresh
@@ -162,7 +168,7 @@ if($isExternal) {
                 console.log('onTorrent...');
                 // // Print out progress every 5 seconds
                 var rounds = 0;
-                var maxRounds = 10;
+                var maxRounds = 60;
                 var lastVal = 0;
                 
                 $('#torrent_form_div').hide();
@@ -171,25 +177,30 @@ if($isExternal) {
                 var interval = setInterval(function () {
                     rounds += 1;
                     
+                    /*
                     if(rounds > maxRounds && lastVal == (torrent.progress * 100)) {
                         clearInterval(interval);
                         $('#Form1').show();
                         $('#Form1').submit();
                         return false;
                     }
+                    */
                     
                     log('Progress: ' + (torrent.progress * 100).toFixed(1) + '%');
                     
-                    var $uploadProgressBar = $('#data-file-upload-progress');
-                    var $uploadProgress = $('#data-file-upload-progress-text');
-                    $uploadProgress.attr('data-file-upload-time', new Date().getTime());
+                    var $dlProgressBar = $('#data-file-download-progress');
+                    var $dl_info_downloaded_mb = $('#dl_info_downloaded_mb');
+                    var $dl_info_downloaded_percent = $('#dl_info_downloaded_percent');
+                    var $dl_info_peers = $('#dl_info_peers');
+                    var $dl_info_downloaded_speed = $('#dl_info_downloaded_speed');
                     
                     var progress = (torrent.progress * 100).toFixed(1);
-                    $uploadProgressBar.attr('value', progress);
-                    $uploadProgress.html(progress + '%');
+                    $dlProgressBar.attr('value', progress);
                     
-                    lastVal = torrent.progress * 100;
-                    
+                    $dl_info_downloaded_mb.html(torrent.downloaded);
+                    $dl_info_downloaded_percent.html(progress);
+                    $dl_info_peers.html(torrent.numPeers);
+                    $dl_info_downloaded_speed.html(torrent.downloadSpeed);
                     
                 }, 1000)
 
@@ -283,7 +294,7 @@ if($isExternal) {
                         
                             
                             
-                        <?php if ($hasTorrent == true) {                      
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && $hasTorrent == true) {                      
                         ?>
                         <div id="torrent_form_div">
                             <form id="form-download-torrent" name="form-download-torrent">
@@ -304,13 +315,15 @@ if($isExternal) {
                         </div>
                         <div class="log" id="dl_status">
                             <p>Download-Progress:</p>
-                            <progress id="data-file-upload-progress" max="100" value="0" data-file-upload-progress=""></progress>
+                            <progress id="data-file-download-progress" max="100" value="0" data-file-upload-progress=""></progress>
                             <br>
-                            <span id="data-file-upload-progress-text"
-                             data-file-upload-progress=""
-                             data-file-upload-loaded="0"
-                             data-file-upload-time="0"></span>
+                            <span id="dl_info_downloaded_mb">0</span> of <?= $this->file_size_human ?> | <span id="dl_info_downloaded_percent">0</span>%
+                            <br>
+                            Peers: <span id="dl_info_peers">0</span> | <span id="dl_info_downloaded_speed">0</span>
+                            <br>
+                            <a href="javasript:startDirectDownload()">Start direct download</a>
                         </div>
+                        
                         <form id="Form1" name="Form1" action="" method="POST">
                             <button type="submit" value="Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download</button>
                         </form>
