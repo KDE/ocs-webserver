@@ -1046,6 +1046,7 @@ class Default_Model_Info
                 AND project.status = 100
                 and comments.comment_type=:comment_type
                 AND project.member_id =:member_id
+                and comments.comment_member_id <>:member_id
                 ORDER BY comments.comment_created_at DESC               
         ';
 
