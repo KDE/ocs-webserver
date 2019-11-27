@@ -283,7 +283,7 @@ if($isExternal) {
                         
                             
                             
-                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && $hasTorrent == true) {                      
+                        <?php if ($hasTorrent == true) {                      
                         ?>
                         <div id="torrent_form_div">
                             <form id="form-download-torrent" name="form-download-torrent">

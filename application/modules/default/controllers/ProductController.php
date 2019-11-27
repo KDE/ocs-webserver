@@ -2487,7 +2487,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $queue->send(serialize($command));
                 }
 
-                                //If this file is bigger than XXX MB (see application.ini), then create a webtorrent file
+                //If this file is bigger than XXX MB (see application.ini), then create a webtorrent file
                 $config = Zend_Registry::get('config');
                 $minFileSize = $config->torrent->media->min_filesize;
                 if(!empty($fileResponse->file->size) && $fileResponse->file->size >= $minFileSize) {
