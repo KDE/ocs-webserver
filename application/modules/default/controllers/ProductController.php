@@ -524,6 +524,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         $command = new Backend_Commands_ConvertVideo($file['collection_id'], $file['id'], $file['type']);
                         $queue->send(serialize($command));
                     }
+                    
+
                     if(!empty($file['url_preview'])) {
                         $file['url_preview'] = urlencode($file['url_preview']);
                     }
@@ -2485,6 +2487,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $queue->send(serialize($command));
                 }
 
+                                //If this file is bigger than XXX MB (see application.ini), then create a webtorrent file
+                $config = Zend_Registry::get('config');
+                $minFileSize = $config->torrent->media->min_filesize;
+                if(!empty($fileResponse->file->size) && $fileResponse->file->size >= $minFileSize) {
+                    $queue = Local_Queue_Factory::getQueue();
+                    $command = new Backend_Commands_CreateTorrent($fileResponse->file);
+                    $queue->send(serialize($command));
+                }
+
                 $this->_helper->json(array(
                     'status' => 'ok',
                     'file'   => $fileResponse->file
@@ -2571,6 +2582,16 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 if (isset($fileResponse->status)
                     && $fileResponse->status == 'success'
                 ) {
+
+                    //If this file is bigger than XXX MB (see application.ini), then create a webtorrent file
+                    $config = Zend_Registry::get('config');
+                    $minFileSize = $config->torrent->media->min_filesize;
+                    if(!empty($fileResponse->file->size) && $fileResponse->file->size >= $minFileSize) {
+                        $queue = Local_Queue_Factory::getQueue();
+                        $command = new Backend_Commands_CreateTorrent($fileResponse->file);
+                        $queue->send(serialize($command));
+                    }
+
                     $this->_helper->json(array(
                         'status' => 'ok',
                         'file'   => $fileResponse->file
