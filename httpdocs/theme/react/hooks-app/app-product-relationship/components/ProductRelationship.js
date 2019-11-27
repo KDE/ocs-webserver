@@ -52,9 +52,9 @@ const ProductRelationship = () => {
     return (
       <form name="form-add-product-relationship" onSubmit={handleSubmit}>
       <div>
-       <button type="button" className="btn btn-primary btn-xs" data-toggle="modal" data-target="#productRelationshipPanel">
+       <a data-toggle="modal" data-target="#productRelationshipPanel" style={{fontStyle:'italic',cursor:'pointer'}}>
          Add Relationship
-      </button>        
+      </a>        
         <div className="modal fade " id="productRelationshipPanel" tabindex="-1" data-keyboard="false" role="dialog" aria-labelledby="productRelationshipPanelModalLabel" aria-hidden="true">
         <div className="modal-dialog " role="document" style={{width:'1000px'}}>
           <div className="modal-content">
