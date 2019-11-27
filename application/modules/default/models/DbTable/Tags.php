@@ -314,6 +314,12 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
             return $tags;
     }
 
+    public function fetchTagByName($tag_name)
+    {
+        $sql = "select * from tag where tag_name=:tag_name";
+        $resultRow = $this->_db->fetchRow($sql, array('tag_name' => $tag_name));
+        return $resultRow;
+    }
     
     
 
