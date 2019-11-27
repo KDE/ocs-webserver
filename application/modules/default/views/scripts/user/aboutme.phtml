@@ -40,7 +40,9 @@ $this->headMeta()->appendProperty('og:description',
 $this->headMeta()->appendProperty('og:image',
     $helperImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)));
 
-
+$helperLastLogin = new Default_View_Helper_FetchLastLoginData();
+$lastLoginData = $helperLastLogin->fetchLastLoginData($this->member->member_id);
+    
 $helperFetchMainCategories = new Default_View_Helper_FetchMainCategories();
 $helperRatingWidget = new Default_View_Helper_PrintRatingWidget();
 $categories = $helperFetchMainCategories->fetchMainCategories();
@@ -539,7 +541,16 @@ div#preloaded-images {
                                     echo '<br/><span>Member id: '.$this->member->member_id.' </span>';
                                     echo '<br/><span>Email address: '.$this->member->mail.' </span>';
                                     echo '<br/><span>Paypal address: '.$this->member->paypal_mail.' </span>';
-
+                                    if(null != $lastLoginData[0]['ip']) {
+                                         echo '<br/><span>Last IP: '.$lastLoginData[0]['ip'].' </span>';
+                                        }
+                                        if(null != $lastLoginData[0]['ipv4']) {
+                                        echo '<br/><span>Last IPv4: '.$lastLoginData[0]['ipv4'].' </span>';
+                                        }
+                                        if(null != $lastLoginData[0]['ipv6']) {
+                                        echo '<br/><span>Last IPv6: '.$lastLoginData[0]['ipv6'].' </span>';
+                                        }
+                                        
                                 ?>
                             </div>
                         </div>
