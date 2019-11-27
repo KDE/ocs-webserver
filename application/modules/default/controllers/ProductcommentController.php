@@ -79,11 +79,11 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
 
         $this->updateActivityLog($result, $this->view->product->image_small);
 
-        //Send a notification to the owner
-        $this->sendNotificationToOwner($this->view->product, $data['comment_text']);
+        //Send a notification to the owner        
+        $this->sendNotificationToOwner($this->view->product, $data['comment_text'],$data['comment_type']);
 
         //Send a notification to the parent comment writer
-        $this->sendNotificationToParent($this->view->product, $data['comment_text'], $data['comment_parent_id']);
+        $this->sendNotificationToParent($this->view->product, $data['comment_text'], $data['comment_parent_id'],$data['comment_type']);
 
         if ($this->_request->isXmlHttpRequest()) {
             
@@ -136,7 +136,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
      * @param Zend_Db_Table_Row_Abstract $product
      * @param string                     $comment
      */
-    private function sendNotificationToOwner($product, $comment)
+    private function sendNotificationToOwner($product, $comment,$comment_type)
     {
         //Don't send email notification for comments from product owner
         if ($this->_authMember->member_id == $product->member_id) {
@@ -151,11 +151,17 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $productData->project_id = $product->project_id;
 
         $queue = Local_Queue_Factory::getQueue();
-        $command = new Backend_Commands_SendCommentNotification('tpl_user_comment_note', $productData, $comment);
+        if(!empty($comment_type)&& $comment_type=='30')
+        {   
+            $command = new Backend_Commands_SendCommentNotification('tpl_user_comment_note_'.$comment_type, $productData, $comment);
+        }else
+        {
+            $command = new Backend_Commands_SendCommentNotification('tpl_user_comment_note', $productData, $comment);
+        }        
         $queue->send(serialize($command));
     }
 
-    private function sendNotificationToParent($product, $comment, $parent_id)
+    private function sendNotificationToParent($product, $comment, $parent_id,$comment_type)
     {
         if (0 == $parent_id) {
             return;
@@ -184,7 +190,14 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $productData->project_id = $product->project_id;
 
         $queue = Local_Queue_Factory::getQueue();
-        $command = new Backend_Commands_SendCommentNotification('tpl_user_comment_reply_note', $productData, $comment);
+        if(!empty($comment_type)&& $comment_type=='30')
+        {   
+            $command = new Backend_Commands_SendCommentNotification('tpl_user_comment_reply_note_'.$comment_type, $productData, $comment);
+        }else
+        {
+            $command = new Backend_Commands_SendCommentNotification('tpl_user_comment_reply_note', $productData, $comment);
+        } 
+       
         $queue->send(serialize($command));
     }
 
