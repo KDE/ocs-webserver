@@ -121,7 +121,7 @@ if($isExternal) {
     </script>   
     
     
-    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && $hasTorrent == true) { ?>
+    <?php if ($hasTorrent == true) { ?>
     
     <script src="/theme/flatui/js/lib/webtorrent.min.js"></script>
     <script>
