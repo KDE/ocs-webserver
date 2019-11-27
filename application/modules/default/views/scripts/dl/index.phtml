@@ -126,6 +126,12 @@ if($isExternal) {
     <script src="/theme/flatui/js/lib/webtorrent.min.js"></script>
     <script>
         
+        function startDirectDownload() {
+            $('#form-download-torrent').hide();
+            $('#Form1').show();
+            $('#Form1').submit();
+        }
+        
         $(document).ready(function(){
             
        
