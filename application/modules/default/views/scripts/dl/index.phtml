@@ -19,6 +19,32 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+
+
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+   
+$fileName = $this->file_name;
+$lastIndex = strripos($fileName, '.');
+$fileExt = "";
+if(!empty($lastIndex)) {
+    $fileExt = substr($fileName, $lastIndex+1);
+}
+$fileExt = strtoupper($fileExt);
+$isAppimage = false;
+if($fileExt == 'APPIMAGE') {
+    $isAppimage = true;
+}
+
+$isExternal = ($this->is_external == "true");
+
+$hasTorrent = ($this->has_torrent == "true" || $this->has_torrent == "1");
+
+$link = "";
+
+if($isExternal) {
+    $link = $this->external_link;
+}    
 ?>
 <!DOCTYPE html>
 <html>
@@ -95,34 +121,128 @@
     </script>   
     
     
+    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && $hasTorrent == true) { ?>
+    
+    <script src="/theme/flatui/js/lib/webtorrent.min.js"></script>
+    <script>
+        
+        $(document).ready(function(){
+            
+       
+            var client = new WebTorrent()
+            client.on('error', function (err) {
+                console.error('ERROR: ' + err.message);
+                $('#form-download-torrent').hide();
+                $('#Form1').show();
+                $('#Form1').submit();
+                
+            })
+
+            $('#dl_status').hide();
+            $('#Form1').hide();
+
+            $('#form-download-torrent').on('submit', function (e) {
+                e.preventDefault() // Prevent page refresh
+
+                console.log('Start Torrent DL');
+
+                <?php
+                $config = Zend_Registry::get('config');
+                $torrenturl = $config->torrent->media->downloadurl . "?id=".$this->file_id."&lt=torrent";
+                ?>
+
+                var torrentUrl = '<?= $torrenturl ?>';
+
+                console.log('Url: ' + torrentUrl);
+                //log('Adding ' + torrentId)
+                client.add(torrentUrl, onTorrent);
+            })
+
+            function onTorrent (torrent) {
+                console.log('onTorrent...');
+                // // Print out progress every 5 seconds
+                var rounds = 0;
+                var maxRounds = 10;
+                var lastVal = 0;
+                
+                $('#torrent_form_div').hide();
+                $('#dl_status').show();
+                
+                var interval = setInterval(function () {
+                    rounds += 1;
+                    
+                    if(rounds > maxRounds && lastVal == (torrent.progress * 100)) {
+                        clearInterval(interval);
+                        $('#Form1').show();
+                        $('#Form1').submit();
+                        return false;
+                    }
+                    
+                    log('Progress: ' + (torrent.progress * 100).toFixed(1) + '%');
+                    
+                    var $uploadProgressBar = $('#data-file-upload-progress');
+                    var $uploadProgress = $('#data-file-upload-progress-text');
+                    $uploadProgress.attr('data-file-upload-time', new Date().getTime());
+                    
+                    var progress = (torrent.progress * 100).toFixed(1);
+                    $uploadProgressBar.attr('value', progress);
+                    $uploadProgress.html(progress + '%');
+                    
+                    lastVal = torrent.progress * 100;
+                    
+                    
+                }, 1000)
+
+                torrent.on('done', function () {
+                    //log('Progress: 100%');
+                    log('Progress: 100%');
+                    clearInterval(interval);
+                    $('#dl_status').hide();
+                })
+
+                // Render all files into to the page
+                torrent.files.forEach(function (file) {
+                    //file.appendTo('.log')
+                    //log('(Blob URLs only work if the file is loaded from a server. "http//localhost" works. "file://" does not.)')
+                    file.getBlobURL(function (err, url) {
+                        if (err) {
+                            $('#Form1').show();
+                            $('#Form1').submit();
+                            return log(err.message);
+                        }
+                        //log('File done.')
+                        //log('<a href="' + url + '">Download full file: ' + file.name + '</a>');
+                        //window.location.assign(url);
+                        
+                        var a = document.createElement("a");
+                        document.body.appendChild(a);
+                        a.style = "display: none";
+                        a.href = url;
+                        a.download = file.name;
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        
+                        parent.jQuery.fancybox.close();
+                    })
+                })
+            }
+            
+            
+            function log (str) {
+                //var p = document.createElement('p')
+                //p.innerHTML = str
+                //document.querySelector('.log').appendChild(p)
+                $('.log').innerHTML = str;
+                console.log(str);
+            }
+        });
+    </script>
+    
+    <?php } ?>    
+    
 </head>
 
 <body style="height: 370px; background-color: #f8f9fa;">
-    
-    <?php
-    
-    $fileName = $this->file_name;
-    $lastIndex = strripos($fileName, '.');
-    $fileExt = "";
-    if(!empty($lastIndex)) {
-        $fileExt = substr($fileName, $lastIndex+1);
-    }
-    $fileExt = strtoupper($fileExt);
-    $isAppimage = false;
-    if($fileExt == 'APPIMAGE') {
-        $isAppimage = true;
-    }
-    
-    $isExternal = ($this->is_external == "true");
-    
-    $link = "";
-    
-    if($isExternal) {
-        $link = $this->external_link;
-    }
-    
-    ?>
-    
     <main id="ads-page">
         
         <div class="columns" style="background-color: #f8f9fa;">
@@ -160,35 +280,70 @@
 
                         } else {
                         ?>
-                        <form id="Form1" name="Form1" action="" method="POST">    
+                        
+                            
+                            
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && $hasTorrent == true) {                      
+                        ?>
+                        <div id="torrent_form_div">
+                            <form id="form-download-torrent" name="form-download-torrent">
+                                <?php if($this->link_type == 'download') { ?>
+                                <button type="submit" value="Continue Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download (<?= $this->file_size_human ?>)</button>
+                                <?php } else { ?>
+                                <button type="submit" value="Continue Installation" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Install (<?= $this->file_size_human ?>)</button>
+                                <p style="margin: 0;">*Install things with <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a>.</p>
+                                <?php } ?>
+                                
+                                <?php
+                                if($isAppimage) {
+                                    echo("<p style='margin: 0;'>For Appimages we recommend <a href='https://www.opendesktop.org/p/1228228' target='_NEW' style='color: #0088d7;text-decoration: underline;'>AppImageLauncher</a> for system integration</p>");
+                                }
+                                ?>
+                                
+                            </form>
+                        </div>
+                        <div class="log" id="dl_status">
+                            <p>Download-Progress:</p>
+                            <progress id="data-file-upload-progress" max="100" value="0" data-file-upload-progress=""></progress>
+                            <br>
+                            <span id="data-file-upload-progress-text"
+                             data-file-upload-progress=""
+                             data-file-upload-loaded="0"
+                             data-file-upload-time="0"></span>
+                        </div>
+                        <form id="Form1" name="Form1" action="" method="POST">
+                            <button type="submit" value="Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download</button>
+                        </form>
 
-                         <?php if($isExternal && $this->link_type == 'download') {?>
-                            <button type="submit" value="External Link" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Follow Link (<?= $this->file_size_human ?>) <i class="fa fa-external-link"></i></button>   
-                         <?php } else if($isExternal && $this->link_type == 'install') { ?>
-                         <button type="submit" value="Continue Installation" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Install (<?= $this->file_size_human ?>)</button>
-                         <p style="margin: 0;">*Install things with <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a>.</p>
-                         <?php } else if($this->link_type == 'download') { ?>
-                         <button type="submit" value="Continue Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download (<?= $this->file_size_human ?>)</button>
-                         <?php } else { ?>
-                         <button type="submit" value="Continue Installation" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Install (<?= $this->file_size_human ?>)</button>
-                         <p style="margin: 0;">*Install things with <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a>.</p>
-                         <?php } ?>
-                         
-                         <?php
-                         if($isExternal) {
-                             echo("<p style='margin: 0;'>".$link."</p>");
-                         }
-                         if($isAppimage) {
-                             echo("<p style='margin: 0;'>For Appimages we recommend <a href='https://www.opendesktop.org/p/1228228' target='_NEW' style='color: #0088d7;text-decoration: underline;'>AppImageLauncher</a> for system integration</p>");
-                         }
-                         ?>
-                         
+                        <?php } else { ?>    
+                            <form id="Form1" name="Form1" action="" method="POST">
+                            <?php if($isExternal && $this->link_type == 'download') {?>
+                               <button type="submit" value="External Link" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Follow Link (<?= $this->file_size_human ?>) <i class="fa fa-external-link"></i></button>   
+                            <?php } else if($isExternal && $this->link_type == 'install') { ?>
+                                <button type="submit" value="Continue Installation" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Install (<?= $this->file_size_human ?>)</button>
+                                <p style="margin: 0;">*Install things with <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a>.</p>
+                            <?php } else if($this->link_type == 'download') { ?>
+                                <button type="submit" value="Continue Download" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Download (<?= $this->file_size_human ?>)</button>
+                            <?php } else { ?>
+                                <button type="submit" value="Continue Installation" class="btn btn-success btn-lg" style="margin: 0 0 10px;">Install (<?= $this->file_size_human ?>)</button>
+                                <p style="margin: 0;">*Install things with <a href="https://www.opendesktop.org/p/1136805/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-url</a> or <a href="https://www.opendesktop.org/p/1175480/" target="_NEW" style="color: #0088d7;text-decoration: underline;">ocs-store</a>.</p>
+                            <?php } ?>
+
+                            <?php
+                            if($isExternal) {
+                                echo("<p style='margin: 0;'>".$link."</p>");
+                            }
+                            if($isAppimage) {
+                                echo("<p style='margin: 0;'>For Appimages we recommend <a href='https://www.opendesktop.org/p/1228228' target='_NEW' style='color: #0088d7;text-decoration: underline;'>AppImageLauncher</a> for system integration</p>");
+                            }
+                            ?>
+                        <?php } ?>  
                          
                          <?php
                         }
                          ?>
 
-                        </form>   
+                            </form>   
                         
                         
                     </div>
@@ -246,6 +401,4 @@
     
     </script>
 </html>
-
-
 

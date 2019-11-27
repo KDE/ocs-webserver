@@ -64,10 +64,15 @@ if (Zend_Auth::getInstance()->hasIdentity()){
     );
 
     $comments = $modelInfo->getLastCommentsForUsersProjects($identity->member_id);
+    $commentsmoderation = $modelInfo->getLastCommentsForUsersProjects($identity->member_id,10,Default_Model_DbTable_Comments::COMMENT_TYPE_MODERATOR);
     $votes = $modelInfo->getLastVotesForUsersProjects($identity->member_id);
     $spams = $modelInfo->getLastSpamProjects($identity->member_id);
 
     foreach ($comments as &$p) {
+      $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
+      $p['comment_created_at'] = $helpPrintDate->printDate($p['comment_created_at']);
+    }
+    foreach ($commentsmoderation as &$p) {
       $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
       $p['comment_created_at'] = $helpPrintDate->printDate($p['comment_created_at']);
     }
@@ -87,6 +92,7 @@ if (Zend_Auth::getInstance()->hasIdentity()){
       'user' => $user,
       'supporterinfo' => $supporterinfo,
       'comments' =>$comments,
+      'commentsmoderation' =>$commentsmoderation,
       'votes' => $votes,
       'spams' => $spams,
       "baseUrl" => $baseurl,
@@ -158,13 +164,12 @@ if (Zend_Auth::getInstance()->hasIdentity()){
           <i class="fa fa-spinner"></i>
       </span>
 </div>
-
-<main class="startpage-store-new">
+<main class="startpage-store-new">      
       <div id="main-content"></div>
       <script type="text/javascript">
         var page = "opendesktop";
         var hpVersion = 2;
         var data = <?php echo Zend_Json::encode($response)?>;
       </script>
-      <script src="/theme/react/bundle/home-main-container-bundle.js" type="text/javascript"></script>
+      <script src="/theme/react/bundle/home-main-container-bundle.js" type="text/javascript"></script>      
 </main>

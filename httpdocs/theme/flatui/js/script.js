@@ -647,6 +647,7 @@ var Opendownloadfile= (function () {
                 var project_id = $(this).attr('data-project_id');
                 var link_type = $(this).attr('data-link_type');
                 var is_external = $(this).attr('data-is-external-link');
+                var has_torrent = $(this).attr('data-has_torrent');
                 var external_link = null;
                 var popupHeight = '450';
                 
@@ -674,7 +675,7 @@ var Opendownloadfile= (function () {
                             locked: false
                         }
                     },
-                    href:'/dl?file_id='+file_id+'&file_type='+file_type+'&file_name='+file_name+'&file_size='+file_size+'&project_id='+project_id+'&link_type='+link_type+'&is_external='+is_external+'&external_link='+external_link
+                    href:'/dl?file_id='+file_id+'&file_type='+file_type+'&file_name='+file_name+'&file_size='+file_size+'&has_torrent='+has_torrent+'&project_id='+project_id+'&link_type='+link_type+'&is_external='+is_external+'&external_link='+external_link
 
                 });
                 return false;
@@ -1576,9 +1577,9 @@ var PartialFormsAjaxMemberBg = (function () {
 
 var AjaxForm = (function () {
     return {
-        setup: function (idElement, idTargetElement) {
+        setup: function (elForm, idTargetElement) {
             var target = $(idTargetElement);
-            $('body').on("submit", 'form.product-add-comment', function (event) {
+            $('body').on("submit", elForm, function (event) {
                 event.preventDefault();
                 event.stopImmediatePropagation();
                 $(this).find('button').attr("disabled", "disabled");
@@ -1619,6 +1620,7 @@ var AjaxForm = (function () {
         }
     }
 })();
+
 
 
 var WidgetModalAjax = (function () {
@@ -1918,8 +1920,13 @@ var AboutMeMyProjectsPaging = (function () {
                     let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';
                     let nextpage = $('button#btnshowmoreproducts').attr('data-page');
                     $('button#btnshowmoreproducts').remove();
+                
                     $url = window.location.href;
-                    target = '#my-products-list';
+                    target = $('.about-me-details').find('li.active').find('a').attr('href');  
+                    if(target=='#user-original-products'){
+                        $url = $url+'showoriginal'
+                    }
+                    //target = '#my-products-list';
                     let container = $('<div></div>').append(indicator).load($url,{projectpage:nextpage},function (response, status, xhr) {
                             if (status == "error") {
                                 if (xhr.status == 401) {
@@ -1937,7 +1944,7 @@ var AboutMeMyProjectsPaging = (function () {
                                 }
                             }
                         });
-                    $('#my-products-list').append(container);
+                        $(target).append(container);
             }
         });
 
@@ -1953,8 +1960,14 @@ var AboutMeMyProjectsPagingButton = (function () {
         $('body').on('click', 'button#btnshowmoreproducts', function (event) {
                 let nextpage = $(this).attr('data-page');
                 $(this).remove();
+                         
                 $url = window.location.href;
-                target = '#my-products-list';
+                //target = '#my-products-list';
+                target = $('.about-me-details').find('li.active').find('a').attr('href');  
+                           
+                if(target=='#user-original-products'){
+                    $url = $url+'showoriginal'
+                }
                 let container = $('<div></div>').append(indicator).load($url,{projectpage:nextpage},function (response, status, xhr) {
                         if (status == "error") {
                             if (xhr.status == 401) {
@@ -1972,7 +1985,7 @@ var AboutMeMyProjectsPagingButton = (function () {
                             }
                         }
                     });
-                $('#my-products-list').append(container);
+                $(target).append(container);
         });
 
 

@@ -192,16 +192,23 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $index = $this->getParam('index');
         
         if($index) {
-            if($index == 2) {
-                $browseListType = 'picture';
-            }
-            if($index == 3) {
-                $browseListType = 'music';
-            }
-            if($index == 4) {
-                $browseListType = 'phone-pictures';
-            }
-            
+            switch ($index) {
+                case 2:
+                    $browseListType = 'picture';
+                    break;
+                case 3:
+                    $browseListType = 'picture';
+                    break;
+                case 4:
+                    $browseListType = 'phone-pictures';
+                    break;
+                case 8:
+                    $browseListType = 'apps';
+                    break;
+                case 9:
+                    $browseListType = 'icons';
+                    break;
+            }                        
         }
         
         if($storeConfig->browse_list_type) {

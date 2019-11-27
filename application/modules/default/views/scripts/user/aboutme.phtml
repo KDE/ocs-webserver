@@ -42,8 +42,6 @@ $this->headMeta()->appendProperty('og:image',
 
 
 $helperFetchMainCategories = new Default_View_Helper_FetchMainCategories();
-$helperLastLogin = new Default_View_Helper_FetchLastLoginData();
-$lastLoginData = $helperLastLogin->fetchLastLoginData($this->member->member_id);
 $helperRatingWidget = new Default_View_Helper_PrintRatingWidget();
 $categories = $helperFetchMainCategories->fetchMainCategories();
 $helperAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
@@ -328,6 +326,11 @@ div#preloaded-images {
                                     Products<?=($this->stat['cntProducts']>0?' ('.$this->stat['cntProducts'].') ':'')?>
                                 </a>
                             </li>
+                            <li role="presentation">
+                                <a class="aboutmetab" href="#user-original-products" data-toggle="tab" role="tab" data-href="/u/<?php echo $this->member->username;?>/showoriginal"  aria-controls="user-original-products" >
+                                    Originals<?=($this->stat['cntOrinalProducts']>0?' ('.$this->stat['cntOrinalProducts'].') ':'')?>
+                                </a>                               
+                            </li>
                             <?php if($this->stat['cntFProducts']>0){ ?>
                             <li role="presentation">
                                 <a href="#user-featuredproducts" data-toggle="tab" role="tab"  aria-controls="user-featuredproducts" >
@@ -418,7 +421,12 @@ div#preloaded-images {
                                     </div>
                                 <?php } ?>
                             </div>
-
+                            
+                            <div role="tabpanel" class="tab-pane " id="user-original-products">
+                                test
+                            </div>
+                            
+                            
                             <?php if($this->stat['cntFProducts']>0){ ?>
                                 <div role="tabpanel" class="tab-pane " id="user-featuredproducts">
                                     <?php
@@ -531,16 +539,6 @@ div#preloaded-images {
                                     echo '<br/><span>Member id: '.$this->member->member_id.' </span>';
                                     echo '<br/><span>Email address: '.$this->member->mail.' </span>';
                                     echo '<br/><span>Paypal address: '.$this->member->paypal_mail.' </span>';
-                                    
-                                    if(null != $lastLoginData[0]['ip']) {
-                                        echo '<br/><span>Last IP: '.$lastLoginData[0]['ip'].' </span>';
-                                    }
-                                    if(null != $lastLoginData[0]['ipv4']) {
-                                        echo '<br/><span>Last IPv4: '.$lastLoginData[0]['ipv4'].' </span>';
-                                    }
-                                    if(null != $lastLoginData[0]['ipv6']) {
-                                        echo '<br/><span>Last IPv6: '.$lastLoginData[0]['ipv6'].' </span>';
-                                    }
 
                                 ?>
                             </div>

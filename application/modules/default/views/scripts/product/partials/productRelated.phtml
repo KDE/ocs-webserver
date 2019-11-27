@@ -2,49 +2,7 @@
     div.title{
         font-weight:bold;border-bottom:1px solid #ccc; padding:5px; margin-bottom:5px;
     }
-
-
-/* the tree node's style */
-.tree-view {
-  overflow-y: hidden;
-}
-
-.tree-view_item {
-  /* immediate child of .tree-view, for styling convenience */
-}
-
-/* style for the children nodes container */
-.tree-view_children {
-  margin-left: 16px;
-}
-
-.tree-view_children-collapsed {
-  height: 0px;
-}
-
-.tree-view_arrow {
-  cursor: pointer;
-  margin-right: 6px;
-  display: inline-block;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.tree-view_arrow:after {
-  content: '▾';
-}
-
-/* rotate the triangle to close it */
-.tree-view_arrow-collapsed {
-  -webkit-transform: rotate(-90deg);
-  -moz-transform: rotate(-90deg);
-  -ms-transform: rotate(-90deg);
-  transform: rotate(-90deg);
-}
     </style>
-
 
 <?php
 if($this->related_ancesters){
@@ -87,30 +45,6 @@ if($this->related_children){
 <div class="col-lg-12">
 <?php 
 $this->userProducts=$this->related_children;
-echo $this->render('product/partials/productRelatedProducts.phtml'); ?>
-</div>
-<?php }?>
-
-
-<?php
-if($this->related_children2){
-?>
-<div class="col-lg-12 title" > Children 2</div>
-<div class="col-lg-12">
-<?php 
-$this->userProducts=$this->related_children2;
-echo $this->render('product/partials/productRelatedProducts.phtml'); ?>
-</div>
-<?php }?>
-
-
-<?php
-if($this->related_children3){
-?>
-<div class="col-lg-12 title" > Children 3</div>
-<div class="col-lg-12">
-<?php 
-$this->userProducts=$this->related_children3;
 echo $this->render('product/partials/productRelatedProducts.phtml'); ?>
 </div>
 <?php }?>
