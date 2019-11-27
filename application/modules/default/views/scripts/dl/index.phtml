@@ -121,7 +121,7 @@ if($isExternal) {
     </script>   
     
     
-    <?php if ($hasTorrent == true) { ?>
+    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && $hasTorrent == true) { ?>
     
     <script src="/theme/flatui/js/lib/webtorrent.min.js"></script>
     <script>
@@ -285,7 +285,7 @@ if($isExternal) {
                         
                             
                             
-                        <?php if ($hasTorrent == true) {                      
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && $hasTorrent == true) {                      
                         ?>
                         <div id="torrent_form_div">
                             <form id="form-download-torrent" name="form-download-torrent">
