@@ -67,23 +67,28 @@ $credits = $model->fetchMods();
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title">This product is based on:</h2>
+                            <h2 class="modal-title">Flag Modification</h2>
             </div>
             <form id="product-report-clone" class="full-width partialjson" action="/credits/edit/"
                   data-target="#report-product-clone-message">
                 <input type="hidden" name="id" value="">
                 <div id="report-product-clone-message" class="message" style="padding: 20px">
                     <div>                            
-                        <label class="form-label">ID of the Clone on opendesktop:  </label><br/>
-                        <input name="p" id="clonePId"/><br/><br/>     
+                        <label class="form-label">Project ID:  </label><br/>
+                        <input name="p" id="clonePId" readonly/><br/><br/>     
+                        
+                        <label class="form-label">Origianl Link:  </label><br/>
+                        <input name="l" id="externalLink"/><br/><br/> 
+
                         <br/><br/>
+                        
                         <label class="form-label">Additional message: </label>
                         <br/>
                        <textarea class="" id="report-text" name="t"  rows="3" style="width: 440px;"></textarea>                                                     
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="small">
-                            <span class="glyphicon glyphicon-share-alt"></span> add credits
+                            <span class="glyphicon glyphicon-share-alt"></span> Flag Modification
                         </button>
                     </div>
                 </div>
