@@ -261,13 +261,14 @@ if($isExternal) {
                 torrent.on('upload', function (bytes) {
                     console.log('Uploading: ' + bytes)
                 })
-                
+                /*
                 torrent.on('download', function (bytes) {
                     console.log('just downloaded: ' + bytes)
                     console.log('total downloaded: ' + torrent.downloaded)
                     console.log('download speed: ' + torrent.downloadSpeed)
                     console.log('progress: ' + torrent.progress)
                 })
+                */
 
                 // Render all files into to the page
                 torrent.files.forEach(function (file) {
