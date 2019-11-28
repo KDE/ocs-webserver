@@ -136,7 +136,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
      * @param Zend_Db_Table_Row_Abstract $product
      * @param string                     $comment
      */
-    private function sendNotificationToOwner($product, $comment,$comment_type)
+    private function sendNotificationToOwner($product, $comment,$comment_type=null)
     {
         //Don't send email notification for comments from product owner
         if ($this->_authMember->member_id == $product->member_id) {
