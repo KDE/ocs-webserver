@@ -236,6 +236,7 @@ if($isExternal) {
 
                 torrent.on('done', function () {
                     //log('Progress: 100%');
+                    console.log('Done')
                     log('Progress: 100%');
                     clearInterval(interval);
                     $('#dl_status').hide();
@@ -292,7 +293,7 @@ if($isExternal) {
                         a.click();
                         window.URL.revokeObjectURL(url);
                         
-                        parent.jQuery.fancybox.close();
+                        //parent.jQuery.fancybox.close();
                     })
                 })
             }
