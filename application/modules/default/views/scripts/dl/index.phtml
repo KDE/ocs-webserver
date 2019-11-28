@@ -203,7 +203,7 @@ if($isExternal) {
                     }
                     */
                     
-                    log('Progress: ' + (torrent.progress * 100).toFixed(1) + '%');
+                    //log('Progress: ' + (torrent.progress * 100).toFixed(1) + '%');
                     
                     var $dlProgressBar = $('#data-file-download-progress');
                     var $dl_info_downloaded_mb = $('#dl_info_downloaded_mb');
@@ -239,7 +239,7 @@ if($isExternal) {
                     console.log('Done')
                     log('Progress: 100%');
                     clearInterval(interval);
-                    $('#dl_status').hide();
+                    //$('#dl_status').hide();
                 })
                 
                 torrent.on('warning', function (err) {
@@ -279,6 +279,7 @@ if($isExternal) {
                         if (err) {
                             $('#Form1').show();
                             $('#Form1').submit();
+                            console.log('Error: ' + err + ', Url: ' + url)
                             return log(err.message);
                         }
                         //log('File done.')
