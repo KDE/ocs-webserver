@@ -573,6 +573,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $this->view->comments = $modelInfo->getLastCommentsForUsersProjects($this->_authMember->member_id);
         $this->view->votes = $modelInfo->getLastVotesForUsersProjects($this->_authMember->member_id);
         $this->view->donations = $modelInfo->getLastDonationsForUsersProjects($this->_authMember->member_id);
+        $this->view->featured = $modelInfo->getFeaturedProductsForUser($this->_authMember->member_id,100);
     }
 
     public function settingsAction()
