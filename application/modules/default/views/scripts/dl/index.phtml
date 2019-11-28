@@ -137,6 +137,7 @@ if($isExternal) {
             
        
             var client = new WebTorrent()
+            
             client.on('error', function (err) {
                 console.error('ERROR: ' + err.message);
                 $('#form-download-torrent').hide();
@@ -173,7 +174,15 @@ if($isExternal) {
 
                 console.log('Url: ' + torrentUrl);
                 //log('Adding ' + torrentId)
-                client.add(torrentUrl, onTorrent);
+                var ops = {
+                    //announce: [String],        // Torrent trackers to use (added to list in .torrent or magnet uri)
+                    //getAnnounceOpts: Function, // Custom callback to allow sending extra parameters to the tracker
+                    maxWebConns: 10,              // Max number of simultaneous connections per web seed [default=4]
+                    path: '/tmp/webtorrent/'    // Folder to download files to (default=`/tmp/webtorrent/`)
+                    //store: Function            // Custom chunk store (must follow [abstract-chunk-store](https://www.npmjs.com/package/abstract-chunk-store) API)
+                  };
+                  
+                client.add(torrentUrl, ops, onTorrent);
             })
 
             function onTorrent (torrent) {
@@ -289,6 +298,11 @@ if($isExternal) {
 
                 // Render all files into to the page
                 torrent.files.forEach(function (file) {
+                    
+                    console.log('Filename: ' + file.name);
+                    console.log('Filepath: ' + file.path);
+                    console.log('Filelength: ' + file.length);
+                    
                     //file.appendTo('.log')
                     //log('(Blob URLs only work if the file is loaded from a server. "http//localhost" works. "file://" does not.)')
                     file.getBlobURL(function (err, url) {
@@ -301,6 +315,8 @@ if($isExternal) {
                         //log('File done.')
                         //log('<a href="' + url + '">Download full file: ' + file.name + '</a>');
                         //window.location.assign(url);
+                        
+                        console.log('Fileurl: ' + url);
                         
                         var a = document.createElement("a");
                         document.body.appendChild(a);
