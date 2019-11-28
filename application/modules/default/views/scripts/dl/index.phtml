@@ -137,6 +137,7 @@ if($isExternal) {
             
        
             var client = new WebTorrent()
+            
             client.on('error', function (err) {
                 console.error('ERROR: ' + err.message);
                 $('#form-download-torrent').hide();
@@ -173,7 +174,15 @@ if($isExternal) {
 
                 console.log('Url: ' + torrentUrl);
                 //log('Adding ' + torrentId)
-                client.add(torrentUrl, onTorrent);
+                var ops = {
+                    //announce: [String],        // Torrent trackers to use (added to list in .torrent or magnet uri)
+                    //getAnnounceOpts: Function, // Custom callback to allow sending extra parameters to the tracker
+                    maxWebConns: 1,              // Max number of simultaneous connections per web seed [default=4]
+                    path: '/tmp/webtorrent/'    // Folder to download files to (default=`/tmp/webtorrent/`)
+                    //store: Function            // Custom chunk store (must follow [abstract-chunk-store](https://www.npmjs.com/package/abstract-chunk-store) API)
+                  };
+                  
+                client.add(torrentUrl, ops, onTorrent);
             })
 
             function onTorrent (torrent) {
@@ -236,9 +245,26 @@ if($isExternal) {
 
                 torrent.on('done', function () {
                     //log('Progress: 100%');
+                    
+                    var $dlProgressBar = $('#data-file-download-progress');
+                    var $dl_info_downloaded_mb = $('#dl_info_downloaded_mb');
+                    var $dl_info_downloaded_percent = $('#dl_info_downloaded_percent');
+                    var $dl_info_peers = $('#dl_info_peers');
+                    var $dl_info_downloaded_speed = $('#dl_info_downloaded_speed');
+                    var $dl_info_status = $('#dl_info_status');
+                    
+                    var progress = (torrent.progress * 100).toFixed(1);
+                    $dlProgressBar.attr('value', progress);
+                    
+                    $dl_info_downloaded_mb.html(humanSize(torrent.downloaded));
+                    $dl_info_downloaded_percent.html(progress);
+                    $dl_info_peers.html(torrent.numPeers);
+                    $dl_info_downloaded_speed.html(humanSize(torrent.downloadSpeed));
+                    
+                    console.log('Done')
                     log('Progress: 100%');
                     clearInterval(interval);
-                    $('#dl_status').hide();
+                    //$('#dl_status').hide();
                 })
                 
                 torrent.on('warning', function (err) {
@@ -278,6 +304,7 @@ if($isExternal) {
                         if (err) {
                             $('#Form1').show();
                             $('#Form1').submit();
+                            console.log('Error: ' + err + ', Url: ' + url)
                             return log(err.message);
                         }
                         //log('File done.')
@@ -292,7 +319,7 @@ if($isExternal) {
                         a.click();
                         window.URL.revokeObjectURL(url);
                         
-                        parent.jQuery.fancybox.close();
+                        //parent.jQuery.fancybox.close();
                     })
                 })
             }
