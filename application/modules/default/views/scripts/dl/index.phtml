@@ -148,12 +148,6 @@ if($isExternal) {
             $('#dl_status').hide();
             $('#Form1').hide();
             
-            function startDirectDownload() {
-                $('#form-download-torrent').hide();
-                $('#Form1').show();
-                $('#Form1').submit();
-            }
-            
             function humanSize(bytes) {
                 size = (bytes / 1048576).toFixed(2)
                 if(size == 0.0)
@@ -192,7 +186,7 @@ if($isExternal) {
                 $('#torrent_form_div').hide();
                 $('#dl_status').show();
                 
-                
+                console.log('Save to Path: ' + torrent.path);
                 
                 var interval = setInterval(function () {
                     rounds += 1;
@@ -345,7 +339,7 @@ if($isExternal) {
                             <br>
                             <span id="dl_info_downloaded_mb">0</span> of <?= $this->file_size_human ?> | <span id="dl_info_downloaded_percent">0</span>%
                             <br>
-                            Peers: <span id="dl_info_peers">0</span> | <span id="dl_info_downloaded_speed">0</span>MB/s
+                            Peers: <span id="dl_info_peers">0</span> | <span id="dl_info_downloaded_speed">0</span>/s
                             <br>
                             <a href="#" onclick="startDirectDownload()">Start direct download</a>
                         </div>
