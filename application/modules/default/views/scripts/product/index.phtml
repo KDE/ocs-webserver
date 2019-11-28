@@ -429,6 +429,9 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                     <?php if($this->isProjectOriginal($this->product->project_id)){?>
                                     <span class=" label label-info right" style="font-size: 13px;padding: .2em .6em .3em;"> Original</span>
                                     <?php }?>
+                                    <?php if($this->isProjectMod($this->product->project_id)){?>
+                                    <span class=" label label-info right" style="font-size: 13px;padding: .2em .6em .3em;"> Mod</span>
+                                    <?php }?>
 
                                     </div>
 
