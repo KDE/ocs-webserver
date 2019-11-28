@@ -298,6 +298,11 @@ if($isExternal) {
 
                 // Render all files into to the page
                 torrent.files.forEach(function (file) {
+                    
+                    console.log('Filename: ' + file.name);
+                    console.log('Filepath: ' + file.path);
+                    console.log('Filelength: ' + file.length);
+                    
                     //file.appendTo('.log')
                     //log('(Blob URLs only work if the file is loaded from a server. "http//localhost" works. "file://" does not.)')
                     file.getBlobURL(function (err, url) {
