@@ -1,0 +1,281 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created: 31.05.2017
+ */
+
+
+$this->headTitle('Mods', 'SET');
+$model = new Default_Model_ProjectClone();
+$credits = $model->fetchMods();
+?>
+
+<style type="text/css">
+        img.reporterimage
+        {
+                width: 80px;
+                height: 80px;
+                border: 1px solid #dbdbdb;
+                -webkit-border-radius: 999px;
+                -moz-border-radius: 999px;
+                border-radius: 999px;
+                -webkit-background-clip: padding-box;
+                -moz-background-clip: padding;
+                background-clip: padding-box;
+        }
+
+        .mini-card{
+            width: 70%;
+            
+        }
+        .u-wrap{
+            position: relative;
+        }
+        div.header{
+            font-weight: bold;
+            height: 30px;
+            background-color: #ccc; 
+        }
+</style>
+<div class="tooltip_templates" style="display: none">
+    <span id="tooltip_content">
+        <i class="fa fa-spinner"></i>
+    </span>
+</div>
+
+ <div id="report-product-clone" class="modal report-product-clone" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                            <h2 class="modal-title">This product is based on:</h2>
+            </div>
+            <form id="product-report-clone" class="full-width partialjson" action="/credits/edit/"
+                  data-target="#report-product-clone-message">
+                <input type="hidden" name="id" value="">
+                <div id="report-product-clone-message" class="message" style="padding: 20px">
+                    <div>                            
+                        <label class="form-label">ID of the Clone on opendesktop:  </label><br/>
+                        <input name="p" id="clonePId"/><br/><br/>     
+                        <br/><br/>
+                        <label class="form-label">Additional message: </label>
+                        <br/>
+                       <textarea class="" id="report-text" name="t"  rows="3" style="width: 440px;"></textarea>                                                     
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="small">
+                            <span class="glyphicon glyphicon-share-alt"></span> add credits
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<main id="explore-content">
+    <section class="wrapper" id="products-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="sidebar-left col-md-1"></div>
+                <div class="content col-md-10">
+                <h2>
+                     List of Mods
+                </h2>
+                <?php if(count($credits)>0)
+                {
+                    ?>
+                 <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" style="padding: 10px 0;">
+                    
+                                <div class="col-lg-1 "></div>
+                                <div class="col-lg-3 center" >Original Link</div>
+                                <div class="col-lg-3 center">Clone</div>
+                                <div class="col-lg-3 center">Text</div>
+                                <div class="col-lg-2 col-md-2 center">Reported by</div>
+                                <div class="col-lg-1 "></div>
+                 
+                </div>
+                <?php } ?>
+                    <?php
+                    $helperPrintDate = new Default_View_Helper_PrintDate();
+                    $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+                    $helperImage = new Default_View_Helper_Image();
+                    $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
+
+                    $this->rownum = (1 + (($this->page - 1) * 10));
+                    $pageLimit = 10;    
+                    $paginator = Zend_Paginator::factory($credits);
+                    $paginator->setItemCountPerPage($pageLimit);
+                    $paginator->setCurrentPageNumber($this->page);                    
+                    $this->products = $paginator;
+                    if ($paginator->count() == 0) {
+                        echo '<div class="alert alert-success" role="alert"><p class="text-success">Congratulations. No more Mods in sight. (For the moment)</p></div>';
+                    }
+                    foreach ($this->products as $this->product) {                        
+                        ?>
+
+                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" style="border-top: 1px solid #ccc;font-size: 12px;padding: 10px 0;">
+
+
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                <div class="rownum">
+                                    <?= intval($this->rownum) ?>.
+                                </div>
+                            </div>
+                            <div class="col-lg-3 ">
+                            <?php   echo $this->product->external_link ; ?>
+                            </div>
+
+                            <div class="explore-product-details col-lg-3">      
+                                <?php if($this->product->title): ?>                              
+                                      <div class="mini-card">
+                                            <div class="u-wrap">
+                                                <a href="<?= $this->buildProductUrl($this->product->project_id, '', null, true); ?>">
+                                                    <figure>
+                                                        <img src="<?php echo $this->Image($this->product->image_small, array('width' => 101, 'height' => 81)); ?>"
+                                                             class="explore-product-image" width="101" height="81" />
+                                                    </figure>
+                                                    <div class="u-content">
+                                                        <h3><?php echo $this->product->title; ?></h3>
+                                                        <span class="productCategory"> <?php echo $this->product->catTitle; ?> </span>
+
+                                                        <span class="productCategory" style="width: 100%; float: left;">
+                                                            <?= $helperPrintDate->printDate($this->product->changed_at) ?>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                                                          
+                                                
+                                                <?php
+                                                $this->widgetRating = new stdClass();
+                                                $this->widgetRating->project_id = $this->product->project_id;
+                                                $this->widgetRating->laplace_score =$this->product->laplace_score;
+                                                $this->widgetRating->count_likes = 0;
+                                                $this->widgetRating->count_dislikes = 0;
+                                                echo $this->render('partials/widgetRating.phtml'); ?>
+                                            </div>
+                                      </div>
+                                  <?php endif; ?>
+                            </div>
+                            <div class="col-lg-3">
+                                    
+                                    <?php  echo $this->product->text ; ?>
+                            </div>
+                            
+
+                            <div class="col-lg-1 col-md-1 col-sm-1">
+                                <figure>                                   
+                                        <a href="<?=$helpMemberUrl->buildMemberUrl($this->product->reporter_username)?>">    <img class="reporterimage tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->reported_by?>" 
+                                                    src="<?php echo $this->Image($this->product->reporter_profile_image_url,array('width' => 50, 'height' => 50)); ?>" 
+                                                />                                       
+                                        </a>
+                                </figure>
+                                <span><?=$this->product->reporter_username?></span>
+                            </div>    
+
+
+
+                        </div><!-- END .explore-product -->
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 small text-right"
+                             style="border-top: 1px solid #ccc;font-size: 12px;padding: 10px 0;">
+                            
+                              <a  href="/credits/delete?id=<?= $this->product->project_clone_id?>"
+                               class="delete-this btn btn-danger" data-title="Do you really want to delete this ?" >delete
+                              </a>
+
+                              <a  href="/credits/valid?id=<?= $this->product->project_clone_id?>"
+                               class="delete-this btn btn-danger" data-title="Do you really want to validate this ?">validate
+                              </a>
+
+                              <a 
+                                          class="btn btn-default eventmodal" 
+                                          data-p="<?=$this->product->project_id?>"
+                                          data-t="<?=$this->product->text?>"
+                                          data-l="<?=$this->product->external_link?>"
+                                          data-id="<?=$this->product->project_clone_id?>">
+                                           edit 
+                              </a>
+                            
+                        </div>
+                        <?php
+                        $this->rownum++;
+                    }
+                    ?>
+                </div>
+                <div class="sidebar-right col-md-1"></div>
+            </div>
+             <?php if(count($credits)>0)
+                {
+                    ?>
+            <section class="explore-footer text-center">
+                <?php echo $this->paginationControl($this->products, 'Sliding',
+                    'partials/paginationControlWithoutAjax.phtml',
+                    array('params' => $this->filters, 'dom_target' => 'section#products-wrapper')); ?>
+            </section>
+            <?php } ?>
+        </div>
+    </section>
+</main>
+
+<script>
+    $('.delete-this').on('click', function (event) {
+        event.stopPropagation();
+        var popupText = $(this).attr('data-title');
+        var result = confirm(popupText);
+        if (result) {
+            var target = $(this).attr('href');
+            $.ajax({
+                url: target,
+                success: function (results) {
+                    location.reload();
+                    //alert('Deleted successfully');
+                },
+                error: function () {
+                    alert('Service is temporarily unavailable.');
+                }
+            });
+        }
+
+        return false;
+    });
+
+    $('body').on('click', 'a.eventmodal', function (event) {
+             event.stopPropagation();
+             $('#report-product-clone').modal('toggle');           
+             console.log($(this));
+             $('#report-product-clone').find('input[name="id"]').val($(this).attr('data-id'));
+             $('#report-product-clone').find('input[name="p"]').val($(this).attr('data-p'));
+             $('#report-product-clone').find('input[name="l"]').val($(this).attr('data-l'));
+             $('#report-product-clone').find('textarea[name="t"]').text($(this).attr('data-t'));            
+    })
+
+    $("#report-product-clone").on("hidden.bs.modal", function () {
+        location.reload();
+    });
+</script>
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){                                             
+                TooltipUser.setup("tooltipuser","right");            
+                  PartialJson.setup();           
+            });
+        ');

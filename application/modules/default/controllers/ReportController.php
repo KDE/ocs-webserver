@@ -167,11 +167,40 @@ class ReportController extends Zend_Controller_Action
         ));
     }
 
+    public function flagmodAction()
+    {                           
+        $this->_helper->layout()->disableLayout();
+        $params = $this->getAllParams();
+        if (APPLICATION_ENV != 'searchbotenv') {
+
+                    $project_clone = $this->getParam('p');
+                    $text = $this->getParam('t');                    
+                    $url = $this->getParam('l'); 
+                    $project_id = 0;
+                    
+                    if (Zend_Auth::getInstance()->hasIdentity()) {
+                        $reported_by = (int)Zend_Auth::getInstance()->getStorage()->read()->member_id;
+                        $reportProducts = new Default_Model_DbTable_ProjectClone();                 
+                        $reportProducts->save(array('project_id' => $project_clone
+                        ,'member_id' => $reported_by
+                        ,'text' => $text
+                        ,'external_link' => $url
+                        ,'project_clone_type' =>1
+                        ,'project_id_parent' =>$project_id));                             
+                    }                                                                                               
+        }
+
+        $this->_helper->json(array(
+            'status'  => 'ok',
+            'message' => '<p>Thank you. The credits have been submitted.</p><p>It can take some time to appear while we verify it.</p><div class="modal-footer">
+                                            <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
+                                        </div>',
+            'data'    => $params
+        ));
+    }
 
     public function productcloneAction()
-    {   
-        $report_type = 1;
-        
+    {                   
         $this->_helper->layout()->disableLayout();
         $params = $this->getAllParams();
         if (APPLICATION_ENV != 'searchbotenv') {

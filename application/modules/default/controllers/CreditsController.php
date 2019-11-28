@@ -80,5 +80,11 @@ class CreditsController extends Local_Controller_Action_DomainSwitch
        	
     }
 
+	public function modsAction()
+	{
+		$this->view->headTitle('Modifications','SET');
+		$this->view->page = (int)$this->getParam('page', 1);
+	}
+
  
 }
