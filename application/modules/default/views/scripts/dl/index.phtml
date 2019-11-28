@@ -187,6 +187,9 @@ if($isExternal) {
                 $('#dl_status').show();
                 
                 console.log('Save to Path: ' + torrent.path);
+                console.log('Torrent Lenght: ' + torrent.length);
+                console.log('Torrent Created: ' + torrent.created);
+                console.log('Torrent Created by: ' + torrent.createdBy);
                 
                 var interval = setInterval(function () {
                     rounds += 1;
@@ -218,6 +221,18 @@ if($isExternal) {
                     $dl_info_downloaded_speed.html(humanSize(torrent.downloadSpeed));
                     
                 }, 1000)
+                
+                torrent.on('ready', function () {
+                    console.log('ready')
+                })
+                
+                torrent.on('metadata', function () {
+                    console.log('metadata')
+                })
+                
+                torrent.on('infoHash', function () {
+                    console.log('infoHash')
+                })
 
                 torrent.on('done', function () {
                     //log('Progress: 100%');
@@ -226,9 +241,32 @@ if($isExternal) {
                     $('#dl_status').hide();
                 })
                 
+                torrent.on('warning', function (err) {
+                    console.log('Warning: ' + err)
+                })
+                
                 torrent.on('error', function (err) {
                     var $dl_info_status = $('#dl_info_status');
                     $dl_info_status.html('Error: ' + err);
+                })
+                
+                torrent.on('wire', function (wire, addr) {
+                    console.log('connected to peer with address ' + addr)
+                })
+                
+                torrent.on('noPeers', function (announceType) {
+                    console.log('Warning: no peers found: ' + announceType)
+                })
+                
+                torrent.on('upload', function (bytes) {
+                    console.log('Uploading: ' + bytes)
+                })
+                
+                torrent.on('download', function (bytes) {
+                    console.log('just downloaded: ' + bytes)
+                    console.log('total downloaded: ' + torrent.downloaded)
+                    console.log('download speed: ' + torrent.downloadSpeed)
+                    console.log('progress: ' + torrent.progress)
                 })
 
                 // Render all files into to the page
