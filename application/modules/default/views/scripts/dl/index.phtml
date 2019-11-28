@@ -236,6 +236,22 @@ if($isExternal) {
 
                 torrent.on('done', function () {
                     //log('Progress: 100%');
+                    
+                    var $dlProgressBar = $('#data-file-download-progress');
+                    var $dl_info_downloaded_mb = $('#dl_info_downloaded_mb');
+                    var $dl_info_downloaded_percent = $('#dl_info_downloaded_percent');
+                    var $dl_info_peers = $('#dl_info_peers');
+                    var $dl_info_downloaded_speed = $('#dl_info_downloaded_speed');
+                    var $dl_info_status = $('#dl_info_status');
+                    
+                    var progress = (torrent.progress * 100).toFixed(1);
+                    $dlProgressBar.attr('value', progress);
+                    
+                    $dl_info_downloaded_mb.html(humanSize(torrent.downloaded));
+                    $dl_info_downloaded_percent.html(progress);
+                    $dl_info_peers.html(torrent.numPeers);
+                    $dl_info_downloaded_speed.html(humanSize(torrent.downloadSpeed));
+                    
                     console.log('Done')
                     log('Progress: 100%');
                     clearInterval(interval);
