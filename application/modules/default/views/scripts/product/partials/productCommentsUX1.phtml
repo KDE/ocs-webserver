@@ -115,9 +115,10 @@ if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
                        <?php }?>
 
                        <?php                       
-                        if($comment['issupporter']){
+                        if($comment['issupporter']){                            
+                            $isSupporterActive = $this->isSupporterActive($this->product->member_id);
                        ?>
-                       <span class="supporter-badge-<?=($elementComment['level']>1?2:1)?>" >S<?=$comment['issupporter']?></span> 
+                       <span class="supporter-badge-<?=($elementComment['level']>1?2:1)?>  <?=($isSupporterActive?'':'inactive')?>" >S<?=$comment['issupporter']?></span> 
                        <?php }?>
                        
                        <?php 
