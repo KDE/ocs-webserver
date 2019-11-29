@@ -895,9 +895,10 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                                title="<?= $this->product->username ?>"  class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->member_id?>">
                                                <?php
                                                   $isSupporter = $this->isSupporter($this->product->member_id);
+                                                  $isSupporterActive = $this->isSupporterActive($this->product->member_id);
                                                     if($isSupporter) {
                                                 ?>
-                                                    <span class="supporter-badge" >S<?=$isSupporter?></span>
+                                                    <span class="supporter-badge <?=($isSupporterActive?'':'inactive')?>" >S<?=$isSupporter?></span>
                                                 <?php } ?>
                                                 <img src="<?= $helpImage->Image($this->product->profile_image_url,
                                                     array('width' => 80, 'height' => 80)) ?>"

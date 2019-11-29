@@ -25,7 +25,7 @@ const ModalFlagModification = (props) => {
                   <div>                    
                       <div className="container" style={{width:'500px'}}>  
                       <div className="row">
-                                  <div className="col-lg-12"><h6>Original Url:</h6></div>
+                                  <div className="col-lg-12"><h6>Extern Original Url:</h6></div>
                                   <div className="col-lg-12">
                                     <input name="externalurl" id="externalurl" value={props.externalurl} onChange={props.handleChangeExternalurl} required></input>
                                 </div>

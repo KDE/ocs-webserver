@@ -105,8 +105,11 @@ div#preloaded-images {
                         <article class="well" style="width: 100%;">
                             <div class="about-title">
                                 <figure class="relative inline profile-image-container">
-                                    <?php if( $isSupporter || $isSubscriber ) { ?>
-                                        <span class="supporter-badge">S<?=$isSupporterSection?></span>
+                                    <?php if( $isSupporter || $isSubscriber ) {
+                                        $isSupporterActive = $this->isSupporterActive($this->member->member_id);
+                                        ?>
+                                        
+                                        <span class="supporter-badge <?=($isSupporterActive?'':'inactive')?>">S<?=$isSupporterSection?></span>
                                     <?php }?>
                                     <img src="<?php echo $memberProfile ; ?>"
                                          alt="profile-image"

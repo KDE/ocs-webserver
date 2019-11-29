@@ -1048,7 +1048,7 @@ span.packagetypeos
     /*padding: 5px 10px;*/
     font-size: 12px;
     border-radius: 999px;
-    padding:5px;
+    padding:5px;    
 }
 .comments-list .supporter-badge-2{
     position: absolute;
@@ -1063,6 +1063,11 @@ span.packagetypeos
     border-radius: 999px;
     padding:2px;
 }
+
+.comments-list .supporter-badge-1.inactive,.comments-list .supporter-badge-2.inactive{
+  background: #ccc;
+}
+
 .comments-list .mod-badge-1{
     text-align: center;
     font-size: 12px;
