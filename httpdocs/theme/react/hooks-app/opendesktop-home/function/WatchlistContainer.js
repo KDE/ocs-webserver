@@ -26,7 +26,7 @@ function WatchlistContainer(props)
           </li>
           <li id="clones-link-item">
             <a href={props.baseUrlStore+"/mods/"} >
-              <span>Modifications</span>
+              <span>Mods</span>
             </a>
           </li>
 
