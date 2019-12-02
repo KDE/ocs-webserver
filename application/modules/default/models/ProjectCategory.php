@@ -220,6 +220,8 @@ class Default_Model_ProjectCategory
                     WHERE cfc.store_id = :store_id
                     ORDER BY cfc.`order`, sct.lft        
             ";
+            
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - SQL: ' . $sql);
 
             $rows = $this->_dataTable->getAdapter()->fetchAll($sql,array('store_id' =>$store_id));           
             list($rows, $tree) = $this->buildTreeForView($rows); 
