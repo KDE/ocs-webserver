@@ -460,7 +460,7 @@ class Default_Form_Product extends Zend_Form
         $option = array();
         $option[0] = "";
         $option[1] = "Original";
-        $option[2] = "Modification";
+        $option[2] = "Mod";
 
         return $element->setFilters(array('StringTrim'))->setMultiOptions($option);
     }

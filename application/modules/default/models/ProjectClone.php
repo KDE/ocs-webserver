@@ -132,6 +132,39 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
               return $this->generateRowSet($resultSet);             
     }
 
+    public function fetchMods()
+    {
+          $sql = "
+
+          SELECT 
+          c.project_clone_id
+         ,c.project_id 
+         ,c.project_id_parent
+         ,c.external_link
+         ,c.text
+         ,c.member_id as reported_by
+         ,m.username as reporter_username
+         ,m.profile_image_url  as reporter_profile_image_url
+         ,p.cat_title catTitle
+         ,p.title
+         ,p.image_small
+         ,p.changed_at
+         ,p.laplace_score
+         ,p.member_id
+         ,p.username
+         
+         FROM project_clone c                      
+         join member m on m.member_id = c.member_id
+         JOIN stat_projects p on p.project_id = c.project_id                                            
+         WHERE c.is_deleted = 0 and c.is_valid = 0  and c.project_clone_type=1
+         order by c.created_at desc
+
+          ";
+
+          $resultSet = $this->_db->fetchAll($sql);         
+          return $this->generateRowSet($resultSet);            
+    }
+
     public function fetchCredits()
     {
           $sql = "
@@ -163,7 +196,7 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                       join stat_projects pp on  pp.project_id =c.project_id_parent 
                       join member m on m.member_id = c.member_id
                       left JOIN stat_projects p on p.project_id = c.project_id                                            
-                      WHERE c.is_deleted = 0 and c.is_valid = 0  AND pp.status = 100
+                      WHERE c.is_deleted = 0 and c.is_valid = 0  AND pp.status = 100 and c.project_clone_type=0
                       order by c.created_at desc
 
           ";

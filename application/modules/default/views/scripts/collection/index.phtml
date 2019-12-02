@@ -957,8 +957,9 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                                title="<?= $this->product->username ?>"  class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->member_id?>">
                                                <?php
                                                     if($this->isSupporter($this->product->member_id)) {
+                                                        $isSupporterActive = $this->isSupporterActive($this->product->member_id);
                                                 ?>
-                                                    <span class="supporter-badge" >S</span>
+                                                    <span class="supporter-badge <?=($isSupporterActive?'':'inactive')?>" >S</span>
                                                 <?php } ?>
                                                 <img src="<?= $helpImage->Image($this->product->profile_image_url,
                                                     array('width' => 80, 'height' => 80)) ?>"

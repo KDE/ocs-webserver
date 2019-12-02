@@ -1048,6 +1048,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'controller' => 'credits',
             'action'     => 'index'
         )));
+        $router->addRoute('mods', new Zend_Controller_Router_Route('/mods/*', array(
+            'module'     => 'default',
+            'controller' => 'credits',
+            'action'     => 'mods'
+        )));
 
 
 

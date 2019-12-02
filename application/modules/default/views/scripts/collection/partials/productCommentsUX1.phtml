@@ -109,8 +109,9 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
 
                        <?php                       
                         if($comment['issupporter']){
+                            $isSupporterActive = $this->isSupporterActive($this->product->member_id);
                        ?>
-                       <span class="supporter-badge-<?=($elementComment['level']>1?2:1)?>" >S</span> 
+                       <span class="supporter-badge-<?=($elementComment['level']>1?2:1)?> <?=($isSupporterActive?'':'inactive')?>" >S</span> 
                        <?php }?>
 
                         <img src="<?= $helperImage->Image($comment['profile_image_url'], array('width' => 60, 'height' => 60)) ?>" class="img<?= $elementComment['level']?>">

@@ -34,7 +34,7 @@ $helpDate = new Default_View_Helper_PrintDate();
                 <?php echo $this->render('user/partials/userHeader.phtml'); ?>
                 <!-- /NAVIGATION -->
                 <?php
-                    if(count($this->comments)==0 and count($this->votes)==0 and count($this->donations)==0){ 
+                    if((count($this->comments)+count($this->votes)+count($this->donations)+count($this->featured))==0){ 
                     ?>
                <div class="my-products-heading">
                     <h1 class="page-title left"><?= $this->translate('no activities yet') ?></h1>                   
@@ -49,6 +49,24 @@ $helpDate = new Default_View_Helper_PrintDate();
                 <?php }?>
 
                 <div class="my-products-list">  
+                <div class="row">
+                        <div class="col-lg-12 title"><?php  if(count($this->featured)>0) { echo count($this->featured). ' featured product'.(count($this->featured)>1?'s':'');}?> </div>
+                </div>
+                <?php  foreach ($this->featured as $f) { ?>
+                    <div class="row">
+                        <div class="col-lg-12"> 
+                            <span>                           
+                            <?php 
+                            echo $f['title'].' is featured';
+                            ?>
+                            </span>
+                        </div>
+                    </div>
+                <?php
+                }
+                ?>
+
+
                 <div class="row">
                         <div class="col-lg-12 title"><?php  if(count($this->comments)>0) { echo count($this->comments). ' Comment'.(count($this->comments)>1?'s':'');}?> </div>
                 </div>
