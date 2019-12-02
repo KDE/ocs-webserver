@@ -151,6 +151,71 @@ class Default_Model_ProjectCategory
         list($rows, $tree) = $this->buildTreeForView($rows);        
         return $tree;
     }
+    
+    
+    /**
+     * @param null $store_id
+     *
+     * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     */
+    public function fetchTreeForViewForProjectTagGroupTags($store_id = null,$tagFilter=null)
+    {        
+        if (empty($store_id)) {
+            $store_config = Zend_Registry::get('store_config');
+            $store_id = $store_config->store_id;            
+        }
+        
+        $filterString = "";
+        
+        if (is_array($tagFilter)) {
+            $tagList = $tagFilter;
+            foreach ($tagList as $key => $value) {
+                if($value != null && $value != "0") {
+                    $filterString .= "AND FIND_IN_SET('".$value."',p.tag_ids)";
+                }
+            }
+        } else {
+            $filterString .= "AND FIND_IN_SET('".$tagFilter."',p.tag_ids)";
+        }
+        
+        $sql = "
+                SELECT `sct`.`lft`, `sct`.`rgt`, `sct`.`project_category_id` AS `id`, `sct`.`title`, `scpc`.`count_product` AS `product_count`, `sct`.`xdg_type`, `sct`.`name_legacy`, if(`sct`.`rgt`-`sct`.`lft` = 1, 0, 1) AS `has_children`, (SELECT `project_category_id` FROM `stat_cat_tree` AS `sct2` WHERE `sct2`.`lft` < `sct`.`lft` AND `sct2`.`rgt` > `sct`.`rgt` ORDER BY `sct2`.`rgt` - `sct`.`rgt` LIMIT 1) AS `parent_id`
+                FROM (
+                        SELECT `csc`.`store_id`, `csc`.`project_category_id`, `csc`.`order`, `pc`.`title`, `pc`.`lft`, `pc`.`rgt`
+                        FROM `config_store_category` AS `csc`
+                        JOIN `project_category` AS `pc` ON `pc`.`project_category_id` = `csc`.`project_category_id`
+                        WHERE `csc`.`store_id` = :store_id
+                        GROUP BY `csc`.`store_category_id`
+                        ORDER BY `csc`.`order`, `pc`.`title`
+                
+                ) AS `cfc`
+                JOIN `stat_cat_tree` AS `sct` ON find_in_set(`cfc`.`project_category_id`, `sct`.`ancestor_id_path`)   
+                join (
+                
+                    SELECT
+                    sct2.project_category_id,          
+                    count(distinct p.project_id) as count_product
+                    FROM stat_cat_tree as sct1
+                    JOIN stat_cat_tree as sct2 ON sct1.lft between sct2.lft AND sct2.rgt
+                    left join (
+                        SELECT project_category_id, project_id
+                        from stat_projects p
+                        WHERE 1=1
+                        ".$filterString."
+                    ) as p on p.project_category_id = sct1.project_category_id                           
+                    GROUP BY sct2.project_category_id
+                
+                ) AS `scpc` on  `sct`.`project_category_id` = `scpc`.`project_category_id`  
+                WHERE cfc.store_id = :store_id
+                ORDER BY cfc.`order`, sct.lft        
+        ";
+
+        $rows = $this->_dataTable->getAdapter()->fetchAll($sql,array('store_id' =>$store_id));           
+        list($rows, $tree) = $this->buildTreeForView($rows);        
+        return $tree;
+    }
 
 
 

@@ -465,7 +465,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->headTitle($productInfo->title . ' - ' . $this->getHeadTitle(), 'SET');
         $this->view->cat_id = $this->view->product->project_category_id;
 
-        
+        $tagGroupFilter  = Zend_Registry::isRegistered('config_store_taggroups') ? Zend_Registry::get('config_store_taggroups') : null;
+        if(!empty($tagGroupFilter)) {
+            $filterArray = array();
+            foreach ($tagGroupFilter as $tagGroupId) {
+                $inputFilter = $this->getFilterTagFromCookie($tagGroupId);
+                $filterArray[$tagGroupId] = $inputFilter;
+            }
+            $this->view->tag_group_filter = $filterArray;
+        }
         
         //create ppload download hash: secret + collection_id + expire-timestamp
         $salt = PPLOAD_DOWNLOAD_SECRET;
@@ -2487,7 +2495,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $queue->send(serialize($command));
                 }
 
-                                //If this file is bigger than XXX MB (see application.ini), then create a webtorrent file
+                //If this file is bigger than XXX MB (see application.ini), then create a webtorrent file
                 $config = Zend_Registry::get('config');
                 $minFileSize = $config->torrent->media->min_filesize;
                 if(!empty($fileResponse->file->size) && $fileResponse->file->size >= $minFileSize) {
@@ -3278,6 +3286,16 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $referer = $_SERVER['HTTP_REFERER'];
         }
         return $referer;
+    }
+    
+    private function getFilterTagFromCookie($group)
+    {
+        $config = Zend_Registry::get('config');
+        $cookieName = $config->settings->session->filter_browse_original.$group;
+
+        $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
+
+        return $storedInCookie;
     }
 
 }

@@ -21,7 +21,19 @@
  **/
 
 $modelCategory = new Default_Model_ProjectCategory();
-if($this->filter_mode=='filter_favourites')
+
+$isTagGroupFilter = false;
+if(isset($this->tag_group_filter)) {
+    foreach ($this->tag_group_filter as $key => $value) {
+        if($value != null && $this->tag_group_filter != "0") {
+            $isTagGroupFilter = true;
+        }
+    }
+}
+
+if($isTagGroupFilter) {
+    $this->categories = $modelCategory->fetchTreeForViewForProjectTagGroupTags(null, $this->tag_group_filter);
+} else if($this->filter_mode=='filter_favourites')
 {
     $this->categories = $modelCategory->fetchTreeForViewForProjectFavourites();
 }else{
