@@ -160,21 +160,18 @@ class Default_Model_ProjectCategory
      * @throws Zend_Cache_Exception
      * @throws Zend_Exception
      */
-    public function fetchTreeForViewForProjectTagGroupTags($storeTagFilter = null,$tagFilter=null)
+    public function fetchTreeForViewForProjectTagGroupTags($store_id = null, $storeTagFilter = null,$tagFilter=null)
     {        
-        
-        $cacheName = __FUNCTION__ . '_' . md5(serialize($storeTagFilter) . serialize($tagFilter));
+        if (empty($store_id)) {
+            $store_config = Zend_Registry::get('store_config');
+            $store_id = $store_config->store_id;            
+        }
+
+        $cacheName = __FUNCTION__ . '_' . md5(serialize($storeTagFilter) . '_' . serialize($tagFilter) . '_' . serialize($store_id));
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
 
         if (false === ($tree = $cache->load($cacheName))) {
-        
-        
-            if (empty($store_id)) {
-                $store_config = Zend_Registry::get('store_config');
-                $store_id = $store_config->store_id;            
-            }
-
             $filterString = "";
             
             if(null != $storeTagFilter) {
