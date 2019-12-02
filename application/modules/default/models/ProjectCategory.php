@@ -189,7 +189,7 @@ class Default_Model_ProjectCategory
                     }
                 }
             } else {
-                $filterString .= "AND FIND_IN_SET('".$tagFilter."',p.tag_ids)";
+                $filterString .= " AND FIND_IN_SET('".$tagFilter."',p.tag_ids)";
             }
 
             $sql = "
