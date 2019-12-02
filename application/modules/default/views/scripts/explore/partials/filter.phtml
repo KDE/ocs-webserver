@@ -33,7 +33,7 @@ if(isset($this->tag_group_filter)) {
     }
 }
 
-if($isTagGroupFilter) {
+if($isTagGroupFilter == true) {
     $this->categories = $modelCategory->fetchTreeForViewForProjectTagGroupTags($filter, $this->tag_group_filter);
 } else if($this->filter_mode=='filter_favourites')
 {
