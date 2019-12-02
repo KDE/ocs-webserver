@@ -3287,5 +3287,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
         return $referer;
     }
+    
+    private function getFilterTagFromCookie($group)
+    {
+        $config = Zend_Registry::get('config');
+        $cookieName = $config->settings->session->filter_browse_original.$group;
+
+        $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
+
+        return $storedInCookie;
+    }
 
 }
