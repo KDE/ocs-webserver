@@ -34,7 +34,6 @@ if(isset($this->tag_group_filter)) {
 }
 
 if($isTagGroupFilter == true) {
-    var_dump($this->tag_group_filter);
     $this->categories = $modelCategory->fetchTreeForViewForProjectTagGroupTags(null, $filter, $this->tag_group_filter);
 } else if($this->filter_mode=='filter_favourites')
 {
