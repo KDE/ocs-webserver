@@ -160,32 +160,39 @@ class Default_Model_ProjectCategory
      * @throws Zend_Cache_Exception
      * @throws Zend_Exception
      */
-    public function fetchTreeForViewForProjectTagGroupTags($store_id = null,$tagFilter=null)
+    public function fetchTreeForViewForProjectTagGroupTags($store_id = null, $storeTagFilter = null,$tagFilter=null)
     {        
-        
-        $cacheName = __FUNCTION__ . '_' . md5(serialize($tagFilter) . (string)$store_id);
+        if (empty($store_id)) {
+            $store_config = Zend_Registry::get('store_config');
+            $store_id = $store_config->store_id;            
+        }
+
+        $cacheName = __FUNCTION__ . '_' . md5(serialize($storeTagFilter) . '_' . serialize($tagFilter) . '_' . serialize($store_id));
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
 
         if (false === ($tree = $cache->load($cacheName))) {
-        
-        
-            if (empty($store_id)) {
-                $store_config = Zend_Registry::get('store_config');
-                $store_id = $store_config->store_id;            
-            }
-
             $filterString = "";
-
+            //Store Tag Filter
+            if(null != $storeTagFilter) {
+                if(is_array($storeTagFilter)) {
+                    foreach ($storeTagFilter as $value) {
+                        $filterString .= " AND FIND_IN_SET('".$value."',p.tag_ids)";
+                    }
+                } else {
+                    $filterString .= " AND FIND_IN_SET('".$storeTagFilter."',p.tag_ids)";
+                }
+            }
+            //Store-Tag-Group-Filter
             if (is_array($tagFilter)) {
                 $tagList = $tagFilter;
                 foreach ($tagList as $key => $value) {
                     if($value != null && $value != "0") {
-                        $filterString .= "AND FIND_IN_SET('".$value."',p.tag_ids)";
+                        $filterString .= " AND FIND_IN_SET('".$value."',p.tag_ids)";
                     }
                 }
             } else {
-                $filterString .= "AND FIND_IN_SET('".$tagFilter."',p.tag_ids)";
+                $filterString .= " AND FIND_IN_SET('".$tagFilter."',p.tag_ids)";
             }
 
             $sql = "
@@ -219,11 +226,13 @@ class Default_Model_ProjectCategory
                     WHERE cfc.store_id = :store_id
                     ORDER BY cfc.`order`, sct.lft        
             ";
+            
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - SQL: ' . $sql);
 
             $rows = $this->_dataTable->getAdapter()->fetchAll($sql,array('store_id' =>$store_id));           
             list($rows, $tree) = $this->buildTreeForView($rows); 
             
-            $cache->save($tree, $cacheName, array(), 120);
+            $cache->save($tree, $cacheName, array(), 1800);
         }
         return $tree;
     }
