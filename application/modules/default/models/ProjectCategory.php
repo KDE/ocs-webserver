@@ -178,14 +178,14 @@ class Default_Model_ProjectCategory
             $filterString = "";
             
             if(null != $storeTagFilter) {
-                $filterString .= "AND FIND_IN_SET('".$storeTagFilter."',p.tag_ids)";
+                $filterString .= " AND FIND_IN_SET('".$storeTagFilter."',p.tag_ids)";
             }
 
             if (is_array($tagFilter)) {
                 $tagList = $tagFilter;
                 foreach ($tagList as $key => $value) {
                     if($value != null && $value != "0") {
-                        $filterString .= "AND FIND_IN_SET('".$value."',p.tag_ids)";
+                        $filterString .= " AND FIND_IN_SET('".$value."',p.tag_ids)";
                     }
                 }
             } else {
