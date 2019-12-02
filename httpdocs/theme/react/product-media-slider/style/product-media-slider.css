@@ -740,12 +740,6 @@ video:focus {
 #music-player-wrapper.desktop .music-player-panel .panel-content .player-content {
   padding: 0;
 }
-#music-player-wrapper.desktop .music-player-panel .panel-content .player-content * {
-  -webkit-transition: all none ease-out !important;
-  -moz-transition: all none ease-out !important;
-  -o-transition: all none ease-out !important;
-  transition: all none ease-out !important;
-}
 #music-player-wrapper.desktop .music-player-panel .panel-content .player-content .play-btn {
   padding: 0 5px;
 }
@@ -764,12 +758,16 @@ video:focus {
   order: 11;
 }
 #music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.play-sounds .sound-operation {
-  display: none;
+  width: 0;
+  opacity: 0;
   overflow: hidden;
   -webkit-transition: all 0.2s ease-out;
   -moz-transition: all 0.2s ease-out;
   -o-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
+}
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.play-sounds .sound-operation .rc-slider-handle {
+  margin-left: -14px;
 }
 #music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.play-sounds .sounds-icon {
   margin-right: 0;
@@ -778,7 +776,9 @@ video:focus {
   margin-right: 15px;
 }
 #music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.play-sounds:hover .sound-operation {
+  opacity: 1;
   display: block;
+  width: 100px;
 }
 #music-player-wrapper.desktop .audio-lists-panel {
   position: absolute;

@@ -909,10 +909,6 @@ video:focus {
   
         .player-content {
           padding: 0;
-
-          * {
-            .transition(none) !important; 
-          }
   
           .play-btn {
             padding: 0 5px;
@@ -937,9 +933,14 @@ video:focus {
 
             &.play-sounds {
               .sound-operation {
-                  display: none;
-                  overflow: hidden;
-                  .transition();
+                width:0;
+                opacity: 0;
+                overflow: hidden;
+                .transition();
+
+                .rc-slider-handle {
+                  margin-left: -14px;
+                }
               }
 
               .sounds-icon {
@@ -951,7 +952,11 @@ video:focus {
                   margin-right:15px;
                 }
                 .sound-operation {
+                  opacity: 1;
                   display: block;
+                  width: 100px;
+
+                  
                 }
               }
             }
