@@ -160,10 +160,10 @@ class Default_Model_ProjectCategory
      * @throws Zend_Cache_Exception
      * @throws Zend_Exception
      */
-    public function fetchTreeForViewForProjectTagGroupTags($store_id = null,$tagFilter=null)
+    public function fetchTreeForViewForProjectTagGroupTags($storeTagFilter = null,$tagFilter=null)
     {        
         
-        $cacheName = __FUNCTION__ . '_' . md5(serialize($tagFilter) . (string)$store_id);
+        $cacheName = __FUNCTION__ . '_' . md5(serialize($storeTagFilter) . serialize($tagFilter));
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
 
@@ -176,6 +176,10 @@ class Default_Model_ProjectCategory
             }
 
             $filterString = "";
+            
+            if(null != $storeTagFilter) {
+                $filterString .= "AND FIND_IN_SET('".$storeTagFilter."',p.tag_ids)";
+            }
 
             if (is_array($tagFilter)) {
                 $tagList = $tagFilter;
@@ -223,7 +227,7 @@ class Default_Model_ProjectCategory
             $rows = $this->_dataTable->getAdapter()->fetchAll($sql,array('store_id' =>$store_id));           
             list($rows, $tree) = $this->buildTreeForView($rows); 
             
-            $cache->save($tree, $cacheName, array(), 120);
+            $cache->save($tree, $cacheName, array(), 300);
         }
         return $tree;
     }
