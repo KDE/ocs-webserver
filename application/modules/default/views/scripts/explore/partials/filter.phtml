@@ -27,7 +27,7 @@ $filter = Zend_Registry::isRegistered('config_store_tags') ?  Zend_Registry::get
 
 if(isset($this->tag_group_filter)) {
     foreach ($this->tag_group_filter as $key => $value) {
-        if($value != null && $this->tag_group_filter != "0") {
+        if($value != null && $value != "0") {
             $isTagGroupFilter = true;
         }
     }

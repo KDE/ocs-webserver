@@ -221,7 +221,7 @@ class Default_Model_ProjectCategory
                     ORDER BY cfc.`order`, sct.lft        
             ";
             
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - SQL: ' . $sql);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - SQL: ' . $sql);
 
             $rows = $this->_dataTable->getAdapter()->fetchAll($sql,array('store_id' =>$store_id));           
             list($rows, $tree) = $this->buildTreeForView($rows); 
