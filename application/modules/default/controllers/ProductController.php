@@ -465,7 +465,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->headTitle($productInfo->title . ' - ' . $this->getHeadTitle(), 'SET');
         $this->view->cat_id = $this->view->product->project_category_id;
 
-        
+        $tagGroupFilter  = Zend_Registry::isRegistered('config_store_taggroups') ? Zend_Registry::get('config_store_taggroups') : null;
+        if(!empty($tagGroupFilter)) {
+            $filterArray = array();
+            foreach ($tagGroupFilter as $tagGroupId) {
+                $inputFilter = $this->getFilterTagFromCookie($tagGroupId);
+                $filterArray[$tagGroupId] = $inputFilter;
+            }
+            $this->view->tag_group_filter = $filterArray;
+        }
         
         //create ppload download hash: secret + collection_id + expire-timestamp
         $salt = PPLOAD_DOWNLOAD_SECRET;
