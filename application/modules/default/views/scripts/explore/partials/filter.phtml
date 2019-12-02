@@ -21,6 +21,12 @@
  **/
 
 $modelCategory = new Default_Model_ProjectCategory();
+
+if(isset($this->tag_group_filter)) {
+    var_dump($this->tag_group_filter);
+}
+
+
 if($this->filter_mode=='filter_favourites')
 {
     $this->categories = $modelCategory->fetchTreeForViewForProjectFavourites();
