@@ -45,7 +45,9 @@ class ModerationController extends Local_Controller_Action_DomainSwitch
     public function indexAction()
     {
         $this->view->page = (int)$this->getParam('page', 1);        
-    }
+	}
+	
+	
 
     public function listAction()
     {
@@ -95,6 +97,40 @@ class ModerationController extends Local_Controller_Action_DomainSwitch
     	$jTableResult = array();
         	$jTableResult['Result'] = self::RESULT_OK;                		
         	$this->_helper->json($jTableResult);
+    }
+
+
+	public function productmoderationAction()
+    {		
+		$this->view->headTitle('Product Moderation','SET');   
+    }
+
+	public function listmoderationAction()
+    {
+    	$startIndex = (int)$this->getParam('jtStartIndex');
+    	$pageSize = (int)$this->getParam('jtPageSize');
+    	$sorting = $this->getParam('jtSorting');
+    	if($sorting==null)
+    	{
+    		$sorting = 'comment_created_at desc';
+    	}
+    	$mod = new Default_Model_ProjectComments();    
+    	$comments = $mod->fetchCommentsWithType(Default_Model_DbTable_Comments::COMMENT_TYPE_MODERATOR,$sorting,(int)$pageSize,$startIndex);    			
+		$printDateSince = new Default_View_Helper_PrintDateSince();        
+        $helperImage = new Default_View_Helper_Image();
+        foreach ($comments as &$value) {            
+            $value['comment_created_at'] = $printDateSince->printDateSince($value['comment_created_at']);
+			$value['profile_image_url'] = $helperImage->Image($value['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); 
+			$value['image_small'] = $helperImage->Image($value['image_small'], array('width' => '100', 'height' => '100', 'crop' => 2)); 
+        }
+		
+		
+		$totalRecordCount = $mod->fetchCommentsWithTypeCount(Default_Model_DbTable_Comments::COMMENT_TYPE_MODERATOR);    	
+    	$jTableResult = array();
+    	$jTableResult['Result'] = self::RESULT_OK;
+    	$jTableResult['Records'] = $comments;
+    	$jTableResult['TotalRecordCount'] = $totalRecordCount;
+    	$this->_helper->json($jTableResult);
     }
 
       

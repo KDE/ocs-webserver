@@ -64,13 +64,16 @@ class CreditsController extends Local_Controller_Action_DomainSwitch
       	$id =  (int)$this->getParam('id'); 
       	$text =$this->getParam('t');
       	$project_id =  (int)$this->getParam('p'); // cloneID
-      	//$link =  $this->getParam('l');
+      	$link =  $this->getParam('l');
       	$m = new Default_Model_ProjectClone();
-       	              	
-
-	    $m->update(array( 'text' => $text
-	 		     , 'project_id' =>$project_id
-	 		    ) , 'project_clone_id='.$id);                             
+		
+		$arr = array( 'text' => $text
+				, 'project_id' =>$project_id				  
+			);
+		if($link){
+			$arr['external_link'] = $link;
+		}
+	    $m->update($arr, 'project_clone_id='.$id);                             
 	
        	$this->_helper->json(array(
        	    'status'  => 'ok',
@@ -79,6 +82,12 @@ class CreditsController extends Local_Controller_Action_DomainSwitch
        	));
        	
     }
+
+	public function modsAction()
+	{
+		$this->view->headTitle('Modifications','SET');
+		$this->view->page = (int)$this->getParam('page', 1);
+	}
 
  
 }

@@ -84,7 +84,8 @@ $this->ratings = $tableProjectRatings->fetchRating($this->product->project_id);
  //    if($p['rating_active']==1) $cntRatingsActive =$cntRatingsActive+1;
  // }
 
-
+$commentModel = new Default_Model_ProjectComments();
+$cntModeration = $commentModel->fetchCommentsWithTypeProjectCount(30,$this->product->project_id);
 
 if (Zend_Auth::getInstance()->hasIdentity()){
     $this->ratingOfUser = $tableProjectRatings->getProjectRateForUser($this->product->project_id,$identity->member_id);
@@ -428,6 +429,9 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                     <?php if($this->isProjectOriginal($this->product->project_id)){?>
                                     <span class=" label label-info right" style="font-size: 13px;padding: .2em .6em .3em;"> Original</span>
                                     <?php }?>
+                                    <?php if($this->isProjectMod($this->product->project_id)){?>
+                                    <span class=" label label-info right" style="font-size: 13px;padding: .2em .6em .3em;"> Mod</span>
+                                    <?php }?>
 
                                     </div>
 
@@ -592,10 +596,11 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                             <li><a href="#likes-panel" data-toggle="tab">Fans <?php echo '('.count($this->likes).')';  ?></a></li>
                         <?php } ?>
 
-                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
-                        <li><a href="#related-panel" data-toggle="tab">Relationship<?=' ('.$this->cntRelatedProducts.')'?></a></li>
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName || $isowner){  ?>
+                        <li><a href="#related-panel" data-toggle="tab" style="font-style: italic;">Relationship<?=' ('.$this->cntRelatedProducts.')'?></a></li>
 
-                        <li><a href="#related-panel2" data-toggle="tab">Relationship 2<?=' ('.$this->cntRelatedProducts.')'?></a></li>
+                        <li><a href="#tab-moderation" data-toggle="tab" style="font-style: italic;">Moderation<?=' ('.$cntModeration.')'?></a></li>
+                        
                        <?php } ?>
 
                         </ul>
@@ -649,7 +654,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 
 
                                     <!-- comments -->
-                                    <div id="product-discussion">
+                                    <div id="product-discussion" class="comment-containers">
                                         <?php
                                         $modelComments = new Default_Model_ProjectComments();
                                         $offset = $this->paramPageId;
@@ -770,15 +775,21 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                             </div>
                         </div>
 
-                        <div class="tab-pane" id="related-panel2">
+                        <div class="tab-pane" id="tab-moderation">
                             <div class="col-lg-12">                            
-                            <article>
-                                <div id="productRatingContainer2">
-                                <?php
-                                       echo $this->render('product/partials/productRelated2.phtml');
-                                  ?>
-                                </div>                                
-                            </article>
+                             <!-- comments -->
+                                <div id="product-comment-moderation" class="comment-containers">
+                                        <?php
+                                        $modelComments = new Default_Model_ProjectComments();
+                                        $offset = $this->paramPageId;
+                                        $testComments = $modelComments->getCommentTreeForProject($this->product->project_id,30);
+                                        $testComments->setItemCountPerPage(25);
+                                        $testComments->setCurrentPageNumber($offset);
+                                        $this->comments = $testComments;
+                                        echo $this->render('product/partials/productCommentsUX2.phtml');
+                                        ?>
+                                    </div>
+                                    <!-- /comments -->
                             </div>
                         </div>
 
@@ -786,7 +797,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                         <!-- likes panel -->
                         <?php  if (count($this->likes) > 0) { ?>
                         <div class="tab-pane" id="likes-panel">
-                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <article>
                                 <div id="productLikesContainer">
                                 <?php
@@ -801,7 +812,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                         <!-- plings panel -->
                         <?php  if (count($this->projectplings) > 0) { ?>
                         <div class="tab-pane" id="plings-panel">
-                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <article>
                                 <div id="productPlingsContainer">
                                 <?php
@@ -815,7 +826,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 
                         <!-- affiliates panel -->
                         <div class="tab-pane" id="affiliates-panel">
-                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <article>
                                 <div id="productAffiliatesContainer">
                                 <?php
@@ -826,72 +837,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                             </div>
                         </div>
 
-                        <div class="tab-pane" id="files-panel">      
-                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>                      
-                            <div class="row">
-                            <form id="form-download-torrent">
-                            <label for="torrentId">Download from a magnet link: </label>
-                            <input name="torrentId" placeholder="magnet:" 
-                             value="https://torrent.opendesktop.cc/api/files/downloadtorrent?id=1568302531&lt=torrent">
-                            <button type="submit">Download</button>
-                            </form>
-                            
-                            <div class="log"></div>
-                            <script src="/theme/flatui/js/lib/webtorrent.min.js"></script>
-                            <script>
-                                var client = new WebTorrent()
-                                client.on('error', function (err) {
-                                    console.error('ERROR: ' + err.message)                                    
-                                })
-
-                                document.querySelector('#form-download-torrent').addEventListener('submit', function (e) {
-                                    e.preventDefault() // Prevent page refresh
-
-                                    var torrentId = document.querySelector('form input[name=torrentId]').value;
-                                    log('Adding ' + torrentId)
-                                    client.add(torrentId, onTorrent);
-                                })
-
-                                function onTorrent (torrent) {
-                                    log('Got torrent metadata!')
-                                    log(
-                                    'Torrent info hash: ' + torrent.infoHash + ' ' +
-                                    '<a href="' + torrent.magnetURI + '" target="_blank">[Magnet URI]</a> ' +
-                                    '<a href="' + torrent.torrentFileBlobURL + '" target="_blank" download="' + torrent.name + '.torrent">[Download .torrent]</a>'
-                                    )
-
-                                    // // Print out progress every 5 seconds
-                                    var interval = setInterval(function () {
-                                    log('Progress: ' + (torrent.progress * 100).toFixed(1) + '%')
-                                    }, 5000)
-
-                                    
-
-                                    torrent.on('done', function () {
-                                    log('Progress: 100%')
-                                    clearInterval(interval)
-                                    })
-
-                                    // Render all files into to the page
-                                    torrent.files.forEach(function (file) {
-                                    file.appendTo('.log')
-                                    log('(Blob URLs only work if the file is loaded from a server. "http//localhost" works. "file://" does not.)')
-                                    file.getBlobURL(function (err, url) {
-                                        if (err) return log(err.message)
-                                        log('File done.')
-                                        log('<a href="' + url + '">Download full file: ' + file.name + '</a>')
-                                    })
-                                    })
-                                }
-
-                                function log (str) {
-                                    var p = document.createElement('p')
-                                    p.innerHTML = str
-                                    document.querySelector('.log').appendChild(p)
-                                }
-                                </script>
-                            </div>
-                            <?php endif;?>
+                        <div class="tab-pane" id="files-panel">                              
                             <div class="col-lg-12">
                                 <?php
                                         echo $this->render('product/partials/ppload.phtml');
@@ -949,9 +895,10 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                                title="<?= $this->product->username ?>"  class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->member_id?>">
                                                <?php
                                                   $isSupporter = $this->isSupporter($this->product->member_id);
+                                                  $isSupporterActive = $this->isSupporterActive($this->product->member_id);
                                                     if($isSupporter) {
                                                 ?>
-                                                    <span class="supporter-badge" >S<?=$isSupporter?></span>
+                                                    <span class="supporter-badge <?=($isSupporterActive?'':'inactive')?>" >S<?=$isSupporter?></span>
                                                 <?php } ?>
                                                 <img src="<?= $helpImage->Image($this->product->profile_image_url,
                                                     array('width' => 80, 'height' => 80)) ?>"

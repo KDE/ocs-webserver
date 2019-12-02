@@ -96,7 +96,24 @@ class Default_Model_Section
                 ";
          $resultSet = $this->getAdapter()->fetchAll($sql);
         return $resultSet;    
+    
     }
+
+    public function fetchCategoriesWithPlinged()
+    {
+        $sql = " select
+                p.project_category_id, m.section_id,pc.title
+                from project_plings pl
+                inner join stat_projects p on pl.project_id = p.project_id and p.status = 100
+                inner join section_category m on p.project_category_id = m.project_category_id
+                inner join project_category pc on m.project_category_id = pc.project_category_id                
+                where pl.is_deleted = 0 and pl.is_active = 1
+                group by p.project_category_id
+                ";
+         $resultSet = $this->getAdapter()->fetchAll($sql);
+        return $resultSet;    
+    }
+    /** removed inner join supporters
     public function fetchCategoriesWithPlinged()
     {
         $sql = " select
@@ -116,7 +133,7 @@ class Default_Model_Section
                 ";
          $resultSet = $this->getAdapter()->fetchAll($sql);
         return $resultSet;    
-    }
+    } */
 
     public function getNewActivePlingProduct($section_id=null)
     {
@@ -421,6 +438,7 @@ class Default_Model_Section
         return $resultSet;    
     }
 
+    /** removed inner join suppoerts
     public function fetchTopPlingedCreatorPerCategory($cat_id)
     {
         
@@ -439,6 +457,27 @@ class Default_Model_Section
                         JOIN support su2 ON su2.id = ss.support_id
                         where yearmonth = DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')
                     ) ss on pl.member_id = ss.member_id
+                    where p.status = 100 and p.project_category_id=:cat_id
+                    and pl.is_deleted = 0 and pl.is_active = 1  
+                    group by p.member_id
+                    order by cnt desc 
+                    limit 20";
+        $resultSet = $this->getAdapter()->fetchAll($sql,array("cat_id"=>$cat_id));
+        return $resultSet;    
+    }
+    */
+    public function fetchTopPlingedCreatorPerCategory($cat_id)
+    {
+        
+        $sql = "select p.member_id,
+                    count(1) as cnt,
+                    (select count(1) from project_plings pls , stat_projects ppp where pls.project_id=ppp.project_id and pls.is_deleted=0 and ppp.member_id=p.member_id) as sum_plings_all,
+                    m.username,
+                    m.profile_image_url,
+                    m.created_at
+                    from stat_projects p
+                    join project_plings pl on p.project_id = pl.project_id
+                    join member m on p.member_id = m.member_id                                       
                     where p.status = 100 and p.project_category_id=:cat_id
                     and pl.is_deleted = 0 and pl.is_active = 1  
                     group by p.member_id

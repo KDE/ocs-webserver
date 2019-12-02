@@ -398,7 +398,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->allow(self::ROLENAME_GUEST, 'default_home', array('baseurlajax','forumurlajax','blogurlajax','storenameajax','domainsajax', 'userdataajax', 'loginurlajax', 'metamenujs','metamenubundlejs','fetchforgit'));
 
         // resource default_user
-        $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report', 'about', 'tooltip', 'avatar', 'userdataajax'));
+        $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report', 'about', 'tooltip', 'avatar', 'userdataajax','showoriginal'));
 
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_user', array(
             'follow',

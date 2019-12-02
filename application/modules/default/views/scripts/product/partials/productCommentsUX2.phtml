@@ -32,6 +32,13 @@ $helperImage = new Default_View_Helper_Image();
 $identity = Zend_Auth::getInstance()->getStorage()->read();
 $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountPerPage();
 
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+$isAdmin = false;
+if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+    $isAdmin = true;
+}
+
 //$captcha = new Zend_Captcha_Image(array(
 //    'name' => 'foo',
 //    'wordLen' => 6,
@@ -50,7 +57,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                     <small class="pull-right">
                         <div class="row" style="margin:0;padding: 0;text-align: right;"><?=$this->comments->getTotalItemCount()?> comments</div>
                         <?php if ($pageCount > 1) echo $this->paginationControl($this->comments, 'Sliding', '/partials/paginationControlComment.phtml',
-                            array('params' => array('project_id'=>$this->product->project_id), 'dom_target' => 'div#product-discussion')); ?></small>
+                            array('params' => array('project_id'=>$this->product->project_id), 'dom_target' => 'div#product-comment-moderation')); ?></small>
                     Comments
                 </h3>
                 <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
@@ -58,9 +65,10 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         <small class="small"> Add a comment</small>
                     </p>
                     <div class="collapse in" id="add-comment" style="padding-top: 8px;">
-                        <form class="full-width product-add-comment" action="/productcomment/addreply" id="product-add-comment1">
+                        <form class="full-width product-add-comment-moderation" action="/productcomment/addreply" >
                             <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
                             <input type="hidden" name="m" value="<?= $identity->member_id ?>">
+                            <input type="hidden" name="t" value="30">
                             <textarea name="msg" class="full-width" required="required"></textarea>
                             <button type="submit" style="border:none;background: transparent;color: #2673b0; float: right" class="small"><span class="glyphicon glyphicon-send"></span> Send</button>
                         </form>
@@ -111,8 +119,32 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         if($comment['issupporter']){
                             $isSupporterActive = $this->isSupporterActive($this->product->member_id);
                        ?>
-                       <span class="supporter-badge-<?=($elementComment['level']>1?2:1)?> <?=($isSupporterActive?'':'inactive')?>" >S</span> 
+                       <span class="supporter-badge-<?=($elementComment['level']>1?2:1)?>  <?=($isSupporterActive?'':'inactive')?>" >S<?=$comment['issupporter']?></span> 
                        <?php }?>
+                       
+                       <?php 
+                        $modelSectionSupport = new Default_Model_SectionSupport();
+                        $isAffiliate = $modelSectionSupport->isMemberAffiliateForMember($this->product->member_id, $comment['member_id']);
+                        if($isAffiliate && $this->product->member_id != $comment['member_id']){
+                       ?>
+                       <span class="creator-badge-<?=($elementComment['level']>1?2:1)?>" >A</span> 
+                       <?php }?>
+                       
+                       <?php
+                       if(!is_null($comment['rating_member']) && $comment['rating_member']!='-1')
+                       {?>
+                       <span class="creator-badge-<?=($elementComment['level']>1?2:1)?>" style="background-color:<?=$this->fetchScoreColor($comment['rating_member'])?>; padding:3px;border-radius: 3px">
+                            <?=$comment['rating_member']?>
+                        </span> 
+                       <?php }?>
+                       
+                       <?php 
+                        $wasAffiliate = $modelSectionSupport->wasMemberAffiliateForMember($this->product->member_id, $comment['member_id']);
+                        if($wasAffiliate && $this->product->member_id != $comment['member_id']){
+                       ?>
+                       <span class="creator-badge-<?=($elementComment['level']>1?2:1)?>" style="background: gray !important;">A</span> 
+                       <?php }?>
+                       
 
                         <img src="<?= $helperImage->Image($comment['profile_image_url'], array('width' => 60, 'height' => 60)) ?>" class="img<?= $elementComment['level']?>">
                                                
@@ -137,13 +169,14 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         
                         <?php
                             if(!is_null($comment['rating']) && $comment['rating']!='-1')
-                            { ?>   
-                                <span class="rating-label" style="background-color:<?=$this->fetchScoreColor($comment['rating'])?>; ">
+                            { ?>                                                           
+                               <span class="rating-label" style="background-color:<?=$this->fetchScoreColor($comment['rating'])?>; "> <?=$comment['rating'] ?></span>  
+                            <?php                             
+                                /*
+                                    <span class="score label" style="margin-right:5px;background-color:<?=$this->fetchScoreColor($comment['rating'])?>; ">
                                     <?=$comment['rating'] ?>
-                                </span>                              
-                               
-                            <?php 
-                                /*if($comment['rating']==1){
+                                </span> 
+                                if($comment['rating']==1){
                                     echo '<span class="btn btn-success active" style="cursor:default;line-height: 10px;padding: 3px 6px;"><span class="fa fa-plus" ></span></span>';
                                 }else
                                 {
@@ -153,7 +186,8 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                             }
                         ?>
                         
-                        <?= nl2br(Default_Model_HtmlPurify::purify($comment['comment_text']),true) ?>                            
+                        <?= nl2br(Default_Model_HtmlPurify::purify($comment['comment_text']),true) ?>
+
                         </div>
                         <p>
                             <small class="small pull-right">
@@ -193,10 +227,11 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         </div>
                         <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
                         <div class="collapse" id="reply-<?= $comment['comment_id'] ?>">
-                            <form class="full-width product-add-comment" action="/productcomment/addreply" id="product-add-comment2">
+                            <form class="full-width product-add-comment-moderation" action="/productcomment/addreply" >
                                 <input type="hidden" name="i" value="<?= $comment['comment_id'] ?>">
                                 <input type="hidden" name="p" value="<?= $comment['comment_target_id'] ?>">
                                 <input type="hidden" name="m" value="<?= $identity->member_id ?>">
+                                <input type="hidden" name="t" value="30">
                                 <textarea name="msg" class="full-width" required="required"></textarea>
                                 <button type="submit" style="border:none;background: transparent;color: #2673b0; float: right" class="small"><span class="glyphicon glyphicon-send"></span> Send</button>
                                 <?php //echo $captcha->render($this); ?>
@@ -213,7 +248,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         <div class="col-lg-12">
                         <small class="pull-right">                         
                         <?php if ($pageCount > 1) echo $this->paginationControl($this->comments, 'Sliding', '/partials/paginationControlComment.phtml',
-                            array('params' => array('project_id'=>$this->product->project_id), 'dom_target' => 'div#product-discussion')); ?></small>
+                            array('params' => array('project_id'=>$this->product->project_id), 'dom_target' => 'div#product-comment-moderation')); ?></small>
                             </div>
                     </div>
         </div>
@@ -226,7 +261,6 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
 </div>
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){                      
-            AjaxForm.setup("form.product-add-comment", "div#product-discussion");
-            ProductDetailCommentTooltip.setup();
+            AjaxForm.setup("form.product-add-comment-moderation", "div#product-comment-moderation");                            
         });
     ');

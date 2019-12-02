@@ -54,6 +54,7 @@ class HomeMainContainer extends Component {
             <div className="middle"> 
                      
                 <CommentsContainer title="Last 10 comments received" baseUrlStore={this.state.baseUrlStore} comments={this.state.comments}/>
+                <CommentsContainer title="Last 10 moderation" baseUrlStore={this.state.baseUrlStore} comments={this.state.commentsmoderation} type='moderation'/>
                 <RatingContainer title="Last 10 ratings received" baseUrlStore={this.state.baseUrlStore} votes={this.state.votes}/>
                 { this.state.spams.length>0 && 
                 <MySpamContainer title="Spam" baseUrlStore={this.state.baseUrlStore} spams={this.state.spams}/>

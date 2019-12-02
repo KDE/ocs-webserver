@@ -11,7 +11,7 @@ class CommentsContainer extends React.Component {
               <img src={cm.profile_image_url}/>
               <span className="username"><a href={this.props.baseUrlStore+"/member/"+cm.member_id}>{cm.username}</a></span>
             </span>
-            <a className="title" href={this.props.baseUrlStore+"/p/"+cm.comment_target_id}>{cm.title}</a>
+            <a className="title" href={this.props.baseUrlStore+"/p/"+cm.comment_target_id+(this.props.type && this.props.type=='moderation' ?'#tab-moderation':'')}>{cm.title}</a>
             <span className="content">
               {cm.comment_text}
             </span>

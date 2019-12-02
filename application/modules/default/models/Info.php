@@ -1016,11 +1016,11 @@ class Default_Model_Info
         }
     }
 
-    public function getLastCommentsForUsersProjects($member_id, $limit = 10)
+    public function getLastCommentsForUsersProjects($member_id, $limit = 10, $comment_type=0)
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$member_id . (int)$limit);
+        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$member_id . (int)$limit).$comment_type;
 
         if (false !== ($resultSet = $cache->load($cacheName))) {
             return $resultSet;
@@ -1040,11 +1040,13 @@ class Default_Model_Info
                 ,comments.comment_target_id
 
                 FROM comments           
-                JOIN project ON comments.comment_target_id = project.project_id AND comments.comment_type = 0
+                JOIN project ON comments.comment_target_id = project.project_id 
                 STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id
                 WHERE comments.comment_active = 1
                 AND project.status = 100
+                and comments.comment_type=:comment_type
                 AND project.member_id =:member_id
+                and comments.comment_member_id <>:member_id
                 ORDER BY comments.comment_created_at DESC               
         ';
 
@@ -1052,7 +1054,7 @@ class Default_Model_Info
             $sql .= ' limit ' . (int)$limit;
         }
 
-        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('member_id' => $member_id));
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('member_id' => $member_id, 'comment_type'=>$comment_type));
 
         if (count($resultSet) > 0) {
             $cache->save($resultSet, $cacheName, array(), 300);
@@ -1063,6 +1065,46 @@ class Default_Model_Info
 
             return array();
         }
+    }
+    public function getFeaturedProductsForUser($member_id,$limit = 10)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$member_id . (int)$limit);
+
+        if (false !== ($resultSet = $cache->load($cacheName))) {
+            return $resultSet;
+        }
+        
+        $sql="SELECT 
+                p.project_id
+                ,p.title
+                ,p.description  
+                ,p.image_small
+                ,p.count_comments   
+                ,p.changed_at                
+                ,p.laplace_score
+                ,p.profile_image_url
+                ,p.username                               
+                FROM
+                stat_projects as p                                           
+                WHERE
+                p.status = 100 and p.featured = 1  and p.member_id = 24 
+        ";
+
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('threshold' => Default_Model_Spam::SPAM_THRESHOLD, 'member_id' => $member_id));
+
+        if ($result->rowCount() > 0) {            
+            $resultSet = $result->fetchAll();        
+        } else {
+            $resultSet = array();
+        }
+        $cache->save($resultSet, $cacheName, array(), 300);
+        return $resultSet;
     }
 
     public function getLastVotesForUsersProjects($member_id, $limit = 10)

@@ -3,6 +3,11 @@ function WatchlistContainer(props)
 {
   return (
         <ul id="admin-links-container">
+          <li id="product-moderation-link-item">
+            <a href={props.baseUrlStore+"/moderation/productmoderation/"} >
+              <span>Product moderation</span>
+            </a>
+          </li>
           <li id="spam-link-item">
             <a href={props.baseUrlStore+"/spam/"} >
               <span>Spam</span>
@@ -17,6 +22,11 @@ function WatchlistContainer(props)
           <li id="clones-link-item">
             <a href={props.baseUrlStore+"/clones/"} >
               <span>Clones</span>
+            </a>
+          </li>
+          <li id="clones-link-item">
+            <a href={props.baseUrlStore+"/mods/"} >
+              <span>Mods</span>
             </a>
           </li>
 

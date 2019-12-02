@@ -276,17 +276,16 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
                 if ($userRoleName == Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN) {
                     //$file['downloaded_count_live'] = $this->getFileDownloadCount($collection_id, $file['id']);
-                    //$counterToday = $file['count_dl_today'];
-                    //$counterAll = $file['count_dl_all'];
-                    
-                    //$counter = 0;
-                    //if(!empty($counterToday)) {
-                    //    $counter = $counterToday;
-                    //}
-                    //if(!empty($counterAll)) {
-                    //    $counter = $counter + $counterAll;
-                    //}
-                    //$file['downloaded_count_live'] = $counter;
+                    $counterToday = $file['count_dl_today'];
+                    $counterAll = $file['count_dl_all'];
+                    $counter = 0;
+                    if(!empty($counterToday)) {
+                        $counter = $counterToday;
+                    }
+                    if(!empty($counterAll)) {
+                        $counter = $counter + $counterAll;
+                    }
+                    $file['downloaded_count_live'] = $counter;
                 } else {
                     unset($file['count_dl_all']);
                     unset($file['count_dl_all_nouk']);
@@ -466,7 +465,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->headTitle($productInfo->title . ' - ' . $this->getHeadTitle(), 'SET');
         $this->view->cat_id = $this->view->product->project_category_id;
 
-        
+        $tagGroupFilter  = Zend_Registry::isRegistered('config_store_taggroups') ? Zend_Registry::get('config_store_taggroups') : null;
+        if(!empty($tagGroupFilter)) {
+            $filterArray = array();
+            foreach ($tagGroupFilter as $tagGroupId) {
+                $inputFilter = $this->getFilterTagFromCookie($tagGroupId);
+                $filterArray[$tagGroupId] = $inputFilter;
+            }
+            $this->view->tag_group_filter = $filterArray;
+        }
         
         //create ppload download hash: secret + collection_id + expire-timestamp
         $salt = PPLOAD_DOWNLOAD_SECRET;
@@ -525,6 +532,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         $command = new Backend_Commands_ConvertVideo($file['collection_id'], $file['id'], $file['type']);
                         $queue->send(serialize($command));
                     }
+                    
+
                     if(!empty($file['url_preview'])) {
                         $file['url_preview'] = urlencode($file['url_preview']);
                     }
@@ -592,32 +601,71 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $pc = new Default_Model_ProjectClone();
         $cntRelatedProducts=0;
         $ancesters = $pc->fetchAncestersIds($this->_projectId);
-        $siblings = $pc->fetchSiblings($this->_projectId);
-        $parents = $pc->fetchParentIds($this->_projectId);
+        //$siblings = $pc->fetchSiblings($this->_projectId);
+        //$parents = $pc->fetchParentIds($this->_projectId);
+        if($ancesters && strlen($ancesters)>0){ 
+            $parents = $pc->fetchParentLevelRelatives($this->_projectId);
+        }else{
+            $parents = $pc->fetchParentIds($this->_projectId);
+        }
+        if($parents && strlen($parents)>0)
+        {
+            $siblings = $pc->fetchSiblingsLevelRelatives($parents, $this->_projectId);        
+        }else
+        {
+            $siblings = null;
+        }        
         $childrens =  $pc->fetchChildrensIds($this->_projectId);
+        $childrens2 = null;
+        $childrens3 = null;
+        if(strlen($childrens)>0)
+        {
+            $childrens2 = $pc->fetchChildrensChildrenIds($childrens);
+            if(strlen($childrens2)>0)
+            {
+                $childrens3 = $pc->fetchChildrensChildrenIds($childrens2);
+            }
+        }
+
         $this->view->related_ancesters = null;
         $this->view->related_siblings = null;
         $this->view->related_parents = null;
         $this->view->related_children = null;
-        if($ancesters && strlen($ancesters)>0){
-            $this->view->related_ancesters = $modelProduct->fetchProjects($ancesters);
-            $cntRelatedProducts+= sizeof($this->view->related_ancesters);
+        $this->view->related_children2 = null;
+        $this->view->related_children3 = null;
+        if($ancesters && strlen($ancesters)>0){            
+            $pts = $modelProduct->fetchProjects($ancesters);
+            $this->view->related_ancesters = sizeof($pts)==0?null:$pts;
+            $cntRelatedProducts+= sizeof($pts);
         }
         if($siblings && strlen($siblings)>0){
-            $this->view->related_siblings = $modelProduct->fetchProjects($siblings);
-            $cntRelatedProducts+= sizeof($this->view->related_siblings);
+            $pts = $modelProduct->fetchProjects($siblings);
+            $this->view->related_siblings = sizeof($pts)==0?null:$pts;
+            $cntRelatedProducts+= sizeof($pts);
         }
         if($parents && strlen($parents)>0){
-            $this->view->related_parents = $modelProduct->fetchProjects($parents);
-            $cntRelatedProducts+= sizeof($this->view->related_parents);
+            $pts = $modelProduct->fetchProjects($parents);
+            $this->view->related_parents = sizeof($pts)==0?null:$pts;
+            $cntRelatedProducts+= sizeof($pts);
         }
         if($childrens && strlen($childrens)>0){
-            $this->view->related_children = $modelProduct->fetchProjects($childrens);
-            $cntRelatedProducts+= sizeof($this->view->related_children);
+            $pts = $modelProduct->fetchProjects($childrens);
+            $this->view->related_children = sizeof($pts)==0?null:$pts;
+            $cntRelatedProducts+= sizeof($pts);
         }
+        if($childrens2 && strlen($childrens2)>0){
+            $pts = $modelProduct->fetchProjects($childrens2);
+            $this->view->related_children2 = sizeof($pts)==0?null:$pts;
+            $cntRelatedProducts+= sizeof($pts);
+        }
+        if($childrens3 && strlen($childrens3)>0){
+            $pts = $modelProduct->fetchProjects($childrens3);
+            $this->view->related_children3 = sizeof($pts)==0?null:$pts;
+            $cntRelatedProducts+= sizeof($pts);
+        }
+
         $this->view->cntRelatedProducts = $cntRelatedProducts;
        
-
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;              
         if($storeConfig->layout_pagedetail && $storeConfig->isRenderReact()){ 
             $this->initJsonForReact();           
@@ -2446,8 +2494,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $command = new Backend_Commands_ConvertVideo($projectData->ppload_collection_id, $fileResponse->file->id, $fileResponse->file->type);
                     $queue->send(serialize($command));
                 }
-                
-                
+
                 //If this file is bigger than XXX MB (see application.ini), then create a webtorrent file
                 $config = Zend_Registry::get('config');
                 $minFileSize = $config->torrent->media->min_filesize;
@@ -2543,15 +2590,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 if (isset($fileResponse->status)
                     && $fileResponse->status == 'success'
                 ) {
-                    /*
-                    //If this file has a torrent file, delete it
-                    if(!empty($fileResponse->file->has_torrent) && $fileResponse->file->has_torrent == 1) {
-                        $queue = Local_Queue_Factory::getQueue();
-                        $command = new Backend_Commands_DeleteTorrent($fileResponse->file);
-                        $queue->send(serialize($command));
-                    }
-                    */
-                    
+
                     //If this file is bigger than XXX MB (see application.ini), then create a webtorrent file
                     $config = Zend_Registry::get('config');
                     $minFileSize = $config->torrent->media->min_filesize;
@@ -2560,8 +2599,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         $command = new Backend_Commands_CreateTorrent($fileResponse->file);
                         $queue->send(serialize($command));
                     }
-                    
-                    
+
                     $this->_helper->json(array(
                         'status' => 'ok',
                         'file'   => $fileResponse->file
@@ -2726,15 +2764,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     && $fileResponse->status == 'success'
                 ) {
 
-                    /*
-                    //If this file has a torrent file, delete it
-                    if(!empty($fileResponse->file->has_torrent) && $fileResponse->file->has_torrent == 1) {
-                        $queue = Local_Queue_Factory::getQueue();
-                        $command = new Backend_Commands_DeleteTorrent($fileResponse->file);
-                        $queue->send(serialize($command));
-                    }
-                    */
-                    
                     $this->_helper->json(array('status' => 'ok'));
 
                     return;
@@ -3257,6 +3286,16 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $referer = $_SERVER['HTTP_REFERER'];
         }
         return $referer;
+    }
+    
+    private function getFilterTagFromCookie($group)
+    {
+        $config = Zend_Registry::get('config');
+        $cookieName = $config->settings->session->filter_browse_original.$group;
+
+        $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
+
+        return $storedInCookie;
     }
 
 }
