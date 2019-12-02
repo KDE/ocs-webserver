@@ -232,7 +232,7 @@ class Default_Model_ProjectCategory
             $rows = $this->_dataTable->getAdapter()->fetchAll($sql,array('store_id' =>$store_id));           
             list($rows, $tree) = $this->buildTreeForView($rows); 
             
-            $cache->save($tree, $cacheName, array(), 300);
+            $cache->save($tree, $cacheName, array(), 1800);
         }
         return $tree;
     }

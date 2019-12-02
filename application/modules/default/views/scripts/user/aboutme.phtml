@@ -235,8 +235,8 @@ div#preloaded-images {
                             <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                                 <div class="pull-right">
                                 <span class="page-views">
-                                <a id="linktohive" target="_blank" href="http://cp1.hive01.com/usermanager/search.php?username=<?= $this->member->username ?>">link to hive</a>
-                                <a id="delete-this" href="/backend/user/delete?member_id=<?= $this->member->member_id ?>">delete user</a>
+                                    <a id="linktohive" target="_blank" href="http://cp1.hive01.com/usermanager/search.php?username=<?= $this->member->username ?>"><i>link to hive</i></a>
+                                    <a id="delete-this" href="/backend/user/delete?member_id=<?= $this->member->member_id ?>"><i>delete user</i></a>
                                 </span>
                                 <br>
                                 <span class="page-views" style="color: red;">
@@ -398,7 +398,7 @@ div#preloaded-images {
                           <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' && $this->stat['cntDuplicateSourceurl']>0) { ?>                          
                             <li>
                                 <a class="aboutmetab" data-href="/u/<?php echo $this->member->username;?>/duplicates"  href="#user-duplicates" data-toggle="tab" role="tab"  aria-controls="user-duplicates">
-                                    Duplicates (<?=$this->stat['cntDuplicateSourceurl']?>)
+                                    <i>Duplicates (<?=$this->stat['cntDuplicateSourceurl']?>)</i>
                                 </a>
                             </li>                           
                           <?php } ?>
@@ -406,7 +406,7 @@ div#preloaded-images {
                           <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') { ?>                                                     
                             <li>
                                 <a class="aboutmetab" data-href="/u/<?php echo $this->member->username;?>/unpublished"  href="#user-unpublished" data-toggle="tab" role="tab"  aria-controls="user-unpublished">
-                                    Unpublished (A:<?=$this->stat['cntUnpublished']?>)
+                                    <i>Unpublished (A:<?=$this->stat['cntUnpublished']?>)</i>
                                 </a>
                             </li>
                           <?php } ?>
@@ -532,28 +532,35 @@ div#preloaded-images {
                         <div class="col-container">
                             <div class="well details about">
                                 <div>
-                                    <span>Score: <?php echo $scoreArray['score']; ?> <div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Member Score" data-trigger="hover" data-html="true" data-content="The score is calculated from the following values:<br> <ul><li>Products: <?php echo $scoreArray['count_product'];?> * <?php echo $scoreArray['factor_prod'];?></li><li>Plings: <?php echo $scoreArray['count_pling'];?> * <?php echo $scoreArray['factor_pling'];?></li><li>Likes: <?php echo $scoreArray['count_like'];?> * <?php echo $scoreArray['factor_like'];?></li><li>Comments: <?php echo $scoreArray['count_comment'];?> * <?php echo $scoreArray['factor_comment'];?></li><li>Years of membership: <?php echo $scoreArray['count_years_membership'];?> * <?php echo $scoreArray['factor_year'];?></li><li>Spam-Reports: <?php echo $scoreArray['count_report_product_spam'];?> * <?php echo $scoreArray['factor_report_prod_spam'];?></li><li>Misuse-Reports: <?php echo $scoreArray['count_report_product_fraud'];?> * <?php echo $scoreArray['factor_report_prod_fraud'];?></li></ul>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div> </span>
+                                    <span><i>Score: <?php echo $scoreArray['score']; ?> <div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Member Score" data-trigger="hover" data-html="true" data-content="The score is calculated from the following values:<br> <ul><li>Products: <?php echo $scoreArray['count_product'];?> * <?php echo $scoreArray['factor_prod'];?></li><li>Plings: <?php echo $scoreArray['count_pling'];?> * <?php echo $scoreArray['factor_pling'];?></li><li>Likes: <?php echo $scoreArray['count_like'];?> * <?php echo $scoreArray['factor_like'];?></li><li>Comments: <?php echo $scoreArray['count_comment'];?> * <?php echo $scoreArray['factor_comment'];?></li><li>Years of membership: <?php echo $scoreArray['count_years_membership'];?> * <?php echo $scoreArray['factor_year'];?></li><li>Spam-Reports: <?php echo $scoreArray['count_report_product_spam'];?> * <?php echo $scoreArray['factor_report_prod_spam'];?></li><li>Misuse-Reports: <?php echo $scoreArray['count_report_product_fraud'];?> * <?php echo $scoreArray['factor_report_prod_fraud'];?></li></ul>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div> </i></span>
                                 </div>
 
                                 <?php
 
                                     if($this->stat['cntDuplicateSourceurl']>0)
                                     {
-                                        echo '<span>Duplicates: '.$this->stat['cntDuplicateSourceurl'].'</span>';
+                                        echo '<span><i>Duplicates: '.$this->stat['cntDuplicateSourceurl'].'</i></span>';
                                     }
-                                    echo '<br/><span>Member id: '.$this->member->member_id.' </span>';
-                                    echo '<br/><span>Email address: '.$this->member->mail.' </span>';
-                                    echo '<br/><span>Paypal address: '.$this->member->paypal_mail.' </span>';
+                                    echo '<br/><span><i>Member id: '.$this->member->member_id.' </i></span>';
+                                    echo '<br/><span><i>Email address: '.$this->member->mail.' </i></span>';
+                                    echo '<br/><span><i>Paypal address: '.$this->member->paypal_mail.' </i></span>';
+                                    echo '<br/><span><i>Last IP: ';
                                     if(null != $lastLoginData[0]['ip']) {
-                                         echo '<br/><span>Last IP: '.$lastLoginData[0]['ip'].' </span>';
-                                        }
-                                        if(null != $lastLoginData[0]['ipv4']) {
-                                        echo '<br/><span>Last IPv4: '.$lastLoginData[0]['ipv4'].' </span>';
-                                        }
-                                        if(null != $lastLoginData[0]['ipv6']) {
-                                        echo '<br/><span>Last IPv6: '.$lastLoginData[0]['ipv6'].' </span>';
-                                        }
-                                        
+                                         echo $lastLoginData[0]['ip'];
+                                    }
+                                    echo '</i></span>';
+
+                                    echo '<br/><span><i>Last IPv4: ';
+                                    if(null != $lastLoginData[0]['ipv4']) {
+                                        echo $lastLoginData[0]['ipv4'];
+                                    }
+                                    echo '</i></span>';
+
+                                    echo '<br/><span><i>Last IPv6: ';
+                                    if(null != $lastLoginData[0]['ipv6']) {
+                                        echo $lastLoginData[0]['ipv6'];
+                                    }
+                                    echo '</i></span>';    
                                 ?>
                             </div>
                         </div>
@@ -568,11 +575,11 @@ div#preloaded-images {
                             </div>
                         </div>
                         <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                        <div class="col-container">
+                        <div class="col-container" style="font-style: italic">
                             <div class="well details">
-                                <h3>Computer Info</h3>                                
+                                <h3><i>Computer Info</i></h3>                                
                             
-                             <div class="box-content">
+                                <div class="box-content" style="font-style: italic">
                                 <?php 
                                     $tagmodel = new Default_Model_Tags();
                                     $gidsstring = Zend_Registry::get('config')->settings->client->default->tag_group_osuser;   
