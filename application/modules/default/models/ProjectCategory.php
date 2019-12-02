@@ -173,11 +173,17 @@ class Default_Model_ProjectCategory
 
         if (false === ($tree = $cache->load($cacheName))) {
             $filterString = "";
-            
+            //Store Tag Filter
             if(null != $storeTagFilter) {
-                $filterString .= " AND FIND_IN_SET('".$storeTagFilter."',p.tag_ids)";
+                if(is_array($storeTagFilter)) {
+                    foreach ($storeTagFilter as $value) {
+                        $filterString .= " AND FIND_IN_SET('".$value."',p.tag_ids)";
+                    }
+                } else {
+                    $filterString .= " AND FIND_IN_SET('".$storeTagFilter."',p.tag_ids)";
+                }
             }
-
+            //Store-Tag-Group-Filter
             if (is_array($tagFilter)) {
                 $tagList = $tagFilter;
                 foreach ($tagList as $key => $value) {
