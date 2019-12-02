@@ -171,8 +171,8 @@ class Default_Model_ProjectCategory
         
         if (is_array($tagFilter)) {
             $tagList = $tagFilter;
-            foreach($tagList as $item) {
-                $filterString .= "AND FIND_IN_SET('381',p.tag_ids)";
+            foreach ($tagList as $key => $value) {
+                $filterString .= "AND FIND_IN_SET('".$value."',p.tag_ids)";
             }
         } else {
             $filterString .= "AND FIND_IN_SET('".$tagFilter."',p.tag_ids)";
