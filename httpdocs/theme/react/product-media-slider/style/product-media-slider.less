@@ -602,18 +602,20 @@ video:focus {
         background: white;
     }
 
-    #viewer.spreads:after {
-      position: absolute;
-      width: 1px;
-      border-right: 1px #000 solid;
-      height: 90%;
-      z-index: 1;
-      left: 50%;
-      margin-left: -1px;
-      top: 5%;
-      opacity: .15;
-      box-shadow: -2px 0 15px rgba(0, 0, 0, 1);
-      content:  "";
+    @media (min-width:969px){
+      #viewer.spreads:after {
+        position: absolute;
+        width: 1px;
+        border-right: 1px #000 solid;
+        height: 90%;
+        z-index: 1;
+        left: 50%;
+        margin-left: -1px;
+        top: 5%;
+        opacity: .15;
+        box-shadow: -2px 0 15px rgba(0, 0, 0, 1);
+        content:  "";
+      }
     }
     
     #viewer.scrolled {
