@@ -1,6 +1,5 @@
 import React, { useState, createContext } from 'react';
 import TopProducts from './TopProducts';
-import TopCreators from './TopCreators';
 import Support from './Support';
 import Supporters from './Supporters';
 import Header from './Header';
@@ -12,9 +11,9 @@ const AppSupporters = () => {
   const [state, setState] = useState(window.data);
   const [section, setSection] = useState(window.data.section);
   const [products, setProducts] = useState(window.data.products);
-  const [creators, setCreators] = useState(window.data.creators);
+  
   const [productsCategory, setProductsCategory] = useState([]);
-  const [creatorsCategory, setCreatorsCategory] = useState([]);
+
   const [sections, setSections] = useState(window.data.sections);
   const [supporters, setSupporters] = useState(window.data.supporters)
 
@@ -47,8 +46,7 @@ const AppSupporters = () => {
     const data = await fetch(`/supporters/topcat?cat_id=${category.project_category_id}`);
     const items = await data.json();
     setShowContent('overview-category-subcat');
-    setProductsCategory(items.products);
-    setCreatorsCategory(items.creators);
+    setProductsCategory(items.products);    
     setCategory(category);
   }
 
@@ -83,13 +81,12 @@ const AppSupporters = () => {
     detailContent = <RecentPlinged products={recentplings} baseUrlStore={state.baseurlStore}/>
   }else if (showContent == 'overview-category-subcat') {
     detailContent = <>
-    <TopCreators creators={creatorsCategory} baseUrlStore={state.baseurlStore}/>
       <TopProducts products={productsCategory} baseUrlStore={state.baseurlStore}/>      
     </>
   } else {
     // overview or category all on click
     detailContent = <>
-      <TopCreators creators={creators} baseUrlStore={state.baseurlStore}/>
+     
       <TopProducts products={products} baseUrlStore={state.baseurlStore}/>      
     </>
   }
@@ -98,7 +95,8 @@ const AppSupporters = () => {
     {section &&
       <div className="pling-section-detail-left">        
         <h2 className={showContent == 'supporters' ? 'focused' : ''}><a onClick={() => showDetail('supporters')}>Supporters</a></h2>
-        <h2 className={showContent == 'overview-category' || showContent == 'overview-category-subcat'  ? 'focused' : ''}><a onClick={() => showDetail('overview-category')}>Plings</a></h2>
+        <h2 className={showContent == 'overview-category' || showContent == 'overview-category-subcat'  ? 'focused' : ''}>
+          <a onClick={() => showDetail('overview-category')}>Products</a></h2>
         <ul className="pling-section-detail-ul">{categories}</ul>
         <h2 className={showContent == 'recentplings' ? 'focused' : ''}><a onClick={() => showDetail('recentplings')}>Recent Plings</a></h2>
       </div>

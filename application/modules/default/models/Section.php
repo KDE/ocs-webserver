@@ -109,6 +109,7 @@ class Default_Model_Section
                 inner join project_category pc on m.project_category_id = pc.project_category_id                
                 where pl.is_deleted = 0 and pl.is_active = 1
                 group by p.project_category_id
+                order by pc.title asc
                 ";
          $resultSet = $this->getAdapter()->fetchAll($sql);
         return $resultSet;    
