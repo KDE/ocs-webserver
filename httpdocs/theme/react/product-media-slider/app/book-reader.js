@@ -68,7 +68,9 @@ function BookReaderWrapper(props){
       <div id="prev" className="arrow" onClick={goPrev}>
         <span className="glyphicon glyphicon-chevron-left"></span>  
       </div>
-      <div id="viewer" className="spreads"></div>
+      <div id="viewer" className="spreads">
+        <div id="book-container"></div>
+      </div>
       <div id="book-pager">
         {pageCountDisplay}
       </div>
