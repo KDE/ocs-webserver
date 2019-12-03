@@ -6,7 +6,7 @@ function BookReaderWrapper(props){
   const [ currentPage, setCurrentPage ] = useState();
   const [ totalPages, setTotalPages ] = useState();
 
-  console.log(renditionState);
+  console.log(props.width);
 
   React.useEffect(() => {initBookReader()},[])
   React.useEffect(() => { 
@@ -21,8 +21,8 @@ function BookReaderWrapper(props){
         flow: 'paginated',
         manager: 'default',
         spread: 'always',
-        width: (props.width - 104),
-        height: (props.height - 40)
+        width: (props.width - 134),
+        height: (props.height - 31)
     });
     setRenditionState(rendition)
 
