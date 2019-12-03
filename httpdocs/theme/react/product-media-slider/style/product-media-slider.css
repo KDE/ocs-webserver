@@ -474,18 +474,32 @@ video:focus {
   color: #777;
 }
 #book-reader-wrapper #viewer.spreads {
-  width: 900px;
-  height: 600px;
+  width: 94%;
+  height: 100%;
   box-shadow: 0 0 4px #ccc;
   border-radius: 5px;
   padding: 0;
   position: relative;
   margin: 10px auto;
-  background: white url('ajax-loader.gif') center center no-repeat;
-  top: calc(50vh - 400px);
+  background: white url(ajax-loader.gif) center center no-repeat;
+  top: 0;
+  padding: 15px 30px;
 }
 #book-reader-wrapper #viewer.spreads .epub-view > iframe {
   background: white;
+}
+#book-reader-wrapper #viewer.spreads:after {
+  position: absolute;
+  width: 1px;
+  border-right: 1px #000 solid;
+  height: 90%;
+  z-index: 1;
+  left: 50%;
+  margin-left: -1px;
+  top: 5%;
+  opacity: 0.15;
+  box-shadow: -2px 0 15px #000000;
+  content: "";
 }
 #book-reader-wrapper #viewer.scrolled {
   overflow: hidden;
@@ -508,19 +522,6 @@ video:focus {
   margin: 10px auto;
 }
 @media (min-width: 1000px) {
-  #book-reader-wrapper #viewer.spreads:after {
-    position: absolute;
-    width: 1px;
-    border-right: 1px #000 solid;
-    height: 90%;
-    z-index: 1;
-    left: 50%;
-    margin-left: -1px;
-    top: 5%;
-    opacity: 0.15;
-    box-shadow: -2px 0 15px #000000;
-    content: "";
-  }
   #book-reader-wrapper #viewer.spreads.single:after {
     display: none;
   }

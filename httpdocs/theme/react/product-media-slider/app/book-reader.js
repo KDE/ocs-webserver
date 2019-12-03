@@ -19,7 +19,7 @@ function BookReaderWrapper(props){
     window.book = ePub(props.slide.url, {});
     window.rendition = book.renderTo('book-container', {
         flow: 'paginated',
-        manager: 'continuous',
+        manager: 'default',
         spread: 'always',
         width: (props.width - 40),
         height: (props.height - 40)
@@ -68,7 +68,7 @@ function BookReaderWrapper(props){
       <div id="prev" className="arrow" onClick={goPrev}>
         <span className="glyphicon glyphicon-chevron-left"></span>  
       </div>
-      <div id="book-container"></div>
+      <div id="viewer" className="spreads"></div>
       <div id="book-pager">
         {pageCountDisplay}
       </div>
