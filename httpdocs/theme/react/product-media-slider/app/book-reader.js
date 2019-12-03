@@ -6,7 +6,7 @@ function BookReaderWrapper(props){
   const [ currentPage, setCurrentPage ] = useState();
   const [ totalPages, setTotalPages ] = useState();
 
-  console.log(props.width);
+  console.log(renditionState);
 
   React.useEffect(() => {initBookReader()},[])
   React.useEffect(() => { 
