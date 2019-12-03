@@ -17,7 +17,7 @@ function BookReaderWrapper(props){
   function initBookReader(){
     // Initialize the book
     window.book = ePub(props.slide.url, {});
-    window.rendition = book.renderTo('book-container', {
+    window.rendition = book.renderTo('viewer', {
         flow: 'paginated',
         manager: 'default',
         spread: 'always',
@@ -69,7 +69,6 @@ function BookReaderWrapper(props){
         <span className="glyphicon glyphicon-chevron-left"></span>  
       </div>
       <div id="viewer" className="spreads">
-        <div id="book-container"></div>
       </div>
       <div id="book-pager">
         {pageCountDisplay}
