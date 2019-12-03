@@ -187,7 +187,7 @@ div#preloaded-images {
                                       if($this->stat['donationMax'] !=null && !$isSupporter){ // inactive supporter
                                   ?>
                                    <div class="row">
-                                     <span class="cnt">Inactive supporter since: <?=$helperPrintDate->printDate(date('Y-m-d H:i:s', strtotime($this->stat['donationMax'] . ' +1 year')))?></span>
+                                     <span class="cnt">Supporter since: <?=$helperPrintDate->printDate(date('Y-m-d H:i:s', strtotime($this->stat['donationMax'] )))?> (Inactive)</span>
                                   </div>
                                   <?php } ?>
 
