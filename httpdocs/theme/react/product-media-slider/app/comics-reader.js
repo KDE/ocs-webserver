@@ -121,7 +121,7 @@ function ComicBookReader(props){
 }
 
 function ComicBookPage(props){
-  
+
   const [ image, setImage ] = useState();
 
   React.useEffect(() => {
@@ -130,7 +130,6 @@ function ComicBookPage(props){
 
   function fetchPageImage(){
     $.ajax({url:props.url}).done(function(res){
-      console.log(res);
       setImage(res);
     });
   }
@@ -139,7 +138,9 @@ function ComicBookPage(props){
   if (image) comicBookPageDisplay = <img src={image}/>
 
   return (
-    {comicBookPageDisplay}
+    <div className="image-wrapper">
+      {comicBookPageDisplay}
+    </div>
   )
 }
 
