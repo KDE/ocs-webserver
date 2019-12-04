@@ -28,15 +28,15 @@ function ComicsReaderWrapper(props){
     }
 
     /* COMPONENT */
-    console.log(pages);
     let comicsReaderDisplay = loadingState;
     if (pages.length > 0){
-      comicsReaderDisplay = (
+      console.log(pages)
+      /*comicsReaderDisplay = (
         <ComicBookReader 
           pages={pages}
           currentSlide={props.currentSlide}
         />
-      )
+      )*/
     }
 
     return (
