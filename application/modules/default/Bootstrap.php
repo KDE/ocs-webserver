@@ -286,6 +286,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $videoConfig = $appConfig->videos;
         defined('VIDEOS_UPLOAD_PATH') || define('VIDEOS_UPLOAD_PATH', $videoConfig->upload->path);
         defined('VIDEOS_MEDIA_SERVER') || define('VIDEOS_MEDIA_SERVER', $videoConfig->media->server);
+        $comicConfig = $appConfig->comics;
+        defined('COMICS_MEDIA_SERVER') || define('COMICS_MEDIA_SERVER', $comicConfig->media->server);
 
         // fileserver
         $configFileserver = $appConfig->settings->server->files;
