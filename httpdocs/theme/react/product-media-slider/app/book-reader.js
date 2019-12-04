@@ -6,6 +6,8 @@ function BookReaderWrapper(props){
   const [ currentPage, setCurrentPage ] = useState();
   const [ totalPages, setTotalPages ] = useState();
 
+  console.log(renditionState);
+
   React.useEffect(() => {initBookReader()},[])
   React.useEffect(() => { 
     if (window.book) window.book.destroy()
@@ -15,12 +17,12 @@ function BookReaderWrapper(props){
   function initBookReader(){
     // Initialize the book
     window.book = ePub(props.slide.url, {});
-    window.rendition = book.renderTo('book-container', {
+    window.rendition = book.renderTo('viewer', {
         flow: 'paginated',
-        manager: 'continuous',
+        manager: 'default',
         spread: 'always',
-        width: (props.width - 40),
-        height: (props.height - 40)
+        width: (props.width - 134),
+        height: (props.height - 31)
     });
     setRenditionState(rendition)
 
@@ -66,7 +68,8 @@ function BookReaderWrapper(props){
       <div id="prev" className="arrow" onClick={goPrev}>
         <span className="glyphicon glyphicon-chevron-left"></span>  
       </div>
-      <div id="book-container"></div>
+      <div id="viewer" className="spreads">
+      </div>
       <div id="book-pager">
         {pageCountDisplay}
       </div>
