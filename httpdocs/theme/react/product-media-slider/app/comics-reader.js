@@ -14,8 +14,10 @@ function ComicsReaderWrapper(props){
     function initComicBook(){
       const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
       $.ajax({url:url}).done(function(res){
-        const pages = renderPages(res.files,props.slide.file_id);
-        setPages(pages);
+        if (res.files.length > 1){
+          const pages = renderPages(res.files,props.slide.file_id);
+          setPages(pages);
+        }
       });
     }
 
