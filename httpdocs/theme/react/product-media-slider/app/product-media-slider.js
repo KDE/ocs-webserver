@@ -28,8 +28,6 @@ function ProductMediaSlider(){
   const [ showSliderArrows, setShowSliderArrows ] = useState(isMobile === true ? true : false);  
   const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(true);
 
-  console.log(showSliderArrows);
-
   let sliderFadeControlTimeOut;
 
   // use effects

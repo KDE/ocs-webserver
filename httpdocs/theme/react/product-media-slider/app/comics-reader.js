@@ -2,82 +2,21 @@ import React, { useState } from 'react';
 import {generatePagesArray} from './product-media-slider-helpers';
 
 function ComicsReaderWrapper(props){
-
     const [ loadingState, setLoadingState ] = useState('Loading...');
-
-    const initPages = [
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/1.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/2.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/3.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/4.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/5.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/6.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/7.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/8.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/9.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/10.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/11.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/12.jpg"
-    ]
-
-    const [ pages, setPages ] = useState(initPages);
+    const [ pages, setPages ] = useState([]);
 
     /* INIT */
 
-    function fetchArchive(){
-        var request = new XMLHttpRequest();
-        request.open("GET", props.slide.url);
-        request.responseType = "blob";
-        request.onload = function() {
-            var response = this.response;
-            openArchive(response)
-        }
-        request.send()
-    }
+    React.useEffect(() => {
+      initComicBook();
+    },[]);
 
-    function openArchive(res){
-        if (props.slide.file_type === "cbz") openZipArchive(res);
-        else if (props.slide.file_type === "cbr") openRarArchive(res);
+    function initComicBook(){
+      const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
+      $.ajax({url:url}).done(function(res){
+        console.log(res);
+      });
     }
-
-    function openZipArchive(res){
-        setLoadingState('reading archive...');
-        var zip = new JSZip()
-        zip.loadAsync(res).then(function (data) {
-            let pagesArray = [];
-            let zipFileIndex = 0;
-            for ( var i in data.files ){
-                zip.files[data.files[i].name].async('blob').then(function(blob) {
-                    zipFileIndex += 1;
-                    const pageArrayItem = {
-                        name:data.files[i].name,
-                        blob:blob
-                    }
-                    pagesArray.push(pageArrayItem);
-                    if (Object.keys(data.files).length === zipFileIndex) generateImageGallery(pagesArray);
-                });
-            }
-        });
-    }
-
-    function generateImageGallery(pagesArray){
-        setLoadingState('extracting images...');
-        pagesArray.forEach(function(page,index){
-            var reader = new FileReader();
-            reader.onload = function() {
-                const imgSrc = "data:image/" + page.name.split('.')[1] + ";base64," + reader.result.split(';base64,')[1];
-                let newPages = pages;
-                newPages.push(imgSrc);
-                setPages(newPages);
-            }; 
-            reader.onerror = function(event) {
-                console.error("File could not be read! Code " + event.target.error.code);
-            };
-            reader.readAsDataURL(page.blob);
-        });
-    }
-
-    /* /INIT */
 
     /* COMPONENT */
 
