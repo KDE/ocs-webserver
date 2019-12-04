@@ -38,6 +38,7 @@ class Default_Model_DbTable_ProjectClone extends Local_Model_Table
         'text'              => null,
         'is_deleted'        => null,
         'is_valid'          => null,
+        'project_clone_type' => null,
         'created_at'        => null,
         'changed_at'        => null,
         'deleted_at'        => null
