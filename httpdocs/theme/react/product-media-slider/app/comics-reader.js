@@ -11,7 +11,7 @@ function ComicsReaderWrapper(props){
     React.useEffect(() => {
       console.log('init comic book');
       console.log(comicBookInitiated);
-      if (comicBookInitiated === false){
+      if (pages.length === 0){
         setComicBookInitiated(true);
         initComicBook();
       }
@@ -90,8 +90,8 @@ function ComicBookReader(props){
   else {
     const comicPages = pages.map((p,index) => (
       <div key={index} className="bb-item">
-        <img src={p[0]}/>
-        <img src={p[1]}/>
+        <ComicBookPage url={p[0]}/>
+        <ComicBookPage url={p[1]}/>
       </div>      
     ))
 
@@ -120,6 +120,25 @@ function ComicBookReader(props){
   )
 }
 
+function ComicBookPage(props){
+  const [ image, setImage ] = useState();
+
+  React.useEffect(() => {
+    fetchPageImage();
+  });
+
+  function fetchPageImage(){
+    $.ajax({url:props.url}).done(function(res){
+      console.log(res);
+      setImage(res);
+    });
+
+    return (
+      <img src={img}/>
+    )
+  }
+}
+
 function ComicBookReaderNavigation(props){
 
   return (
@@ -136,62 +155,5 @@ function ComicBookReaderNavigation(props){
     </div>
   )
 }
-/*
-			var Page = (function() {
-				
-				var config = {
-						$bookBlock : $( '#bb-bookblock' ),
-						$navNext : $( '#bb-nav-next' ),
-						$navPrev : $( '#bb-nav-prev' ),
-						$navFirst : $( '#bb-nav-first' ),
-						$navLast : $( '#bb-nav-last' )
-					},
-					init = function() {
-						config.$bookBlock.bookblock( {
-							speed : 800,
-							shadowSides : 0.8,
-							shadowFlip : 0.7
-						} );
-						initEvents();
-					},
-					initEvents = function() {
 
-						// add swipe events
-						$slides.on( {
-							'swipeleft' : function( event ) {
-								config.$bookBlock.bookblock( 'next' );
-								return false;
-							},
-							'swiperight' : function( event ) {
-								config.$bookBlock.bookblock( 'prev' );
-								return false;
-							}
-						} );
-
-						// add keyboard events
-						$( document ).keydown( function(e) {
-							var keyCode = e.keyCode || e.which,
-								arrow = {
-									left : 37,
-									up : 38,
-									right : 39,
-									down : 40
-								};
-
-							switch (keyCode) {
-								case arrow.left:
-									config.$bookBlock.bookblock( 'prev' );
-									break;
-								case arrow.right:
-									config.$bookBlock.bookblock( 'next' );
-									break;
-							}
-						} );
-					};
-
-					return { init : init };
-
-      })();
-      
-      */
 export default ComicsReaderWrapper;
