@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { func } from 'prop-types';
 
 function BookReaderWrapper(props){
   
@@ -34,6 +35,9 @@ function BookReaderWrapper(props){
 
     // Generate location and pagination
     window.book.ready.then(function() {
+        window.book.generatePagination(props.width,props.height).then(function () {
+            console.log("The pagination has been generated");
+        });
         const stored = localStorage.getItem(book.key() + '-locations');
         // console.log('metadata:', book.package.metadata);
         if (stored) {
@@ -58,6 +62,14 @@ function BookReaderWrapper(props){
 
   function goNext(){
     renditionState.next();
+  }
+
+  function goToStart(){
+    renditionState.moveTo()
+  }
+
+  function goToEnd(){
+    console.log('go to end');
   }
 
   let pageCountDisplay;
