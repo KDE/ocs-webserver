@@ -35,7 +35,7 @@ function BookReaderWrapper(props){
 
     // Generate location and pagination
     window.book.ready.then(function() {
-        window.book.generatePagination(props.width,props.height).then(function () {
+        this.generatePagination(props.width,props.height).then(function () {
             console.log("The pagination has been generated");
         });
         const stored = localStorage.getItem(book.key() + '-locations');
