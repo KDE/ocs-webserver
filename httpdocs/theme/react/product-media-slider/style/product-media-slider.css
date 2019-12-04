@@ -390,6 +390,13 @@ video:focus {
 #media-slider.fade-controls .video-react-playing .video-react-control-bar {
   opacity: 0 !important;
 }
+#media-slider.hide-controls .carousel-control,
+#media-slider.hide-controls .slider-navigation-toggle {
+  display: none !important;
+}
+#media-slider.hide-controls .video-react-playing .video-react-control-bar {
+  display: none !important;
+}
 #media-slider.disable-gallery {
   padding-bottom: 0;
 }
@@ -489,18 +496,20 @@ video:focus {
   background: white;
 }
 @media (min-width: 969px) {
-  #book-reader-wrapper #viewer.spreads:after {
-    position: absolute;
-    width: 1px;
-    border-right: 1px #000 solid;
-    height: 90%;
-    z-index: 1;
-    left: 50%;
-    margin-left: -1px;
-    top: 5%;
-    opacity: 0.15;
-    box-shadow: -2px 0 15px #000000;
-    content: "";
+  #book-reader-wrapper {
+    /*#viewer.spreads:after {
+        position: absolute;
+        width: 1px;
+        border-right: 1px #000 solid;
+        height: 90%;
+        z-index: 1;
+        left: 50%;
+        margin-left: -1px;
+        top: 5%;
+        opacity: .15;
+        box-shadow: -2px 0 15px rgba(0, 0, 0, 1);
+        content:  "";
+      }*/
   }
 }
 #book-reader-wrapper #viewer.scrolled {

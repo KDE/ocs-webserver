@@ -486,6 +486,19 @@ video:focus {
         }
     }
 
+    &.hide-controls {
+      .carousel-control,
+      .slider-navigation-toggle { 
+          display: none !important;
+      }
+
+      .video-react-playing {
+          .video-react-control-bar {
+              display: none !important;
+          }
+      }
+    }
+
     &.disable-gallery {
         padding-bottom:0;
           .swiper-wrapper .slide-item img {
@@ -603,7 +616,7 @@ video:focus {
     }
 
     @media (min-width:969px){
-      #viewer.spreads:after {
+      /*#viewer.spreads:after {
         position: absolute;
         width: 1px;
         border-right: 1px #000 solid;
@@ -615,7 +628,7 @@ video:focus {
         opacity: .15;
         box-shadow: -2px 0 15px rgba(0, 0, 0, 1);
         content:  "";
-      }
+      }*/
     }
     
     #viewer.scrolled {
