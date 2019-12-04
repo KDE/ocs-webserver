@@ -652,6 +652,8 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                             </article>
                                         <?php } ?>
 
+                                    <!--product category tag rating -->
+                                    <div id="prodcut-category-tag-rating-container"></div>
 
                                     <!-- comments -->
                                     <div id="product-discussion" class="comment-containers">
@@ -1171,7 +1173,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 
 
 <script src="/theme/react/bundle/app-product-relationship-bundle.js?<?= APPLICATION_VERSION ?>"></script>
-
+<script src="/theme/react/bundle/tag-rating-bundle.js?<?= APPLICATION_VERSION ?>"></script>
 
 
 <?php $this->inlineScript()->appendScript(

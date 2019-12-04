@@ -8,8 +8,6 @@ import ComicsReaderWrapper from './comics-reader';
 
 import {GenerateGalleryArray, CheckForMultipleAudioFiles, GroupAudioFilesInGallery} from './product-media-slider-helpers';
 
-console.log(window.galleryPicturesJson);
-
 function ProductMediaSlider(){ 
 
   /* Component */ 
@@ -33,7 +31,11 @@ function ProductMediaSlider(){
   let sliderFadeControlTimeOut;
 
   // use effects
-  React.useEffect(() => { initProductMediaSlider(currentSlide) },[currentSlide])
+  React.useEffect(() => { 
+    initProductMediaSlider(currentSlide);
+    if (gallery[currentSlide].type === "book") setShowSliderArrows(false)
+    else setShowSliderArrows(true)
+  },[currentSlide])
   React.useEffect((event) => { updateDimensions(event,currentSlide) },[currentSlide, cinemaMode])
   React.useEffect(() => { handleMouseMovementEventListener(showPlaylist,isFullScreen) },[showPlaylist,isFullScreen])
 
@@ -180,6 +182,7 @@ function ProductMediaSlider(){
   if (showPlaylist === false) mediaSliderCssClass += "hide-playlist ";
   if (sliderFadeControlsMode === true) mediaSliderCssClass += "fade-controls ";
   if (isMobile === true) mediaSliderCssClass += "is-mobile ";
+  if (showSliderArrows === false) mediaSliderCssClass += "hide-controls";
 
   // slides display
   const slidesDisplay = gallery.map((s,index) => (

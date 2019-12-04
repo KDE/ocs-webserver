@@ -17,6 +17,8 @@ export function GenerateGalleryArray(product){
                 if (f.type.indexOf('video') > -1 || 
                     f.type.indexOf('audio') > -1 ||
                     f.type.indexOf('ogg') > -1 ||
+                    f.name.indexOf('.cbr') > -1 ||
+                    f.name.indexOf('.cbz') > -1 ||
                     f.type.indexOf('epub') > -1){
                     addFileToGallery = true;
                 }
@@ -29,7 +31,7 @@ export function GenerateGalleryArray(product){
                     else if (f.type.indexOf('epub') > -1 ) type = "book";
                     else if (f.type.indexOf('image') > -1) type = "image";
                     else if (f.type.indexOf('ogg') > -1) type = "audio";
-                    // else if (f.name.indexOf('.cbr') > -1 || f.name.indexOf('.cbz') > -1) type = "comics";
+                    else if (f.name.indexOf('.cbr') > -1 || f.name.indexOf('.cbz') > -1) type = "comics";
                     
                     let url_preview, url_thumb;
                     if (f.url_thumb) url_thumb = f.url_thumb.replace(/%2F/g,'/').replace(/%3A/g,':');
@@ -90,6 +92,14 @@ export function GroupAudioFilesInGallery(galleryArray){
         }
     });
     return newGalleryArray;
+}
+
+export function renderPages(res,fileId){
+    let pages = [];
+    res.forEach(function(r,index){
+        pages.push(json_server_comics + "/api/files/page?id=" + fileId + "&filename=" + r)
+    });
+    return pages;
 }
 
 export function generatePagesArray(pages,displayType){

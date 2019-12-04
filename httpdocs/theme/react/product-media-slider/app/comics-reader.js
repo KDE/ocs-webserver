@@ -1,87 +1,31 @@
 import React, { useState } from 'react';
-import {generatePagesArray} from './product-media-slider-helpers';
+import {generatePagesArray, renderPages} from './product-media-slider-helpers';
 
 function ComicsReaderWrapper(props){
-
     const [ loadingState, setLoadingState ] = useState('Loading...');
-
-    const initPages = [
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/1.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/2.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/3.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/4.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/5.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/6.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/7.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/8.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/9.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/10.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/11.jpg",
-      "https://s6.mkklcdnv6.com/mangakakalot/r1/read_berserk_manga_online/chapter_230_qliphoth/12.jpg"
-    ]
-
-    const [ pages, setPages ] = useState(initPages);
+    const [ comicBookInitiated, setComicBookInitiated ] = useState(false);
+    const [ pages, setPages ] = useState([]);
 
     /* INIT */
 
-    function fetchArchive(){
-        var request = new XMLHttpRequest();
-        request.open("GET", props.slide.url);
-        request.responseType = "blob";
-        request.onload = function() {
-            var response = this.response;
-            openArchive(response)
-        }
-        request.send()
-    }
+    React.useEffect(() => {
+      if (props.slideIndex === props.currentSlide){
+        setComicBookInitiated(true);
+        initComicBook();
+      }
+    },[]);
 
-    function openArchive(res){
-        if (props.slide.file_type === "cbz") openZipArchive(res);
-        else if (props.slide.file_type === "cbr") openRarArchive(res);
+    function initComicBook(){
+      const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
+      $.ajax({url:url}).done(function(res){
+          const pages = renderPages(res.files,props.slide.file_id);
+          setPages(pages);
+      });
     }
-
-    function openZipArchive(res){
-        setLoadingState('reading archive...');
-        var zip = new JSZip()
-        zip.loadAsync(res).then(function (data) {
-            let pagesArray = [];
-            let zipFileIndex = 0;
-            for ( var i in data.files ){
-                zip.files[data.files[i].name].async('blob').then(function(blob) {
-                    zipFileIndex += 1;
-                    const pageArrayItem = {
-                        name:data.files[i].name,
-                        blob:blob
-                    }
-                    pagesArray.push(pageArrayItem);
-                    if (Object.keys(data.files).length === zipFileIndex) generateImageGallery(pagesArray);
-                });
-            }
-        });
-    }
-
-    function generateImageGallery(pagesArray){
-        setLoadingState('extracting images...');
-        pagesArray.forEach(function(page,index){
-            var reader = new FileReader();
-            reader.onload = function() {
-                const imgSrc = "data:image/" + page.name.split('.')[1] + ";base64," + reader.result.split(';base64,')[1];
-                let newPages = pages;
-                newPages.push(imgSrc);
-                setPages(newPages);
-            }; 
-            reader.onerror = function(event) {
-                console.error("File could not be read! Code " + event.target.error.code);
-            };
-            reader.readAsDataURL(page.blob);
-        });
-    }
-
-    /* /INIT */
 
     /* COMPONENT */
-
-    let comicsReaderDisplay = loadingState
+    console.log(pages);
+    let comicsReaderDisplay = loadingState;
     if (pages.length > 0){
       comicsReaderDisplay = (
         <ComicBookReader 
@@ -103,12 +47,12 @@ function ComicBookReader(props){
   const [ loading, setLoading ] = useState(false);
   const [ displayType, setDisplayType ] = useState("double")
   const [ pages, setPages ] = useState(generatePagesArray(props.pages,displayType))
-  console.log(pages);
   const [ currentPage, setCurrentPage ] = useState(1)
   const [ totalPages, setTotalPages ] = useState(pages.length)
   const [ viewMode, setViewMode ] = useState('normal');
 
   React.useEffect(() => { 
+    console.log('another init comic reader');
     initComicReader()
   },[])
 
@@ -142,8 +86,8 @@ function ComicBookReader(props){
   else {
     const comicPages = pages.map((p,index) => (
       <div key={index} className="bb-item">
-        <img src={p[0]}/>
-        <img src={p[1]}/>
+        <ComicBookPage url={p[0]}/>
+        <ComicBookPage url={p[1]}/>
       </div>      
     ))
 
@@ -172,6 +116,31 @@ function ComicBookReader(props){
   )
 }
 
+function ComicBookPage(props){
+
+  const [ image, setImage ] = useState();
+
+  React.useEffect(() => {
+    fetchPageImage();
+  });
+
+  function fetchPageImage(){
+    $.ajax({url:props.url}).done(function(res){
+      setImage(res);
+    });
+  }
+
+  let comicBookPageDisplay = null;
+  if (image) comicBookPageDisplay = <img src={image}/>
+
+  return (
+    <div className="image-wrapper">
+    {comicBookPageDisplay}
+    </div>
+  )
+}
+
+
 function ComicBookReaderNavigation(props){
 
   return (
@@ -188,62 +157,5 @@ function ComicBookReaderNavigation(props){
     </div>
   )
 }
-/*
-			var Page = (function() {
-				
-				var config = {
-						$bookBlock : $( '#bb-bookblock' ),
-						$navNext : $( '#bb-nav-next' ),
-						$navPrev : $( '#bb-nav-prev' ),
-						$navFirst : $( '#bb-nav-first' ),
-						$navLast : $( '#bb-nav-last' )
-					},
-					init = function() {
-						config.$bookBlock.bookblock( {
-							speed : 800,
-							shadowSides : 0.8,
-							shadowFlip : 0.7
-						} );
-						initEvents();
-					},
-					initEvents = function() {
 
-						// add swipe events
-						$slides.on( {
-							'swipeleft' : function( event ) {
-								config.$bookBlock.bookblock( 'next' );
-								return false;
-							},
-							'swiperight' : function( event ) {
-								config.$bookBlock.bookblock( 'prev' );
-								return false;
-							}
-						} );
-
-						// add keyboard events
-						$( document ).keydown( function(e) {
-							var keyCode = e.keyCode || e.which,
-								arrow = {
-									left : 37,
-									up : 38,
-									right : 39,
-									down : 40
-								};
-
-							switch (keyCode) {
-								case arrow.left:
-									config.$bookBlock.bookblock( 'prev' );
-									break;
-								case arrow.right:
-									config.$bookBlock.bookblock( 'next' );
-									break;
-							}
-						} );
-					};
-
-					return { init : init };
-
-      })();
-      
-      */
 export default ComicsReaderWrapper;
