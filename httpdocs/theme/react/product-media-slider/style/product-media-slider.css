@@ -854,14 +854,14 @@ video:focus {
   position: relative;
 }
 #comics-reader-wrapper .comic-book-reader {
-  margin: 0 auto;
   height: 100%;
   position: relative;
   padding-bottom: 34px;
+  padding-top: 26px;
 }
 #comics-reader-wrapper .comic-book-reader .bb-bookblock {
   width: 450px;
-  height: 327px;
+  height: 100%;
 }
 #comics-reader-wrapper .comic-book-reader .bb-bookblock .bb-item img,
 #comics-reader-wrapper .comic-book-reader .bb-bookblock .bb-page img {
