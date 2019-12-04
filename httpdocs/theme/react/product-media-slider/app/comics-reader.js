@@ -22,7 +22,7 @@ function ComicsReaderWrapper(props){
     }
 
     /* COMPONENT */
-
+    console.log(pages);
     let comicsReaderDisplay = loadingState;
     if (pages.length > 0){
       comicsReaderDisplay = (
