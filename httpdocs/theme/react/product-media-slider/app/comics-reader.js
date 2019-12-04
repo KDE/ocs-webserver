@@ -9,7 +9,8 @@ function ComicsReaderWrapper(props){
     /* INIT */
 
     React.useEffect(() => {
-      console.log('init comic book')
+      console.log('init comic book');
+      console.log(comicBookInitiated);
       if (comicBookInitiated === false){
         setComicBookInitiated(true);
         initComicBook();
@@ -50,12 +51,12 @@ function ComicBookReader(props){
   const [ loading, setLoading ] = useState(false);
   const [ displayType, setDisplayType ] = useState("double")
   const [ pages, setPages ] = useState(generatePagesArray(props.pages,displayType))
-  console.log(pages);
   const [ currentPage, setCurrentPage ] = useState(1)
   const [ totalPages, setTotalPages ] = useState(pages.length)
   const [ viewMode, setViewMode ] = useState('normal');
 
   React.useEffect(() => { 
+    console.log('another init comic reader');
     initComicReader()
   },[])
 
