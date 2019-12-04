@@ -2503,6 +2503,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $command = new Backend_Commands_CreateTorrent($fileResponse->file);
                     $queue->send(serialize($command));
                 }
+                
+                //If this is a cbr or cbz comic archive, then start an extracting job
+                if($this->endsWith($fileResponse->file->name, '.cbr') || $this->endsWith($fileResponse->file->name, '.cbz')) {
+                    $queue = Local_Queue_Factory::getQueue();
+                    $command = new Backend_Commands_ExtractComic($fileResponse->file);
+                    $queue->send(serialize($command)); 
+                }
 
                 $this->_helper->json(array(
                     'status' => 'ok',
@@ -2515,6 +2522,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $log->debug('********** END ' . __CLASS__ . '::' . __FUNCTION__ . '**********' . "\n");
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
+    }
+    
+    private function endsWith($haystack, $needle)
+    {
+        return $needle === "" || substr(strtolower($haystack), -strlen($needle)) === strtolower($needle);
     }
 
     /**
