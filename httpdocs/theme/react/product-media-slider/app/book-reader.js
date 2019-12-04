@@ -82,9 +82,6 @@ function BookReaderWrapper(props){
       <div id="viewer" className="spreads">
       </div>
       <div id="book-pager">
-        
-      <a onClick={goToStart}>Start</a>
-        <a onClick={goToEnd}>End</a>
         {pageCountDisplay}
       </div>
       <div id="next" className="arrow" onClick={goNext}>
