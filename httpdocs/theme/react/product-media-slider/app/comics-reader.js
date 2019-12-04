@@ -25,7 +25,7 @@ function ComicsReaderWrapper(props){
     }
 
     /* COMPONENT */
-    let comicsReaderDisplay = <img id="ajax-loader" src="../../flatui/img/ajax-loader.gif"/>
+    let comicsReaderDisplay = <span id="ajax-loader"></span>
     if (pages.length > 0){
       comicsReaderDisplay = (
         <ComicBookReader 

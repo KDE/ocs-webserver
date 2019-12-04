@@ -854,13 +854,15 @@ video:focus {
   position: relative;
 }
 #comics-reader-wrapper #ajax-loader {
-  width: 56px;
-  height: 21px;
+  width: 24px;
+  height: 24px;
   position: absolute;
   top: 50%;
   left: 50%;
-  margin-left: -28px;
-  margin-top: -10px;
+  margin-left: -12px;
+  margin-top: -12px;
+  background-image: url('../../assets/img/ajax-loader.gif');
+  background-color: white;
 }
 #comics-reader-wrapper .comic-book-reader {
   height: 100%;
