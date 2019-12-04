@@ -22,7 +22,7 @@ function ComicsReaderWrapper(props){
       $.ajax({url:url}).done(function(res){
         //if (res.files.length > 1){
           const pages = renderPages(res.files,props.slide.file_id);
-          setPages(pages);
+          if (pages.length > 1) setPages(pages);
         //}
       });
     }
