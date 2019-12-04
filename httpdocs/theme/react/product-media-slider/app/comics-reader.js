@@ -133,8 +133,12 @@ function ComicBookPage(props){
       setImage(res);
     });
 
+    let comicBookPageDisplay = null;
+    if (image) comicBookPageDisplay = <img src={image}/>
+
+
     return (
-      <img src={img}/>
+      {comicBookDisplay}
     )
   }
 }
