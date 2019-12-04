@@ -9,24 +9,22 @@ function ComicsReaderWrapper(props){
     /* INIT */
 
     React.useEffect(() => {
-      initComicBook();
+      if (props.slideIndex === props.currentSlide){
+        setComicBookInitiated(true);
+        initComicBook();
+      }
     },[]);
 
     function initComicBook(){
-      if (comicBookInitiated === false){
-        console.log('init comic book');
-        setComicBookInitiated(true);
-        const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
-        $.ajax({url:url}).done(function(res){
-          //if (res.files.length > 1){
-            const pages = renderPages(res.files,props.slide.file_id);
-            if (pages.length > 1) setPages(pages);
-          //}
-        });      
-      }
+      const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
+      $.ajax({url:url}).done(function(res){
+          const pages = renderPages(res.files,props.slide.file_id);
+          setPages(pages);
+      });
     }
 
     /* COMPONENT */
+    console.log(pages);
     let comicsReaderDisplay = loadingState;
     if (pages.length > 0){
       comicsReaderDisplay = (
@@ -46,7 +44,7 @@ function ComicsReaderWrapper(props){
 
 function ComicBookReader(props){
 
-  const [ loading, setLoading ] = useState(true);
+  const [ loading, setLoading ] = useState(false);
   const [ displayType, setDisplayType ] = useState("double")
   const [ pages, setPages ] = useState(generatePagesArray(props.pages,displayType))
   const [ currentPage, setCurrentPage ] = useState(1)
@@ -55,8 +53,7 @@ function ComicBookReader(props){
 
   React.useEffect(() => { 
     console.log('another init comic reader');
-    initComicReader();
-    console.log(pages);
+    initComicReader()
   },[])
 
   function initComicReader(){
@@ -138,7 +135,7 @@ function ComicBookPage(props){
 
   return (
     <div className="image-wrapper">
-      {comicBookPageDisplay}
+    {comicBookPageDisplay}
     </div>
   )
 }
