@@ -10,6 +10,7 @@ export function ProductBrowseItem(props){
     const [ productFiles, setProductFiles ] = useState();
     const [ imgUrl, setImgUrl ] = useState(getImageUrl(p,props.itemWidth,props.imgHeight));
 
+    console.log(browseListType);
 
     if (window.location.search === "?index=7") {
         window.browseListType === "favorites";
