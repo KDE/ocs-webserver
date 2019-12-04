@@ -71,6 +71,8 @@ function BookReaderWrapper(props){
     console.log('go to end');
   }
 
+  console.log(window.book);
+
   let pageCountDisplay;
   if (totalPages) pageCountDisplay = <span>{currentPage + "/" + totalPages}</span>
 
