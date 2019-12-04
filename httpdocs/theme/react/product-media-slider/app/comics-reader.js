@@ -30,7 +30,7 @@ function ComicsReaderWrapper(props){
       comicsReaderDisplay = (
         <ComicBookReader 
           pages={pages}
-          currentSlide={props.currentSlide}
+          slideIndex={props.slideIndex}
         />
       )
     }
@@ -58,7 +58,7 @@ function ComicBookReader(props){
 
   function initComicReader(){
     $(function() {
-      $( '#bb-bookblock-'+props.currentSlide ).bookblock( {
+      $( '#bb-bookblock-'+props.slideIndex ).bookblock( {
         speed : 800,
         shadowSides : 0.8,
         shadowFlip : 0.7,
@@ -92,7 +92,7 @@ function ComicBookReader(props){
     ))
 
     comicBookDisplay = (
-      <div id={"bb-bookblock-" + props.currentSlide} className="bb-bookblock">
+      <div id={"bb-bookblock-" + props.slideIndex} className="bb-bookblock">
         {comicPages}
       </div>
     )
