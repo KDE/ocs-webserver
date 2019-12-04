@@ -86,8 +86,8 @@ function ComicBookReader(props){
   else {
     const comicPages = pages.map((p,index) => (
       <div key={index} className="bb-item">
-        <ComicBookPage url={p[0]}/>
-        <ComicBookPage url={p[1]}/>
+        <img src={p[0]}/>
+        <img src={p[1]}/>
       </div>      
     ))
 
@@ -111,50 +111,6 @@ function ComicBookReader(props){
           <a id="bb-nav-last" href="#" onClick={() => onComicReaderNavClick('last')}><span className="glyphicon glyphicon-step-forward"></span></a>
           <a id="bb-nav-viewmode" href="#" onClick={() => setViewMode('fullscreen')}><span className="glyphicon glyphicon-fullscreen"></span></a>
         </nav>
-      </div>
-    </div>
-  )
-}
-
-function ComicBookPage(props){
-
-  const [ image, setImage ] = useState();
-
-  React.useEffect(() => {
-    fetchPageImage();
-  });
-
-  function fetchPageImage(){
-    console.log(props.url);
-    $.ajax({url:props.url}).done(function(res){
-      console.log(res);
-      setImage(res);
-    });
-  }
-
-  let comicBookPageDisplay = null;
-  if (image) comicBookPageDisplay = <img src={image}/>
-
-  return (
-    <div className="image-wrapper">
-    {comicBookPageDisplay}
-    </div>
-  )
-}
-
-
-function ComicBookReaderNavigation(props){
-
-  return (
-    <div className="comic-book-reader-navigation">
-      <div className="scroll-bar"></div>
-      <div className="actions-menu">
-        <a className="page-counter"> {props.currentPage + "/" + props.totalPages} </a>
-        <a onClick={props.onPrevPageBtnClick} className="prev-page"></a> 
-        <a onClick={props.onNextPageBtnClick} className="next-page"></a>
-        <a className="one-page-view"></a>
-        <a className="two-page-view"></a>
-        <a className="full-screen"></a>
       </div>
     </div>
   )
