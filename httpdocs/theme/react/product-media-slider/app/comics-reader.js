@@ -13,18 +13,18 @@ function ComicsReaderWrapper(props){
         setComicBookInitiated(true);
         initComicBook();
       }
-    },[]);
+    },[props.slideIndex,props.currentSlide]);
 
     function initComicBook(){
       const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
       $.ajax({url:url}).done(function(res){
+          console.log(res)
           const pages = renderPages(res.files,props.slide.file_id);
           setPages(pages);
       });
     }
 
     /* COMPONENT */
-    console.log(pages);
     let comicsReaderDisplay = loadingState;
     if (pages.length > 0){
       comicsReaderDisplay = (
@@ -125,7 +125,9 @@ function ComicBookPage(props){
   });
 
   function fetchPageImage(){
+    console.log(props.url);
     $.ajax({url:props.url}).done(function(res){
+      console.log(res);
       setImage(res);
     });
   }
