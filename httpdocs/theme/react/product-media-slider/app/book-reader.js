@@ -35,9 +35,7 @@ function BookReaderWrapper(props){
 
     // Generate location and pagination
     window.book.ready.then(function() {
-        this.generatePagination(props.width,props.height).then(function () {
-            console.log("The pagination has been generated");
-        });
+
         const stored = localStorage.getItem(book.key() + '-locations');
         // console.log('metadata:', book.package.metadata);
         if (stored) {
@@ -65,7 +63,8 @@ function BookReaderWrapper(props){
   }
 
   function goToStart(){
-    renditionState.moveTo()
+    const current = window.book.pagination.pageFromCfi(book.getCurrentLocationCfi());
+    console.log(current)
   }
 
   function goToEnd(){
@@ -83,10 +82,15 @@ function BookReaderWrapper(props){
       <div id="viewer" className="spreads">
       </div>
       <div id="book-pager">
+        
+      <a onClick={goToStart}>Start</a>
+        <a onClick={goToEnd}>End</a>
         {pageCountDisplay}
       </div>
       <div id="next" className="arrow" onClick={goNext}>
         <span className="glyphicon glyphicon-chevron-right"></span>  
+      </div>
+      <div id="book-reader-nav">
       </div>
     </div>
   )
