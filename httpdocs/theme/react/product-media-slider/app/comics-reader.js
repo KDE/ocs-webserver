@@ -15,8 +15,7 @@ function ComicsReaderWrapper(props){
       const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
       $.ajax({url:url}).done(function(res){
         const pages = renderPages(res.files,props.slide.file_id);
-        console.log(pages);
-        setPages(res.files);
+        setPages(pages);
       });
     }
 
