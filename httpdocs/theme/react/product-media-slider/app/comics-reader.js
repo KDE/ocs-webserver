@@ -52,7 +52,6 @@ function ComicBookReader(props){
   const [ viewMode, setViewMode ] = useState('normal');
 
   React.useEffect(() => { 
-    console.log('another init comic reader');
     initComicReader()
   },[])
 
@@ -69,7 +68,7 @@ function ComicBookReader(props){
   }
 
   function onComicReaderNavClick(val){
-    $( '#bb-bookblock-'+props.currentSlide).bookblock(val);
+    $( '#bb-bookblock-'+props.slideIndex).bookblock(val);
   }
 
   function onBeforeFlip(page){
@@ -103,13 +102,13 @@ function ComicBookReader(props){
       {comicBookDisplay}
       <div className="nav-container">
         <nav>
-          <a id="bb-nav-counter" href="#">{currentPage + "/" + totalPages}</a>
-          <a id="bb-nav-first" href="#" onClick={() => onComicReaderNavClick('first')}><span className="glyphicon glyphicon-step-backward"></span></a>
-          <a id="bb-nav-prev" href="#" onClick={() => onComicReaderNavClick('prev')}><span className="glyphicon glyphicon-triangle-left"></span></a>
-          <a id="bb-nav-next" href="#" onClick={() => onComicReaderNavClick('next')}><span className="glyphicon glyphicon-triangle-right"></span></a>
-          <a id="bb-nav-last" href="#" onClick={() => onComicReaderNavClick('last')}><span className="glyphicon glyphicon-step-forward"></span></a>
-          <a id="bb-nav-last" href="#" onClick={() => onComicReaderNavClick('last')}><span className="glyphicon glyphicon-step-forward"></span></a>
-          <a id="bb-nav-viewmode" href="#" onClick={() => setViewMode('fullscreen')}><span className="glyphicon glyphicon-fullscreen"></span></a>
+          <a id="bb-nav-counter">{currentPage + "/" + totalPages}</a>
+          <a id="bb-nav-first" onClick={() => onComicReaderNavClick('first')}><span className="glyphicon glyphicon-step-backward"></span></a>
+          <a id="bb-nav-prev" onClick={() => onComicReaderNavClick('prev')}><span className="glyphicon glyphicon-triangle-left"></span></a>
+          <a id="bb-nav-next" onClick={() => onComicReaderNavClick('next')}><span className="glyphicon glyphicon-triangle-right"></span></a>
+          <a id="bb-nav-last" onClick={() => onComicReaderNavClick('last')}><span className="glyphicon glyphicon-step-forward"></span></a>
+          <a id="bb-nav-last" onClick={() => onComicReaderNavClick('last')}><span className="glyphicon glyphicon-step-forward"></span></a>
+          <a id="bb-nav-viewmode" onClick={() => setViewMode('fullscreen')}><span className="glyphicon glyphicon-fullscreen"></span></a>
         </nav>
       </div>
     </div>

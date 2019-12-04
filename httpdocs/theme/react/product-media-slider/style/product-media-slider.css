@@ -892,6 +892,7 @@ video:focus {
   color: #fff;
   margin: 2px;
   float: left;
+  cursor: pointer;
 }
 #comics-reader-wrapper .nav-container nav a .glyphicon {
   top: 7px;
