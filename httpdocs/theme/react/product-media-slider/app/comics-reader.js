@@ -79,9 +79,9 @@ function ComicBookReader(props){
     setCurrentPage(isLimit + 1);
     return false;
   }
-
+  
   let comicBookDisplay;
-  if (loading) comicPages = "loading...";
+  if (loading) comicPages = <img src="../../flatui/img/ajax-loader.gif"/>
   else {
     const comicPages = pages.map((p,index) => (
       <div key={index} className="bb-item">
@@ -106,7 +106,6 @@ function ComicBookReader(props){
           <a id="bb-nav-first" onClick={() => onComicReaderNavClick('first')}><span className="glyphicon glyphicon-step-backward"></span></a>
           <a id="bb-nav-prev" onClick={() => onComicReaderNavClick('prev')}><span className="glyphicon glyphicon-triangle-left"></span></a>
           <a id="bb-nav-next" onClick={() => onComicReaderNavClick('next')}><span className="glyphicon glyphicon-triangle-right"></span></a>
-          <a id="bb-nav-last" onClick={() => onComicReaderNavClick('last')}><span className="glyphicon glyphicon-step-forward"></span></a>
           <a id="bb-nav-last" onClick={() => onComicReaderNavClick('last')}><span className="glyphicon glyphicon-step-forward"></span></a>
           <a id="bb-nav-viewmode" onClick={() => setViewMode('fullscreen')}><span className="glyphicon glyphicon-fullscreen"></span></a>
         </nav>
