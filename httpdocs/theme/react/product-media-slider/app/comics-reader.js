@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {generatePagesArray, renderPages} from './product-media-slider-helpers';
 
 function ComicsReaderWrapper(props){
-    const [ loadingState, setLoadingState ] = useState('Loading...');
+    const [ loading, setLoading ] = useState('Loading...');
     const [ comicBookInitiated, setComicBookInitiated ] = useState(false);
     const [ pages, setPages ] = useState([]);
 
@@ -25,7 +25,7 @@ function ComicsReaderWrapper(props){
     }
 
     /* COMPONENT */
-    let comicsReaderDisplay = loadingState;
+    let comicsReaderDisplay = <img id="ajax-loader" src="../../flatui/img/ajax-loader.gif"/>
     if (pages.length > 0){
       comicsReaderDisplay = (
         <ComicBookReader 
@@ -79,7 +79,7 @@ function ComicBookReader(props){
     setCurrentPage(isLimit + 1);
     return false;
   }
-  
+
   let comicBookDisplay;
   if (loading) comicPages = <img src="../../flatui/img/ajax-loader.gif"/>
   else {
