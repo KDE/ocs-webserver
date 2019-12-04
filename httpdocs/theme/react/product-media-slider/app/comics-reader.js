@@ -13,8 +13,8 @@ function ComicsReaderWrapper(props){
     },[]);
 
     function initComicBook(){
-      console.log('init comic book');
       if (comicBookInitiated === false){
+        console.log('init comic book');
         setComicBookInitiated(true);
         const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
         $.ajax({url:url}).done(function(res){
@@ -29,13 +29,12 @@ function ComicsReaderWrapper(props){
     /* COMPONENT */
     let comicsReaderDisplay = loadingState;
     if (pages.length > 0){
-      console.log(pages)
-      /*comicsReaderDisplay = (
+      comicsReaderDisplay = (
         <ComicBookReader 
           pages={pages}
           currentSlide={props.currentSlide}
         />
-      )*/
+      )
     }
 
     return (
@@ -47,7 +46,7 @@ function ComicsReaderWrapper(props){
 
 function ComicBookReader(props){
 
-  const [ loading, setLoading ] = useState(false);
+  const [ loading, setLoading ] = useState(true);
   const [ displayType, setDisplayType ] = useState("double")
   const [ pages, setPages ] = useState(generatePagesArray(props.pages,displayType))
   const [ currentPage, setCurrentPage ] = useState(1)
@@ -56,7 +55,8 @@ function ComicBookReader(props){
 
   React.useEffect(() => { 
     console.log('another init comic reader');
-    initComicReader()
+    initComicReader();
+    console.log(pages);
   },[])
 
   function initComicReader(){
