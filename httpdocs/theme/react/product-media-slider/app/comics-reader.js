@@ -9,6 +9,7 @@ function ComicsReaderWrapper(props){
     /* INIT */
 
     React.useEffect(() => {
+      console.log('init comic book')
       if (comicBookInitiated === false){
         setComicBookInitiated(true);
         initComicBook();
