@@ -9,20 +9,21 @@ function ComicsReaderWrapper(props){
     /* INIT */
 
     React.useEffect(() => {
-      console.log('init comic book');
-      console.log(comicBookInitiated);
-      setComicBookInitiated(true);
       initComicBook();
     },[]);
 
     function initComicBook(){
-      const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
-      $.ajax({url:url}).done(function(res){
-        //if (res.files.length > 1){
-          const pages = renderPages(res.files,props.slide.file_id);
-          if (pages.length > 1) setPages(pages);
-        //}
-      });
+      console.log('init comic book');
+      if (comicBookInitiated === false){
+        setComicBookInitiated(true);
+        const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
+        $.ajax({url:url}).done(function(res){
+          //if (res.files.length > 1){
+            const pages = renderPages(res.files,props.slide.file_id);
+            if (pages.length > 1) setPages(pages);
+          //}
+        });      
+      }
     }
 
     /* COMPONENT */
