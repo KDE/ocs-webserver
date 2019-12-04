@@ -121,6 +121,7 @@ function ComicBookReader(props){
 }
 
 function ComicBookPage(props){
+  
   const [ image, setImage ] = useState();
 
   React.useEffect(() => {
@@ -132,16 +133,16 @@ function ComicBookPage(props){
       console.log(res);
       setImage(res);
     });
-
-    let comicBookPageDisplay = null;
-    if (image) comicBookPageDisplay = <img src={image}/>
-
-
-    return (
-      {comicBookDisplay}
-    )
   }
+
+  let comicBookPageDisplay = null;
+  if (image) comicBookPageDisplay = <img src={image}/>
+
+  return (
+    {comicBookPageDisplay}
+  )
 }
+
 
 function ComicBookReaderNavigation(props){
 
