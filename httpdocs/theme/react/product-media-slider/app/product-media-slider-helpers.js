@@ -94,6 +94,14 @@ export function GroupAudioFilesInGallery(galleryArray){
     return newGalleryArray;
 }
 
+export function renderPages(res,fileId){
+    let pages = [];
+    res.forEach(function(r,index){
+        pages.push(json_server_comics + "/api/files/page?id=" + fileId + "&filename=" + r)
+    });
+    return pages;
+}
+
 export function generatePagesArray(pages,displayType){
     let pagesArray;
     if (displayType === "single") pagesArray = pages;

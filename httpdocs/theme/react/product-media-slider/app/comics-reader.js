@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {generatePagesArray} from './product-media-slider-helpers';
+import {generatePagesArray, renderPages} from './product-media-slider-helpers';
 
 function ComicsReaderWrapper(props){
     const [ loadingState, setLoadingState ] = useState('Loading...');
@@ -14,7 +14,8 @@ function ComicsReaderWrapper(props){
     function initComicBook(){
       const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
       $.ajax({url:url}).done(function(res){
-        console.log(res);
+        const pages = renderPages(res.files);
+        console.log(pages);
         setPages(res.files);
       });
     }
