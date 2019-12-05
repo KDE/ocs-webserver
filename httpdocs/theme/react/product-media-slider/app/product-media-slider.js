@@ -311,7 +311,6 @@ function SlideItem(props){
                 props.onSetSliderHeight(360)
               }          
             } else {
-              let if 
               if (props.disableGallery) setMediaStyle({maxHeight:360})
             }
           }
