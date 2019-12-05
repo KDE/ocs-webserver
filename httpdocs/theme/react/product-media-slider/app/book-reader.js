@@ -60,14 +60,13 @@ function BookReaderWrapper(props){
   }
 
   function goToStart(){
-    
+    renditionState.moveTo(0);    
   }
 
   function goToEnd(){
-    renditionState.moveTo(6);
+    console.log(renditionState);
+    renditionState.moveTo(-1);
   }
-
-  console.log(renditionState);
 
   let pageCountDisplay;
   if (totalPages) pageCountDisplay = <span>{currentPage + "/" + totalPages}</span>
@@ -80,9 +79,9 @@ function BookReaderWrapper(props){
       <div id="viewer" className="spreads">
       </div>
       <div id="book-pager">
+        <a onClick={goToStart}>START</a>
         <a onClick={goToEnd}>END</a>
-        
-        {pageCountDisplay}
+        <span>{pageCountDisplay}</span>
       </div>
       <div id="next" className="arrow" onClick={goNext}>
         <span className="glyphicon glyphicon-chevron-right"></span>  
