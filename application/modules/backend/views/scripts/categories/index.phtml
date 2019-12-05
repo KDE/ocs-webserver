@@ -327,7 +327,7 @@
         $('body').on("click", 'a.create-about', function (event) {
             event.preventDefault();
             event.stopImmediatePropagation();
-
+            alert(1);
             var elementRecord = $(this).data("record");
 
             jQuery.ajax({
@@ -493,6 +493,23 @@
                     options: function (data) {
                         data.clearCache();                        
                         return '/backend/browselisttype/allbrowselisttypes';
+                    }
+                },
+                tag_rating_name: {
+                    title: 'Tag-Rating',                   
+                    create: false,
+                    edit: false,
+                    list:true,
+                    width: '8%'
+                }, 
+                tag_rating: {
+                    title: 'Tag-Rating',                    
+                    create: true,
+                    edit: true,
+                    list: false,
+                    options: function (data) {
+                        data.clearCache();                        
+                        return '/backend/categories/fetchtagratinggroups';
                     }
                 },
                 is_active: {
