@@ -1843,6 +1843,59 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $ratings = $tableProjectRatings->fetchRating($this->_projectId);
         $this->_helper->json($ratings);
     }
+
+    public function loadtagratingAction()
+    {
+         $this->_helper->layout->disableLayout();
+         //$tableProjectRatings = new Default_Model_DbTable_ProjectRating();            
+         //$ratings = $tableProjectRatings->fetchTagRating($this->_projectId);
+         $category_id=  $this->getParam('gid');
+         $model = new Default_Model_ProjectTagRatings();
+         $ratingsLabel = $model->getCategoryTagRatings($category_id);
+         $ratingsValue=null;
+         if($ratingsLabel!=null && sizeof($ratingsLabel)>0)
+         {
+            $ratingsValue = $model->getProjectTagRatings($this->_projectId);            
+         }         
+         
+         $this->_helper->json(array(
+            'status' => 'ok',
+            'labels' =>$ratingsLabel,
+            'values' =>$ratingsValue
+        ));         
+    }
+    public function votetagratingAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $vote=  $this->getParam('vote');
+        $tag_id=  $this->getParam('tid');
+        $model = new Default_Model_ProjectTagRatings();
+        if($this->_authMember->member_id)
+        {
+            $checkVote = $model->checkIfVote($this->_authMember->member_id,$this->_projectId,$tag_id);
+            if(!$checkVote)
+            {
+               $model->doVote($this->_authMember->member_id,$this->_projectId,$tag_id,$vote);               
+            }else{
+               if($checkVote['vote']== $vote)
+               {
+                    $model->removeVote($checkVote['tag_rating_id']);
+               }else{
+                    $model->removeVote($checkVote['tag_rating_id']);
+                    $model->doVote($this->_authMember->member_id,$this->_projectId,$tag_id,$vote);               
+               }
+            }
+                                    
+            $this->_helper->json(array(
+                'status' => 'ok'                
+            ));  
+        }else{
+            $this->_helper->json(array(
+                'status' => 'error',
+                'msg' =>'Login please'                
+            ));  
+        }
+    }
     
     public function loadfilesjsonAction()
     {
@@ -2503,6 +2556,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $command = new Backend_Commands_CreateTorrent($fileResponse->file);
                     $queue->send(serialize($command));
                 }
+                
+                //If this is a cbr or cbz comic archive, then start an extracting job
+                if($this->endsWith($fileResponse->file->name, '.cbr') || $this->endsWith($fileResponse->file->name, '.cbz')) {
+                    $queue = Local_Queue_Factory::getQueue();
+                    $command = new Backend_Commands_ExtractComic($fileResponse->file);
+                    $queue->send(serialize($command)); 
+                }
 
                 $this->_helper->json(array(
                     'status' => 'ok',
@@ -2515,6 +2575,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $log->debug('********** END ' . __CLASS__ . '::' . __FUNCTION__ . '**********' . "\n");
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
+    }
+    
+    private function endsWith($haystack, $needle)
+    {
+        return $needle === "" || substr(strtolower($haystack), -strlen($needle)) === strtolower($needle);
     }
 
     /**

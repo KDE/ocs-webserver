@@ -15,12 +15,12 @@ function BookReaderWrapper(props){
   function initBookReader(){
     // Initialize the book
     window.book = ePub(props.slide.url, {});
-    window.rendition = book.renderTo('book-container', {
+    window.rendition = book.renderTo('viewer', {
         flow: 'paginated',
-        manager: 'continuous',
+        manager: 'default',
         spread: 'always',
-        width: (props.width - 40),
-        height: (props.height - 40)
+        width: (props.width - 134),
+        height: (props.height - 31)
     });
     setRenditionState(rendition)
 
@@ -32,6 +32,7 @@ function BookReaderWrapper(props){
 
     // Generate location and pagination
     window.book.ready.then(function() {
+
         const stored = localStorage.getItem(book.key() + '-locations');
         // console.log('metadata:', book.package.metadata);
         if (stored) {
@@ -58,6 +59,15 @@ function BookReaderWrapper(props){
     renditionState.next();
   }
 
+  function goToStart(){
+    renditionState.moveTo(0);    
+  }
+
+  function goToEnd(){
+    console.log(renditionState);
+    renditionState.moveTo(-1);
+  }
+
   let pageCountDisplay;
   if (totalPages) pageCountDisplay = <span>{currentPage + "/" + totalPages}</span>
 
@@ -66,9 +76,12 @@ function BookReaderWrapper(props){
       <div id="prev" className="arrow" onClick={goPrev}>
         <span className="glyphicon glyphicon-chevron-left"></span>  
       </div>
-      <div id="book-container"></div>
+      <div id="viewer" className="spreads">
+      </div>
       <div id="book-pager">
-        {pageCountDisplay}
+        <a onClick={goToStart}>START</a>
+        <a onClick={goToEnd}>END</a>
+        <span>{pageCountDisplay}</span>
       </div>
       <div id="next" className="arrow" onClick={goNext}>
         <span className="glyphicon glyphicon-chevron-right"></span>  

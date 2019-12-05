@@ -262,7 +262,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'stopvideoajax',
             'startmediaviewajax',
             'stopmediaviewajax',
-            'loadfirstfilejson'
+            'loadfirstfilejson',
+            'loadtagrating'
         ));
         
         // resource default_product
@@ -311,7 +312,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'paymentok',
             'paymentcancel',
             'saveproduct',
-            'claim'
+            'claim',
+            'votetagrating'
         ));
         
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_collection', array(

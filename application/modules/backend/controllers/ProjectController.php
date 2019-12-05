@@ -30,6 +30,7 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
     const PARAM_FEATURED = 'featured';
     const PARAM_APPROVED = 'ghns_excluded';
     const PARAM_PLING_EXCLUDED = 'pling_excluded';
+    const PARAM_PRODUCT_DANGEROUS = 'product_dangerous';
     const PARAM_MSG ='msg';
     /** @var Default_Model_Project */
     protected $_model;
@@ -321,6 +322,28 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         $identity = $auth->getIdentity();
         Default_Model_ActivityLog::logActivity($projectId, $projectId, $identity->member_id,
             Default_Model_ActivityLog::BACKEND_PROJECT_PLING_EXCLUDED, $product);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+
+        $this->_helper->json($jTableResult);
+    }
+    
+    
+    public function dodangerousAction()
+    {
+        $projectId = (int)$this->getParam(self::DATA_ID_NAME, null);
+        $product = $this->_model->find($projectId)->current();
+        $dangerous = (int)$this->getParam(self::PARAM_PRODUCT_DANGEROUS, null);
+
+        $tableTags = new Default_Model_Tags();
+        $tableTags->saveDangerosuTagForProject($projectId, $dangerous);
+
+        $auth = Zend_Auth::getInstance();
+        $identity = $auth->getIdentity();
+        Default_Model_ActivityLog::logActivity($projectId, $projectId, $identity->member_id,
+            Default_Model_ActivityLog::BACKEND_PROJECT_DANGEROUS, $product); 
+        
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;

@@ -390,6 +390,13 @@ video:focus {
 #media-slider.fade-controls .video-react-playing .video-react-control-bar {
   opacity: 0 !important;
 }
+#media-slider.hide-controls .carousel-control,
+#media-slider.hide-controls .slider-navigation-toggle {
+  display: none !important;
+}
+#media-slider.hide-controls .video-react-playing .video-react-control-bar {
+  display: none !important;
+}
 #media-slider.disable-gallery {
   padding-bottom: 0;
 }
@@ -427,10 +434,10 @@ video:focus {
   position: absolute;
   bottom: 0;
   z-index: 100;
-  color: white;
   font-weight: bold;
   left: 0;
   width: 100%;
+  font-size: 14px;
 }
 #book-reader-wrapper .arrow {
   position: fixed;
@@ -474,18 +481,36 @@ video:focus {
   color: #777;
 }
 #book-reader-wrapper #viewer.spreads {
-  width: 900px;
-  height: 600px;
+  width: 94%;
+  height: 100%;
   box-shadow: 0 0 4px #ccc;
   border-radius: 5px;
   padding: 0;
   position: relative;
   margin: 10px auto;
-  background: white url('ajax-loader.gif') center center no-repeat;
-  top: calc(50vh - 400px);
+  background: white url(ajax-loader.gif) center center no-repeat;
+  top: 0;
+  padding: 15px 30px;
 }
 #book-reader-wrapper #viewer.spreads .epub-view > iframe {
   background: white;
+}
+@media (min-width: 969px) {
+  #book-reader-wrapper {
+    /*#viewer.spreads:after {
+        position: absolute;
+        width: 1px;
+        border-right: 1px #000 solid;
+        height: 90%;
+        z-index: 1;
+        left: 50%;
+        margin-left: -1px;
+        top: 5%;
+        opacity: .15;
+        box-shadow: -2px 0 15px rgba(0, 0, 0, 1);
+        content:  "";
+      }*/
+  }
 }
 #book-reader-wrapper #viewer.scrolled {
   overflow: hidden;
@@ -508,19 +533,6 @@ video:focus {
   margin: 10px auto;
 }
 @media (min-width: 1000px) {
-  #book-reader-wrapper #viewer.spreads:after {
-    position: absolute;
-    width: 1px;
-    border-right: 1px #000 solid;
-    height: 90%;
-    z-index: 1;
-    left: 50%;
-    margin-left: -1px;
-    top: 5%;
-    opacity: 0.15;
-    box-shadow: -2px 0 15px #000000;
-    content: "";
-  }
   #book-reader-wrapper #viewer.spreads.single:after {
     display: none;
   }
@@ -740,12 +752,6 @@ video:focus {
 #music-player-wrapper.desktop .music-player-panel .panel-content .player-content {
   padding: 0;
 }
-#music-player-wrapper.desktop .music-player-panel .panel-content .player-content * {
-  -webkit-transition: all none ease-out !important;
-  -moz-transition: all none ease-out !important;
-  -o-transition: all none ease-out !important;
-  transition: all none ease-out !important;
-}
 #music-player-wrapper.desktop .music-player-panel .panel-content .player-content .play-btn {
   padding: 0 5px;
 }
@@ -764,12 +770,16 @@ video:focus {
   order: 11;
 }
 #music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.play-sounds .sound-operation {
-  display: none;
+  width: 0;
+  opacity: 0;
   overflow: hidden;
   -webkit-transition: all 0.2s ease-out;
   -moz-transition: all 0.2s ease-out;
   -o-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
+}
+#music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.play-sounds .sound-operation .rc-slider-handle {
+  margin-left: -14px;
 }
 #music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.play-sounds .sounds-icon {
   margin-right: 0;
@@ -778,7 +788,9 @@ video:focus {
   margin-right: 15px;
 }
 #music-player-wrapper.desktop .music-player-panel .panel-content .player-content > .group.play-sounds:hover .sound-operation {
+  opacity: 1;
   display: block;
+  width: 100px;
 }
 #music-player-wrapper.desktop .audio-lists-panel {
   position: absolute;
@@ -841,15 +853,26 @@ video:focus {
   height: 100%;
   position: relative;
 }
+#comics-reader-wrapper #ajax-loader {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -12px;
+  margin-top: -12px;
+  background-image: url('../../assets/img/ajax-loader.gif');
+  background-color: white;
+}
 #comics-reader-wrapper .comic-book-reader {
-  margin: 0 auto;
   height: 100%;
   position: relative;
-  padding-bottom: 34px;
+  padding-bottom: 50px;
+  padding-top: 26px;
 }
 #comics-reader-wrapper .comic-book-reader .bb-bookblock {
   width: 450px;
-  height: 327px;
+  height: 100%;
 }
 #comics-reader-wrapper .comic-book-reader .bb-bookblock .bb-item img,
 #comics-reader-wrapper .comic-book-reader .bb-bookblock .bb-page img {
@@ -862,7 +885,7 @@ video:focus {
   position: absolute;
   bottom: 0;
   z-index: 111;
-  height: 34px;
+  height: 50px;
 }
 #comics-reader-wrapper .nav-container nav {
   width: auto;
@@ -880,6 +903,7 @@ video:focus {
   color: #fff;
   margin: 2px;
   float: left;
+  cursor: pointer;
 }
 #comics-reader-wrapper .nav-container nav a .glyphicon {
   top: 7px;
@@ -890,4 +914,18 @@ video:focus {
 #comics-reader-wrapper .nav-container nav a#bb-nav-counter {
   line-height: 30px;
   font-size: 12px;
+}
+#comics-reader-wrapper .nav-container > span.title {
+  display: inline-block;
+  /* min-width: 30px; */
+  height: auto;
+  text-align: center;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  margin: 2px;
+  /* float: left; */
+  cursor: pointer;
+  font-size: 12px;
+  padding: 4px;
 }

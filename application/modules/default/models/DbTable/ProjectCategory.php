@@ -433,6 +433,8 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
                 `pc`.`source_required`,
                 `blt`.`name` as `browse_list_type_name`,
                 `pc`.`browse_list_type`,
+                `pc`.`tag_rating`,
+                `tg`.`group_name` as `tag_rating_name`,
                 MIN(`pc2`.`is_active`)                                       AS `parent_active`,
                 concat(repeat('&nbsp;&nbsp;',count(`pc`.`lft`) - 1), `pc`.`title`) AS `title_show`,
                 concat(repeat('&nbsp;&nbsp;',count(`pc`.`lft`) - 1), IF(LENGTH(TRIM(`pc`.`name_legacy`))>0,`pc`.`name_legacy`,`pc`.`title`)) AS `title_legacy`,
@@ -447,6 +449,8 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
                     `project_category` AS `pc2` ON (`pc`.`lft` BETWEEN `pc2`.`lft` AND `pc2`.`rgt`) AND `pc2`.`project_category_id` <> `pc`.`project_category_id`
               LEFT JOIN 
                     `browse_list_types` AS `blt`  ON `pc`.`browse_list_type` = `blt`.`browse_list_type_id`
+            LEFT JOIN 
+            `tag_group` AS `tg`  ON `pc`.`tag_rating` = `tg`.`group_id`
               GROUP BY `pc`.`lft`
               {$sqlHaving}
               ORDER BY pc.lft
