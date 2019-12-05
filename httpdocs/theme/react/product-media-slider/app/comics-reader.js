@@ -32,6 +32,7 @@ function ComicsReaderWrapper(props){
           slideIndex={props.slideIndex}
           comicsFileName={props.slide.title}
           onFullScreenToggle={props.onFullScreenToggle}
+          isFullScreen={props.isFullScreen}
         />
       )
     }
@@ -108,7 +109,7 @@ function ComicBookReader(props){
           <a id="bb-nav-prev" onClick={() => onComicReaderNavClick('prev')}><span className="glyphicon glyphicon-triangle-left"></span></a>
           <a id="bb-nav-next" onClick={() => onComicReaderNavClick('next')}><span className="glyphicon glyphicon-triangle-right"></span></a>
           <a id="bb-nav-last" onClick={() => onComicReaderNavClick('last')}><span className="glyphicon glyphicon-step-forward"></span></a>
-          <a id="bb-nav-viewmode" onClick={() => props.onFullScreenToggle(true)}><span className="glyphicon glyphicon-fullscreen"></span></a>
+          <a id="bb-nav-viewmode" onClick={() => props.onFullScreenToggle(props.isFullScreen === true ? false : true)}><span className="glyphicon glyphicon-fullscreen"></span></a>
         </nav>
         <span className="title">{props.comicsFileName}</span>
       </div>

@@ -188,7 +188,7 @@ function ProductMediaSlider(){
   if (sliderFadeControlsMode === true) mediaSliderCssClass += "fade-controls ";
   if (isMobile === true) mediaSliderCssClass += "is-mobile ";
   if (showSliderArrows === false) mediaSliderCssClass += "hide-controls ";
-  if (isFullScreen === false) mediaSliderCssClass += "is-full-screen"
+  if (isFullScreen === true) mediaSliderCssClass += "is-full-screen"
 
   // slides display
   const slidesDisplay = gallery.map((s,index) => (
