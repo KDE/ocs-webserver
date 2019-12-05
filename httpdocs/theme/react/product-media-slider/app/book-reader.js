@@ -67,7 +67,7 @@ function BookReaderWrapper(props){
     window.book.book.displayChapter(6);
   }
 
-  console.log(window.book);
+  console.log(renditionState);
 
   let pageCountDisplay;
   if (totalPages) pageCountDisplay = <span>{currentPage + "/" + totalPages}</span>
@@ -79,9 +79,7 @@ function BookReaderWrapper(props){
       </div>
       <div id="viewer" className="spreads">
       </div>
-      <div id="book-pager">
-        <a onClick={goToEnd}>END</a>
-        
+      <div id="book-pager">        
         {pageCountDisplay}
       </div>
       <div id="next" className="arrow" onClick={goNext}>
