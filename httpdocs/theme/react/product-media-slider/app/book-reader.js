@@ -64,7 +64,7 @@ function BookReaderWrapper(props){
   }
 
   function goToEnd(){
-    window.book.book.displayChapter(6);
+    renditionState.moveTo(6);
   }
 
   console.log(renditionState);
@@ -79,7 +79,9 @@ function BookReaderWrapper(props){
       </div>
       <div id="viewer" className="spreads">
       </div>
-      <div id="book-pager">        
+      <div id="book-pager">
+        <a onClick={goToEnd}>END</a>
+        
         {pageCountDisplay}
       </div>
       <div id="next" className="arrow" onClick={goNext}>
