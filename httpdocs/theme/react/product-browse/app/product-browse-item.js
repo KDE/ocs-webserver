@@ -10,13 +10,6 @@ export function ProductBrowseItem(props){
     const [ productFiles, setProductFiles ] = useState();
     const [ imgUrl, setImgUrl ] = useState(getImageUrl(p,props.itemWidth,props.imgHeight));
 
-    console.log(browseListType);
-
-    if (window.location.search === "?index=7") {
-        window.browseListType === "favorites";
-        browseListType = "favorites";
-    }
-
     React.useEffect(() => {
         if (browseListType === "music"  && productFilesFetched === false ||browseListType ===  "music-test" && productFilesFetched === false) onMusicProductLoad()
     },[])
@@ -104,6 +97,15 @@ export function ProductBrowseItem(props){
         itemInfoDisplay = (
             <div className="product-browse-item-info">
                 <h2>{p.title}</h2>
+                {productBrowseItemLikesDislpay}
+            </div>
+        )
+    }
+    else if (browseListType === "books"){
+        itemInfoDisplay = (
+            <div className="product-browse-item-info">
+                <h2>{p.title}</h2>
+                <span>{p.username}</span>
                 {productBrowseItemLikesDislpay}
             </div>
         )

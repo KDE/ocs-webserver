@@ -357,6 +357,38 @@
                     }
                 }
             }
+
+            &.books {
+                .wrapper {
+                    overflow: hidden;
+                    box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+                    position: relative;
+
+                    .product-browse-image {
+                        box-shadow: none;
+                    }
+
+                    .product-browse-item-info {
+                        padding: 5px;
+                        height: 100px;
+
+                        > span {
+                            width: 100%;
+                        }
+                    }
+
+                    .likes-counter {
+                        margin-top: 3px;
+                        font-size: 12px;
+                        font-weight: 400;
+                        margin-bottom: 5px;
+                        position: absolute;
+                        left: 5px;
+                        bottom: 5px;
+                        width: 100%;
+                    }
+                }
+            }
         }
 
         .product-browse-item-preview-music-player {
