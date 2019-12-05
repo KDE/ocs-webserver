@@ -111,13 +111,13 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <div id="downloadscntdb2"><?= $countDownloadsTodayUk ?></div></span>
     </div>
     
-    <div class="row">
+    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+
+    <div class="row font-italic">
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">mediaviews 24h </span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countMediaViewsToday ?></span>
     </div>
     
-    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-
     <div class="row font-italic">
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">mediaviews total </span>
         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countMediaViewsAlltime ?></span>
