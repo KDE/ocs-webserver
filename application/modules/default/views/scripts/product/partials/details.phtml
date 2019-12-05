@@ -32,8 +32,6 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
     $isGhnsExcluded = true;
 }
 
-$isProductDangerous = $tableTags->isProductDangerous($this->product->project_id);
-
 $filesTable = new Default_Model_DbTable_PploadFiles();
 $countDownloadsToday = $filesTable->fetchCountDownloadsTodayForProject($this->product->ppload_collection_id);
 $countDownloadsTodayUk = $filesTable->fetchCountDownloadsTodayForProjectNew($this->product->ppload_collection_id);
@@ -204,9 +202,6 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
             <input type="checkbox" id="ghns_excluded-this-checkbox" <?php echo $isGhnsExcluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  ghns-excluded
         </span>
         <span class="page-views font-italic" style="color: red;">
-            <input type="checkbox" id="product_dangerous-checkbox" <?php echo $isProductDangerous == 1 ? ' checked=\'checked\' ' : ''; ?> />  product-dangerous
-        </span>
-        <span class="page-views font-italic" style="color: red;">
             <input type="checkbox" id="pling-excluded-checkbox" <?php echo $this->product->pling_excluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  pling-excluded
         </span>
 
@@ -316,38 +311,6 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
                         } else {
                             alert('Project was successfully excluded for plinging');
                             $('#pling-excluded-checkbox').prop("checked", true);
-
-                        }
-
-                    },
-                    error: function () {
-                        alert('Service is temporarily unavailable.');
-                    }
-                });
-
-                return false;
-            });
-            
-            $('#product_dangerous-checkbox').on('click', function (event) {
-                event.stopPropagation();
-                var status = 0;
-                if (this.checked) {
-                    status = 1;
-                } else {
-                    status = 0;
-                }
-
-                var target = "/backend/project/dodangerous?project_id=<?= $this->product->project_id ?>&product_dangerous=" + status;
-                $.ajax({
-                    url: target,
-                    success: function (results) {
-                        if (status == 0) {
-                            alert('Project was successfully marked as not dangerous');
-                            $('#product_dangerous-checkbox').prop("checked", false);
-
-                        } else {
-                            alert('Project was successfully marked as dangerous');
-                            $('#product_dangerous-checkbox').prop("checked", true);
 
                         }
 
