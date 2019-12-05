@@ -110,7 +110,7 @@ function ComicBookReader(props){
           <a id="bb-nav-last" onClick={() => onComicReaderNavClick('last')}><span className="glyphicon glyphicon-step-forward"></span></a>
           <a id="bb-nav-viewmode" onClick={() => setViewMode('fullscreen')}><span className="glyphicon glyphicon-fullscreen"></span></a>
         </nav>
-        <span>{props.comicsFileName}</span>
+        <span className="title">{props.comicsFileName}</span>
       </div>
     </div>
   )

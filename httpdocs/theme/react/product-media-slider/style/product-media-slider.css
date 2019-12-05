@@ -867,7 +867,7 @@ video:focus {
 #comics-reader-wrapper .comic-book-reader {
   height: 100%;
   position: relative;
-  padding-bottom: 34px;
+  padding-bottom: 50px;
   padding-top: 26px;
 }
 #comics-reader-wrapper .comic-book-reader .bb-bookblock {
@@ -885,7 +885,7 @@ video:focus {
   position: absolute;
   bottom: 0;
   z-index: 111;
-  height: 34px;
+  height: 50px;
 }
 #comics-reader-wrapper .nav-container nav {
   width: auto;
@@ -914,4 +914,18 @@ video:focus {
 #comics-reader-wrapper .nav-container nav a#bb-nav-counter {
   line-height: 30px;
   font-size: 12px;
+}
+#comics-reader-wrapper .nav-container > span.title {
+  display: inline-block;
+  /* min-width: 30px; */
+  height: auto;
+  text-align: center;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  margin: 2px;
+  /* float: left; */
+  cursor: pointer;
+  font-size: 12px;
+  padding: 4px;
 }
