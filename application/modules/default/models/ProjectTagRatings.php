@@ -35,8 +35,8 @@ class Default_Model_ProjectTagRatings
                 r.member_id,
                 r.tag_rating_id
                 FROM stat_projects p
-                inner join category_tag_group_rating g on p.project_category_id = g.category_id
-                inner join tag_group_item i on i.tag_group_id = g.tag_group_id
+                inner join project_category g on p.project_category_id = g.project_category_id
+                inner join tag_group_item i on i.tag_group_id = g.tag_rating
                 inner join tag_rating r on r.tag_id = i.tag_id and r.project_id = p.project_id and r.is_deleted=0
                 inner join tag t on t.tag_id = r.tag_id
                 where p.project_id = :project_id
@@ -48,14 +48,14 @@ class Default_Model_ProjectTagRatings
     public function getCategoryTagRatings($category_id)
     {
         $sql ="SELECT 
-            t.tag_id as id,            
-            t.tag_fullname as name,
-            tg.group_display_name
-            FROM category_tag_group_rating g
-            inner join tag_group_item i on i.tag_group_id = g.tag_group_id
-            inner join tag t on t.tag_id = i.tag_id
-            inner join tag_group tg on g.tag_group_id = tg.group_id
-            where g.category_id = :category_id
+                t.tag_id as id,            
+                t.tag_fullname as name,
+                tg.group_display_name
+                FROM project_category g
+                inner join tag_group_item i on i.tag_group_id = g.tag_rating
+                inner join tag t on t.tag_id = i.tag_id
+                inner join tag_group tg on g.tag_rating = tg.group_id
+                where g.project_category_id =:category_id
             ";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('category_id' => $category_id))->fetchAll();
         return $result;
