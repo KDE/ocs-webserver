@@ -420,6 +420,22 @@ video:focus {
   z-index: 11;
   background: rgba(0, 0, 0, 0.5);
 }
+#media-slider.is-full-screen #comics-reader-wrapper .nav-container {
+  height: 95px;
+}
+#media-slider.is-full-screen #comics-reader-wrapper .comic-book-reader {
+  padding-bottom: 100px;
+  padding-top: 34px;
+}
+#media-slider.is-full-screen #comics-reader-wrapper .comic-book-reader .bb-bookblock {
+  width: 93%;
+  height: 95%;
+  margin-top: 2%;
+}
+#media-slider.is-full-screen .swiper-pagination {
+  margin-top: -50px;
+  position: fixed;
+}
 #book-reader-wrapper {
   position: relative;
   height: inherit;
