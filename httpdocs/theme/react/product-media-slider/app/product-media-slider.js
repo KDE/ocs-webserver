@@ -109,7 +109,7 @@ function ProductMediaSlider(){
   //handle full screen toggle
   function hanleFullScreenToggle(val){
     setIsFullScreen(val);
-    const newSliderHeight = val === true ? window.offsetHeight : 360;
+    const newSliderHeight = val === true ? window.innerHeight : 360;
     setSliderHeight(newSliderHeight);
     const parentContainerElement = document.getElementById('product-title-div');
     const newContainerWidth = val === true ? window.offsetWidth : parentContainerElement;
@@ -282,9 +282,9 @@ function SlideItem(props){
   }, [props.gallery])
   React.useEffect(() => { getSlideContentHeight(props.cinemaMode) },[props.currentSlide, props.cinemaMode]);
   React.useEffect(() => {
-    const newItemSetHeight = props.isFullScreen === true ? window.offsetHeight - 20 : 360;
+    const newItemSetHeight = props.sliderHeight;
     setItemSetHeight(newItemSetHeight);
-  },[props.isFullScreen]);
+  },[props.isFullScreen,props.sliderHeight]);
 
   function getSlideContentHeight(cinemaMode){
     if (props.currentSlide === props.slideIndex){    
