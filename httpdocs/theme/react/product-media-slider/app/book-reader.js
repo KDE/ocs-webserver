@@ -64,7 +64,7 @@ function BookReaderWrapper(props){
   }
 
   function goToEnd(){
-    window.book.displayChapter(6);
+    window.book.book.displayChapter(6);
   }
 
   console.log(window.book);
