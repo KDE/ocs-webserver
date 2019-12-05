@@ -5,7 +5,7 @@ function ComicsReaderWrapper(props){
     const [ loading, setLoading ] = useState('Loading...');
     const [ comicBookInitiated, setComicBookInitiated ] = useState(false);
     const [ pages, setPages ] = useState([]);
-    console.log(props);
+
     /* INIT */
 
     React.useEffect(() => {
@@ -18,7 +18,6 @@ function ComicsReaderWrapper(props){
     function initComicBook(){
       const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
       $.ajax({url:url}).done(function(res){
-          console.log(res)
           const pages = renderPages(res.files,props.slide.file_id);
           setPages(pages);
       });
@@ -108,7 +107,7 @@ function ComicBookReader(props){
           <a id="bb-nav-prev" onClick={() => onComicReaderNavClick('prev')}><span className="glyphicon glyphicon-triangle-left"></span></a>
           <a id="bb-nav-next" onClick={() => onComicReaderNavClick('next')}><span className="glyphicon glyphicon-triangle-right"></span></a>
           <a id="bb-nav-last" onClick={() => onComicReaderNavClick('last')}><span className="glyphicon glyphicon-step-forward"></span></a>
-          <a id="bb-nav-viewmode" onClick={() => setViewMode('fullscreen')}><span className="glyphicon glyphicon-fullscreen"></span></a>
+          <a id="bb-nav-viewmode" onClick={() => props.onFullScreenToggle(true)}><span className="glyphicon glyphicon-fullscreen"></span></a>
         </nav>
         <span className="title">{props.comicsFileName}</span>
       </div>
