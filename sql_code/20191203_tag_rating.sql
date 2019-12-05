@@ -36,11 +36,14 @@ CREATE TABLE `tag_rating` (
 )
 ;
 
-CREATE TABLE `category_tag_group_rating`
-(
-    `category_tag_group_rating_id` INT(11) NOT NULL AUTO_INCREMENT,
-    `category_id`  INT(11) NOT NULL,
-    `tag_group_id` INT(11) NOT NULL,
-    PRIMARY KEY (`category_tag_group_rating_id`)
-)   
-;
+-- CREATE TABLE `category_tag_group_rating`
+-- (
+--     `category_tag_group_rating_id` INT(11) NOT NULL AUTO_INCREMENT,
+--     `category_id`  INT(11) NOT NULL,
+--     `tag_group_id` INT(11) NOT NULL,
+--     PRIMARY KEY (`category_tag_group_rating_id`)
+-- )   
+-- ;
+
+ALTER TABLE `project_category`
+	ADD COLUMN `tag_rating` INT(11)  comment 'tag_group_id' AFTER `browse_list_type`;
