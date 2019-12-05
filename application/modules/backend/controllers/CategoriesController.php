@@ -229,6 +229,32 @@ class Backend_CategoriesController extends Local_Controller_Action_Backend
         $this->_helper->json($jTableResult);
     }
 
+    public function fetchtagratinggroupsAction()
+    {
+        $result = true;
+        
+        $tagmodel  = new Default_Model_Tags();
+        try {
+                $resultRows = $tagmodel->getAllTagGroupsForStoreFilter();
+                $resultForSelect = array();
+                $resultForSelect[] = array('DisplayText' => '', 'Value' => null);
+                foreach ($resultRows as $row) {         
+                    $resultForSelect[] = array('DisplayText' => $row['group_name'], 'Value' => $row['group_id']);
+                }
+
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
+            $result = false;
+            $records = array();
+        }
+
+        $jTableResult = array();
+        $jTableResult['Result'] = ($result == true) ? self::RESULT_OK : self::RESULT_ERROR;
+        $jTableResult['Options'] = $resultForSelect;
+
+        $this->_helper->json($jTableResult);
+    }
+
     public function readaboutAction()
     {
         $cat_id = (int)$this->getParam('c');

@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import { func } from 'prop-types';
 
 function BookReaderWrapper(props){
   
   const [ renditionState , setRenditionState ] = useState()
   const [ currentPage, setCurrentPage ] = useState();
   const [ totalPages, setTotalPages ] = useState();
-
-  console.log(renditionState);
 
   React.useEffect(() => {initBookReader()},[])
   React.useEffect(() => { 
@@ -63,15 +60,13 @@ function BookReaderWrapper(props){
   }
 
   function goToStart(){
-    const current = window.book.pagination.pageFromCfi(book.getCurrentLocationCfi());
-    console.log(current)
+    renditionState.moveTo(0);    
   }
 
   function goToEnd(){
-    console.log('go to end');
+    console.log(renditionState);
+    renditionState.moveTo(-1);
   }
-
-  console.log(window.book);
 
   let pageCountDisplay;
   if (totalPages) pageCountDisplay = <span>{currentPage + "/" + totalPages}</span>
@@ -84,12 +79,12 @@ function BookReaderWrapper(props){
       <div id="viewer" className="spreads">
       </div>
       <div id="book-pager">
-        {pageCountDisplay}
+        <a onClick={goToStart}>START</a>
+        <a onClick={goToEnd}>END</a>
+        <span>{pageCountDisplay}</span>
       </div>
       <div id="next" className="arrow" onClick={goNext}>
         <span className="glyphicon glyphicon-chevron-right"></span>  
-      </div>
-      <div id="book-reader-nav">
       </div>
     </div>
   )

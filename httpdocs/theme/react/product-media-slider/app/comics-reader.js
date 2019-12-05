@@ -5,7 +5,7 @@ function ComicsReaderWrapper(props){
     const [ loading, setLoading ] = useState('Loading...');
     const [ comicBookInitiated, setComicBookInitiated ] = useState(false);
     const [ pages, setPages ] = useState([]);
-
+    console.log(props);
     /* INIT */
 
     React.useEffect(() => {
@@ -31,6 +31,7 @@ function ComicsReaderWrapper(props){
         <ComicBookReader 
           pages={pages}
           slideIndex={props.slideIndex}
+          comicsFileName={props.slide.title}
         />
       )
     }
@@ -109,6 +110,7 @@ function ComicBookReader(props){
           <a id="bb-nav-last" onClick={() => onComicReaderNavClick('last')}><span className="glyphicon glyphicon-step-forward"></span></a>
           <a id="bb-nav-viewmode" onClick={() => setViewMode('fullscreen')}><span className="glyphicon glyphicon-fullscreen"></span></a>
         </nav>
+        <span className="title">{props.comicsFileName}</span>
       </div>
     </div>
   )
