@@ -477,6 +477,26 @@ class Default_Model_Tags
             return false;
         }
     }
+    
+    public function isProductDangerous($project_id)
+    {
+        $tag_dangerous_group_id = Zend_Registry::get('config')->settings->client->default->tag_group_dangerous_id;
+        $tag_dangerous_id = Zend_Registry::get('config')->settings->client->default->tag_dangerous_id;
+        
+        $sql_object = "select tag_item_id  from tag_object WHERE tag_id = :tag_id and tag_object_id=:tag_object_id and tag_group_id=:tag_group_id  
+                                    and tag_type_id = :tag_type_id and is_deleted = 0";
+        $r = $this->getAdapter()->fetchRow($sql_object, array(
+            'tag_id'        => $tag_dangerous_id,
+            'tag_object_id' => $project_id,
+            'tag_group_id'  => $tag_dangerous_group_id,
+            'tag_type_id'   => self::TAG_TYPE_PROJECT
+        ));
+        if ($r) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public function isProductEbook($project_id)
     {
@@ -815,15 +835,16 @@ class Default_Model_Tags
     }
 
 
-    public function saveGhnsExcludedTagForProject($object_id, $tag_value)
+    public function saveDangerosuTagForProject($object_id, $tag_value)
     {
 
         $tableTags = new Default_Model_DbTable_Tags();
-        $ghnsExcludedTagId = $tableTags->fetchGhnsExcludedTagId();
+        $tag_dangerous_group_id = Zend_Registry::get('config')->settings->client->default->tag_group_dangerous_id;
+        $tag_dangerous_id = Zend_Registry::get('config')->settings->client->default->tag_dangerous_id;
 
         $sql = "UPDATE tag_object SET tag_changed = NOW() , is_deleted = 1  WHERE tag_group_id = :tag_group_id AND tag_type_id = :tag_type_id AND tag_object_id = :tag_object_id";
         $this->getAdapter()->query($sql, array(
-            'tag_group_id'  => $this::TAG_GHNS_EXCLUDED_GROUPID,
+            'tag_group_id'  => $tag_dangerous_group_id,
             'tag_type_id'   => $this::TAG_TYPE_PROJECT,
             'tag_object_id' => $object_id
         ));
@@ -831,10 +852,10 @@ class Default_Model_Tags
         if ($tag_value == 1) {
             $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_group_id)";
             $this->getAdapter()->query($sql, array(
-                'tag_id'        => $ghnsExcludedTagId,
+                'tag_id'        => $tag_dangerous_id,
                 'tag_type_id'   => $this::TAG_TYPE_PROJECT,
                 'tag_object_id' => $object_id,
-                'tag_group_id'  => $this::TAG_GHNS_EXCLUDED_GROUPID
+                'tag_group_id'  => $tag_dangerous_group_id
             ));
         }
 
