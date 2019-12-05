@@ -31,6 +31,7 @@ function ComicsReaderWrapper(props){
           pages={pages}
           slideIndex={props.slideIndex}
           comicsFileName={props.slide.title}
+          onFullScreenToggle={props.onFullScreenToggle}
         />
       )
     }
