@@ -183,6 +183,15 @@ if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
                                 }*/
                                 
                             }
+                            if(!is_null($comment['tag_vote']))
+                            {   
+                                if($comment['tag_vote']=='1')
+                                {
+                                    echo $comment['tag_fullname'].'<i class="fa fa-thumbs-up" style="color:#4CAF50"></i>';
+                                }else{
+                                    echo $comment['tag_fullname'].'<i class="fa fa-thumbs-down" style="color:#FF0000"></i>';
+                                }
+                            }
                         ?>
                         
                         <?= nl2br(Default_Model_HtmlPurify::purify($comment['comment_text']),true) ?>
