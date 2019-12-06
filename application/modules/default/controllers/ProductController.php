@@ -1869,20 +1869,29 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout->disableLayout();
         $vote=  $this->getParam('vote');
         $tag_id=  $this->getParam('tid');
+        $msg=  $this->getParam('msg');
+        if(strlen($msg)<1) {
+            $this->_helper->json(array(
+                'status' => 'error',
+                'msg' =>'Please add a comment.'                
+            ));
+            return;
+        };
+                
         $model = new Default_Model_ProjectTagRatings();
         if($this->_authMember->member_id)
         {
             $checkVote = $model->checkIfVote($this->_authMember->member_id,$this->_projectId,$tag_id);
             if(!$checkVote)
             {
-               $model->doVote($this->_authMember->member_id,$this->_projectId,$tag_id,$vote);               
+               $model->doVote($this->_authMember->member_id,$this->_projectId,$tag_id,$vote,$msg);               
             }else{
                if($checkVote['vote']== $vote)
                {
                     $model->removeVote($checkVote['tag_rating_id']);
                }else{
                     $model->removeVote($checkVote['tag_rating_id']);
-                    $model->doVote($this->_authMember->member_id,$this->_projectId,$tag_id,$vote);               
+                    $model->doVote($this->_authMember->member_id,$this->_projectId,$tag_id,$vote,$msg);               
                }
             }
                                     

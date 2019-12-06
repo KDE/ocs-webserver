@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import Axios from 'axios';
 import Rate from './Rate';
+import Bar from './Bar';
+import ModalComment from './ModalComment';
 const TagRating = () => {
     const [labels, setLabels] = useState([]);
     const [values, setValues] = useState([]);   
+    const [comment, setComment] = useState('');   
     const [user, setUser] = useState(window.config.user); 
+    const [project_id, setProject_id] = useState(window.product.project_id);   
+    const [vote, setVote] = useState(null);   
+    const [tid, setTid] = useState(null);   
     useEffect(() => {
         loadTagRatings();
     }, []);
@@ -19,17 +25,39 @@ const TagRating = () => {
     }
     const handleVote =(vote,tid)=>{
         if(user)
-        {
-            const url = window.config.baseUrlStore + '/p/' + window.product.project_id + '/votetagrating?vote='+vote+'&tid='+tid;
-            Axios.get(url)
-            .then(result => {
-                loadTagRatings();        
-            })
+        {   
+            setVote(vote);
+            setTid(tid);         
+            $('#tag-voting-comment-modal').modal('show');                        
         }else{            
             $('#like-product-modal').modal('show');
-        }
-        
+        }        
     }
+
+    const handleSubmitVote= event =>{        
+        event.preventDefault();
+        const url = window.config.baseUrlStore + '/p/' + project_id + '/votetagrating';
+        const params = new URLSearchParams();
+        params.append('vote', vote);
+        params.append('tid', tid);
+        params.append('msg', comment);
+        Axios.post(url,params)
+        .then(function (response) {
+            setComment('');
+            $('#tag-voting-comment-modal').modal('hide');      
+            loadTagRatings();            
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+    
+    const handleChangeComment = event =>{
+        setComment(event.target.value);
+      }
+
+   
     return (
         <div className="tag-rating-container">
             {labels && labels.length>0 &&
@@ -43,7 +71,7 @@ const TagRating = () => {
                         <a onClick={()=>handleVote(-1,l.id)} style={{color:'#4e4e4e'}}>                            
                             <Rate values={values} vote="-1" label={l} user={user}/>
                             </a> 
-                        <span className="taglabel label label-info" style={{marginRight: '3px',width:'120px',display:'inline-block',padding:'3px'}}>{l.name}</span>                        
+                        <Bar title={l.name}></Bar>                     
                         <a onClick={()=>handleVote(1,l.id)} style={{color:'#4e4e4e'}}>                            
                             <Rate values={values} vote="1" label={l} user={user}/>
                              </a> 
@@ -51,6 +79,8 @@ const TagRating = () => {
                 )
             }
             </ul>
+
+            <ModalComment handleSubmit={handleSubmitVote} comment={comment} handleChangeComment={handleChangeComment}></ModalComment>
         </div>
     )
 }

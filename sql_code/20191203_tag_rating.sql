@@ -28,6 +28,7 @@ CREATE TABLE `tag_rating` (
 	`project_id` INT(11) NOT NULL,
     `member_id` INT(11) NOT NULL,
 	`tag_id` INT(11) NOT NULL,
+	`comment_id` INT(11) NOT NULL,
     `vote` INT(1) NOT NULL comment '1 = like -1 = dislike 0=neutral',
     `is_deleted` INT(1) NOT NULL DEFAULT 0,
     `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
@@ -36,14 +37,7 @@ CREATE TABLE `tag_rating` (
 )
 ;
 
--- CREATE TABLE `category_tag_group_rating`
--- (
---     `category_tag_group_rating_id` INT(11) NOT NULL AUTO_INCREMENT,
---     `category_id`  INT(11) NOT NULL,
---     `tag_group_id` INT(11) NOT NULL,
---     PRIMARY KEY (`category_tag_group_rating_id`)
--- )   
--- ;
 
-ALTER TABLE `project_category`
-	ADD COLUMN `tag_rating` INT(11)  comment 'tag_group_id' AFTER `browse_list_type`;
+ALTER TABLE `tag_rating`
+    ADD INDEX `idx_tag_rating_1` (`comment_id`);
+    

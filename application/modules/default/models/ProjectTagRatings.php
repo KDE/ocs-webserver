@@ -81,20 +81,79 @@ class Default_Model_ProjectTagRatings
         }
     }
 
-    public function doVote($member_id,$project_id,$tag_id,$vote)
-    {        
+    public function doVote($member_id,$project_id,$tag_id,$vote,$msg)
+    {                
+        $data = array();
+        $data['comment_target_id'] =$project_id;
+        $data['comment_member_id'] =$member_id;
+        $data['comment_parent_id'] = 0;
+        $data['comment_text'] = $msg;
+        $commentmodel = new Default_Model_ProjectComments();
+        $result = $commentmodel->save($data);
+        $comment_id =  $result->comment_id;
+
         Zend_Db_Table::getDefaultAdapter()->insert('tag_rating'
         ,array('member_id' => $member_id
         ,'project_id' => $project_id
         ,'tag_id' => $tag_id
-        ,'vote' => $vote   
+        ,'vote' => $vote
+        ,'comment_id' => $comment_id 
         ));
+
+        $this->sendNotificationToOwner($project_id, $msg,40);
+       
     }
 
     public function removeVote($tag_rating_id)
     {        
         $sql ="update tag_rating set is_deleted=1, deleted_at=now() where tag_rating_id=".$tag_rating_id;
         Zend_Db_Table::getDefaultAdapter()->query($sql);
+        
+        $sql = "select comment_id from tag_rating where tag_rating_id=:tag_rating_id ";
+        $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql,array("tag_rating_id"=>$tag_rating_id));
+        if($result && $result['comment_id'])
+        {
+            $modelComments = new Default_Model_ProjectComments();
+            $modelComments->deactiveComment($result['comment_id']);
+        }
+    }
+
+
+    /**
+     * @param Zend_Db_Table_Row_Abstract $product
+     * @param string                     $comment
+     */
+    private function sendNotificationToOwner($project_id, $comment,$comment_type=null)
+    {
+        $auth = Zend_Auth::getInstance();
+        if ($auth->hasIdentity()) {
+            $this->_authMember = $auth->getStorage()->read();
+        }else{
+            return;
+        }
+        $tableProject = new Default_Model_Project();
+        $product = $tableProject->fetchProductInfo($project_id);
+        //Don't send email notification for comments from product owner
+        if ($this->_authMember->member_id == $product->member_id) {
+            return;
+        }
+
+        $productData = new stdClass();
+        $productData->mail = $product->mail;
+        $productData->username = $product->username;
+        $productData->username_sender = $this->_authMember->username;
+        $productData->title = $product->title;
+        $productData->project_id = $product->project_id;
+
+        $queue = Local_Queue_Factory::getQueue();        
+        if(!empty($comment_type)&& $comment_type=='30')
+        {   
+            $command = new Backend_Commands_SendCommentNotification('tpl_user_comment_note_'.$comment_type, $productData, $comment);
+        }else
+        {
+            $command = new Backend_Commands_SendCommentNotification('tpl_user_comment_note', $productData, $comment);
+        }        
+        $queue->send(serialize($command));
     }
     
     

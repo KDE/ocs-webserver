@@ -23,13 +23,12 @@ class Default_Model_DbTable_Comments extends Local_Model_Table
 {
 
     const COMMENT_ACTIVE = 1;
-    const COMMENT_INACTIVE = 0;
-    
+    const COMMENT_INACTIVE = 0;    
     const COMMENT_TYPE_PLING = 10;
     const COMMENT_TYPE_DONATION = 20;
     const COMMENT_TYPE_PRODUCT = 0;
     const COMMENT_TYPE_MODERATOR = 30;
-        
+            
     protected $_name = "comments";
 
     protected $_keyColumnsForRow = array('comment_id');

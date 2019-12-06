@@ -15,12 +15,12 @@ const Rate = (props) => {
    if(props.vote==1)
    {
        content =<>
-                    <i className={iconCls}></i>
+                    <i className={iconCls} style={l.length>0?{color:'#4CAF50'}:{}}></i>
                     {l.length>0?l.length:''}
                 </>
    }else{
         content =<>
-                    <i className={iconCls}></i>
+                    <i className={iconCls} style={l.length>0?{color:'#FF0000'}:{}}></i>
                     {l.length>0?l.length:''}      
         </>
    }

@@ -272,7 +272,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
 
     }
 
-
+   
 
     /**
      * @param int      $projectId
