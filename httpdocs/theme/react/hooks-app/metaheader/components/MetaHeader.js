@@ -6,10 +6,11 @@ import MetaHeaderComponent from "./MetaHeaderComponent";
 
 const MetaHeader = (props) => {
   
-  return (    
-    <MetaheaderContextProvider {...props}>
+  return (      
+    <MetaheaderContextProvider {...props}>      
       <MetaHeaderComponent />  
     </MetaheaderContextProvider>
+    
   )
 }
 
