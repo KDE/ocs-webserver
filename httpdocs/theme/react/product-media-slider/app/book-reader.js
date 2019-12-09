@@ -6,19 +6,36 @@ import {
   ReactReaderStyle // Styles for the epub-reader it you need to customize it
 } from "react-reader";
 
-class BookReaderWrapper extends Component {
-  render() {
+function BookReaderWrapper(props){
+    console.log(props.slide)
+
+    function onGetRendition(rendition){
+      console.log('on get rendition');
+      console.log(rendition);
+    }
+
+    function onLocationChanged(epubcifi){
+      console.log('on location changed');
+      console.log(epubcifi);
+    }
+
+    function onTocChanged(toc){
+      console.log('on toc changed')
+      console.log(toc)
+    }
+
     return (
       <div style={{ position: "relative", height: "100%" }}>
         {" "}
         <ReactReader
           url={this.props.slide.url}
           title={this.props.slide.title}
-          locationChanged={epubcifi => console.log(epubcifi)}
+          locationChanged={epubcifi => onLocationChanged(epubcifi)}
+          getRendition={rendition => onGetRendition(rendtion)}
+          tocChanged={toc => onTocChanged(toc)}
         />
       </div>
     );
-  }
 }
 
 /*function BookReaderWrapper(props){

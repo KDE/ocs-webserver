@@ -27,7 +27,7 @@ function ProductMediaSlider(){
   const [ showPlaylist, setShowPlaylist ] = useState(false);
   const [ showSliderArrows, setShowSliderArrows ] = useState(isMobile === true ? true : false);  
   const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(true);
-  console.log(isFullScreen);
+
   let sliderFadeControlTimeOut;
 
   // use effects
