@@ -35,7 +35,7 @@
     "react-device-detect": "^1.6.2",
     "react-draggable": "^3.3.0",
     "react-jinke-music-player": "^4.3.4",
-    "react-reader": "^0.17.10",
+    "react-reader": "^0.17.11",
     "swiper": "^4.5.0",
     "video-react": "^0.13.7"
   }
