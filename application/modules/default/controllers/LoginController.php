@@ -32,6 +32,13 @@ class LoginController extends Local_Controller_Action_DomainSwitch
 
     }
 
+    public function setAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        //$this->_helper->viewRenderer->setNoRender(true);
+
+    }
+
     public function fpAction()
     {
         $this->_helper->layout()->disableLayout();
