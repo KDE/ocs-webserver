@@ -37,12 +37,30 @@ class LoginController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $fingerprint = stripslashes(trim($this->getParam('fp')));
-
-        Zend_Registry::set('client_fp', $fingerprint);
-
+        $fp = stripslashes(trim($this->getParam('fp')));
+        $ip4 = filter_var(stripslashes(trim($this->getParam('ipv4'))), FILTER_VALIDATE_IP);
+        $ip6 = filter_var(stripslashes(trim($this->getParam('ipv6'))), FILTER_VALIDATE_IP);
+        $hash = sha1($fp.$ip4.$ip6);
+        $request_ip = $this->getRequest()->getClientIp();
         $namespace = new Zend_Session_Namespace();
-        $namespace->client_fp = $fingerprint;
+
+        if ($namespace->stat_hash === $hash) {
+            $this->_helper->json(array('status' => 'ok'));
+
+            return;
+        }
+
+        $namespace->client_fp = $fp;
+        $namespace->stat_fp = $fp;
+        $namespace->stat_ipv4 = $ip4 ? $ip4 : null;
+        $namespace->stat_ipv6 = $ip6 ? $ip6 : null;
+        $namespace->stat_hash = $hash;
+        $namespace->stat_request_ip = $request_ip;
+        $namespace->stat_valid = true;
+
+        foreach ($namespace->getIterator()->getArrayCopy() as $key=>$item) {
+            Zend_Registry::get('logger')->debug(print_r($key, true).' => '.print_r($item,true));
+        };
 
         $this->_helper->json(array('status' => 'ok'));
     }

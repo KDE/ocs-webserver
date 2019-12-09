@@ -1,36 +1,84 @@
-version: '3'
+version: '2.4'
 services:
   web:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./.docker/dev/nginx/ocs.conf:/etc/nginx/conf.d/default.conf
+      - ./httpdocs:/usr/local/src/ocs-webserver/httpdocs
+      - ./.docker_init/images_sys/store_kde:/usr/local/src/ocs-webserver/httpdocs/images_sys/store_kde
+      - ./.docker_init/images_sys/superstore:/usr/local/src/ocs-webserver/httpdocs/images_sys/superstore
+      - ./.docker_init/images_sys/store_pling:/usr/local/src/ocs-webserver/httpdocs/images_sys/store_pling
+      - ./.docker_init/images_sys/store_opendesktop:/usr/local/src/ocs-webserver/httpdocs/images_sys/store_opendesktop
+    container_name: 'ocs-web'
+    depends_on:
+      - app
+    networks:
+      dev:
+        aliases:
+          - ocs
+          - pling
+  app:
     build:
       context: .
-      args:
-        BUILD_ENV: development
-    ports:
-      - '80:80'
+      dockerfile: .docker/dev/app/Dockerfile
+#      args:
+#        BUILD_ENV: development
+    environment:
+      - APPLICATION_ENV=development
+      - APPLICATION_TIMEZONE=UTC
+#      - APPLICATION_LOGFILE=/var/log/ocs-webserver/application.log
+#      - APPLICATION_LOGMODE=a
+      - APPLICATION_LOGFILE=php://stdout
+      - APPLICATION_LOGMODE=w
+      - PHP_IDE_CONFIG=serverName=localhost
     volumes:
-      - .:/usr/src/ocs-webserver
-      - ./.docker_init/configs/application.dev.ini:/usr/src/ocs-webserver/application/configs/application.local.ini
-      - ./.docker_init/httpdocs/.htaccess:/usr/src/ocs-webserver/httpdocs/.htaccess
-      - ./.docker_init/httpdocs/images_sys/store_kde:/usr/src/ocs-webserver/httpdocs/images_sys/store_kde
-      - ./.docker_init/httpdocs/images_sys/store_opendesktop:/usr/src/ocs-webserver/httpdocs/images_sys/store_opendesktop
-      - ./.docker_init/httpdocs/images_sys/superstore:/usr/src/ocs-webserver/httpdocs/images_sys/superstore
-#      - ./.docker_init/templates:/usr/src/ocs-webserver/data/stores/templates
-    expose:
-      - '80'
+      - .:/usr/local/src/ocs-webserver
+      - ./.docker_init/templates:/usr/local/src/ocs-webserver/data/stores/templates
+      - ./.docker_init/images_sys/store_kde:/usr/local/src/ocs-webserver/httpdocs/images_sys/store_kde
+      - ./.docker_init/images_sys/superstore:/usr/local/src/ocs-webserver/httpdocs/images_sys/superstore
+      - ./.docker_init/images_sys/store_pling:/usr/local/src/ocs-webserver/httpdocs/images_sys/store_pling
+      - ./.docker_init/images_sys/store_opendesktop:/usr/local/src/ocs-webserver/httpdocs/images_sys/store_opendesktop
+#      - ./.docker/dev/app/application.local.ini:/usr/local/src/ocs-webserver/application/configs/application.local.ini
+#      - ./.docker_init/httpdocs/.htaccess:/usr/local/src/ocs-webserver/httpdocs/.htaccess
+    container_name: 'ocs-webserver'
     depends_on:
       - sessions
       - cache
       - sqldb
+      - ipify
+    networks:
+      - dev
+  ipify:
+    build:
+      context: .docker/dev/ipify
+      dockerfile: ./Dockerfile
+    container_name: 'ocs-ipify'
+    networks:
+      dev:
+        aliases:
+          - ipify4
+          - ipify6
+    ports:
+      - "8080:80"
   sessions:
     image: 'memcached:1.5'
+    container_name: 'ocs-sessions'
     expose:
       - '11211'
+    networks:
+      - dev
   cache:
     image: 'memcached:1.5'
+    container_name: 'ocs-cache'
     expose:
       - '11211'
+    networks:
+      - dev
   sqldb:
-    image: mariadb
+    image: mysql:5.5.57
+    container_name: 'ocs-database'
     ports:
       - '3306:3306'
     expose:
@@ -39,3 +87,26 @@ services:
       - MYSQL_ROOT_PASSWORD=${OCS_WS_MYSQL_ROOT_PWD:-root}
     volumes:
       - ./.docker_init/seed/:/docker-entrypoint-initdb.d
+      - ./.docker/dev/sqldb/init:/etc/mysql/conf.d
+    networks:
+      - dev
+  search:
+    image: 'solr:8.1'
+    container_name: 'ocs-search'
+    expose:
+      - '8983'
+    ports:
+      - '127.0.0.1:8983:8983'
+    volumes:
+      - ./.docker_init/solr/lib/mysql-connector-java-5.1.41-bin.jar:/opt/solr/contrib/dataimporthandler-extras/lib/mysql-connector-java-5.1.41-bin.jar
+      - ./.docker_init/solr/config:/ocs-config
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - opendesktop
+      - /ocs-config
+    networks:
+      - dev
+networks:
+  dev:
+#    enable_ipv6: true
