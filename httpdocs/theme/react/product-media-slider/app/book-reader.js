@@ -7,12 +7,13 @@ import {
 } from "react-reader";
 
 function BookReaderWrapper(props){
-    console.log(props)
 
     const [ currentPage, setCurrentPage ] = useState();
     const [ totalPages, setTotalPages ] = useState();
 
     function onGetRendition(rendition){
+      console.log('on get rendition');
+      console.log(rendition);
       if (rendition.locations){
         console.log(rendition.locations.start.cfi);
         console.log(rendition.book.locations.locationFromCfi(rendition.locations.start.cfi))
