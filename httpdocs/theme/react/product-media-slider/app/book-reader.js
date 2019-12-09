@@ -14,7 +14,9 @@ function BookReaderWrapper(props){
 
     function onGetRendition(rendition){
       console.log(rendition);
-      setCurrentPage(rendition.book.locations.locationFromCfi(rendition.locations.start.cfi));
+      if (rendtion.locations){
+        setCurrentPage(rendition.book.locations.locationFromCfi(rendition.locations.start.cfi));
+      }
       setTotalPages(rendtion.book.locations.total);
     }
 
