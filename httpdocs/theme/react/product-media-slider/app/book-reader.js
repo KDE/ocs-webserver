@@ -13,16 +13,18 @@ function BookReaderWrapper(props){
     const [ totalPages, setTotalPages ] = useState();
 
     function onGetRendition(rendition){
-      console.log(rendition);
       if (rendition.locations){
-        setCurrentPage(rendition.book.locations.locationFromCfi(rendition.locations.start.cfi));
+        console.log(rendition.locations.start.cfi);
+        console.log(rendition.book.locations.locationFromCfi(rendition.locations.start.cfi))
+        const location = rendition.book.locations.locationFromCfi(rendition.locations.start.cfi);
+        setTotalPages(rendition.locations.total);        
+        setCurrentPage(location);
       }
-      setTotalPages(rendition.book.locations.total);
     }
 
     function onLocationChanged(epubcifi){
       console.log('on location changeds');
-      console.log(epubcifi);
+      // console.log(epubcifi);
     }
 
     function onTocChanged(toc){
