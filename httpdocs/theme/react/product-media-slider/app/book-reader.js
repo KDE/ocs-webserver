@@ -8,18 +8,24 @@ import {
 
 function BookReaderWrapper(props){
 
+    const [ renditionState, setRenditionState ] = useState();
     const [ currentPage, setCurrentPage ] = useState();
     const [ totalPages, setTotalPages ] = useState();
 
-    function onGetRendition(rendition){
-      console.log('on get rendition');
-      if (rendition.location){
-        console.log(rendition.location.start.cfi);
-        console.log(rendition.book.locations.locationFromCfi(rendition.location.start.cfi))
-        const location = rendition.book.locations.locationFromCfi(rendition.location.start.cfi);
-        setTotalPages(rendition.location.total);        
-        setCurrentPage(location);
+    React.useEffect(() => {
+      console.log(renditionState);
+      if (renditionState.location){
+          console.log(rendition.location.start.cfi);
+          console.log(rendition.book.locations.locationFromCfi(rendition.location.start.cfi))
+          const location = rendition.book.locations.locationFromCfi(rendition.location.start.cfi);
+          setTotalPages(rendition.location.total);        
+          setCurrentPage(location);
       }
+    },[renditionState])
+
+    function onGetRendition(rendition){
+      console.log(rendition);
+      setRenditionState(rendition);
     }
 
     function onLocationChanged(epubcifi){
