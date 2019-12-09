@@ -13,14 +13,11 @@ function BookReaderWrapper(props){
 
     function onGetRendition(rendition){
       console.log('on get rendition');
-      console.log(rendition);
-      if (rendition.locations){
-        console.log(rendition.locations.start.cfi);
-        console.log(rendition.book.locations.locationFromCfi(rendition.locations.start.cfi))
-        const location = rendition.book.locations.locationFromCfi(rendition.locations.start.cfi);
-        setTotalPages(rendition.locations.total);        
-        setCurrentPage(location);
-      }
+      console.log(rendition.location.start.cfi);
+      console.log(rendition.book.locations.locationFromCfi(rendition.location.start.cfi))
+      const location = rendition.book.locations.locationFromCfi(rendition.location.start.cfi);
+      setTotalPages(rendition.location.total);        
+      setCurrentPage(location);
     }
 
     function onLocationChanged(epubcifi){
