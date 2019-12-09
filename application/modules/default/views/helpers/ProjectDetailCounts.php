@@ -27,24 +27,25 @@ class Default_View_Helper_ProjectDetailCounts extends Zend_View_Helper_Abstract
             page views today 
             page views total
     */
-    public function projectDetailCounts ($project_id)
+    public function projectDetailCounts($project_id)
     {
-        $sql= "
+        $sql = "
                 SELECT
-                 count(1) as `count_views`
+                 count(1) AS `count_views`
                  FROM
                      `stat_page_views_48h`
                  WHERE `project_id` = :project_id
-                 AND created_at >= subdate(NOW(), 1)
-                union
+                 AND `created_at` >= subdate(NOW(), 1)
+                UNION
                 SELECT
-                 count(1) as `count_views`
+                 count(1) AS `count_views`
                  FROM
                  `stat_page_views`
                  WHERE `project_id` = :project_id             
                 ";
-        
+
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('project_id' => $project_id));
+
         return $resultSet;
     }
 

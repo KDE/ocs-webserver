@@ -1,0 +1,33 @@
+<?php
+header('content-type: image/png');
+
+if (isset($_SERVER['HTTP_COOKIE'])) {
+    $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
+    $cookie_params = session_get_cookie_params();
+    foreach($cookies as $cookie) {
+        $parts = explode('=', $cookie);
+        $name = trim($parts[0]);
+        setcookie($name, false, time()-1000, $cookie_params['path'], $_SERVER['HTTP_HOST'], $cookie_params['secure'], true);
+    }
+}
+
+require APPLICATION_LIB . "/Local/LoginCookie.php";
+
+if (isset($_GET['k'])) {
+    $key = $_GET['k'];
+    $id = Local_LoginCookie::readJwt($key);
+    if ($id) {
+        $cookie_lifetime = (int)Zend_Registry::get('config')->resources->session->cookie_lifetime;
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        if ($data = $cache->load($id)) {
+            $cookie_params = session_get_cookie_params();
+            setcookie($data['domain'], $data['id'], time() + $cookie_lifetime, $cookie_params['path'], $_SERVER['HTTP_HOST'], $cookie_params['secure'], true);
+            $cache->remove($id);
+        }
+    }
+}
+
+$imagePath = APPLICATION_PATH . "/../httpdocs/img/default.png";
+$image = file_get_contents($imagePath);
+echo $image;

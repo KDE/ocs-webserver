@@ -476,6 +476,14 @@ $tagsForGroupHelper = new Default_View_Helper_FetchTagsForTagGroup();
 
 
                                         $compatibleCheckbox = $("#data-checkbox-compatible-" + this.id);
+                                        
+                                        
+                                        if(this.ocs_compatible == 1) {
+                                            $compatibleCheckbox.prop('checked', true);
+                                            
+                                        } else {
+                                            $compatibleCheckbox.prop('checked', false);
+                                        }
 
                                         if(this.active == '0') {
                                             $compatibleCheckbox.prop('disabled', 'disabled');

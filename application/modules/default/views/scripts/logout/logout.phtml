@@ -26,21 +26,34 @@ $info = new Default_Model_Info();
 $domains = $info->getActiveStoresForCrossDomainLogin();
 
 foreach ($domains as $domain) {
-
-    echo '<img src="https://'.$domain.'/external/removedata.php" height="0" width="0">';
-    
+    if ($domain == $_SERVER['HTTP_HOST']) {
+        continue;
+    }
+    $cookie_name = Zend_Registry::get('config')->settings->session->remember_me->name;
+    $remember_me = isset($_COOKIE[$cookie_name]) ? unserialize($_COOKIE[$cookie_name]) : null;
+    $id = crc32('logout'.$domain . Zend_Session::getId());
+    $data = array('domain'      => Zend_Registry::get('config')->resources->session->name,
+                  'id'          => Zend_Session::getId(),
+                  'remember_me' => $remember_me
+    );
+    Zend_Registry::get('cache')->save($data, $id);
+    $cookie = Local_LoginCookie::createJwt($id, 120);
+    $url = sprintf('%s://%s/logout/set?k=%s', $http_scheme, $domain, $cookie);
+    echo '<img src="'.$url.'" height="1" width="1" style="display:none;" >' . PHP_EOL;
 }
-
 ?>
     <img src="<?=$http_scheme?>://<?=$config->openid->host?>/logout" style="display:none;" />
     <img src="<?=$http_scheme?>://<?=$config->opencode->host?>/users/sign_out" style="display:none;" />
     <img src="<?=$http_scheme?>://<?=$config->opencode->host?>/external/removedata.php" style="display:none;" />
     <img src="<?=$http_scheme?>://<?=$config->forum->host?>:8443/removedata.php" style="display:none;" />
-    <img src="<?=$http_scheme?>://<?=$config->base->host?>/external/removedata.php" style="display:none;" />
     <img src="<?=$http_scheme?>://<?=$config->myopendesktop->host?>/removedata.php" style="display:none;" />
-    <img src="<?=$http_scheme?>://<?=$config->opencode->host?>/users/sign_out" style="display:none;" />
     <img src="<?=$http_scheme?>://<?=$url_nextcloud?>/users/sign_out" style="display:none;" />
-<?php /*    <img src="<?=$http_scheme?>://<?=$config->mastodon->host?>/auth/sign_out" style="display:none;" /> */ ?>
+<?php
+/*
+    <img src="<?=$http_scheme?>://<?=$config->mastodon->host?>/auth/sign_out" style="display:none;" />
+    <img src="<?=$http_scheme?>://<?=$config->base->host?>/external/removedata.php" style="display:none;" />
+ */
+?>
 
 </body>
 </html>

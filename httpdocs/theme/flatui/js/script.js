@@ -18,6 +18,62 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+var prefix = 'ocs_';
+
+var OcsStorage = {
+    set: function(key, value) {
+        localStorage[key] = JSON.stringify(value);
+    },
+    get: function(key) {
+        return localStorage[key] ? JSON.parse(localStorage[key]) : null;
+    }
+};
+
+var OcsStats = {
+    props: {},
+    a: 0,
+    readIp: function(apiv4, apiv6) {
+        var xhr1 = $.getJSON(apiv4,function(data) { OcsStats.props.ipv4=data.ip;OcsStats.saveProps(1);});
+        xhr1.fail(function() {
+            OcsStats.saveProps(1);
+        });
+        var xhr2 = $.getJSON(apiv6,function(data) { OcsStats.props.ipv6=data.ip;OcsStats.saveProps(2);});
+        xhr2.fail(function () {
+            OcsStats.saveProps(2);
+        });
+    },
+    genId: function() {
+        var options={};
+        Fingerprint2.get(options, function (components) {
+            var values = components.map(function (component) { return component.value });
+            OcsStats.props.fp = Fingerprint2.x64hash128(values.join(''), 31);
+            OcsStats.saveProps(4);
+        })
+    },
+    saveProps: function(c) {
+        OcsStorage.set('ocs',OcsStats.props);
+        OcsStats.a += c;
+        if (OcsStats.a == 7) {
+            OcsStats.postProps();
+        }
+    },
+    postProps: function() {
+        $.post("/l/fp",OcsStats.props);
+    },
+    readStats: function(apiv4, apiv6) {
+        if (window.requestIdleCallback) {
+            requestIdleCallback(function () {
+                OcsStats.genId();
+                OcsStats.readIp(apiv4, apiv6);
+            })
+        } else {
+            setTimeout(function () {
+                OcsStats.genId();
+                OcsStats.readIp(apiv4, apiv6);
+            }, 500)
+        }
+    }
+};
 
 var newProductPage = (function () {
 

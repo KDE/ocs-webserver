@@ -274,26 +274,26 @@
             }
         });
 
-        $('body').on("submit", '#add-subcat-form', function (event) {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            jQuery.ajax({
-                data: $(this).serialize(),
-                url: this.action,
-                type: this.method,
-                error: function (jqXHR, textStatus, errorThrown) {
-                    $(".alert-danger .alert-body").empty().html('<span class="error">Operation not possible.</span>');
-                    $(".alert-danger").alert().fadeIn('slow');
-                    return false;
-                },
-                success: function (data, textStatus, jqXHR) {
-                    return false;
-                }
-            });
-
-            return false;
-        });
+        // $('body').on("submit", '#add-subcat-form', function (event) {
+        //     event.preventDefault();
+        //     event.stopImmediatePropagation();
+        //
+        //     jQuery.ajax({
+        //         data: $(this).serialize(),
+        //         url: this.action,
+        //         type: this.method,
+        //         error: function (jqXHR, textStatus, errorThrown) {
+        //             $(".alert-danger .alert-body").empty().html('<span class="error">Operation not possible.</span>');
+        //             $(".alert-danger").alert().fadeIn('slow');
+        //             return false;
+        //         },
+        //         success: function (data, textStatus, jqXHR) {
+        //             return false;
+        //         }
+        //     });
+        //
+        //     return false;
+        // });
 
         $('body').on("click", '.move-category', function (event) {
             event.preventDefault();
@@ -559,7 +559,6 @@
                     list: true,
                     display: function (data) {
                         if (data.record) {
-                            //return '<button title="Add Subcategory" class="jtable-command-button" style="  width: 15px;height: 15px;background: url(/theme/flatui/img/icon-plus.png);" onclick="$( \'#dialog-form\' ).data(\'record\',{project_category_id: ' + data.record.project_category_id + ', lft: ' + data.record.lft + ',rgt: ' + data.record.rgt + '}).dialog( \'open\' );"><span>add subcat</span></button>';
                             return '<a title="add sub category" href="javascript:return false;" role="button" onclick="$(\'#dialog-form\').data(\'record\',{project_category_id: ' + data.record.project_category_id + ', lft: ' + data.record.lft + ',rgt: ' + data.record.rgt + '}).dialog( \'open\' );"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>';
                         }
                     }
