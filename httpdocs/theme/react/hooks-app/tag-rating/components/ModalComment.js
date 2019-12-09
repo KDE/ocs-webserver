@@ -21,6 +21,7 @@ import React from 'react'
                                         <div className="col-lg-12">
                                             <textarea name="comment" id="comment" value={props.comment} 
                                                 onChange={props.handleChangeComment} 
+                                                required="required" 
                                             style={{width:'400px',height:'120px'}}/>
                                         </div>
                                 </div>                                                           
@@ -31,7 +32,10 @@ import React from 'react'
                         
 
                     </div>
-                    <div className="modal-footer">                       
+                    <div className="modal-footer">
+                        {props.errmsg &&
+                            <span style={{color:'#ff0000'}}>{props.errmsg}</span>
+                        }                                           
                     <button type="button" className="btn btn-primary" data-dismiss="modal">Close</button>                                  
                     <button type="submit" className="btn btn-primary" >Save</button>                                 
                     </div>

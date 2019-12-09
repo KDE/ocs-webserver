@@ -3,6 +3,7 @@ import Axios from 'axios';
 import Rate from './Rate';
 import Bar from './Bar';
 import ModalComment from './ModalComment';
+import RateComment from './RateComment';
 const TagRating = () => {
     const [labels, setLabels] = useState([]);
     const [values, setValues] = useState([]);   
@@ -11,6 +12,7 @@ const TagRating = () => {
     const [project_id, setProject_id] = useState(window.product.project_id);   
     const [vote, setVote] = useState(null);   
     const [tid, setTid] = useState(null);   
+    const [errmsg, setErrmsg] = useState('');
     useEffect(() => {
         loadTagRatings();
     }, []);
@@ -36,6 +38,12 @@ const TagRating = () => {
 
     const handleSubmitVote= event =>{        
         event.preventDefault();
+        if(comment.length<=2)
+        {
+            setErrmsg('Please fill out comment at least 3 chars.');
+            return;
+        }
+
         const url = window.config.baseUrlStore + '/p/' + project_id + '/votetagrating';
         const params = new URLSearchParams();
         params.append('vote', vote);
@@ -55,6 +63,10 @@ const TagRating = () => {
     
     const handleChangeComment = event =>{
         setComment(event.target.value);
+        if(event.target.value.length>=2)
+        {
+            setErrmsg('');
+        }
       }
 
    
@@ -65,6 +77,7 @@ const TagRating = () => {
                     {labels[0].group_display_name}
                 </h4>
             }            
+            <div style={{display:'flex'}}>
             <ul style={{listStyle:'none',paddingLeft:'0px',marginTop:'20px'}}>{
                 labels.map((l, index) => 
                     <li key={index} style={{margin:'3px'}}>                        
@@ -79,8 +92,24 @@ const TagRating = () => {
                 )
             }
             </ul>
+            <div style={{borderLeft:'1px solid #ccc', maxHeight:'300px', overflow:'auto', marginLeft:'20px',paddingLeft:'20px'}}>
+            <ul style={{listStyle:'none',paddingLeft:'0px',marginTop:'20px'}}>
+            {   
+                    values.map((v, index) => 
+                    <li key={index} style={{margin:'3px'}}>                                                
+                        <RateComment labels={labels} vote={v} user={user}/>
+                    </li>                                     
+                    )
+            }
+            </ul>
+            </div>
+            </div>
 
-            <ModalComment handleSubmit={handleSubmitVote} comment={comment} handleChangeComment={handleChangeComment}></ModalComment>
+            <ModalComment handleSubmit={handleSubmitVote} 
+                        comment={comment} 
+                        handleChangeComment={handleChangeComment}
+                        errmsg ={errmsg}
+                        ></ModalComment>
         </div>
     )
 }

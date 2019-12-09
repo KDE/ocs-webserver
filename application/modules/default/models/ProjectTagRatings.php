@@ -33,13 +33,17 @@ class Default_Model_ProjectTagRatings
                 r.tag_id,
                 r.vote,
                 r.member_id,
-                r.tag_rating_id
+                r.tag_rating_id,
+                r.comment_id,
+                comments.comment_text   
                 FROM stat_projects p
                 inner join project_category g on p.project_category_id = g.project_category_id
                 inner join tag_group_item i on i.tag_group_id = g.tag_rating
                 inner join tag_rating r on r.tag_id = i.tag_id and r.project_id = p.project_id and r.is_deleted=0
                 inner join tag t on t.tag_id = r.tag_id
+                inner join comments on comments.comment_id = r.comment_id	
                 where p.project_id = :project_id
+                order by r.tag_rating_id desc
                ";        
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('project_id' => $project_id))->fetchAll();
         return $result;
