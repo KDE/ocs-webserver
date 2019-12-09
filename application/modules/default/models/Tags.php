@@ -833,6 +833,33 @@ class Default_Model_Tags
 
         }
     }
+    
+    
+    public function saveGhnsExcludedTagForProject($object_id, $tag_value)
+    {
+
+        $tableTags = new Default_Model_DbTable_Tags();
+        $ghnsExcludedTagId = $tableTags->fetchGhnsExcludedTagId();
+
+        $sql = "UPDATE tag_object SET tag_changed = NOW() , is_deleted = 1  WHERE tag_group_id = :tag_group_id AND tag_type_id = :tag_type_id AND tag_object_id = :tag_object_id";
+        $this->getAdapter()->query($sql, array(
+            'tag_group_id'  => $this::TAG_GHNS_EXCLUDED_GROUPID,
+            'tag_type_id'   => $this::TAG_TYPE_PROJECT,
+            'tag_object_id' => $object_id
+        ));
+
+        if ($tag_value == 1) {
+            $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_group_id)";
+            $this->getAdapter()->query($sql, array(
+                'tag_id'        => $ghnsExcludedTagId,
+                'tag_type_id'   => $this::TAG_TYPE_PROJECT,
+                'tag_object_id' => $object_id,
+                'tag_group_id'  => $this::TAG_GHNS_EXCLUDED_GROUPID
+            ));
+        }
+
+
+    }
 
 
     public function saveDangerosuTagForProject($object_id, $tag_value)
