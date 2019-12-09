@@ -6,7 +6,7 @@ import {
   ReactReaderStyle // Styles for the epub-reader it you need to customize it
 } from "react-reader";
 
-function BookReaderWrapper(props){
+/*function BookReaderWrapper(props){
 
     const [ renditionState, setRenditionState ] = useState();
     const [ currentPage, setCurrentPage ] = useState();
@@ -53,10 +53,10 @@ function BookReaderWrapper(props){
       <span>{currentPage}/{totalPages}</span>
       </div>
     );
-}
+}*/
 
-/*function BookReaderWrapper(props){
-  
+function BookReaderWrapper(props){
+
   const [ renditionState , setRenditionState ] = useState()
   const [ currentPage, setCurrentPage ] = useState();
   const [ totalPages, setTotalPages ] = useState();
@@ -139,6 +139,6 @@ function BookReaderWrapper(props){
       </div>
     </div>
   )
-}*/
+}
 
 export default BookReaderWrapper;
