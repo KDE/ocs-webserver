@@ -7,11 +7,14 @@ import {
 } from "react-reader";
 
 function BookReaderWrapper(props){
-    console.log(props.slide)
+    console.log(props)
+
+    const [ renditionState, setRenditionState ] = useState();
+
+    console.log(renditionState);
 
     function onGetRendition(rendition){
-      console.log('on get rendition');
-      console.log(rendition);
+      setRenditionState(rendition);
     }
 
     function onLocationChanged(epubcifi){
