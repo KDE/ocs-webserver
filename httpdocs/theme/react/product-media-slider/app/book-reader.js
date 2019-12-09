@@ -14,7 +14,7 @@ function BookReaderWrapper(props){
 
     React.useEffect(() => {
       console.log(renditionState);
-      if (renditionState.location){
+      if (renditionState && renditionState.location){
           console.log(rendition.location.start.cfi);
           console.log(rendition.book.locations.locationFromCfi(rendition.location.start.cfi))
           const location = rendition.book.locations.locationFromCfi(rendition.location.start.cfi);
