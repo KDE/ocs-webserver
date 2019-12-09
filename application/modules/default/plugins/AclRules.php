@@ -40,6 +40,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_ADMIN));
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_SYSUSER));
 
+        $this->addResource(new Zend_Acl_Resource ('default_logout'));
         $this->addResource(new Zend_Acl_Resource ('default_oauth'));
 
         $this->addResource(new Zend_Acl_Resource ('default_authorization'));
@@ -85,7 +86,6 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_password'));
         $this->addResource(new Zend_Acl_Resource ('default_verify'));
         $this->addResource(new Zend_Acl_Resource ('default_login'));
-        $this->addResource(new Zend_Acl_Resource ('default_logout'));
         $this->addResource(new Zend_Acl_Resource ('default_collection'));
         $this->addResource(new Zend_Acl_Resource ('default_funding'));
 

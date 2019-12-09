@@ -71,6 +71,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $modelRating->rateForProject($this->_projectId, $this->_authMember->member_id, $userRating);
     }
 
+
     public function pploadAction()
     {
         $this->_helper->layout->disableLayout();
@@ -164,6 +165,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         return null;
     }
     
+    
     private function getFileDownloadCount($collection_id, $fileId) {
         $modelFiles = new Default_Model_DbTable_PploadFiles();
         
@@ -202,7 +204,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         echo $r;
 
     }  
-
+       
+ 
+    
     public function getfilesajaxAction() {
         $this->_helper->layout()->disableLayout();
         
@@ -300,7 +304,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->json(array('status' => 'error'));
     }
-
+    
+    
     public function getfiletagsajaxAction() {
         $this->_helper->layout()->disableLayout();
         
@@ -319,6 +324,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->json(array('status' => 'error'));
     }
+
+    
 
     public function initJsonForReact(){
             $modelProduct = new Default_Model_Project();
@@ -497,8 +504,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         if (APPLICATION_ENV != 'searchbotenv') {
-            Default_Model_Views::saveViewProduct($this->_projectId);
-
             $tablePageViews = new Default_Model_DbTable_StatPageViews();
             $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
                 $this->_authMember->member_id);
@@ -675,6 +680,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->viewRenderer('index');
         $this->indexAction();
     }
+
+
 
     public function addAction()
     {
