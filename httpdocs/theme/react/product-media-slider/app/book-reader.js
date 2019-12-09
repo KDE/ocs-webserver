@@ -17,7 +17,7 @@ function BookReaderWrapper(props){
       if (rendition.locations){
         setCurrentPage(rendition.book.locations.locationFromCfi(rendition.locations.start.cfi));
       }
-      setTotalPages(rendtion.book.locations.total);
+      setTotalPages(rendition.book.locations.total);
     }
 
     function onLocationChanged(epubcifi){
