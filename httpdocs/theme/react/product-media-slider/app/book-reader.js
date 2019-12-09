@@ -15,10 +15,10 @@ function BookReaderWrapper(props){
     React.useEffect(() => {
       console.log(renditionState);
       if (renditionState){
-          console.log(rendition.location.start.cfi);
-          console.log(rendition.book.locations.locationFromCfi(rendition.location.start.cfi))
-          const location = rendition.book.locations.locationFromCfi(rendition.location.start.cfi);
-          setTotalPages(rendition.location.total);        
+          console.log(renditionState.location.start.cfi);
+          console.log(renditionState.book.locations.locationFromCfi(renditionState.location.start.cfi))
+          const location = renditionState.book.locations.locationFromCfi(renditionState.location.start.cfi);
+          setTotalPages(renditionState.location.total);        
           setCurrentPage(location);
       }
     },[renditionState])
