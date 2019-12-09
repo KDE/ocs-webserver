@@ -11,10 +11,10 @@ if (isset($_GET['k'])) {
         $cache = Zend_Registry::get('cache');
         if ($data = $cache->load($id)) {
             $cookie_params = session_get_cookie_params();
-            setcookie($data['domain'], $data['id'], time() + $cookie_lifetime, $cookie_params['path'], $_SERVER['HTTP_HOST'], $cookie_params['secure'], true);
+            setcookie($data['domain'], $data['id'], time() + $cookie_lifetime, $cookie_params['path'], '', $cookie_params['secure'], true);
             if (false == empty($data['remember_me'])) {
                 $cookie_name = Zend_Registry::get('config')->settings->session->remember_me->name;
-                setcookie($cookie_name, serialize($data['remember_me']), time() + $cookie_lifetime, $cookie_params['path'], $_SERVER['HTTP_HOST'], $cookie_params['secure'], true);
+                setcookie($cookie_name, serialize($data['remember_me']), time() + $cookie_lifetime, $cookie_params['path'], '', $cookie_params['secure'], true);
             }
             $cache->remove($id);
         }
