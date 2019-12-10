@@ -20,7 +20,7 @@ function BookReaderWrapper(props){
     const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
     $.ajax({url:url}).done(function(res){
       setToc(res.files);
-      getPage(res.files[0].src);
+      getPage(res.files[1].src);
     });
   }
 
