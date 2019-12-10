@@ -6,26 +6,41 @@ import {
   ReactReaderStyle // Styles for the epub-reader it you need to customize it
 } from "react-reader";
 
-/*function BookReaderWrapper(props){
+function BookReaderWrapper(props){
 
-  const [ Toc, setToc ] = useState();
+  const [ chapters, setChapters ] = useState();
+  const [ currentChapter, setCurrentChapter ] = useState();
 
-  console.log(Toc);
+  console.log(chapters);
 
   React.useEffect(() => {
+    console.log('on get toc');
     getTableOfContents();
   },[])
 
+  React.useEffect(() => {
+    console.log('on chapters change');
+    if (chapters.length > 0 && !currentChapter){
+      console.log('get & set first chapter');
+      setCurrentChapter(1);
+      getChapter();
+    }
+  },[chapters])
+
   function getTableOfContents(){
+    console.log('get toc');
     const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
     $.ajax({url:url}).done(function(res){
-      setToc(res.files);
-      getPage(res.files[1].id);
+      const newChapters = res.files;
+      setChapters(newChapters);
     });
   }
 
-  function getPage(filename){
-    const url = json_server_comics + "/api/files/page?id="+props.slide.file_id+"&filename="+filename;
+  function getChapter(chapter){
+    console.log('get chapter');
+    if (!chapter) chapter = chapters[0];
+    console.log(chapter);
+    const url = json_server_comics + "/api/files/page?id="+props.slide.file_id+"&filename="+chapter.src;
     $.ajax({url:url}).done(function(res){
       console.log(res);
     });  
@@ -34,7 +49,7 @@ import {
   return (
     <div id="book-reader-wrapper"></div>
   )
-}*/
+}
 
 /*function BookReaderWrapper(props){
 
@@ -83,7 +98,7 @@ import {
       <span>{currentPage}/{totalPages}</span>
       </div>
     );
-}*/
+}
 
 function BookReaderWrapper(props){
 
@@ -169,6 +184,6 @@ function BookReaderWrapper(props){
       </div>
     </div>
   )
-}
+}*/
 
 export default BookReaderWrapper;
