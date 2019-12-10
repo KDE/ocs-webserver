@@ -6,7 +6,7 @@ import {
   ReactReaderStyle // Styles for the epub-reader it you need to customize it
 } from "react-reader";
 
-function BookReaderWrapper(props){
+/*function BookReaderWrapper(props){
 
   const [ Toc, setToc ] = useState();
 
@@ -20,12 +20,12 @@ function BookReaderWrapper(props){
     const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
     $.ajax({url:url}).done(function(res){
       setToc(res.files);
-      getPage(res.files[1].src);
+      getPage(res.files[1].id);
     });
   }
 
   function getPage(filename){
-    const url = json_server_comics + "/api/files/page?id="+props.slide.file_id+"&filename="+filename.split('#')[1];
+    const url = json_server_comics + "/api/files/page?id="+props.slide.file_id+"&filename="+filename;
     $.ajax({url:url}).done(function(res){
       console.log(res);
     });  
@@ -34,7 +34,7 @@ function BookReaderWrapper(props){
   return (
     <div id="book-reader-wrapper"></div>
   )
-}
+}*/
 
 /*function BookReaderWrapper(props){
 
@@ -85,7 +85,7 @@ function BookReaderWrapper(props){
     );
 }*/
 
-/*function BookReaderWrapper(props){
+function BookReaderWrapper(props){
 
   const [ renditionState , setRenditionState ] = useState()
   const [ currentPage, setCurrentPage ] = useState();
@@ -169,6 +169,6 @@ function BookReaderWrapper(props){
       </div>
     </div>
   )
-}*/
+}
 
 export default BookReaderWrapper;
