@@ -20,12 +20,12 @@ function BookReaderWrapper(props){
     const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
     $.ajax({url:url}).done(function(res){
       setToc(res.files);
-      getPage();
+      getPage(res.files[0].src);
     });
   }
 
-  function getPage(){
-    const url = json_server_comics + "/api/files/page?id="+props.slide.file_id+"&filename="+Toc[0].src;
+  function getPage(filename){
+    const url = json_server_comics + "/api/files/page?id="+props.slide.file_id+"&filename="+filename;
     $.ajax({url:url}).done(function(res){
       console.log(res);
     });  
