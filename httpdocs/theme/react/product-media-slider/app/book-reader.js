@@ -20,7 +20,7 @@ function BookReaderWrapper(props){
 
   React.useEffect(() => {
     console.log('on chapters change');
-    if (chapters.length > 0 && !currentChapter){
+    if (chapters.length > 0){
       console.log('get & set first chapter');
       setCurrentChapter(1);
       getChapter();
