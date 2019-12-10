@@ -25,7 +25,7 @@ function BookReaderWrapper(props){
   }
 
   function getPage(filename){
-    const url = json_server_comics + "/api/files/page?id="+props.slide.file_id+"&filename="+filename;
+    const url = json_server_comics + "/api/files/page?id="+props.slide.file_id+"&filename="+filename.split('#')[1];
     $.ajax({url:url}).done(function(res){
       console.log(res);
     });  
