@@ -7,7 +7,7 @@ import {
 } from "react-reader";
 import {ConvertObjectToArray} from './product-media-slider-helpers';
 
-function BookReaderWrapper(props){
+/*function BookReaderWrapper(props){
 
   const [ chapters, setChapters ] = useState([]);
   const [ currentChapter, setCurrentChapter ] = useState();
@@ -51,9 +51,9 @@ function BookReaderWrapper(props){
       <div id="viewer" className="spreads" dangerouslySetInnerHTML={{__html:readerContent}}></div>
     </div>
   )
-}
+}*/
 
-/*function BookReaderWrapper(props){
+function BookReaderWrapper(props){
 
     const [ renditionState, setRenditionState ] = useState();
     const [ currentPage, setCurrentPage ] = useState();
@@ -102,7 +102,7 @@ function BookReaderWrapper(props){
     );
 }
 
-function BookReaderWrapper(props){
+/*function BookReaderWrapper(props){
 
   const [ renditionState , setRenditionState ] = useState()
   const [ currentPage, setCurrentPage ] = useState();
