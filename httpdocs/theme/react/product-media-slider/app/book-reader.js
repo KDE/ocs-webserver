@@ -92,7 +92,7 @@ function BookReaderWrapper(props){
     return (
       <div id="viewer" className="spreads" style={{ position: "relative", height: "100%" }}>
         {" "}
-        <EpubView
+        <ReactReader
           url={props.slide.url}
           title={props.slide.title}
           locationChanged={(epubcifi,rendition) => onLocationChanged(epubcifi,rendition)}
