@@ -48,9 +48,7 @@ function BookReaderWrapper(props){
 
   return (
     <div id="book-reader-wrapper">
-      <div id="viewer" className="spreads">
-        {readerContent}
-      </div>
+      <div id="viewer" className="spreads" dangerouslySetInnerHTML={{__html:readerContent}}></div>
     </div>
   )
 }
