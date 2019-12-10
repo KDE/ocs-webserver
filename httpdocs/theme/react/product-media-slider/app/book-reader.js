@@ -77,7 +77,9 @@ function BookReaderWrapper(props){
       setRenditionState(rendition);
     }
 
-    function onLocationChanged(epubcifi){
+    function onLocationChanged(epubcifi,rendition){
+      console.log(rendition);
+      setRenditionState(rendition);
       console.log('on location changeds');
       // console.log(epubcifi);
     }
@@ -93,7 +95,7 @@ function BookReaderWrapper(props){
         <ReactReader
           url={props.slide.url}
           title={props.slide.title}
-          locationChanged={epubcifi => onLocationChanged(epubcifi)}
+          locationChanged={(epubcifi,rendition) => onLocationChanged(epubcifi,rendition)}
           getRendition={rendition => onGetRendition(rendition)}
           tocChanged={toc => onTocChanged(toc)}
         />
