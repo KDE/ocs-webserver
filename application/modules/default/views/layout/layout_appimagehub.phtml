@@ -189,5 +189,13 @@ echo $this->render('partials/propagateLogout.phtml');
 <?php
  echo $this->render('partials/profiler.phtml')
 ?>
+<?php
+$session = new Zend_Session_Namespace();
+$apiv4 = Zend_Registry::get("config")->settings->server->ip->api->v4;
+$apiv6 = Zend_Registry::get("config")->settings->server->ip->api->v6;
+if (false == $session->stat_valid) : ?>
+    <script src="/tools/fpjs2/fp2.compressed.js" ></script>
+    <script type="text/javascript">OcsStats.readStats('<?php echo $apiv4; ?>','<?php echo $apiv6; ?>');</script>
+<?php endif; ?>
 </body>
 </html>
