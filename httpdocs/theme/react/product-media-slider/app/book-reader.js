@@ -5,6 +5,7 @@ import {
   ReactReader, // A simple epub-reader with left/right button and chapter navigation
   ReactReaderStyle // Styles for the epub-reader it you need to customize it
 } from "react-reader";
+import {ConvertObjectToArray} from './product-media-slider-helpers';
 
 function BookReaderWrapper(props){
 
@@ -31,7 +32,7 @@ function BookReaderWrapper(props){
     console.log('get toc');
     const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
     $.ajax({url:url}).done(function(res){
-      const newChapters = res.files;
+      const newChapters = ConvertObjectToArray(res.files);
       setChapters(newChapters);
     });
   }

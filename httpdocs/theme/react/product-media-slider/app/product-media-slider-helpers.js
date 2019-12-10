@@ -123,3 +123,15 @@ function chunkArray(myArray, chunk_size){
     }
     return tempArray;
 } 
+
+export function ConvertObjectToArray(object,key){
+    let newArray = [];
+    for (var i in object){
+        const newObject = {
+            tag:object[i],
+            id:i
+        }
+        newArray.push(newObject);
+    }
+    return newArray;
+}
