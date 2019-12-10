@@ -11,6 +11,7 @@ function BookReaderWrapper(props){
 
   const [ chapters, setChapters ] = useState([]);
   const [ currentChapter, setCurrentChapter ] = useState();
+  const [ readerContent, setReaderContent ] = useState(null);
 
   React.useEffect(() => {
     console.log('on get toc');
@@ -37,17 +38,20 @@ function BookReaderWrapper(props){
   }
 
   function getChapter(chapter){
-    console.log('get chapter');
     if (!chapter) chapter = chapters[0];
-    console.log(chapter);
-    const url = json_server_comics + "/api/files/page?id="+props.slide.file_id+"&filename="+chapter.tag.src;
+    console.log(chapter);    
+    const url = json_server_comics + "/api/files/page?id="+props.slide.file_id+"&filename="+chapter.tag.src; 
     $.ajax({url:url}).done(function(res){
-      console.log(res);
-    });  
+      setReaderContent(res);
+    });   
   }
 
   return (
-    <div id="book-reader-wrapper"></div>
+    <div id="book-reader-wrapper">
+      <div id="viewer" className="spreads">
+        {readerContent}
+      </div>
+    </div>
   )
 }
 
