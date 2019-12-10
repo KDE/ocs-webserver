@@ -90,16 +90,18 @@ function BookReaderWrapper(props){
     }
 
     return (
-      <div id="viewer" className="spreads" style={{ position: "relative", height: "100%" }}>
-        {" "}
-        <ReactReader
-          url={props.slide.url}
-          title={props.slide.title}
-          locationChanged={(epubcifi,rendition) => onLocationChanged(epubcifi,rendition)}
-          getRendition={rendition => onGetRendition(rendition)}
-          tocChanged={toc => onTocChanged(toc)}
-        />
-      <span>{currentPage}/{totalPages}</span>
+      <div id="book-reader-wrapper">
+        <div id="viewer" className="spreads" style={{ position: "relative", height: "100%" }}>
+          {" "}
+          <ReactReader
+            url={props.slide.url}
+            title={props.slide.title}
+            locationChanged={(epubcifi,rendition) => onLocationChanged(epubcifi,rendition)}
+            getRendition={rendition => onGetRendition(rendition)}
+            tocChanged={toc => onTocChanged(toc)}
+          />
+          <span>{currentPage}/{totalPages}</span>
+        </div>
       </div>
     );
 }
