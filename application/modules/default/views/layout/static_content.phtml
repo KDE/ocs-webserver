@@ -87,12 +87,12 @@
 
 <?php
 $session = new Zend_Session_Namespace();
-$fp = $session->client_fp;
-if (empty($fp)) : ?>
-    <script src="/tools/fpjs2/fp2.js" ></script>
-    <script type="text/javascript">
-        var options={};window.requestIdleCallback?requestIdleCallback(function(){Fingerprint2.get(options,function(a){var b=a.map(function(a){return a.value}),c=Fingerprint2.x64hash128(b.join(""),31);$.post("/l/fp",{fp:c})})}):setTimeout(function(){Fingerprint2.get(options,function(a){var b=a.map(function(a){return a.value}),c=Fingerprint2.x64hash128(b.join(""),31);$.post("/l/fp",{fp:c})})},500);
-    </script>
+$apiv4 = Zend_Registry::get("config")->settings->server->ip->api->v4;
+$apiv6 = Zend_Registry::get("config")->settings->server->ip->api->v6;
+if (false == $session->stat_valid) : ?>
+    <script src="/theme/flatui/js/script.js?<?= APPLICATION_VERSION ?>"></script>
+    <script src="/tools/fpjs2/fp2.compressed.js" ></script>
+    <script type="text/javascript">OcsStats.readStats('<?php echo $apiv4; ?>','<?php echo $apiv6; ?>');</script>
 <?php endif; ?>
 </body>
 </html>
