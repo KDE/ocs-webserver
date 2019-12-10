@@ -8,6 +8,10 @@ import {
 
 function BookReaderWrapper(props){
 
+  const [ Toc, setToc ] = useState();
+
+  console.log(Toc);
+
   React.useEffect(() => {
     getTableOfContents();
   },[])
@@ -15,8 +19,16 @@ function BookReaderWrapper(props){
   function getTableOfContents(){
     const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
     $.ajax({url:url}).done(function(res){
-      console.log(res)
+      setToc(res.files);
+      getPage();
     });
+  }
+
+  function getPage(){
+    const url = json_server_comics + "/api/files/page?id="+props.slide.file_id+"&filename="+Toc[0].src;
+    $.ajax({url:url}).done(function(res){
+      console.log(res);
+    });  
   }
 
   return (
