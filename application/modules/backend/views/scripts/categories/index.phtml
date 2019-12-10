@@ -68,70 +68,6 @@
 
 <div id="TableContainer"></div>
 
-<div id="dialog-form" title="Create new Subcategory">
-    <p class="validateTips">Form fields with * are required.</p>
-
-    <form id="add-subcat-form" class="jtable-dialog-form jtable-create-form">
-        <div class="jtable-input-field-container">
-            <div class="jtable-input-label">Title*</div>
-            <div class="jtable-input jtable-textarea-input">
-                <input id="subcat-title" name="title" class="validate[required]" />
-            </div>
-        </div>
-        <div class="jtable-input-field-container">
-            <div class="jtable-input-label">XDG-Type</div>
-            <div class="jtable-input jtable-text-input">
-                <input id="subcat-xdg" name="xdg_type" type="text">
-            </div>
-        </div>
-        <div class="jtable-input-field-container">
-            <div class="jtable-input-label">Legacy Name</div>
-            <div class="jtable-input jtable-text-input">
-                <input id="subcat-legacy" name="name_legacy" type="text">
-            </div>
-        </div>
-        <div class="jtable-input-field-container">
-            <div class="jtable-input-label">Download Factor</div>
-            <div class="jtable-input jtable-text-input">
-                <input id="subcat-dl_pling_factor" name="dl_pling_factor" type="text" value="1">
-            </div>
-        </div>
-        <div class="jtable-input-field-container">
-            <div class="jtable-input-label">Mediaview Factor</div>
-            <div class="jtable-input jtable-text-input">
-                <input id="subcat-mv_pling_factor" name="mv_pling_factor" type="text" value="1">
-            </div>
-        </div>
-        <div class="jtable-input-field-container">
-            <div class="jtable-input-label">Show Description*</div>
-            <div class="jtable-input jtable-dropdown-input">
-                <select id="subcat-show_description" name="show_description" class="validate[required]">
-                    <option value="1">Show</option>
-                    <option selected="selected" value="0">Don't show</option>
-                </select>
-            </div>
-        </div>
-        <div class="jtable-input-field-container">
-            <div class="jtable-input-label">Source Required*</div>
-            <div class="jtable-input jtable-dropdown-input">
-                <select id="subcat-source_required" name="source_required" class="validate[required]">
-                    <option value="1">Required</option>
-                    <option selected="selected" value="0">Not Required</option>
-                </select>
-            </div>
-        </div>
-        <div class="jtable-input-field-container">
-            <div class="jtable-input-label">Status*</div>
-            <div class="jtable-input jtable-dropdown-input">
-                <select id="subcat-status" name="is_active" class="validate[required]">
-                    <option selected="selected" value="1">Active</option>
-                    <option value="0">Inactive</option>
-                </select>
-            </div>
-        </div>
-    </form>
-</div>
-
 <div id="dialog-cat-about" title="Create/Edit Category About Page">
     <form id="edit-cat-about" class="" action="/backend/categories/saveabout" method="post">
         <input type="hidden" value="" id="text-cat-id" name="c"/>
@@ -142,6 +78,14 @@
 <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
 <!-- <script src="//cdn.tinymce.com/4/jquery.tinymce.min.js"></script> -->
 <script type="text/javascript">
+    var curId = 0;
+    var OcsProps = {
+        set: function (value) {
+            curId = value;
+            $('#TableContainer').jtable('showCreateForm');
+        }
+    };
+
     $(document).ready(function () {
         // Prevent jQuery UI dialog from blocking focusin
         $(document).on('focusin', function(e) {
@@ -224,77 +168,6 @@
             allFields = $([]).add(title).add(status),
             tips = $(".validateTips");
 
-        $("#dialog-form").dialog({
-            autoOpen: false,
-            //height: 350,
-            width: 350,
-            modal: true,
-            open: function (event, ui) {
-                $("#add-subcat-form").trigger('reset').validationEngine('attach');
-            },
-            buttons: {
-                Cancel: function () {
-                    $(this).dialog("close");
-                },
-                Save: function () {
-                    if (false == $("#add-subcat-form").validationEngine('validate')) {
-                        return;
-                    }
-
-                    if ($(this).data('record').cat_id == 1) {
-                        sendPostId = $(this).data('record').rgt - 1;
-                    } else {
-                        if (($(this).data('record').rgt - $(this).data('record').lft) > 1) {
-                            sendPostId = $(this).data('record').rgt - 1;
-                        } else {
-                            sendPostId = $(this).data('record').lft;
-                        }
-                    }
-
-                    $('#TableContainer').jtable('addRecord', {
-                        record: {
-                            "title": $("#subcat-title").val(),
-                            "xdg_type": $("#subcat-xdg").val(),
-                            "name_legacy": $("#subcat-legacy").val(),
-                            "dl_pling_factor": $("#subcat-dl_pling_factor").val(),
-                            "mv_pling_factor": $("#subcat-mv_pling_factor").val(),
-                            "show_description": $("#subcat-show_description").val(),
-                            "source_required": $("#subcat-source_required").val(),
-                            "is_active": $("#subcat-status").val(),
-                            "rgt": sendPostId
-                        }
-                    });
-                    $(this).dialog("close");
-                }
-            },
-            close: function () {
-                allFields.val("").removeClass("ui-state-error");
-                $("#add-subcat-form").validationEngine('hide');
-                $("#add-subcat-form").validationEngine('detach');
-            }
-        });
-
-        $('body').on("submit", '#add-subcat-form', function (event) {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            jQuery.ajax({
-                data: $(this).serialize(),
-                url: this.action,
-                type: this.method,
-                error: function (jqXHR, textStatus, errorThrown) {
-                    $(".alert-danger .alert-body").empty().html('<span class="error">Operation not possible.</span>');
-                    $(".alert-danger").alert().fadeIn('slow');
-                    return false;
-                },
-                success: function (data, textStatus, jqXHR) {
-                    return false;
-                }
-            });
-
-            return false;
-        });
-
         $('body').on("click", '.move-category', function (event) {
             event.preventDefault();
             event.stopImmediatePropagation();
@@ -327,7 +200,6 @@
         $('body').on("click", 'a.create-about', function (event) {
             event.preventDefault();
             event.stopImmediatePropagation();
-            alert(1);
             var elementRecord = $(this).data("record");
 
             jQuery.ajax({
@@ -364,7 +236,6 @@
                 createAction: '/backend/categories/create',
                 //updateAction: '/backend/categories/update',
                 updateAction: function (postData) {
-//                console.log("updating from custom function...");
                     return $.Deferred(function ($dfd) {
                         $.ajax({
                             url: '/backend/categories/update',
@@ -559,8 +430,7 @@
                     list: true,
                     display: function (data) {
                         if (data.record) {
-                            //return '<button title="Add Subcategory" class="jtable-command-button" style="  width: 15px;height: 15px;background: url(/theme/flatui/img/icon-plus.png);" onclick="$( \'#dialog-form\' ).data(\'record\',{project_category_id: ' + data.record.project_category_id + ', lft: ' + data.record.lft + ',rgt: ' + data.record.rgt + '}).dialog( \'open\' );"><span>add subcat</span></button>';
-                            return '<a title="add sub category" href="javascript:return false;" role="button" onclick="$(\'#dialog-form\').data(\'record\',{project_category_id: ' + data.record.project_category_id + ', lft: ' + data.record.lft + ',rgt: ' + data.record.rgt + '}).dialog( \'open\' );"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>';
+                            return '<a title="add sub category" href="javascript:return false;" role="button" onclick="OcsProps.set(' + data.record.project_category_id + ');"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>';
                         }
                     }
                 },
@@ -609,6 +479,10 @@
             //Initialize validation logic when a form is created
             formCreated: function (event, data) {
                 data.form.validationEngine();
+                if (typeof curId !== 'undefined') {
+                    console.log(curId);
+                    $("select[id=Edit-parent] option[value="+curId+"]").attr('selected','selected');
+                }
                 $('#jtable-create-form').attr('style', 'padding:5%');
             },
             //Validate form when it is being submitted
@@ -617,46 +491,12 @@
             },
             //Dispose validation logic when form is closed
             formClosed: function (event, data) {
+                curId=null;
                 data.form.validationEngine('hide');
                 data.form.validationEngine('detach');
             },
             recordsLoaded: function () {
                 $(".jtable").attr('style', 'position:inherit;'); // corrects the position for dragged element.
-                // $(".jtable tbody").sortable({
-                //     cursor: 'move',
-                //     opacity: 0.9,
-                //     axis: 'y',
-                //     containment: 'parent',
-                //     start: function (event, ui) {
-                //         ui.item.startPos = ui.item.index() + 1;
-                //         ui.item.lft = $('.jtable tbody tr:nth-child(' + (ui.item.startPos) + ') td:nth-child(2)').text();
-                //         ui.item.rgt = $('.jtable tbody tr:nth-child(' + (ui.item.startPos) + ') td:nth-child(3)').text();
-                //     },
-                //     stop: function (event, ui) {
-                //         lft = $('.jtable tbody tr:nth-child(' + (ui.item.index() + 2) + ') td:nth-child(2)').text();
-                //         rgt = $('.jtable tbody tr:nth-child(' + (ui.item.index() + 2) + ') td:nth-child(3)').text();
-                //         newPosition = ui.item.lft;
-                //         if (parseInt(lft) > 0) {
-                //             newPosition = parseInt(lft);
-                //         }
-                //
-                //         jQuery.ajax({
-                //             data: {'data': {'lft': ui.item.lft, 'rgt': ui.item.rgt}, 'newPosition': newPosition},
-                //             url: '/backend/categories/dragdrop/',
-                //             type: 'post',
-                //             error: function (jqXHR, textStatus, errorThrown) {
-                //                 $(".alert").alert().fadeIn('slow');
-                //                 return false;
-                //             },
-                //             success: function (data, textStatus, jqXHR) {
-                //                 $('#TableContainer').jtable('reload');
-                //                 return false;
-                //             }
-                //         });
-                //
-                //     }
-                //
-                // }).disableSelection();
                 $('tr.jtable-data-row').hover(function () {
                     $(this).addClass('highlight');
                 }, function () {
