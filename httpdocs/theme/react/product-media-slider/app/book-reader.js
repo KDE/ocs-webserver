@@ -8,7 +8,7 @@ import {
 
 function BookReaderWrapper(props){
 
-  const [ chapters, setChapters ] = useState();
+  const [ chapters, setChapters ] = useState([]);
   const [ currentChapter, setCurrentChapter ] = useState();
 
   console.log(chapters);
