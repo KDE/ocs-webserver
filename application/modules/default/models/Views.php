@@ -40,15 +40,18 @@ class Default_Model_Views
         $sql = ("INSERT IGNORE INTO `stat_page_impression` (`seen_at`, `ip_inet`, `object_type`, `object_id`, `ipv4`, `ipv6`, `fingerprint`, `user_agent`, `member_id_viewer`) VALUES (:seen, :ip_inet, :object_type, :product_id, :ipv4, :ipv6, :fp, :ua, :member)");
         $session = new Zend_Session_Namespace();
         $view_member_id = Zend_Auth::getInstance()->getIdentity()->member_id ? Zend_Auth::getInstance()->getIdentity()->member_id : null;
+        $ipClient = Zend_Controller_Front::getInstance()->getRequest()->getClientIp();
+        $ipClientv6 = filter_var($ipClient, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? $ipClient : null;
+        $ipClientv4 = filter_var($ipClient, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? $ipClient : null;
 
         try {
             Zend_Db_Table::getDefaultAdapter()->query($sql, array(
                 'seen'        => round(time() / 300),
-                'ip_inet'     => isset($session->stat_ipv6) ? inet_pton($session->stat_ipv6) : inet_pton($session->stat_ipv4),
+                'ip_inet'     => isset($session->stat_ipv6) ? inet_pton($session->stat_ipv6) : isset($session->stat_ipv4) ? inet_pton($session->stat_ipv4) : $ipClient,
                 'object_type' => $object_type,
                 'product_id'  => $object_id,
-                'ipv6'        => $session->stat_ipv6 ? $session->stat_ipv6 : null,
-                'ipv4'        => $session->stat_ipv4 ? $session->stat_ipv4 : null,
+                'ipv6'        => $session->stat_ipv6 ? $session->stat_ipv6 : $ipClientv6,
+                'ipv4'        => $session->stat_ipv4 ? $session->stat_ipv4 : $ipClientv4,
                 'fp'          => $session->stat_fp ? $session->stat_fp : null,
                 'ua'          => $_SERVER['HTTP_USER_AGENT'] ? $_SERVER['HTTP_USER_AGENT'] : null,
                 'member'      => $view_member_id
