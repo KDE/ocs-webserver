@@ -121,6 +121,7 @@ class Default_Model_RememberMe
         $newSessionData = $this->createSessionData($identifier);
         $this->setCookie($newSessionData);
         $this->saveSessionData($newSessionData);
+        $this->storeRememberIdInSession($newSessionData['remember_mem_id']);
 
         return $newSessionData;
     }
@@ -136,8 +137,7 @@ class Default_Model_RememberMe
         $sessionData['member_id'] = (int)$identifier;
         $sessionData['remember_me_id'] = Local_Tools_UUID::generateUUID();
         $sessionData['expiry'] = time() + (int)$this->cookieTimeout;
-        $sessionData['token'] =
-            base64_encode(hash('sha256', $sessionData['member_id'] . $sessionData['remember_me_id'] . $this->salt));
+        $sessionData['token'] = base64_encode(hash('sha256', $sessionData['member_id'] . $sessionData['remember_me_id'] . $this->salt));
 
         return $sessionData;
     }
@@ -277,6 +277,12 @@ class Default_Model_RememberMe
 
         setcookie($this->cookieName, false, $cookieExpire, '/', $this->request->getHttpHost(), null, true);
         setcookie($this->cookieName, false, $cookieExpire, '/', $domain, null, true);
+    }
+
+    private function storeRememberIdInSession($remember_mem_id)
+    {
+        $session = new Zend_Session_Namespace();
+        $session->remember_me_id = $remember_mem_id;
     }
 
 } 

@@ -54,9 +54,10 @@ class Default_Model_Authorization
         $auth->clearIdentity();
 
         $session = new Zend_Session_Namespace();
-        $session->unsetAll();
-        Zend_Session::forgetMe();
-        //        Zend_Session::destroy();
+        //$session->unsetAll();
+        //Zend_Session::forgetMe();
+        Zend_Session::rememberUntil(Zend_Registry::get('config')->resources->session->cookie_lifetime);
+        //Zend_Session::destroy();
 
         $modelRememberMe = new Default_Model_RememberMe();
         $modelRememberMe->deleteSession();
@@ -83,6 +84,7 @@ class Default_Model_Authorization
         if ($authResult->isValid()) {
             $this->updateRememberMe($setRememberMe);
             Zend_Session::regenerateId();
+            Zend_Session::rememberMe();
             $this->_storeAuthSessionData();
             $this->updateUserLastOnline('member_id', $this->_authUserData->member_id);
         }

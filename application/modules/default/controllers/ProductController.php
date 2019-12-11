@@ -49,13 +49,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_browserTitlePrepend = $this->templateConfigData['head']['browser_title_prepend'];
 
         $action = $this->getRequest()->getActionName();
-         $title = $action;
-        if($action =='add')
-        {
-          $title = 'add product';
-        }else
-        {
-          $title = $action;
+        $title = $action;
+        if ($action == 'add') {
+            $title = 'add product';
+        } else {
+            $title = $action;
         }
         $this->view->headTitle($title . ' - ' . $this->getHeadTitle(), 'SET');
     }
@@ -91,40 +89,41 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->product = $productInfo;
         $this->_helper->viewRenderer('/partials/pploadajax');
     }
-    
-    public function gettaggroupsforcatajaxAction() {
+
+    public function gettaggroupsforcatajaxAction()
+    {
         $this->_helper->layout()->disableLayout();
-        
+
         $catId = null;
         $fileId = null;
-        
-        if($this->hasParam('file_id')) {
+
+        if ($this->hasParam('file_id')) {
             $fileId = $this->getParam('file_id');
         }
-        
-        if($this->hasParam('project_cat_id')) {
+
+        if ($this->hasParam('project_cat_id')) {
             $catId = $this->getParam('project_cat_id');
-            $catTagModel  = new Default_Model_Tags();
-            $catTagGropuModel  = new Default_Model_TagGroup();
+            $catTagModel = new Default_Model_Tags();
+            $catTagGropuModel = new Default_Model_TagGroup();
             $tagGroups = $catTagGropuModel->fetchTagGroupsForCategory($catId);
-            
+
             $tableTags = new Default_Model_DbTable_Tags();
-            
+
             $result = array();
             $resultGroup = array();
-            
+
             foreach ($tagGroups as $group) {
-                $tags = $tableTags->fetchForGroupForSelect($group['tag_group_id']); 
+                $tags = $tableTags->fetchForGroupForSelect($group['tag_group_id']);
                 $selectedTags = null;
-                if(!empty($fileId)) {
-                    $selectedTags = $catTagModel->getTagsArray($fileId, Default_Model_DbTable_Tags::TAG_TYPE_FILE,$group['tag_group_id']);
+                if (!empty($fileId)) {
+                    $selectedTags = $catTagModel->getTagsArray($fileId, Default_Model_DbTable_Tags::TAG_TYPE_FILE, $group['tag_group_id']);
                 }
-                
+
                 $group['tag_list'] = $tags;
                 $group['selected_tags'] = $selectedTags;
                 $result[] = $group;
             }
-            
+
             $this->_helper->json(array('status' => 'ok', 'ResultSize' => count($tagGroups), 'tag_groups' => $result));
 
             return;
@@ -132,70 +131,27 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->json(array('status' => 'error'));
     }
-    
-    private function getTagGroupsForCat($fileId) {
+
+    public function listsamesourceurlAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
         $modelProduct = new Default_Model_Project();
         $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
-        $catId = $productInfo->project_category_id;
-        
-        if(!empty($catId)) {
-            $catTagModel  = new Default_Model_Tags();
-            $catTagGropuModel  = new Default_Model_TagGroup();
-            $tagGroups = $catTagGropuModel->fetchTagGroupsForCategory($catId);
-            
-            $tableTags = new Default_Model_DbTable_Tags();
-            
-            $result = array();
-            
-            foreach ($tagGroups as $group) {
-                $tags = $tableTags->fetchForGroupForSelect($group['tag_group_id']); 
-                $selectedTags = null;
-                if(!empty($fileId)) {
-                    $selectedTags = $catTagModel->getTagsArray($fileId, Default_Model_DbTable_Tags::TAG_TYPE_FILE,$group['tag_group_id']);
-                }
-                
-                $group['tag_list'] = $tags;
-                $group['selected_tags'] = $selectedTags;
-                $result[] = $group;
-            }
-            
-            return $result;
-        }
-        
-        return null;
-    }
-    
-    
-    private function getFileDownloadCount($collection_id, $fileId) {
-        $modelFiles = new Default_Model_DbTable_PploadFiles();
-        
-        $countAll = $modelFiles->fetchCountDownloadsForFileAllTime($collection_id, $fileId);
-        $countToday = $modelFiles->fetchCountDownloadsForFileToday($collection_id, $fileId);
-        
-        $count = (int)$countAll+ (int)$countToday;
-        return $count;
-    }
-    
-    public function listsamesourceurlAction()
-    {        
-        $this->_helper->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);                
-        $modelProduct = new Default_Model_Project();     
-        $productInfo = $modelProduct->fetchProductInfo($this->_projectId);   
         $result = $modelProduct->getSourceUrlProjects($productInfo->source_url);
         $r = '<div class="container containerduplicates">';
         foreach ($result as $value) {
-            $r=$r.'<div class="row"><div class="col-lg-2"><a href="/p/'.$value['project_id'].'">'.$value['project_id'].'</a></div>'
-                .'<div class="col-lg-4">'.$value['title'].'</div>'
-                .'<div class="col-lg-2"><a href="/u/'.$value['username'].'">'.$value['username'].'</a></div>'
-                .'<div class="col-lg-2">'.$value['created_at'].'</div>'
-                .'<div class="col-lg-2">'.$value['changed_at'].'</div>'
-                .'</div>';
+            $r = $r . '<div class="row"><div class="col-lg-2"><a href="/p/' . $value['project_id'] . '">' . $value['project_id'] . '</a></div>'
+                 . '<div class="col-lg-4">' . $value['title'] . '</div>'
+                 . '<div class="col-lg-2"><a href="/u/' . $value['username'] . '">' . $value['username'] . '</a></div>'
+                 . '<div class="col-lg-2">' . $value['created_at'] . '</div>'
+                 . '<div class="col-lg-2">' . $value['changed_at'] . '</div>'
+                 . '</div>';
         }
 
-        $r = $r.'</div>';
-            
-  
+        $r = $r . '</div>';
+
+
         /*$response='<ul class="list-group" style="min-height:300px;min-width:1000px; max-height:500px; overflow:auto">';
         foreach ($result as $value) {
             $response=$response.'<li class="list-group-item"><a href="/p/'.$value['project_id'].'">'.$value['project_id'].'</a></li>';
@@ -203,72 +159,71 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $response=$response.'</ul>';*/
         echo $r;
 
-    }  
-       
- 
-    
-    public function getfilesajaxAction() {
+    }
+
+    public function getfilesajaxAction()
+    {
         $this->_helper->layout()->disableLayout();
-        
+
         $collection_id = null;
         $file_status = null;
         $ignore_status_code = null;
-        
+
         $helperUserRole = new Backend_View_Helper_UserRole();
         $userRoleName = $helperUserRole->userRole();
-        
-        if($this->hasParam('status')) {
+
+        if ($this->hasParam('status')) {
             $file_status = $this->getParam('status');
         }
-        if($this->hasParam('ignore_status_code')) {
+        if ($this->hasParam('ignore_status_code')) {
             $ignore_status_code = $this->getParam('ignore_status_code');
         }
-        
+
         $filesTable = new Default_Model_DbTable_PploadFiles();
-        
-        if($this->hasParam('collection_id')) {
+
+        if ($this->hasParam('collection_id')) {
             $collection_id = $this->getParam('collection_id');
             $result = array();
             $isForAdmin = false;
             if ($userRoleName == Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN) {
                 $isForAdmin = true;
             }
-            
+
             //Load files from DB
-            if($ignore_status_code == 0 && $file_status == 'active') {
+            if ($ignore_status_code == 0 && $file_status == 'active') {
                 $files = $filesTable->fetchAllActiveFilesForProject($collection_id, $isForAdmin);
             } else {
                 $files = $filesTable->fetchAllFilesForProject($collection_id, $isForAdmin);
             }
-            
+
             //Check, if the project category has tag-grous
             $modelProduct = new Default_Model_Project();
             $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
-            $catTagGropuModel  = new Default_Model_TagGroup();
+            $catTagGropuModel = new Default_Model_TagGroup();
             $tagGroups = $catTagGropuModel->fetchTagGroupsForCategory($productInfo->project_category_id);
 
             foreach ($files as $file) {
                 //add tag grous, if needed
-                if(!empty($tagGroups)) {
+                if (!empty($tagGroups)) {
                     $groups = $this->getTagGroupsForCat($file['id']);
                     $file['tag_groups'] = $groups;
                 }
-                
+
                 //Download Counter
-                
+
 
                 //new counter IP based
                 $counterUkAll = $file['count_dl_all_uk'];
                 $counterNoUkAll = $file['count_dl_all_nouk'];
                 $counterUkToday = $file['count_dl_uk_today'];
                 $counterNew = 0;
-                if(!empty($counterUkAll)) {
+                if (!empty($counterUkAll)) {
                     $counterNew = $counterNew + $counterUkAll;
                 }
-                if(!empty($counterUkToday)) {
+                if (!empty($counterUkToday)) {
                     $counterNew = $counterNew + $counterUkToday;
                 }
-                if(!empty($counterNoUkAll)) {
+                if (!empty($counterNoUkAll)) {
                     $counterNew = $counterNew + $counterNoUkAll;
                 }
                 $file['downloaded_count_uk'] = $counterNew;
@@ -279,10 +234,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $counterToday = $file['count_dl_today'];
                     $counterAll = $file['count_dl_all'];
                     $counter = 0;
-                    if(!empty($counterToday)) {
+                    if (!empty($counterToday)) {
                         $counter = $counterToday;
                     }
-                    if(!empty($counterAll)) {
+                    if (!empty($counterAll)) {
                         $counter = $counter + $counterAll;
                     }
                     $file['downloaded_count_live'] = $counter;
@@ -296,7 +251,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 }
                 $result[] = $file;
             }
-            
+
             $this->_helper->json(array('status' => 'success', 'ResultSize' => count($result), 'files' => $result));
 
             return;
@@ -304,19 +259,53 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->json(array('status' => 'error'));
     }
-    
-    
-    public function getfiletagsajaxAction() {
+
+    private function getTagGroupsForCat($fileId)
+    {
+        $modelProduct = new Default_Model_Project();
+        $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
+        $catId = $productInfo->project_category_id;
+
+        if (!empty($catId)) {
+            $catTagModel = new Default_Model_Tags();
+            $catTagGropuModel = new Default_Model_TagGroup();
+            $tagGroups = $catTagGropuModel->fetchTagGroupsForCategory($catId);
+
+            $tableTags = new Default_Model_DbTable_Tags();
+
+            $result = array();
+
+            foreach ($tagGroups as $group) {
+                $tags = $tableTags->fetchForGroupForSelect($group['tag_group_id']);
+                $selectedTags = null;
+                if (!empty($fileId)) {
+                    $selectedTags = $catTagModel->getTagsArray($fileId, Default_Model_DbTable_Tags::TAG_TYPE_FILE,
+                        $group['tag_group_id']);
+                }
+
+                $group['tag_list'] = $tags;
+                $group['selected_tags'] = $selectedTags;
+                $result[] = $group;
+            }
+
+            return $result;
+        }
+
+        return null;
+    }
+
+    public function getfiletagsajaxAction()
+    {
         $this->_helper->layout()->disableLayout();
-        
+
         $fileId = null;
-        
-        if($this->hasParam('file_id')) {
+
+        if ($this->hasParam('file_id')) {
             $fileId = $this->getParam('file_id');
-            
-            $tagModel  = new Default_Model_Tags();
+
+            $tagModel = new Default_Model_Tags();
             $fileTags = $tagModel->getFileTags($fileId);
-            
+
             $this->_helper->json(array('status' => 'ok', 'ResultSize' => count($fileTags), 'file_tags' => $fileTags));
 
             return;
@@ -325,112 +314,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json(array('status' => 'error'));
     }
 
-    
-
-    public function initJsonForReact(){
-            $modelProduct = new Default_Model_Project();
-            $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
-            $this->view->product = $productInfo;
-            if (empty($this->view->product)) {
-                throw new Zend_Controller_Action_Exception('This page does not exist', 404);
-            }
-
-             if(null != $this->_authMember) {
-                $this->view->authMemberJson = Zend_Json::encode( Default_Model_Member::cleanAuthMemberForJson($this->_authMember) );
-            }
-
-            $helpAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
-            $this->view->product->title = Default_Model_HtmlPurify::purify($this->view->product->title);
-            $this->view->product->description = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($this->view->product->description));
-            $this->view->product->version = Default_Model_HtmlPurify::purify($this->view->product->version);
-            $this->view->product->link_1 = Default_Model_HtmlPurify::purify($helpAddDefaultScheme->addDefaultScheme($this->view->product->link_1),Default_Model_HtmlPurify::ALLOW_URL);
-            $this->view->product->source_url = Default_Model_HtmlPurify::purify($this->view->product->source_url,Default_Model_HtmlPurify::ALLOW_URL);
-            $this->view->product->facebook_code = Default_Model_HtmlPurify::purify($this->view->product->facebook_code,Default_Model_HtmlPurify::ALLOW_URL);
-            $this->view->product->twitter_code = Default_Model_HtmlPurify::purify($this->view->product->twitter_code,Default_Model_HtmlPurify::ALLOW_URL);
-            $this->view->product->google_code = Default_Model_HtmlPurify::purify($this->view->product->google_code,Default_Model_HtmlPurify::ALLOW_URL);
-            $this->view->productJson = Zend_Json::encode(Default_Model_Collection::cleanProductInfoForJson($this->view->product) );
-
-            $fmodel =new  Default_Model_DbTable_PploadFiles();
-            $files = $fmodel->fetchFilesForProject($this->view->product->ppload_collection_id);
-
-            $salt = PPLOAD_DOWNLOAD_SECRET;
-            
-            $filesList = array();
-            
-            foreach ($files as $file) {
-                $timestamp = time() + 3600; // one hour valid
-                $hash = hash('sha512',$salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
-                $url = PPLOAD_API_URI . 'files/download/id/' . $file['id'] . '/s/' . $hash . '/t/' . $timestamp;
-                if(null != $this->_authMember) {
-                    $url .= '/u/' . $this->_authMember->member_id;
-                }
-                $url .= '/lt/filepreview/' . $file['name'];
-                $file['url'] = urlencode($url);
-                $filesList[] = $file;
-            }
-            
-            $this->view->filesJson = Zend_Json::encode($filesList);
-            $this->view->filesCntJson = Zend_Json::encode($fmodel->fetchFilesCntForProject($this->view->product->ppload_collection_id));
-
-            $tableProjectUpdates = new Default_Model_ProjectUpdates();
-            $this->view->updatesJson =  Zend_Json::encode($tableProjectUpdates->fetchProjectUpdates($this->_projectId));
-            $tableProjectRatings = new Default_Model_DbTable_ProjectRating();
-            $ratings = $tableProjectRatings->fetchRating($this->_projectId);
-            $cntRatingsActive = 0;
-             foreach ($ratings as $p) {
-                if($p['rating_active']==1) $cntRatingsActive =$cntRatingsActive+1;
-             }
-             $this->view->ratingsJson = Zend_Json::encode($ratings);
-             $this->view->cntRatingsActiveJson = Zend_Json::encode($cntRatingsActive);
-
-            $identity = Zend_Auth::getInstance()->getStorage()->read();
-            if (Zend_Auth::getInstance()->hasIdentity()){
-                $ratingOfUserJson = $tableProjectRatings->getProjectRateForUser($this->_projectId,$identity->member_id);
-                $this->view->ratingOfUserJson =  Zend_Json::encode($ratingOfUserJson);
-            }else{
-                $this->view->ratingOfUserJson =  Zend_Json::encode(null);
-            }
-            $tableProjectFollower = new Default_Model_DbTable_ProjectFollower();
-            $likes = $tableProjectFollower->fetchLikesForProject($this->_projectId);
-            $this->view->likeJson = Zend_Json::encode($likes);
-
-            $projectplings = new Default_Model_ProjectPlings();
-            $plings = $projectplings->fetchPlingsForProject($this->_projectId);
-            $this->view->projectplingsJson = Zend_Json::encode($plings);
-
-            $tableProject = new Default_Model_Project();
-            $galleryPictures = $tableProject->getGalleryPictureSources($this->_projectId);
-            $this->view->galleryPicturesJson = Zend_Json::encode($galleryPictures);
-
-            $tagmodel = new Default_Model_Tags();
-            $tagsuser = $tagmodel->getTagsUser($this->_projectId, Default_Model_Tags::TAG_TYPE_PROJECT);
-            $tagssystem = $tagmodel->getTagsSystemList($this->_projectId);
-            $this->view->tagsuserJson = Zend_Json::encode($tagsuser);
-            $this->view->tagssystemJson = Zend_Json::encode($tagssystem);
-
-            $modelComments = new Default_Model_ProjectComments();
-            $offset = 0;
-            $testComments = $modelComments->getCommentTreeForProjectList($this->_projectId);            
-            $this->view->commentsJson = Zend_Json::encode($testComments);
-
-            $modelClone = new Default_Model_ProjectClone();
-            $origins =  $modelClone->fetchOrigins($this->_projectId);
-            $this->view->originsJson = Zend_Json::encode($origins);
-            $related =  $modelClone->fetchRelatedProducts($this->_projectId);
-             $this->view->relatedJson = Zend_Json::encode($related);
-
-             $moreProducts = $tableProject->fetchMoreProjects($this->view->product, 8);
-             $this->view->moreProductsJson = Zend_Json::encode($moreProducts);
-
-            $moreProducts = $tableProject->fetchMoreProjectsOfOtherUsr($this->view->product, 8);
-            $this->view->moreProductsOfOtherUsrJson = Zend_Json::encode($moreProducts);
-
-
-
+    public function showAction()
+    {
+        $this->view->authMember = $this->_authMember;
+        $this->_helper->viewRenderer('index');
+        $this->indexAction();
     }
 
     public function indexAction()
-    {        
+    {
 
         if (!empty($this->_collectionId)) {
             $modelProduct = new Default_Model_Project();
@@ -445,28 +337,28 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->view->paramPageId = (int)$this->getParam('page');
         $this->view->member_id = null;
-        if(null != $this->_authMember && null != $this->_authMember->member_id) {
+        if (null != $this->_authMember && null != $this->_authMember->member_id) {
             $this->view->member_id = $this->_authMember->member_id;
         }
-        //        $this->fetchDataForIndexView();        
-        
+        //        $this->fetchDataForIndexView();
+
         $modelProduct = new Default_Model_Project();
         $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
         if (empty($productInfo)) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
-        
+
         //Check if this is a collection
-        if($productInfo->type_id == $modelProduct::PROJECT_TYPE_COLLECTION) {
-            $this->redirect('/c/'.$this->_projectId);
+        if ($productInfo->type_id == $modelProduct::PROJECT_TYPE_COLLECTION) {
+            $this->redirect('/c/' . $this->_projectId);
         }
-        
+
         $this->view->product = $productInfo;
         $this->view->headTitle($productInfo->title . ' - ' . $this->getHeadTitle(), 'SET');
         $this->view->cat_id = $this->view->product->project_category_id;
 
-        $tagGroupFilter  = Zend_Registry::isRegistered('config_store_taggroups') ? Zend_Registry::get('config_store_taggroups') : null;
-        if(!empty($tagGroupFilter)) {
+        $tagGroupFilter = Zend_Registry::isRegistered('config_store_taggroups') ? Zend_Registry::get('config_store_taggroups') : null;
+        if (!empty($tagGroupFilter)) {
             $filterArray = array();
             foreach ($tagGroupFilter as $tagGroupId) {
                 $inputFilter = $this->getFilterTagFromCookie($tagGroupId);
@@ -474,73 +366,77 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             }
             $this->view->tag_group_filter = $filterArray;
         }
-        
+
         //create ppload download hash: secret + collection_id + expire-timestamp
         $salt = PPLOAD_DOWNLOAD_SECRET;
         $collectionID = $this->view->product->ppload_collection_id;
         $timestamp = time() + 3600; // one hour valid
         //20181009 ronald: change hash from MD5 to SHA512
         //$hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
-        $hash = hash('sha512',$salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
+        $hash = hash('sha512',
+            $salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
 
         $this->view->download_hash = $hash;
         $this->view->download_timestamp = $timestamp;
-        
-        
+
         $helperUserRole = new Backend_View_Helper_UserRole();
         $userRoleName = $helperUserRole->userRole();
         $isAdmin = false;
         if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
             $isAdmin = true;
         }
-        
 
         $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
         $helperIsProjectActive = new Default_View_Helper_IsProjectActive();
         if (!$isAdmin AND (false === $helperIsProjectActive->isProjectActive($this->view->product->project_status))
-            AND (false === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
+                          AND (false === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
         ) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
 
         if (APPLICATION_ENV != 'searchbotenv') {
+            Default_Model_Views::saveViewProduct($this->_projectId);
+
             $tablePageViews = new Default_Model_DbTable_StatPageViews();
             $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
                 $this->_authMember->member_id);
         }
-        
-        $fmodel =new  Default_Model_DbTable_PploadFiles();
-        
+
+        $fmodel = new  Default_Model_DbTable_PploadFiles();
+
         $filesList = array();
-            
-        if(isset($this->view->product->ppload_collection_id)) {
+
+        if (isset($this->view->product->ppload_collection_id)) {
             $files = $fmodel->fetchFilesForProject($this->view->product->ppload_collection_id);
-            if(!empty($files)) {
+            if (!empty($files)) {
                 foreach ($files as $file) {
                     $timestamp = time() + 3600; // one hour valid
-                    $hash = hash('sha512',$salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
+                    $hash = hash('sha512',
+                        $salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
                     $url = PPLOAD_API_URI . 'files/download/id/' . $file['id'] . '/s/' . $hash . '/t/' . $timestamp;
-                    if(null != $this->_authMember) {
+                    if (null != $this->_authMember) {
                         $url .= '/u/' . $this->_authMember->member_id;
                     }
                     $url .= '/lt/filepreview/' . $file['name'];
                     $file['url'] = urlencode($url);
-                    
+
                     //If this file is a video, we have to convert it for preview
-                    if(!empty($file['type']) && in_array($file['type'], Backend_Commands_ConvertVideo::$VIDEO_FILE_TYPES) && empty($file['ppload_file_preview_id'])) {
+                    if (!empty($file['type']) && in_array($file['type'],
+                            Backend_Commands_ConvertVideo::$VIDEO_FILE_TYPES) && empty($file['ppload_file_preview_id'])) {
                         $queue = Local_Queue_Factory::getQueue();
-                        $command = new Backend_Commands_ConvertVideo($file['collection_id'], $file['id'], $file['type']);
+                        $command = new Backend_Commands_ConvertVideo($file['collection_id'], $file['id'],
+                            $file['type']);
                         $queue->send(serialize($command));
                     }
-                    
 
-                    if(!empty($file['url_preview'])) {
+
+                    if (!empty($file['url_preview'])) {
                         $file['url_preview'] = urlencode($file['url_preview']);
                     }
-                    if(!empty($file['url_thumb'])) {
+                    if (!empty($file['url_thumb'])) {
                         $file['url_thumb'] = urlencode($file['url_thumb']);
                     }
-                    
+
                     $filesList[] = $file;
                 }
             }
@@ -548,11 +444,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->view->filesJson = Zend_Json::encode($filesList);
 
-       
+
         //gitlab
-        if($this->view->product->is_gitlab_project) {
+        if ($this->view->product->is_gitlab_project) {
             $gitProject = $this->fetchGitlabProject($this->view->product->gitlab_project_id);
-            if(null == $gitProject) {
+            if (null == $gitProject) {
                 $this->view->product->is_gitlab_project = 0;
                 $this->view->product->show_gitlab_project_issues = 0;
                 $this->view->product->use_gitlab_project_readme = 0;
@@ -561,16 +457,16 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $this->view->gitlab_project = $gitProject;
 
                 //show issues?
-                if($this->view->product->show_gitlab_project_issues) {
+                if ($this->view->product->show_gitlab_project_issues) {
                     $issues = $this->fetchGitlabProjectIssues($this->view->product->gitlab_project_id);
                     $this->view->gitlab_project_issues = $issues;
                     $this->view->gitlab_project_issues_url = $this->view->gitlab_project['web_url'] . '/issues/';
                 }
 
                 //show readme.md?
-                if($this->view->product->use_gitlab_project_readme && null != $this->view->gitlab_project['readme_url']) {
+                if ($this->view->product->use_gitlab_project_readme && null != $this->view->gitlab_project['readme_url']) {
                     $config = Zend_Registry::get('config')->settings->server->opencode;
-                    $readme = $this->view->gitlab_project['web_url'].'/raw/master/README.md?inline=false';       
+                    $readme = $this->view->gitlab_project['web_url'] . '/raw/master/README.md?inline=false';
                     $httpClient = new Zend_Http_Client($readme, array('keepalive' => true, 'strictredirects' => true));
                     $httpClient->resetParameters();
                     $httpClient->setUri($readme);
@@ -596,33 +492,29 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 }
             }
         }
-        
+
         // products related
         $pc = new Default_Model_ProjectClone();
-        $cntRelatedProducts=0;
+        $cntRelatedProducts = 0;
         $ancesters = $pc->fetchAncestersIds($this->_projectId);
         //$siblings = $pc->fetchSiblings($this->_projectId);
         //$parents = $pc->fetchParentIds($this->_projectId);
-        if($ancesters && strlen($ancesters)>0){ 
+        if ($ancesters && strlen($ancesters) > 0) {
             $parents = $pc->fetchParentLevelRelatives($this->_projectId);
-        }else{
+        } else {
             $parents = $pc->fetchParentIds($this->_projectId);
         }
-        if($parents && strlen($parents)>0)
-        {
-            $siblings = $pc->fetchSiblingsLevelRelatives($parents, $this->_projectId);        
-        }else
-        {
+        if ($parents && strlen($parents) > 0) {
+            $siblings = $pc->fetchSiblingsLevelRelatives($parents, $this->_projectId);
+        } else {
             $siblings = null;
-        }        
-        $childrens =  $pc->fetchChildrensIds($this->_projectId);
+        }
+        $childrens = $pc->fetchChildrensIds($this->_projectId);
         $childrens2 = null;
         $childrens3 = null;
-        if(strlen($childrens)>0)
-        {
+        if (strlen($childrens) > 0) {
             $childrens2 = $pc->fetchChildrensChildrenIds($childrens);
-            if(strlen($childrens2)>0)
-            {
+            if (strlen($childrens2) > 0) {
                 $childrens3 = $pc->fetchChildrensChildrenIds($childrens2);
             }
         }
@@ -633,78 +525,233 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->related_children = null;
         $this->view->related_children2 = null;
         $this->view->related_children3 = null;
-        if($ancesters && strlen($ancesters)>0){            
+        if ($ancesters && strlen($ancesters) > 0) {
             $pts = $modelProduct->fetchProjects($ancesters);
-            $this->view->related_ancesters = sizeof($pts)==0?null:$pts;
-            $cntRelatedProducts+= sizeof($pts);
+            $this->view->related_ancesters = sizeof($pts) == 0 ? null : $pts;
+            $cntRelatedProducts += sizeof($pts);
         }
-        if($siblings && strlen($siblings)>0){
+        if ($siblings && strlen($siblings) > 0) {
             $pts = $modelProduct->fetchProjects($siblings);
-            $this->view->related_siblings = sizeof($pts)==0?null:$pts;
-            $cntRelatedProducts+= sizeof($pts);
+            $this->view->related_siblings = sizeof($pts) == 0 ? null : $pts;
+            $cntRelatedProducts += sizeof($pts);
         }
-        if($parents && strlen($parents)>0){
+        if ($parents && strlen($parents) > 0) {
             $pts = $modelProduct->fetchProjects($parents);
-            $this->view->related_parents = sizeof($pts)==0?null:$pts;
-            $cntRelatedProducts+= sizeof($pts);
+            $this->view->related_parents = sizeof($pts) == 0 ? null : $pts;
+            $cntRelatedProducts += sizeof($pts);
         }
-        if($childrens && strlen($childrens)>0){
+        if ($childrens && strlen($childrens) > 0) {
             $pts = $modelProduct->fetchProjects($childrens);
-            $this->view->related_children = sizeof($pts)==0?null:$pts;
-            $cntRelatedProducts+= sizeof($pts);
+            $this->view->related_children = sizeof($pts) == 0 ? null : $pts;
+            $cntRelatedProducts += sizeof($pts);
         }
-        if($childrens2 && strlen($childrens2)>0){
+        if ($childrens2 && strlen($childrens2) > 0) {
             $pts = $modelProduct->fetchProjects($childrens2);
-            $this->view->related_children2 = sizeof($pts)==0?null:$pts;
-            $cntRelatedProducts+= sizeof($pts);
+            $this->view->related_children2 = sizeof($pts) == 0 ? null : $pts;
+            $cntRelatedProducts += sizeof($pts);
         }
-        if($childrens3 && strlen($childrens3)>0){
+        if ($childrens3 && strlen($childrens3) > 0) {
             $pts = $modelProduct->fetchProjects($childrens3);
-            $this->view->related_children3 = sizeof($pts)==0?null:$pts;
-            $cntRelatedProducts+= sizeof($pts);
+            $this->view->related_children3 = sizeof($pts) == 0 ? null : $pts;
+            $cntRelatedProducts += sizeof($pts);
         }
 
         $this->view->cntRelatedProducts = $cntRelatedProducts;
-       
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;              
-        if($storeConfig->layout_pagedetail && $storeConfig->isRenderReact()){ 
-            $this->initJsonForReact();           
-            $this->_helper->viewRenderer('index-react');              
+
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        if ($storeConfig->layout_pagedetail && $storeConfig->isRenderReact()) {
+            $this->initJsonForReact();
+            $this->_helper->viewRenderer('index-react');
         }
 
     }
 
-    public function showAction()
+    private function getFilterTagFromCookie($group)
     {
-        $this->view->authMember = $this->_authMember;
-        $this->_helper->viewRenderer('index');
-        $this->indexAction();
+        $config = Zend_Registry::get('config');
+        $cookieName = $config->settings->session->filter_browse_original . $group;
+
+        $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : null;
+
+        return $storedInCookie;
     }
 
+    private function fetchGitlabProject($gitProjectId)
+    {
+        $gitlab = new Default_Model_Ocs_Gitlab();
 
+        try {
+            $gitProject = $gitlab->getProject($gitProjectId);
+        } catch (Exception $exc) {
+            //Project is gone
+            $modelProject = new Default_Model_Project();
+            $modelProject->updateProject($this->_projectId, array(
+                'is_gitlab_project'          => 0,
+                'gitlab_project_id'          => null,
+                'show_gitlab_project_issues' => 0,
+                'use_gitlab_project_readme'  => 0
+            ));
+            $gitProject = null;
+        }
+
+        return $gitProject;
+    }
+
+    private function fetchGitlabProjectIssues($gitProjectId)
+    {
+        $gitlab = new Default_Model_Ocs_Gitlab();
+
+        try {
+            $gitProjectIssues = $gitlab->getProjectIssues($gitProjectId);
+        } catch (Exception $exc) {
+            //Project is gone
+            $modelProject = new Default_Model_Project();
+            $modelProject->updateProject($this->_projectId, array(
+                'is_gitlab_project'          => 0,
+                'gitlab_project_id'          => null,
+                'show_gitlab_project_issues' => 0,
+                'use_gitlab_project_readme'  => 0
+            ));
+
+            $gitProjectIssues = null;
+        }
+
+
+        return $gitProjectIssues;
+    }
+
+    public function initJsonForReact()
+    {
+        $modelProduct = new Default_Model_Project();
+        $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
+        $this->view->product = $productInfo;
+        if (empty($this->view->product)) {
+            throw new Zend_Controller_Action_Exception('This page does not exist', 404);
+        }
+
+        if (null != $this->_authMember) {
+            $this->view->authMemberJson = Zend_Json::encode(Default_Model_Member::cleanAuthMemberForJson($this->_authMember));
+        }
+
+        $helpAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
+        $this->view->product->title = Default_Model_HtmlPurify::purify($this->view->product->title);
+        $this->view->product->description = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($this->view->product->description));
+        $this->view->product->version = Default_Model_HtmlPurify::purify($this->view->product->version);
+        $this->view->product->link_1 = Default_Model_HtmlPurify::purify($helpAddDefaultScheme->addDefaultScheme($this->view->product->link_1),
+            Default_Model_HtmlPurify::ALLOW_URL);
+        $this->view->product->source_url = Default_Model_HtmlPurify::purify($this->view->product->source_url,
+            Default_Model_HtmlPurify::ALLOW_URL);
+        $this->view->product->facebook_code = Default_Model_HtmlPurify::purify($this->view->product->facebook_code,
+            Default_Model_HtmlPurify::ALLOW_URL);
+        $this->view->product->twitter_code = Default_Model_HtmlPurify::purify($this->view->product->twitter_code,
+            Default_Model_HtmlPurify::ALLOW_URL);
+        $this->view->product->google_code = Default_Model_HtmlPurify::purify($this->view->product->google_code,
+            Default_Model_HtmlPurify::ALLOW_URL);
+        $this->view->productJson = Zend_Json::encode(Default_Model_Collection::cleanProductInfoForJson($this->view->product));
+
+        $fmodel = new  Default_Model_DbTable_PploadFiles();
+        $files = $fmodel->fetchFilesForProject($this->view->product->ppload_collection_id);
+
+        $salt = PPLOAD_DOWNLOAD_SECRET;
+
+        $filesList = array();
+
+        foreach ($files as $file) {
+            $timestamp = time() + 3600; // one hour valid
+            $hash = hash('sha512',
+                $salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
+            $url = PPLOAD_API_URI . 'files/download/id/' . $file['id'] . '/s/' . $hash . '/t/' . $timestamp;
+            if (null != $this->_authMember) {
+                $url .= '/u/' . $this->_authMember->member_id;
+            }
+            $url .= '/lt/filepreview/' . $file['name'];
+            $file['url'] = urlencode($url);
+            $filesList[] = $file;
+        }
+
+        $this->view->filesJson = Zend_Json::encode($filesList);
+        $this->view->filesCntJson = Zend_Json::encode($fmodel->fetchFilesCntForProject($this->view->product->ppload_collection_id));
+
+        $tableProjectUpdates = new Default_Model_ProjectUpdates();
+        $this->view->updatesJson = Zend_Json::encode($tableProjectUpdates->fetchProjectUpdates($this->_projectId));
+        $tableProjectRatings = new Default_Model_DbTable_ProjectRating();
+        $ratings = $tableProjectRatings->fetchRating($this->_projectId);
+        $cntRatingsActive = 0;
+        foreach ($ratings as $p) {
+            if ($p['rating_active'] == 1) {
+                $cntRatingsActive = $cntRatingsActive + 1;
+            }
+        }
+        $this->view->ratingsJson = Zend_Json::encode($ratings);
+        $this->view->cntRatingsActiveJson = Zend_Json::encode($cntRatingsActive);
+
+        $identity = Zend_Auth::getInstance()->getStorage()->read();
+        if (Zend_Auth::getInstance()->hasIdentity()) {
+            $ratingOfUserJson = $tableProjectRatings->getProjectRateForUser($this->_projectId, $identity->member_id);
+            $this->view->ratingOfUserJson = Zend_Json::encode($ratingOfUserJson);
+        } else {
+            $this->view->ratingOfUserJson = Zend_Json::encode(null);
+        }
+        $tableProjectFollower = new Default_Model_DbTable_ProjectFollower();
+        $likes = $tableProjectFollower->fetchLikesForProject($this->_projectId);
+        $this->view->likeJson = Zend_Json::encode($likes);
+
+        $projectplings = new Default_Model_ProjectPlings();
+        $plings = $projectplings->fetchPlingsForProject($this->_projectId);
+        $this->view->projectplingsJson = Zend_Json::encode($plings);
+
+        $tableProject = new Default_Model_Project();
+        $galleryPictures = $tableProject->getGalleryPictureSources($this->_projectId);
+        $this->view->galleryPicturesJson = Zend_Json::encode($galleryPictures);
+
+        $tagmodel = new Default_Model_Tags();
+        $tagsuser = $tagmodel->getTagsUser($this->_projectId, Default_Model_Tags::TAG_TYPE_PROJECT);
+        $tagssystem = $tagmodel->getTagsSystemList($this->_projectId);
+        $this->view->tagsuserJson = Zend_Json::encode($tagsuser);
+        $this->view->tagssystemJson = Zend_Json::encode($tagssystem);
+
+        $modelComments = new Default_Model_ProjectComments();
+        $offset = 0;
+        $testComments = $modelComments->getCommentTreeForProjectList($this->_projectId);
+        $this->view->commentsJson = Zend_Json::encode($testComments);
+
+        $modelClone = new Default_Model_ProjectClone();
+        $origins = $modelClone->fetchOrigins($this->_projectId);
+        $this->view->originsJson = Zend_Json::encode($origins);
+        $related = $modelClone->fetchRelatedProducts($this->_projectId);
+        $this->view->relatedJson = Zend_Json::encode($related);
+
+        $moreProducts = $tableProject->fetchMoreProjects($this->view->product, 8);
+        $this->view->moreProductsJson = Zend_Json::encode($moreProducts);
+
+        $moreProducts = $tableProject->fetchMoreProjectsOfOtherUsr($this->view->product, 8);
+        $this->view->moreProductsOfOtherUsrJson = Zend_Json::encode($moreProducts);
+
+
+    }
 
     public function addAction()
     {
         $this->view->member = $this->_authMember;
         $this->view->mode = 'add';
-        
-        if($this->getParam('catId')){
+
+        if ($this->getParam('catId')) {
             $this->view->catId = $this->getParam('catId');
         }
         $form = new Default_Form_Product(array('member_id' => $this->view->member->member_id));
         $this->view->form = $form;
-        
+
         if ($this->_request->isGet()) {
             return;
         }
-        
+
         $helperUserRole = new Backend_View_Helper_UserRole();
         $userRoleName = $helperUserRole->userRole();
         $isAdmin = false;
         if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
             $isAdmin = true;
         }
-        
+
 
         if (isset($_POST['cancel'])) { // user cancel function
             $this->redirect('/member/' . $this->_authMember->member_id . '/news/');
@@ -741,7 +788,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             if (isset($values['project_id'])) {
                 $newProject = $modelProject->updateProject($values['project_id'], $values);
             } else {
-                $newProject = $modelProject->createProject($this->_authMember->member_id, $values, $this->_authMember->username);
+                $newProject = $modelProject->createProject($this->_authMember->member_id, $values,
+                    $this->_authMember->username);
                 //$this->createSystemPlingForNewProject($newProject->project_id);
             }
         } catch (Exception $exc) {
@@ -770,12 +818,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $modelTags = new Default_Model_Tags();
         if ($values['tagsuser']) {
-            $modelTags->processTagsUser($newProject->project_id, implode(',', $values['tagsuser']),Default_Model_Tags::TAG_TYPE_PROJECT);
+            $modelTags->processTagsUser($newProject->project_id, implode(',', $values['tagsuser']),
+                Default_Model_Tags::TAG_TYPE_PROJECT);
         } else {
             $modelTags->processTagsUser($newProject->project_id, null, Default_Model_Tags::TAG_TYPE_PROJECT);
         }
-        
-        $modelTags->processTagProductOriginalOrModification($newProject->project_id,$values['is_original_or_modification'][0]); 
+
+        $modelTags->processTagProductOriginalOrModification($newProject->project_id,
+            $values['is_original_or_modification'][0]);
 
         //set license, if needed
         $licenseTag = $form->getElement('license_tag_id')->getValue();
@@ -783,7 +833,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if ($licenseTag && count($licenseTag) > 0) {
             $modelTags->saveLicenseTagForProject($newProject->project_id, $licenseTag);
             $activityLog = new Default_Model_ActivityLog();
-            $activityLog->logActivity($newProject->project_id, $newProject->project_id, $this->_authMember->member_id,Default_Model_ActivityLog::PROJECT_LICENSE_CHANGED, array('title' => 'Set new License Tag', 'description' => 'New TagId: ' . $licenseTag));
+            $activityLog->logActivity($newProject->project_id, $newProject->project_id, $this->_authMember->member_id,
+                Default_Model_ActivityLog::PROJECT_LICENSE_CHANGED,
+                array('title' => 'Set new License Tag', 'description' => 'New TagId: ' . $licenseTag));
         }
 
         $isGitlabProject = $form->getElement('is_gitlab_project')->getValue();
@@ -793,7 +845,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $activityLog = new Default_Model_ActivityLog();
-        $activityLog->writeActivityLog($newProject->project_id, $newProject->member_id, Default_Model_ActivityLog::PROJECT_CREATED, $newProject->toArray());
+        $activityLog->writeActivityLog($newProject->project_id, $newProject->member_id,
+            Default_Model_ActivityLog::PROJECT_CREATED, $newProject->toArray());
 
         // ppload
         $this->processPploadId($newProject);
@@ -802,7 +855,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             if (100 < $this->_authMember->roleId) {
                 if (Default_Model_Spam::hasSpamMarkers($newProject->toArray())) {
                     $tableReportComments = new Default_Model_DbTable_ReportProducts();
-                    $tableReportComments->save(array('project_id' => $newProject->project_id, 'reported_by' => 24, 'text' => "System: automatic spam detection"));
+                    $tableReportComments->save(array(
+                        'project_id'  => $newProject->project_id,
+                        'reported_by' => 24,
+                        'text'        => "System: automatic spam detection"
+                    ));
                 }
                 Default_Model_DbTable_SuspicionLog::logProject($newProject, $this->_authMember, $this->getRequest());
             }
@@ -818,25 +875,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $imageModel = new Default_Model_DbTable_Image();
 
         return $imageModel->saveImages($form_element);
-    }
-
-
-    /**
-     * @param $projectData
-     *
-     * @throws Zend_Exception
-     * @throws Zend_Queue_Exception
-     */
-    protected function createTaskWebsiteOwnerVerification($projectData)
-    {
-        if (empty($projectData->link_1)) {
-            return;
-        }
-        $checkAuthCode = new Local_Verification_WebsiteProject();
-        $authCode = $checkAuthCode->generateAuthCode(stripslashes($projectData->link_1));
-        $queue = Local_Queue_Factory::getQueue();
-        $command = new Backend_Commands_CheckProjectWebsite($projectData->project_id, $projectData->link_1, $authCode);
-        $queue->send(serialize($command));
     }
 
     /**
@@ -892,9 +930,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
         $viewHelperImage = new Default_View_Helper_Image();
         $uri = $viewHelperImage->Image($projectData->image_small, array(
-                'width'  => 600,
-                'height' => 600
-            ));
+            'width'  => 600,
+            'height' => 600
+        ));
 
         file_put_contents($filename, file_get_contents($uri));
 
@@ -947,7 +985,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $modelMember = new Default_Model_Member();
             $member = $modelMember->fetchMember($projectData->member_id, false);
         }
-        
+
         $helperUserRole = new Backend_View_Helper_UserRole();
         $userRoleName = $helperUserRole->userRole();
         $isAdmin = false;
@@ -967,7 +1005,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $timestamp = time() + 3600; // one hour valid
         //20181009 ronald: change hash from MD5 to SHA512
         //$hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
-        $hash = hash('sha512',$salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
+        $hash = hash('sha512',
+            $salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
 
         $this->view->download_hash = $hash;
         $this->view->download_timestamp = $timestamp;
@@ -977,7 +1016,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         //read the already existing gallery pics and add them to the form
         $sources = $projectModel->getGalleryPictureSources($this->_projectId);
-        
+
         //get the gitlab projects for this user
 
         //setup form
@@ -991,27 +1030,31 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         if ($this->_request->isGet()) {
             $form->populate($projectData->toArray());
-           // $form->populate(array('tags' => $modelTags->getTags($projectData->project_id, Default_Model_Tags::TAG_TYPE_PROJECT)));
-            $form->populate(array('tagsuser' => $modelTags->getTagsUser($projectData->project_id, Default_Model_Tags::TAG_TYPE_PROJECT)));
+            // $form->populate(array('tags' => $modelTags->getTags($projectData->project_id, Default_Model_Tags::TAG_TYPE_PROJECT)));
+            $form->populate(array(
+                'tagsuser' => $modelTags->getTagsUser($projectData->project_id, Default_Model_Tags::TAG_TYPE_PROJECT)
+            ));
             $form->getElement('image_small')->setValue($projectData->image_small);
             //Bilder voreinstellen
             $form->getElement(self::IMAGE_SMALL_UPLOAD)->setValue($projectData->image_small);
 
             $licenseTags = $tagTable->fetchLicenseTagsForProject($this->_projectId);
             $licenseTag = null;
-            if($licenseTags) {
+            if ($licenseTags) {
                 $licenseTag = $licenseTags[0]['tag_id'];
             }
             $form->getElement('license_tag_id')->setValue($licenseTag);
 
             $is_original = $modelTags->isProductOriginal($projectData->project_id);
             $is_modification = $modelTags->isProductModification($projectData->project_id);
-            if($is_original){
-                $form->getElement('is_original_or_modification')->setValue(1);                
-            } else if($is_modification){
-                $form->getElement('is_original_or_modification')->setValue(2);                
+            if ($is_original) {
+                $form->getElement('is_original_or_modification')->setValue(1);
+            } else {
+                if ($is_modification) {
+                    $form->getElement('is_original_or_modification')->setValue(2);
+                }
             }
- 
+
             $this->view->form = $form;
 
             return;
@@ -1032,27 +1075,31 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
 
         //set license, if needed
-        $tagList = $modelTags->getTagsArray($this->_projectId, $modelTags::TAG_TYPE_PROJECT, $modelTags::TAG_LICENSE_GROUPID);
+        $tagList = $modelTags->getTagsArray($this->_projectId, $modelTags::TAG_TYPE_PROJECT,
+            $modelTags::TAG_LICENSE_GROUPID);
         $oldLicenseTagId = null;
-        if($tagList && count($tagList) == 1) {
+        if ($tagList && count($tagList) == 1) {
             $oldLicenseTagId = $tagList[0]['tag_id'];
         }
 
         $licenseTag = $form->getElement('license_tag_id')->getValue();
         //only set/update license tags if something was changed
-        if($licenseTag <> $oldLicenseTagId) {
+        if ($licenseTag <> $oldLicenseTagId) {
             $modelTags->saveLicenseTagForProject($this->_projectId, $licenseTag);
             $activityLog = new Default_Model_ActivityLog();
-            $activityLog->logActivity($this->_projectId, $this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_LICENSE_CHANGED, array('title' => 'License Tag', 'description' => 'Old TagId: '.$oldLicenseTagId.' - New TagId: '.$licenseTag));
+            $activityLog->logActivity($this->_projectId, $this->_projectId, $this->_authMember->member_id,
+                Default_Model_ActivityLog::PROJECT_LICENSE_CHANGED, array(
+                    'title'       => 'License Tag',
+                    'description' => 'Old TagId: ' . $oldLicenseTagId . ' - New TagId: ' . $licenseTag
+                ));
         }
-        
+
         //gitlab project
         $isGitlabProject = $form->getElement('is_gitlab_project')->getValue();
         $gitlabProjectId = $form->getElement('gitlab_project_id')->getValue();
-        if($isGitlabProject && $gitlabProjectId == 0) {
+        if ($isGitlabProject && $gitlabProjectId == 0) {
             $values['gitlab_project_id'] = null;
         }
-
 
 
         $imageModel = new Default_Model_DbTable_Image();
@@ -1078,18 +1125,20 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //20180219 ronald: we set the changed_at only by new files or new updates
         //$projectData->changed_at = new Zend_Db_Expr('NOW()');
         $projectData->save();
-        
-        $modelTags->processTagProductOriginalOrModification($this->_projectId,$values['is_original_or_modification'][0]);
 
-        if($values['tagsuser']) {
-            $modelTags->processTagsUser($this->_projectId,implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);
-        }else
-        {
-            $modelTags->processTagsUser($this->_projectId,null, Default_Model_Tags::TAG_TYPE_PROJECT);
+        $modelTags->processTagProductOriginalOrModification($this->_projectId,
+            $values['is_original_or_modification'][0]);
+
+        if ($values['tagsuser']) {
+            $modelTags->processTagsUser($this->_projectId, implode(',', $values['tagsuser']),
+                Default_Model_Tags::TAG_TYPE_PROJECT);
+        } else {
+            $modelTags->processTagsUser($this->_projectId, null, Default_Model_Tags::TAG_TYPE_PROJECT);
         }
 
         $activityLog = new Default_Model_ActivityLog();
-        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
+        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
+            Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
 
         // ppload
         $this->processPploadId($projectData);
@@ -1098,7 +1147,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             if (100 < $this->_authMember->roleId) {
                 if (Default_Model_Spam::hasSpamMarkers($projectData->toArray())) {
                     $tableReportComments = new Default_Model_DbTable_ReportProducts();
-                    $tableReportComments->save(array('project_id' => $projectData->project_id, 'reported_by' => 24, 'text' => "System: automatic spam detection on product edit"));
+                    $tableReportComments->save(array(
+                        'project_id'  => $projectData->project_id,
+                        'reported_by' => 24,
+                        'text'        => "System: automatic spam detection on product edit"
+                    ));
                 }
                 Default_Model_DbTable_SuspicionLog::logProject($projectData, $this->_authMember, $this->getRequest());
             }
@@ -1119,7 +1172,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         foreach ($updates as $key => $update) {
             $updates[$key]['title'] = Default_Model_HtmlPurify::purify($update['title']);
-            $updates[$key]['text'] = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify(htmlentities($update['text'], ENT_QUOTES | ENT_IGNORE)));
+            $updates[$key]['text'] = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify(htmlentities($update['text'],
+                ENT_QUOTES | ENT_IGNORE)));
             $updates[$key]['raw_title'] = $update['title'];
             $updates[$key]['raw_text'] = $update['text'];
         }
@@ -1134,24 +1188,24 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     public function saveupdateajaxAction()
     {
         $filter =
-        new Zend_Filter_Input(
-            array(
-                '*' => 'StringTrim'
-            ),
-            array(
-                '*'         => array(),
-                'title'     => array(
-                    new Zend_Validate_StringLength(array('min' => 3, 'max' => 200)),
-                    'presence' => 'required',
-                    'allowEmpty' => false
+            new Zend_Filter_Input(
+                array(
+                    '*' => 'StringTrim'
                 ),
-                'text'      => array(
-                    new Zend_Validate_StringLength(array('min' => 3, 'max' => 16383)),
-                    'presence' => 'required',
-                    'allowEmpty' => false
-                ),
-                'update_id' => array('digits', 'allowEmpty' => true)
-            ), $this->getAllParams(), array('allowEmpty' => true));
+                array(
+                    '*'         => array(),
+                    'title'     => array(
+                        new Zend_Validate_StringLength(array('min' => 3, 'max' => 200)),
+                        'presence'   => 'required',
+                        'allowEmpty' => false
+                    ),
+                    'text'      => array(
+                        new Zend_Validate_StringLength(array('min' => 3, 'max' => 16383)),
+                        'presence'   => 'required',
+                        'allowEmpty' => false
+                    ),
+                    'update_id' => array('digits', 'allowEmpty' => true)
+                ), $this->getAllParams(), array('allowEmpty' => true));
 
         if ($filter->hasInvalid() OR $filter->hasMissing() OR $filter->hasUnknown()) {
             $result['status'] = 'error';
@@ -1534,7 +1588,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
         $helperIsProjectActive = new Default_View_Helper_IsProjectActive();
         if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status)) AND (false
-                === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
+                                                                                                           === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
         ) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
@@ -1542,8 +1596,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $tableProject = new Default_Model_Project();
         $this->view->supporting = $tableProject->fetchProjectSupporterWithPlings($this->_projectId);
     }
-
-
 
     public function payAction()
     {
@@ -1696,7 +1748,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $memberId = (int)$this->getParam('m');
 
         if ((empty($this->_authMember->member_id)) OR (empty($memberId)) OR ($this->_authMember->member_id
-                != $memberId)
+                                                                             != $memberId)
         ) {
             $this->forward('products', 'user', 'default');
 
@@ -1704,7 +1756,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $tableProduct = new Default_Model_Project();
-        $tableProduct->setDeleted($this->_authMember->member_id,$this->_projectId);
+        $tableProduct->setDeleted($this->_authMember->member_id, $this->_projectId);
 
         $product = $tableProduct->find($this->_projectId)->current();
 
@@ -1730,7 +1782,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $activityLog = new Default_Model_ActivityLog();
-        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_DELETED,
+        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
+            Default_Model_ActivityLog::PROJECT_DELETED,
             $product->toArray());
 
         $this->forward('products', 'user', 'default');
@@ -1762,7 +1815,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $activityLog = new Default_Model_ActivityLog();
-        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_UNPUBLISHED,
+        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
+            Default_Model_ActivityLog::PROJECT_UNPUBLISHED,
             $product->toArray());
 
         // remove unpublished project from search index
@@ -1793,13 +1847,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $memberId = (int)$this->getParam('m');
 
         if ((empty($this->_authMember->member_id)) OR (empty($memberId)) OR ($this->_authMember->member_id
-                != $memberId)
+                                                                             != $memberId)
         ) {
             return;
         }
 
         $tableProduct = new Default_Model_Project();
-        $tableProduct->setActive($this->_authMember->member_id,$this->_projectId);
+        $tableProduct->setActive($this->_authMember->member_id, $this->_projectId);
 
         $product = $tableProduct->find($this->_projectId)->current();
 
@@ -1809,7 +1863,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $activityLog = new Default_Model_ActivityLog();
-        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_PUBLISHED,
+        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
+            Default_Model_ActivityLog::PROJECT_PUBLISHED,
             $product->toArray());
 
         // add published project to search index
@@ -1836,67 +1891,74 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //$this->redirect('/member/'.$memberId.'/products');
     }
 
-   public function loadratingsAction()
-   {
+    public function loadratingsAction()
+    {
         $this->_helper->layout->disableLayout();
-        $tableProjectRatings = new Default_Model_DbTable_ProjectRating();            
+        $tableProjectRatings = new Default_Model_DbTable_ProjectRating();
         $ratings = $tableProjectRatings->fetchRating($this->_projectId);
         $this->_helper->json($ratings);
     }
 
     public function loadtagratingAction()
     {
-         $this->_helper->layout->disableLayout();
-         //$tableProjectRatings = new Default_Model_DbTable_ProjectRating();            
-         //$ratings = $tableProjectRatings->fetchTagRating($this->_projectId);
-         $category_id=  $this->getParam('gid');
-         $model = new Default_Model_ProjectTagRatings();
-         $ratingsLabel = $model->getCategoryTagRatings($category_id);
-         $ratingsValue=null;
-         if($ratingsLabel!=null && sizeof($ratingsLabel)>0)
-         {
-            $ratingsValue = $model->getProjectTagRatings($this->_projectId);            
-         }         
-         
-         $this->_helper->json(array(
+        $this->_helper->layout->disableLayout();
+        //$tableProjectRatings = new Default_Model_DbTable_ProjectRating();
+        //$ratings = $tableProjectRatings->fetchTagRating($this->_projectId);
+        $category_id = $this->getParam('gid');
+        $model = new Default_Model_ProjectTagRatings();
+        $ratingsLabel = $model->getCategoryTagRatings($category_id);
+        $ratingsValue = null;
+        if ($ratingsLabel != null && sizeof($ratingsLabel) > 0) {
+            $ratingsValue = $model->getProjectTagRatings($this->_projectId);
+        }
+
+        $this->_helper->json(array(
             'status' => 'ok',
-            'labels' =>$ratingsLabel,
-            'values' =>$ratingsValue
-        ));         
+            'labels' => $ratingsLabel,
+            'values' => $ratingsValue
+        ));
     }
+
     public function votetagratingAction()
     {
         $this->_helper->layout->disableLayout();
-        $vote=  $this->getParam('vote');
-        $tag_id=  $this->getParam('tid');
-        $model = new Default_Model_ProjectTagRatings();
-        if($this->_authMember->member_id)
-        {
-            $checkVote = $model->checkIfVote($this->_authMember->member_id,$this->_projectId,$tag_id);
-            if(!$checkVote)
-            {
-               $model->doVote($this->_authMember->member_id,$this->_projectId,$tag_id,$vote);               
-            }else{
-               if($checkVote['vote']== $vote)
-               {
-                    $model->removeVote($checkVote['tag_rating_id']);
-               }else{
-                    $model->removeVote($checkVote['tag_rating_id']);
-                    $model->doVote($this->_authMember->member_id,$this->_projectId,$tag_id,$vote);               
-               }
-            }
-                                    
-            $this->_helper->json(array(
-                'status' => 'ok'                
-            ));  
-        }else{
+        $vote = $this->getParam('vote');
+        $tag_id = $this->getParam('tid');
+        $msg = $this->getParam('msg');
+        if (strlen($msg) < 1) {
             $this->_helper->json(array(
                 'status' => 'error',
-                'msg' =>'Login please'                
-            ));  
+                'msg'    => 'Please add a comment.'
+            ));
+
+            return;
+        };
+
+        $model = new Default_Model_ProjectTagRatings();
+        if ($this->_authMember->member_id) {
+            $checkVote = $model->checkIfVote($this->_authMember->member_id, $this->_projectId, $tag_id);
+            if (!$checkVote) {
+                $model->doVote($this->_authMember->member_id, $this->_projectId, $tag_id, $vote, $msg);
+            } else {
+                if ($checkVote['vote'] == $vote) {
+                    $model->removeVote($checkVote['tag_rating_id']);
+                } else {
+                    $model->removeVote($checkVote['tag_rating_id']);
+                    $model->doVote($this->_authMember->member_id, $this->_projectId, $tag_id, $vote, $msg);
+                }
+            }
+
+            $this->_helper->json(array(
+                'status' => 'ok'
+            ));
+        } else {
+            $this->_helper->json(array(
+                'status' => 'error',
+                'msg'    => 'Login please'
+            ));
         }
     }
-    
+
     public function loadfilesjsonAction()
     {
         $this->_helper->layout->disableLayout();
@@ -1906,17 +1968,18 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $salt = PPLOAD_DOWNLOAD_SECRET;
         foreach ($files as &$file) {
             $timestamp = time() + 3600; // one hour valid
-            $hash = hash('sha512',$salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
+            $hash = hash('sha512',
+                $salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
             $url = PPLOAD_API_URI . 'files/download/id/' . $file['id'] . '/s/' . $hash . '/t/' . $timestamp;
-            if(null != $this->_authMember) {
+            if (null != $this->_authMember) {
                 $url .= '/u/' . $this->_authMember->member_id;
             }
             $url .= '/lt/filepreview/' . $file['name'];
-            $file['url'] = urlencode($url);                    
-        }        
+            $file['url'] = urlencode($url);
+        }
         $this->_helper->json($files);
     }
-    
+
     public function loadfirstfilejsonAction()
     {
         $this->_helper->layout->disableLayout();
@@ -1925,29 +1988,30 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $files = $modelProject->fetchFilesForProject($this->_projectId);
         $salt = PPLOAD_DOWNLOAD_SECRET;
         $file = $files[0];
-        
+
         $timestamp = time() + 3600; // one hour valid
-        $hash = hash('sha512',$salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
+        $hash = hash('sha512',
+            $salt . $file['collection_id'] . $timestamp); // order isn't important at all... just do the same when verifying
         $url = PPLOAD_API_URI . 'files/download/id/' . $file['id'] . '/s/' . $hash . '/t/' . $timestamp;
-        if(null != $this->_authMember) {
+        if (null != $this->_authMember) {
             $url .= '/u/' . $this->_authMember->member_id;
         }
         $url .= '/lt/filepreview/' . $file['name'];
-        $file['url'] = urlencode($url);                    
+        $file['url'] = urlencode($url);
 
         $this->_helper->json($file);
     }
-    
+
     public function loadinstallinstructionAction()
     {
         $this->_helper->layout->disableLayout();
         $infomodel = new Default_Model_Info();
-        $text =  $infomodel->getOCSInstallInstruction();
-        
+        $text = $infomodel->getOCSInstallInstruction();
+
 
         $this->_helper->json(array(
-            'status'  => 'ok',            
-            'data'    => $text
+            'status' => 'ok',
+            'data'   => $text
         ));
     }
 
@@ -1967,8 +2031,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $newVals = array('project_id' => $this->_projectId, 'member_id' => $this->_authMember->member_id);
         $where = $projectFollowTable->select()->where('member_id = ?', $this->_authMember->member_id)
-                                    ->where('project_id = ?', $this->_projectId, 'INTEGER')
-        ;
+                                    ->where('project_id = ?', $this->_projectId, 'INTEGER');
         $result = $projectFollowTable->fetchRow($where);
 
         if (null === $result) {
@@ -2014,7 +2077,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $projectFollowTable = new Default_Model_DbTable_ProjectFollower();
 
         $projectFollowTable->delete('member_id=' . $this->_authMember->member_id . ' AND project_id='
-            . $this->_projectId);
+                                    . $this->_projectId);
 
 
         $tableProduct = new Default_Model_Project();
@@ -2064,12 +2127,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $newVals = array('project_id' => $this->_projectId, 'member_id' => $this->_authMember->member_id);
         $where = $projectFollowTable->select()->where('member_id = ?', $this->_authMember->member_id)
-                                    ->where('project_id = ?', $this->_projectId, 'INTEGER')
-        ;
+                                    ->where('project_id = ?', $this->_projectId, 'INTEGER');
         $result = $projectFollowTable->fetchRow($where);
 
         if (null === $result) {
-             $projectFollowTable->createRow($newVals)->save();
+            $projectFollowTable->createRow($newVals)->save();
             $tableProduct = new Default_Model_Project();
             $product = $tableProduct->find($this->_projectId)->current();
             $activityLog = new Default_Model_ActivityLog();
@@ -2089,7 +2151,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $projectFollowTable = new Default_Model_DbTable_ProjectFollower();
 
         $projectFollowTable->delete('member_id=' . $this->_authMember->member_id . ' AND project_id='
-            . $this->_projectId);
+                                    . $this->_projectId);
 
 
         $tableProduct = new Default_Model_Project();
@@ -2098,6 +2160,57 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
             Default_Model_ActivityLog::PROJECT_UNFOLLOWED, $product->toArray());
+
+    }
+
+    public function followprojectAction()
+    {
+        $this->_helper->layout()->disableLayout();
+
+        $this->view->project_id = $this->_projectId;
+        $this->view->authMember = $this->_authMember;
+
+        // not allow to pling himself
+        if (array_key_exists($this->_projectId, $this->_authMember->projects)) {
+            $this->_helper->json(array(
+                'status' => 'error',
+                'msg'    => 'not allowed'
+            ));
+
+            return;
+        }
+
+
+        $projectFollowTable = new Default_Model_DbTable_ProjectFollower();
+
+        $newVals = array('project_id' => $this->_projectId, 'member_id' => $this->_authMember->member_id);
+        $where = $projectFollowTable->select()->where('member_id = ?', $this->_authMember->member_id)
+                                    ->where('project_id = ?', $this->_projectId, 'INTEGER');
+
+        $result = $projectFollowTable->fetchRow($where);
+
+        if (null === $result) {
+            $projectFollowTable->createRow($newVals)->save();
+            $this->logActivity(Default_Model_ActivityLog::PROJECT_FOLLOWED);
+            $cnt = $projectFollowTable->countForProject($this->_projectId);
+            $this->_helper->json(array(
+                'status' => 'ok',
+                'msg'    => 'Success.',
+                'cnt'    => $cnt,
+                'action' => 'insert'
+            ));
+        } else {
+            $projectFollowTable->delete('member_id=' . $this->_authMember->member_id . ' AND project_id='
+                                        . $this->_projectId);
+            $this->logActivity(Default_Model_ActivityLog::PROJECT_UNFOLLOWED);
+            $cnt = $projectFollowTable->countForProject($this->_projectId);
+            $this->_helper->json(array(
+                'status' => 'ok',
+                'msg'    => 'Success.',
+                'cnt'    => $cnt,
+                'action' => 'delete'
+            ));
+        }
 
     }
 
@@ -2110,59 +2223,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $logId, $product->toArray());
     }
 
-
-    public function followprojectAction()
-    {
-        $this->_helper->layout()->disableLayout();
-
-        $this->view->project_id = $this->_projectId;
-        $this->view->authMember = $this->_authMember;
-
-        // not allow to pling himself
-        if (array_key_exists($this->_projectId, $this->_authMember->projects))
-        {
-             $this->_helper->json(array(
-                    'status' => 'error',
-                    'msg'   => 'not allowed'
-                ));
-            return;
-        }
-
-
-        $projectFollowTable = new Default_Model_DbTable_ProjectFollower();
-
-        $newVals = array('project_id' => $this->_projectId, 'member_id' => $this->_authMember->member_id);
-        $where = $projectFollowTable->select()->where('member_id = ?', $this->_authMember->member_id)
-                                    ->where('project_id = ?', $this->_projectId, 'INTEGER')  ;
-
-        $result = $projectFollowTable->fetchRow($where);
-
-        if (null === $result) {
-            $projectFollowTable->createRow($newVals)->save();
-            $this->logActivity(Default_Model_ActivityLog::PROJECT_FOLLOWED);
-            $cnt = $projectFollowTable->countForProject($this->_projectId);
-             $this->_helper->json(array(
-                    'status' => 'ok',
-                    'msg'   => 'Success.',
-                    'cnt'  => $cnt,
-                    'action' =>'insert'
-                ));
-        }else{
-            $projectFollowTable->delete('member_id=' . $this->_authMember->member_id . ' AND project_id='
-            . $this->_projectId);
-            $this->logActivity(Default_Model_ActivityLog::PROJECT_UNFOLLOWED);
-            $cnt = $projectFollowTable->countForProject($this->_projectId);
-            $this->_helper->json(array(
-                    'status' => 'ok',
-                    'msg'   => 'Success.',
-                    'cnt'  => $cnt,
-                    'action' => 'delete'
-                ));
-        }
-
-    }
-
-
     public function plingprojectAction()
     {
         $this->_helper->layout()->disableLayout();
@@ -2171,23 +2231,23 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->authMember = $this->_authMember;
 
         // not allow to pling himself
-        if (array_key_exists($this->_projectId, $this->_authMember->projects))
-        {
-             $this->_helper->json(array(
-                    'status' => 'error',
-                    'msg'   => 'not allowed'
-                ));
+        if (array_key_exists($this->_projectId, $this->_authMember->projects)) {
+            $this->_helper->json(array(
+                'status' => 'error',
+                'msg'    => 'not allowed'
+            ));
+
             return;
         }
 
         // not allow to pling if not supporter
         $helperIsSupporter = new Default_View_Helper_IsSupporter();
-        if(!$helperIsSupporter->isSupporter($this->_authMember->member_id))
-        {
-             $this->_helper->json(array(
-                    'status' => 'error',
-                    'msg'   => 'become a supporter first please. '
-                ));
+        if (!$helperIsSupporter->isSupporter($this->_authMember->member_id)) {
+            $this->_helper->json(array(
+                'status' => 'error',
+                'msg'    => 'become a supporter first please. '
+            ));
+
             return;
         }
 
@@ -2196,76 +2256,75 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $newVals = array('project_id' => $this->_projectId, 'member_id' => $this->_authMember->member_id);
         $sql = $projectplings->select()
-                ->where('member_id = ?', $this->_authMember->member_id)
-                ->where('is_deleted = ?',0)
-                ->where('project_id = ?', $this->_projectId, 'INTEGER')
-        ;
+                             ->where('member_id = ?', $this->_authMember->member_id)
+                             ->where('is_deleted = ?', 0)
+                             ->where('project_id = ?', $this->_projectId, 'INTEGER');
         $result = $projectplings->fetchRow($sql);
 
         if (null === $result) {
-             $projectplings->createRow($newVals)->save();
-             //$this->logActivity(Default_Model_ActivityLog::PROJECT_PLINGED_2);
+            $projectplings->createRow($newVals)->save();
+            //$this->logActivity(Default_Model_ActivityLog::PROJECT_PLINGED_2);
 
-             $cnt = $projectplings->getPlingsAmount($this->_projectId);
-             $this->_helper->json(array(
-                    'status' => 'ok',
-                    'msg'   => 'Success.',
-                    'cnt'  => $cnt,
-                    'action' =>'insert'
-                ));
-        }else{
+            $cnt = $projectplings->getPlingsAmount($this->_projectId);
+            $this->_helper->json(array(
+                'status' => 'ok',
+                'msg'    => 'Success.',
+                'cnt'    => $cnt,
+                'action' => 'insert'
+            ));
+        } else {
 
             // delete pling
             $projectplings->setDelete($result->project_plings_id);
             //$this->logActivity(Default_Model_ActivityLog::PROJECT_DISPLINGED_2);
 
-             $cnt = $projectplings->getPlingsAmount($this->_projectId);
+            $cnt = $projectplings->getPlingsAmount($this->_projectId);
             $this->_helper->json(array(
-                    'status' => 'ok',
-                    'msg'   => 'Success.',
-                    'cnt'  => $cnt,
-                    'action' => 'delete'
-                ));
+                'status' => 'ok',
+                'msg'    => 'Success.',
+                'cnt'    => $cnt,
+                'action' => 'delete'
+            ));
         }
 
     }
 
-/**
-
-    public function unplingprojectAction()
-    {
-        $this->_helper->layout()->disableLayout();
-
-        $projectplings = new Default_Model_ProjectPlings();
-        $pling = $projectplings->getPling($this->_projectId,$this->_authMember->member_id);
-
-        if($pling)
-        {
-            $projectplings->setDelete($pling->project_plings_id);
-            $cnt = count($projectplings->getPlings($this->_projectId));
-             $this->_helper->json(array(
-                    'status' => 'ok',
-                    'deleted' => $pling->project_plings_id,
-                    'msg'   => 'Success. ',
-                     'cnt'  => $cnt
-                ));
-
-             $tableProduct = new Default_Model_Project();
-            $product = $tableProduct->find($this->_projectId)->current();
-
-            $activityLog = new Default_Model_ActivityLog();
-            $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
-            Default_Model_ActivityLog::PROJECT_DISPLINGED_2, $product->toArray());
-        }else{
-             $this->_helper->json(array(
-                    'status' => 'error',
-                    'msg'   => 'not existing.'
-                ));
-        }
-
-
-    }
-**/
+    /**
+     *
+     * public function unplingprojectAction()
+     * {
+     * $this->_helper->layout()->disableLayout();
+     *
+     * $projectplings = new Default_Model_ProjectPlings();
+     * $pling = $projectplings->getPling($this->_projectId,$this->_authMember->member_id);
+     *
+     * if($pling)
+     * {
+     * $projectplings->setDelete($pling->project_plings_id);
+     * $cnt = count($projectplings->getPlings($this->_projectId));
+     * $this->_helper->json(array(
+     * 'status' => 'ok',
+     * 'deleted' => $pling->project_plings_id,
+     * 'msg'   => 'Success. ',
+     * 'cnt'  => $cnt
+     * ));
+     *
+     * $tableProduct = new Default_Model_Project();
+     * $product = $tableProduct->find($this->_projectId)->current();
+     *
+     * $activityLog = new Default_Model_ActivityLog();
+     * $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
+     * Default_Model_ActivityLog::PROJECT_DISPLINGED_2, $product->toArray());
+     * }else{
+     * $this->_helper->json(array(
+     * 'status' => 'error',
+     * 'msg'   => 'not existing.'
+     * ));
+     * }
+     *
+     *
+     * }
+     **/
 
     public function followsAction()
     {
@@ -2325,6 +2384,24 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     }
 
     /**
+     * @param $projectData
+     *
+     * @throws Zend_Exception
+     * @throws Zend_Queue_Exception
+     */
+    protected function createTaskWebsiteOwnerVerification($projectData)
+    {
+        if (empty($projectData->link_1)) {
+            return;
+        }
+        $checkAuthCode = new Local_Verification_WebsiteProject();
+        $authCode = $checkAuthCode->generateAuthCode(stripslashes($projectData->link_1));
+        $queue = Local_Queue_Factory::getQueue();
+        $command = new Backend_Commands_CheckProjectWebsite($projectData->project_id, $projectData->link_1, $authCode);
+        $queue->send(serialize($command));
+    }
+
+    /**
      * @throws Zend_Controller_Action_Exception
      * @deprecated
      */
@@ -2346,7 +2423,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
             $helperIsProjectActive = new Default_View_Helper_IsProjectActive();
             if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status)) AND (false
-                    === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
+                                                                                                               === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
             ) {
                 throw new Zend_Controller_Action_Exception('This page does not exist', 404);
             }
@@ -2384,7 +2461,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $claimMailConfirm->setTemplateVar('sender', 'contact@opendesktop.org');
             $claimMailConfirm->setTemplateVar('producttitle', $productInfo->title);
             $claimMailConfirm->setTemplateVar('productlink', 'http://' . $this->getRequest()->getHttpHost()
-                . $helperBuildProductUrl->buildProductUrl($productInfo->project_id));
+                                                             . $helperBuildProductUrl->buildProductUrl($productInfo->project_id));
             $claimMailConfirm->setTemplateVar('username', $this->_authMember->username);
             $claimMailConfirm->setReceiverMail($this->_authMember->mail);
             $claimMailConfirm->send();
@@ -2415,7 +2492,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $this->view->comments = $plingModel->getCommentsForProject($widgetProjectId, 10);
             $websiteOwner = new Local_Verification_WebsiteProject();
             $this->view->authCode = '<meta name="ocs-site-verification" content="'
-                . $websiteOwner->generateAuthCode(stripslashes($this->view->product->link_1)) . '" />';
+                                    . $websiteOwner->generateAuthCode(stripslashes($this->view->product->link_1)) . '" />';
         }
     }
 
@@ -2451,7 +2528,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'file'     => $tmpFilename,
                 'owner_id' => $this->_authMember->member_id
             );
-            
+
             //Admins can upload files for users
             $helperUserRole = new Backend_View_Helper_UserRole();
             $userRoleName = $helperUserRole->userRole();
@@ -2462,7 +2539,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     'owner_id' => $member_id
                 );
             }
-            
+
             if ($projectData->ppload_collection_id) {
                 // Append to existing collection
                 $fileRequest['collection_id'] = $projectData->ppload_collection_id;
@@ -2480,12 +2557,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     // Save collection ID
                     $projectData->ppload_collection_id = $fileResponse->file->collection_id;
                     //20180219 ronald: we set the changed_at only by new files or new updates
-                    if((int)$this->_authMember->member_id==(int)$projectData->member_id)
-                    {
+                    if ((int)$this->_authMember->member_id == (int)$projectData->member_id) {
                         $projectData->changed_at = new Zend_Db_Expr('NOW()');
                     } else {
-                        $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member ('.$this->_authMember->member_id.') != Project-Owner ('.$projectData->member_id.'): **********' . "\n");
-                    }    
+                        $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member (' . $this->_authMember->member_id . ') != Project-Owner (' . $projectData->member_id . '): **********' . "\n");
+                    }
                     $projectData->ghns_excluded = 0;
                     $projectData->save();
 
@@ -2531,37 +2607,39 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $this->_updatePploadMediaCollectionthumbnail($projectData);
                 } else {
                     //20180219 ronald: we set the changed_at only by new files or new updates
-                    if((int)$this->_authMember->member_id==(int)$projectData->member_id)
-                    {
+                    if ((int)$this->_authMember->member_id == (int)$projectData->member_id) {
                         $projectData->changed_at = new Zend_Db_Expr('NOW()');
                     } else {
-                        $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member ('.$this->_authMember->member_id.') != Project-Owner ('.$projectData->member_id.'): **********' . "\n");
-                    }                      
+                        $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member (' . $this->_authMember->member_id . ') != Project-Owner (' . $projectData->member_id . '): **********' . "\n");
+                    }
                     $projectData->ghns_excluded = 0;
-                    $projectData->save();                    
+                    $projectData->save();
                 }
-                
+
                 //If this file is a video, we have to convert it for preview
-                if(!empty($fileResponse->file->type) && in_array($fileResponse->file->type, Backend_Commands_ConvertVideo::$VIDEO_FILE_TYPES)) {
+                if (!empty($fileResponse->file->type) && in_array($fileResponse->file->type,
+                        Backend_Commands_ConvertVideo::$VIDEO_FILE_TYPES)) {
                     $queue = Local_Queue_Factory::getQueue();
-                    $command = new Backend_Commands_ConvertVideo($projectData->ppload_collection_id, $fileResponse->file->id, $fileResponse->file->type);
+                    $command = new Backend_Commands_ConvertVideo($projectData->ppload_collection_id,
+                        $fileResponse->file->id, $fileResponse->file->type);
                     $queue->send(serialize($command));
                 }
 
                 //If this file is bigger than XXX MB (see application.ini), then create a webtorrent file
                 $config = Zend_Registry::get('config');
                 $minFileSize = $config->torrent->media->min_filesize;
-                if(!empty($fileResponse->file->size) && $fileResponse->file->size >= $minFileSize) {
+                if (!empty($fileResponse->file->size) && $fileResponse->file->size >= $minFileSize) {
                     $queue = Local_Queue_Factory::getQueue();
                     $command = new Backend_Commands_CreateTorrent($fileResponse->file);
                     $queue->send(serialize($command));
                 }
-                
+
                 //If this is a cbr or cbz comic archive, then start an extracting job
-                if($this->endsWith($fileResponse->file->name, '.cbr') || $this->endsWith($fileResponse->file->name, '.cbz')) {
+                if ($this->endsWith($fileResponse->file->name, '.cbr') || $this->endsWith($fileResponse->file->name,
+                        '.cbz')) {
                     $queue = Local_Queue_Factory::getQueue();
                     $command = new Backend_Commands_ExtractComic($fileResponse->file);
-                    $queue->send(serialize($command)); 
+                    $queue->send(serialize($command));
                 }
 
                 $this->_helper->json(array(
@@ -2576,7 +2654,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $log->debug('********** END ' . __CLASS__ . '::' . __FUNCTION__ . '**********' . "\n");
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
-    
+
     private function endsWith($haystack, $needle)
     {
         return $needle === "" || substr(strtolower($haystack), -strlen($needle)) === strtolower($needle);
@@ -2617,17 +2695,16 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $log->debug(__CLASS__ . '::' . __FUNCTION__ . '::' . print_r($tmpFilename, true) . "\n");
                     move_uploaded_file($_FILES['file_upload']['tmp_name'], $tmpFilename);
                     $fileRequest['file'] = $tmpFilename;
-                    
+
                     //20180219 ronald: we set the changed_at only by new files or new updates
-                    if((int)$this->_authMember->member_id==(int)$projectData->member_id)
-                    {
+                    if ((int)$this->_authMember->member_id == (int)$projectData->member_id) {
                         $projectData->changed_at = new Zend_Db_Expr('NOW()');
                     } else {
-                        $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member ('.$this->_authMember->member_id.') != Project-Owner ('.$projectData->member_id.'): **********' . "\n");
-                    }                      
+                        $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member (' . $this->_authMember->member_id . ') != Project-Owner (' . $projectData->member_id . '): **********' . "\n");
+                    }
                     $projectData->ghns_excluded = 0;
-                    $projectData->save();  
-                    
+                    $projectData->save();
+
                 }
                 if (isset($_POST['file_description'])) {
                     $fileRequest['description'] = mb_substr($_POST['file_description'], 0, 140);
@@ -2659,7 +2736,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     //If this file is bigger than XXX MB (see application.ini), then create a webtorrent file
                     $config = Zend_Registry::get('config');
                     $minFileSize = $config->torrent->media->min_filesize;
-                    if(!empty($fileResponse->file->size) && $fileResponse->file->size >= $minFileSize) {
+                    if (!empty($fileResponse->file->size) && $fileResponse->file->size >= $minFileSize) {
                         $queue = Local_Queue_Factory::getQueue();
                         $command = new Backend_Commands_CreateTorrent($fileResponse->file);
                         $queue->send(serialize($command));
@@ -2673,16 +2750,16 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     return;
                 } else {
                     $error_text .= 'Response: $pploadApi->putFile(): ' . json_encode($fileResponse)
-                        . '; $fileResponse->status: ' . $fileResponse->status;
+                                   . '; $fileResponse->status: ' . $fileResponse->status;
                 }
             } else {
                 $error_text .= 'PPload Response: ' . json_encode($fileResponse)
-                    . '; fileResponse->file->collection_id: ' . $fileResponse->file->collection_id
-                    . ' != $projectData->ppload_collection_id: ' . $projectData->ppload_collection_id;
+                               . '; fileResponse->file->collection_id: ' . $fileResponse->file->collection_id
+                               . ' != $projectData->ppload_collection_id: ' . $projectData->ppload_collection_id;
             }
         } else {
             $error_text .= 'No CollectionId or no FileId. CollectionId: ' . $projectData->ppload_collection_id
-                . ', FileId: ' . $_POST['file_id'];
+                           . ', FileId: ' . $_POST['file_id'];
         }
 
         $log->debug('********** END ' . __CLASS__ . '::' . __FUNCTION__ . '**********' . "\n");
@@ -2719,7 +2796,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
-    
+
     public function deletefiletagAction()
     {
         $this->_helper->layout()->disableLayout();
@@ -2747,7 +2824,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
 
-
     public function updatecompatibleAction()
     {
         $this->_helper->layout()->disableLayout();
@@ -2769,7 +2845,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
 
-    public function startdownloadAction() {
+    public function startdownloadAction()
+    {
         $this->_helper->layout()->disableLayout();
 
         /**
@@ -2780,26 +2857,68 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $file_name = $this->getParam('file_name');
         $file_size = $this->getParam('file_size');
         $projectId = $this->_projectId;
-        
-        $this->redirect('/dl?file_id='.$file_id.'&file_type='.$file_type.'&file_name='.$file_name.'&file_size='.$file_size.'&project_id='.$projectId);
-        
-        
-//        if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
-/*            if(isset($file_id) && isset($projectId) && isset($memberId)) {
-                $memberDlHistory = new Default_Model_DbTable_MemberDownloadHistory();
-                $data = array('project_id' => $projectId, 'member_id' => $memberId, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size);
-                $memberDlHistory->createRow($data)->save();
-            }
 
-            $url = urldecode($urltring);
-            $this->redirect($url);
- * 
- */
+        $this->redirect('/dl?file_id=' . $file_id . '&file_type=' . $file_type . '&file_name=' . $file_name . '&file_size=' . $file_size . '&project_id=' . $projectId);
+
+
+//        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        /*            if(isset($file_id) && isset($projectId) && isset($memberId)) {
+                        $memberDlHistory = new Default_Model_DbTable_MemberDownloadHistory();
+                        $data = array('project_id' => $projectId, 'member_id' => $memberId, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size);
+                        $memberDlHistory->createRow($data)->save();
+                    }
+
+                    $url = urldecode($urltring);
+                    $this->redirect($url);
+         *
+         */
 //        } else {
 //            $this->redirect('/ads?file_id='.$file_id);
 //        }
     }
 
+    /**
+     * ppload
+     */
+    /*public function deletepploadcollectionAction()
+    {
+        $this->_helper->layout()->disableLayout();
+
+        $projectTable = new Default_Model_DbTable_Project();
+        $projectData = $projectTable->find($this->_projectId)->current();
+
+        // Delete ppload collection
+        if ($projectData->ppload_collection_id) {
+            $pploadApi = new Ppload_Api(array(
+                'apiUri' => PPLOAD_API_URI,
+                'clientId' => PPLOAD_CLIENT_ID,
+                'secret' => PPLOAD_SECRET
+            ));
+
+            $collectionResponse = $pploadApi->deleteCollection($projectData->ppload_collection_id);
+
+            if (isset($collectionResponse->status)
+                && $collectionResponse->status == 'success'
+            ) {
+                $projectData->ppload_collection_id = null;
+                $projectData->changed_at = new Zend_Db_Expr('NOW()');
+                $projectData->save();
+
+                $activityLog = new Default_Model_ActivityLog();
+                $activityLog->writeActivityLog(
+                    $this->_projectId,
+                    $projectData->member_id,
+                    Default_Model_ActivityLog::PROJECT_EDITED,
+                    $projectData->toArray()
+                );
+
+                $this->_helper->json(array('status' => 'ok'));
+                return;
+            }
+        }
+
+        $this->_helper->json(array('status' => 'error'));
+    }*/
     /**
      * ppload
      */
@@ -2889,48 +3008,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json(array('status' => 'error'));
     }
 
-    /**
-     * ppload
-     */
-    /*public function deletepploadcollectionAction()
-    {
-        $this->_helper->layout()->disableLayout();
 
-        $projectTable = new Default_Model_DbTable_Project();
-        $projectData = $projectTable->find($this->_projectId)->current();
-
-        // Delete ppload collection
-        if ($projectData->ppload_collection_id) {
-            $pploadApi = new Ppload_Api(array(
-                'apiUri' => PPLOAD_API_URI,
-                'clientId' => PPLOAD_CLIENT_ID,
-                'secret' => PPLOAD_SECRET
-            ));
-
-            $collectionResponse = $pploadApi->deleteCollection($projectData->ppload_collection_id);
-
-            if (isset($collectionResponse->status)
-                && $collectionResponse->status == 'success'
-            ) {
-                $projectData->ppload_collection_id = null;
-                $projectData->changed_at = new Zend_Db_Expr('NOW()');
-                $projectData->save();
-
-                $activityLog = new Default_Model_ActivityLog();
-                $activityLog->writeActivityLog(
-                    $this->_projectId,
-                    $projectData->member_id,
-                    Default_Model_ActivityLog::PROJECT_EDITED,
-                    $projectData->toArray()
-                );
-
-                $this->_helper->json(array('status' => 'ok'));
-                return;
-            }
-        }
-
-        $this->_helper->json(array('status' => 'error'));
-    }*/
 
     public function saveproductAction()
     {
@@ -2963,23 +3041,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json(array('status' => 'ok', 'project_id' => $newProject->project_id));
     }
 
-
-    protected function createPling($member_id,$project_id)
-    {
-            $projectplings = new Default_Model_ProjectPlings();
-            $newVals = array('project_id' =>$project_id, 'member_id' => $member_id);
-            $sql = $projectplings->select()
-                    ->where('member_id = ?', $this->_authMember->member_id)
-                    ->where('is_deleted = ?',0)
-                    ->where('project_id = ?', $this->_projectId, 'INTEGER');
-            $result = $projectplings->fetchRow($sql);
-             if (null === $result) {
-                 $projectplings->createRow($newVals)->save();
-             }
-    }
-
-
-
     /**
      * @param $errors
      *
@@ -3000,21 +3061,21 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     }
 
     public function searchAction()
-    {                
+    {
         // Filter-Parameter
         $params = $this->getAllParams();
         $filterInput =
             new Zend_Filter_Input(
                 array(
-                    '*' => 'StringTrim',
-                    'projectSearchText' => array(new Zend_Filter_Callback('stripslashes'),'StripTags'),
-                    'page' => 'digits',
-                    'pci' => 'digits',
-                    'ls'  => 'digits',
-                    't' => array(new Zend_Filter_Callback('stripslashes'),'StripTags'),
-                    'pkg'=> array(new Zend_Filter_Callback('stripslashes'),'StripTags'),
-                    'lic'=> array(new Zend_Filter_Callback('stripslashes'),'StripTags'),
-                    'arch'=> array(new Zend_Filter_Callback('stripslashes'),'StripTags')
+                    '*'                 => 'StringTrim',
+                    'projectSearchText' => array(new Zend_Filter_Callback('stripslashes'), 'StripTags'),
+                    'page'              => 'digits',
+                    'pci'               => 'digits',
+                    'ls'                => 'digits',
+                    't'                 => array(new Zend_Filter_Callback('stripslashes'), 'StripTags'),
+                    'pkg'               => array(new Zend_Filter_Callback('stripslashes'), 'StripTags'),
+                    'lic'               => array(new Zend_Filter_Callback('stripslashes'), 'StripTags'),
+                    'arch'              => array(new Zend_Filter_Callback('stripslashes'), 'StripTags')
 
                 ),
                 array(
@@ -3028,33 +3089,38 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         //new Zend_Validate_InArray(array('f'=>'tags')),
                         'allowEmpty' => true
                     ),
-                    'pci'               => array('digits',
+                    'pci'               => array(
+                        'digits',
                         'allowEmpty' => true
                     ),
-                    'ls'                => array('digits',
+                    'ls'                => array(
+                        'digits',
                         'allowEmpty' => true
                     ),
-                    't'                 => array(new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
+                    't'                 => array(
+                        new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
                         'allowEmpty' => true
                     ),
-                    'pkg'                 => array(new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
+                    'pkg'               => array(
+                        new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
                         'allowEmpty' => true
                     ),
-                    'lic'                 => array(new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
+                    'lic'               => array(
+                        new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
                         'allowEmpty' => true
                     ),
-                    'arch'                 => array(new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
-                        'allowEmpty' => true)
+                    'arch'              => array(
+                        new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
+                        'allowEmpty' => true
+                    )
                 ), $params);
 
-        
-        
 
         if ($filterInput->hasInvalid()) {
             $this->_helper->flashMessenger->addMessage('<p class="text-error">There was an error. Please check your input and try again.</p>');
+
             return;
         }
-
 
 
         $this->view->searchText = $filterInput->getEscaped('projectSearchText');
@@ -3068,64 +3134,205 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->lic = $filterInput->getEscaped('lic');
         $this->view->store = $this->getParam('domain_store_id');
 
-        if(isset($params['isJson']))
-        {
+        if (isset($params['isJson'])) {
             $this->_helper->layout()->disableLayout();
-            $filterScore = $this->view->ls ? 'laplace_score:['.$this->view->ls.' TO '.($this->view->ls+9).']':null;
-            $filterCat = $this->view->pci ? 'project_category_id:('.$this->view->pci.')' : null;
-            $filterTags = $this->view->t ? 'tags:('.$this->view->t.')' : null;
-            $filterPkg = $this->view->pkg ? 'package_names:('.$this->view->pkg.')' : null;
-            $filterArch = $this->view->arch ? 'arch_names:('.$this->view->arch.')' : null;
-            $filterLic = $this->view->lic ? 'license_names:('.$this->view->lic.')' : null;
+            $filterScore = $this->view->ls ? 'laplace_score:[' . $this->view->ls . ' TO ' . ($this->view->ls + 9) . ']' : null;
+            $filterCat = $this->view->pci ? 'project_category_id:(' . $this->view->pci . ')' : null;
+            $filterTags = $this->view->t ? 'tags:(' . $this->view->t . ')' : null;
+            $filterPkg = $this->view->pkg ? 'package_names:(' . $this->view->pkg . ')' : null;
+            $filterArch = $this->view->arch ? 'arch_names:(' . $this->view->arch . ')' : null;
+            $filterLic = $this->view->lic ? 'license_names:(' . $this->view->lic . ')' : null;
             // $param = array('q' => $this->view->searchText ,'store'=>$this->view->store,'page' => $this->view->page
             // , 'count' => 10, 'qf' => $this->view->searchField, 'fq' => array($filterCat, $filterScore, $filterTags,$filterPkg,$filterArch,$filterLic));
-            
-            $param = array('q' => 'test','store'=>null,'page' => 1
-            , 'count' => 10);
+
+            $param = array(
+                'q'     => 'test',
+                'store' => null,
+                'page'  => 1
+            ,
+                'count' => 10
+            );
             $viewHelperImage = new Default_View_Helper_Image();
-        
+
             $modelSearch = new Default_Model_Solr();
             try {
                 $result = $modelSearch->search($param);
-                $products = $result['hits'];          
-                
+                $products = $result['hits'];
+
                 // var_dump($products);
                 // die;
-                $ps=array();
+                $ps = array();
                 foreach ($products as $p) {
                     $img = $viewHelperImage->Image($p->image_small, array(
                         'width'  => 50,
                         'height' => 50
                     ));
-                    $ps[] =array('description'=>$p->description
-                        ,'title' =>$p->title
-                        ,'project_id' =>$p->project_id
-                        ,'member_id'=>$p->member_id
-                        ,'username' => $p->username
-                        ,'laplace_score' =>$p->laplace_score
-                        ,'score' =>$p->score
-                        ,'image_small' =>$img);
+                    $ps[] = array(
+                        'description'   => $p->description
+                    ,
+                        'title'         => $p->title
+                    ,
+                        'project_id'    => $p->project_id
+                    ,
+                        'member_id'     => $p->member_id
+                    ,
+                        'username'      => $p->username
+                    ,
+                        'laplace_score' => $p->laplace_score
+                    ,
+                        'score'         => $p->score
+                    ,
+                        'image_small'   => $img
+                    );
                 }
-                
+
                 $this->_helper->json(array(
-                    'status' => 'ok',
+                    'status'   => 'ok',
                     'products' => $ps,
-                    'q' =>$param
+                    'q'        => $param
                 ));
             } catch (Exception $e) {
                 $this->_helper->json(array(
                     'status' => 'err',
-                    'msg' => 'Not Found! Try again.'
+                    'msg'    => 'Not Found! Try again.'
                 ));
-            }            
-                
+            }
+
         }
 
-        
+
     }
 
-    
-    
+    public function startmediaviewajaxAction()
+    {
+        return $this->startvideoajaxAction();
+    }
+
+    public function startvideoajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+
+        $collection_id = null;
+        $file_id = null;
+        $memberId = $this->_authMember->member_id;
+        $media_view_type_id = $this->getParam('type_id');
+        if (!$media_view_type_id) {
+            // default
+            $media_view_type_id = Default_Model_DbTable_MediaViews::MEDIA_TYPE_VIDEO;
+        }
+
+        if ($this->hasParam('collection_id') && $this->hasParam('file_id')) {
+            $collection_id = $this->getParam('collection_id');
+            $file_id = $this->getParam('file_id');
+            $id = null;
+
+            //Log media view
+            try {
+                $mediaviewsTable = new Default_Model_DbTable_MediaViews();
+                $id = $mediaviewsTable->getNewId();
+                $data = array(
+                    'media_view_id'      => $id,
+                    'media_view_type_id' => $media_view_type_id,
+                    'project_id'         => $this->_projectId,
+                    'collection_id'      => $collection_id,
+                    'file_id'            => $file_id,
+                    'start_timestamp'    => new Zend_Db_Expr ('Now()'),
+                    'ip'                 => $this->getRealIpAddr(),
+                    'referer'            => $this->getReferer()
+                );
+                if (!empty($memberId)) {
+                    $data['member_id'] = $memberId;
+                }
+                $data['source'] = 'OCS-Webserver';
+
+                $mediaviewsTable->createRow($data)->save();
+
+            } catch (Exception $exc) {
+                //echo $exc->getTraceAsString();
+                $errorLog = Zend_Registry::get('logger');
+                $errorLog->err(__METHOD__ . ' - ' . $exc->getMessage() . ' ---------- ' . PHP_EOL);
+            }
+
+
+            $this->_helper->json(array('status' => 'success', 'MediaViewId' => $id));
+
+            return;
+        }
+
+        $this->_helper->json(array('status' => 'error'));
+    }
+
+    function getRealIpAddr()
+    {
+        if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
+        {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
+        {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+
+        return $ip;
+    }
+
+    function getReferer()
+    {
+        $referer = null;
+        if (!empty($_SERVER['HTTP_REFERER'])) {
+            $referer = $_SERVER['HTTP_REFERER'];
+        }
+
+        return $referer;
+    }
+
+    public function stopmediaviewajaxAction()
+    {
+        return $this->stopvideoajaxAction();
+    }
+
+    public function stopvideoajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+
+        $view_id = null;
+
+        if ($this->hasParam('media_view_id')) {
+            $view_id = $this->getParam('media_view_id');
+
+            //Log media view stop
+            try {
+                $mediaviewsTable = new Default_Model_DbTable_MediaViews();
+                $data = array('stop_timestamp' => new Zend_Db_Expr ('Now()'));
+                $mediaviewsTable->update($data, 'media_view_id = ' . $view_id);
+            } catch (Exception $exc) {
+                //echo $exc->getTraceAsString();
+                $errorLog = Zend_Registry::get('logger');
+                $errorLog->err(__METHOD__ . ' - ' . $exc->getMessage() . ' ---------- ' . PHP_EOL);
+            }
+            $this->_helper->json(array('status' => 'success', 'MediaViewId' => $view_id));
+
+            return;
+        }
+
+        $this->_helper->json(array('status' => 'error'));
+    }
+
+    protected function createPling($member_id, $project_id)
+    {
+        $projectplings = new Default_Model_ProjectPlings();
+        $newVals = array('project_id' => $project_id, 'member_id' => $member_id);
+        $sql = $projectplings->select()
+                             ->where('member_id = ?', $this->_authMember->member_id)
+                             ->where('is_deleted = ?', 0)
+                             ->where('project_id = ?', $this->_projectId, 'INTEGER');
+        $result = $projectplings->fetchRow($sql);
+        if (null === $result) {
+            $projectplings->createRow($newVals)->save();
+        }
+    }
+
     /**
      * @param $memberId
      *
@@ -3146,10 +3353,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
 
         $this->getResponse()->setHeader('X-FRAME-OPTIONS', 'ALLOWALL',
-                true)//            ->setHeader('Last-Modified', $modifiedTime, true)
+            true)//            ->setHeader('Last-Modified', $modifiedTime, true)
              ->setHeader('Expires', $expires, true)->setHeader('Pragma', 'no-cache', true)
-             ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true)
-        ;
+             ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true);
     }
 
     /**
@@ -3199,168 +3405,27 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         return $viewArray;
     }
 
-
     protected function setLayout()
     {
         $layoutName = 'flat_ui_template';
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;      
-        if($storeConfig  && $storeConfig->layout_pagedetail)
-        {
-             $this->_helper->layout()->setLayout($storeConfig->layout_pagedetail);
-        }else{
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        if ($storeConfig && $storeConfig->layout_pagedetail) {
+            $this->_helper->layout()->setLayout($storeConfig->layout_pagedetail);
+        } else {
             $this->_helper->layout()->setLayout($layoutName);
-        }        
+        }
     }
-    
-    
-    private function fetchGitlabProject($gitProjectId)
+
+    private function getFileDownloadCount($collection_id, $fileId)
     {
-        $gitlab = new Default_Model_Ocs_Gitlab(); 
-        
-        try {
-            $gitProject = $gitlab->getProject($gitProjectId);
-        } catch (Exception $exc) {
-            //Project is gone
-            $modelProject = new Default_Model_Project();
-            $modelProject->updateProject($this->_projectId, array('is_gitlab_project' => 0, 'gitlab_project_id' => null, 'show_gitlab_project_issues' => 0, 'use_gitlab_project_readme' => 0));
-            $gitProject = null;
-        }
-        return $gitProject;
-    }
-    
-    private function fetchGitlabProjectIssues($gitProjectId)
-    {
-        $gitlab = new Default_Model_Ocs_Gitlab();
-        
-        try {
-            $gitProjectIssues = $gitlab->getProjectIssues($gitProjectId);
-        } catch (Exception $exc) {
-            //Project is gone
-            $modelProject = new Default_Model_Project();
-            $modelProject->updateProject($this->_projectId, array('is_gitlab_project' => 0, 'gitlab_project_id' => null, 'show_gitlab_project_issues' => 0, 'use_gitlab_project_readme' => 0));
+        $modelFiles = new Default_Model_DbTable_PploadFiles();
 
-            $gitProjectIssues = null;
-        }
+        $countAll = $modelFiles->fetchCountDownloadsForFileAllTime($collection_id, $fileId);
+        $countToday = $modelFiles->fetchCountDownloadsForFileToday($collection_id, $fileId);
 
-        
-        
-        return $gitProjectIssues;
-    }
-    
-    public function startmediaviewajaxAction() {
-        return $this->startvideoajaxAction();
-    }
+        $count = (int)$countAll + (int)$countToday;
 
-    public function startvideoajaxAction() {
-        $this->_helper->layout()->disableLayout();
-        
-        $collection_id = null;
-        $file_id = null;
-        $memberId = $this->_authMember->member_id;
-        $media_view_type_id = $this->getParam('type_id');
-        if(!$media_view_type_id)
-        {
-            // default
-            $media_view_type_id = Default_Model_DbTable_MediaViews::MEDIA_TYPE_VIDEO;            
-        }
-        
-        if($this->hasParam('collection_id') && $this->hasParam('file_id')) {
-            $collection_id = $this->getParam('collection_id');
-            $file_id = $this->getParam('file_id');
-            $id = null;
-            
-            //Log media view
-            try {
-                $mediaviewsTable = new Default_Model_DbTable_MediaViews();
-                $id = $mediaviewsTable->getNewId();
-                $data = array('media_view_id' => $id, 'media_view_type_id' => $media_view_type_id, 'project_id' => $this->_projectId, 'collection_id' => $collection_id, 'file_id' => $file_id, 'start_timestamp' => new Zend_Db_Expr ('Now()'), 'ip' => $this->getRealIpAddr(), 'referer' => $this->getReferer());
-                if(!empty($memberId)) {
-                   $data['member_id'] = $memberId;
-                }
-                $data['source'] = 'OCS-Webserver';
-
-                $mediaviewsTable->createRow($data)->save();
-
-            } catch (Exception $exc) {
-                //echo $exc->getTraceAsString();
-                $errorLog = Zend_Registry::get('logger');
-                $errorLog->err(__METHOD__ . ' - ' . $exc->getMessage() . ' ---------- ' . PHP_EOL);
-            }
-            
-            
-            $this->_helper->json(array('status' => 'success', 'MediaViewId' => $id));
-
-            return;
-        }
-
-        $this->_helper->json(array('status' => 'error'));
-    }
-    
-    public function stopmediaviewajaxAction() {
-        return $this->stopvideoajaxAction();
-    }
-
-    
-    public function stopvideoajaxAction() {
-        $this->_helper->layout()->disableLayout();
-        
-        $view_id = null;
-        
-        if($this->hasParam('media_view_id')) {
-            $view_id = $this->getParam('media_view_id');
-            
-            //Log media view stop
-            try {
-                $mediaviewsTable = new Default_Model_DbTable_MediaViews();
-                $data = array('stop_timestamp' => new Zend_Db_Expr ('Now()'));
-                $mediaviewsTable->update($data, 'media_view_id = '. $view_id);
-            } catch (Exception $exc) {
-                //echo $exc->getTraceAsString();
-                $errorLog = Zend_Registry::get('logger');
-                $errorLog->err(__METHOD__ . ' - ' . $exc->getMessage() . ' ---------- ' . PHP_EOL);
-            }
-            $this->_helper->json(array('status' => 'success', 'MediaViewId' => $view_id));
-
-            return;
-        }
-
-        $this->_helper->json(array('status' => 'error'));
-    }
-    
-    function getRealIpAddr()
-    {
-        if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
-        {
-          $ip=$_SERVER['HTTP_CLIENT_IP'];
-        }
-        elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
-        {
-          $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
-        }
-        else
-        {
-          $ip=$_SERVER['REMOTE_ADDR'];
-        }
-        return $ip;
-    }
-    
-    function getReferer()
-    {
-        $referer = null;
-        if (!empty($_SERVER['HTTP_REFERER'])) {
-            $referer = $_SERVER['HTTP_REFERER'];
-        }
-        return $referer;
-    }
-    
-    private function getFilterTagFromCookie($group)
-    {
-        $config = Zend_Registry::get('config');
-        $cookieName = $config->settings->session->filter_browse_original.$group;
-
-        $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
-
-        return $storedInCookie;
+        return $count;
     }
 
 }

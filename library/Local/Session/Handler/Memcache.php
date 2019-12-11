@@ -29,7 +29,21 @@ class Local_Session_Handler_Memcache implements Zend_Session_SaveHandler_Interfa
 
     public function __construct($cacheHandler)
     {
-        $this->cache = $cacheHandler;
+        if ($cacheHandler instanceof Zend_Cache_Backend_Interface) {
+            $this->cache = $cacheHandler;
+
+            return $this;
+        }
+
+        $cacheClass = 'Zend_Cache_Backend_' . $cacheHandler['cache']['type'];
+        $_cache = new $cacheClass($cacheHandler);
+        $this->cache = $_cache;
+
+        if (isset($cacheHandler['cache']['maxlifetime'])) {
+            $this->maxlifetime = (int)$cacheHandler['cache']['maxlifetime'];
+        }
+
+        return $this;
     }
 
     public function open($save_path, $name)

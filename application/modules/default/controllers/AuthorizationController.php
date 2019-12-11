@@ -761,6 +761,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
      * @throws Zend_Controller_Action_Exception
      * @throws Zend_Exception
      * @throws Zend_Session_Exception
+     * @deprecated
      */
     public function logoutAction()
     {
