@@ -67,7 +67,7 @@ class Default_Model_Views
         }
     }
 
-    private static function getRemoteAddress($ipClient)
+    public static function getRemoteAddress($ipClient)
     {
         $iplist = explode(',', $ipClient);
         foreach ($iplist as $ip) {
