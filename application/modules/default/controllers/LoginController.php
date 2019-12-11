@@ -65,9 +65,9 @@ class LoginController extends Local_Controller_Action_DomainSwitch
         $namespace->stat_request_ip = $request_ip;
         $namespace->stat_valid = true;
 
-        foreach ($namespace->getIterator()->getArrayCopy() as $key=>$item) {
-            Zend_Registry::get('logger')->debug(print_r($key, true).' => '.print_r($item,true));
-        };
+//        foreach ($namespace->getIterator()->getArrayCopy() as $key=>$item) {
+//            Zend_Registry::get('logger')->debug(print_r($key, true).' => '.print_r($item,true));
+//        };
 
         $this->_helper->json(array('status' => 'ok'));
     }
