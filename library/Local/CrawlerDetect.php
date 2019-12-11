@@ -57,7 +57,8 @@ function crawlerDetect($USER_AGENT)
         array('Scrubby', 'Scrubby robot'),
         array('MJ12bot','http://mj12bot.com/'),
         array('SemrushBot', 'SemrushBot'),
-        array('bingbot','bingbot')
+        array('bingbot','bingbot'),
+        array('DotBot','http://www.opensiteexplorer.org/dotbot')
     );
 
     foreach ($crawlers as $c)

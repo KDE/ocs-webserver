@@ -394,7 +394,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
 
-        if (APPLICATION_ENV != 'searchbotenv') {
+        if ((APPLICATION_ENV != 'searchbotenv') AND (false == SEARCHBOT_DETECTED)) {
             Default_Model_Views::saveViewProduct($this->_projectId);
 
             $tablePageViews = new Default_Model_DbTable_StatPageViews();
