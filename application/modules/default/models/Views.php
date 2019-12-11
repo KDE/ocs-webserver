@@ -29,6 +29,7 @@ class Default_Model_Views
     const OBJECT_TYPE_LOGIN = 30;
     const OBJECT_TYPE_LOGOUT = 32;
     const OBJECT_TYPE_DOWNLOAD = 40;
+    const OBJECT_TYPE_COLLECTION = 50;
 
     public static function saveViewProduct($product_id)
     {
@@ -72,6 +73,11 @@ class Default_Model_Views
     public static function saveViewDownload($file_id)
     {
         self::saveViewObject(self::OBJECT_TYPE_DOWNLOAD, $file_id);
+    }
+
+    public static function saveViewCollection($_projectId)
+    {
+        self::saveViewObject(self::OBJECT_TYPE_COLLECTION, $_projectId);
     }
 
 }
