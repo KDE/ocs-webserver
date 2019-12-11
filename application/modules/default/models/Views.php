@@ -42,11 +42,13 @@ class Default_Model_Views
         $session = new Zend_Session_Namespace();
         $view_member_id = Zend_Auth::getInstance()->getIdentity()->member_id ? Zend_Auth::getInstance()->getIdentity()->member_id : null;
         $ipClient = Zend_Controller_Front::getInstance()->getRequest()->getClientIp();
-        $ipClientv6 = filter_var($ipClient, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? $ipClient : null;
-        $ipClientv4 = filter_var($ipClient, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? $ipClient : null;
+        $remoteAddress = self::getRemoteAddress($ipClient);
+        $ipClientv6 = filter_var($remoteAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? $remoteAddress : null;
+        $ipClientv4 = filter_var($remoteAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? $remoteAddress : null;
         $session_ipv6 = isset($session->stat_ipv6) ? inet_pton($session->stat_ipv6) : null;
         $session_ipv4 = isset($session->stat_ipv4) ? inet_pton($session->stat_ipv4) : null;
-        $ip_inet = isset($session_ipv6) ? $session_ipv6 : (isset($session_ipv4) ? $session_ipv4 : inet_pton($ipClient));
+        $session_remote = isset($remoteAddress) ? inet_pton($remoteAddress) : null;
+        $ip_inet = isset($session_ipv6) ? $session_ipv6 : (isset($session_ipv4) ? $session_ipv4 : $session_remote);
 
         try {
             Zend_Db_Table::getDefaultAdapter()->query($sql, array(
@@ -63,6 +65,31 @@ class Default_Model_Views
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR write - ' . print_r($e, true));
         }
+    }
+
+    private static function getRemoteAddress($ipClient)
+    {
+        $iplist = explode(',', $ipClient);
+        foreach ($iplist as $ip) {
+            if (self::validate_ip($ip)) {
+                return $ip;
+            }
+        }
+
+        return null;
+    }
+
+    public static function validate_ip($ip)
+    {
+        $filter = FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE;
+        if (APPLICATION_ENV == 'development') {
+            $filter = FILTER_FLAG_NO_RES_RANGE;
+        }
+        if (filter_var($ip, FILTER_VALIDATE_IP, $filter) === false) {
+            return false;
+        }
+
+        return true;
     }
 
     public static function saveViewMemberpage($member_id)
