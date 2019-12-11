@@ -26,7 +26,7 @@ class ReportController extends Zend_Controller_Action
     public function commentAction()
     {
         $this->_helper->layout()->disableLayout();
-        if (APPLICATION_ENV != 'searchbotenv') {
+        if ((APPLICATION_ENV != 'searchbotenv') AND (false == SEARCHBOT_DETECTED)) {
             $comment_id = (int)$this->getParam('i');
             $project_id = (int)$this->getParam('p');
             $reported_by =
@@ -78,7 +78,7 @@ class ReportController extends Zend_Controller_Action
     {
         $this->_helper->layout()->disableLayout();
 
-        if (APPLICATION_ENV != 'searchbotenv') {
+        if ((APPLICATION_ENV != 'searchbotenv') AND (false == SEARCHBOT_DETECTED)) {
 
             $session = new Zend_Session_Namespace();
             $reportedProducts = isset($session->reportedProducts) ? $session->reportedProducts : array();
@@ -133,7 +133,7 @@ class ReportController extends Zend_Controller_Action
 
         $this->_helper->layout()->disableLayout();
 
-        if (APPLICATION_ENV != 'searchbotenv') {
+        if ((APPLICATION_ENV != 'searchbotenv') AND (false == SEARCHBOT_DETECTED)) {
 
                     $session = new Zend_Session_Namespace();
                     $reportedFraudProducts = isset($session->reportedFraudProducts) ? $session->reportedFraudProducts : array();
@@ -171,7 +171,7 @@ class ReportController extends Zend_Controller_Action
     {                           
         $this->_helper->layout()->disableLayout();
         $params = $this->getAllParams();
-        if (APPLICATION_ENV != 'searchbotenv') {
+        if ((APPLICATION_ENV != 'searchbotenv') AND (false == SEARCHBOT_DETECTED)) {
 
                     $project_clone = $this->getParam('p');
                     $text = $this->getParam('t');                    
@@ -203,7 +203,7 @@ class ReportController extends Zend_Controller_Action
     {                   
         $this->_helper->layout()->disableLayout();
         $params = $this->getAllParams();
-        if (APPLICATION_ENV != 'searchbotenv') {
+        if ((APPLICATION_ENV != 'searchbotenv') AND (false == SEARCHBOT_DETECTED)) {
 
                     $project_clone = $this->getParam('p');
                     $text = $this->getParam('t');

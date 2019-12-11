@@ -121,7 +121,7 @@ class Default_Model_RememberMe
         $newSessionData = $this->createSessionData($identifier);
         $this->setCookie($newSessionData);
         $this->saveSessionData($newSessionData);
-        $this->storeRememberIdInSession($newSessionData['remember_mem_id']);
+        $this->storeRememberIdInSession($newSessionData['remember_me_id']);
 
         return $newSessionData;
     }

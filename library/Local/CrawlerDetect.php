@@ -57,7 +57,18 @@ function crawlerDetect($USER_AGENT)
         array('Scrubby', 'Scrubby robot'),
         array('MJ12bot','http://mj12bot.com/'),
         array('SemrushBot', 'SemrushBot'),
-        array('bingbot','bingbot')
+        array('bingbot','bingbot'),
+        array('DotBot','http://www.opensiteexplorer.org/dotbot'),
+        array('SEOkicks','https://www.seokicks.de/robot.html'),
+        array('CCBot','CCBot/2.0 (https://commoncrawl.org/faq/)'),
+        array('Sogou','Sogou web spider/4.0(+http://www.sogou.com/docs/help/webmasters.htm#07)'),
+        array('Bytespider','Bytespider;https://zhanzhang.toutiao.com/'),
+        array('BLEXBot','BLEXBot/1.0; +http://webmeup-crawler.com/'),
+        array('Applebot','Applebot/0.1; +http://www.apple.com/go/applebot'),
+        array('serpstatbot','serpstatbot/1.0 (advanced backlink tracking bot; curl/7.58.0; http://serpstatbot.com/; abuse@serpstatbot.com)'),
+        array('Linespider','Linespider/1.1;+https://lin.ee/4dwXkTH'),
+        array('Yeti','Yeti/1.1; +http://naver.me/spd'),
+        array('Feedspot','Feedspot/1.0 (+https://www.feedspot.com/fs/fetcher; like FeedFetcher-Google)')
     );
 
     foreach ($crawlers as $c)

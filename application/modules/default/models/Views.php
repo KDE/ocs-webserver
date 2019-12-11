@@ -29,6 +29,7 @@ class Default_Model_Views
     const OBJECT_TYPE_LOGIN = 30;
     const OBJECT_TYPE_LOGOUT = 32;
     const OBJECT_TYPE_DOWNLOAD = 40;
+    const OBJECT_TYPE_COLLECTION = 50;
 
     public static function saveViewProduct($product_id)
     {
@@ -43,11 +44,14 @@ class Default_Model_Views
         $ipClient = Zend_Controller_Front::getInstance()->getRequest()->getClientIp();
         $ipClientv6 = filter_var($ipClient, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? $ipClient : null;
         $ipClientv4 = filter_var($ipClient, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? $ipClient : null;
+        $session_ipv6 = isset($session->stat_ipv6) ? inet_pton($session->stat_ipv6) : null;
+        $session_ipv4 = isset($session->stat_ipv4) ? inet_pton($session->stat_ipv4) : null;
+        $ip_inet = isset($session_ipv6) ? $session_ipv6 : (isset($session_ipv4) ? $session_ipv4 : inet_pton($ipClient));
 
         try {
             Zend_Db_Table::getDefaultAdapter()->query($sql, array(
                 'seen'        => round(time() / 300),
-                'ip_inet'     => isset($session->stat_ipv6) ? inet_pton($session->stat_ipv6) : isset($session->stat_ipv4) ? inet_pton($session->stat_ipv4) : $ipClient,
+                'ip_inet'     => $ip_inet,
                 'object_type' => $object_type,
                 'product_id'  => $object_id,
                 'ipv6'        => $session->stat_ipv6 ? $session->stat_ipv6 : $ipClientv6,
@@ -69,6 +73,11 @@ class Default_Model_Views
     public static function saveViewDownload($file_id)
     {
         self::saveViewObject(self::OBJECT_TYPE_DOWNLOAD, $file_id);
+    }
+
+    public static function saveViewCollection($_projectId)
+    {
+        self::saveViewObject(self::OBJECT_TYPE_COLLECTION, $_projectId);
     }
 
 }
