@@ -68,7 +68,10 @@ function crawlerDetect($USER_AGENT)
         array('serpstatbot','serpstatbot/1.0 (advanced backlink tracking bot; curl/7.58.0; http://serpstatbot.com/; abuse@serpstatbot.com)'),
         array('Linespider','Linespider/1.1;+https://lin.ee/4dwXkTH'),
         array('Yeti','Yeti/1.1; +http://naver.me/spd'),
-        array('Feedspot','Feedspot/1.0 (+https://www.feedspot.com/fs/fetcher; like FeedFetcher-Google)')
+        array('Feedspot','Feedspot/1.0 (+https://www.feedspot.com/fs/fetcher; like FeedFetcher-Google)'),
+        array('fantastic_search_engine_crawler','fantastic_search_engine_crawler/2.0 (Linux) fantastic-crawler@umich.edu'),
+        array('Qwantify','Qwantify/Bleriot/1.1; +https://help.qwant.com/bot'),
+        array('coccocbot','coccocbot-web/1.0; +http://help.coccoc.com/searchengine')
     );
 
     foreach ($crawlers as $c)
