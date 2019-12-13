@@ -123,7 +123,7 @@ function BookReaderWrapper(props){
     // Initialize the book
     window.book = ePub(props.slide.url, {});
     
-    winbow.book.HOOKS.register("beforeChapterDisplay").pageTurns = function (callback, renderer) {
+    window.book.HOOKS.register("beforeChapterDisplay").pageTurns = function (callback, renderer) {
       var lock = false;
       var arrowKeys = function (e) {
           e.preventDefault();
