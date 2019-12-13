@@ -439,6 +439,7 @@ video:focus {
 #book-reader-wrapper {
   position: relative;
   height: inherit;
+  padding: 10px;
 }
 #book-reader-wrapper #ajax-loader {
   width: 24px;
@@ -579,7 +580,7 @@ video:focus {
   border-radius: 5px;
   padding: 0;
   position: relative;
-  margin: 10px auto;
+  margin: 0;
   background: white url('img/ajax-loader.gif') center center no-repeat;
   top: 0;
   padding: 0px;

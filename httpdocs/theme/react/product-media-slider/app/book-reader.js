@@ -89,6 +89,7 @@ function BookReaderWrapper(props){
   }
 
   function goToTocItem(item){
+    console.log('go to toc item');
     console.log(item);
     renditionState.display(item.href);
     toggleMenu();
@@ -156,8 +157,10 @@ function BookReaderWrapper(props){
 
 function BookMenuItem(props){
 
-  function goToTocItem(item){
-    props.goToTocItem(item);
+  function onGoToTocItem(){
+    console.log('on go to toc item')
+    console.log(props.item);
+    props.goToTocItem(props.item);
   }
 
   let subItemsDisplay;
@@ -170,7 +173,7 @@ function BookMenuItem(props){
 
   return (
     <li>
-      <a onClick={() => goToTocItem()}>{props.item.label}</a>
+      <a onClick={() => onGoToTocItem()}>{props.item.label}</a>
       {subItemsDisplay}
     </li>
   )
