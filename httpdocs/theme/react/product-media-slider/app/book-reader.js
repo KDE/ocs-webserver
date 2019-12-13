@@ -7,6 +7,8 @@ function BookReaderWrapper(props){
   const [ currentPage, setCurrentPage ] = useState();
   const [ totalPages, setTotalPages ] = useState();
   const [ showBookMenu, setShowBookMenu ] = useState(false);
+  const [ showPrevButton, setShowPrevButton ] = useState(false);
+  const [ showNextButton, setShowNextButton ] = useState(false);
 
   React.useEffect(() => {initBookReader()},[])
   React.useEffect(() => { 
@@ -15,7 +17,6 @@ function BookReaderWrapper(props){
   },[props.cinemaMode,props.width])
 
   function initBookReader(){
-    console.log('init book reader');
     // Initialize the book
     window.book = ePub(props.slide.url, {});
     
@@ -32,13 +33,11 @@ function BookReaderWrapper(props){
     // Display the book
     window.displayed = window.rendition.display(window.location.hash.substr(1) || undefined);
     displayed.then(function() {
-        console.log('displayed.then()');
-        console.log('rendition.currentLocation():', rendition.currentLocation());
+        // console.log('rendition.currentLocation():', rendition.currentLocation());
     });
 
     // Generate location and pagination
     window.book.ready.then(function() {
-        console.log('book.ready.then()');
         const stored = localStorage.getItem(book.key() + '-locations');
         // console.log('metadata:', book.package.metadata);
         if (stored) {
@@ -53,11 +52,22 @@ function BookReaderWrapper(props){
 
     // When navigating to the next/previous page
     window.rendition.on('relocated', function(locations) {
+      
         console.log('rendition.currentLocation():', rendition.currentLocation());
+        
         setCurrentPage(book.locations.locationFromCfi(locations.start.cfi));
         setTotalPages(book.locations.total)
+        
         if (loading === true) setLoading(false);
-    })
+
+        if (renditionState.currentLocation().atStart === true) setShowPrevButton(false)
+        else setShowPrevButton(true)
+
+        
+        if (renditionState.currentLocation().atEnd === true) setShowNextButton(false)
+        else setShowNextButton(true)
+
+      })
   }
 
   function goPrev(){
@@ -89,8 +99,6 @@ function BookReaderWrapper(props){
   }
 
   function goToTocItem(item){
-    console.log('go to toc item');
-    console.log(item);
     renditionState.display(item.href);
     toggleMenu();
   }
@@ -116,16 +124,20 @@ function BookReaderWrapper(props){
 
   let bookMenuDisplay, tocMenuToggleDisplay, prevButtonDisplay, nextButtonDisplay;
   if (renditionState){
-    prevButtonDisplay = (
-      <div id="prev" className="arrow" onClick={goPrev}>
-        <span className="glyphicon glyphicon-chevron-left"></span>  
-      </div>
-    )
-    nextButtonDisplay = (
-      <div id="next" className="arrow" onClick={goNext}>
-        <span className="glyphicon glyphicon-chevron-right"></span>  
-      </div>
-    )
+    if (showPrevButton === true){
+      prevButtonDisplay = (
+        <div id="prev" className="arrow" onClick={goPrev}>
+          <span className="glyphicon glyphicon-chevron-left"></span>  
+        </div>
+      )
+    }
+    if (showNextButton === true){
+      nextButtonDisplay = (
+        <div id="next" className="arrow" onClick={goNext}>
+          <span className="glyphicon glyphicon-chevron-right"></span>  
+        </div>
+      )
+    }
     if (renditionState.book.navigation){
       tocMenuToggleDisplay = (
         <div id="toc-menu-toggle" onClick={toggleMenu}>
@@ -158,8 +170,6 @@ function BookReaderWrapper(props){
 function BookMenuItem(props){
 
   function onGoToTocItem(){
-    console.log('on go to toc item')
-    console.log(props.item);
     props.goToTocItem(props.item);
   }
 
