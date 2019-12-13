@@ -204,8 +204,8 @@ function BookReaderWrapper(props){
       <div id="book-pager">
         <div>
           <span><a onClick={() => onStartClick()}>First Page</a></span>
-          <span><input type="number" placeholder="###" onChange={(e) => onPageNumberInput(e.target.value)}/></span>
-          <span><span>{currentPage + "/" + totalPages}</span></span>
+          <span><input type="number" className="form-control" placeholder={currentPage} onChange={(e) => onPageNumberInput(e.target.value)}/></span>
+          <span><span>{ "/" + totalPages}</span></span>
           <span><a onClick={() => onEndClick()}>Last Page</a></span>
         </div>
       </div>
