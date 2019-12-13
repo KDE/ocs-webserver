@@ -24,8 +24,8 @@ function BookReaderWrapper(props){
         flow: 'paginated',
         manager: 'default',
         spread: 'always',
-        width: (props.width),
-        height: (props.height - 31)
+        width: (props.width - 2),
+        height: (props.height - 35)
     });
 
     setRenditionState(rendition)
