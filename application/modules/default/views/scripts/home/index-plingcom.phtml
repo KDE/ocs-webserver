@@ -44,7 +44,7 @@ $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,"295",nul
 
 $this->productsArtwork = $modelInfo->getLastProductsForHostStores(5,"158");
 $this->productsVideos = $modelInfo->getLastProductsForHostStores(5,"518,586");
-$this->productsComics = $modelInfo->getLastProductsForHostStores(5,"39");
+$this->productsBooksComics = $modelInfo->getLastProductsForHostStores(5,"581,39");
 $this->productsPhone = $modelInfo->getLastProductsForHostStores(5,"491");
 $this->productsDistors = $modelInfo->getLastProductsForHostStores(5,"404");
 
@@ -369,9 +369,9 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                         )
                     );
                     echo $this->partial('/home/partials/product_group.phtml', array(
-                            "title"  => "Comics",
-                            "products" => $this->productsComics,
-                            "catIDs" =>"39"
+                            "title"  => "Books,Comics",
+                            "products" => $this->productsBooksComics,
+                            "catIDs" =>"581,39"
                         )
                     );  
                     
