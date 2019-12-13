@@ -53,7 +53,7 @@ import {ConvertObjectToArray} from './product-media-slider-helpers';
   )
 }*/
 
-function BookReaderWrapper(props){
+/*function BookReaderWrapper(props){
 
     const [ renditionState, setRenditionState ] = useState();
     const [ currentPage, setCurrentPage ] = useState();
@@ -104,9 +104,9 @@ function BookReaderWrapper(props){
         </div>
       </div>
     );
-}
+}*/
 
-/*function BookReaderWrapper(props){
+function BookReaderWrapper(props){
 
   const [ renditionState , setRenditionState ] = useState()
   const [ currentPage, setCurrentPage ] = useState();
@@ -165,6 +165,11 @@ function BookReaderWrapper(props){
     renditionState.next();
   }
 
+  function onStartClick(){
+    renditionState.moveTo(0);
+    setCurrentPage(0);
+  }
+
   let pageCountDisplay;
   if (totalPages) pageCountDisplay = <span>{currentPage + "/" + totalPages}</span>
 
@@ -172,6 +177,9 @@ function BookReaderWrapper(props){
   if (window.book){
     bookNavigation = (
       <div id="book-pager">
+        <div id="navigation">
+          <span><a onClick={() => onStartClick()}>START</a></span>
+        </div>
         <span>{pageCountDisplay}</span>
       </div>
     )
@@ -180,16 +188,16 @@ function BookReaderWrapper(props){
   return (
     <div id="book-reader-wrapper">
       <div id="prev" className="arrow" onClick={goPrev}>
-        <span className="glyphicon glyphicon-chevron-left"></span>  
+        {"<"}
       </div>
       <div id="viewer" className="spreads">
       </div>
       {bookNavigation}
       <div id="next" className="arrow" onClick={goNext}>
-        <span className="glyphicon glyphicon-chevron-right"></span>  
+        {">"}
       </div>
     </div>
   )
-}*/
+}
 
 export default BookReaderWrapper;

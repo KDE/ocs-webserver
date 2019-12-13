@@ -584,22 +584,26 @@ video:focus {
       left: 0;
       width: 100%;  
       font-size:14px;
+
+      div {
+        margin-right:5px;
+      }
     }
 
     .arrow {
-      position: fixed;
+      outline: none;
+      border: none;
+      background: none;
+      position: absolute;
       top: 50%;
-      margin-top: -13px !important;
-      font-size: 32px;
-      color: #E2E2E2;
+      margin-top: -32px;
+      font-size: 64px;
+      padding: 0px 10px;
+      color: rgb(226, 226, 226);
       font-family: arial, sans-serif;
-      font-weight: bold;
       cursor: pointer;
-      -webkit-user-select: none;
-      -moz-user-select: none;
       user-select: none;
-      text-decoration: none;
-      z-index: 1000;
+      font-weight: normal;
     }
     
     .arrow:hover, .navlink:hover {
@@ -611,11 +615,11 @@ video:focus {
     }
 
     #prev {
-      left: 50px;
+      left: 1px;
     }
     
     #next {
-      right: 50px;
+      right: 1px;
     }
 
     #title {

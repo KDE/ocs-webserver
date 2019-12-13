@@ -464,20 +464,23 @@ video:focus {
   width: 100%;
   font-size: 14px;
 }
+#book-reader-wrapper #book-pager div {
+  margin-right: 5px;
+}
 #book-reader-wrapper .arrow {
-  position: fixed;
+  outline: none;
+  border: none;
+  background: none;
+  position: absolute;
   top: 50%;
-  margin-top: -13px !important;
-  font-size: 32px;
-  color: #E2E2E2;
+  margin-top: -32px;
+  font-size: 64px;
+  padding: 0px 10px;
+  color: #e2e2e2;
   font-family: arial, sans-serif;
-  font-weight: bold;
   cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
   user-select: none;
-  text-decoration: none;
-  z-index: 1000;
+  font-weight: normal;
 }
 #book-reader-wrapper .arrow:hover,
 #book-reader-wrapper .navlink:hover {
@@ -488,10 +491,10 @@ video:focus {
   color: #000;
 }
 #book-reader-wrapper #prev {
-  left: 50px;
+  left: 1px;
 }
 #book-reader-wrapper #next {
-  right: 50px;
+  right: 1px;
 }
 #book-reader-wrapper #title {
   width: 900px;
