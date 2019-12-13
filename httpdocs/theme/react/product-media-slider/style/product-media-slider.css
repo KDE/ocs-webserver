@@ -465,7 +465,13 @@ video:focus {
   font-size: 14px;
 }
 #book-reader-wrapper #book-pager div {
+  display: inline;
+}
+#book-reader-wrapper #book-pager div span {
   margin-right: 5px;
+}
+#book-reader-wrapper #book-pager div a {
+  cursor: pointer;
 }
 #book-reader-wrapper .arrow {
   outline: none;
@@ -491,10 +497,10 @@ video:focus {
   color: #000;
 }
 #book-reader-wrapper #prev {
-  left: 1px;
+  left: 1px !important;
 }
 #book-reader-wrapper #next {
-  right: 1px;
+  right: 1px !important;
 }
 #book-reader-wrapper #title {
   width: 900px;
