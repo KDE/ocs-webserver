@@ -184,7 +184,9 @@ function BookReaderWrapper(props){
   }
 
  function onEndClick(){
-   renditionState.moveTo(1000);
+  console.log(renditionState.book.locations.spine.items[renditionState.book.locations.spine.items.length - 1].cfiBase);
+  const lastPageCfiBase = renditionState.book.locations.spine.items[renditionState.book.locations.spine.items.length - 1].cfiBase;
+   renditionState.moveTo(lastPageCfiBase);
  }
   
   let pageCountDisplay;
