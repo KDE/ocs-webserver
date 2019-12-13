@@ -119,10 +119,8 @@ function BookReaderWrapper(props){
     initBookReader()
   },[props.cinemaMode,props.width])
 
-  console.log(renditionState);
-  console.log(window.book);
-
   function initBookReader(){
+    console.log('init book reader');
     console.log(props.slide.url);
     // Initialize the book
     window.book = ePub(props.slide.url, {});
@@ -140,12 +138,13 @@ function BookReaderWrapper(props){
     // Display the book
     window.displayed = window.rendition.display(window.location.hash.substr(1) || undefined);
     displayed.then(function() {
-        // console.log('rendition.currentLocation():', rendition.currentLocation());
+        console.log('displayed.then()');
+        console.log('rendition.currentLocation():', rendition.currentLocation());
     });
 
     // Generate location and pagination
     window.book.ready.then(function() {
-
+        console.log('book.ready.then()');
         const stored = localStorage.getItem(book.key() + '-locations');
         // console.log('metadata:', book.package.metadata);
         if (stored) {
@@ -189,7 +188,7 @@ function BookReaderWrapper(props){
 
   let loadingDisplay = <div id="ajax-loader"></div>
   let bookNavigation;
-  if (window.book && totalPages){
+  if (window.book){
     loadingDisplay = "";
     bookNavigation = (
       <div id="book-pager">
