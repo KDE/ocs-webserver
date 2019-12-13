@@ -109,6 +109,7 @@ import { func } from 'prop-types';
 
 function BookReaderWrapper(props){
 
+  const [ loading, setLoading ] = useState(true);
   const [ renditionState , setRenditionState ] = useState()
   const [ currentPage, setCurrentPage ] = useState();
   const [ totalPages, setTotalPages ] = useState();
@@ -118,6 +119,8 @@ function BookReaderWrapper(props){
     if (window.book) window.book.destroy()
     initBookReader()
   },[props.cinemaMode,props.width])
+
+  console.log(renditionState);
 
   function initBookReader(){
     console.log('init book reader');
@@ -161,10 +164,9 @@ function BookReaderWrapper(props){
     window.rendition.on('relocated', function(locations) {
         console.log('rendition.getContents():',rendition.getContents());
         console.log('rendition.currentLocation():', rendition.currentLocation());
-        console.log('rendition.views():',rendition.views());
-        if (renditionState !== undefined) console.log(renditionState);
         setCurrentPage(book.locations.locationFromCfi(locations.start.cfi));
         setTotalPages(book.locations.total)
+        if (loading === true) setLoading(false);
     })
   }
 
@@ -186,17 +188,17 @@ function BookReaderWrapper(props){
  }
   
   let pageCountDisplay;
-  if (totalPages) pageCountDisplay = <span>{currentPage + "/" + totalPages}</span>
 
   let loadingDisplay = <div id="ajax-loader"></div>
   let bookNavigation;
-  if (window.book){
+  if (loading === false){
+    if (totalPages) pageCountDisplay = 
     loadingDisplay = "";
     bookNavigation = (
       <div id="book-pager">
         <div>
           <span><a onClick={() => onStartClick()}>First Page</a></span>
-          <span>{pageCountDisplay}</span>
+          <span><span>{currentPage + "/" + totalPages}</span></span>
           <span><a onClick={() => onEndClick()}>Last Page</a></span>
         </div>
       </div>
