@@ -184,13 +184,13 @@ function BookReaderWrapper(props){
   }
 
    function onEndClick(){
-    const lastPageCfi = renditionState.book.locations.spine._locations[renditionState.book.locations.spine._locations.length - 1];
+    const lastPageCfi = renditionState.book.locations._locations[renditionState.book.locations._locations.length - 1];
     renditionState.display(lastPageCfi);
   } 
   
   function onPageNumberInput(val){
     console.log(val);
-    console.log(renditionState.book.locations.spin._locations[val]);
+    console.log(renditionState.book.locations._locations[val]);
   }
 
   let loadingDisplay = <div id="ajax-loader"></div>
