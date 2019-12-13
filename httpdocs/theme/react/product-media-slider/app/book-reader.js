@@ -211,7 +211,7 @@ function BookReaderWrapper(props){
         <div>
           <span><a onClick={() => onStartClick()}>First Page</a></span>
           <span>
-            <input type="number" className="form-control" placeholder={currentPage} max={totalPages} onChange={(e) => onPageNumberInput(e.target.value)}/>
+            <input type="number" className="form-control" placeholder={currentPage} min="0" max={totalPages} onChange={(e) => onPageNumberInput(e.target.value)}/>
             { "/" + totalPages}
           </span>
           <span><a onClick={() => onEndClick()}>Last Page</a></span>
@@ -258,10 +258,9 @@ function BookReaderWrapper(props){
 
 function BookMenuItem(props){
 
-
   let subItemsDisplay;
-  if (props.item.subItems.length > 0){
-    const item = props.item.subItems.map((item,index) => (
+  if (props.item.subitems && props.item.subitems.length > 0){
+    const item = props.item.subitems.map((item,index) => (
       <BookMenuItem key={index} onClick={() => props.goToTocItem(item)} item={item}/>
     ));
     subItemsDisplay = <ul> {items} </ul>
