@@ -500,6 +500,12 @@ video:focus {
   z-index: 100;
   font-weight: normal;
 }
+#book-reader-wrapper .arrow#prev {
+  left: 30px;
+}
+#book-reader-wrapper .arrow#next {
+  right: 30px;
+}
 #book-reader-wrapper .arrow:hover,
 #book-reader-wrapper .navlink:hover {
   color: #777;

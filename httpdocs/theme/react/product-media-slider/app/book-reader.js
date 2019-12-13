@@ -120,38 +120,10 @@ function BookReaderWrapper(props){
   },[props.cinemaMode,props.width])
 
   function initBookReader(){
+    console.log(props.slide.url);
     // Initialize the book
     window.book = ePub(props.slide.url, {});
     
-    window.book.HOOKS.register("beforeChapterDisplay").pageTurns = function (callback, renderer) {
-      var lock = false;
-      var arrowKeys = function (e) {
-          e.preventDefault();
-          if (lock) return;
-  
-          if (e.keyCode == 37) {
-              ePubViewer.Book.prevPage();
-              lock = true;
-              setTimeout(function () {
-                  lock = false;
-              }, 100);
-              return false;
-          }
-  
-          if (e.keyCode == 39) {
-              ePubViewer.Book.nextPage();
-              lock = true;
-              setTimeout(function () {
-                  lock = false;
-              }, 100);
-              return false;
-          }
-  
-      };
-      renderer.doc.addEventListener('keydown', arrowKeys, false);
-      if (callback) callback();
-  }
-
     window.rendition = book.renderTo('viewer', {
         flow: 'paginated',
         manager: 'default',
