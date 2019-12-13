@@ -12,9 +12,9 @@ class Default_Plugin_Stats extends Zend_Controller_Plugin_Abstract
         }
 
         $session_stats = new Zend_Session_Namespace();
-        foreach ($session_stats->getIterator()->getArrayCopy() as $key => $item) {
-           Zend_Registry::get('logger')->debug(print_r($key, true).' => '.print_r($item,true));
-        };
+//        foreach ($session_stats->getIterator()->getArrayCopy() as $key => $item) {
+//           Zend_Registry::get('logger')->debug(print_r($key, true).' => '.print_r($item,true));
+//        };
         $request_ip = $request->getClientIp();
 
         if (empty($session_stats->stat_ipv4) AND empty($session_stats->stat_ipv6)) {

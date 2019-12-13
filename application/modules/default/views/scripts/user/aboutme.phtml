@@ -67,7 +67,7 @@ $isSupporterSection = $isSupporterHelper->isSupporter($this->member->member_id);
 
 $modelSectionSupport = new Default_Model_SectionSupport();
 $affiliates = $modelSectionSupport->fetchAffiliatesForMember($this->member->member_id);
-
+$isSupporterActive = false;
 $this->affiliates = $affiliates;
 
 ?>
@@ -148,6 +148,12 @@ div#preloaded-images {
 
                                     <?php
                                         echo $this->aboutmeUserInfo. ' '. $this->earnInfo;
+                                        if($isSupporterActive)
+                                        {
+                                            $info = new Default_Model_Info();
+                                            $activemonths = $info->getSupporterActiveMonths($this->member->member_id);
+                                            echo ' I am active supporter for '.$activemonths['active_months'].' months.';
+                                        }
                                     ?>
 
                                 </div>

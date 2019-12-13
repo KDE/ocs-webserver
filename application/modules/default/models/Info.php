@@ -1388,12 +1388,32 @@ class Default_Model_Info
         return $result;
     }
 
+    public function getSupporterActiveMonths($member_id)
+    {
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . $member_id ;
+        if (false !== ($newSupporters = $cache->load($cacheName))) {
+            return $newSupporters;
+        }
+        $sql = "select 
+                count(distinct yearmonth) active_months
+                from section_support_paypements ss
+                JOIN support s ON s.id = ss.support_id
+                where s.member_id = :member_id              
+                ";
+        $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql,array('member_id' => $member_id));        
+        $cache->save($result, $cacheName, array(), 300);
+        return $result;
+    }
+
     public function getSectionSupportersActiveMonths($section_id)
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
         $cacheName = __FUNCTION__ . '_' . $section_id ;
-
+        if (false !== ($newSupporters = $cache->load($cacheName))) {
+            return $newSupporters;
+        }
         $sql = "SELECT COUNT(1) AS active_months, member_id,sum(tier) sum_support FROM
                 (
                 SELECT s.member_id, p.yearmonth , sum(p.tier) tier FROM section_support_paypements p

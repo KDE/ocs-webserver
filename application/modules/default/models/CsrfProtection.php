@@ -69,6 +69,9 @@ class Default_Model_CsrfProtection
             return $valid;
         }
 
+        if (empty($session->crsf_token)) {
+            return false;
+        }
         $valid = hash_equals($session->crsf_token, $hash);
         Zend_Registry::get('logger')->debug(__METHOD__
                 . PHP_EOL . ' - session csrf token: ' . print_r($session->crsf_token, true)

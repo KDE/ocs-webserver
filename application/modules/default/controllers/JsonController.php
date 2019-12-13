@@ -277,6 +277,10 @@ class JsonController extends Zend_Controller_Action
     {  
         $this->_initResponseHeader();
         $projectSearchText = $this->getParam('p');
+        if(is_array($projectSearchText)) {
+            $projectSearchText = array_pop(array_values($projectSearchText));
+        }
+        
         $store = null;
         if($this->hasParam('s')){
             $store = $this->getParam('s');
