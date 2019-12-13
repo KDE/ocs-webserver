@@ -24,7 +24,7 @@ function BookReaderWrapper(props){
         flow: 'paginated',
         manager: 'default',
         spread: 'always',
-        width: (props.width - 2),
+        width: (props.width - 20),
         height: (props.height - 35)
     });
 
