@@ -184,11 +184,10 @@ function BookReaderWrapper(props){
   }
 
  function onEndClick(){
-  console.log(renditionState.book.locations.spine.items[renditionState.book.locations.spine.items.length - 1].cfiBase);
   const lastPageCfiBase = renditionState.book.locations.spine.items[renditionState.book.locations.spine.items.length - 1].cfiBase;
   const lastPageCfi = "epubCfi(" + lastPageCfiBase + ")";
   console.log(lastPageCfi);
-   renditionState.moveTo(lastPageCfi);
+   renditionState.display(lastPageCfi);
  }
   
   let pageCountDisplay;
