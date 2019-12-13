@@ -154,6 +154,8 @@ function BookReaderWrapper(props){
 
 function BookMenuItem(props){
 
+  console.log(props.item);
+
   function goToTocItem(item){
     props.goToTocItem(item);
   }
