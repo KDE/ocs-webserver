@@ -198,8 +198,8 @@ function BookReaderWrapper(props){
   }
 
   function toggleMenu(){
-    const newBookMenuDisplay = bookMenuDisplay === true ? false : true;
-    setShowBookMenu(newBookMenuDisplay)
+    const newShowBookMenu = showBookMenu === true ? false : true;
+    setShowBookMenu(newShowBookMenu)
   }
 
   let loadingDisplay = <div id="ajax-loader"></div>
@@ -258,10 +258,14 @@ function BookReaderWrapper(props){
 
 function BookMenuItem(props){
 
+  function goToTocItem(item){
+    props.goToTocItem(item);
+  }
+
   let subItemsDisplay;
   if (props.item.subitems && props.item.subitems.length > 0){
     const items = props.item.subitems.map((item,index) => (
-      <BookMenuItem key={index} onClick={() => props.goToTocItem(item)} item={item}/>
+      <BookMenuItem key={index} onClick={() => goToTocItem(item)} item={item}/>
     ));
     subItemsDisplay = <ul> {items} </ul>
   }
