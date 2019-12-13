@@ -524,8 +524,8 @@ video:focus {
 }
 #book-reader-wrapper #toc-menu-toggle {
   position: absolute;
-  top: 6px;
-  left: 43px;
+  top: 20px;
+  left: 20px;
   z-index: 300;
   font-size: 22px;
   color: #e2e2e2;
@@ -533,35 +533,30 @@ video:focus {
 }
 #book-reader-wrapper #book-menu {
   position: absolute;
-  top: 0px;
-  left: 36px;
+  top: 10px;
+  left: 10px;
   list-style-type: none;
   margin: 0;
   padding: 27px;
   background-color: #f7f7f7;
   z-index: 199;
   max-width: 400px;
-  max-height: 100%;
-  border-radius: 5px 0 0 5px;
+  height: calc(100% - 20px);
+  /* border-radius: 5px 0 0 5px; */
   overflow-y: scroll;
   text-align: left;
 }
-#book-reader-wrapper #book-menu li {
-  padding: 5px;
-}
 #book-reader-wrapper #book-menu li a {
+  padding: 5px;
   cursor: pointer;
+  display: block;
   font-size: 12px;
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  -o-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
 }
 #book-reader-wrapper #book-menu li a:hover {
   background: rgba(0, 0, 0, 0.1);
 }
 #book-reader-wrapper #book-menu li > ul {
-  padding: 0;
+  padding: 0 0 0 10px;
   list-style-type: none;
   margin: 5px 0 0 0;
 }

@@ -597,7 +597,7 @@ video:focus {
       width: 100%;  
       font-size:14px;
       margin-bottom: 5px;
-      
+
       div {
         display: inline;
         input[type="number"]{
@@ -649,8 +649,8 @@ video:focus {
 
     #toc-menu-toggle {
       position: absolute;
-      top: 6px;
-      left: 43px;
+      top: 20px;
+      left: 20px;
       z-index: 300;
       font-size: 22px;
       color: #e2e2e2;
@@ -659,26 +659,25 @@ video:focus {
 
     #book-menu {
       position: absolute;
-      top: 0px;
-      left: 36px;
+      top: 10px;
+      left: 10px;
       list-style-type: none;
       margin: 0;
       padding: 27px;
       background-color: #f7f7f7;
       z-index: 199;
       max-width: 400px;
-      max-height: 100%;
-      border-radius: 5px 0 0 5px;
+      height: calc(100% - 20px);
+      /* border-radius: 5px 0 0 5px; */
       overflow-y: scroll;
-      text-align:left;
+      text-align: left;
 
       li {
-        padding: 5px;
-
         a {
+          padding: 5px;
           cursor: pointer;
+          display: block;
           font-size: 12px;
-          .transition();
 
           &:hover {
             background: rgba(0,0,0,0.1);
@@ -686,7 +685,7 @@ video:focus {
         }
 
         > ul {
-          padding: 0;
+          padding: 0 0 0 10px;
           list-style-type: none;
           margin: 5px 0 0 0;
         }
