@@ -113,6 +113,7 @@ function BookReaderWrapper(props){
   const [ renditionState , setRenditionState ] = useState()
   const [ currentPage, setCurrentPage ] = useState();
   const [ totalPages, setTotalPages ] = useState();
+  const [ bookMenuDisplay, setBookMenuDisplay ] = useState(false);
 
   React.useEffect(() => {initBookReader()},[])
   React.useEffect(() => { 
@@ -178,9 +179,9 @@ function BookReaderWrapper(props){
     renditionState.next();
   }
 
- function onStartClick(){
-  const lastPageCfi = renditionState.book.locations._locations[0];
-  renditionState.display(lastPageCfi);
+  function onStartClick(){
+    const lastPageCfi = renditionState.book.locations._locations[0];
+    renditionState.display(lastPageCfi);
   }
 
   function onEndClick(){
@@ -196,6 +197,11 @@ function BookReaderWrapper(props){
     renditionState.display(cfiFromNumber);
   }
 
+  function toggleMenu(){
+    const newBookMenuDisplay = bookMenuDisplay === true ? false : true;
+    setBookMenuDisplay(newBookMenuDisplay)
+  }
+
   let loadingDisplay = <div id="ajax-loader"></div>
   let bookNavigation;
   if (loading === false){
@@ -204,8 +210,10 @@ function BookReaderWrapper(props){
       <div id="book-pager">
         <div>
           <span><a onClick={() => onStartClick()}>First Page</a></span>
-          <span><input type="number" className="form-control" placeholder={currentPage} onChange={(e) => onPageNumberInput(e.target.value)}/></span>
-          <span><span>{ "/" + totalPages}</span></span>
+          <span>
+            <input type="number" className="form-control" placeholder={currentPage} max={totalPages} onChange={(e) => onPageNumberInput(e.target.value)}/>
+            { "/" + totalPages}
+          </span>
           <span><a onClick={() => onEndClick()}>Last Page</a></span>
         </div>
       </div>
@@ -215,6 +223,9 @@ function BookReaderWrapper(props){
   return (
     <div id="book-reader-wrapper">
       {loadingDisplay}
+      <div id="toc-menu" onClick={toggleMenu}>
+        <span className="glyphicon glyphicon-menu-hamburger"></span>
+      </div>
       <div id="prev" className="arrow" onClick={goPrev}>
         <span className="glyphicon glyphicon-chevron-left"></span>  
       </div>
