@@ -260,7 +260,7 @@ function BookMenuItem(props){
 
   let subItemsDisplay;
   if (props.item.subitems && props.item.subitems.length > 0){
-    const item = props.item.subitems.map((item,index) => (
+    const items = props.item.subitems.map((item,index) => (
       <BookMenuItem key={index} onClick={() => props.goToTocItem(item)} item={item}/>
     ));
     subItemsDisplay = <ul> {items} </ul>
