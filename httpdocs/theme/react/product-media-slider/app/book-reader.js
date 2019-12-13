@@ -122,6 +122,36 @@ function BookReaderWrapper(props){
   function initBookReader(){
     // Initialize the book
     window.book = ePub(props.slide.url, {});
+    
+    winbow.book.HOOKS.register("beforeChapterDisplay").pageTurns = function (callback, renderer) {
+      var lock = false;
+      var arrowKeys = function (e) {
+          e.preventDefault();
+          if (lock) return;
+  
+          if (e.keyCode == 37) {
+              ePubViewer.Book.prevPage();
+              lock = true;
+              setTimeout(function () {
+                  lock = false;
+              }, 100);
+              return false;
+          }
+  
+          if (e.keyCode == 39) {
+              ePubViewer.Book.nextPage();
+              lock = true;
+              setTimeout(function () {
+                  lock = false;
+              }, 100);
+              return false;
+          }
+  
+      };
+      renderer.doc.addEventListener('keydown', arrowKeys, false);
+      if (callback) callback();
+  }
+
     window.rendition = book.renderTo('viewer', {
         flow: 'paginated',
         manager: 'default',
@@ -129,6 +159,7 @@ function BookReaderWrapper(props){
         width: (props.width - 134),
         height: (props.height - 31)
     });
+
     setRenditionState(rendition)
 
     // Display the book
@@ -147,6 +178,7 @@ function BookReaderWrapper(props){
         } else {
             return window.book.locations.generate(1024); // Generates CFI for every X characters (Characters per/page)
         }
+
     }).then(function(location) { // This promise will take a little while to return (About 20 seconds or so for Moby Dick)
         localStorage.setItem(book.key() + '-locations', book.locations.save());
     });
