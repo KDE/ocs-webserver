@@ -220,15 +220,19 @@ function BookReaderWrapper(props){
     )
   }
 
+  function goToTocItem(item){
+    console.log(item);
+    renditionState.display(item.href);
+    toggleMenu();
+  }
+
   let bookMenuDisplay;
   if (renditionState){
     if (showBookMenu === true){
       const items = renditionState.book.navigation.toc.map((item,index) => (
-        <li key={index}>
-          <a onClick={() => goToTocItem(item.href)}>{item.label}</a>
-        </li>
+        <BookMenuItem key={index} goToTocItem={() => goToTocItem(item)} item={item}/>
       ));
-      bookMenuDisplay = <ul>{items}</ul>
+      bookMenuDisplay = <ul id="book-menu">{items}</ul>
     }
   }
 
@@ -249,6 +253,25 @@ function BookReaderWrapper(props){
       </div>
       {bookMenuDisplay}
     </div>
+  )
+}
+
+function BookMenuItem(props){
+
+
+  let subItemsDisplay;
+  if (props.item.subItems.length > 0){
+    const item = props.item.subItems.map((item,index) => (
+      <BookMenuItem key={index} onClick={() => props.goToTocItem(item)} item={item}/>
+    ));
+    subItemsDisplay = <ul> {items} </ul>
+  }
+
+  return (
+    <li>
+      <a onClick={() => props.goToTocItem(props.item.href)}>{props.item.label}</a>
+      {subItemsDisplay}
+    </li>
   )
 }
 

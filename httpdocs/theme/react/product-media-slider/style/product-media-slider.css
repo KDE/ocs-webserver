@@ -530,6 +530,17 @@ video:focus {
   color: #e2e2e2;
   cursor: pointer;
 }
+#book-reader-wrapper #book-menu {
+  position: absolute;
+  top: 0px;
+  left: 36px;
+  list-style-type: none;
+  margin: 0;
+  padding: 32px;
+  background-color: #f7f7f7;
+  z-index: 99;
+  max-width: 400px;
+}
 #book-reader-wrapper #title {
   width: 900px;
   min-height: 18px;
