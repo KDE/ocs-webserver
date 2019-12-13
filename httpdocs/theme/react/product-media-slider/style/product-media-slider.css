@@ -501,10 +501,10 @@ video:focus {
   font-weight: normal;
 }
 #book-reader-wrapper .arrow#prev {
-  left: 30px;
+  left: 30px !important;
 }
 #book-reader-wrapper .arrow#next {
-  right: 30px;
+  right: 30px !important;
 }
 #book-reader-wrapper .arrow:hover,
 #book-reader-wrapper .navlink:hover {

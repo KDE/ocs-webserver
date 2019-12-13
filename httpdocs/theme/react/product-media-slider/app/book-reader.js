@@ -119,6 +119,9 @@ function BookReaderWrapper(props){
     initBookReader()
   },[props.cinemaMode,props.width])
 
+  console.log(renditionState);
+  console.log(window.book);
+
   function initBookReader(){
     console.log(props.slide.url);
     // Initialize the book
@@ -157,6 +160,8 @@ function BookReaderWrapper(props){
 
     // When navigating to the next/previous page
     window.rendition.on('relocated', function(locations) {
+        console.log(renditionState.getContents());
+        console.log(renditionState.views());
         setCurrentPage(book.locations.locationFromCfi(locations.start.cfi));
         setTotalPages(book.locations.total)
     })
@@ -172,7 +177,7 @@ function BookReaderWrapper(props){
 
  function onStartClick(){
    renditionState.moveTo(0);
-   setTotalPages(0);
+   setCurrentPage(0);
   }
 
  function onEndClick(){
@@ -184,7 +189,7 @@ function BookReaderWrapper(props){
 
   let loadingDisplay = <div id="ajax-loader"></div>
   let bookNavigation;
-  if (window.book){
+  if (window.book && totalPages){
     loadingDisplay = "";
     bookNavigation = (
       <div id="book-pager">
