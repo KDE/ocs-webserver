@@ -225,21 +225,17 @@ function BookReaderWrapper(props){
     if (showBookMenu === true){
       const items = renditionState.book.navigation.toc.map((item,index) => (
         <li key={index}>
-          <a onClick={() => goToTocItem(item.href)}>item.label</a>
+          <a onClick={() => goToTocItem(item.href)}>{item.label}</a>
         </li>
-      ))
-      bookMenuDisplay = (
-        <ul>
-          {items}
-        </ul>
-      )
+      ));
+      bookMenuDisplay = <ul>{items}</ul>
     }
   }
 
   return (
     <div id="book-reader-wrapper">
       {loadingDisplay}
-      <div id="toc-menu" onClick={toggleMenu}>
+      <div id="toc-menu-toggle" onClick={toggleMenu}>
         <span className="glyphicon glyphicon-menu-hamburger"></span>
       </div>
       <div id="prev" className="arrow" onClick={goPrev}>

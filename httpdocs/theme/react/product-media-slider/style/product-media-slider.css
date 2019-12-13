@@ -521,6 +521,15 @@ video:focus {
 #book-reader-wrapper .navlink:hover {
   color: #000;
 }
+#book-reader-wrapper #toc-menu-toggle {
+  position: absolute;
+  top: 6px;
+  left: 43px;
+  z-index: 100;
+  font-size: 22px;
+  color: #e2e2e2;
+  cursor: pointer;
+}
 #book-reader-wrapper #title {
   width: 900px;
   min-height: 18px;
