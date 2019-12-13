@@ -669,14 +669,19 @@ video:focus {
       max-height: 100%;
       border-radius: 5px 0 0 5px;
       overflow-y: scroll;
+      text-align:left;
 
       li {
         padding: 5px;
-        .transition();
 
         a {
           cursor: pointer;
           font-size: 12px;
+          .transition();
+
+          &:hover {
+            background: rgba(0,0,0,0.1);
+          }
         }
 
         > ul {
@@ -685,9 +690,6 @@ video:focus {
           margin: 5px 0 0 0;
         }
 
-        &:hover {
-          background: rgba(0,0,0,0.1);
-        }
       }
     }
 

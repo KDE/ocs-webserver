@@ -1,111 +1,4 @@
-import React, { Component, useState } from 'react';
-import {
-  EpubView, // Underlaying epub-canvas (wrapper for epub.js iframe)
-  EpubViewStyle, // Styles for EpubView, you can pass it to the instance as a style prop for customize it
-  ReactReader, // A simple epub-reader with left/right button and chapter navigation
-  ReactReaderStyle // Styles for the epub-reader it you need to customize it
-} from "react-reader";
-import {ConvertObjectToArray} from './product-media-slider-helpers';
-import { func, string } from 'prop-types';
-
-/*function BookReaderWrapper(props){
-
-  const [ chapters, setChapters ] = useState([]);
-  const [ currentChapter, setCurrentChapter ] = useState();
-  const [ readerContent, setReaderContent ] = useState(null);
-
-  React.useEffect(() => {
-    console.log('on get toc');
-    getTableOfContents();
-  },[])
-
-  React.useEffect(() => {
-    console.log(chapters);
-    console.log('on chapters change');
-    if (chapters.length > 0){
-      console.log('get & set first chapter');
-      setCurrentChapter(1);
-      getChapter();
-    }
-  },[chapters])
-
-  function getTableOfContents(){
-    console.log('get toc');
-    const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
-    $.ajax({url:url}).done(function(res){
-      const newChapters = ConvertObjectToArray(res.files);
-      setChapters(newChapters);
-    });
-  }
-
-  function getChapter(chapter){
-    if (!chapter) chapter = chapters[0];
-    console.log(chapter);    
-    const url = json_server_comics + "/api/files/page?id="+props.slide.file_id+"&filename="+chapter.tag.src; 
-    $.ajax({url:url}).done(function(res){
-      setReaderContent(res);
-    });   
-  }
-
-  return (
-    <div id="book-reader-wrapper">
-      <div id="viewer" className="spreads" dangerouslySetInnerHTML={{__html:readerContent}}></div>
-    </div>
-  )
-}*/
-
-/*function BookReaderWrapper(props){
-
-    const [ renditionState, setRenditionState ] = useState();
-    const [ currentPage, setCurrentPage ] = useState();
-    const [ totalPages, setTotalPages ] = useState();
-
-    React.useEffect(() => {
-      console.log(renditionState);
-      if (renditionState){
-        if (renditionState.location !== undefined){
-          console.log(renditionState.location.start.cfi);
-          console.log(renditionState.book.locations.locationFromCfi(renditionState.location.start.cfi))
-          const location = renditionState.book.locations.locationFromCfi(renditionState.location.start.cfi);
-          setTotalPages(renditionState.location.total);        
-          setCurrentPage(location);
-        }
-      }
-    },[renditionState])
-
-    function onGetRendition(rendition){
-      console.log(rendition);
-      setRenditionState(rendition);
-    }
-
-    function onLocationChanged(epubcifi,rendition){
-      console.log(rendition);
-      setRenditionState(rendition);
-      console.log('on location changeds');
-      // console.log(epubcifi);
-    }
-
-    function onTocChanged(toc){
-      console.log('on toc changed')
-      console.log(toc)
-    }
-
-    return (
-      <div id="book-reader-wrapper">
-        <div id="viewer" className="spreads" style={{ position: "relative", height: "100%" }}>
-          {" "}
-          <ReactReader
-            url={props.slide.url}
-            title={props.slide.title}
-            locationChanged={(epubcifi,rendition) => onLocationChanged(epubcifi,rendition)}
-            getRendition={rendition => onGetRendition(rendition)}
-            tocChanged={toc => onTocChanged(toc)}
-          />
-          <span>{currentPage}/{totalPages}</span>
-        </div>
-      </div>
-    );
-}*/
+import React, { useState } from 'react';
 
 function BookReaderWrapper(props){
 
@@ -121,11 +14,8 @@ function BookReaderWrapper(props){
     initBookReader()
   },[props.cinemaMode,props.width])
 
-  console.log(renditionState);
-
   function initBookReader(){
     console.log('init book reader');
-    console.log(props.slide.url);
     // Initialize the book
     window.book = ePub(props.slide.url, {});
     
@@ -163,7 +53,6 @@ function BookReaderWrapper(props){
 
     // When navigating to the next/previous page
     window.rendition.on('relocated', function(locations) {
-        console.log('rendition.getContents():',rendition.getContents());
         console.log('rendition.currentLocation():', rendition.currentLocation());
         setCurrentPage(book.locations.locationFromCfi(locations.start.cfi));
         setTotalPages(book.locations.total)
@@ -190,10 +79,7 @@ function BookReaderWrapper(props){
   } 
   
   function onPageNumberInput(val){
-    console.log(val);
-    console.log(renditionState.book.locations._locations[val]);
     const cfiFromNumber = renditionState.book.locations._locations[val];
-    console.log(typeof(cfiFromNumber));
     renditionState.display(cfiFromNumber);
   }
 
@@ -201,6 +87,13 @@ function BookReaderWrapper(props){
     const newShowBookMenu = showBookMenu === true ? false : true;
     setShowBookMenu(newShowBookMenu)
   }
+
+  function goToTocItem(item){
+    console.log(item);
+    renditionState.display(item.href);
+    toggleMenu();
+  }
+
 
   let loadingDisplay = <div id="ajax-loader"></div>
   let bookNavigation;
@@ -218,12 +111,6 @@ function BookReaderWrapper(props){
         </div>
       </div>
     )
-  }
-
-  function goToTocItem(item){
-    console.log(item);
-    renditionState.display(item.href);
-    toggleMenu();
   }
 
   let bookMenuDisplay;

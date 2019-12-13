@@ -543,25 +543,26 @@ video:focus {
   max-height: 100%;
   border-radius: 5px 0 0 5px;
   overflow-y: scroll;
+  text-align: left;
 }
 #book-reader-wrapper #book-menu li {
   padding: 5px;
+}
+#book-reader-wrapper #book-menu li a {
+  cursor: pointer;
+  font-size: 12px;
   -webkit-transition: all 0.2s ease-out;
   -moz-transition: all 0.2s ease-out;
   -o-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
 }
-#book-reader-wrapper #book-menu li a {
-  cursor: pointer;
-  font-size: 12px;
+#book-reader-wrapper #book-menu li a:hover {
+  background: rgba(0, 0, 0, 0.1);
 }
 #book-reader-wrapper #book-menu li > ul {
   padding: 0;
   list-style-type: none;
   margin: 5px 0 0 0;
-}
-#book-reader-wrapper #book-menu li:hover {
-  background: rgba(0, 0, 0, 0.1);
 }
 #book-reader-wrapper #title {
   width: 900px;
