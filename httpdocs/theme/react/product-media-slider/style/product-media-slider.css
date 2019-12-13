@@ -536,13 +536,32 @@ video:focus {
   left: 36px;
   list-style-type: none;
   margin: 0;
-  padding: 32px;
+  padding: 27px;
   background-color: #f7f7f7;
   z-index: 199;
   max-width: 400px;
   max-height: 100%;
   border-radius: 5px 0 0 5px;
   overflow-y: scroll;
+}
+#book-reader-wrapper #book-menu li {
+  padding: 5px;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+#book-reader-wrapper #book-menu li a {
+  cursor: pointer;
+  font-size: 12px;
+}
+#book-reader-wrapper #book-menu li > ul {
+  padding: 0;
+  list-style-type: none;
+  margin: 5px 0 0 0;
+}
+#book-reader-wrapper #book-menu li:hover {
+  background: rgba(0, 0, 0, 0.1);
 }
 #book-reader-wrapper #title {
   width: 900px;
@@ -564,7 +583,7 @@ video:focus {
   padding: 0;
   position: relative;
   margin: 10px auto;
-  background: white url('../img/ajax-loader.gif') center center no-repeat;
+  background: white url('img/ajax-loader.gif') center center no-repeat;
   top: 0;
   padding: 0px;
 }

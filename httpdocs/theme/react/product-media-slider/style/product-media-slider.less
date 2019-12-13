@@ -662,13 +662,33 @@ video:focus {
       left: 36px;
       list-style-type: none;
       margin: 0;
-      padding: 32px;
+      padding: 27px;
       background-color: #f7f7f7;
       z-index: 199;
       max-width: 400px;
       max-height: 100%;
       border-radius: 5px 0 0 5px;
       overflow-y: scroll;
+
+      li {
+        padding: 5px;
+        .transition();
+
+        a {
+          cursor: pointer;
+          font-size: 12px;
+        }
+
+        > ul {
+          padding: 0;
+          list-style-type: none;
+          margin: 5px 0 0 0;
+        }
+
+        &:hover {
+          background: rgba(0,0,0,0.1);
+        }
+      }
     }
 
     #title {
@@ -693,7 +713,7 @@ video:focus {
       padding: 0;
       position: relative;
       margin: 10px auto;
-      background: white url('../img/ajax-loader.gif') center center no-repeat;
+      background: white url('img/ajax-loader.gif') center center no-repeat;
       top: 0;
       padding: 0px;
     }
