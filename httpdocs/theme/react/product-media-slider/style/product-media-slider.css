@@ -478,6 +478,13 @@ video:focus {
 #book-reader-wrapper #book-pager div {
   display: inline;
 }
+#book-reader-wrapper #book-pager div input[type="number"] {
+  width: 30px;
+  display: inline-block;
+  padding: 2px;
+  margin: 0 5px 0 0;
+  height: 30px;
+}
 #book-reader-wrapper #book-pager div span {
   margin-right: 5px;
 }
