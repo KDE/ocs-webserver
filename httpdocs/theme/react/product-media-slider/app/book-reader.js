@@ -168,7 +168,8 @@ function BookReaderWrapper(props){
 
  function onStartClick(){
    renditionState.moveTo(0);
- }
+   setTotalPages(0);
+  }
 
  function onEndClick(){
    renditionState.moveTo(1000);
@@ -177,14 +178,16 @@ function BookReaderWrapper(props){
   let pageCountDisplay;
   if (totalPages) pageCountDisplay = <span>{currentPage + "/" + totalPages}</span>
 
+  let loadingDisplay = <div id="ajax-loader"></div>
   let bookNavigation;
   if (window.book){
+    loadingDisplay = "";
     bookNavigation = (
       <div id="book-pager">
         <div>
           <span><a onClick={() => onStartClick()}>First Page</a></span>
           <span>{pageCountDisplay}</span>
-          <span><a onCick={() => onEndClick()}>Last Page</a></span>
+          <span><a onClick={() => onEndClick()}>Last Page</a></span>
         </div>
       </div>
     )
@@ -192,10 +195,11 @@ function BookReaderWrapper(props){
 
   return (
     <div id="book-reader-wrapper">
+      {loadingDisplay}
       <div id="prev" className="arrow" onClick={goPrev}>
         <span className="glyphicon glyphicon-chevron-left"></span>  
       </div>
-      <div id="viewer" className="spreads">
+      <div id="viewer" className="spreads">1
       </div>
       {bookNavigation}
       <div id="next" className="arrow" onClick={goNext}>

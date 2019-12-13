@@ -559,6 +559,18 @@ video:focus {
   position: relative;
   height: inherit;
 
+    #ajax-loader {
+      width: 24px;
+      height: 24px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: -12px;
+      margin-top: -12px;
+      background-image: url('../../assets/img/ajax-loader.gif');
+      background-color: white;
+    }
+
     #book-container {
       border: 1px solid #ccc;
       width: 100% !important;
@@ -601,12 +613,13 @@ video:focus {
       position: absolute;
       top: 50%;
       margin-top: -32px;
-      font-size: 64px;
+      font-size: 30px;
       padding: 0px 10px;
       color: rgb(226, 226, 226);
       font-family: arial, sans-serif;
       cursor: pointer;
       user-select: none;
+      z-index: 100;
       font-weight: normal;
     }
     
@@ -616,14 +629,6 @@ video:focus {
     
     .arrow:active, .navlink:hover {
       color: #000;
-    }
-
-    #prev {
-      left: 1px !important;
-    }
-    
-    #next {
-      right: 1px !important;
     }
 
     #title {
