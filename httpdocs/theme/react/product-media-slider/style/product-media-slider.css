@@ -499,7 +499,7 @@ video:focus {
   background: none;
   position: absolute;
   top: 50%;
-  margin-top: -32px;
+  margin-top: -21px !important;
   font-size: 30px;
   padding: 0px 10px;
   color: #e2e2e2;
@@ -510,10 +510,10 @@ video:focus {
   font-weight: normal;
 }
 #book-reader-wrapper .arrow#prev {
-  left: 30px !important;
+  left: 10px !important;
 }
 #book-reader-wrapper .arrow#next {
-  right: 30px !important;
+  right: 10px !important;
 }
 #book-reader-wrapper .arrow:hover,
 #book-reader-wrapper .navlink:hover {
@@ -574,7 +574,7 @@ video:focus {
   color: #777;
 }
 #book-reader-wrapper #viewer.spreads {
-  width: 94%;
+  width: 100%;
   height: 100%;
   box-shadow: 0 0 4px #ccc;
   border-radius: 5px;

@@ -135,7 +135,7 @@ function BookReaderWrapper(props){
     }    
     if (showBookMenu === true){
       const items = renditionState.book.navigation.toc.map((item,index) => (
-        <BookMenuItem key={index} goToTocItem={() => goToTocItem(item)} item={item}/>
+        <BookMenuItem key={index} goToTocItem={goToTocItem} item={item}/>
       ));
       bookMenuDisplay = <ul id="book-menu">{items}</ul>
     }
