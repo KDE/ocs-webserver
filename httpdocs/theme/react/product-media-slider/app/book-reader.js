@@ -113,7 +113,7 @@ function BookReaderWrapper(props){
   const [ renditionState , setRenditionState ] = useState()
   const [ currentPage, setCurrentPage ] = useState();
   const [ totalPages, setTotalPages ] = useState();
-  const [ bookMenuDisplay, setBookMenuDisplay ] = useState(false);
+  const [ showBookMenu, setShowBookMenu ] = useState(false);
 
   React.useEffect(() => {initBookReader()},[])
   React.useEffect(() => { 
@@ -199,7 +199,7 @@ function BookReaderWrapper(props){
 
   function toggleMenu(){
     const newBookMenuDisplay = bookMenuDisplay === true ? false : true;
-    setBookMenuDisplay(newBookMenuDisplay)
+    setShowBookMenu(newBookMenuDisplay)
   }
 
   let loadingDisplay = <div id="ajax-loader"></div>
@@ -220,6 +220,22 @@ function BookReaderWrapper(props){
     )
   }
 
+  let bookMenuDisplay;
+  if (renditionState){
+    if (showBookMenu === true){
+      const items = renditionState.book.navigation.toc.map((item,index) => (
+        <li key={index}>
+          <a onClick={() => goToTocItem(item.href)}>item.label</a>
+        </li>
+      ))
+      bookMenuDisplay = (
+        <ul>
+          {items}
+        </ul>
+      )
+    }
+  }
+
   return (
     <div id="book-reader-wrapper">
       {loadingDisplay}
@@ -229,12 +245,13 @@ function BookReaderWrapper(props){
       <div id="prev" className="arrow" onClick={goPrev}>
         <span className="glyphicon glyphicon-chevron-left"></span>  
       </div>
-      <div id="viewer" className="spreads">1
+      <div id="viewer" className="spreads">
       </div>
       {bookNavigation}
       <div id="next" className="arrow" onClick={goNext}>
         <span className="glyphicon glyphicon-chevron-right"></span>  
       </div>
+      {bookMenuDisplay}
     </div>
   )
 }
