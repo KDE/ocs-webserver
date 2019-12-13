@@ -183,24 +183,25 @@ function BookReaderWrapper(props){
    setCurrentPage(0);
   }
 
- function onEndClick(){
-  const lastPageCfiBase = renditionState.book.locations.spine.items[renditionState.book.locations.spine.items.length - 1].cfiBase;
-  const lastPageCfi = "epubCfi(" + lastPageCfiBase + ")";
-  console.log(lastPageCfi);
-   renditionState.display(lastPageCfi);
- }
+   function onEndClick(){
+    const lastPageCfi = renditionState.book.locations.spine._locations[renditionState.book.locations.spine._locations.length - 1];
+    renditionState.display(lastPageCfi);
+  } 
   
-  let pageCountDisplay;
+  function onPageNumberInput(val){
+    console.log(val);
+    console.log(renditionState.book.locations.spin._locations[val]);
+  }
 
   let loadingDisplay = <div id="ajax-loader"></div>
   let bookNavigation;
   if (loading === false){
-    if (totalPages) pageCountDisplay = 
     loadingDisplay = "";
     bookNavigation = (
       <div id="book-pager">
         <div>
           <span><a onClick={() => onStartClick()}>First Page</a></span>
+          <span><input type="number" onChange={(e) => onPageNumberInput(e.target.value)}/></span>
           <span><span>{currentPage + "/" + totalPages}</span></span>
           <span><a onClick={() => onEndClick()}>Last Page</a></span>
         </div>
