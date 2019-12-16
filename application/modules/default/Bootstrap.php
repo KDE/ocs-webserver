@@ -46,6 +46,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initSessionManagement()
     {
         $session = $this->bootstrap('session');
+        $domain = Local_Tools_ParseDomain::get_domain($_SERVER['HTTP_HOST']);
+        Zend_Session::setOptions(array('cookie_domain'   => $domain));
         Zend_Session::start();
         $config = $this->getOption('settings')['session'];
         $session_namespace = new Zend_Session_Namespace($config['auth']['name']);
